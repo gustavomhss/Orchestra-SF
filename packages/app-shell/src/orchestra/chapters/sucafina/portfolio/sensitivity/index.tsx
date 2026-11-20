@@ -1,3 +1,4 @@
+import { sfOwnerMatchesContext } from "../../navigation-state/owner"
 import { useNavigate } from "@solidjs/router"
 import { createEffect, createMemo, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -88,9 +89,7 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
       scenarioRef: "", baselineRef: "", parameterRef: "", ruleId: "", review: false,
       message: null, busy: false, outcomeUnknown: false })
     if (!current || status !== "ready") return
-    if (current.context.stamp.projectId !== props.route.ownerSelection.projectId ||
-      (props.route.ownerSelection.installationId &&
-       current.context.stamp.installationId !== props.route.ownerSelection.installationId)) {
+    if (!sfOwnerMatchesContext(current.context, props.route.ownerSelection)) {
       set("status", "denied"); return
     }
     const live = () => !controller.signal.aborted && owner.generation() === epoch

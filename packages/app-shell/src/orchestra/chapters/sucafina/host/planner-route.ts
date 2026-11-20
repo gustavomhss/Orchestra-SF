@@ -1,9 +1,10 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Option, Schema } from "effect"
 import { SfDomainPageCap17, SfDomainPageCap23 } from "@orchestra/schema/sucafina/planner"
-import type { SfContext, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
 import type { SfNativeRouteCandidate } from "../route-registry"
 
-const selectorKeys = ["server", "project", "installation"] as const
+const selectorKeys = sfOwnerQueryKeys
 export function isPlannerRouteSurface(id: string): boolean {
   return id === "CAP17" || id === "CAP23"
 }
@@ -14,8 +15,7 @@ export function parsePlannerRouteQuery(params: URLSearchParams, candidate: SfNat
       !(candidate.surfaceId === "CAP23" && ["entry", "new", "detail", "compare"].includes(candidate.kind))) return
   const keys = [...params.keys()]
   if (new Set(keys).size !== keys.length || keys.some((key) => ![...selectorKeys, "year", ...(candidate.surfaceId === "CAP17" ? ["version", "filter"] : [])].includes(key))) return
-  const selectors = selectorKeys.map((key) => params.get(key))
-  if (selectors.some((item) => item !== null) && !selectors.every((item) => !!item)) return
+  if (!sfOwnerQueryValid(params)) return
   const rawYear = params.get("year")
   if (rawYear !== null && !/^\d{4}$/.test(rawYear)) return
   const input = {
@@ -32,7 +32,7 @@ export function parsePlannerRouteQuery(params: URLSearchParams, candidate: SfNat
 }
 
 /** Context availability is necessary, not a grant: each mounted leaf still performs its original producer read. */
-export function plannerRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function plannerRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (!(candidate.surfaceId === "CAP17" && candidate.kind === "entry") &&
       !(candidate.surfaceId === "CAP23" && ["entry", "new", "detail", "compare"].includes(candidate.kind))) return false
   const required = candidate.surfaceId === "CAP17" ? ["CAP17"] : candidate.kind === "compare" ? ["CAP23", "CAP17"] : ["CAP23"]

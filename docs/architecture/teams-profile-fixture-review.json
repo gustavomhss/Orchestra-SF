@@ -1,0 +1,2831 @@
+{
+  "schemaVersion": 1,
+  "title": "Fecho focal dos 213 candidatos diretos de identidade",
+  "repository": "gustavomhss/Orchestra-SF",
+  "analysisCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+  "analysisTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+  "status": "SEMANTIC_SLICES_CLOSED_NOT_RUN",
+  "selection": {
+    "originalDocument": "teams-profile-radius-identity.json@a91489b035be3e5b05256965f7a472c096cc2d8c#scan.directImportCandidatesNotSemanticallyReviewed",
+    "originalCount": 213,
+    "sort": "path.localeCompare(other.path,'en')",
+    "partition": "zero-based index % 3; shell=0, identity=1, core=2",
+    "originalDocumentaryCommit": "a91489b035be3e5b05256965f7a472c096cc2d8c",
+    "currentFrozenInventory": "teams-profile-radius-identity.json#scan.initialDirectImportCandidatesAtFirstDomainReview"
+  },
+  "method": {
+    "review": "Constructor/fixture/contract and relevant assertion slices; not whole-file business semantic review.",
+    "bodyPinsAndBlobsVerified": true,
+    "executions": 0,
+    "sourceWrites": 0,
+    "parentClosure": "Explicit structural caller/import parents; parent bodies are not presumed semantically read."
+  },
+  "counts": {
+    "records": 213,
+    "executableRecords": 159,
+    "supportRecords": 54,
+    "actions": {
+      "CHANGE_CONTRACT": 71,
+      "CHANGE_FIXTURE": 131,
+      "KEEP_REGRESSION": 11
+    },
+    "unclassified": 0
+  },
+  "cohorts": [
+    {
+      "area": "shell",
+      "sourceDocument": "teams-profile-fixture-shell.json",
+      "documentationCommit": "44afcb1e7634aa1a5be071dfc348a2410e564ff7",
+      "blob": "c0aa769a292ae280be4eac7c3f59bce44bec5a5a",
+      "count": 71,
+      "sourceDocumentLink": "./teams-profile-fixture-shell.json"
+    },
+    {
+      "area": "identity",
+      "sourceDocument": "teams-profile-fixture-identity.json",
+      "documentationCommit": "ccd4ed2f6c91282d48619460e05c2dc03df2989f",
+      "blob": "267bc7fc7c2b45cd268126951bba7adc23072f0e",
+      "count": 71,
+      "sourceDocumentLink": "./teams-profile-fixture-identity.json"
+    },
+    {
+      "area": "core",
+      "sourceDocument": "teams-profile-fixture-core.json",
+      "documentationCommit": "db46ee5dadcf68ba9a18f70921f243c604a0d6d6",
+      "blob": "fdbb5db31362d505c2fd023f8f9a429c2cb41a46",
+      "count": 71,
+      "sourceDocumentLink": "./teams-profile-fixture-core.json"
+    }
+  ],
+  "records": [
+    {
+      "path": "apps/cli/test/factory-distribution-linux.test.ts",
+      "blob": "846f19ce4eff89c960954681fabbcf310a2f8ed7",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 0
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/fixture/local-native.ts",
+      "blob": "99caf5db493116663ef41e0fbb710f93b2009edb",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 1
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/home-operational.test.ts",
+      "blob": "e02f2355acc1502912cbab289a60a2c1677b5f12",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 2
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/talent-live-context.test.ts",
+      "blob": "e435acbc21fad8502192687114f5c13077311f99",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 3
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/fixture.ts",
+      "blob": "f0b23f1dcbc3529cd215ac6d58b9caf351be5e77",
+      "area": "shell",
+      "action": "KEEP_REGRESSION",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 4
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/planner-fixture.ts",
+      "blob": "8843c5b219a358226873650b4e053f8643d4fc73",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 5
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+      "blob": "8057df81b00d687ff99ec0417bba15814ffe5cd3",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 6
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+      "blob": "cca6caa4504fe74e2b7e23f413de214be0405041",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 7
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/first-save-http-repair/outcome-key-admission.test.ts",
+      "blob": "e5e3783efa011f80ca4e9ac9467776bc9bca2b19",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 8
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "blob": "4f74fd8a45d748fd3a7c3e785e2b9a77643fc776",
+      "area": "shell",
+      "action": "KEEP_REGRESSION",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 9
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-fixture.ts",
+      "blob": "fadeb3063fa26a586957947802781ac2b64ff546",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 10
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-fixture.ts",
+      "blob": "8007eccb9dbf0813d4930f4a5b0a99657809c3fa",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 11
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-phase-bridge/native-fixture.ts",
+      "blob": "69b5013bb7d69b72d3f7913c84080996b5b5b431",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 12
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "blob": "31dc3ce17b22188d60f9524ea01ce60cf3a2d8a1",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 13
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+      "blob": "ca194cbb04ca6e39caaf408b0045fc8d65b70cc1",
+      "area": "shell",
+      "action": "KEEP_REGRESSION",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 14
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/fixture.ts",
+      "blob": "d66efca4ffc076b6c709cec2fcccf6b024b26fb1",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 15
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-regression-fix/host-answer-stage-probe.test.ts",
+      "blob": "364e5a81f832d85954c66b2daa428d54dccf4b6a",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 16
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/domain-fixture.ts",
+      "blob": "0b7b2d477cffe8721becabfd57ea0765358ece46",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 17
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts",
+      "blob": "5af45b2d010e691935524082a85cba47c8bf5cec",
+      "area": "shell",
+      "action": "KEEP_REGRESSION",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 18
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "blob": "113018057e634839e9b96b117eba612422899124",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 19
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "blob": "1cecfd23bca79ea5891b12b44b912a212daea89c",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 20
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "blob": "1879eab81e80f0068efc5f054551b0c45a2f0047",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 21
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "blob": "7ee1f5c0ec1012914b797de46e93189eab86797c",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 22
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "blob": "2d8c9e76e6c190515afa0c4ebaf8a1b60fe83296",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 23
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/prepared.test.ts",
+      "blob": "f660231b54967d45f3fdfca3acab8abd8524df34",
+      "area": "shell",
+      "action": "KEEP_REGRESSION",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 24
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/headcount-host.test.ts",
+      "blob": "697c03930cb1619c69b24483f1e3870f01e7c6ba",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 25
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+      "blob": "60f751d4ee674bea63814f45b62e86db217f7a07",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 26
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/resume-ui-host-boundaries.test.ts",
+      "blob": "b112602cb6e3a12ca208780092b2a65ab6a24c91",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 27
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation.test.ts",
+      "blob": "161d98af958b15ea738d84001e581ed6fd7fe725",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 28
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "blob": "268c49a2bedbaf85eab24de01bbed2fb71f3c8cc",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 29
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+      "blob": "18a30f1ee4083eef1cccad8b9e8193a11cfc758f",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 30
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/consumer-dashboard.test.ts",
+      "blob": "5561f0b5648a4f25deb1ebcaaa62f83d5736c02b",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 31
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/dashboard-integration.test.ts",
+      "blob": "af0b141f25283121674c31669bd59fef5831a346",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 32
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/factory.test.ts",
+      "blob": "b58cb332283bce402111133617de70a86bf50e58",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 33
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/procurement-stages.test.ts",
+      "blob": "2eac642deb1e422017b28d41cc0eceba237568f4",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 34
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/tickets-integration.test.ts",
+      "blob": "fe8185eaa7ee7d2d3d99e5a62415e2f28cf84abd",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 35
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/files.test.ts",
+      "blob": "c9edbfd871ab6058c10f36281ec62fe4a6b1aeab",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 36
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "blob": "2b2d90d85057dd9f78e20021b867b2a5b5068936",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 37
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts",
+      "blob": "5f45ba3357aa724af2746687761fc32fd4ca48ef",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 38
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/closure-action.test.ts",
+      "blob": "2fb094eb04a42123b95407ca0682f9d5d3552592",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 39
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/human.test.ts",
+      "blob": "8ac8eed148d03031208fac7ab368ae5e0cb6b5ef",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 40
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/thread-producer.test.ts",
+      "blob": "e7e1016bcdb8e8a68c21850190be3f085cbab383",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 41
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "blob": "36ddb67ceb7f5fbf5c9698efe553d64693a8f8e5",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 42
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+      "blob": "2308b7ebbf791e792894c1d2ac777b70e17d83b1",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 43
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+      "blob": "73e30001d18b68aa1eee3e052123ef4d81c5dc3f",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 44
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+      "blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 45
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/selection.test.ts",
+      "blob": "03770d948e16708da1cdde11a694a6e325e89b59",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 46
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts",
+      "blob": "7f99dee8c6995dd685272a150b939d74a75fd653",
+      "area": "shell",
+      "action": "KEEP_REGRESSION",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 47
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+      "blob": "e0ff844b564285cb6503a7c491a568c8c64e43c1",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 48
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/followup-consumer.test.ts",
+      "blob": "0d364e398cc2555729462d4b877e7ea00aea48de",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 49
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "blob": "339a7ba1b57f31ca985b6b1015e0242ac60e2eb3",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 50
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "blob": "8de25849acd13dd8f58b5225e1cc16a84f5e33ab",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 51
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "blob": "8a9eb8eb63274c004ef188ff46eb33f18cf215d6",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 52
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "blob": "6de0459d3897490b89b85d7f375a4234f554025f",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 53
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "blob": "80994cb20463fbb4faa56d9d4ef6e1bb58600661",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 54
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-sources.test.ts",
+      "blob": "90ca4ecba5e3aabc7312b8c33c7b718265db6ce7",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 55
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "blob": "72742aebc51eb8436fd5a424ff3935f8f3a42f46",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 56
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts",
+      "blob": "8c95f9e87d60075ae7dc0f61f5cbbd3f8f4bd0d4",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 57
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-destinations.test.ts",
+      "blob": "7faff70673ff3d601f48f9924d1ee5c4b92725f8",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 58
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host.test.ts",
+      "blob": "79bcef90638fa5dcb16214413b07a7527c63c05b",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 59
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "blob": "aa7fa9b776e421f0141bdabc34353d2d53123233",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 60
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "blob": "40f814167314c329b30d15db3dadbeaad4cfcb55",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 61
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "blob": "d530558df74f6a0a0c7458a1a308ffdc0114b66b",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 62
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+      "blob": "9810a5665701722cfef59aa8028796764051f604",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 63
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/portfolio-replay-lease-egress.test.ts",
+      "blob": "6a0bbd6efe8d33f366dcf92772c0bd687bba0bcf",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 64
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "blob": "582c69e353bdfd96663c479713ffb9ff6d7585a5",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 65
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 66
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "blob": "bc76ac585880bb3d160aa5156878b62234cd4c3b",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 67
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "area": "shell",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 68
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-retry-boundary.test.ts",
+      "blob": "674fae533af967f87e49a5a79d25ac1a6a925e3a",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 69
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+      "blob": "694bf7f659b5b26eb8a1441db38699223af00e3d",
+      "area": "shell",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "TARGETED_CONSTRUCTORS_ASSERTIONS",
+      "source": {
+        "document": "teams-profile-fixture-shell.json",
+        "section": "rows",
+        "index": 70
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/dashboard-budget-runtime.test.ts",
+      "blob": "a378ae82fcc987091697ba7f7a14d751baaea94c",
+      "area": "identity",
+      "action": "KEEP_REGRESSION",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 0
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/import-http-admission.test.ts",
+      "blob": "d3c3044f558e27f14bc842999f0158e88a88142e",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 1
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/memory-resource-index.test.ts",
+      "blob": "c6a87ae704a1ff53d59e1f86e6b38bf7b95dda1e",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 2
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/operator-browser.test.ts",
+      "blob": "f45dfe9da2e7e19424d740cde0a41c064b38043d",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 3
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "blob": "3b414811c64afe3fc95b8bb1c4dbba7af1d24640",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 4
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts",
+      "blob": "c09dcbaf40a92ae15a96dd7046e1eebc7d7cc58c",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 5
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-fixture.ts",
+      "blob": "dd5c155115190cf4af4ab76ec37970e3df268253",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 6
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/coverage-read.test.ts",
+      "blob": "f714f9ce95309f06874dd081c36a45ef1526a6cd",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 7
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+      "blob": "7451a7ca5c8bce0f04572939bddade5450f7a83f",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 8
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "blob": "7968ddcc8ec4d1268cb34f6ce0222799dc89228d",
+      "area": "identity",
+      "action": "KEEP_REGRESSION",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 9
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+      "blob": "14e6ff5807ff2599fe8cc7793d22864c25af6652",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 10
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission219/human-command.test.ts",
+      "blob": "fb24ea750289297621b9ab514ce6422bc2435342",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 11
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/fixture.ts",
+      "blob": "13dc9ab57a57fbd5e1c1477cf5fc6718cd5d2cad",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 12
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
+      "blob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 13
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/admission-fixture.ts",
+      "blob": "675c6fff9a395a88665a8f0e55e5129bd3772a8d",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 14
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/sourcing-money/fixture.ts",
+      "blob": "6c28a1355277c883f2eee65e54fbff101211da75",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 15
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/source-fixture.ts",
+      "blob": "3015731e6159296ec412543264da532941766e66",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 16
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-fixture.ts",
+      "blob": "894a03d8449d65efb6ad324858b270b60f34ebe5",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 17
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+      "blob": "8edf5ecb086b8c8c7e07a1ca5375dc203d9e6d61",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 18
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "blob": "422bb2e2f0b8819187f1a28ecee2f486cd17cd42",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 19
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "blob": "cac2da7a8a20cc405aaa1be784fa96a1217dc3f1",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 20
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+      "blob": "f90a6f1a4663e90a9ab8fe354be781baf4e94d78",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 21
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "blob": "da00d263697369c02d3a5b4f53c7a1ebcd730a34",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 22
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/import-report-consumer.test.ts",
+      "blob": "e012e89f96f6f68a9223a3b3b5bb757b9bcb099b",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 23
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "blob": "6aeb601cfe9667056157baa4689cfe272f90d5bb",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 24
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/import-analysis.test.ts",
+      "blob": "1b010f9dabe5f71233a19e1d3c04d00da1494f99",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 25
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "blob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 26
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "blob": "06990c2bcb0ebc68797e275c5c24a6946b7cbb5b",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 27
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts",
+      "blob": "b124021c502932239759b2b73bf7df336148b134",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 28
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "blob": "a71839833d50fa3da37f18b2c1fca4597032a5b7",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 29
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts",
+      "blob": "21aea44dd75ae1fca7c0637829317d923378a938",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 30
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/consumer.test.ts",
+      "blob": "d4b730aacf05f0d3c193d78276b41ed3779aecfc",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 31
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "blob": "aa982a85ec7e8446a50b9300a898bdd79ad33bde",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 32
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "blob": "219f08eacd4df0de26c8219708ac8364d1c10082",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 33
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "blob": "2e18729fa382d1c8c1cc68d98703644e5c018be7",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 34
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "blob": "6183b5a77945fa2fe66f02e92c070359775d1129",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 35
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/host-fixture.ts",
+      "blob": "835e9e51cfb4d013e75e29a5bee6f77eec1d89f9",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 36
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+      "blob": "a546d659af749958d214f25e50186072cc2c44ad",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 37
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/application.test.ts",
+      "blob": "0d9a00095fa0e34ba5bb3f8de067f8b540807902",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 38
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/composition.test.ts",
+      "blob": "d33bf05add10d9600867a0ff53fd0a20ae75e2a4",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 39
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "blob": "34fca96285891a5e2e10fc9d82922a9e4034e026",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 40
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+      "blob": "6365cdfc08d1f6550919566b8462966f034b2194",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 41
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-observations.test.ts",
+      "blob": "a45c06afd6910286616ff3127e88063b60b4f88a",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 42
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts",
+      "blob": "74bc4d8994406fd0444a7e338f66d491eb6007c2",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 43
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/human-authority.test.ts",
+      "blob": "c62a9eedf33ccba82c6c9e5b5bec014894d4afad",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 44
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+      "blob": "afc54a6607457e9e9b7cf4c37a324196c8a0200b",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 45
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+      "blob": "979c14a23e34d715b94614df148ecf12ab9bf310",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 46
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+      "blob": "43103eea4e7a10e8da2f799a2495894627ce528a",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 47
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/discovery.test.ts",
+      "blob": "c4749574300fdeff4ae4a7f7ac65af4c4b392e82",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 48
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/planner-review-fixture.ts",
+      "blob": "923bf9287941cc9eb3adc07d1e8030342d17a29a",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 49
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+      "blob": "f8e2886ac152eccaf4cf101475fbe49619c668eb",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 50
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-domain.test.ts",
+      "blob": "416d08711a2fe9d0e26034c80d317950c81f9394",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 51
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+      "blob": "0133da905f2825a57c65d69684a24a8afd8814be",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 52
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-fixture.ts",
+      "blob": "e5923470873762513850d88e54deeeb20922f043",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 53
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "blob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 54
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/extended-composition.test.ts",
+      "blob": "8bf13e0ffb22256f0f9cc607c76848aa45d469d2",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 55
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts",
+      "blob": "4092804b5ba52baea87bf58b1c252c6ce5917f30",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 56
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "blob": "b1137e58b9800eb94587848d3e3882a87c1a11a4",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 57
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "blob": "f643abc8cb78feabb82cde3eaea9bdae9e428ee9",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 58
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/capability-dispatch.test.ts",
+      "blob": "631fafc5d1eb344d5d2887af5e3db3794d10d1aa",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 59
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/assumption-fixture.ts",
+      "blob": "11ee78d20722a49be19e52bb21ecd42b010dfd7c",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 60
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "blob": "185d8f144c789550c0aa62baf557bed63c830320",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 61
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "blob": "2be9d8b282315bf6c030eea4b92e1fd39ed20d55",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 62
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "blob": "447ae83e4a49175f6751138d44d3221f364b0731",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 63
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "blob": "1ec3fa08e6ef4bdb226a5c26838b01553606872e",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 64
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 65
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "blob": "1c2d45332907483ec7c816ebdc64ea81ee8b215e",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 66
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+      "blob": "15f64ede1ffcfae7a9ba35592b9a4dbaf3442097",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 67
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-restart-reader.ts",
+      "blob": "1f2dc2935b3964b022dd5ab77790040a6b5e75d5",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 68
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "blob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+      "area": "identity",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 69
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+      "blob": "5b325d463c633637e804c9b30bc4cf9fd54ad46f",
+      "area": "identity",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "SEMANTIC_CONSTRUCTOR_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-identity.json",
+        "section": "rows",
+        "index": 70
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts",
+      "blob": "9ad503712688652807c162ad6b506d42fa55ba0e",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 0
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/actions-operational.test.ts",
+      "blob": "ee126e8685eb88de9946f7bd848cdd4b0b41d939",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 1
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/recall-health.test.ts",
+      "blob": "e09dc5b1dfc16dfc6852a4e80b8b23476554e40a",
+      "area": "core",
+      "action": "KEEP_REGRESSION",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 2
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-pitr.test.ts",
+      "blob": "e20dc20d98e2fb20122c844008a747b955613b40",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 3
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-fixture.ts",
+      "blob": "342df1f422f2f73abda0f868816f6b61786ec979",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 4
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts",
+      "blob": "b55071dcdc67e28d139d8ecc25a433371e03c8ba",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 5
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+      "blob": "f56e2adcd8d970de29a708732c07cb764db44ded",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 6
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/fixture.ts",
+      "blob": "e0405a7c523702482ffd1c8a9b500f4ca241b3a8",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 7
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench-fixture.ts",
+      "blob": "b4f4360d23ee709c36582f060d4ca4382d1e11d5",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 8
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-post-cause/probe.test.ts",
+      "blob": "a055e39c6962dceb400a990af47ba6783c687821",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 9
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts",
+      "blob": "b2a9cc8fe662bd6f774166d6f0f57c4f0c39fde4",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 10
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-phase-bridge/fixture.ts",
+      "blob": "a9daedc068f4f6bb710f120603fa4f36a87d7248",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 11
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/c12-fixture.ts",
+      "blob": "47d5a3deb98e15e8ac1b9800fb57ae7a9a476218",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 12
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/fixture.ts",
+      "blob": "98003837dd9b8f564e577130170f217eae6727d9",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 13
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-fixture.ts",
+      "blob": "446c0244a71d388cc995f99255c529e72d9dc88b",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 14
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+      "blob": "35741770154ccea55944674239e5b29cadc3abb6",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 15
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/actors-fixture.ts",
+      "blob": "91205e4a9d58290733a4ce4ea511d00ed96734b9",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 16
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+      "blob": "c61e812acd6d5b968a804028caaee7323497ced3",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 17
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/contract-boundaries.test.ts",
+      "blob": "08ae098aec6ec8149dc5b4a30c18f7ef888884ba",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 18
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+      "blob": "5d7551354919d1c23a316bc268ce9e9549cb1ec4",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 19
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-domain-fixture.ts",
+      "blob": "333cb8751dea4833ce0f127d9d924e2c790b3e2e",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 20
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts",
+      "blob": "85ee6b0c7111023fc58576c1ad227907daed18a4",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 21
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "blob": "dd2c21f7a187daf53afadda628d0678c6cbcb345",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 22
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts",
+      "blob": "93d24c34b73bdd6d1a6ef4c6fe57a855f6820b26",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 23
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/catalog-host.test.ts",
+      "blob": "d6548946971a002260114f8e07b60ee69eb193b4",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 24
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "blob": "11735326f621576904444b3cad356c3cb182fa51",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 25
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+      "blob": "5961c1eebeec21b75228bccb7caf1ca283fa6c9a",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 26
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+      "blob": "2acbd3f41e433a2a8949f9c453f0614715239ef8",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 27
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "blob": "df59fbe6a75525e57a7013a09a1a56712214868e",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 28
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "blob": "eaa14e509dadbba9242dade7b70e5cf41cc8b51b",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 29
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/reissue.test.ts",
+      "blob": "a27d1ac9342d81f072a9d1a1708140357788576f",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 30
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/contextual.test.ts",
+      "blob": "e64bfd21530dd565f32effd0888488e09260408f",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 31
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/factory-selection.test.ts",
+      "blob": "600ba05222e5b43c34ddd8457fa5480f874a595f",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 32
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/procurement-integration.test.ts",
+      "blob": "a7f4db379faeefca50794683fba0f3cb32d3ea97",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 33
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/stored-scenario.test.ts",
+      "blob": "0976e2d7d14c83c4fdff5d9232b780f54387a7bb",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 34
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "blob": "cce2a91907a6a46b02aa4f4596f8631cfd484a50",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 35
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+      "blob": "90f40a0c3b66f23f4b16c9be107e0e83e874ecac",
+      "area": "core",
+      "action": "KEEP_REGRESSION",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 36
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/fixture.ts",
+      "blob": "8cdbe78f64fe61757ec7cd2b82a09917fae90659",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 37
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+      "blob": "7e0692bd9868f66cb1b6b01f5b3563c3a75ee104",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 38
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/contribution.test.ts",
+      "blob": "ca452cde54965c28d75d05e638b39b1ed0e83aa7",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 39
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/services.test.ts",
+      "blob": "9c827b6da7b4c6f77ad15a07cc1c08ed004de81e",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 40
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+      "blob": "ca0e83b316f368be5ede080f881db86743bd0435",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 41
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-scope-reader.test.ts",
+      "blob": "398bc418b83944efc02d2db7d983375a630f7136",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 42
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "blob": "7652cb023376e2321662acae5e46ac530f491d81",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 43
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "blob": "ab57b52bd0901c5e396f070c1ff444f3ba7d7b9f",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 44
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-fixture.ts",
+      "blob": "d7983764984d04dba911819b004701866810e179",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 45
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors.test.ts",
+      "blob": "97feec47f26df8f3ce1095b53fb2121200ce67f3",
+      "area": "core",
+      "action": "KEEP_REGRESSION",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 46
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/authority-dispatch.test.ts",
+      "blob": "2ad8526bca2b19c99a152046df302ee071f349fc",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 47
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "blob": "77bcec45da27704c1ff6b858a84d8aea83931725",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 48
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/ui-authority-fixture.ts",
+      "blob": "547f3b08be286de485fa5d839db2cb52337e98ac",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 49
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "blob": "871f557e1c8b4509c7bc2c997add40a4c22070b7",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 50
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "blob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 51
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "blob": "b4af8ec1ca2b944f89bdfea23fd339c510154182",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 52
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "blob": "8c7dd854a195194c8e6eecd5c616797a72dcf7c8",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 53
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "blob": "bd6fe733ecc35b7e82161c0d3456880c552c4e56",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 54
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/memory-fixture.ts",
+      "blob": "a041a506b45bebc137fb30ed071ce753e1e88d62",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 55
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "blob": "20c02e25b9c26b34b9cbecf407027bd80de48dae",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 56
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-sources.test.ts",
+      "blob": "b956fb090719629714995b391c2cb47444ead40d",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 57
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts",
+      "blob": "56c2353cc1f6851c3016327376040ff901b8e868",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 58
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "blob": "5dc267e9ff70762bcd315352b81f6ce20fb7a494",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 59
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "blob": "4ab80cd8cdb2f2e310f7eb55908919d32f8e2444",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 60
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "blob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 61
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "blob": "e3b25caeece77ca1d755bc64e8253ca003179793",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 62
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/http.test.ts",
+      "blob": "864325e74086a6a39b7240cfddcd5ff16064160f",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 63
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "blob": "50a806e1e7749af2a191de8b67a318f65260d85c",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 64
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+      "blob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": false,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 65
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "blob": "ab321fb2d1562255cf987571477233767c5240e3",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 66
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+      "blob": "a284bb02a1b8d4ef734ebcaeab64f07d718a04b8",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 67
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "area": "core",
+      "action": "CHANGE_FIXTURE",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 68
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+      "blob": "421b724f467e45b2e0d3c3e0b76df01230b8744b",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 69
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "blob": "75f8fe05373865d0497184a9c710a382ff06a737",
+      "area": "core",
+      "action": "CHANGE_CONTRACT",
+      "executable": true,
+      "review": "CONSTRUCTOR_FIXTURE_AND_RELEVANT_ASSERTION_SLICES",
+      "source": {
+        "document": "teams-profile-fixture-core.json",
+        "section": "records",
+        "index": 70
+      }
+    }
+  ]
+}

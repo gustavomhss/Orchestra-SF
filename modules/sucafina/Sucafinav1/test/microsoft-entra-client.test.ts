@@ -151,3 +151,36 @@ for (const tokenType of [undefined, "MAC", "bearer"]) {
     expect(f.requests.some((request) => request.url.startsWith(graph))).toBe(false)
   })
 }
+
+test("Teams directory capability is explicit and preserves the minimum login when omitted", async () => {
+  const f = await microsoftFixture({ teams: "direct" })
+  const result = await webExchange(f)
+  expect(new URL(result.location).searchParams.get("scope")?.split(" ")).toEqual(["openid", "profile", "offline_access", "User.Read", "Team.ReadBasic.All"])
+  expect(result.tokens.grantedScopes).toEqual(["openid", "profile", "offline_access", "User.Read", "Team.ReadBasic.All"])
+  expect(Object.isFrozen(result.tokens.grantedScopes)).toBe(true)
+  expect(f.client).toMatchObject({ profile: "web-confidential", teams: "direct" })
+  const refreshed = await f.client.refresh(result.tokens.refreshToken!)
+  expect(refreshed.grantedScopes).toEqual(result.tokens.grantedScopes)
+  expect(f.requests.some((request) => new URL(request.url).pathname === "/v1.0/me/joinedTeams")).toBe(false)
+})
+
+test("Teams capability cannot be enabled for the retained local-public login", async () => {
+  expect(() => createEntraClient({ tenantId: tenant, clientId, profile: "local-public", teams: "direct" })).toThrow("Invalid Teams capability")
+})
+
+test("Teams option is captured at client construction", async () => {
+  const f = await microsoftFixture({ teams: "direct" })
+  const client = createEntraClient(f.options)
+  f.options.teams = undefined
+  const result = await webExchange(f, client)
+  expect(new URL(result.location).searchParams.get("scope")).toContain("Team.ReadBasic.All")
+  expect(client.teams).toBe("direct")
+})
+
+for (const scope of ["", " ", "User.Read\tTeam.ReadBasic.All", "User.Read User.Read", "User.Read\nTeam.ReadBasic.All"]) {
+  test(`malformed returned delegated scopes fail before Graph (${JSON.stringify(scope)})`, async () => {
+    const f = await microsoftFixture({ teams: "direct", grantedScopes: scope })
+    await failure(() => webExchange(f))
+    expect(f.requests.some((request) => request.url.startsWith(graph))).toBe(false)
+  })
+}

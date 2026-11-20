@@ -1,8 +1,14 @@
 import type { SfHostServices } from "../contracts/host-context.ts"
-
-type AnalysisHttpRuntime = Pick<SfHostServices, "human" | "ui" | "models" | "analyses" | "analysisInputs">
+import type { SfAnalysisRequest } from "./analysis-input-port.ts"
+import type { PortResult } from "../contracts/ports.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { presentSfAnalysisOutput } from "./analysis-output.ts"
+import { decodeSfSkillInput } from "../contracts/schema-admission.ts"
+import { hasCaseAnalysisInput, prepareCaseAnalysisInput } from "./case-analysis-input.ts"
+import { prepareReviewAnalysisInput } from "./review-analysis-input.ts"
+
+type PreparationServices = Pick<SfHostServices, "selected" | "dispatch">
+type AnalysisHttpRuntime = Pick<SfHostServices, "human" | "ui" | "models" | "analyses" | "analysisInputs"> & Partial<PreparationServices>
 
 /** The host owns authorization and execution; this boundary exposes no native binding. */
 export async function handleSfAnalysis(request: Request, origin: string, runtime: AnalysisHttpRuntime) {
@@ -16,18 +22,36 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
   if (!record(parsed) || (parsed.action !== "prepare" && parsed.action !== "start" && parsed.action !== "read" && parsed.action !== "cancel" && parsed.action !== "list" && parsed.action !== "output")) return reply({ status: "invalid" }, 400)
   if (!runtime.analyses) return reply({ status: "unavailable" }, 503)
   const action = parsed.action
-  const input = action === "prepare" ? prepareInput(parsed.input) : action === "start" ? await analysisInput(parsed.input, runtime) : action === "list" ? caseInput(parsed.caseRef) : typeof parsed.runRef === "string" && parsed.runRef.trim() ? { runRef: parsed.runRef } : undefined
+  const input = action === "prepare" ? prepareInput(parsed.input) : action === "start" ? await analysisInput(parsed.input, runtime) : action === "list" ? caseInput(parsed.caseRef) : nonempty(parsed.runRef) ? { runRef: parsed.runRef } : undefined
   if (!input || Object.keys(parsed).some((key) => key !== "action" && key !== (action === "start" || action === "prepare" ? "input" : action === "list" ? "caseRef" : "runRef"))) return reply({ status: "invalid" }, 400)
-  if (action === "prepare" && !runtime.analysisInputs) return reply({ status: "unavailable" }, 503)
   const admitted = await runtime.human.admit(request, action === "list" || action === "output" ? "analysis.read" : `analysis.${action}`, input)
   if (admitted.status !== "ok") return reply({ status: admitted.status }, admitted.status === "unavailable" ? 503 : 403)
   try {
-    if (action === "prepare" && "selection" in input && runtime.analysisInputs) {
-      const prepared = await runtime.analysisInputs.prepare(admitted.value, input).catch(() => undefined)
+    if (action === "prepare" && "selection" in input) {
+      const port = runtime.analysisInputs
+      if (!port || !runtime.selected || !runtime.dispatch) return reply({ status: "unavailable" }, 503)
+      if (!selectedRequest(runtime.selected, input.request)) return reply({ status: "denied" }, 403)
+      const readers = { ui: runtime.ui, human: runtime.human, analyses: runtime.analyses, dispatch: runtime.dispatch }
+      const observed = await observePreparation(request, readers, input).catch(() => undefined)
+      if (!observed) return reply({ status: "unavailable" }, 503)
+      if (observed.status !== "ok") return reply(observed, statusCode(observed.status))
+      // Keep the closed browser intent and its actual admission together. The
+      // installed producer already normalizes saved-case/reviewer selectors,
+      // verifies the result and persists selectionScope for the later start.
+      const effective = structuredClone(input)
+      const wanted = digestSfValue(effective)
+      const prepared = await port.prepare(admitted.value, effective).catch(() => undefined)
       if (!prepared) return reply({ status: "unavailable" }, 503)
-      if (prepared.status !== "ok") return reply({ status: prepared.status }, prepared.status === "denied" ? 403 : prepared.status === "stale" || prepared.status === "conflict" ? 409 : prepared.status === "needs-input" ? 400 : 503)
+      if (prepared.status !== "ok") return reply(prepared, statusCode(prepared.status))
+      const decoded = preparedInput(input.request.skillId, prepared.value)
+      if (!decoded?.ok) return reply({ status: "unavailable" }, 503)
+      const current = await observePreparation(request, readers, input).catch(() => undefined)
+      if (!current) return reply({ status: "unavailable" }, 503)
+      if (current.status !== "ok") return reply(current, statusCode(current.status))
+      if (digestSfValue(effective) !== wanted || digestSfValue(input) !== wanted || current.value !== observed.value)
+        return reply({ status: "stale" }, 409)
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-      return reply({ status: "ok", value: prepared.value }, 200)
+      return reply({ status: "ok", value: decoded.value }, 200)
     }
     const result = await (action === "start" && "request" in input && "skillInput" in input ? runtime.analyses.start(admitted.value, input)
       : action === "read" && "runRef" in input ? runtime.analyses.read(admitted.value, input.runRef)
@@ -35,13 +59,13 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
       : action === "list" && "caseRef" in input ? runtime.analyses.list(admitted.value, input.caseRef)
       : action === "cancel" && "runRef" in input ? runtime.analyses.cancel(admitted.value, input.runRef) : Promise.resolve(undefined)).catch(() => undefined)
     if (!result) return reply({ status: "unavailable" }, 503)
-    if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
+    if (result.status !== "ok") return reply({ status: result.status }, statusCode(result.status))
     if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
     if (action === "read" && runRead(result.value)) {
       const value = result.value
       return reply({ status: "ok", value: { runRef: value.runRef, state: value.state, version: value.version, ...(typeof value.outputRef === "string" ? { outputRef: value.outputRef } : {}) } }, 200)
     }
-    if (action === "output" && "kind" in result.value) {
+    if (action === "output" && "runRef" in input && "kind" in result.value) {
       const output = result.value
       const presentation = await Promise.resolve().then(() => presentSfAnalysisOutput(output)).catch(() => undefined)
       if (!presentation?.html) return reply({ status: "unavailable" }, 503)
@@ -52,6 +76,51 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
   } finally { runtime.human.finish(admitted.value) }
 }
 
+type Preparation = { request: SfAnalysisRequest; selection: Record<string, unknown> }
+
+/** These current reads are observations only. Their inputs never substitute for
+ * the installed producer, its verifier or the persisted human selection. */
+async function observePreparation(request: Request, runtime: Pick<SfHostServices, "ui" | "human" | "analyses" | "dispatch">, input: Preparation): Promise<PortResult<string>> {
+  const wanted = structuredClone(input)
+  if (hasCaseAnalysisInput(wanted.request.skillId)) {
+    const read = await prepareCaseAnalysisInput(request, runtime, wanted)
+    return read.status === "ok" ? { status: "ok", value: digestSfValue(read.value) } : read
+  }
+  if (wanted.request.skillId === "sf-contestar-decisao") {
+    const read = await prepareReviewAnalysisInput(request, runtime, wanted)
+    return read.status === "ok" ? { status: "ok", value: digestSfValue(read.value) } : read
+  }
+  return { status: "ok", value: digestSfValue(wanted) }
+}
+
+function statusCode(status: string) {
+  return status === "denied" ? 403 : status === "stale" || status === "conflict" ? 409 : status === "needs-input" ? 400 : 503
+}
+
+function selectedRequest(selected: PreparationServices["selected"], request: SfAnalysisRequest) {
+  const parents = selected.filter((item) => item.profile.id === request.profileId && item.profile.version === request.profileVersion && item.manifestDigest === request.manifestDigest)
+  if (parents.length !== 1 || request.outputSchemaVersion !== "sf-contribution-v1") return false
+  const parent = parents[0]!
+  const skills = parent.skills.filter((item) => item.id === request.skillId && item.version === request.skillVersion)
+  if (skills.length !== 1 || new Set(request.requestedOperationScope).size !== request.requestedOperationScope.length) return false
+  const skill = skills[0]!
+  const kind = inputKind(request.skillId)
+  return !!kind && skill.inputSchemaRef === kind && request.requestedOperationScope.every((operation) =>
+    parent.operationIds.includes(operation) && parent.profile.allowedOperations.includes(operation) && skill.allowedOperations.includes(operation))
+}
+
+function inputKind(skillId: string) {
+  if (skillId === "sf-enquadrar-decisao") return "DecisionIntentInput"
+  if (skillId === "sf-comparar-cenarios") return "ScenarioComparisonInput"
+  if (skillId === "sf-contestar-decisao") return "DecisionCritiqueInput"
+  if (skillId === "sf-explicar-forecast") return "ForecastExplainInput"
+}
+
+function preparedInput(skillId: string, value: unknown) {
+  const kind = inputKind(skillId)
+  return kind ? decodeSfSkillInput(kind, value) : undefined
+}
+
 function runRead(value: unknown): value is { runRef: string; state: unknown; version: unknown; outputRef?: string } {
   return !!value && typeof value === "object" && "runRef" in value && typeof value.runRef === "string" && "state" in value && "version" in value
 }
@@ -60,10 +129,13 @@ function record(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object" && !Array.isArray(value)
 }
 
+function nonempty(value: unknown): value is string {
+  return typeof value === "string" && !!value.trim()
+}
+
 function caseInput(value: unknown) {
   if (!record(value) || Object.keys(value).some((key) => !["id", "incarnation", "version"].includes(key)) ||
-    typeof value.id !== "string" || !value.id.trim() || typeof value.incarnation !== "string" || !value.incarnation.trim() ||
-    typeof value.version !== "number" || !Number.isSafeInteger(value.version) || value.version < 1) return undefined
+    !nonempty(value.id) || !nonempty(value.incarnation) || typeof value.version !== "number" || !Number.isSafeInteger(value.version) || value.version < 1) return undefined
   return { caseRef: { id: value.id, incarnation: value.incarnation, version: value.version } }
 }
 
@@ -79,19 +151,16 @@ async function analysisInput(value: unknown, runtime: AnalysisHttpRuntime) {
 function prepareInput(value: unknown) {
   if (!record(value) || Object.keys(value).some((key) => !["request", "selection"].includes(key)) || !record(value.selection)) return undefined
   const request = analysisRequest(value.request)
-  if (!request || !["sf-comparar-cenarios", "sf-explicar-forecast"].includes(request.skillId)) return undefined
+  if (!request || !inputKind(request.skillId)) return undefined
   return { request, selection: value.selection }
 }
 
-function analysisRequest(request: unknown) {
-  if (!record(request)) return undefined
-  const caseRef = request.caseRef
-  if (!record(caseRef)) return undefined
-  if (Object.keys(request).some((key) => !["caseRef", "profileId", "profileVersion", "skillId", "skillVersion", "manifestDigest", "outputSchemaVersion", "requestedOperationScope", "objective"].includes(key)) ||
-    Object.keys(caseRef).some((key) => !["id", "incarnation", "version"].includes(key)) ||
-    typeof caseRef.id !== "string" || typeof caseRef.incarnation !== "string" || !Number.isSafeInteger(caseRef.version) ||
-    typeof request.profileId !== "string" || typeof request.profileVersion !== "string" || typeof request.skillId !== "string" || typeof request.skillVersion !== "string" ||
-    typeof request.manifestDigest !== "string" || typeof request.outputSchemaVersion !== "string" || typeof request.objective !== "string" ||
-    !Array.isArray(request.requestedOperationScope) || !request.requestedOperationScope.every((item) => typeof item === "string")) return undefined
-  return { caseRef: { id: caseRef.id, incarnation: caseRef.incarnation, version: caseRef.version as number }, profileId: request.profileId, profileVersion: request.profileVersion, skillId: request.skillId, skillVersion: request.skillVersion, manifestDigest: request.manifestDigest, outputSchemaVersion: request.outputSchemaVersion, requestedOperationScope: request.requestedOperationScope, objective: request.objective }
+function analysisRequest(value: unknown): SfAnalysisRequest | undefined {
+  if (!record(value) || Object.keys(value).some((key) => !["caseRef", "profileId", "profileVersion", "skillId", "skillVersion", "manifestDigest", "outputSchemaVersion", "requestedOperationScope", "objective"].includes(key))) return undefined
+  const parsed = caseInput(value.caseRef)
+  if (!parsed || !nonempty(value.profileId) || !nonempty(value.profileVersion) || !nonempty(value.skillId) || !nonempty(value.skillVersion) ||
+    !nonempty(value.manifestDigest) || !nonempty(value.outputSchemaVersion) || !nonempty(value.objective) ||
+    !Array.isArray(value.requestedOperationScope) || !value.requestedOperationScope.every(nonempty)) return undefined
+  return { caseRef: parsed.caseRef, profileId: value.profileId, profileVersion: value.profileVersion, skillId: value.skillId, skillVersion: value.skillVersion,
+    manifestDigest: value.manifestDigest, outputSchemaVersion: value.outputSchemaVersion, requestedOperationScope: value.requestedOperationScope, objective: value.objective }
 }

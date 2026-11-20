@@ -4,7 +4,7 @@ import { closeSync, existsSync, openSync, readSync } from "fs"
 import { resolve } from "path"
 import { pathToFileURL } from "url"
 import { and, asc, eq, isNotNull, sql } from "drizzle-orm"
-import { Cause, Context, Effect, Layer, Option, Schema } from "effect"
+import { Cause, Context, Effect, Layer, Option, Schema, SynchronizedRef } from "effect"
 import { EffectDrizzleSqlite } from "@orchestra/effect-drizzle-sqlite"
 import { layer } from "#sqlite"
 import { Credential } from "@orchestra/schema/credential"
@@ -14,6 +14,8 @@ import { makeGlobalNode } from "./effect/app-node"
 import { Flag } from "./flag/flag"
 import { CredentialCipher } from "./credential/cipher"
 import { CredentialTable } from "./credential/sql"
+import { CredentialVault } from "./credential/vault"
+import { SessionOwner } from "./session/owner"
 
 export const ID = Credential.ID
 export type ID = Credential.ID
@@ -96,6 +98,7 @@ export const layerFrom = (release: string | undefined) =>
     Service,
     Effect.gen(function* () {
       const { db } = yield* Database.Service
+      yield* SessionOwner.ensureTechnical(db)
       // Loads the key before any credential row is sealed or opened.
       yield* CredentialCipher.Service
       yield* sealLegacy(db).pipe(
@@ -203,7 +206,94 @@ export const layerFrom = (release: string | undefined) =>
     }),
   ).pipe(Layer.provide(CredentialCipher.layer))
 
-export const node = makeGlobalNode({ service: Service, layer: layerFrom(inheritedPath()), deps: [Database.node] })
+/** The production node postpones every legacy key/file/row access until a proved technical call. */
+export const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
+  const database = yield* Database.Service
+  const owners = yield* SessionOwner.Service
+  const retained = SynchronizedRef.makeUnsafe<Interface | undefined>(undefined)
+  const legacy = SynchronizedRef.modifyEffect(retained, (current) => current
+    ? Effect.succeed([current, current] as const)
+    : Service.use((service) => Effect.succeed(service)).pipe(
+      Effect.provide(layerFrom(inheritedPath())),
+      Effect.provideService(Database.Service, database),
+      Effect.map((service) => [service, service] as const),
+    ))
+  const use = <A, E>(
+    corporate: (vault: CredentialVault.Interface) => Effect.Effect<A, CredentialVault.Denied>,
+    technical: (service: Interface) => Effect.Effect<A, E>,
+  ): Effect.Effect<A, E> => Effect.gen(function* () {
+    const scope = yield* owners.open().pipe(Effect.orDie)
+    const vault = yield* owners.connections(scope).pipe(Effect.orDie)
+    if (vault) return yield* corporate(vault).pipe(Effect.orDie)
+    const value = yield* technical(yield* legacy)
+    yield* owners.verify(scope).pipe(Effect.orDie)
+    return value
+  })
+  const decode = (value: CredentialVault.Stored | undefined) => Effect.gen(function* () {
+    if (!value || value.metadata.state === "removed") return undefined
+    if (value.encodedValue === undefined) return yield* new CredentialVault.Denied({ reason: "invalid-value" })
+    const secret = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(Value))(value.encodedValue)
+      .pipe(Effect.mapError(() => new CredentialVault.Denied({ reason: "invalid-value" })))
+    return new Info({
+      id: ID.make(value.metadata.key.id), integrationID: Integration.ID.make(value.metadata.key.resourceId),
+      label: value.metadata.label, value: secret,
+    })
+  })
+  const list = (vault: CredentialVault.Interface, integrationID?: Integration.ID) => Effect.gen(function* () {
+    const records = yield* vault.list("integration", integrationID)
+    const values = yield* Effect.forEach(records, (record) => vault.read(record.key).pipe(Effect.flatMap(decode)))
+    return values.filter((value): value is Info => value !== undefined)
+  })
+  const find = (vault: CredentialVault.Interface, id: ID) => Effect.gen(function* () {
+    const matches = (yield* vault.list("integration")).filter((value) => value.key.id === id)
+    if (matches.length > 1) return yield* new CredentialVault.Denied({ reason: "unavailable" })
+    const key = matches[0]?.key
+    return key ? yield* vault.read(key) : undefined
+  })
+  return Service.of({
+    all: () => use((vault) => list(vault), (service) => service.all()),
+    list: (integrationID) => use((vault) => list(vault, integrationID), (service) => service.list(integrationID)),
+    get: (id) => use((vault) => find(vault, id).pipe(Effect.flatMap(decode)), (service) => service.get(id)),
+    inheritedFrom: (id) => use((vault) => find(vault, id).pipe(Effect.as(undefined)), (service) => service.inheritedFrom(id)),
+    create: (input) => {
+      const encodedValue = Schema.encodeSync(Schema.fromJsonString(Value))(input.value)
+      const label = input.label ?? "default"
+      const integrationID = input.integrationID
+      return use((vault) => Effect.gen(function* () {
+        const id = ID.create()
+        const stored = yield* vault.write({
+          key: { category: "integration", resourceId: integrationID, id }, label, encodedValue,
+          expectedRevision: 0, action: "create",
+        })
+        const credential = yield* decode(stored)
+        if (!credential) return yield* new CredentialVault.Denied({ reason: "unavailable" })
+        return credential
+      }), (service) => service.create({ integrationID, label, value: Schema.decodeUnknownSync(Schema.fromJsonString(Value))(encodedValue) }))
+    },
+    update: (id, updates) => {
+      const label = updates.label
+      const encodedValue = updates.value === undefined ? undefined : Schema.encodeSync(Schema.fromJsonString(Value))(updates.value)
+      return use((vault) => Effect.gen(function* () {
+        const stored = yield* find(vault, id)
+        if (!stored || stored.metadata.state === "removed" || stored.encodedValue === undefined)
+          return yield* new CredentialVault.Denied({ reason: "unavailable" })
+        yield* vault.write({
+          key: stored.metadata.key, expectedRevision: stored.metadata.revision, action: "update",
+          label: label ?? stored.metadata.label, encodedValue: encodedValue ?? stored.encodedValue,
+        })
+      }), (service) => service.update(id, {
+        ...(label === undefined ? {} : { label }),
+        ...(encodedValue === undefined ? {} : { value: Schema.decodeUnknownSync(Schema.fromJsonString(Value))(encodedValue) }),
+      }))
+    },
+    remove: (id) => use((vault) => Effect.gen(function* () {
+      const stored = yield* find(vault, id)
+      if (!stored) return
+      yield* vault.remove({ key: stored.metadata.key, expectedRevision: stored.metadata.revision })
+    }), (service) => service.remove(id)),
+  })
+}))
+export const node = makeGlobalNode({ service: Service, layer: admittedLayer, deps: [Database.node, SessionOwner.node] })
 
 /**
  * Seals every credential row still stored as plaintext. Reading a row opens it whichever form it has, and writing it

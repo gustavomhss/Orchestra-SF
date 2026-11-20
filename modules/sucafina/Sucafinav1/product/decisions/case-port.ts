@@ -6,7 +6,7 @@ import type { CommandReceipt, CommandReceiptView } from "../contracts/context.ts
 import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort, SfStateResult } from "../contracts/state.ts"
-import { selectSfCase } from "../host-binding/state-provider.ts"
+import { selectSfCase, selectSfCaseWithOwner, sfTransactionLookup } from "../host-binding/state-provider.ts"
 
 export function encodeCaseRef(value: Pick<DecisionCase, "id" | "incarnation">) {
   return `case:${encodeURIComponent(value.id)}:${encodeURIComponent(value.incarnation)}`
@@ -99,15 +99,15 @@ export function createDecisionCasePort(input: {
         const checkedAt = input.now()
         // All external checks may await while C08 changes. Keep the second
         // observation after them and release only the same complete case.
-        const again = await input.state.read(source, "cases", selectSfCase(ref.id, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+        const again = await input.state.read(source, "cases", selectSfCaseWithOwner(ref.id, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
         if (again.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
         if (again.status !== "ok") return failure(again)
         // Namespace authorization may await after the state callback. Check
         // the live lease synchronously with the complete final snapshot.
-        if (!again.value || digestSfValue(again.value) !== caseDigest || digestSfValue(value) !== caseDigest || digestSfValue(refs) !== refsDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
-        const final = again.value
+        if (!again.value.value || digestSfValue(again.value.value) !== caseDigest || digestSfValue(value) !== caseDigest || digestSfValue(refs) !== refsDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
+        const final = again.value.value
         const projection: AuthorizedCaseProjection = {
-          context: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision, ...(context.kind === "native" ? { kind: "native" as const, profileId: context.binding.profileId } : { kind: "ui" as const }) },
+          context: { ...(again.value.owner ? { owner: again.value.owner } : {}), installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision, ...(context.kind === "native" ? { kind: "native" as const, profileId: context.binding.profileId } : { kind: "ui" as const }) },
           case: { ...final, preparedChanges: final.preparedChanges.map(changeView), receipts: final.receipts.map((receipt) => receiptView(receipt, final.preparedChanges)) },
           events: final.ledger, evidenceRefs: refs, checkedAt,
         }
@@ -145,14 +145,15 @@ export function createDecisionCasePort(input: {
     const source = input.host.requestFor(context)
     if (!source || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
     const operation = digestSfValue({ operation: "sf_case_draft", key })
-    const ledgerKey = JSON.stringify([context.binding.principalRef, "cases", input.creationTarget.ref, operation])
     type Observed = { kind: "missing" } | { kind: "changed" } | { kind: "committed"; caseRef: string; caseDigest: string;
       receipt: Extract<CaseCreationRecovery, { state: "committed" }>["receipt"] }
     const observe = () => input.state.read<Observed>(source, "cases", (state, authority): Observed => {
       if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion ||
         authority.accessRevision !== context.binding.accessRevision) return { kind: "changed" }
-      const transaction = state.transactions[ledgerKey]
-      if (!transaction) return { kind: "missing" }
+      const lookup = sfTransactionLookup(state, authority, { namespace: "cases", targetRef: input.creationTarget.ref, idempotencyKey: operation })
+      if (lookup.status === "ambiguous") return { kind: "changed" }
+      if (lookup.status === "missing") return { kind: "missing" }
+      const transaction = lookup.receipt
       if (transaction.namespace !== "cases" || transaction.principalRef !== authority.principalRef ||
         transaction.targetRef !== input.creationTarget.ref || transaction.targetIncarnation !== input.creationTarget.incarnation ||
         !/^[a-f0-9]{64}$/.test(transaction.commandDigest) || transaction.incarnation !== state.incarnation ||

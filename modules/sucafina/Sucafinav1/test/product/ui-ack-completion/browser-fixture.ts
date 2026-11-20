@@ -33,10 +33,16 @@ export async function createAckBrowserFixture(browser: Browser) {
   const origin = server.url.origin
   let actors: Awaited<ReturnType<typeof createThreadActorsFixture>> | undefined
   let context: BrowserContext | undefined
+  const waits: Promise<PromiseSettledResult<unknown>>[] = []
+  const observe = <A>(operation: Promise<A>): Promise<A> => {
+    waits.push(operation.then((value) => ({ status: 'fulfilled', value }), (reason) => ({ status: 'rejected', reason })))
+    return operation
+  }
   let producer: Awaited<ReturnType<typeof loadRecipientActions>> | undefined
   const close = async () => {
     const errors: unknown[] = []
     try { await context?.close() } catch (error) { errors.push(error) }
+    await Promise.all(waits)
     try { await server.stop(true) } catch (error) { errors.push(error) }
     try { await actors?.dispose() } catch (error) { errors.push(error) }
     try { await producer?.close() } catch (error) { errors.push(error) }
@@ -158,7 +164,7 @@ export async function createAckBrowserFixture(browser: Browser) {
       if (!current) throw new Error("Replacement physical source unavailable")
       return { previous, current }
     }
-    return { ...app, port, origin, context, page, errors, attempts, thread, caseRef, view, send, reply, inspect, resolveThread, editMessage, legacyOutcome, historyCount, replaceSource, close }
+    return { ...app, port, origin, context, page, observe, errors, attempts, thread, caseRef, view, send, reply, inspect, resolveThread, editMessage, legacyOutcome, historyCount, replaceSource, close }
   } catch (error) {
     try { await close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Shared Collaboration setup and cleanup failed") }
     throw error

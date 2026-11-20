@@ -1,6 +1,7 @@
 import { Session } from "@orchestra/schema/session"
 import { SessionMessage } from "@orchestra/schema/session-message"
 import { Schema } from "effect"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/unstable/httpapi"
 import { InvalidCursorError, SessionNotFoundError, UnknownError } from "../errors"
 
@@ -28,6 +29,7 @@ export const MessageGroup = HttpApiGroup.make("server.message")
       query: SessionMessagesQuery,
       success: Schema.Struct({
         data: Schema.Array(SessionMessage.Message),
+        namespace: Schema.optional(TeamProfile.SessionNamespace),
         cursor: Schema.Struct({
           previous: Schema.String.pipe(Schema.optional),
           next: Schema.String.pipe(Schema.optional),

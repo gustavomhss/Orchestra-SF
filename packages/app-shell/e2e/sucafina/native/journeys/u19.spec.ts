@@ -1,18 +1,16 @@
 import { expect } from "@playwright/test"
 import type { Page } from "@playwright/test"
 import { nativeInstalledFixture as test, type InstalledNativeHarness } from "../fixture"
+import { nativeOwnerQuery, type NativeTarget } from "../fixture/manifest-contract.ts"
 
 /** U19 browser journeys bound to the original real F04 private manifest.
  * Auth, A04 cases and A05 stored results must come from the installed product.
  * NOT_RUN by N17; only hosted 120 may qualify. No mocked backends or bypass.
  */
-function route(target: Readonly<{
-  shellOrigin: string; serverKey: string; projectId: string; installationId: string
-}>, suffix: string) {
-  const query = new URLSearchParams({
-    server: target.serverKey, project: target.projectId, installation: target.installationId,
-  })
-  return target.shellOrigin + suffix + "?" + query
+function route(target: NativeTarget, pathname: string) {
+  const url = new URL(pathname, target.shellOrigin)
+  url.search = nativeOwnerQuery(target).toString()
+  return url.href
 }
 async function mounted(page: Page, fixture: InstalledNativeHarness) {
   await page.goto(fixture.manifest.target.shellOrigin + fixture.manifest.target.chapterHref)
@@ -68,22 +66,26 @@ test("U19 UI44 requires genuine selected results and A05-issued sensitivity unit
 test("U19 cross-owner context cannot expose case, portfolio combinations or sensitivity samples", async ({
   page, nativeHarness,
 }) => {
-  await mounted(page, nativeHarness)
+  const scenarios = await readCases(page, nativeHarness)
   const manifest = nativeHarness.manifest
-  const wrongProject = { ...manifest.target, projectId: manifest.wrongProject.projectId }
-  await page.goto(route(wrongProject, "/orchestra/sf-portfolio/scenarios"))
-  const scenario = page.locator("[data-sf-scenarios]")
-  await expect(scenario).toBeVisible()
-  await expect(scenario.locator('[data-sf-state]')).toHaveAttribute("data-sf-state",
-    /^(denied|unavailable|invalid|session-expired)$/)
-  await expect(scenario.locator(".sf-u19-combination")).toHaveCount(0)
-  const wrongInstallation = { ...manifest.target, installationId: manifest.wrongInstallation.installationId }
-  await page.goto(route(wrongInstallation, "/orchestra/sf-portfolio/sensitivity"))
+  const alert = page.locator("#sf-team-content").getByRole("alert")
+  const wrongTeam = route(manifest.wrongTeam, "/orchestra/sf-portfolio/scenarios")
+  await page.goto(wrongTeam)
+  await expect(alert.filter({ hasText: /^(This Team is not available for this account\.|Esta equipe não está disponível para esta conta\.)$/ })).toBeVisible()
+  await expect(page).toHaveURL(wrongTeam)
+  await expect(scenarios).toHaveCount(0)
+  await expect(page.locator(".sf-u19-case-list, .sf-u19-combination")).toHaveCount(0)
+
+  const sensitivityPath = "/orchestra/sf-portfolio/sensitivity"
+  await page.goto(route(manifest.target, sensitivityPath))
   const sensitivity = page.locator("[data-sf-sensitivity]")
   await expect(sensitivity).toBeVisible()
-  await expect(sensitivity.locator('[data-sf-state]')).toHaveAttribute("data-sf-state",
-    /^(denied|unavailable|invalid|session-expired)$/)
-  await expect(sensitivity.locator(".sf-u19-sensitivity-results")).toHaveCount(0)
+  const wrongInstallation = route(manifest.wrongInstallation, sensitivityPath)
+  await page.goto(wrongInstallation)
+  await expect(alert.filter({ hasText: /^(This link does not identify a valid Team profile for this installation\.|Este link não identifica um perfil do Teams válido para esta instalação\.)$/ })).toBeVisible()
+  await expect(page).toHaveURL(wrongInstallation)
+  await expect(sensitivity).toHaveCount(0)
+  await expect(page.locator(".sf-u19-sensitivity-results")).toHaveCount(0)
 })
 for (const width of [320, 768, 1024, 1280, 1440]) {
   test("U19 case chooser reflows at viewport " + width, async ({

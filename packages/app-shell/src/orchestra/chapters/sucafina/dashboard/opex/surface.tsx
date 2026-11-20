@@ -1,3 +1,4 @@
+import { sfAppendOwnerQuery } from "../../navigation-state/owner"
 import { useNavigate } from "@solidjs/router"
 import { createEffect, createMemo, createSignal, createUniqueId, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -152,9 +153,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const query = new URLSearchParams()
     const selection = props.route.ownerSelection
     if (selection.installationId) {
-      query.set("server", selection.serverKey)
-      query.set("project", selection.projectId)
-      query.set("installation", selection.installationId)
+      sfAppendOwnerQuery(query, selection)
     }
     query.set("year", String(selectedYear))
     return path + "?" + query.toString()
@@ -163,9 +162,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const query = new URLSearchParams()
     const selection = props.route.ownerSelection
     if (selection.installationId) {
-      query.set("server", selection.serverKey)
-      query.set("project", selection.projectId)
-      query.set("installation", selection.installationId)
+      sfAppendOwnerQuery(query, selection)
     }
     query.set("year", String(year()))
     return "/orchestra/sf-dashboard/budget?" + query.toString()

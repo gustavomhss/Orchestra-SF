@@ -6,6 +6,7 @@ import { Cause, Context, Effect, Layer, Schema, Scope } from "effect"
 import { ModelV2 } from "./model"
 import { ProviderV2 } from "./provider"
 import { State } from "./state"
+import { SessionOwner } from "./session/owner"
 
 type SDK = any
 
@@ -232,4 +233,32 @@ export const locationLayer = Layer.effect(
   }),
 )
 
-export const node = makeLocationNode({ service: Service, layer: locationLayer, deps: [] })
+/** A shared model name is not a private provider definition or credential grant. */
+const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
+  const owners = yield* SessionOwner.Service
+  const binding = yield* owners.location.pipe(Effect.orDie)
+  const service = Context.get(yield* Layer.build(locationLayer), Service)
+  if (!binding) return service
+  const unavailable = (providerID: ProviderV2.ID) => new InitError({
+    providerID, cause: new Error("Private provider configuration is unavailable for this profile"),
+  })
+  // Until a concrete private provider source is admitted, do not instantiate an SDK that might
+  // discover process environment credentials. The technical branch retains its existing behavior.
+  return Service.of({
+    hook: {
+      sdk: (callback) => binding.bind(service.hook.sdk((event) => binding.bind(Effect.suspend(() => {
+        const effect = callback(event)
+        return Effect.isEffect(effect) ? effect : Effect.void
+      })))),
+      language: (callback) => binding.bind(service.hook.language((event) => binding.bind(Effect.suspend(() => {
+        const effect = callback(event)
+        return Effect.isEffect(effect) ? effect : Effect.void
+      })))),
+    },
+    runSDK: (event) => binding.bind(Effect.die(unavailable(event.model.providerID))),
+    runLanguage: (event) => binding.bind(Effect.die(unavailable(event.model.providerID))),
+    language: (model) => binding.bind(Effect.fail(unavailable(model.providerID))),
+  })
+}))
+
+export const node = makeLocationNode({ service: Service, layer: admittedLayer, deps: [SessionOwner.node] })

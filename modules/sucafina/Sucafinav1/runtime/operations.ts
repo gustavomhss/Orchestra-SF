@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "node:crypto"
 import type { Environment, Notice, Persistence, Result, Snapshot } from "./contract.ts"
 import type { AssetPersistence } from "./assets.ts"
 import type { Surface } from "../src/identity.ts"
+import { captureSfRestoreRetention } from "./restore-effect-frontier.ts"
 
 type ScheduledNotice = Notice & { reason?: "reminder" | "escalation"; roles?: readonly string[] }
 
@@ -352,11 +353,13 @@ export async function restoreBackup(
           by: snapshot.versions.dataset?.by,
         },
       }
+    const retention = captureSfRestoreRetention(snapshot, recovered)
     // Verify every retained blob's actual size and SHA; the adapter keeps all puts private until commit.
     for (const blob of manifest.blobs) {
       const bytes = await source.readBlob(surface, id, blob.key)
       if (!bytes || bytes.byteLength !== blob.bytes || createHash("sha256").update(bytes).digest("hex") !== blob.sha256)
         throw new Error("Missing or corrupt private backup blob")
+      retention.verifyBlobReplacement(await blobs.get(blob.key), bytes)
       await blobs.put(blob.key, bytes, "application/octet-stream")
     }
     const previous = structuredClone(snapshot.data)
@@ -367,6 +370,7 @@ export async function restoreBackup(
     const jobState = snapshot.data.localJobState
     const currentStore = record(snapshot.data.store)
     snapshot.data = structuredClone(recovered.data)
+    retention.apply(snapshot.data)
     delete snapshot.data.noticeDelivery
     delete snapshot.data.noticeClaims
     delete snapshot.data.noticeSchedule

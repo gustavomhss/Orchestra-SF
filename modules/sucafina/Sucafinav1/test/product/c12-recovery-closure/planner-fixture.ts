@@ -14,7 +14,7 @@ import type { CostCoverageAssessment, CostCoverageBasis, DecisionCase } from "..
 import type { ScenarioOperation, ScenarioRequest } from "../../../product/contracts/operations.ts"
 import type { DomainPortHost, PlannerSourceHost, PreparedApplyPort } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
-import type { SfProductState } from "../../../product/contracts/state.ts"
+import type { SfProductState, SfStateAuthority } from "../../../product/contracts/state.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
 import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createDecisionCoverageAccess, decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
@@ -257,8 +257,14 @@ export async function openPlannerRecoveryFixture(retained?: { directory: string;
     if (reviewed.status !== "ok") throw new Error(reviewed.reason)
     return { request, reviewDigest: reviewed.value.reviewDigest, original: { ...request, reviewDigest: reviewed.value.reviewDigest }, change, choice, review: reviewed.value }
   }
+  const readProduct = async <A>(read: (value: Readonly<SfProductState>, authority: SfStateAuthority) => A | Promise<A>, principal = "finance") => {
+    const context = await admit("decisions.portfolio.read", { caseRef: currentCase.ref }, randomUUID(), principal)
+    const result = await state.read(ui.requestFor(context)!, "cases", read)
+    if (result.status !== "ok") throw new Error(`C12 current state admission: ${result.status}`)
+    return result.value
+  }
   const observe = async () => { if (!persistence.transactionAll) throw new Error("SQLite snapshot unavailable"); return persistence.transactionAll(async (snapshots) => { const value = snapshots.dashboard.data.__sfProductV1 as SfProductState; return { commit: false, value: structuredClone({ state: value, decision: currentCase.ref ? value?.cases[currentCase.ref.id] : undefined, domain: snapshots.planner }) } }) }
-  return { directory, get caseRef() { return currentCase.ref }, access, counters, faults, persistence, state, ui, human, host, admission, cases, mutations, producer, execute, prepare, apply, admit, admitOperation, admitApply, storedCase, readCase: async () => (await storedCase()).value, readSnapshot, editCase, observe,
+  return { directory, get caseRef() { return currentCase.ref }, access, counters, faults, persistence, state, ui, human, host, admission, cases, mutations, producer, execute, prepare, apply, admit, admitOperation, admitApply, storedCase, readCase: async () => (await storedCase()).value, readSnapshot, editCase, readProduct, observe,
     close: async (remove = true) => { contexts.forEach(human.finish); await store.dispose(); if (remove) await rm(directory, { recursive: true, force: true }) },
   }
 }

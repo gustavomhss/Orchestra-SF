@@ -1,4 +1,5 @@
 import { Orchestra } from "@orchestra/client"
+import { Schema } from "effect"
 import type { ServerConnection } from "@/context/server"
 import type {
   RequestOptions,
@@ -9,6 +10,13 @@ import type {
   SessionStageInput,
 } from "@/server-api"
 import { decode64 } from "@/utils/base64"
+
+// This adapter belongs to the explicit technical application. Corporate response
+// namespaces must be consumed by the Teams facade, never stripped into a technical grant.
+const decodeTechnicalActiveSessions = Schema.decodeUnknownSync(Schema.Struct({
+  data: Schema.Record(Schema.String, Schema.Struct({ type: Schema.Literal("running") })),
+  namespace: Schema.optional(Schema.Null),
+}), { onExcessProperty: "error" })
 
 export function authTokenFromCredentials(input: { username?: string; password: string }) {
   return btoa(`${input.username ?? "orchestra"}:${input.password}`)
@@ -73,7 +81,8 @@ function buildServerApi(input: {
         orchestra.sessions.list(value, requestOptions),
       create: (value?: Parameters<typeof orchestra.sessions.create>[0], requestOptions?: Parameters<typeof orchestra.sessions.create>[1]) =>
         orchestra.sessions.create(value, requestOptions),
-      active: (requestOptions?: Parameters<typeof orchestra.sessions.active>[0]) => orchestra.sessions.active(requestOptions),
+      active: (requestOptions?: Parameters<typeof orchestra.sessions.active>[0]) =>
+        orchestra.sessions.active(requestOptions).then((value) => decodeTechnicalActiveSessions(value).data),
       get: (value: Parameters<typeof orchestra.sessions.get>[0], requestOptions?: Parameters<typeof orchestra.sessions.get>[1]) =>
         orchestra.sessions.get(value, requestOptions),
       remove: (value: Parameters<typeof orchestra.sessions.remove>[0], requestOptions?: Parameters<typeof orchestra.sessions.remove>[1]) =>

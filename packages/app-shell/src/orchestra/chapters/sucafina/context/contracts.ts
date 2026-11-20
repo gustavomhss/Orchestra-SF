@@ -1,6 +1,7 @@
+import type { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { Accessor, JSX } from "solid-js"
 import type {
-  SfContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
+  SfReadableContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
   SfInstallationDescriptor, SfInstallationList, SfOwnerKey, SfOwnerSelection,
   SfResolvedRoute, SfVersion, SurfaceId, SfRef, SfOperationId,
 } from "@orchestra/schema/sucafina/context"
@@ -13,7 +14,7 @@ import type { SfTodayResumePort } from "../home"
 import type { SfBudgetPeriodPort } from "../navigation-state/budget-period"
 
 export type {
-  SfContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
+  SfContext, SfReadableContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
   SfInstallationDescriptor, SfInstallationList, SfOwnerKey, SfOwnerSelection,
   SfResolvedRoute, SfVersion, SurfaceId, SfRef,
 } from "@orchestra/schema/sucafina/context"
@@ -29,6 +30,8 @@ export type SfOwnerIdentity = Readonly<{
   projectId: string
   installationId: string
   principalRef: string
+  /** Corporate identity is independent of the technical project placement. */
+  team?: TeamProfile.Owner
   authEpoch: number
 }>
 export type SfContextState =
@@ -38,7 +41,7 @@ export type SfContextState =
   | Readonly<{ status: "denied"; selection: SfOwnerSelection }>
   | Readonly<{ status: "unavailable"; selection: SfOwnerSelection; reason: "installation-unavailable" | "identity-unavailable" | "host-unavailable" | "connection-auth-unavailable" | "connection-unapproved" | "network" | "contract-mismatch" }>
   | Readonly<{ status: "context-mismatch"; selection: SfOwnerSelection }>
-  | Readonly<{ status: "ready"; selection: SfOwnerSelection; ownerKey: SfOwnerKey; owner: SfOwnerIdentity; binding: SfInstallationDescriptor; context: SfContext }>
+  | Readonly<{ status: "ready"; selection: SfOwnerSelection; ownerKey: SfOwnerKey; owner: SfOwnerIdentity; binding: SfInstallationDescriptor; context: SfReadableContext }>
 
 export type SfPublicDraftController<Value> = Pick<
   SfDraftController<Value>, "snapshot" | "edit" | "discard" | "receiveRemote" | "setPhase" | "setPending" | "confirmSave" | "rejectSave"
@@ -74,7 +77,7 @@ export type SfContextDependencies = Readonly<{
   createTransport(binding: SfInstallationDescriptor, generation: number): SfTransport
   resolveTransportIdentity(selection: SfOwnerSelection): string
   createDraft<Value>(input: SfDraftInput<Value>): SfDraftController<Value>
-  revalidateDraft(input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal): Promise<SfDraftRevalidation>
+  revalidateDraft(input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal): Promise<SfDraftRevalidation>
   /** Generic notice only: retained edits were purged after access was revoked. */
   onDraftAccessRevoked?: () => void
   /** I00 supplies only the genuine owner-bound F01 shell navigation instance. */
@@ -92,7 +95,7 @@ export type SfContextHandle = Readonly<{
   hasDirtyDrafts: () => boolean
   /** Only after explicit consent; quarantined unsent drafts may be purged, never pending/unknown operations. */
   discardDrafts: () => boolean
-  ready: Accessor<Readonly<{ context: SfContext; transport: SfTransport; drafts: SfDraftRegistry }> | undefined>
+  ready: Accessor<Readonly<{ context: SfReadableContext; transport: SfTransport; drafts: SfDraftRegistry }> | undefined>
   reload: () => Promise<void>
   /** Session expiry quarantines for same-owner revalidation; other reasons purge. */
   invalidate: (reason: "logout" | "revoked" | "session-expired" | "owner-changed" | "host-changed") => void

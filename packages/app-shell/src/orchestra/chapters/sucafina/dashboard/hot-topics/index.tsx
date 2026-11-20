@@ -1,3 +1,4 @@
+import { sfAppendOwnerQuery } from "../../navigation-state/owner"
 import { For, Show, createMemo, createSignal } from "solid-js"
 import type { JSX } from "solid-js"
 import { useNavigate } from "@solidjs/router"
@@ -30,9 +31,7 @@ function topicPath(props: SfSurfaceProps<"CAP02">, view: "list" | "new" | "detai
   // Keep the explicit canonical selection, never borrow the ambient connection.
   const query = new URLSearchParams()
   if (props.route.ownerSelection.installationId) {
-    query.set("server", props.route.ownerSelection.serverKey)
-    query.set("project", props.route.ownerSelection.projectId)
-    query.set("installation", props.route.ownerSelection.installationId)
+    sfAppendOwnerQuery(query, props.route.ownerSelection)
   }
   if (props.route.query.year !== undefined) query.set("year", String(props.route.query.year))
   if (props.route.query.month !== undefined) query.set("month", String(props.route.query.month))

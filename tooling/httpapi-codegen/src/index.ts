@@ -32,7 +32,18 @@ export type Output = {
 
 export type Contract = {
   readonly groups: ReadonlyArray<Group>
+  /** This contract may execute only through its original imported API. */
+  readonly authoritativeImport?: true
 }
+
+export type CompileOptions = {
+  readonly groupNames?: Readonly<Record<string, string>>
+  readonly endpointNames?: Readonly<Record<string, string>>
+  readonly omitEndpoints?: ReadonlySet<string>
+}
+
+type ApiImport = { readonly module: string; readonly api: string }
+const authoritativeImports = new WeakMap<Contract, ApiImport>()
 
 export { GenerationError } from "./error-symbol"
 
@@ -74,11 +85,50 @@ const manifestName = ".httpapi-codegen.json"
 
 export function compile<Id extends string, Groups extends HttpApiGroup.Any>(
   api: HttpApi.HttpApi<Id, Groups>,
-  options?: {
-    readonly groupNames?: Readonly<Record<string, string>>
-    readonly endpointNames?: Readonly<Record<string, string>>
-    readonly omitEndpoints?: ReadonlySet<string>
-  },
+  options?: CompileOptions,
+): Contract {
+  return compileContract(api, options, false)
+}
+
+/**
+ * Preserve nonportable runtime refinements by binding emission to the original
+ * API export. Promise DTOs describe wire shape only; this mode does not turn
+ * them into validators. The caller must export this API at the supplied import.
+ */
+export function compileImported<Id extends string, Groups extends HttpApiGroup.Any>(
+  api: HttpApi.HttpApi<Id, Groups>,
+  source: ApiImport,
+  options?: CompileOptions,
+): Contract {
+  if (!source.module.trim() || !/^[A-Za-z_$][\w$]*$/.test(source.api)) {
+    throw new GenerationError({ reason: "Invalid authoritative API import" })
+  }
+  const contract: Contract = Object.freeze({
+    groups: Object.freeze(compileContract(api, options, true).groups.map((group) => Object.freeze({
+      ...group,
+      endpoints: Object.freeze(group.endpoints.map((endpoint) => Object.freeze({
+        ...endpoint,
+        payloads: Object.freeze([...endpoint.payloads]),
+        successes: Object.freeze([...endpoint.successes]),
+        errors: Object.freeze(endpoint.errors.map((error) => Object.freeze({ ...error }))),
+        input: Object.freeze(endpoint.input.map((field) => Object.freeze({ ...field }))),
+        operation: Object.freeze({
+          ...endpoint.operation,
+          input: Object.freeze(endpoint.operation.input.map((field) => Object.freeze({ ...field }))),
+          errors: Object.freeze([...endpoint.operation.errors]),
+        }),
+      }))),
+    }))),
+    authoritativeImport: true,
+  })
+  authoritativeImports.set(contract, Object.freeze({ module: source.module, api: source.api }))
+  return contract
+}
+
+function compileContract<Id extends string, Groups extends HttpApiGroup.Any>(
+  api: HttpApi.HttpApi<Id, Groups>,
+  options: CompileOptions | undefined,
+  imported: boolean,
 ): Contract {
   const endpoints: Array<Endpoint> = []
   const portable = new Map<SchemaAST.AST, boolean>()
@@ -98,17 +148,17 @@ export function compile<Id extends string, Groups extends HttpApiGroup.Any>(
       if (successSchemas.length === 0) successSchemas.push(HttpApiSchema.NoContent)
       if (successSchemas.length > 1) throw new GenerationError({ reason: `Multiple success schemas: ${name}` })
 
-      const params = normalizeTransport(endpoint.params, "params", endpoint, name)
-      const query = normalizeTransport(endpoint.query, "query", endpoint, name)
-      const headers = normalizeTransport(endpoint.headers, "headers", endpoint, name)
+      const params = normalizeTransport(endpoint.params, "params", endpoint, name, imported)
+      const query = normalizeTransport(endpoint.query, "query", endpoint, name, imported)
+      const headers = normalizeTransport(endpoint.headers, "headers", endpoint, name, imported)
       const sourcePayloads = Array.from(endpoint.payload.values()).flatMap(({ schemas }) => schemas)
       if (sourcePayloads.length > 1) {
         throw new GenerationError({ reason: `Multiple payload schemas: ${name}` })
       }
-      const payloads = sourcePayloads.map((schema) => normalizeTransport(schema, "payload", endpoint, name)!)
-      const success = normalizeTransport(successSchemas[0], "success", endpoint, name)!
+      const payloads = sourcePayloads.map((schema) => normalizeTransport(schema, "payload", endpoint, name, imported)!)
+      const success = normalizeTransport(successSchemas[0], "success", endpoint, name, imported)!
       const errorSchemas = Array.from(errors).flatMap(([status, schemas]) =>
-        schemas.map((schema) => ({ status, ...normalizeTransport(schema, "error", endpoint, name)! })),
+        schemas.map((schema) => ({ status, ...normalizeTransport(schema, "error", endpoint, name, imported)! })),
       )
       const inputs = [
         ...inputFields(params?.schema, "params", name),
@@ -214,6 +264,9 @@ export function compile<Id extends string, Groups extends HttpApiGroup.Any>(
 }
 
 export function emitEffect(contract: Contract): Output {
+  if (contract.authoritativeImport) {
+    throw new GenerationError({ reason: "Effect schema requires its bound authoritative API import" })
+  }
   const endpoint = contract.groups.flatMap((group) => group.endpoints).find((endpoint) => !endpoint.effectPortable)
   if (endpoint !== undefined) {
     throw new GenerationError({
@@ -231,6 +284,12 @@ export function emitEffectImported(
     | { readonly module: string; readonly endpoints: Readonly<Record<string, string>> },
   layout?: { readonly splitGroups: ReadonlySet<string> },
 ): Output {
+  if (contract.authoritativeImport) {
+    const source = authoritativeImports.get(contract)
+    if (source === undefined || !("api" in options) || source.module !== options.module || source.api !== options.api) {
+      throw new GenerationError({ reason: "Authoritative API import does not match its compiled contract" })
+    }
+  }
   assertSplitGroups(contract.groups, layout?.splitGroups)
   return {
     operations: operations(contract.groups),
@@ -342,7 +401,7 @@ function assertPromiseEndpoint(endpoint: Endpoint) {
   ) {
     throw new GenerationError({ reason: `Unsupported Promise success encoding: ${name}` })
   }
-  if (successEncoding === "Uint8Array") endpoint.binary = true
+  if (successEncoding === "Uint8Array" && endpoint.binary !== true) endpoint.binary = true
   for (const error of endpoint.errors) {
     if (declaredErrorFields(error.schema) === undefined) {
       throw new GenerationError({ reason: `Promise error must have a literal discriminator: ${name}` })
@@ -514,7 +573,7 @@ function renderPromiseClient(
     if (group.endpoints[0]?.topLevel) return methods.join(", ")
     return `${JSON.stringify(group.identifier)}: { ${methods.join(", ")} }`
   })
-  return `import type { ${imports.join(", ")} } from "./types"\nimport { ClientError } from "./client-error"\n\nexport interface ClientOptions {\n  readonly baseUrl: string\n  readonly fetch?: typeof globalThis.fetch\n  readonly headers?: HeadersInit\n}\n\nexport interface RequestOptions {\n  readonly signal?: AbortSignal\n  readonly headers?: HeadersInit\n}\n\ninterface RequestDescriptor {\n  readonly method: string\n  readonly path: string\n  readonly query?: Record<string, unknown>\n  readonly headers?: Record<string, unknown>\n  readonly body?: unknown\n  readonly successStatus: number\n  readonly declaredStatuses: ReadonlyArray<number>\n  readonly empty: boolean\n  readonly binary?: boolean\n}\n\nexport function make(options: ClientOptions) {\n  const fetch = options.fetch ?? globalThis.fetch\n\n  const prepare = (descriptor: RequestDescriptor, requestOptions?: RequestOptions) => {\n    const url = new URL(descriptor.path, options.baseUrl)\n    for (const [key, value] of Object.entries(descriptor.query ?? {})) appendQuery(url.searchParams, key, value)\n    const headers = new Headers(options.headers)\n    for (const [key, value] of Object.entries(descriptor.headers ?? {})) {\n      if (value !== undefined && value !== null) headers.set(key, String(value))\n    }\n    for (const [key, value] of new Headers(requestOptions?.headers)) headers.set(key, value)\n    if (descriptor.body !== undefined && !headers.has("content-type")) headers.set("content-type", "application/json")\n    return {\n      url,\n      init: {\n        method: descriptor.method,\n        signal: requestOptions?.signal,\n        headers,\n        body: descriptor.body === undefined ? undefined : JSON.stringify(descriptor.body),\n      } satisfies RequestInit,\n    }\n  }\n\n  const execute = async (descriptor: RequestDescriptor, requestOptions?: RequestOptions) => {\n    try {\n      const prepared = prepare(descriptor, requestOptions)\n      return await fetch(prepared.url, prepared.init)\n    } catch (cause) {\n      throw new ClientError("Transport", { cause })\n    }\n  }\n\n  const responseError = async (response: Response, descriptor: RequestDescriptor): Promise<never> => {\n    if (descriptor.declaredStatuses.includes(response.status)) throw await json(response)\n    try {\n      await response.body?.cancel()\n    } catch {}\n    throw new ClientError("UnexpectedStatus", { cause: { status: response.status } })\n  }\n\n  const request = async <A>(descriptor: RequestDescriptor, requestOptions?: RequestOptions): Promise<A> => {\n    const response = await execute(descriptor, requestOptions)\n    if (response.status !== descriptor.successStatus) return responseError(response, descriptor)\n    if (descriptor.empty) {\n      try {\n        await response.body?.cancel()\n      } catch {}\n      return undefined as A\n    }\n    if (descriptor.binary) {
+  return `import type { ${imports.join(", ")} } from "./types"\nimport { ClientError } from "./client-error"\n\nexport interface ClientOptions {\n  readonly baseUrl: string\n  readonly fetch?: (...args: Parameters<typeof globalThis.fetch>) => ReturnType<typeof globalThis.fetch>\n  readonly headers?: HeadersInit\n}\n\nexport interface RequestOptions {\n  readonly signal?: AbortSignal\n  readonly headers?: HeadersInit\n}\n\ninterface RequestDescriptor {\n  readonly method: string\n  readonly path: string\n  readonly query?: Record<string, unknown>\n  readonly headers?: Record<string, unknown>\n  readonly body?: unknown\n  readonly successStatus: number\n  readonly declaredStatuses: ReadonlyArray<number>\n  readonly empty: boolean\n  readonly binary?: boolean\n}\n\nexport function make(options: ClientOptions) {\n  const fetch = options.fetch ?? globalThis.fetch\n\n  const prepare = (descriptor: RequestDescriptor, requestOptions?: RequestOptions) => {\n    const url = new URL(descriptor.path, options.baseUrl)\n    for (const [key, value] of Object.entries(descriptor.query ?? {})) appendQuery(url.searchParams, key, value)\n    const headers = new Headers(options.headers)\n    for (const [key, value] of Object.entries(descriptor.headers ?? {})) {\n      if (value !== undefined && value !== null) headers.set(key, String(value))\n    }\n    for (const [key, value] of new Headers(requestOptions?.headers)) headers.set(key, value)\n    if (descriptor.body !== undefined && !headers.has("content-type")) headers.set("content-type", "application/json")\n    return {\n      url,\n      init: {\n        method: descriptor.method,\n        signal: requestOptions?.signal,\n        headers,\n        body: descriptor.body === undefined ? undefined : JSON.stringify(descriptor.body),\n      } satisfies RequestInit,\n    }\n  }\n\n  const execute = async (descriptor: RequestDescriptor, requestOptions?: RequestOptions) => {\n    try {\n      const prepared = prepare(descriptor, requestOptions)\n      return await fetch(prepared.url, prepared.init)\n    } catch (cause) {\n      throw new ClientError("Transport", { cause })\n    }\n  }\n\n  const responseError = async (response: Response, descriptor: RequestDescriptor): Promise<never> => {\n    if (descriptor.declaredStatuses.includes(response.status)) throw await json(response)\n    try {\n      await response.body?.cancel()\n    } catch {}\n    throw new ClientError("UnexpectedStatus", { cause: { status: response.status } })\n  }\n\n  const request = async <A>(descriptor: RequestDescriptor, requestOptions?: RequestOptions): Promise<A> => {\n    const response = await execute(descriptor, requestOptions)\n    if (response.status !== descriptor.successStatus) return responseError(response, descriptor)\n    if (descriptor.empty) {\n      try {\n        await response.body?.cancel()\n      } catch {}\n      return undefined as A\n    }\n    if (descriptor.binary) {
       return new Uint8Array(await response.arrayBuffer()) as A
     }
     return await json(response) as A\n  }\n\n  const sse = <A>(descriptor: RequestDescriptor, requestOptions?: RequestOptions): AsyncIterable<A> => ({\n    async *[Symbol.asyncIterator]() {\n      const response = await execute(descriptor, requestOptions)\n      if (response.status !== descriptor.successStatus) await responseError(response, descriptor)\n      if (!isContentType(response, "text/event-stream")) {\n        try {\n          await response.body?.cancel()\n        } catch {}\n        throw new ClientError("UnsupportedContentType")\n      }\n      if (response.body === null) throw new ClientError("MalformedResponse")\n      const reader = response.body.getReader()\n      const decoder = new TextDecoder()\n      let buffer = ""\n      try {\n        while (true) {\n          let next: ReadableStreamReadResult<Uint8Array>\n          try {\n            next = await reader.read()\n          } catch (cause) {\n            throw new ClientError("Transport", { cause })\n          }\n          buffer += decoder.decode(next.value, { stream: !next.done })\n          const trailingCarriageReturn = !next.done && buffer.endsWith("\\r")\n          if (trailingCarriageReturn) buffer = buffer.slice(0, -1)\n          buffer = buffer.replaceAll("\\r\\n", "\\n").replaceAll("\\r", "\\n")\n          if (trailingCarriageReturn) buffer += "\\r"\n          if (next.done && buffer !== "") buffer += "\\n\\n"\n          let boundary = buffer.indexOf("\\n\\n")\n          while (boundary >= 0) {\n            const block = buffer.slice(0, boundary)\n            buffer = buffer.slice(boundary + 2)\n            if (block.length > 1_048_576) throw new ClientError("MalformedResponse")\n            const data = block.split("\\n").flatMap((line) => line.startsWith("data:") ? [line.slice(5).trimStart()] : []).join("\\n")\n            if (data !== "") {\n              try {\n                yield JSON.parse(data) as A\n              } catch (cause) {\n                throw new ClientError("MalformedResponse", { cause })\n              }\n            }\n            boundary = buffer.indexOf("\\n\\n")\n          }\n          if (buffer.length > 1_048_576) throw new ClientError("MalformedResponse")\n          if (next.done) return\n        }\n      } finally {\n        try {\n          await reader.cancel()\n        } catch {}\n        reader.releaseLock()\n      }\n    },\n  })\n\n  return { ${fields.join(", ")} }\n}\n\nfunction appendQuery(params: URLSearchParams, key: string, value: unknown): void {\n  if (value === undefined || value === null) return\n  if (Array.isArray(value)) {\n    for (const item of value) appendQuery(params, key, item)\n    return\n  }\n  if (typeof value === "object") {\n    for (const [child, item] of Object.entries(value)) appendQuery(params, \`\${key}[\${child}]\`, item)\n    return\n  }\n  params.append(key, String(value))\n}\n\nasync function json(response: Response): Promise<unknown> {\n  if (!isContentType(response, "application/json") && !response.headers.get("content-type")?.includes("+json")) {\n    try {\n      await response.body?.cancel()\n    } catch {}\n    throw new ClientError("UnsupportedContentType")\n  }\n  let text: string\n  try {\n    text = await response.text()\n  } catch (cause) {\n    throw new ClientError("Transport", { cause })\n  }\n  if (text === "") throw new ClientError("MalformedResponse")\n  try {\n    return JSON.parse(text)\n  } catch (cause) {\n    throw new ClientError("MalformedResponse", { cause })\n  }\n}\n\nfunction isContentType(response: Response, expected: string) {\n  return response.headers.get("content-type")?.split(";", 1)[0]?.trim().toLowerCase() === expected\n}\n`
@@ -588,10 +647,17 @@ function normalizeTransport(
   source: InputField["source"] | "success" | "error",
   endpoint: HttpApiEndpoint.AnyWithProps,
   operation: string,
+  imported: boolean,
 ) {
   if (schema === undefined) return undefined
-  if (isStreamSchema(schema)) return { schema, effectPortable: true } as const
+  if (isStreamSchema(schema)) {
+    const effectPortable = !imported || responseSchemas(schema, `${operation}.${source}`).every(
+      ([, value]) => metadataPortable(value.ast, new Set()),
+    )
+    return { schema, effectPortable }
+  }
   if (!metadataPortable(schema.ast, new Set())) {
+    if (imported) return { schema, effectPortable: false }
     throw new GenerationError({ reason: `Unportable schema: ${operation}.${source}` })
   }
   const decoded = Schema.toType(schema)

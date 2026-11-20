@@ -266,6 +266,7 @@ function pageData(
       })),
       suppliers: suppliers.map((row) => selectSupplier(row, false)),
       directory, formSettings, bankVerificationAvailable: data.bankVerificationAvailable === true,
+      ...(queue ? { procurementQueueView: queue } : {}),
     },
     versions: requestsVersion,
   }

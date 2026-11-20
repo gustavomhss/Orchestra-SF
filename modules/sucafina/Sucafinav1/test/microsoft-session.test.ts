@@ -18,8 +18,8 @@ const context = { surface: "planner" as const, roleMap: [
 
 afterEach(async () => { for (const close of cleanups.splice(0)) await close() })
 
-async function fixture(input: { sessionSeconds?: number; loginSeconds?: number; tokenSeconds?: number } = {}) {
-  const provider = await microsoftFixture({ tokenSeconds: input.tokenSeconds })
+async function fixture(input: { sessionSeconds?: number; loginSeconds?: number; tokenSeconds?: number; teams?: "direct"; grantedScopes?: string | null } = {}) {
+  const provider = await microsoftFixture({ tokenSeconds: input.tokenSeconds, teams: input.teams, grantedScopes: input.grantedScopes })
   const directory = await mkdtemp(join(tmpdir(), "sf-microsoft-session-"))
   const store = await openLocalStore(directory)
   cleanups.push(async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) })
@@ -151,12 +151,19 @@ test.each(["tenant", "audience", "nonce", "expired", "signature", "algorithm"] a
   expect((await begun.callback())?.status).toBe(403)
 })
 
-test("unsafe return targets stay within real Sucafina surfaces", async () => {
+test("Microsoft sign-in returns only to the native root and never replays private or retired routes", async () => {
   const f = await fixture()
   for (const returnTo of ["https://attacker.example", "//attacker.example", "/sucafina/../api", "/sucafina/planner\\@attacker.example", "/sucafina/auth/logout"]) {
-    expect((await f.login(oid, returnTo)).response.headers.get("location")).toBe(`${mount}/dashboard`)
+    expect((await f.login(oid, returnTo)).response.headers.get("location")).toBe("/")
   }
-  expect((await f.login(oid, `${mount}/procurement?page=pending`)).response.headers.get("location")).toBe(`${mount}/procurement?page=pending`)
+  expect((await f.login(oid, `${mount}/procurement?page=pending`)).response.headers.get("location")).toBe("/")
+  for (const returnTo of ["/", "/?auth_token=private", "/#private", "/sucafina/dashboard", "/sucafina/planner",
+    "/orchestra/sf-home?contractRevision=sf-team-profile%2F1&installationId=private&tenantId=private&teamObjectId=private"]) {
+    const login = await f.login(oid, returnTo)
+    expect(login.response.headers.get("location")).toBe("/")
+    expect(login.response.headers.get("cache-control")).toBe("no-store")
+    expect(await f.identity.person(f.request("/planner", login.cookie))).not.toBeNull()
+  }
 })
 
 test("immutable individual subjects receive only current assigned surface roles", async () => {
@@ -342,4 +349,328 @@ test("logout requires exact same-origin POST and ignores forwarded origins", asy
   expect((await f.identity.handle(f.request("/auth/logout", login.cookie, { method: "POST", headers: { origin, "sec-fetch-site": "cross-site" } })))?.status).toBe(403)
   expect(await f.identity.person(f.request("/planner", login.cookie))).not.toBeNull()
   expect((await f.logout(login.cookie))?.headers.getSetCookie().every((value) => value.includes("Max-Age=0") && value.includes("Secure"))).toBe(true)
+})
+
+async function teamsFixture(input: { sessionSeconds?: number; tokenSeconds?: number; grantedScopes?: string | null } = {}) {
+  const f = await fixture({ ...input, teams: "direct" })
+  const read = f.identity.teamDirectory
+  if (!read) throw new Error("Explicit Microsoft Teams capability was not composed")
+  return { ...f, read, readTeams: (cookie?: string) => read(f.request("/planner", cookie)) }
+}
+
+test("Teams directory capability is absent from the minimum Microsoft login", async () => {
+  const f = await fixture()
+  const login = await f.login()
+  expect(f.identity.teamDirectory).toBeUndefined()
+  expect(f.provider.client.joinedTeams).toBeUndefined()
+  expect(f.provider.requests.some((request) => new URL(request.url).pathname.endsWith("/joinedTeams"))).toBe(false)
+  expect(await f.identity.person(f.request("/planner", login.cookie))).not.toBeNull()
+})
+
+test("Teams directory binds verified private-session identity and exposes no credential", async () => {
+  const f = await teamsFixture()
+  const before = f.provider.requests.length
+  expect(await f.readTeams()).toEqual({ state: "unauthenticated" })
+  expect(f.provider.requests.length).toBe(before)
+  const team = { id: group, tenantId: tenant, displayName: "Synthetic Finance", isArchived: false }
+  f.provider.directTeams.set(oid, [team])
+  const login = await f.login()
+  const observed = await f.readTeams(login.cookie)
+  expect(observed).toEqual({
+    state: "complete", tenantId: tenant, principalObjectId: oid,
+    source: "joinedTeams", membership: "direct",
+    teams: [{ teamObjectId: group, name: team.displayName, archived: false }],
+  })
+  const serialized = JSON.stringify(observed)
+  for (const forbidden of ["accessToken", "refreshToken", "idToken", "grantedScopes", "synthetic-access-", "synthetic-refresh-", login.cookie])
+    expect(serialized).not.toContain(forbidden)
+  // Selectors are not consulted by this server-only reader.
+  expect(await f.read(new Request(`${origin}${mount}/planner?tenantId=${other}&principalObjectId=${other}&teamObjectId=${other}`, {
+    headers: { cookie: login.cookie, "x-principal-id": other },
+  }))).toEqual(observed)
+})
+
+test("Teams directory rejects missing, duplicate, foreign-origin and wrong-mount cookies before Graph", async () => {
+  const f = await teamsFixture()
+  const login = await f.login()
+  const before = f.provider.requests.length
+  for (const request of [
+    f.request("/planner"),
+    f.request("/planner", `${login.cookie}; ${login.cookie}`),
+    new Request(`https://foreign.synthetic.example${mount}/planner`, { headers: { cookie: login.cookie } }),
+    new Request(`${origin}/outside/planner`, { headers: { cookie: login.cookie } }),
+  ]) expect(await f.read(request)).toEqual({ state: "unauthenticated" })
+  expect(f.provider.requests.length).toBe(before)
+  const otherInstallation = createMicrosoftIdentity({ ...f.options, mount: "/other" })
+  const otherRead = otherInstallation.teamDirectory
+  if (!otherRead) throw new Error("Explicit capability missing")
+  expect(await otherRead(new Request(`${origin}/other/planner`, { headers: { cookie: login.cookie } })))
+    .toEqual({ state: "unauthenticated" })
+  expect(f.provider.requests.length).toBe(before)
+})
+
+test("Teams directory preserves missing consent and provider failure as errors instead of empty membership", async () => {
+  const reduced = await teamsFixture({ grantedScopes: "User.Read" })
+  const login = await reduced.login()
+  const before = reduced.provider.requests.length
+  expect(await reduced.readTeams(login.cookie)).toEqual({ state: "unavailable", reason: "consent_required" })
+  expect(reduced.provider.requests.length).toBe(before)
+
+  const f = await teamsFixture()
+  const signedIn = await f.login()
+  f.provider.hooks.before = async (request) => new URL(request.url).pathname === "/v1.0/me/joinedTeams"
+    ? Response.json({ error: "Authorization_RequestDenied" }, { status: 403 }) : undefined
+  expect(await f.readTeams(signedIn.cookie)).toEqual({ state: "unavailable", reason: "forbidden" })
+})
+
+test("Teams directory re-reads membership and separates two principals in the same installation", async () => {
+  const f = await teamsFixture()
+  f.provider.directTeams.set(oid, [{ id: group, tenantId: tenant, displayName: "Same label", isArchived: false }])
+  f.provider.directTeams.set(other, [{ id: clientId, tenantId: tenant, displayName: "Same label", isArchived: false }])
+  const first = await f.login(oid)
+  const second = await f.login(other)
+  const a = await f.readTeams(first.cookie)
+  const b = await f.readTeams(second.cookie)
+  if (a.state !== "complete" || b.state !== "complete") throw new Error("Current Teams observations required")
+  expect(a.principalObjectId).toBe(oid)
+  expect(b.principalObjectId).toBe(other)
+  expect(a.teams.map((team) => team.teamObjectId)).toEqual([group])
+  expect(b.teams.map((team) => team.teamObjectId)).toEqual([clientId])
+  f.provider.directTeams.set(oid, [])
+  expect(await f.readTeams(first.cookie)).toEqual({ ...a, teams: [] })
+  expect(await f.readTeams(second.cookie)).toEqual(b)
+})
+
+test("Teams directory cannot publish a pending result after logout or absolute expiry", async () => {
+  for (const cause of ["logout", "expiry"]) {
+    const f = await teamsFixture({ sessionSeconds: 30 })
+    f.provider.directTeams.set(oid, [{ id: group, tenantId: tenant, displayName: "Private team", isArchived: false }])
+    const login = await f.login()
+    const gate = barrier()
+    f.provider.hooks.before = async (request) => {
+      if (new URL(request.url).pathname === "/v1.0/me/joinedTeams") await gate.hold()
+      return undefined
+    }
+    const reading = f.readTeams(login.cookie)
+    await gate.entered
+    if (cause === "logout") expect((await f.logout(login.cookie))?.status).toBe(204)
+    if (cause === "expiry") f.provider.clock.value += 30001
+    gate.release()
+    expect(await reading).toEqual({ state: "unauthenticated" })
+  }
+})
+
+test("Teams directory fences the prior token when refresh finishes during its Graph read", async () => {
+  const f = await teamsFixture({ tokenSeconds: 90 })
+  const login = await f.login()
+  f.provider.clock.value += 40000
+  const gate = barrier()
+  f.provider.hooks.before = async (request) => {
+    if (new URL(request.url).pathname === "/v1.0/me/joinedTeams") await gate.hold()
+    return undefined
+  }
+  const reading = f.readTeams(login.cookie)
+  await gate.entered
+  await f.identity.prepare(f.request("/planner", login.cookie))
+  gate.release()
+  expect(await reading).toEqual({ state: "unauthenticated" })
+  f.provider.hooks.before = undefined
+  expect((await f.readTeams(login.cookie)).state).toBe("complete")
+})
+
+test("Teams directory cannot revive a copied cookie after reopening the real private store", async () => {
+  const f = await teamsFixture()
+  const login = await f.login()
+  expect((await f.logout(login.cookie))?.status).toBe(204)
+  await f.store.dispose()
+  const reopened = await openLocalStore(f.directory)
+  cleanups.unshift(() => reopened.dispose())
+  const identity = createMicrosoftIdentity({ ...f.options, secrets: reopened.secrets })
+  const read = identity.teamDirectory
+  if (!read) throw new Error("Explicit capability missing")
+  const before = f.provider.requests.length
+  expect(await read(f.request("/planner", login.cookie))).toEqual({ state: "unauthenticated" })
+  expect(f.provider.requests.length).toBe(before)
+})
+
+test("Teams directory never retains prior consent when refreshed credentials omit scope", async () => {
+  const f = await teamsFixture({ grantedScopes: null, tokenSeconds: 90 })
+  const login = await f.login()
+  expect((await f.readTeams(login.cookie)).state).toBe("complete")
+  f.provider.clock.value += 40000
+  await f.identity.prepare(f.request("/planner", login.cookie))
+  const before = f.provider.requests.length
+  expect(await f.readTeams(login.cookie)).toEqual({ state: "unavailable", reason: "consent_required" })
+  expect(f.provider.requests.length).toBe(before)
+})
+
+async function corporateObservation(f: Awaited<ReturnType<typeof fixture>>, cookie: string, init?: RequestInit) {
+  const capture = f.identity.microsoftSession
+  if (!capture) throw new Error("Microsoft session observation capability missing")
+  const value = await capture(f.request("/profiles", cookie, init))
+  if (!value) throw new Error("Verified Microsoft session required by this test")
+  return value
+}
+
+test("Microsoft session observation exposes only the verified principal and private read closures", async () => {
+  const f = await fixture()
+  const login = await f.login()
+  const value = await corporateObservation(f, login.cookie)
+  expect(value.principal).toEqual({ tenantId: tenant, principalObjectId: oid })
+  expect(Object.isFrozen(value)).toBe(true)
+  expect(Object.isFrozen(value.principal)).toBe(true)
+  expect(JSON.parse(JSON.stringify(value))).toEqual({ principal: value.principal })
+  expect(await value.verifyCurrent()).toBe(true)
+  expect(await value.teams()).toEqual({ state: "unavailable", reason: "capability_disabled" })
+  expect(await value.team(group)).toEqual({ state: "unavailable", reason: "capability_disabled" })
+  expect(await value.groupMembership(group)).toEqual({
+    state: "complete", tenantId: tenant, principalObjectId: oid, groupObjectId: group,
+    source: "checkMemberGroups", membership: "transitive", member: true,
+  })
+  // A verified group observation neither selects a Team nor manufactures a business role.
+  expect(await f.identity.authenticate(f.request("/planner", login.cookie), { surface: "planner", roleMap: [] })).toBeNull()
+  expect(f.provider.requests.some((request) => request.url.includes("/joinedTeams"))).toBe(false)
+  const publicClient = createEntraClient({ ...f.provider.options, profile: "local-public", clientSecret: undefined })
+  expect(createLocalIdentity({ ...f.options, origin: "http://localhost:4110", client: publicClient }).microsoftSession).toBeUndefined()
+})
+
+test("Microsoft session capture rejects wrong transport, duplicate cookies and cancelled requests before Graph", async () => {
+  const f = await teamsFixture()
+  const login = await f.login()
+  const capture = f.identity.microsoftSession
+  if (!capture) throw new Error("Microsoft session observation capability missing")
+  const controller = new AbortController()
+  controller.abort()
+  const before = f.provider.requests.length
+  for (const request of [
+    f.request("/profiles"),
+    f.request("/profiles", login.cookie + "; " + login.cookie),
+    f.request("/profiles", login.cookie, { signal: controller.signal }),
+    f.request("/profiles", login.cookie, { headers: { origin: "https://foreign.synthetic.example" } }),
+    f.request("/profiles", login.cookie, { headers: { "sec-fetch-site": "cross-site" } }),
+    new Request("https://foreign.synthetic.example/sucafina/profiles", { headers: { cookie: login.cookie } }),
+    new Request(origin + "/outside/profiles", { headers: { cookie: login.cookie } }),
+  ]) expect(await capture(request)).toBeUndefined()
+  expect(f.provider.requests.length).toBe(before)
+  const value = await capture(f.request("/profiles?principalObjectId=" + other + "&tenantId=" + other, login.cookie, { headers: { "x-principal-id": other } }))
+  expect(value?.principal).toEqual({ tenantId: tenant, principalObjectId: oid })
+})
+
+test("Microsoft group verification stays independent of failed or empty Teams enumeration", async () => {
+  const f = await teamsFixture()
+  const login = await f.login()
+  const value = await corporateObservation(f, login.cookie)
+  f.provider.hooks.before = async (request) => new URL(request.url).pathname === "/v1.0/me/joinedTeams"
+    ? Response.json({ error: "Authorization_RequestDenied" }, { status: 403 }) : undefined
+  expect(await value.teams()).toEqual({ state: "unavailable", reason: "forbidden" })
+  expect(await value.groupMembership(group)).toMatchObject({ state: "complete", member: true, principalObjectId: oid })
+  f.provider.hooks.before = undefined
+  expect(await value.teams()).toMatchObject({ state: "complete", teams: [] })
+  expect(await value.groupMembership(group)).toMatchObject({ state: "complete", member: true })
+  expect(await value.verifyCurrent()).toBe(true)
+})
+
+test("Microsoft group observation rechecks current membership and never unites two principals", async () => {
+  const f = await fixture()
+  const first = await f.login(oid)
+  const second = await f.login(other)
+  const a = await corporateObservation(f, first.cookie)
+  const b = await corporateObservation(f, second.cookie)
+  f.provider.second.groups.splice(0)
+  expect(await a.groupMembership(group)).toMatchObject({ state: "complete", principalObjectId: oid, member: true })
+  expect(await b.groupMembership(group)).toMatchObject({ state: "complete", principalObjectId: other, member: false })
+  f.provider.account.groups.splice(0)
+  expect(await a.groupMembership(group)).toMatchObject({ state: "complete", member: false })
+  f.provider.account.groups.push(group)
+  expect(await a.groupMembership(group)).toMatchObject({ state: "complete", member: true })
+  expect(a).not.toBe(b)
+})
+
+test("Microsoft session can verify a provider-readable Team without asserting membership", async () => {
+  const f = await teamsFixture()
+  const login = await f.login()
+  const value = await corporateObservation(f, login.cookie)
+  f.provider.hooks.before = async (request) => new URL(request.url).pathname === "/v1.0/teams/" + group
+    ? Response.json({ id: group, tenantId: tenant, displayName: "Verified provider team", isArchived: false }) : undefined
+  expect(await value.teams()).toMatchObject({ state: "complete", teams: [] })
+  expect(await value.team(group)).toEqual({
+    state: "complete", tenantId: tenant, principalObjectId: oid, source: "team",
+    team: { teamObjectId: group, name: "Verified provider team", archived: false },
+  })
+  // Provider refusal remains an error; administration in this product cannot grant Graph access.
+  f.provider.hooks.before = async (request) => new URL(request.url).pathname === "/v1.0/teams/" + group
+    ? Response.json({ error: "Authorization_RequestDenied" }, { status: 403 }) : undefined
+  expect(await value.team(group)).toEqual({ state: "unavailable", reason: "forbidden" })
+})
+
+test.each(["logout", "expiry", "refresh", "abort", "replace-login"])("Microsoft captured session is fenced after %s", async (cause) => {
+  const f = await teamsFixture({ tokenSeconds: 90, sessionSeconds: 300 })
+  const login = await f.login()
+  const controller = new AbortController()
+  const value = await corporateObservation(f, login.cookie, { signal: controller.signal })
+  if (cause === "logout") expect((await f.logout(login.cookie))?.status).toBe(204)
+  if (cause === "expiry") f.provider.clock.value += 300001
+  if (cause === "abort") controller.abort()
+  if (cause === "refresh") {
+    f.provider.clock.value += 40000
+    await f.identity.prepare(f.request("/profiles", login.cookie))
+    expect(await (await corporateObservation(f, login.cookie)).verifyCurrent()).toBe(true)
+  }
+  if (cause === "replace-login") await f.login(oid, mount + "/planner", login.cookie)
+  const before = f.provider.requests.length
+  expect(await value.verifyCurrent()).toBe(false)
+  expect(await value.teams()).toEqual({ state: "unauthenticated" })
+  expect(await value.groupMembership(group)).toEqual({ state: "unauthenticated" })
+  expect(await value.team(group)).toEqual({ state: "unauthenticated" })
+  expect(f.provider.requests.length).toBe(before)
+})
+
+test.each(["group", "team"])("Microsoft pending %s observation cannot outlive its captured session", async (kind) => {
+  const f = await teamsFixture()
+  const login = await f.login()
+  const value = await corporateObservation(f, login.cookie)
+  const gate = barrier()
+  const target = kind === "group" ? "/v1.0/me/checkMemberGroups" : "/v1.0/teams/" + group
+  f.provider.hooks.before = async (request) => {
+    if (new URL(request.url).pathname !== target) return undefined
+    await gate.hold()
+    return kind === "team" ? Response.json({ id: group, tenantId: tenant, displayName: "Late private team", isArchived: false }) : undefined
+  }
+  const pending = kind === "group" ? value.groupMembership(group) : value.team(group)
+  await gate.entered
+  expect((await f.logout(login.cookie))?.status).toBe(204)
+  gate.release()
+  expect(await pending).toEqual({ state: "unauthenticated" })
+  expect(await value.verifyCurrent()).toBe(false)
+})
+
+test("Microsoft observation recheck sees logout inside an older real business transaction", async () => {
+  const f = await fixture()
+  const login = await f.login()
+  const value = await corporateObservation(f, login.cookie)
+  const gate = barrier()
+  const reading = f.store.transaction("planner", async () => {
+    await gate.hold()
+    return { commit: false, value: await value.verifyCurrent() }
+  })
+  await gate.entered
+  const logout = f.logout(login.cookie)
+  gate.release()
+  expect(await reading).toBe(false)
+  expect((await logout)?.status).toBe(204)
+})
+
+test("Microsoft group observation refuses a refreshed token whose scopes are no longer confirmed", async () => {
+  const f = await fixture({ tokenSeconds: 90, grantedScopes: null })
+  const login = await f.login()
+  const before = await corporateObservation(f, login.cookie)
+  expect(await before.groupMembership(group)).toMatchObject({ state: "complete", member: true })
+  f.provider.clock.value += 40000
+  await f.identity.prepare(f.request("/profiles", login.cookie))
+  expect(await before.verifyCurrent()).toBe(false)
+  const current = await corporateObservation(f, login.cookie)
+  expect(await current.verifyCurrent()).toBe(true)
+  const requests = f.provider.requests.length
+  expect(await current.groupMembership(group)).toEqual({ state: "unavailable", reason: "consent_required" })
+  expect(f.provider.requests.length).toBe(requests)
 })

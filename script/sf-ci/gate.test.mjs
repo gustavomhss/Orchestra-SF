@@ -1,13 +1,15 @@
 import { test } from "node:test"
-import { assertWorkflowManifestSelection } from "./workflow-contract.mjs"
+import { assertWorkflowManifestSelection, assertWorkflowSourceSelection } from "./workflow-contract.mjs"
+import { candidateSource } from "./workflow-source.mjs"
+import { buildNativeInventory, recordTeamsProfileNative, requireNativePrivateRoot, readNativePrivateFile } from "./native-evidence.mjs"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import { spawnSync } from "node:child_process"
-import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, copyFileSync, existsSync } from "node:fs"
+import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, copyFileSync, existsSync, chmodSync, linkSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { parseShardCosts } from "./shard-plan.mjs"
-import { SHARDED, describeShardPlan, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
+import { SHARDED, describeShardPlan, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, describeInventory, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: 2, product_executed: 2, failures: 0, errors: 0, skipped: 0 },
@@ -117,9 +119,12 @@ test("the live manifest excludes exactly the static ordered-pool closure", () =>
     .map((entry) => path.join("Sucafinav1", entry))
   const closure = [...browserPoolConsumers(discovered, suiteRoot)]
     .map((file) => path.relative(suiteRoot, file)).sort()
-  assert.deepEqual([...selection.harnessOwnedFiles].sort(), closure)
+  assert.deepEqual(selection.harnessEntryFiles, ["Sucafinav1/test/product/wp01/browser-selection.test.ts"])
+  assert.equal(selection.harnessOwnedFiles.length, 40)
+  assert.deepEqual([...selection.harnessOwnedFiles].sort(),
+    closure.filter((file) => !selection.harnessEntryFiles.includes(file)))
   const selected = selectSuiteFiles(live, "CI-SF", root)
-  for (const file of selection.harnessOwnedFiles) assert.equal(selected.includes(file), false)
+  for (const file of [...selection.harnessOwnedFiles, ...selection.harnessEntryFiles]) assert.equal(selected.includes(file), false)
 })
 test("a harness-owned entry that never reaches the pool fails closed", () => {
   const root = poolTree("Sucafinav1/test/plain.test.ts")
@@ -224,7 +229,7 @@ function fixture() {
     reports[suite.id] = bytes
     receipts[suite.id] = receiptFor(suite, bytes, selection)
   }
-  const needs = Object.fromEntries(["preflight","static","omni","unit","unit-sf","ui"].map((name) => [name, { result: "success" }]))
+  const needs = Object.fromEntries(["preflight","static","omni","unit","unit-sf","ui","teams-profile-browser-pool","teams-profile-artifact","teams-profile-residue"].map((name) => [name, { result: "success" }]))
   return { manifest: structuredClone(manifest), reports, receipts, shards, needs, sha, runId, attempt, treeSha,
     selectionProvider: (_manifest, id) => fixtureSelection(id), repoRoot: FIXTURE_ROOT }
 }
@@ -336,8 +341,9 @@ for (const scenario of [
       mkdirSync(evidence, { recursive: true })
       writeFileSync(path.join(root, "sf/ci/suites.json"), JSON.stringify(unitManifest))
       writeFileSync(spec, "// Unit fixture only; no product tests or accepted baseline.\n")
-      copyFileSync(new URL("./gate.mjs", import.meta.url), path.join(root, "script/sf-ci/gate.mjs"))
-      copyFileSync(new URL("./shard-plan.mjs", import.meta.url), path.join(root, "script/sf-ci/shard-plan.mjs"))
+      for (const file of ["gate.mjs", "shard-plan.mjs", "workflow-source.mjs", "native-evidence.mjs"]) {
+        copyFileSync(new URL("./" + file, import.meta.url), path.join(root, "script/sf-ci", file))
+      }
       copyFileSync(new URL("../../sf/ci/shard-costs.json", import.meta.url), path.join(root, "sf/ci/shard-costs.json"))
       const git = (...args) => {
         const result = spawnSync("git", ["-C", root, ...args], { encoding: "utf8", timeout: 10_000 })
@@ -345,7 +351,7 @@ for (const scenario of [
         return result.stdout.trim()
       }
       git("init", "--quiet")
-      git("add", "sf/ci/suites.json", "sf/ci/shard-costs.json", "script/sf-ci/gate.mjs", "script/sf-ci/shard-plan.mjs", suite.directory)
+      git("add", "sf/ci/suites.json", "sf/ci/shard-costs.json", "script/sf-ci", suite.directory)
       git("-c", "user.name=SF gate unit fixture", "-c", "user.email=sf-gate-unit@example.invalid",
         "commit", "--quiet", "-m", "Unit fixture only")
       const unitSha = git("rev-parse", "HEAD")
@@ -371,6 +377,8 @@ for (const scenario of [
           GITHUB_WORKSPACE: root,
           GITHUB_OUTPUT: outputFile,
           GITHUB_SHA: unitSha,
+          GITHUB_EVENT_NAME: "workflow_dispatch",
+          SF_PRODUCT_SOURCE_SHA: unitSha,
           GITHUB_RUN_ID: runId,
           GITHUB_RUN_ATTEMPT: attempt,
           SF_CHECKOUT_TREE_SHA: unitTree,
@@ -431,7 +439,7 @@ function timingSidecarFixture(sharded = false) {
   const command = [
     "python3 script/sf-ci/timings.py",
     '--report "' + directory + '/report.xml" --output "' + directory + '/timings.json"',
-    '--source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT"',
+    '--source-sha "$SF_PRODUCT_SOURCE_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT"',
     '--job-name "$GITHUB_JOB"',
     sharded
       ? '--suite CI-SF --directory modules/sucafina --file-root "$GITHUB_WORKSPACE/modules/sucafina"'
@@ -600,7 +608,7 @@ test("Bun timing sidecars reject extra commands, altered provenance, metadata an
       ["missing sidecar", ""],
       ["duplicate argument", sidecar + ' --run-id "$GITHUB_RUN_ID"'],
       ["false success", sidecar.replace('--conclusion "$TEST_CONCLUSION"', '--conclusion success')],
-      ["foreign source", sidecar.replace('--source-sha "$GITHUB_SHA"', '--source-sha "unverified"')],
+      ["foreign source", sidecar.replace('--source-sha "$SF_PRODUCT_SOURCE_SHA"', '--source-sha "unverified"')],
       ["false outcome metadata", sidecar.replace("TEST_CONCLUSION: ${{ steps.tests.outcome }}", "TEST_CONCLUSION: success")],
       ["hidden shell metadata", sidecar.replace("        env:", '        env:\n          BASH_ENV: hidden.sh')],
       ["wrong outcome condition", sidecar.replace("always() && !cancelled() && steps.tests.outcome != 'skipped'", "success()")],
@@ -668,7 +676,7 @@ test("upstream failures list every failed, skipped or missing job, not only the 
   data.needs.unit.result = "cancelled"
   delete data.needs.ui
   assert.throws(() => requirePrerequisites(data.needs), /static=failure, unit=cancelled, ui=missing/)
-  assert.equal(requirePrerequisites(fixture().needs), 6)
+  assert.equal(requirePrerequisites(fixture().needs), 9)
 })
 test("live installed and macOS-local recovery proofs are release-owned, never silently discarded", () => {
   assert.deepEqual(releaseOnlySelection(manifest, "CI-SF"), ["Sucafinav1/test/parity-pitr.test.ts"])
@@ -723,6 +731,83 @@ test("playwright requires the exact requested spec and one clean execution", () 
   const suite = manifest.suites[5]
   assert.equal(countPlaywrightReport(playwright(suite).toString(), suite.specFile), 1)
   assert.throws(() => countPlaywrightReport(playwright(suite).toString(), "e2e/sucafina/other.spec.ts"))
+})
+test("diagnostic inventory preserves failed Bun identities without creating a pass", () => {
+  const suite = manifest.suites.find((item) => item.id === "CI-APP-SRC")
+  // Mirrors verify-bun-report.py's counts and case fields for a red JUnit report.
+  const summary = {
+    schema_version: 1, status: "FAIL", report: "/private/runner/report.xml", report_sha256: "a".repeat(64),
+    scope: "DATA_ONLY_JUNIT_VALIDATION", tests_executed_by_verifier: false,
+    issues: ["Report contains failure/error elements"],
+    counts: { tests: 2, failures: 1, errors: 0, skipped: 1, todo_identified: 0, executed: 1,
+      known_control_or_hook: 0, product_executed: 1 },
+    suites: [], limitations: [],
+    cases: [
+      { file: "test/example.test.ts", classname: "Example", name: "first identity", failures: 1, errors: 0,
+        skipped: 0, todo_identified: 0, executed: 1, known_control_or_hook: 0, product_executed: 1 },
+      { file: "test/example.test.ts", classname: "Example", name: "second identity", failures: 0, errors: 0,
+        skipped: 1, todo_identified: 0, executed: 0, known_control_or_hook: 0, product_executed: 0 },
+    ],
+  }
+  const diagnostic = describeInventory(JSON.stringify(summary), suite, { sourceSha: sha, runId, attempt, treeSha })
+  assert.deepEqual(diagnostic.binding, { sourceSha: sha, runId, attempt, treeSha })
+  assert.deepEqual(diagnostic.counts, { reportTests: 2, productCases: 2, executedCases: 1, failedCases: 1, skippedCases: 1 })
+  assert.deepEqual(diagnostic.identities.map(({ file, classname, name, status }) => ({ file, classname, name, status })), [
+    { file: "test/example.test.ts", classname: "Example", name: "first identity", status: "failed" },
+    { file: "test/example.test.ts", classname: "Example", name: "second identity", status: "skipped" },
+  ])
+  assert.equal(JSON.stringify(diagnostic).includes("PRIVATE_OUTPUT"), false)
+  assert.equal(JSON.stringify(diagnostic).includes("/private/runner"), false)
+  assert.throws(() => countBunReport(JSON.stringify(summary)), /SF_CI_FAIL_CLOSED/)
+
+  const baseline = { schemaVersion: 1, status: "HISTORIC_SUCCESSFUL_ARTIFACT", minimumCases: 2, minimumFiles: 1,
+    casesSha256: "0".repeat(64), filesSha256: "1".repeat(64) }
+  assert.throws(() => checkCoverageBaseline({ id: suite.id, coverageBaseline: baseline }, diagnostic), /SF_CI_FAIL_CLOSED/)
+})
+test("diagnostic inventory hashes Playwright case IDs and excludes report payloads", () => {
+  const suite = manifest.suites.find((item) => item.id === "CI-UI-OPERATIONS")
+  const source = JSON.parse(playwright(suite).toString("utf8"))
+  source.suites[0].title = "PRIVATE_REPORT_TITLE"
+  source.suites[0].specs[0].title = "PRIVATE_CASE_TITLE"
+  source.suites[0].specs[0].tests[0].results[0].stderr = [{ text: "PRIVATE_OUTPUT" }]
+  source.metadata = { token: "PRIVATE_TOKEN" }
+  const diagnostic = describeInventory(JSON.stringify(source), suite)
+  assert.deepEqual(diagnostic.counts, { reportTests: 1, productCases: 1, executedCases: 1, failedCases: 0, skippedCases: 0 })
+  assert.deepEqual(diagnostic.files, [suite.specFile])
+  assert.equal(JSON.stringify(diagnostic).includes("PRIVATE_"), false)
+  assert.match(diagnostic.identities[0].name, /^spec-[a-f0-9]{64}#0$/)
+  const sanitized = minimalPlaywrightEvidence(JSON.stringify(source), suite.specFile)
+  assert.equal(describeInventory(sanitized, suite).casesSha256, diagnostic.casesSha256)
+  assert.equal(diagnostic.coverageCasesSha256, playwrightCoverageIdentity(sanitized, suite.specFile).casesSha256)
+})
+test("Playwright diagnostic counts mixed red outcomes beyond stats.expected without changing identity hashes", () => {
+  const suite = manifest.suites.find((item) => item.id === "CI-UI-OPERATIONS")
+  const source = JSON.parse(playwright(suite).toString("utf8"))
+  source.stats = { expected: 1, unexpected: 1, flaky: 1, skipped: 1 }
+  source.suites[0].specs[0].tests = [
+    { expectedStatus: "passed", results: [{ status: "passed" }] },
+    { expectedStatus: "passed", results: [{ status: "failed" }] },
+    { expectedStatus: "passed", results: [{ status: "failed" }, { status: "passed" }] },
+    { expectedStatus: "passed", results: [{ status: "skipped" }] },
+  ]
+  const diagnostic = describeInventory(JSON.stringify(source), suite)
+  const file = suite.specFile
+  const specName = "spec-" + createHash("sha256").update("case-source-id").digest("hex")
+  const tuples = [0, 1, 2, 3].map((index) => file + "\0\0" + specName + "#" + index)
+  assert.deepEqual(diagnostic.counts, { reportTests: 4, productCases: 4, executedCases: 1, failedCases: 1, skippedCases: 1 })
+  assert.deepEqual(diagnostic.identities.map((item) => item.status), ["passed", "failed", "multiple-results", "skipped"])
+  assert.equal(diagnostic.casesSha256, sha256Lines(tuples))
+  assert.equal(diagnostic.executedCasesSha256, sha256Lines([tuples[0]]))
+  assert.throws(() => countPlaywrightReport(JSON.stringify(source), suite.specFile), /SF_CI_FAIL_CLOSED/)
+})
+test("diagnostic inventory rejects unknown, empty, malformed and wrong-suite evidence", () => {
+  const suite = manifest.suites.find((item) => item.id === "CI-UI-OPERATIONS")
+  for (const [raw, selected] of [["{}", suite], [JSON.stringify({ suites: [] }), suite], ["not-json", suite], [JSON.stringify(playwright(suite)), undefined]]) {
+    assert.throws(() => describeInventory(raw, selected), /SF_CI_FAIL_CLOSED/)
+  }
+  const wrong = JSON.parse(playwright(suite).toString("utf8"))
+  wrong.suites[0].file = "e2e/sucafina/decisions.spec.ts"
+  assert.throws(() => describeInventory(JSON.stringify(wrong), suite), /SF_CI_FAIL_CLOSED/)
 })
 const mutations = [
   ["missing suite", (a) => { delete a.receipts["CI-CLI"] }],
@@ -945,4 +1030,401 @@ test("advisory plan reports the validated v2 status and preserves the complete s
   assert.deepEqual(planned.shards.flatMap((part) => part.files).sort(), [...CI_SF_FILES].sort())
   assert.equal(planned.shards.length, SHARDED["CI-SF"])
   assert.equal(describeShardPlan(CI_SF_FILES, "CI-SF").profileStatus, "HISTORICAL_RED_OR_PARTIAL")
+})
+
+test("harness entry is discovered and excluded before pool-consumer checks and shard partition", () => {
+  const owned = "Sucafinav1/test/product/ordered/browser.test.ts"
+  const entry = "Sucafinav1/test/product/wp01/browser-selection.test.ts"
+  const root = poolTree(owned)
+  try {
+    writeFileSync(path.join(root, "modules/sucafina", entry), 'import "./browser-fixture.ts"\n')
+    const input = structuredClone(manifest)
+    const selection = input.suites.find((suite) => suite.id === "CI-SF").selection
+    selection.harnessOwnedFiles = [owned]
+    selection.harnessEntryFiles = [entry]
+    selection.releaseOnlyFiles = []
+    const files = selectSuiteFiles(input, "CI-SF", root)
+    assert.deepEqual(files, ["Sucafinav1/test/plain.test.ts"])
+    assert.equal(shardFiles(files, 1, 1).includes(entry), false)
+    selection.harnessEntryFiles = []
+    assert.throws(() => selectSuiteFiles(input, "CI-SF", root), /ordered browser pool file is still selected/)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
+test("harness entries reject missing, duplicate, non-test, unsafe and overlapping declarations", () => {
+  const owned = "Sucafinav1/test/product/ordered/browser.test.ts"
+  const entry = "Sucafinav1/test/product/wp01/browser-selection.test.ts"
+  const root = poolTree(owned)
+  try {
+    writeFileSync(path.join(root, "modules/sucafina", entry), 'import "./browser-fixture.ts"\n')
+    for (const entries of [
+      [entry, entry], ["Sucafinav1/test/missing.test.ts"], ["Sucafinav1/test/product/wp01/browser-fixture.ts"],
+      ["../escape.test.ts"], [owned],
+    ]) {
+      const input = structuredClone(manifest)
+      const selection = input.suites.find((suite) => suite.id === "CI-SF").selection
+      selection.harnessOwnedFiles = [owned]
+      selection.harnessEntryFiles = entries
+      selection.releaseOnlyFiles = []
+      assert.throws(() => selectSuiteFiles(input, "CI-SF", root), /SF_CI_FAIL_CLOSED/)
+    }
+    const input = structuredClone(manifest)
+    const selection = input.suites.find((suite) => suite.id === "CI-SF").selection
+    selection.harnessOwnedFiles = [owned]
+    selection.harnessEntryFiles = [entry]
+    selection.releaseOnlyFiles = [entry]
+    assert.throws(() => selectSuiteFiles(input, "CI-SF", root), /overlaps source\/release/)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
+test("live manifest validation cannot erase or merge the separate pool entry", () => {
+  const live = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  assert.doesNotThrow(() => validateManifest(live))
+  for (const change of [
+    (selection) => { delete selection.harnessEntryFiles },
+    (selection) => { selection.harnessEntryFiles = [] },
+    (selection) => { selection.harnessEntryFiles.push(selection.harnessEntryFiles[0]) },
+    (selection) => { selection.harnessOwnedFiles.push(selection.harnessEntryFiles[0]) },
+    (selection) => { selection.releaseOnlyFiles.push(selection.harnessEntryFiles[0]) },
+  ]) {
+    const broken = structuredClone(live)
+    change(broken.suites.find((suite) => suite.id === "CI-SF").selection)
+    assert.throws(() => validateManifest(broken), /SF_CI_FAIL_CLOSED/)
+  }
+})
+
+test("the ordered Teams browser pool is a required successful job, independently of the original eight suites", () => {
+  for (const outcome of [undefined, "failure", "cancelled", "skipped"]) {
+    const data = fixture()
+    if (outcome === undefined) delete data.needs["teams-profile-browser-pool"]
+    else data.needs["teams-profile-browser-pool"].result = outcome
+    assert.throws(() => requirePrerequisites(data.needs), /teams-profile-browser-pool=/)
+  }
+})
+
+test("actual PR head remains the product identity while GitHub's synthetic merge SHA remains workflow provenance", () => {
+  const product = "a".repeat(40), workflow = "b".repeat(40)
+  const env = { GITHUB_EVENT_NAME: "pull_request", GITHUB_SHA: workflow, SF_PRODUCT_SOURCE_SHA: product }
+  const event = { pull_request: { head: { sha: product } } }
+  assert.equal(candidateSource(env, event), product)
+  for (const broken of [
+    { ...env, SF_PRODUCT_SOURCE_SHA: workflow },
+    { ...env, SF_PRODUCT_SOURCE_SHA: "c".repeat(40) },
+    { ...env, SF_PRODUCT_SOURCE_SHA: undefined },
+    { ...env, GITHUB_SHA: "not-a-commit" },
+    { ...env, GITHUB_EVENT_NAME: "pull_request_target" },
+  ]) assert.throws(() => candidateSource(broken, event), /SF_CANDIDATE_IDENTITY_INVALID/)
+  for (const broken of [{}, { pull_request: {} }, { pull_request: { head: { sha: workflow } } }])
+    assert.throws(() => candidateSource(env, broken), /SF_CANDIDATE_IDENTITY_INVALID/)
+})
+
+test("PR source validation reads the actual runner event and fails on missing or malformed evidence", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "sf-candidate-event-"))
+  try {
+    const event = path.join(root, "event.json"), product = "a".repeat(40)
+    const env = { GITHUB_EVENT_NAME: "pull_request", GITHUB_SHA: "b".repeat(40),
+      SF_PRODUCT_SOURCE_SHA: product, GITHUB_EVENT_PATH: event }
+    assert.throws(() => candidateSource(env), /SF_CANDIDATE_IDENTITY_INVALID/)
+    writeFileSync(event, "{")
+    assert.throws(() => candidateSource(env), /SF_CANDIDATE_IDENTITY_INVALID/)
+    writeFileSync(event, JSON.stringify({ pull_request: { head: { sha: product } } }))
+    assert.equal(candidateSource(env), product)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
+
+test("push and dispatch evidence cannot be rebound to a foreign product commit", () => {
+  const product = "a".repeat(40)
+  for (const name of ["push", "workflow_dispatch"]) {
+    const env = { GITHUB_EVENT_NAME: name, GITHUB_SHA: product, SF_PRODUCT_SOURCE_SHA: product }
+    assert.equal(candidateSource(env), product)
+    assert.throws(() => candidateSource({ ...env, SF_PRODUCT_SOURCE_SHA: "b".repeat(40) }),
+      /SF_CANDIDATE_IDENTITY_INVALID/)
+    assert.throws(() => candidateSource({ ...env, SF_PRODUCT_SOURCE_SHA: undefined }),
+      /SF_CANDIDATE_IDENTITY_INVALID/)
+  }
+})
+
+test("the canonical workflow pins every product checkout and keeps raw workflow provenance", () => {
+  const workflow = readFileSync(new URL("../../.github/workflows/sf-ci.yml", import.meta.url), "utf8")
+  assert.equal(assertWorkflowSourceSelection(workflow), 11)
+  const expression = "$" + "{{ github.event.pull_request.head.sha || github.sha }}"
+  for (const broken of [
+    workflow.replace("          ref: " + expression, "          ref: $" + "{{ github.sha }}"),
+    workflow.replace("  SF_PRODUCT_SOURCE_SHA: " + expression, ""),
+    workflow.replace("workflowSHA: process.env.GITHUB_SHA", "workflowSHA: process.env.SF_PRODUCT_SOURCE_SHA"),
+    workflow.replace('test "$SF_PRODUCT_SOURCE_SHA"', 'test "$GITHUB_SHA"'),
+    workflow.replace("    env:\n", "    env:\n      SF_FORBIDDEN: $" + "{{ runner.temp }}\n"),
+  ]) assert.throws(() => assertWorkflowSourceSelection(broken), /SF_CI_WORKFLOW_SELECTION/)
+})
+
+test("both the actual production artifact and exact-archive residue audit are mandatory successful prerequisites", () => {
+  for (const job of ["teams-profile-artifact", "teams-profile-residue"])
+    for (const outcome of [undefined, "failure", "cancelled", "skipped"]) {
+      const data = fixture()
+      if (outcome === undefined) delete data.needs[job]
+      else data.needs[job].result = outcome
+      assert.throws(() => requirePrerequisites(data.needs), new RegExp(job + "="))
+    }
+})
+
+
+function nativeFixture(role = "u15") {
+  const sha256 = (value) => createHash("sha256").update(value).digest("hex")
+  const ledger = JSON.parse(readFileSync(new URL("../../sf/ci/team-profile-native-cases.json", import.meta.url), "utf8"))
+  const contract = ledger.roles[role]
+  const sourceBytes = readFileSync(new URL("../../packages/app-shell/" + contract.specFile, import.meta.url))
+  const sourceLines = sourceBytes.toString("utf8").split("\n")
+  const meta = { sha: "a".repeat(40), treeSha: "b".repeat(40), runId: "123", attempt: "1", role,
+    invocationId: "c".repeat(32) }
+  const binding = { sourceSHA: meta.sha, sourceTreeSHA: meta.treeSha, runId: meta.runId,
+    runAttempt: meta.attempt, role, invocationId: meta.invocationId }
+  const cases = contract.cases.map((item) => {
+    const line = sourceLines.findIndex((text) =>
+      text.includes(JSON.stringify(item.title) + ", async")) + 1
+    assert.ok(line > 0, "preserved case must exist in the actual selected source")
+    return { ...item, line, column: sourceLines[line - 1].length - sourceLines[line - 1].trimStart().length + 1 }
+  })
+  const inventory = { schema: "teams-profile-native-inventory.v1", ...binding, specFile: contract.specFile,
+    specSha256: sha256(sourceBytes), caseLedgerSha256: "", cases }
+  const artifact = { schema: "teams-profile-native-artifact-binding.v1", sourceSHA: meta.sha,
+    sourceTreeSHA: meta.treeSha, runId: meta.runId, runAttempt: meta.attempt,
+    archiveSha256: "d".repeat(64), archiveBytes: 90000000, manifestSha256: "e".repeat(64),
+    inventorySha256: "f".repeat(64), artifactId: "456", artifactDigest: "sha256:" + "1".repeat(64),
+    producerReceiptSha256: "2".repeat(64) }
+  const host = { schema: "teams-profile-native-host-observation.v1",
+    proofClass: "REVALIDATED_PREREQUISITES_NOT_UI_PASS", ...binding,
+    archiveSha256: artifact.archiveSha256, rawReportSha256: "", expectedInventorySha256: "",
+    manifestSha256: "3".repeat(64), selectionSha256: "4".repeat(64),
+    registryObservationSha256: "5".repeat(64), installedClosureSha256: "6".repeat(64),
+    actors: ["requester", "holder", "denied"].map((role, index) => ({ role,
+      principalSha256: sha256("principal" + index), contextSha256: sha256("context" + index) })),
+    cases: cases.map((item) => ({ id: item.id, fixtureCase: item.fixtureCase,
+      beforeAuthoritySha256: "7".repeat(64), afterAuthoritySha256: "8".repeat(64),
+      producerObservationSha256: "9".repeat(64) })) }
+  const specFile = contract.specFile.slice("e2e/".length)
+  const report = {
+    config: { configFile: "/source/packages/app-shell/e2e/playwright.production.config.ts",
+      version: "1.59.1", webServer: null, shard: null, maxFailures: 0,
+      workers: 1, forbidOnly: true, fullyParallel: false, metadata: { bundle: "production" },
+      projects: [{ name: "chromium", retries: 0, repeatEach: 1 }], reporter: [["json"]] },
+    errors: [], stats: { expected: cases.length, unexpected: 0, flaky: 0, skipped: 0 },
+    suites: [{ file: specFile, title: "PRIVATE_TEST_VALUE_DO_NOT_PUBLISH", specs: cases.map((item) => ({
+      file: specFile, title: item.title, id: "source-case-" + item.id, line: item.line, column: item.column, ok: true,
+      tests: [{ expectedStatus: "passed", status: "expected", projectName: "chromium", annotations: [],
+        results: [{ status: "passed", retry: 0, parallelIndex: 0, workerIndex: 0,
+          errors: [], stdout: [{ text: "PRIVATE_TEST_VALUE_DO_NOT_PUBLISH" }],
+          stderr: [{ text: "https://PRIVATE_TEST_VALUE_DO_NOT_PUBLISH/session" }],
+          attachments: [] }] }],
+    })) }],
+  }
+  return { meta, ledger, inventory, artifact, host, report, sourceBytes, exitCode: 0,
+    sourceProvenance: { commitSha256: "0".repeat(64), inventorySha256: "a".repeat(64) } }
+}
+function nativeInput(data) {
+  const bytes = (value) => Buffer.from(JSON.stringify(value, null, 2) + "\n")
+  const sha256 = (value) => createHash("sha256").update(value).digest("hex")
+  const ledgerBytes = bytes(data.ledger)
+  const inventoryBytes = bytes({ ...data.inventory, caseLedgerSha256: sha256(ledgerBytes) })
+  const rawReport = bytes(data.report)
+  return { rawReport, inventoryBytes, ledgerBytes, artifactBytes: bytes(data.artifact),
+    hostBytes: bytes({ ...data.host, rawReportSha256: sha256(rawReport),
+      expectedInventorySha256: sha256(inventoryBytes) }),
+    sourceBytes: data.sourceBytes, sourceProvenance: data.sourceProvenance, meta: data.meta, exitCode: data.exitCode }
+}
+
+test("native receipts preserve the actual six, twenty-two and twenty-two source registrations without publishing private report fields", () => {
+  for (const [role, count] of [["u15", 6], ["u39", 22], ["u40", 22]]) {
+    const receipt = recordTeamsProfileNative(nativeInput(nativeFixture(role)))
+    assert.equal(receipt.counts.executed, count)
+    assert.equal(receipt.status, "REPORT_VALIDATED")
+    assert.equal(receipt.liveQualification, "REQUIRES_INDEPENDENT_F04_AND_FINAL_GATE_VERIFICATION")
+    assert.equal(receipt.cases.length, count)
+    assert.deepEqual(Object.keys(receipt.cases[0]), ["id", "sourceCaseSha256", "status", "attempts"])
+    const output = JSON.stringify(receipt)
+    for (const forbidden of ["PRIVATE_TEST_VALUE_DO_NOT_PUBLISH", "stdout", "stderr", "title", "https://"])
+      assert.equal(output.includes(forbidden), false)
+  }
+})
+
+test("native inventory producer binds exact original source positions and fails for unimplemented roles", () => {
+  for (const [role, count] of [["u15", 6], ["u39", 22], ["u40", 22]]) {
+    const data = nativeFixture(role)
+    const input = nativeInput(data)
+    const generated = buildNativeInventory(input)
+    assert.deepEqual(generated, JSON.parse(input.inventoryBytes))
+    assert.equal(generated.cases.length, count)
+    assert.equal(recordTeamsProfileNative({ ...input,
+      inventoryBytes: Buffer.from(JSON.stringify(generated, null, 2) + "\n") }).counts.executed, count)
+    assert.throws(() => buildNativeInventory({ ...input, sourceBytes: Buffer.from("") }), /invalid private native evidence/)
+    for (const unimplemented of ["teams", "recovery"]) {
+      assert.throws(() => buildNativeInventory({ ...input, meta: { ...input.meta, role: unimplemented } }),
+        /invalid private native evidence/)
+    }
+  }
+  const rebound = nativeFixture()
+  rebound.inventory.cases[0].column++
+  rebound.report.suites[0].specs[0].column++
+  assert.throws(() => recordTeamsProfileNative(nativeInput(rebound)), /invalid private native evidence/)
+})
+
+test("native qualification refuses a partial Teams spec even when its case declarations exist", () => {
+  const data = nativeInput(nativeFixture())
+  const sourceBytes = readFileSync(new URL("../../packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts", import.meta.url))
+  const meta = { ...data.meta, role: "teams" }
+  const ledger = JSON.parse(data.ledgerBytes)
+  assert.equal(ledger.roles.teams.status, "PARTIAL_SOURCE_OBLIGATIONS")
+  assert.ok(ledger.roles.teams.cases.length > 0)
+  for (const item of ledger.roles.teams.cases) assert.ok(sourceBytes.includes(JSON.stringify(item.title)))
+  assert.throws(() => buildNativeInventory({ ...data, sourceBytes, meta }), /invalid private native evidence/)
+  ledger.roles.teams.status = "IMPLEMENTED_SOURCE_OBLIGATIONS"
+  const ledgerBytes = Buffer.from(JSON.stringify(ledger, null, 2) + "\n")
+  assert.throws(() => buildNativeInventory({ ledgerBytes, sourceBytes, meta }), /invalid private native evidence/)
+})
+
+test("native report admission rejects incomplete, flaky, retried, skipped and foreign-source executions", () => {
+  const mutations = [
+    (data) => { data.exitCode = 1 },
+    (data) => { data.report.stats.expected-- },
+    (data) => { data.report.stats.flaky = 1 },
+    (data) => { data.report.stats.skipped = 1 },
+    (data) => { data.report.errors.push({ message: "PRIVATE_FAILURE" }) },
+    (data) => { data.report.suites = [] },
+    (data) => { data.report.suites[0].specs.pop() },
+    (data) => { data.report.suites[0].specs.push(data.report.suites[0].specs[0]) },
+    (data) => { data.report.suites[0].file = "sucafina/native/journeys/u39.spec.ts" },
+    (data) => { data.report.suites[0].specs[0].file = "../private.spec.ts" },
+    (data) => { data.report.suites[0].specs[0].line++ },
+    (data) => { data.report.suites[0].specs[0].ok = false },
+    (data) => { data.report.suites[0].specs[0].tests[0].expectedStatus = "failed" },
+    (data) => { data.report.suites[0].specs[0].tests[0].status = "flaky" },
+    (data) => { data.report.suites[0].specs[0].tests[0].results.push(data.report.suites[0].specs[0].tests[0].results[0]) },
+    (data) => { data.report.suites[0].specs[0].tests[0].results[0].status = "interrupted" },
+    (data) => { data.report.suites[0].specs[0].tests[0].results[0].retry = 1 },
+    (data) => { data.report.suites[0].specs[0].tests[0].results[0].error = { message: "PRIVATE_FAILURE" } },
+    (data) => { data.report.suites[0].specs[0].tests[0].results[0].attachments.push({ path: "/private/trace.zip" }) },
+    (data) => { data.report.suites[0].specs[0].tests[0].annotations.push({ type: "skip" }) },
+    (data) => { data.report.suites[0].specs[1].id = data.report.suites[0].specs[0].id },
+    (data) => { data.report.config.configFile = "/source/other.config.ts" },
+    (data) => { data.report.config.version = "1.50.0" },
+    (data) => { data.report.config.webServer = { command: "start replacement" } },
+    (data) => { data.report.config.shard = { current: 1, total: 2 } },
+    (data) => { data.report.config.workers = 2 },
+    (data) => { data.report.config.projects[0].retries = 1 },
+    (data) => { data.report.config.projects[0].repeatEach = 2 },
+    (data) => { data.report.config.projects.push(data.report.config.projects[0]) },
+    (data) => { data.report.config.reporter.push(["html"]) },
+    (data) => { data.report.config.metadata.bundle = "development" },
+  ]
+  for (const mutate of mutations) {
+    const data = nativeFixture()
+    mutate(data)
+    assert.throws(() => recordTeamsProfileNative(nativeInput(data)), /invalid private native evidence/)
+  }
+})
+
+test("native inventories cannot narrow original obligations or claim unimplemented Teams and recovery cases", () => {
+  const skippedRegistration = ["test", "skip"].join(".")
+  for (const mutate of [
+    (data) => { data.inventory.cases.pop() },
+    (data) => { data.inventory.cases[0].title = "replacement case" },
+    (data) => { data.inventory.cases[0].fixtureCase = "denied" },
+    (data) => { data.inventory.specSha256 = "0".repeat(64) },
+    (data) => { data.ledger.roles.u15.cases.pop() },
+    (data) => { data.ledger.roles.u15.cases[0].title = "replacement case" },
+    (data) => { data.ledger.roles.u15.requiredAcceptanceIds = ["A01"] },
+    (data) => {
+      const source = data.sourceBytes.toString()
+      const registration = `test(${JSON.stringify(data.inventory.cases[0].title)}`
+      assert.equal(source.split(registration).length - 1, 1)
+      data.sourceBytes = Buffer.from(source.replace(registration, skippedRegistration + registration.slice("test".length)))
+    },
+    (data) => { data.meta.role = "teams" },
+    (data) => { data.meta.role = "recovery" },
+  ]) {
+    const data = nativeFixture()
+    mutate(data)
+    assert.throws(() => recordTeamsProfileNative(nativeInput(data)), /invalid private native evidence/)
+  }
+})
+
+test("native report success cannot substitute for matching host, authority, archive and run bindings", () => {
+  for (const mutate of [
+    (data) => { data.meta.runId = "999" },
+    (data) => { data.meta.invocationId = "0".repeat(32) },
+    (data) => { data.host.proofClass = "LIVE" },
+    (data) => { data.host.sourceSHA = "0".repeat(40) },
+    (data) => { data.host.sourceTreeSHA = "0".repeat(40) },
+    (data) => { data.host.runAttempt = "2" },
+    (data) => { data.host.archiveSha256 = "0".repeat(64) },
+    (data) => { data.host.registryObservationSha256 = "" },
+    (data) => { data.host.actors.pop() },
+    (data) => { data.host.actors[1].principalSha256 = data.host.actors[0].principalSha256 },
+    (data) => { data.host.actors[1].contextSha256 = data.host.actors[0].contextSha256 },
+    (data) => { data.host.cases.pop() },
+    (data) => { data.host.cases[0].afterAuthoritySha256 = "" },
+    (data) => { data.host.cases[0].producerObservationSha256 = "" },
+    (data) => { data.host.approved = true },
+    (data) => { data.artifact.sourceSHA = "0".repeat(40) },
+    (data) => { data.artifact.sourceTreeSHA = "0".repeat(40) },
+    (data) => { data.artifact.runId = "999" },
+    (data) => { data.artifact.archiveBytes = 0 },
+    (data) => { data.artifact.artifactDigest = data.artifact.archiveSha256 },
+    (data) => { data.artifact.producerReceiptSha256 = "" },
+  ]) {
+    const data = nativeFixture()
+    mutate(data)
+    assert.throws(() => recordTeamsProfileNative(nativeInput(data)), /invalid private native evidence/)
+  }
+  for (const field of ["rawReportSha256", "expectedInventorySha256"]) {
+    const input = nativeInput(nativeFixture()), host = JSON.parse(input.hostBytes)
+    host[field] = "0".repeat(64)
+    input.hostBytes = Buffer.from(JSON.stringify(host, null, 2) + "\n")
+    assert.throws(() => recordTeamsProfileNative(input), /invalid private native evidence/)
+  }
+})
+
+test("native JSON rejects duplicate keys, malformed UTF-8 and extra output without exposing private values", () => {
+  for (const alter of [
+    (raw) => Buffer.concat([raw, Buffer.from("private trailing output")]),
+    (raw) => Buffer.from(raw.toString().replace('"expected": 6,', '"expected": 1,\n    "expected": 6,')),
+    (raw) => Buffer.from(raw.toString().replace('"expected": 6,', '"expected": 1,\n    "\\u0065xpected": 6,')),
+    () => Buffer.from([0xff, 0xfe]),
+    () => Buffer.from("{}"),
+  ]) {
+    const input = nativeInput(nativeFixture())
+    input.rawReport = alter(input.rawReport)
+    const host = JSON.parse(input.hostBytes)
+    host.rawReportSha256 = createHash("sha256").update(input.rawReport).digest("hex")
+    input.hostBytes = Buffer.from(JSON.stringify(host, null, 2) + "\n")
+    assert.throws(() => recordTeamsProfileNative(input), (error) => {
+      assert.equal(String(error).includes("private trailing output"), false)
+      return /invalid private native evidence/.test(String(error))
+    })
+  }
+})
+
+test("native private evidence requires owned 0700 roots and 0600 regular unlinked files", () => {
+  const temp = mkdtempSync(path.join(tmpdir(), "sf-native-private-"))
+  const meta = nativeFixture().meta
+  const root = path.join(temp, "teams-profile-private", meta.runId + "-" + meta.attempt, meta.role, meta.invocationId)
+  const file = path.join(root, "playwright-results.json")
+  try {
+    mkdirSync(root, { recursive: true, mode: 0o700 })
+    assert.equal(requireNativePrivateRoot(root, meta, temp), root)
+    writeFileSync(file, "private", { mode: 0o600 })
+    assert.equal(readNativePrivateFile(root, file).toString(), "private")
+    chmodSync(file, 0o644)
+    assert.throws(() => readNativePrivateFile(root, file))
+    chmodSync(file, 0o600)
+    linkSync(file, path.join(root, "hardlink"))
+    assert.throws(() => readNativePrivateFile(root, file))
+    rmSync(path.join(root, "hardlink"))
+    symlinkSync(file, path.join(root, "symlink"))
+    assert.throws(() => readNativePrivateFile(root, path.join(root, "symlink")))
+    assert.throws(() => readNativePrivateFile(root, file, 2))
+    assert.throws(() => requireNativePrivateRoot(root, { ...meta, invocationId: "f".repeat(32) }, temp))
+    chmodSync(root, 0o755)
+    assert.throws(() => requireNativePrivateRoot(root, meta, temp))
+    chmodSync(root, 0o700)
+    chmodSync(path.dirname(root), 0o755)
+    assert.throws(() => requireNativePrivateRoot(root, meta, temp))
+  } finally { rmSync(temp, { recursive: true, force: true }) }
 })

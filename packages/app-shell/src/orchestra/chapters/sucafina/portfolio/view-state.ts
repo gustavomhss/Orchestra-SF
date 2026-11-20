@@ -39,7 +39,7 @@ export function createSfPortfolioViewState(
   }
   createEffect(() => {
     const state = context.state()
-    const selected = JSON.stringify([state.selection.serverKey, state.selection.projectId, state.selection.installationId])
+    const selected = JSON.stringify([state.selection.serverKey, state.selection.projectId, state.selection.installationId, state.selection.team ?? null])
     const scope = admitted()
     const target = route()
     if (!scope) {

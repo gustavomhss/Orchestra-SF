@@ -616,7 +616,7 @@ import { makeActionsTransfers } from "./actionsTransfers"
 
 export interface ClientOptions {
   readonly baseUrl: string
-  readonly fetch?: typeof globalThis.fetch
+  readonly fetch?: (...args: Parameters<typeof globalThis.fetch>) => ReturnType<typeof globalThis.fetch>
   readonly headers?: HeadersInit
 }
 
@@ -873,7 +873,7 @@ export function make(options: ClientOptions) {
           requestOptions,
         ).then((value) => value.data),
       active: (requestOptions?: RequestOptions) =>
-        request<{ readonly data: SessionsActiveOutput }>(
+        request<SessionsActiveOutput>(
           {
             method: "GET",
             path: `/api/session/active`,
@@ -882,7 +882,7 @@ export function make(options: ClientOptions) {
             empty: false,
           },
           requestOptions,
-        ).then((value) => value.data),
+        ),
       get: (input: SessionsGetInput, requestOptions?: RequestOptions) =>
         request<{ readonly data: SessionsGetOutput }>(
           {
@@ -3701,6 +3701,8 @@ export function make(options: ClientOptions) {
             path: `/api/sucafina/installations`,
             query: {
               select: input["select"],
+              contractRevision: input["contractRevision"],
+              tenantId: input["tenantId"],
               installationId: input["installationId"],
               projectId: input["projectId"],
               location: input["location"],

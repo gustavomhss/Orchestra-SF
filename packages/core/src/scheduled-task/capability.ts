@@ -89,6 +89,7 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
   // Capability planning under the write lock. A run moves `next` to the claimed slot, so the overtaken slots are
   // counted once even when a stopped claim is voided and the slot planned again.
   const beginCapability = Effect.fn("ScheduledTask.beginCapability")(function* (task: Task, now: number) {
+    if (task.disabled_reason === "removed") return { type: "idle" } as const
     const timing = capabilityTiming(task)
     const due = ScheduledTaskCapabilityModel.plan(timing, now)
     if (due.type === "wait") return { type: "idle" } as const
@@ -127,6 +128,7 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
         claimed: ScheduledTaskRunTable.revision,
         revision: ScheduledTaskTable.revision,
         enabled: ScheduledTaskTable.enabled,
+        disabledReason: ScheduledTaskTable.disabled_reason,
       })
       .from(ScheduledTaskRunTable)
       .innerJoin(ScheduledTaskTable, eq(ScheduledTaskTable.id, ScheduledTaskRunTable.task_id))
@@ -139,6 +141,7 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
             row?.state === "running" &&
             row.lease === lease &&
             row.claimed === row.revision &&
+            row.disabledReason !== "removed" &&
             // A manual run may start while the schedule is paused.
             (row.enabled || row.slot === null),
         ),
@@ -177,7 +180,7 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
     })
 
   // Marks the task's running claims in `scope` whose prompt was never admitted as revoked.
-  const revoke = (task: Task, now: number, scope: SQL) =>
+  const revoke = (task: Task, now: number, scope: SQL, reason = "revoked by an edit") =>
     Effect.gen(function* () {
       const pending = yield* db
         .select()
@@ -191,7 +194,7 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
             if (run.message_id && (yield* SessionInput.find(db, run.message_id))) return
             yield* db
               .update(ScheduledTaskRunTable)
-              .set({ state: "revoked", error: "revoked by an edit", owner: null, time_settled: now })
+              .set({ state: "revoked", error: reason, owner: null, time_settled: now })
               .where(eq(ScheduledTaskRunTable.id, run.id))
               .run()
           }),
@@ -212,7 +215,7 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
       const next = firstSlot({ cadence: input.cadence, timezone, catchUp, enabled }, now)
       if (typeof next !== "number") return yield* next
       const id = ScheduledTask.ID.create()
-      yield* db
+      yield* immediate(db
         .insert(ScheduledTaskTable)
         .values({
           id,
@@ -231,8 +234,7 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
           time_created: now,
           time_updated: now,
         })
-        .run()
-        .pipe(Effect.orDie)
+        .run())
       return yield* getOwned(owner, id).pipe(Effect.orDie)
     }),
     list: Effect.fn("ScheduledTask.capability.list")(function* (owner) {
@@ -240,7 +242,7 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
         .select()
         .from(ScheduledTaskTable)
         .where(
-          and(eq(ScheduledTaskTable.directory, owner.location.directory), eq(ScheduledTaskTable.policy, "capability")),
+          and(eq(ScheduledTaskTable.directory, owner.location.directory), eq(ScheduledTaskTable.policy, "capability"), ScheduledTaskShared.ACTIVE),
         )
         .orderBy(asc(ScheduledTaskTable.time_created), asc(ScheduledTaskTable.id))
         .all()
@@ -252,7 +254,7 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
         .select()
         .from(ScheduledTaskTable)
         .where(
-          and(eq(ScheduledTaskTable.directory, placement.location.directory), eq(ScheduledTaskTable.policy, "capability")),
+          and(eq(ScheduledTaskTable.directory, placement.location.directory), eq(ScheduledTaskTable.policy, "capability"), ScheduledTaskShared.ACTIVE),
         )
         .orderBy(asc(ScheduledTaskTable.time_created), asc(ScheduledTaskTable.id))
         .all()
@@ -323,10 +325,17 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
         }),
       ),
     remove: Effect.fn("ScheduledTask.capability.remove")(function* (owner, id) {
+      const now = yield* Clock.currentTimeMillis
       const removed = yield* immediate(
         Effect.gen(function* () {
-          if (!(yield* owned(owner, id))) return false
-          yield* db.delete(ScheduledTaskTable).where(eq(ScheduledTaskTable.id, id)).run()
+          const task = yield* owned(owner, id)
+          if (!task) return false
+          const revision = task.revision + 1
+          if (!Number.isSafeInteger(revision)) return yield* Effect.die(new Error("Invalid scheduled task revision"))
+          // The parent row and all intent keys survive removal. An already admitted prompt
+          // can still settle honestly; no active operation can revive this tombstone.
+          yield* advance(task, { enabled: false, disabled_reason: "removed", revision }, now)
+          yield* revoke(task, now, eq(ScheduledTaskRunTable.task_id, id), "schedule removed")
           return true
         }),
       )
@@ -365,7 +374,8 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
         yield* ops.settle(begun.claim, outcome)
         return { sessionID: outcome.sessionID, reused: false }
       }
-      // Nothing was admitted, so the same call may retry; a missing owner disables the schedule.
+      // Retain the original reservation even when admission was not observed. The same
+      // key cannot become a fresh effect after a failure, revocation or restart.
       yield* ops.settle(begun.claim, outcome.type === "revoked" ? outcome : { type: "void" })
       return yield* new ScheduledTaskShared.RunError({
         reason:
@@ -385,6 +395,7 @@ function sameOwner(task: Task, owner: Capability.Owner) {
   const stored = task.policy === "capability" ? task.owner : null
   return (
     stored !== null &&
+    task.disabled_reason !== "removed" &&
     stored.sessionID === owner.sessionID &&
     stored.agentID === owner.agentID &&
     stored.projectID === owner.projectID &&
@@ -455,6 +466,7 @@ function following(timing: ScheduledTaskCapabilityModel.Timing, after: number) {
 // A settled capability claim. Manual runs never move the schedule or count. A slot counts once its prompt was
 // admitted; a failed slot is consumed, never retried. An edit since the claim already recomputed `next`.
 export function settledCapability(task: Task, run: RunRow, outcome: Outcome): Partial<Task> {
+  if (task.disabled_reason === "removed") return {}
   if (outcome.type === "revoked") return { enabled: false, disabled_reason: "owner-missing" }
   if (run.slot === null) return {}
   const runs = outcome.type === "started" ? task.runs + 1 : task.runs
@@ -466,6 +478,7 @@ export function settledCapability(task: Task, run: RunRow, outcome: Outcome): Pa
 }
 
 function toSchedule(task: Task, run: RunRow | undefined): Schedule {
+  if (task.disabled_reason === "removed") throw new Error("Removed scheduled task cannot be projected")
   return {
     id: task.id,
     revision: task.revision,

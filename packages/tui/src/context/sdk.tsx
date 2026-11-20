@@ -89,6 +89,16 @@ export const { use: useSDK, provider: SDKProvider } = createSimpleContext({
           await (async () => {
             for await (const event of v2.events.subscribe({ signal: ctrl.signal })) {
               if (ctrl.signal.aborted) break
+              if ("event" in event) {
+                // This store has no installed Team lifetime. Refuse the whole
+                // frame before queueing; never project its inner corporate event.
+                queue = []
+                if (timer) clearTimeout(timer)
+                timer = undefined
+                setOffline(true)
+                ctrl.abort()
+                throw new Error("Corporate events require an installed Microsoft transport")
+              }
               setOffline(false)
               handleEvent({
                 directory: event.location?.directory ?? props.directory ?? "",

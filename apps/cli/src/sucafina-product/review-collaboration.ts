@@ -1,3 +1,5 @@
+import { sfTransactionIdentity, sfTransactionProfileMatches } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+import type { SfStateAuthority } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { PreservedReview } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -35,20 +37,25 @@ export function createSfReviewCollaboration(input: {
     input.application.threadContext === contexts && contexts.read === readContext
   const leases = new WeakMap<TrustedDomainContext, Map<string, AccessLease>>()
   const key = (pin: ReviewThreadContext, basis: ThreadSourceContext, call: TrustedDomainContext) => digestSfValue({ pin, basis, authority: call.binding })
-  const fingerprint = (pin: ReviewThreadContext) => {
+  const fingerprint = (pin: ReviewThreadContext, actor: SfStateAuthority) => {
     const snapshots = host.persistence.currentSnapshots?.()
     if (!snapshots) return undefined
     const product = object(snapshots.dashboard.data.__sfProductV1)
     const review = object(product.reviews)[pin.reviewRef]
     if (digestSfValue(review) !== pin.reviewDigest) return undefined
-    const receipts = Object.values(object(product.transactions)).filter((entry) => {
+    const entries = Object.entries(object(product.transactions)).filter(([, entry]) => {
       const receipt = object(entry), value = object(receipt.value)
       return receipt.namespace === "reviews" && receipt.targetRef === input.authority.creationTarget.ref &&
         receipt.targetIncarnation === input.authority.creationTarget.incarnation && typeof receipt.principalRef === "string" && !!receipt.principalRef.trim() &&
         (value.schema === "sf-review-receipt-v1" && Object.keys(value).length === 3 && value.reviewRef === pin.reviewRef && value.reviewDigest === pin.reviewDigest ||
           value.schema === undefined && value.id === pin.reviewRef && digestSfValue(value) === pin.reviewDigest)
     })
-    if (!receipts.length) return undefined
+    if (!entries.length || entries.some(([key, entry]) => {
+      const receipt = object(entry), identity = sfTransactionIdentity(key)
+      return !identity || identity.principalRef !== receipt.principalRef || identity.namespace !== receipt.namespace ||
+        identity.targetRef !== receipt.targetRef || !sfTransactionProfileMatches(actor.profile, key)
+    })) return undefined
+    const receipts = entries.map(([, receipt]) => receipt)
     // Plain record reviews depend on these domain data/ACLs and source identities.
     // C06's own threads/confirmations may change inside C08; they are not source data.
     const sources = (["dashboard", "planner", "procurement"] as const).map((surface) => ({
@@ -71,7 +78,7 @@ export function createSfReviewCollaboration(input: {
     if (!request || !snapshots || snapshots.call(host.persistence) || !localRecordReview(review) || !isReviewThreadContext(pin) ||
       digestSfValue(review) !== pin.reviewDigest || !current() || !await revalidate.call(host, call)) return unavailable()
     const snapshot = async () => {
-      const checked = await readState.call(state, request, "reviews", async (_state, actor) => {
+      const checked = await readState(request, "reviews", async (_state, actor) => {
         if (!current() || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
           actor.policyVersion !== call.binding.policyVersion) return undefined
         const held = snapshots.call(host.persistence)
@@ -80,7 +87,7 @@ export function createSfReviewCollaboration(input: {
           const principal = await authenticate.call(host, request, { surface, roleMap: roleMap(held[surface], surface) })
           if (!principal || principal.id !== call.binding.principalRef || principal.id.startsWith("local:") || !current()) return undefined
         }
-        return fingerprint(pin)
+        return { fingerprint: fingerprint(pin, actor), authority: actor }
       })
       return checked.status === "ok" && current() ? checked.value : undefined
     }
@@ -89,9 +96,10 @@ export function createSfReviewCollaboration(input: {
     const before = await snapshot()
     const second = await read.call(reviews, pin.reviewRef, call)
     const after = await snapshot()
-    if (!before || before !== after || !current() || second.status !== "ok" || digestSfValue(second.value) !== pin.reviewDigest ||
+    if (!before?.fingerprint || !after?.fingerprint || before.fingerprint !== after.fingerprint ||
+      digestSfValue(before.authority) !== digestSfValue(after.authority) || !current() || second.status !== "ok" || digestSfValue(second.value) !== pin.reviewDigest ||
       !await revalidate.call(host, call) || !current()) return unavailable()
-    const check = () => current() && fingerprint(pin) === after
+    const check = () => current() && fingerprint(pin, after.authority) === after.fingerprint
     const lease = { check, fence: async () => check() && await revalidate.call(host, call) && check() }
     const selected = leases.get(call) ?? new Map<string, AccessLease>()
     if (selected.size >= 128 && !selected.has(key(pin, basis, call))) return unavailable()

@@ -16,7 +16,7 @@ export async function readManifest(): Promise<Manifest> {
   const filename = path.join(import.meta.dirname, "../wp04/.host-manifest.json")
   const source = await readFile(filename, "utf8").catch((error: unknown) => {
     if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
-      throw new Error("CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.")
+      throw new Error("CI-UI-OPERATIONS requires the existing Sucafina host for operations.spec.ts; no synthetic fallback is permitted")
     }
     throw error
   })
@@ -29,7 +29,7 @@ export async function readManifest(): Promise<Manifest> {
     const account = manifest.accounts[key]
     const base = new URL(account.baseURL)
     expect(base.origin).toBe(manifest.origin)
-    expect(base.pathname).toBe("/wp04/" + key)
+    expect(base.pathname).toBe("/sucafina")
     expect(base.search).toBe("")
     expect(base.hash).toBe("")
     expect(account.principal).toMatch(/^macos:.+:\d+$/)

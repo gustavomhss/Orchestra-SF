@@ -7,10 +7,15 @@
  * Frozen source blobs: catalog 31dbec1726fd8147156b01dc545726650ffd49e1; surface manifest 50e2993a881e207aa3b2a1cd250a7da84cea5855.
  * This module is inert until 162 installs it in the original host's services.
  */
-import { Schema } from "effect"
+import { Option, Schema } from "effect"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { readTeamContextQuery } from "../../../../../modules/sucafina/Sucafinav1/runtime/team-profile-selector.ts"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import {
   SfContext as SfContextSchema,
+  SfTeamContext,
+  type SfTeamContextResult,
+  type SfTeamContextQuery,
   SfOperationAvailability as SfOperationAvailabilitySchema,
   SfResourceAvailability,
   type SfContext,
@@ -35,6 +40,12 @@ export type SfLiveContextAdmission =
   | Readonly<{ status: "unauthenticated" | "denied" }>
   | Readonly<{ status: "unavailable"; reason: "identity-unavailable" | "host-unavailable" | "contract-mismatch" }>
 
+/** Projection data only; the opaque resolver admission remains in product authority. */
+export type SfLiveTeamContextAdmission =
+  | Readonly<{ status: "ok"; technical: SfContextStamp; projection: TeamProfile.Authenticated;
+      binding?: TeamProfile.Binding; destinations: readonly Destination[] }>
+  | Exclude<SfTeamContextResult, { status: "ok" }>
+
 /** An observation is not inferred from method presence or the frozen catalog. */
 export type SfLiveOperationalObservation = SfOperationAvailability
 export type SfLiveContextSources = Readonly<{
@@ -44,6 +55,8 @@ export type SfLiveContextSources = Readonly<{
   currentBinding: () => Binding | undefined
   /** Current original-request auth, roles/grant and source accessRevision, not a client stamp. */
   admit: (request: Request) => Promise<SfLiveContextAdmission>
+  /** Microsoft installations expose only this versioned public context. */
+  teams?: Readonly<{ tenantId: string; admit: (request: Request) => Promise<SfLiveTeamContextAdmission> }>
   /**
    * Optional until a live, admitted operation probe is composed. Missing
    * evidence leaves each operation unavailable, rather than optimistic ready.
@@ -73,7 +86,18 @@ const sameBinding = (a: Binding, b: Binding) =>
 const sameStamp = (a: SfContextStamp, b: SfContextStamp) =>
   a.installationId === b.installationId && a.projectId === b.projectId && a.hostId === b.hostId &&
   a.principalRef === b.principalRef && a.policyVersion === b.policyVersion &&
-  a.accessRevision === b.accessRevision
+  a.accessRevision === b.accessRevision && sameTeamBinding(a.team, b.team)
+
+function sameTeamBinding(a: SfContextStamp["team"], b: SfContextStamp["team"]): boolean {
+  if (!a || !b) return a === b
+  return a.owner.profile.installationId === b.owner.profile.installationId &&
+    a.owner.profile.tenantId === b.owner.profile.tenantId &&
+    a.owner.profile.teamObjectId === b.owner.profile.teamObjectId &&
+    a.owner.principal.tenantId === b.owner.principal.tenantId &&
+    a.owner.principal.principalObjectId === b.owner.principal.principalObjectId &&
+    a.revisions.configRevision === b.revisions.configRevision &&
+    a.revisions.accessRevision === b.revisions.accessRevision
+}
 
 function originalRequest(request: Request, expected: Binding, origin: string, mount: string, internal: boolean): boolean {
   if (request.signal.aborted) return false
@@ -222,6 +246,8 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
   currentBinding: SfLiveContextSources["currentBinding"]
   readContext: (request: Request, expected: Binding) => Promise<SfContextResult>
   readRequestContext: (request: Request, expected: Binding) => Promise<SfContextResult>
+  teamTenantId?: string
+  readTeamContext: (request: Request, expected: SfTeamContextQuery) => Promise<SfTeamContextResult>
 }> {
   if (!URL.canParse(source.origin) || new URL(source.origin).origin !== source.origin ||
     !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(source.mount))
@@ -229,7 +255,7 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
 
   const currentBinding = source.currentBinding
   const read = async (request: Request, expected: Binding, internal: boolean): Promise<SfContextResult> => {
-    if (!originalRequest(request, expected, source.origin, source.mount, internal)) return mismatch()
+    if (!internal && source.teams || !originalRequest(request, expected, source.origin, source.mount, internal)) return mismatch()
     const firstBinding = currentBinding()
     if (!firstBinding) return { status: "unavailable", reason: "identity-unavailable" }
     if (!sameBinding(firstBinding, expected)) return mismatch()
@@ -245,7 +271,7 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
       !first.stamp.policyVersion || !first.stamp.accessRevision) return mismatch()
     // Copy the first observed stamp: the private authority may refresh or
     // revoke its own mutable working state during a subsequent await.
-    const admittedStamp = Object.freeze({ ...first.stamp })
+    const admittedStamp = Object.freeze(structuredClone(first.stamp))
     const admittedMode = first.authMode
     const destinations = approvedDestinations(first.destinations)
     if (!destinations) return mismatch()
@@ -294,8 +320,67 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
     if (!Schema.is(SfContextSchema)(value)) return mismatch()
     return { status: "ok", value }
   }
+  const readTeamContext = async (request: Request, expected: SfTeamContextQuery): Promise<SfTeamContextResult> => {
+    const teams = source.teams
+    const firstBinding = currentBinding()
+    if (!teams || !firstBinding) return { status: "unavailable", reason: "host-unavailable" }
+    const query = readTeamContextQuery(request, {
+      installationId: firstBinding.installationId, tenantId: teams.tenantId, origin: source.origin, mount: source.mount,
+    })
+    if (!query || request.method !== "GET" || query.hostId !== firstBinding.hostId ||
+      query.installationId !== expected.installationId || query.tenantId !== expected.tenantId ||
+      query.hostId !== expected.hostId || query.kind !== expected.kind || query.teamObjectId !== expected.teamObjectId)
+      return { status: "unavailable", reason: "contract-mismatch" }
+    const stillCurrent = () => !request.signal.aborted && source.teams === teams &&
+      currentBinding() === firstBinding && firstBinding.hostId === query.hostId &&
+      firstBinding.installationId === query.installationId
+    const project = (admitted: Extract<SfLiveTeamContextAdmission, { status: "ok" }>) => {
+      const destinations = approvedDestinations(admitted.destinations)
+      if (!destinations || admitted.technical.team || !sameBinding(admitted.technical, firstBinding) ||
+        admitted.projection.principal.tenantId !== teams.tenantId ||
+        query.kind === "administration" && admitted.binding ||
+        query.kind === "team" && admitted.projection.teams.status === "ready" &&
+          admitted.projection.teams.selected.teamObjectId !== query.teamObjectId)
+        return undefined
+      const value = {
+        contractRevision: "sf-team-profile/1", authMode: "microsoft",
+        stamp: { ...admitted.technical, ...(admitted.binding ? { team: admitted.binding } : {}) },
+        profile: admitted.projection, destinations, availability: [],
+      }
+      const parsed = Schema.decodeUnknownOption(SfTeamContext)(value)
+      return Option.isSome(parsed) ? structuredClone(parsed.value) : undefined
+    }
+    const readAdmission = () => teams.admit(request).catch((): SfLiveTeamContextAdmission =>
+      ({ status: "unavailable", reason: "host-unavailable" }))
+    const first = await readAdmission()
+    if (!stillCurrent()) return { status: "unavailable", reason: "contract-mismatch" }
+    if (first.status !== "ok") return first
+    const admitted = project(first)
+    if (!admitted) return { status: "unavailable", reason: "contract-mismatch" }
+    const original = JSON.stringify(admitted)
+    const readOperations = async () => !admitted.stamp.team || !source.operational
+      ? operational([]) : operational(await source.operational(request, admitted.stamp))
+    const before = await readOperations().catch(() => undefined)
+    if (!stillCurrent() || !before) return { status: "unavailable", reason: "contract-mismatch" }
+    const again = await readAdmission()
+    if (!stillCurrent() || again.status !== "ok" || JSON.stringify(project(again)) !== original)
+      return { status: "unavailable", reason: "contract-mismatch" }
+    const after = await readOperations().catch(() => undefined)
+    if (!stillCurrent() || !after || !equalObservations(before, after))
+      return { status: "unavailable", reason: "contract-mismatch" }
+    const final = await readAdmission()
+    if (!stillCurrent() || final.status !== "ok" || JSON.stringify(project(final)) !== original)
+      return { status: "unavailable", reason: "contract-mismatch" }
+    const currentAvailability = admitted.stamp.team ? availability(after) : []
+    if (!currentAvailability) return { status: "unavailable", reason: "contract-mismatch" }
+    const value = { ...admitted, availability: currentAvailability }
+    return Schema.is(SfTeamContext)(value)
+      ? { status: "ok", value } : { status: "unavailable", reason: "contract-mismatch" }
+  }
   return Object.freeze({ currentBinding,
+    ...(source.teams ? { teamTenantId: source.teams.tenantId } : {}),
     readContext: (request: Request, expected: Binding) => read(request, expected, false),
     readRequestContext: (request: Request, expected: Binding) => read(request, expected, true),
+    readTeamContext,
   })
 }

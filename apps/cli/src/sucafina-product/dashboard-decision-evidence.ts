@@ -1,3 +1,4 @@
+import { sfTransactionProfileMatches } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
@@ -177,7 +178,13 @@ export function createSfDashboardDecisionEvidence(input: {
       if (!sameAuthority(authority, call) || !same(stored.cases[value.decision.id], value.decision) ||
         !same(stored.preferences[preparedKey(value.change.id)], value.binding)) return undefined
       const actual = stored.receipts[ref.target.receiptId]
-      const proof = actual && stored.transactions[receiptProofTransactionKey(actual.principalRef, value.change.target.id, actual.idempotencyKey)]
+      if (!actual) return undefined
+      // This authorized shared case may retain another operator's receipt. Preserve
+      // that author while matching only the current backend-issued profile.
+      const legacyKey = receiptProofTransactionKey(actual.principalRef, value.change.target.id, actual.idempotencyKey)
+      const keys = Object.keys(stored.transactions).filter((key) => key === legacyKey || key.startsWith(`${legacyKey.slice(0, -1)},`))
+      if (keys.length !== 1 || !sfTransactionProfileMatches(authority.profile, keys[0]!)) return undefined
+      const proof = stored.transactions[keys[0]!]
       if (!actual || !proof || proof.namespace !== "receipts" || proof.principalRef !== actual.principalRef || proof.targetRef !== value.change.target.id ||
         proof.targetIncarnation !== actual.targetIncarnation || proof.scopeDigest !== digestSfValue(["cases", "receipts"]) || proof.incarnation !== stored.incarnation ||
         !Number.isSafeInteger(proof.storageVersion) || proof.storageVersion < 1 || proof.storageVersion > stored.versions.receipts ||

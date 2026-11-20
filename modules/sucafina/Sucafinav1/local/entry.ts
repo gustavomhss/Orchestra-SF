@@ -35,6 +35,10 @@ import { createLocalIdentity } from "../runtime/local-identity.ts"
 import { bootstrapLocalSurface, initializeConfiguredMicrosoftRoleMaps } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
 import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
+import { createTeamProfileResolver } from "../runtime/team-profile-resolver.ts"
+import { createTeamProfileHttp } from "../runtime/team-profile-http.ts"
+import { createTeamProfileMigrationAuthority } from "../runtime/team-profile-migration-authority.ts"
+import { createTeamProfileIdentityBoundary } from "../runtime/team-profile-identity.ts"
 import type { EntraOptions } from "../runtime/local-contract.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
 import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
@@ -44,9 +48,7 @@ import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
 import { createSfBiHttp } from "../product/integration/bi-http.ts"
 import { createSfWorkbenchHttp } from "../product/interface/http.ts"
-import { sfHumanActions } from "../product/integration/human-authority.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
-import freeze from "../product/contracts/freeze-v1.json" with { type: "json" }
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
 import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
 
@@ -94,7 +96,9 @@ export async function createConfiguredInstallation(
   const client = microsoft?.client ?? (!operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined)
   const now = () => new Date().toISOString()
   const projectScope = createSfSourceScopeProjector(now)
-  const driver = await openLocalStore(path.join(loaded.directory, microsoft ? "business-microsoft" : operator ? "business-local" : "business"))
+  const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
+  const driver = await openLocalStore(path.join(loaded.directory, microsoft ? "business-microsoft" : operator ? "business-local" : "business"),
+    microsoft ? { teamProfiles: { installationId, tenantId: microsoft.loaded.config.tenantId } } : undefined)
   let runtime: SfHostRuntime | undefined
   // The packaged host supplies its own WeakSet-registered constructor; direct source
   // installations retain the original module implementation and its strict guard.
@@ -117,7 +121,7 @@ export async function createConfiguredInstallation(
     return new Response(request.method === "HEAD" ? null : JSON.stringify({
       login: operator ? "local-operator" : config.tenantId && config.clientId ? "configured-unverified" : "not-configured",
       uploads: config.scanner ? "scanner-configured-unverified" : "unavailable-scanner-not-configured",
-      notifications: operator ? "in-app" : "queued-transport-not-configured",
+      notifications: "queued-transport-not-configured",
       ...(operator && services.jobs ? { maintenance: services.jobs.status().error ? "degraded" : services.jobs.status().lastSuccess ? "active" : "starting" } : {}),
     }), { headers: { "Cache-Control": "no-store", "Content-Type": "application/json" } })
   }
@@ -137,6 +141,35 @@ export async function createConfiguredInstallation(
   const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
+  const profileResolver = (() => {
+    if (!microsoft) return undefined
+    if (!driver.teamProfiles || !identity.microsoftSession) throw new Error("Microsoft profile authority capability unavailable")
+    return createTeamProfileResolver({
+      installationId, tenantId: microsoft.loaded.config.tenantId, store: driver.teamProfiles,
+      microsoftSession: identity.microsoftSession, policy: microsoft.readTeamProfilePolicy,
+    })
+  })()
+  const teamBoundary = microsoft && profileResolver ? createTeamProfileIdentityBoundary({
+    identity, resolver: profileResolver, installationId, tenantId: microsoft.loaded.config.tenantId,
+    origin: config.origin, mount: config.mount,
+  }) : undefined
+  if (microsoft && !teamBoundary) throw new Error("Microsoft Team boundary unavailable")
+  // An installed local operator authenticates only technical maintenance.
+  // Every SF business producer requires the original Microsoft Team boundary.
+  const businessIdentity = teamBoundary?.identity ?? Object.freeze({
+    ...identity,
+    authenticate: async () => null,
+    directory: async () => { throw new Error("SF_TEAM_BUSINESS_CONTEXT_UNAVAILABLE") },
+    ...(identity.graphDirectory ? { graphDirectory: async () => { throw new Error("SF_TEAM_BUSINESS_CONTEXT_UNAVAILABLE") } } : {}),
+  })
+  const teamProfileHttp = microsoft && profileResolver ? createTeamProfileHttp({
+    origin: config.origin, mount: config.mount, installationId, tenantId: microsoft.loaded.config.tenantId,
+    resolver: profileResolver,
+  }) : undefined
+  const migrationAuthority = microsoft && profileResolver ? createTeamProfileMigrationAuthority({
+    origin: config.origin, installationId, tenantId: microsoft.loaded.config.tenantId,
+    resolver: profileResolver, microsoft,
+  }) : undefined
   const backupDirectory = path.join(loaded.directory, operator ? "backups-local" : "backups-microsoft")
   const backups = await createLocalBackups(backupDirectory)
   const recovery = operator ? await loadRecoveryConfiguration(loaded.directory) : undefined
@@ -150,30 +183,33 @@ export async function createConfiguredInstallation(
     })
     return { at, durationMs: Math.ceil(performance.now() - started) }
   } : undefined
-  const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount, ...(recoveryDrill ? { recoveryDrill } : {}), ...(operator ? { operator: { id: `macos:${operator.installationId}:${operator.uid}`, name: operator.name } } : {}), schedule: !!operator })
+  const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount,
+    ...(recoveryDrill ? { recoveryDrill } : {}), maintenanceOnly: true, schedule: !!operator })
   services.jobs = jobs
-  const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
-  const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
+  const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await businessIdentity.directory(request), bankKey: loaded.keys.bank })
   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scannerConfiguration: config.scanner, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
   let nativeOperational: NonNullable<Parameters<CreateSfHostRuntime>[0]["operational"]> | undefined
   let nativeActions: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeActions"]> | undefined
   let nativeReadBinding: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]> | undefined
   runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: context.sourceRoot ?? path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
     mount: config.mount, authMode: operator ? "local-operator" : "microsoft",
+    ...(microsoft ? { tenantId: microsoft.loaded.config.tenantId, readGrants: microsoft.readGrants, teamProfiles: teamBoundary?.profiles } : {}),
+    ...(migrationAuthority ? { migrationAuthority } : {}),
+    ...(microsoft && driver.teamConnections ? { teamConnections: { store: driver.teamConnections, readKey: microsoft.readConnectionKey } } : {}),
     operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
     nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),
     nativeActions: (request, stamp, pages) => nativeActions ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
     isAuthenticated: async (request: Request) => Boolean(await identity.person(request)),
-    persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
-    grants: microsoft?.grants ?? (operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
-      namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
-      operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : []) })
+    persistence: store, currentChoiceFence, authenticate: identity.authenticate, authenticateAll: identity.authenticateAll,
+    environment: requestEnvironment, assets,
+    grants: microsoft?.grants ?? [] })
   const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
-    persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
+    persistence: store, authenticate: businessIdentity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
   const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
   const applicationServices: ModuleServices = {
     persistence: store,
-    authenticate: identity.authenticate,
+    authenticate: businessIdentity.authenticate,
+    ...(teamBoundary ? { procurementCreateAdmission: teamBoundary.admit } : {}),
     environment: requestEnvironment,
     product: async (request, surface) => await runtime?.services?.()?.productHttp?.(request, surface) ?? await workbench(request, surface) ?? await bi(request, surface),
     productView: async (request, surface, page) => {
@@ -270,6 +306,7 @@ export async function createConfiguredInstallation(
       current: async (signal: AbortSignal) => signal.aborted ? undefined : {
         publicOrigin: config.origin, mount: config.mount,
         authMode: operator ? "local-operator" as const : "microsoft" as const,
+        ...(microsoft ? { tenantId: microsoft.loaded.config.tenantId } : {}),
         identity: () => runtime?.identity(),
       },
       forAdmittedLocation: async (location: Readonly<{ directory: string; workspace?: string }>, signal: AbortSignal) => {
@@ -278,17 +315,21 @@ export async function createConfiguredInstallation(
             location.directory !== identity.location.directory) return []
         return [{ publicOrigin: config.origin, mount: config.mount,
           authMode: operator ? "local-operator" as const : "microsoft" as const,
+          ...(microsoft ? { tenantId: microsoft.loaded.config.tenantId } : {}),
           identity: () => runtime?.identity() }]
       },
     } } : {}),
     async handler(request: Request) {
       const url = new URL(request.url)
-      if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
+      const denied = () => microsoft && url.pathname === `${config.mount}/api/ui/team-profiles`
+        ? Response.json({ status: "denied" }, { status: 403, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
+        : new Response("Access denied", { status: 403 })
+      if (url.origin !== config.origin) return denied()
       if (url.pathname === "/" && (request.method === "GET" || request.method === "HEAD")) {
         const frame = Bun.file(path.join(import.meta.dir, "../../../../apps/web/index.html"))
         if (await frame.exists()) return new Response(request.method === "HEAD" ? null : await frame.bytes(), { status: 200, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
       }
-      if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
+      if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return denied()
       const readiness = status(request)
       if (readiness) return readiness
       const auth = await identity.handle(request)
@@ -297,20 +338,17 @@ export async function createConfiguredInstallation(
         return auth
       }
       await identity.prepare(request)
-      if (operator && (url.pathname === `${config.mount}/notifications` || url.pathname === `${config.mount}/backups`)) {
+      const teamProfileResponse = await teamProfileHttp?.(request)
+      if (teamProfileResponse) return teamProfileResponse
+      if (url.pathname === `${config.mount}/api/ui/team-profile-migration`) {
+        const response = await runtime?.services?.()?.migrationHttp?.(request)
+        return response ?? utilityJson({ status: "unavailable" }, 503)
+      }
+      if (operator && url.pathname === `${config.mount}/backups`) {
         if (!["GET", "HEAD", "POST"].includes(request.method)) return new Response(null, { status: 405, headers: { Allow: "GET, HEAD, POST" } })
         const person = await identity.person(request)
         if (!person) return request.method === "POST" ? utilityJson({ ok: false }, 403) : new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login`, "Cache-Control": "no-store" } })
         if (person.id !== `macos:${operator.installationId}:${operator.uid}`) return utilityJson({ ok: false }, 403)
-        if (url.pathname.endsWith("/notifications")) {
-          if (request.method !== "POST") return utilityJson({ items: await jobs.inbox(person.id) }, 200, request.method === "HEAD")
-          const command = await utilityCommand(request)
-          if (command instanceof Response) return command
-          if (!Array.isArray(command.ids) || command.ids.some((id) => typeof id !== "string")) return utilityJson({ ok: false, errors: ["Notification identifiers required."] }, 422)
-          const ids = command.ids.filter((id): id is string => typeof id === "string")
-          if (ids.length > 100 || ids.some((id) => !/^(dashboard|planner|procurement):[a-f0-9]{64}$/.test(id))) return utilityJson({ ok: false, errors: ["Invalid notification identifiers."] }, 422)
-          return utilityJson({ ok: true, read: await jobs.markRead(person.id, ids) })
-        }
         if (request.method === "POST") {
           const command = await utilityCommand(request)
           if (command instanceof Response) return command
@@ -357,10 +395,37 @@ export async function createConfiguredInstallation(
         return request.method === "HEAD" ? new Response(null, { status: html.status, headers: html.headers }) : html
       }
       const surface = url.pathname.slice(config.mount.length + 1)
+      if (!teamBoundary && (url.pathname === config.mount || url.pathname.startsWith(config.mount + "/"))) {
+        const person = await identity.person(request)
+        const headers = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" }
+        if (!person) return request.method === "GET" || request.method === "HEAD"
+          ? new Response(null, { status: 303, headers: { ...headers,
+              location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}` } })
+          : Response.json({ status: "unauthenticated" }, { status: 401, headers })
+        if ((request.method === "GET" || request.method === "HEAD") && !url.searchParams.has("sf") &&
+            (surface === "dashboard" || surface === "planner" || surface === "procurement"))
+          return new Response(request.method === "HEAD" ? null : "legacy console decommissioned — use /",
+            { status: 404, headers: { ...headers, "Content-Type": "text/plain; charset=utf-8" } })
+        return Response.json({ status: "denied", reason: "microsoft-team-required" }, { status: 403, headers })
+      }
+      // The installed Session API consumes the same original identity-bound Request
+      // and the single already-composed host runtime. Technical operators never enter it.
+      const sessionResponse = await runtime?.services?.()?.sessionHttp?.(request)
+      if (sessionResponse) return sessionResponse
       if (surface === "dashboard" || surface === "planner" || surface === "procurement") {
         const person = await identity.person(request)
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
-        if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
+        if (teamBoundary && !await teamBoundary.admit(request)) {
+          const resolution = await teamBoundary.profiles.resolve(request)
+          const status = resolution.status === "unauthenticated" ? 401 :
+            resolution.status === "unavailable" || resolution.status === "authenticated" && resolution.teams.status === "unavailable" ? 503 : 403
+          return Response.json({ status: status === 401 ? "unauthenticated" : status === 503 ? "unavailable" : "denied" }, {
+            status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
+          })
+        }
+        // Corporate maps are initialized from explicit private configuration at composition.
+        // A legacy HTML landing must never create Microsoft business state before Team admission.
+        if (person && !operator && !microsoft) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
       }
       // The authorized native projection seam runs after the installation's
       // origin, identity.handle/prepare and narrowly selected surface bootstrap.
@@ -379,7 +444,7 @@ export async function createConfiguredInstallation(
   function localChrome(response: Response) {
     return response.text().then((body) => {
       const html = body.replace('<div id="content" class="content">', '<div id="content" class="content"><p role="status" class="environment-banner">Homologação local · ' + esc(operator!.name) + ' · Microsoft 365 desativado neste perfil</p>')
-        .replace('<!--local-tools-->', `<a href="${config.mount}/backups">Backups</a><details data-notifications="${config.mount}/notifications"><summary>Notifications <span class="notification-count" data-notification-count></span></summary><div class="notification-popover" data-notification-items><p>Loading notifications…</p></div></details>`)
+        .replace('<!--local-tools-->', `<a href="${config.mount}/backups">Backups</a>`)
       const headers = new Headers(response.headers)
       headers.delete("content-length")
       return new Response(html, { status: response.status, headers })

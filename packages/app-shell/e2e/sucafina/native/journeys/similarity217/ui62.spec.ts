@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test"
 import { nativeInstalledFixture as test } from "../../fixture"
+import { nativeOwnerQuery, type NativeTarget } from "../../fixture/manifest-contract.ts"
 
 test.describe.configure({ retries: 0 })
 test.use({ trace: "off" })
@@ -19,12 +20,16 @@ function proofInputs() {
     throw new Error("214 must provide real original C09 source and C17 Atlas precedent refs for UI62")
   return { source, precedent, precedentId }
 }
-function installedUrl(origin: string, path: string) { return new URL(path, origin).toString() }
+function installedUrl(target: NativeTarget) {
+  const url = new URL("/orchestra/sf-memory/cases", target.shellOrigin)
+  url.search = nativeOwnerQuery(target).toString()
+  return url.href
+}
 
 test("217-UI62 — real case list → original selection → Atlas match → explanation → original detail", async ({ page, nativeHarness }) => {
   const { source, precedent, precedentId } = proofInputs()
   const target = nativeHarness.manifest.target
-  await page.goto(installedUrl(target.shellOrigin, "/orchestra/sf-memory/cases"))
+  await page.goto(installedUrl(target))
   const root = page.locator('[data-sf-surface="UI62"]')
   await expect(root).toBeVisible()
   // Existing authenticated projection.cases; no client-side memory catalog.
@@ -64,7 +69,7 @@ test("217-UI62 — current source/version, keyboard and 320px reflow retain sour
   const { source } = proofInputs()
   const target = nativeHarness.manifest.target
   await page.setViewportSize({ width: 320, height: 900 })
-  await page.goto(installedUrl(target.shellOrigin, "/orchestra/sf-memory/cases"))
+  await page.goto(installedUrl(target))
   const root = page.locator('[data-sf-surface="UI62"]')
   await expect(root).toBeVisible()
   await root.getByLabel(/Original decision case|Caso de decisão original/).selectOption(source)
@@ -81,7 +86,7 @@ test("217-UI62 — current source/version, keyboard and 320px reflow retain sour
 test("217-UI62 — change to another installed project never carries the previous case list or Atlas result", async ({ page, nativeHarness }) => {
   const { source, precedent } = proofInputs()
   const target = nativeHarness.manifest.target
-  await page.goto(installedUrl(target.shellOrigin, "/orchestra/sf-memory/cases"))
+  await page.goto(installedUrl(target))
   const root = page.locator('[data-sf-surface="UI62"]')
   await expect(root).toBeVisible()
   await root.getByLabel(/Original decision case|Caso de decisão original/).selectOption(source)
@@ -89,13 +94,11 @@ test("217-UI62 — change to another installed project never carries the previou
   await root.getByLabel(/Recall question|Pergunta para recuperar memória/).fill("Compare only the authorized original context")
   await root.getByRole("button", { name: /Find similar cases|Buscar casos semelhantes/ }).click()
   await expect(root.locator("[data-sf-similar-matches]")).toBeVisible()
-  const changed = nativeHarness.manifest.wrongProject
-  const url = new URL("/orchestra/sf-memory/cases", changed.shellOrigin)
-  url.searchParams.set("server", changed.serverKey)
-  url.searchParams.set("project", changed.projectId)
-  url.searchParams.set("installation", changed.installationId)
-  await page.goto(url.toString())
-  const changedRoot = page.locator('[data-sf-surface="UI62"]')
-  await expect(changedRoot.locator("[data-sf-similar-matches]")).toHaveCount(0)
-  await expect(changedRoot.locator("[data-sf-similar-detail]")).toHaveCount(0)
+  const rejected = installedUrl(nativeHarness.manifest.wrongTeam)
+  await page.goto(rejected)
+  await expect(page.locator("#sf-team-content").getByRole("alert")
+    .filter({ hasText: /^(This Team is not available for this account\.|Esta equipe não está disponível para esta conta\.)$/ })).toBeVisible()
+  await expect(page).toHaveURL(rejected)
+  await expect(root).toHaveCount(0)
+  await expect(page.locator("[data-sf-similar-matches], [data-sf-similar-detail]")).toHaveCount(0)
 })

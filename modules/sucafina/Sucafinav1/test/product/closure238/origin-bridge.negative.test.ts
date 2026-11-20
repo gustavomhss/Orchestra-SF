@@ -1,5 +1,6 @@
 /* 238: deterministic negative contract tests. NOT_RUN until inert postimages composed. */
 import { test, expect } from "bun:test"
+import { Schema } from "effect"
 import { createSfTransport } from "@orchestra/client/sucafina/transport"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfContextClient } from "@orchestra/client/sucafina/context"
@@ -7,7 +8,7 @@ import { validateSfOwnedLocationProbe } from "../../../../../../apps/desktop/src
 import { createSfDesktopOriginBridge238 } from "../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/host/desktop-origin-bridge238"
 import type { ServerConnection } from "../../../../../../packages/app-shell/src/context/server-connection"
 import type { SfDesktopCapability, SfDesktopInvalidation } from "@orchestra/client/sucafina/transport"
-import type { SfInstallationDescriptor, SfOwnerSelection } from "@orchestra/schema/sucafina/context"
+import { SfInstallationDescriptor, type SfOwnerSelection } from "@orchestra/schema/sucafina/context"
 
 const blockedFetch = (message: string, onCall?: () => void): typeof fetch => Object.assign(async () => {
   onCall?.()
@@ -257,7 +258,7 @@ function stagedFixture() {
       const handle = `handle-${++next}`
       callbacks.set(handle, callback)
       return { status: "ok", bindingHandle: handle, generation: 7,
-        descriptor: { ...descriptor, projectId: selection.projectId, installationId: selection.installationId } }
+        descriptor: Schema.decodeUnknownSync(SfInstallationDescriptor)({ ...descriptor, projectId: selection.projectId, installationId: selection.installationId }) }
     },
     invoke: async () => ({ kind: "transport-error", reason: "contract-unavailable" }),
     abort: async () => undefined,

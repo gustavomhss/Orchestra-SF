@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { isIP } from "node:net"
-import type { DirectoryPerson, EntraClient, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
+import type { DirectoryPerson, EntraClient, EntraTeamsSessionResult, EntraTokens, LocalIdentity, LocalSecrets, MicrosoftProfileSession } from "./local-contract.ts"
 
 type Session = { person: DirectoryPerson; tokens: EntraTokens; expiresAt: number; createdAt: number; login: string }
 type Login = { nonce: string; verifier: string; returnTo: string; expiresAt: number }
@@ -125,6 +125,108 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
     if (!current || current.value.tokens.expiresAt <= now()) return undefined
     return current
   }
+  const captureMicrosoftSession = async (request: Request) => {
+    const admissibleRequest = () => binding[0] === "microsoft" && !request.signal.aborted &&
+      trusted(request) && (!request.headers.has("origin") || request.headers.get("origin") === options.origin) &&
+      request.headers.get("sec-fetch-site") !== "cross-site"
+    if (!admissibleRequest()) return undefined
+    const current = await ready(request)
+    if (!current || !admissibleRequest()) return undefined
+    const principal = Object.freeze({ tenantId: binding[1], principalObjectId: current.value.person.id.toLowerCase() })
+    const verifyCurrent = async () => {
+      if (!admissibleRequest()) return false
+      const latest = await ready(request).catch(() => undefined)
+      return !!latest && admissibleRequest() && latest.handle === current.handle &&
+        latest.value.login === current.value.login && latest.value.createdAt === current.value.createdAt &&
+        latest.value.expiresAt === current.value.expiresAt && latest.value.person.id === current.value.person.id &&
+        latest.value.tokens.accessToken === current.value.tokens.accessToken &&
+        latest.value.tokens.refreshToken === current.value.tokens.refreshToken &&
+        latest.value.tokens.idToken === current.value.tokens.idToken &&
+        latest.value.tokens.expiresAt === current.value.tokens.expiresAt &&
+        JSON.stringify(latest.value.tokens.grantedScopes) === JSON.stringify(current.value.tokens.grantedScopes)
+    }
+    return { current, principal, verifyCurrent }
+  }
+  const observeMicrosoftSession = async (request: Request): Promise<MicrosoftProfileSession | undefined> => {
+    const captured = await captureMicrosoftSession(request)
+    if (!captured) return undefined
+    const { current, principal, verifyCurrent } = captured
+    // Only these closures retain credentials. This observation is not a grant;
+    // the installation resolver revalidates it after its own policy/store awaits.
+    const observation: MicrosoftProfileSession = {
+      principal,
+      verifyCurrent,
+      async teams() {
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        const reader = options.client.joinedTeams
+        if (!reader) return { state: "unavailable", reason: "capability_disabled" }
+        const observed = await reader({ tokens: current.value.tokens, principal })
+          .catch(() => ({ state: "unavailable" as const, reason: "provider_unavailable" as const }))
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        if (observed.state === "complete" &&
+            (observed.tenantId !== principal.tenantId || observed.principalObjectId !== principal.principalObjectId))
+          return { state: "unavailable", reason: "identity_mismatch" }
+        return observed
+      },
+      async groupMembership(groupObjectId) {
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        const reader = options.client.checkGroupMembership
+        if (!reader) return { state: "unavailable", reason: "capability_disabled" }
+        const observed = await reader({ tokens: current.value.tokens, principal, groupObjectId })
+          .catch(() => ({ state: "unavailable" as const, reason: "provider_unavailable" as const }))
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        if (observed.state === "complete" &&
+            (observed.tenantId !== principal.tenantId || observed.principalObjectId !== principal.principalObjectId ||
+              typeof groupObjectId !== "string" || observed.groupObjectId !== groupObjectId.toLowerCase()))
+          return { state: "unavailable", reason: "identity_mismatch" }
+        return observed
+      },
+      async team(teamObjectId) {
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        const reader = options.client.team
+        if (!reader) return { state: "unavailable", reason: "capability_disabled" }
+        const observed = await reader({ tokens: current.value.tokens, principal, teamObjectId })
+          .catch(() => ({ state: "unavailable" as const, reason: "provider_unavailable" as const }))
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        if (observed.state === "complete" &&
+            (observed.tenantId !== principal.tenantId || observed.principalObjectId !== principal.principalObjectId ||
+              typeof teamObjectId !== "string" || observed.team.teamObjectId !== teamObjectId.toLowerCase()))
+          return { state: "unavailable", reason: "identity_mismatch" }
+        return observed
+      },
+    }
+    return Object.freeze(observation)
+  }
+  const authenticateAll: NonNullable<LocalIdentity["authenticateAll"]> = async (request, contexts) => {
+    // Copy every selector before the first await. The callback observes groups once
+    // for this boundary only; callers must invoke it again after their own awaits.
+    const originalMaps = JSON.stringify(contexts)
+    const maps = contexts.map((context) => ({
+      surface: context.surface, roleMap: context.roleMap.map((row) => ({ ...row })),
+    }))
+    if (maps.length !== 3 || new Set(maps.map((entry) => entry.surface)).size !== 3 ||
+        maps.some((entry) => !["dashboard", "planner", "procurement"].includes(entry.surface) ||
+          entry.roleMap.some((row) => row.surface !== entry.surface))) return null
+    const intent = () => JSON.stringify([request.url, request.method, request.headers.get("cookie"),
+      request.headers.get("authorization"), request.headers.get("origin"), request.headers.get("sec-fetch-site"),
+      request.headers.get("x-sf-team-profile")])
+    const originalIntent = intent()
+    const unchanged = () => !request.signal.aborted && intent() === originalIntent && JSON.stringify(contexts) === originalMaps
+    const captured = await captureMicrosoftSession(request)
+    if (!captured || !unchanged()) return null
+    const actor = await options.client.resolve(captured.current.value.tokens.accessToken, maps.flatMap((entry) => entry.roleMap))
+      .catch(() => null)
+    if (!actor || actor.id !== captured.current.value.person.id ||
+        actor.roles.some((role) => !maps.some((entry) => entry.surface === role.surface &&
+          entry.roleMap.some((row) => row.role === role.role)))) return null
+    const projected = maps.map((entry) => {
+      const roles = actor.roles.filter((role) => role.surface === entry.surface)
+      return { surface: entry.surface, actor: roles.length ? { id: actor.id, roles,
+        canWrite: roles.some((role) => role.role !== "viewer") } : null }
+    })
+    if (!await captured.verifyCurrent() || !unchanged()) return null
+    return projected
+  }
   const headers = () => new Headers({ "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" })
   const error = (status: number) => new Response("Authentication unavailable", { status, headers: headers() })
   return {
@@ -216,6 +318,14 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
       refreshing.set(current.handle, work)
       await work
     },
+    ...(binding[0] !== "microsoft" ? {} : { microsoftSession: observeMicrosoftSession }),
+    ...(binding[0] !== "microsoft" || !options.client.joinedTeams ? {} : {
+      async teamDirectory(request: Request): Promise<EntraTeamsSessionResult> {
+        const observation = await observeMicrosoftSession(request)
+        return observation ? observation.teams() : { state: "unauthenticated" }
+      },
+    }),
+    ...(binding[0] === "microsoft" ? { authenticateAll } : {}),
     async authenticate(request, context) {
       const current = await ready(request)
       if (!current || !context) return null
@@ -237,7 +347,11 @@ function validPerson(value: unknown): value is DirectoryPerson {
   return value !== null && typeof value === "object" && "id" in value && typeof value.id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.id) && "name" in value && typeof value.name === "string" && Boolean(value.name.trim())
 }
 function validTokens(value: unknown): value is EntraTokens {
-  return value !== null && typeof value === "object" && "accessToken" in value && typeof value.accessToken === "string" && Boolean(value.accessToken) && "expiresAt" in value && typeof value.expiresAt === "number" && Number.isFinite(value.expiresAt) && (!("refreshToken" in value) || value.refreshToken === undefined || typeof value.refreshToken === "string") && (!("idToken" in value) || value.idToken === undefined || typeof value.idToken === "string")
+  return value !== null && typeof value === "object" && "accessToken" in value && typeof value.accessToken === "string" && Boolean(value.accessToken) && "expiresAt" in value && typeof value.expiresAt === "number" && Number.isFinite(value.expiresAt) && (!("refreshToken" in value) || value.refreshToken === undefined || typeof value.refreshToken === "string") && (!("idToken" in value) || value.idToken === undefined || typeof value.idToken === "string") &&
+    (!("grantedScopes" in value) || value.grantedScopes === undefined ||
+      (Array.isArray(value.grantedScopes) && value.grantedScopes.length <= 100 &&
+        value.grantedScopes.every((scope: unknown) => typeof scope === "string" && scope.length > 0 && scope.length <= 256 && !/[\x00-\x20\x7f]/.test(scope)) &&
+        new Set(value.grantedScopes).size === value.grantedScopes.length))
 }
 function validSession(value: unknown): value is Session {
   return value !== null && typeof value === "object" && "person" in value && validPerson(value.person) && "tokens" in value && validTokens(value.tokens) && "expiresAt" in value && typeof value.expiresAt === "number" && Number.isSafeInteger(value.expiresAt) && "createdAt" in value && typeof value.createdAt === "number" && Number.isSafeInteger(value.createdAt) && value.expiresAt > value.createdAt && "login" in value && typeof value.login === "string" && /^[a-f0-9]{64}$/.test(value.login)
@@ -245,10 +359,10 @@ function validSession(value: unknown): value is Session {
 function validLogin(value: unknown): value is Login {
   return value !== null && typeof value === "object" && "nonce" in value && typeof value.nonce === "string" && /^[a-f0-9]{64}$/.test(value.nonce) && "verifier" in value && typeof value.verifier === "string" && /^[A-Za-z0-9_-]{43}$/.test(value.verifier) && "returnTo" in value && typeof value.returnTo === "string" && "expiresAt" in value && typeof value.expiresAt === "number" && Number.isSafeInteger(value.expiresAt)
 }
-function safeReturn(value: string | null, mount: string) {
-  const fallback = `${mount}/dashboard`
-  if (!value || !value.startsWith(`${mount}/`) || /[\\\r\n]/.test(value)) return fallback
-  const parsed = new URL(value, "http://localhost")
-  return ["dashboard", "planner", "procurement"].some((surface) => parsed.pathname === `${mount}/${surface}`) && parsed.origin === "http://localhost" ? `${parsed.pathname}${parsed.search}` : fallback
+function safeReturn(_value: string | null, _mount: string) {
+  // The Microsoft Web login has one native return destination. Query strings,
+  // legacy HTML surfaces and previous private routes never survive a login.
+  // The native shell rereads corporate context before restoring window intent.
+  return "/"
 }
 

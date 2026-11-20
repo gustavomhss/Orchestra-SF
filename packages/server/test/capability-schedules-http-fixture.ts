@@ -28,7 +28,7 @@ import { MeetingHandoff } from "@orchestra/core/session/meeting-handoff"
 import { makeCapabilitySchedulesGroup } from "@orchestra/protocol/groups/capability-schedules"
 import type { Capability } from "@orchestra/schema/capability"
 import { AbsolutePath } from "@orchestra/schema/schema"
-import { Context, Effect, Layer, LayerMap, Option } from "effect"
+import { Context, Effect, Layer, LayerMap, Option, RcMap } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
 import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
@@ -67,7 +67,7 @@ export function make() {
       ])
       return LayerNode.compile(nodes.node).pipe(Layer.fresh,
         Layer.provide(LayerNode.compile(nodes.hoisted, [[Database.node, databaseNode]])))
-    }, { idleTimeToLive: "60 minutes" }))
+    }, { idleTimeToLive: "60 minutes" }).pipe(Effect.map((locations) => ({ ...locations, keys: RcMap.keys(locations.rcMap).pipe(Effect.map((values) => Array.from(values))) }))))
     const base = yield* Layer.build(Layer.mergeAll(map, LayerNode.compile(FSUtil.node),
       Global.layerWith({ data: join(directory, "data"), tmp: join(directory, "tmp") })))
     const locations = Context.get(base, LocationServiceMap.Service)

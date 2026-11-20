@@ -17,6 +17,7 @@ concurrency:
 env:
   CI: "true"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  SF_PRODUCT_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   preflight:
@@ -26,15 +27,22 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Select Node 24.15 for SF qualification
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
       - name: Require exact checkout and Linux x64
         env:
-          EXPECTED_SHA: ${{ github.sha }}
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
           test "$RUNNER_OS" = Linux
           test "$RUNNER_ARCH" = X64
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          test "$(node --version)" = "v24.15.0"
+          node --input-type=module -e 'import { candidateSource } from "./script/sf-ci/workflow-source.mjs"; if (candidateSource() !== process.env.EXPECTED_SHA) process.exit(2)'
           node script/sf-ci/gate.mjs manifest
           node --test script/sf-ci/gate.test.mjs script/sf-ci/shard-plan.test.mjs script/sf-ci/shard-adoption.test.mjs script/sf-ci/cache-source.test.mjs
           # Existing preflight, no extra job/runner: generated maintenance QA consistency.
@@ -44,6 +52,10 @@ jobs:
       - uses: ./.github/actions/setup-bun
         with:
           save: "true"
+      - name: Select Node 24.15 for SF qualification
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
       - name: Verify Linux-only surgical runner contract independently of product typechecks
         env:
           ORCHESTRA_OMNI_CONTROL: declared
@@ -61,9 +73,14 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - uses: ./.github/actions/setup-bun
+      - name: Select Node 24.15 for SF qualification
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
 
       - name: Verify generated business boundaries (generation and clean tree)
         run: |
@@ -89,7 +106,7 @@ jobs:
           set -euo pipefail
           evidence="$RUNNER_TEMP/sf-e2e-typecheck-evidence"
           mkdir -p "$evidence"
-          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"
           test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
           export SF_PRODUCT_TREE="$(git rev-parse 'HEAD^{tree}')"
           bun --version > "$evidence/bun-version.txt"
@@ -120,7 +137,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sf-e2e-inclusion-${{ github.sha }}-${{ github.run_attempt }}
+          name: sf-e2e-inclusion-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/sf-e2e-typecheck-evidence
           if-no-files-found: error
           retention-days: 14
@@ -138,7 +155,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"
           evidence_dir="$RUNNER_TEMP/guard-evidence"
           mkdir -p "$evidence_dir"
           # checkout has persist-credentials:false; the read-only token exists
@@ -173,7 +190,7 @@ jobs:
               import { execFileSync } from "node:child_process"
               const sha = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim()
               const tree = execFileSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }).trim()
-              if (sha !== process.env.GITHUB_SHA) process.exit(2)
+              if (sha !== process.env.SF_PRODUCT_SOURCE_SHA) process.exit(2)
               const receipt = {
                 schema: "sf-ci-guard-bases-v1", candidate: sha, tree,
                 run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
@@ -197,7 +214,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sf-guard-bases-${{ github.sha }}-${{ github.run_attempt }}
+          name: sf-guard-bases-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/guard-evidence
           if-no-files-found: error
           retention-days: 14
@@ -208,6 +225,7 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: ./.github/actions/omni-binaries
         with:
@@ -220,7 +238,7 @@ jobs:
           test -x "$HUGR_OMNI_SUPERVISOR"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sf-omni-linux-${{ github.sha }}
+          name: sf-omni-linux-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             ${{ env.HUGR_OMNI_ADDON }}
             ${{ env.HUGR_OMNI_SUPERVISOR }}
@@ -242,12 +260,17 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: ./.github/actions/setup-bun
+      - name: Select Node 24.15 for SF qualification
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
       - uses: ./.github/actions/ripgrep
       - uses: ./.github/actions/omni-binaries
         with:
-          artifact: sf-omni-linux-${{ github.sha }}
+          artifact: sf-omni-linux-${{ github.event.pull_request.head.sha || github.sha }}
       - name: Execute production HTTP queue integration on pinned Linux checkout
         working-directory: modules/sucafina
         shell: bash
@@ -255,7 +278,7 @@ jobs:
           GITHUB_ACTIONS: "false"
         run: |
           set -euo pipefail
-          test "$GITHUB_SHA" = "$(git -C ../.. rev-parse HEAD)"
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git -C ../.. rev-parse HEAD)"
           test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
           bun test --timeout 30000 Sucafinav1/test/product/wp04/queue-view.test.ts
 
@@ -275,12 +298,17 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: ./.github/actions/setup-bun
+      - name: Select Node 24.15 for SF qualification
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
       - uses: ./.github/actions/ripgrep
       - uses: ./.github/actions/omni-binaries
         with:
-          artifact: sf-omni-linux-${{ github.sha }}
+          artifact: sf-omni-linux-${{ github.event.pull_request.head.sha || github.sha }}
       - name: Execute exact manifest-selected Bun files
         id: tests
         timeout-minutes: 24
@@ -293,7 +321,7 @@ jobs:
           root="$GITHUB_WORKSPACE"
           evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
           mkdir -p "$evidence"
-          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"
           test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
           export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
 
@@ -305,6 +333,19 @@ jobs:
           # Keep the receipt inventory unchanged; ./ forces Bun's explicit-file mode.
           for index in "${!files[@]}"; do files[$index]="./${files[$index]}"; done
 
+          diagnostic() (
+            cd "$root" || exit 1
+            if [ ! -s "$evidence/summary.json" ]; then
+              test -s "$evidence/report.xml" || exit 1
+              if python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json.tmp"; then :; fi
+              node -e 'const s=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (s.schema_version !== 1 || !Array.isArray(s.cases) || !s.cases.length || !/^[a-f0-9]{64}$/.test(s.report_sha256 || "")) process.exit(1)' "$evidence/summary.json.tmp" || exit 1
+              mv "$evidence/summary.json.tmp" "$evidence/summary.json" || exit 1
+            fi
+            SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')" node script/sf-ci/gate.mjs describe-inventory > "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            node -e 'const s=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (s.schema !== "sf-ci-diagnostic-inventory-v1" || s.suiteId !== process.env.SF_SUITE_ID || !Array.isArray(s.identities) || !s.identities.length) process.exit(1)' "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            mv "$RUNNER_TEMP/sf-inventory.tmp" "$RUNNER_TEMP/sf-inventory.json"
+          )
+          trap 'result=$?; if [ "$result" -ne 0 ]; then if diagnostic; then :; else printf "%s\n" "Minimized inventory unavailable" >&2; fi; fi; exit "$result"' EXIT
           # Selection paths are relative to the manifest's suite.directory.
           suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
@@ -345,7 +386,7 @@ jobs:
           } 2>&1 | tee "$evidence/run.log"
           status=${PIPESTATUS[0]}
           set -e
-          test "$status" -eq 0
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
@@ -357,7 +398,7 @@ jobs:
           python3 script/sf-ci/timings.py \
             --report "sf-ci-evidence/$SF_SUITE_ID/report.xml" \
             --output "sf-ci-evidence/$SF_SUITE_ID/timings.json" \
-            --source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --source-sha "$SF_PRODUCT_SOURCE_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
             --job-name "$GITHUB_JOB" --suite "$SF_SUITE_ID" --directory "${SF_TIMINGS_DIRECTORY:-.}" \
             --file-root "$GITHUB_WORKSPACE/${SF_TIMINGS_DIRECTORY:-.}" --conclusion "$TEST_CONCLUSION"
       - name: Publish Bun timings separately from acceptance receipts
@@ -377,6 +418,15 @@ jobs:
             sf-ci-evidence/${{ matrix.id }}/summary.json
             sf-ci-evidence/${{ matrix.id }}/receipt.json
           if-no-files-found: error
+          retention-days: 7
+
+      - name: Publish minimized Bun failure inventory
+        if: ${{ failure() && steps.tests.outcome == 'failure' && !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-diagnostic-inventory-${{ matrix.id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf-inventory.json
+          if-no-files-found: ignore
           retention-days: 7
 
   unit-sf:
@@ -401,12 +451,17 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: ./.github/actions/setup-bun
+      - name: Select Node 24.15 for SF qualification
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
       - uses: ./.github/actions/ripgrep
       - uses: ./.github/actions/omni-binaries
         with:
-          artifact: sf-omni-linux-${{ github.sha }}
+          artifact: sf-omni-linux-${{ github.event.pull_request.head.sha || github.sha }}
       - name: Execute exact manifest-selected Bun files
         id: tests
         timeout-minutes: 26
@@ -418,7 +473,7 @@ jobs:
           root="$GITHUB_WORKSPACE"
           evidence="$root/sf-ci-evidence/$SF_SUITE_ID-shard-$SF_SHARD_INDEX"
           mkdir -p "$evidence"
-          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"
           test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
           export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
 
@@ -428,6 +483,19 @@ jobs:
           # Keep the receipt inventory unchanged; ./ forces Bun's explicit-file mode.
           for index in "${!files[@]}"; do files[$index]="./${files[$index]}"; done
 
+          diagnostic() (
+            cd "$root" || exit 1
+            if [ ! -s "$evidence/summary.json" ]; then
+              test -s "$evidence/report.xml" || exit 1
+              if python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json.tmp"; then :; fi
+              node -e 'const s=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (s.schema_version !== 1 || !Array.isArray(s.cases) || !s.cases.length || !/^[a-f0-9]{64}$/.test(s.report_sha256 || "")) process.exit(1)' "$evidence/summary.json.tmp" || exit 1
+              mv "$evidence/summary.json.tmp" "$evidence/summary.json" || exit 1
+            fi
+            SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')" node script/sf-ci/gate.mjs describe-inventory > "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            node -e 'const s=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (s.schema !== "sf-ci-diagnostic-inventory-v1" || s.suiteId !== process.env.SF_SUITE_ID || !Array.isArray(s.identities) || !s.identities.length) process.exit(1)' "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            mv "$RUNNER_TEMP/sf-inventory.tmp" "$RUNNER_TEMP/sf-inventory.json"
+          )
+          trap 'result=$?; if [ "$result" -ne 0 ]; then if diagnostic; then :; else printf "%s\n" "Minimized inventory unavailable" >&2; fi; fi; exit "$result"' EXIT
           suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
             import { validateManifest } from "./script/sf-ci/gate.mjs"
@@ -445,7 +513,7 @@ jobs:
           } 2>&1 | tee "$evidence/run.log"
           status=${PIPESTATUS[0]}
           set -e
-          test "$status" -eq 0
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
@@ -457,7 +525,7 @@ jobs:
           python3 script/sf-ci/timings.py \
             --report "sf-ci-evidence/CI-SF-shard-$SF_SHARD_INDEX/report.xml" \
             --output "sf-ci-evidence/CI-SF-shard-$SF_SHARD_INDEX/timings.json" \
-            --source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --source-sha "$SF_PRODUCT_SOURCE_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
             --job-name "$GITHUB_JOB" --suite CI-SF --directory modules/sucafina \
             --file-root "$GITHUB_WORKSPACE/modules/sucafina" --conclusion "$TEST_CONCLUSION" \
             --shard-index "$SF_SHARD_INDEX" --shard-count "$SF_SHARD_COUNT"
@@ -490,14 +558,12 @@ jobs:
           compression-level: 0
           retention-days: 7
 
-      - name: Publish the shard run log on failure
-        if: failure()
+      - name: Publish minimized shard failure inventory
+        if: ${{ failure() && steps.tests.outcome == 'failure' && !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sf-shard-failure-CI-SF-${{ matrix.shard }}
-          path: |
-            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/run.log
-            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/report.xml
+          name: sf-diagnostic-inventory-CI-SF-shard-${{ matrix.shard }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf-inventory.json
           if-no-files-found: ignore
           retention-days: 7
 
@@ -519,6 +585,7 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
@@ -529,7 +596,7 @@ jobs:
       - uses: ./.github/actions/ripgrep
       - uses: ./.github/actions/omni-binaries
         with:
-          artifact: sf-omni-linux-${{ github.sha }}
+          artifact: sf-omni-linux-${{ github.event.pull_request.head.sha || github.sha }}
       - name: Install Chromium for Linux only
         working-directory: packages/app-shell
         run: bunx playwright install --with-deps chromium
@@ -548,7 +615,7 @@ jobs:
           root="$GITHUB_WORKSPACE"
           evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
           mkdir -p "$evidence"
-          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"
           test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
           export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
 
@@ -556,6 +623,14 @@ jobs:
           node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
           mapfile -t files < "$evidence/selection.txt"
           test "${#files[@]}" -eq 1 || exit 2
+
+          diagnostic() (
+            cd "$root" || exit 1
+            SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')" node script/sf-ci/gate.mjs describe-inventory > "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            node -e 'const s=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (s.schema !== "sf-ci-diagnostic-inventory-v1" || s.suiteId !== process.env.SF_SUITE_ID || !Array.isArray(s.identities) || !s.identities.length) process.exit(1)' "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            mv "$RUNNER_TEMP/sf-inventory.tmp" "$RUNNER_TEMP/sf-inventory.json"
+          )
+          trap 'result=$?; if [ "$result" -ne 0 ]; then if diagnostic; then :; else printf "%s\n" "Minimized inventory unavailable" >&2; fi; fi; exit "$result"' EXIT
           suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
             import { validateManifest } from "./script/sf-ci/gate.mjs"
@@ -600,20 +675,410 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Publish UI failure evidence
-        if: failure()
+      - name: Publish minimized UI failure inventory
+        if: ${{ failure() && steps.ui_journey.outcome == 'failure' && !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sf-ui-failure-${{ matrix.id }}
-          path: |
-            packages/app-shell/e2e/test-results/**
+          name: sf-diagnostic-inventory-${{ matrix.id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf-inventory.json
           if-no-files-found: ignore
           retention-days: 7
+
+  teams-profile-browser-pool:
+    name: sf/teams-profile-browser-pool
+    needs: [preflight, omni]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+      ORCHESTRA_OMNI_CONTROL: declared
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - name: Select Node 24.15 for SF qualification
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+        with:
+          artifact: sf-omni-linux-${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Verify the ordered pool contract and available Google Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"
+          node --test script/sf-ci/browser-pool.test.mjs
+          command -v google-chrome
+          google-chrome --version > "$RUNNER_TEMP/sf-browser-chrome-version.txt"
+          test -s "$RUNNER_TEMP/sf-browser-chrome-version.txt"
+      - name: Prepare exact candidate and lifecycle evidence
+        id: pool_prepare
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code
+          git diff --cached --exit-code
+          export SF_CHECKOUT_SHA="$(git rev-parse HEAD)"
+          export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
+          export SF_BROWSER_POOL_OUTPUT="$RUNNER_TEMP/sf-browser-pool"
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")"
+          node script/sf-ci/browser-pool.mjs prepare \
+            --manifest sf/ci/suites.json --output "$SF_BROWSER_POOL_OUTPUT"
+          cp "$RUNNER_TEMP/sf-browser-chrome-version.txt" "$SF_BROWSER_POOL_OUTPUT/chrome-version.txt"
+          printf 'SF_CHECKOUT_SHA=%s\nSF_CHECKOUT_TREE_SHA=%s\nSF_BROWSER_POOL_OUTPUT=%s\nORCHESTRA_OMNI_CONTROL_NONCE=%s\n' \
+            "$SF_CHECKOUT_SHA" "$SF_CHECKOUT_TREE_SHA" "$SF_BROWSER_POOL_OUTPUT" "$ORCHESTRA_OMNI_CONTROL_NONCE" >> "$GITHUB_ENV"
+      - name: Execute all forty original sources through their single owned Bun entry
+        id: pool_bun
+        working-directory: modules/sucafina
+        env:
+          # Preserve the canonical Bun test guard/preloads. CI remains true.
+          GITHUB_ACTIONS: "false"
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git -C ../.. rev-parse HEAD)"
+          test "$SF_CHECKOUT_SHA" = "$SF_PRODUCT_SOURCE_SHA"
+          set +e
+          bun test --timeout 30000 --reporter=junit \
+            "--reporter-outfile=$SF_BROWSER_POOL_OUTPUT/report.xml" \
+            ./Sucafinav1/test/product/wp01/browser-selection.test.ts \
+            2>&1 | tee "$SF_BROWSER_POOL_OUTPUT/run.log"
+          status=${PIPESTATUS[0]}
+          set -e
+          printf '%s\n' "$status" > "$SF_BROWSER_POOL_OUTPUT/exit-code.txt"
+          exit "$status"
+      - name: Reconcile actual cases, hooks, Omni and physical cleanup even after a failed test
+        if: ${{ !cancelled() && steps.pool_prepare.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"
+          test "$SF_CHECKOUT_TREE_SHA" = "$(git rev-parse 'HEAD^{tree}')"
+          # A committed tree cannot identify dirty tracked product inputs. Keep the
+          # evidence but refuse to issue a receipt if a test changed those inputs.
+          git status --porcelain=v1 --untracked-files=no > "$SF_BROWSER_POOL_OUTPUT/tracked-worktree-after.txt"
+          git diff --exit-code > "$SF_BROWSER_POOL_OUTPUT/tracked-diff-after.txt"
+          git diff --cached --exit-code > "$SF_BROWSER_POOL_OUTPUT/staged-diff-after.txt"
+          set +e
+          python3 script/sf2h/final-bundle/verify-bun-report.py "$SF_BROWSER_POOL_OUTPUT/report.xml" \
+            > "$SF_BROWSER_POOL_OUTPUT/summary.json"
+          report_status=$?
+          node script/sf-ci/browser-pool.mjs verify \
+            --manifest sf/ci/suites.json --output "$SF_BROWSER_POOL_OUTPUT"
+          verification_status=$?
+          set -e
+          printf '{"report":%d,"verification":%d}\n' "$report_status" "$verification_status" \
+            > "$SF_BROWSER_POOL_OUTPUT/verification-statuses.json"
+          test "$report_status" -eq 0 && test "$verification_status" -eq 0
+      - name: Preserve ordered pool evidence including failures
+        if: ${{ !cancelled() && steps.pool_prepare.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: teams-profile-evidence-G04
+          path: ${{ env.SF_BROWSER_POOL_OUTPUT }}
+          if-no-files-found: error
+          retention-days: 14
+
+
+  teams-profile-artifact:
+    name: teams-profile-artifact (actual SF production archive)
+    needs: [preflight]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    outputs:
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+      artifact-digest: ${{ steps.upload.outputs.artifact-digest }}
+      source-sha: ${{ github.event.pull_request.head.sha || github.sha }}
+      source-tree: ${{ steps.archive.outputs.source-tree }}
+      archive-sha: ${{ steps.archive.outputs.archive-sha }}
+      inventory-sha: ${{ steps.archive.outputs.inventory-sha }}
+      receipt-sha: ${{ steps.archive.outputs.receipt-sha }}
+    env:
+      SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+      ORCHESTRA_OMNI_CONTROL: declared
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+    steps:
+      - name: Checkout exact candidate source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Setup Bun 1.3.14 x64 baseline
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+          no-cache: true
+      - name: Install frozen dependencies
+        run: bun install --frozen-lockfile
+      - name: Build real Linux Omni companions
+        working-directory: native/omni
+        run: |
+          set -euo pipefail
+          test "$(uname -m)" = x86_64
+          rustup show active-toolchain || rustup toolchain install
+          cargo build --locked --release -p hugr-omni-node -p omni-supervisor
+      - name: Assemble and inspect the exact Sucafina production bytes outside checkout
+        id: archive
+        env:
+          SF_ARTIFACT_OUTPUT: ${{ runner.temp }}/teams-profile-artifact
+        run: |
+          set -euo pipefail
+          test "$SOURCE_REVISION" = "$(git rev-parse --verify HEAD)"
+          mkdir -p "$SF_ARTIFACT_OUTPUT"
+          set +e
+          bun sf/ci/assemble-orchestra-web.mjs "$SF_ARTIFACT_OUTPUT/orchestra-sf.tar.gz" \
+            > "$SF_ARTIFACT_OUTPUT/assembler.log" 2>&1
+          assembler_status=$?
+          set -e
+          tail -n 100 "$SF_ARTIFACT_OUTPUT/assembler.log"
+          test "$assembler_status" -eq 0
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync, writeFileSync } from "node:fs"
+          import { createHash } from "node:crypto"
+          import { execFileSync } from "node:child_process"
+          import path from "node:path"
+          const out = process.env.SF_ARTIFACT_OUTPUT
+          const receipt = JSON.parse(readFileSync(path.join(out, "orchestra-sf.tar.gz.receipt.json"), "utf8"))
+          const tree = execFileSync("git", ["rev-parse", "--verify", "HEAD^{tree}"], { encoding: "utf8" }).trim()
+          const archive = readFileSync(path.join(out, "orchestra-sf.tar.gz"))
+          const digest = createHash("sha256").update(archive).digest("hex")
+          if (receipt.schema !== "sf-teams-production-artifact-v1" || receipt.proofRole !== "sf-production-archive" ||
+              receipt.sourceSHA !== process.env.SOURCE_REVISION || receipt.sourceTreeSHA !== tree ||
+              receipt.archiveSha256 !== digest || receipt.archiveBytes !== archive.length ||
+              receipt.brand !== "sucafina" || receipt.channel !== "prod" || receipt.extractedVerified !== true)
+            throw new Error("SF_TEAMS_ARTIFACT_PRODUCER_BINDING_INVALID")
+          writeFileSync(path.join(out, "producer.json"), JSON.stringify({
+            schema: "sf-teams-artifact-producer-v1", proofRole: "sf-production-archive",
+            repository: process.env.GITHUB_REPOSITORY, sourceSHA: process.env.SOURCE_REVISION,
+            sourceTreeSHA: tree, archiveSha256: digest, runId: process.env.GITHUB_RUN_ID,
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT, eventName: process.env.GITHUB_EVENT_NAME,
+            workflowSHA: process.env.GITHUB_SHA, job: "teams-profile-artifact",
+          }, null, 2) + "\n", { flag: "wx" })
+          const inventoryHash = createHash("sha256").update(readFileSync(path.join(out, "orchestra-sf.tar.gz.inventory.json"))).digest("hex")
+          const receiptHash = createHash("sha256").update(readFileSync(path.join(out, "orchestra-sf.tar.gz.receipt.json"))).digest("hex")
+          appendFileSync(process.env.GITHUB_OUTPUT, "source-tree=" + tree + "\narchive-sha=" + digest +
+            "\ninventory-sha=" + inventoryHash + "\nreceipt-sha=" + receiptHash + "\n")
+          NODE
+      - name: Upload immutable production archive and actual inventory
+        id: upload
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: teams-profile-artifact-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/teams-profile-artifact/
+          if-no-files-found: error
+          retention-days: 14
+
+
+  teams-profile-residue:
+    name: teams-profile-residue (exact source and production archive)
+    needs: [teams-profile-artifact]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    permissions:
+      contents: read
+      actions: read
+    env:
+      SF_TEAMS_RESIDUE_ARTIFACT_ID: ${{ needs.teams-profile-artifact.outputs.artifact-id }}
+    steps:
+      - name: Checkout the identical product candidate
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - name: Select Node 24.15 for SF qualification
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
+      - name: Bind actual Git objects before executing controls
+        id: evidence
+        env:
+          SF_TEAMS_RESIDUE_ROOT: ${{ runner.temp }}/teams-profile-residue
+          SF_TEAMS_RESIDUE_ARCHIVE_ROOT: ${{ runner.temp }}/teams-profile-residue/archive
+          SF_TEAMS_RESIDUE_COMMIT_FILE: ${{ runner.temp }}/teams-profile-residue/source.commit
+          SF_TEAMS_RESIDUE_TRACKED_FILE: ${{ runner.temp }}/teams-profile-residue/source.tree
+          SF_TEAMS_RESIDUE_CONTROLS_FILE: ${{ runner.temp }}/teams-profile-residue/controls.json
+          SF_TEAMS_RESIDUE_INVENTORY_FILE: ${{ runner.temp }}/teams-profile-residue/archive/orchestra-sf.tar.gz.inventory.json
+          SF_TEAMS_RESIDUE_RECEIPT_FILE: ${{ runner.temp }}/teams-profile-residue/archive/orchestra-sf.tar.gz.receipt.json
+          SF_TEAMS_RESIDUE_PROVENANCE_FILE: ${{ runner.temp }}/teams-profile-residue/provenance.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          test "$(node --version)" = "v24.15.0"
+          test "$(bun --version)" = "1.3.14"
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"
+          node --input-type=module -e 'import { candidateSource } from "./script/sf-ci/workflow-source.mjs"; candidateSource()'
+          test -z "$(git status --porcelain=v1 --untracked-files=all --ignore-submodules=none)"
+          mkdir -m 700 "$SF_TEAMS_RESIDUE_ROOT"
+          mkdir -m 700 "$SF_TEAMS_RESIDUE_ARCHIVE_ROOT"
+          for residue_path_name in SF_TEAMS_RESIDUE_ROOT SF_TEAMS_RESIDUE_ARCHIVE_ROOT SF_TEAMS_RESIDUE_COMMIT_FILE SF_TEAMS_RESIDUE_TRACKED_FILE SF_TEAMS_RESIDUE_CONTROLS_FILE SF_TEAMS_RESIDUE_INVENTORY_FILE SF_TEAMS_RESIDUE_RECEIPT_FILE SF_TEAMS_RESIDUE_PROVENANCE_FILE; do
+            printf '%s=%s\n' "$residue_path_name" "${!residue_path_name}" >> "$GITHUB_ENV"
+          done
+          git cat-file commit "$SF_PRODUCT_SOURCE_SHA" > "$SF_TEAMS_RESIDUE_COMMIT_FILE"
+          git ls-tree -rz --full-tree "$SF_PRODUCT_SOURCE_SHA" > "$SF_TEAMS_RESIDUE_TRACKED_FILE"
+          printf 'SF_CHECKOUT_TREE_SHA=%s\n' "$(git rev-parse 'HEAD^{tree}')" >> "$GITHUB_ENV"
+      - name: Execute all planted residue controls on the identical source
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          node --test script/sf-ci/team-profile-residue.test.mjs > "$SF_TEAMS_RESIDUE_ROOT/controls.log" 2>&1
+          controls_status=$?
+          set -e
+          cat "$SF_TEAMS_RESIDUE_ROOT/controls.log"
+          test "$controls_status" -eq 0
+      - name: Download only the immutable archive produced in this run
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: ${{ needs.teams-profile-artifact.outputs.artifact-id }}
+          merge-multiple: true
+          path: ${{ env.SF_TEAMS_RESIDUE_ARCHIVE_ROOT }}
+      - name: Independently verify artifact API identity and downloaded bytes
+        env:
+          GH_READ_TOKEN: ${{ github.token }}
+          EXPECTED_ARTIFACT_DIGEST: ${{ needs.teams-profile-artifact.outputs.artifact-digest }}
+          EXPECTED_SOURCE_TREE: ${{ needs.teams-profile-artifact.outputs.source-tree }}
+          EXPECTED_ARCHIVE_SHA: ${{ needs.teams-profile-artifact.outputs.archive-sha }}
+          EXPECTED_INVENTORY_SHA: ${{ needs.teams-profile-artifact.outputs.inventory-sha }}
+          EXPECTED_RECEIPT_SHA: ${{ needs.teams-profile-artifact.outputs.receipt-sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync, writeFileSync } from "node:fs"
+          import { createHash } from "node:crypto"
+          import path from "node:path"
+          import { candidateSource } from "./script/sf-ci/workflow-source.mjs"
+          const fail = () => { throw new Error("SF_TEAMS_RESIDUE_ACTUAL_ARTIFACT_BINDING_INVALID") }
+          const sourceSHA = candidateSource(), sourceTreeSHA = process.env.SF_CHECKOUT_TREE_SHA
+          const id = process.env.SF_TEAMS_RESIDUE_ARTIFACT_ID
+          const normalize = (value) => typeof value === "string" && /^(?:sha256:)?[a-f0-9]{64}$/.test(value)
+            ? value.startsWith("sha256:") ? value : "sha256:" + value : fail()
+          const expectedDigest = normalize(process.env.EXPECTED_ARTIFACT_DIGEST)
+          if (!/^[1-9][0-9]*$/.test(id ?? "") || sourceTreeSHA !== process.env.EXPECTED_SOURCE_TREE ||
+              !/^[a-f0-9]{40}$/.test(sourceTreeSHA ?? "")) fail()
+          const url = "https://api.github.com/repos/" + process.env.GITHUB_REPOSITORY + "/actions/artifacts/" + id
+          const headers = { Authorization: "Bearer " + process.env.GH_READ_TOKEN, Accept: "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "Orchestra-SF-residue-verifier" }
+          const response = await fetch(url, { headers, signal: AbortSignal.timeout(30000) })
+          if (!response.ok) fail()
+          const artifact = await response.json()
+          if (String(artifact.id) !== id || artifact.name !== "teams-profile-artifact-" + sourceSHA ||
+              artifact.expired !== false || normalize(artifact.digest) !== expectedDigest ||
+              String(artifact.workflow_run?.id) !== process.env.GITHUB_RUN_ID ||
+              artifact.workflow_run?.head_sha !== sourceSHA ||
+              String(artifact.workflow_run?.repository_id) !== process.env.GITHUB_REPOSITORY_ID ||
+              !Number.isSafeInteger(artifact.size_in_bytes) || artifact.size_in_bytes <= 0) fail()
+          // Verify the actual GitHub ZIP as well as the separately declared inner tar.
+          const download = await fetch(url + "/zip", { headers, signal: AbortSignal.timeout(180000) })
+          if (!download.ok || !download.body) fail()
+          const zipped = createHash("sha256")
+          let zipBytes = 0
+          for await (const chunk of download.body) {
+            zipBytes += chunk.length
+            if (zipBytes > artifact.size_in_bytes) fail()
+            zipped.update(chunk)
+          }
+          if (zipBytes !== artifact.size_in_bytes || "sha256:" + zipped.digest("hex") !== expectedDigest) fail()
+          const root = process.env.SF_TEAMS_RESIDUE_ARCHIVE_ROOT
+          const digest = (filename) => createHash("sha256").update(readFileSync(path.join(root, filename))).digest("hex")
+          const archiveSha256 = digest("orchestra-sf.tar.gz")
+          const inventorySha256 = digest("orchestra-sf.tar.gz.inventory.json")
+          const receiptSha256 = digest("orchestra-sf.tar.gz.receipt.json")
+          if (archiveSha256 !== process.env.EXPECTED_ARCHIVE_SHA ||
+              inventorySha256 !== process.env.EXPECTED_INVENTORY_SHA ||
+              receiptSha256 !== process.env.EXPECTED_RECEIPT_SHA) fail()
+          const producer = JSON.parse(readFileSync(path.join(root, "producer.json"), "utf8"))
+          if (producer.schema !== "sf-teams-artifact-producer-v1" || producer.proofRole !== "sf-production-archive" ||
+              producer.repository !== process.env.GITHUB_REPOSITORY || producer.sourceSHA !== sourceSHA ||
+              producer.sourceTreeSHA !== sourceTreeSHA || producer.archiveSha256 !== archiveSha256 ||
+              producer.runId !== process.env.GITHUB_RUN_ID || producer.runAttempt !== process.env.GITHUB_RUN_ATTEMPT ||
+              producer.workflowSHA !== process.env.GITHUB_SHA || producer.eventName !== process.env.GITHUB_EVENT_NAME ||
+              producer.job !== "teams-profile-artifact") fail()
+          const provenance = {
+            schema: "teams-profile-residue-provenance-v1", runId: process.env.GITHUB_RUN_ID,
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT, workflowSHA: process.env.GITHUB_SHA,
+            sourceSHA, sourceTreeSHA, producerJob: "teams-profile-artifact",
+            artifact: { id, name: artifact.name, digest: expectedDigest, workflowRunId: String(artifact.workflow_run.id),
+              headSha: artifact.workflow_run.head_sha, expired: false },
+            archiveSha256, inventorySha256, receiptSha256,
+          }
+          writeFileSync(process.env.SF_TEAMS_RESIDUE_PROVENANCE_FILE, JSON.stringify(provenance, null, 2) + "\n",
+            { flag: "wx", mode: 0o600 })
+          appendFileSync(process.env.GITHUB_ENV, "SF_TEAMS_RESIDUE_ARTIFACT_DIGEST=" + expectedDigest + "\n")
+          console.log("SF_TEAMS_RESIDUE_ARTIFACT_BOUND " + JSON.stringify({ sourceSHA, sourceTreeSHA, artifactId: id,
+            artifactDigest: expectedDigest, archiveSha256, zipBytes }))
+          NODE
+      - name: Audit every tracked byte and actual packed member
+        id: audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"
+          test -z "$(git status --porcelain=v1 --untracked-files=all --ignore-submodules=none)"
+          set +e
+          bun script/sf-ci/team-profile-residue.mjs --source . \
+            --archive "$SF_TEAMS_RESIDUE_ARCHIVE_ROOT/orchestra-sf.tar.gz" \
+            --manifest sf/ci/team-profile-residue.json \
+            --output "$SF_TEAMS_RESIDUE_ROOT/team-profile-residue.json" \
+            > "$SF_TEAMS_RESIDUE_ROOT/audit.log" 2>&1
+          status=$?
+          set -e
+          printf 'exit_code=%s\n' "$status" >> "$GITHUB_OUTPUT"
+          printf '{"exitCode":%d}\n' "$status" > "$SF_TEAMS_RESIDUE_ROOT/command-status.json"
+          cat "$SF_TEAMS_RESIDUE_ROOT/audit.log"
+          test -z "$(git status --porcelain=v1 --untracked-files=all --ignore-submodules=none)"
+      - name: Preserve residue evidence including an unqualified diagnostic
+        if: ${{ !cancelled() && steps.evidence.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: teams-profile-evidence-G09
+          path: |
+            ${{ env.SF_TEAMS_RESIDUE_ROOT }}/*.json
+            ${{ env.SF_TEAMS_RESIDUE_ROOT }}/*.log
+          if-no-files-found: error
+          retention-days: 14
+      - name: Fail closed unless the audit actually qualified
+        if: ${{ !cancelled() }}
+        env:
+          ACTUAL_EXIT: ${{ steps.audit.outputs.exit_code }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from "node:fs"
+          import path from "node:path"
+          const report = JSON.parse(readFileSync(path.join(process.env.SF_TEAMS_RESIDUE_ROOT, "team-profile-residue.json"), "utf8"))
+          console.log("SF_TEAMS_RESIDUE_GATE " + JSON.stringify({ exitCode: process.env.ACTUAL_EXIT,
+            status: report.status, blockers: report.blockers, counts: report.counts,
+            review: report.review?.status ?? "UNAVAILABLE", proofs: report.proofs?.status ?? "UNAVAILABLE" }))
+          if (process.env.ACTUAL_EXIT !== "0") throw new Error("SF_TEAMS_RESIDUE_AUDIT_NOT_QUALIFIED")
+          if (report.status !== "PASS" || report.counts.unclassified !== 0 || report.counts.activeLegacy !== 0 ||
+              report.counts.orphan !== 0 || report.binding.sourceSHA !== process.env.SF_PRODUCT_SOURCE_SHA ||
+              report.binding.sourceTreeSHA !== process.env.SF_CHECKOUT_TREE_SHA ||
+              report.artifact.artifact.id !== process.env.SF_TEAMS_RESIDUE_ARTIFACT_ID ||
+              report.artifact.artifact.digest !== process.env.SF_TEAMS_RESIDUE_ARTIFACT_DIGEST)
+            throw new Error("SF_TEAMS_RESIDUE_NOT_QUALIFIED")
+          NODE
 
   verify:
     name: sf/verify
     if: always()
-    needs: [preflight, static, omni, unit, unit-sf, ui]
+    needs: [preflight, static, omni, unit, unit-sf, ui, teams-profile-browser-pool, teams-profile-artifact, teams-profile-residue]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
@@ -622,7 +1087,12 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Select Node 24.15 for SF qualification
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
       - name: Diagnose upstream gates before downloading suite artifacts
         env:
           SF_NEEDS_JSON: ${{ toJSON(needs) }}
@@ -638,6 +1108,6 @@ jobs:
           SF_NEEDS_JSON: ${{ toJSON(needs) }}
         run: |
           set -euo pipefail
-          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"
           export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
           node script/sf-ci/gate.mjs verify

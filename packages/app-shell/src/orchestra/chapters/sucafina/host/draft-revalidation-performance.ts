@@ -1,6 +1,6 @@
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { draftAvailability } from "./draft-revalidation-availability"
 
 const contractFields = ["name", "year"]
@@ -9,7 +9,7 @@ const subFields = ["label", "objective", "description", "target", "totalWeight",
   "co2", "co2Weight", "score", "status", "q1", "q2", "q3", "q4", "statusQ1", "statusQ2", "statusQ3", "statusQ4", "notes"]
 
 export async function revalidatePerformanceDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (input.surfaceId !== "CAP16" || input.read.operationId !== "domain.page.CAP16" ||
       input.read.actionIds.length !== 1) return { status: "unavailable" }

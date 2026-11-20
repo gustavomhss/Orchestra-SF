@@ -1,5 +1,7 @@
 import type { Persistence } from "./contract.ts"
 import type { AssetPersistence } from "./assets.ts"
+import type { TeamProfilePolicyStore } from "./team-profile-store.ts"
+import type { TeamConnectionStore } from "./team-connection-store.ts"
 import type { RoleRow, ResolvedActor, Surface } from "../src/identity.ts"
 
 /** Authentication records are separate from business snapshots and their backups. Payloads are encrypted by identity. */
@@ -30,9 +32,69 @@ export type LocalSecrets = {
   /** Required by the Microsoft composition; optional only for retained local adapters. */
   authentication?: AuthenticationSecrets
 }
-export type LocalStore = Persistence & AssetPersistence & { secrets: LocalSecrets; dispose: () => Promise<void> }
+export type LocalStore = Persistence & AssetPersistence & { secrets: LocalSecrets; readonly teamProfiles?: TeamProfilePolicyStore; readonly teamConnections?: TeamConnectionStore; dispose: () => Promise<void> }
 export type DirectoryPerson = { id: string; name: string }
-export type EntraTokens = { accessToken: string; refreshToken?: string; idToken?: string; expiresAt: number }
+export type EntraTokens = { accessToken: string; refreshToken?: string; idToken?: string; expiresAt: number; grantedScopes?: readonly string[] }
+/** A server-only Graph observation. It never grants product access or proves a login by itself. */
+export type EntraTeamsResult =
+  | Readonly<{
+      state: "complete"
+      tenantId: string
+      principalObjectId: string
+      source: "joinedTeams"
+      membership: "direct"
+      teams: readonly Readonly<{ teamObjectId: string; name: string; archived: boolean }>[]
+    }>
+  | Readonly<{
+      state: "unavailable"
+      reason: "capability_disabled" | "consent_required" | "token_expired" | "identity_mismatch" | "unauthenticated" | "forbidden" | "throttled" | "timeout" | "provider_unavailable" | "invalid_response" | "incomplete" | "limit_exceeded"
+      retryAfterMs?: number
+    }>
+export type EntraTeamsSessionResult = EntraTeamsResult | Readonly<{ state: "unauthenticated" }>
+export type EntraTeamsInput = Readonly<{
+  /** Only credentials and principal restored from the verified Microsoft session may reach this reader. */
+  tokens: Pick<EntraTokens, "accessToken" | "expiresAt" | "grantedScopes">
+  principal: Readonly<{ tenantId: string; principalObjectId: string }>
+}>
+/** A positive check observes membership only; the configured supreme policy decides admission. */
+export type EntraGroupMembershipInput = EntraTeamsInput & Readonly<{
+  /** Immutable ID supplied by trusted current server policy, never a client-selected group. */
+  groupObjectId: string
+}>
+export type EntraGroupMembershipResult =
+  | Readonly<{
+      state: "complete"
+      tenantId: string
+      principalObjectId: string
+      groupObjectId: string
+      source: "checkMemberGroups"
+      membership: "transitive"
+      /** False means not confirmed: Graph can omit groups the caller cannot evaluate. */
+      member: boolean
+    }>
+  | Extract<EntraTeamsResult, { state: "unavailable" }>
+export type EntraGroupMembershipSessionResult = EntraGroupMembershipResult | Readonly<{ state: "unauthenticated" }>
+export type EntraTeamInput = EntraTeamsInput & Readonly<{ teamObjectId: string }>
+/** Existence and tenant observation of one Team; this result never asserts membership. */
+export type EntraTeamResult =
+  | Readonly<{
+      state: "complete"
+      tenantId: string
+      principalObjectId: string
+      source: "team"
+      team: Readonly<{ teamObjectId: string; name: string; archived: boolean }>
+    }>
+  | Extract<EntraTeamsResult, { state: "unavailable" }>
+export type EntraTeamSessionResult = EntraTeamResult | Readonly<{ state: "unauthenticated" }>
+/** Server-only closure over one verified session generation; it exposes no credentials. */
+export type MicrosoftProfileSession = Readonly<{
+  principal: Readonly<{ tenantId: string; principalObjectId: string }>
+  teams: () => Promise<EntraTeamsSessionResult>
+  groupMembership: (groupObjectId: string) => Promise<EntraGroupMembershipSessionResult>
+  team: (teamObjectId: string) => Promise<EntraTeamSessionResult>
+  /** Recheck after awaits and before committing; directory observations are not cached grants. */
+  verifyCurrent: () => Promise<boolean>
+}>
 /** Complete server-only directory view; group IDs are transitive memberships. */
 export type EntraGraphDirectory = Readonly<{
   users: readonly Readonly<{ id: string; name: string; department: string; jobTitle: string; managerId: string | null; groupIds: readonly string[] }>[]
@@ -43,11 +105,18 @@ export type EntraClient = {
   readonly tenantId?: string
   readonly clientId?: string
   readonly profile?: "local-public" | "web-confidential"
+  readonly teams?: "direct"
   authorization: (input: { state: string; nonce: string; challenge: string; redirectUri: string }) => Promise<string>
   exchange: (input: { code: string; verifier: string; redirectUri: string; nonce: string }) => Promise<{ tokens: EntraTokens; person: DirectoryPerson }>
   refresh: (refreshToken: string) => Promise<EntraTokens>
   person: (accessToken: string) => Promise<DirectoryPerson>
   directory: (accessToken: string) => Promise<DirectoryPerson[]>
+  /** Direct memberships only; separate from roles, organization enumeration and channel associations. */
+  joinedTeams?: (input: EntraTeamsInput) => Promise<EntraTeamsResult>
+  /** Checks one policy-selected group under the signed-in user, independently of Team and RoleRows. */
+  checkGroupMembership?: (input: EntraGroupMembershipInput) => Promise<EntraGroupMembershipResult>
+  /** Looks up one immutable Team ID under the explicit Teams capability, without asserting membership. */
+  team?: (input: EntraTeamInput) => Promise<EntraTeamResult>
   /** Reads complete Graph users, managers, groups and transitive members with a server-held delegated token. */
   graphDirectory?: (accessToken: string) => Promise<EntraGraphDirectory>
   resolve: (accessToken: string, map: readonly RoleRow[]) => Promise<ResolvedActor>
@@ -56,6 +125,8 @@ export type EntraOptions = {
   tenantId: string
   clientId: string
   profile?: "local-public" | "web-confidential"
+  /** Explicit delegated read capability; omitted preserves minimum web-login scopes. */
+  teams?: "direct"
   /** Server-private provider. Never expose this credential through browser or tool configuration. */
   clientSecret?: () => Promise<string>
   fetch?: (request: Request) => Promise<Response>
@@ -68,7 +139,14 @@ export type LocalIdentity = {
   prepare: (request: Request) => Promise<void>
   /** Read-only credential lookup and fresh directory membership; never writes a nested SQL transaction. */
   authenticate: (request: Request, context?: { surface: Surface; roleMap: readonly RoleRow[] }) => Promise<ResolvedActor | null>
+  /** One fresh private Microsoft observation projected over all current surface maps; never a reusable grant. */
+  authenticateAll?: (request: Request, contexts: readonly { surface: Surface; roleMap: readonly RoleRow[] }[]) =>
+    Promise<readonly { surface: Surface; actor: ResolvedActor | null }[] | null>
   directory: (request: Request) => Promise<DirectoryPerson[]>
+  /** Server-only observation under the current verified Microsoft session; never a grant or bearer projection. */
+  teamDirectory?: (request: Request) => Promise<EntraTeamsSessionResult>
+  /** Captures a confidential Microsoft session for server authority checks, never for renderer projection. */
+  microsoftSession?: (request: Request) => Promise<MicrosoftProfileSession | undefined>
   /** Available only in a confidential Microsoft installation; never returns a bearer token. */
   graphDirectory?: (request: Request) => Promise<EntraGraphDirectory>
   person: (request: Request) => Promise<DirectoryPerson | null>

@@ -5,10 +5,7 @@ import { chmod, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/pr
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath, pathToFileURL } from "node:url"
-import { Effect } from "effect"
-import { ChildProcess } from "effect/unstable/process"
-import { LayerNode } from "@orchestra/core/effect/layer-node"
-import { AppProcess } from "@orchestra/core/process"
+import { run } from "../../apps/cli/script/sf-package-process.mjs"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 const cli = path.join(root, "apps/cli")
@@ -23,21 +20,6 @@ if (!expectedSHA || !/^[0-9a-f]{40}$/.test(expectedSHA))
 if (process.platform !== "linux" || process.arch !== "x64" || process.versions.bun !== "1.3.14")
   throw new Error("SF_ORCHESTRA_WEB_LINUX_X64_BUN_1_3_14_REQUIRED")
 
-const processLayer = LayerNode.compile(AppProcess.node)
-const outputLimit = 16 * 1024 * 1024
-async function run(cmd, cwd, env, stream = false) {
-  const result = await Effect.runPromise(AppProcess.Service.use((app) => app.run(
-    ChildProcess.make(cmd[0], cmd.slice(1), { cwd, env, extendEnv: false, stdin: "ignore" }),
-    stream ? {
-      combineOutput: true,
-      maxOutputBytes: outputLimit,
-      inspect: (chunk) => process.stdout.write(chunk),
-    } : { maxOutputBytes: outputLimit, maxErrorBytes: outputLimit },
-  )).pipe(Effect.provide(processLayer)))
-  if (result.exitCode !== 0)
-    throw new Error(`SF_ORCHESTRA_WEB_COMMAND_FAILED: ${cmd.join(" ")}`)
-  return result
-}
 
 // The source SHA is not enough: staged, unstaged, untracked and nested
 // submodule edits can change compiled bytes without changing HEAD.
@@ -51,13 +33,17 @@ async function requireCleanCheckout(phase) {
   ], root, process.env)
   if (porcelain.stdout.length)
     throw new Error(`SF_ORCHESTRA_WEB_DIRTY_WORKTREE_${phase}`)
+  const tree = await run(["git", "rev-parse", "--verify", "HEAD^{tree}"], root, process.env)
+  const sourceTreeSHA = tree.stdout.toString("utf8").trim()
+  if (!/^[0-9a-f]{40}$/.test(sourceTreeSHA)) throw new Error("SF_ORCHESTRA_WEB_SOURCE_TREE_UNAVAILABLE")
+  return sourceTreeSHA
 }
 const archiveWithinCheckout = path.relative(root, destination)
 if (archiveWithinCheckout === "" ||
     (archiveWithinCheckout !== ".." && !archiveWithinCheckout.startsWith(".." + path.sep) &&
       !path.isAbsolute(archiveWithinCheckout)))
   throw new Error("SF_ORCHESTRA_WEB_ARCHIVE_OUTSIDE_CHECKOUT_REQUIRED")
-await requireCleanCheckout("BEFORE_BUILD")
+const sourceTreeSHA = await requireCleanCheckout("BEFORE_BUILD")
 
 // Vite publishes VITE_* values into client assets. This release has no
 // externally configured public VITE_* inputs: never inherit CI secrets or
@@ -76,7 +62,9 @@ for (const filename of [".env", ".env.local", ".env.production", ".env.productio
 const sourceChecks = [
   ["apps/cli/src/commands/handlers/serve.ts", /sucafinaInstallations:\s*installation\?\.discovery/],
   ["apps/cli/src/sucafina-product/installation.ts", /discovery\?:\s*SfTrustedInstallationSource/],
-  ["packages/app-shell/src/orchestra/sidebar.tsx", /sfNativeChapterEntry/],
+  ["apps/web/src/entry.tsx", /if \(isSucafinaBrand\(\)\)[\s\S]*?<SfTeamWebApp origin=\{location\.origin\}/],
+  ["packages/app-shell/src/web.ts", /export \{ SfTeamWebApp \} from "\.\/pages\/team-profile"/],
+  ["packages/app-shell/src/context/team-profile-web.ts", /export async function readCurrentTeamInstallation/],
 ]
 for (const [relative, required] of sourceChecks) {
   if (!required.test(await readFile(path.join(root, relative), "utf8")))
@@ -126,6 +114,7 @@ const { prepareDistribution, verifyDistribution, archiveDistribution } =
 const staging = await mkdtemp(path.join(tmpdir(), "sf-orchestra-web-release-"))
 let ownsArchive = false
 let archiveVerified = false
+const ownedEvidence = new Set()
 try {
   const payload = path.join(staging, "payload")
   const manifest = await prepareDistribution({
@@ -178,15 +167,42 @@ try {
   // A verified archive is NOT a qualified installed/browser package. The
   // final SF_ORCHESTRA_WEB_PACKAGE_VERIFIED receipt must be withheld until
   // an isolated, authenticated native host proves CAP01/CAP02 on this SHA.
-  await requireCleanCheckout("BEFORE_ARCHIVE_RECEIPT")
-  archiveVerified = true
-  console.log("SF_ORCHESTRA_WEB_ARCHIVE_EXTRACTED_VERIFIED " + JSON.stringify({
-    sourceSHA: expectedSHA, target, version, sha256, fileCount: manifest.files.length,
+  if (await requireCleanCheckout("BEFORE_ARCHIVE_RECEIPT") !== sourceTreeSHA)
+    throw new Error("SF_ORCHESTRA_WEB_SOURCE_TREE_CHANGED")
+  const inventory = []
+  for (const [relative, file] of [...tarFiles].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)) {
+    const bytes = Buffer.from(await file.arrayBuffer())
+    inventory.push({ path: relative, byteLength: bytes.length,
+      sha256: createHash("sha256").update(bytes).digest("hex") })
+  }
+  const inventoryBytes = Buffer.from(JSON.stringify({
+    schema: "sf-teams-archive-inventory-v1", sourceSHA: expectedSHA, sourceTreeSHA,
+    archiveFile: path.basename(destination), archiveSha256: sha256, files: inventory,
+  }, null, 2) + "\n")
+  const manifestBytes = Buffer.from(await tarFiles.get("distribution.json").arrayBuffer())
+  const receipt = {
+    schema: "sf-teams-production-artifact-v1", proofRole: "sf-production-archive",
+    sourceSHA: expectedSHA, sourceTreeSHA, target, version,
+    archiveFile: path.basename(destination), archiveSha256: sha256, archiveBytes: compressed.length,
+    manifestSha256: createHash("sha256").update(manifestBytes).digest("hex"),
+    inventoryFile: path.basename(destination) + ".inventory.json",
+    inventorySha256: createHash("sha256").update(inventoryBytes).digest("hex"),
+    fileCount: manifest.files.length, archiveFileCount: inventory.length,
     webFileCount: manifest.files.filter((item) => item.path.startsWith("bin/web/")).length,
-    brand: "sucafina", viteEnvironmentInputs: 0, extractedVerified: true,
+    brand: "sucafina", channel: "prod", viteEnvironmentInputs: 0, extractedVerified: true,
     nativeBrowserProof: "REQUIRED_SEPARATELY", fullSfCi: "REQUIRED_SEPARATELY",
-  }))
+  }
+  for (const [file, bytes] of [
+    [destination + ".inventory.json", inventoryBytes],
+    [destination + ".receipt.json", Buffer.from(JSON.stringify(receipt, null, 2) + "\n")],
+  ]) {
+    await writeFile(file, bytes, { flag: "wx", mode: 0o600 })
+    ownedEvidence.add(file)
+  }
+  archiveVerified = true
+  console.log("SF_ORCHESTRA_WEB_ARCHIVE_EXTRACTED_VERIFIED " + JSON.stringify(receipt))
 } finally {
   if (ownsArchive && !archiveVerified) await rm(destination, { force: true })
+  if (!archiveVerified) for (const file of ownedEvidence) await rm(file, { force: true })
   await rm(staging, { recursive: true, force: true })
 }

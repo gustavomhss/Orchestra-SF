@@ -2,8 +2,13 @@
  * No route.fulfill mock, forged status/receipt, role override, or replay.
  */
 import type { Page, Request, Route } from "@playwright/test"
-import { observeNativeBinding } from "./readiness.ts"
-import type { NativeManifest } from "./readiness.ts"
+import { expect } from "@playwright/test"
+import { Schema } from "effect"
+import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { nativeTeamRef } from "./manifest-contract.ts"
+import { nativeContextURL, observeNativeBinding } from "./readiness.ts"
+import type { NativeManifest, NativeTarget } from "./readiness.ts"
 
 export type NativeFaultTarget = Readonly<{
   origin: string
@@ -98,40 +103,47 @@ export async function armHeldResponse(page: Page, target: NativeFaultTarget) {
   }
 }
 
-/** Invoke only the real privileged producer action supplied by the approved
- * fixture, then demand an independent, same-cookie original context reread.
- * The callback's own committed bit is NOT accepted as a permission proof.
- */
-export async function requestRealRevocation(input: Readonly<{
+/** Disable only the disposable case Team through the real administration route. */
+export async function revokeNativeTeam(input: Readonly<{
   page: Page
+  admin: Page
   manifest: NativeManifest
   capabilityId: string
-  revokeViaProducer: () => Promise<{ committed: boolean }>
+  principalRef: string
 }>) {
-  const before = await observeNativeBinding(input.page, input.manifest.target)
-  if (!before.destinations.some((entry) => entry.capabilityId === input.capabilityId && entry.canRead))
+  const { target, actors } = input.manifest
+  if (input.page.context() === input.admin.context()) throw new Error("F04_DISTINCT_REVOCATION_ADMIN_REQUIRED")
+  const before = await observeNativeBinding(input.page, target)
+  if (!before.stamp.team || before.stamp.principalRef !== input.principalRef ||
+      !before.destinations.some((entry) => entry.capabilityId === input.capabilityId && entry.canRead))
     throw new Error("F04_REVOCATION_PRECONDITION_UNAUTHORIZED")
-  const actual = await input.revokeViaProducer()
-  if (!actual.committed) throw new Error("F04_REAL_PRODUCER_REVOCATION_NOT_CONFIRMED")
-  const contextURL = new URL(input.manifest.target.mount + "/api/ui/context",
-    input.manifest.target.publicOrigin)
-  contextURL.search = new URLSearchParams({
-    installationId: input.manifest.target.installationId,
-    projectId: input.manifest.target.projectId,
-    hostId: input.manifest.target.hostId,
-  }).toString()
-  const response = await input.page.request.get(contextURL.toString(),
-    { maxRedirects: 0, maxRetries: 0 })
-  if (response.status() === 401 || response.status() === 403) {
-    return { phase: "PRODUCER_AUTHENTICATION_REVOKED" as const,
-      status: response.status(), clientProjection: "REQUIRES_SEPARATE_UI_ASSERTION" as const }
-  }
-  if (response.status() !== 200) throw new Error("F04_REVOCATION_REFETCH_UNAVAILABLE")
-  const after = await observeNativeBinding(input.page, input.manifest.target)
+  const administrator = await observeNativeBinding(input.admin, target)
+  if (administrator.stamp.principalRef !== actors.dashboardAdmin ||
+      administrator.profile.administration.status !== "available")
+    throw new Error("F04_REAL_TEAMS_ADMINISTRATION_REQUIRED")
+  const profile = nativeTeamRef(target)
+  const url = new URL(target.mount + "/api/ui/team-profiles", target.publicOrigin)
+  url.search = new URLSearchParams({ contractRevision: "sf-team-profile/1",
+    installationId: profile.installationId, tenantId: profile.tenantId }).toString()
+  const opts = { maxRedirects: 0, maxRetries: 0, timeout: 15000 }
+  const catalog = await input.admin.request.get(url.href, opts)
+  if (catalog.status() !== 200) throw new Error("F04_REAL_TEAMS_ADMIN_CATALOG_UNAVAILABLE")
+  const current = Schema.decodeUnknownSync(TeamProfile.AdminListResult)(await catalog.json())
+  if (current.status !== "ok" || current.configRevision !== before.stamp.team.revisions.configRevision ||
+      current.profiles.filter((entry) => entry.enabled).length !== 1 ||
+      !current.profiles.some((entry) => entry.enabled && entry.profile.installationId === profile.installationId &&
+        entry.profile.tenantId === profile.tenantId && entry.profile.teamObjectId === profile.teamObjectId))
+    throw new Error("F04_DISPOSABLE_TEAMS_ADMIN_CATALOG_MISMATCH")
+  const action = await input.admin.request.post(url.href, { ...opts, headers: { origin: target.publicOrigin },
+    data: { action: "disable", profile, expectedRevision: current.configRevision } })
+  if (action.status() !== 200) throw new Error("F04_REAL_PRODUCER_REVOCATION_NOT_CONFIRMED")
+  const result = Schema.decodeUnknownSync(TeamProfile.AdminConfigureResult)(await action.json())
+  if (result.status !== "ok" || !result.changed || result.configRevision !== current.configRevision + 1)
+    throw new Error("F04_REAL_PRODUCER_REVOCATION_NOT_CONFIRMED")
+  const after = await observeNativeBinding(input.page, target)
   if (after.stamp.principalRef !== before.stamp.principalRef ||
       after.stamp.accessRevision === before.stamp.accessRevision ||
-      after.destinations.some((entry) =>
-        entry.capabilityId === input.capabilityId && entry.canRead))
+      after.profile.teams.status !== "revoked" || after.stamp.team || after.destinations.length || after.availability.length)
     throw new Error("F04_REVOCATION_NOT_PROVEN_BY_ORIGINAL_CONTEXT")
   return {
     phase: "PRODUCER_ACCESS_REVOCATION_OBSERVED" as const,
@@ -140,4 +152,25 @@ export async function requestRealRevocation(input: Readonly<{
     newAccessRevision: after.stamp.accessRevision,
     clientProjection: "REQUIRES_SEPARATE_UI_ASSERTION" as const,
   }
+}
+
+/** Exercise the original same-document refresh, not a reload that erases every draft anyway. */
+export async function refreshRevokedNativeTeam(page: Page, target: NativeTarget, accessRevision: string) {
+  const expected = new URL(nativeContextURL(target))
+  const documentStart = await page.evaluate(() => performance.timeOrigin)
+  const [reply] = await Promise.all([
+    page.waitForResponse((response) => {
+      const url = new URL(response.url())
+      return response.request().method() === "GET" && url.origin === expected.origin &&
+        url.pathname === expected.pathname && url.searchParams.size === expected.searchParams.size &&
+        [...expected.searchParams].every(([key, value]) =>
+          url.searchParams.getAll(key).length === 1 && url.searchParams.get(key) === value)
+    }),
+    page.evaluate(() => window.dispatchEvent(new FocusEvent("focus"))),
+  ])
+  expect(reply.status()).toBe(200)
+  const result = Schema.decodeUnknownSync(SfTeamContextResult)(await reply.json())
+  expect(result).toMatchObject({ status: "ok", value: { stamp: { accessRevision }, profile: { teams: { status: "revoked" } } } })
+  await expect(page.getByRole("alert").filter({ hasText: /This Team is not available for this account\.|Esta equipe não está disponível para esta conta\./ })).toBeVisible()
+  expect(await page.evaluate(() => performance.timeOrigin)).toBe(documentStart)
 }

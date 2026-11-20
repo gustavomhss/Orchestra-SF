@@ -1,3 +1,4 @@
+import { sfSameOwnerSelection, sfSameContextStamp, sfOwnerQuery } from "./owner"
 /**
  * UI29 -> UI34 through the existing F01 native transition. A Home row is a
  * source hint, never authority: read the current original case and its
@@ -21,18 +22,9 @@ export type SfCurrentResumeOwner = Readonly<{
 }>
 
 const sameSelection = (a: SfOwnerSelection, b: SfOwnerSelection) =>
-  !!a.installationId && !!b.installationId &&
-  a.serverKey === b.serverKey &&
-  a.projectId === b.projectId &&
-  a.installationId === b.installationId
+  !!a.installationId && !!b.installationId && sfSameOwnerSelection(a, b)
 
-const sameStamp = (a: SfContextStamp, b: SfContextStamp) =>
-  a.installationId === b.installationId &&
-  a.projectId === b.projectId &&
-  a.hostId === b.hostId &&
-  a.principalRef === b.principalRef &&
-  a.policyVersion === b.policyVersion &&
-  a.accessRevision === b.accessRevision
+const sameStamp = sfSameContextStamp
 
 const liveOwner = (previous: SfCurrentResumeOwner, current: () => SfCurrentResumeOwner | undefined) => {
   const latest = current()
@@ -107,11 +99,7 @@ export function createSfTodayResumePort(
 
       // Q01 UI34 frozen entry template. F01 still independently authorizes it.
       const destination = "/orchestra/sf-decisions/" + encodeSfRouteRef(request.caseRef) +
-        "?" + new URLSearchParams({
-          server: owner.selection.serverKey,
-          project: owner.selection.projectId,
-          installation: owner.selection.installationId!,
-        }).toString()
+        "?" + new URLSearchParams(sfOwnerQuery(owner.selection)).toString()
       const returnRef = navigation.rememberResumeFocus({
         ownerKey: owner.ownerKey,
         accessRevision: owner.stamp.accessRevision,

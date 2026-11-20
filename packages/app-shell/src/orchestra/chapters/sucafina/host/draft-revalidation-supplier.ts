@@ -1,11 +1,11 @@
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { bankFields, generalDraftFields, supplierVersion, uniqueSupplier } from "../procurement/suppliers/model"
 import { draftAvailability } from "./draft-revalidation-availability"
 
 export async function revalidateSupplierDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (input.surfaceId !== "CAP27" || input.read.operationId !== "domain.page.CAP27" ||
       (input.editScopeKey !== "CAP27:general" && input.editScopeKey !== "CAP27:bank")) return { status: "unavailable" }

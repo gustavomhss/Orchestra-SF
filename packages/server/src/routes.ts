@@ -18,6 +18,7 @@ import { PermissionSaved } from "@orchestra/core/permission/saved"
 import { PtyTicket } from "@orchestra/core/pty/ticket"
 import { ScheduledTask } from "@orchestra/core/scheduled-task"
 import { SessionV2 } from "@orchestra/core/session"
+import { SessionOwner } from "@orchestra/core/session/owner"
 import { SessionProcess } from "@orchestra/core/session-process"
 import { MoveSession } from "@orchestra/core/control-plane/move-session"
 import { TaskBackground } from "@orchestra/core/tool/task-background"
@@ -29,7 +30,7 @@ import { ToolOutputStore } from "@orchestra/core/tool-output-store"
 import { ResearchArtifacts } from "@orchestra/core/research/artifacts"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
-import { Layer, Option } from "effect"
+import { Effect, Layer, Option } from "effect"
 import { Api } from "./api"
 import { ServerAuth } from "./auth"
 import { BodyLimit } from "./body-limit"
@@ -37,7 +38,7 @@ import { corsLayer } from "./cors"
 import { hostPolicyLayer } from "./host-policy"
 import { handlers } from "./handlers"
 import { SfInstallationSource, type SfTrustedInstallationSource } from "./sucafina-installations"
-import { authorizationLayer } from "./middleware/authorization"
+import { authorizationLayerWith } from "./middleware/authorization"
 import { schemaErrorLayer } from "./middleware/schema-error"
 import { PtyEnvironment } from "@orchestra/core/host/pty-environment"
 import { layer as inboxLocationLayer } from "./inbox-location"
@@ -51,13 +52,14 @@ import { ServerCapabilityVerification } from "./capability-verification"
 import type { CapabilityOperatorContract } from "@orchestra/core/capability/operator/contract"
 import type { CapabilityConnectionSetupContract } from "@orchestra/core/capability/connection/setup-contract"
 
-const applicationServices = LayerNode.group([
+export const applicationServices = LayerNode.group([
   Database.node,
   EventV2.node,
   httpClient,
   ToolOutputStore.cleanupNode,
   ResearchArtifacts.node,
   SessionV2.node,
+  SessionOwner.node,
   SessionExecution.node,
   SessionSubagentModels.node,
   SessionProcess.node,
@@ -128,30 +130,48 @@ function makeRoutes<AuthError, AuthServices>(
     merged.locationNodes,
   )
 
-  const api = HttpApiBuilder.layer(Api, { openapiPath: "/openapi.json" }).pipe(
+  const api = makeApiRoutes(auth, options).pipe(Layer.provide(merged.references), Layer.provide(serviceLayer))
+  const runtime = merged.runtime.pipe(Layer.provide(merged.references), Layer.provide(serviceLayer))
+  return Layer.mergeAll(api, runtime, options.webRoot ? WebUi.layer(options.webRoot) : Layer.empty).pipe(
+    Layer.provide(hostPolicyLayer(options.allowedHosts)),
+  )
+}
+
+/** Reuse the existing application graph; this factory creates only the HTTP layer. */
+export function createApiRoutesWithServices(options: Omit<Options, "host" | "webRoot"> = {}) {
+  const auth = options.password
+    ? ServerAuth.Config.configLayer({ username: "orchestra", password: Option.some(options.password) })
+    : ServerAuth.Config.configLayer({ username: "orchestra", password: Option.none() })
+  return makeApiRoutes(auth, options).pipe(Layer.provide(hostPolicyLayer(options.allowedHosts)))
+}
+
+function makeApiRoutes<AuthError, AuthServices>(
+  auth: Layer.Layer<ServerAuth.Config, AuthError, AuthServices>,
+  options: Omit<Options, "password">,
+) {
+  return HttpApiBuilder.layer(Api, { openapiPath: "/openapi.json" }).pipe(
     Layer.provide(handlers),
     Layer.provide(Layer.succeed(SfInstallationSource, options.sucafinaInstallations ?? {
       current: async () => undefined,
       forAdmittedLocation: async () => [],
     })),
-    Layer.provide(merged.references),
     Layer.provide(sessionLocationLayer),
     Layer.provide(inboxLocationLayer),
     Layer.provide(locationLayer),
-    Layer.provide(authorizationLayer),
+    Layer.provide(Layer.unwrap(Effect.map(SessionOwner.Service, (owners) =>
+      authorizationLayerWith(options.sucafinaInstallations, owners)))),
     Layer.provide(capabilityAuthorizationLayer),
     Layer.provide(schemaErrorLayer),
     Layer.provide(auth),
     Layer.provide(options.operator ? Layer.succeed(ServerOperator.Service, options.operator) : ServerOperator.layer),
     Layer.provide(ServerContentTicket.layer),
     Layer.provide(options.verifier ? Layer.succeed(ServerCapabilityVerification.Service, options.verifier) : ServerCapabilityVerification.layer),
-    Layer.provide(serviceLayer),
     // The desktop renderer (`oc://renderer`) calls a desktop-owned server cross-origin, as the earlier runtime did.
     Layer.provide(corsLayer({ cors: options.cors })),
-    Layer.provide(BodyLimit.layer),
-  )
-  return Layer.merge(api, options.webRoot ? WebUi.layer(options.webRoot) : Layer.empty).pipe(
-    Layer.provide(hostPolicyLayer(options.allowedHosts)),
+    Layer.provide(BodyLimit.layerWithMount(options.sucafinaInstallations ? async (signal) => {
+      const installed = await options.sucafinaInstallations!.current(signal)
+      return installed?.authMode === "microsoft" ? installed.mount : undefined
+    } : undefined)),
   )
 }
 

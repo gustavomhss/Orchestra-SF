@@ -4,6 +4,7 @@ import { ActionsContract } from "@orchestra/core/actions/contract"
 import { ActionsOperations } from "@orchestra/core/actions/operations"
 import { Config } from "@orchestra/core/config"
 import { Database } from "@orchestra/core/database/database"
+import { SessionOwner } from "@orchestra/core/session/owner"
 import { makeLocationNode } from "@orchestra/core/effect/app-node"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { FSUtil } from "@orchestra/core/fs-util"
@@ -129,7 +130,9 @@ export const httpFixture = Effect.fnUntraced(function* (
     [FSUtil.node, Layer.succeed(FSUtil.Service, fs)],
     [AppProcess.node, Layer.succeed(AppProcess.Service, proc)],
   ])
-  const map = Context.get(yield* Layer.build(locations), LocationServiceMap.Service)
+  // The current map captures a real private owner service over this fixture's one actual database.
+  const owners = LayerNode.compile(SessionOwner.node, [[Database.node, Layer.succeed(Database.Service, core.database)]])
+  const map = Context.get(yield* Layer.build(locations.pipe(Layer.provide(owners))), LocationServiceMap.Service)
   yield* Layer.build(
     map.get(
       Schema.decodeUnknownSync(Location.Ref)({

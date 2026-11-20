@@ -7,26 +7,29 @@ import { sfDecisionHref } from "./route"
 import { sfOperationReady } from "./model"
 import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext } from "../../context/contracts"
+import type { SfReadableContext } from "../../context/contracts"
 
 type Phase = "editing" | "reviewing" | "submitting" | "unknown" | "confirmed" | "invalid" | "unavailable"
 const PENDING_PREFIX = "sf:n24:case-create:pending:v1:"
 const KEY_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
 
-async function scopedPrefix(context: SfContext): Promise<string> {
+async function scopedPrefix(context: SfReadableContext): Promise<string> {
   const scope = context.stamp
-  const value = JSON.stringify([scope.installationId, scope.projectId, scope.hostId,
-    scope.principalRef, scope.policyVersion, scope.accessRevision])
+  const value = JSON.stringify(scope.team ? [scope.team.owner.profile.installationId,
+    scope.team.owner.profile.tenantId, scope.team.owner.profile.teamObjectId,
+    scope.team.owner.principal.principalObjectId] : [scope.installationId, scope.projectId, scope.hostId,
+      scope.principalRef, scope.policyVersion, scope.accessRevision])
   // Only a SHA-256 scope digest and UUID remain in browser storage; never form
   // fields, case contents, access tokens or a fabricated server receipt.
   const hashed = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value))
-  return PENDING_PREFIX + Array.from(new Uint8Array(hashed), (byte) => byte.toString(16).padStart(2, "0")).join("") + ":"
+  return (scope.team ? "sf:n24:case-create:pending:v2:" : PENDING_PREFIX) + Array.from(new Uint8Array(hashed), (byte) => byte.toString(16).padStart(2, "0")).join("") + ":"
 }
 function pendingKeys(prefix: string): string[] | null {
   try {
     const found: string[] = []
     for (let i = 0; i < localStorage.length; i++) {
       const name = localStorage.key(i)
+      if (prefix.startsWith("sf:n24:case-create:pending:v2:") && name?.startsWith(PENDING_PREFIX)) return null
       if (!name?.startsWith(prefix) || localStorage.getItem(name) !== "pending") continue
       const key = name.slice(prefix.length)
       if (!KEY_PATTERN.test(key)) return null
@@ -41,7 +44,7 @@ function pendingKeys(prefix: string): string[] | null {
 
 export function SfCreateCase(props: Readonly<{
   route: SfResolvedRoute<"UI33">
-  context: () => SfContext | undefined
+  context: () => SfReadableContext | undefined
   transport: () => SfTransport | undefined
   onCreated: () => void
 }>) {

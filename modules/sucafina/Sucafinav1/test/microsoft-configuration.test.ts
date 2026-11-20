@@ -19,6 +19,7 @@ test("Microsoft configuration is explicit, immutable, minimal and separate from 
   expect(Object.isFrozen(loaded.config)).toBe(true)
   expect(Object.isFrozen(loaded.config.groups.dashboard)).toBe(true)
   expect(Object.isFrozen(loaded.config.grants)).toBe(true)
+  expect(loaded.config).not.toHaveProperty("teams")
   expect(loaded.config).not.toHaveProperty("clientSecret")
   expect(JSON.stringify(loaded)).not.toContain(syntheticSecret)
   expect(await loaded.clientSecret()).toBe(syntheticSecret)
@@ -38,6 +39,8 @@ test("missing, unsafe, legacy or incoherent Microsoft configuration fails closed
     { grants: [{ principalRef: oid, namespaces: ["root"], operations: [] }] }, { grants: [{ principalRef: oid, namespaces: [], operations: ["sf_admin_everything"] }] },
     { grants: [{ principalRef: oid, namespaces: [], operations: [], humanActions: ["approve.everything"] }] },
     { grants: [{ principalRef: oid, namespaces: [], operations: [] }, { principalRef: oid.toUpperCase(), namespaces: [], operations: [] }] },
+    { teams: undefined }, { teams: null }, { teams: false }, { teams: true }, { teams: "all" }, { teams: "Direct" }, { teams: {} },
+    { supremeAdminGroupId: undefined }, { supremeAdminGroupId: null }, { supremeAdminGroupId: "Administrators" }, { supremeAdminGroupId: `group:${group}` }, { supremeAdminGroupId: {} },
     { sessionSeconds: 28801 }, { sessionSeconds: 0 }, { loginSeconds: 601 }, { localOperator: { uid: 0 } }, { clientSecret: syntheticSecret },
   ]) expect(() => validateMicrosoftConfiguration({ ...f.config, ...mutation })).toThrow()
   for (const value of [undefined, null, [], "", {}]) expect(() => validateMicrosoftConfiguration(value)).toThrow()
@@ -101,7 +104,7 @@ test("durable tenant/client pin prevents cross-tenant reuse after a configuratio
 test("explicit principal grants preserve canonical operations without granting roles", async () => {
   const f = await fixture()
   const configured = validateMicrosoftConfiguration({ ...f.config, grants: [{ principalRef: oid, namespaces: ["preferences"], operations: ["sf_work_list"], humanActions: ["views.read"] }] })
-  expect(configured.grants).toEqual([{ principalRef: oid, namespaces: ["preferences"], operations: ["sf_work_list"], humanActions: ["views.read"] }])
+  expect(configured.grants).toEqual([{ principalRef: oid, namespaces: ["preferences"], operations: ["sf_work_list"], humanActions: ["views.read"], sessionActions: [], referenceActions: [], migrationActions: [] }])
   expect(configured.groups.dashboard).toEqual(f.config.groups.dashboard)
   expect(configured.grants.find((grant) => grant.principalRef === other)).toBeUndefined()
 })
@@ -119,4 +122,93 @@ test("fixed proxy transport never infers the public origin from forwarded header
   const post = microsoftRequest(new Request(`${ingressOrigin}/sucafina/auth/logout`, { method: "POST", headers: { host: new URL(ingressOrigin).host, origin: publicOrigin }, body: "fixture-body" }), profile.transport)
   expect(post?.headers.get("origin")).toBe(publicOrigin)
   expect(await post?.text()).toBe("fixture-body")
+})
+
+test("Microsoft factory keeps minimum login scopes when Teams reading is not configured", async () => {
+  const f = await fixture()
+  const provider = await microsoftFixture()
+  const profile = await prepareMicrosoftInstallation({ origin: listenerOrigin }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
+  expect(profile.loaded.config).not.toHaveProperty("teams")
+  expect(profile.client).not.toHaveProperty("teams")
+  expect(profile.client).not.toHaveProperty("joinedTeams")
+  const authorization = new URL(await profile.client.authorization({
+    state: "synthetic-state", nonce: "synthetic-nonce", challenge: "synthetic-challenge",
+    redirectUri: `${publicOrigin}/sucafina/auth/callback`,
+  }))
+  expect(authorization.searchParams.get("scope")).toBe("openid profile offline_access User.Read")
+  expect(profile.loaded.config.groups).toEqual(f.config.groups)
+  expect(profile.grants).toEqual([])
+  expect(provider.requests.every((request) => new URL(request.url).origin === "https://login.microsoftonline.com")).toBe(true)
+  expect(await Bun.file(path.join(f.directory, "business-microsoft", "installation.sqlite")).exists()).toBe(false)
+})
+
+test("explicit Teams reading is reversible without changing the installation identity or access policy", async () => {
+  const f = await fixture()
+  const provider = await microsoftFixture({ teams: "direct" })
+  const baseline = await prepareMicrosoftInstallation({ origin: listenerOrigin }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
+  const pin = await readFile(path.join(f.directory, "microsoft-identity.json"), "utf8")
+  const groups = { dashboard: {}, planner: {}, procurement: {} }
+  await writeFile(f.file, JSON.stringify({ ...f.config, teams: "direct", groups }))
+  const enabled = await prepareMicrosoftInstallation({ origin: listenerOrigin }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
+  expect(enabled.loaded.config.teams).toBe("direct")
+  expect(enabled.client.teams).toBe("direct")
+  expect(typeof enabled.client.joinedTeams).toBe("function")
+  expect(Object.isFrozen(enabled.loaded.config)).toBe(true)
+  expect(enabled.loaded.config.groups).toEqual(groups)
+  expect(enabled.grants).toEqual([])
+  const input = { state: "synthetic-state", nonce: "synthetic-nonce", challenge: "synthetic-challenge", redirectUri: `${publicOrigin}/sucafina/auth/callback` }
+  expect(new URL(await enabled.client.authorization(input)).searchParams.get("scope")).toBe("openid profile offline_access User.Read Team.ReadBasic.All")
+  expect(await readFile(path.join(f.directory, "microsoft-identity.json"), "utf8")).toBe(pin)
+  // The configured capability is fixed for each prepared installation, not read from later requests.
+  expect(baseline.client).not.toHaveProperty("joinedTeams")
+  expect(new URL(await baseline.client.authorization(input)).searchParams.get("scope")).toBe("openid profile offline_access User.Read")
+
+  await writeFile(f.file, JSON.stringify({ ...f.config, groups }))
+  const disabled = await prepareMicrosoftInstallation({ origin: listenerOrigin }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
+  expect(disabled.loaded.config).not.toHaveProperty("teams")
+  expect(disabled.client).not.toHaveProperty("teams")
+  expect(disabled.client).not.toHaveProperty("joinedTeams")
+  expect(new URL(await disabled.client.authorization(input)).searchParams.get("scope")).toBe("openid profile offline_access User.Read")
+  expect(disabled.loaded.config.groups).toEqual(groups)
+  expect(disabled.grants).toEqual([])
+  expect(await readFile(path.join(f.directory, "microsoft-identity.json"), "utf8")).toBe(pin)
+  expect(provider.requests.every((request) => new URL(request.url).origin === "https://login.microsoftonline.com")).toBe(true)
+  expect(await Bun.file(path.join(f.directory, "business-microsoft", "installation.sqlite")).exists()).toBe(false)
+})
+
+test("supreme administration policy is explicit, canonical and read fresh independently of Teams", async () => {
+  const f = await fixture()
+  await writeFile(f.file, JSON.stringify({ ...f.config, supremeAdminGroupId: other.toUpperCase() }))
+  const provider = await microsoftFixture()
+  const profile = await prepareMicrosoftInstallation({ origin: listenerOrigin }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
+  expect(profile.loaded.config.supremeAdminGroupId).toBe(other)
+  expect(await profile.readTeamProfilePolicy()).toEqual({ supremeAdminGroupId: other })
+  expect(profile.client.joinedTeams).toBeUndefined()
+  await writeFile(f.file, JSON.stringify({ ...f.config, supremeAdminGroupId: group, teams: "direct" }))
+  expect(await profile.readTeamProfilePolicy()).toEqual({ supremeAdminGroupId: group, teams: "direct" })
+  expect(profile.loaded.config.supremeAdminGroupId).toBe(other)
+  expect(profile.client.joinedTeams).toBeUndefined()
+  await writeFile(f.file, JSON.stringify(f.config))
+  expect(await profile.readTeamProfilePolicy()).toEqual({})
+})
+
+test("current policy cannot retarget the captured installation or replace its private keys", async () => {
+  const f = await fixture()
+  const provider = await microsoftFixture()
+  const profile = await prepareMicrosoftInstallation({ origin: listenerOrigin }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
+  const workspaceDirectory = path.join(f.root, "second-workspace")
+  await mkdir(workspaceDirectory, { mode: 0o700 })
+  for (const mutation of [
+    { tenantId: other }, { clientId: other }, { origin: "https://another.example.test" },
+    { mount: "/other" }, { listenerOrigin: "http://127.0.0.1:4999" }, { ingressOrigin: "http://another.example.test" },
+    { workspaceDirectory },
+  ]) {
+    await writeFile(f.file, JSON.stringify({ ...f.config, ...mutation }))
+    await expect(profile.readTeamProfilePolicy()).rejects.toThrow("binding changed")
+  }
+  await writeFile(f.file, JSON.stringify(f.config))
+  const bankKey = await readFile(path.join(f.directory, "bank.key"))
+  bankKey[0] ^= 1
+  await writeFile(path.join(f.directory, "bank.key"), bankKey)
+  await expect(profile.readTeamProfilePolicy()).rejects.toThrow("keys changed")
 })

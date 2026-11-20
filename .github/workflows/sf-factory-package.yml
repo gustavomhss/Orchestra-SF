@@ -4,7 +4,7 @@ on:
   push:
     branches: [sfa-factory-package]
   # Retain this dedicated native gate when the feature branch is eventually merged.
-  # Only PRs that change the installation product or its distribution producer qualify.
+  # Every candidate change must preserve the actual native packaging contract.
   pull_request:
     branches: [close-final-candidate, sf-join-four]
     paths:
@@ -99,6 +99,7 @@ jobs:
           actual="$(git rev-parse --verify HEAD)"
           test "$actual" = "$SF_FACTORY_EXPECTED_SOURCE_SHA" || { echo "SF_FACTORY_CHECKOUT_SHA_MISMATCH" >&2; exit 1; }
           export SF_FACTORY_CHECKOUT_SHA="$actual"
+          export SF_FACTORY_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
           bun run script/factory-receipt-check.ts "../../distribution-logs/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
       - name: Upload extracted-factory qualification archive and factual proof
         if: success()
@@ -106,5 +107,16 @@ jobs:
         with:
           name: sf-factory-package-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.event.pull_request.head.sha || github.sha }}
           path: distribution-logs/${{ github.run_id }}-${{ github.run_attempt }}/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload independent native lifecycle receipt and the exact archive it names
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-web-native-package-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            distribution-logs/build-receipt.json
+            distribution-logs/orchestra-sf-linux-x64-baseline.tar.gz
           if-no-files-found: error
           retention-days: 7

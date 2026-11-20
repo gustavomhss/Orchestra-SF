@@ -1,3 +1,4 @@
+import { sfSameOwnerSelection, sfOwnerMatchesContext } from "../navigation-state/owner"
 import { batch, createContext, createEffect, onCleanup, untrack, useContext, type JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
 import { createStore, reconcile } from "solid-js/store"
@@ -8,7 +9,7 @@ import { createSfTodayResumePort, type SfCurrentResumeOwner } from "../navigatio
 import { createSfBudgetPeriodPort, sfBudgetPeriodAvailable } from "../navigation-state/budget-period"
 import { sfExecutiveLinkAllowed, sfExecutiveLinkMatches, sfExecutiveLinkRequest, sfExecutiveRevalidateRef } from "../cross-links"
 import type {
-  SfContext, SfContextHandle, SfContextProviderProps, SfContextState,
+  SfReadableContext, SfContextHandle, SfContextProviderProps, SfContextState,
   SfOwnerIdentity, SfSurfaceProps,
 } from "./contracts"
 import type { SfInstallationDescriptor, SfOwnerKey, SfOwnerSelection } from "@orchestra/schema/sucafina/context"
@@ -16,7 +17,7 @@ import type { SfTransport } from "@orchestra/client/sucafina/transport"
 
 const Context = createContext<SfContextHandle>()
 type Active = Readonly<{
-  context: SfContext
+  context: SfReadableContext
   transport: SfTransport
   drafts: ReturnType<typeof createSfOwnerDrafts>
 }>
@@ -46,8 +47,7 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     generation: number
     value: NonNullable<ReturnType<SfContextHandle["ready"]>>
   }> | undefined
-  const sameSelection = (a: SfOwnerSelection, b: SfOwnerSelection) =>
-    a.serverKey === b.serverKey && a.projectId === b.projectId && a.installationId === b.installationId
+  const sameSelection = sfSameOwnerSelection
 
   const fence = (selection: SfOwnerSelection) => {
     readyAccess = undefined
@@ -308,20 +308,15 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
         latest.ownerKey === originalOwnerKey && store.active === active &&
         latest.context.stamp.accessRevision === originalAccessRevision &&
         latest.context.stamp.policyVersion === originalPolicyVersion &&
-        latest.selection.serverKey === selection.serverKey &&
-        latest.selection.projectId === selection.projectId &&
-        latest.selection.installationId === selection.installationId &&
-        latest.context.stamp.projectId === selection.projectId &&
-        latest.context.stamp.installationId === selection.installationId &&
+        sfSameOwnerSelection(latest.selection, selection) &&
+        sfOwnerMatchesContext(latest.context, selection) &&
         active.drafts.state() === "active"
     }
     if (!stillSource() || !sfExecutiveLinkAllowed(active.context, target)) return "denied"
     const result = await navigation.requestNativeTransition(destination, "link", {
       expectedOwnerKey: originalOwnerKey,
       admit: (resolved) => stillSource() &&
-        resolved.ownerSelection.serverKey === selection.serverKey &&
-        resolved.ownerSelection.projectId === selection.projectId &&
-        resolved.ownerSelection.installationId === selection.installationId &&
+        sfSameOwnerSelection(resolved.ownerSelection, selection) &&
         sfExecutiveLinkMatches(resolved, target) &&
         sfExecutiveLinkAllowed(active.context, target),
       preCommit: async (_resolved, signal) => stillSource() && !signal.aborted &&
@@ -367,9 +362,7 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
             input.returnRoute.surfaceId !== "UI29" ||
             input.returnRoute.kind !== "entry" ||
             input.returnRoute.pathname !== "/orchestra/sf-home" ||
-            input.returnRoute.ownerSelection.serverKey !== owner.selection.serverKey ||
-            input.returnRoute.ownerSelection.projectId !== owner.selection.projectId ||
-            input.returnRoute.ownerSelection.installationId !== owner.selection.installationId)
+            !sfSameOwnerSelection(input.returnRoute.ownerSelection, owner.selection))
           return false
         return navigation!.claimResumeFocus({
           ownerKey: owner.ownerKey,
@@ -405,6 +398,11 @@ function discoveryDenied(value: unknown): boolean {
   return detail.status === "denied" || detail.status === "unauthenticated"
     || detail.httpStatus === 401 || detail.httpStatus === 403
     || detail.reason === "denied" || detail.reason === "unauthenticated"
+}
+
+/** The installed Teams shell supplies its one verified owner handle to the existing native views. */
+export function SfContextBoundary(props: Readonly<{ value: SfContextHandle; children: JSX.Element }>): JSX.Element {
+  return <Context.Provider value={props.value}>{props.children}</Context.Provider>
 }
 
 export function useSfContext(): SfContextHandle {

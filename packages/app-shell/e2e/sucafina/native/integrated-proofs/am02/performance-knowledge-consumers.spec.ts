@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test"
 import { nativeInstalledFixture as test } from "../../fixture"
+import { nativeOwnerQuery, type NativeTarget } from "../../fixture/manifest-contract.ts"
 
 /**
  * Installed DOM consumers for AM02. They do not pretend to be C16, to execute
@@ -7,13 +8,9 @@ import { nativeInstalledFixture as test } from "../../fixture"
  * Only an F04 provisioned, authenticated original Orchestra installation
  * may run these cases. Missing F04/installed sources fail explicitly.
  */
-function destination(target: {
-  shellOrigin: string; serverKey: string; projectId: string; installationId: string
-}, pathname: string) {
+function destination(target: NativeTarget, pathname: string) {
   const url = new URL(pathname, target.shellOrigin)
-  url.search = new URLSearchParams({
-    server: target.serverKey, project: target.projectId, installation: target.installationId,
-  }).toString()
+  url.search = nativeOwnerQuery(target).toString()
   return url.href
 }
 
@@ -48,13 +45,15 @@ test.describe("AM02 installed native consumer boundaries", () => {
       status: "real-installed-DOM-source-consumed", c16ReceiptObserved: false,
       fullAm02Parity: false,
     }))
-    const wrongProject = destination({ ...manifest.target,
-      projectId: manifest.wrongProject.projectId }, "/orchestra/sf-dashboard/executive")
-    await page.goto(wrongProject)
+    const wrongTeam = destination(manifest.wrongTeam, "/orchestra/sf-dashboard/executive")
+    await page.goto(wrongTeam)
     // There is no separate actor session invented in this test. The F04
-    // wrong-project URL alone must not disclose the previous owner's figures.
-    await expect(page.locator('[data-sf-surface="CAP01"] [data-sf-metric]')).toHaveCount(0)
-    await expect(page.locator('[data-sf-surface="CAP01"] [data-sf-bi-slot="BI01"] table')).toHaveCount(0)
+    // wrong-Team URL alone must not disclose the previous owner's figures.
+    await expect(page.locator("#sf-team-content").getByRole("alert")
+      .filter({ hasText: /^(This Team is not available for this account\.|Esta equipe n\u00e3o est\u00e1 dispon\u00edvel para esta conta\.)$/ })).toBeVisible()
+    await expect(page).toHaveURL(wrongTeam)
+    await expect(dashboard).toHaveCount(0)
+    await expect(page.locator('[data-sf-metric], [data-sf-bi-slot="BI01"] table')).toHaveCount(0)
   })
 
   test("AM02-KNOWLEDGE: UI31 private search consumes an installed authorized producer without URL disclosure", async ({ page, nativeHarness }) => {

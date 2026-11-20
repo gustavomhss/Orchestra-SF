@@ -14,7 +14,7 @@ import { object } from "../../../runtime/contract.ts"
 const transport = "playwright-unix-pipe-node-websocket"
 const limits = { maxFrameBytes: 16 * 1024 * 1024, maxQueuedBytes: 32 * 1024 * 1024 }
 const nodeDriver = String.raw`
-import { readFileSync } from "node:fs"
+import { readFileSync, readlinkSync } from "node:fs"
 import { chmod, lstat, mkdtemp, readFile, rm } from "node:fs/promises"
 import { createServer } from "node:net"
 import { tmpdir } from "node:os"
@@ -48,7 +48,8 @@ const lifecycle = { bridgeClosed: false, listenerClosed: false, socketClosed: fa
   pendingFrameBytes: 0, queuedWriteBytes: 0, socketRemoved: false, directoryRemoved: false }
 let server, socket, websocket, bridge, failure, launchSampler
 const launchStarted = performance.now()
-const protocol = { sent: 0, received: 0, malformed: 0, lastSent: undefined, lastReceived: undefined, pending: new Map() }
+const protocol = { sent: 0, received: 0, malformed: 0, lastSent: undefined, lastReceived: undefined, pending: new Map(),
+  getVersionReplyMs: undefined, browserProduct: undefined }
 const launchLogger = {
   isEnabled: (name) => name === "protocol",
   log: (_name, _severity, message) => {
@@ -60,7 +61,14 @@ const launchLogger = {
         protocol.sent++; protocol.lastSent = typeof value.method === "string" ? value.method : undefined
         if (Number.isSafeInteger(value.id) && typeof value.method === "string" && protocol.pending.size < 32) protocol.pending.set(value.id, value.method)
       } else {
-        protocol.received++; protocol.lastReceived = typeof value.method === "string" ? value.method : protocol.pending.get(value.id)
+        const request = protocol.pending.get(value.id)
+        protocol.received++; protocol.lastReceived = typeof value.method === "string" ? value.method : request
+        if (request === "Browser.getVersion" && protocol.getVersionReplyMs === undefined) {
+          protocol.getVersionReplyMs = Math.round(performance.now() - launchStarted)
+          const product = value.result?.product
+          if (typeof product === "string" && /^(?:Chrome|HeadlessChrome|Chromium)\/\d{1,6}(?:\.\d{1,6}){3}$/.test(product))
+            protocol.browserProduct = product
+        }
         protocol.pending.delete(value.id)
       }
     } catch { protocol.malformed++ }
@@ -78,19 +86,30 @@ const inspectLaunch = () => {
           const status = readFileSync("/proc/" + id + "/status", "utf8")
           const parent = Number(/^PPid:\s+(\d+)/m.exec(status)?.[1])
           if (parent !== process.pid) continue
-          children.push({ pid: Number(id), parent, name: readFileSync("/proc/" + id + "/comm", "utf8").trim(), state: /^State:\s+([^\n]+)/m.exec(status)?.[1], wait: readFileSync("/proc/" + id + "/wchan", "utf8").trim() })
+          const name = readFileSync("/proc/" + id + "/comm", "utf8").trim()
+          let executable
+          if (name === "chrome" || name === "chromium") {
+            // Read the running image, not a Playwright default path or a separate version process.
+            try {
+              const path = readlinkSync("/proc/" + id + "/exe")
+              if (/^\/[a-zA-Z0-9._/+ ()-]{1,383}$/.test(path)) executable = path
+            } catch { /* May be inaccessible or the child may already have exited. */ }
+          }
+          children.push({ pid: Number(id), parent, name, state: /^State:\s+([^\n]+)/m.exec(status)?.[1], wait: readFileSync("/proc/" + id + "/wchan", "utf8").trim(), executable })
         } catch { children.push({ pid: Number(id), state: "exited-during-observation" }) }
       }
     } catch { children.push({ state: "process-observation-unavailable" }) }
   }
-  // No protocol payload, command arguments, cookies or environment values leave
-  // the driver. These samples are diagnostic and never count as lifecycle proof.
+  // Only the allowlisted product/version leaves the driver, not raw protocol
+  // payloads, command arguments, cookies or environment values.
   console.log(JSON.stringify({ event: "launch-diagnostic", runtime: process.release.name, pid: process.pid,
+    nodeVersion: process.versions.node, playwrightVersion: version,
     elapsedMs: Math.round(performance.now() - launchStarted), resources, rss: process.memoryUsage().rss, children,
     deadlineEpochMs: startup.deadlineEpochMs, launchCeilingMs, remainingStartupMs: Math.max(0, startup.deadlineEpochMs - Date.now()),
     debugFileConfigured: typeof process.env.DEBUG_FILE === "string" && process.env.DEBUG_FILE.length > 0,
     protocol: { sent: protocol.sent, received: protocol.received, malformed: protocol.malformed,
-      lastSent: protocol.lastSent, lastReceived: protocol.lastReceived, pending: [...protocol.pending.values()] } }))
+      lastSent: protocol.lastSent, lastReceived: protocol.lastReceived, pending: [...protocol.pending.values()],
+      getVersionReplyMs: protocol.getVersionReplyMs, browserProduct: protocol.browserProduct } }))
 }
 const fail = (error) => {
   if (failure) return
@@ -289,7 +308,7 @@ async function within<T>(work: Promise<T>, timeout: number, name: string) {
 
 /** Each caller declares expectSpawn in its own test and reports only after assertions and cleanup succeed.
  * A caller's shorter acquisition deadline cancels the owned process scope, not only its await. */
-export async function launchBrowserDriver(consumer: "wp01-native-decisions" | "planner-monthly" | "wp10-review-access" | "wp07-review" | "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool" | "wp05-renderer", startup?: { signal: AbortSignal; timeoutMs: number; deadlineEpochMs?: number }) {
+export async function launchBrowserDriver(consumer: "teams-web-transport" | "wp01-native-decisions" | "planner-monthly" | "wp10-review-access" | "wp07-review" | "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool" | "wp05-renderer", startup?: { signal: AbortSignal; timeoutMs: number; deadlineEpochMs?: number }) {
   const launchTimeout = startup?.timeoutMs ?? 15000
   const launchCeilingMs = consumer === "wp01-shared-pool" ? 30000 : 15000
   if (!Number.isSafeInteger(launchTimeout) || launchTimeout < 1 || launchTimeout > launchCeilingMs) throw new Error("Invalid browser driver startup deadline")
@@ -458,8 +477,17 @@ export async function launchBrowserDriver(consumer: "wp01-native-decisions" | "p
     const browser = await chromium.connect(metadata.endpoint, { timeout: remaining() })
     phase("browser-connected", { driverPid: metadata.pid, browserPid: metadata.browserPid })
     const browserVersion = browser.version()
+    const launchChild = (Array.isArray(observed.diagnostic?.children) ? observed.diagnostic.children : [])
+      .map(object).find((child) => child.parent === metadata.pid && child.pid === metadata.browserPid)
+    const launchProtocol = object(observed.diagnostic?.protocol)
     let closing: Promise<void> | undefined
     return { browser,
+      launchObservation: {
+        browserPid: metadata.browserPid,
+        executable: launchChild?.executable,
+        getVersionReplyMs: launchProtocol.getVersionReplyMs,
+        browserProduct: launchProtocol.browserProduct,
+      },
       close: () => closing ??= cleanup(async () => {
         for (const context of browser.contexts()) await context.close()
         if (browser.contexts().length) throw new Error("Browser contexts remained open")

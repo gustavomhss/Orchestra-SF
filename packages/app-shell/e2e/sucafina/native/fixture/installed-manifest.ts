@@ -7,9 +7,10 @@ import { open, rm } from "node:fs/promises"
 import path from "node:path"
 import type { Page } from "@playwright/test"
 import {
-  observeNativeBinding, requirePrivateNativeRoot, validateNativeTarget,
+  observeNativeBinding, requireNativeInvocation, requirePrivateNativeRoot,
 } from "./readiness.ts"
-import type { NativeManifest, NativeTarget } from "./readiness.ts"
+import { serializeNativeManifest, validateNativeBoundaries, validateNativeInvocation } from "./manifest-contract.ts"
+import type { NativeInvocation, NativeManifest, NativeTarget } from "./manifest-contract.ts"
 
 type ActorPages = Readonly<{
   requester: Page
@@ -18,18 +19,24 @@ type ActorPages = Readonly<{
   dashboardAdmin?: Page
 }>
 
-type ApprovedConnection = Readonly<{
+export type ApprovedConnection = Readonly<{
   serverKey: string
   projectId: string
+  installationId: string
+  tenantId: string
+  hostId: string
   origin: string
+  publicOrigin: string
+  mount: string
 }>
 
 export type NativeInstalledRegistration = Readonly<{
   scratchRoot: string
   candidateSha: string
+  invocation: NativeInvocation
   target: NativeTarget
   wrongServer: NativeTarget
-  wrongProject: NativeTarget
+  wrongTeam: NativeTarget
   wrongInstallation: NativeTarget
   actors: ActorPages
   /** Must query the real, already-approved connection registry, not env input. */
@@ -41,27 +48,18 @@ export async function registerNativeInstalledManifest(input: NativeInstalledRegi
   if (!/^[0-9a-f]{40}$/.test(input.candidateSha) ||
       process.env.SF_NATIVE_CANDIDATE_SHA !== input.candidateSha)
     throw new Error("F04_CANDIDATE_MUST_MATCH_AUTHORIZED_RUNNER")
+  const boundaries = validateNativeBoundaries(input)
+  const invocation = validateNativeInvocation(input.invocation)
+  const originalActors = Object.freeze({ ...input.actors })
   const root = await requirePrivateNativeRoot(input.scratchRoot)
   const file = process.env.SF_NATIVE_INSTALLED_MANIFEST
   if (!file || path.dirname(path.resolve(file)) !== root || path.resolve(file) !== file)
     throw new Error("F04_MANIFEST_MUST_BE_INSIDE_PRIVATE_INSTALLATION_ROOT")
-  const target = validateNativeTarget(input.target)
-  const wrongServer = validateNativeTarget(input.wrongServer)
-  const wrongProject = validateNativeTarget(input.wrongProject)
-  const wrongInstallation = validateNativeTarget(input.wrongInstallation)
-  if (target.serverKey === wrongServer.serverKey ||
-      target.projectId === wrongProject.projectId ||
-      target.installationId === wrongInstallation.installationId ||
-      target.publicOrigin === wrongProject.publicOrigin ||
-      target.publicOrigin === wrongInstallation.publicOrigin)
-    throw new Error("F04_REAL_NEGATIVE_BOUNDARIES_REQUIRED")
-  const connection = await input.resolveApprovedConnection(target.serverKey)
-  if (!connection || connection.serverKey !== target.serverKey ||
-      connection.projectId !== target.projectId ||
-      connection.origin !== target.discoveryOrigin)
-    throw new Error("F04_APPROVED_ORCHESTRA_CONNECTION_REQUIRED")
+  const target = boundaries.target
+  await requireApprovedNativeConnection(target, input.resolveApprovedConnection)
+  await requireApprovedNativeConnection(boundaries.wrongServer, input.resolveApprovedConnection)
 
-  const pages = [input.actors.requester, input.actors.holder, input.actors.denied, ...(input.actors.dashboardAdmin ? [input.actors.dashboardAdmin] : [])]
+  const pages = [originalActors.requester, originalActors.holder, originalActors.denied, ...(originalActors.dashboardAdmin ? [originalActors.dashboardAdmin] : [])]
   if (pages.length < 3 || new Set(pages.map((page) => page.context())).size !== pages.length)
     throw new Error("F04_DISTINCT_AUTHENTICATED_BROWSER_CONTEXTS_REQUIRED")
   for (const page of pages) {
@@ -79,29 +77,33 @@ export async function registerNativeInstalledManifest(input: NativeInstalledRegi
     requester: principalRefs[0]!,
     holder: principalRefs[1]!,
     denied: principalRefs[2]!,
-    ...(input.actors.dashboardAdmin ? { dashboardAdmin: principalRefs[3]! } : {}),
+    ...(originalActors.dashboardAdmin ? { dashboardAdmin: principalRefs[3]! } : {}),
   }
 
   // A denied actor is not a success merely because it is different; its
   // current producer-admitted CAP14 read must actually be absent or refused.
   const deniedVendor = live[2]!.destinations.find((entry) => entry.capabilityId === "CAP14")
   if (deniedVendor?.canRead) throw new Error("F04_DENIED_ACTOR_CAN_READ_CAP14")
-  const admin = input.actors.dashboardAdmin ? live[3] : undefined
+  const admin = originalActors.dashboardAdmin ? live[3] : undefined
   if (admin && !["CAP04", "CAP05"].every((id) =>
     admin.destinations.some((entry) =>
       entry.capabilityId === id && entry.canRead && entry.allowedActionIds.includes("save"))))
     throw new Error("F04_DASHBOARD_MUTATION_NOT_ADMITTED_BY_CURRENT_PRODUCER")
 
   const manifest: NativeManifest = {
-    schema: "sf2h.native-installed-manifest.v1",
+    schema: "sf2h.native-installed-manifest.v2",
     candidateSha: input.candidateSha,
-    target, wrongServer, wrongProject, wrongInstallation, actors, scratchRoot: root,
+    invocation, ...boundaries, actors, scratchRoot: root,
   }
   // Exclusive private creation: no existing session file is replaced, and
   // no auth cookies, bearer tokens, session storage or grants are serialized.
+  requireNativeInvocation(manifest)
+  await requireApprovedNativeConnection(target, input.resolveApprovedConnection)
+  await requireApprovedNativeConnection(boundaries.wrongServer, input.resolveApprovedConnection)
+  const serialized = serializeNativeManifest(manifest)
   const handle = await open(file, "wx", 0o600)
   try {
-    await handle.writeFile(JSON.stringify(manifest) + "\n", "utf8")
+    await handle.writeFile(serialized, "utf8")
     await handle.sync()
   } catch (error) {
     await handle.close()
@@ -116,4 +118,17 @@ export async function registerNativeInstalledManifest(input: NativeInstalledRegi
     candidateSha: manifest.candidateSha,
     desktop: "NOT_RUN_D01_REAL_ELECTRON_REQUIRED" as const,
   }
+}
+
+/** Registry metadata alone grants nothing; original Microsoft/F02 follows this check. */
+export async function requireApprovedNativeConnection(
+  target: NativeTarget, resolve: NativeInstalledRegistration["resolveApprovedConnection"],
+): Promise<ApprovedConnection> {
+  const connection = await resolve(target.serverKey)
+  if (!connection || connection.serverKey !== target.serverKey || connection.projectId !== target.projectId ||
+      connection.installationId !== target.installationId || connection.tenantId !== target.tenantId ||
+      connection.hostId !== target.hostId || connection.origin !== target.discoveryOrigin ||
+      connection.publicOrigin !== target.publicOrigin || connection.mount !== target.mount)
+    throw new Error("F04_APPROVED_ORCHESTRA_CONNECTION_REQUIRED")
+  return Object.freeze({ ...connection })
 }

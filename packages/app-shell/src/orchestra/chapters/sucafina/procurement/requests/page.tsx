@@ -1,8 +1,10 @@
+import { sfAppendOwnerQuery } from "../../navigation-state/owner"
 import { createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "solid-js"
 import { Dynamic } from "solid-js/web"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
+import { SF_PROCUREMENT_CREATE_KEY_PREFIX } from "@orchestra/schema/sucafina/procurement"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfContext } from "../../context"
@@ -17,7 +19,7 @@ import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-confl
 import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
 import { SF_U11_REMAINING_COPY } from "./copy"
 import {
-  decodeRequestsPage, displayScalar, isPoWritable, isPrWritable, poFromRecord, postedPoLine, prFromRecord,
+  decodeRequestsPage, displayScalar, isPoWritable, isPrWritable, poFromRecord, postedPoLine, prCommandInput, prFromRecord,
   requestRef, requestVersion, uiCommandAction, validatePo, validatePr,
   type SfPoEdit, type SfPrEdit, type SfRequest, type SfRequestCommand, type SfRequestsRead,
 } from "./model"
@@ -167,10 +169,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     row: row(), version: version(), actionIds: view.read?.actionIds, stamp: sf.ready()?.context.stamp,
   })
   const stageHref = (ref: SfRef, part: "detail" | "requisition" | "po" | "history" | "sourcing" | "quotes") => {
-    const url = new URL(props.route.href, "http://orchestra.invalid")
     const query = new URLSearchParams()
-    for (const param of ["server", "project", "installation"])
-      if (url.searchParams.has(param)) query.set(param, url.searchParams.get(param)!)
+    if (props.route.ownerSelection.installationId) sfAppendOwnerQuery(query, props.route.ownerSelection)
     return "/orchestra/sf-procurement/requests/" + encodeSfRouteRef(ref) +
       (part === "detail" ? "" : "/" + part) + (query.size ? "?" + query.toString() : "")
   }
@@ -326,7 +326,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       reason,
       operationRef: crypto.randomUUID() as SfOperationRef,
       intentRef: crypto.randomUUID() as SfIntentRef,
-      idempotencyKey: crypto.randomUUID(),
+      idempotencyKey: (action === "create" && sf.ready()?.context.stamp.team ? SF_PROCUREMENT_CREATE_KEY_PREFIX : "") + crypto.randomUUID(),
     }
     setView({ reviewing: review, notice: undefined })
     if (pr) prDraft()?.setPhase("reviewing")
@@ -381,18 +381,25 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
 
     const base = { page: "Requests" as const, version: review.version,
       ...(review.ref ? { id: review.ref } : {}) }
-    const input = (() => {
+    const command = (() => {
       switch (review.action) {
-        case "create": return { ...base, action: "create" as const, values: { pr: review.pr! } }
-        case "save-pr": return { ...base, action: "save" as const, values: { pr: review.pr! } }
-        case "save-po": return { ...base, action: "save" as const, values: { po: review.po! } }
-        case "submit_pr": return { ...base, action: "submit_pr" as const, values: { pr: review.pr! } }
-        case "submit_po": return { ...base, action: "submit_po" as const, values: { po: review.po! } }
-        case "issue": return { ...base, action: "issue" as const, values: {} }
-        case "cancel": return { ...base, action: "cancel" as const, values: { reason: review.reason } }
-        case "delete": return { ...base, action: "delete" as const, values: {} }
+        case "create": return { operation: "create" as const,
+          input: { ...base, action: "create" as const, values: { pr: prCommandInput(review.pr!) } } }
+        case "save-pr": return { operation: "save-pr" as const,
+          input: { ...base, action: "save" as const, values: { pr: prCommandInput(review.pr!) } } }
+        case "save-po": return { operation: "save-po" as const,
+          input: { ...base, action: "save" as const, values: { po: review.po! } } }
+        case "submit_pr": return { operation: "submit_pr" as const,
+          input: { ...base, action: "submit_pr" as const, values: { pr: prCommandInput(review.pr!) } } }
+        case "submit_po": return { operation: "submit_po" as const,
+          input: { ...base, action: "submit_po" as const, values: { po: review.po! } } }
+        case "issue": return { operation: "issue" as const, input: { ...base, action: "issue" as const, values: {} } }
+        case "cancel": return { operation: "cancel" as const,
+          input: { ...base, action: "cancel" as const, values: { reason: review.reason } } }
+        case "delete": return { operation: "delete" as const, input: { ...base, action: "delete" as const, values: {} } }
       }
     })()
+    const input = command.input
     const payloadJson = JSON.stringify(input)
     const fence: RequestsDispatchFence = {
       reviewing: review, mode: creating() ? "create" : stage() === "po" ? "po" : "pr",
@@ -465,23 +472,14 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
 
     try {
       const result = await (async () => {
-        switch (review.action) {
-          case "create": return client["domain.command.CAP25.create"](
-            { ...base, action: "create", values: { pr: review.pr! } }, options)
-          case "save-pr": return client["domain.command.CAP25.save"](
-            { ...base, action: "save", values: { pr: review.pr! } }, options)
-          case "save-po": return client["domain.command.CAP25.save"](
-            { ...base, action: "save", values: { po: review.po! } }, options)
-          case "submit_pr": return client["domain.command.CAP25.submit_pr"](
-            { ...base, action: "submit_pr", values: { pr: review.pr! } }, options)
-          case "submit_po": return client["domain.command.CAP25.submit_po"](
-            { ...base, action: "submit_po", values: { po: review.po! } }, options)
-          case "issue": return client["domain.command.CAP25.issue"](
-            { ...base, action: "issue", values: {} }, options)
-          case "cancel": return client["domain.command.CAP25.cancel"](
-            { ...base, action: "cancel", values: { reason: review.reason } }, options)
-          case "delete": return client["domain.command.CAP25.delete"](
-            { ...base, action: "delete", values: {} }, options)
+        switch (command.operation) {
+          case "create": return client["domain.command.CAP25.create"](command.input, options)
+          case "save-pr": case "save-po": return client["domain.command.CAP25.save"](command.input, options)
+          case "submit_pr": return client["domain.command.CAP25.submit_pr"](command.input, options)
+          case "submit_po": return client["domain.command.CAP25.submit_po"](command.input, options)
+          case "issue": return client["domain.command.CAP25.issue"](command.input, options)
+          case "cancel": return client["domain.command.CAP25.cancel"](command.input, options)
+          case "delete": return client["domain.command.CAP25.delete"](command.input, options)
         }
       })()
       if (!ownerMatches(ownerKey, epoch)) return

@@ -1,13 +1,16 @@
 export * as ScheduledTask from "./scheduled-task"
 
 import { and, asc, desc, eq, lt, lte, min, ne, notInArray } from "drizzle-orm"
-import { Cause, Clock, Context, Duration, Effect, Layer, Queue, Schema } from "effect"
+import { Cause, Clock, Context, Duration, Effect, Fiber, Layer, Queue, Schema } from "effect"
 import { ScheduledTask } from "@orchestra/schema/scheduled-task"
 import { AgentV2 } from "./agent"
 import { Database } from "./database/database"
 import { makeGlobalNode } from "./effect/app-node"
+import { HostMaintenance } from "./host-maintenance"
 import { AbsolutePath } from "./schema"
 import { SessionV2 } from "./session"
+import { SessionOwner } from "./session/owner"
+import type { Capability } from "@orchestra/schema/capability"
 import { SessionInput } from "./session/input"
 import { ScheduledTaskCapability } from "./scheduled-task/capability"
 import { ScheduledTaskModel } from "./scheduled-task/model"
@@ -20,15 +23,16 @@ export type ID = ScheduledTask.ID
 export const Info = ScheduledTask.Info
 export type Info = ScheduledTask.Info
 
-// A running claim older than this belongs to a process that stopped mid-dispatch. Dispatch is a few local
-// writes, so a live process settles long before.
+// Recovery timing for a proven technical store only. Expiry is not corporate
+// authority or evidence that an external effect did not occur.
 export const LEASE = 120_000
 export const TICK = Duration.seconds(15)
 const TICK_MILLIS = Duration.toMillis(TICK)
 // The daemon never sleeps longer than this while something is scheduled, so a clock that jumped or a machine that
 // slept is noticed within a minute.
 const SLEEP_LIMIT = 60_000
-// Settled runs kept per task. Only the latest is shown; a slot can no longer run once the task moved past it.
+// Display history retained for the technical legacy policy only. Capability intent
+// reservations are permanent; pruning them would allow an old invocation to dispatch again.
 const KEEP = 20
 
 export const NotFoundError = ScheduledTaskShared.NotFoundError
@@ -80,6 +84,8 @@ type Outcome = ScheduledTaskShared.Outcome
 const layer = Layer.effect(
   Service,
   Effect.gen(function* () {
+    const maintenance = yield* HostMaintenance.Service
+    const owners = yield* SessionOwner.Service
     const { db } = yield* Database.Service
     const sessions = yield* SessionV2.Service
     // At most one pending wake: the daemon needs to know that something was written, not how many times.
@@ -201,10 +207,15 @@ const layer = Layer.effect(
               .set({ state: "started", session_id: outcome.sessionID, error: null, time_settled: now })
               .where(eq(ScheduledTaskRunTable.id, run.id))
               .run()
-          // Gone with its task, taken over after the lease ended (the new lease settles it), or revoked by an edit.
+          // Legacy task deleted, claim taken over (the current holder settles it), or revoked by an edit.
           if (run?.state !== "running" || run.owner !== lease) return
-          if (outcome.type === "void")
+          if (outcome.type === "void") {
+            if (claimed.task.policy === "capability")
+              return yield* db.update(ScheduledTaskRunTable)
+                .set({ state: "revoked", error: "reservation retained without admission", owner: null, time_settled: now })
+                .where(eq(ScheduledTaskRunTable.id, run.id)).run()
             return yield* db.delete(ScheduledTaskRunTable).where(eq(ScheduledTaskRunTable.id, run.id)).run()
+          }
           yield* db
             .update(ScheduledTaskRunTable)
             .set({
@@ -217,8 +228,11 @@ const layer = Layer.effect(
             .run()
           const task = yield* find(claimed.task.id)
           if (!task) return
-          if (task.policy === "capability")
-            yield* advance(task, ScheduledTaskCapability.settledCapability(task, run, outcome), now)
+          if (task.policy === "capability") {
+            if (task.disabled_reason !== "removed")
+              yield* advance(task, ScheduledTaskCapability.settledCapability(task, run, outcome), now)
+            return
+          }
           if (legacy(task)) {
             // The task still points at (or before) the served slot unless it was rescheduled while the run
             // started; then the run counts as an extra run and the task keeps its new time.
@@ -270,8 +284,9 @@ const layer = Layer.effect(
     })
 
     // Only a claim whose prompt was admitted happened. It is finished with the exact retry a client would send,
-    // which reconciles the admitted prompt and wakes the Session. A claim that never reached admission is void,
-    // and its slot is planned again.
+    // which reconciles the admitted prompt and wakes the Session. Capability reservations
+    // without observed admission remain terminal. Removed tasks reconcile durable admission
+    // without waking or dispatching again; legacy device slots retain their old retry policy.
     const takeOver = Effect.fn("ScheduledTask.takeOver")(function* (stale: RunRow, now: number) {
       const claimed = yield* immediate(
         Effect.gen(function* () {
@@ -296,6 +311,10 @@ const layer = Layer.effect(
       if (!claimed) return
       const admitted = yield* SessionInput.find(db, claimed.messageID)
       if (!admitted) return yield* settle(claimed, { type: "void" })
+      if (admitted.sessionID !== claimed.sessionID)
+        return yield* Effect.die(new Error("Scheduled task admission conflicts with its retained reservation"))
+      if (claimed.task.policy === "capability" && claimed.task.disabled_reason === "removed")
+        return yield* settle(claimed, { type: "started", sessionID: admitted.sessionID })
       const retried = yield* dispatch(claimed, true)
       if (retried.type !== "started") yield* Effect.logWarning("Scheduled run retry failed", retried)
       yield* settle(claimed, { type: "started", sessionID: admitted.sessionID })
@@ -313,7 +332,7 @@ const layer = Layer.effect(
       const due = yield* db
         .select({ id: ScheduledTaskTable.id })
         .from(ScheduledTaskTable)
-        .where(and(eq(ScheduledTaskTable.enabled, true), lte(ScheduledTaskTable.next, now)))
+        .where(and(eq(ScheduledTaskTable.enabled, true), lte(ScheduledTaskTable.next, now), ScheduledTaskShared.ACTIVE))
         .all()
         .pipe(Effect.orDie)
       yield* Effect.forEach(due, (task) => serve(task.id, now).pipe(Effect.catchCause(logFailure)), { discard: true })
@@ -327,7 +346,7 @@ const layer = Layer.effect(
       const next = yield* db
         .select({ at: min(ScheduledTaskTable.next) })
         .from(ScheduledTaskTable)
-        .where(eq(ScheduledTaskTable.enabled, true))
+        .where(and(eq(ScheduledTaskTable.enabled, true), ScheduledTaskShared.ACTIVE))
         .get()
         .pipe(Effect.orDie)
       const claimed = yield* db
@@ -346,9 +365,35 @@ const layer = Layer.effect(
       yield* Effect.race(Effect.sleep(delay), Queue.take(woken))
     })
 
-    const capability = cap.api({ dispatch, settle })
+    const technical = <A, E>(work: Effect.Effect<A, E>) => Effect.gen(function* () {
+      const scope = yield* owners.open().pipe(Effect.orDie)
+      if (owners.owner(scope)) return yield* Effect.die(new SessionOwner.Denied({ reason: "missing-admission" }))
+      yield* SessionOwner.ensureTechnical(db)
+      const value = yield* work
+      yield* owners.verify(scope).pipe(Effect.orDie)
+      yield* SessionOwner.ensureTechnical(db)
+      return value
+    })
+    const owned = <A, E>(owner: Capability.Owner, action: "read" | "write" | "run" | "control", work: Effect.Effect<A, E>) =>
+      SessionOwner.guard(owners, owner.sessionID, action, (scope) => action === "read" ? work :
+        owners.withWriter(scope, work).pipe(
+          Effect.catchTag("SessionOwner.Denied", (error) => Effect.die(error)),
+          Effect.catchTag("AuthorityGenerationError", (error) => Effect.die(error)),
+        ))
+    const capApi = cap.api({ dispatch, settle })
+    const capability: ScheduledTaskCapability.Interface = {
+      create: (owner, ...args) => maintenance.admit(owned(owner, "write", capApi.create(owner, ...args))),
+      list: (owner, ...args) => maintenance.admit(owned(owner, "read", capApi.list(owner, ...args))),
+      placed: (...args) => maintenance.admit(technical(capApi.placed(...args))),
+      get: (owner, ...args) => maintenance.admit(owned(owner, "read", capApi.get(owner, ...args))),
+      update: (owner, ...args) => maintenance.admit(owned(owner, "write", capApi.update(owner, ...args))),
+      pause: (owner, ...args) => maintenance.admit(owned(owner, "control", capApi.pause(owner, ...args))),
+      resume: (owner, ...args) => maintenance.admit(owned(owner, "control", capApi.resume(owner, ...args))),
+      remove: (owner, ...args) => maintenance.admit(owned(owner, "control", capApi.remove(owner, ...args))),
+      run: (owner, ...args) => maintenance.admit(owned(owner, "run", capApi.run(owner, ...args))),
+    }
     yield* ScheduledTaskPort.bind(capability)
-    return Service.of({
+    const service = Service.of({
       list: Effect.fn("ScheduledTask.list")(function* (directory) {
         const tasks = yield* db
           .select()
@@ -475,10 +520,19 @@ const layer = Layer.effect(
       untilDue,
       capability,
     })
+    return Service.of({
+      ...service,
+      list: (...args) => maintenance.admit(technical(service.list(...args))),
+      create: (...args) => maintenance.admit(technical(service.create(...args))),
+      update: (...args) => maintenance.admit(technical(service.update(...args))),
+      remove: (...args) => maintenance.admit(technical(service.remove(...args))),
+      run: (...args) => maintenance.admit(technical(service.run(...args))),
+      tick: maintenance.admit(technical(service.tick)),
+    })
   }),
 )
 
-export const node = makeGlobalNode({ service: Service, layer, deps: [Database.node, SessionV2.node] })
+export const node = makeGlobalNode({ service: Service, layer, deps: [Database.node, SessionV2.node, HostMaintenance.node, SessionOwner.node] })
 
 
 /** Serves due slots on the server whether or not any client is open, starting with a pass at boot. */
@@ -486,10 +540,11 @@ export const daemonNode = makeGlobalNode({
   name: "scheduled-task-daemon",
   layer: Layer.effectDiscard(
     Effect.gen(function* () {
+      const maintenance = yield* HostMaintenance.Service
       const tasks = yield* Service
       // A failed pass (the database was busy, say) must not stop later passes.
-      yield* tasks.tick.pipe(
-        Effect.catchCause(logFailure),
+      const daemon = yield* tasks.tick.pipe(
+        Effect.catchCause((cause) => logFailure(cause).pipe(Effect.andThen(Effect.sleep(TICK)))),
         Effect.andThen(
           tasks.untilDue.pipe(
             Effect.catchCause((cause) => logFailure(cause).pipe(Effect.andThen(Effect.sleep(TICK)))),
@@ -498,9 +553,10 @@ export const daemonNode = makeGlobalNode({
         Effect.forever,
         Effect.forkScoped,
       )
+      yield* maintenance.register("scheduled-task-daemon", Fiber.interrupt(daemon).pipe(Effect.asVoid))
     }),
   ),
-  deps: [node],
+  deps: [node, HostMaintenance.node],
 })
 
 function legacy(task: Task): task is LegacyTask {

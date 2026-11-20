@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { Context, Effect, Layer, LayerMap, Option } from "effect"
+import { Context, Effect, Layer, LayerMap, Option, RcMap } from "effect"
 import { Node } from "@orchestra/core/effect/app-node"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
@@ -51,20 +51,14 @@ describe("node build", () => {
     const mapLayer = Layer.effect(
       LocationServiceMap.Service,
       Effect.gen(function* () {
-        const service = yield* CycleB
-        return yield* LayerMap.make(
-          (ref: Location.Ref) =>
-            Layer.succeed(
-              Location.Service,
-              Location.Service.of({
-                directory: ref.directory,
-                workspaceID: ref.workspaceID,
-                project: { id: Project.ID.global, directory: service.directory },
-              }),
-            ),
-          { idleTimeToLive: "1 minute" },
+        yield* CycleB
+        const locations = yield* LayerMap.make((_ref: Location.Ref) =>
+          Layer.effectContext<LocationServices, LocationError, never>(
+            Effect.die("The dependency cycle must be rejected before a Location is acquired"),
+          ), { idleTimeToLive: "1 minute" },
         )
-      }) as unknown as Effect.Effect<LayerMap.LayerMap<Location.Ref, LocationServices, LocationError>, never, CycleB>,
+        return { ...locations, keys: RcMap.keys(locations.rcMap).pipe(Effect.map((values) => Array.from(values))) }
+      }),
     )
     const map = Node.makeGlobalNode({ service: LocationServiceMap.Service, layer: mapLayer, deps: [b] })
     await expect(

@@ -27,7 +27,7 @@ import { Capability } from "@orchestra/schema/capability"
 import { AbsolutePath } from "@orchestra/schema/schema"
 import { SessionID } from "@orchestra/schema/session-id"
 import { SessionMessage } from "@orchestra/schema/session-message"
-import { Context, Effect, Layer, LayerMap, Option } from "effect"
+import { Context, Effect, Layer, LayerMap, Option, RcMap } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
 import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
@@ -63,7 +63,7 @@ export function make(options: { ticketTtlMillis?: number } = {}) {
       ])
       return LayerNode.compile(nodes.node).pipe(Layer.fresh,
         Layer.provide(LayerNode.compile(nodes.hoisted, [[Database.node, databaseNode]])))
-    }, { idleTimeToLive: "60 minutes" }))
+    }, { idleTimeToLive: "60 minutes" }).pipe(Effect.map((locations) => ({ ...locations, keys: RcMap.keys(locations.rcMap).pipe(Effect.map((values) => Array.from(values))) }))))
     const context = yield* Layer.build(Layer.mergeAll(Layer.succeed(Database.Service, database), map,
       LayerNode.compile(EventV2.node, [[Database.node, databaseNode]]), LayerNode.compile(FSUtil.node),
       Global.layerWith({ data: join(directory, "data"), tmp: join(directory, "tmp") })))

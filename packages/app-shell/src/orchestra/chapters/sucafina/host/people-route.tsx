@@ -1,7 +1,8 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Option, Schema } from "effect"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfPeople } from "@orchestra/schema/sucafina/people"
-import type { SfContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import type { SfSurfaceProps } from "../context/contracts"
 import { SfPeopleOverviewView } from "../people/overview"
@@ -21,9 +22,8 @@ export function isPeopleSurface(id: string): id is keyof typeof operations { ret
 export function parsePeopleRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
   if (candidate.chapterId !== "sf-people" || !isPeopleSurface(candidate.surfaceId) || !kinds[candidate.surfaceId].includes(candidate.kind)) return
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation", "year", "month", ...(candidate.surfaceId === "CAP08" ? ["status"] : [])].includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => ![...sfOwnerQueryKeys, "year", "month", ...(candidate.surfaceId === "CAP08" ? ["status"] : [])].includes(key))) return
+  if (!sfOwnerQueryValid(params)) return
   const year = params.get("year"), month = params.get("month"), status = params.get("status")
   if (year !== null && !/^\d{4}$/.test(year) || month !== null && !/^(?:[1-9]|1[0-2])$/.test(month) || status === "") return
   const input = { ...(year === null ? {} : { year: Number(year) }), ...(month === null ? {} : { month: Number(month) }),
@@ -31,7 +31,7 @@ export function parsePeopleRouteQuery(params: URLSearchParams, candidate: SfNati
   if (Option.isNone(Schema.decodeUnknownOption(operations[candidate.surfaceId].input, { onExcessProperty: "error" })(input))) return
   return { ...(year === null ? {} : { year: Number(year) }), ...(month === null ? {} : { month: Number(month) }), ...(status === null ? {} : { status }) }
 }
-export function peopleRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function peopleRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-people" || !isPeopleSurface(candidate.surfaceId) || !kinds[candidate.surfaceId].includes(candidate.kind)) return false
   const operation = operations[candidate.surfaceId]
   return context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead) &&

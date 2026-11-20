@@ -1,7 +1,8 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Option, Schema } from "effect"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
-import type { SfContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import { SfPlannerOpexView } from "../planner/opex"
@@ -34,9 +35,10 @@ export function parsePlannerPagesRouteQuery(params: URLSearchParams, candidate: 
   if (candidate.chapterId !== "sf-planner" || !isPlannerPagesSurface(candidate.surfaceId) ||
     !kinds[candidate.surfaceId].includes(candidate.kind)) return
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation", "year", ...(candidate.surfaceId === "CAP21" ? [] : ["version"]), ...(["CAP18", "CAP19"].includes(candidate.surfaceId) ? ["view"] : [])].includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  const allowed = [...sfOwnerQueryKeys, "year", ...(candidate.surfaceId === "CAP21" ? [] : ["version"]),
+    ...(["CAP18", "CAP19"].includes(candidate.surfaceId) ? ["view"] : [])]
+  if (new Set(keys).size !== keys.length || keys.some((key) => !allowed.includes(key))) return
+  if (!sfOwnerQueryValid(params)) return
   const savedView = params.get("view")
   if (savedView !== null && (!/^[A-Za-z0-9_-]{8,128}$/.test(savedView) || params.has("year") || params.has("version"))) return
   const year = params.get("year"), version = params.get("version")
@@ -47,7 +49,7 @@ export function parsePlannerPagesRouteQuery(params: URLSearchParams, candidate: 
     ...(savedView === null ? {} : { savedView: savedView as SfRef }) }
 }
 
-export function plannerPagesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function plannerPagesRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-planner" || !isPlannerPagesSurface(candidate.surfaceId) ||
     !kinds[candidate.surfaceId].includes(candidate.kind)) return false
   const operation = operations[candidate.surfaceId]

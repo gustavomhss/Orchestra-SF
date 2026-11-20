@@ -1,4 +1,7 @@
 import { ServerAuth } from "../auth"
+import type { SessionOwner } from "@orchestra/core/session/owner"
+import { guardSessionEndpoint } from "../session-access"
+import { parseSfInstallationSelector, readSfInstallations, type SfTrustedInstallationSource } from "../sucafina-installations"
 import { UnauthorizedError } from "@orchestra/protocol/errors"
 import { Authorization } from "@orchestra/protocol/middleware/authorization"
 export { Authorization } from "@orchestra/protocol/middleware/authorization"
@@ -39,22 +42,43 @@ function credentialFromRequest(request: HttpServerRequest.HttpServerRequest) {
   return Effect.succeed(emptyCredential())
 }
 
-export const authorizationLayer = Layer.effect(
+export const authorizationLayerWith = (installed?: SfTrustedInstallationSource, owners?: SessionOwner.Interface) => Layer.effect(
   Authorization,
   Effect.gen(function* () {
     const config = yield* ServerAuth.Config
-    if (!ServerAuth.required(config)) return Authorization.of((effect) => effect)
-    return Authorization.of((effect) =>
+    const protect = <A, E, R>(effect: Effect.Effect<A, E, R>, group: string, endpoint: string) =>
+      Effect.gen(function* () {
+        // Technical health contains no profile data. Corporate administration
+        // remains on its separately authenticated installation mount.
+        if (group === "server.health") return yield* effect
+        // An installation's technical operator never admits business APIs.
+        // A configured source that is missing or failed cannot become a bare technical server.
+        if (installed)
+          return yield* new UnauthorizedError({ message: "Corporate installation admission required" })
+        if (owners) {
+          const scope = yield* owners.open().pipe(Effect.mapError(() =>
+            new UnauthorizedError({ message: "Corporate installation admission required" })))
+          const value = yield* guardSessionEndpoint(owners, group, endpoint, effect)
+          yield* owners.verify(scope).pipe(Effect.mapError(() =>
+            new UnauthorizedError({ message: "Corporate installation admission required" })))
+          return value
+        }
+        return yield* effect
+      })
+    return Authorization.of((effect, options) =>
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest
         // Browsers cannot set headers on WebSocket upgrades, so a ticketed PTY connect skips
         // credential checks here; the connect handler consumes and validates the ticket.
         const url = new URL(request.url, "http://localhost")
-        if (hasPtyConnectTicketURL(url)) return yield* effect
+        if (hasPtyConnectTicketURL(url)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
         // Media elements cannot send headers either; the content handler verifies the HMAC ticket.
-        if (hasCapabilityContentTicketURL(url)) return yield* effect
+        if (hasCapabilityContentTicketURL(url)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
+        // Only the configured current Microsoft metadata endpoint is public; the descriptor grants no admission.
+        if (installed && (yield* Effect.promise((signal) => publicBootstrap(request, installed, signal)))) return yield* effect
+        if (!ServerAuth.required(config)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
         const credential = yield* credentialFromRequest(request)
-        if (ServerAuth.authorized(credential, config)) return yield* effect
+        if (ServerAuth.authorized(credential, config)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
         if (process.env.SF_AUTH_DIAG === "1" && /^\/sucafina\/(?:dashboard|planner|procurement)$/.test(url.pathname)) {
           console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "server-middleware", stage: "authorization-denied", path: url.pathname }))
           yield* HttpEffect.appendPreResponseHandler((_request, response) =>
@@ -69,3 +93,28 @@ export const authorizationLayer = Layer.effect(
     )
   }),
 )
+
+export const authorizationLayer = authorizationLayerWith()
+
+async function publicBootstrap(request: HttpServerRequest.HttpServerRequest, installed: SfTrustedInstallationSource, signal: AbortSignal) {
+  if (request.method !== "GET" && request.method !== "HEAD") return false
+  const url = new URL(request.url, "http://localhost")
+  if (url.pathname !== "/api/sucafina/installations" || url.username || url.password || url.hash ||
+    request.headers["sec-fetch-site"] === "cross-site" || request.headers["transfer-encoding"] !== undefined ||
+    request.headers["content-length"] !== undefined && request.headers["content-length"] !== "0") return false
+  try {
+    const selector = parseSfInstallationSelector(request.url)
+    if (selector.select !== "current") return false
+    const result = await readSfInstallations(installed, selector, signal)
+    const descriptor = result.installations.length === 1 ? result.installations[0] : undefined
+    if (signal.aborted || !descriptor || descriptor.authMode !== "microsoft" ||
+      descriptor.contractRevision !== "sf-team-profile/1") return false
+    const source = request.source instanceof Request ? new URL(request.source.url) : undefined
+    const host = request.headers.host ?? source?.host
+    const origin = new URL(descriptor.publicOrigin)
+    // Host comes from the actual transport. Forwarded hints never widen this exception.
+    return host?.toLowerCase() === origin.host.toLowerCase() &&
+      (!source || source.origin === descriptor.publicOrigin) &&
+      (request.headers.origin === undefined || request.headers.origin === descriptor.publicOrigin)
+  } catch { return false }
+}

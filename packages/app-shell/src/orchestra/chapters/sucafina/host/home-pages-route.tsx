@@ -1,7 +1,8 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid, sfSameOwnerSelection } from "../navigation-state/owner"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfWork } from "@orchestra/schema/sucafina/work"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
-import type { SfContext, SfHref, SfOwnerSelection, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfHref, SfOwnerSelection, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import { matchSfNativeRoutePath, type SfNativeRouteCandidate } from "../route-registry"
 import { resolveSfUrlSelection } from "../navigation-state"
@@ -14,9 +15,8 @@ export function isHomePagesSurface(id: string): boolean { return kinds.some((ite
 export function parseHomePagesRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
   if (candidate.chapterId !== "sf-home" || !isHomePagesSurface(candidate.surfaceId) || candidate.kind !== "entry") return
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation"].includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => !sfOwnerQueryKeys.some((name) => name === key))) return
+  if (!sfOwnerQueryValid(params)) return
   return {}
 }
 /** Syntax-only UI67 status route; it carries no authenticated authority. */
@@ -24,12 +24,11 @@ export function homeContextStatusRoute(pathname: string, search: string, selecte
   const candidate = matchSfNativeRoutePath(pathname)
   if (!candidate || candidate.surfaceId !== "UI67" || !parseHomePagesRouteQuery(new URLSearchParams(search), candidate)) return
   const resolved = resolveSfUrlSelection(pathname + search, pathname, selected)
-  if (resolved.status !== "selected" || resolved.selection.serverKey !== selected.serverKey ||
-    resolved.selection.projectId !== selected.projectId || resolved.selection.installationId !== selected.installationId) return
+  if (resolved.status !== "selected" || !sfSameOwnerSelection(resolved.selection, selected)) return
   return { surfaceId: "UI67", kind: "entry", params: {}, ownerSelection: selected,
     pathname, href: (pathname + search) as SfHref, query: {} }
 }
-export function homePagesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function homePagesRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-home" || !isHomePagesSurface(candidate.surfaceId) || candidate.kind !== "entry") return false
   // UI67 renders the same context already read and stamped by F01 preflight.
   if (candidate.surfaceId === "UI67") return true

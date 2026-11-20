@@ -2,12 +2,12 @@ import { Option, Schema } from "effect"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { draftAvailability } from "./draft-revalidation-availability"
 
 /** CAP04/CAP05: retain the source editor's owner, entry, deviation and YTD CAS keys. */
 export async function revalidateBudgetDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (signal.aborted) return { status: "unavailable" }
   if (input.originalOwner.installationId !== fresh.stamp.installationId ||

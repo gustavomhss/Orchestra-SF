@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -89,7 +90,9 @@ export function createHotTopicDraftStore(input: {
       const preferences = await input.state.read(source, "preferences", (state, authority) => {
         if (!sameAuthority(authority, context)) return undefined
         const previous = request.draftRef ? state.preferences[historyKey(request.draftRef)] : undefined
-        return { previous, active: isDraft(previous) ? state.preferences[activeKey(previous.id)] : undefined, prior: state.transactions[JSON.stringify([authority.principalRef, "preferences", request.caseRef.id, `hot-topic-draft:${operation}`])] }
+        const savedIntent = sfTransactionLookup(state, authority, { namespace: "preferences", targetRef: request.caseRef.id, idempotencyKey: `hot-topic-draft:${operation}` })
+        if (savedIntent.status === "ambiguous") return undefined
+        return { previous, active: isDraft(previous) ? state.preferences[activeKey(previous.id)] : undefined, prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
       })
       // Only an already committed operation may be read against a later case version.
       // Keep the original request intact for its exact command digest and human grant.
@@ -146,14 +149,18 @@ export function createHotTopicDraftStore(input: {
         return { status: "needs-input", reason: "invalid-first-save-reference" }
       if (context.kind !== "ui" || !source || !operation || !await input.authorizeLookup?.(request, context) || !await input.host.revalidate(context))
         return { status: "denied", reason: "hot-topic-draft-outcome-access-unavailable" }
-      const transactionKey = JSON.stringify([context.binding.principalRef, "preferences", request.caseRef.id, `hot-topic-draft:${operation}`])
+      const transaction = { namespace: "preferences" as const, targetRef: request.caseRef.id, idempotencyKey: `hot-topic-draft:${operation}` }
       const caseRead = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
       if (caseRead.status !== "ok" || !caseRead.value || caseRead.value.id !== request.caseRef.id ||
         caseRead.value.incarnation !== request.caseRef.incarnation || caseRead.value.version < request.caseRef.version ||
         !caseRead.value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(caseRead.value, context))
         return { status: "denied", reason: "hot-topic-draft-outcome-access-unavailable" }
-      const outcome = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context)
-        ? { current: state.cases[request.caseRef.id], prior: state.transactions[transactionKey] } : undefined)
+      const outcome = await input.state.read(source, "preferences", (state, authority) => {
+        if (!sameAuthority(authority, context)) return undefined
+        const savedIntent = sfTransactionLookup(state, authority, transaction)
+        if (savedIntent.status !== "found") return undefined
+        return { current: state.cases[request.caseRef.id], prior: savedIntent.receipt }
+      })
       if (outcome.status !== "ok" || !outcome.value || digestSfValue(outcome.value.current) !== digestSfValue(caseRead.value))
         return { status: "unavailable", reason: "hot-topic-draft-outcome-unconfirmed" }
       const prior = outcome.value.prior
@@ -179,12 +186,15 @@ export function createHotTopicDraftStore(input: {
         !await input.authorizeCase(caseRead.value, context) || !await input.authorizeLookup?.(request, context) ||
         !await input.host.revalidate(context))
         return { status: "unavailable", reason: "hot-topic-draft-outcome-unconfirmed" }
-      const retained = await input.state.read(source, "preferences", (state, authority) =>
-        sameAuthority(authority, context) && digestSfValue(state.cases[request.caseRef.id]) === digestSfValue(caseRead.value) &&
-        digestSfValue(state.transactions[transactionKey]) === digestSfValue(prior) &&
-        digestSfValue(state.preferences[historyKey(draft.draftRef)]) === digestSfValue(draft) &&
-        digestSfValue(state.preferences[activeKey(draft.id)]) === digestSfValue(draft) &&
-        input.verifyLookupSnapshot?.(draft, context) === true)
+      const retained = await input.state.read(source, "preferences", (state, authority) => {
+        if (!sameAuthority(authority, context)) return false
+        const savedIntent = sfTransactionLookup(state, authority, transaction)
+        return savedIntent.status === "found" && digestSfValue(state.cases[request.caseRef.id]) === digestSfValue(caseRead.value) &&
+          digestSfValue(savedIntent.receipt) === digestSfValue(prior) &&
+          digestSfValue(state.preferences[historyKey(draft.draftRef)]) === digestSfValue(draft) &&
+          digestSfValue(state.preferences[activeKey(draft.id)]) === digestSfValue(draft) &&
+          input.verifyLookupSnapshot?.(draft, context) === true
+      })
       if (retained.status !== "ok" || retained.value !== true || source.signal.aborted || input.host.requestFor(context) !== source)
         return { status: "unavailable", reason: "hot-topic-draft-outcome-unconfirmed" }
       return { status: "ok", value: { draftRef: saved.draftRef, version: saved.version } }

@@ -1,8 +1,9 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Option, Schema } from "effect"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfRoutines, SfRoutineCaseRef } from "@orchestra/schema/sucafina/routines"
 import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
-import type { SfContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import { SfRoutineCatalogView } from "../routines/catalog"
@@ -16,14 +17,13 @@ export function parseRoutinesRouteQuery(params: URLSearchParams, candidate: SfNa
   if (candidate.chapterId !== "sf-routines" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
   const keys = [...params.keys()]
   const caseAllowed = candidate.surfaceId === "UI64" || candidate.surfaceId === "UI65" && candidate.kind === "entry"
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation", ...(caseAllowed ? ["case"] : [])].includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => ![...sfOwnerQueryKeys, ...(caseAllowed ? ["case"] : [])].includes(key))) return
+  if (!sfOwnerQueryValid(params)) return
   const value = params.get("case")
   if (value !== null && Option.isNone(Schema.decodeUnknownOption(SfRoutineCaseRef.fields.id)(value))) return
   return value === null ? {} : { case: value as SfRef }
 }
-export function routinesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function routinesRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-routines" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
   const operations = candidate.surfaceId === "UI64" ? [SfAnalyses.operations["intelligence.analysis.choices"].operationId,
     candidate.kind === "admission" ? SfRoutines.operations["routines.read-admission"].operationId : SfRoutines.operations["routines.catalog"].operationId] :

@@ -1,5 +1,6 @@
 import { configure, roleMap } from "./admin.ts"
 import { createHash } from "node:crypto"
+import { SF_PROCUREMENT_CREATE_KEY_PREFIX } from "@orchestra/schema/sucafina/procurement"
 import type { ResolvedActor, RoleRow, Surface } from "../src/identity.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../src/nav.ts"
 import { visibleRequests } from "../src/requests.ts"
@@ -12,8 +13,11 @@ import { assetLink, captureRecordAssets, deleteRecordAssets, downloadAsset, uplo
 import type { AssetKind, AssetPersistence, AssetServices, BlobTransaction } from "./assets.ts"
 import type { RenderContext } from "./ui.ts"
 import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
-import { publicSfData } from "../product/integration/public-state.ts"
+import { publicSfData, SF_PROCUREMENT_CREATE_RECEIPTS } from "../product/integration/public-state.ts"
 import { readProcurementQueueView } from "../product/procurement/queue-view.ts"
+import { digestSfValue } from "../product/contracts/canonical.ts"
+import { procurementCanCreateRequest } from "./procurement.ts"
+import type { TeamProfileAdmission } from "./team-profile-resolver.ts"
 
 export type Contribution = {
   pages: readonly string[]
@@ -30,6 +34,7 @@ export type Application = {
     request: Request,
     context?: { surface: Surface; roleMap: readonly RoleRow[] },
   ) => Promise<ResolvedActor | null>
+  procurementCreateAdmission?: (request: Request) => Promise<TeamProfileAdmission | undefined>
   persistence: Persistence
   environment: (request: Request) => Promise<Environment>
   domains: Record<Surface, readonly Contribution[]>
@@ -83,6 +88,14 @@ export function createApplication(mount: string, application: Application) {
     const parsed =
       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
     if (parsed instanceof Response) return parsed
+    const intentKey = surface === "procurement" && parsed?.page === "Requests" && parsed.action === "create"
+      ? request.headers.get("idempotency-key")
+      : undefined
+    const createKey = intentKey?.startsWith(SF_PROCUREMENT_CREATE_KEY_PREFIX)
+      ? intentKey.slice(SF_PROCUREMENT_CREATE_KEY_PREFIX.length)
+      : undefined
+    if (createKey !== undefined && !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(createKey))
+      return json({ ok: false, status: 400 }, 400)
     const environment = await application.environment(request)
     const transaction: TransactionRunner = (work) =>
       application.assets
@@ -319,6 +332,42 @@ export function createApplication(mount: string, application: Application) {
             : parsed.action === "delete" && surface === "procurement" && page === "Suppliers"
               ? "supplier"
               : undefined
+        let createIntent: { key: string; authorityDigest: string; commandDigest: string } | undefined
+        if (createKey !== undefined) {
+          if (!procurementCanCreateRequest(actor))
+            return { commit: false, value: json({ ok: false, status: 403 }, 403) }
+          const admission = await application.procurementCreateAdmission?.(request)
+          if (!admission || admission.principal.principalObjectId !== actor.id)
+            return { commit: false, value: json({ ok: false, status: 403 }, 403) }
+          const commandDigest = await Promise.resolve().then(() => digestSfValue(parsed)).catch(() => undefined)
+          if (!commandDigest)
+            return { commit: false, value: json({ ok: false, status: 400 }, 400) }
+          createIntent = {
+            key: digestSfValue(createKey),
+            authorityDigest: digestSfValue({ admission, roles: [...actor.roles].sort(), assigned: actor.assigned, domains: actor.domains }),
+            commandDigest,
+          }
+          const stored = snapshot.data[SF_PROCUREMENT_CREATE_RECEIPTS]
+          const receipts = object(stored)
+          if (stored !== undefined && stored !== receipts)
+            return { commit: false, value: json({ ok: false, status: 503 }, 503) }
+          if (Object.hasOwn(receipts, createIntent.key)) {
+            const receipt = object(receipts[createIntent.key])
+            if (receipt.authorityDigest !== createIntent.authorityDigest || receipt.commandDigest !== commandDigest)
+              return { commit: false, value: json({ ok: false, status: 409 }, 409) }
+            const ref = text(receipt.requestRef)
+            const record = object(object(object(snapshot.data.store).requests)[ref])
+            const originalVersion = receipt.requestVersion
+            const currentVersion = snapshot.versions[`requests:${ref}`]?.version
+            // Refuse an acknowledgement if the durable request is unavailable,
+            // including after a restore that retained the original receipt.
+            if (!ref || typeof originalVersion !== "number" || !Number.isSafeInteger(originalVersion) || originalVersion < 1 ||
+                currentVersion === undefined || currentVersion < originalVersion ||
+                object(record.request).createdBy !== actor.id || record.version !== currentVersion)
+              return { commit: false, value: json({ ok: false, status: 409 }, 409) }
+            return { commit: false, value: json({ ok: true, warnings: receipt.warnings }, 200) }
+          }
+        }
         const auditStart = snapshot.audit.length
         // Authorize and validate deletion in a staged draft before examining private metadata.
         const target = deletionKind ? structuredClone(snapshot) : snapshot
@@ -364,6 +413,19 @@ export function createApplication(mount: string, application: Application) {
             version: (snapshot.versions.dataset?.version ?? 0) + 1,
             by: actor.id,
           }
+        if (result.ok && createIntent) {
+          if (!result.procurementCreate)
+            return { commit: false, value: json({ ok: false, status: 503 }, 503) }
+          snapshot.data[SF_PROCUREMENT_CREATE_RECEIPTS] = {
+            ...object(snapshot.data[SF_PROCUREMENT_CREATE_RECEIPTS]),
+            [createIntent.key]: {
+              authorityDigest: createIntent.authorityDigest,
+              commandDigest: createIntent.commandDigest,
+              ...result.procurementCreate,
+              ...(result.warnings ? { warnings: result.warnings } : {}),
+            },
+          }
+        }
         // Business values stay behind the authorized view boundary; the browser refreshes after a commit.
         const response = result.ok ? { ok: true, warnings: result.warnings } : safeFailure(result, surface, page, actor)
         return {

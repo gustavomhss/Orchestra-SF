@@ -2,12 +2,12 @@ import { Option, Schema } from "effect"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { draftAvailability } from "./draft-revalidation-availability"
 
 /** CAP18/CAP19: CAS keys are the ones the installed planner's cas() emits. */
 export async function revalidatePlannerBudgetDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (signal.aborted) return { status: "unavailable" }
   if (input.originalOwner.installationId !== fresh.stamp.installationId ||

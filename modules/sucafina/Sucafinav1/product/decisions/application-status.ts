@@ -28,16 +28,17 @@ export function createPreparedApplicationStatus(input: {
       if (!source || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
       if (context.kind === "native" && (context.binding.caseId !== request.caseRef.id || context.binding.caseIncarnation !== request.caseRef.incarnation || context.binding.caseVersion !== request.caseRef.version)) return { status: "denied", reason: "case-access-unavailable" }
       const read = () => input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision
-        ? { decision: state.cases[request.caseRef.id], attempts: applicationAttempts(state, request) } : undefined)
+        ? { decision: state.cases[request.caseRef.id], attempts: applicationAttempts(state, request, authority) } : undefined)
       const first = await read()
       if (first.status !== "ok" || !first.value) return { status: first.status === "denied" ? "denied" : "unavailable", reason: "application-status-unavailable" }
+      if (first.value.attempts.status === "ambiguous") return { status: "unavailable", reason: "application-intent-provenance-unavailable" }
       const decision = first.value.decision
       if (!decision || decision.incarnation !== request.caseRef.incarnation || !decision.participants.includes(context.binding.principalRef) || !await input.authorizeCase(structuredClone(decision), context)) return { status: "denied", reason: "case-access-unavailable" }
       if (decision.version !== request.caseRef.version) return { status: "stale", reason: "case-changed" }
       const changes = decision.preparedChanges.filter((change) => change.id === request.changeId && change.choiceId === request.choiceId && change.caseId === decision.id)
       if (changes.length !== 1 || decision.choices.filter((choice) => choice.id === request.choiceId).length !== 1) return { status: "unavailable", reason: "prepared-change-unavailable" }
       const change = changes[0]!
-      const status = change.receipt ? "reconciled" : first.value.attempts.length ? "receipt-required" : "not-attempted"
+      const status = change.receipt ? "reconciled" : first.value.attempts.entries.length ? "receipt-required" : "not-attempted"
       const lookup = { surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }
       if (change.receipt) {
         if (change.state === "planned") return { status: "unavailable", reason: "case-receipt-unavailable" }

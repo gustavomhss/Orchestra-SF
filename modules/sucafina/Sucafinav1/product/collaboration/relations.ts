@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ConfirmedRelations } from "../contracts/outputs.ts"
@@ -102,7 +103,9 @@ export function createRelationPort(input: {
       const commandDigest = digestSfValue({ operation: "remove", id, pair: selected.pair })
       const prior = await input.state.read(request, "relations", (state, authority) => {
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion) return undefined
-        const transaction = state.transactions[JSON.stringify([authority.principalRef, "relations", target.ref, selected.mutation.idempotencyKey])]
+        const savedIntent = sfTransactionLookup(state, authority, { namespace: "relations", targetRef: target.ref, idempotencyKey: selected.mutation.idempotencyKey })
+        if (savedIntent.status === "ambiguous") return undefined
+        const transaction = savedIntent.status === "found" ? savedIntent.receipt : undefined
         return { relation: state.relations[id], assignment: state.relations[`sf:assignment:${id}`], transaction }
       })
       if (prior.status !== "ok" || !prior.value) return { status: "unavailable", reason: "relation-access-unavailable" }

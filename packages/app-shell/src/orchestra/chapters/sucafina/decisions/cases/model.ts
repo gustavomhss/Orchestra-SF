@@ -10,7 +10,7 @@ import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import { useSfContext } from "../../context"
 import type { SfUiState } from "../../shared/frame"
-import type { SfContext, SfContextHandle } from "../../context/contracts"
+import type { SfReadableContext, SfContextHandle } from "../../context/contracts"
 
 type CaseEnvelope = Schema.Schema.Type<(typeof SfDecisions.operations)["projection.case"]["output"]>
 type CasesEnvelope = Schema.Schema.Type<(typeof SfDecisions.operations)["projection.cases"]["output"]>
@@ -18,7 +18,7 @@ export type SfCaseProjection = Extract<CaseEnvelope, { status: "ok" }>["value"][
 export type SfCaseRecord = SfCaseProjection["case"]
 export type SfCaseListEntry = Extract<CasesEnvelope, { status: "ok" }>["value"]["cases"][number]
 
-export function sfOperationReady(context: SfContext, operationId: string): boolean {
+export function sfOperationReady(context: SfReadableContext, operationId: string): boolean {
   return context.availability.some((resource) =>
     resource.operations.some((op) => op.operationId === operationId && op.state === "ready" && op.operational),
   )
@@ -42,7 +42,7 @@ export function sfFailureUiState(status: string, httpStatus: number): SfUiState 
 }
 
 /** The producer's projection context must agree with the CURRENT authenticated owner. */
-function sameAuthorizedProjection(projection: SfCaseProjection, context: SfContext): boolean {
+function sameAuthorizedProjection(projection: SfCaseProjection, context: SfReadableContext): boolean {
   const stamp = context.stamp
   return projection.context.installationId === stamp.installationId
     && projection.context.projectId === stamp.projectId

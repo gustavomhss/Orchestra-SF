@@ -14,6 +14,8 @@ import type { Connection } from "effect/unstable/sql/SqlConnection"
 import { classifySqliteError, SqlError } from "effect/unstable/sql/SqlError"
 import * as Statement from "effect/unstable/sql/Statement"
 import { Sqlite } from "./sqlite"
+import { AuthoritySqlFence } from "./authority-sql-fence"
+import { AuthorityGeneration } from "../session/authority-generation"
 
 const ATTR_DB_SYSTEM_NAME = "db.system.name"
 // Distinct SQL texts kept compiled per connection. Generated `IN (...)` lists make one text per list length.
@@ -49,6 +51,7 @@ interface SqliteConnection extends Connection {
 const make = (options: Config) =>
   Effect.gen(function* () {
     const native = (yield* Sqlite.Native) as Database
+    const guarded = AuthoritySqlFence.make(authorityDriver(native), AuthorityGeneration.storageID(native, options.filename))
 
     const compiler = Statement.makeCompilerSqlite(options.transformQueryNames)
     const transformRows = options.transformResultNames
@@ -95,7 +98,7 @@ const make = (options: Config) =>
             const statement = prepare(query)
             // @ts-ignore bun-types missing safeIntegers method, fixed in https://github.com/oven-sh/bun/pull/26627
             statement.safeIntegers(Context.get(fiber.context, Client.SafeIntegers))
-            return (statement.all(...(params as Parameters<typeof statement.all>)) ?? []) as Array<Record<string, unknown>>
+            return guarded(query, fiber.context, () => (statement.all(...(params as Parameters<typeof statement.all>)) ?? []) as Array<Record<string, unknown>>)
           },
           catch: (cause) => {
             // Only native SQLite failures belong in the typed channel; programming errors remain defects.
@@ -114,7 +117,7 @@ const make = (options: Config) =>
             const statement = prepare(query)
             // @ts-ignore bun-types missing safeIntegers method, fixed in https://github.com/oven-sh/bun/pull/26627
             statement.safeIntegers(Context.get(fiber.context, Client.SafeIntegers))
-            return (statement.values(...(params as Parameters<typeof statement.values>)) ?? []) as Array<unknown[]>
+            return guarded(query, fiber.context, () => (statement.values(...(params as Parameters<typeof statement.values>)) ?? []) as Array<unknown[]>)
           },
           catch: (cause) => {
             if (!(cause instanceof SQLiteError)) throw cause
@@ -230,4 +233,35 @@ export const layer = (config: Config) => {
   return Layer.merge(native, Layer.merge(sqliteLayer(config), drizzleLayer).pipe(Layer.provide(native))).pipe(
     Layer.provide(Reactivity.layer),
   )
+}
+
+/** The control database is separate from business checkpoints and carries no content or credentials. */
+export function openAuthorityControl(filename: string) {
+  const native = new Database(filename, { readwrite: true, create: true })
+  native.run("PRAGMA journal_mode = WAL")
+  native.run("PRAGMA synchronous = FULL")
+  native.run("PRAGMA foreign_keys = ON")
+  native.run("PRAGMA busy_timeout = 5000")
+  return { ...authorityDriver(native), close: () => native.close(true) }
+}
+
+function authorityDriver(native: Database): AuthoritySqlFence.Driver {
+  return {
+    all(query, params = []) {
+      const statement = native.prepare(query)
+      try { return statement.all(...(params as Parameters<typeof statement.all>)) as AuthoritySqlFence.Row[] }
+      finally { statement.finalize() }
+    },
+    execute(query, params = []) {
+      const statement = native.prepare(query)
+      try { statement.run(...(params as Parameters<typeof statement.run>)) }
+      finally { statement.finalize() }
+    },
+    inTransaction: () => native.inTransaction,
+  }
+}
+
+export function readAuthorityMarker(native: unknown) {
+  if (!(native instanceof Database)) throw new AuthorityGeneration.GenerationError("unavailable")
+  return AuthoritySqlFence.marker(authorityDriver(native))
 }

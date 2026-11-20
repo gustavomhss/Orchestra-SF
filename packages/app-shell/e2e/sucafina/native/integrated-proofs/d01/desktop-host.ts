@@ -6,7 +6,7 @@ import { createHash } from "node:crypto"
 import { createReadStream } from "node:fs"
 import { lstat, readFile, realpath } from "node:fs/promises"
 import path from "node:path"
-import type { NativeManifest } from "../../fixture/readiness.ts"
+import type { NativeManifest } from "../../fixture/legacy-desktop-manifest.ts"
 import { requirePrivateNativeRoot } from "../../fixture/readiness.ts"
 
 type RecordValue = Record<string, unknown>

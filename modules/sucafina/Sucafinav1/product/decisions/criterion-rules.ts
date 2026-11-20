@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
@@ -64,7 +65,12 @@ export function createCriterionRuleRegistry(input: {
       const operation = input.operationIdentity(context)
       if (!source || !operation || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "criterion-access-unavailable" }
       const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
-      const preferences = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? { existing: state.preferences[criterionRuleKey(request.caseRef, request.criterionId)], prior: state.transactions[JSON.stringify([authority.principalRef, "preferences", request.caseRef.id, `criterion-rule:${operation}`])] } : undefined)
+      const preferences = await input.state.read(source, "preferences", (state, authority) => {
+        if (!(sameAuthority(authority, context))) return undefined
+        const savedIntent = sfTransactionLookup(state, authority, { namespace: "preferences", targetRef: request.caseRef.id, idempotencyKey: `criterion-rule:${operation}` })
+        if (savedIntent.status === "ambiguous") return undefined
+        return { existing: state.preferences[criterionRuleKey(request.caseRef, request.criterionId)], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
+      })
       if (current.status !== "ok" || preferences.status !== "ok" || !preferences.value) return { status: "unavailable", reason: "criterion-state-unavailable" }
       const decision = current.value
       if (!allowed(decision, request.caseRef, context) || !await input.authorizeCase(decision!, context)) return { status: "denied", reason: "criterion-access-unavailable" }

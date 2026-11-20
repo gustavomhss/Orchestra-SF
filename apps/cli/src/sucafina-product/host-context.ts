@@ -1,4 +1,12 @@
+import { Database } from "@orchestra/core/database/database"
+import { HostMaintenance } from "@orchestra/core/host-maintenance"
+import { SessionProcess } from "@orchestra/core/session-process"
+import { ScheduledTask } from "@orchestra/core/scheduled-task"
+import { createTeamProfileCoreMigration } from "../../../../modules/sucafina/Sucafinav1/runtime/team-profile-core-migration.ts"
+import { openTeamProfileMigrationFiles } from "../../../../modules/sucafina/Sucafinav1/runtime/team-profile-migration-files.ts"
+import { createTeamProfileMigrationHttp } from "../../../../modules/sucafina/Sucafinav1/runtime/team-profile-migration-http.ts"
 export { createCurrentChoiceFence } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+import { createSfSessionHttp } from "./session-http.ts"
 import { createSfProcurementScenarioHttp } from "./procurement-scenario-services.ts"
 import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { createHash, randomUUID } from "node:crypto"
@@ -152,6 +160,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
   })
   const state: { identity?: ReturnType<SfHostRuntime["identity"]>; store?: SessionStore.Interface; api?: SfNativeHostApi;
     models?: SfHostServices["models"]; configuration?: string; generation: number;
+    migration?: () => ReturnType<typeof createTeamProfileCoreMigration>;
     verifyGovernedLoad?: (session: SessionSchema.Info) => Promise<boolean> } = { generation: 0 }
   const requests = new Map<string, Request>()
   const admittedInputs = new Map<string, SfAdmittedAnalysisInput>()
@@ -200,6 +209,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
     authorizeDocument: createSfDocumentTargetAuthority(input),
     authorizePreparedTarget: (request, snapshot, targetRef, actor) => preparedAuthority.business?.procurementDecisions.authorizeReceiptTarget(request, snapshot, targetRef, actor) ?? Promise.resolve(undefined),
   })
+  const sessionHttp = createSfSessionHttp({ authority, origin: input.origin, mount: input.mount,
+    authMode: input.authMode, location: () => identity()?.location })
   const nativeRegistry = authority.native
   authority.native = { ...nativeRegistry,
     bind: async (admission) => {
@@ -871,12 +882,31 @@ export const createSfHostRuntimeWithRoutineNative = async (
     } })
   const node = makeGlobalNode({
     name: "sucafina/host-context",
-    deps: [ProjectV2.node, SessionStore.node, LocationServiceMap.node, AppProcess.node],
+    deps: [ProjectV2.node, SessionStore.node, LocationServiceMap.node, AppProcess.node,
+      ...(input.migrationAuthority ? [Database.node, HostMaintenance.node, SessionProcess.node, ScheduledTask.daemonNode] : [])],
     layer: Layer.effectDiscard(Effect.gen(function* () {
       const projects = yield* ProjectV2.Service
       const store = yield* SessionStore.Service
       const locations = yield* LocationServiceMap.Service
       const process = yield* AppProcess.Service
+      if (input.migrationAuthority) {
+        const migrationAuthority = input.migrationAuthority
+        const database = yield* Database.Service
+        const maintenance = yield* HostMaintenance.Service
+        const filename = database.filename, storageId = database.storageID
+        if (!filename || !storageId) throw new Error("SF_CORE_MIGRATION_PLACEMENT_UNAVAILABLE")
+        let files: ReturnType<typeof openTeamProfileMigrationFiles> | undefined
+        let migration: ReturnType<typeof createTeamProfileCoreMigration> | undefined
+        let closed = false
+        state.migration = () => {
+          if (closed) throw new Error("SF_CORE_MIGRATION_HOST_CLOSED")
+          files ??= openTeamProfileMigrationFiles(filename, storageId)
+          return migration ??= createTeamProfileCoreMigration({ files, authority: migrationAuthority, maintenance })
+        }
+        yield* Effect.addFinalizer(() => Effect.sync(() => {
+          closed = true; state.migration = undefined; files?.close()
+        }))
+      }
       const scanner = yield* Effect.promise(() => probeSfAtlasScanner(process))
       business.initializeAtlas(scanner, { boundaryVersion: atlasPackage.version, schemaVersion: contractFreeze.canonicalSha256,
         manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })
@@ -966,6 +996,21 @@ export const createSfHostRuntimeWithRoutineNative = async (
   // missing operation probes remain explicitly unavailable (never catalog-ready).
   const nativeUiContext = createSfLiveContext({
     origin: input.origin, mount: input.mount, currentBinding: identity,
+    ...(input.authMode === "microsoft" ? { teams: {
+      tenantId: input.tenantId ?? "",
+      admit: async (request: Request) => {
+        const admitted = await authority.readTeamContextAdmission(request)
+        if (admitted.status !== "ok") return admitted
+        const stamp = { ...admitted.technical, ...(admitted.binding ? { team: admitted.binding } : {}) }
+        const actions = admitted.binding && input.nativeActions
+          ? await input.nativeActions(request, stamp, admitted.pages) : undefined
+        if (admitted.binding && input.nativeActions && !Array.isArray(actions))
+          return { status: "unavailable", reason: "contract-mismatch" } as const
+        const destinations = admitted.binding ? sfContextDestinationsFromPages(admitted.pages, actions) : []
+        if (!destinations) return { status: "unavailable", reason: "contract-mismatch" } as const
+        return { ...admitted, destinations }
+      },
+    } } : {}),
     operational: async (request, stamp) => {
       const observations = await Promise.allSettled([
         input.operational?.(request, stamp) ?? Promise.resolve([]),
@@ -1097,7 +1142,9 @@ export const createSfHostRuntimeWithRoutineNative = async (
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
     routineRuns: nativePhases.services.routineRuns,
     routineEvidence: { readExecution: nativePhases.services.readExecution, openResult: nativePhases.services.openResult },
-    productHttp,
+    productHttp, sessionHttp: sessionHttp.sessionHttp,
+    ...(input.migrationAuthority ? { migrationHttp: createTeamProfileMigrationHttp({ origin: input.origin, mount: input.mount,
+      runtime: () => identity() ? state.migration?.() : undefined }) } : {}),
     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
@@ -1115,7 +1162,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
     interrupt: (binding) => state.api ? Effect.runPromise(state.api.interrupt(binding)) : Promise.resolve({ status: "unavailable", reason: "native-host-unavailable" }),
   } }
   return { identity, services: () => identity() ? services : undefined,
-    contributions: [{ id: "sucafina-host-context", nodes: [node] }, gate.contribution, native.contribution,
+    contributions: [{ id: "sucafina-host-context", nodes: [node] }, sessionHttp.contribution, gate.contribution, native.contribution,
       installedRoutinePublication.contribution, routinePublication.contribution,
       routineGovernance.contribution, nativePhases.contribution, nativePhasePrompt,
       routineRuntime.contribution, routineRuntime.mount(product)] }

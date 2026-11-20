@@ -10,6 +10,10 @@ export type MicrosoftConfiguration = LocalConfiguration & {
   authentication: "microsoft"
   tenantId: string
   clientId: string
+  /** Explicit delegated Teams read capability; omitted preserves minimum web-login scopes. */
+  teams?: "direct"
+  /** Independent corporate administration group, configured by the installation owner. */
+  supremeAdminGroupId?: string
   listenerOrigin: string
   ingressOrigin: string
   workspaceDirectory: string
@@ -44,7 +48,7 @@ export async function loadMicrosoftConfiguration(file: string) {
 }
 
 export function validateMicrosoftConfiguration(value: unknown): MicrosoftConfiguration {
-  if (!record(value) || value.version !== 1 || value.deployment !== "azure-https" || value.authentication !== "microsoft" || Object.keys(value).some((key) => !["version", "deployment", "authentication", "origin", "listenerOrigin", "ingressOrigin", "mount", "tenantId", "clientId", "groups", "grants", "workspaceDirectory", "scanner", "sessionSeconds", "loginSeconds"].includes(key))) throw new Error("Explicit Microsoft HTTPS configuration required")
+  if (!record(value) || value.version !== 1 || value.deployment !== "azure-https" || value.authentication !== "microsoft" || Object.keys(value).some((key) => !["version", "deployment", "authentication", "origin", "listenerOrigin", "ingressOrigin", "mount", "tenantId", "clientId", "teams", "supremeAdminGroupId", "groups", "grants", "workspaceDirectory", "scanner", "sessionSeconds", "loginSeconds"].includes(key))) throw new Error("Explicit Microsoft HTTPS configuration required")
   if (typeof value.origin !== "string" || !URL.canParse(value.origin)) throw new Error("Microsoft HTTPS public origin required")
   const origin = new URL(value.origin)
   if (origin.origin !== value.origin || origin.protocol !== "https:" || origin.port || isIP(origin.hostname) || origin.hostname.startsWith("[") || !origin.hostname.includes(".") || origin.hostname.endsWith(".") || origin.hostname.endsWith(".localhost") || origin.hostname.endsWith(".local") || origin.hostname.includes("..")) throw new Error("Microsoft HTTPS public origin required")
@@ -55,13 +59,15 @@ export function validateMicrosoftConfiguration(value: unknown): MicrosoftConfigu
   }
   if (typeof value.mount !== "string" || !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(value.mount)) throw new Error("Invalid Microsoft mount")
   if (typeof value.tenantId !== "string" || !microsoftUuid.test(value.tenantId) || typeof value.clientId !== "string" || !microsoftUuid.test(value.clientId)) throw new Error("Microsoft resource tenant and client IDs required")
+  if ("teams" in value && value.teams !== "direct") throw new Error("Invalid Microsoft Teams capability")
+  if ("supremeAdminGroupId" in value && (typeof value.supremeAdminGroupId !== "string" || !microsoftUuid.test(value.supremeAdminGroupId))) throw new Error("Immutable Microsoft supreme administration group ID required")
   if (typeof value.workspaceDirectory !== "string" || !path.isAbsolute(value.workspaceDirectory) || path.resolve(value.workspaceDirectory) !== value.workspaceDirectory) throw new Error("Separate canonical Microsoft agent workspace required")
   if (!("scanner" in value) || (value.scanner !== null && (!record(value.scanner) || value.scanner.host !== "127.0.0.1" || typeof value.scanner.port !== "number" || !Number.isInteger(value.scanner.port) || value.scanner.port < 1 || value.scanner.port > 65535 || Object.keys(value.scanner).some((key) => !["host", "port"].includes(key))))) throw new Error("Invalid Microsoft scanner configuration")
   const sessionSeconds = value.sessionSeconds ?? 28800
   const loginSeconds = value.loginSeconds ?? 600
   if (typeof sessionSeconds !== "number" || !Number.isSafeInteger(sessionSeconds) || sessionSeconds < 60 || sessionSeconds > 28800 || typeof loginSeconds !== "number" || !Number.isSafeInteger(loginSeconds) || loginSeconds < 30 || loginSeconds > 600) throw new Error("Invalid Microsoft session lifetime")
   const policy = microsoftPolicy(value)
-  return Object.freeze({ version: 1, deployment: "azure-https", authentication: "microsoft", origin: value.origin, listenerOrigin: value.listenerOrigin as string, ingressOrigin: value.ingressOrigin as string, mount: value.mount, tenantId: value.tenantId.toLowerCase(), clientId: value.clientId.toLowerCase(), groups: policy.groups, grants: policy.grants, workspaceDirectory: value.workspaceDirectory, scanner: value.scanner === null ? null : Object.freeze({ host: "127.0.0.1", port: (value.scanner as { port: number }).port }), sessionSeconds, loginSeconds })
+  return Object.freeze({ version: 1, deployment: "azure-https", authentication: "microsoft", origin: value.origin, listenerOrigin: value.listenerOrigin as string, ingressOrigin: value.ingressOrigin as string, mount: value.mount, tenantId: value.tenantId.toLowerCase(), clientId: value.clientId.toLowerCase(), ...(value.teams === "direct" ? { teams: value.teams } : {}), ...(typeof value.supremeAdminGroupId === "string" ? { supremeAdminGroupId: value.supremeAdminGroupId.toLowerCase() } : {}), groups: policy.groups, grants: policy.grants, workspaceDirectory: value.workspaceDirectory, scanner: value.scanner === null ? null : Object.freeze({ host: "127.0.0.1", port: (value.scanner as { port: number }).port }), sessionSeconds, loginSeconds })
 }
 
 /** Persist the namespace before opening cloud data. Reusing a directory for another tenant/app is rejected. */

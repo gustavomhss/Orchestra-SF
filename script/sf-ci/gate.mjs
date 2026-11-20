@@ -4,6 +4,9 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, statSy
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { parseShardCosts, planShards } from "./shard-plan.mjs"
+import { candidateSource } from "./workflow-source.mjs"
+import { NATIVE_SPECS, NATIVE_CASE_LEDGER, buildNativeInventory, nativeFail, recordTeamsProfileNative,
+  requireNativePrivateRoot, readNativePrivateFile } from "./native-evidence.mjs"
 
 export const REQUIRED = [
   "CI-SF", "CI-CLI", "CI-APP-SRC", "CI-APP-BROWSER", "CI-ATLAS-BUSINESS",
@@ -21,7 +24,7 @@ const SUITE_DIRECTORIES = Object.freeze({
   "CI-UI-REPORTS": "packages/app-shell",
 })
 const PROOFS = ["AM01", "AM02", "AM03", "AM04", "AM05", "AM06"]
-const JOBS = ["preflight", "static", "omni", "unit", "unit-sf", "ui"]
+const JOBS = ["preflight", "static", "omni", "unit", "unit-sf", "ui", "teams-profile-browser-pool", "teams-profile-artifact", "teams-profile-residue"]
 // CI-SF is the only suite that outgrows one Linux job. Its parts are a strict
 // partition of the manifest selection, proven complete and disjoint below.
 export const SHARDED = Object.freeze({ "CI-SF": 8 })
@@ -205,7 +208,19 @@ export function selectSuiteFiles(manifest, suiteId, repoRoot = process.cwd()) {
     ensureContained(root, name, "file")
     if (!isTestFile(name) || !files.includes(name)) fail("harness-owned file is outside admitted selection: " + name)
   }
-  // All roots share one graph; membership still proves both exclusion directions.
+  // The owned entry is a runner, not a forty-first source proof. Validate it
+  // separately and exclude it before the consumer graph and shard partition.
+  const harnessEntries = selection.harnessEntryFiles || []
+  if (!Array.isArray(harnessEntries) || new Set(harnessEntries).size !== harnessEntries.length) {
+    fail("invalid harness-entry inventory")
+  }
+  for (const name of harnessEntries) {
+    ensureContained(root, name, "file")
+    if (!isTestFile(name) || !files.includes(name)) fail("harness entry is outside admitted selection: " + name)
+    if (harnessOwned.includes(name) || (selection.releaseOnlyFiles || []).includes(name)) fail("harness entry overlaps source/release inventory")
+  }
+  files = files.filter((name) => !harnessEntries.includes(name))
+  // All source roots share one graph; membership still proves both exclusion directions.
   const consumers = browserPoolConsumers(files, root)
   for (const name of harnessOwned) {
     if (!consumers.has(path.resolve(root, name))) {
@@ -316,6 +331,18 @@ export function validateManifest(manifest) {
         JSON.stringify(["Sucafinav1/test/parity-pitr.test.ts"])) {
     fail("Linux SF unit and release-only recovery boundary drift")
   }
+  if (sfProduct.selection.harnessOwnedFiles !== undefined || sfProduct.selection.harnessEntryFiles !== undefined) {
+    if (JSON.stringify(sfProduct.selection.harnessEntryFiles) !==
+        JSON.stringify(["Sucafinav1/test/product/wp01/browser-selection.test.ts"])) {
+      fail("ordered browser pool entry must remain explicitly declared")
+    }
+    const owned = sfProduct.selection.harnessOwnedFiles
+    if (!Array.isArray(owned) || !owned.length || new Set(owned).size !== owned.length ||
+        owned.some((name) => !isTestFile(name)) ||
+        owned.some((name) => sfProduct.selection.harnessEntryFiles.includes(name) || sfProduct.selection.releaseOnlyFiles.includes(name))) {
+      fail("invalid or overlapping ordered browser source inventory")
+    }
+  }
   const sfBrowser = suites.find((s) => s.id === "CI-APP-BROWSER")
   if (sfBrowser?.selection?.kind !== "directory" ||
       sfBrowser.selection.testDirectory !== "test-browser/sucafina-native" ||
@@ -395,6 +422,110 @@ export function countPlaywrightReport(raw, exactSpec) {
   for (const suite of report.suites) visit(suite)
   if (count < 1 || stats.expected !== count) fail("Playwright selected/executed count mismatch")
   return count
+}
+
+/** Describe identities from a report without converting test outcomes into a receipt. */
+export function describeInventory(raw, suite, binding = {}) {
+  if (typeof raw !== "string" || !raw.trim() || !suite || !["bun", "playwright"].includes(suite.kind)) {
+    fail("inventory diagnostic requires a known suite and nonempty report")
+  }
+  let report
+  try { report = JSON.parse(raw) } catch { fail("invalid inventory report JSON") }
+  const identities = []
+  let counts
+  if (suite.kind === "bun") {
+    if (!report || !["PASS", "FAIL"].includes(report.status) || !Array.isArray(report.cases) ||
+        !report.counts || report.counts.tests !== report.cases.length) fail("malformed Bun inventory report")
+    const product = []
+    for (const row of report.cases) {
+      if (!row || typeof row !== "object" || typeof row.name !== "string" || !row.name.trim() ||
+          typeof row.classname !== "string" || typeof row.file !== "string" ||
+          !Number.isSafeInteger(row.product_executed) || ![0, 1].includes(row.product_executed) ||
+          !Number.isSafeInteger(row.known_control_or_hook) || ![0, 1].includes(row.known_control_or_hook) ||
+          !["failures", "errors", "skipped", "executed"].every((key) => Number.isSafeInteger(row[key]) && [0, 1].includes(row[key]))) {
+        fail("malformed Bun inventory case")
+      }
+      if (row.known_control_or_hook === 1) continue
+      const file = validateRelative(row.file.replaceAll("\\", "/"))
+      if (!isTestFile(file) || row.classname.length > 512 || row.name.length > 1024 ||
+          /[\x00-\x1f\x7f]/.test(row.classname + row.name)) fail("unsafe Bun inventory identity")
+      const status = row.failures || row.errors ? "failed" : row.skipped ? "skipped" : row.executed === 1 ? "passed" : "not-run"
+      const identity = { file, classname: row.classname, name: row.name, status }
+      identities.push(identity)
+      if (row.product_executed === 1) product.push(identity)
+    }
+    if (!identities.length) fail("empty Bun product inventory")
+    if (!["product_executed", "failures", "errors", "skipped"].every((key) => Number.isSafeInteger(report.counts[key])) ||
+        report.counts.product_executed !== product.length ||
+        ["failures", "errors", "skipped"].some((key) => report.counts[key] !== report.cases.reduce((sum, row) => sum + row[key], 0))) {
+      fail("Bun inventory counts disagree with cases")
+    }
+    const tuple = (item) => item.file + "\0" + item.classname + "\0" + item.name
+    const sorted = (items) => items.map(tuple).sort()
+    counts = {
+      reportTests: report.cases.length,
+      productCases: identities.length,
+      executedCases: product.length,
+      failedCases: identities.filter((item) => item.status === "failed").length,
+      skippedCases: identities.filter((item) => item.status === "skipped").length,
+    }
+    identities.sort((a, b) => tuple(a) < tuple(b) ? -1 : tuple(a) > tuple(b) ? 1 : a.status < b.status ? -1 : a.status > b.status ? 1 : 0)
+    return {
+      schema: "sf-ci-diagnostic-inventory-v1", suiteId: suite.id, kind: suite.kind, binding,
+      counts, casesSha256: sha256Lines(sorted(identities)), executedCasesSha256: sha256Lines(sorted(product)),
+      files: [...new Set(identities.map((item) => item.file))].sort(),
+      filesSha256: sha256Lines([...new Set(identities.map((item) => item.file))].sort()), identities,
+    }
+  }
+
+  if (!Array.isArray(report.suites)) fail("malformed Playwright inventory report")
+  const coverageTuples = []
+  const visit = (node, inheritedFile = "") => {
+    if (!node || typeof node !== "object" || Array.isArray(node)) fail("malformed Playwright inventory suite")
+    const file = node.file || inheritedFile
+    for (const spec of node.specs || []) {
+      const canonical = canonicalPlaywrightSpec(spec.file || file, suite.specFile)
+      const identityHash = typeof spec.idHash === "string" && /^[a-f0-9]{64}$/.test(spec.idHash)
+        ? spec.idHash
+        : typeof spec.id === "string" && spec.id ? digest(spec.id) : undefined
+      if (!Array.isArray(spec.tests) || !identityHash) fail("malformed Playwright inventory spec")
+      const name = "spec-" + identityHash
+      for (const [index, test] of spec.tests.entries()) {
+        if (!Array.isArray(test.results)) fail("malformed Playwright inventory test")
+        const statuses = test.results.map((result) => result?.status)
+        if (statuses.some((status) => !["passed", "failed", "timedOut", "skipped", "interrupted"].includes(status))) {
+          fail("malformed Playwright inventory result")
+        }
+        identities.push({ file: canonical, classname: "", name: name + "#" + index,
+          status: statuses.length === 1 ? statuses[0] : statuses.length ? "multiple-results" : test.status === "skipped" ? "skipped" : "not-run" })
+        coverageTuples.push(canonical + "\0" + identityHash + "\0" + index)
+      }
+    }
+    if (node.suites !== undefined && !Array.isArray(node.suites)) fail("malformed Playwright inventory children")
+    for (const child of node.suites || []) visit(child, file)
+  }
+  for (const node of report.suites) visit(node)
+  if (!identities.length) fail("empty Playwright inventory")
+  const outcomeCounts = ["expected", "unexpected", "flaky", "skipped"].map((key) => report.stats?.[key])
+  if (outcomeCounts.some((count) => !Number.isSafeInteger(count) || count < 0) ||
+      outcomeCounts.reduce((sum, count) => sum + count, 0) !== identities.length) {
+    fail("Playwright inventory counts disagree with cases")
+  }
+  identities.sort((a, b) => {
+    const left = a.file + "\0" + a.classname + "\0" + a.name
+    const right = b.file + "\0" + b.classname + "\0" + b.name
+    return left < right ? -1 : left > right ? 1 : 0
+  })
+  const files = [...new Set(identities.map((item) => item.file))].sort()
+  const tuples = identities.map((item) => item.file + "\0" + item.classname + "\0" + item.name)
+  counts = { reportTests: outcomeCounts.reduce((sum, count) => sum + count, 0),
+    productCases: identities.length, executedCases: identities.filter((item) => item.status === "passed").length,
+    failedCases: identities.filter((item) => ["failed", "timedOut", "interrupted"].includes(item.status)).length,
+    skippedCases: identities.filter((item) => item.status === "skipped").length }
+  return { schema: "sf-ci-diagnostic-inventory-v1", suiteId: suite.id, kind: suite.kind, binding, counts,
+    casesSha256: sha256Lines(tuples), executedCasesSha256: sha256Lines(tuples.filter((_, index) => identities[index].status === "passed")),
+    coverageCasesSha256: sha256Lines(coverageTuples),
+    files, filesSha256: sha256Lines(files), identities }
 }
 
 
@@ -555,12 +686,20 @@ function realTreeSha() {
   return treeSha
 }
 function realRunMeta() {
-  const sha = process.env.GITHUB_SHA
+  const sha = candidateSource()
   const runId = process.env.GITHUB_RUN_ID
   const attempt = process.env.GITHUB_RUN_ATTEMPT
   if (!/^[a-f0-9]{40}$/.test(sha || "") || !/^[0-9]+$/.test(runId || "") ||
       !/^[0-9]+$/.test(attempt || "")) fail("invalid GitHub Actions identity")
   return { sha, runId, attempt }
+}
+function diagnosticBinding() {
+  return {
+    sourceSha: /^[a-f0-9]{40}$/.test(process.env.SF_PRODUCT_SOURCE_SHA || "") ? process.env.SF_PRODUCT_SOURCE_SHA : null,
+    runId: /^[0-9]+$/.test(process.env.GITHUB_RUN_ID || "") ? process.env.GITHUB_RUN_ID : null,
+    attempt: /^[0-9]+$/.test(process.env.GITHUB_RUN_ATTEMPT || "") ? process.env.GITHUB_RUN_ATTEMPT : null,
+    treeSha: /^[a-f0-9]{40}$/.test(process.env.SF_CHECKOUT_TREE_SHA || "") ? process.env.SF_CHECKOUT_TREE_SHA : null,
+  }
 }
 export function releaseOnlySelection(manifest, id) {
   const suites = validateManifest(manifest)
@@ -598,8 +737,81 @@ export function describeShardPlan(files, id, costs = shardCosts) {
   }
 }
 
-function cli() {
+async function nativeEvidenceCli(command) {
+  const recording = command === "record-teams-profile-native"
+  const keys = ["candidate", "tree", "role", "output",
+    ...(recording ? ["raw-report", "expected-inventory", "host-receipt", "artifact-receipt"] : [])]
+  const args = process.argv.slice(3), flags = new Map()
+  if (args.length !== keys.length * 2) nativeFail()
+  for (let index = 0; index < args.length; index += 2) {
+    const key = args[index]?.slice(2)
+    if (!args[index]?.startsWith("--") || !keys.includes(key) || flags.has(key) || !args[index + 1]) nativeFail()
+    flags.set(key, args[index + 1])
+  }
+  const run = realRunMeta(), treeSha = realTreeSha()
+  if (flags.get("candidate") !== run.sha || flags.get("tree") !== treeSha ||
+      process.env.SF_CHECKOUT_SHA !== run.sha || process.env.SF_NATIVE_CANDIDATE_SHA !== run.sha ||
+      process.env.CI !== "true" || process.env.GITHUB_ACTIONS !== "true" ||
+      process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64" || process.platform !== "linux" ||
+      process.env.ORCHESTRA_CHANNEL !== "prod" || (recording && process.env.SF_NATIVE_TEST_EXIT_CODE !== "0")) nativeFail()
+  const meta = { ...run, treeSha, role: flags.get("role"), invocationId: process.env.SF_NATIVE_INVOCATION_ID }
+  const output = flags.get("output")
+  const root = requireNativePrivateRoot(path.dirname(output), meta, process.env.RUNNER_TEMP)
+  if (path.resolve(output) !== output || existsSync(output) ||
+      (recording && existsSync(output + ".sha256"))) nativeFail()
+  const { verifyGitSource, readSource } = await import("./team-profile-residue.mjs")
+  const commit = readNativePrivateFile(root, path.join(root, "source.commit"))
+  const inventory = readNativePrivateFile(root, path.join(root, "source.inventory"), 64 * 1024 * 1024)
+  const verified = verifyGitSource(commit, inventory, run.sha)
+  if (verified.tree !== treeSha) nativeFail()
+  const source = await readSource(process.cwd(), verified)
+  const records = new Map(source.records.map((record) => [record.path, record]))
+  const specPath = "packages/app-shell/" + NATIVE_SPECS[meta.role]
+  const specRecord = records.get(specPath), ledgerRecord = records.get(NATIVE_CASE_LEDGER)
+  if (specRecord?.kind !== "regular" || ledgerRecord?.kind !== "regular") nativeFail()
+  const sourceBytes = readFileSync(ensureContained(process.cwd(), specPath, "file"))
+  const ledgerBytes = readFileSync(ensureContained(process.cwd(), NATIVE_CASE_LEDGER, "file"))
+  if (digest(sourceBytes) !== specRecord.sha256 || digest(ledgerBytes) !== ledgerRecord.sha256) nativeFail()
+  if (!recording) {
+    const expected = buildNativeInventory({ sourceBytes, ledgerBytes, meta })
+    await readSource(process.cwd(), verified)
+    const bytes = Buffer.from(JSON.stringify(expected, null, 2) + "\n")
+    writeFileSync(output, bytes, { flag: "wx", mode: 0o600 })
+    console.log("SF_TEAMS_NATIVE_INVENTORY_PREPARED " + JSON.stringify({
+      role: meta.role, cases: expected.cases.length, inventorySha256: digest(bytes),
+    }))
+    return
+  }
+  const rawReport = readNativePrivateFile(root, flags.get("raw-report"))
+  const inventoryBytes = readNativePrivateFile(root, flags.get("expected-inventory"))
+  const hostBytes = readNativePrivateFile(root, flags.get("host-receipt"))
+  const artifactBytes = readNativePrivateFile(root, flags.get("artifact-receipt"))
+  const receipt = recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes, artifactBytes,
+    sourceBytes, ledgerBytes, sourceProvenance: { commitSha256: verified.commitSha256,
+      inventorySha256: verified.inventorySha256 }, meta, exitCode: Number(process.env.SF_NATIVE_TEST_EXIT_CODE) })
+  // Recheck the complete selected checkout and all private inputs after validation.
+  await readSource(process.cwd(), verified)
+  for (const [name, bytes] of [["raw-report", rawReport], ["expected-inventory", inventoryBytes],
+    ["host-receipt", hostBytes], ["artifact-receipt", artifactBytes]]) {
+    if (!readNativePrivateFile(root, flags.get(name)).equals(bytes)) nativeFail()
+  }
+  if (path.dirname(output) !== root || path.resolve(output) !== output || existsSync(output) || existsSync(output + ".sha256")) nativeFail()
+  const bytes = Buffer.from(JSON.stringify(receipt, null, 2) + "\n")
+  writeFileSync(output, bytes, { flag: "wx", mode: 0o600 })
+  writeFileSync(output + ".sha256", digest(bytes) + "\n", { flag: "wx", mode: 0o600 })
+  console.log("SF_TEAMS_NATIVE_REPORT_RECORDED " + JSON.stringify({
+    role: meta.role, sourceSHA: meta.sha, sourceTreeSHA: treeSha, runId: meta.runId, runAttempt: meta.attempt,
+    invocationId: meta.invocationId, cases: receipt.counts.executed, receiptSha256: digest(bytes),
+    status: receipt.status, liveQualification: receipt.liveQualification,
+  }))
+}
+
+async function cli() {
   const command = process.argv[2]
+  if (command === "prepare-teams-profile-native-inventory" || command === "record-teams-profile-native") {
+    await nativeEvidenceCli(command)
+    return
+  }
   const manifest = readJson("sf/ci/suites.json")
   const suites = validateManifest(manifest)
   if (command === "manifest") {
@@ -638,6 +850,18 @@ function cli() {
   if (command === "precheck") {
     requirePrerequisites(JSON.parse(process.env.SF_NEEDS_JSON || "null"))
     console.log("SF_CI_REQUIRED_JOB_CONCLUSIONS_PASS")
+    return
+  }
+  if (command === "describe-inventory") {
+    const id = process.env.SF_SUITE_ID
+    const shard = shardRequest(id)
+    const suite = suites.find((entry) => entry.id === id)
+    if (!suite || process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64") {
+      fail("inventory diagnostic requires a known Linux x64 suite")
+    }
+    const reportFile = path.join("sf-ci-evidence", evidenceId(id, shard), reportName(suite.kind))
+    const inventory = describeInventory(readFileSync(reportFile, "utf8"), suite, diagnosticBinding())
+    process.stdout.write(JSON.stringify(inventory) + "\n")
     return
   }
   if (command === "select") {
@@ -737,4 +961,4 @@ function cli() {
   }
   fail("unknown CLI command")
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) cli()
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) await cli()

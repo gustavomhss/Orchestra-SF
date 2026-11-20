@@ -2,7 +2,7 @@ import { Option, Schema } from "effect"
 import { createSfOperationsClient } from "@orchestra/client/sucafina/operations"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfOperationsSelection } from "@orchestra/schema/sucafina/operations"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { SECURITY_CAMPAIGN_FIELDS, SECURITY_KPI_FIELDS, securityVersion } from "../operations/security/model"
 import { draftAvailability } from "./draft-revalidation-availability"
 
@@ -11,7 +11,7 @@ const actionFields = ["text", "done"]
 const incidentFields = ["title", "date", "impact", "notes", "contained", "remediated", "rootCause", "consequences"]
 const campaignFields = ["name", "start", "end", "notes", ...SECURITY_CAMPAIGN_FIELDS, "departments"]
 export async function revalidateSecurityDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (input.surfaceId !== "CAP12" || input.read.operationId !== "domain.page.CAP12" || input.read.actionIds.length !== 1)
     return { status: "unavailable" }

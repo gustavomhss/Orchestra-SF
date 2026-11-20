@@ -385,6 +385,14 @@ export type SessionsListInput = {
 export type SessionsListOutput = {
   readonly data: ReadonlyArray<{
     readonly id: string
+    readonly namespace?: {
+      readonly version: 1
+      readonly owner: {
+        readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+        readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+      }
+      readonly authorityGeneration: number
+    }
     readonly parentID?: string
     readonly projectID: string
     readonly agent?: string
@@ -424,6 +432,14 @@ export type SessionsListOutput = {
       }>
     }
   }>
+  readonly namespace?: {
+    readonly version: 1
+    readonly owner: {
+      readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+      readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+    }
+    readonly authorityGeneration: number
+  } | null
   readonly cursor: { readonly previous?: string | null; readonly next?: string | null }
 }
 
@@ -457,6 +473,14 @@ export type SessionsCreateInput = {
 export type SessionsCreateOutput = {
   readonly data: {
     readonly id: string
+    readonly namespace?: {
+      readonly version: 1
+      readonly owner: {
+        readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+        readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+      }
+      readonly authorityGeneration: number
+    }
     readonly parentID?: string
     readonly projectID: string
     readonly agent?: string
@@ -498,13 +522,31 @@ export type SessionsCreateOutput = {
   }
 }["data"]
 
-export type SessionsActiveOutput = { readonly data: { readonly [x: string]: { readonly type: "running" } } }["data"]
+export type SessionsActiveOutput = {
+  readonly data: { readonly [x: string]: { readonly type: "running" } }
+  readonly namespace?: {
+    readonly version: 1
+    readonly owner: {
+      readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+      readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+    }
+    readonly authorityGeneration: number
+  } | null
+}
 
 export type SessionsGetInput = { readonly sessionID: { readonly sessionID: string }["sessionID"] }
 
 export type SessionsGetOutput = {
   readonly data: {
     readonly id: string
+    readonly namespace?: {
+      readonly version: 1
+      readonly owner: {
+        readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+        readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+      }
+      readonly authorityGeneration: number
+    }
     readonly parentID?: string
     readonly projectID: string
     readonly agent?: string
@@ -908,6 +950,14 @@ export type SessionsForkInput = {
 export type SessionsForkOutput = {
   readonly data: {
     readonly id: string
+    readonly namespace?: {
+      readonly version: 1
+      readonly owner: {
+        readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+        readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+      }
+      readonly authorityGeneration: number
+    }
     readonly parentID?: string
     readonly projectID: string
     readonly agent?: string
@@ -1791,6 +1841,14 @@ export type SessionsHistoryOutput = {
         readonly data: { readonly timestamp: number; readonly sessionID: string; readonly messageID: string }
       }
   >
+  readonly namespace?: {
+    readonly version: 1
+    readonly owner: {
+      readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+      readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+    }
+    readonly authorityGeneration: number
+  } | null
   readonly hasMore: boolean
 }
 
@@ -2182,6 +2240,14 @@ export type MessagesListOutput = {
         readonly time: { readonly created: number }
       }
   >
+  readonly namespace?: {
+    readonly version: 1
+    readonly owner: {
+      readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+      readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+    }
+    readonly authorityGeneration: number
+  } | null
   readonly cursor: { readonly previous?: string | null; readonly next?: string | null }
 }
 
@@ -11486,25 +11552,49 @@ export type InstallationUpgradeOutput = { readonly success: true; readonly versi
 
 export type ServerSucafinaInstallationsInput = {
   readonly select: {
-    readonly select: "ids" | "location"
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
     readonly installationId?: string | undefined
     readonly projectId?: string | undefined
     readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
   }["select"]
+  readonly contractRevision?: {
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
+    readonly installationId?: string | undefined
+    readonly projectId?: string | undefined
+    readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
+  }["contractRevision"]
+  readonly tenantId?: {
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
+    readonly installationId?: string | undefined
+    readonly projectId?: string | undefined
+    readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
+  }["tenantId"]
   readonly installationId?: {
-    readonly select: "ids" | "location"
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
     readonly installationId?: string | undefined
     readonly projectId?: string | undefined
     readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
   }["installationId"]
   readonly projectId?: {
-    readonly select: "ids" | "location"
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
     readonly installationId?: string | undefined
     readonly projectId?: string | undefined
     readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
   }["projectId"]
   readonly location?: {
-    readonly select: "ids" | "location"
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
     readonly installationId?: string | undefined
     readonly projectId?: string | undefined
     readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
@@ -11512,15 +11602,27 @@ export type ServerSucafinaInstallationsInput = {
 }
 
 export type ServerSucafinaInstallationsOutput = {
-  readonly installations: ReadonlyArray<{
-    readonly installationId: string
-    readonly projectId: string
-    readonly hostId: string
-    readonly publicOrigin: string
-    readonly mount: string
-    readonly contractRevision: "sf-native-ui/1"
-    readonly authMode: "microsoft" | "local-operator"
-  }>
+  readonly installations: ReadonlyArray<
+    | {
+        readonly installationId: string
+        readonly projectId: string
+        readonly hostId: string
+        readonly publicOrigin: string
+        readonly mount: string
+        readonly contractRevision: "sf-native-ui/1"
+        readonly authMode: "microsoft" | "local-operator"
+      }
+    | {
+        readonly installationId: string
+        readonly tenantId: string
+        readonly projectId: string
+        readonly hostId: string
+        readonly publicOrigin: string
+        readonly mount: string
+        readonly contractRevision: "sf-team-profile/1"
+        readonly authMode: "microsoft"
+      }
+  >
 }
 
 export type GuardrailRulesInput = {

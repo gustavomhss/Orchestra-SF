@@ -1,3 +1,4 @@
+import { sfSameOwnerSelection } from "../../../navigation-state/owner"
 import { useNavigate } from "@solidjs/router"
 import { createEffect, createMemo, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -98,9 +99,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     const state = host.state()
     if (state.status !== "ready" || !host.ready()) return null
     const requested = props.route.ownerSelection
-    if (state.selection.serverKey !== requested.serverKey ||
-        state.selection.projectId !== requested.projectId ||
-        state.selection.installationId !== requested.installationId) return null
+    if (!sfSameOwnerSelection(state.selection, requested)) return null
     return JSON.stringify([
       state.ownerKey, host.generation(), state.owner.authEpoch,
       state.context.stamp, props.route.href,

@@ -5,7 +5,8 @@
  */
 import { expect } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { armLostResponse, nativeCorpus, nativeInstalledFixture as test } from "./fixture"
+import { armLostResponse, nativeInstalledFixture as test } from "./fixture"
+import { nativeCorpus } from "./fixture/corpus"
 import type { NativeTarget } from "./fixture/readiness"
 
 const p0Title = "F04 real domain P0 draft title"

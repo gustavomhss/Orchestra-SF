@@ -124,6 +124,7 @@ describe("SessionProcess", () => {
                     pid: 4242,
                     all: Stream.fromEffect(Effect.sleep("100 millis").pipe(Effect.as(new TextEncoder().encode("drain-marker")))),
                     exitCode: Effect.succeed(0),
+                    isRunning: Effect.succeed(false),
                     kill: () => Effect.void,
                   }),
               } as unknown as AppProcess.Interface),

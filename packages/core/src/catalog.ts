@@ -10,6 +10,7 @@ import { EventV2 } from "./event"
 import { Policy } from "./policy"
 import { State } from "./state"
 import { Integration } from "./integration"
+import { SessionOwner } from "./session/owner"
 
 export const VIRTUAL_SEPARATOR = "#"
 
@@ -73,9 +74,7 @@ export interface Interface extends State.Transformable<Draft> {
 
 export class Service extends Context.Service<Service, Interface>()("@orchestra/v2/Catalog") {}
 
-const layer = Layer.effect(
-  Service,
-  Effect.gen(function* () {
+const make = Effect.gen(function* () {
     const events = yield* EventV2.Service
     const policy = yield* Policy.Service
     const integrations = yield* Integration.Service
@@ -369,8 +368,9 @@ const layer = Layer.effect(
     }
 
     return Service.of(result)
-  }),
-)
+  })
+
+const layer = Layer.effect(Service, make)
 
 const SMALL_MODEL_RE = /\b(nano|flash|lite|mini|haiku|small|fast)\b/
 
@@ -379,8 +379,37 @@ export const locationLayer = layer.pipe(
   Layer.provideMerge(Policy.locationLayer),
 )
 
+/** Corporate discovery has no provider source until an explicit private definition is admitted. */
+const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
+  const owners = yield* SessionOwner.Service
+  const binding = yield* owners.location.pipe(Effect.orDie)
+  const service = yield* make
+  if (!binding) return service
+  // Provider metadata, ambient keys and a shared model name cannot turn into an
+  // available private provider. This branch does not enumerate or open credentials.
+  return Service.of({
+    transform: (callback) => binding.bind(service.transform((draft) => binding.bind(Effect.suspend(() => {
+      const effect = callback(draft)
+      return Effect.isEffect(effect) ? effect : Effect.void
+    })))),
+    reload: () => binding.bind(service.reload()),
+    provider: {
+      get: () => binding.bind(Effect.succeed(undefined)),
+      all: () => binding.bind(Effect.succeed([])),
+      available: () => binding.bind(Effect.succeed([])),
+    },
+    model: {
+      get: () => binding.bind(Effect.succeed(undefined)),
+      all: () => binding.bind(Effect.succeed([])),
+      available: () => binding.bind(Effect.succeed([])),
+      default: () => binding.bind(Effect.succeed(undefined)),
+      small: () => binding.bind(Effect.succeed(undefined)),
+    },
+  })
+}))
+
 export const node = makeLocationNode({
   service: Service,
-  layer,
-  deps: [EventV2.node, Policy.node, Integration.node, Credential.node],
+  layer: admittedLayer,
+  deps: [EventV2.node, Policy.node, Integration.node, Credential.node, SessionOwner.node],
 })

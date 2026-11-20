@@ -13,6 +13,7 @@ export const syntheticSecret = "synthetic-test-only-web-client-secret"
 export const authority = `https://login.microsoftonline.com/${tenant}`
 
 type Account = { id: string; name: string; groups: string[] }
+type TeamResource = { id: string; displayName: string; tenantId: string; isArchived: boolean }
 type Code = { user: string; nonce: string; challenge: string; redirect: string }
 type ProviderHook = (request: Request) => Response | undefined | Promise<Response | undefined>
 
@@ -22,8 +23,12 @@ export async function microsoftFixture(input: {
   claims?: Record<string, unknown>
   route?: ProviderHook
   tokenSeconds?: number
+  teams?: "direct"
+  grantedScopes?: string | null
+  algorithm?: "RS256" | "PS256"
 } = {}) {
-  const pair = await generateKeyPair("RS256", { extractable: true })
+  const algorithm = input.algorithm ?? "RS256"
+  const pair = await generateKeyPair(algorithm, { extractable: true })
   const publicKey = await exportJWK(pair.publicKey)
   const clock = { value: Date.UTC(2026, 10, 14, 20, 0, 0) }
   const claims = { ...input.claims }
@@ -31,6 +36,9 @@ export async function microsoftFixture(input: {
   const account: Account = { id: oid, name: "Synthetic resource-tenant guest", groups: [group] }
   const second: Account = { id: other, name: "Synthetic other user", groups: [group] }
   const accounts = new Map([[oid, account], [other, second]])
+  const directTeams = new Map<string, TeamResource[]>([[oid, []], [other, []]])
+  // Existence/visibility of a Team is independent of this user's direct memberships.
+  const teamResources = new Map<string, TeamResource>()
   const codes = new Map<string, Code>()
   const access = new Map<string, string>()
   const refresh = new Map<string, string>()
@@ -63,8 +71,9 @@ export async function microsoftFixture(input: {
       iss: metadata.issuer, aud: clientId, tid: tenant, oid: user, sub: `synthetic-subject-${user}`,
       nonce, iat: epoch, exp: epoch + (input.tokenSeconds ?? 3600), ver: "2.0",
       idp: "https://sts.windows.net/66666666-6666-4666-8666-666666666666/", ...claims,
-    }).setProtectedHeader({ alg: "RS256", kid: "synthetic-rsa-key" }).sign(pair.privateKey)
-    return Response.json({ access_token: accessToken, refresh_token: refreshToken, expires_in: input.tokenSeconds ?? 3600, token_type: "Bearer", ...(idToken ? { id_token: idToken } : {}) })
+    }).setProtectedHeader({ alg: algorithm, kid: "synthetic-rsa-key" }).sign(pair.privateKey)
+    const scope = input.grantedScopes === null ? undefined : input.grantedScopes ?? (input.teams === "direct" ? "openid profile offline_access User.Read Team.ReadBasic.All" : undefined)
+    return Response.json({ access_token: accessToken, refresh_token: refreshToken, expires_in: input.tokenSeconds ?? 3600, token_type: "Bearer", ...(scope === undefined ? {} : { scope }), ...(idToken ? { id_token: idToken } : {}) })
   }
 
   const transport = async (request: Request) => {
@@ -74,7 +83,7 @@ export async function microsoftFixture(input: {
     const url = new URL(request.url)
     if (request.redirect !== "error") throw new Error("Synthetic provider requires redirect rejection")
     if (request.url === `${authority}/v2.0/.well-known/openid-configuration`) return Response.json(metadata)
-    if (request.url === metadata.jwks_uri) return Response.json({ keys: [{ ...publicKey, kid: "synthetic-rsa-key", alg: "RS256", use: "sig" }] })
+    if (request.url === metadata.jwks_uri) return Response.json({ keys: [{ ...publicKey, kid: "synthetic-rsa-key", alg: algorithm, use: "sig" }] })
     if (request.url === metadata.token_endpoint) {
       const fields = new URLSearchParams(await request.text())
       if (request.method !== "POST" || fields.get("client_id") !== clientId || (profile === "web-confidential" && fields.get("client_secret") !== syntheticSecret)) return Response.json({ error: "invalid_client" }, { status: 400 })
@@ -96,6 +105,15 @@ export async function microsoftFixture(input: {
       const person = user ? accounts.get(user) : undefined
       if (!person) return Response.json({ error: "InvalidAuthenticationToken" }, { status: 401 })
       if (url.pathname === "/v1.0/me") return Response.json({ id: person.id, displayName: person.name })
+      if (url.pathname === "/v1.0/me/joinedTeams" && input.teams === "direct") {
+        if (request.method !== "GET" || url.search) return Response.json({ error: "bad_request" }, { status: 400 })
+        return Response.json({ value: directTeams.get(person.id) ?? [] })
+      }
+      if (url.pathname.startsWith("/v1.0/teams/") && input.teams === "direct") {
+        if (request.method !== "GET" || url.search !== "?$select=id,displayName,isArchived,tenantId") return Response.json({ error: "bad_request" }, { status: 400 })
+        const resource = teamResources.get(url.pathname.slice("/v1.0/teams/".length))
+        return resource ? Response.json(resource) : Response.json({ error: "ItemNotFound" }, { status: 404 })
+      }
       if (url.pathname === "/v1.0/me/checkMemberGroups") {
         const body = await request.json() as { groupIds: string[] }
         if (request.method !== "POST" || !Array.isArray(body.groupIds) || body.groupIds.length > 20) return Response.json({ error: "bad_request" }, { status: 400 })
@@ -107,6 +125,6 @@ export async function microsoftFixture(input: {
     }
     throw new Error("Unexpected synthetic provider endpoint")
   }
-  const options: EntraOptions = { tenantId: tenant, clientId, profile, fetch: transport, now: () => new Date(clock.value), ...(profile === "web-confidential" ? { clientSecret: async () => syntheticSecret } : {}) }
-  return { client: createEntraClient(options), options, fetch: transport, clock, claims, hooks, account, second, accounts, requests, issueCode, metadata }
+  const options: EntraOptions = { tenantId: tenant, clientId, profile, fetch: transport, now: () => new Date(clock.value), ...(input.teams === undefined ? {} : { teams: input.teams }), ...(profile === "web-confidential" ? { clientSecret: async () => syntheticSecret } : {}) }
+  return { client: createEntraClient(options), options, fetch: transport, clock, claims, hooks, account, second, accounts, directTeams, teamResources, requests, issueCode, metadata }
 }

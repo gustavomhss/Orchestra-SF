@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
 import { writeFile } from "node:fs/promises"
+import { admitMicrosoftFixtureTeam } from "./microsoft-login/team-admission-fixture.ts"
 import { Layer } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { createSfHostRuntime } from "../../../../apps/cli/src/sucafina-product/host-context.ts"
@@ -20,7 +21,7 @@ import { microsoftRequest, prepareMicrosoftInstallation } from "../runtime/micro
 import { microsoftPolicy } from "../runtime/microsoft-policy.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import { createSfProductAuthority, type SfProductGrant } from "../product/integration/product-authority.ts"
-import { microsoftFixture, oid, other } from "./microsoft-login/oidc-fixture.ts"
+import { microsoftFixture, oid, other, group } from "./microsoft-login/oidc-fixture.ts"
 import { privateFixture, listenerOrigin, ingressOrigin, publicOrigin } from "./microsoft-login/private-fixture.ts"
 
 const cleanups: (() => Promise<void>)[] = []
@@ -31,8 +32,8 @@ async function fixture(grants: readonly SfProductGrant[] = [oid, other].map((pri
   const disk = await privateFixture()
   cleanups.push(disk.close)
   // Native Requests invokes the real queue reader; no write, namespace or human-action grant is implied.
-  await writeFile(disk.file, JSON.stringify({ ...disk.config, grants }), { mode: 0o600 })
-  const provider = await microsoftFixture({ claims: { name: "Same synthetic display name", email: "same-synthetic@example.test", preferred_username: "same-synthetic@example.test", roles: ["admin"] } })
+  await writeFile(disk.file, JSON.stringify({ ...disk.config, teams: "direct", supremeAdminGroupId: group, grants }), { mode: 0o600 })
+  const provider = await microsoftFixture({ teams: "direct", claims: { name: "Same synthetic display name", email: "same-synthetic@example.test", preferred_username: "same-synthetic@example.test", roles: ["admin"] } })
   provider.account.name = "Same synthetic display name"
   provider.second.name = provider.account.name
   const profile = await prepareMicrosoftInstallation({ origin: listenerOrigin }, disk.file, disk.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
@@ -58,9 +59,13 @@ async function fixture(grants: readonly SfProductGrant[] = [oid, other].map((pri
     { disableLogger: true },
   )
   cleanups.push(router.dispose)
+  const rawRequest = (pathname: string, init: RequestInit = {}) => router.handler(new Request(`${ingressOrigin}${pathname}`, {
+    ...init, headers: { host: new URL(ingressOrigin).host, ...Object.fromEntries(new Headers(init.headers)) },
+  }))
+  const team = await admitMicrosoftFixtureTeam({ installation, provider, request: rawRequest })
   const request = (suffix: string, cookie?: string, body?: Record<string, unknown>) => router.handler(new Request(`${ingressOrigin}/sucafina${suffix}`, {
     method: body === undefined ? "GET" : "POST",
-    headers: { host: new URL(ingressOrigin).host, ...(cookie ? { cookie } : {}), ...(body === undefined ? {} : { origin: publicOrigin, "content-type": "application/json" }) },
+    headers: { host: new URL(ingressOrigin).host, ...(!suffix.startsWith("/auth/") ? { "x-sf-team-profile": team.selector } : {}), ...(cookie ? { cookie } : {}), ...(body === undefined ? {} : { origin: publicOrigin, "content-type": "application/json" }) },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   }))
   const login = async (user = oid) => {
@@ -76,7 +81,7 @@ async function fixture(grants: readonly SfProductGrant[] = [oid, other].map((pri
   }
   const snapshot = (surface: Surface) => store.transaction(surface, async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
   const post = (cookie: string, action: string, values: Record<string, unknown>, id?: string, version = 0) => request("/procurement", cookie, { page: "Requests", action, values, version, ...(id ? { id } : {}) })
-  return { provider, store, identity, profile, environment, request, login, snapshot, post }
+  return { provider, store, identity, profile, environment, request, login, snapshot, post, rawRequest }
 }
 
 describe("Microsoft native business routes", () => {
@@ -144,11 +149,12 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
   expect(JSON.stringify(created)).not.toContain("synthetic-access-")
   expect(JSON.stringify(created)).not.toContain("synthetic-refresh-")
 
-  for (const [cookie, visibleId, visibleTitle, hiddenId, hiddenTitle] of [
+  // These six reads observe the same committed snapshot; each actor remains independently authenticated.
+  await Promise.all(([
     [first, firstId, firstTitle, secondId, secondTitle],
     [second, secondId, secondTitle, firstId, firstTitle],
-  ] as const) {
-    for (const suffix of ["/api/ui/pages/CAP25", "/procurement?download=register"]) {
+  ] as const).map(async ([cookie, visibleId, visibleTitle, hiddenId, hiddenTitle]) => {
+    await Promise.all(["/api/ui/pages/CAP25", "/procurement?download=register"].map(async (suffix) => {
       const response = await f.request(suffix, cookie)
       expect(response.status).toBe(200)
       const body = await response.text()
@@ -156,11 +162,11 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
       expect(body).toContain(visibleId)
       expect(body).not.toContain(hiddenTitle)
       expect(body).not.toContain(hiddenId)
-    }
+    }))
     const deepLink = await f.request(`/api/ui/pages/CAP25?request=${encodeURIComponent(hiddenId)}`, cookie)
     expect(deepLink.status).toBe(200)
     expect(await deepLink.text()).not.toContain(hiddenTitle)
-  }
+  }))
 
   const before = await f.snapshot("procurement")
   const denied = await f.post(first, "save", { pr: { title: "ATTACKER-REPLACEMENT" } }, secondId, 1)
@@ -182,6 +188,31 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
   expect(after.versions[`requests:${secondId}`]).toEqual({ version: 2, by: other })
   expect(object(object(object(object(after.data.store).requests)[secondId]).request).createdBy).toBe(other)
   expect(after.audit.at(-1)?.who).toBe(other)
+})
+
+test("creating a purchase request requires the selected Team even with a valid Microsoft session", async () => {
+  const cookie = await f.login()
+  const title = "Synthetic Team purchase request"
+  const before = await f.snapshot("procurement")
+  const denied = await f.rawRequest("/sucafina/procurement?page=Requests", {
+    method: "POST", headers: { cookie, origin: publicOrigin, "content-type": "application/json" },
+    body: JSON.stringify({ page: "Requests", action: "create", version: 0, values: { pr: { title } } }),
+  })
+  expect(denied.status).toBe(403)
+  expect(await f.snapshot("procurement")).toEqual(before)
+
+  const created = await f.request("/procurement?page=Requests", cookie, {
+    page: "Requests", action: "create", version: 0, values: { pr: { title } },
+  })
+  expect(created.status).toBe(200)
+  const page = await f.request("/api/ui/pages/CAP25", cookie)
+  expect(page.status).toBe(200)
+  expect(await page.json()).toMatchObject({ status: "ok", context: { principalRef: oid }, value: {
+    data: { requests: [expect.objectContaining({ createdBy: oid, pr: expect.objectContaining({ title }) })] },
+  } })
+  const after = await f.snapshot("procurement")
+  expect(Object.keys(object(object(after.data.store).requests))).toHaveLength(1)
+  expect(after.audit.at(-1)?.who).toBe(oid)
 })
 
 test("logout revokes a retained session at the actual business routes without affecting another user", async () => {

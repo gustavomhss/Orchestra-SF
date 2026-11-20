@@ -1,3 +1,4 @@
+import type { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { Snapshot, Command } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
 import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult } from "./decisions.ts"
@@ -178,7 +179,13 @@ export type SfProductState = {
   transactions: Record<string, { namespace: SfStateNamespace; scopeDigest: string; principalRef: string; targetRef: string; targetIncarnation: string; commandDigest: string; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown }>
 }
 export type SfStateNamespace = "preferences" | "reviews" | "relations" | "threads" | "confirmations" | "cases" | "contributions" | "documents" | "receipts" | "atlas" | "outbox" | "bi-artifacts"
-export type SfStateAuthority = { principalRef: string; accessRevision: string; policyVersion: string }
+export type SfStateAuthority = {
+  principalRef: string
+  accessRevision: string
+  policyVersion: string
+  /** Emitted only by the verified corporate authority. Technical legacy callers remain unscoped. */
+  profile?: TeamProfile.Ref
+}
 export type SfStateMutation = {
   namespace: SfStateNamespace
   domainSurface?: Surface

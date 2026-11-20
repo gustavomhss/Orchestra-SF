@@ -9,12 +9,12 @@ import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { ProductHost } from "../../../../../../apps/cli/src/host.ts"
 import { createSfHostRuntime } from "../../../../../../apps/cli/src/sucafina-product/host-context.ts"
 import { createSfAnalysisHttp } from "../../../../../../apps/cli/src/sucafina-product/analysis-http.ts"
-import { createPlannerProduct } from "../../../product/planner/product.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
+import { createPlannerProduct } from "../../../product/planner/product.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
 import { digestSfContribution, digestSfValue } from "../../../product/contracts/canonical.ts"
@@ -151,8 +151,8 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     const draft = await command("sf_case_draft", draftInput)
     expect(draft.status).toBe(200)
     const created = await draft.json()
-    const projection = await (async () => {
-      const payload = { caseRef: created.outputRef }
+    const readCase = async (caseRef: string) => {
+      const payload = { caseRef }
       const source = new Request(`${origin}/sucafina/dashboard?sf=workbench-case`, { headers: { cookie: cookie ?? "" } })
       const admitted = await services.ui.admit(source, "sf_case_read", digestSfValue(payload))
       if (admitted.status !== "ok") throw new Error("real case read was not authorized")
@@ -163,7 +163,8 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
         if (!decoded.ok || !await services.ui.revalidate(admitted.value)) throw new Error("real case projection was rejected")
         return decoded.value
       } finally { services.ui.finish(admitted.value) }
-    })()
+    }
+    const projection = await readCase(created.outputRef)
     const currentCase = projection.case
     const intentRuntime = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-enquadrar-decisao"))
     const intentSkill = intentRuntime?.skills.find((skill) => skill.id === "sf-enquadrar-decisao")
@@ -259,6 +260,11 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
       selection: {},
     } }
     await refused(prepare, 403, { status: "denied", reason: "case-selection-unavailable" })
+    const absent = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => ({ ...services, analysisInputs: undefined }) })
+    const absentResponse = await absent(new Request(`${origin}/sucafina/dashboard?sf=workbench-analysis`, {
+      method: "POST", headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify(prepare),
+    }), "dashboard")
+    expect(absentResponse?.status).toBe(503)
     // Exercise the optional boundary with real authority and an intentionally invalid producer payload.
     // This checks schema/selection rejection; it is not a native analysis or producer witness.
     let prepareCalls = 0
@@ -304,6 +310,14 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     expect(selectionsAfter.status === "ok" && selectionsAfter.value).toEqual(preparedSelections.value)
     const casesAfter = await services.state.read(stateRequest, "cases", (state) => state.cases)
     expect(casesAfter.status === "ok" && casesAfter.value).toEqual(caseBeforeRefusals.value)
+    const emptyDraft = await command("sf_case_draft", { ...draftInput, sourceRefs: [] })
+    expect(emptyDraft.status).toBe(200)
+    const empty = await readCase((await emptyDraft.json()).outputRef)
+    expect((await post({ ...intentPrepare, input: { ...intentPrepare.input, request: { ...intentRequest, caseRef: {
+      id: empty.case.id, incarnation: empty.case.incarnation, version: empty.case.version } } } })).status).toBe(400)
+    const selectionsAfterEmpty = await services.state.read(stateRequest, "preferences", (state) =>
+      Object.entries(state.preferences).filter(([key]) => key.startsWith("sf:analysis-selection:")))
+    expect(selectionsAfterEmpty.status === "ok" && selectionsAfterEmpty.value).toEqual(preparedSelections.value)
     await identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie: cookie ?? "", origin } }))
     expect((await post(intentPrepare)).status).toBe(403)
   } finally {

@@ -1,10 +1,10 @@
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { draftAvailability } from "./draft-revalidation-availability"
 
 export async function revalidatePlannerVersionDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (input.surfaceId !== "CAP23" || input.read.operationId !== "domain.page.CAP23" ||
       input.identity.kind !== "record" || input.read.actionIds.length !== 1 || input.read.actionIds[0] !== "save" ||

@@ -1,5 +1,5 @@
 import { useLanguage } from "@/context/language"
-import type { SfContext } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext } from "@orchestra/schema/sucafina/context"
 import { SfDisplayValueText, type SfCopyKey } from "../shared/frame"
 
 const key = (value: string) => value as SfCopyKey
@@ -32,7 +32,7 @@ const statusKey: Readonly<Record<string, SfCopyKey>> = {
   valid: key("sf.u44.materialScopeReady"),
 }
 
-export function operationGranted(context: SfContext | undefined, operationId: string, scope?: { family?: string; resource?: string }) {
+export function operationGranted(context: SfReadableContext | undefined, operationId: string, scope?: { family?: string; resource?: string }) {
   return !!context?.availability.some((entry) =>
     (!scope?.family || entry.family === scope.family) &&
     (!scope?.resource || entry.resource === scope.resource) &&
