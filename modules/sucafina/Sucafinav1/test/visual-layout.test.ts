@@ -1,4 +1,5 @@
 import { test } from "bun:test"
+import { Database } from "bun:sqlite"
 import { expect, type Response } from "@playwright/test"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { Schema } from "effect"
@@ -8,6 +9,7 @@ import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { mkdir } from "node:fs/promises"
 import path from "node:path"
 import { localBrowser } from "./fixture/local-browser.ts"
+import { decodeSnapshot } from "../runtime/local-store.ts"
 
 // Independent original page identities mapped to the frozen native paths.
 // CAP14 keeps its original Dashboard source inside the native Procurement chapter.
@@ -87,9 +89,24 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
       data: { page: "Versions", action: "save", version: 0, values: {} },
     }))
     expect(plan.status()).toBe(200)
-    const created = await step("read planner version receipt", () => plan.json())
-    expect(created).toMatchObject({ ok: true, value: expect.any(String) })
-    expect(created.value.length).toBeGreaterThan(0)
+    expect(await step("read planner version receipt", () => plan.json())).toMatchObject({ ok: true })
+    // HTTP intentionally omits business values. Read the actual committed source
+    // through a read-only connection to this local operator fixture's database.
+    const persisted = await step("read committed Planner version from private SQLite", () => {
+      const db = new Database(path.join(fixture!.root, "business-local", "installation.sqlite"), { readonly: true, strict: true })
+      try {
+        const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get("planner")
+        if (!row) throw new Error("Private Planner snapshot was not persisted")
+        return decodeSnapshot(row.payload)
+      } finally { db.close() }
+    })
+    const versions = Schema.decodeUnknownSync(Schema.Array(Schema.Struct({
+      id: Schema.String.check(Schema.isMinLength(1)),
+    })))(persisted.data.versions)
+    expect(versions).toHaveLength(1)
+    const createdVersionId = versions[0]!.id
+    expect(persisted.versions["versions:first"]).toEqual({ version: 1, by: fixture.actorId })
+    expect(persisted.versions["versions:" + createdVersionId]).toEqual({ version: 1, by: fixture.actorId })
     const nativePage = (response: Response, cap: string) => {
       const url = new URL(response.url())
       return response.request().method() === "GET" && url.origin === origin && url.pathname === "/sucafina/api/ui/pages/" + cap
@@ -146,7 +163,7 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
       expect(decoded.status).toBe("ok")
       if (decoded.status !== "ok") throw new Error("Original source violated its codec: " + cap)
       expect(decoded.value).toMatchObject({ status: "ok", context: context.value.stamp, value: { capabilityId: cap } })
-      if (cap === "CAP18") expect(decoded.value).toHaveProperty("value.data.selectedVersion.id", created.value)
+      if (cap === "CAP18") expect(decoded.value).toHaveProperty("value.data.selectedVersion.id", createdVersionId)
     }
     const ready = async () => {
       const host = page.locator('[data-sf-host="owner-runtime231"]')
@@ -206,7 +223,8 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
           expect(Math.max(...cards.map((box) => box!.height)) - Math.min(...cards.map((box) => box!.height))).toBeLessThanOrEqual(2)
           expect(Math.min(...cards.map((box) => box!.height))).toBeGreaterThanOrEqual(100)
         }
-        await step(entry + ": screenshot", () => page.screenshot({ path: path.join(import.meta.dir, "artifacts", "visual-" + chapter.chapter + "-" + width + ".png"), fullPage: true, timeout: 10_000 }))
+        if (["sf-dashboard", "sf-procurement", "sf-planner"].includes(chapter.chapter))
+          await step(entry + ": screenshot", () => page.screenshot({ path: path.join(import.meta.dir, "artifacts", "visual-" + chapter.chapter + "-" + width + ".png"), fullPage: true, timeout: 10_000 }))
         // Cycle back to the entry last: all 28 real links are clicked once at
         // each width, and every transition mounts a different source page.
         for (const target of [...chapter.pages.slice(1), initial]) {
