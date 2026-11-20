@@ -206,3 +206,25 @@ test("a partially missing control journal is refused instead of silently recreat
   expect(() => AuthorityControl.open(f.controlDriver)).toThrow("unavailable")
   expect(f.controlDriver.all("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'sf_control_writer'")).toEqual([])
 })
+
+test("an empty existing authority marker is corrupt, never an unmarked technical store", async () => {
+  await using f = await fixture()
+  f.business.execute("DELETE FROM sf_authority_generation")
+  expect(() => f.marker()).toThrow("unavailable")
+  expect(Exit.isFailure(await Effect.runPromise(f.generation.current.pipe(Effect.exit)))).toBe(true)
+  expect(Exit.isFailure(await Effect.runPromise(f.command("INSERT INTO protected_item VALUES ('downgraded', 1)").pipe(Effect.exit)))).toBe(true)
+})
+
+test("rollback remains possible when a pending transaction makes its marker unreadable", async () => {
+  await using f = await fixture()
+  await Effect.runPromise(f.generation.withWriter(1, Effect.gen(function* () {
+    yield* f.command("BEGIN IMMEDIATE")
+    yield* f.command("INSERT INTO protected_item VALUES ('rollback-corrupt-marker', 1)")
+    f.business.execute("DELETE FROM sf_authority_generation")
+    expect(() => f.marker()).toThrow("unavailable")
+    yield* f.command("ROLLBACK")
+  })))
+  expect(f.business.all("SELECT * FROM protected_item")).toEqual([])
+  expect(f.marker()?.generation).toBe(1)
+  expect(f.control.pendingWriters(f.storage)).toEqual([])
+})

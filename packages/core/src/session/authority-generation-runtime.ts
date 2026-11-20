@@ -2,7 +2,7 @@ export * as AuthorityGenerationRuntime from "./authority-generation-runtime"
 
 import { openAuthorityControl } from "#sqlite"
 import { Effect, Layer } from "effect"
-import { chmodSync, closeSync, openSync } from "node:fs"
+import { AuthorityControlFile } from "../database/authority-control-file"
 import { AuthorityControl } from "../database/authority-control"
 import { Database } from "../database/database"
 import { makeGlobalNode } from "../effect/app-node"
@@ -16,11 +16,8 @@ export const layer = Layer.effect(AuthorityGeneration.Service, Effect.gen(functi
     return yield* Effect.die(new AuthorityGeneration.GenerationError("unavailable"))
   const file = AuthorityGeneration.filename(filename)
   const controlPath = file ? file + ".authority.sqlite" : ":memory:"
-  if (controlPath !== ":memory:") {
-    closeSync(openSync(controlPath, "a", 0o600))
-    chmodSync(controlPath, 0o600)
-  }
-  const driver = openAuthorityControl(controlPath)
+  const driver = controlPath === ":memory:" ? openAuthorityControl(controlPath) :
+    AuthorityControlFile.open(controlPath, openAuthorityControl)
   yield* Effect.addFinalizer(() => Effect.sync(() => driver.close()))
   const control = AuthorityControl.open(driver)
   return AuthorityGeneration.make(control.source(database.storageID, marker))
