@@ -114,7 +114,7 @@ export type CreateSfHostRuntime = (input: {
   operational?: (request: Request, stamp: import("@orchestra/schema/sucafina/context").SfContextStamp) => Promise<readonly import("@orchestra/schema/sucafina/context").SfOperationAvailability[]>
   /** Exact installed binding identity; not an authorization or a serialized readiness claim. */
   nativeReadBinding?: (operationId:
-    | "projection.review" | "dashboard.dashboard-review"
+    | "projection.review" | "dashboard.dashboard-review" | "dashboard.dashboard-agenda" | "dashboard.dashboard-review-preserve"
     | "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read"
     | "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover"
     | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision", producer: object) => object | undefined

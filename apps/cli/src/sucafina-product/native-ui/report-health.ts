@@ -142,6 +142,70 @@ export async function observeSfReviewThreadContextHealth(input: {
   } finally { input.ui.finish(admitted.value) }
 }
 
+/** Installed agenda infrastructure only; this never previews or preserves a selection. */
+export async function observeSfDashboardAgendaHealth(input: {
+  ui: SfHostServices["ui"]
+  state: SfHostServices["state"]
+  binding?: Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]
+  humanActions: (request: Request) => Promise<readonly string[]>
+  source: (id: "dashboard.dashboard-agenda" | "dashboard.dashboard-review-preserve") =>
+    { producer: object; methods: readonly unknown[]; dependencies: readonly object[] } | undefined
+}, request: Request, stamp: SfContextStamp) {
+  if (!input.binding || request.signal.aborted) return []
+  const bindingFor = input.binding, sourceFor = input.source, ui = input.ui, state = input.state
+  const humanActions = input.humanActions
+  const candidates = [
+    { id: "dashboard.dashboard-agenda", query: "dashboard-agenda", operation: "sf_dashboard_read", effect: "read", write: false },
+    { id: "dashboard.dashboard-review-preserve", query: "dashboard-review-preserve", operation: "sf-human:reviews.preserve", effect: "mutation", write: true },
+  ] as const
+  const results = await Promise.allSettled(candidates.map(async (candidate) => {
+    const metadata = SfOperationRegistry[candidate.id]
+    if (!sfHasOperationalResource(candidate.id) || metadata.method !== "POST" ||
+      metadata.pathTemplate !== "{mount}/dashboard" || metadata.fixedQuery.sf !== candidate.query ||
+      metadata.effect !== candidate.effect || metadata.responseMode !== "json") return []
+    const source = sourceFor(candidate.id)
+    if (!source || !source.dependencies.length || !source.methods.length ||
+      source.methods.some((method) => typeof method !== "function")) return []
+    const installed = bindingFor(candidate.id, source.producer)
+    if (!installed || typeof installed !== "object" && typeof installed !== "function") return []
+    const current = () => {
+      const next = sourceFor(candidate.id)
+      return input.binding === bindingFor && input.source === sourceFor && input.ui === ui && input.state === state &&
+        input.humanActions === humanActions && !!next && next.producer === source.producer &&
+        next.methods.length === source.methods.length && next.methods.every((method, index) => method === source.methods[index]) &&
+        next.dependencies.length === source.dependencies.length &&
+        next.dependencies.every((dependency, index) => dependency === source.dependencies[index]) &&
+        bindingFor(candidate.id, source.producer) === installed && !request.signal.aborted
+    }
+    const digest = digestSfValue({ purpose: "dashboard-agenda-source-health", operation: candidate.operation })
+    // The original authority admits this metadata-only lease. No human POST or
+    // dashboard producer is invoked, and the actual command retains its own admission.
+    const admitted = await ui.admit(request, candidate.operation, digest)
+    if (admitted.status !== "ok") return []
+    try {
+      const actor = admitted.value.binding
+      if (actor.installationId !== stamp.installationId || actor.projectId !== stamp.projectId ||
+        actor.principalRef !== stamp.principalRef || actor.policyVersion !== stamp.policyVersion ||
+        actor.accessRevision !== stamp.accessRevision || !await ui.validate(admitted.value, candidate.operation, digest) ||
+        ui.requestFor(admitted.value) !== request || !current() ||
+        candidate.write && !(await humanActions(request)).includes("reviews.preserve")) return []
+      const read = () => state.read(request, "reviews", selectSfNamespaceHealth("reviews", stamp, candidate.write ? "write" : "read"))
+      const first = await read(), second = await read()
+      if (first.status !== "ok" || second.status !== "ok" || !first.value || !second.value ||
+        first.storageVersion !== first.value.storageVersion || first.aggregateRevision !== first.value.aggregateRevision ||
+        first.incarnation !== first.value.incarnation || second.storageVersion !== second.value.storageVersion ||
+        second.aggregateRevision !== second.value.aggregateRevision || second.incarnation !== second.value.incarnation ||
+        first.storageVersion !== second.storageVersion || first.aggregateRevision !== second.aggregateRevision ||
+        first.incarnation !== second.incarnation || !await ui.revalidate(admitted.value) ||
+        ui.requestFor(admitted.value) !== request || !current()) return []
+      if (candidate.write && !(await humanActions(request)).includes("reviews.preserve") ||
+        !await ui.revalidate(admitted.value) || ui.requestFor(admitted.value) !== request || !current()) return []
+      return [{ operationId: candidate.id, state: "ready" as const, reason: null, operational: true as const }]
+    } finally { ui.finish(admitted.value) }
+  }))
+  return results.flatMap((result) => result.status === "fulfilled" ? result.value : [])
+}
+
 function isOperation(value: string): value is SfOperationId {
   return Object.hasOwn(SfOperationRegistry, value)
 }

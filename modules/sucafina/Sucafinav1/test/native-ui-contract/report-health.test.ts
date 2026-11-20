@@ -3,7 +3,7 @@ import { mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
-import { observeSfReportHealth, observeSfReviewReadHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/report-health.ts"
+import { observeSfDashboardAgendaHealth, observeSfReportHealth, observeSfReviewReadHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/report-health.ts"
 import { createSfLiveContext } from "../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
 import { mountSfNativeProjections } from "../../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
 import { createSfReviewsProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/reviews.ts"
@@ -144,6 +144,114 @@ test("F01 review reads require each real source, binding, lease and current C08 
   } finally { extended.dispose(); await f.dispose() }
 })
 
+test("F01 agenda readiness observes the original read and human write without executing either", async () => {
+  const f = await financialCompositionFixture()
+  try {
+    if (!f.store.readSnapshotRoot) throw new Error("real read root unavailable")
+    const original = new Request("https://example.test/sucafina/api/ui/context?installationId=installation&projectId=project&hostId=host")
+    const initialized = await f.authority.state.transaction(original, { namespace: "preferences", expectedStorageVersion: 0,
+      targetRef: f.authority.creationTarget.ref, targetIncarnation: f.authority.creationTarget.incarnation,
+      idempotencyKey: "agenda-health-fixture", commandDigest: digestSfValue({ fixture: "agenda-health" }) },
+    async (state) => { state.preferences["agenda-health-fixture"] = true; return { commit: true, value: true } })
+    if (initialized.status !== "ok") throw new Error("C08 fixture initialization failed")
+    let previews = 0
+    let preserves = 0
+    let dispatches = 0
+    const preview = f.business.dashboardServices.agenda
+    const preserve = f.business.dashboardServices.preserveReview
+    f.business.dashboardServices.agenda = (...args) => { previews++; return preview(...args) }
+    f.business.dashboardServices.preserveReview = (...args) => { preserves++; return preserve(...args) }
+    const dashboardHttp = createSfDashboardHttp({ origin: "https://example.test", mount: "/sucafina",
+      runtime: () => ({ authority: f.authority, dashboard: f.business.dashboardServices, decisions: f.business.dashboardDecisions }) })
+    const productHttp = async (request: Request, surface: string) => { dispatches++; return dashboardHttp(request, surface) }
+    const ids = ["dashboard.dashboard-agenda", "dashboard.dashboard-review-preserve"] as const
+    let mounted = true
+    const proof: NonNullable<Parameters<typeof observeSfDashboardAgendaHealth>[0]["binding"]> = (id, producer) =>
+      mounted && ids.some((candidate) => candidate === id) && producer === productHttp ? productHttp : undefined
+    const sources: Parameters<typeof observeSfDashboardAgendaHealth>[0]["source"] = (id) => ({
+      producer: productHttp,
+      methods: [dashboardHttp,
+        id === "dashboard.dashboard-agenda" ? f.business.dashboardServices.agenda : f.business.dashboardServices.preserveReview,
+        f.business.dashboard.read, f.business.dashboardSources.resolveDashboardSource,
+        f.business.dashboardRecords.resolve, f.persistence.resolveScopedSource],
+      dependencies: [f.authority, f.business.dashboardServices, f.business.dashboard,
+        f.business.dashboardSources, f.business.dashboardRecords, f.persistence],
+    })
+    const input = { ui: f.authority.ui, state: f.authority.state, binding: proof,
+      humanActions: f.authority.humanActions, source: sources }
+    const inRoot = <T>(work: () => Promise<T>) => f.store.readSnapshotRoot!(work)
+    const readState = () => f.store.transactionAll!(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
+    const before = await readState()
+    const admission = await inRoot(() => f.authority.readContextAdmission(original))
+    if (admission.status !== "ok") throw new Error("agenda context admission failed")
+    const live = createSfLiveContext({ origin: "https://example.test", mount: "/sucafina", currentBinding: () => f.identity,
+      admit: async (request) => {
+        const current = await f.authority.readContextAdmission(request)
+        return current.status === "ok" ? { status: "ok", stamp: current.stamp, authMode: "local-operator", destinations: [] } : current
+      }, operational: (request, stamp) => observeSfDashboardAgendaHealth(input, request, stamp) })
+    const healthy = await inRoot(() => live.readContext(original, f.identity))
+    if (healthy.status !== "ok") throw new Error("agenda F01 unavailable")
+    const agenda = healthy.value.availability.find((resource) => resource.family === "reviews" && resource.resource === "agenda")
+    expect(agenda?.operations.filter((operation) => ids.some((id) => id === operation.operationId))).toEqual(
+      ids.map((operationId) => ({ operationId, state: "ready", reason: null, operational: true })))
+    expect(await readState()).toEqual(before)
+    expect([dispatches, previews, preserves]).toEqual([0, 0, 0])
+    const installedPreserve = f.business.dashboardServices.preserveReview
+    expect(Reflect.deleteProperty(f.business.dashboardServices, "preserveReview")).toBe(true)
+    expect((await inRoot(() => observeSfDashboardAgendaHealth(input, original, admission.stamp)))
+      .map((operation) => operation.operationId)).toEqual(["dashboard.dashboard-agenda"])
+    f.business.dashboardServices.preserveReview = installedPreserve
+    expect((await inRoot(() => observeSfDashboardAgendaHealth(input, original, admission.stamp)))
+      .map((operation) => operation.operationId)).toEqual([...ids])
+    for (const [denied, absent, retained] of [
+      ["sf_dashboard_read", "dashboard.dashboard-agenda", "dashboard.dashboard-review-preserve"],
+      ["sf-human:reviews.preserve", "dashboard.dashboard-review-preserve", "dashboard.dashboard-agenda"],
+    ] as const) {
+      const ui = { ...f.authority.ui, admit: async (...args: Parameters<typeof f.authority.ui.admit>) => args[1] === denied
+        ? { status: "denied" as const, reason: "fixture-denied" } : f.authority.ui.admit(...args) }
+      const result = await inRoot(() => observeSfDashboardAgendaHealth({ ...input, ui }, original, admission.stamp))
+      expect(result.map((operation) => operation.operationId)).not.toContain(absent)
+      expect(result.map((operation) => operation.operationId)).toContain(retained)
+    }
+    expect((await inRoot(() => observeSfDashboardAgendaHealth({ ...input, humanActions: async () => [] }, original, admission.stamp)))
+      .map((operation) => operation.operationId)).toEqual(["dashboard.dashboard-agenda"])
+    expect(await inRoot(() => observeSfDashboardAgendaHealth({ ...input, binding: undefined }, original, admission.stamp))).toEqual([])
+    expect(await inRoot(() => observeSfDashboardAgendaHealth({ ...input, source: () => undefined }, original, admission.stamp))).toEqual([])
+    mounted = false
+    expect(await inRoot(() => observeSfDashboardAgendaHealth(input, original, admission.stamp))).toEqual([])
+    mounted = true
+    let bindings = 0
+    const replaced: Parameters<typeof observeSfDashboardAgendaHealth>[0] = { ...input, binding: (id, producer) =>
+      id === "dashboard.dashboard-review-preserve" && ++bindings > 1 ? {} : proof(id, producer) }
+    expect((await inRoot(() => observeSfDashboardAgendaHealth(replaced, original, admission.stamp)))
+      .map((operation) => operation.operationId)).toEqual(["dashboard.dashboard-agenda"])
+    let reads = 0
+    const changedSource: Parameters<typeof observeSfDashboardAgendaHealth>[0] = { ...input, source: (id) => {
+      const source = sources(id)
+      return id === "dashboard.dashboard-review-preserve" && ++reads > 1 && source
+        ? { ...source, dependencies: [...source.dependencies, {}] } : source
+    } }
+    expect((await inRoot(() => observeSfDashboardAgendaHealth(changedSource, original, admission.stamp)))
+      .map((operation) => operation.operationId)).toEqual(["dashboard.dashboard-agenda"])
+    expect(await inRoot(() => observeSfDashboardAgendaHealth(input, original, { ...admission.stamp, accessRevision: "changed" }))).toEqual([])
+    expect(await inRoot(() => observeSfDashboardAgendaHealth({ ...input,
+      ui: { ...input.ui, requestFor: () => new Request(original) } }, original, admission.stamp))).toEqual([])
+    const unavailableRead: typeof f.authority.state.read = async () => ({ status: "unavailable", reason: "fixture-unavailable" })
+    expect(await inRoot(() => observeSfDashboardAgendaHealth({ ...input,
+      state: { ...input.state, read: unavailableRead } }, original, admission.stamp))).toEqual([])
+    const revokeRead: typeof f.authority.state.read = async (request, namespace, select) => {
+      const result = await f.authority.state.read(request, namespace, select)
+      f.active.value = false
+      return result
+    }
+    expect(await inRoot(() => observeSfDashboardAgendaHealth({ ...input,
+      state: { ...input.state, read: revokeRead } }, original, admission.stamp))).toEqual([])
+    expect(await inRoot(() => observeSfDashboardAgendaHealth(input, original, admission.stamp))).toEqual([])
+    expect(await readState()).toEqual(before)
+    expect([dispatches, previews, preserves]).toEqual([0, 0, 0])
+  } finally { await f.dispose() }
+})
+
 test("local installation supplies only its actual registered review bindings", async () => {
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "sf-review-binding-"))
   try {
@@ -164,6 +272,8 @@ test("local installation supplies only its actual registered review bindings", a
       binding.value = input.nativeReadBinding
       expect(binding.value?.("projection.review", projection)).toBeUndefined()
       expect(binding.value?.("dashboard.dashboard-review", productHttp)).toBeUndefined()
+      expect(binding.value?.("dashboard.dashboard-agenda", productHttp)).toBeUndefined()
+      expect(binding.value?.("dashboard.dashboard-review-preserve", productHttp)).toBeUndefined()
       return { identity: () => undefined, contributions: [], services: () => services } as never
     } }, file, environment)
     try {
@@ -173,15 +283,23 @@ test("local installation supplies only its actual registered review bindings", a
       const dashboard = binding.value?.("dashboard.dashboard-review", productHttp)
       expect(typeof dashboard).toBe("function")
       expect(binding.value?.("dashboard.dashboard-review", productHttp)).toBe(dashboard)
+      for (const id of ["dashboard.dashboard-agenda", "dashboard.dashboard-review-preserve"] as const) {
+        expect(binding.value?.(id, productHttp)).toBe(dashboard)
+        expect(binding.value?.(id, {})).toBeUndefined()
+      }
       expect(binding.value?.("projection.review", {})).toBeUndefined()
       expect(binding.value?.("dashboard.dashboard-review", {})).toBeUndefined()
       services = { nativeReviewProjection: { ...projection }, productHttp: async () => undefined }
       expect(binding.value?.("projection.review", projection)).toBeUndefined()
       expect(binding.value?.("dashboard.dashboard-review", productHttp)).toBeUndefined()
+      expect(binding.value?.("dashboard.dashboard-agenda", productHttp)).toBeUndefined()
+      expect(binding.value?.("dashboard.dashboard-review-preserve", productHttp)).toBeUndefined()
       services = undefined
       expect(binding.value?.("projection.review", projection)).toBeUndefined()
     } finally { await installation.dispose() }
     services = { nativeReviewProjection: projection, productHttp }
     expect(binding.value?.("projection.review", projection)).toBeUndefined()
+    expect(binding.value?.("dashboard.dashboard-agenda", productHttp)).toBeUndefined()
+    expect(binding.value?.("dashboard.dashboard-review-preserve", productHttp)).toBeUndefined()
   } finally { await rm(root, { recursive: true, force: true }) }
 })
