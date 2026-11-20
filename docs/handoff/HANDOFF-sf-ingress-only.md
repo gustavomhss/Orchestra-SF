@@ -1,8 +1,22 @@
 # Handoff — sf-ingress-only
 
+## Qualificação atual pelo integrador — COMPLETE no escopo de ingresso
+
+- Run: [44674117714](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44674117714), attempt1, completed / **success**.
+- Snapshot: af21e61bf9cb52a73482cd99eebb61975395fdcc, filho direto de300e5c41ab1f353f491db80bfc93b664960abd38. Acrescenta somente .ci-run.json; os seis blobs de código são idênticos a345cebee e ao checkpoint documental410e2d1.
+- Testjob136081747586: **success**; compilação SF E2E original efetivamente executada por bun run typecheck:sf-e2e / tsgo -p tsconfig.sf-e2e.json.
+- Os três specs completos: **3 passed (2.0m)**, zero falhas, um worker, zero retries. As duas jornadas antigas preservam todas as assertions.
+- Cleanup136083875834: **success**.
+- Artefato14602300733: playwright-ubuntu-24.04-1,924306bytes; digest ZIP **f5d57d0a477f6de2b7cdc42a8cd067399d62c7c16584b710069310f33ed35a4e**.
+- Este é um recibo de ingresso real/primeiro save, não um baseline da campanha, digest do pacote ou aprovação das jornadas completas de Reports/Decisions/BI.
+- O código foi revisado por root e por Reports. Não houve troca de resposta, novo grant, bypass, alteração do runtime/application.ts, ampliação de prazo ou skip.
+- Escopo agora elegível: exatamente os seis arquivos de código e este handoff. Os gates globais anteriores Reports0/4 e Decisions2/5 permanecem failure/unbound; os ramos de UI/shards não são promovidos por este resultado.
+- O #396 anterior continua sendo proveniência dos três blobs de Reports; o integrador apresentará esta união explícita de ingresso em PR próprio e registrará a relação, sem alegar sucesso da antiga jornada completa.
+
+
 SHA: 345cebeedb2b04d3e349bd40f0678c82cfaac215 (code; this handoff is a later documentation commit)
 Data: 2026-11-20 (UTC)
-Estado: partial — the three declared ingress specs await one coordinator-owned Actions gate
+Estado: COMPLETE — real ingress and original first-save scope qualified by Actions44674117714; business journeys remain unbound
 
 Branch: sf-ingress-only.
 Integration parent: aa751dd731ce91f126a00488dfce16022bb8cb2d (sf-join-four).
