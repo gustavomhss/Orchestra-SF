@@ -295,7 +295,8 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
       </Show>
       <Show when={runtime.view.kind === "administration" && context()}>
         <SfTeamProfilesAdministration binding={props.binding} context={context} generation={runtime.generation}
-          fetch={runtime.fetch} refresh={runtime.refresh} />
+          fetch={runtime.fetch} refresh={runtime.refresh} confirmDiscard={confirm}
+          registerDraft={runtime.registerAdministrativeDraft} notice={(key) => setUi("notice", key)} />
       </Show>
       <Show when={runtime.view.kind === "session" && runtime.state().status === "authenticated" && runtime.owner.ready()}>
         <Suspense fallback={<p role="status">{language.t("session.messages.loading")}</p>}>

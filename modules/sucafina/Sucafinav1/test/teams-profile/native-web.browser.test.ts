@@ -345,10 +345,34 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     expect(await picker(administrator.page).isDisabled()).toBe(true)
     expect(observed.some((call) => call.fixture === "admin" && call.path.endsWith("/api/ui/team-profiles") &&
       call.method === "POST" && call.cookie && !call.basic && call.selector === null && call.status === 200)).toBe(true)
+    phase = "shared-team-configuration"
+    await administrator.page.locator('[data-sf-config-open="' + profileA.teamObjectId + '"]').click()
+    const configuration = administrator.page.locator('[data-sf-team-configuration="ready"]')
+    await configuration.waitFor({ state: "visible" })
+    await configuration.locator("[data-sf-config-model]").fill("fixture/shared-model")
+    await configuration.locator("[data-sf-config-default-agent]").fill("analyst")
+    await configuration.locator("[data-sf-config-agent-id]").fill("analyst")
+    await configuration.locator("[data-sf-config-add-agent]").click()
+    await configuration.locator("[data-sf-config-instructions]").fill("Shared instructions configured by the independent administrator.")
+    const configured = administrator.page.waitForResponse((response) =>
+      new URL(response.url()).pathname === admin!.binding.mount + "/api/ui/team-profiles/configuration" &&
+      response.request().method() === "POST")
+    await configuration.locator("[data-sf-config-save]").click()
+    expect((await configured).status()).toBe(200)
+    await administrator.page.locator('[data-sf-team-administration="ready"]').waitFor({ state: "visible" })
+    expect(await admin.profiles.readConfiguration(profileA)).toEqual({
+      origin: "installation-team-store", profile: profileA, configRevision: 2,
+      document: { version: 1, settings: { model: "fixture/shared-model", default_agent: "analyst",
+        agents: { analyst: { system: "Shared instructions configured by the independent administrator." } } } },
+    })
+    expect(await admin.profiles.read()).toEqual({ configRevision: 2, profiles: [{ profile: profileA, enabled: true }] })
+    expect(await picker(administrator.page).isDisabled()).toBe(true)
+    expect(observed.some((call) => call.fixture === "admin" && call.path.endsWith("/api/ui/team-profiles/configuration") &&
+      call.method === "POST" && call.cookie && !call.basic && call.selector === null && call.status === 200)).toBe(true)
     admin.provider.account.groups = admin.provider.account.groups.filter((value) => value !== group)
     await administrator.page.getByRole("button", { name: "Read current configuration", exact: true }).click()
     await administrator.page.locator('[data-sf-team-administration="denied"]').waitFor({ state: "visible" })
-    expect(await admin.profiles.read()).toEqual({ configRevision: 1, profiles: [{ profile: profileA, enabled: true }] })
+    expect(await admin.profiles.read()).toEqual({ configRevision: 2, profiles: [{ profile: profileA, enabled: true }] })
     expect(admin.metadataCalls.locations).toBe(0)
 
     expect(observed.some((call) => call.basic)).toBe(false)

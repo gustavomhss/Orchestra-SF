@@ -7,6 +7,7 @@ import { createSfTeamAuthActions, type SfTransportFetch } from "@orchestra/clien
 import { createTeamProfileSelection, type TeamProfileSelection } from "./team-profile-selection"
 import { teamWebContextReader } from "./team-profile-web"
 import { createTeamSessionsWorkspace, type TeamChatNotice } from "./team-sessions"
+import type { TeamAdministrativeDraft } from "../orchestra/chapters/sucafina/local-administration/team-configuration-state"
 import { clearTeamSelection, readTeamSelection, writeTeamSelection, type TeamWindowIdentity } from "../utils/team-profile-storage"
 import { createTeamNativeOwner } from "../orchestra/chapters/sucafina/context/team-owner"
 import { createSfNavigationState, type SfNativeTransitionCause } from "../orchestra/chapters/sucafina/navigation-state"
@@ -49,10 +50,18 @@ export function createTeamWebRuntime(input: Readonly<{
       input.commitHref(sfTeamSessionHref(input.binding, current.context.stamp.team.owner.profile, id), true)
     },
   })
-  const hasDirtyDrafts = () => owner.handle.hasDirtyDrafts() || sessions.hasDirtyDrafts()
+  const administrativeDrafts = new Set<TeamAdministrativeDraft>()
+  const otherDirtyDrafts = () => owner.handle.hasDirtyDrafts() || [...administrativeDrafts].some((draft) => draft.dirty())
+  const hasDirtyDrafts = () => otherDirtyDrafts() || sessions.hasDirtyDrafts()
+  const discardOtherDrafts = () => {
+    if ([...administrativeDrafts].some((draft) => draft.pending())) { input.notice("sf.teams.pending"); return false }
+    if (owner.handle.hasDirtyDrafts() && !owner.handle.discardDrafts()) return false
+    for (const draft of administrativeDrafts) draft.discard()
+    return true
+  }
   const discardDrafts = () => {
     if (sessions.state.pending.length) { input.notice("sf.teams.pending"); return false }
-    if (owner.handle.hasDirtyDrafts() && !owner.handle.discardDrafts()) return false
+    if (!discardOtherDrafts()) return false
     return sessions.discardDrafts()
   }
   const rawFetch: SfTransportFetch = async (url, init) => {
@@ -85,6 +94,7 @@ export function createTeamWebRuntime(input: Readonly<{
       input.closeConsent()
       owner.retire(reason)
       sessions.retire(reason)
+      for (const draft of administrativeDrafts) draft.retire()
       setView({ kind: "resolving", route: undefined })
     },
     accept: async (context, transport, generation, signal) => {
@@ -231,7 +241,7 @@ export function createTeamWebRuntime(input: Readonly<{
         if (!sfSameContextStamp(fresh.value.stamp, original.context.stamp)) { changed(); return "denied" }
         // Session tabs preserve their in-memory drafts. A business editor still
         // uses its original consent and a fresh source proof before being left.
-        if (owner.handle.hasDirtyDrafts()) {
+        if (otherDirtyDrafts()) {
           if (!await input.confirmDiscard()) return "kept-editing"
           if (abort.signal.aborted || epoch !== attempt || controller.current() !== original) return "aborted"
           const after = await proof(queryFor(original.context), abort.signal, generation)
@@ -239,7 +249,7 @@ export function createTeamWebRuntime(input: Readonly<{
             changed(); return "denied"
           }
           if (abort.signal.aborted || controller.current() !== original) return "aborted"
-          if (!owner.handle.discardDrafts()) { input.notice("sf.teams.pending"); return "kept-editing" }
+          if (!discardOtherDrafts()) { input.notice("sf.teams.pending"); return "kept-editing" }
         }
         setView({ kind: "session", route: undefined })
         if (commit) commit(intent.href)
@@ -291,6 +301,10 @@ export function createTeamWebRuntime(input: Readonly<{
       if (!disposed) await admitCurrent()
     },
     refresh, navigate,
+    registerAdministrativeDraft(draft: TeamAdministrativeDraft) {
+      administrativeDrafts.add(draft)
+      return () => { administrativeDrafts.delete(draft); draft.retire() }
+    },
     async closeSession(id: string) {
       const original = controller.current()
       if (!original?.context.stamp.team || disposed) return false

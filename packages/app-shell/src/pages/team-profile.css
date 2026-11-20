@@ -22,3 +22,15 @@
 .sf-team-dialog{margin:auto;width:calc(100% - 2rem);background:var(--background-base);color:var(--text-base);border:1px solid var(--border-base);border-radius:.75rem;padding:1.5rem;max-width:32rem;box-shadow:0 1rem 3rem rgb(0 0 0/.2)}
 .sf-team-dialog h2{font-size:1.1rem;margin-bottom:1rem}.sf-team-dialog button{margin-right:.6rem}
 @media(max-width:900px){.sf-team-shell{grid-template-columns:minmax(0,1fr)}.sf-team-sidebar,.sf-team-picker-wide{display:none}.sf-team-topbar{padding:.75rem}.sf-team-topbar>.mx-btn:last-child{margin-left:auto}.sf-team-menu-toggle{display:block}.sf-team-main{grid-column:1;padding:.75rem}.sf-team-mobile:not([hidden]){display:block;position:fixed;top:4.5rem;left:.5rem;right:.5rem;max-height:75dvh;overflow:auto;background:var(--background-base);border:1px solid var(--border-base);border-radius:.5rem;padding:1rem;z-index:20;box-shadow:0 .5rem 2rem rgb(0 0 0/.15)}.sf-team-context,.sf-team-admin{padding:1rem;margin:.5rem auto}.sf-team-context dl{grid-template-columns:1fr;gap:.25rem}.sf-team-context dd{margin-bottom:.6rem}}
+
+.sf-team-configuration { border-top: 1px solid var(--border-base, #d5d8db); margin-top: 1.5rem; padding-top: 1rem; max-width: 58rem; }
+.sf-team-configuration header p { overflow-wrap: anywhere; }
+.sf-team-config-fields, .sf-team-config-agent { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; min-width: 0; margin-top: 1rem; border: 0; padding: 0; }
+.sf-team-config-fields > label, .sf-team-config-agent > label { font-weight: 600; margin-top: .5rem; }
+.sf-team-config-fields input:not([type=checkbox]), .sf-team-config-fields select, .sf-team-config-fields textarea { box-sizing: border-box; width: 100%; min-width: 0; border: 1px solid var(--border-base, #aeb5bb); border-radius: .375rem; background: var(--background-base, #fff); color: inherit; padding: .5rem; font: inherit; }
+.sf-team-config-fields textarea { resize: vertical; }
+.sf-team-config-fields p { margin: 0; }
+.sf-team-config-agent-add { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: end; }
+.sf-team-config-agent-add label { grid-column: 1 / -1; }
+.sf-team-config-fields .mx-btn { justify-self: start; }
+@media (max-width: 600px) { .sf-team-config-agent-add { grid-template-columns: minmax(0, 1fr); } }

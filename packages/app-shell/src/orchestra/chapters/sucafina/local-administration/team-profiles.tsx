@@ -6,6 +6,8 @@ import type { SfTeamContext, SfTeamInstallationDescriptor } from "@orchestra/sch
 import { createSfTeamProfileClient } from "@orchestra/client/sucafina/team-profile"
 import type { SfTransportFetch } from "@orchestra/client/sucafina/transport"
 import { useLanguage } from "../../../../context/language"
+import { createTeamConfigurationState, type TeamAdministrativeDraft } from "./team-configuration-state"
+import { SfTeamConfigurationForm } from "./team-configuration"
 
 type CopyKey = Parameters<ReturnType<typeof useLanguage>["t"]>[0]
 type View = Readonly<{ status: "loading" | "ready" | "denied" | "unavailable";
@@ -13,11 +15,19 @@ type View = Readonly<{ status: "loading" | "ready" | "denied" | "unavailable";
 export function SfTeamProfilesAdministration(props: Readonly<{
   binding: SfTeamInstallationDescriptor; context: () => SfTeamContext | undefined
   generation: () => number; fetch: SfTransportFetch; refresh(): Promise<void>
+  confirmDiscard(): Promise<boolean>
+  registerDraft(draft: TeamAdministrativeDraft): () => void
+  notice(key: CopyKey): void
 }>): JSX.Element {
   const language = useLanguage()
   const [ui, setUi] = createStore<{ view: View; input: string; busy: boolean; message?: CopyKey; limit: number }>({
     view: { status: "loading", profiles: [] }, input: "", busy: false, limit: 100,
   })
+  const editor = createTeamConfigurationState({
+    binding: props.binding, context: props.context, generation: props.generation, fetch: props.fetch,
+    refresh: props.refresh, confirmDiscard: props.confirmDiscard, notice: props.notice,
+  })
+  const unregister = props.registerDraft(editor.guard)
   let disposed = false, serial = 0, operation: AbortController | undefined
   const current = (generation: number, principal: TeamProfile.Principal) => {
     const context = props.context()
@@ -55,7 +65,13 @@ export function SfTeamProfilesAdministration(props: Readonly<{
     const context = props.context(), revision = ui.view.configRevision
     if (ui.busy || ui.view.status !== "ready" || revision === undefined || !context ||
         context.profile.administration.status !== "available") return
-    const generation = props.generation(), principal = context.profile.principal, epoch = ++serial
+    const generation = props.generation(), principal = context.profile.principal
+    if (editor.guard.pending()) { setUi("message", "sf.teams.configUnknown"); return }
+    if (editor.guard.dirty()) {
+      if (!await props.confirmDiscard() || !current(generation, principal)) return
+      editor.guard.discard()
+    }
+    const epoch = ++serial
     operation?.abort(); operation = new AbortController()
     const abort = operation
     setUi({ busy: true, message: undefined })
@@ -95,6 +111,7 @@ export function SfTeamProfilesAdministration(props: Readonly<{
   }
   createEffect(() => {
     const generation = props.generation(), context = props.context()
+    editor.guard.retire()
     if (!context || context.profile.administration.status !== "available") {
       serial++; operation?.abort()
       setUi({ input: "", busy: false, message: undefined,
@@ -104,7 +121,7 @@ export function SfTeamProfilesAdministration(props: Readonly<{
     void generation
     void read()
   })
-  onCleanup(() => { disposed = true; serial++; operation?.abort(); setUi("input", "") })
+  onCleanup(() => { disposed = true; serial++; operation?.abort(); unregister(); setUi("input", "") })
   return <section class="sf-team-admin mx-card" data-sf-team-administration={ui.view.status}>
     <header><h2>{language.t("sf.teams.administration")}</h2><p>{language.t("sf.teams.adminDescription")}</p></header>
     <Show when={ui.message}><p role="status">{language.t(ui.message!)}</p></Show>
@@ -132,6 +149,9 @@ export function SfTeamProfilesAdministration(props: Readonly<{
               {language.t(row.enabled ? "sf.teams.disable" : "sf.teams.enable")}</button>
             <button type="button" class="mx-btn" disabled={ui.busy}
               onClick={() => { void configure("remove", row.profile) }}>{language.t("sf.teams.remove")}</button>
+            <button type="button" class="mx-btn" disabled={ui.busy || editor.state.busy || !row.enabled}
+              data-sf-config-open={row.profile.teamObjectId}
+              onClick={() => { void editor.open(row.profile) }}>{language.t("sf.teams.configTitle")}</button>
           </li>
         }</For></ul>
       </Show>
@@ -139,5 +159,6 @@ export function SfTeamProfilesAdministration(props: Readonly<{
         <button type="button" class="mx-btn" onClick={() => setUi("limit", (value) => value + 100)}>{language.t("sf.teams.more")}</button>
       </Show>
     </Show>
+    <SfTeamConfigurationForm editor={editor} />
   </section>
 }

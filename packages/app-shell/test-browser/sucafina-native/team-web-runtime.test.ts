@@ -348,3 +348,38 @@ test("Session 403 scrubs chat without retiring still-admitted business context",
     expect(f.runtime.view.kind).toBe("business")
   } finally { f.close() }
 })
+
+test("administrative drafts participate in per-window consent and pending writes cannot be discarded by navigation", async () => {
+  const f = fixture({ teams: [] })
+  let dirty = true, pending = false, retired = 0, discarded = 0
+  const unregister = f.runtime.registerAdministrativeDraft({
+    dirty: () => dirty, pending: () => pending,
+    discard: () => { discarded++; dirty = false },
+    retire: () => { retired++; dirty = false; pending = false },
+  })
+  try {
+    await f.runtime.start()
+    await f.runtime.navigate(sfTeamAdministrationHref(binding))
+    dirty = true
+    f.setConsent(async () => false)
+    expect(await f.runtime.navigate(sfTeamContextHref(binding))).toBe("denied")
+    expect(f.runtime.view.kind).toBe("administration")
+    expect(discarded).toBe(0)
+    expect(dirty).toBe(true)
+    f.setConsent(async () => true)
+    pending = true
+    expect(await f.runtime.navigate(sfTeamContextHref(binding))).toBe("denied")
+    expect(f.runtime.view.kind).toBe("administration")
+    expect(discarded).toBe(0)
+    expect(f.notices).toContain("sf.teams.pending")
+    pending = false
+    expect(await f.runtime.navigate(sfTeamContextHref(binding))).toBe("committed")
+    expect(discarded).toBe(1)
+    expect(f.runtime.view.kind).toBe("context")
+    dirty = true
+    const before = retired
+    f.runtime.invalidate("logout")
+    expect(retired).toBeGreaterThan(before)
+    expect(dirty).toBe(false)
+  } finally { unregister(); f.close() }
+})
