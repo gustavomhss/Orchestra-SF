@@ -1,3 +1,4 @@
+import { discoverSfDashboardAgenda } from "./dashboard-services.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { resolveDashboardBiSelection } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/bi-metadata.ts"
@@ -244,7 +245,7 @@ export function createSfExtendedHttp(input: {
           if (new Set(pages).size !== pages.length) return json({ status: "needs-input", reason: "duplicate-report-topic" }, 400)
           const items: ReturnType<typeof sfDashboardReviewAgendaItem>[] = []
           for (const page of pages) {
-            const current = await business.dashboardServices.discover({ page, period }, call)
+            const current = await discoverSfDashboardAgenda(business.dashboardServices, { page, period }, call)
             if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
             if (!current.value.agenda) return json({ status: "unavailable", reason: "review-source-selection-unavailable" }, 409)
             // Discovery uses one local "dashboard" ID; a report needs one stable ID per chosen topic.
