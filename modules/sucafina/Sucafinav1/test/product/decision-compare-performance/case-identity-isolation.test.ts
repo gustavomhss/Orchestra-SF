@@ -50,7 +50,7 @@ test("case identity returns detached metadata before final admission and across 
     expect(first).toMatchObject({ status: "ok", value: captured })
     if (first.status !== "ok" || !first.value || !retained.state) throw new Error("Detached identity missing")
     first.value.version = 900
-    retained.state.cases.case!.participants.length = 0
+    Array.prototype.splice.call(retained.state.cases.case!.participants, 0, retained.state.cases.case!.participants.length)
     f.controls.observe = undefined
     const next = await f.admit()
     const second = await f.state.read(next.request, "cases", selectSfCaseIdentity(captured, next.context))
@@ -68,7 +68,7 @@ test("case identity wrappers and other namespaces keep the original full callbac
     const selector = selectSfCaseIdentity(captured, f.context)
     const wrapped = Object.assign((state: Readonly<SfProductState>, actor: Parameters<typeof selector>[1]) => {
       state.preferences.private = "callback-private"
-      state.cases.case!.participants.length = 0
+      Array.prototype.splice.call(state.cases.case!.participants, 0, state.cases.case!.participants.length)
       return selector(state, actor)
     }, selector)
     expect(await f.state.read(f.request, "cases", wrapped)).toMatchObject({ status: "ok", value: undefined })
@@ -137,7 +137,7 @@ test("case identity observes captured identity, participants and bindings at the
       f.controls.observe = (snapshot, _request, mode, index) => {
         if (mode !== "read" || index !== 1) return
         const state = snapshot.data.__sfProductV1 as SfProductState
-        if (change === "participants") { state.cases.case!.participants.length = 0; return }
+        if (change === "participants") { Array.prototype.splice.call(state.cases.case!.participants, 0, state.cases.case!.participants.length); return }
         if (change === "stored-incarnation") { state.cases.case!.incarnation = "replaced"; return }
         if (change === "stored-version") { state.cases.case!.version++; return }
         if (change === "version") { captured.version++; return }
