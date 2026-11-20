@@ -6,7 +6,7 @@ on:
   # Retain this dedicated native gate when the feature branch is eventually merged.
   # Only PRs that change the installation product or its distribution producer qualify.
   pull_request:
-    branches: [close-final-candidate]
+    branches: [close-final-candidate, sf-join-four]
     paths:
       - ".github/workflows/sf-factory-package.yml"
       - "apps/cli/script/build.ts"
@@ -33,7 +33,9 @@ concurrency:
 jobs:
   linux-factory:
     name: linux-factory (compiled + extracted)
-    if: github.repository == 'gustavomhss/Orchestra-SF' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/sfa-factory-package')
+    # Qualify the continuation repair on its exact PR head before integration.
+    # The added sf-join-four path admits only this repository's dedicated repair branch.
+    if: github.repository == 'gustavomhss/Orchestra-SF' && ((github.event_name == 'push' && github.ref == 'refs/heads/sfa-factory-package') || (github.event_name == 'pull_request' && (github.base_ref == 'close-final-candidate' || (github.base_ref == 'sf-join-four' && github.head_ref == 'sf-continuation-package' && github.event.pull_request.head.repo.full_name == github.repository))))
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
