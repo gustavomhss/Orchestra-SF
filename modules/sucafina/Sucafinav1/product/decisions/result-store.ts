@@ -29,7 +29,7 @@ export async function readHistoricalScenarios(
   store: Pick<ReturnType<typeof createSfDecisionResultStore>, "read"> & { readHistoricalScenario?: HistoricalScenarioReader },
   incoming: readonly string[],
   context: TrustedDomainContext,
-  scalarConcurrency: "serial" | "parallel" = "serial",
+  scalarConcurrency: "serial" | "parallel" | "parallel-joint" = "serial",
 ): Promise<PortResult<StoredDecisionResult>[]> {
   const references = [...incoming]
   if (!references.length) return []
@@ -40,6 +40,17 @@ export async function readHistoricalScenarios(
     // A facade that replaces the scalar during an await cannot inherit a grant
     // from the old reader. Never fall back after starting this observation.
     if (store.readHistoricalScenario !== scalar) return references.map(() => ({ status: "denied", reason: "historical-reader-changed" }))
+    return observed
+  }
+  if (scalarConcurrency === "parallel-joint") {
+    // Analysis historically clones only after every concurrent reader settles.
+    // Preserve aliases and late mutations from opaque readers until that fence.
+    const read = store.read
+    const observed = structuredClone(await Promise.all(references.map((resultRef) => store.readHistoricalScenario
+      ? store.readHistoricalScenario({ resultRef }, context)
+      : store.read({ resultRef, kind: "scenario" }, context))))
+    if (store.readHistoricalScenario !== scalar || !scalar && store.read !== read)
+      return references.map(() => ({ status: "denied", reason: "historical-reader-changed" }))
     return observed
   }
   const read = async (resultRef: string) => structuredClone(await (store.readHistoricalScenario
