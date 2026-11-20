@@ -1,0 +1,3965 @@
+{
+  "schema": "teams-profile-execution/1",
+  "status": "IMPLEMENTATION_IN_PROGRESS_NOT_QUALIFIED",
+  "plan": {
+    "commit": "3148412a24f9fbdcc22149b47cf739dbd539eb8d",
+    "branch": "teams-profile-plan",
+    "catalog": "docs/architecture/teams-profile-test-plan.json"
+  },
+  "product": {
+    "baseCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+    "baseTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+    "branch": "teams-profile-work",
+    "documentImportCommit": "dcbf46eec37fce43e8ff5c12d795a78f39228fa9"
+  },
+  "wp0": {
+    "codeDeltaAgainstAnalysisPin": [],
+    "productSourceMatchesFrozenPin": true,
+    "documentImport": {
+      "count": 24,
+      "policy": "Only the exact plan blobs were copied; no product blobs copied from the older documentary branch."
+    },
+    "concurrentIntegration": {
+      "observedCommit": "3910a644c7fdab1a438c2b5b39d69afc19361709",
+      "aheadOfAnalysisPin": 129,
+      "changedPaths": [
+        ".github/actions/setup-bun/action.yml",
+        ".github/workflows/sf-cache-warm.yml",
+        ".github/workflows/sf-ci.yml",
+        ".github/workflows/sf-factory-package.yml",
+        ".github/workflows/sf-static-surgical.yml",
+        ".github/workflows/test-ci.yml",
+        "apps/cli/script/factory-receipt-check.ts",
+        "apps/cli/src/sucafina-product/document-services.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/native-ui/asset-health.ts",
+        "apps/cli/src/sucafina-product/native-ui/domain-health.ts",
+        "apps/cli/src/sucafina-product/native-ui/domain.ts",
+        "apps/cli/src/sucafina-product/native-ui/domain/projection.ts",
+        "apps/cli/src/sucafina-product/native-ui/import-health.ts",
+        "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+        "apps/cli/src/sucafina-product/native-ui/review-agenda-health.ts",
+        "apps/cli/src/sucafina-product/native-ui/summary-settings.ts",
+        "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "apps/cli/test/factory-distribution-linux.test.ts",
+        "docs/handoff/HANDOFF-sf-continuation-package.md",
+        "docs/handoff/HANDOFF-sf-files-upload-observation.md",
+        "docs/handoff/HANDOFF-sf-ingress-only.md",
+        "docs/handoff/HANDOFF-sf-package-reconciled.md",
+        "docs/handoff/HANDOFF-sf-review-observation.md",
+        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/contract-freeze-revision-12.md",
+        "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/contracts-v1.md",
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+        "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/runtime/assets.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/asset-health.test.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/budget-deviation-projection.test.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/import-health.test.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/review-agenda-health.test.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/summary-settings.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-expected.ts",
+        "modules/sucafina/Sucafinav1/test/product/diagnostics/calculation/source-observation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/proof234/am04-c12-return.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/choice.ts",
+        "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/workbench-case-identity.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/browser-bridge-half-close.node-smoke.mjs",
+        "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/import-report-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp05/contributions-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp05/planner-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp05/procurement-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp05/procurement-stages.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp05/sensitivity-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/native-public-state-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/public-state.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-verifier-negatives.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/analysis-observation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-predispatch.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-canonical-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-persistence.test.ts",
+        "packages/app-shell/e2e/playwright.production.config.ts",
+        "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+        "packages/app-shell/e2e/sucafina/reports-ingress.spec.ts",
+        "packages/app-shell/e2e/sucafina/reports-support/fixture.ts",
+        "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+        "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u28.ts",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u39.ts",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u40.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/reader.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/model.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/host/home-pages-route.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+        "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/summary-settings.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/budget-period.ts",
+        "packages/app-shell/test-browser/sucafina-native/budget-conflict.test.ts",
+        "packages/app-shell/test-browser/sucafina-native/budget-period.test.ts",
+        "packages/app-shell/test-browser/sucafina-native/home-pages-route.test.ts",
+        "packages/app-shell/test-browser/sucafina-native/summary-settings.test.ts",
+        "packages/app-shell/test-browser/sucafina-native/transport-contract.test.ts",
+        "packages/client/src/sucafina/domain.ts",
+        "packages/core/test/setup-bun-cache-inputs.test.ts",
+        "packages/core/test/setup-bun-cache.test.ts",
+        "packages/schema/src/sucafina/common.ts",
+        "packages/schema/src/sucafina/domain.ts",
+        "packages/schema/src/sucafina/domain/operations.ts",
+        "packages/schema/src/sucafina/operation-registry.ts",
+        "packages/schema/test/sucafina-summary-settings.test.ts",
+        "script/ci-cache-inputs.ts",
+        "script/sf-ci/cache-source.mjs",
+        "script/sf-ci/cache-source.test.mjs",
+        "script/sf-ci/gate.mjs",
+        "script/sf-ci/gate.test.mjs",
+        "script/sf-ci/shard-adoption.mjs",
+        "script/sf-ci/shard-adoption.test.mjs",
+        "script/sf-ci/shard-plan.mjs",
+        "script/sf-ci/shard-plan.test.mjs",
+        "script/sf-ci/test_timings.py",
+        "script/sf-ci/timings.py",
+        "script/sf-ci/workflow-contract.mjs",
+        "sf/ci/PENDING-WORK.md",
+        "sf/ci/PERFORMANCE.md"
+      ],
+      "decision": "Not silently included in the frozen implementation. Reconcile semantically before eventual promotion."
+    },
+    "legacyDataCensus": "NOT_OBSERVED",
+    "affectedActorCensus": "NOT_OBSERVED",
+    "residueLedger": "NOT_MEASURED",
+    "blockBeforeRealCutover": [
+      "Real ownership/ambiguous mappings and private quarantine",
+      "Classification of existing grantees/guests without eligible Team",
+      "Admitted disposable Azure Linux installation and original Microsoft contexts",
+      "Current corporate administration group and consent"
+    ]
+  },
+  "baseline": {
+    "status": "RELEVANT_INITIAL_SELECTIONS_OBSERVED",
+    "coverage": "Five normative existingOnlyBaselineRequest selections. No new tests or changed product/assertions in snapshots.",
+    "runs": [
+      {
+        "id": "TP-030",
+        "branch": "ci-run-linux-tpbase-030-1120",
+        "sha": "76f180928f77c25e4becb2d30eab6297e58c5494",
+        "tree": "4cae164fd3ca373e2a790663368db70b7ddb4068",
+        "request": {
+          "package": "schema",
+          "runner": "bun",
+          "args": [
+            "--timeout",
+            "30000",
+            "./test/atlas-knowledge.test.ts",
+            "./test/compatibility.test.ts",
+            "./test/contract-hygiene.test.ts",
+            "./test/event-manifest.test.ts",
+            "./test/event.test.ts",
+            "./test/lean-items.test.ts",
+            "./test/lean-metrics.test.ts"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "runId": 44676827296,
+        "jobId": 136090549433,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676827296",
+        "jobConclusion": "success",
+        "sourceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+        "sourceTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+        "files": [
+          "test/atlas-knowledge.test.ts",
+          "test/compatibility.test.ts",
+          "test/contract-hygiene.test.ts",
+          "test/event-manifest.test.ts",
+          "test/event.test.ts",
+          "test/lean-items.test.ts",
+          "test/lean-metrics.test.ts"
+        ],
+        "counts": {
+          "pass": 45,
+          "fail": 0,
+          "skip": 0
+        },
+        "cases": [
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > canonical anchor preserves host invocation, target and exact source packet"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > new anchor records reject excess properties at each boundary"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > invalid reference \"\" rejected"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > invalid reference \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\" rejected"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > invalid reference \"gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg\" rejected"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > invalid reference \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\" rejected"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > invalid reference \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\" rejected"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > invalid reference null rejected"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > invalid reference {} rejected"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > invalid reference \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\n\" rejected"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > invalid reference \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\r\" rejected"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > invalid reference \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \" rejected"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > invalid reference \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \" rejected"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > anchor unit bounds, owner, target and source digests stay closed"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > Relay references decode at global and work-package scope without dropping unknown legacy fields"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "Atlas knowledge contracts > optional fields omit undefined on encoding and preserve absent legacy shapes"
+          },
+          {
+            "file": "test/atlas-knowledge.test.ts",
+            "outcome": "pass",
+            "title": "AtlasKnowledge.canonical > serializes every field in schema order regardless of input order"
+          },
+          {
+            "file": "test/compatibility.test.ts",
+            "outcome": "pass",
+            "title": "schema compatibility > moved class schemas remain constructible"
+          },
+          {
+            "file": "test/contract-hygiene.test.ts",
+            "outcome": "pass",
+            "title": "contract hygiene > optional properties preserve transformations and omit undefined while encoding"
+          },
+          {
+            "file": "test/contract-hygiene.test.ts",
+            "outcome": "pass",
+            "title": "contract hygiene > todo status and priority preserve arbitrary strings"
+          },
+          {
+            "file": "test/contract-hygiene.test.ts",
+            "outcome": "pass",
+            "title": "contract hygiene > current ID constructors expose create"
+          },
+          {
+            "file": "test/contract-hygiene.test.ts",
+            "outcome": "pass",
+            "title": "contract hygiene > Session policy and archive events carry state without transcript message identities"
+          },
+          {
+            "file": "test/contract-hygiene.test.ts",
+            "outcome": "pass",
+            "title": "contract hygiene > reusable public identifiers are stable and unique"
+          },
+          {
+            "file": "test/event-manifest.test.ts",
+            "outcome": "pass",
+            "title": "public event manifest > owns the complete public event surface"
+          },
+          {
+            "file": "test/event-manifest.test.ts",
+            "outcome": "pass",
+            "title": "public event manifest > owns canonical research definitions only on the durable surface"
+          },
+          {
+            "file": "test/event-manifest.test.ts",
+            "outcome": "pass",
+            "title": "public event manifest > public-name pin rejects missing, unknown and same-count replacement events"
+          },
+          {
+            "file": "test/event-manifest.test.ts",
+            "outcome": "pass",
+            "title": "public event manifest > includes canonical current and durable definition session.next.subagent.models.changed"
+          },
+          {
+            "file": "test/event-manifest.test.ts",
+            "outcome": "pass",
+            "title": "public event manifest > includes canonical current and durable definition session.next.archive.changed"
+          },
+          {
+            "file": "test/event-manifest.test.ts",
+            "outcome": "pass",
+            "title": "public event manifest > includes canonical current and durable definition session.next.compaction.failed"
+          },
+          {
+            "file": "test/event-manifest.test.ts",
+            "outcome": "pass",
+            "title": "public event manifest > uses canonical definitions for current public events"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "public event schemas > definition is pure"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "public event schemas > latest selection is independent of declaration order"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "public event schemas > durable definitions are indexed by type and version"
+          },
+          {
+            "file": "test/lean-items.test.ts",
+            "outcome": "pass",
+            "title": "every inventory item survives strict detached disabled metadata without a filter profile"
+          },
+          {
+            "file": "test/lean-items.test.ts",
+            "outcome": "pass",
+            "title": "only accepted engine literals decode; historical records need no itemID"
+          },
+          {
+            "file": "test/lean-items.test.ts",
+            "outcome": "pass",
+            "title": "itemID whitelist rejects payloads and unknown IDs; getters read once"
+          },
+          {
+            "file": "test/lean-items.test.ts",
+            "outcome": "pass",
+            "title": "item attribution cannot excuse contradictory producer eligibility or passthrough savings"
+          },
+          {
+            "file": "test/lean-items.test.ts",
+            "outcome": "pass",
+            "title": "known filter profile and item must agree before reading numeric counters"
+          },
+          {
+            "file": "test/lean-metrics.test.ts",
+            "outcome": "pass",
+            "title": "decode detaches and freezes every record; signed estimates and distinct dimensions survive"
+          },
+          {
+            "file": "test/lean-metrics.test.ts",
+            "outcome": "pass",
+            "title": "zero passthrough and unavailable tokens remain honest"
+          },
+          {
+            "file": "test/lean-metrics.test.ts",
+            "outcome": "pass",
+            "title": "contradictory passthrough eligibility requires native-shell for every token kind"
+          },
+          {
+            "file": "test/lean-metrics.test.ts",
+            "outcome": "pass",
+            "title": "inclusive owner/string and safe integer limits accept valid boundary records"
+          },
+          {
+            "file": "test/lean-metrics.test.ts",
+            "outcome": "pass",
+            "title": "counterfeit contracts, unsafe numbers and raw payload fields are rejected"
+          },
+          {
+            "file": "test/lean-metrics.test.ts",
+            "outcome": "pass",
+            "title": "whitelisted accessors read once; throwing and revoked proxies fail open"
+          },
+          {
+            "file": "test/lean-metrics.test.ts",
+            "outcome": "pass",
+            "title": "Lean 2.0 native read/fetch/search producer may claim savings; unverified still may not"
+          }
+        ],
+        "omni": "No Omni control emitted by this package; not an Omni proof."
+      },
+      {
+        "id": "TP-034",
+        "branch": "ci-run-linux-tpbase-034-1120",
+        "sha": "3f2344680bd0fd6ab735d68d4c635dd5182d7fb3",
+        "tree": "bba28193ae5552faa7152b24fcc225730b487cb2",
+        "request": {
+          "package": "sucafina",
+          "runner": "bun",
+          "args": [
+            "--timeout",
+            "30000",
+            "./Sucafinav1/test/admin-runtime.test.ts",
+            "./Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "./Sucafinav1/test/entra-client.test.ts",
+            "./Sucafinav1/test/import-http-admission.test.ts",
+            "./Sucafinav1/test/local-backup-resilience.test.ts",
+            "./Sucafinav1/test/local-backups.test.ts",
+            "./Sucafinav1/test/local-bootstrap.test.ts",
+            "./Sucafinav1/test/local-entry.test.ts",
+            "./Sucafinav1/test/local-identity.test.ts",
+            "./Sucafinav1/test/microsoft-composition.test.ts",
+            "./Sucafinav1/test/microsoft-configuration.test.ts",
+            "./Sucafinav1/test/microsoft-entra-client.test.ts",
+            "./Sucafinav1/test/microsoft-first-login.test.ts",
+            "./Sucafinav1/test/microsoft-routes.test.ts",
+            "./Sucafinav1/test/microsoft-session.test.ts",
+            "./Sucafinav1/test/operations-runtime.test.ts",
+            "./Sucafinav1/test/operator-browser.test.ts",
+            "./Sucafinav1/test/t8-auth-frontier.test.ts"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "runId": 44676829864,
+        "jobId": 136090544030,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676829864",
+        "jobConclusion": "success",
+        "sourceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+        "sourceTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+        "files": [
+          "Sucafinav1/test/admin-runtime.test.ts",
+          "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+          "Sucafinav1/test/entra-client.test.ts",
+          "Sucafinav1/test/import-http-admission.test.ts",
+          "Sucafinav1/test/local-backup-resilience.test.ts",
+          "Sucafinav1/test/local-backups.test.ts",
+          "Sucafinav1/test/local-bootstrap.test.ts",
+          "Sucafinav1/test/local-entry.test.ts",
+          "Sucafinav1/test/local-identity.test.ts",
+          "Sucafinav1/test/microsoft-composition.test.ts",
+          "Sucafinav1/test/microsoft-configuration.test.ts",
+          "Sucafinav1/test/microsoft-entra-client.test.ts",
+          "Sucafinav1/test/microsoft-first-login.test.ts",
+          "Sucafinav1/test/microsoft-routes.test.ts",
+          "Sucafinav1/test/microsoft-session.test.ts",
+          "Sucafinav1/test/operations-runtime.test.ts",
+          "Sucafinav1/test/operator-browser.test.ts",
+          "Sucafinav1/test/t8-auth-frontier.test.ts"
+        ],
+        "counts": {
+          "pass": 267,
+          "fail": 0,
+          "skip": 1
+        },
+        "cases": [
+          {
+            "file": "Sucafinav1/test/admin-runtime.test.ts",
+            "outcome": "pass",
+            "title": "unconfigured role maps stay empty, group clearing is versioned and another surface row is preserved"
+          },
+          {
+            "file": "Sucafinav1/test/admin-runtime.test.ts",
+            "outcome": "pass",
+            "title": "admin-only configuration is atomic, surface-scoped and accepts only real page and record keys"
+          },
+          {
+            "file": "Sucafinav1/test/admin-runtime.test.ts",
+            "outcome": "pass",
+            "title": "contributor assignments and planner domains never create local people or infer empty as everyone"
+          },
+          {
+            "file": "Sucafinav1/test/admin-runtime.test.ts",
+            "outcome": "pass",
+            "title": "budget access uses collection-qualified choices and requires explicit legacy reselection"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "dashboard-budget required pages contain functional controls or nonempty read views"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "dashboard-budget direct write without canWrite fails atomically"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "OPEX stores monthly zero, keeps annual fallback and sums all twelve actuals"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "year amount remainder and clear preserve stored months"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "per-record CAS allows independent owners and rejects stale update without audit"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "domain leader uses stored allowlist, never domain or contributor assignment"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "annual entry has no final remainder; year amount current month is server stored"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "import matches first case-insensitive owner, rounds whole monthly fallback and preserves actuals"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "owner deletion spans years while leaving YTD/deviations; CAPEX deletion leaves PMO"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "budget overview uses singleton CAS and displays effective and flat-reference budgets"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "view never exposes talent or unrelated private data; invalid actions do not mutate"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "bulk entry conflict rolls back earlier prepared writes and YTD hint"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "executive users zero, fallback month, yearly benchmark and selected-year attrition"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "CAPEX create/edit status and annual field are independent from PMO"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "executive derived ops, SLA, security and performance expose no raw records"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "executive security separates the operations month, current incidents and each fallback KPI period"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "deviation writes original collection with record CAS and escaped display"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "OPEX import uses file boundary and hidden versions, without a JSON editor"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "changing current month only marks YTD stale and singleton versions span years"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "monthly departures require Terminated for current and selected years"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "Executive backlog requires initial balances and distinguishes net flow"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "aggregate member reads audit every member and reveal no talent or change versions"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "CAPEX legacy parent cannot be overridden to bypass stored allowlist"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "monthly upsert without id retains existing actual and forecast before applying defaults"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "render month fallback matches execution December past and January future"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "utilization preserves excess and overview renders effective monthly distribution"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "same-id budget grants isolate both collections in server mutations and rendered controls"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "raw legacy budget grants fail closed while admin needs no grants"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "executive labels each period without implying one historical snapshot"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "detail distinguishes a missing entry from an observed zero"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "invalid year amount cannot silently clear an existing value"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "missing current collections remain unavailable while empty collections are zero"
+          },
+          {
+            "file": "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "outcome": "pass",
+            "title": "zero and missing budgets have distinct utilization explanations"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "authorization uses tenant discovery, exact scopes, state, nonce and PKCE S256"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange posts code and verifier, verifies signed identity and returns real Graph name"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"nonce\":\"wrong\"}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"iss\":\"https://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/wrong\"}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"aud\":\"55555555-5555-4555-8555-555555555555\"}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"aud\":[\"22222222-2222-4222-8222-222222222222\",\"55555555-5555-4555-8555-555555555555\"]}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"tid\":\"55555555-5555-4555-8555-555555555555\"}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"oid\":\"not-a-uuid\"}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"oid\":null}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"sub\":\"\"}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"exp\":1794398100}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"exp\":1794398400.5}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"iat\":1794402000}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"iat\":1794398399.5}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"iat\":0}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects invalid signed claims {\"ver\":\"1.0\"}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects a valid RSA signature with an unapproved algorithm"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects Graph identity mismatch"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery authorization_endpoint: https://evil.example/collect"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery authorization_endpoint: http://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/keys"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery authorization_endpoint: https://login.microsoftonline.com.evil.example/11111111-1111-4111-8111-111111111111/keys"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery authorization_endpoint: https://login.microsoftonline.com/unrelated/keys"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery token_endpoint: https://evil.example/collect"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery token_endpoint: http://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/keys"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery token_endpoint: https://login.microsoftonline.com.evil.example/11111111-1111-4111-8111-111111111111/keys"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery token_endpoint: https://login.microsoftonline.com/unrelated/keys"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery jwks_uri: https://evil.example/collect"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery jwks_uri: http://login.microsoftonline.com/11111111-1111-4111-8111-111111111111/keys"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery jwks_uri: https://login.microsoftonline.com.evil.example/11111111-1111-4111-8111-111111111111/keys"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "rejects unsafe discovery jwks_uri: https://login.microsoftonline.com/unrelated/keys"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "refresh supports rotation and does not invent an omitted id_token"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "refresh permits omitted refresh_token"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange sanitizes provider failures and never follows redirects"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "person sanitizes provider failures and never follows redirects"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory sanitizes provider failures and never follows redirects"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "person reads actual /me and rejects missing or blank identity data"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory follows validated pagination and retains real names"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory fails closed for forbidden or cyclic nextLink https://evil.example/v1.0/users"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory fails closed for forbidden or cyclic nextLink http://graph.microsoft.com/v1.0/users"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory fails closed for forbidden or cyclic nextLink https://graph.microsoft.com/v1.0/groups"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory fails closed for forbidden or cyclic nextLink https://graph.microsoft.com/beta/users"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory fails closed for forbidden or cyclic nextLink https://graph.microsoft.com/v1.0/users?$select=id,displayName"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory budget rejects overflow rather than truncating"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory default budget rejects more than 10000 people"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory rejects malformed rows and oversized JSON"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "resolve uses exact escaped group name and actual membership; viewer cannot write"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "resolve rereads membership on each call and shares lookups for duplicate configured names"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "resolve empty configuration grants nothing and performs no group queries"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "missing group grants nothing"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "ambiguous, inexact or invalid group never grants: [{\"id\":\"44444444-4444-4444-8444-444444444444\",\"displayName\":\"Finance's owners\"},{\"id\":\"55555555-5555-4555-8555-555555555555\",\"displayName\":\"Finance's owners\"}]"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "ambiguous, inexact or invalid group never grants: [{\"id\":\"44444444-4444-4444-8444-444444444444\",\"displayName\":\"finance's owners\"}]"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "ambiguous, inexact or invalid group never grants: [{\"id\":\"bad-id\",\"displayName\":\"Finance's owners\"}]"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "membership response cannot grant an unrequested group ID"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "invalid UUID configuration fails before network: {\"tenantId\":\"common\",\"clientId\":\"22222222-2222-4222-8222-222222222222\"}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "invalid UUID configuration fails before network: {\"tenantId\":\"11111111-1111-4111-8111-111111111111\",\"clientId\":\"invalid\"}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "invalid UUID configuration fails before network: {\"tenantId\":\"\",\"clientId\":\"22222222-2222-4222-8222-222222222222\"}"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "discovery issuer must equal the configured tenant v2 issuer"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange rejects an ID token signed by an unknown RSA key"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "network exceptions are sanitized without leaking provider credentials"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange requires an id_token even though refresh may omit it"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "request deadline aborts and bounds an uncooperative fetch"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "request deadline aborts and bounds an uncooperative body"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "person requires a GUID and returns a normalized principal ID"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "exchange compares signed tenant and object GUIDs without case sensitivity"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory rejects duplicate IDs within a page including case variants"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory rejects duplicate IDs across pages including case variants"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory rejects non-GUID entries"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory never returns a partial first page when continuation fails"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory rejects incomplete continuation null"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory rejects incomplete continuation \"\""
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory rejects incomplete continuation 42"
+          },
+          {
+            "file": "Sucafinav1/test/entra-client.test.ts",
+            "outcome": "pass",
+            "title": "directory rejects a terminal page that contradicts the declared total"
+          },
+          {
+            "file": "Sucafinav1/test/import-http-admission.test.ts",
+            "outcome": "pass",
+            "title": "import admission rejects unavailable authority before consuming multipart bytes"
+          },
+          {
+            "file": "Sucafinav1/test/import-http-admission.test.ts",
+            "outcome": "pass",
+            "title": "authorized import admission still consumes and rejects a malformed multipart envelope"
+          },
+          {
+            "file": "Sucafinav1/test/import-http-admission.test.ts",
+            "outcome": "pass",
+            "title": "multipart part budget rejects an authenticated part fanout before form parsing"
+          },
+          {
+            "file": "Sucafinav1/test/import-http-admission.test.ts",
+            "outcome": "pass",
+            "title": "concurrent intake budget rejects excess work before consuming its body and releases after abort"
+          },
+          {
+            "file": "Sucafinav1/test/import-http-admission.test.ts",
+            "outcome": "pass",
+            "title": "slow multipart intake reaches a bounded deadline and returns its concurrency slot"
+          },
+          {
+            "file": "Sucafinav1/test/local-backup-resilience.test.ts",
+            "outcome": "pass",
+            "title": "durable backup I/O runs outside the SQLite writer scope and retains the captured point in time"
+          },
+          {
+            "file": "Sucafinav1/test/local-backup-resilience.test.ts",
+            "outcome": "pass",
+            "title": "snapshot corruption is visible to inventory instead of disappearing from maintenance health"
+          },
+          {
+            "file": "Sucafinav1/test/local-backup-resilience.test.ts",
+            "outcome": "pass",
+            "title": "retention preserves a corrupt expired archive and reports the integrity failure"
+          },
+          {
+            "file": "Sucafinav1/test/local-backup-resilience.test.ts",
+            "outcome": "pass",
+            "title": "startup inventory scavenges only structurally safe orphan staging directories"
+          },
+          {
+            "file": "Sucafinav1/test/local-backup-resilience.test.ts",
+            "outcome": "pass",
+            "title": "aborting maintenance removes unpublished staging bytes and never publishes a partial archive"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "SQLite capture survives live deletion and reopens for actual atomic restore, preserving exact tagged state"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "missing retained blob rejects restore without changing SQLite state or staged blobs"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "corrupt retained blob rejects restore without changing SQLite state or staged blobs"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "symlink retained blob rejects restore without changing SQLite state or staged blobs"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "permissive retained blob rejects restore without changing SQLite state or staged blobs"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "corrupt encoded snapshot rejects restore before target state changes"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "dashboard preserves supplied daily dates and applies the documented strict daily cutoff"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "procurement preserves supplied daily dates and applies the documented strict daily cutoff"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "planner preserves supplied daily dates and applies the documented strict daily cutoff"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "unsafe archive id \"../live\" rejects before filesystem traversal"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "unsafe archive id \"/etc/passwd\" rejects before filesystem traversal"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "unsafe archive id \"..\" rejects before filesystem traversal"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "unsafe archive id \"a/b\" rejects before filesystem traversal"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "unsafe archive id \"a\\\\b\" rejects before filesystem traversal"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "unsafe archive id \"%2e%2e\" rejects before filesystem traversal"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "unsafe archive id \"\" rejects before filesystem traversal"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "unsafe archive id \"x\\u0000y\" rejects before filesystem traversal"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "missing live blob prevents publication of an incomplete archive"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "relative roots, permissive existing roots and symlink ancestors reject without changing paths"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "skip",
+            "title": "foreign-owned existing root rejects (requires root fixture privileges)"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "pruning leaves unknown, incomplete and aliased paths untouched and never copies secrets"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "capture uses short non-nested SQLite scopes and releases them before durable storage I/O"
+          },
+          {
+            "file": "Sucafinav1/test/local-backups.test.ts",
+            "outcome": "pass",
+            "title": "invalid capture time cannot publish; archive blob reads never fall back to unrelated live keys"
+          },
+          {
+            "file": "Sucafinav1/test/local-bootstrap.test.ts",
+            "outcome": "pass",
+            "title": "private setup is idempotent, keys distinct and public identity remains unconfigured"
+          },
+          {
+            "file": "Sucafinav1/test/local-bootstrap.test.ts",
+            "outcome": "pass",
+            "title": "publicly accessible existing directories and symlinked configuration are refused"
+          },
+          {
+            "file": "Sucafinav1/test/local-bootstrap.test.ts",
+            "outcome": "pass",
+            "title": "startup isolation checks every host path before permitting migration"
+          },
+          {
+            "file": "Sucafinav1/test/local-bootstrap.test.ts",
+            "outcome": "pass",
+            "title": "role bootstrap requires verified admin and never overwrites deliberate saved edits"
+          },
+          {
+            "file": "Sucafinav1/test/local-bootstrap.test.ts",
+            "outcome": "pass",
+            "title": "startup accepts explicit loopback origin and refuses unsafe origins or temporary directories"
+          },
+          {
+            "file": "Sucafinav1/test/local-bootstrap.test.ts",
+            "outcome": "pass",
+            "title": "trusted Microsoft configuration initializes only absent maps, preserving deliberate stored denial"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "unconfigured installation exposes honest readiness and never grants business access"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "configured IDs do not imply proven login or active scanner; unauthorized browser is directed to local login"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "origin mismatch and nonisolated host paths fail before any host DB can be opened"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "explicit local operator enrollment enters Orchestra and HTML console faces are retired"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "enrolled operator authenticates when the serving process cannot resolve the OS account name"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "local owner writes persist in isolated local data and audit the actual OS account"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "local profile is never an implicit fallback and rejects another UID before opening data"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "corporate and local sessions never cross profiles or mutate the other profile's existing records"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "local scratch bootstrap preserves populated durable product state across reinstallation and leaves corporate profile untouched"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "corrupt existing local product state fails closed during reinstallation without repair or corporate writes"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "private maintenance routes enforce local identity, origin and confirmation; logout revokes utility access"
+          },
+          {
+            "file": "Sucafinav1/test/local-entry.test.ts",
+            "outcome": "pass",
+            "title": "restoration pins a selected old archive before protective capture applies retention"
+          },
+          {
+            "file": "Sucafinav1/test/local-identity.test.ts",
+            "outcome": "pass",
+            "title": "PKCE credentials stay encrypted, cookies scoped and callback single-use"
+          },
+          {
+            "file": "Sucafinav1/test/local-identity.test.ts",
+            "outcome": "pass",
+            "title": "unsafe return destination https://attacker.example falls back inside module"
+          },
+          {
+            "file": "Sucafinav1/test/local-identity.test.ts",
+            "outcome": "pass",
+            "title": "unsafe return destination //attacker.example falls back inside module"
+          },
+          {
+            "file": "Sucafinav1/test/local-identity.test.ts",
+            "outcome": "pass",
+            "title": "unsafe return destination /sucafina/auth/logout falls back inside module"
+          },
+          {
+            "file": "Sucafinav1/test/local-identity.test.ts",
+            "outcome": "pass",
+            "title": "unsafe return destination /sucafina/../api falls back inside module"
+          },
+          {
+            "file": "Sucafinav1/test/local-identity.test.ts",
+            "outcome": "pass",
+            "title": "unsafe return destination /sucafina/planner\\@attacker.example falls back inside module"
+          },
+          {
+            "file": "Sucafinav1/test/local-identity.test.ts",
+            "outcome": "pass",
+            "title": "callback requires matching browser state and expiry"
+          },
+          {
+            "file": "Sucafinav1/test/local-identity.test.ts",
+            "outcome": "pass",
+            "title": "authentication reads only, refresh is explicit and membership resolves fresh in selected surface"
+          },
+          {
+            "file": "Sucafinav1/test/local-identity.test.ts",
+            "outcome": "pass",
+            "title": "refresh cannot adopt a different directory identity"
+          },
+          {
+            "file": "Sucafinav1/test/local-identity.test.ts",
+            "outcome": "pass",
+            "title": "tampering or a different installation key fails closed"
+          },
+          {
+            "file": "Sucafinav1/test/local-identity.test.ts",
+            "outcome": "pass",
+            "title": "logout requires same-origin POST and revokes copied browser cookie"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-composition.test.ts",
+            "outcome": "pass",
+            "title": "installed Microsoft viewer reads the native projection without gaining administrator rights"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-composition.test.ts",
+            "outcome": "pass",
+            "title": "real mounted transport rejects wrong host, missing Origin and replay; logout revokes the copied cookie"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-composition.test.ts",
+            "outcome": "pass",
+            "title": "listener privacy blocks tracing before malformed callbacks; capture works without the cloud privacy layer"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-composition.test.ts",
+            "outcome": "pass",
+            "title": "installed profile fails closed before private business state and never promotes the local operator to HTTPS"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-configuration.test.ts",
+            "outcome": "pass",
+            "title": "Microsoft configuration is explicit, immutable, minimal and separate from the agent workspace"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-configuration.test.ts",
+            "outcome": "pass",
+            "title": "missing, unsafe, legacy or incoherent Microsoft configuration fails closed"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-configuration.test.ts",
+            "outcome": "pass",
+            "title": "private files reject permissive modes, symlinks, hardlinks and missing credentials"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-configuration.test.ts",
+            "outcome": "pass",
+            "title": "credentials cannot be placed in, above or aliased into the configured workspace"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-configuration.test.ts",
+            "outcome": "pass",
+            "title": "durable tenant/client pin prevents cross-tenant reuse after a configuration change"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-configuration.test.ts",
+            "outcome": "pass",
+            "title": "explicit principal grants preserve canonical operations without granting roles"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-configuration.test.ts",
+            "outcome": "pass",
+            "title": "fixed proxy transport never infers the public origin from forwarded headers"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "confidential web flow uses minimum scopes and sends the private credential only to token POST"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "web mode accepts the guest object in the resource tenant and ignores home identity and role/name/email claims"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "web directory exposes only the authenticated user and never asks for guest-forbidden directory enumeration"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "web authorization resolves immutable IDs and rereads removal with no display-name queries"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "role mapping cannot change privilege while a directory resolution is pending"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "web mode refuses noncanonical or legacy mappings: Guest"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "web mode refuses noncanonical or legacy mappings: Administrator"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "web mode refuses noncanonical or legacy mappings: 44444444-4444-4444-8444-444444444444"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "web mode refuses noncanonical or legacy mappings: group:44444444-4444-4444-8444-444444444444"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "web mode refuses noncanonical or legacy mappings: group:not-an-id"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "web mode refuses noncanonical or legacy mappings: person:admin@example.test"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "web mode refuses invented product roles before directory lookup"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "confidential profile cannot silently downgrade or receive a public-client secret"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "invalid private credential fails before token POST (0 chars)"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "invalid private credential fails before token POST (1 chars)"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "invalid private credential fails before token POST (20 chars)"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "invalid private credential fails before token POST (4097 chars)"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "private credential provider failure is sanitized"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "client snapshots application/profile/transport and credential provider"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "confidential profile rejects missing or unsupported token type: undefined"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "confidential profile rejects missing or unsupported token type: MAC"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-entra-client.test.ts",
+            "outcome": "pass",
+            "title": "confidential profile rejects missing or unsupported token type: bearer"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-first-login.test.ts",
+            "outcome": "pass",
+            "title": "first configured Microsoft member reaches all three native surfaces without an admin bootstrap"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-routes.test.ts",
+            "outcome": "pass",
+            "title": "Microsoft native business routes > real Microsoft-authenticated dashboard route grants only its assigned viewer role"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-routes.test.ts",
+            "outcome": "pass",
+            "title": "Microsoft native business routes > actual routes deny a signed-in guest with no group role and revalidate role removal"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-routes.test.ts",
+            "outcome": "pass",
+            "title": "Microsoft native business routes > actual Procurement HTTP ownership uses resource-tenant oid despite matching names and email claims"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-routes.test.ts",
+            "outcome": "pass",
+            "title": "Microsoft native business routes > logout revokes a retained session at the actual business routes without affecting another user"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-routes.test.ts",
+            "outcome": "pass",
+            "title": "Microsoft product grants > real Microsoft group membership requires a separate product grant bound to the resource-tenant oid"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "HTTPS uses opaque scoped cookies and actual encrypted private persistence"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "HTTPS identity rejects insecure origins, wrong client profile and unbounded lifetimes"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "browser state, callback parameters and expiry fail closed before token redemption"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "provider error, missing or duplicate code consume the one-time callback"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "HTTPS confidential callback rejects invalid tenant without establishing a private session"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "HTTPS confidential callback rejects invalid audience without establishing a private session"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "HTTPS confidential callback rejects invalid nonce without establishing a private session"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "HTTPS confidential callback rejects invalid expired without establishing a private session"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "HTTPS confidential callback rejects invalid signature without establishing a private session"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "HTTPS confidential callback rejects invalid algorithm without establishing a private session"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "unsafe return targets stay within real Sucafina surfaces"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "immutable individual subjects receive only current assigned surface roles"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "copied cookie stays revoked after reopening the actual private store"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "absolute session expiry cannot be extended by refresh"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "logout wins an in-flight refresh and the copied cookie never revives"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "logout cancels callback redemption even before a session exists"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "callback expiry while the provider is pending cannot create a session"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "authorization awaiting Graph cannot emit identity after logout or session expiry"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "directory lookup cannot return private identity after logout"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "logout fences a pending authorization inside the real business transaction"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "durable logout wins between refresh validation and the real private-store write"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "origin, installation and resource-tenant boundaries reject the same opaque cookie"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "identity pins caller configuration and method references for its full lifetime"
+          },
+          {
+            "file": "Sucafinav1/test/microsoft-session.test.ts",
+            "outcome": "pass",
+            "title": "logout requires exact same-origin POST and ignores forwarded origins"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "claims commit before external lookup/send and concurrent workers cannot send the same active claim"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "failed external delivery releases claim and retries"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "failed acknowledgement retries with stable dedup key after lease expiry"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "no recipients waits without inventing groups or identities; invalid lease fails before delivery"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "backup retention has a 35-day minimum for dashboard and procurement; Planner retains fourteen days"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "restore requires current admin confirmation, keeps counters monotone and does not replay notices"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "invalid backup manifest never permits prune"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "procurement restore unions issued numbers, preserves delivery and active claims, never replays old notices"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "failed claim commit never calls external lookup or send"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "stale sender cannot acknowledge or release a replacement claim"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "backup rejects missing blob manifest entries before prune"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "null reminder/escalation settings do not change any state or audit"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "configured age thresholds use latest submission and copied holders, deduplicated by installation day"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "all pending stages use matching history, no missing holder or next-level fallback"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "concurrent reminder queue calls commit one daily notice; invalid or unmatched submission queues none"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "queued reason reaches delivery transport without external role lookup for pending notices"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "persisted notice property order does not change delivery identity or retry key"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "restore verifies manifest and snapshot SHA before changing durable state"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "restore rejects missing or corrupt private bytes and atomically rolls back on commit failure"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "notice identity canonicalizes symbolic roles and recipient sets without collapsing distinct roles"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "authorized restore conflict returns isolated current data and writer without reading private blobs"
+          },
+          {
+            "file": "Sucafinav1/test/operations-runtime.test.ts",
+            "outcome": "pass",
+            "title": "extra manifest key cannot overwrite an unrelated live private object"
+          },
+          {
+            "file": "Sucafinav1/test/operator-browser.test.ts",
+            "outcome": "pass",
+            "title": "Chrome follows private enrollment while retired console routes remain unavailable"
+          },
+          {
+            "file": "Sucafinav1/test/t8-auth-frontier.test.ts",
+            "outcome": "pass",
+            "title": "T8: 303 to root never widens the operator's path-scoped cookie or authenticates root implicitly"
+          },
+          {
+            "file": "Sucafinav1/test/t8-auth-frontier.test.ts",
+            "outcome": "pass",
+            "title": "T8: no session / eight-hour expiry / durable logout all stay 401; wrong Origin stays 403"
+          },
+          {
+            "file": "Sucafinav1/test/t8-auth-frontier.test.ts",
+            "outcome": "pass",
+            "title": "T8: a missing installed F01 owner remains 503, not a synthetic identity or ready context"
+          },
+          {
+            "file": "Sucafinav1/test/t8-auth-frontier.test.ts",
+            "outcome": "pass",
+            "title": "T8: changing the current installation during authority read discards its stale answer"
+          },
+          {
+            "file": "Sucafinav1/test/t8-auth-frontier.test.ts",
+            "outcome": "pass",
+            "title": "T8: owner-selected factory loader rejects relative paths and noncanonical origins before import"
+          }
+        ],
+        "omni": "omni positive control [e8cfdf77cebe64a9b5ec9d25d6d058bd]: pass (focused: no declaring test ran); 8 omni spawn(s), 0 delegated."
+      },
+      {
+        "id": "TP-001",
+        "branch": "ci-run-linux-tpbase-001-1120",
+        "sha": "2ed64937222d72db0f1d1d5310fe9a602e755a0e",
+        "tree": "ba19713cb134fe1aa86c58fc8be7f2eeeed115ad",
+        "request": {
+          "package": "app",
+          "runner": "bun",
+          "args": [
+            "./test-browser/actions-navigation.test.ts",
+            "./test-browser/deep-link-ingress.test.ts",
+            "./test-browser/draft-session-key.test.ts",
+            "./test-browser/notification-origin.test.ts",
+            "./test-browser/orchestra-compact-navigation.test.ts",
+            "./test-browser/orchestra/titlebar-tab-order.test.ts",
+            "./test-browser/prompt-persistence.test.ts",
+            "./test-browser/prompt-scope.test.ts",
+            "./test-browser/sucafina-native/context.test.ts",
+            "./test-browser/sucafina-native/decisions-pages-route.test.ts",
+            "./test-browser/sucafina-native/draft-quarantine.test.ts",
+            "./test-browser/sucafina-native/extended-routes.test.ts",
+            "./test-browser/sucafina-native/files-route.test.ts",
+            "./test-browser/sucafina-native/fixture/selection.test.ts",
+            "./test-browser/sucafina-native/home-pages-route.test.ts",
+            "./test-browser/sucafina-native/host-binding231.test.ts",
+            "./test-browser/sucafina-native/memory-route.test.ts",
+            "./test-browser/sucafina-native/operations-route.test.ts",
+            "./test-browser/sucafina-native/owner-mount-integration.test.ts",
+            "./test-browser/sucafina-native/owner-ready.test.ts",
+            "./test-browser/sucafina-native/people-route.test.ts",
+            "./test-browser/sucafina-native/planner-pages-route.test.ts",
+            "./test-browser/sucafina-native/portfolio-route.test.ts",
+            "./test-browser/sucafina-native/reviews-route.test.ts"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "runId": 44676833630,
+        "jobId": 136090556278,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676833630",
+        "jobConclusion": "success",
+        "sourceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+        "sourceTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+        "files": [
+          "test-browser/actions-navigation.test.ts",
+          "test-browser/deep-link-ingress.test.ts",
+          "test-browser/draft-session-key.test.ts",
+          "test-browser/notification-origin.test.ts",
+          "test-browser/orchestra-compact-navigation.test.ts",
+          "test-browser/orchestra/titlebar-tab-order.test.ts",
+          "test-browser/prompt-persistence.test.ts",
+          "test-browser/prompt-scope.test.ts",
+          "test-browser/sucafina-native/context.test.ts",
+          "test-browser/sucafina-native/decisions-pages-route.test.ts",
+          "test-browser/sucafina-native/draft-quarantine.test.ts",
+          "test-browser/sucafina-native/extended-routes.test.ts",
+          "test-browser/sucafina-native/files-route.test.ts",
+          "test-browser/sucafina-native/fixture/selection.test.ts",
+          "test-browser/sucafina-native/home-pages-route.test.ts",
+          "test-browser/sucafina-native/host-binding231.test.ts",
+          "test-browser/sucafina-native/memory-route.test.ts",
+          "test-browser/sucafina-native/operations-route.test.ts",
+          "test-browser/sucafina-native/owner-mount-integration.test.ts",
+          "test-browser/sucafina-native/owner-ready.test.ts",
+          "test-browser/sucafina-native/people-route.test.ts",
+          "test-browser/sucafina-native/planner-pages-route.test.ts",
+          "test-browser/sucafina-native/portfolio-route.test.ts",
+          "test-browser/sucafina-native/reviews-route.test.ts"
+        ],
+        "counts": {
+          "pass": 72,
+          "fail": 0,
+          "skip": 0
+        },
+        "cases": [
+          {
+            "file": "test-browser/actions-navigation.test.ts",
+            "outcome": "pass",
+            "title": "a scoped resource link and its reload load the resource instead of staying idle"
+          },
+          {
+            "file": "test-browser/actions-navigation.test.ts",
+            "outcome": "pass",
+            "title": "an unscoped link applies only when its binding belongs to this directory"
+          },
+          {
+            "file": "test-browser/actions-navigation.test.ts",
+            "outcome": "pass",
+            "title": "a stale persisted binding still lets a deep link apply and the URL be written"
+          },
+          {
+            "file": "test-browser/actions-navigation.test.ts",
+            "outcome": "pass",
+            "title": "removing a binding selected after mount still lets the URL follow the selection"
+          },
+          {
+            "file": "test-browser/deep-link-ingress.test.ts",
+            "outcome": "pass",
+            "title": "desktop bridge waits for shell readiness and acknowledges live links without remount replay"
+          },
+          {
+            "file": "test-browser/draft-session-key.test.ts",
+            "outcome": "pass",
+            "title": "draft policy isolates source directory, draft and server; worktree handoff retains the original key"
+          },
+          {
+            "file": "test-browser/notification-origin.test.ts",
+            "outcome": "pass",
+            "title": "turn complete click captures the originating server even after active server changes"
+          },
+          {
+            "file": "test-browser/notification-origin.test.ts",
+            "outcome": "pass",
+            "title": "step failure click captures the originating server even after active server changes"
+          },
+          {
+            "file": "test-browser/orchestra-compact-navigation.test.ts",
+            "outcome": "pass",
+            "title": "window navigation presentation > remembers an explicit choice without sharing it with another window"
+          },
+          {
+            "file": "test-browser/orchestra-compact-navigation.test.ts",
+            "outcome": "pass",
+            "title": "window navigation presentation > presents the window preference only once it loads, and a toggle made earlier wins"
+          },
+          {
+            "file": "test-browser/orchestra-compact-navigation.test.ts",
+            "outcome": "pass",
+            "title": "window navigation presentation > a narrow window cannot overwrite the expanded preference"
+          },
+          {
+            "file": "test-browser/orchestra/titlebar-tab-order.test.ts",
+            "outcome": "pass",
+            "title": "active close overrides the native hidden successor and preserves native closed history"
+          },
+          {
+            "file": "test-browser/prompt-persistence.test.ts",
+            "outcome": "pass",
+            "title": "prompt persistence > waits for an async draft to hydrate before reporting ready"
+          },
+          {
+            "file": "test-browser/prompt-persistence.test.ts",
+            "outcome": "pass",
+            "title": "moves legacy image data URLs into blobs and hydrates object URLs"
+          },
+          {
+            "file": "test-browser/prompt-persistence.test.ts",
+            "outcome": "pass",
+            "title": "does not let delayed blob migration overwrite a newer draft"
+          },
+          {
+            "file": "test-browser/prompt-scope.test.ts",
+            "outcome": "pass",
+            "title": "selects the explicitly scoped session tab instead of the active tab"
+          },
+          {
+            "file": "test-browser/sucafina-native/context.test.ts",
+            "outcome": "pass",
+            "title": "F01 strict installation discovery > IDs never call selected Location, cwd or directory fallback"
+          },
+          {
+            "file": "test-browser/sucafina-native/context.test.ts",
+            "outcome": "pass",
+            "title": "F01 strict installation discovery > location mode is separate, explicit and dispatched only via admitted Location"
+          },
+          {
+            "file": "test-browser/sucafina-native/context.test.ts",
+            "outcome": "pass",
+            "title": "F01 strict installation discovery > unknown, mixed, duplicate, partial and empty query selectors fail closed"
+          },
+          {
+            "file": "test-browser/sucafina-native/context.test.ts",
+            "outcome": "pass",
+            "title": "F01 URL and owner fences > explicit URL A never inherits a prior shell selection B"
+          },
+          {
+            "file": "test-browser/sucafina-native/context.test.ts",
+            "outcome": "pass",
+            "title": "F01 URL and owner fences > opaque refs remain exact including reserved static tokens and Unicode"
+          },
+          {
+            "file": "test-browser/sucafina-native/context.test.ts",
+            "outcome": "pass",
+            "title": "F01 URL and owner fences > an explicit unauthorized link is not silently redirected to previous server"
+          },
+          {
+            "file": "test-browser/sucafina-native/context.test.ts",
+            "outcome": "pass",
+            "title": "F01 URL and owner fences > dirty voluntary owner change waits for discard, then purges before one atomic commit"
+          },
+          {
+            "file": "test-browser/sucafina-native/context.test.ts",
+            "outcome": "pass",
+            "title": "F01 URL and owner fences > late A cannot commit over a newer B"
+          },
+          {
+            "file": "test-browser/sucafina-native/context.test.ts",
+            "outcome": "pass",
+            "title": "F01 URL and owner fences > owner-scoped list focus/scroll cannot cross an access revision"
+          },
+          {
+            "file": "test-browser/sucafina-native/context.test.ts",
+            "outcome": "pass",
+            "title": "Q01 original-owner entry navigation candidates > CAP06→CAP07 and CAP24→CAP25 use only approved frozen entry templates"
+          },
+          {
+            "file": "test-browser/sucafina-native/context.test.ts",
+            "outcome": "pass",
+            "title": "Q01 original-owner entry navigation candidates > refuses an incomplete installed owner and never fills another selection"
+          },
+          {
+            "file": "test-browser/sucafina-native/decisions-pages-route.test.ts",
+            "outcome": "pass",
+            "title": "decision page routing > retains canonical case and detail selectors and rejects controls"
+          },
+          {
+            "file": "test-browser/sucafina-native/decisions-pages-route.test.ts",
+            "outcome": "pass",
+            "title": "decision page routing > case projection admission uses the actual CAP-only destination catalog"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "owner draft quarantine > only an exact first-attempt 409 permits discard; unknown and quarantined operations stay fenced"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "owner draft quarantine > typed 422 settles only the exact first submission and permits editing without changing CAS"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "owner draft quarantine > unavailable retry keeps values hidden, then restores the same drafts"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "owner draft quarantine > all proofs settle before any facade becomes active; changed version conflicts"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "owner draft quarantine > a later explicit denial still purges after another source is unavailable"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "owner draft quarantine > empty quarantine is clean; explicit discard purges unsent but not pending or unresolved drafts"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "owner draft quarantine > foreign authority, denial and invalid stamp revoke; abort does not"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "provider quarantine publication > People source outage takes precedence over missing action; explicit action loss purges and notifies"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "provider quarantine publication > session expiry fences the transport and hides pending edits until same-owner proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "provider quarantine publication > logout and a different principal purge expired drafts without a false revocation notice"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "provider quarantine publication > explicit non-ready discard replaces the revoked registry on the next successful load"
+          },
+          {
+            "file": "test-browser/sucafina-native/draft-quarantine.test.ts",
+            "outcome": "pass",
+            "title": "provider quarantine publication > unavailable retry stays non-ready; denial purges and emits a generic notice"
+          },
+          {
+            "file": "test-browser/sucafina-native/extended-routes.test.ts",
+            "outcome": "pass",
+            "title": "family dispatch admission > routes recognized families to their own parsers, not generic grants"
+          },
+          {
+            "file": "test-browser/sucafina-native/files-route.test.ts",
+            "outcome": "pass",
+            "title": "files routes > preserves producer references and rejects control queries"
+          },
+          {
+            "file": "test-browser/sucafina-native/files-route.test.ts",
+            "outcome": "pass",
+            "title": "files routes > requires the exact files read with CAP-only destinations"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/selection.test.ts",
+            "outcome": "pass",
+            "title": "F04 exact native Playwright selection (pure recognizer) > recognizes the assigned pilot and nested journey specs"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/selection.test.ts",
+            "outcome": "pass",
+            "title": "F04 exact native Playwright selection (pure recognizer) > never treats discovery or non-native paths as installed-run selection"
+          },
+          {
+            "file": "test-browser/sucafina-native/home-pages-route.test.ts",
+            "outcome": "pass",
+            "title": "home context, search and administration > permits only owner selectors"
+          },
+          {
+            "file": "test-browser/sucafina-native/home-pages-route.test.ts",
+            "outcome": "pass",
+            "title": "home context, search and administration > requires the original search operation with CAP-only destinations"
+          },
+          {
+            "file": "test-browser/sucafina-native/home-pages-route.test.ts",
+            "outcome": "pass",
+            "title": "home context, search and administration > pre-login context status never borrows a mismatched or partial owner"
+          },
+          {
+            "file": "test-browser/sucafina-native/host-binding231.test.ts",
+            "outcome": "pass",
+            "title": "F01/231 native host ownership > new root callsites are registered to the SAME owner runtime outside the keyed chapter leaf"
+          },
+          {
+            "file": "test-browser/sucafina-native/host-binding231.test.ts",
+            "outcome": "pass",
+            "title": "F01/231 native host ownership > wrong registered ServerConnection cannot discover another owner's installation"
+          },
+          {
+            "file": "test-browser/sucafina-native/host-binding231.test.ts",
+            "outcome": "pass",
+            "title": "F01/231 native host ownership > UI29 and UI34 originate from Q01 exact native routes, not an invented chapter"
+          },
+          {
+            "file": "test-browser/sucafina-native/host-binding231.test.ts",
+            "outcome": "pass",
+            "title": "F01/231 native host ownership > only the original typed projection.case GET can preflight/resume, no write or guessed handler"
+          },
+          {
+            "file": "test-browser/sucafina-native/host-binding231.test.ts",
+            "outcome": "pass",
+            "title": "F01/231 native host ownership > unknown native chapter and unsafe encoded refs never become an admitted UI34"
+          },
+          {
+            "file": "test-browser/sucafina-native/memory-route.test.ts",
+            "outcome": "pass",
+            "title": "memory route admission > preserves an opaque outcome selector without deriving authority"
+          },
+          {
+            "file": "test-browser/sucafina-native/operations-route.test.ts",
+            "outcome": "pass",
+            "title": "operations route composition > validates selectors consumed by the original page"
+          },
+          {
+            "file": "test-browser/sucafina-native/operations-route.test.ts",
+            "outcome": "pass",
+            "title": "operations route composition > requires readable destination and operational original read"
+          },
+          {
+            "file": "test-browser/sucafina-native/owner-mount-integration.test.ts",
+            "outcome": "pass",
+            "title": "native shell owner integration > both added chapters and existing planner and BI retain the same owner"
+          },
+          {
+            "file": "test-browser/sucafina-native/owner-mount-integration.test.ts",
+            "outcome": "pass",
+            "title": "native shell owner integration > the canonical resolver selects the requested CAP25 sourcing stage"
+          },
+          {
+            "file": "test-browser/sucafina-native/owner-ready.test.ts",
+            "outcome": "pass",
+            "title": "the admitted ready access survives an await and keeps the original transport identity"
+          },
+          {
+            "file": "test-browser/sucafina-native/owner-ready.test.ts",
+            "outcome": "pass",
+            "title": "expiry, revocation, logout and unmount never expose the prior ready access"
+          },
+          {
+            "file": "test-browser/sucafina-native/owner-ready.test.ts",
+            "outcome": "pass",
+            "title": "a delayed prior context cannot replace the successor access revision or wrapper"
+          },
+          {
+            "file": "test-browser/sucafina-native/people-route.test.ts",
+            "outcome": "pass",
+            "title": "people route composition > validates producer periods and talent status without admitting control keys"
+          },
+          {
+            "file": "test-browser/sucafina-native/people-route.test.ts",
+            "outcome": "pass",
+            "title": "people route composition > requires the page's original operational read and readable destination"
+          },
+          {
+            "file": "test-browser/sucafina-native/planner-pages-route.test.ts",
+            "outcome": "pass",
+            "title": "planner native pages > uses real routes and a closed, source-validated period"
+          },
+          {
+            "file": "test-browser/sucafina-native/planner-pages-route.test.ts",
+            "outcome": "pass",
+            "title": "planner native pages > requires both the original readable destination and operational producer"
+          },
+          {
+            "file": "test-browser/sucafina-native/portfolio-route.test.ts",
+            "outcome": "pass",
+            "title": "portfolio route composition > validates real route refs and bounded producer selectors"
+          },
+          {
+            "file": "test-browser/sucafina-native/portfolio-route.test.ts",
+            "outcome": "pass",
+            "title": "portfolio route composition > source operations and readable destination are both necessary"
+          },
+          {
+            "file": "test-browser/sucafina-native/portfolio-route.test.ts",
+            "outcome": "pass",
+            "title": "portfolio route composition > scenario reads use exact live operations despite a partial aggregate and CAP-only destinations"
+          },
+          {
+            "file": "test-browser/sucafina-native/reviews-route.test.ts",
+            "outcome": "pass",
+            "title": "review routes > retains original review refs and validates closed query selectors"
+          },
+          {
+            "file": "test-browser/sucafina-native/reviews-route.test.ts",
+            "outcome": "pass",
+            "title": "review routes > requires the original review operation with CAP-only destinations"
+          },
+          {
+            "file": "test-browser/sucafina-native/reviews-route.test.ts",
+            "outcome": "pass",
+            "title": "review routes > report admission uses source-backed prepare and download, not legacy Office codecs"
+          }
+        ],
+        "omni": "omni positive control [5012fccde79bcad02e1c69bd8a49b466]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      {
+        "id": "TP-021",
+        "branch": "ci-run-linux-tpbase-021-1120",
+        "sha": "ec7c1e48c9702bd85e6c61f122c512ace7b57bd1",
+        "tree": "873100b45b023b172516b9210ba849a5fc5010b7",
+        "request": {
+          "package": "core",
+          "runner": "bun",
+          "args": [
+            "--timeout",
+            "30000",
+            "./test/database-migration-backup.test.ts",
+            "./test/database-migration-meeting-memory.test.ts",
+            "./test/database-migration-retire-legacy.test.ts",
+            "./test/database-migration.test.ts",
+            "./test/event.test.ts",
+            "./test/session-archive-http.test.ts",
+            "./test/session-archive.test.ts",
+            "./test/session-create.test.ts",
+            "./test/session-legacy-import.test.ts",
+            "./test/session-lifecycle.test.ts",
+            "./test/session-list-projection.test.ts",
+            "./test/session-operations.test.ts",
+            "./test/session-persistence.test.ts",
+            "./test/session-projector.test.ts",
+            "./test/session-prompt.test.ts",
+            "./test/session-rename-remove.test.ts",
+            "./test/session-run-coordinator.test.ts",
+            "./test/session-runner-model.test.ts",
+            "./test/session-runner-policy.test.ts",
+            "./test/session-runner-tool-registry.test.ts",
+            "./test/session-scope.test.ts",
+            "./test/session-store-permissions.test.ts"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "runId": 44676836570,
+        "jobId": 136090564691,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676836570",
+        "jobConclusion": "success",
+        "sourceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+        "sourceTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+        "files": [
+          "test/database-migration-backup.test.ts",
+          "test/database-migration-meeting-memory.test.ts",
+          "test/database-migration-retire-legacy.test.ts",
+          "test/database-migration.test.ts",
+          "test/event.test.ts",
+          "test/session-archive-http.test.ts",
+          "test/session-archive.test.ts",
+          "test/session-create.test.ts",
+          "test/session-legacy-import.test.ts",
+          "test/session-lifecycle.test.ts",
+          "test/session-list-projection.test.ts",
+          "test/session-operations.test.ts",
+          "test/session-persistence.test.ts",
+          "test/session-projector.test.ts",
+          "test/session-prompt.test.ts",
+          "test/session-rename-remove.test.ts",
+          "test/session-run-coordinator.test.ts",
+          "test/session-runner-model.test.ts",
+          "test/session-runner-policy.test.ts",
+          "test/session-runner-tool-registry.test.ts",
+          "test/session-scope.test.ts",
+          "test/session-store-permissions.test.ts"
+        ],
+        "counts": {
+          "pass": 248,
+          "fail": 0,
+          "skip": 1
+        },
+        "cases": [
+          {
+            "file": "test/database-migration-backup.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration backup and newer-schema guard > backs up an existing database before a pending migration runs"
+          },
+          {
+            "file": "test/database-migration-backup.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration backup and newer-schema guard > restoring the backup by the documented steps returns the pre-migration database"
+          },
+          {
+            "file": "test/database-migration-backup.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration backup and newer-schema guard > does not back up when nothing is pending"
+          },
+          {
+            "file": "test/database-migration-backup.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration backup and newer-schema guard > keeps only the three newest backups"
+          },
+          {
+            "file": "test/database-migration-backup.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration backup and newer-schema guard > refuses a database migrated by a newer build and leaves it untouched"
+          },
+          {
+            "file": "test/database-migration-backup.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration backup and newer-schema guard > two connections applying the same migration add its column once"
+          },
+          {
+            "file": "test/database-migration-meeting-memory.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration meeting memory > keeps segments across the meeting rebuild and detaches meetings from a deleted session"
+          },
+          {
+            "file": "test/database-migration-retire-legacy.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration retire legacy Session events > retires legacy Session event rows and records the compaction marker"
+          },
+          {
+            "file": "test/database-migration-retire-legacy.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration retire legacy Session events > records no compaction marker when no legacy Session event rows exist"
+          },
+          {
+            "file": "test/database-migration-retire-legacy.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration retire legacy Session events > skips a database without an event table"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > adds nullable prompt context while preserving historical inbox rows"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > defaults missing workspace names while preserving legacy workspace data"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > imports unnamed legacy Drizzle journal entries by their actual migration timestamps"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > rejects unknown legacy Drizzle journal timestamps instead of guessing completed migrations"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > serializes concurrent embedded initialization for one database path"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > declared schema has no ungenerated migrations"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > applies tracked migrations to an empty database"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > adds Session list indexes on a fresh database and on upgrade without touching rows"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > rejects a non-empty database without a session table"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > backfills existing Context Epoch rows to the build agent"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > keeps legacy credential fields nullable"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > resets beta history and rebuilds event-sourced Session input storage"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > preserves canonical legacy state and restarts its event stream"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > resets incompatible projected Session messages before adding sequence order"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > runs session usage backfill in order with schema changes"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > normalizes Windows storage paths and leaves POSIX paths untouched"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "skip",
+            "title": "DatabaseMigration > maps native Windows paths through database columns"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > imports existing drizzle migration state"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > does not replay a migrated session metadata column"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > accepts the temporary replacement session metadata migration id"
+          },
+          {
+            "file": "test/database-migration.test.ts",
+            "outcome": "pass",
+            "title": "DatabaseMigration > skips drizzle import when migration table already has state"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > publishes events with the current location"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > omits location when no location is available"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > publishes definition version"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > selects the latest durable definition independent of declaration order"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > publishes to typed and wildcard subscriptions"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > runs projectors inline"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > commits local operational state inside a new durable event transaction"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > rolls back the durable event and projector when the local commit fails"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > rejects local commit hooks on live-only events"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > rejects commit hooks on local-only durable events"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > runs projectors before publishing to streams"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > runs listeners inline after projectors"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > isolates observer defects after durable events commit"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > notifies global listeners only after a durable event is committed"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > ends only an overflowing bounded subscriber without blocking other listeners"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > preserves observer interruption"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > keeps live-only listener defects fail-fast"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > inserts durable event rows on publish"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > increments durable event seq per aggregate"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replays durable aggregate events after a sequence and tails new events"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > catches durable aggregate events published during replay handoff"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > retains a durable wake committed while historical replay is paused"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > coalesces durable aggregate wakes while draining every committed event"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > omits live-only events from durable aggregate streams"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > uses custom sync aggregate field"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replays durable events through projectors"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replay inserts external event rows"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replay rejects an envelope aggregate that differs from its payload without mutating the payload aggregate"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replay defects on sequence mismatch"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replay decodes synchronized transformed values before projection"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replay defects on unknown event type"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replayAll validates contiguous aggregate events"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replayAll accepts later chunks after the first batch"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replayAll rolls back the whole batch on failure"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > claim fences replay owners"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > strict owner fences exact replay"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > exact replay claims an unowned aggregate"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replay with owner claims an unowned sequence"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replay claims an existing unowned sequence before fencing a different owner"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > strict replay rejects an owner conflict instead of silently skipping it"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > publishes accepted replay with its durable sequence and suppresses stale replay"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > rejects divergent stale replay without publishing it"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > rejects an event ID reused at another aggregate position"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > replay from a different owner leaves claimed sequence unchanged"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > claim updates the event sequence owner"
+          },
+          {
+            "file": "test/event.test.ts",
+            "outcome": "pass",
+            "title": "EventV2 > remove clears durable event sequence"
+          },
+          {
+            "file": "test/session-archive-http.test.ts",
+            "outcome": "pass",
+            "title": "real HTTP archive CRUD preserves direct reads and durable history; missing and malformed writes fail"
+          },
+          {
+            "file": "test/session-archive-http.test.ts",
+            "outcome": "pass",
+            "title": "real HTTP cursors retain archive visibility and scope in both directions"
+          },
+          {
+            "file": "test/session-archive.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 archive > notifies only after real COMMIT; deferred FK failure rolls back with zero notifications"
+          },
+          {
+            "file": "test/session-archive.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 archive > same-file independent connections deduplicate concurrent archive/restore events and timestamps"
+          },
+          {
+            "file": "test/session-archive.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 archive > replay applies authoritative same-state archive timestamps and preserves every sealed event"
+          },
+          {
+            "file": "test/session-archive.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 archive > unexpected projector TypeError remains the original Die and rolls back archive/history"
+          },
+          {
+            "file": "test/session-archive.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 archive > archiving a busy Session interrupts its run and leaves it idle; restoring does not interrupt"
+          },
+          {
+            "file": "test/session-archive.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 archive > durably archives/restores once and preserves messages, inbox, children and adoption"
+          },
+          {
+            "file": "test/session-archive.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 archive > serializes concurrent retries and treats epoch zero as archived"
+          },
+          {
+            "file": "test/session-archive.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 archive > replays archive and restore into a fresh database without losing prompt lifecycle"
+          },
+          {
+            "file": "test/session-archive.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 archive > filters archive visibility before scoped limits in both cursor directions"
+          },
+          {
+            "file": "test/session-archive.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 archive > returns typed NotFound without writing a missing aggregate"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > creates a fresh projected session when the ID is omitted"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > returns the original session when the ID is retried"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > stores supplied immutable create attributes"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > returns the existing Session when one ID is reused with different create arguments"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > returns one recorded session to concurrent exact retries"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > returns the current Session projection after updates"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > returns the current Session projection after projected updates"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > persists creation through the created event"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > persists caller-ID creation through the existing created event"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > streams creation first in the V2 Session event stream"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > replays one prompt lifecycle into a fresh target database"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > does not mask unrelated created projector defects"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > forks the history before a message into a retitled Session"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > moves a Session within its project"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > switches the selected agent through the durable Session event"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > rejects an agent switch for a missing Session"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > switches the selected model through the durable Session event"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > ignores a model switch when the selected model is unchanged"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > treats an omitted variant as the default variant"
+          },
+          {
+            "file": "test/session-create.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.create > rejects a model switch for a missing Session"
+          },
+          {
+            "file": "test/session-legacy-import.test.ts",
+            "outcome": "pass",
+            "title": "SessionLegacyImport > copies a legacy transcript into V2 once and leaves the legacy rows alone"
+          },
+          {
+            "file": "test/session-legacy-import.test.ts",
+            "outcome": "pass",
+            "title": "SessionLegacyImport > maps subtask, patch and compaction parts and tool-result attachments onto V2 shapes"
+          },
+          {
+            "file": "test/session-legacy-import.test.ts",
+            "outcome": "pass",
+            "title": "SessionLegacyImport > counts only Sessions that gained messages and skips Sessions already holding V2 messages"
+          },
+          {
+            "file": "test/session-lifecycle.test.ts",
+            "outcome": "pass",
+            "title": "child creation revalidates a parent deleted during project resolution"
+          },
+          {
+            "file": "test/session-lifecycle.test.ts",
+            "outcome": "pass",
+            "title": "remove stops children admitted during its initial stop before deleting them"
+          },
+          {
+            "file": "test/session-lifecycle.test.ts",
+            "outcome": "pass",
+            "title": "Created listener can await sibling creation after the durable parent guard releases"
+          },
+          {
+            "file": "test/session-list-projection.test.ts",
+            "outcome": "pass",
+            "title": "lists despite malformed unused JSON"
+          },
+          {
+            "file": "test/session-list-projection.test.ts",
+            "outcome": "pass",
+            "title": "uses the production projection and captures migrated database query plans"
+          },
+          {
+            "file": "test/session-operations.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 operations > compacts the conversation on request into a manual checkpoint"
+          },
+          {
+            "file": "test/session-operations.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 operations > generates text after the history without recording it"
+          },
+          {
+            "file": "test/session-operations.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 operations > records a drain that fails before its provider turn as a failed step"
+          },
+          {
+            "file": "test/session-persistence.test.ts",
+            "outcome": "pass",
+            "title": "retains current-source Session state in a committed WAL snapshot and across clean reopenings"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > projects moved sessions without the transitional context epoch table"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > projects staged, cleared, and committed reverts"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > orders projected messages and context by durable aggregate sequence"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > marks an inbox row promoted with the Prompted event sequence"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > projects durable context messages supported by the updater"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > decodes and replays failed compactions without creating or replacing a successful checkpoint"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > rejects distinct creator events that reuse one projected message ID"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > does not revive a stale incomplete in-memory assistant projection"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > updates only the newest incomplete assistant projection"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > does not revive a stale incomplete assistant projection"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > ends a shell by decoding only the row for its call, not every shell of the Session"
+          },
+          {
+            "file": "test/session-projector.test.ts",
+            "outcome": "pass",
+            "title": "SessionProjector > ends the newest shell when a call ID repeats"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > exposes the execution registry"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > delegates execution continuation through SessionExecution"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > delegates process-local interruption through SessionExecution"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > delegates interruption without requiring a recorded Session"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > durably admits one user message before transcript promotion"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > resolves attachment MIME before admission"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > streams durable Session events after an aggregate sequence"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > resumes through a recorded message without appending another prompt"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > records distinct messages when the ID is omitted"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > returns the original recorded message when the ID is retried"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > wakes execution when an exact prompt retry recovers a committed message"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > rejects reuse of one ID with a different prompt"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > rejects reuse of one ID with a different delivery mode"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > returns one recorded message to concurrent exact retries"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > promotes one message once under concurrent promotion attempts"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > promotes steers only through the captured inbox cutoff"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > reprojects pending inbox input without scheduling execution"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > returns an exact retry of a legacy projected prompt"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > returns an exact retry of a legacy projected queued prompt"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > rejects reuse of one globally unique message ID across sessions"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > rejects a prompt ID already used by visible Session history"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > starts execution by default after recording the prompt"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > starts execution when resume is explicitly true"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2.prompt > only records the prompt when resume is false"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "audit: next prompt excludes the history hidden by staged undo"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "revert stage rejects active execution before reading or restoring state"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "revert clear rejects active execution before reading or restoring state"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "revert commit rejects active execution before reading or restoring state"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "exact retry and conflicting reuse leave staged undo intact"
+          },
+          {
+            "file": "test/session-prompt.test.ts",
+            "outcome": "pass",
+            "title": "global message ID contention cannot truncate a rejected staged replacement"
+          },
+          {
+            "file": "test/session-rename-remove.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 rename and remove > rename replaces only the title on the shared Session row"
+          },
+          {
+            "file": "test/session-rename-remove.test.ts",
+            "outcome": "pass",
+            "title": "SessionV2 rename and remove > remove deletes the Session and its children; a missing Session is NotFound"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > joins concurrent resumes for one key"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > joins a wake-started execution without forcing a successor"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > starts execution when woken while idle"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > snapshots only active executions"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > cleans active executions after failure and defect"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > cleans active executions when its scope closes"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > coalesces wakes received during active execution"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > runs again when woken during the follow-up"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > does nothing when interrupted while idle"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > discards wakes during an opt-in exclusive hold and settles its waiters"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > retains one coalesced wake during an ordinary exclusive hold and settles its waiters"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > interrupts active execution and runs one follow-up for a wake recorded during it"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > promotes a steer admitted mid-drain after the drain is interrupted, never leaving it pending"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > drops a wake recorded during the drain when interrupted with discardPending"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > runs a wake registered during interruption cleanup"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > starts a resume registered during interruption cleanup"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > starts one follow-up when a wake races with failure"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > promotes an input admitted mid-drain with exactly one successor when the drain fails"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > does not chain successors when the successor of a failed drain fails too"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > does not cancel execution when a joined waiter is interrupted"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > ownership-aware: cancellation belongs only to the waiter that starts the active entry"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > ownership-aware: a stopped starter cannot cancel a different successor entry"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > coalesces wakes held by a successful exclusive operation into one non-forced drain"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > retains and coalesces wakes through exclusive interruption cleanup"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > discardPending drops wakes recorded during an interrupted exclusive operation"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > keeps a fresh cleanup wake after discardPending clears an exclusive hold's earlier wake"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > runs different keys concurrently"
+          },
+          {
+            "file": "test/session-run-coordinator.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunCoordinator > trampolines synchronous self-waking execution"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > lowers canonical generation temperature zero to real HTTP and preserves omitted defaults"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > rejects invalid generation settings with typed model-resolution failure"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > generation settings do not permit protocol-owned http body overlays"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > never overrides the configured user agent, free Zen models included"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > adds the Zen session header only for Zen and Go models"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > maps catalog OpenAI AI SDK models into native Responses routes"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > carries the catalog model's input limit and price list onto the resolved model"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > prices a step per million tokens, bills reasoning at the output rate and picks the tier by prompt size"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > keeps catalog apiKey credentials out of provider JSON"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > uses merged API settings for OpenAI-compatible auth and request defaults"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > overlays selected OpenAI Session variant bodies"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > overlays selected OpenAI-compatible Session variant bodies"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > rejects an explicit unavailable Session variant during model resolution"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > overlays selected Anthropic Session variant bodies"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > maps catalog OpenRouter AI SDK models into the OpenAI-compatible chat route"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > maps catalog Anthropic AI SDK models into native routes"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > uses resolved credentials for bearer auth"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > prefers stored credentials over configured auth"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > does not project OAuth account metadata into the request body"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > rejects catalog APIs without a native route"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > reports whether a catalog model has a supported native route"
+          },
+          {
+            "file": "test/session-runner-model.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerModel > maps a native catalog model with an endpoint to the OpenAI-compatible chat route"
+          },
+          {
+            "file": "test/session-runner-policy.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerLLM policy > policy runner reports malformed projected storage as typed error before provider call"
+          },
+          {
+            "file": "test/session-runner-policy.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerLLM policy > policy runner leaves root own chat unrestricted even with outgoing deny-all"
+          },
+          {
+            "file": "test/session-runner-policy.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerLLM policy > policy runner rejects unknown identity, passes captured catalog ref to tools and preserves historical wire model"
+          },
+          {
+            "file": "test/session-runner-policy.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerLLM policy > policy runner rechecks immediately after model resolution before any provider call"
+          },
+          {
+            "file": "test/session-runner-policy.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerLLM policy > policy runner lets active turn finish, blocks continuation and explicit resume at next boundary"
+          },
+          {
+            "file": "test/session-runner-policy.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunnerLLM policy > policy runner blocks overflow compaction when restrictions change during active provider turn"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > filters disabled tools with edit aliases and ordered wildcard precedence"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > keeps permission decoration isolated between registrations"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > reuses model definitions across provider turns"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > removes a scoped registration"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > preserves an interrupted registration until its scope closes"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > returns model errors without swallowing interruption or defects"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > propagates retention failures through settlement"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > exposes settlement only through materialization"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > passes complete invocation identity to the canonical handler"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > encodes output and applies generic settlement bounding"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > enforces transformed codecs at execution and projection boundaries"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > executes the unchanged registration advertised for a provider turn"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > rejects a call when its advertised registration was removed"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > rejects only the replaced name from a multi-tool provider turn"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > treats revealing a previous overlay as stale"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > rejects an application call after a Location override is registered"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > rejects a Location call after removal reveals an application registration"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "ToolRegistry > keeps captured execution running after registration mutation"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunner with a scoped Session > advertises only scoped tools, refuses the rest, and makes the turn after the budget its last"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunner with a scoped Session > leaves an unscoped Session as it was"
+          },
+          {
+            "file": "test/session-runner-tool-registry.test.ts",
+            "outcome": "pass",
+            "title": "SessionRunner with a scoped Session > holds the same scope for a hosted engine's Orchestra tools and its own built-ins"
+          },
+          {
+            "file": "test/session-scope.test.ts",
+            "outcome": "pass",
+            "title": "SessionScope.decide > holds the delivered entry from the start and admits only exact allowed nodes within the load budget"
+          },
+          {
+            "file": "test/session-scope.test.ts",
+            "outcome": "pass",
+            "title": "SessionScope.decide > admits only scoped tools and spends the call budget"
+          },
+          {
+            "file": "test/session-scope.test.ts",
+            "outcome": "pass",
+            "title": "SessionStore scope > is written once, records uses and deviations, and leaves an unscoped Session admitting everything"
+          },
+          {
+            "file": "test/session-scope.test.ts",
+            "outcome": "pass",
+            "title": "SessionStore scope > concurrent calls each count, and an execution host's own state write keeps the scope"
+          },
+          {
+            "file": "test/session-store-permissions.test.ts",
+            "outcome": "pass",
+            "title": "SessionStore.permissions > maps the Session's recorded legacy rules to V2 rules in order"
+          },
+          {
+            "file": "test/session-store-permissions.test.ts",
+            "outcome": "pass",
+            "title": "SessionStore.permissions > keeps the Session's rules unchanged when its scope is written beside them"
+          },
+          {
+            "file": "test/session-store-permissions.test.ts",
+            "outcome": "pass",
+            "title": "SessionStore.permissions > is empty for a Session without rules and for an unknown Session"
+          }
+        ],
+        "omni": "omni positive control [b9b2e905eb680b9145021e79e7cbbb72]: pass (declared: 2 test(s) in test/session-archive-http.test.ts); 46 omni spawn(s), 0 delegated."
+      },
+      {
+        "id": "TP-004",
+        "branch": "ci-run-linux-tpbase-004-1120",
+        "sha": "8fe52bf6ae0d6938a0d6a922afd8a7c4d73282c4",
+        "tree": "d93cd3f77ab0f12b6eb6d8e9b748d8906192a2bd",
+        "request": {
+          "package": "app",
+          "runner": "bun",
+          "args": [
+            "./src/utils/session-route.test.ts",
+            "./test/sucafina-native/bi-route.test.ts",
+            "./test/sucafina-native/dashboard-route.test.ts",
+            "./test/sucafina-native/native-chapter-entry.test.ts",
+            "./test/sucafina-native/navigation-consent-recheck.test.ts",
+            "./test/sucafina-native/owner-exit.test.ts",
+            "./test/sucafina-native/planner-route.test.ts",
+            "./test/sucafina-native/procurement-route.test.ts"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "runId": 44676936519,
+        "jobId": 136090891254,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676936519",
+        "jobConclusion": "success",
+        "sourceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+        "sourceTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+        "files": [
+          "src/utils/session-route.test.ts",
+          "test/sucafina-native/bi-route.test.ts",
+          "test/sucafina-native/dashboard-route.test.ts",
+          "test/sucafina-native/native-chapter-entry.test.ts",
+          "test/sucafina-native/navigation-consent-recheck.test.ts",
+          "test/sucafina-native/owner-exit.test.ts",
+          "test/sucafina-native/planner-route.test.ts",
+          "test/sucafina-native/procurement-route.test.ts"
+        ],
+        "counts": {
+          "pass": 40,
+          "fail": 0,
+          "skip": 0
+        },
+        "cases": [
+          {
+            "file": "src/utils/session-route.test.ts",
+            "outcome": "pass",
+            "title": "session routes > uses the unique persisted server for a legacy session route"
+          },
+          {
+            "file": "src/utils/session-route.test.ts",
+            "outcome": "pass",
+            "title": "session routes > prefers the active server when a legacy session ID is ambiguous"
+          },
+          {
+            "file": "src/utils/session-route.test.ts",
+            "outcome": "pass",
+            "title": "session routes > builds and decodes a server-keyed session route"
+          },
+          {
+            "file": "src/utils/session-route.test.ts",
+            "outcome": "pass",
+            "title": "session routes > rejects malformed server keys"
+          },
+          {
+            "file": "src/utils/session-route.test.ts",
+            "outcome": "pass",
+            "title": "session routes > builds the legacy directory-keyed route"
+          },
+          {
+            "file": "src/utils/session-route.test.ts",
+            "outcome": "pass",
+            "title": "session routes > resolves the root session"
+          },
+          {
+            "file": "src/utils/session-route.test.ts",
+            "outcome": "pass",
+            "title": "session routes > rejects a parent cycle"
+          },
+          {
+            "file": "test/sucafina-native/bi-route.test.ts",
+            "outcome": "pass",
+            "title": "BI native route admission > uses the real Q01 decoder and rejects unknown views and malformed query selectors"
+          },
+          {
+            "file": "test/sucafina-native/bi-route.test.ts",
+            "outcome": "pass",
+            "title": "BI native route admission > explicit foreign owner stays explicit and cannot borrow the selected owner"
+          },
+          {
+            "file": "test/sucafina-native/bi-route.test.ts",
+            "outcome": "pass",
+            "title": "BI native route admission > catalog and visual require their actual operational read operations"
+          },
+          {
+            "file": "test/sucafina-native/dashboard-route.test.ts",
+            "outcome": "pass",
+            "title": "dashboard route admission > recognizes real entry and detail routes, consuming only supported selectors"
+          },
+          {
+            "file": "test/sucafina-native/dashboard-route.test.ts",
+            "outcome": "pass",
+            "title": "dashboard route admission > requires readable destination and operational source for each capability"
+          },
+          {
+            "file": "test/sucafina-native/dashboard-route.test.ts",
+            "outcome": "pass",
+            "title": "dashboard route admission > proposal detail uses its original workbench operation"
+          },
+          {
+            "file": "test/sucafina-native/native-chapter-entry.test.ts",
+            "outcome": "pass",
+            "title": "native chapter entry > each manifest chapter has one canonical sidebar entry and recognized default route"
+          },
+          {
+            "file": "test/sucafina-native/native-chapter-entry.test.ts",
+            "outcome": "pass",
+            "title": "native chapter entry > candidate URLs preserve the verified owner triplet"
+          },
+          {
+            "file": "test/sucafina-native/native-chapter-entry.test.ts",
+            "outcome": "pass",
+            "title": "native chapter entry > ready owner tuple comes from one coherent verified snapshot, not discovery"
+          },
+          {
+            "file": "test/sucafina-native/native-chapter-entry.test.ts",
+            "outcome": "pass",
+            "title": "native chapter entry > live denial never falls back, and initial entry and profile switch are distinct"
+          },
+          {
+            "file": "test/sucafina-native/native-chapter-entry.test.ts",
+            "outcome": "pass",
+            "title": "native chapter entry > the live owner callback is explicitly bound and retired"
+          },
+          {
+            "file": "test/sucafina-native/native-chapter-entry.test.ts",
+            "outcome": "pass",
+            "title": "native chapter entry > invalid owner syntax preserves the live owner and prior editor"
+          },
+          {
+            "file": "test/sucafina-native/native-chapter-entry.test.ts",
+            "outcome": "pass",
+            "title": "native chapter entry > sidebar enters through the real F01 transition and cannot commit a changed owner"
+          },
+          {
+            "file": "test/sucafina-native/navigation-consent-recheck.test.ts",
+            "outcome": "pass",
+            "title": "target re-admission after discard consent > a revoked target does not commit or retire the current owner"
+          },
+          {
+            "file": "test/sucafina-native/navigation-consent-recheck.test.ts",
+            "outcome": "pass",
+            "title": "target re-admission after discard consent > consent precedes the fresh source check, promotion and commit"
+          },
+          {
+            "file": "test/sucafina-native/navigation-consent-recheck.test.ts",
+            "outcome": "pass",
+            "title": "target re-admission after discard consent > an outgoing owner change during the fresh read cannot promote the stage"
+          },
+          {
+            "file": "test/sucafina-native/navigation-consent-recheck.test.ts",
+            "outcome": "pass",
+            "title": "target re-admission after discard consent > abort during the fresh read cannot promote the stage"
+          },
+          {
+            "file": "test/sucafina-native/owner-exit.test.ts",
+            "outcome": "pass",
+            "title": "quarantined owner exit > asks before discarding unsent quarantine and never reveals it"
+          },
+          {
+            "file": "test/sucafina-native/owner-exit.test.ts",
+            "outcome": "pass",
+            "title": "quarantined owner exit > cancel and empty quarantine do not discard"
+          },
+          {
+            "file": "test/sucafina-native/owner-exit.test.ts",
+            "outcome": "pass",
+            "title": "quarantined owner exit > source refusal for a pending outcome blocks navigation and reports pending"
+          },
+          {
+            "file": "test/sucafina-native/owner-exit.test.ts",
+            "outcome": "pass",
+            "title": "quarantined owner exit > owner, generation, handle or authority changes during consent never discard"
+          },
+          {
+            "file": "test/sucafina-native/owner-exit.test.ts",
+            "outcome": "pass",
+            "title": "quarantined owner exit > an aborted native transition cannot discard after its confirmation resolves"
+          },
+          {
+            "file": "test/sucafina-native/owner-exit.test.ts",
+            "outcome": "pass",
+            "title": "quarantined owner exit > in-place mutation of a non-ready selection cannot discard the next owner's draft"
+          },
+          {
+            "file": "test/sucafina-native/planner-route.test.ts",
+            "outcome": "pass",
+            "title": "Planner route admission > query is closed and year obeys the producer input schema"
+          },
+          {
+            "file": "test/sucafina-native/planner-route.test.ts",
+            "outcome": "pass",
+            "title": "Planner route admission > selector tuple is a hint, never a grant or a fallback from partial selection"
+          },
+          {
+            "file": "test/sucafina-native/planner-route.test.ts",
+            "outcome": "pass",
+            "title": "Planner route admission > accepts valid encoded server URLs and rejects malformed escapes"
+          },
+          {
+            "file": "test/sucafina-native/planner-route.test.ts",
+            "outcome": "pass",
+            "title": "Planner route admission > reads require the matching destination and operational producer"
+          },
+          {
+            "file": "test/sucafina-native/planner-route.test.ts",
+            "outcome": "pass",
+            "title": "Planner overview deep links > validates closed selector syntax and the producer year"
+          },
+          {
+            "file": "test/sucafina-native/planner-route.test.ts",
+            "outcome": "pass",
+            "title": "Planner overview deep links > rejects removed versions, wrong year, and filters outside current comparison choices"
+          },
+          {
+            "file": "test/sucafina-native/procurement-route.test.ts",
+            "outcome": "pass",
+            "title": "procurement route admission > recognizes real entries and details and rejects hostile selectors"
+          },
+          {
+            "file": "test/sucafina-native/procurement-route.test.ts",
+            "outcome": "pass",
+            "title": "procurement route admission > requires readable destination and operational source for every capability"
+          },
+          {
+            "file": "test/sucafina-native/procurement-route.test.ts",
+            "outcome": "pass",
+            "title": "procurement route admission > owner selection never fills a partial URL from the active owner"
+          },
+          {
+            "file": "test/sucafina-native/procurement-route.test.ts",
+            "outcome": "pass",
+            "title": "procurement route admission > approval panels retain their separate original stage guards"
+          }
+        ],
+        "omni": "No Omni control emitted by this package; not an Omni proof."
+      }
+    ],
+    "sfIntegrated": {
+      "status": "NOT_RUN",
+      "reason": "The connected GitHub tools expose reads and reruns, but no workflow_dispatch operation. The plan requires a real dispatch on the pinned branch; no synthetic PR merge is substituted."
+    },
+    "excludedCases": [
+      {
+        "file": "modules/sucafina/Sucafinav1/test/local-backups.test.ts",
+        "title": "foreign-owned existing root rejects (requires root fixture privileges)",
+        "observed": "SKIPPED_BY_EXISTING_TEST",
+        "disposition": "Must supply the required privilege/environment before claiming this obligation passed; not waived."
+      },
+      {
+        "file": "packages/core/test/database-migration.test.ts",
+        "title": "DatabaseMigration > maps native Windows paths through database columns",
+        "observed": "SKIPPED_BY_EXISTING_PLATFORM_CONDITION",
+        "disposition": "Native Windows execution is outside the requested Linux SF scope. Cross-platform string normalization remains executed. Not counted as a pass."
+      }
+    ]
+  },
+  "workPackages": [
+    {
+      "id": "WP1A",
+      "owner": "teams-profile-schema",
+      "scope": "Canonical additive TeamProfile schema and strict codecs",
+      "status": "IN_PROGRESS"
+    },
+    {
+      "id": "WP1B",
+      "owner": "teams-profile-graph",
+      "scope": "Explicit delegated Graph Teams reader, bounded complete pagination, minimum-login preservation",
+      "status": "IN_PROGRESS"
+    },
+    {
+      "id": "WP1C",
+      "owner": "teams-profile-work",
+      "scope": "Server-only directory binding to the actual Microsoft session and revocation fence",
+      "status": "IN_PROGRESS"
+    },
+    {
+      "id": "F04",
+      "owner": "teams-profile-native",
+      "scope": "Shared installed-manifest validation and actual producer/reader round-trip; v1 retained until protocol migration",
+      "status": "IN_PROGRESS"
+    }
+  ],
+  "gates": [
+    {
+      "id": "G01-CONTRACT-STATIC",
+      "status": "NOT_RUN_ON_FINAL_CANDIDATE"
+    },
+    {
+      "id": "G02-TARGETED-REQUESTS",
+      "status": "NOT_RUN_ON_FINAL_CANDIDATE"
+    },
+    {
+      "id": "G03-SF-INTEGRATED",
+      "status": "NOT_RUN_ON_FINAL_CANDIDATE"
+    },
+    {
+      "id": "G04-ORDERED-BROWSER-POOL",
+      "status": "NOT_RUN_ON_FINAL_CANDIDATE"
+    },
+    {
+      "id": "G05-HTTP-EXERCISE",
+      "status": "NOT_RUN_ON_FINAL_CANDIDATE"
+    },
+    {
+      "id": "G06-SCANNER",
+      "status": "NOT_RUN_ON_FINAL_CANDIDATE"
+    },
+    {
+      "id": "G07-LINUX-PACKAGE",
+      "status": "NOT_RUN_ON_FINAL_CANDIDATE"
+    },
+    {
+      "id": "G08-NATIVE-TEAMS",
+      "status": "NOT_RUN_ON_FINAL_CANDIDATE"
+    },
+    {
+      "id": "G09-RESIDUE",
+      "status": "NOT_RUN_ON_FINAL_CANDIDATE"
+    },
+    {
+      "id": "G10-MIGRATION-RESTORE",
+      "status": "NOT_RUN_ON_FINAL_CANDIDATE"
+    }
+  ],
+  "qualification": {
+    "qualified": false,
+    "liveTenant": "NOT_OBSERVED",
+    "native": "NOT_RUN",
+    "migration": "NOT_RUN",
+    "restore": "NOT_RUN",
+    "release": "NOT_REQUESTED_OR_PERFORMED"
+  }
+}
