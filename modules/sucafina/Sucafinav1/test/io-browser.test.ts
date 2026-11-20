@@ -102,22 +102,22 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     const previewControl = imports.getByRole("button", { name: "Generate preview", exact: true })
     await expect(previewControl).toBeVisible()
     await expect(previewControl).toBeEnabled()
-    const [admittedResponse, previewResponse, detailResponse] = await Promise.all([
+    const [admittedResponse, previewResponse, referenceResponse] = await Promise.all([
       page.waitForResponse((response) => fileResponse(response, "import-admit", "POST"), { timeout: 10000 }),
       page.waitForResponse((response) => fileResponse(response, "import-preview", "POST"), { timeout: 10000 }),
-      page.waitForResponse((response) => fileResponse(response, "import-detail", "GET"), { timeout: 10000 }),
+      page.waitForResponse((response) => fileResponse(response, "import-reference", "GET"), { timeout: 10000 }),
       previewControl.click(),
     ])
     expect(admittedResponse.status()).toBe(200)
     expect(previewResponse.status()).toBe(200)
-    expect(detailResponse.status()).toBe(200)
+    expect(referenceResponse.status()).toBe(200)
     const admitted = Schema.decodeUnknownSync(SfFiles.operations["files.import-admit"].output)(await admittedResponse.json())
     const preview = Schema.decodeUnknownSync(SfFiles.operations["files.import-preview"].output)(await previewResponse.json())
-    const detail = Schema.decodeUnknownSync(SfFiles.operations["files.import-detail"].output)(await detailResponse.json())
+    const reference = Schema.decodeUnknownSync(SfFiles.operations["files.import-reference"].output)(await referenceResponse.json())
     expect(admitted.status).toBe("ok")
     expect(preview.status).toBe("ok")
-    expect(detail.status).toBe("ok")
-    if (admitted.status !== "ok" || preview.status !== "ok" || detail.status !== "ok")
+    expect(reference.status).toBe("ok")
+    if (admitted.status !== "ok" || preview.status !== "ok" || reference.status !== "ok")
       throw new Error("The original workbook did not produce an admitted native preview")
     const sourceDigest = new Bun.CryptoHasher("sha256").update(plannerBytes).digest("hex")
     expect(admitted.value.digest).toBe(sourceDigest)
@@ -127,19 +127,21 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     })
     expect(preview.value.commands).toHaveLength(1)
     expect(preview.value.commands[0]).toMatchObject({ action: "import-workbook", target: { id: versionId } })
-    expect(detail.value.detail.sourceDigest).toBe(sourceDigest)
-    const addedName = detail.value.detail.changes.filter((change) => change.kind === "added" &&
+    expect(reference.value.detail.sourceDigest).toBe(sourceDigest)
+    const addedName = reference.value.detail.changes.filter((change) => change.kind === "added" &&
       change.path.endsWith("/name") && change.after.state === "present" && change.after.value === "Browser OPEX fixture")
     expect(addedName).toHaveLength(1)
     expect(addedName[0]!.path).toMatch(/^\/versions\/@id=[^/]+\/lines\/@id=[^/]+\/name$/)
     const linePath = addedName[0]!.path.slice(0, -"/name".length)
-    const budgetChanges = detail.value.detail.changes.filter((change) => change.path.startsWith(linePath + "/b/"))
+    const budgetChanges = reference.value.detail.changes.filter((change) => change.path.startsWith(linePath + "/b/"))
       .toSorted((left, right) => Number(left.path.split("/").at(-1)) - Number(right.path.split("/").at(-1)))
     expect(budgetChanges.map((change) => Number(change.path.split("/").at(-1)))).toEqual(Array.from({ length: 12 }, (_, month) => month))
     expect(budgetChanges.map((change) => change.after)).toEqual(Array.from({ length: 12 }, () => ({ state: "present", value: 125 })))
     const previewLine = imports.locator(".sf-files-change").filter({ hasText: "Browser OPEX fixture" })
     await expect(previewLine).toHaveCount(1)
-    await imports.locator("details").filter({ has: previewLine }).locator("summary").click()
+    await imports.locator("details").filter({
+      has: page.locator(".sf-files-change").filter({ hasText: "Browser OPEX fixture" }),
+    }).locator("summary").click()
     await expect(previewLine).toBeVisible()
     // Independently re-read the same authorized projection. Preview must not have
     // changed the stored plan; the browser still owns the real review and Apply.
