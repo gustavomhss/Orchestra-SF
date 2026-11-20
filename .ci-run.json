@@ -1,0 +1,12 @@
+{
+  "package": "sucafina",
+  "runner": "bun",
+  "args": [
+    "--timeout",
+    "30000",
+    "Sucafinav1/test/product/wp10/integration/authority-admit-contract.diagnostic.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+  }
+}
