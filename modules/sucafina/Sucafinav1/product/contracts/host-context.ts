@@ -148,6 +148,7 @@ export type CreateSfHostRuntime = (input: {
   /** Installed below source lifecycle; shared by the real C08 and Planner producers. */
   currentChoiceFence?: CurrentChoiceFence
   authenticate: Application["authenticate"]
+  authenticateAll?: Parameters<typeof createSfProductAuthority>[0]["authenticateAll"]
   environment: Application["environment"]
   /** Explicit installation policy, distinct from financial roles and inaccessible to model input. */
   grants?: readonly SfProductGrant[]

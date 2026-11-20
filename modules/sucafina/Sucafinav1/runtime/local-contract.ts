@@ -139,6 +139,9 @@ export type LocalIdentity = {
   prepare: (request: Request) => Promise<void>
   /** Read-only credential lookup and fresh directory membership; never writes a nested SQL transaction. */
   authenticate: (request: Request, context?: { surface: Surface; roleMap: readonly RoleRow[] }) => Promise<ResolvedActor | null>
+  /** One fresh private Microsoft observation projected over all current surface maps; never a reusable grant. */
+  authenticateAll?: (request: Request, contexts: readonly { surface: Surface; roleMap: readonly RoleRow[] }[]) =>
+    Promise<readonly { surface: Surface; actor: ResolvedActor | null }[] | null>
   directory: (request: Request) => Promise<DirectoryPerson[]>
   /** Server-only observation under the current verified Microsoft session; never a grant or bearer projection. */
   teamDirectory?: (request: Request) => Promise<EntraTeamsSessionResult>

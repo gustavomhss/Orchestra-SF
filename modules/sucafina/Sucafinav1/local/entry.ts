@@ -199,7 +199,8 @@ export async function createConfiguredInstallation(
     nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),
     nativeActions: (request, stamp, pages) => nativeActions ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
     isAuthenticated: async (request: Request) => Boolean(await identity.person(request)),
-    persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
+    persistence: store, currentChoiceFence, authenticate: identity.authenticate, authenticateAll: identity.authenticateAll,
+    environment: requestEnvironment, assets,
     grants: microsoft?.grants ?? [] })
   const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
     persistence: store, authenticate: businessIdentity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
