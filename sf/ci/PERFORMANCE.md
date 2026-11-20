@@ -1,12 +1,25 @@
 # CI performance: measured cost and execution ownership
 
-Tested implementation: `8b65f3f1ec7b1a5f558a84b325b8bdbd4f4fc7ba`.
-The [final infrastructure validation, run 44658705334](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658705334),
-completed **SUCCESS (2/2 jobs)** in 2m36s on snapshot `47a0973d517908487c1e908767052e05886f9651`.
-The snapshot contains that implementation plus an isolated probe workflow, the unchanged baseline
-selector used for equivalence, and a copy of the separately proposed cache-writer workflow.
-Subsequent changes on `ci-rescue` are documentation only. This is infrastructure validation;
-it is not the duration or result of the complete product suite.
+The CI rescue is integrated into `sf-join-four` through
+[PR #413](https://github.com/gustavomhss/Orchestra-SF/pull/413), merge
+`72830e53adfcb2059575b249e76c88753beb04e8`.
+
+The pre-integration implementation `8b65f3f1ec7b1a5f558a84b325b8bdbd4f4fc7ba`
+passed [run 44658705334](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658705334)
+on snapshot `47a0973d517908487c1e908767052e05886f9651`: 155 focused tests,
+Sucafina typecheck and same-ref cache reuse. That historical probe included
+its isolated workflow, the original selector for equivalence and a copy of the cache writer.
+
+The post-integration [probe 44661129868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661129868)
+passed **176 focused tests and the real Sucafina typecheck** in 1m48s on snapshot
+`d08f56805155240c9295cc6abfe6cf4951bf9500`. Its reviewed source candidate was
+`e23e850fd30d450a67165b407b10b131f38f63e1`, including the explicit Planner fixture
+precondition from [PR #418](https://github.com/gustavomhss/Orchestra-SF/pull/418), merged at
+`c7fc8b4cfc809e8ba46ab7a3ad48dcae2ec46e61`. The exact probe scope and the earlier RED
+result are recorded below. Shared default-branch caches are now installed and their
+consumption from a fresh restore-only branch has been observed.
+
+These are infrastructure and integration proofs. They do not measure or qualify the complete product suite.
 
 ## Where the time went
 
@@ -41,8 +54,8 @@ The 45-minute limit belongs to the surgical runner; `sf-ci` shards retain their 
 longest processing time first: the next most expensive file goes to the least-loaded shard.
 Lexical file ordering and the lowest shard index break ties deterministically.
 Every plan must be nonempty, complete and disjoint; duplicate paths and invalid costs fail closed.
-The manifest selection grows from **883 to 884 files** because the static-contract regression
-test was added. No selected file was excluded to achieve that change.
+The rescue added its static-contract regression test, taking the pre-integration selection
+from **883 to 884 files**. The first post-merge probe observed **886 files** after the concurrent Atlas and Planner test additions; the original and optimized selectors agreed exactly on that integrated tree. No selected file was excluded.
 
 [`shard-costs.json`](./shard-costs.json) contains 170 weighted files from 777 observed files
 across the eight sources. Its status is explicitly `HISTORICAL_RED_OR_PARTIAL`.
@@ -84,15 +97,39 @@ An unsuccessful product test does not undo an already completed cache save.
 A save-step success is not itself proof of a hit: the consumer must report an exact key match.
 
 Ephemeral surgical branches remain restore-only. Sibling `ci-run-*` branches cannot read
-each other's branch-scoped entries, so this patch does not make those requests warm.
-The isolated [Linux-only shared-cache writer](https://github.com/gustavomhss/Orchestra-SF/blob/ef41c498af352b110cbe27c50510b12076e855f8/.github/workflows/sf-cache-warm.yml)
-is implemented on `ci-cache-warm`; it binds one admitted source ref to its exact reviewed head SHA.
-It must be installed and executed from the default branch before sibling reuse exists.
-Its default-branch installation is isolated in [PR #408](https://github.com/gustavomhss/Orchestra-SF/pull/408).
-It is **not activated**. Install and warm this shared entry before multiplying PR-local cold caches;
-that keeps identical inputs reusable instead of storing a large copy in every ephemeral ref.
-The inherited multi-platform workflow stays disabled.
-The isolated probe checks producer/consumer reuse on one ref; it does not qualify the product.
+each other's branch-scoped entries; they reuse matching entries made available from the default branch.
+
+The Linux-only shared-cache writer was installed on default `dev` by
+[PR #408](https://github.com/gustavomhss/Orchestra-SF/pull/408), merge
+`8e537a29fa5f1f8900d60d3231fa19625859accb`.
+[Seed run 44660364678](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660364678)
+completed **SUCCESS** in 1m59s. Its [job 136036809773](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660364678/job/136036809773)
+confirmed `Cache scope=refs/heads/dev` and checked out the reviewed source
+`sf-join-four@72830e53adfcb2059575b249e76c88753beb04e8`.
+It saved installed dependencies, Bun downloads, ripgrep and Omni under these exact keys:
+
+| Cache | Saved key |
+| --- | --- |
+| Installed dependencies | `Linux-X64-modules-v4-33ade1c6324fedd257063fa9cd550a093f21cb5b1f88b908cdddeecfdce0c812` |
+| Bun downloads | `Linux-X64-bun-v3-9dba89b5073c640f02ea6a33dfbc2c175779544e55d5003358191ed07d5b15c7` |
+| ripgrep | `ripgrep-archive-ripgrep-15.2.0-x86_64-unknown-linux-musl-33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c` |
+| Omni | `omni-bin-v2-Linux-X64-97518c5742e25a49884d3106c8ac013f1765c5fc5eee51b24c8c175f8f5f5189` |
+
+[Fresh-ref probe 44660638657](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660638657)
+ran restore-only from the new `ci-rescue-final` branch at
+`de0f281cc824a84c064deb75266eb35d54ae5677`, whose source parent was `72830e53adfcb2059575b249e76c88753beb04e8`.
+Its [job 136037730107](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660638657/job/136037730107)
+restored the exact installed-dependency key above and skipped installation, and restored the matching
+ripgrep and Omni keys. This demonstrates consumption of the shared default-branch caches from
+a different branch. The run remained **RED** because the real Sucafina typecheck found an inherited
+Planner fixture error; the successful cache observations do not change that conclusion.
+[PR #416](https://github.com/gustavomhss/Orchestra-SF/pull/416), merged into `dev` at
+`69ac140f615c30d166af9038297a6462c6bdee3c`, removed the temporary bootstrap source pin.
+The writer returned byte-for-byte to the reviewed 74-line workflow (blob
+`db79f49db0b1e9d56ecd5d7510f8e9a7dc359f6e`). Automatic `dev` pushes use their own
+ref and SHA; a manual SF refresh requires the admitted source branch and its exact reviewed head.
+Default-branch scope, live source verification, Linux x86_64 and read-only permissions remain required.
+The inherited multi-platform workflow remains disabled.
 
 ## Updating weights without changing coverage
 
@@ -107,7 +144,7 @@ The isolated probe checks producer/consumer reuse on one ref; it does not qualif
    Verify the selected-file union, disjointness and case inventory before comparing actual runtime.
 5. Record any later performance claim against the exact tested SHA and observed cold/warm state.
 
-## Observed validation results
+## Historical pre-integration validation
 
 | Check | Actual result |
 | --- | --- |
@@ -121,7 +158,7 @@ The isolated probe checks producer/consumer reuse on one ref; it does not qualif
 | Export evidence | Original 131,072 synthetic bytes and stored manifest matched their SHA-256; stdout under 2 KB |
 | Consumer cache job | Exact same dependency key restored; install skipped |
 
-The final contract job is [136031263507](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658705334/job/136031263507).
+The pre-integration contract job is [136031263507](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658705334/job/136031263507).
 The exact-hit consumer is [136032006969](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658705334/job/136032006969).
 The earlier [cold probe](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658022066)
 observed a real miss, 38.399s installing dependencies, then successful Bun and node_modules cache saves.
@@ -131,7 +168,47 @@ those were fixed without casts or ignores before the final green run.
 
 The optimized selector measured 164.95ms versus 763.18ms for the unchanged selector in the final
 single-run comparison. This is an observed selector-only measurement, not an end-to-end speedup.
-All 155 focused tests passed; the complete 884-file product suite was not run by this probe.
+All 155 focused tests passed; the complete 884-file product suite was not run by that probe.
+
+## Post-integration focused validation
+
+The first integrated [probe 44660638657](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660638657)
+passed 175 focused tests and selection/cache checks, but remained **RED**: the real Sucafina
+typecheck rejected `Period | undefined` in the Planner regression inherited from
+[PR #400](https://github.com/gustavomhss/Orchestra-SF/pull/400). PR #418 added an explicit
+failure when the canonical source has no period, preserving the original assertions.
+The corrected probe also executed that real Planner regression.
+
+[Run 44661129868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661129868)
+completed **SUCCESS** at 2026-11-20 02:30:58 UTC after 1m48s;
+its [job 136039361873](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661129868/job/136039361873)
+ran for 1m45s. Its snapshot `d08f56805155240c9295cc6abfe6cf4951bf9500` differs from
+reviewed candidate `e23e850fd30d450a67165b407b10b131f38f63e1` in exactly three probe-only files:
+the isolated workflow, the unchanged baseline-selector copy and the final default-branch
+cache-writer YAML copy. None of those probe files is part of the CI rescue integration.
+
+| Check | Observed result |
+| --- | --- |
+| Gate and LPT planner | 63 pass, 0 fail |
+| Cache, surgical requests and source-PR guard context | 77 pass, 0 fail; 27 native Omni spawns, 0 delegated |
+| Static ownership and former wrapper cases | 35 pass, 0 fail |
+| Real Planner answer scope and host-reopen regression | 1 pass, 0 fail; 18.92s; 55 native Omni spawns, 0 delegated |
+| Total focused tests | **176 pass, 0 fail** |
+| Real Sucafina package typecheck | **PASS**, 53s |
+| Original versus optimized selector | Exact equality, **886 files** |
+| Eight shard partitions | Complete disjoint union; 110–111 files per part; no empty shard |
+| Installed dependencies, ripgrep and Omni | Exact cache hits on the keys recorded above |
+| Dependency preparation | 14s; installation and cache saves skipped; `CACHE_SAVE_REQUESTED=false` |
+
+The observed selected-path SHA-256 was
+`71054ee4a0525383ddfc2dea0b249d57c6e157b2669b941a86cb2a9e2acb12cc`.
+The selector measured 262.04ms versus 1,220.52ms for the unchanged implementation in this
+single observation. These numbers measure selection and preparation, not product-suite runtime.
+
+This evidence is pinned to the candidate and probe snapshot above. Concurrent frontend
+[PR #411](https://github.com/gustavomhss/Orchestra-SF/pull/411) changed the integration branch
+outside the CI, cache and CI-SF selection paths. The focused probe does not assert whole-tree
+equality with that later branch state or qualify all of its product behavior.
 
 ## Export logs and concurrent requests
 
@@ -150,11 +227,12 @@ Several original files consumed 8–11 minutes, including
 `wp13/coverage-sensitivity-integration.test.ts` (662.77s observed) and
 `integrated-proofs/am01/portfolio-recall-proof.test.ts` (579.80s, failed).
 Their composition and revalidation work is separate from setup overhead.
-[PR #401](https://github.com/gustavomhss/Orchestra-SF/pull/401) already addresses repeated BI proof
-construction in three product paths; this CI change does not overwrite that concurrent work.
+[PR #401](https://github.com/gustavomhss/Orchestra-SF/pull/401) was already merged into `sf-join-four`
+at `18a913220a6805bef1c62a58a26a310f991d6a0a`. Its repeated-BI-proof corrections are
+included in the integrated candidate; the CI rescue preserves them.
 
-Full product runs remain red or incomplete, and the authentic complete-run CI-SF coverage baseline
-remains `PENDING_REAL_COMPLETE_RUN`. No baseline was fabricated. Product assertions, permission
+This rescue has not produced a complete green product run. The authentic complete-run CI-SF
+coverage baseline remains `PENDING_REAL_COMPLETE_RUN`. No baseline was fabricated. Product assertions, permission
 checks, timeouts and release-only ownership are unchanged; static execution remains mandatory.
 A subsequent complete run on the integrated candidate must measure actual shard durations and
 provide authentic case/file evidence before any product-green or release claim.
