@@ -15,6 +15,7 @@ import { projectSfSourceScope } from "../../../../modules/sucafina/Sucafinav1/pr
 import { sfScopedSourceIdentity, sfSourceIdentity } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import type { SfScopedSourcePort } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { createSfCaseReadBatch } from "./case-read-batch.ts"
+import type { SfCaseReadBatchAdmission } from "./case-read-batch.ts"
 import { sfPlannerRecordMaterialized } from "./planner-case-read-batch.ts"
 
 type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
@@ -36,7 +37,12 @@ export function createSfDashboardCaseReadBatch(input: {
     readerIdentity: () => readonly unknown[]
   }
 }): DecisionCasePort["read"] {
-  return createSfCaseReadBatch(input, { kind: "dashboard",
+  return createSfCaseReadBatch(input, sfDashboardCaseReadAdmission(input))
+}
+
+/** Reuse the exact domain admission for complete read-only producer phases. */
+export function sfDashboardCaseReadAdmission(input: Omit<Parameters<typeof createSfDashboardCaseReadBatch>[0], "read">): SfCaseReadBatchAdmission {
+  return { kind: "dashboard",
     identity: () => [input.sources, input.sources.resolveForecastSource,
       input.dashboard, input.dashboard.port, input.dashboard.port.read,
       input.dashboard.sources, input.dashboard.sources.resolveDashboardSource, input.dashboard.sources.resolveDashboardMetric,
@@ -72,7 +78,7 @@ export function createSfDashboardCaseReadBatch(input: {
         return { kind: "current", value: { principal, day } }
       } }
     },
-  })
+  }
 }
 
 /** Reconstruct the current actor scope using the real projector. Exact equality
