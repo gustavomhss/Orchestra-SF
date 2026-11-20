@@ -6,12 +6,15 @@ import { inflateRawSync } from "node:zlib"
 // Temporary retained-evidence reader. No product imports, browser, network, process spawn or replay.
 const source = Object.freeze({
   repository: "gustavomhss/Orchestra-SF",
-  run: 44656358971,
-  artifact: 14594546715,
-  snapshot: "5f2867ccf7ac764e0e714cbe4914ce9300da3965",
-  digest: "sha256:623d31906142b886aeb3401aed58bd2b9e5ed809a7709726366e13c17e59a2a1",
+  repositoryId: 1455724710,
+  workflow: 416464764,
+  attempt: 1,
+  run: 44662419134,
+  artifact: 14596666417,
+  snapshot: "9ea42e72f6aebed5685cd5b2b48df993a1e8f33d",
+  digest: "sha256:28ca71a87e76cb8fc85cb370d0da714b5d8e8503f574b396c192c7efa4cd5cd3",
   name: "playwright-ubuntu-24.04-1",
-  bytes: 2075937,
+  bytes: 68608517,
 })
 const cases = new Map([["OP-PROC-01", 13], ["OP-PROC-02", 18], ["OP-PROC-03", 23],
   ["OP-IMPORT-01", 28], ["OP-DOC-01", 33]])
@@ -68,7 +71,7 @@ function errorClasses(error) {
     [/Timeout \d+ms exceeded|TimeoutError/, "action-timeout"],
     [/Object with guid response@.* was not bound in the connection/, "response-connection-binding"],
     [/Target page, context or browser has been closed/, "page-or-context-closed"],
-    [/Request content was evicted from inspector cache|No resource with given identifier found/, "response-body-unavailable"],
+    [/Request content was evicted from inspector cache|No resource with given identifier found|No data found for resource with given identifier/, "response-body-unavailable"],
     [/net::ERR_CONNECTION_RESET|ECONNRESET/, "connection-reset"],
     [/net::ERR_CONNECTION_REFUSED|ECONNREFUSED/, "connection-refused"],
     [/net::ERR_TIMED_OUT|ETIMEDOUT/, "connection-timeout"],
@@ -88,7 +91,7 @@ async function inventory(root, depth = 0, output = []) {
   }
   return output
 }
-function archive(buffer) {
+function archive(buffer, traces = false) {
   requireValue(buffer.length > 22 && buffer.length <= 64 * 1024 * 1024, "EMBEDDED_ARCHIVE_SIZE")
   let end = -1
   for (let index = buffer.length - 22; index >= Math.max(0, buffer.length - 65557); index--) {
@@ -109,8 +112,9 @@ function archive(buffer) {
     requireValue(cursor + 46 + names + extras + comments <= end, "ZIP_ENTRY_OUT_OF_BOUNDS")
     const name = buffer.subarray(cursor + 46, cursor + 46 + names).toString("utf8")
     cursor += 46 + names + extras + comments
-    // Detailed Playwright file JSONs are hash-named; attachments and arbitrary ZIP paths are never read.
-    if (name !== "report.json" && !/^[a-f0-9]{16,64}\.json$/.test(name)) continue
+    // Only report JSON, or the original action streams of a specifically bound trace.
+    if (traces ? name !== "test.trace" && !/^(?:\d+-)?trace\.trace$/.test(name)
+      : name !== "report.json" && !/^[a-f0-9]{16,64}\.json$/.test(name)) continue
     requireValue(!(flags & 1) && [0, 8].includes(method) && size < 16 * 1024 * 1024, "UNSUPPORTED_REPORT_JSON_ENTRY")
     requireValue(local + 30 <= offset && buffer.readUInt32LE(local) === 0x04034b50, "INVALID_ZIP_LOCAL_ENTRY")
     const start = local + 30 + buffer.readUInt16LE(local + 26) + buffer.readUInt16LE(local + 28)
@@ -119,9 +123,11 @@ function archive(buffer) {
     const bytes = method === 0 ? raw : inflateRawSync(raw, { maxOutputLength: 16 * 1024 * 1024 })
     expanded += bytes.length
     requireValue(bytes.length === size && expanded <= 64 * 1024 * 1024, "ZIP_EXPANSION_LIMIT")
-    entries.push({ report: name === "report.json", value: parseJson(bytes.toString("utf8")) })
+    entries.push(traces ? { name, value: bytes.toString("utf8") }
+      : { report: name === "report.json", value: parseJson(bytes.toString("utf8")) })
   }
-  requireValue(entries.filter((entry) => entry.report).length === 1, "EXACTLY_ONE_REPORT_JSON_REQUIRED")
+  requireValue(traces ? entries.length <= 17 && entries.filter((entry) => entry.name === "test.trace").length === 1
+    : entries.filter((entry) => entry.report).length === 1, "EXACTLY_ONE_PRIMARY_STREAM_REQUIRED")
   return entries
 }
 function flatten(value, depth = 0, output = []) {
@@ -169,7 +175,8 @@ function resultRecord(id, result, recordedLocation) {
   return { case: id, status: result.status, retry: 0, durationMs: number(result.duration),
     location: recordedLocation, errors: [...new Set([
       ...errorClasses(result.error), ...(Array.isArray(result.errors) ? result.errors.flatMap(errorClasses) : []),
-    ])], steps: flatten(result) }
+    ])], steps: flatten(result),
+    traceAttachments: Array.isArray(result.attachments) ? result.attachments.map(traceAttachment).filter(Boolean) : [] }
 }
 function completeCases(detailed) {
   return detailed.size === cases.size && [...cases.keys()].every((id) => detailed.has(id))
@@ -226,7 +233,161 @@ function runtimeResults(report) {
   return detailed
 }
 
-test("inspect only retained Operations2 report evidence", async () => {
+const traceCases = new Map([
+  ["OP-PROC-02", "packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--b41a7-while-the-future-PO-changes-chromium/trace.zip"],
+  ["OP-PROC-03", "packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--048f9-ssion-without-a-new-version-chromium/trace.zip"],
+])
+const channels = new Set([
+  "BrowserContext.newCDPSession", "BrowserContext.newPage", "CDPSession.send", "CDPSession.detach",
+  "Page.reload", "Page.close", "Page.waitForEventInfo",
+  "Frame.goto", "Frame.click", "Frame.fill", "Frame.press", "Frame.check", "Frame.uncheck",
+  "Frame.selectOption", "Frame.setInputFiles", "Frame.getAttribute", "Frame.innerText", "Frame.textContent",
+  "Frame.inputValue", "Frame.expect", "Frame.waitForSelector", "Frame.waitForFunction", "Frame.evaluateExpression",
+  "APIRequestContext.fetch", "Response.body",
+])
+const cdpCommands = new Set([
+  "Fetch.enable", "Fetch.getResponseBody", "Fetch.continueRequest", "Fetch.continueResponse",
+  "Fetch.fulfillRequest", "Fetch.failRequest", "Fetch.disable", "Network.enable", "Network.disable",
+])
+function traceAttachment(value) {
+  if (!value || typeof value.path !== "string" || value.name !== "trace" || value.contentType !== "application/zip") return null
+  const file = value.path.replaceAll("\\", "/")
+  const root = "/home/runner/work/Orchestra-SF/Orchestra-SF/"
+  const relative = file.startsWith(root) ? file.slice(root.length)
+    : file.startsWith("e2e/") ? "packages/app-shell/" + file : file
+  return [...traceCases.values()].includes(relative) ? relative : null
+}
+function traceEvents(entry) {
+  const lines = entry.value.split("\n")
+  requireValue(lines.length <= 200_000, "TRACE_EVENT_COUNT_LIMIT")
+  const events = []
+  for (const [sequence, line] of lines.entries()) {
+    // The pinned v1.59.1 serializer puts type first, or after version for context.
+    // Ignore DOM snapshots, resources, logs and all other event kinds before JSON parsing.
+    if (!/^\{(?:"version":8,)?"type":"(?:context-options|before|after|error)"/.test(line)) continue
+    requireValue(line.length <= 2 * 1024 * 1024, "TRACE_ACTION_SIZE_LIMIT")
+    const event = parseJson(line)
+    requireValue(event && typeof event === "object" && !Array.isArray(event), "INVALID_TRACE_ACTION")
+    event.auditSequence = sequence
+    events.push(event)
+  }
+  return events
+}
+function clock(value) {
+  requireValue(typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= Number.MAX_SAFE_INTEGER, "INVALID_TRACE_CLOCK")
+  return value
+}
+function traceSummary(id, entries) {
+  const primary = entries.filter((entry) => entry.name === "test.trace")
+  requireValue(primary.length === 1, "EXACTLY_ONE_TEST_TRACE_REQUIRED")
+  const events = traceEvents(primary[0])
+  const contexts = events.filter((event) => event.type === "context-options")
+  requireValue(contexts.length === 1 && contexts[0].version === 8 && contexts[0].origin === "testRunner" &&
+    contexts[0].platform === "linux" && contexts[0].playwrightVersion === "1.59.1", "TRACE_VERSION_OR_ORIGIN_MISMATCH")
+  const origin = clock(contexts[0].monotonicTime)
+  const offset = (value) => {
+    const relative = clock(value) - origin
+    requireValue(number(relative) !== null, "TRACE_RELATIVE_TIME_OUT_OF_BOUNDS")
+    return relative
+  }
+  const before = new Map(), after = new Map()
+  for (const event of events) {
+    if (event.type === "context-options" || event.type === "error") continue
+    requireValue(typeof event.callId === "string" && event.callId.length > 0 && event.callId.length < 512, "INVALID_TRACE_CALL_ID")
+    const target = event.type === "before" ? before : after
+    requireValue(!target.has(event.callId), "DUPLICATE_TEST_TRACE_CALL")
+    target.set(event.callId, event)
+  }
+  requireValue(before.size > 0 && before.size < 100_000, "TEST_TRACE_CALL_COUNT")
+  for (const key of after.keys()) requireValue(before.has(key), "TRACE_AFTER_WITHOUT_BEFORE")
+  const protocolByStep = new Map()
+  let libraryChunks = 0
+  for (const entry of entries.filter((entry) => entry.name !== "test.trace")) {
+    libraryChunks++
+    const actions = traceEvents(entry)
+    const contexts = actions.filter((event) => event.type === "context-options")
+    requireValue(contexts.length === 1 && contexts[0].version === 8 && contexts[0].origin === "library" &&
+      contexts[0].platform === "linux" && contexts[0].playwrightVersion === "1.59.1", "LIBRARY_TRACE_VERSION_OR_ORIGIN_MISMATCH")
+    for (const event of actions) {
+      if (event.type !== "before" || typeof event.stepId !== "string" || !before.has(event.stepId)) continue
+      const channel = event.class + "." + event.method
+      if (!channels.has(channel)) continue
+      const cdp = channel === "CDPSession.send" && cdpCommands.has(event.params?.method) ? event.params.method : null
+      const values = protocolByStep.get(event.stepId) ?? []
+      if (!values.some((value) => value.channel === channel && value.cdp === cdp)) values.push({ channel, cdp })
+      requireValue(values.length <= 16, "TRACE_STEP_PROTOCOL_LIMIT")
+      protocolByStep.set(event.stepId, values)
+    }
+  }
+  const phaseFor = (event) => {
+    let current = event
+    const seen = new Set()
+    for (let depth = 0; current && depth < 80; depth++) {
+      requireValue(!seen.has(current.callId), "TRACE_PARENT_CYCLE")
+      seen.add(current.callId)
+      if (phases.has(current.title)) return current.title
+      if (current.parentId === undefined) return null
+      current = before.get(current.parentId)
+    }
+    requireValue(!current, "TRACE_PARENT_DEPTH_LIMIT")
+    return null
+  }
+  const timeline = [...before.values()].map((event, index) => {
+    const completed = after.get(event.callId)
+    const startMs = offset(event.startTime)
+    const endMs = completed ? offset(completed.endTime) : null
+    requireValue(endMs === null || endMs >= startMs, "TRACE_NEGATIVE_DURATION")
+    const frames = Array.isArray(event.stack) ? event.stack.map(location).filter(Boolean).slice(0, 6) : []
+    const errors = completed ? errorClasses(completed.error) : []
+    return { index, beforeEventSequence: event.auditSequence, afterEventSequence: completed?.auditSequence ?? null, phase: phaseFor(event), category: categories.has(event.method) ? event.method : null,
+      apiName: apis.has(event.title) ? event.title : null, protocol: protocolByStep.get(event.callId) ?? [],
+      location: frames[0] ?? null, callerFrames: frames.slice(1), startMs, endMs,
+      durationMs: endMs === null ? null : endMs - startMs,
+      state: !completed ? "completion-not-recorded" : errors.length ? "recorded-error" : "recorded-without-error", errors }
+  }).sort((a, b) => a.startMs - b.startMs || a.index - b.index)
+  const ended = timeline.filter((event) => event.endMs !== null).sort((a, b) => a.endMs - b.endMs || a.index - b.index)
+  const errors = ended.filter((event) => event.errors.length)
+  const firstError = errors[0] ?? null
+  const successful = ended.filter((event) => !event.errors.length)
+  const pending = timeline.filter((event) => event.endMs === null)
+  // TestTracing.appendForError has no timestamp. Its recorded stream position
+  // identifies the failure boundary without inventing a clock value.
+  const testError = events.find((event) => event.type === "error")
+  const boundary = testError?.auditSequence
+  const prior = boundary === undefined ? [] : timeline.filter((event) => event.beforeEventSequence < boundary)
+  const priorCompleted = boundary === undefined ? [] : successful.filter((event) => event.afterEventSequence < boundary)
+  const openAtFailure = boundary === undefined ? [] : prior.filter((event) =>
+    event.afterEventSequence === null || event.afterEventSequence > boundary)
+  return {
+    case: id, traceVersion: 8, playwrightVersion: "1.59.1", primaryClock: "test.trace-monotonic",
+    libraryChunks, recordedCalls: timeline.length, pendingCalls: pending.length,
+    phases: timeline.filter((event) => phases.has(event.phase) && event.category === "test.step"),
+    firstRecordedTestError: testError ? { eventSequence: boundary, errors: errorClasses(testError.message), time: "not-recorded" } : null,
+    lastStartedBeforeTestError: prior.slice(-16), lastCompletedBeforeTestError: priorCompleted.slice(-16),
+    callsOpenAtTestError: openAtFailure.slice(-16),
+    firstRecordedErrorByEndTime: firstError,
+    lastCompletedBeforeFirstError: firstError ? successful.filter((event) => event.endMs < firstError.endMs).at(-1) ?? null : null,
+    lastCompletedCalls: successful.slice(-16), lastStartedCalls: timeline.slice(-16),
+    callsWithoutCompletion: pending.slice(-16), errorsByEndTime: errors.slice(0, 12),
+    sourceAttribution: "original-recorded-stack-only", unrecordedPromiseAwait: "not-inferred",
+  }
+}
+async function readProcurementTraces(root, files, results) {
+  for (const [id, relative] of traceCases) {
+    const result = results.get(id)
+    requireValue(result?.status === "timedOut" && result.retry === 0, "EXPECTED_PROCUREMENT_TIMEOUT_REQUIRED")
+    const attachments = result.traceAttachments
+    requireValue(Array.isArray(attachments) && attachments.length === 1 && attachments[0] === relative, "TRACE_ATTACHMENT_IDENTITY_MISMATCH")
+    const matching = files.filter((file) => artifactPath(root, file) === relative)
+    requireValue(matching.length === 1, "EXACTLY_ONE_ORIGINAL_TRACE_FILE_REQUIRED")
+    const size = (await lstat(matching[0])).size
+    requireValue(size > 22 && size <= 64 * 1024 * 1024, "ORIGINAL_TRACE_SIZE_LIMIT")
+    const entries = archive(await readFile(matching[0]), true)
+    emit("TRACE", traceSummary(id, entries))
+  }
+}
+
+test("inspect only retained Operations3 report and trace evidence", async () => {
   try {
     requireValue(typeof process.env.RUNNER_TEMP === "string" && path.isAbsolute(process.env.RUNNER_TEMP), "RUNNER_TEMP_REQUIRED")
     const root = path.join(process.env.RUNNER_TEMP, "audit-operations-evidence")
@@ -243,6 +404,14 @@ test("inspect only retained Operations2 report evidence", async () => {
     const requests = files.filter((file) => artifactPath(root, file) === "test-ci-evidence/request.json")
     emit("INVENTORY", { files: files.length, htmlCandidates: htmls.length,
       originalRuntimeJsonCandidates: runtimes.length, originalRequestJsonCandidates: requests.length })
+    requireValue(runtimes.length === 1 && requests.length === 1, "ORIGINAL_RUNTIME_AND_REQUEST_REQUIRED")
+    const recorded = parseJson(await readBounded(requests[0], 64 * 1024))
+    const request = recorded.request
+    requireValue(recorded.sha === source.snapshot && recorded.platform === "linux" && recorded.arch === "x64" &&
+      request?.package === "app" && request.directory === "packages/app-shell" && request.runner === "playwright" &&
+      request.config === "e2e/playwright.production.config.ts" && Array.isArray(request.args) &&
+      request.args.length === 1 && request.args[0] === "e2e/sucafina/operations.spec.ts", "ORIGINAL_REQUEST_IDENTITY_MISMATCH")
+    const originalRuntime = runtimeResults(parseJson(await readBounded(runtimes[0], 16 * 1024 * 1024)))
     requireValue(htmls.length <= 32, "HTML_CANDIDATE_LIMIT")
     const valid = []
     let totalHtmlBytes = 0
@@ -272,23 +441,13 @@ test("inspect only retained Operations2 report evidence", async () => {
     requireValue(valid.length <= 1, "MULTIPLE_VALID_RETAINED_REPORTS")
     const report = valid[0]
     let detailed = report?.detailed
-    if (!report) {
-      // The original snapshot's test-ci.yml:229-232 writes this JSON and :349-352 uploads it.
-      // Its sibling request proves the snapshot and exact Playwright selection before any result is consumed.
-      requireValue(runtimes.length === 1 && requests.length === 1, "ORIGINAL_RUNTIME_AND_REQUEST_REQUIRED")
-      const recorded = parseJson(await readBounded(requests[0], 64 * 1024))
-      const request = recorded.request
-      requireValue(recorded.sha === source.snapshot && recorded.platform === "linux" && recorded.arch === "x64" &&
-        request?.package === "app" && request.directory === "packages/app-shell" && request.runner === "playwright" &&
-        request.config === "e2e/playwright.production.config.ts" && Array.isArray(request.args) &&
-        request.args.length === 1 && request.args[0] === "e2e/sucafina/operations.spec.ts", "ORIGINAL_REQUEST_IDENTITY_MISMATCH")
-      detailed = runtimeResults(parseJson(await readBounded(runtimes[0], 16 * 1024 * 1024)))
-    }
+    if (!report) detailed = originalRuntime
     requireValue(detailed && completeCases(detailed), "FIVE_RETAINED_CASE_RESULTS_REQUIRED")
     const format = report ? "html-embedded-report" : "original-playwright-runtime-json"
     emit("SOURCE", { ...source, binding: "github-metadata-pinned-download",
       execution: "retained-artifact-only", format })
     for (const id of cases.keys()) emit("RESULT", minimized(detailed.get(id)))
+    await readProcurementTraces(root, files, originalRuntime)
     emit("SUMMARY", { originalRun: source.run, originalArtifact: source.artifact, format, cases: detailed.size,
       casesWithRecordedSteps: [...detailed.values()].filter((result) => result.steps.length > 0).length,
       reportJsonEntries: report?.jsonEntries ?? 1, qualification: "none", productReplay: false })
