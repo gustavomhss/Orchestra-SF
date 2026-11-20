@@ -1,9 +1,9 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "06438ff3-666f-4a77-a0ea-2ca8c9dbd4ab",
+  "id": "944003f2-5be3-4691-a24f-01221d5ea50b",
   "prevIds": [
-    "3ef1dd08-953e-44f5-92b5-48debd5c9d63"
+    "06438ff3-666f-4a77-a0ea-2ca8c9dbd4ab"
   ],
   "ddl": [
     {
@@ -36,6 +36,10 @@
     },
     {
       "name": "meeting",
+      "entityType": "tables"
+    },
+    {
+      "name": "session_owner",
       "entityType": "tables"
     },
     {
@@ -891,6 +895,66 @@
       "name": "card_summary",
       "entityType": "columns",
       "table": "meeting"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "session_id",
+      "entityType": "columns",
+      "table": "session_owner"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "installation_id",
+      "entityType": "columns",
+      "table": "session_owner"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "tenant_id",
+      "entityType": "columns",
+      "table": "session_owner"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "team_object_id",
+      "entityType": "columns",
+      "table": "session_owner"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "principal_object_id",
+      "entityType": "columns",
+      "table": "session_owner"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "generation",
+      "entityType": "columns",
+      "table": "session_owner"
     },
     {
       "type": "integer",
@@ -8017,6 +8081,15 @@
     },
     {
       "columns": [
+        "session_id"
+      ],
+      "nameExplicit": false,
+      "name": "session_owner_pk",
+      "table": "session_owner",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
         "id"
       ],
       "nameExplicit": false,
@@ -8474,6 +8547,32 @@
       "name": "meeting_session_idx",
       "entityType": "indexes",
       "table": "meeting"
+    },
+    {
+      "columns": [
+        {
+          "value": "installation_id",
+          "isExpression": false
+        },
+        {
+          "value": "tenant_id",
+          "isExpression": false
+        },
+        {
+          "value": "principal_object_id",
+          "isExpression": false
+        },
+        {
+          "value": "team_object_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "session_owner_principal_team_idx",
+      "entityType": "indexes",
+      "table": "session_owner"
     },
     {
       "columns": [
@@ -9343,6 +9442,12 @@
       "name": "project_checkpoint_attempt_check",
       "entityType": "checks",
       "table": "project_checkpoint"
+    },
+    {
+      "value": "\"generation\" >= 1",
+      "name": "session_owner_generation",
+      "entityType": "checks",
+      "table": "session_owner"
     }
   ],
   "renames": []
