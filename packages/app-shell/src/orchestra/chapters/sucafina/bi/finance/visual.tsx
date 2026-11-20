@@ -86,7 +86,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                 </svg>
                 <div class="sf-bi-source-actions">
                   <For each={rows().filter((row) => row.evidenceRef)}>
-                    {(row) => <button class="mx-btn" type="button"
+                    {(row) => <button class="mx-btn" type="button" data-sf-bi-focus={row.id}
                       onClick={() => row.evidenceRef && props.onOpenSource(row.evidenceRef)}>
                       {t(sfBiKey(props.copy + ".openSource"))}: {row.label} · {row.period}
                     </button>}

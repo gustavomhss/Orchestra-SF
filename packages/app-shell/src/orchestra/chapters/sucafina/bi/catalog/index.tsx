@@ -1,7 +1,9 @@
 import { For, Show, createEffect, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useSfContext } from "../../context"
-import { safeBiDestination } from "../safe-destination"
+import { nativeBiDestination } from "../native-destination"
+import { clearSfBiRetention, readSfBiSelection, retainSfBiSelection, sfBiOwnerFence, sfBiStampKey } from "../lifecycle-retention"
+import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
 import type {
@@ -44,6 +46,11 @@ type CatalogStore = {
   start: string
   end: string
   choice: string
+  baseRef: string
+  candidateRef: string
+  currency: string
+  focus: string
+  requested: boolean
   options: Options | undefined
   data: CatalogData | undefined
   selectedSource: SfRef | null
@@ -78,44 +85,59 @@ function isOperational(id: ViewId): id is SfBiOperationalView {
 export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
   const context = useSfContext()
   const { t } = useSfPresentation()
+  const retained = readSfBiSelection(context, props.route.pathname)
+  const initialView = props.surfaceId === "UI46" ? props.route.params.viewId as ViewId :
+    retained && BI_CATALOG.some((item) => item.id === retained.viewId) ? retained.viewId as ViewId : ""
   const [store, setStore] = createStore<CatalogStore>({
-    viewId: props.surfaceId === "UI46" ? props.route.params.viewId as ViewId : "", start: "", end: "", choice: "",
+    viewId: initialView, start: retained?.start ?? "", end: retained?.end ?? "", choice: "",
+    baseRef: "", candidateRef: "", currency: "", focus: "", requested: false,
     options: undefined, data: undefined, links: undefined, detail: undefined, selectedSource: null,
     sourceState: "empty", readState: "ready", busy: false, layout: "single",
   })
+  let root: HTMLElement | undefined
   let activeController: AbortController | undefined
-  let ticket = 0
+  let authorityController: AbortController | undefined
+  let authorityPending: Promise<boolean> | undefined
+  let ticket = 0, selectionEpoch = 0, disposed = false
+  let ownerFence = sfBiOwnerFence(context)
 
-  const revokeReads = () => {
-    activeController?.abort()
-    activeController = undefined
-    ticket++
-    setStore({ options: undefined, data: undefined, links: undefined, detail: undefined,
-      selectedSource: null, sourceState: "empty", readState: "ready", busy: false, choice: "" })
+  const remember = () => retainSfBiSelection(context, props.route.pathname, {
+    viewId: store.viewId, start: store.start, end: store.end, choice: store.choice,
+    baseRef: store.baseRef, candidateRef: store.candidateRef, currency: store.currency,
+    focus: store.focus, requested: store.requested,
+  })
+  const clearResult = () => {
+    activeController?.abort(); activeController = undefined; ticket++
+    setStore({ data: undefined, links: undefined, detail: undefined, selectedSource: null,
+      sourceState: "empty", readState: "ready", busy: false })
   }
-  onCleanup(revokeReads)
-
-  // A changed UI46 path is a new selector under the same F01 owner; clear old projections.
-  let lastRouteView: string | undefined
-  createEffect(() => {
-    const view = props.surfaceId === "UI46" ? props.route.params.viewId : undefined
-    if (view === lastRouteView) return
-    lastRouteView = view
+  const revokeReads = () => {
+    selectionEpoch++
+    clearResult()
+    setStore({ options: undefined, choice: "", baseRef: "", candidateRef: "", currency: "", focus: "", requested: false })
+  }
+  onCleanup(() => {
+    // Keep only untrusted human input when this same F01 owner remains current.
+    if (ownerFence && ownerFence === sfBiOwnerFence(context)) remember()
+    disposed = true
+    authorityController?.abort()
     revokeReads()
-    setStore("viewId", view && BI_CATALOG.some((item) => item.id === view) ? view as ViewId : "")
   })
 
-  // Owner generation/accessRevision is the read fence; old projections never
-  // survive a context switch or arrive late after a re-authenticated owner.
-  let lastFence: string | undefined
   createEffect(() => {
-    const state = context.state()
-    const current = context.ready()
-    const fence = String(context.generation()) + ":" + state.status +
-      ":" + (current?.context.stamp.accessRevision ?? "") +
-      ":" + (current?.context.stamp.principalRef ?? "")
-    if (lastFence !== undefined && lastFence !== fence) revokeReads()
-    lastFence = fence
+    const expected = props.surfaceId === "UI46" ? props.route.params.viewId as ViewId : undefined
+    if (expected && expected !== store.viewId) {
+      revokeReads()
+      setStore("viewId", expected)
+    }
+  })
+  createEffect(() => {
+    const next = sfBiOwnerFence(context)
+    if (ownerFence === next) return
+    ownerFence = next
+    authorityController?.abort()
+    clearSfBiRetention(context)
+    revokeReads()
   })
 
   const ownerState = (): SfUiState => {
@@ -123,102 +145,185 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     if (state.status === "denied") return "denied"
     if (state.status === "unauthenticated") return "session-expired"
     if (state.status === "resolving" || state.status === "choose-installation") return "loading"
-    if (state.status !== "ready") return "unavailable"
-    const availability = state.context.availability.find((entry) =>
-      entry.family === "bi" && entry.resource === "catalog")
-    const operation = availability?.operations.find((entry) => entry.operationId === "bi.bi-options")
-    if (operation?.state === "denied") return "denied"
-    return operation?.state === "ready" ? "ready" : "unavailable"
-  }
-  const allowedData = () => {
     const ready = context.ready()
-    if (!ready) return false
-    return ready.context.availability.some((entry) =>
-      entry.family === "bi" && (entry.resource === "visual" || entry.resource === "catalog") &&
-      entry.operations.some((op) => op.operationId === "bi.bi-data" && op.state === "ready"))
+    if (state.status !== "ready" || !ready) return "unavailable"
+    return ready.context.availability.some((entry) => entry.family === "bi" && entry.resource === "catalog" &&
+      entry.operations.some((operation) => operation.operationId === "bi.bi-options" &&
+        operation.state === "ready" && operation.operational)) ? "ready" : "unavailable"
   }
+  const allowedData = () => context.ready()?.context.availability.some((entry) =>
+    entry.family === "bi" && (entry.resource === "visual" || entry.resource === "catalog") &&
+    entry.operations.some((operation) => operation.operationId === "bi.bi-data" &&
+      operation.state === "ready" && operation.operational)) === true
   const pending = () => store.busy
-  const changed = () => {
-    revokeReads()
+  const changed = () => { revokeReads(); remember() }
+  const selectionValid = () => Boolean(store.viewId &&
+    /^\d{4}-\d{2}-\d{2}$/.test(store.start) && /^\d{4}-\d{2}-\d{2}$/.test(store.end) &&
+    store.start <= store.end)
+  const plannerChoice = () => store.choice === "planner" && !!store.viewId && isFinancial(store.viewId)
+  const dataSelectionValid = () => !!store.options && (plannerChoice()
+    ? !!store.baseRef && !!store.candidateRef && /^[A-Z]{3}$/.test(store.currency) &&
+      store.options.versions.some((item) => item.ref === store.baseRef) &&
+      store.options.versions.some((item) => item.ref === store.candidateRef)
+    : !!store.choice && store.options.choices.some((item) => item.selectionRef === store.choice))
+  const selectionChanged = () => {
+    selectionEpoch++
+    clearResult()
+    setStore({ requested: false, focus: "" })
   }
-  const selectionValid = () => store.viewId !== "" &&
-    /^\d{4}-\d{2}-\d{2}$/.test(store.start) &&
-    /^\d{4}-\d{2}-\d{2}$/.test(store.end) && store.start <= store.end
-
-  // Each explicit read gets its own AbortSignal and authority-generation fence.
   const prepareRead = () => {
-    const ready = context.ready()
-    if (ownerState() !== "ready" || !ready) return undefined
+    const ready = context.ready(), fence = sfBiOwnerFence(context)
+    if (!ready || !fence || ownerState() !== "ready" || disposed) return
     activeController?.abort()
-    const controller = new AbortController()
+    const controller = new AbortController(), ownTicket = ++ticket
     activeController = controller
-    const requestId = ++ticket
-    const generation = context.generation()
-    const stamp = ready.context.stamp
-    return { client: createSfBiClient(ready.transport), controller,
-      current: () => !controller.signal.aborted && ticket === requestId &&
-        context.generation() === generation &&
-        context.ready()?.context.stamp.accessRevision === stamp.accessRevision &&
-        context.ready()?.context.stamp.principalRef === stamp.principalRef &&
-        context.ready()?.context.stamp.hostId === stamp.hostId,
+    return {
+      client: createSfBiClient(ready.transport), controller,
+      current: () => !disposed && !controller.signal.aborted && ticket === ownTicket &&
+        context.ready()?.transport === ready.transport && sfBiOwnerFence(context) === fence,
     }
   }
 
-  const chooseContext = async () => {
-    if (!selectionValid()) { setStore("readState", "invalid"); return }
-    revokeReads()
+  // Independent from BI reads: a delayed data response cannot stop the actual
+  // context producer from detecting revocation. A successful probe does not
+  // replace the owner or bless data from an earlier generation.
+  const reauthorize = (): Promise<boolean> => {
+    if (authorityPending) return authorityPending
+    const state = context.state(), ready = context.ready(), fence = sfBiOwnerFence(context)
+    if (state.status !== "ready" || !ready || !fence || disposed) return Promise.resolve(false)
+    const controller = new AbortController()
+    authorityController = controller
+    const current = () => !disposed && !controller.signal.aborted &&
+      context.ready()?.transport === ready.transport && sfBiOwnerFence(context) === fence
+    const probe = (async () => {
+      try {
+        const result = await createSfContextClient(ready.transport)["ctx.context"]({
+          installationId: state.binding.installationId, projectId: state.binding.projectId,
+          hostId: state.binding.hostId,
+        }, { signal: controller.signal })
+        if (!current()) return false
+        if (result.kind !== "response") {
+          revokeReads(); setStore("readState", "unavailable"); return false
+        }
+        if (result.body.status === "denied" || result.body.status === "unauthenticated") {
+          clearSfBiRetention(context)
+          context.invalidate(result.body.status === "denied" ? "revoked" : "session-expired")
+          return false
+        }
+        if (result.body.status !== "ok") {
+          revokeReads(); setStore("readState", "unavailable"); return false
+        }
+        if (sfBiStampKey(result.body.value.stamp) !== sfBiStampKey(ready.context.stamp)) {
+          clearSfBiRetention(context); context.invalidate("revoked"); return false
+        }
+        if (!result.body.value.availability.some((entry) => entry.family === "bi" &&
+            entry.operations.some((operation) => operation.operationId === "bi.bi-options" &&
+              operation.state === "ready" && operation.operational))) {
+          revokeReads(); setStore("readState", "unavailable"); return false
+        }
+        return true
+      } catch {
+        if (current()) { revokeReads(); setStore("readState", "unavailable") }
+        return false
+      }
+    })()
+    authorityPending = probe
+    void probe.finally(() => {
+      if (authorityPending === probe) authorityPending = undefined
+      if (authorityController === controller) authorityController = undefined
+    })
+    return probe
+  }
+
+  const chooseContext = async (preserve = false): Promise<boolean> => {
+    if (!selectionValid() || !store.viewId) { setStore("readState", "invalid"); return false }
+    if (!preserve) revokeReads()
     const request = prepareRead()
-    if (!request) return
-    const viewId = store.viewId as ViewId
-    const start = store.start, end = store.end
-    setStore({ busy: true, readState: "loading" })
+    if (!request) return false
+    const viewId = store.viewId, start = store.start, end = store.end
+    // Keep the last authorized options interactive while refreshing. A human
+    // clear aborts this request and advances the selection epoch immediately.
+    setStore({ busy: true, data: undefined, links: undefined, detail: undefined,
+      selectedSource: null, sourceState: "empty", readState: store.options ? "ready" : "loading" })
     try {
       const output = await request.client["bi.bi-options"]({ viewId, start, end }, { signal: request.controller.signal })
-      if (!request.current()) return
-      if (output.kind !== "response") {
-        setStore("readState", "unavailable")
-        return
-      }
-      const body = output.body
-      if (body.status !== "ok") {
-        setStore("readState", failureState(body.status))
-        return
-      }
-      setStore("options", body.value)
-      setStore("readState", body.value.choices.length ? "ready" : "filtered-empty")
-    } finally {
-      if (request.current()) setStore("busy", false)
-    }
+      if (!request.current()) return false
+      if (output.kind !== "response") { setStore("readState", "unavailable"); return false }
+      if (output.body.status !== "ok") { setStore("readState", failureState(output.body.status)); return false }
+      const options = output.body.value
+      const selection = store.choice === "planner" && isFinancial(viewId) && options.versions.length > 0
+        ? "planner" : options.choices.some((item) => item.selectionRef === store.choice) ? store.choice : ""
+      setStore({ options, choice: selection,
+        baseRef: options.versions.some((item) => item.ref === store.baseRef) ? store.baseRef : "",
+        candidateRef: options.versions.some((item) => item.ref === store.candidateRef) ? store.candidateRef : "",
+        readState: options.choices.length || options.versions.length ? "ready" : "filtered-empty" })
+      if (!selection) setStore("requested", false)
+      remember()
+      return true
+    } finally { if (request.current()) setStore("busy", false) }
   }
 
+  const restoreFocus = () => {
+    if (!store.focus || !store.data?.projection.values.some((value) => value.id === store.focus)) return
+    const button = [...(root?.querySelectorAll<HTMLButtonElement>("button[data-sf-bi-focus]") ?? [])]
+      .find((element) => element.dataset.sfBiFocus === store.focus)
+    button?.focus()
+  }
   const preview = async () => {
-    if (!selectionValid() || !allowedData() || !store.options || !store.viewId) return
-    // A choice is an exact producer-issued selectionRef; no derivation from labels.
-    if (store.choice && !store.options.choices.some((choice) => choice.selectionRef === store.choice)) return
+    if (!selectionValid() || !allowedData() || !dataSelectionValid() || !store.viewId) return
     const request = prepareRead()
     if (!request) return
-    const viewId = store.viewId
-    const start = store.start, end = store.end, selectionRef = store.choice
+    const viewId = store.viewId, start = store.start, end = store.end, selectionRef = store.choice
+    const comparison = plannerChoice() ? {
+      baseRef: store.baseRef, candidateRef: store.candidateRef, currency: store.currency,
+    } : undefined
     setStore({ busy: true, data: undefined, links: undefined, detail: undefined, selectedSource: null,
-      sourceState: "empty", readState: "loading" })
+      sourceState: "empty", readState: "ready", requested: true })
+    remember()
     try {
-      const output = await request.client["bi.bi-data"]({
-        viewId, start, end, ...(selectionRef ? { selectionRef } : {}),
-      }, { signal: request.controller.signal })
+      const output = comparison && isFinancial(viewId)
+        ? await request.client["bi.bi-data"]({ viewId, start, end, ...comparison }, { signal: request.controller.signal })
+        : await request.client["bi.bi-data"]({ viewId, start, end, selectionRef }, { signal: request.controller.signal })
       if (!request.current()) return
       if (output.kind !== "response") { setStore("readState", "unavailable"); return }
       const body = output.body
       if ("request" in body) {
         if (body.request.viewId !== viewId || body.request.period.start !== start ||
-            body.request.period.end !== end || (selectionRef && body.request.selectionRef !== selectionRef)) {
-          setStore("readState", "unavailable")
-          return
+            body.request.period.end !== end || (!comparison && body.request.selectionRef !== selectionRef) ||
+            (comparison && body.projection.context.currency !== comparison.currency)) {
+          setStore("readState", "unavailable"); return
         }
         setStore({ data: body, readState: "ready" })
+        remember()
+        queueMicrotask(() => { if (request.current()) restoreFocus() })
       } else setStore("readState", failureState(body.status))
-    } finally {
-      if (request.current()) setStore("busy", false)
-    }
+    } finally { if (request.current()) setStore("busy", false) }
+  }
+
+  const refresh = async (automatic = false) => {
+    const epoch = selectionEpoch, requested = store.requested
+    if (!await reauthorize() || disposed || epoch !== selectionEpoch) return
+    // Still reauthorize while a result is held, without replacing its read.
+    if (automatic && (store.busy || !requested)) return
+    if (!selectionValid()) return
+    if (await chooseContext(true) && epoch === selectionEpoch && requested && dataSelectionValid()) await preview()
+  }
+  if (typeof window !== "undefined") {
+    const onFocus = () => { void refresh(true) }
+    const timer = window.setInterval(() => { void refresh(true) }, 30_000)
+    window.addEventListener("focus", onFocus)
+    onCleanup(() => { window.clearInterval(timer); window.removeEventListener("focus", onFocus) })
+  }
+  if (retained && retained.viewId === initialView) {
+    // Returning hints are untrusted until both current context and new options
+    // admit exactly those references. No previous successful data is replayed.
+    queueMicrotask(() => { void (async () => {
+      const epoch = selectionEpoch
+      if (!await reauthorize() || disposed || epoch !== selectionEpoch) return
+      setStore({ choice: retained.choice, baseRef: retained.baseRef, candidateRef: retained.candidateRef,
+        currency: retained.currency, focus: retained.focus, requested: retained.requested })
+      if (await chooseContext(true) && epoch === selectionEpoch && retained.requested && dataSelectionValid()) await preview()
+    })() })
   }
 
   const openSource = async (reference: SfRef) => {
@@ -226,7 +331,8 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     // installed C08 bi-source producer. This cannot produce arbitrary URLs.
     const result = store.data
     if (!result || !allowedData()) return
-    const matched = result.projection.values.flatMap((value) =>
+    const focused = store.focus && result.projection.values.some((value) => value.id === store.focus) ? store.focus : undefined
+    const matched = result.projection.values.filter((value) => !focused || value.id === focused).flatMap((value) =>
       [value.drilldown, ...value.sourceRefs].filter((source) => source?.refId === reference)
         .filter((source, index, all) => source && all.findIndex((item) => item?.refDigest === source.refDigest) === index)
         .map((source) => ({ value, source: source! })))
@@ -297,7 +403,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     const state = context.state()
     if (state.status !== "ready" || !context.ready()) return []
     return links.flatMap((link) => {
-      const href = safeBiDestination(link.url, state.binding)
+      const href = nativeBiDestination(link.url, state.binding, state.selection)
       return href ? [{ label: link.label, href }] : []
     })
   }
@@ -313,7 +419,13 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
       primaryAction={undefined} density="comfortable" layout="work"
       onLayoutMode={(mode) => setStore("layout", mode)}
     >
-      <section class="sf-bi-catalog" data-sf-catalog={props.surfaceId} data-sf-layout-mode={store.layout}>
+      <section ref={root} class="sf-bi-catalog" data-sf-catalog={props.surfaceId} data-sf-layout-mode={store.layout}
+        onFocusIn={(event) => {
+          const focus = event.target instanceof HTMLElement ? event.target.dataset.sfBiFocus : undefined
+          if (focus && store.data?.projection.values.some((value) => value.id === focus)) {
+            setStore("focus", focus); remember()
+          }
+        }}>
         <SfStatePanel state={ownerState()}
           messageKey={sfCommonKey(ownerState() === "denied" ? "sf.common.noAccess" : "sf.common.unavailable")}
           onRetryRead={() => { void context.reload() }}>
@@ -323,7 +435,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
               <select value={store.viewId} required disabled={pending() || props.surfaceId === "UI46"} data-sf-field="view"
                 onChange={(event) => {
                   changed()
-                  setStore("viewId", event.currentTarget.value as ViewId)
+                  setStore("viewId", event.currentTarget.value as ViewId); remember()
                 }}>
                 <option value="">{t(sfBiKey("sf.u21.chooseView"))}</option>
                 <For each={BI_CATALOG}>
@@ -334,17 +446,26 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
             <label>
               {t(sfBiKey("sf.u21.start"))}
               <input type="date" required value={store.start} disabled={pending()}
-                data-sf-field="start" onInput={(event) => { changed(); setStore("start", event.currentTarget.value) }} />
+                data-sf-field="start" onInput={(event) => { changed(); setStore("start", event.currentTarget.value); remember() }} />
             </label>
             <label>
               {t(sfBiKey("sf.u21.end"))}
               <input type="date" required value={store.end} disabled={pending()}
-                data-sf-field="end" onInput={(event) => { changed(); setStore("end", event.currentTarget.value) }} />
+                data-sf-field="end" onInput={(event) => { changed(); setStore("end", event.currentTarget.value); remember() }} />
             </label>
-            <button class="mx-btn primary" type="submit" disabled={!selectionValid() || pending()}>
+            <button class="mx-btn primary" type="submit" data-sf-action="choose-context" disabled={!selectionValid() || pending()}>
               {t(sfBiKey("sf.ui45.primary"))}
             </button>
           </form>
+          <button class="mx-btn" type="button" data-sf-action="refresh-data"
+            disabled={!selectionValid() || pending()} onClick={() => { void refresh() }}>
+            {t(sfBiKey("sf.u21.refresh"))}
+          </button>
+          <Show when={store.busy}><p role="status">{t(sfBiKey("sf.u21.readStatus"))}</p></Show>
+          <Show when={safePreview() && !store.busy}><p role="status">{t(sfBiKey("sf.u21.updated"))}</p></Show>
+          <Show when={store.options && !store.data && !store.busy}>
+            <p role="status">{t(sfBiKey("sf.u21.selectionChanged"))}</p>
+          </Show>
           <Show when={choice()}>
             {(entry) => <section class="sf-bi-question" aria-label={t(sfBiKey("sf.u21.question"))}>
               <h2>{t(sfBiKey(entry().question))}</h2>
@@ -356,17 +477,20 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
             onRetryRead={store.readState === "unavailable" ? () => { void chooseContext() } : undefined}>
             <Show when={store.options}>
               {(options) => <>
-                <Show when={options().choices.length}>
+                <Show when={options().choices.length || options().versions.length && store.viewId && isFinancial(store.viewId)}>
                   <section>
                     <h2>{t(sfBiKey("sf.u21.authorizedChoices"))}</h2>
                     <label>{t(sfBiKey("sf.u21.selection"))}
-                      <select value={store.choice} disabled={pending()} data-sf-field="selection"
+                      <select value={store.choice} data-sf-field="selection"
                         onChange={(event) => {
-                          activeController?.abort(); ticket++
-                          setStore({ choice: event.currentTarget.value, data: undefined,
-                            links: undefined, detail: undefined, selectedSource: null, sourceState: "empty" })
+                          selectionChanged()
+                          setStore({ choice: event.currentTarget.value, baseRef: "", candidateRef: "", currency: "" })
+                          remember()
                         }}>
                         <option value="">{t(sfBiKey("sf.u21.chooseSelection"))}</option>
+                        <Show when={store.viewId && isFinancial(store.viewId) && options().versions.length}>
+                          <option value="planner">{t(sfBiKey("sf.u21.plannerComparison"))}</option>
+                        </Show>
                         <For each={options().choices}>
                           {(item) => <option value={item.selectionRef}>{item.label}</option>}
                         </For>
@@ -374,11 +498,28 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                     </label>
                   </section>
                 </Show>
-                <Show when={options().versions.length}>
+                <Show when={plannerChoice()}>
                   <section><h2>{t(sfBiKey("sf.u21.versions"))}</h2>
-                    <ul><For each={options().versions}>
-                      {(version) => <li>{version.label} ({version.year})</li>}
-                    </For></ul>
+                    <label>{t(sfBiKey("sf.u21.baseVersion"))}
+                      <select value={store.baseRef} data-sf-field="base-version" onChange={(event) => {
+                        selectionChanged(); setStore("baseRef", event.currentTarget.value); remember()
+                      }}>
+                        <option value="">{t(sfBiKey("sf.u21.chooseVersion"))}</option>
+                        <For each={options().versions}>{(version) => <option value={version.ref}>{version.label}</option>}</For>
+                      </select>
+                    </label>
+                    <label>{t(sfBiKey("sf.u21.candidateVersion"))}
+                      <select value={store.candidateRef} data-sf-field="candidate-version" onChange={(event) => {
+                        selectionChanged(); setStore("candidateRef", event.currentTarget.value); remember()
+                      }}>
+                        <option value="">{t(sfBiKey("sf.u21.chooseVersion"))}</option>
+                        <For each={options().versions}>{(version) => <option value={version.ref}>{version.label}</option>}</For>
+                      </select>
+                    </label>
+                    <label>{t(sfBiKey("sf.u21.comparisonCurrency"))}
+                      <input value={store.currency} data-sf-field="currency" pattern="[A-Z]{3}" maxLength={3}
+                        onInput={(event) => { selectionChanged(); setStore("currency", event.currentTarget.value); remember() }} />
+                    </label>
                   </section>
                 </Show>
                 <Show when={options().links.length}>
@@ -395,7 +536,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                 </Show>
                 <Show when={store.viewId}>
                   <button class="mx-btn primary" type="button" data-sf-action="view-data"
-                    disabled={pending() || !allowedData()} onClick={() => { void preview() }}>
+                    disabled={pending() || !allowedData() || !dataSelectionValid()} onClick={() => { void preview() }}>
                     {t(sfBiKey("sf.ui46.primary"))}
                   </button>
                 </Show>
@@ -428,7 +569,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                       <thead><tr><For each={table.columns}>{(column) => <th>{column}</th>}</For></tr></thead>
                       <tbody><For each={table.rows}>{(row) => <tr><For each={row}>{(cell) => <td>{cell}</td>}</For></tr>}</For></tbody>
                     </table></section>}</For>
-                    <ul><For each={safeLinks(detail().links)}>{(link) => <li><a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a></li>}</For></ul>
+                    <ul><For each={safeLinks(detail().links)}>{(link) => <li><a href={link.href} onClick={remember}>{link.label}</a></li>}</For></ul>
                   </section>}
                 </Show>
                 <Show when={store.viewId !== "BI09" && store.viewId !== "BI10" && store.viewId !== "BI11" ? store.selectedSource : null}>
@@ -443,7 +584,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                   <Show when={store.links}>
                     {(links) => <nav aria-label={t(sfBiKey("sf.u21.sourceLinks"))}>
                       <ul><For each={safeLinks(links())}>
-                        {(link) => <li><a href={link.href} target="_blank" rel="noopener noreferrer">
+                        {(link) => <li><a href={link.href} onClick={remember}>
                           {link.label}</a></li>}
                       </For></ul>
                     </nav>}
