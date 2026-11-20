@@ -1,87 +1,211 @@
 import { test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { Schema } from "effect"
+import { SfContextResult } from "@orchestra/schema/sucafina/context"
+import { SfFiles } from "@orchestra/schema/sucafina/files"
+import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { Workbook } from "exceljs"
 import { expect } from "@playwright/test"
-import type { Locator, Page } from "@playwright/test"
+import type { Locator, Page, Response as BrowserResponse } from "@playwright/test"
 import path from "node:path"
 import { localBrowser } from "./fixture/local-browser.ts"
 
 test("browser previews/applies Planner XLSX and exports persisted monthly values and totals", async () => {
-  console.info("browser IO: opening private installation")
-  const fixture = await localBrowser()
+  expectSpawn(import.meta.path)
+  console.info("browser IO: opening private native installation")
+  const fixture = await localBrowser({ nativePlanner: true })
   try {
-    console.info("browser IO: private installation authenticated")
     const page = fixture.page
+    const origin = new URL(page.url()).origin
     page.setDefaultTimeout(10000)
     page.on("dialog", (dialog) => dialog.accept())
-    page.on("response", (response) => {
-      if (response.request().isNavigationRequest() && response.frame() === page.mainFrame()) {
-        console.info("browser IO: main navigation response", response.status(), new URL(response.url()).pathname)
-      }
-    })
-    page.on("domcontentloaded", () => console.info("browser IO: DOMContentLoaded", new URL(page.url()).pathname))
-    page.on("load", () => console.info("browser IO: load", new URL(page.url()).pathname))
-    page.on("requestfailed", (request) => console.info("browser IO: request failed", request.method(), new URL(request.url()).pathname))
-    console.info("browser IO: Versions navigation starting")
-    try {
-      const response = await page.goto("http://localhost:4110/sucafina/planner?page=Versions", { waitUntil: "load", timeout: 10000 })
-      console.info("browser IO: Versions navigation complete", response?.status(), new URL(page.url()).pathname)
-    } catch (error) {
-      console.info("browser IO: Versions navigation failed", error instanceof Error ? error.name : "unknown", new URL(page.url()).pathname)
-      // The page can be unresponsive. Inspect only business text under main, with a separate hard bound.
-      const deadline = { timer: undefined as ReturnType<typeof setTimeout> | undefined }
-      try {
-        const text = await Promise.race([
-          page.locator('body[data-surface="planner"] main').innerText({ timeout: 1000 }),
-          new Promise<never>((_, reject) => { deadline.timer = setTimeout(() => reject(new Error("Versions diagnostic text deadline")), 1500) }),
-        ])
-        console.info("browser IO: Versions business text", text.slice(0, 2000))
-      } catch {
-        console.info("browser IO: Versions business text unavailable within bound")
-      } finally {
-        if (deadline.timer) clearTimeout(deadline.timer)
-      }
-      throw error
+    const nativePage = (response: BrowserResponse, capability: string) => {
+      const url = new URL(response.url())
+      return response.request().method() === "GET" && url.origin === origin &&
+        url.pathname === "/sucafina/api/ui/pages/" + capability
     }
-    await submit(page, page.locator('form[data-command="save"][data-record=""]'))
-    await page.goto("http://localhost:4110/sucafina/planner?page=OPEX")
+    const fileResponse = (response: BrowserResponse, mode: string, method: string) => {
+      const url = new URL(response.url())
+      return response.request().method() === method && url.origin === origin &&
+        url.pathname === "/sucafina/planner" && url.searchParams.get("sf") === mode
+    }
+    const [contextResponse, document] = await Promise.all([
+      page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return response.request().method() === "GET" && url.origin === origin &&
+          url.pathname === "/sucafina/api/ui/context"
+      }, { timeout: 10000 }),
+      page.goto(origin + "/orchestra/sf-planner/versions/new", { waitUntil: "load", timeout: 10000 }),
+    ])
+    expect(document?.status()).toBe(200)
+    expect(contextResponse.status()).toBe(200)
+    const context = Schema.decodeUnknownSync(SfContextResult)(await contextResponse.json())
+    expect(context.status).toBe("ok")
+    if (context.status !== "ok") throw new Error("Original local operator context was not admitted")
+    expect(context.value.authMode).toBe("local-operator")
+    expect(context.value.stamp.principalRef).toBe(fixture.actorId)
+    await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-view-state", "ready")
+    const versions = page.locator('[data-sf-surface="CAP23"]')
+    const create = versions.getByRole("button", { name: "Create first version", exact: true })
+    await expect(create).toBeVisible()
+    await expect(create).toBeEnabled()
+    await create.click()
+    const confirm = versions.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Confirm", exact: true })
+    await expect(confirm).toBeVisible()
+    await expect(confirm).toBeEnabled()
+    const [saved] = await Promise.all([
+      page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return response.request().method() === "POST" && url.origin === origin &&
+          url.pathname === "/sucafina/planner" && !url.search
+      }, { timeout: 10000 }),
+      confirm.click(),
+    ])
+    expect(saved.status()).toBe(200)
+    expect(await saved.json()).toMatchObject({ ok: true })
+    await page.reload()
+    const [initialResponse] = await Promise.all([
+      page.waitForResponse((response) => nativePage(response, "CAP18"), { timeout: 10000 }),
+      page.goto(origin + "/orchestra/sf-planner/opex"),
+    ])
+    const initial = await plannerIoProjection(initialResponse)
+    expect(initial.data.selectedVersion).toBeDefined()
+    const versionId = initial.data.selectedVersion!.id
     const book = new Workbook()
     const sheet = book.addWorksheet("OPEX")
     sheet.addRow(["Line ID", "Cost element", "Vendor / item", "Description", "Currency", "Measure", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
     sheet.addRow(["", "Services", "Browser OPEX fixture", "Temporary acceptance record", "USD", "Budget", ...Array.from({ length: 12 }, () => 125)])
-    await page.getByText("Import workbook", { exact: true }).click()
-    const planner = page.locator('form[data-command="import-workbook"]')
-    console.info("browser IO: Planner workbook preview")
-    console.info("browser IO: Planner XLSX generation starting")
+    // UI55 owns admission, original-byte preview and explicit apply. The
+    // original INSTREAM/PING/EICAR fixture stays in localBrowser; this is not AV qualification.
+    const importLink = page.getByRole("link", { name: "Import workbook", exact: true })
+    await expect(importLink).toBeVisible()
+    await importLink.click()
+    const imports = page.locator('.sf-files[data-sf-surface="UI55"]')
+    await expect(imports).toBeVisible()
+    const [targetResponse] = await Promise.all([
+      page.waitForResponse((response) => fileResponse(response, "import-targets", "GET"), { timeout: 10000 }),
+      imports.getByRole("button", { name: "Find destinations", exact: true }).click(),
+    ])
+    expect(targetResponse.status()).toBe(200)
+    const targets = Schema.decodeUnknownSync(SfFiles.operations["files.import-targets"].output)(await targetResponse.json())
+    expect(targets.status).toBe("ok")
+    if (targets.status !== "ok") throw new Error("Original Planner import destinations were not admitted")
+    expect(targets.value).toHaveLength(1)
+    const target = targets.value[0]!
+    expect(target.surface).toBe("planner")
+    expect(target.label).toBe(initial.data.selectedVersion!.name)
+    await imports.getByLabel("Destination", { exact: true }).selectOption(target.selectionRef)
     const plannerBytes = Buffer.from(await book.xlsx.writeBuffer())
-    console.info("browser IO: Planner XLSX generation complete")
     const plannerFile = path.join(fixture.root, "browser-opex.xlsx")
     await Bun.write(plannerFile, plannerBytes)
-    const [previewResponse] = await Promise.all([
-      page.waitForResponse((response) => response.request().method() === "POST", { timeout: 10000 }),
-      planner.locator('input[type="file"]').setInputFiles(plannerFile),
+    await imports.getByLabel("File", { exact: true }).setInputFiles(plannerFile)
+    const previewControl = imports.getByRole("button", { name: "Generate preview", exact: true })
+    await expect(previewControl).toBeVisible()
+    await expect(previewControl).toBeEnabled()
+    const [admittedResponse, previewResponse, detailResponse] = await Promise.all([
+      page.waitForResponse((response) => fileResponse(response, "import-admit", "POST"), { timeout: 10000 }),
+      page.waitForResponse((response) => fileResponse(response, "import-preview", "POST"), { timeout: 10000 }),
+      page.waitForResponse((response) => fileResponse(response, "import-detail", "GET"), { timeout: 10000 }),
+      previewControl.click(),
     ])
-    const previewBody = await previewResponse.json()
-    console.info("browser IO: Planner preview response", previewResponse.status())
-    expect(previewResponse.status(), JSON.stringify(previewBody)).toBe(200)
-    expect(previewBody).toMatchObject({ ok: true })
-    await expect(planner.locator("[data-import-notice]")).toContainText("OPEX (1)")
-    await submit(page, planner)
-    const importedLine = page.getByRole("row").filter({ hasText: "Browser OPEX fixture" }).first()
-    await expect(importedLine).toBeVisible()
-    // The canonical read-only monthly projection no longer embeds legacy b0..b11 editors.
-    // Verify the saved Budget through all twelve projected forecast cells and the XLSX below.
-    const monthlyGrid = page.locator("details.planner-monthly-state")
-    await expect(monthlyGrid).toHaveCount(1)
-    await monthlyGrid.locator("summary").click()
-    const projectedLine = monthlyGrid.locator("tbody tr[data-planner-line]").filter({ hasText: "Browser OPEX fixture" })
+    expect(admittedResponse.status()).toBe(200)
+    expect(previewResponse.status()).toBe(200)
+    expect(detailResponse.status()).toBe(200)
+    const admitted = Schema.decodeUnknownSync(SfFiles.operations["files.import-admit"].output)(await admittedResponse.json())
+    const preview = Schema.decodeUnknownSync(SfFiles.operations["files.import-preview"].output)(await previewResponse.json())
+    const detail = Schema.decodeUnknownSync(SfFiles.operations["files.import-detail"].output)(await detailResponse.json())
+    expect(admitted.status).toBe("ok")
+    expect(preview.status).toBe("ok")
+    expect(detail.status).toBe("ok")
+    if (admitted.status !== "ok" || preview.status !== "ok" || detail.status !== "ok")
+      throw new Error("The original workbook did not produce an admitted native preview")
+    const sourceDigest = new Bun.CryptoHasher("sha256").update(plannerBytes).digest("hex")
+    expect(admitted.value.digest).toBe(sourceDigest)
+    expect(preview.value).toMatchObject({
+      sourceDigest, format: "xlsx", state: "preview", domainApplied: false,
+      context: { surface: "planner", principalRef: fixture.actorId },
+    })
+    expect(preview.value.commands).toHaveLength(1)
+    expect(preview.value.commands[0]).toMatchObject({ action: "import-workbook", target: { id: versionId } })
+    expect(detail.value.detail.sourceDigest).toBe(sourceDigest)
+    const addedName = detail.value.detail.changes.filter((change) => change.kind === "added" &&
+      change.path.endsWith("/name") && change.after.state === "present" && change.after.value === "Browser OPEX fixture")
+    expect(addedName).toHaveLength(1)
+    expect(addedName[0]!.path).toMatch(/^\/versions\/@id=[^/]+\/lines\/@id=[^/]+\/name$/)
+    const linePath = addedName[0]!.path.slice(0, -"/name".length)
+    const budgetChanges = detail.value.detail.changes.filter((change) => change.path.startsWith(linePath + "/b/"))
+      .toSorted((left, right) => Number(left.path.split("/").at(-1)) - Number(right.path.split("/").at(-1)))
+    expect(budgetChanges.map((change) => Number(change.path.split("/").at(-1)))).toEqual(Array.from({ length: 12 }, (_, month) => month))
+    expect(budgetChanges.map((change) => change.after)).toEqual(Array.from({ length: 12 }, () => ({ state: "present", value: 125 })))
+    const previewLine = imports.locator(".sf-files-change").filter({ hasText: "Browser OPEX fixture" })
+    await expect(previewLine).toHaveCount(1)
+    await imports.locator("details").filter({ has: previewLine }).locator("summary").click()
+    await expect(previewLine).toBeVisible()
+    // Independently re-read the same authorized projection. Preview must not have
+    // changed the stored plan; the browser still owns the real review and Apply.
+    const beforeApply = await plannerIoProjection(await page.request.get(initialResponse.url(), { timeout: 10000 }))
+    expect(beforeApply.data).toEqual(initial.data)
+    const apply = imports.getByRole("button", { name: "Apply reviewed import", exact: true })
+    await expect(apply).toBeVisible()
+    await expect(apply).toBeEnabled()
+    const [appliedResponse] = await Promise.all([
+      page.waitForResponse((response) => fileResponse(response, "import-apply", "POST"), { timeout: 10000 }),
+      apply.click(),
+    ])
+    expect(appliedResponse.status()).toBe(200)
+    const applied = Schema.decodeUnknownSync(SfFiles.operations["files.import-apply"].output)(await appliedResponse.json())
+    expect(applied.status).toBe("ok")
+    if (applied.status !== "ok") throw new Error("The original Planner import was not committed")
+    expect(applied.value).toMatchObject({ id: preview.value.id, sourceDigest, state: "applied", domainApplied: true })
+    expect(applied.value.receipts).toHaveLength(1)
+    await expect(imports).toHaveAttribute("data-sf-phase", "receipt")
+    await page.reload()
+    const [persistedResponse] = await Promise.all([
+      page.waitForResponse((response) => nativePage(response, "CAP18"), { timeout: 10000 }),
+      page.goto(origin + "/orchestra/sf-planner/opex"),
+    ])
+    const persisted = await plannerIoProjection(persistedResponse)
+    expect(persisted.data.selectedVersion?.id).toBe(versionId)
+    const persistedLines = persisted.data.grid?.rows.filter((row) => row.label === "Browser OPEX fixture")
+    expect(persistedLines).toHaveLength(1)
+    expect(persistedLines![0]!.cells.map((cell) => cell.month)).toEqual(Array.from({ length: 12 }, (_, month) => month + 1))
+    expect(persistedLines![0]!.cells.map((cell) => ({ value: cell.forecast.value, source: cell.forecast.source })))
+      .toEqual(Array.from({ length: 12 }, () => ({ value: 125, source: "inherited-budget" })))
+    const projectedLine = page.getByRole("grid").getByRole("row").filter({ hasText: "Browser OPEX fixture" })
     await expect(projectedLine).toHaveCount(1)
-    await expect(projectedLine.locator("td > span")).toHaveText(Array(12).fill("125"))
-    await expect(projectedLine.locator("td > small")).toContainText(Array(12).fill("Inherited budget"))
+    await expect(projectedLine).toBeVisible()
+    const forecasts = projectedLine.locator(".sf-s02-measure").filter({
+      has: page.locator(".sf-s02-measure-name").filter({ hasText: /^Forecast$/ }),
+    })
+    await expect(forecasts).toHaveCount(12)
+    await expect(forecasts.locator(".sf-s02-cell-amount")).toHaveText(Array(12).fill("125.00"))
+    await expect(forecasts.locator(".sf-s02-cell-source")).toHaveText(Array(12).fill("Inherited value"))
+    // The native label is generic; the observed original projection above proves
+    // these twelve forecast cells specifically inherit budget.
+    await page.goto(origin + "/orchestra/sf-imports/exports")
+    await page.getByLabel("format", { exact: true }).selectOption("xlsx")
+    const exportControl = page.getByRole("button", { name: "Export", exact: true })
+    await expect(exportControl).toBeVisible()
+    await expect(exportControl).toBeEnabled()
+    const [exportResponse, downloaded] = await Promise.all([
+      page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return response.request().method() === "GET" && url.origin === origin &&
+          url.pathname === "/sucafina/planner" && url.searchParams.get("download") === "xlsx"
+      }, { timeout: 10000 }),
+      page.waitForEvent("download", { timeout: 10000 }),
+      exportControl.click(),
+    ])
+    expect(exportResponse.status()).toBe(200)
+    expect(await downloaded.failure()).toBeNull()
+    // A connected Node-owned browser cannot expose Download.path(). saveAs
+    // transfers that actual browser download, rather than issuing a second GET.
+    const downloadPath = path.join(fixture.root, "browser-opex-export.xlsx")
+    await downloaded.saveAs(downloadPath)
+    const plannerDownload = Bun.file(downloadPath)
+    expect(await plannerDownload.exists()).toBe(true)
     const exported = new Workbook()
-    const plannerDownload = await expectDownload(page, page.getByRole("link", { name: "Export Excel", exact: true }).first())
-    console.info("browser IO: Planner XLSX parse starting")
     await exported.xlsx.load(await plannerDownload.arrayBuffer())
-    console.info("browser IO: Planner XLSX parse complete")
     const exportedOpex = exported.getWorksheet("OPEX")
     expect(exportedOpex).toBeDefined()
     const rows: unknown[][] = []
@@ -90,8 +214,9 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     expect(budget).toBeDefined()
     expect(budget!.slice(9, 21)).toEqual(Array.from({ length: 12 }, () => 125))
     expect(budget![21]).toMatchObject({ formula: expect.stringMatching(/^SUM\(J\d+:U\d+\)$/), result: 1500 })
+    await page.goto(origin + "/orchestra/sf-planner/opex")
+    await expect(projectedLine).toBeVisible()
     await page.screenshot({ path: path.join(import.meta.dir, "artifacts/browser-business-opex.png"), fullPage: true, timeout: 10000, animations: "disabled" })
-
     expect(fixture.errors).toEqual([])
   } catch (error) {
     console.error("browser IO: failed before cleanup", error)
@@ -101,6 +226,7 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     await fixture.dispose()
     console.info("browser IO: cleanup complete")
   }
+  fixture.report()
 }, 90000)
 
 test("browser roundtrips private document bytes, supplier CSV and Members XLSX", async () => {
@@ -219,4 +345,12 @@ async function expectDownload(page: Page, link: Locator) {
   expect(file).not.toBeNull()
   console.info("browser IO: downloaded", downloaded.suggestedFilename())
   return Bun.file(file!)
+}
+
+async function plannerIoProjection(response: Pick<BrowserResponse, "status" | "json">) {
+  expect(response.status()).toBe(200)
+  const body = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP18"].output)(await response.json())
+  expect(body.status).toBe("ok")
+  if (body.status !== "ok") throw new Error("The original authorized Planner projection was unavailable")
+  return body.value
 }

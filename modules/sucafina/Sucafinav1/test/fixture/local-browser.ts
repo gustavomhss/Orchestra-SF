@@ -7,7 +7,7 @@ import { prepareOperatorAccess } from "../../local/enroll.ts"
 import { createLocalInstallation } from "../../local/entry.ts"
 
 /** Throwaway browser installation. The protocol scanner is a test fixture, never antivirus qualification. */
-export async function localBrowser() {
+export async function localBrowser(options: { nativePlanner?: boolean } = {}) {
   console.info("browser fixture: prepare")
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "sucafina-business-browser-"))
   const cleanup: (() => Promise<unknown> | void)[] = [() => rm(root, { recursive: true, force: true })]
@@ -60,14 +60,24 @@ export async function localBrowser() {
       XDG_CACHE_HOME: path.join(root, "host-cache"), XDG_STATE_HOME: path.join(root, "host-state"),
     }
     console.info("browser fixture: installation")
-    const installation = await createLocalInstallation({ origin: "http://localhost:3000" }, configFile, environment)
+    // Opt in only for the migrated Planner journey. Identity, scanner, storage
+    // and enrollment below remain the original localBrowser installation.
+    const native = options.nativePlanner ? await import("./native-local-host.ts") : undefined
+    const installation = await createLocalInstallation({
+      origin: "http://localhost:3000",
+      ...(native ? { createHostRuntime: native.createSfHostRuntime } : {}),
+    }, configFile, environment)
     cleanup.push(() => installation.dispose())
-    const server = Bun.serve({ hostname: "localhost", port: 3000, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
+    const nativeHost = native ? await native.mountNativeLocalBrowser({ root, directory: root, environment }, installation) : undefined
+    if (nativeHost) cleanup.push(() => nativeHost.dispose())
+    const server = Bun.serve({ hostname: "localhost", port: 3000, fetch: async (request) =>
+      await nativeHost?.handle(request) ?? await installation.handler(request) ?? new Response(null, { status: 404 }) })
     const stopServer = () => server.stop(true)
     cleanup.push(stopServer)
     const { chromium } = await import("@playwright/test")
-    console.info("browser fixture: direct pipe Chrome launch")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    const nativeDriver = native ? await native.launchNativeLocalBrowser() : undefined
+    console.info(nativeDriver ? "browser fixture: owned Node Chrome launch" : "browser fixture: direct pipe Chrome launch")
+    const browser = nativeDriver?.browser ?? await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
     const connection: { context?: BrowserContext; cdp?: CDPSession; owner?: NonNullable<Awaited<ReturnType<typeof linuxProcess>>> & { cmdline: string } } = {}
     cleanup.push(async () => {
       const outcomes: { operation: string; settled: boolean; error?: unknown }[] = []
@@ -89,8 +99,11 @@ export async function localBrowser() {
       }
       // Include extra contexts created by a business test, before closing the browser pipe.
       await Promise.all(browser.contexts().map((context, index) => bounded(`context.close:${index}`, context.close(), 750)))
-      if (connection.cdp) await bounded("CDP Browser.close", connection.cdp.send("Browser.close"), 1000)
-      await bounded("browser.close", browser.close(), 1500)
+      if (nativeDriver) await bounded("Node browser driver.close", nativeDriver.close(), 1500)
+      else {
+        if (connection.cdp) await bounded("CDP Browser.close", connection.cdp.send("Browser.close"), 1000)
+        await bounded("browser.close", browser.close(), 1500)
+      }
       const owner = connection.owner
       if (!owner) throw new Error("No authoritative Linux Chrome ownership capture; cleanup cannot be certified")
       const census = async () => {
@@ -150,6 +163,9 @@ export async function localBrowser() {
         if (outcome.error !== undefined && !(outcome.error instanceof Error && /Target.*closed|Session closed|Browser has been closed/i.test(outcome.error.message)))
           throw outcome.error
       }
+      // A pending Node close also needs its original transport/child proof.
+      // The existing 20s cleanup bound and independent Linux census still apply.
+      if (nativeDriver) await nativeDriver.close()
       console.info("browser fixture: OS proof: isolated owned group has no live members; transport disconnected", {
         pid: owner.pid, pgid: owner.group, uid: owner.uid, starttime: owner.start.toString(),
         pendingCloseRPCs: outcomes.filter((outcome) => !outcome.settled).map((outcome) => outcome.operation),
@@ -198,7 +214,8 @@ export async function localBrowser() {
     await page.waitForURL("http://localhost:3000/", { timeout: 10000 })
     console.info("browser fixture: authenticated")
     await mkdir(path.join(import.meta.dir, "../artifacts"), { recursive: true })
-    return { page, browser, root, configFile, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, installation, errors, stopServer, dispose }
+    return { page, browser, root, configFile, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, installation, errors, stopServer, dispose,
+      report: () => nativeDriver?.report() }
   } catch (error) {
     await dispose()
     throw error
