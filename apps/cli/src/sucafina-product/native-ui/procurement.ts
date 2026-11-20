@@ -27,7 +27,7 @@ const pages: Readonly<Record<Capability, Page>> = {
 const selectors: Readonly<Record<Capability, readonly string[]>> = {
   CAP24: ["year", "month"],
   CAP25: ["year", "month", "filter", "q", "request"],
-  CAP26: ["year", "month"],
+  CAP26: ["year", "month", "request"],
   CAP27: ["year", "month", "status", "q", "supplier"],
   CAP28: ["year", "month"],
 }
