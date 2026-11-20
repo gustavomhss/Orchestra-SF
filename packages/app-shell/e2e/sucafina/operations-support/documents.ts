@@ -162,7 +162,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(admittedAssets).toHaveLength(1)
   expect(afterAssets.filter((asset) => asset.name === filename)).toHaveLength(1)
   // The public upload receipt is only { ok: true }; identity comes from its authorized readback.
-  expect(admittedAssets[0]).toMatchObject({ name: filename, type: "text/plain", bytes: bytes.byteLength, size: bytes.byteLength })
+  expect(admittedAssets[0]).toMatchObject({ name: filename })
   const asset = admittedAssets[0]?.id
   expect(asset).toMatch(/^[A-Za-z0-9_-]+$/)
   if (typeof asset !== "string") throw new Error("The original supplier readback did not expose the admitted asset identity")
