@@ -211,7 +211,7 @@ try {
   const launchTimeoutMs = Math.min(launchCeilingMs, startup.deadlineEpochMs - Date.now())
   if (launchTimeoutMs <= 0) throw new Error("Node browser startup deadline expired before launch")
   console.log(JSON.stringify({ event: "phase", phase: "chromium-launch", timeoutMs: launchTimeoutMs, deadlineEpochMs: startup.deadlineEpochMs }))
-  server = await chromium.launchServer({ host: "127.0.0.1", channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: launchTimeoutMs, logger: launchLogger })
+  server = await chromium.launchServer({ host: "127.0.0.1", headless: true, args: ["--no-sandbox"], timeout: launchTimeoutMs, logger: launchLogger })
   clearInterval(launchSampler)
   inspectLaunch()
   console.log(JSON.stringify({ event: "phase", phase: "chromium-launched" }))
@@ -289,7 +289,7 @@ async function within<T>(work: Promise<T>, timeout: number, name: string) {
 
 /** Each caller declares expectSpawn in its own test and reports only after assertions and cleanup succeed.
  * A caller's shorter acquisition deadline cancels the owned process scope, not only its await. */
-export async function launchBrowserDriver(consumer: "wp10-review-access" | "wp07-review" | "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool" | "wp05-renderer", startup?: { signal: AbortSignal; timeoutMs: number; deadlineEpochMs?: number }) {
+export async function launchBrowserDriver(consumer: "wp10-review-access" | "wp07-review" | "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool" | "wp05-renderer" | "native-private-io", startup?: { signal: AbortSignal; timeoutMs: number; deadlineEpochMs?: number }) {
   const launchTimeout = startup?.timeoutMs ?? 15000
   const launchCeilingMs = consumer === "wp01-shared-pool" ? 30000 : 15000
   if (!Number.isSafeInteger(launchTimeout) || launchTimeout < 1 || launchTimeout > launchCeilingMs) throw new Error("Invalid browser driver startup deadline")
