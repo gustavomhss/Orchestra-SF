@@ -3,7 +3,7 @@ import { NonNegativeInt, optional } from "../../schema"
 
 /** Public DTOs: the legacy renderer's allowed fieldsets, not the persisted snapshot. */
 export type SfDomainJson = null | boolean | number | string | readonly SfDomainJson[] | { readonly [key: string]: SfDomainJson }
-export const SfDomainJsonValue: Schema.Schema<SfDomainJson> = Schema.suspend(() =>
+export const SfDomainJsonValue: Schema.Codec<SfDomainJson, SfDomainJson> = Schema.suspend(() =>
   Schema.Union([Schema.Null, Schema.Boolean, Schema.Finite, Schema.String,
     Schema.Array(SfDomainJsonValue), Schema.Record(Schema.String, SfDomainJsonValue)]),
 )
@@ -202,6 +202,13 @@ export const SfDomainPerformance = Schema.Struct({
 export const SfDomainPageData = {
   CAP01: Schema.Struct({
     totals: optional(SfDomainBudgetTotals),
+    people: optional(Schema.Struct({
+      year: SfDomainYears, month: SfDomainMonths,
+      users: Schema.NullOr(Schema.Finite),
+      opexCostPerUser: Schema.NullOr(Schema.Finite),
+      totalCostPerUser: Schema.NullOr(Schema.Finite),
+      attritionYtd: Schema.NullOr(Schema.Finite),
+    })),
     executive: optional(SfDomainExecutive),
     executiveByYear: optional(Schema.Record(Schema.String, SfDomainExecutive )),
     executiveMonths: optional(Schema.Record(Schema.String, SfDomainExecutiveMonth )),
