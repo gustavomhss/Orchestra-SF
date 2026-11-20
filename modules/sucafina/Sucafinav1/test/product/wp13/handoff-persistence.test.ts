@@ -14,7 +14,7 @@ import type { BusinessContextService, BusinessEvidenceRef } from "../../../produ
 import type { DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { PreparedCommand } from "../../../product/contracts/context.ts"
 import type { PortfolioRequest, ScenarioOperation } from "../../../product/contracts/operations.ts"
-import type { PreparedDomainMutation } from "../../../product/contracts/ports.ts"
+import type { PreparedApplyPort, PreparedDomainMutation } from "../../../product/contracts/ports.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import type { Command } from "../../../runtime/contract.ts"
@@ -83,11 +83,17 @@ test("persisted producer: portfolio handoff prepares two WP11 changes and resume
       revalidate: async () => true,
     }
     const portfolio = createPortfolioPort(portfolioHost)
-    const domain = { procurementFails: true, plannerCalls: 0, receiptSequence: 0 }
+    const domain = { procurementFails: true, plannerCalls: 0, procurementCalls: 0, receiptSequence: 0 }
     for (const [index, surface] of (["planner", "procurement"] as const).entries()) {
       await store.transaction(surface, async (snapshot) => { snapshot.data.wp13Amount = index === 0 ? 30 : 50; snapshot.versions.wp13Amount = { version: 4, by: "principal" }; return { commit: true, value: true } })
     }
     const amounts = () => Promise.all((["planner", "procurement"] as const).map((surface) => store.transaction(surface, async (snapshot) => ({ commit: false, value: snapshot.data.wp13Amount }))))
+    const durableCase = async () => {
+      const current = await state.read(admittedRequest, "cases", (productState) => productState.cases[decision.id])
+      expect(current.status).toBe("ok")
+      if (current.status !== "ok" || !current.value) throw new Error("Durable case unavailable")
+      return current.value
+    }
     const comparison = await portfolio.evaluate(portfolioRequest, binding)
     expect(comparison.status).toBe("ok")
     if (comparison.status !== "ok") return
@@ -120,11 +126,12 @@ test("persisted producer: portfolio handoff prepares two WP11 changes and resume
       authorizeReceipt: async (receipt, request) => receipt.targetIncarnation === request.targetIncarnation && receipt.commandDigest === request.commandDigest,
       confirmHuman: async (request, change, context) => !!reviewDigestFor(context, request, change),
       resolveActor: () => ({ id: "principal", roles: ["finance", "buyer"], canWrite: true }),
-      resolveMutation: (_snapshot, change) => change.target.surface === "procurement" && domain.procurementFails ? undefined : ({
+      resolveMutation: (_snapshot, change) => ({
         surface: change.target.surface, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest, expectedVersion: change.expectedVersion,
         execute: (snapshot): ReturnType<PreparedDomainMutation["execute"]> => {
           if (snapshot.versions.wp13Amount?.version !== change.expectedVersion) return { commit: false, value: { status: "conflict" } }
           if (change.target.surface === "planner") domain.plannerCalls++
+          if (change.target.surface === "procurement") domain.procurementCalls++
           snapshot.data.wp13Amount = change.operation.command.values.amount
           snapshot.versions.wp13Amount = { version: change.expectedVersion + 1, by: "principal" }
           return { commit: true, value: { amount: change.operation.command.values.amount as number } }
@@ -135,51 +142,93 @@ test("persisted producer: portfolio handoff prepares two WP11 changes and resume
       environment: () => ({ at: "2027-01-03T00:00:00Z", id: () => "unused", directory: [] }),
       createId: () => `receipt-${++domain.receiptSequence}`, now: () => "2027-01-03T00:00:00Z", reviewDigestFor,
     })
-    const execution = createPreparedExecution({ state, host, apply, reviewDigestFor, revalidateProducer: review, authorizeCase: async () => true, authorizeApplication: async (request, change, trusted) => trusted.kind === "ui" && request.choiceId === choice.id && change.caseId === decision.id && ["planner:forecast-a", "procurement:contract-b"].includes(`${change.target.surface}:${change.target.id}`), confirmApplication: async () => true, operationIdentity: () => "apply-operation", classifyReceipt: async (receipt) => {
+    // Lose only the response from the real producer, after its durable receipt.
+    // An absent receipt after dispatch would stay indeterminate and cannot retry.
+    const interruptedApply: PreparedApplyPort = { ...apply, executePrepared: async (request, context) => {
+      const applied = await apply.executePrepared(request, context)
+      if (applied.status === "ok") throw new Error("Injected loss after durable domain receipt")
+      return applied
+    } }
+    const execution = createPreparedExecution({ state, host, apply: interruptedApply, reviewDigestFor, revalidateProducer: async (request, context) => {
+      // Temporary producer unavailability is observed before reserving/dispatching.
+      if (request.changeId === secondChange.id && domain.procurementFails) return { status: "unavailable", reason: "procurement-producer-unavailable" }
+      return review(request, context)
+    }, authorizeCase: async () => true, authorizeApplication: async (request, change, trusted) => trusted.kind === "ui" && request.choiceId === choice.id && change.caseId === decision.id && ["planner:forecast-a", "procurement:contract-b"].includes(`${change.target.surface}:${change.target.id}`), confirmApplication: async () => true, operationIdentity: () => "apply-operation", classifyReceipt: async (receipt) => {
       const evidenceBase = { schema: "sf-evidence-v1" as const, refId: `receipt-ref-${receipt.id}`, installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed" as const, kind: "receipt" as const, target: { surface: receipt.surface, receiptId: receipt.id, idempotencyKey: receipt.idempotencyKey, targetIncarnation: receipt.targetIncarnation, commandDigest: receipt.commandDigest, version: receipt.version } }
       return { state: "applied", evidence: { ...evidenceBase, refDigest: digestSfEvidenceRef(evidenceBase) } }
     } })
     const firstChange = saved.value.preparedChanges[0]!
     const secondChange = saved.value.preparedChanges[1]!
     const firstRequest = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: saved.value.version }, changeId: firstChange.id, choiceId: choice.id }
-    // WP11 currently advances the cases namespace while committing a domain receipt.
-    // Preserve that observable pending reconciliation and prove recovery without a second mutation.
-    expect(await execution(firstRequest, binding)).toEqual({ status: "unavailable", reason: "case-reconciliation-pending" })
+    // A lost response follows the real atomic domain/receipt commit. It leaves
+    // C08 unreconciled; recovery must use that receipt without another dispatch.
+    expect(await execution(firstRequest, binding)).toEqual({ status: "unavailable", reason: "domain-result-unknown" })
     expect(await amounts()).toEqual([40, 50])
-    expect(domain.plannerCalls).toBe(1)
+    expect({ planner: domain.plannerCalls, procurement: domain.procurementCalls }).toEqual({ planner: 1, procurement: 0 })
     const committedReceipt = await state.read(new Request("https://example.test"), "receipts", (productState) => Object.values(productState.receipts))
     expect(committedReceipt.status).toBe("ok")
-    if (committedReceipt.status !== "ok") return
+    if (committedReceipt.status !== "ok") throw new Error("Committed Planner receipt unavailable")
     expect(committedReceipt.value).toHaveLength(1)
-    expect(committedReceipt.value[0]?.result.ok).toBe(true)
+    const firstReceipt = committedReceipt.value[0]!
+    expect(firstReceipt.result.ok).toBe(true)
     const unreconciled = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
     expect(unreconciled.status).toBe("ok")
-    if (unreconciled.status !== "ok") return
+    if (unreconciled.status !== "ok") throw new Error("Case unavailable before Planner reconciliation")
     expect(unreconciled.value.case.receipts).toHaveLength(0)
     expect(unreconciled.value.case.preparedChanges[0]?.state).toBe("planned")
-    expect((await execution(firstRequest, binding)).status).toBe("ok")
+    const firstExecution = await execution(firstRequest, binding)
+    expect(firstExecution).toEqual({ status: "ok", value: firstReceipt })
     const afterFirst = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
     expect(afterFirst.status).toBe("ok")
-    if (afterFirst.status !== "ok") return
-    expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: afterFirst.value.case.version }, changeId: secondChange.id, choiceId: choice.id }, binding)).status).toBe("unavailable")
+    if (afterFirst.status !== "ok") throw new Error("Case unavailable after Planner reconciliation")
+    expect((await durableCase()).receipts).toEqual([firstReceipt])
+    expect(afterFirst.value.case.preparedChanges.map((change) => change.state)).toEqual(["applied", "planned"])
+    expect(await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: afterFirst.value.case.version }, changeId: secondChange.id, choiceId: choice.id }, binding)).toEqual({ status: "unavailable", reason: "procurement-producer-unavailable" })
     const partial = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
     expect(partial.status).toBe("ok")
-    if (partial.status !== "ok") return
+    if (partial.status !== "ok") throw new Error("Partially applied case unavailable")
+    expect(partial.value.case).toEqual(afterFirst.value.case)
     expect(partial.value.case.state).toBe("partially-applied")
+    expect({ planner: domain.plannerCalls, procurement: domain.procurementCalls, receipts: domain.receiptSequence }).toEqual({ planner: 1, procurement: 0, receipts: 1 })
     expect(await amounts()).toEqual([40, 50])
     domain.procurementFails = false
     expect(await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).toEqual({ status: "conflict", reason: "original-intent-mismatch" })
-    expect(await execution(firstRequest, binding)).toEqual({ status: "ok", value: committedReceipt.value[0] })
+    expect(await execution(firstRequest, binding)).toEqual(firstExecution)
     const beforeResume = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
-    if (beforeResume.status !== "ok") throw new Error("case unavailable after first retry")
+    if (beforeResume.status !== "ok") throw new Error("Case unavailable after first retry")
+    expect(beforeResume.value.case).toEqual(partial.value.case)
     const secondRequest = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: beforeResume.value.case.version }, changeId: secondChange.id, choiceId: choice.id }
-    expect(await execution(secondRequest, binding)).toEqual({ status: "unavailable", reason: "case-reconciliation-pending" })
-    expect((await execution(secondRequest, binding)).status).toBe("ok")
-    expect(domain.plannerCalls).toBe(1)
+    expect(await execution(secondRequest, binding)).toEqual({ status: "unavailable", reason: "domain-result-unknown" })
     expect(await amounts()).toEqual([40, 60])
+    const secondCommitted = await state.read(new Request("https://example.test"), "receipts", (productState) => Object.values(productState.receipts))
+    expect(secondCommitted.status).toBe("ok")
+    if (secondCommitted.status !== "ok") throw new Error("Committed Procurement receipt unavailable")
+    expect(secondCommitted.value).toHaveLength(2)
+    const secondReceipt = secondCommitted.value.find((receipt) => receipt.idempotencyKey === secondChange.idempotencyKey)
+    if (!secondReceipt) throw new Error("Original Procurement receipt missing")
+    expect(secondReceipt.result.ok).toBe(true)
+    expect(secondCommitted.value).toEqual([firstReceipt, secondReceipt])
+    const beforeSecondReconciliation = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
+    if (beforeSecondReconciliation.status !== "ok") throw new Error("Case unavailable before Procurement reconciliation")
+    expect(beforeSecondReconciliation.value.case).toEqual(beforeResume.value.case)
+    const secondExecution = await execution(secondRequest, binding)
+    expect(secondExecution).toEqual({ status: "ok", value: secondReceipt })
     const completed = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
     expect(completed.status).toBe("ok")
-    if (completed.status === "ok") expect(completed.value.case.state).toBe("applied")
+    if (completed.status !== "ok") throw new Error("Completed case unavailable")
+    expect(completed.value.case.state).toBe("applied")
+    const completedState = await durableCase()
+    expect(completedState.receipts).toEqual([firstReceipt, secondReceipt])
+    expect(completedState.preparedChanges.map((change) => ({ state: change.state, receipt: change.receipt }))).toEqual([{ state: "applied", receipt: firstReceipt }, { state: "applied", receipt: secondReceipt }])
+    expect(await execution(firstRequest, binding)).toEqual(firstExecution)
+    expect(await execution(secondRequest, binding)).toEqual(secondExecution)
+    const replayed = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
+    if (replayed.status !== "ok") throw new Error("Replayed case unavailable")
+    expect(replayed.value.case).toEqual(completed.value.case)
+    expect(await durableCase()).toEqual(completedState)
+    expect({ planner: domain.plannerCalls, procurement: domain.procurementCalls, receipts: domain.receiptSequence }).toEqual({ planner: 1, procurement: 1, receipts: 2 })
+    expect(await amounts()).toEqual([40, 60])
+    expect(await Promise.all((["planner", "procurement"] as const).map((surface) => store.transaction(surface, async (snapshot) => ({ commit: false, value: snapshot.versions.wp13Amount }))))).toEqual([{ version: 5, by: "principal" }, { version: 5, by: "principal" }])
   } finally {
     await store.dispose()
     await rm(directory, { recursive: true, force: true })
