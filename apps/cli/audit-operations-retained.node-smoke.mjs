@@ -34,7 +34,7 @@ const paths = new Set(["operations.spec.ts", "operations-support/runtime.ts", "o
   "operations-support/imports.ts", "operations-support/procurement-snapshot.ts",
   "operations-support/procurement-refusal.ts", "operations-support/procurement-comparison.ts",
   "operations-support/procurement.ts", "operations-support/installation.ts", "native/select-profile.ts",
-  "native-ui/procurement.ts", "wp04/procurement.spec.ts"].map((file) => "packages/app-shell/e2e/sucafina/" + file))
+  "wp04/procurement.spec.ts"].map((file) => "packages/app-shell/e2e/sucafina/" + file))
 const statuses = new Set(["passed", "failed", "timedOut", "skipped", "interrupted"])
 const emit = (kind, value) => console.info("AUDIT_OPS_RETAINED_" + kind + " " + JSON.stringify(value))
 
