@@ -2,7 +2,7 @@
  * No route.fulfill mock, forged status/receipt, role override, or replay.
  */
 import type { Page, Request, Route } from "@playwright/test"
-import { observeNativeBinding } from "./readiness.ts"
+import { nativeContextURL, observeNativeBinding } from "./readiness.ts"
 import type { NativeManifest } from "./readiness.ts"
 
 export type NativeFaultTarget = Readonly<{
@@ -113,14 +113,8 @@ export async function requestRealRevocation(input: Readonly<{
     throw new Error("F04_REVOCATION_PRECONDITION_UNAUTHORIZED")
   const actual = await input.revokeViaProducer()
   if (!actual.committed) throw new Error("F04_REAL_PRODUCER_REVOCATION_NOT_CONFIRMED")
-  const contextURL = new URL(input.manifest.target.mount + "/api/ui/context",
-    input.manifest.target.publicOrigin)
-  contextURL.search = new URLSearchParams({
-    installationId: input.manifest.target.installationId,
-    projectId: input.manifest.target.projectId,
-    hostId: input.manifest.target.hostId,
-  }).toString()
-  const response = await input.page.request.get(contextURL.toString(),
+  const contextURL = nativeContextURL(input.manifest.target)
+  const response = await input.page.request.get(contextURL,
     { maxRedirects: 0, maxRetries: 0 })
   if (response.status() === 401 || response.status() === 403) {
     return { phase: "PRODUCER_AUTHENTICATION_REVOKED" as const,

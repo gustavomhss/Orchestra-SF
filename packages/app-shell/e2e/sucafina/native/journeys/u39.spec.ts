@@ -1032,7 +1032,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     // is unresolved. Fixture/200 owns disposing the isolated private dataset.
   })
 
-  nativeInstalledFixture("206-AC02 late original GET after different installation/project never leaks prior draft or owner", async ({ page, nativeHarness }) => {
+  nativeInstalledFixture("206-AC02 late original GET after different installation/Team never leaks prior draft or owner", async ({ page, nativeHarness }) => {
     requireRegisteredLiveCase(nativeHarness, "late")
     const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
     const original = await originalPage(page, nativeHarness)

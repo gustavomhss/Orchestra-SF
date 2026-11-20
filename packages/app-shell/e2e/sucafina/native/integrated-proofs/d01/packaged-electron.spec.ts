@@ -9,10 +9,9 @@ import { _electron, expect, test } from "@playwright/test"
 import type { SfDesktopCapability, SfDesktopBindResult } from "@orchestra/client/sucafina/transport"
 import type { SfJson } from "@orchestra/schema/sucafina/common"
 import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
-import { readNativeManifest } from "../../fixture/readiness.ts"
 import {
-  nativeSuiteFromChapter, readNativeSelectedInstallation,
-} from "../../fixture/selected-installation.ts"
+  readNativeManifest, nativeSuiteFromChapter, readNativeSelectedInstallation,
+} from "../../fixture/legacy-desktop-manifest.ts"
 import {
   d01IsolatedDesktopEnvironment, requireD01PackagedHost,
 } from "./desktop-host.ts"
