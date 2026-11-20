@@ -213,7 +213,9 @@ try {
   const launchTimeoutMs = Math.min(launchCeilingMs, startup.deadlineEpochMs - Date.now())
   if (launchTimeoutMs <= 0) throw new Error("Node browser startup deadline expired before launch")
   console.log(JSON.stringify({ event: "phase", phase: "chromium-launch", timeoutMs: launchTimeoutMs, deadlineEpochMs: startup.deadlineEpochMs }))
-  server = await chromium.launchServer({ host: "127.0.0.1", channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: launchTimeoutMs, logger: launchLogger })
+  // Actions provisions this Playwright version's default Chromium headless shell.
+  // Do not fall back to the runner's unrelated Chrome or start a fresh deadline.
+  server = await chromium.launchServer({ host: "127.0.0.1", headless: true, args: ["--no-sandbox"], timeout: launchTimeoutMs, logger: launchLogger })
   clearInterval(launchSampler)
   inspectLaunch()
   console.log(JSON.stringify({ event: "phase", phase: "chromium-launched" }))
