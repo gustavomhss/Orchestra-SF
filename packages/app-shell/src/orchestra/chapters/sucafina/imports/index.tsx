@@ -605,7 +605,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
           <Show when={isImport()}>
             <div class="sf-files-fields">
               <label>{t("sf.u23.source")}
-                <select value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
+                <select aria-label={t("sf.u23.source")} value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
                   <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
                 </select>
               </label>
@@ -625,7 +625,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 </p>
               </Show>
               <label>{t("sf.u23.destination")}
-                <select value={state.selectionRef} disabled={editLocked() || !state.targets.length}
+                <select aria-label={t("sf.u23.destination")} value={state.selectionRef} disabled={editLocked() || !state.targets.length}
                   onChange={(e) => { change(); setState("selectionRef", e.currentTarget.value) }}>
                   <option value="">{t("sf.u23.destinationEmpty")}</option>
                   <For each={state.targets}>{(target) =>
