@@ -56,7 +56,10 @@ export async function runTurn(
     // mismatch is terminal and cannot be replayed through this technical client.
     if (error instanceof CorporateSessionTransportError) { transportFailure = error; stop.abort() }
   })
-  const permissions = answerPermissions(client, input.sessionID, input.location, stop.signal, input.onPermission).catch((error) => {
+  const permissions = answerPermissions(client, input.sessionID, input.location, stop.signal, input.onPermission)
+  // Observe immediately, but await the original promise during cleanup so an
+  // unrelated permission-reader failure is never converted into success.
+  void permissions.catch((error) => {
     if (error instanceof CorporateSessionTransportError) { transportFailure = error; stop.abort() }
   })
   try {
