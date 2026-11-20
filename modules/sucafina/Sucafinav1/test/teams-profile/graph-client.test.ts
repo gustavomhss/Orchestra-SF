@@ -116,7 +116,7 @@ for (const failure of [
   { status: 403, reason: "forbidden" },
   { status: 429, reason: "throttled" },
   { status: 503, reason: "provider_unavailable" },
-]) {
+] as const) {
   test(`graph-client-03: Graph ${failure.status} is not an empty eligible list`, async () => {
     const f = await microsoftFixture({ teams: "direct" })
     const session = await login(f)
