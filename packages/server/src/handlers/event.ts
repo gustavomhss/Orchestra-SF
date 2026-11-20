@@ -1,15 +1,21 @@
 import { EventV2 } from "@orchestra/core/event"
-import { OrchestraEvent } from "@orchestra/protocol/groups/event"
-import { Effect, Schema, Stream } from "effect"
+import { SessionOwner } from "@orchestra/core/session/owner"
+import { OrchestraEventTransport } from "@orchestra/protocol/groups/event"
+import { Permission } from "@orchestra/schema/permission"
+import { Question } from "@orchestra/schema/question"
+import { Session } from "@orchestra/schema/session"
+import { SessionEvent } from "@orchestra/schema/session-event"
+import { SessionTodo } from "@orchestra/schema/session-todo"
+import { Effect, Queue, Schema, Stream } from "effect"
 import { HttpServerResponse } from "effect/unstable/http"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
-import * as Sse from "effect/unstable/encoding/Sse"
+import { Sse } from "effect/unstable/encoding"
 import { Api } from "../api"
+import { openSessionAccess, sessionNamespace } from "../session-access"
 
-export const encodeEvent = (data: unknown) => JSON.stringify(Schema.encodeUnknownSync(OrchestraEvent)(data))
+export const encodeEvent = (data: unknown) => JSON.stringify(Schema.encodeUnknownSync(OrchestraEventTransport)(data))
 
-// The bus hands every subscriber the same payload object, so the encoded JSON is memoized on it: N open streams pay
-// one schema encode and one stringify per event instead of N. The entry dies with the payload.
+/** A memo belongs to one subscriber's admitted projection, never to the whole server. */
 export const eventFrames = (encode: (data: unknown) => string = encodeEvent) => {
   const frames = new WeakMap<object, string>()
   return (data: object): Sse.Event => {
@@ -20,72 +26,91 @@ export const eventFrames = (encode: (data: unknown) => string = encodeEvent) => 
   }
 }
 
-// The renderer reads this stream on its main thread. On a loaded machine it can fall seconds behind while a model
-// streams token deltas, and a subscriber that overflows is cut and must resync everything. The capacity is large
-// intended to ride out short stalls. This bounds queued items, not bytes: payload sizes vary, and large events can
-// still retain substantial memory per slow subscriber.
+// Bound item count and disconnect overflow; never silently lose an admitted event.
 export const subscriberCapacity = 4096
+const ownedTypes = new Set<string>([
+  ...SessionEvent.Definitions, ...SessionTodo.Event.Definitions,
+  ...Permission.Event.Definitions, ...Question.Event.Definitions,
+].map((definition) => definition.type))
+
+type SubscriberAccess = Readonly<{ owners: SessionOwner.Interface; scope: SessionOwner.Scope }>
+class SessionStreamEnded extends Schema.TaggedErrorClass<SessionStreamEnded>()("Server.SessionStreamEnded", {}) {}
 
 function eventType(data: object) {
   const type = "type" in data ? data.type : undefined
   return typeof type === "string" ? type : "unknown"
 }
 
-export const eventStream = (events: EventV2.Interface, frame = eventFrames()) => {
-  const connected = {
-    id: EventV2.ID.create(),
-    type: "server.connected",
-    data: {},
-  }
-  // Research, LSP and project events are published on this bus and are not in the public schema. Encoding
-  // them used to throw and end every open subscription. Skip the event and say so once per type.
+/** Only canonical Session-bearing definitions identify an owner; metadata and Location never do. */
+const readable = (access: SubscriberAccess, event: EventV2.Payload) => Effect.gen(function* () {
+  yield* access.owners.verify(access.scope)
+  if (!ownedTypes.has(event.type)) return access.owners.owner(access.scope) === undefined
+  const sessionID = Schema.decodeUnknownOption(Session.ID)(event.data.sessionID).valueOrUndefined
+  return sessionID ? yield* access.owners.canRead(access.scope, sessionID) : false
+})
+
+const admittedEvents = (events: EventV2.Interface, access: SubscriberAccess) => Effect.gen(function* () {
+  const queue = yield* Queue.dropping<EventV2.Payload, EventV2.SubscriberOverflowError | SessionStreamEnded>(subscriberCapacity)
+  // Event callbacks execute in the publisher's fiber. Always use the captured
+  // subscriber Scope, and check before retaining any payload in its queue.
+  const unsubscribe = yield* events.listen((event) => Effect.gen(function* () {
+    if (!(yield* readable(access, event))) return
+    yield* access.owners.verify(access.scope)
+    const accepted = yield* Queue.offer(queue, event)
+    if (!accepted) yield* Queue.fail(queue, new EventV2.SubscriberOverflowError({ capacity: subscriberCapacity }))
+  }).pipe(Effect.catchCause(() => Queue.fail(queue, new SessionStreamEnded()).pipe(Effect.asVoid))))
+  yield* Effect.addFinalizer(() => unsubscribe.pipe(Effect.andThen(Queue.shutdown(queue)), Effect.asVoid))
+  return Stream.fromQueue(queue)
+})
+
+export const eventStream = (events: EventV2.Interface, frame = eventFrames(), access?: SubscriberAccess) => {
+  const connected = { id: EventV2.ID.create(), type: "server.connected", data: {} }
   const skipped = new Set<string>()
-  const output = Stream.unwrap(
-    Effect.gen(function* () {
-      // Acquiring the bounded stream installs its listener before readiness is observable.
-      const live = yield* EventV2.allBounded(events, subscriberCapacity)
-      return Stream.make(connected).pipe(Stream.concat(live))
-    }),
-  ).pipe(
-    Stream.mapEffect((data) =>
-      Effect.try({
-        try: () => frame(data),
-        catch: () => eventType(data),
-      }).pipe(
-        Effect.catch((type) =>
-          skipped.has(type)
-            ? Effect.succeed(undefined)
-            : Effect.logWarning("event stream skipped an event the public schema cannot name", { type }).pipe(
-                Effect.andThen(Effect.sync(() => skipped.add(type))),
-                Effect.as(undefined),
-              ),
-        ),
-      ),
-    ),
+  const output = Stream.unwrap(Effect.gen(function* () {
+    if (access) yield* access.owners.authorize(access.scope, "read")
+    // Register before the connected frame makes readiness observable.
+    const live = yield* (access ? admittedEvents(events, access) : EventV2.allBounded(events, subscriberCapacity))
+    return Stream.make(connected).pipe(Stream.concat(live))
+  })).pipe(
+    Stream.mapEffect((data) => Effect.gen(function* () {
+      if (access) {
+        yield* access.owners.authorize(access.scope, "read")
+        // This connected object is generated here; a publisher cannot claim a public exception.
+        if (data !== connected && !(yield* readable(access, data))) return undefined
+      }
+      const namespace = access ? yield* sessionNamespace(access.owners, access.scope) : undefined
+      return yield* Effect.try({ try: () => frame(namespace ? { namespace, event: data } : data), catch: () => eventType(data) }).pipe(
+        Effect.catch((type) => skipped.has(type) ? Effect.succeed(undefined) :
+          Effect.logWarning("event stream skipped an event the public schema cannot name", { type }).pipe(
+            Effect.andThen(Effect.sync(() => skipped.add(type))), Effect.as(undefined),
+          )),
+      )
+    })),
     Stream.filter((event): event is Sse.Event => event !== undefined),
     Stream.pipeThroughChannel(Sse.encode()),
   )
-  // A comment frame keeps idle connections open and tells the client the server is alive.
-  const heartbeat = Stream.tick("15 seconds").pipe(Stream.map(() => ": heartbeat\n\n"))
+  // Idle streams recheck their original authority too; logout/revocation cannot
+  // keep a connection alive merely because no new business event is published.
+  const heartbeat = Stream.tick("15 seconds").pipe(Stream.mapEffect(() =>
+    access ? access.owners.authorize(access.scope, "read").pipe(Effect.as(": heartbeat\n\n")) :
+      Effect.succeed(": heartbeat\n\n")))
   return output.pipe(Stream.merge(heartbeat, { haltStrategy: "left" }), Stream.encodeText)
 }
 
 export const EventHandler = HttpApiBuilder.group(Api, "server.event", (handlers) =>
   Effect.gen(function* () {
     const events = yield* EventV2.Service
-    // One memo for the whole server, so every subscriber reuses the first one's encode.
-    const frame = eventFrames()
-    return handlers.handleRaw("event.subscribe", () =>
-      Effect.succeed(
-        HttpServerResponse.stream(eventStream(events, frame), {
-          contentType: "text/event-stream",
-          headers: {
-            "Cache-Control": "no-cache, no-transform",
-            "X-Accel-Buffering": "no",
-            "X-Content-Type-Options": "nosniff",
-          },
-        }),
-      ),
-    )
+    const owners = yield* SessionOwner.Service
+    return handlers.handleRaw("event.subscribe", () => Effect.gen(function* () {
+      const scope = yield* openSessionAccess(owners, "event.subscribe")
+      return HttpServerResponse.stream(eventStream(events, eventFrames(), { owners, scope }), {
+        contentType: "text/event-stream",
+        headers: {
+          "Cache-Control": "no-cache, no-transform",
+          "X-Accel-Buffering": "no",
+          "X-Content-Type-Options": "nosniff",
+        },
+      })
+    }))
   }),
 )

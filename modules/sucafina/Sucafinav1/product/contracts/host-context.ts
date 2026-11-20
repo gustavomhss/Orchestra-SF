@@ -51,6 +51,8 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   caseCreationRecovery?: (key: string, context: TrustedUiContext) => Promise<PortResult<CaseCreationRecovery>>
   /** Private HTTP adapters mounted in the existing local application. */
   productHttp?: NonNullable<Application["product"]>
+  /** Existing Core HTTP adapters under the Microsoft mount, using the original admitted Request. */
+  sessionHttp?: (original: Request) => Promise<Response | undefined>
   /** Private page projection prepared before the page lock and fenced inside it. */
   productView?: NonNullable<Application["productView"]>
   /** Private UI discovery; absent until its real collection registry is mounted. */

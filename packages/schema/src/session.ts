@@ -10,6 +10,7 @@ import { SessionEvent } from "./session-event"
 import { SessionID } from "./session-id"
 import { Revert } from "./revert"
 import { SessionSubagentModels } from "./session-subagent-models"
+import { TeamProfile } from "./sucafina/team-profile"
 
 export const ID = SessionID
 export type ID = SessionID
@@ -19,6 +20,8 @@ export const Event = SessionEvent
 export interface Info extends Schema.Schema.Type<typeof Info> {}
 export const Info = Schema.Struct({
   id: ID,
+  /** Server response label; mandatory at the corporate transport boundary, omitted only by technical mode. */
+  namespace: TeamProfile.SessionNamespace.pipe(optional),
   parentID: ID.pipe(optional),
   projectID: Project.ID,
   agent: Agent.ID.pipe(optional),

@@ -4,6 +4,7 @@ import path from "node:path"
 
 export type FactoryReceiptIdentity = {
   sourceSHA: string
+  sourceTreeSHA: string
   checkoutSHA: string
   workflowSHA: string
   eventName: "push" | "pull_request"
@@ -31,7 +32,7 @@ function fail(code: string): never { throw new Error(`SF_FACTORY_RECEIPT_${code}
  * Refuses a PR synthetic merge SHA substituted for the branch source.
  */
 export async function verifyFactoryPackageReceipt(directory: string, expected: FactoryReceiptIdentity) {
-  if (!sha40(expected.sourceSHA) || !sha40(expected.checkoutSHA) || !sha40(expected.workflowSHA) ||
+  if (!sha40(expected.sourceSHA) || !sha40(expected.sourceTreeSHA) || !sha40(expected.checkoutSHA) || !sha40(expected.workflowSHA) ||
     !runNumber(expected.runID) || !runNumber(expected.runAttempt) ||
     !["push", "pull_request"].includes(expected.eventName)) fail("EXPECTED_RUN_IDENTITY_INVALID")
   if (expected.sourceSHA !== expected.checkoutSHA ||
@@ -39,9 +40,9 @@ export async function verifyFactoryPackageReceipt(directory: string, expected: F
     fail("EXPECTED_SOURCE_SHA_MISMATCH")
 
   const receipt: unknown = JSON.parse(await readFile(path.join(directory, "factory-package-receipt.json"), "utf8"))
-  if (!object(receipt) || receipt.schema !== "sf-factory-package-proof-v1")
+  if (!object(receipt) || receipt.schema !== "sf-factory-package-proof-v2" || receipt.proofRole !== "factory-technical-packaging")
     fail("SCHEMA_INVALID")
-  if (receipt.sourceSHA !== expected.sourceSHA ||
+  if (receipt.sourceSHA !== expected.sourceSHA || receipt.sourceTreeSHA !== expected.sourceTreeSHA ||
     receipt.checkoutSHA !== expected.checkoutSHA ||
     receipt.expectedSourceSHA !== expected.sourceSHA)
     fail("SOURCE_SHA_MISMATCH")
@@ -56,8 +57,10 @@ export async function verifyFactoryPackageReceipt(directory: string, expected: F
     receipt.checkedEndpoint !== "/sucafina/status" || receipt.status !== 200 ||
     receipt.authentication !== "local-operator" || receipt.loginLandingStatus !== 200 ||
     receipt.dashboardGateStatus !== 303 || receipt.currentChoiceGateStatus !== 303 ||
-    receipt.authenticatedDashboardStatus !== 404 || receipt.authenticatedCurrentChoiceStatus !== 200 ||
-    receipt.authenticatedCurrentChoiceState !== "ok" ||
+    receipt.authenticatedDashboardStatus !== 404 || receipt.authenticatedCurrentChoiceStatus !== 403 ||
+    receipt.authenticatedCurrentChoiceState !== "denied" ||
+    receipt.authenticatedBusinessCommandStatus !== 403 || receipt.authenticatedNativeBusinessStatus !== 403 ||
+    receipt.businessAuthority !== "none" || receipt.businessUnchanged !== true ||
     receipt.currentChoiceEndpoint !== "/sucafina/dashboard?sf=current-choice&format=json" ||
     receipt.origin !== "http://localhost:4110" || receipt.extractedOutsideCheckout !== true)
     fail("QUALIFICATION_FIELDS_INVALID")
@@ -147,6 +150,7 @@ if (import.meta.main) {
   if (!directory) throw new Error("Usage: bun script/factory-receipt-check.ts <run-scoped-directory>")
   const result = await verifyFactoryPackageReceipt(directory, {
     sourceSHA: process.env.SF_FACTORY_EXPECTED_SOURCE_SHA ?? "",
+    sourceTreeSHA: process.env.SF_FACTORY_CHECKOUT_TREE_SHA ?? "",
     checkoutSHA: process.env.SF_FACTORY_CHECKOUT_SHA ?? "",
     workflowSHA: process.env.GITHUB_SHA ?? "",
     eventName: process.env.GITHUB_EVENT_NAME as "push" | "pull_request",

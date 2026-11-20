@@ -86,3 +86,46 @@ test("session-policy-04: each current action set changes the effective revision 
     expect(revisions.size).toBe(5)
   } finally { await f.close() }
 })
+
+test("session-policy-05: one fresh inspection answers same-boundary actions without multiplying remote observations", async () => {
+  const base: SfProductGrant = { ...productGrant(), sessionActions: ["read", "create"] }
+  const f = await teamProductFixture({ grants: [base] })
+  try {
+    const admission = await f.authority.readCoreSessionAdmission(f.businessRequest())
+    if (!admission?.inspect) throw new Error("Actual combined corporate inspection required")
+    let grantReads = 0
+    f.hooks.beforeGrants = async () => { grantReads++ }
+    const graphCount = () => f.provider.requests.filter((request) => new URL(request.url).origin === "https://graph.microsoft.com").length
+    const firstGraph = graphCount()
+    const first = await Effect.runPromise(admission.inspect([{ action: "read" }]))
+    expect(first?.authorized).toBe(true)
+    const single = { grants: grantReads, graph: graphCount() - firstGraph }
+    grantReads = 0
+    const nextGraph = graphCount()
+    const both = await Effect.runPromise(admission.inspect([{ action: "read" }, { action: "create" }]))
+    expect(both?.authorized).toBe(true)
+    expect({ grants: grantReads, graph: graphCount() - nextGraph }).toEqual(single)
+    expect(single.grants).toBeGreaterThan(0)
+    expect(single.graph).toBeGreaterThan(0)
+    expect(single.grants).toBeLessThanOrEqual(4)
+    expect(single.graph).toBeLessThanOrEqual(12)
+    // Each invocation still reads current policy; the earlier positive result cannot authorize this one.
+    await f.writeGrants([{ ...base, sessionActions: ["read"] }])
+    expect(await Effect.runPromise(admission.inspect([{ action: "create" }]))).toBeUndefined()
+  } finally { await f.close() }
+})
+
+test("session-policy-06: a policy edit during the combined observation invalidates every requested action", async () => {
+  const base: SfProductGrant = { ...productGrant(), sessionActions: ["read", "create"] }
+  const f = await teamProductFixture({ grants: [base] })
+  try {
+    const admission = await f.authority.readCoreSessionAdmission(f.businessRequest())
+    if (!admission?.inspect) throw new Error("Actual combined corporate inspection required")
+    let reads = 0
+    f.hooks.beforeGrants = async () => {
+      if (++reads === 2) await f.writeGrants([{ ...base, sessionActions: ["read"] }])
+    }
+    expect(await Effect.runPromise(admission.inspect([{ action: "read" }, { action: "create" }]))).toBeUndefined()
+    expect(reads).toBe(2)
+  } finally { await f.close() }
+})

@@ -106,3 +106,33 @@ test("unavailable recipients do not starve valid later messages or other applica
     expect(await f.jobs.inbox(f.operator.id)).toHaveLength(2)
   } finally { await f.dispose() }
 })
+
+test("technical maintenance preserves backups while refusing every business notification effect", async () => {
+  const f = await fixture()
+  let maintenance: Awaited<ReturnType<typeof createLocalJobs>> | undefined
+  try {
+    await f.jobs.dispose()
+    await f.store.transaction("procurement", async (snapshot) => {
+      snapshot.notices.push({ kind: "pending", to: [f.operator.id], record: "legacy-retained", at: f.clock.value.toISOString() })
+      snapshot.data.localInbox = [{ key: "retained", to: [f.operator.id], record: "legacy-retained", at: f.clock.value.toISOString() }]
+      return { commit: true, value: undefined }
+    })
+    const before = await f.store.transaction("procurement", async (snapshot) => ({
+      commit: false, value: { notices: structuredClone(snapshot.notices), inbox: structuredClone(snapshot.data.localInbox),
+        claims: structuredClone(snapshot.data.noticeClaims), delivery: structuredClone(snapshot.data.noticeDelivery) },
+    }))
+    maintenance = await createLocalJobs({ store: f.store, backupDirectory: f.backupDirectory, mount: "/sucafina",
+      operator: f.operator, now: () => f.clock.value, schedule: false, maintenanceOnly: true })
+    const result = await maintenance.runOnce()
+    expect(result.error).toBeNull()
+    expect(result.notifications).toBe("queued-transport-not-configured")
+    expect(Object.keys(result.backups).sort()).toEqual(["dashboard", "planner", "procurement"])
+    expect(await maintenance.inbox(f.operator.id)).toEqual([])
+    expect(await maintenance.markRead(f.operator.id, ["procurement:retained"])).toBe(0)
+    const after = await f.store.transaction("procurement", async (snapshot) => ({
+      commit: false, value: { notices: structuredClone(snapshot.notices), inbox: structuredClone(snapshot.data.localInbox),
+        claims: structuredClone(snapshot.data.noticeClaims), delivery: structuredClone(snapshot.data.noticeDelivery) },
+    }))
+    expect(after).toEqual(before)
+  } finally { await maintenance?.dispose(); await f.dispose() }
+})

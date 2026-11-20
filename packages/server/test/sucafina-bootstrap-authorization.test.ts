@@ -1,5 +1,5 @@
 import { afterEach, expect, test } from "bun:test"
-import { createServer, request as nodeRequest } from "node:http"
+import { createServer, request } from "node:http"
 import { NodeHttpServer } from "@effect/platform-node"
 import { composeSfInstallation } from "../../../apps/cli/src/sucafina-product/installation"
 import { Context, Effect, Layer, Option, Schema } from "effect"
@@ -26,7 +26,7 @@ afterEach(async () => { for (const close of cleanups.splice(0)) await close() })
 
 // Real Authorization and discovery handlers, with an explicitly declared installed
 // metadata source. This proves no corporate login, grant or Session admission.
-function fixture(value: Awaited<ReturnType<SfTrustedInstallationSource["current"]>> | null = installed, failure = false) {
+function fixture(value: Awaited<ReturnType<SfTrustedInstallationSource["current"]>> | null = installed, failure = false, technical = false) {
   const observations = { current: 0, locations: 0, privateCalls: 0 }
   const source: SfTrustedInstallationSource = {
     current: async () => { observations.current++; if (failure) throw new Error("offline"); return value ?? undefined },
@@ -45,7 +45,7 @@ function fixture(value: Awaited<ReturnType<SfTrustedInstallationSource["current"
   const routes = HttpApiBuilder.layer(api).pipe(
     Layer.provide(Layer.mergeAll(SucafinaHandler, probeHandlers)),
     Layer.provide(Layer.succeed(SfInstallationSource, source)),
-    Layer.provide(authorizationLayerWith(source)),
+    Layer.provide(authorizationLayerWith(technical ? undefined : source)),
     Layer.provide(schemaErrorLayer),
     Layer.provide(ServerAuth.Config.configLayer({ username: "orchestra", password: Option.some("configured-host-secret") })),
   )
@@ -54,13 +54,13 @@ function fixture(value: Awaited<ReturnType<SfTrustedInstallationSource["current"
   return { ...web, routes, observations }
 }
 
-function request(path = current, input: RequestInit = {}, publicOrigin = origin) {
+function webRequest(path = current, input: RequestInit = {}, publicOrigin = origin) {
   return new Request(publicOrigin + path, input)
 }
 
 test("current Microsoft metadata is reachable by exact GET and HEAD without host Basic", async () => {
   const f = fixture()
-  const response = await f.handler(request())
+  const response = await f.handler(webRequest())
   expect(response.status).toBe(200)
   expect(response.headers.get("cache-control")).toBe("no-store")
   expect(response.headers.get("x-content-type-options")).toBe("nosniff")
@@ -68,7 +68,7 @@ test("current Microsoft metadata is reachable by exact GET and HEAD without host
     ...installed.identity(), tenantId: installed.tenantId, publicOrigin: origin, mount: installed.mount,
     authMode: "microsoft", contractRevision: "sf-team-profile/1",
   }] })
-  const head = await f.handler(request(current, { method: "HEAD" }))
+  const head = await f.handler(webRequest(current, { method: "HEAD" }))
   expect(head.status).toBe(200)
   expect(await head.text()).toBe("")
   expect(f.observations.locations).toBe(0)
@@ -88,7 +88,7 @@ test("bootstrap exception rejects mixed selectors, encoded duplicates and old or
       .map((key) => "?select=current&contractRevision=sf-team-profile%2F1&" + key + "=caller"),
   ]
   for (const query of invalid) {
-    const response = await f.handler(request("/api/sucafina/installations" + query))
+    const response = await f.handler(webRequest("/api/sucafina/installations" + query))
     expect(response.status).toBe(401)
     expect(response.headers.get("www-authenticate")).toBe('Basic realm="Secure Area"')
   }
@@ -99,30 +99,37 @@ test("bootstrap exception rejects mixed selectors, encoded duplicates and old or
 test("public bootstrap is bound to the configured transport host and origin without forwarded hints", async () => {
   const f = fixture()
   for (const value of [
-    request(current, {}, "https://other.example.test"),
-    request(current, {}, "http://sf.example.test"),
-    request(current, { headers: { host: "other.example.test" } }),
-    request(current, { headers: { host: "sf.example.test:444" } }),
-    request(current, { headers: { origin: "https://other.example.test" } }),
-    request(current, { headers: { "sec-fetch-site": "cross-site" } }),
-    request(current, { headers: { host: "other.example.test", "x-forwarded-host": "sf.example.test", "x-forwarded-proto": "https" } }),
+    webRequest(current, {}, "https://other.example.test"),
+    webRequest(current, {}, "http://sf.example.test"),
+    webRequest(current, { headers: { host: "other.example.test" } }),
+    webRequest(current, { headers: { host: "sf.example.test:444" } }),
+    webRequest(current, { headers: { origin: "https://other.example.test" } }),
+    webRequest(current, { headers: { "sec-fetch-site": "cross-site" } }),
+    webRequest(current, { headers: { host: "other.example.test", "x-forwarded-host": "sf.example.test", "x-forwarded-proto": "https" } }),
   ]) expect((await f.handler(value)).status).toBe(401)
-  expect((await f.handler(request(current, { headers: { host: "sf.example.test", origin, "sec-fetch-site": "same-origin" } }))).status).toBe(200)
+  expect((await f.handler(webRequest(current, { headers: { host: "sf.example.test", origin, "sec-fetch-site": "same-origin" } }))).status).toBe(200)
   expect(f.observations.locations).toBe(0)
 })
 
-test("the exception does not expose other routes or mutation methods and existing Basic still works", async () => {
+test("installed Microsoft and local operators cannot use generic business APIs while an uninstalled technical server retains Basic", async () => {
   const f = fixture()
-  for (const value of [request("/api/private"), request("/api/sucafina/other"), request(current, { method: "POST" })]) {
+  for (const value of [webRequest("/api/private"), webRequest("/api/sucafina/other"), webRequest(current, { method: "POST" })]) {
     expect((await f.handler(value)).status).toBe(401)
   }
   expect(f.observations.privateCalls).toBe(0)
   expect(f.observations.current).toBe(0)
-  const admitted = await f.handler(request("/api/private", { headers: { authorization: basic } }))
-  expect(admitted.status).toBe(200)
-  expect(f.observations.privateCalls).toBe(1)
-  const malformed = await f.handler(request("/api/sucafina/installations?select=current", { headers: { authorization: basic } }))
-  expect(malformed.status).toBe(400)
+  const admitted = await f.handler(webRequest("/api/private", { headers: { authorization: basic } }))
+  expect(admitted.status).toBe(401)
+  expect(f.observations.privateCalls).toBe(0)
+  const malformed = await f.handler(webRequest("/api/sucafina/installations?select=current", { headers: { authorization: basic } }))
+  expect(malformed.status).toBe(401)
+  const localOperator = fixture({ ...installed, authMode: "local-operator", publicOrigin: "http://127.0.0.1:4096" })
+  expect((await localOperator.handler(webRequest("/api/private", { headers: { authorization: basic } }))).status).toBe(401)
+  expect(localOperator.observations.privateCalls).toBe(0)
+  const technical = fixture(null, false, true)
+  expect((await technical.handler(webRequest("/api/private", { headers: { authorization: basic } }))).status).toBe(200)
+  expect(technical.observations.privateCalls).toBe(1)
+  expect((await technical.handler(webRequest("/api/sucafina/installations?select=current", { headers: { authorization: basic } }))).status).toBe(400)
 })
 
 test("absent, local-operator, incomplete or failed metadata never creates a public exemption", async () => {
@@ -133,7 +140,7 @@ test("absent, local-operator, incomplete or failed metadata never creates a publ
     fixture({ ...installed, authMode: "local-operator", publicOrigin: "http://127.0.0.1:4096" }),
     fixture({ ...installed, identity: () => undefined }),
     fixture(installed, true),
-  ]) expect((await f.handler(request())).status).toBe(401)
+  ]) expect((await f.handler(webRequest())).status).toBe(401)
 })
 
 test("the production Node ingress accepts configured HTTPS-proxy metadata while preserving installed mount normalization", async () => {
@@ -164,7 +171,7 @@ test("the production Node ingress accepts configured HTTPS-proxy metadata while 
     if (address._tag !== "TcpAddress") throw new Error("Actual TCP listener required")
     const send = (pathname: string, headers: Record<string, string>) => Effect.promise((signal) =>
       new Promise<{ status: number; body: string; headers: import("node:http").IncomingHttpHeaders }>((resolve, reject) => {
-        const outgoing = nodeRequest({ hostname: "127.0.0.1", port: address.port, path: pathname,
+        const outgoing = request({ hostname: "127.0.0.1", port: address.port, path: pathname,
           method: "GET", headers, signal }, (response) => {
           let body = ""
           response.setEncoding("utf8")

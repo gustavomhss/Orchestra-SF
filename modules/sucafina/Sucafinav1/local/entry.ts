@@ -46,9 +46,7 @@ import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
 import { createSfBiHttp } from "../product/integration/bi-http.ts"
 import { createSfWorkbenchHttp } from "../product/interface/http.ts"
-import { sfHumanActions } from "../product/integration/human-authority.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
-import freeze from "../product/contracts/freeze-v1.json" with { type: "json" }
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
 import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
 
@@ -121,7 +119,7 @@ export async function createConfiguredInstallation(
     return new Response(request.method === "HEAD" ? null : JSON.stringify({
       login: operator ? "local-operator" : config.tenantId && config.clientId ? "configured-unverified" : "not-configured",
       uploads: config.scanner ? "scanner-configured-unverified" : "unavailable-scanner-not-configured",
-      notifications: operator ? "in-app" : "queued-transport-not-configured",
+      notifications: "queued-transport-not-configured",
       ...(operator && services.jobs ? { maintenance: services.jobs.status().error ? "degraded" : services.jobs.status().lastSuccess ? "active" : "starting" } : {}),
     }), { headers: { "Cache-Control": "no-store", "Content-Type": "application/json" } })
   }
@@ -154,7 +152,14 @@ export async function createConfiguredInstallation(
     origin: config.origin, mount: config.mount,
   }) : undefined
   if (microsoft && !teamBoundary) throw new Error("Microsoft Team boundary unavailable")
-  const businessIdentity = teamBoundary?.identity ?? identity
+  // An installed local operator authenticates only technical maintenance.
+  // Every SF business producer requires the original Microsoft Team boundary.
+  const businessIdentity = teamBoundary?.identity ?? Object.freeze({
+    ...identity,
+    authenticate: async () => null,
+    directory: async () => { throw new Error("SF_TEAM_BUSINESS_CONTEXT_UNAVAILABLE") },
+    ...(identity.graphDirectory ? { graphDirectory: async () => { throw new Error("SF_TEAM_BUSINESS_CONTEXT_UNAVAILABLE") } } : {}),
+  })
   const teamProfileHttp = microsoft && profileResolver ? createTeamProfileHttp({
     origin: config.origin, mount: config.mount, installationId, tenantId: microsoft.loaded.config.tenantId,
     resolver: profileResolver,
@@ -172,7 +177,8 @@ export async function createConfiguredInstallation(
     })
     return { at, durationMs: Math.ceil(performance.now() - started) }
   } : undefined
-  const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount, ...(recoveryDrill ? { recoveryDrill } : {}), ...(operator ? { operator: { id: `macos:${operator.installationId}:${operator.uid}`, name: operator.name } } : {}), schedule: !!operator })
+  const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount,
+    ...(recoveryDrill ? { recoveryDrill } : {}), maintenanceOnly: true, schedule: !!operator })
   services.jobs = jobs
   const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await businessIdentity.directory(request), bankKey: loaded.keys.bank })
   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
@@ -187,9 +193,7 @@ export async function createConfiguredInstallation(
     nativeActions: (request, stamp, pages) => nativeActions ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
     isAuthenticated: async (request: Request) => Boolean(await identity.person(request)),
     persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
-    grants: microsoft?.grants ?? (operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
-      namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
-      operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : []) })
+    grants: microsoft?.grants ?? [] })
   const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
     persistence: store, authenticate: businessIdentity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
   const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
@@ -320,20 +324,11 @@ export async function createConfiguredInstallation(
       await identity.prepare(request)
       const teamProfileResponse = await teamProfileHttp?.(request)
       if (teamProfileResponse) return teamProfileResponse
-      if (operator && (url.pathname === `${config.mount}/notifications` || url.pathname === `${config.mount}/backups`)) {
+      if (operator && url.pathname === `${config.mount}/backups`) {
         if (!["GET", "HEAD", "POST"].includes(request.method)) return new Response(null, { status: 405, headers: { Allow: "GET, HEAD, POST" } })
         const person = await identity.person(request)
         if (!person) return request.method === "POST" ? utilityJson({ ok: false }, 403) : new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login`, "Cache-Control": "no-store" } })
         if (person.id !== `macos:${operator.installationId}:${operator.uid}`) return utilityJson({ ok: false }, 403)
-        if (url.pathname.endsWith("/notifications")) {
-          if (request.method !== "POST") return utilityJson({ items: await jobs.inbox(person.id) }, 200, request.method === "HEAD")
-          const command = await utilityCommand(request)
-          if (command instanceof Response) return command
-          if (!Array.isArray(command.ids) || command.ids.some((id) => typeof id !== "string")) return utilityJson({ ok: false, errors: ["Notification identifiers required."] }, 422)
-          const ids = command.ids.filter((id): id is string => typeof id === "string")
-          if (ids.length > 100 || ids.some((id) => !/^(dashboard|planner|procurement):[a-f0-9]{64}$/.test(id))) return utilityJson({ ok: false, errors: ["Invalid notification identifiers."] }, 422)
-          return utilityJson({ ok: true, read: await jobs.markRead(person.id, ids) })
-        }
         if (request.method === "POST") {
           const command = await utilityCommand(request)
           if (command instanceof Response) return command
@@ -380,6 +375,23 @@ export async function createConfiguredInstallation(
         return request.method === "HEAD" ? new Response(null, { status: html.status, headers: html.headers }) : html
       }
       const surface = url.pathname.slice(config.mount.length + 1)
+      if (!teamBoundary && (url.pathname === config.mount || url.pathname.startsWith(config.mount + "/"))) {
+        const person = await identity.person(request)
+        const headers = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" }
+        if (!person) return request.method === "GET" || request.method === "HEAD"
+          ? new Response(null, { status: 303, headers: { ...headers,
+              location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}` } })
+          : Response.json({ status: "unauthenticated" }, { status: 401, headers })
+        if ((request.method === "GET" || request.method === "HEAD") && !url.searchParams.has("sf") &&
+            (surface === "dashboard" || surface === "planner" || surface === "procurement"))
+          return new Response(request.method === "HEAD" ? null : "legacy console decommissioned — use /",
+            { status: 404, headers: { ...headers, "Content-Type": "text/plain; charset=utf-8" } })
+        return Response.json({ status: "denied", reason: "microsoft-team-required" }, { status: 403, headers })
+      }
+      // The installed Session API consumes the same original identity-bound Request
+      // and the single already-composed host runtime. Technical operators never enter it.
+      const sessionResponse = await runtime?.services?.()?.sessionHttp?.(request)
+      if (sessionResponse) return sessionResponse
       if (surface === "dashboard" || surface === "planner" || surface === "procurement") {
         const person = await identity.person(request)
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
@@ -412,7 +424,7 @@ export async function createConfiguredInstallation(
   function localChrome(response: Response) {
     return response.text().then((body) => {
       const html = body.replace('<div id="content" class="content">', '<div id="content" class="content"><p role="status" class="environment-banner">Homologação local · ' + esc(operator!.name) + ' · Microsoft 365 desativado neste perfil</p>')
-        .replace('<!--local-tools-->', `<a href="${config.mount}/backups">Backups</a><details data-notifications="${config.mount}/notifications"><summary>Notifications <span class="notification-count" data-notification-count></span></summary><div class="notification-popover" data-notification-items><p>Loading notifications…</p></div></details>`)
+        .replace('<!--local-tools-->', `<a href="${config.mount}/backups">Backups</a>`)
       const headers = new Headers(response.headers)
       headers.delete("content-length")
       return new Response(html, { status: response.status, headers })

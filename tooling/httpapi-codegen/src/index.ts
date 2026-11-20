@@ -32,7 +32,18 @@ export type Output = {
 
 export type Contract = {
   readonly groups: ReadonlyArray<Group>
+  /** This contract may execute only through its original imported API. */
+  readonly authoritativeImport?: true
 }
+
+export type CompileOptions = {
+  readonly groupNames?: Readonly<Record<string, string>>
+  readonly endpointNames?: Readonly<Record<string, string>>
+  readonly omitEndpoints?: ReadonlySet<string>
+}
+
+type ApiImport = { readonly module: string; readonly api: string }
+const authoritativeImports = new WeakMap<Contract, ApiImport>()
 
 export { GenerationError } from "./error-symbol"
 
@@ -74,11 +85,50 @@ const manifestName = ".httpapi-codegen.json"
 
 export function compile<Id extends string, Groups extends HttpApiGroup.Any>(
   api: HttpApi.HttpApi<Id, Groups>,
-  options?: {
-    readonly groupNames?: Readonly<Record<string, string>>
-    readonly endpointNames?: Readonly<Record<string, string>>
-    readonly omitEndpoints?: ReadonlySet<string>
-  },
+  options?: CompileOptions,
+): Contract {
+  return compileContract(api, options, false)
+}
+
+/**
+ * Preserve nonportable runtime refinements by binding emission to the original
+ * API export. Promise DTOs describe wire shape only; this mode does not turn
+ * them into validators. The caller must export this API at the supplied import.
+ */
+export function compileImported<Id extends string, Groups extends HttpApiGroup.Any>(
+  api: HttpApi.HttpApi<Id, Groups>,
+  source: ApiImport,
+  options?: CompileOptions,
+): Contract {
+  if (!source.module.trim() || !/^[A-Za-z_$][\w$]*$/.test(source.api)) {
+    throw new GenerationError({ reason: "Invalid authoritative API import" })
+  }
+  const contract: Contract = Object.freeze({
+    groups: Object.freeze(compileContract(api, options, true).groups.map((group) => Object.freeze({
+      ...group,
+      endpoints: Object.freeze(group.endpoints.map((endpoint) => Object.freeze({
+        ...endpoint,
+        payloads: Object.freeze([...endpoint.payloads]),
+        successes: Object.freeze([...endpoint.successes]),
+        errors: Object.freeze(endpoint.errors.map((error) => Object.freeze({ ...error }))),
+        input: Object.freeze(endpoint.input.map((field) => Object.freeze({ ...field }))),
+        operation: Object.freeze({
+          ...endpoint.operation,
+          input: Object.freeze(endpoint.operation.input.map((field) => Object.freeze({ ...field }))),
+          errors: Object.freeze([...endpoint.operation.errors]),
+        }),
+      }))),
+    }))),
+    authoritativeImport: true,
+  })
+  authoritativeImports.set(contract, Object.freeze({ module: source.module, api: source.api }))
+  return contract
+}
+
+function compileContract<Id extends string, Groups extends HttpApiGroup.Any>(
+  api: HttpApi.HttpApi<Id, Groups>,
+  options: CompileOptions | undefined,
+  imported: boolean,
 ): Contract {
   const endpoints: Array<Endpoint> = []
   const portable = new Map<SchemaAST.AST, boolean>()
@@ -98,17 +148,17 @@ export function compile<Id extends string, Groups extends HttpApiGroup.Any>(
       if (successSchemas.length === 0) successSchemas.push(HttpApiSchema.NoContent)
       if (successSchemas.length > 1) throw new GenerationError({ reason: `Multiple success schemas: ${name}` })
 
-      const params = normalizeTransport(endpoint.params, "params", endpoint, name)
-      const query = normalizeTransport(endpoint.query, "query", endpoint, name)
-      const headers = normalizeTransport(endpoint.headers, "headers", endpoint, name)
+      const params = normalizeTransport(endpoint.params, "params", endpoint, name, imported)
+      const query = normalizeTransport(endpoint.query, "query", endpoint, name, imported)
+      const headers = normalizeTransport(endpoint.headers, "headers", endpoint, name, imported)
       const sourcePayloads = Array.from(endpoint.payload.values()).flatMap(({ schemas }) => schemas)
       if (sourcePayloads.length > 1) {
         throw new GenerationError({ reason: `Multiple payload schemas: ${name}` })
       }
-      const payloads = sourcePayloads.map((schema) => normalizeTransport(schema, "payload", endpoint, name)!)
-      const success = normalizeTransport(successSchemas[0], "success", endpoint, name)!
+      const payloads = sourcePayloads.map((schema) => normalizeTransport(schema, "payload", endpoint, name, imported)!)
+      const success = normalizeTransport(successSchemas[0], "success", endpoint, name, imported)!
       const errorSchemas = Array.from(errors).flatMap(([status, schemas]) =>
-        schemas.map((schema) => ({ status, ...normalizeTransport(schema, "error", endpoint, name)! })),
+        schemas.map((schema) => ({ status, ...normalizeTransport(schema, "error", endpoint, name, imported)! })),
       )
       const inputs = [
         ...inputFields(params?.schema, "params", name),
@@ -214,6 +264,9 @@ export function compile<Id extends string, Groups extends HttpApiGroup.Any>(
 }
 
 export function emitEffect(contract: Contract): Output {
+  if (contract.authoritativeImport) {
+    throw new GenerationError({ reason: "Effect schema requires its bound authoritative API import" })
+  }
   const endpoint = contract.groups.flatMap((group) => group.endpoints).find((endpoint) => !endpoint.effectPortable)
   if (endpoint !== undefined) {
     throw new GenerationError({
@@ -231,6 +284,12 @@ export function emitEffectImported(
     | { readonly module: string; readonly endpoints: Readonly<Record<string, string>> },
   layout?: { readonly splitGroups: ReadonlySet<string> },
 ): Output {
+  if (contract.authoritativeImport) {
+    const source = authoritativeImports.get(contract)
+    if (source === undefined || !("api" in options) || source.module !== options.module || source.api !== options.api) {
+      throw new GenerationError({ reason: "Authoritative API import does not match its compiled contract" })
+    }
+  }
   assertSplitGroups(contract.groups, layout?.splitGroups)
   return {
     operations: operations(contract.groups),
@@ -342,7 +401,7 @@ function assertPromiseEndpoint(endpoint: Endpoint) {
   ) {
     throw new GenerationError({ reason: `Unsupported Promise success encoding: ${name}` })
   }
-  if (successEncoding === "Uint8Array") endpoint.binary = true
+  if (successEncoding === "Uint8Array" && endpoint.binary !== true) endpoint.binary = true
   for (const error of endpoint.errors) {
     if (declaredErrorFields(error.schema) === undefined) {
       throw new GenerationError({ reason: `Promise error must have a literal discriminator: ${name}` })
@@ -588,10 +647,17 @@ function normalizeTransport(
   source: InputField["source"] | "success" | "error",
   endpoint: HttpApiEndpoint.AnyWithProps,
   operation: string,
+  imported: boolean,
 ) {
   if (schema === undefined) return undefined
-  if (isStreamSchema(schema)) return { schema, effectPortable: true } as const
+  if (isStreamSchema(schema)) {
+    const effectPortable = !imported || responseSchemas(schema, `${operation}.${source}`).every(
+      ([, value]) => metadataPortable(value.ast, new Set()),
+    )
+    return { schema, effectPortable }
+  }
   if (!metadataPortable(schema.ast, new Set())) {
+    if (imported) return { schema, effectPortable: false }
     throw new GenerationError({ reason: `Unportable schema: ${operation}.${source}` })
   }
   const decoded = Schema.toType(schema)

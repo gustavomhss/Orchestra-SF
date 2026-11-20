@@ -1,5 +1,5 @@
 import { makeDefaultApi } from "@orchestra/protocol/api"
-import { InvalidRequestError, SessionNotFoundError } from "@orchestra/protocol/errors"
+import { InvalidRequestError, SessionNotFoundError, UnauthorizedError } from "@orchestra/protocol/errors"
 import { HttpApiMiddleware } from "effect/unstable/httpapi"
 
 class LocationMiddleware extends HttpApiMiddleware.Service<LocationMiddleware>()(
@@ -14,7 +14,7 @@ class InboxLocationMiddleware extends HttpApiMiddleware.Service<InboxLocationMid
 
 class SessionLocationMiddleware extends HttpApiMiddleware.Service<SessionLocationMiddleware>()(
   "@orchestra/client/SessionLocationMiddleware",
-  { error: [InvalidRequestError, SessionNotFoundError] },
+  { error: [InvalidRequestError, SessionNotFoundError, UnauthorizedError] },
 ) {}
 
 export const ClientApi = makeDefaultApi({
