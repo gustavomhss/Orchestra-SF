@@ -70,9 +70,15 @@ const spec: CollectionSpec<"CAP13", Risk, RiskValues> = {
       actions:response.body.value.allowedActionIds,
     }
   },
-  save:async(transport,command,signal,idempotencyKey)=>
-    writeOutcome(await createSfDomainClient(transport)["domain.command.CAP13.save"](
-      {id:command.id,version:command.version,values:command.values},{signal,idempotencyKey})),
+  save:async(transport,command,signal,idempotencyKey)=>{
+    const values = { ...command.values }
+    for (const field of fields) {
+      if (values[field.name] === undefined) delete values[field.name]
+    }
+    return writeOutcome(await createSfDomainClient(transport)["domain.command.CAP13.save"](
+      { ...(command.id === undefined ? {} : { id: command.id }), version: command.version, values },
+      {signal,idempotencyKey}))
+  },
   delete:async(transport,command,signal,idempotencyKey)=>
     writeOutcome(await createSfDomainClient(transport)["domain.command.CAP13.delete"](
       {id:command.id,version:command.version,values:{}},{signal,idempotencyKey})),

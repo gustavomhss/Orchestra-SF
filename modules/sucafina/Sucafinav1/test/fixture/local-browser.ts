@@ -7,7 +7,10 @@ import { prepareOperatorAccess } from "../../local/enroll.ts"
 import { createLocalInstallation } from "../../local/entry.ts"
 
 /** Throwaway browser installation. The protocol scanner is a test fixture, never antivirus qualification. */
-export async function localBrowser() {
+export async function localBrowser(options: { nativePlanner?: boolean } = {}) {
+  // Native local-operator transport admits numeric loopback origins.
+  const hostname = options.nativePlanner ? "127.0.0.1" : "localhost"
+  const origin = `http://${hostname}:3000`
   console.info("browser fixture: prepare")
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "sucafina-business-browser-"))
   const cleanup: (() => Promise<unknown> | void)[] = [() => rm(root, { recursive: true, force: true })]
@@ -47,7 +50,7 @@ export async function localBrowser() {
       close(socket) { scans.delete(socket) },
     } })
     cleanup.push(() => scanner.stop(true))
-    const configFile = await prepareLocalConfiguration(root, "http://localhost:3000")
+    const configFile = await prepareLocalConfiguration(root, origin)
     const access = await prepareOperatorAccess(configFile, true)
     const config = await Bun.file(configFile).json()
     config.localOperator.buyer = true
@@ -60,14 +63,24 @@ export async function localBrowser() {
       XDG_CACHE_HOME: path.join(root, "host-cache"), XDG_STATE_HOME: path.join(root, "host-state"),
     }
     console.info("browser fixture: installation")
-    const installation = await createLocalInstallation({ origin: "http://localhost:3000" }, configFile, environment)
+    // Opt in for migrated native browser journeys. Identity, scanner, storage
+    // and enrollment below remain the original localBrowser installation.
+    const native = options.nativePlanner ? await import("./native-local-host.ts") : undefined
+    const installation = await createLocalInstallation({
+      origin,
+      ...(native ? { createHostRuntime: native.createSfHostRuntime } : {}),
+    }, configFile, environment)
     cleanup.push(() => installation.dispose())
-    const server = Bun.serve({ hostname: "localhost", port: 3000, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
+    const nativeHost = native ? await native.mountNativeLocalBrowser({ root, directory: root, environment }, installation) : undefined
+    if (nativeHost) cleanup.push(() => nativeHost.dispose())
+    const server = Bun.serve({ hostname, port: 3000, fetch: async (request) =>
+      await nativeHost?.handle(request) ?? await installation.handler(request) ?? new Response(null, { status: 404 }) })
     const stopServer = () => server.stop(true)
     cleanup.push(stopServer)
     const { chromium } = await import("@playwright/test")
-    console.info("browser fixture: direct pipe Chrome launch")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    const nativeDriver = native ? await native.launchNativeLocalBrowser() : undefined
+    console.info(nativeDriver ? "browser fixture: owned Node Chrome launch" : "browser fixture: direct pipe Chrome launch")
+    const browser = nativeDriver?.browser ?? await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
     const connection: { context?: BrowserContext; cdp?: CDPSession; owner?: NonNullable<Awaited<ReturnType<typeof linuxProcess>>> & { cmdline: string } } = {}
     cleanup.push(async () => {
       const outcomes: { operation: string; settled: boolean; error?: unknown }[] = []
@@ -89,8 +102,11 @@ export async function localBrowser() {
       }
       // Include extra contexts created by a business test, before closing the browser pipe.
       await Promise.all(browser.contexts().map((context, index) => bounded(`context.close:${index}`, context.close(), 750)))
-      if (connection.cdp) await bounded("CDP Browser.close", connection.cdp.send("Browser.close"), 1000)
-      await bounded("browser.close", browser.close(), 1500)
+      if (nativeDriver) await bounded("Node browser driver.close", nativeDriver.close(), 1500)
+      else {
+        if (connection.cdp) await bounded("CDP Browser.close", connection.cdp.send("Browser.close"), 1000)
+        await bounded("browser.close", browser.close(), 1500)
+      }
       const owner = connection.owner
       if (!owner) throw new Error("No authoritative Linux Chrome ownership capture; cleanup cannot be certified")
       const census = async () => {
@@ -150,6 +166,9 @@ export async function localBrowser() {
         if (outcome.error !== undefined && !(outcome.error instanceof Error && /Target.*closed|Session closed|Browser has been closed/i.test(outcome.error.message)))
           throw outcome.error
       }
+      // A pending Node close also needs its original transport/child proof.
+      // The existing 20s cleanup bound and independent Linux census still apply.
+      if (nativeDriver) await nativeDriver.close()
       console.info("browser fixture: OS proof: isolated owned group has no live members; transport disconnected", {
         pid: owner.pid, pgid: owner.group, uid: owner.uid, starttime: owner.start.toString(),
         pendingCloseRPCs: outcomes.filter((outcome) => !outcome.settled).map((outcome) => outcome.operation),
@@ -182,23 +201,73 @@ export async function localBrowser() {
     page.setDefaultTimeout(10000)
     page.setDefaultNavigationTimeout(10000)
     const errors: string[] = []
-    page.on("pageerror", (error) => { errors.push(error.message) })
+    const pageErrorKinds: string[] = []
+    const bootstrapStarted = performance.now()
+    const bootstrapTraffic: {
+      event: "request" | "response"; path: string; method: string; status?: number; elapsedMs: number
+    }[] = []
+    const observeBootstrap = (event: "request" | "response", url: string, method: string, status?: number) => {
+      if (!native || bootstrapTraffic.length >= 40) return
+      const parsed = new URL(url)
+      if (parsed.origin !== origin || ![
+        "/api/health", "/api/sucafina/installations", "/sucafina/api/ui/context",
+      ].includes(parsed.pathname)) return
+      bootstrapTraffic.push({ event, path: parsed.pathname, method,
+        ...(status === undefined ? {} : { status }), elapsedMs: Math.round(performance.now() - bootstrapStarted) })
+    }
+    page.on("pageerror", (error) => {
+      errors.push(error.message)
+      if (pageErrorKinds.length < 10) pageErrorKinds.push(
+        ["Error", "TypeError", "ReferenceError", "SyntaxError", "RangeError"].includes(error.name) ? error.name : "Error",
+      )
+    })
+    if (native) {
+      page.on("request", (request) => observeBootstrap("request", request.url(), request.method()))
+      page.on("response", (response) => observeBootstrap("response", response.url(), response.request().method(), response.status()))
+    }
+    // Read-only, bounded diagnostics. Never collect headers, bodies, query strings,
+    // enrollment codes, signed asset URLs or field contents from the private page.
+    const nativeDiagnostics = async () => {
+      if (!native) return undefined
+      const url = new URL(page.url())
+      const deadline = { timer: undefined as ReturnType<typeof setTimeout> | undefined }
+      const f01 = await Promise.race([
+        page.evaluate(() => {
+          const host = document.querySelector('[data-sf-host="owner-runtime231"]')
+          const attribute = (element: Element | null, name: string) =>
+            element?.getAttribute(name)?.replace(/[^a-zA-Z0-9_.:-]/g, "_").slice(0, 80) ?? null
+          return {
+            discovery: attribute(host, "data-sf-discovery-state"),
+            provider: attribute(host, "data-sf-provider-state"),
+            reason: attribute(host, "data-sf-provider-reason"),
+            view: attribute(host, "data-sf-view-state"),
+            gate: attribute(document.querySelector("[data-sf-f01]"), "data-sf-f01"),
+          }
+        }).catch(() => ({ unavailable: true })),
+        new Promise<{ unavailable: true }>((resolve) => {
+          deadline.timer = setTimeout(() => resolve({ unavailable: true }), 1000)
+        }),
+      ]).finally(() => { if (deadline.timer) clearTimeout(deadline.timer) })
+      return { url: url.origin + url.pathname, f01, traffic: [...bootstrapTraffic],
+        pageErrorCount: errors.length, pageErrorKinds: [...pageErrorKinds] }
+    }
     // Business tests navigate their own throwaway browser to the real enrollment endpoint.
     // operator-browser.test.ts separately covers the file-to-browser handoff.
     const handoff = (await Bun.file(access.artifact).text()).match(/location\.replace\(("[^"\r\n]*")\)/)?.[1]
     if (!handoff) throw new Error("Private test enrollment handoff is malformed")
     const destination = new URL(JSON.parse(handoff))
-    if (destination.origin !== "http://localhost:3000" || destination.pathname !== "/sucafina/auth/local") throw new Error("Unexpected test enrollment destination")
+    if (destination.origin !== origin || destination.pathname !== "/sucafina/auth/local") throw new Error("Unexpected test enrollment destination")
     console.info("browser fixture: private enrollment navigation")
     const [enrollment] = await Promise.all([
       page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/auth/local", { timeout: 10000 }),
       page.goto(destination.href, { waitUntil: "domcontentloaded", timeout: 10000 }),
     ]).catch((error) => { throw new Error("Private test browser enrollment failed: " + (error instanceof Error ? error.message : String(error))) })
     if (enrollment.status() !== 303) throw new Error(`Test enrollment failed with status ${enrollment.status()}`)
-    await page.waitForURL("http://localhost:3000/", { timeout: 10000 })
+    await page.waitForURL(origin + "/", { timeout: 10000 })
     console.info("browser fixture: authenticated")
     await mkdir(path.join(import.meta.dir, "../artifacts"), { recursive: true })
-    return { page, browser, root, configFile, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, installation, errors, stopServer, dispose }
+    return { page, browser, root, configFile, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, installation, errors, stopServer, dispose,
+      report: () => nativeDriver?.report(), nativeDiagnostics }
   } catch (error) {
     await dispose()
     throw error

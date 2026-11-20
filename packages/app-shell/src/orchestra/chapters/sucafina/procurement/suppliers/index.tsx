@@ -9,6 +9,7 @@ import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable } from "../../shared/table"
 import { SfRecordDetail } from "../../shared/detail"
+import { SfBoundAssets } from "../../shared/attachments/bound-assets"
 import { SfChangeReview } from "../../shared/change-review"
 import {
   createSfProcurementClient, exportSfSupplierCsv, sfSupplierCsvBindingInstalled,
@@ -535,7 +536,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     }
     const opRef = crypto.randomUUID() as SfOperationRef
     const idempotencyKey = crypto.randomUUID()
-    const requestBody = { page: "Suppliers", action: intent.action, id: intent.ref ?? undefined,
+    const requestBody = { page: "Suppliers", action: intent.action, ...(intent.ref === null ? {} : { id: intent.ref }),
       version: intent.version,
       values: ["create","save","change-bank"].includes(intent.action) ? { supplier: intent.value } : {} }
     let payloadDigest: string
@@ -562,7 +563,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     try {
       const client = createSfProcurementClient(host.ready()!.transport)
       const options = { signal: controller.signal, idempotencyKey }
-      const record = { page:"Suppliers" as const, id:intent.ref ?? undefined,version:intent.version }
+      const record = { page:"Suppliers" as const, ...(intent.ref === null ? {} : { id: intent.ref }),version:intent.version }
       const response =
         intent.action === "create"
           ? await client["domain.command.CAP27.create"]({ ...record, action:"create", values: {supplier:intent.value} }, options)
@@ -770,6 +771,17 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
           {id:"linked",titleKey:k("sf.u14.linked"),state:"ready",
             content:<Show when={linked.length} fallback={<p>{t("sf.u14.noLinked")}</p>}>
               <ul><For each={linked}>{(request) => <li>{request.number ?? t("sf.u14.missing")} · {request.pr?.title ?? ""}</li>}</For></ul>
+            </Show>},
+          {id:"attachments",titleKey:"orchestra.sf.s04.attachments.title" as SfCopyKey,state:"ready",
+            content:<Show when={version() !== null} fallback={<p>{t("sf.u14.stale")}</p>}>
+              <SfBoundAssets surface="procurement" page="Suppliers"
+                uploadKind={current.value.data.canUploadAttachment === true && can("save") ? "supplier" : undefined}
+                recordRef={id} recordVersion={version()!} assets={selected.attachments ?? []}
+                disabled={active(ui.phase) || current.value.data.canUploadAttachment !== true || !can("save")}
+                onReconcile={() => {
+                  const token = authority()
+                  if (token) void refresh(token,id)
+                }} />
             </Show>},
           {id:"audit",titleKey:k("sf.u14.audit"),state:"ready",
             content:<ul><For each={selected.history ?? []}>{(entry) =>
