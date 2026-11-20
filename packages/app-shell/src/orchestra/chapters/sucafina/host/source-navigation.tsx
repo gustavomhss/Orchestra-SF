@@ -90,7 +90,7 @@ export function SfSourceNavigation(props: Readonly<{
         aria-current={props.route()?.surfaceId === link.surfaceId ? "page" : undefined}
         aria-busy={view.busy === link.surfaceId} aria-disabled={view.busy !== undefined}
         onClick={(event) => {
-          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+          if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
           event.preventDefault()
           void invoke(link.href)
         }}>
