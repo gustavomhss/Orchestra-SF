@@ -11,7 +11,7 @@ import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import { createSfWorkClient } from "@orchestra/client/sucafina/work"
 import { sfPlannerSavedView, type SfPlannerSavedView } from "../../views/planner-view"
 import {
-  prepareSfPlannerMonthlyRange, unresolvedSfPlannerMonthlyRows,
+  prepareSfPlannerMonthlyRange, snapshotSfPlannerMonthlyDraft, unresolvedSfPlannerMonthlyRows,
   type SfPlannerMonthlyDraftInput,
 } from "@orchestra/client/sucafina/planner/monthly"
 import type {
@@ -496,7 +496,11 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const admitted = new Set(rows.filter((row) => row.result === "ready").map((row) => row.rowRef))
     const drafts = input.drafts.filter((row) => admitted.has(row.rowId as SfRef))
     if (!drafts.length) return
-    const request = { ...input, drafts }
+    const request = snapshotSfPlannerMonthlyDraft({ ...input, drafts })
+    if (!request) {
+      setState({ paste: { ...paste, phase: "failed" }, error: t("sf.common.unavailable") })
+      return
+    }
     setState({ busy:true, paste: { ...paste, phase: "applying" } })
     try {
       const response = await createSfPlannerClient(ready.transport)["planner.monthly.apply"](
