@@ -9,7 +9,7 @@ import type { compositionTestDeadline } from "./composition-test-deadline.ts"
 
 // The data below is a declared SQLite fixture. Scenarios, stored results, human
 // criteria, units and the final choice are produced by their real domain APIs.
-export async function plannerObservationFixture(deadline: ReturnType<typeof compositionTestDeadline>, mixed = false) {
+export async function plannerObservationFixture(deadline: ReturnType<typeof compositionTestDeadline>, mixed = false, options: { sourceOnly?: boolean } = {}) {
   const fixture = await deadline.phase("fixture.initialize", async () => {
     const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check(), humanActions: ["decisions.portfolio.read"] })
     deadline.own(() => value.dispose())
@@ -56,7 +56,7 @@ export async function plannerObservationFixture(deadline: ReturnType<typeof comp
     const alternatives: DecisionCase["alternatives"][number][] = []
     const resultRefs: string[] = []
     for (const [index, source] of sources.entries()) {
-      const scenario = { baseRef: source.refId, operations: index ? [{ kind: "replace" as const, targetRef: "line:1", amount: 80,
+      const scenario = { baseRef: source.refId, operations: index && !options.sourceOnly ? [{ kind: "replace" as const, targetRef: "line:1", amount: 80,
         currency: "USD", period: { start: "2026-01-01", end: "2026-01-31" } }] : [], assumptions: [] }
       const result = await fixture.business.planner.simulateScenario(scenario, call)
       if (result.status !== "ok") return result
