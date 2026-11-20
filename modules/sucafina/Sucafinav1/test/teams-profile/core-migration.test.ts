@@ -86,7 +86,47 @@ async function fixture() {
   cleanups.push(async () => files.close())
   const authority = createTeamProfileMigrationAuthority({ origin: f.binding.origin, installationId: profileA.installationId,
     tenantId: profileA.tenantId, resolver: f.resolver, microsoft: f.microsoft })
-  const engine = (using: MigrationFiles = files) => createTeamProfileCoreMigration({ files: using, authority, maintenance: graph.maintenance })
+  const mark = (stage: string) => console.info("CORE_MIGRATION_DIAGNOSTIC " + stage)
+  const engine = (using: MigrationFiles = files) => {
+    const traced: MigrationFiles = {
+      ...using,
+      business: { ...using.business, execute: (sql, params) => {
+        if (sql === "BEGIN IMMEDIATE" || sql === "COMMIT" || sql === "ROLLBACK") mark("business " + sql)
+        using.business.execute(sql, params)
+      } },
+      checkpoint: (plan) => {
+        mark("checkpoint begin")
+        const result = using.checkpoint(plan)
+        mark("checkpoint complete")
+        return result
+      },
+      verifyCheckpoint: (plan, checkpoint) => {
+        mark("verify checkpoint begin")
+        const result = using.verifyCheckpoint(plan, checkpoint)
+        mark("verify checkpoint complete")
+        return result
+      },
+    }
+    const migration = createTeamProfileCoreMigration({ files: traced, authority, maintenance: {
+      ...graph.maintenance,
+      close: Effect.sync(() => mark("maintenance close begin")).pipe(
+        Effect.andThen(graph.maintenance.close), Effect.tap(() => Effect.sync(() => mark("maintenance close complete")))),
+    } })
+    return {
+      ...migration,
+      async prepare(request: Request, rawIntent: unknown) {
+        mark("prepare begin")
+        const result = await migration.prepare(request, rawIntent)
+        mark("prepare complete")
+        return result
+      },
+      async cut(request: Request, planDigest: string) {
+        mark("cut begin")
+        try { const result = await migration.cut(request, planDigest); mark("cut complete"); return result }
+        catch (error) { mark("cut failed"); throw error }
+      },
+    }
+  }
   const request = () => f.request("/api/ui/team-profile-migration", f.cookie, { method: "POST", headers: { origin: f.binding.origin } })
   const mapping = (quarantine = false): TeamProfileCensus.Intent => {
     const report = TeamProfileCensus.inspect(files.business, storageId)
@@ -164,12 +204,15 @@ test("core migration: authority lost while the real producer drain awaits is rec
   const prepared = await engine.prepare(f.request(), f.mapping())
   const started = Promise.withResolvers<void>(), cleaning = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
   const cancel = new AbortController()
-  const admitted = Effect.runPromise(f.graph.maintenance.admit(Effect.sync(() => started.resolve()).pipe(
+  const admitted = Effect.runPromise(f.graph.maintenance.admit(Effect.sync(() => { console.info("CORE_MIGRATION_DIAGNOSTIC revocation started"); started.resolve() }).pipe(
     Effect.andThen(Effect.never),
     Effect.ensuring(Effect.promise(async () => {
+      console.info("CORE_MIGRATION_DIAGNOSTIC revocation cleanup begin")
       f.provider.account.groups.splice(f.provider.account.groups.indexOf(group), 1)
       cleaning.resolve()
+      console.info("CORE_MIGRATION_DIAGNOSTIC revocation cleanup signalled")
       await release.promise
+      console.info("CORE_MIGRATION_DIAGNOSTIC revocation cleanup released")
     })),
   )), { signal: cancel.signal })
   void admitted.catch(() => {})
@@ -179,12 +222,16 @@ test("core migration: authority lost while the real producer drain awaits is rec
   void cutting.then(() => { finished = true }, () => { finished = true })
   try {
     await Promise.race([cleaning.promise, cutting.then(() => { throw new Error("Cut ended before its producer cleanup") })])
+    console.info("CORE_MIGRATION_DIAGNOSTIC revocation test observed cleanup")
     expect(finished).toBe(false)
     release.resolve()
     await expect(cutting).rejects.toThrow("SF_CORE_MIGRATION_AUTHORITY")
+    console.info("CORE_MIGRATION_DIAGNOSTIC revocation rejected")
   } finally {
+    console.info("CORE_MIGRATION_DIAGNOSTIC revocation finally")
     release.resolve(); cancel.abort()
     await admitted.catch(() => {})
+    console.info("CORE_MIGRATION_DIAGNOSTIC revocation admission ended")
   }
   expect(AuthoritySqlFence.marker(f.files.business)).toBeUndefined()
   expect(AuthorityControl.open(f.files.control).inspect(f.storageId)).toBeUndefined()
