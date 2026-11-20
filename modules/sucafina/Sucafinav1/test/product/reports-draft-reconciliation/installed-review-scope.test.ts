@@ -10,6 +10,10 @@ import { createSfExtendedBusinessServices } from "../../../../../../apps/cli/src
 import { createSfReviewCollaboration, localRecordReview } from "../../../../../../apps/cli/src/sucafina-product/review-collaboration.ts"
 import { snapshotBoundReview } from "../../../../../../apps/cli/src/sucafina-product/review-read-integrity.ts"
 import { reportsCorpus } from "../../../../../../packages/app-shell/e2e/sucafina/reports-support/corpus.ts"
+import { createSfResidentReviewReaders, sfResidentReviewSnapshotReaders } from "../../../../../../apps/cli/src/sucafina-product/review-resident-readers.ts"
+import { createSfMemoryServices } from "../../../../../../apps/cli/src/sucafina-product/memory-services.ts"
+import { createSfReviewServices } from "../../../../../../apps/cli/src/sucafina-product/review-services.ts"
+import type { SfReviewReaders } from "../../../../../../apps/cli/src/sucafina-product/review-services.ts"
 import { financialCompositionFixture } from "../wp10/integration/financial-composition-fixture.ts"
 
 function structure(value: unknown) {
@@ -38,10 +42,22 @@ function expectScope(review: PreservedReview, allowed: boolean) {
  * Malformed copies below exercise structural classification only, never a
  * successful source reader or an authorization result supplied by the test.
  */
-test("Reports composition scope handles repeated exact evidence and keeps depth, budget and authority fences", async () => {
-  const fixture = await financialCompositionFixture()
+for (const withResident of [false, true]) test(`Reports composition resident=${withResident} handles repeated evidence and keeps authority fences`, async () => {
+  const hooks: { environment?: () => void } = {}
+  const fixture = await financialCompositionFixture({ beforeEnvironment: async () => { hooks.environment?.() } })
+  const counted = { reviews: 0 }
+  const readState = fixture.authority.state.read
+  fixture.authority.state.read = async (request, namespace, inspect) => {
+    if (namespace === "reviews") counted.reviews += 1
+    return readState(request, namespace, inspect)
+  }
+  const resident = withResident ? createSfResidentReviewReaders({ authority: fixture.authority, business: fixture.business }) : undefined
   const extended = createSfExtendedBusinessServices({ authority: fixture.authority, business: fixture.business,
-    persistence: fixture.persistence, ...fixture.guards, origin: "https://example.test" })
+    persistence: fixture.persistence, ...fixture.guards, origin: "https://example.test",
+    ...(resident ? { reviewReaders: resident.readers } : {}) })
+  const memory = resident ? createSfMemoryServices({ authority: fixture.authority,
+    business: { ...fixture.business, planner: extended.portfolioServices.planner }, signalRegistryWrites: new WeakSet<object>() }) : undefined
+  if (resident && memory) resident.bindOutcome(memory.reviewOutcome)
   try {
     const corpus = reportsCorpus(fixture.at.slice(0, 10))
     await fixture.persistence.transaction("dashboard", async (snapshot) => {
@@ -118,7 +134,8 @@ test("Reports composition scope handles repeated exact evidence and keeps depth,
     const application = extended.reviews
     if (!application?.readScope) throw new Error("Actual installed review scope unavailable")
     const collaboration = createSfReviewCollaboration({ authority: fixture.authority,
-      application, evidence: fixture.business.context })
+      application, evidence: fixture.business.context,
+      readerCurrent: sfResidentReviewSnapshotReaders(resident?.readers, fixture.authority.host) })
     const call = await fixture.read()
     try {
       const request = fixture.authority.host.requestFor(call)
@@ -138,6 +155,100 @@ test("Reports composition scope handles repeated exact evidence and keeps depth,
         const atCommit = await fixture.persistence.transactionAll!(async () => ({ commit: false,
           value: await collaboration.authorizeReviewThreadContext(prepared.value, basis, call) }))
         expect(atCommit).toBe(true)
+        if (resident && memory) {
+          const recognition = sfResidentReviewSnapshotReaders(resident.readers, fixture.authority.host)
+          expect(recognition?.()).toBe(true)
+          const reopened = async () => {
+            counted.reviews = 0
+            expect(await application.reviews.read(saved.id, call)).toEqual({ status: "ok", value: saved })
+            return counted.reviews
+          }
+          await reopened()
+          expect(await reopened()).toBe(1) // One fresh C08 proof; no second producer materialization.
+
+          const outcome = resident.readers.outcome!
+          const alternatives: SfReviewReaders[] = [
+            { ...resident.readers },
+            { ...resident.readers, outcome: { read: outcome.read,
+              authorize: (...args) => outcome.authorize(...args) } },
+          ]
+          for (const readers of alternatives) {
+            expect(sfResidentReviewSnapshotReaders(readers, fixture.authority.host)).toBeUndefined()
+            const other = createSfReviewServices({ authority: fixture.authority, business: fixture.business,
+              portfolio: extended.portfolioServices, bi: extended.bi, persistence: fixture.persistence,
+              origin: "https://example.test", readers }).application
+            if (!other?.readScope) throw new Error("Actual custom-reader composition unavailable")
+            counted.reviews = 0
+            expect(await other.readScope.run(request, () => other.reviews.read(saved.id, call)))
+              .toEqual({ status: "ok", value: saved })
+            expect(counted.reviews).toBeGreaterThan(1)
+          }
+
+          const ownerInput: Parameters<typeof createSfReviewServices>[0] = { authority: fixture.authority,
+            business: fixture.business, portfolio: extended.portfolioServices, bi: extended.bi,
+            persistence: fixture.persistence, origin: "https://example.test", readers: resident.readers }
+          const ownerServices = createSfReviewServices(ownerInput), ownerApplication = ownerServices.application
+          if (!ownerApplication?.readScope) throw new Error("Actual reader-owner composition unavailable")
+          await ownerApplication.readScope.run(request, async () => {
+            expect(await ownerApplication.reviews.read(saved.id, call)).toEqual({ status: "ok", value: saved })
+            counted.reviews = 0
+            expect(await ownerApplication.reviews.read(saved.id, call)).toEqual({ status: "ok", value: saved })
+            expect(counted.reviews).toBe(1)
+            ownerInput.readers = { ...resident.readers, historicalSource: async () => false }
+            expect(ownerServices.residentSnapshotReaders?.()).toBe(false)
+            counted.reviews = 0
+            expect(await ownerApplication.reviews.read(saved.id, call)).toEqual({ status: "ok", value: saved })
+            expect(counted.reviews).toBeGreaterThan(1)
+          })
+
+          // New fields and wrapped methods invalidate factory recognition even
+          // when the wrapper delegates to the unchanged real producer.
+          resident.readers.historicalSource = async () => false
+          try {
+            expect(recognition?.()).toBe(false)
+            expect(await reopened()).toBeGreaterThan(1)
+          } finally { delete resident.readers.historicalSource }
+          const readOutcome = memory.reviewOutcome.read
+          memory.reviewOutcome.read = (...args) => readOutcome(...args)
+          try {
+            expect(recognition?.()).toBe(false)
+            expect(await reopened()).toBeGreaterThan(1)
+          } finally { memory.reviewOutcome.read = readOutcome }
+
+          const refused: number[] = []
+          resident.bindOutcome({ read: readOutcome, authorize: async (_context, observations) => {
+            refused.push(observations.length)
+            return false
+          } })
+          try {
+            expect(recognition?.()).toBe(false)
+            const denied = await application.reviews.read(saved.id, call)
+            expect(denied.status).toBe("denied")
+            expect(denied).not.toHaveProperty("value")
+            expect(refused).toContain(0) // Preserve a custom provider's empty-list refusal.
+          } finally { resident.bindOutcome(memory.reviewOutcome) }
+
+          await reopened()
+          const authorizeOutcome = memory.reviewOutcome.authorize
+          hooks.environment = () => {
+            hooks.environment = undefined
+            memory.reviewOutcome.authorize = async () => false
+          }
+          try {
+            const interrupted = await application.reviews.read(saved.id, call)
+            expect(interrupted.status).toBe("denied")
+            expect(interrupted).not.toHaveProperty("value")
+            expect(recognition?.()).toBe(false)
+            const changedLease = await fixture.persistence.transactionAll!(async () => ({ commit: false,
+              value: await collaboration.authorizeReviewThreadContext(prepared.value, basis, call) }))
+            expect(changedLease).toBe(false)
+          } finally {
+            hooks.environment = undefined
+            memory.reviewOutcome.authorize = authorizeOutcome
+          }
+          expect(recognition?.()).toBe(true)
+          expect(await application.reviews.read(saved.id, call)).toEqual({ status: "ok", value: saved })
+        }
         fixture.active.value = false
         expect(await collaboration.authorizeReviewThreadContext(prepared.value, basis, call)).toBe(false)
       })

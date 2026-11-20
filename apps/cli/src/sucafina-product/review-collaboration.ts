@@ -26,13 +26,17 @@ export function createSfReviewCollaboration(input: {
   evidence: BusinessContextService
   /** A real host-private recipient/source ACL provider; directory membership is insufficient. */
   recipientAuthority?: ReviewThreadRecipientAuthority
+  /** Private registered reader identity, when composed by the resident host. */
+  readerCurrent?: () => boolean
 }): SfReviewCollaborationBinding {
   const host = input.authority.host
   const reviews = input.application.reviews
   const contexts = input.application.threadContext
   const readContext = contexts.read
+  const readerCurrent = input.readerCurrent
   const sameProducer = () => input.authority.host === host && input.application.reviews === reviews &&
-    input.application.threadContext === contexts && contexts.read === readContext
+    input.application.threadContext === contexts && contexts.read === readContext && input.readerCurrent === readerCurrent &&
+    (!readerCurrent || readerCurrent())
   const leases = new WeakMap<TrustedDomainContext, Map<string, AccessLease>>()
   const key = (pin: ReviewThreadContext, basis: ThreadSourceContext, call: TrustedDomainContext) => digestSfValue({ pin, basis, authority: call.binding })
   const fingerprint = (pin: ReviewThreadContext) => {

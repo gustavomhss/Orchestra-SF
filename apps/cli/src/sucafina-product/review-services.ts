@@ -99,10 +99,13 @@ export function createSfReviewServices(input: {
     handoffs,
     ...(input.readers?.contributions ? { contributions: input.readers.contributions } : {}),
   })
+  const readers = input.readers
+  const recognizedReaders = sfResidentReviewSnapshotReaders(readers, host)
+  const residentSnapshotReaders = recognizedReaders ? () => input.readers === readers && recognizedReaders() : undefined
   const readScope = protectSfReviewReads({ authority, reviews: application.reviews,
     localSnapshotReaders: !input.readers || Object.values(input.readers).every((reader) => reader === undefined),
-    residentSnapshotReaders: sfResidentReviewSnapshotReaders(input.readers, host) })
+    residentSnapshotReaders })
   const protectedApplication: typeof application & { readScope?: typeof readScope } = { ...application, readScope,
     http: (request, surface) => readScope.run(request, () => application.http(request, surface)) }
-  return { application: protectedApplication, historical, portfolioHistory, handoffs, unavailable: input.readers?.outcome ? [] : ["review-historical-outcome-reader-unavailable"] }
+  return { application: protectedApplication, historical, portfolioHistory, handoffs, residentSnapshotReaders, unavailable: input.readers?.outcome ? [] : ["review-historical-outcome-reader-unavailable"] }
 }
