@@ -71,7 +71,7 @@ export async function microsoftNativeHost(
     const health = await router.handler(new Request(origin + "/api/health"))
     if (health.status !== 200) throw new Error("MICROSOFT_NATIVE_HOST_UNAVAILABLE:" + health.status)
     if (!selected?.identity()) throw new Error("MICROSOFT_NATIVE_IDENTITY_UNAVAILABLE")
-    return { dispose: async () => { try { await router.dispose() } finally { restore() } } }
+    return { handler: router.handler, dispose: async () => { try { await router.dispose() } finally { restore() } } }
   } catch (error) {
     try { await router.dispose() } finally { restore() }
     throw error
