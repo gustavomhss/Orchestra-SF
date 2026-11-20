@@ -1,6 +1,17 @@
 # HANDOFF — sf-ops-import-observed
 
-## SHA e estado
+## Checkpoint vigente após o primeiro gate desta composição
+
+- Run44671315734 terminou **failure antes de executar testes de produto**; typecheck E2E original TS2367 em apps/cli/src/sucafina-product/native-ui/import-health.ts:31:45.
+- Job136072705652 failure no typecheck; cleanup136075460011 success. Nenhum resultado de Import/Sourcing/Documents pode ser inferido.
+- Causa: comparação entre as interfaces AssetPersistence e Persistence & SfScopedSourcePort declaradas sem sobreposição.
+- Correção concreta: códigoc182df016a561c2ab53d01a6624f2cb11331e41f, treeff16873c116625737373760faa1121c99be28f9c; blob817f50ae7dab6c092d13f342cb0f33edc82c0c53.
+- Único hunk: a mesma identidade de objetos passa a ser comparada com Object.is, sem cast, alteração de permissões, shape ou semântica de autorização.
+- Shared source separado: sf-import-identity@455f64a689f000cdb4c0ed88fdcd229a4de81992, baseado em integração124d5b5, sem dependência #393.
+- O novo snapshot de Operations será filho do checkpoint documental que inclui este fix; request original e todas as assertions permanecem inalterados.
+- Estado ainda PARTIAL até conclusão real do novo gate. Nenhuma repetição de código idêntico e nenhuma qualificação integral antecipada.
+
+## SHA e estado históricos
 - Estado: PARTIAL / NOT_REVALIDATED. Gate original de Operations ainda não executado neste checkpoint.
 - Código: a3dde87cb329cc203170f00e78dc6f766a57d941; tree 512fb0e57046e83ae9bfc9b93a2fee6a1bc9fb88.
 - Parent: sf-import-native@ed8db1bd407d09c908aa90b900e7ecba258b41f7, código64d96d475b38f308bea2d468f2d1c33617002a35, base5856483ee09bcb6b3511aa2d70276dc44b3aa0e5.
