@@ -1,6 +1,7 @@
-import { For, Show, type JSX } from "solid-js"
+import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useNavigate } from "@solidjs/router"
+import { usePlatform } from "@/context/platform"
 import { SfPeople } from "@orchestra/schema/sucafina/people"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
@@ -13,6 +14,7 @@ import { createPeopleSession } from "../structure/session"
 import {
   SfPeopleEditor, type PeopleField, type PeopleFormValues, type PeopleSaveOutcome,
 } from "../structure/editor"
+import { downloadTalentMembers } from "./download"
 import "../structure/people.css"
 
 type TalentResponse = typeof SfPeople.operations["domain.page.CAP08"]["output"]["Type"]
@@ -70,13 +72,14 @@ function toTalentValues(person: object): PeopleFormValues {
 /**
  * U47 / CAP08 Talent Review. Read-only actors see only the server-projected
  * member fields. Actions are independently fenced by F01 context and A10.
- * A missing workbook preview/download binding cannot become a fake import or
- * an arbitrary fetch; both remain explicitly unavailable until 125 integrates
- * the source-bound bytes/preview contract.
+ * Workbook controls require their original files operations and current owner.
+ * Imports navigate to the source-bound UI55 preview/apply flow; exports use
+ * the original members byte producer without serializing the page projection.
  */
 export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element {
   const { t } = useSfPresentation()
   const navigate = useNavigate()
+  const platform = usePlatform()
   const session = createPeopleSession<TalentData>("CAP08", () => props.route.href,
     (transport, signal) => {
       const status = props.route.query.status
@@ -93,12 +96,14 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
     selection: TalentSelection | undefined
     deleting: string | undefined
     pending: boolean
+    exporting: boolean
     message: string
   }>({
     filter: props.route.query.status || "Active",
     selection: undefined,
     deleting: undefined,
     pending: false,
+    exporting: false,
     message: "",
   })
   const ready = () => session.ready()
@@ -183,6 +188,59 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
   const original = () => {
     const id = selectionId()
     return id ? member(id) : undefined
+  }
+  const workbookAllowed = (action: "import" | "exportAllMembers", operations: readonly string[]) => {
+    const active = ready()
+    if (!active || !active.value.allowedActionIds.includes(action) ||
+        !active.context.destinations.some((destination) => destination.capabilityId === "CAP08" &&
+          destination.surface === "dashboard" && destination.canRead &&
+          destination.allowedActionIds.includes(action))) return false
+    return operations.every((operationId) => active.context.availability.some((resource) =>
+      resource.family === "files" && resource.operations.some((operation) =>
+        operation.operationId === operationId && operation.state === "ready" && operation.operational)))
+  }
+  const canImport = () => workbookAllowed("import", [
+    "files.import-targets", "files.import-admit", "files.import-preview",
+    "files.import-reference", "files.import-detail", "files.import-apply",
+  ])
+  const canExport = () => workbookAllowed("exportAllMembers", ["files.export.members"])
+  const workbookScope = () => {
+    const active = ready()
+    return active ? JSON.stringify([active.ownerKey, session.context.generation(),
+      active.context.stamp, props.route.href]) : undefined
+  }
+  let exportAbort: AbortController | undefined
+  createEffect(() => {
+    workbookScope()
+    exportAbort?.abort()
+    exportAbort = undefined
+    setLocal("exporting", false)
+  })
+  onCleanup(() => exportAbort?.abort())
+  const beginExport = async () => {
+    const active = ready()
+    const scope = workbookScope()
+    if (!active || !scope || !canExport() || local.exporting || local.pending) return
+    const controller = new AbortController()
+    exportAbort?.abort()
+    exportAbort = controller
+    setLocal({ exporting: true, message: "" })
+    const current = () => !controller.signal.aborted && workbookScope() === scope && canExport()
+    try {
+      await downloadTalentMembers({
+        transport: active.transport, signal: controller.signal, current,
+        ...(platform.downloadResponse ? { downloadResponse: platform.downloadResponse } : {}),
+      })
+    } catch (error) {
+      if (!current()) return
+      console.error("Sucafina members export failed", error instanceof Error ? error.name : "unknown")
+      setLocal("message", t(sfCommonKey("sf.common.unavailable")))
+    } finally {
+      if (exportAbort === controller) {
+        exportAbort = undefined
+        setLocal("exporting", false)
+      }
+    }
   }
   const importView = () => props.route.kind === "import"
   const exportView = () => props.route.kind === "export"
@@ -335,16 +393,21 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
               <section class="sf-people-section" data-sf-section="import-export">
                 <h2>{t(key("sf.u47.importTitle"))}</h2>
                 <div class="sf-people-toolbar">
-                  <button type="button" class="mx-btn" disabled
-                    title={t(sfCommonKey("sf.common.unavailable"))}>
+                  <button type="button" class="mx-btn" data-sf-talent-workbook="import"
+                    disabled={!canImport() || local.pending || local.exporting}
+                    title={!canImport() ? t(sfCommonKey("sf.common.unavailable")) : undefined}
+                    onClick={() => { if (canImport()) navigate("/orchestra/sf-imports/new") }}>
                     {t(key("sf.u47.import"))}
                   </button>
-                  <button type="button" class="mx-btn" disabled
-                    title={t(sfCommonKey("sf.common.unavailable"))}>
+                  <button type="button" class="mx-btn" data-sf-talent-workbook="export"
+                    disabled={!canExport() || local.pending || local.exporting}
+                    title={!canExport() ? t(sfCommonKey("sf.common.unavailable")) : undefined}
+                    aria-busy={local.exporting}
+                    onClick={() => { void beginExport() }}>
                     {t(key("sf.u47.export"))}
                   </button>
                 </div>
-                <Show when={importView() || exportView()}>
+                <Show when={importView() && !canImport() || exportView() && !canExport()}>
                   <SfStatePanel state="unavailable" messageKey={sfCommonKey("sf.common.unavailable")} />
                 </Show>
               </section>
