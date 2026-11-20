@@ -132,7 +132,7 @@ export function createSfProcurementRecordReadScope(input: SfProcurementRecordRea
             context.value.accessRevision !== actor.accessRevision || context.value.policyVersion !== actor.policyVersion ||
             digestSfValue(context.value.period) !== digestSfValue(selection.period)) return { kind: "changed" }
           const roles = principal.roles.filter((role) => role.surface === "procurement").map((role) => role.role)
-          if (!selected.every((ref) => materialized(ref, call, locked.procurement, context.value, roles, principal.canWrite))) return { kind: "unsupported" }
+          if (!selected.every((ref) => sfProcurementRecordMaterialized(ref, call, locked.procurement, context.value, roles, principal.canWrite))) return { kind: "unsupported" }
           const after = await environment()
           const again = await input.host.authenticate(request, { surface: "procurement", roleMap: roleMap(locked.procurement, "procurement") })
           if (!after || digestSfValue(after) !== environmentDigest || digestSfValue(principal) !== digestSfValue(again) ||
@@ -214,7 +214,7 @@ function changed(scope?: Participation): { kind: "changed" } {
 }
 
 /** Predict only that issueForActor's current scope needs no write; the producer still proves history. */
-function materialized(ref: RecordRef, call: TrustedDomainContext, snapshot: Snapshot, context: ProductContext, roles: string[], canWrite: boolean) {
+export function sfProcurementRecordMaterialized(ref: RecordRef, call: TrustedDomainContext, snapshot: Snapshot, context: ProductContext, roles: string[], canWrite: boolean) {
   if (ref.schema !== "sf-evidence-v1" || ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== call.binding.installationId ||
     ref.projectId !== call.binding.projectId || digestSfValue(ref.target.fields) !== digestSfValue(procurementRequestFields) ||
     digestSfValue(ref.target.period) !== digestSfValue(context.period) || !/^[A-Z]{3}$/.test(context.currency)) return false
