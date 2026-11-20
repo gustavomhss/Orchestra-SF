@@ -374,7 +374,26 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
 export async function exportReview(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, format: "docx" | "pptx", info: TestInfo) {
   await page.goto("/orchestra/sf-reviews/reports/" + encodeReviewRef(saved.id))
   const report = page.locator('[data-sf-surface="UI50"]')
-  await expect(report).toBeVisible()
+  try { await expect(report).toBeVisible() }
+  catch (error) {
+    // Diagnostic only: preserve the original assertion/error and emit only the
+    // source-owned F01 state enums, never DOM text, references or credentials.
+    await page.locator('[data-sf-host="owner-runtime231"]').evaluateAll((elements) => {
+      const allowed = ["unmounted", "resolving", "ready", "invalid-link", "denied", "unavailable",
+        "unauthenticated", "context-mismatch", "ambiguous", "aborted", "kept-editing"]
+      return elements.map((element) => {
+        const state = (name: string) => {
+          const value = element.getAttribute(name)
+          return value !== null && allowed.includes(value) ? value : "unclassified"
+        }
+        return { discovery: state("data-sf-discovery-state"), provider: state("data-sf-provider-state"),
+          view: state("data-sf-view-state") }
+      })
+    }).then((states) => info.attach("reports-route-admission", {
+      contentType: "application/json", body: JSON.stringify({ surface: "UI50", states }),
+    })).catch(() => undefined)
+    throw error
+  }
   await expect(report.locator("[data-preserved-review]")).toHaveAttribute("data-preserved-review", saved.id)
   await expect(report.getByText(/The preserved content was re-read under the current owner\.|O conteúdo preservado foi relido sob o contexto atual\./)).toBeVisible()
   const reportComments = report.getByRole("region", { name: /Preserved notes and comments|Notas e comentários preservados/ })

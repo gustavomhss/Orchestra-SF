@@ -64,7 +64,7 @@ Fontes oficiais verificadas na tag Playwright `v1.59.1`:
 
 RPT-01 avançou pelos checks de preview/preservação e edição real do forecast, mas não montou UI50. Ponto original: `packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:415:24`; neste recorte, a mesma asserção está em **`review-flow.ts:377`**.
 
-O seletor UI50, form.report-form, labels e encodeReviewRef foram encontrados na UI original. O elemento UI50 é criado pelo componente antes do painel de conteúdo; sua ausência não demonstra erro do seletor de formulário. A admissão da rota exige `dashboard.dashboard-review`, `reviews.report.prepare` e `files.export.review`. Não existe ainda observação runtime que distinga o bloqueio no F01/owner/provider. O ECONNREFUSED próximo do teardown não é prova da causa. **Nenhum seletor, navegação ou produtor foi alterado para encobrir essa falha**; a triagem do artefato original segue com o integrador.
+O seletor UI50, form.report-form, labels e encodeReviewRef foram encontrados na UI original. O elemento UI50 é criado pelo componente antes do painel de conteúdo; sua ausência não demonstra erro do seletor de formulário. A admissão da rota exige `dashboard.dashboard-review`, `reviews.report.prepare` e `files.export.review`. O leitor corrigido do artefato original, run44667668234 success, observou provider autenticado/ready e o texto F01 route-not-admitted. Esse fallback também ocorre enquanto a transição está resolving; não demonstra por si só um retorno denied. O ECONNREFUSED próximo do teardown não é prova da causa. **Nenhum seletor, navegação ou produtor foi alterado para encobrir essa falha**; a triagem do artefato original segue com o integrador.
 
 A execução integral de Reports, seus oracles C05 e a entrada UI50 continuam pendentes. Este handoff não qualifica a branch inteira como complete.
 
@@ -81,3 +81,11 @@ A execução integral de Reports, seus oracles C05 e a entrada UI50 continuam pe
 2. Incorporar eventual fix causal de UI50 em snapshot composto, preservando o recorte original e as asserções. Não alegar correção de admissão somente pela retenção de bytes.
 3. O integrador deve coordenar o gate existente de CI-UI-REPORTS, em ci-run-* sem [skip ci] no snapshot, após fixes concretos, respeitando até dois gates simultâneos e uma execução por causa corrigida. A verificação de tipos deve usar os comandos existentes via Actions.
 4. Registrar run/source/attempt/resultados e primeiro file:line real. Promover o handoff a complete somente com a qualificação correspondente; então integrar na ordem autorizada. Não mover a branch do pacote antes do freeze final.
+
+## Observação mínima antes do primeiro gate da retenção
+
+Após os leitores somente de artefato `44664962509`, `44666329606` e `44667668234`, a fonte permanece sem uma causa demonstrada para a ausência de UI50. O terceiro corrigiu um defeito comprovado do parser AI e leu somente o artefato `14596071954`; nenhum desses runs repetiu o produto.
+
+A asserção original de visibilidade agora preserva e relança o mesmo erro. Somente em falha, anexa os três atributos de estado já emitidos por `owner-runtime231.tsx:620–622`: discovery, provider e view. Cada valor passa por uma lista fechada de enums; não sai DOM, texto livre, motivo desconhecido, href, identidade, body, header ou credencial. Falha da coleta não transforma o teste em sucesso.
+
+O primeiro gate do código de retenção continua justificado pelas três falhas de corpo original do run44660375065 e pela correção concreta Fetch Response-stage ainda não executada. A observação adicional não é uma alegação de correção de UI50. Nenhum timeout, retry, seleção ou asserção foi relaxado.
