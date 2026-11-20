@@ -51,14 +51,10 @@ export const authorizationLayerWith = (installed?: SfTrustedInstallationSource, 
         // Technical health contains no profile data. Corporate administration
         // remains on its separately authenticated installation mount.
         if (group === "server.health") return yield* effect
-        if (installed) {
-          const observed = yield* Effect.promise((signal) => installed.current(signal)).pipe(
-            Effect.catchCause(() => Effect.succeed(undefined)),
-          )
-          // A failed/missing configured source is not evidence of a local host.
-          if (!observed || observed.authMode !== "local-operator")
-            return yield* new UnauthorizedError({ message: "Corporate installation admission required" })
-        }
+        // An installation's technical operator never admits business APIs.
+        // A configured source that is missing or failed cannot become a bare technical server.
+        if (installed)
+          return yield* new UnauthorizedError({ message: "Corporate installation admission required" })
         if (owners) {
           const scope = yield* owners.open().pipe(Effect.mapError(() =>
             new UnauthorizedError({ message: "Corporate installation admission required" })))

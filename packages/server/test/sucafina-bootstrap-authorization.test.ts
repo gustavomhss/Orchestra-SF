@@ -26,7 +26,7 @@ afterEach(async () => { for (const close of cleanups.splice(0)) await close() })
 
 // Real Authorization and discovery handlers, with an explicitly declared installed
 // metadata source. This proves no corporate login, grant or Session admission.
-function fixture(value: Awaited<ReturnType<SfTrustedInstallationSource["current"]>> | null = installed, failure = false) {
+function fixture(value: Awaited<ReturnType<SfTrustedInstallationSource["current"]>> | null = installed, failure = false, technical = false) {
   const observations = { current: 0, locations: 0, privateCalls: 0 }
   const source: SfTrustedInstallationSource = {
     current: async () => { observations.current++; if (failure) throw new Error("offline"); return value ?? undefined },
@@ -45,7 +45,7 @@ function fixture(value: Awaited<ReturnType<SfTrustedInstallationSource["current"
   const routes = HttpApiBuilder.layer(api).pipe(
     Layer.provide(Layer.mergeAll(SucafinaHandler, probeHandlers)),
     Layer.provide(Layer.succeed(SfInstallationSource, source)),
-    Layer.provide(authorizationLayerWith(source)),
+    Layer.provide(authorizationLayerWith(technical ? undefined : source)),
     Layer.provide(schemaErrorLayer),
     Layer.provide(ServerAuth.Config.configLayer({ username: "orchestra", password: Option.some("configured-host-secret") })),
   )
@@ -111,7 +111,7 @@ test("public bootstrap is bound to the configured transport host and origin with
   expect(f.observations.locations).toBe(0)
 })
 
-test("the exception keeps corporate routes closed and explicit local technical Basic still works", async () => {
+test("installed Microsoft and local operators cannot use generic business APIs while an uninstalled technical server retains Basic", async () => {
   const f = fixture()
   for (const value of [webRequest("/api/private"), webRequest("/api/sucafina/other"), webRequest(current, { method: "POST" })]) {
     expect((await f.handler(value)).status).toBe(401)
@@ -123,7 +123,10 @@ test("the exception keeps corporate routes closed and explicit local technical B
   expect(f.observations.privateCalls).toBe(0)
   const malformed = await f.handler(webRequest("/api/sucafina/installations?select=current", { headers: { authorization: basic } }))
   expect(malformed.status).toBe(401)
-  const technical = fixture({ ...installed, authMode: "local-operator", publicOrigin: "http://127.0.0.1:4096" })
+  const localOperator = fixture({ ...installed, authMode: "local-operator", publicOrigin: "http://127.0.0.1:4096" })
+  expect((await localOperator.handler(webRequest("/api/private", { headers: { authorization: basic } }))).status).toBe(401)
+  expect(localOperator.observations.privateCalls).toBe(0)
+  const technical = fixture(null, false, true)
   expect((await technical.handler(webRequest("/api/private", { headers: { authorization: basic } }))).status).toBe(200)
   expect(technical.observations.privateCalls).toBe(1)
   expect((await technical.handler(webRequest("/api/sucafina/installations?select=current", { headers: { authorization: basic } }))).status).toBe(400)
