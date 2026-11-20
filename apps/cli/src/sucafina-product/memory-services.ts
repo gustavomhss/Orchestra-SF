@@ -35,6 +35,23 @@ export type SfMemoryServicesInput = {
   signalRegistryWrites: WeakSet<object>
 }
 
+type ReviewOutcome = NonNullable<SfReviewReaders["outcome"]>
+const localReviewOutcomes = new WeakMap<ReviewOutcome, {
+  host: SfMemoryServicesInput["authority"]["host"]
+  read: ReviewOutcome["read"]
+  authorize: ReviewOutcome["authorize"]
+}>()
+
+/** Recognition only: callers cannot register or serialize an outcome authority. */
+export function isSfLocalReviewOutcome(provider: ReviewOutcome | undefined, host: SfMemoryServicesInput["authority"]["host"]) {
+  if (!provider) return false
+  const known = localReviewOutcomes.get(provider)
+  return !!known && known.host === host && Object.getPrototypeOf(provider) === Object.prototype &&
+    Reflect.ownKeys(provider).length === 2 &&
+    Object.getOwnPropertyDescriptor(provider, "read")?.value === known.read &&
+    Object.getOwnPropertyDescriptor(provider, "authorize")?.value === known.authorize
+}
+
 /** Compose C17 from protected selections and actual Planner/C08 reads. No polling event is invented. */
 export function createSfMemoryServices(input: SfMemoryServicesInput) {
   const host = input.authority.host
@@ -158,6 +175,10 @@ export function createSfMemoryServices(input: SfMemoryServicesInput) {
       return same(values, captured) && binding === digestSfValue([call.kind, call.binding]) && await host.revalidate(call)
     },
   }
+
+  // For an empty observation list this exact factory only revalidates the host.
+  // Nonempty observations still require every original producer read above.
+  localReviewOutcomes.set(reviewOutcome, { host, read: reviewOutcome.read, authorize: reviewOutcome.authorize })
 
   const scopeAuthorized = async (scope: SfMaterialSelectionScope, call: TrustedDomainContext) => {
     const request = host.requestFor(call)
