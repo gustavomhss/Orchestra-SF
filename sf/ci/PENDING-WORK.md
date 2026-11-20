@@ -2,7 +2,7 @@
 
 > **Status:** CI RESCUE + FOLLOW-UP INTEGRATED / DEFAULT CACHE REUSE PROVEN / PRODUCT QUALIFICATION PENDING / AZURE RELEASE BLOCKED
 >
-> **Atualizado:** 2026-11-19 (America/Sao_Paulo). Integração: `sf-join-four`. A segunda rodada foi mergeada pelos PRs [#425](https://github.com/gustavomhss/Orchestra-SF/pull/425) e [#429](https://github.com/gustavomhss/Orchestra-SF/pull/429). SHAs e resultados focados ficam em [PERFORMANCE.md](./PERFORMANCE.md); nenhum deles qualifica automaticamente um SHA posterior.
+> **Fechamento operacional observado:** 2026-11-20 00:55 (America/Sao_Paulo), run `44670849654`. Integração: `sf-join-four`. A segunda rodada foi mergeada pelos PRs [#425](https://github.com/gustavomhss/Orchestra-SF/pull/425) e [#429](https://github.com/gustavomhss/Orchestra-SF/pull/429). SHAs e resultados focados ficam em [PERFORMANCE.md](./PERFORMANCE.md); nenhum deles qualifica automaticamente um SHA posterior.
 >
 > **Referência histórica preservada:** o [PR #242](https://github.com/gustavomhss/Orchestra-SF/pull/242) continua aberto, draft e não mergeado em `close-final-candidate`. O snapshot de 16/11 (`sf-ci-lean@0e4848847b85d3d5f97d03de63574c5461c50cba`, base `1cb77b8deb144e01a655c36987922338b1474003`, [run 43956369500](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43956369500)) é histórico; as suas falhas não são uma triagem atual do head de integração.
 
