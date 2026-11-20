@@ -1,3 +1,4 @@
+import { c17Clock, c17End } from "./audit-c17-profile.ts"
 import { Database } from "bun:sqlite"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { constants } from "node:fs"
@@ -52,6 +53,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   }
 
   const connect = () => {
+    const c17Started = c17Clock()
     const db = new Database(path, { strict: true })
     try {
       db.exec("PRAGMA busy_timeout=0; PRAGMA synchronous=FULL")
@@ -59,7 +61,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     } catch (error) {
       db.close()
       throw error
-    }
+    } finally { c17End("sqlite.connect", c17Started) }
   }
   const authentication = await (async () => {
     const initial = connect()
@@ -99,7 +101,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       return { materialize: empty, copy: empty }
     }
     const snapshot = decodeSnapshot(payload)
+    const c17PlanStarted = c17Clock()
     const plan = planSnapshotMaterialization(snapshot, payload)
+    c17End("snapshot.plan", c17PlanStarted)
     if (plan) {
       const retained = { units: [...materializations.values()].reduce((sum, entry) => sum + entry.units, 0) }
       for (const [name, entry] of materializations) {
@@ -172,18 +176,28 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       // Serialize writers within this instance instead of making maintenance
       // contend with its own business transaction in WAL. Credential reads
       // remain independent because authentication awaits them inside that transaction.
-      if (previous) await waitForAdmission(previous, Math.max(0, deadline - performance.now()), signal)
+      if (previous) {
+        const c17WaitStarted = c17Clock()
+        await waitForAdmission(previous, Math.max(0, deadline - performance.now()), signal)
+        c17End("sqlite.queue", c17WaitStarted)
+      }
       signal?.throwIfAborted()
       const db = connect()
       try {
-        if (write) await retryLock(() => db.exec("BEGIN IMMEDIATE"), Math.max(0, deadline - performance.now()), signal)
+        if (write) {
+          const c17BeginStarted = c17Clock()
+          await retryLock(() => db.exec("BEGIN IMMEDIATE"), Math.max(0, deadline - performance.now()), signal)
+          c17End("sqlite.begin", c17BeginStarted)
+        }
         signal?.throwIfAborted()
         return await work(db)
       } finally {
         try {
           if (db.inTransaction) db.exec("ROLLBACK")
         } finally {
+          const c17CloseStarted = c17Clock()
           db.close()
+          c17End("sqlite.close", c17CloseStarted)
         }
       }
     })()
@@ -227,7 +241,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       operation(true, async (db) => {
         const copies: Partial<Record<Surface, () => Snapshot>> = {}
         const read = (surface: Surface) => {
+          const c17SelectStarted = c17Clock()
           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+          c17End("sqlite.select.snapshot", c17SelectStarted)
           // Keep the same SQL order and changed-payload admission as mutable
           // roots. No target escapes here, so every initial memo hit can copy.
           const source = observeSnapshot(surface, row?.payload)
@@ -288,7 +304,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
         const materialize = parent.root.copies?.[surface]
         const staged = materialize ? undefined : parent.root.snapshots[surface]
+        const c17SelectStarted = c17Clock()
         const row = materialize || staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+        c17End(materialize || staged ? "sqlite.select.skipped" : "sqlite.select.snapshot", c17SelectStarted)
         const snapshot = materialize ? materialize() : staged ? cloneSnapshot(staged) :
           loadSnapshot(surface, row?.payload)
         const blobs: BlobTransaction = {
@@ -319,7 +337,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       return operation(true, async (db) => {
         const copies: Partial<Record<Surface, () => Snapshot>> = {}
         const read = (name: Surface) => {
+          const c17SelectStarted = c17Clock()
           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
+          c17End("sqlite.select.snapshot", c17SelectStarted)
           // Observe and validate changed bytes now, including unrequested surfaces.
           // The captured materializer never consults SQL or the shared memo again.
           const source = observeSnapshot(name, row?.payload)
@@ -421,7 +441,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       operation(true, async (db) => {
         const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
         const read = (surface: Surface) => {
+          const c17SelectStarted = c17Clock()
           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+          c17End("sqlite.select.snapshot", c17SelectStarted)
           return loadSnapshot(surface, row?.payload)
         }
         const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
@@ -554,15 +576,20 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 export function decodeSnapshot(payload: string): Snapshot {
-  const envelope: unknown = JSON.parse(payload)
-  if (!Array.isArray(envelope) || envelope.length !== 3 || envelope[0] !== "sucafina-snapshot" || envelope[1] !== 1)
-    throw new Error("Unsupported local snapshot encoding")
-  return validateSnapshot(decode(envelope[2]))
+  const c17Started = c17Clock()
+  try {
+    const envelope: unknown = JSON.parse(payload)
+    if (!Array.isArray(envelope) || envelope.length !== 3 || envelope[0] !== "sucafina-snapshot" || envelope[1] !== 1)
+      throw new Error("Unsupported local snapshot encoding")
+    return validateSnapshot(decode(envelope[2]))
+  } finally { c17End("snapshot.decode", c17Started) }
 }
 
 /** Match the wire codec's normalized tree without allocating tagged nodes or JSON text. */
 function cloneSnapshot(snapshot: Snapshot): Snapshot {
-  return validateSnapshot(copyValue(snapshot))
+  const c17Started = c17Clock()
+  try { return validateSnapshot(copyValue(snapshot)) }
+  finally { c17End("snapshot.clone", c17Started) }
 }
 
 function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
@@ -602,7 +629,9 @@ function validateSnapshot(value: unknown): Snapshot {
 }
 
 export function encodeSnapshot(snapshot: Snapshot): string {
-  return JSON.stringify(["sucafina-snapshot", 1, encode(snapshot)])
+  const c17Started = c17Clock()
+  try { return JSON.stringify(["sucafina-snapshot", 1, encode(snapshot)]) }
+  finally { c17End("snapshot.encode", c17Started) }
 }
 
 // The shared memo retains at most three entries and 16 MiB of UTF-16 strings.
@@ -667,16 +696,19 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string): Snaps
 }
 
 function materializeSnapshot(plan: SnapshotMaterialization): Snapshot {
-  const snapshot = JSON.parse(plan.json) as Snapshot
-  // Null placeholders preserve property order and array density. Only these
-  // known own paths need repair; -0 is preserved by its native JSON literal.
-  if (plan.missing !== "[]") {
-    const paths = JSON.parse(plan.missing) as string[][]
-    for (const path of paths) {
-      let parent: Record<string, unknown> = snapshot
-      for (let index = 0; index < path.length - 1; index++) parent = parent[path[index]!] as Record<string, unknown>
-      Object.defineProperty(parent, path[path.length - 1]!, { value: undefined, enumerable: true, writable: true, configurable: true })
+  const c17Started = c17Clock()
+  try {
+    const snapshot = JSON.parse(plan.json) as Snapshot
+    // Null placeholders preserve property order and array density. Only these
+    // known own paths need repair; -0 is preserved by its native JSON literal.
+    if (plan.missing !== "[]") {
+      const paths = JSON.parse(plan.missing) as string[][]
+      for (const path of paths) {
+        let parent: Record<string, unknown> = snapshot
+        for (let index = 0; index < path.length - 1; index++) parent = parent[path[index]!] as Record<string, unknown>
+        Object.defineProperty(parent, path[path.length - 1]!, { value: undefined, enumerable: true, writable: true, configurable: true })
+      }
     }
-  }
-  return snapshot
+    return snapshot
+  } finally { c17End("snapshot.materialize", c17Started) }
 }

@@ -1,3 +1,4 @@
+import { c17Clock, c17Clone, c17End, c17ReadOrigin } from "../../runtime/audit-c17-profile.ts"
 import { types } from "node:util"
 import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import { object } from "../../runtime/contract.ts"
@@ -224,41 +225,53 @@ export function createSfProductState(input: {
   resolveTarget: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, targetRef: string, command: SfStateMutation) => Promise<{ incarnation: string } | undefined>
 }): SfProductStatePort {
   return {
-    read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
-      input.persistence.transaction<SfStateResult<T>>("dashboard", async (snapshot) => {
-        const candidate = readinessReads.get(read)
-        const readiness = candidate?.namespace === namespace ? candidate : undefined
-        const mode = readiness?.mode ?? "read"
-        const authority = await input.authorize(request, snapshot, namespace, mode)
-        if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
-        const state = readSfState(snapshot)
-        if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
-        const selection = namespace === "cases" ? caseReads.get(read) : undefined
-        const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
-        const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
-          ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
-        const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
-        const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
-        const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
-        const scenarioResults = scenarioSelection ? scenarioResultMap(state) : undefined
-        const identitySelection = namespace === "cases" ? caseIdentityReads.get(read) : undefined
-        const identityCases = identitySelection ? caseIdentityMap(state) : undefined
-        // Keep missing/inherited, accessor and malformed lookups on the original
-        // path. Durable SQLite snapshots contain plain cloneable data.
-        const value = readiness
-          ? structuredClone(readiness.select(state, authority)) as T
-          : selection && selected?.enumerable && "value" in selected && selected.value &&
-          typeof selected.value === "object" && !Array.isArray(selected.value)
-          ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
-          : selectedResults ? await read(selectedResults, authority)
-          : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
-          : identitySelection && identityCases ? await identitySelection.project(structuredClone(identityCases), authority) as T
-          : await read(structuredClone(state), authority)
-        if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
-        const current = await input.authorize(request, snapshot, namespace, mode)
-        if (!sameAuthority(authority, current)) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
-        return { commit: false, value: { status: "ok", storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value } }
-      }, { signal: request.signal }),
+    read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) => {
+      const c17Started = c17Clock(), c17Origin = c17ReadOrigin()
+      return input.persistence.transaction<SfStateResult<T>>("dashboard", async (snapshot) => {
+        const c17Callback = c17Clock()
+        try {
+          const candidate = readinessReads.get(read)
+          const readiness = candidate?.namespace === namespace ? candidate : undefined
+          const mode = readiness?.mode ?? "read"
+          const c17FirstAuthority = c17Clock()
+          const authority = await input.authorize(request, snapshot, namespace, mode)
+          c17End("state.authorize.first." + c17Origin, c17FirstAuthority)
+          if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
+          const state = readSfState(snapshot)
+          if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
+          const selection = namespace === "cases" ? caseReads.get(read) : undefined
+          const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
+          const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
+            ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
+          const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
+          const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
+          const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
+          const scenarioResults = scenarioSelection ? scenarioResultMap(state) : undefined
+          const identitySelection = namespace === "cases" ? caseIdentityReads.get(read) : undefined
+          const identityCases = identitySelection ? caseIdentityMap(state) : undefined
+          // Keep missing/inherited, accessor and malformed lookups on the original
+          // path. Durable SQLite snapshots contain plain cloneable data.
+          const value = readiness
+            ? structuredClone(readiness.select(state, authority)) as T
+            : selection && selected?.enumerable && "value" in selected && selected.value &&
+            typeof selected.value === "object" && !Array.isArray(selected.value)
+            ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
+            : selectedResults ? await read(selectedResults, authority)
+            : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
+            : identitySelection && identityCases ? await identitySelection.project(structuredClone(identityCases), authority) as T
+            : await read(c17Clone(state, c17Origin), authority)
+          if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
+          const c17LastAuthority = c17Clock()
+          const current = await input.authorize(request, snapshot, namespace, mode)
+          c17End("state.authorize.last." + c17Origin, c17LastAuthority)
+          if (!sameAuthority(authority, current)) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
+          return { commit: false, value: { status: "ok", storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value } }
+        } finally {
+          c17End("state.callback." + c17Origin, c17Callback, request.signal.aborted)
+          c17End("state.toCallbackEnd." + c17Origin, c17Started, request.signal.aborted)
+        }
+      }, { signal: request.signal })
+    },
     transaction: <T>(request: Request, command: SfStateMutation, work: (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>) => {
       const run = async (snapshot: Snapshot, domain: Snapshot): Promise<{ commit: boolean; value: SfStateResult<T> }> => {
         const authority = await input.authorize(request, snapshot, command.namespace, "write")

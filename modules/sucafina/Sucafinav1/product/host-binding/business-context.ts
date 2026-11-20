@@ -1,3 +1,4 @@
+import { c17Clock, c17End } from "../../runtime/audit-c17-profile.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope } from "../contracts/business-context.ts"
@@ -79,38 +80,43 @@ function assembleSfBusinessContext(host: {
   emitFromLedger: BusinessContextService["emitFromLedger"]
 }): { service: BusinessContextService; resolveAncestry: (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<BusinessEvidenceResolution> } {
   async function resolveAncestry(ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>): Promise<BusinessEvidenceResolution> {
-    const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
-    if (ancestors.has(ref.refDigest) || ancestors.size >= 16 || !evidenceWithinBudget([ref])) return unavailable()
-    if (!(await host.revalidate(call))) return unavailable()
-    if (ref.schema !== "sf-evidence-v1" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return { ...unavailable(), state: "invalid" }
+    const c17AncestryStarted = c17Clock()
     try {
-      sfEvidenceSourceMaps([ref])
-    } catch {
-      return { ...unavailable(), state: "invalid" }
-    }
-    const result = await host.resolveSource(ref, call, ancestors)
-    if (!(await host.revalidate(call)) || result.accessRevision !== call.binding.accessRevision || result.ref.refDigest !== ref.refDigest) return unavailable()
-    try {
-      sfEvidenceSourceMaps([result.ref, ...(result.currentRef ? [result.currentRef] : [])])
-    } catch {
-      return unavailable()
-    }
-    if (result.state === "fresh") {
-      if (ref.kind === "case-event" || ref.kind === "calculation") {
-        const children = ref.kind === "case-event" ? ref.target.evidenceRefs : ref.target.sourceRefs
-        const next = new Set([...ancestors, ref.refDigest])
-        const dependencies = await mapSfEvidenceInOrder(children, (dependency) => resolveAncestry(dependency, call, next))
-        if (dependencies.some((dependency) => dependency.state !== "fresh" && dependency.state !== "historical") || !(await host.revalidate(call))) return unavailable()
+      const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
+      if (ancestors.has(ref.refDigest) || ancestors.size >= 16 || !evidenceWithinBudget([ref])) return unavailable()
+      if (!(await host.revalidate(call))) return unavailable()
+      if (ref.schema !== "sf-evidence-v1" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return { ...unavailable(), state: "invalid" }
+      try {
+        sfEvidenceSourceMaps([ref])
+      } catch {
+        return { ...unavailable(), state: "invalid" }
       }
-      return result
-    }
-    if (result.state === "historical") {
-      const current = result.currentRef
-      if (!result.authorizedProjection || !current || !result.differences || !sameHistoricalSource(ref, current) || current.installationId !== call.binding.installationId || current.projectId !== call.binding.projectId) return unavailable()
-      if (!(await host.proveContinuity(ref, current, call)) || !(await host.revalidate(call))) return unavailable()
-      return result
-    }
-    return { state: result.state, ref, accessRevision: result.accessRevision, checkedAt: result.checkedAt }
+      const c17SourceStarted = c17Clock()
+      const result = await host.resolveSource(ref, call, ancestors)
+      c17End("bcs.resolveSource", c17SourceStarted)
+      if (!(await host.revalidate(call)) || result.accessRevision !== call.binding.accessRevision || result.ref.refDigest !== ref.refDigest) return unavailable()
+      try {
+        sfEvidenceSourceMaps([result.ref, ...(result.currentRef ? [result.currentRef] : [])])
+      } catch {
+        return unavailable()
+      }
+      if (result.state === "fresh") {
+        if (ref.kind === "case-event" || ref.kind === "calculation") {
+          const children = ref.kind === "case-event" ? ref.target.evidenceRefs : ref.target.sourceRefs
+          const next = new Set([...ancestors, ref.refDigest])
+          const dependencies = await mapSfEvidenceInOrder(children, (dependency) => resolveAncestry(dependency, call, next))
+          if (dependencies.some((dependency) => dependency.state !== "fresh" && dependency.state !== "historical") || !(await host.revalidate(call))) return unavailable()
+        }
+        return result
+      }
+      if (result.state === "historical") {
+        const current = result.currentRef
+        if (!result.authorizedProjection || !current || !result.differences || !sameHistoricalSource(ref, current) || current.installationId !== call.binding.installationId || current.projectId !== call.binding.projectId) return unavailable()
+        if (!(await host.proveContinuity(ref, current, call)) || !(await host.revalidate(call))) return unavailable()
+        return result
+      }
+      return { state: result.state, ref, accessRevision: result.accessRevision, checkedAt: result.checkedAt }
+    } finally { c17End("bcs.ancestry", c17AncestryStarted) }
   }
 
   const resolve = (ref: BusinessEvidenceRef, call: TrustedDomainContext) => resolveAncestry(ref, call, new Set())
