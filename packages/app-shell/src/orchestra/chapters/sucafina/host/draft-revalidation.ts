@@ -11,6 +11,7 @@ import { revalidateRiskStakeholderDraft } from "./draft-revalidation-risk-stakeh
 import { revalidatePeopleDraft } from "./draft-revalidation-people"
 import { revalidatePlannerCatalogDraft } from "./draft-revalidation-planner-catalog"
 import { revalidateHotTopicDraft } from "./draft-revalidation-hot-topic"
+import { revalidateProposalSave } from "./draft-revalidation-proposal"
 import { revalidateProjectDraft } from "./draft-revalidation-project"
 import { revalidatePerformanceDraft } from "./draft-revalidation-performance"
 import { revalidateSecurityDraft } from "./draft-revalidation-security"
@@ -29,6 +30,8 @@ export async function revalidateSfNativeDraft(
   if (input.originalOwner.installationId !== fresh.stamp.installationId ||
       input.originalOwner.projectId !== fresh.stamp.projectId ||
       input.originalOwner.principalRef !== fresh.stamp.principalRef) return { status: "authority-changed" }
+  if (input.read.operationId === "dashboard.dashboard-draft-read")
+    return revalidateProposalSave(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP04" || input.read.operationId === "domain.page.CAP05")
     return revalidateBudgetDraft(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP18" || input.read.operationId === "domain.page.CAP19")

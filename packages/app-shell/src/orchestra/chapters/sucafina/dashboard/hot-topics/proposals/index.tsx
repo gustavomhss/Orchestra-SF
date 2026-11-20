@@ -1,8 +1,9 @@
 import { Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import type { JSX } from "solid-js"
 import { useNavigate } from "@solidjs/router"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
+import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../../context/contracts"
 import { useSfContext } from "../../../context"
@@ -13,6 +14,7 @@ import { SfChangeReview } from "../../../shared/change-review"
 import { SF_STATE_FALLBACK_KEY, sfCommonKey, useSfPresentation } from "../../../shared/frame/presentation"
 import type { SfCopyKey, SfUiState } from "../../../shared/frame/types"
 import { SF_U38_COPY } from "@/i18n/orchestra-chapters/sf-u38"
+import { SfHotTopicPrivateDraft } from "./draft"
 import "../u38.css"
 
 type Key = keyof typeof SF_U38_COPY
@@ -29,6 +31,10 @@ type Workbench = Readonly<{
   preparations: readonly Preparation[]
   changes: readonly Prepared[]
   permissions: Readonly<{ draft: boolean; prepare: boolean; apply: boolean }>
+}>
+type Receipt = Readonly<{
+  id: string; version: number; at: string
+  result: Readonly<{ ok: true }> | Readonly<{ ok: false; status: number; errors: readonly string[] }>
 }>
 type Review = Readonly<{
   reviewDigest: string; changeId: string; choiceId: string; state: string
@@ -111,6 +117,20 @@ function decodeReview(value: unknown, expected: Prepared): Review | undefined {
       ? { receipt: { id: receipt.id, ...(string(receipt.status) ? { status: receipt.status } : {}) } } : {}) }
 }
 
+/** Display fields from the original CommandReceipt; its source identity is checked before retaining them. */
+function decodeReceipt(value: unknown, principalRef: string): Receipt | undefined {
+  const receipt = obj(value), result = obj(receipt?.result)
+  if (!receipt || !result || !string(receipt.id) || !string(receipt.idempotencyKey) ||
+    !string(receipt.targetIncarnation) || receipt.principalRef !== principalRef || receipt.surface !== "dashboard" ||
+    !string(receipt.commandDigest) || !/^[a-f0-9]{64}$/.test(receipt.commandDigest) ||
+    !integer(receipt.version) || !string(receipt.at)) return
+  if (result.ok === true) return { id: receipt.id, version: receipt.version, at: receipt.at, result: { ok: true } }
+  const status = result.status, errors = result.errors
+  if (result.ok !== false || status !== 400 && status !== 403 && status !== 404 && status !== 409 && status !== 422 && status !== 503 ||
+    errors !== undefined && (!Array.isArray(errors) || !errors.every((error): error is string => typeof error === "string"))) return
+  return { id: receipt.id, version: receipt.version, at: receipt.at, result: { ok: false, status, errors: errors ?? [] } }
+}
+
 function proposalRoute(props: SfSurfaceProps<"UI54">, changeId: string): string {
   const query = new URLSearchParams({
     server: props.route.ownerSelection.serverKey,
@@ -137,14 +157,26 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
   const navigate = useNavigate()
   const previewIntent = crypto.randomUUID() as SfIntentRef
   const [revision, bump] = createSignal(0)
+  const [applicationResult, setApplicationResult] = createSignal<{
+    key: string; generation: number; transport: SfTransport; changeId: string; receipt: Receipt
+  }>()
   const [store, setStore] = createStore<{
-    state: SfUiState; workbench: Workbench | null; review: Review | null
+    state: SfUiState; workbench: Workbench | null; review: Review | null; discovery: unknown
     reason: string | null; preparationBusy: boolean; applyBusy: boolean
     outcome: "none" | "unknown" | "applied" | "rejected"
-  }>({ state: "loading", workbench: null, review: null, reason: null,
+  }>({ state: "loading", workbench: null, review: null, discovery: null, reason: null,
     preparationBusy: false, applyBusy: false, outcome: "none" })
   const reference = () => props.route.params.proposalRef
   const current = () => context.state().status === "ready" ? context.ready() : undefined
+  const receiptHere = () => {
+    const saved = applicationResult(), owner = context.state()
+    return saved && owner.status === "ready" && owner.ownerKey === saved.key && reference() === saved.changeId &&
+      context.generation() === saved.generation && current()?.transport === saved.transport ? saved.receipt : undefined
+  }
+  const receiptFailure = () => {
+    const result = receiptHere()?.result
+    return result?.ok === false ? result : undefined
+  }
   const isAdmitted = (operationId: string) => {
     const ready = current()
     return !!ready?.context.availability.some((resource) =>
@@ -158,7 +190,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     item.changeId === reference()))
   const suggestedPreparation = createMemo(() =>
     store.workbench?.preparations.find((item) => item.draftRef === chosenDraft()?.draftRef))
-  const readState = () => store.state === "ready" && !chosenChange() && !chosenDraft()
+  const readState = () => store.state === "ready" && reference() !== "new" && !chosenChange() && !chosenDraft()
     ? "not-found" as const : store.state
 
   createEffect(() => {
@@ -171,16 +203,18 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       setStore({ state: state.status === "unauthenticated" ? "session-expired" :
         state.status === "denied" || state.status === "context-mismatch" ? "denied" :
         state.status === "unavailable" ? "unavailable" : "loading",
-        workbench: null, review: null, reason: null });return
+        workbench: null, review: null, discovery: null, reason: null });return
     }
     if (!isAdmitted("dashboard.dashboard-workbench")) {
       setStore({ state: "unavailable", workbench: null, review: null, reason: "contract-unavailable" });return
     }
     const abort = new AbortController()
-    setStore({ state: "loading", workbench: null, review: null, reason: null })
+    let completed = false
+    setStore({ state: "loading", workbench: null, review: null, discovery: null, reason: null })
     void createSfDomainClient(ready.transport)["dashboard.dashboard-workbench"](
       { page: "Hot Topics & Actions" }, { signal: abort.signal })
       .then((response) => {
+        completed = true
         if (abort.signal.aborted || context.generation() !== generation ||
           context.ready()?.transport !== ready.transport) return
         if (response.kind !== "response") {
@@ -194,13 +228,14 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
             workbench: null, reason: "reason" in response.body ? response.body.reason ?? null : null });return
         }
         const verified = decodeWorkbench(response.body.value)
-        setStore({ state: verified ? "ready" : "unavailable", workbench: verified ?? null,
+        setStore({ state: verified ? "ready" : "unavailable", workbench: verified ?? null, discovery: verified ? response.body.value : null,
           reason: verified ? null : "discovery-contract-mismatch" })
       }).catch((error: unknown) => {
+        completed = true
         if (!abort.signal.aborted) setStore({ state: "unavailable", workbench: null,
           reason: error instanceof Error ? error.message : "workbench-read-failed" })
       })
-    onCleanup(() => abort.abort())
+    onCleanup(() => { if (!completed) abort.abort() })
   })
 
   createEffect(() => {
@@ -211,10 +246,12 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       setStore("review", null);return
     }
     const abort = new AbortController()
+    let completed = false
     setStore("review", null)
     void createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-review"]({
-      caseRef: currentChange.caseRef, choiceId: currentChange.choiceId, changeId: currentChange.changeId,
+      caseRef: structuredClone(unwrap(currentChange.caseRef)), choiceId: currentChange.choiceId, changeId: currentChange.changeId,
     }, { signal: abort.signal }).then((response) => {
+      completed = true
       if (abort.signal.aborted || context.generation() !== generation ||
         context.ready()?.transport !== ready.transport) return
       if (response.kind !== "response" || response.body.status !== "ok") {
@@ -226,9 +263,10 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       setStore("review", review ?? null)
       if (!review) setStore("reason", "review-contract-mismatch")
     }).catch(() => {
+      completed = true
       if (!abort.signal.aborted) setStore("reason", "review-read-failed")
     })
-    onCleanup(() => abort.abort())
+    onCleanup(() => { if (!completed) abort.abort() })
   })
 
   async function prepare() {
@@ -239,7 +277,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     setStore("preparationBusy", true)
     try {
       const response = await createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-prepare"]({
-        caseRef: pending.caseRef, choiceId: pending.choiceId, draftRef: pending.draftRef,
+        caseRef: structuredClone(unwrap(pending.caseRef)), choiceId: pending.choiceId, draftRef: pending.draftRef,
       }, { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() })
       if (context.generation() !== generation || current()?.transport !== ready.transport) return
       if (response.kind !== "response" || response.body.status !== "ok") {
@@ -250,27 +288,32 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       if (!result || !string(result.changeId) || !caseRef(result.caseRef) ||
         result.choiceId !== pending.choiceId) {setStore("outcome", "unknown");return}
       navigate(proposalRoute(props, result.changeId))
+      bump((count) => count + 1)
     } catch {setStore("outcome", "unknown")}
     finally {setStore("preparationBusy", false)}
   }
   async function apply() {
-    const change = chosenChange(), currentReview = store.review, ready = current()
-    if (!change || !currentReview || !ready || store.applyBusy ||
-      store.outcome === "unknown" || !store.workbench?.permissions.apply ||
+    const change = chosenChange(), currentReview = store.review, ready = current(), owner = context.state()
+    if (!change || !currentReview || !ready || owner.status !== "ready" || store.applyBusy ||
+      store.outcome === "unknown" || !!receiptHere() || !store.workbench?.permissions.apply ||
       !isAdmitted("dashboard.dashboard-hot-topic-apply") ||
       currentReview.state !== "planned" || change.state !== "planned") return
     const generation = context.generation()
     setStore("applyBusy", true)
     try {
       const response = await createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-apply"]({
-        caseRef: change.caseRef, choiceId: change.choiceId, changeId: change.changeId,
+        caseRef: structuredClone(unwrap(change.caseRef)), choiceId: change.choiceId, changeId: change.changeId,
         reviewDigest: currentReview.reviewDigest,
       }, { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() })
       if (context.generation() !== generation || current()?.transport !== ready.transport) return
       if (response.kind !== "response") {setStore("outcome", "unknown");return}
       if (response.body.status !== "ok") {setStore("outcome", "rejected");return}
-      setStore("outcome", "applied")
-      bump((count) => count + 1) // read current source/receipt; never reapply
+      const now = context.state()
+      if (now.status !== "ready" || now.ownerKey !== owner.ownerKey) return
+      const receipt = decodeReceipt(response.body.value, ready.context.stamp.principalRef)
+      if (!receipt) {setStore("outcome", "unknown");return}
+      setApplicationResult({ key: owner.ownerKey, generation, transport: ready.transport, changeId: change.changeId, receipt })
+      setStore({ review: null, outcome: receipt.result.ok ? "applied" : "rejected" })
     } catch {setStore("outcome", "unknown")}
     finally {setStore("applyBusy", false)}
   }
@@ -294,6 +337,11 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
   return <SfPageFrame titleKey={key("sf.ui54.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
     <div class="sf-u38-page" data-sf-surface="UI54">
+      <Show when={!chosenChange()}>
+        <SfHotTopicPrivateDraft discovery={store.discovery} reference={reference()} denied={store.state === "denied" || store.state === "session-expired"}
+          onSaved={(ref) => { navigate(proposalRoute(props, ref)); bump((count) => count + 1) }}
+          onDenied={() => setStore({ state: "denied", workbench: null, review: null, discovery: null, reason: null })} />
+      </Show>
       <SfStatePanel state={readState()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[readState()])}
         onRetryRead={() => bump((count) => count + 1)}>
         <section class="sf-u38-section">
@@ -315,7 +363,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
                 <div><dt>{t(key("sf.u38.proposalChange"))}</dt><dd><bdi>{change().changeId}</bdi></dd></div>
                 <div><dt>{t(key("sf.u38.proposalIdentity"))}</dt><dd><bdi>{change().caseRef.id}</bdi></dd></div>
                 <div><dt>{t(key("sf.u38.proposalChoice"))}</dt><dd><bdi>{change().choiceId}</bdi></dd></div>
-                <div><dt>{t(key("sf.u38.status"))}</dt><dd>{change().state}</dd></div>
+                <Show when={!receiptHere()}><div><dt>{t(key("sf.u38.status"))}</dt><dd>{change().state}</dd></div></Show>
               </>}
             </Show>
           </dl>
@@ -339,7 +387,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
             </dl>}
           </Show>
         </section>
-        <section class="sf-u38-section" aria-label={t(key("sf.u38.proposalReview"))}>
+        <Show when={!receiptHere()}><section class="sf-u38-section" aria-label={t(key("sf.u38.proposalReview"))}>
           <h2>{t(key("sf.u38.proposalReview"))}</h2>
           <Show when={chosenChange() && store.review && store.review.state === "planned" &&
             store.workbench?.permissions.apply && isAdmitted("dashboard.dashboard-hot-topic-apply")}
@@ -365,9 +413,9 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
                   reviewRef: chosenChange()!.changeId as SfRef,
                   reviewDigest: store.review!.reviewDigest,
                   baseVersion: store.review!.expectedVersion } }}
-              state="ready" onConfirm={() => {void apply()}}
-              onRevise={() => bump((count) => count + 1)}
-              onCancel={() => bump((count) => count + 1)} />
+              state={store.applyBusy ? "loading" : store.outcome === "unknown" ? "outcome-unknown" : "ready"} onConfirm={() => {void apply()}}
+              onRevise={() => { if (!store.applyBusy) bump((count) => count + 1) }}
+              onCancel={() => { if (!store.applyBusy) bump((count) => count + 1) }} />
           </Show>
         </section>
         <section class="sf-u38-section">
@@ -380,13 +428,30 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
                 <dd>{receipt().status}</dd></div></Show>
             </dl>}
           </Show>
-        </section>
-        <Show when={store.outcome !== "none"}><p role="alert" data-proposal-outcome={store.outcome}>
-          {t(key(store.outcome === "applied" ? "sf.u38.savedRefetch" :
-            store.outcome === "unknown" ? "sf.u38.savePending" : "sf.u38.applyError"))}
+        </section></Show>
+        <Show when={!receiptHere() && (store.outcome === "unknown" || store.outcome === "rejected")}><p role="alert" data-proposal-outcome={store.outcome}>
+          {t(key(store.outcome === "unknown" ? "sf.u38.savePending" : "sf.u38.applyError"))}
         </p></Show>
         <Show when={store.reason}><p role="status">{t(key("sf.u38.sourceUnknown"))}</p></Show>
       </SfStatePanel>
+      <Show when={receiptHere()}>{(receipt) => <section class="sf-u38-section" data-sf-proposal-receipt
+          data-receipt-id={receipt().id} aria-label={t(key("sf.u38.proposalReceipt"))}>
+        <h2>{t(key("sf.u38.proposalReceipt"))}</h2>
+        <dl class="sf-u38-meta">
+          <div><dt>{t(key("sf.u38.proposalReceipt"))}</dt><dd><bdi>{receipt().id}</bdi></dd></div>
+          <div><dt>{t(key("sf.u38.version"))}</dt><dd data-sf-receipt-version>{receipt().version}</dd></div>
+          <div><dt>{t(key("sf.u38.proposalReceiptAt"))}</dt><dd><time dateTime={receipt().at}>{receipt().at}</time></dd></div>
+        </dl>
+        <p role="alert" data-proposal-outcome={receipt().result.ok ? "applied" : "rejected"}>
+          {t(key(receipt().result.ok ? "sf.u38.proposalApplied" : "sf.u38.proposalNotApplied"))}
+        </p>
+        <Show when={receiptFailure()}>{(result) =>
+          <p>{t(key("sf.u38.status"))}: {result().status} · {result().errors.join(" · ")}</p>
+        }</Show>
+        <button type="button" class="mx-btn" onClick={() => { setApplicationResult(undefined); bump((count) => count + 1) }}>
+          {t(key("sf.u38.refresh"))}
+        </button>
+      </section>}</Show>
     </div>
   </SfPageFrame>
 }
