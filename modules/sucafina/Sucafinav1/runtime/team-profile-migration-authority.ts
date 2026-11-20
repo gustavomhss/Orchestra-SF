@@ -34,6 +34,9 @@ export function createTeamProfileMigrationAuthority(input: {
       new URL(input.origin).protocol !== "https:" || !Schema.is(TeamProfile.InstallationId)(input.installationId) ||
       !Schema.is(TeamProfile.TenantId)(input.tenantId)) throw new Error("SF_MIGRATION_AUTHORITY_CONFIG_INVALID")
   const { origin, installationId, tenantId } = input
+  const selector = Object.freeze(Schema.decodeUnknownSync(TeamProfile.Selector)({
+    contractRevision: "sf-team-profile/1", kind: "administration", installationId, tenantId,
+  }))
   const resolver = Object.freeze({ ...input.resolver })
   const readGrants = input.microsoft.readGrants
   type Held = {
@@ -90,7 +93,7 @@ export function createTeamProfileMigrationAuthority(input: {
           })))
         if (owners.some((owner) => owner.profile.installationId !== installationId ||
             owner.profile.tenantId !== tenantId || owner.principal.tenantId !== tenantId)) return undefined
-        const resolution = await resolver.resolve(request, { contractRevision: "sf-team-profile/1", kind: "administration" })
+        const resolution = await resolver.resolve(request, selector)
         if (resolution.status !== "authenticated" || resolution.administration.status !== "available" ||
             resolution.principal.tenantId !== tenantId) return undefined
         const [catalog, grants] = await Promise.all([resolver.list(request), readGrants()])
