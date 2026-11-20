@@ -86,14 +86,6 @@ export function browserPoolConsumers(files, root = process.cwd()) {
   return new Set(files.map((file) => path.resolve(root, file)).filter((file) => reaching.has(file)))
 }
 
-/** A suite that drops the ordered-pool files must prove none of the rest needs them. */
-function assertNoOrderedPoolConsumers(files, root) {
-  const consumers = browserPoolConsumers(files, root)
-  if (consumers.size) {
-    fail("ordered browser pool file is still selected: " + [...consumers][0])
-  }
-}
-
 /** Stable hash partition: every accepted file lands in exactly one part. */
 export function shardFiles(files, index, count) {
   if (!Number.isSafeInteger(count) || count < 1 || !Number.isSafeInteger(index) || index < 1 || index > count) {
@@ -218,13 +210,16 @@ export function selectSuiteFiles(manifest, suiteId, repoRoot = process.cwd()) {
     ensureContained(root, name, "file")
     if (!isTestFile(name) || !files.includes(name)) fail("harness-owned file is outside admitted selection: " + name)
   }
-  files = files.filter((name) => !harnessOwned.includes(name))
+  // All roots share one graph; membership still proves both exclusion directions.
+  const consumers = browserPoolConsumers(files, root)
   for (const name of harnessOwned) {
-    if (browserPoolConsumers([name], root).size === 0) {
+    if (!consumers.has(path.resolve(root, name))) {
       fail("harness-owned file does not reach the ordered pool: " + name)
     }
   }
-  assertNoOrderedPoolConsumers(files, root)
+  files = files.filter((name) => !harnessOwned.includes(name))
+  const remaining = files.find((name) => consumers.has(path.resolve(root, name)))
+  if (remaining) fail("ordered browser pool file is still selected: " + path.resolve(root, remaining))
   const excluded = selection.releaseOnlyFiles || []
   if (!Array.isArray(excluded) || new Set(excluded).size !== excluded.length) fail("invalid release-only inventory")
   for (const name of excluded) {
