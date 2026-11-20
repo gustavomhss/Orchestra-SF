@@ -43,6 +43,8 @@ export async function createLocalJobs(options: {
   now?: () => Date
   intervalMs?: number
   schedule?: boolean
+  /** Installed maintenance may capture/verify backups, never queue or deliver business effects. */
+  maintenanceOnly?: true
   /** Deterministic internal seams used by resilience tests; production leaves both absent. */
   backups?: MaintenanceBackups
   scheduler?: MaintenanceScheduler
@@ -67,7 +69,7 @@ export async function createLocalJobs(options: {
     monthly: {},
     drills: {},
     partialSurface: {},
-    notifications: options.operator ? "in-app" : "queued-transport-not-configured",
+    notifications: options.operator && !options.maintenanceOnly ? "in-app" : "queued-transport-not-configured",
   }
   const run = async () => {
     const signal = controller.signal
@@ -213,9 +215,9 @@ export async function createLocalJobs(options: {
         }
       }
       signal.throwIfAborted()
-      await queueApprovalReminders(options.store, { at }, day)
+      if (!options.maintenanceOnly) await queueApprovalReminders(options.store, { at }, day)
       signal.throwIfAborted()
-      if (options.operator) {
+      if (options.operator && !options.maintenanceOnly) {
         const operator = options.operator
         const deliveryErrors: unknown[] = []
         for (const surface of surfaces) {
@@ -272,7 +274,7 @@ export async function createLocalJobs(options: {
     },
     status: (): LocalJobStatus => structuredClone(state),
     async inbox(actorId: string): Promise<LocalInboxItem[]> {
-      if (!options.operator || actorId !== options.operator.id) return []
+      if (options.maintenanceOnly || !options.operator || actorId !== options.operator.id) return []
       const items = await Promise.all(surfaces.map((surface) => options.store.transaction(surface, async (snapshot) => ({
         commit: false,
         value: inboxEntries(snapshot, actorId, options.mount).map((item) => ({ id: `${surface}:${text(item.key)}`, surface, kind: text(item.kind), record: text(item.record), at: text(item.at), ...(typeof item.reason === "string" ? { reason: item.reason } : {}), link: text(item.link), read: Array.isArray(item.readBy) && item.readBy.includes(actorId) })),
@@ -280,7 +282,7 @@ export async function createLocalJobs(options: {
       return items.flat().sort((a, b) => b.at.localeCompare(a.at) || a.id.localeCompare(b.id))
     },
     async markRead(actorId: string, ids: readonly string[]): Promise<number> {
-      if (!options.operator || actorId !== options.operator.id) return 0
+      if (options.maintenanceOnly || !options.operator || actorId !== options.operator.id) return 0
       if (ids.length > 100 || ids.some((id) => !/^(dashboard|planner|procurement):[a-f0-9]{64}$/.test(id))) throw new Error("Invalid notification identifiers")
       const selected = new Set(ids)
       const counts = await Promise.all(surfaces.map((surface) => options.store.transaction(surface, async (snapshot) => {
