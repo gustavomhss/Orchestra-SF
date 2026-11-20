@@ -57,6 +57,8 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
     ? [...pinned()].filter((value) => value !== id) : [...pinned(), id]
   const byYear = () => year() === undefined ? undefined : data()?.executiveByYear?.[String(year())]
   const executive = () => byYear()
+  // Missing optional DTO keeps the original admitted users row below. A present
+  // null or mismatched people result never falls back to another selection.
   const people = () => {
     const source = data()?.people
     const selection = reader.snapshot()?.selection
@@ -178,7 +180,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
         <section class="sf-u02-section" aria-labelledby="sf-u02-people">
           <h2 id="sf-u02-people">{t(key("sf.u02.people"))}</h2>
           <dl class="sf-u02-stats sf-u02-people-metrics">
-            {stat("it-users", "sf.u02.users", people()?.users)}
+            {stat("it-users", "sf.u02.users", data()?.people === undefined ? users()?.users : people()?.users)}
             {stat("cost-per-user-opex", "sf.u02.costPerUserOpex", people()?.opexCostPerUser)}
             {stat("cost-per-user-total", "sf.u02.costPerUserTotal", people()?.totalCostPerUser)}
             <div class="sf-u02-stat" data-sf-metric="attrition"><dt>{t(key("sf.u02.attrition"))}</dt>
