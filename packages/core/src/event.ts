@@ -777,7 +777,7 @@ export const layerWith = (options?: LayerOptions) =>
           .set({ owner_id: ownerID })
           .where(eq(EventSequenceTable.aggregate_id, aggregateID))
           .run()
-          .pipe(Effect.orDie, Effect.tap(() => currentCheck)), { behavior: "immediate" }).pipe(Effect.orDie))))
+          .pipe(Effect.orDie, Effect.tap(() => currentCheck)), { behavior: "immediate" }).pipe(Effect.orDie)))
       }
 
       const subscribe = <D extends Definition>(definition: D): Stream.Stream<Payload<D>> =>
