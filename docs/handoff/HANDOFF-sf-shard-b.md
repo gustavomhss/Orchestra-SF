@@ -140,10 +140,10 @@ Locais abaixo referem-se à causa na base, salvo indicação explícita. Revisã
 | C07 | e062c6f06142d223c5b8dfd59bd181d9ec5a3b16 + extensão 8d84b40e83b0d3c5e7466ffc2fd64da8d0396f3e | wp13/handoff-c08-predispatch.test.ts:242; handoff-canonical-integration.test.ts:162,176 — versão alterada conflita; replay da request original devolve recibo completo idêntico; extensão handoff-persistence.test.ts:170 | [44663862857](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663862857) — 3 pass / 0 fail; success |
 | C08 | b91d281808c5428e0e0643bc49fd9400cad5ddbc | wp13/handoff-persistence.test.ts:58; handoff-domain-integration.test.ts:358 — mesma Request admitida durante a operação; gate persistence, domain coberto por C09 | [44656700681](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656700681) — 0 pass / 1 fail; failure |
 | C09 | 0e5a457f4d3728a149016b972eee88b2afcdf861 | wp13/handoff-domain-integration.test.ts:391 — intenção de rascunho confirmed:false; não é aprovação | [44662583356](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662583356) — 0 pass / 1 fail; failure |
-| C12 | afb087bb3028f7f6ab3706e50da6bbed5ddb459d | wp10/native-host/native-host-disposal.test.ts:19,57 — SessionSubagentModels real importado e exportado pelo root | [44664197903](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664197903) — em andamento (in_progress) |
-| C13 | 94763c9deec5898cdf5b20b2dfadc5858de4919e | wp01/import-receipt-browser.test.ts:26 — File com exact:true, sem modificar o resultado/contagem da importação | [44664193801](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664193801) — em andamento (in_progress) |
+| C12 | afb087bb3028f7f6ab3706e50da6bbed5ddb459d | wp10/native-host/native-host-disposal.test.ts:19,57 — SessionSubagentModels real importado e exportado pelo root | [44664197903](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664197903) — 7 pass / 0 fail; success |
+| C13 | 94763c9deec5898cdf5b20b2dfadc5858de4919e | wp01/import-receipt-browser.test.ts:26 — File com exact:true, sem modificar o resultado/contagem da importação | [44664193801](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664193801) — 1 pass / 0 fail; success |
 | C14 | 489f6d09cf96ca7348aa362c81635ee1713f05ed | wp12/native-verifier-negatives.test.ts:106,146,165,202 — projeção dos quatro campos canônicos; preserva caseRef no HTTP e todas as provas adversariais | [44662785880](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662785880) — 1 pass / 0 fail; success |
-| C15 | 0e4541a5defc2f35385a45d50d9a4c9eb8a070aa | wp04/capabilities.test.ts:39 — CAS requests:PR-1 versão0, independente da revisão4 do wrapper legado | pendente |
+| C15 | 0e4541a5defc2f35385a45d50d9a4c9eb8a070aa | wp04/capabilities.test.ts:39 — CAS requests:PR-1 versão0, independente da revisão4 do wrapper legado | [44664473159](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664473159) — 3 pass / 0 fail; success |
 | C16 | 4dff91a6503aa4ee6800e98030bde1c38114118b | wp10/integration/bi-access-browser-fixture.ts:195 — controle atual de múltiplas origens + vínculo refDigest64hex; preserva200 retido/403/limpeza/resposta tardia | [44663094821](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663094821) — 1 pass / 0 fail; success |
 | C17 | e55478bd29cd03d604116b855d45e3664270ba4e | wp13/handoff-persistence.test.ts:147 (gate C08) — perda explícita após receipt real; indisponibilidade antes da reserva; execução única, recibos completos e CAS5/5 | [44663862857](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663862857) — 3 pass / 0 fail; success |
 
@@ -181,8 +181,9 @@ Locais abaixo referem-se à causa na base, salvo indicação explícita. Revisã
 | C05 | [44663715036](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663715036) | a4980fbbe4e2bf7eae1f6636073ff32d791ab219 | 7 pass / 0 fail; success |
 | C07-C17 | [44663862857](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663862857) | 479cf1947411cd16a117415bea34a914075596c0 | 3 pass / 0 fail; success |
 | S11 | [44663906249](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663906249) | 3530f1eb5c560cef225b3f4937937d817f4e367e | 9 pass / 0 fail; success |
-| C13 | [44664193801](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664193801) | f2f92375bafaa0c27dc45826a03d2ba0b995da5b | em andamento (in_progress) |
-| C12 | [44664197903](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664197903) | 4ab7cb5700c7d6b180c4ffd0b7e0f3106f1e37d2 | em andamento (in_progress) |
+| C13 | [44664193801](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664193801) | f2f92375bafaa0c27dc45826a03d2ba0b995da5b | 1 pass / 0 fail; success |
+| C12 | [44664197903](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664197903) | 4ab7cb5700c7d6b180c4ffd0b7e0f3106f1e37d2 | 7 pass / 0 fail; success |
+| C15 | [44664473159](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664473159) | 87320a6e2fdc0b237a41287f0f56485e23320611 | 3 pass / 0 fail; success |
 
 Os requests estão nos commits indicados, em .ci-run.json. Cada run testa o fix SHA associado, acrescido somente do request. Os dois slots contam workflows até o encerramento completo.
 
@@ -203,6 +204,8 @@ C07+C17 compartilham um único gate de três arquivos porque a fixture persisten
 - **C05 — [44663715036](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663715036):** PASS: 7 pass / 0 fail, 728 ms. A ordem exata de evaluatedSourceRefs coincide com a avaliação humana já verificada, preservando digest, cobertura e as demais asserções do arquivo. Omni não aplicável, zero spawns.
 - **C07-C17 — [44663862857](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663862857):** PASS: 3 pass / 0 fail em 3 arquivos, 858 ms. C07 exige conflito da intenção alterada e igualdade completa do replay original. C17 preserva perda explícita após o receipt real, recusa Procurement antes da reserva, reconciliação, uma execução por domínio, dois receipts completos e CAS 5/5. O arquivo persistence, que falhou no gate inicial C08, passou neste snapshot com C08+C07+C17. Omni não aplicável, zero spawns.
 - **S11 — [44663906249](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663906249):** PASS: 9 pass / 0 fail em 3 arquivos, 1,82 s. Replay exato após avanço legítimo do case e regressões de fonte/escopo/autorização passaram. hot-topic-draft-domain é controle adicional do shard 3, sem qualificação desse shard. Omni não aplicável, zero spawns. PR #406 tem este gate focado aprovado; nenhuma composição com a base alvo posterior foi testada.
+- **C13 — [44664193801](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664193801):** PASS: 1 pass / 0 fail, 13,76 s. Locator File exato seleciona o upload; o componente recupera o receipt unchanged após resposta incerta e mantém applies=1. Omni não aplicável, zero spawns. Prova isolada do componente, sem aceitação de jornada instalada.
+- **C12 — [44664197903](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664197903):** PASS: 7 pass / 0 fail, 15,79 s. Passaram dispose, interrupt-failure, abort-attach, revoke-attach, throw-attach, throw-announcement e pending-interruption com SessionSubagentModels real no root. Asserções de sessões, grants, tickets, leases e liberação preservadas. Omni não aplicável, zero spawns; fixture de lifecycle com budget sintético declarado, sem prova de inferência nativa.
 
 ### Seleções dos gates publicados
 
@@ -225,6 +228,7 @@ Caminhos relativos a modules/sucafina/; a árvore exata está no SHA do request.
 | S11 | Sucafinav1/test/product/ui-split/ui-source/draft-replay.test.ts; Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts; Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts |
 | C13 | Sucafinav1/test/product/wp01/import-receipt-browser.test.ts |
 | C12 | Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts |
+| C15 | Sucafinav1/test/product/wp04/capabilities.test.ts |
 
 ## Produção compartilhada — PRs separados
 
@@ -241,7 +245,7 @@ PRs alheios apenas inspecionados: [#398 Atlas](https://github.com/gustavomhss/Or
 
 ## Pendente e como retomar
 
-1. Aguardar os gates ativos C13 (44664193801), C12 (44664197903) e registrar os resultados. Nunca repetir gate idêntico sem mudança.
+1. Aguardar os gates ativos (nenhum neste checkpoint) e registrar os resultados. Nunca repetir gate idêntico sem mudança.
 2. Gatear os commits pendentes por causa, até dois workflows ativos. C04/C06 agrupam arquivos com mesma raiz. Não declarar shard verde por recorte.
 3. Verificar a correção C17 do ponto C08:147 no gate conjunto C07+C17, preservando reconciliação durável e execução única.
 4. Timeouts/processos unbound não têm raiz interna provada; não elevar prazos por palpite.
