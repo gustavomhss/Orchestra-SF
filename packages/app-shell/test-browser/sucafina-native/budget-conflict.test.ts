@@ -65,11 +65,15 @@ function mount(replacementId: string) {
   const calls: { operationId: string; input: unknown }[] = []
   const writes: unknown[] = []
   const transport: SfTransport = { async execute(operation, value) {
-    calls.push({ operationId: operation.operationId, input: structuredClone(value) })
+    const input = Schema.decodeUnknownSync(Schema.toType(operation.input), { onExcessProperty: "error" })(value)
+    // F02 sends JSON. values.versions can be a Solid store proxy, which the
+    // structured-clone algorithm rejects before this fixture can return 409.
+    const captured: unknown = JSON.parse(JSON.stringify(input))
+    calls.push({ operationId: operation.operationId, input: captured })
     const read = operation.operationId === "domain.page.CAP04"
     if (!read && operation.operationId !== "domain.command.CAP04.save-entry")
       throw new Error("Unexpected native budget operation")
-    if (!read) writes.push(structuredClone(value))
+    if (!read) writes.push(captured)
     const body = read ? source(writes.length ? replacementId : "entry-original",
       writes.length > 1 ? 3 : writes.length ? 2 : 1, writes.length > 1 ? 123 : writes.length ? 110 : 100,
       writes.length > 1 ? 34 : 30, writes.length > 1 ? 140 : 115)
