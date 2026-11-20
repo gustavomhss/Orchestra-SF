@@ -317,7 +317,8 @@ export function createTeamProfileCoreMigration(input: {
         }
         verifyCut(prepared, generation)
       }
-      atomic(journal, () => step(plan, "backfill-verified", { generation, checkpoint: prepared.checkpoint }))
+      const verifiedCheckpoint = prepared.checkpoint
+      atomic(journal, () => step(plan, "backfill-verified", { generation, checkpoint: verifiedCheckpoint }))
       // The current control file is excluded from data checkpoints. Its CAS is
       // the single authority activation point; no legacy/new dual writer exists.
       getControl().activate(storageId, generation, plan.planDigest, marker)
