@@ -13,6 +13,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: test-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: test (${{ matrix.host }})
@@ -320,12 +324,13 @@ jobs:
           python3 script/sf2h/export-visual/reader.py
 
       - name: Upload SF66 generated exports and reader evidence
-        if: always() && !cancelled() && runner.os == 'Linux' && steps.request.outputs.sf66_exports == 'true'
+        if: always() && !cancelled() && runner.os == 'Linux'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: sf66-exports-${{ github.sha }}-${{ matrix.host }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/sf66-export-artifacts/
-          if-no-files-found: error
+          if-no-files-found: ${{ steps.request.outputs.sf66_exports == 'true' && 'error' || 'ignore' }}
+          compression-level: 0
           retention-days: 7
 
       - name: Upload Lean dashboard previews (extension)
@@ -353,7 +358,7 @@ jobs:
 
   cleanup:
     needs: test
-    if: always()
+    if: always() && !cancelled()
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -363,4 +368,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
-        run: gh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true
+          SNAPSHOT_SHA: ${{ github.sha }}
+        run: |
+          # An obsolete run must not delete a newer snapshot on the same ref.
+          current="$(gh api "repos/$REPO/git/ref/heads/$BRANCH" --jq .object.sha)" || exit 0
+          if [ "$current" = "$SNAPSHOT_SHA" ]; then
+            gh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH"
+          fi
