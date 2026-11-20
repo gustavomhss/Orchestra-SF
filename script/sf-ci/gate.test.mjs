@@ -130,6 +130,44 @@ test("a harness-owned entry that never reaches the pool fails closed", () => {
     assert.throws(() => selectSuiteFiles(invalid, "CI-SF", root), /does not reach the ordered pool/)
   } finally { rmSync(root, { recursive: true, force: true }) }
 })
+test("shared cyclic pool imports preserve per-root admission without retaining a stale graph", () => {
+  const first = "Sucafinav1/test/product/ordered/first.test.ts"
+  const second = "Sucafinav1/test/product/ordered/second.test.ts"
+  const independent = "Sucafinav1/test/product/ordered/independent.test.ts"
+  const root = poolTree(first)
+  const suiteRoot = path.join(root, "modules/sucafina")
+  const write = (name, body) => writeFileSync(path.join(suiteRoot, name), body)
+  try {
+    write(first, 'import "./shared.ts"\n')
+    write(second, 'import "./cycle.ts"\n')
+    write("Sucafinav1/test/product/ordered/shared.ts",
+      'export * from "../wp01/helper.ts"\nexport * from "./cycle.ts"\n')
+    write("Sucafinav1/test/product/ordered/cycle.ts", 'export * from "./shared.ts"\n')
+    write(independent, 'import "./separate-a.ts"\n')
+    write("Sucafinav1/test/product/ordered/separate-a.ts", 'export * from "./separate-b.ts"\n')
+    write("Sucafinav1/test/product/ordered/separate-b.ts", 'export * from "./separate-a.ts"\n')
+    const admitted = structuredClone(manifest)
+    const selection = admitted.suites.find((suite) => suite.id === "CI-SF").selection
+    selection.harnessOwnedFiles = [first, second]
+    selection.releaseOnlyFiles = []
+    assert.deepEqual([...browserPoolConsumers([first, second, independent], suiteRoot)].sort(),
+      [first, second].map((name) => path.resolve(suiteRoot, name)).sort())
+    assert.deepEqual(selectSuiteFiles(admitted, "CI-SF", root),
+      ["Sucafinav1/test/plain.test.ts", independent].sort())
+
+    selection.harnessOwnedFiles = [first]
+    assert.throws(() => selectSuiteFiles(admitted, "CI-SF", root),
+      /ordered browser pool file is still selected/)
+    selection.harnessOwnedFiles = [first, second, independent]
+    assert.throws(() => selectSuiteFiles(admitted, "CI-SF", root),
+      /harness-owned file does not reach the ordered pool/)
+
+    selection.harnessOwnedFiles = [first, second]
+    write("Sucafinav1/test/product/ordered/shared.ts", 'export * from "./cycle.ts"\n')
+    assert.throws(() => selectSuiteFiles(admitted, "CI-SF", root),
+      /harness-owned file does not reach the ordered pool/)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
 const bunReport = (files) => Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: files.length, product_executed: files.length, failures: 0, errors: 0, skipped: 0 },
   cases: files.map((file) => ({ name: "case " + file, classname: "", file,
@@ -299,13 +337,15 @@ for (const scenario of [
       writeFileSync(path.join(root, "sf/ci/suites.json"), JSON.stringify(unitManifest))
       writeFileSync(spec, "// Unit fixture only; no product tests or accepted baseline.\n")
       copyFileSync(new URL("./gate.mjs", import.meta.url), path.join(root, "script/sf-ci/gate.mjs"))
+      copyFileSync(new URL("./shard-plan.mjs", import.meta.url), path.join(root, "script/sf-ci/shard-plan.mjs"))
+      copyFileSync(new URL("../../sf/ci/shard-costs.json", import.meta.url), path.join(root, "sf/ci/shard-costs.json"))
       const git = (...args) => {
         const result = spawnSync("git", ["-C", root, ...args], { encoding: "utf8", timeout: 10_000 })
         assert.equal(result.status, 0, result.stderr || String(result.error))
         return result.stdout.trim()
       }
       git("init", "--quiet")
-      git("add", "sf/ci/suites.json", "script/sf-ci/gate.mjs", suite.directory)
+      git("add", "sf/ci/suites.json", "sf/ci/shard-costs.json", "script/sf-ci/gate.mjs", "script/sf-ci/shard-plan.mjs", suite.directory)
       git("-c", "user.name=SF gate unit fixture", "-c", "user.email=sf-gate-unit@example.invalid",
         "commit", "--quiet", "-m", "Unit fixture only")
       const unitSha = git("rev-parse", "HEAD")

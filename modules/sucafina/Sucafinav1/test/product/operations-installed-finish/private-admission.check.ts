@@ -6,7 +6,10 @@ import { createConnection } from "node:net"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { Workbook } from "exceljs"
-import { createOperationsInstallation } from "../../../../../../packages/app-shell/e2e/sucafina/operations-support/installation.ts"
+import { Layer } from "effect"
+import { HttpRouter, HttpServer } from "effect/unstable/http"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { initializeAbsentSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { scanLocalFile } from "../../../runtime/local-scanner.ts"
@@ -45,6 +48,7 @@ function eicar() {
 }
 
 async function fixture(scanner: ReturnType<typeof endpoint>) {
+  expectSpawn(import.meta.path)
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-operations-private-"))
   cleanups.push(() => rm(directory, { recursive: true, force: true }))
   await chmod(directory, 0o700)
@@ -63,13 +67,32 @@ async function fixture(scanner: ReturnType<typeof endpoint>) {
     secrets: persistence.secrets, key: randomBytes(32),
   })
   const bankKey = randomBytes(32)
-  const installation = createOperationsInstallation({
-    installationId, directory, origin, mount, principalRef, readOnly: false, persistence,
+  await initializeAbsentSfProductState(persistence, randomUUID)
+  // Initialize the actual host graph before using its private HTTP producers.
+  // Loading Global first preserves the same initialization order as wp04/host.
+  await import("@orchestra/core/global")
+  const { createOperationsInstallation } = await import("../../../../../../packages/app-shell/e2e/sucafina/operations-support/installation.ts")
+  const { createEmbeddedRoutes } = await import("../../../../../../packages/server/src/routes.ts")
+  const { AppNodeBuilder } = await import("@orchestra/core/effect/app-node-builder")
+  const { LayerNode } = await import("@orchestra/core/effect/layer-node")
+  const { PermissionSaved } = await import("@orchestra/core/permission/saved")
+  const { ClaudeCodeAccount } = await import("@orchestra/core/claude-code-account")
+  const installation = await createOperationsInstallation({
+    installationId, directory, origin, mount, operators: [{ principalRef, readOnly: false }], persistence,
     authenticate: identity.authenticate,
+    isAuthenticated: async (request) => Boolean(await identity.person(request)),
     environment: async () => ({ at, id: randomUUID, directory: [{ id: principalRef, name: "Private admission operator" }], bankKey }),
     signingKey: randomBytes(32), scanner,
   })
-  cleanups.push(async () => { installation.dispose() })
+  const embedded = HttpRouter.toWebHandler(createEmbeddedRoutes({
+    host: installation.host, sucafinaInstallations: installation.discovery,
+  }).pipe(
+    HttpRouter.provideRequest(AppNodeBuilder.build(LayerNode.group([PermissionSaved.node, ClaudeCodeAccount.node]))),
+    Layer.provide(HttpServer.layerServices),
+  ), { disableLogger: true })
+  cleanups.push(() => embedded.dispose())
+  expect((await embedded.handler(new Request(origin + "/api/health"))).status).toBe(200)
+  expect(installation.identity()).toBeDefined()
   const admitted = await identity.handle(new Request(origin + mount + "/auth/local?code=" + await identity.enroll()))
   expect(admitted?.status).toBe(303)
   const cookie = admitted!.headers.get("set-cookie")!.split(";")[0]!
@@ -169,10 +192,14 @@ async function acceptedImport(f: Fixture, bytes: Uint8Array) {
 
 async function deniedImport(f: Fixture, bytes: Uint8Array) {
   const before = durable(f)
+  const observed = f.scannerObservations().length
   const response = await importFile(f, bytes)
   expect(response.status).toBe(403)
   expect(await response.json()).toEqual({ status: "denied" })
-  expect(f.admissionDiagnostics().at(-1)).toEqual({ stage: "file-admit", status: "denied", reason: "file-not-accepted" })
+  expect(f.scannerObservations()).toHaveLength(observed + 1)
+  expect(f.scannerObservations().at(-1)).toEqual({
+    digest: createHash("sha256").update(bytes).digest("hex"), size: bytes.byteLength, accepted: false,
+  })
   expect(durable(f)).toEqual(before)
 }
 
@@ -204,9 +231,14 @@ async function acceptedUpload(f: Fixture, name: string, bytes: Uint8Array) {
 
 async function deniedUpload(f: Fixture, bytes: Uint8Array) {
   const before = durable(f)
+  const observed = f.scannerObservations().length
   const response = await upload(f, "rejected-control.txt", bytes)
   expect(response.status).toBe(422)
   expect(await response.json()).toEqual({ ok: false, errors: ["The scanner did not accept this file."] })
+  expect(f.scannerObservations()).toHaveLength(observed + 1)
+  expect(f.scannerObservations().at(-1)).toEqual({
+    digest: createHash("sha256").update(bytes).digest("hex"), size: bytes.byteLength, accepted: false,
+  })
   expect(durable(f)).toEqual(before)
 }
 
