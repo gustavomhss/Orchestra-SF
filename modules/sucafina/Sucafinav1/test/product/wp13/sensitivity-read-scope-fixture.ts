@@ -1,5 +1,6 @@
+import { createSfSourceFenceReader } from "../../../../../../apps/cli/src/sucafina-product/source-fence-read.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
 import { sfRunSourceFence } from "../../../product/ai/run-store.ts"
 import { createCriterionResultBindings } from "../../../product/decisions/criterion-rules.ts"
@@ -13,7 +14,7 @@ import type { createPortfolioCoverageFixture } from "./coverage-preview-fixture.
 
 /** Real Planner/C08/rule composition shared by the full replay and scope counterexamples.
  * The private scope uses this fixture's actual LocalStore; grants and evidence stay fresh. */
-export async function persistedServices(fixture: Awaited<ReturnType<typeof createPortfolioCoverageFixture>>, training: string, options: { readScopeHost?: NonNullable<Parameters<typeof createPortfolioProofVerifier>[0]["sensitivityReadScope"]> } = {}) {
+export async function persistedServices(fixture: Awaited<ReturnType<typeof createPortfolioCoverageFixture>>, training: string, options: { readScopeHost?: NonNullable<Parameters<typeof createPortfolioProofVerifier>[0]["sensitivityReadScope"]> | false; revalidate?: DomainPortHost["revalidate"] } = {}) {
   const writes = new WeakSet<object>()
   const identity = { installationId: fixture.context.binding.installationId, projectId: fixture.context.binding.projectId, principalRef: fixture.context.binding.principalRef, policyVersion: fixture.context.binding.policyVersion, accessRevision: fixture.context.binding.accessRevision }
   const state = createSfProductState({ persistence: fixture.store, proposalCoverageWrites: writes, createId: () => "wp13-coverage-state", resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }), authorize: async (request) => request === fixture.request && await fixture.host.revalidate(fixture.context) ? identity : undefined })
@@ -25,17 +26,13 @@ export async function persistedServices(fixture: Awaited<ReturnType<typeof creat
   const coveragePreview = createPortfolioCoveragePreview({ units: fixture.issuer, preview: fixture.preview, resolveAuthority: fixture.resolveAuthority })
   const exactThreshold: NonNullable<Parameters<typeof createPlannerSensitivity>[0]["exactThreshold"]> = (request, binding, context) => fixture.exact(request, binding.baselineRef, context)
   const sensitivity = createPlannerSensitivity({ results, resolve: fixture.issuer.resolve, revalidate: fixture.issuer.revalidate, preview: fixture.preview, coveragePreview, exactThreshold, idempotencyKey: async (digest) => `wp13-certified-samples:${training}:${digest}` })
-  const transactionAll = fixture.store.transactionAll?.bind(fixture.store)
-  if (!transactionAll) throw new Error("The C08 fixture requires durable multi-surface transaction support")
+  if (!fixture.store.transactionAll) throw new Error("The C08 fixture requires durable multi-surface transaction support")
   const sourceFences = (snapshots: Readonly<Record<"dashboard" | "planner" | "procurement", Snapshot>>) => ({ dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) })
-  const readSourceFences = async (context: TrustedDomainContext) => {
-    if (!await fixture.host.revalidate(context)) return undefined
-    const current = fixture.store.currentSnapshots?.()
-    return current ? sourceFences(current) : transactionAll(async (snapshots) => ({ commit: false, value: sourceFences(snapshots) }))
-  }
-  const readScopeHost = options.readScopeHost ?? fixture.host
-  if (readScopeHost.persistence !== fixture.store) throw new Error("The sensitivity read scope must use the same real LocalStore")
-  const verifier = createPortfolioProofVerifier({ cases: fixture.cases, planner: fixture.plannerWithCriteria, sources: fixture.sources, evidence: fixture.evidence, results, revalidate: fixture.host.revalidate, readSourceFences, lockedSourceFences: () => {
+  const revalidate = options.revalidate ?? fixture.host.revalidate
+  const readSourceFences = createSfSourceFenceReader({ host: { ...fixture.host, revalidate }, persistence: fixture.store })
+  const readScopeHost = options.readScopeHost === false ? undefined : options.readScopeHost ?? fixture.host
+  if (readScopeHost && readScopeHost.persistence !== fixture.store) throw new Error("The sensitivity read scope must use the same real LocalStore")
+  const verifier = createPortfolioProofVerifier({ cases: fixture.cases, planner: fixture.plannerWithCriteria, sources: fixture.sources, evidence: fixture.evidence, results, revalidate, readSourceFences, lockedSourceFences: () => {
     const snapshots = fixture.store.currentSnapshots?.()
     return snapshots ? sourceFences(snapshots) : undefined
   }, caseFor: async () => ({ status: "ok", value: fixture.caseRef }), idempotencyKey: async (digest) => `wp13-certified:${training}:${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "human-choice-required" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async () => ({ status: "unavailable", reason: "portfolio-candidates-not-requested" }), revalidateAnalysis: async () => false, units: fixture.issuer, sensitivityPreview: fixture.preview, coveragePreview, exactThreshold, sensitivityReadScope: readScopeHost })
