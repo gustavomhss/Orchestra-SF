@@ -428,6 +428,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const calculationVerifier: { current?: NonNullable<Parameters<typeof createSfDecisionResultStore>[0]["verifyCalculationSources"]> } = {}
   const results = createSfDecisionResultStore({ state: input.authority.state, host, authorizeCase, createId: randomUUID, now: () => new Date().toISOString(),
     verifyCalculationSources: (value, refs, call) => calculationVerifier.current?.(value, refs, call) ?? Promise.resolve(false),
+    observeRead: (value, call, work) => calculationRead.current ? calculationRead.current(value, call, work) : work(),
     verifySources: async (_value, refs, call) => {
       const found = await context.context({ refs }, call)
       return found.length === refs.length && found.every((item, index) => item.state === "fresh" && !!item.authorizedProjection && !!item.currentRef &&

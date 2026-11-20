@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "node:async_hooks"
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceResolution } from "../../../../product/contracts/business-context.ts"
@@ -319,18 +320,37 @@ test("the authenticated case read keeps both evidence passes inside one complete
     const evidence = fixture.business.evidence.current
     if (!evidence) throw new Error("The real BCS producer was not mounted")
     const original = evidence.context
-    const passes: { results: number; sources: number; fresh: boolean }[] = []
-    evidence.context = async (...args) => {
-      const value = await original(...args)
-      passes.push({ results: fixture.counts.results, sources: fixture.counts.sources,
-        fresh: value.length > 0 && value.every((item) => item.state === "fresh") })
-      return value
+    const invocation = new AsyncLocalStorage<{ call: Parameters<typeof original>[1]; depth: number }>()
+    const contexts: {
+      requested: Parameters<typeof original>[0]["refs"]; returned: Parameters<typeof original>[0]["refs"]
+      states: BusinessEvidenceResolution["state"][]; depth: number; sameCall: boolean
+      results: number; sources: number; fresh: boolean
+    }[] = []
+    const leafRefs = digestSfValue([fixture.leaf])
+    evidence.context = (...args) => {
+      const scope = invocation.getStore()
+      if (!scope) return original(...args)
+      const requested = structuredClone(args[0].refs)
+      return invocation.run({ call: scope.call, depth: scope.depth + 1 }, async () => {
+        const value = await original(...args)
+        contexts.push({ requested, returned: structuredClone(value.map((item) => item.ref)),
+          states: value.map((item) => item.state), depth: scope.depth, sameCall: args[1] === scope.call,
+          results: fixture.counts.results, sources: fixture.counts.sources,
+          fresh: value.length > 0 && value.every((item) => item.state === "fresh") })
+        return value
+      })
     }
     const read = await fixture.run(async (call) => {
       fixture.reset()
-      passes.length = 0
-      return fixture.business.cases.read({ caseRef: `case:${fixture.caseRef.id}:${fixture.caseRef.incarnation}` }, call)
-    })
+      contexts.length = 0
+      return invocation.run({ call, depth: 0 }, () =>
+        fixture.business.cases.read({ caseRef: `case:${fixture.caseRef.id}:${fixture.caseRef.incarnation}` }, call))
+    }).finally(() => invocation.disable())
+    // The case port admits its complete [leaf] evidence twice. Replaying that
+    // leaf also asks BCS about Planner sources and empty operation inputs; keep
+    // those real callbacks, without counting them as extra parent admissions.
+    const passes = contexts.filter((entry) => digestSfValue(entry.requested) === leafRefs)
+    const callbacks = contexts.filter((entry) => digestSfValue(entry.requested) !== leafRefs)
     expect(read.status).toBe("ok")
     if (read.status !== "ok") throw new Error("The actual case projection was not returned")
     expect(read.value.case.id).toBe(fixture.caseRef.id)
@@ -339,9 +359,18 @@ test("the authenticated case read keeps both evidence passes inside one complete
     expect(read.value.events[0]?.evidenceRefs).toEqual([fixture.leaf])
     expect(read.value.evidenceRefs).toEqual([fixture.leaf])
     expect(passes).toHaveLength(2)
+    expect(passes.map((pass) => pass.depth)).toEqual([0, 0])
     expect(passes.map((pass) => pass.fresh)).toEqual([true, true])
     expect(passes.map((pass) => pass.results)).toEqual([6, 6])
     expect(passes[1]!.sources).toBeGreaterThan(passes[0]!.sources)
+    expect(contexts.every((entry) => entry.sameCall)).toBe(true)
+    for (const entry of contexts) {
+      expect(entry.returned).toEqual(entry.requested)
+      expect(entry.states).toEqual(entry.requested.map(() => "fresh"))
+    }
+    expect(callbacks.some((entry) => entry.requested.length === 0)).toBe(true)
+    expect(callbacks.some((entry) => entry.depth > 0 && entry.requested.some((ref) =>
+      ref.kind === "record" && ref.target.surface === "planner" && ref.refId === fixture.incoming.baseRef))).toBe(true)
     expect(fixture.counts.results).toBe(6)
     expect(await fixture.capture()).toEqual(before)
   } finally { await fixture.cleanup() }
