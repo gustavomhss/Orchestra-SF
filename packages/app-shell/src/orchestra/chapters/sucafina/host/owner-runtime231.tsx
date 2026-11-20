@@ -36,6 +36,7 @@ import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
 import { bindSfNativeChapterNavigation, confirmSfOwnerExit, transitionSfNativeChapter } from "./native-chapter-entry"
 import { extendedRouteAvailable, isExtendedSurface, parseExtendedRouteQuery, SfExtendedPages } from "./extended-routes"
 import { revalidateSfNativeDraft } from "./draft-revalidation"
+import { SfSourceNavigation } from "./source-navigation"
 
 /** The shell asks the live F01 owner, never a second source of draft authority. */
 let liveExitGuard237: (() => Promise<boolean>) | undefined
@@ -221,6 +222,7 @@ function ownerKeyFromVerifiedContext(
 function MountedSurface(props: Readonly<{
   view: () => View
   gate: () => boolean
+  navigation: Pick<SfNativeNavigationState, "requestNativeTransition">
   bind: (handle: SfContextHandle | undefined) => void
   status: (status: string, generation: number, reason?: string) => void
 }>): JSX.Element {
@@ -281,6 +283,7 @@ function MountedSurface(props: Readonly<{
     </div>
     <Show when={authFailed()}><p role="alert">{language.t("sf.ui67.signOutFailed")}</p></Show>
     <Show when={props.gate()} fallback={<p role="status" data-sf-f01={handle.state().status}>{message()}</p>}>
+      <SfSourceNavigation route={current} navigation={props.navigation} />
       <Switch fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
         <Match when={current()?.surfaceId === "UI29"}>
           <SfTodayView surfaceId="UI29" route={current() as SfSurfaceProps<"UI29">["route"]} />
@@ -648,7 +651,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
           ownerNavigation={navigation}
         >
           <MountedSurface view={() => view} gate={() => provider.status === "ready" && provider.generation >= 0}
-            bind={(handle) => { mounted = handle }}
+            navigation={navigation} bind={(handle) => { mounted = handle }}
             status={(status, generation, reason) => setProvider({ status, generation, reason })} />
         </SfTodayBoundOwnerProvider>
       </Show>
