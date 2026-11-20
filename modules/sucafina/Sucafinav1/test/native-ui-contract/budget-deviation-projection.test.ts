@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { AbsolutePath } from "@orchestra/core/schema"
 import { randomBytes, randomUUID } from "node:crypto"
 import { mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -38,7 +39,7 @@ type Projection = { status: "ok"; context: SfContextStamp; value: {
 // and original command HTTP dispatch. Policy knobs only remove existing access.
 // Positive setup creates owners/entries by command and never seeds deviations.
 async function fixture() {
-  const root = await mkdtemp(path.join(await realpath(tmpdir()), "sf-budget-deviation-"))
+  const root = AbsolutePath.make(await mkdtemp(path.join(await realpath(tmpdir()), "sf-budget-deviation-")))
   const driver = await openLocalStore(path.join(root, "business"))
   const store = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources,
     createId: randomUUID, projectScope: createSfSourceScopeProjector(() => at) })
