@@ -3,7 +3,7 @@ import type { JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfSurfaceProps } from "../../context/contracts"
-import { SfPageFrame } from "../../shared/frame"
+import { SfDisplayValueText, SfPageFrame } from "../../shared/frame"
 import { SfExecutiveAction } from "../../cross-links/view"
 import { SfStatePanel } from "../../shared/states"
 import { sfCommonKey, useSfPresentation, SF_STATE_FALLBACK_KEY } from "../../shared/frame/presentation"
@@ -57,6 +57,13 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
     ? [...pinned()].filter((value) => value !== id) : [...pinned(), id]
   const byYear = () => year() === undefined ? undefined : data()?.executiveByYear?.[String(year())]
   const executive = () => byYear()
+  const people = () => {
+    const source = data()?.people
+    const selection = reader.snapshot()?.selection
+    return source && source.year === selection?.year && source.month === selection?.month &&
+      (year() === undefined || source.year === year()) &&
+      (month() === undefined || source.month === month()) ? source : undefined
+  }
   const unscoped = () => t(key("sf.u02.sourceWarning"))
   const periodTotals = () => year() === undefined ? data()?.totals : undefined
   const operations = () => {
@@ -139,11 +146,10 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
         <section class="sf-u02-section" aria-labelledby="sf-u02-financial">
           <h2 id="sf-u02-financial">{t(key("sf.u02.financial"))}</h2>
           <p role="status">{unscoped()}</p>
-          <dl class="sf-u02-stats sf-u02-four">
+          <dl class="sf-u02-stats sf-u02-financial-metrics">
             {year() === undefined ? stat("budget", "sf.u02.budget", periodTotals()?.totalBudget) : unscopedStat("budget", "sf.u02.budget")}
             {year() === undefined ? stat("actual", "sf.u02.actual", periodTotals()?.totalActual) : unscopedStat("actual", "sf.u02.actual")}
             {year() === undefined ? stat("forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("forecast", "sf.u02.forecast")}
-            {stat("active", "sf.u02.active", executive()?.active)}
           </dl>
           <p>{t(key("sf.u02.noCurrency"))}</p>
           <div data-sf-bi-slot="BI01">{metricTable()}</div>
@@ -160,6 +166,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
         <section class="sf-u02-section" aria-labelledby="sf-u02-delivery">
           <h2 id="sf-u02-delivery">{t(key("sf.u02.delivery"))}</h2>
           <dl class="sf-u02-stats">
+            {stat("active", "sf.u02.active", executive()?.active)}
             {stat("pmo-active", "sf.u02.pmoActive", executive()?.pmoActive)}
             {stat("pmo-risk", "sf.u02.pmoRisk", executive()?.pmoAtRisk)}
             {stat("risks", "sf.u02.activeRisks", executive()?.activeRisks)}
@@ -170,8 +177,16 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
         </section>
         <section class="sf-u02-section" aria-labelledby="sf-u02-people">
           <h2 id="sf-u02-people">{t(key("sf.u02.people"))}</h2>
-          <dl class="sf-u02-stats">
-            {stat("it-users", "sf.u02.users", users()?.users)}
+          <dl class="sf-u02-stats sf-u02-people-metrics">
+            {stat("it-users", "sf.u02.users", people()?.users)}
+            {stat("cost-per-user-opex", "sf.u02.costPerUserOpex", people()?.opexCostPerUser)}
+            {stat("cost-per-user-total", "sf.u02.costPerUserTotal", people()?.totalCostPerUser)}
+            <div class="sf-u02-stat" data-sf-metric="attrition"><dt>{t(key("sf.u02.attrition"))}</dt>
+              <dd>{knownNumber(people()?.attritionYtd) === undefined ? missing() :
+                <SfDisplayValueText value={{ kind: "number", value: people()!.attritionYtd!, fractionDigits: 2, unit: { kind: "percent" } }} />}</dd>
+            </div>
+          </dl>
+          <dl class="sf-u02-stats sf-u02-benchmark">
             {stat("benchmark", "sf.u02.benchmark", benchmark()?.value)}
           </dl>
         </section>
