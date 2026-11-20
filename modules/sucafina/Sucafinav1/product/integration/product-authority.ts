@@ -543,6 +543,7 @@ export function createSfProductAuthority(input: {
         const authorize: TeamConnectionAccess["authorize"] = async (action, resources) => {
           if (!(await Effect.runPromise(fence()))) return false
           const current = await resolve(request).catch(() => undefined)
+          if (!(await Effect.runPromise(fence()))) return false
           return !!current && same(current) && ConnectionAccess.Actions.some((known) => known === action) &&
             !!current.grant.connectionActions?.includes(action) && (action === "read" || current.canWrite) &&
             resources.every((resource) => current.grant.connectionResources?.some((allowed) =>
