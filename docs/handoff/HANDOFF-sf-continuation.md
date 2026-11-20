@@ -1,7 +1,7 @@
 # Handoff — sf-continuation
 
 SHA: f7dd58e32bc834f1485df20b91adbf759b4c4ad0 (produto/base e último SHA de sf-join-four observado; este documento é versionado separadamente em sf-continuation)
-Data: 2026-11-20T00:29:23.496Z
+Data: 2026-11-20T00:37:15.081Z
 Estado: partial
 
 ## Feito
@@ -49,10 +49,10 @@ Estado: partial
 | Ordem exigida | Estado no checkpoint |
 | --- | --- |
 | 1. PRs shared: das sessões 1–4 | Ainda sem PR qualificado observado. |
-| 2. sf-ui-c02 | Branch apareceu durante a auditoria; head 6efb113c755279654c306a6fe76c99bcbffb345f, primeiro fix em 2026-11-20T00:27:11Z. Revisão de leitura em andamento; sem handoff/gate completo observado. |
-| 3. sf-shard-a | Branch criada em f7dd58e32bc834f1485df20b91adbf759b4c4ad0; entrega em andamento. |
-| 3. sf-shard-b | Branch criada em f7dd58e32bc834f1485df20b91adbf759b4c4ad0; entrega em andamento. |
-| 3. sf-shard-c | Branch criada em f7dd58e32bc834f1485df20b91adbf759b4c4ad0; entrega em andamento. |
+| 2. sf-ui-c02 | Branch apareceu durante a auditoria; head 82c3047754cb5ca9b04a5ccdb22c9d0c510295c4 observado às 00:36:42Z. C02 e link Reports revisados estaticamente; gates 44646379209 (Reports) e 44646627443 em andamento; sem PR/handoff complete. |
+| 3. sf-shard-a | Head 8771599524f3344f868e0a2030034d62c9d2b644 observado às 00:36:42Z; gates iniciais 44646013868 / 44646018333 ainda em andamento. |
+| 3. sf-shard-b | Head 3c600f1a6830275e074854f01bbf611274ccf245 observado às 00:36:42Z; gates iniciais 44645900692 / 44645913808 ainda em andamento. |
+| 3. sf-shard-c | Head 45621d94f5dfcfb330f36a6c3e0a140914125c5b acrescenta somente handoff partial. Gates iniciais 44645952434 / 44645956665 ainda em andamento. |
 | 4. Restos qualificados | Operations não qualificada; recortes qualificados de ingress já absorvidos; #393 aguardando condição de checks. |
 
 As consultas iniciais retornaram ausência das branches das sessões; isso foi superado pela publicação concorrente observada às 00:27:22Z. Não interpretar a fotografia inicial como bloqueio permanente. Continuar acompanhando sem refazer o trabalho dos responsáveis.
@@ -65,6 +65,8 @@ As consultas iniciais retornaram ausência das branches das sessões; isso foi s
 - Reports no snapshot `5c0f36...`: `reports-support/review-flow.ts:253:27` (CAP04), `:177:29` (500 versus 200), `:341:153` (confirmação da releitura). Não atribuir à falta do link.
 - C12 na base: registro/remapeamento permanente ainda documentado em `modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts:72/:197`; `packages/app-shell/e2e/sucafina/decisions.spec.ts` ainda não chama as duas jornadas nativas. Os narrow specs estão verdes; não inferir execução nova dos testes antigos. Coordenação com shards/CI sem editar suites nesta sessão.
 - Guards, sf-ci único e pacote: aguardam a conclusão da integração; não há SHA final congelado.
+- Empacotamento: `apps/cli/test/factory-distribution-linux.test.ts:227/:240` inicia e acessa efetivamente a porta 4110; `apps/cli/script/factory-receipt-check.ts:62` exige a mesma origem. O caminho de sucesso do workflow existente conflita com a proibição literal do usuário. Não disparar esse caminho enquanto o uso real da porta não estiver reconciliado.
+- Retenção do baseline UI: `.github/workflows/sf-ci.yml:514–521` publica o JSON minimizado somente se success; `:525–532` publica em falha apenas test-results. Não há garantia de artifact de inventário quando o receipt recusa baseline após testes verdes.
 
 ## Decisões e justificativas
 
@@ -114,9 +116,12 @@ Não existe run desta sessão. `NOT_RUN` abaixo é estado do plano, não uma con
 ### Baseline e pacote
 
 - Manifesto real na base: `sf/ci/suites.json:72/:224/:235` mantém `PENDING_REAL_COMPLETE_RUN` para CI-SF, CI-UI-DECISIONS e CI-UI-REPORTS.
-- Nenhum artifact de sf-ci/baseline final foi produzido nesta sessão. O artifact Reports acima é histórico e não o substitui.
+- CI-SF: shards podem concluir success e gerar receipts; a validação do baseline da união ocorre em `script/sf-ci/gate.mjs:507–509`, se o verify chegar lá. Reports/Decisions aplicam baseline no receipt (`:300–301/:672–674`). `sf/verify` pode falhar antes no precheck de upstream; classificar a falha pelo log real, sem chamar toda falha de baseline.
+- `.github/workflows/sf-ci.yml:501/:509` gera/minimiza report.json, mas o upload `:514–521` depende de success. O upload de falha `:525–532` não inclui esse report; registrar presença ou ausência efetivamente observada pela API. Nenhum artifact de sf-ci/baseline final foi produzido nesta sessão. O artifact Reports acima é histórico e não o substitui.
 - `sfa-factory-package` já existe em `4372b98d8e4db09a56f8ad589fb298c8779c84bf`, associado ao draft #257. Não foi recriada nem movida.
 - O pin atual da integração é descendente desse head de pacote (135 ahead / 0 behind no checkpoint), portanto há caminho de fast-forward depois do congelamento legítimo. Revalidar a relação e a ref na hora; não usar force.
+- `sf-factory-package.yml:82` chama o teste que lança `--port 4110` em `factory-distribution-linux.test.ts:227`, acessa essa origem em `:240` e a grava em `:405`; o checker `factory-receipt-check.ts:62` exige o literal. O teste conserva a expectativa de console descomissionado 404 em `:313–316`; o bloqueio desta sessão é a porta, não essa asserção.
+- O hash solicitado do pacote é `archiveSha256` de `orchestra-sf-factory-linux-x64-baseline.tar.gz`, confirmado nos marcadores `SF_FACTORY_PACKAGE_QUALIFIED` (`factory-distribution-linux.test.ts:460`) e `SF_FACTORY_RECEIPT_VERIFIED` (`factory-receipt-check.ts:156`), vinculados ao mesmo sourceSHA/run/attempt. O `digest` da API identifica o ZIP do artifact e é distinto.
 - Novo run sf-factory-package: NOT_RUN. Novo artifact: inexistente. SHA-256 do pacote desta sessão: NOT_PRODUCED. Não reutilizar digest de artifact E2E como digest de pacote.
 
 ## Como retomar
@@ -127,5 +132,5 @@ Não existe run desta sessão. `NOT_RUN` abaixo é estado do plano, não uma con
 4. Se qualquer fix exigir gate, publicar primeiro o commit de snapshot com `.ci-run.json` e só depois a ref `ci-run-linux-*`. Máximo dois gates simultâneos. Mesma falha sem mudança duas vezes: registrar unbound e parar aquela causa.
 5. Após o último merge, executar guards por Actions e registrar o resultado real. Não aplicar label de aprovação para esconder os dois protected-paths herdados.
 6. Disparar exatamente uma vez o workflow 420530405 em sf-join-four; registrar SHA, run id, cada job e artifacts. Preservar PENDING_REAL_COMPLETE_RUN e os erros esperados de baseline/static; não inventar hash nem editar suites.
-7. Congelar o SHA integrado. Revalidar `sfa-factory-package` e movê-la por fast-forward com lease somente para esse SHA; o push aciona o workflow já existente. Registrar run id, artifact e digest real do pacote publicado, sem GO/deploy.
+7. Resolver antes o conflito do teste de fábrica com a proibição de usar :4110, preservando as provas reais e o 404 do console descomissionado. Depois congelar o SHA integrado. Revalidar `sfa-factory-package` e movê-la por fast-forward com lease somente para esse SHA; o push aciona o workflow já existente. Registrar run id, artifact e digest real do pacote publicado, sem GO/deploy.
 8. Atualizar este handoff com a ordem real de merges e resultados. Toda informação ainda NOT_RUN permanece aberta até existir evidência vinculada ao SHA.
