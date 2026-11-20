@@ -371,13 +371,29 @@ test("Reviewer consumer rejects a supplied comparison, evidence or nonreviewer p
   expect(f.state.authorReads).toBe(0)
 })
 
-test("analysis output returns a denial when access changes during optional review discovery", async () => {
+test("analysis output returns a denial when access changes after its authorized read", async () => {
   const f = await reviewConsumerFixture()
-  // Only the HTTP consumer's declared read/model methods are exercised here.
-  // Neither this adapter fixture nor its fake model catalog executes a native run.
-  const runtime: Parameters<typeof handleSfAnalysis>[2] = { ...f.services, models: async () => { f.state.allowed = false; return [] } }
+  let modelReads = 0
+  // Revoke after the consumer's real awaited read, before its egress fence.
+  // This contract fixture does not execute a native analysis.
+  const runtime: Parameters<typeof handleSfAnalysis>[2] = {
+    ...f.services,
+    models: async () => { modelReads++; return [] },
+    analyses: {
+      ...f.services.analyses,
+      output: async (context, runRef) => {
+        const result = await f.services.analyses.output(context, runRef)
+        expect(result.status).toBe("ok")
+        f.state.allowed = false
+        return result
+      },
+    },
+  }
   const response = await handleSfAnalysis(f.request({ action: "output", runRef: f.input.selection.authorAnalysis.runRef }), f.origin, runtime)
   expect(response.status).toBe(403)
   expect(await response.json()).toEqual({ status: "denied" })
+  expect(f.state.outputReads).toBe(1)
+  expect(modelReads).toBe(0)
+  expect(f.state.readAdmissions).toBe(1)
   expect(f.state.readFinishes).toBe(f.state.readAdmissions)
 })
