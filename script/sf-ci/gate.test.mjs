@@ -281,6 +281,18 @@ test("CI workflow has one automatic trigger and preserves exhaustive green cover
 // A6 consumes this test-defined wiring contract in .github/workflows/sf-ci.yml.
 // The positive fixture is intentionally independent from the live workflow:
 // negative mutations must pass even while A6's YAML still needs updating.
+function uiBootstrapFixture() {
+  return [
+    "      - name: Install Chromium for Linux only",
+    "        working-directory: packages/app-shell",
+    "        run: bunx playwright install --with-deps chromium",
+    "      - name: Qualify real loopback ClamD for Operations uploads",
+    "        if: ${{ matrix.id == 'CI-UI-OPERATIONS' }}",
+    "        shell: bash",
+    "        run: bash script/sf-ci/operations-clamd.sh",
+  ].join("\n")
+}
+
 function timingSidecarFixture(sharded = false) {
   const directory = sharded ? "sf-ci-evidence/CI-SF-shard-$SF_SHARD_INDEX" : "sf-ci-evidence/$SF_SUITE_ID"
   const command = [
@@ -365,7 +377,7 @@ function manifestWiredWorkflowFixture(actualManifest) {
     "  ui:", "    strategy:", "      matrix:", "        include:",
     ...ui.map((suite) => `          - id: ${suite.id}`),
     "    env:", '      SF_SUITE_ID: ${{ matrix.id }}',
-    "    steps:", "      - name: test", "        run: |", prefix,
+    "    steps:", uiBootstrapFixture(), "      - name: test", "        run: |", prefix,
     '          test "${#files[@]}" -eq 1 || exit 2',
     '          cd "$root/packages/app-shell"',
     '          bun run test:e2e:local "${files[0]}" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2',
@@ -409,6 +421,32 @@ test("manifest-to-YAML negative mutations refuse missing selector, missing suite
   assert.doesNotThrow(() => assertWorkflowManifestSelection(good, actual))
   for (const [name, broken] of failCases) {
     assert.notEqual(broken, good, "mutation must actually change the fixture: " + name)
+    assert.throws(() => assertWorkflowManifestSelection(broken, actual), /SF_CI_WORKFLOW_SELECTION/, name)
+  }
+})
+
+test("UI admits exactly the existing Chromium and ClamD setup blocks before its sole execution", () => {
+  const actual = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  const good = manifestWiredWorkflowFixture(actual)
+  const setup = uiBootstrapFixture()
+  const mutations = [
+    ["missing setup", good.replace(setup, "")],
+    ["duplicate setup", good.replace(setup, setup + "\n" + setup)],
+    ["Chromium executes tests", good.replace("run: bunx playwright install --with-deps chromium", "run: bunx playwright install --with-deps chromium && bun test")],
+    ["ClamD executes tests", good.replace("run: bash script/sf-ci/operations-clamd.sh", "run: bash script/sf-ci/operations-clamd.sh; bun test")],
+    ["foreign Chromium directory", good.replace("working-directory: packages/app-shell", "working-directory: modules/sucafina")],
+    ["changed ClamD condition", good.replace("if: ${{ matrix.id == 'CI-UI-OPERATIONS' }}", "if: success()")],
+    ["changed ClamD shell", good.replace("        shell: bash", "        shell: sh")],
+    ["extra setup metadata", good.replace("        run: bunx playwright install --with-deps chromium",
+      "        env:\n          BASH_ENV: hidden.sh\n        run: bunx playwright install --with-deps chromium")],
+    ["setup after execution", good.replace(setup, "") + setup + "\n"],
+    ["other inline setup", good.replace(setup, setup + "\n      - run: bun test")],
+    ["quoted executable key", good.replace(setup, setup + '\n      - name: hidden\n        "run": bun test')],
+    ["flow executable step", good.replace(setup, setup + "\n      - { run: bun test }")],
+  ]
+  assert.doesNotThrow(() => assertWorkflowManifestSelection(good, actual))
+  for (const [name, broken] of mutations) {
+    assert.notEqual(broken, good, name)
     assert.throws(() => assertWorkflowManifestSelection(broken, actual), /SF_CI_WORKFLOW_SELECTION/, name)
   }
 })

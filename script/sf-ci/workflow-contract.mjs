@@ -50,10 +50,11 @@ function runScripts(job) {
   const lines = job.split("\n")
   const scripts = []
   let stepStart = -1
+  requireContract(!/^ {6}-\s*(?:\{|\*|&)/m.test(job), "flow or aliased steps are not auditable")
   requireContract(!/^\s*(?:-\s*)?<<:/m.test(job), "merged YAML metadata is not an auditable execution step")
   for (let index = 0; index < lines.length; index++) {
     if (/^ {6}- /.test(lines[index])) stepStart = index
-    if (!/^(?: {8}run:| {6}- run:)/.test(lines[index])) continue
+    if (!/^(?: {8}(?:run|["']run["']):| {6}- (?:run|["']run["']):)/.test(lines[index])) continue
     requireContract(stepStart >= 0 && /^ {8}run: \|\s*$/.test(lines[index]),
       "every run step must use one explicit literal script")
     const header = lines.slice(stepStart, index)
@@ -103,8 +104,38 @@ function assertTimingSidecar(step, context) {
     context + ": timing sidecar must be exactly one admitted Python command")
 }
 
+/** These two complete UI setup steps do not choose or execute test files. */
+function withoutUiBootstraps(job) {
+  const expected = [
+    [
+      "      - name: Install Chromium for Linux only",
+      "        working-directory: packages/app-shell",
+      "        run: bunx playwright install --with-deps chromium",
+    ].join("\n"),
+    [
+      "      - name: Qualify real loopback ClamD for Operations uploads",
+      "        if: ${{ matrix.id == 'CI-UI-OPERATIONS' }}",
+      "        shell: bash",
+      "        run: bash script/sf-ci/operations-clamd.sh",
+    ].join("\n"),
+  ]
+  const lines = job.split("\n")
+  const starts = lines.flatMap((line, index) => /^ {6}- /.test(line) ? [index] : [])
+  const steps = starts.map((start, index) => lines.slice(start, starts[index + 1]).join("\n").trimEnd())
+  const selectPos = job.indexOf("node script/sf-ci/gate.mjs select")
+  let previous = -1
+  for (const step of expected) {
+    requireContract(steps.filter((block) => block === step).length === 1,
+      "ui: exactly one unchanged Chromium and ClamD bootstrap is required")
+    const position = job.indexOf(step)
+    requireContract(position > previous && position < selectPos, "ui: bootstraps must precede the test execution in order")
+    previous = position
+  }
+  return expected.reduce((text, step) => text.replace(step, ""), job)
+}
+
 function executionScript(job, context) {
-  const scripts = runScripts(job)
+  const scripts = runScripts(context === "ui" ? withoutUiBootstraps(job) : job)
   requireContract(scripts.length === (context === "ui" ? 1 : 2),
     context + ": one execution script and only the admitted Bun timing sidecar are required")
   if (context !== "ui") {
