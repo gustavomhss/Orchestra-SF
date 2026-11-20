@@ -1,17 +1,27 @@
 import { expect, test } from "bun:test"
-import { request } from "node:http"
+import { connect } from "node:net"
 import { connect as secureConnect } from "node:tls"
 import type { Duplex } from "node:stream"
 import { serveNativeTeamsWeb } from "./native-web-network.ts"
 import { publicOrigin } from "../microsoft-login/private-fixture.ts"
 
 const tunnel = (proxy: string, target: string) => new Promise<{ status: number; socket: Duplex }>((resolve, reject) => {
-  const address = new URL(proxy)
-  const call = request({ host: address.hostname, port: address.port, method: "CONNECT", path: target, agent: false })
-  const timer = setTimeout(() => { call.destroy(); reject(new Error("Fixture CONNECT deadline expired")) }, 3000)
-  call.once("error", (error) => { clearTimeout(timer); reject(error) })
-  call.once("connect", (response, socket) => { clearTimeout(timer); resolve({ status: response.statusCode ?? 0, socket }) })
-  call.end()
+  const address = new URL(proxy), socket = connect({ host: address.hostname, port: Number(address.port) })
+  let buffer = Buffer.alloc(0)
+  const timer = setTimeout(() => { socket.destroy(); reject(new Error("Fixture CONNECT deadline expired")) }, 3000)
+  socket.once("error", (error) => { clearTimeout(timer); reject(error) })
+  const read = (chunk: Buffer) => {
+    buffer = Buffer.concat([buffer, chunk])
+    if (buffer.length > 4096) { clearTimeout(timer); socket.destroy(); reject(new Error("Oversized proxy response")); return }
+    const end = buffer.indexOf("\r\n\r\n")
+    if (end < 0) return
+    clearTimeout(timer); socket.off("data", read); socket.pause()
+    const match = /^HTTP\/1\.1 ([0-9]{3}) /.exec(buffer.toString("latin1"))
+    if (end + 4 < buffer.length) socket.unshift(buffer.subarray(end + 4))
+    resolve({ status: Number(match?.[1] ?? 0), socket })
+  }
+  socket.on("data", read)
+  socket.once("connect", () => socket.write("CONNECT " + target + " HTTP/1.1\r\nHost: " + target + "\r\n\r\n"))
 })
 
 test("native Web TLS proxy admits only exact fixture hosts and streams the original request", async () => {

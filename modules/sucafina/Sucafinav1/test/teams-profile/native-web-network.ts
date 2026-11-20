@@ -1,5 +1,4 @@
-import { createServer } from "node:http"
-import { connect } from "node:net"
+import { createServer, connect } from "node:net"
 import type { Duplex } from "node:stream"
 import path from "node:path"
 import { authority } from "../microsoft-login/oidc-fixture.ts"
@@ -39,28 +38,47 @@ export async function serveNativeTeamsWeb(input: Readonly<{
   })
   const securePort = secure.port
   if (typeof securePort !== "number") { await secure.stop(true); throw new Error("TLS listener did not bind") }
-  const proxy = createServer((_request, response) => { response.writeHead(405); response.end() })
   const remember = (socket: Duplex) => {
     peers.add(socket)
     socket.once("close", () => peers.delete(socket))
-    // A cancelled browser connection may close either half first. Its peer is
-    // destroyed below; no rejected cleanup Promise or private payload is logged.
+    // Cancelled browser connections can close either half first. Their peer is
+    // destroyed below; cleanup never logs a private payload.
     socket.on("error", () => socket.destroy())
     return socket
   }
-  proxy.on("connect", (request, socket, head) => {
-    const target = request.url ?? "", allowed = !disposed && (target === publicHost || target === providerHost)
-    calls.push({ authority: target, allowed })
+  const proxy = createServer((socket) => {
     remember(socket)
-    if (!allowed || head.length) { socket.end("HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\n\r\n"); return }
-    const upstream = remember(connect({ host: "127.0.0.1", port: securePort }))
-    const close = () => { socket.destroy(); upstream.destroy() }
-    socket.once("close", close); upstream.once("close", close)
-    upstream.once("connect", () => {
-      if (disposed || socket.destroyed) { close(); return }
-      socket.write("HTTP/1.1 200 Connection Established\r\n\r\n")
-      socket.pipe(upstream); upstream.pipe(socket)
-    })
+    let received = Buffer.alloc(0)
+    const timer = setTimeout(() => socket.destroy(), 3000)
+    socket.once("close", () => clearTimeout(timer))
+    const deny = () => {
+      clearTimeout(timer); socket.off("data", parse)
+      socket.end("HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\nConnection: close\r\n\r\n")
+    }
+    const parse = (chunk: Buffer) => {
+      received = Buffer.concat([received, chunk])
+      if (received.length > 4096 || received.includes(0)) { deny(); return }
+      const end = received.indexOf("\r\n\r\n")
+      if (end < 0) return
+      const lines = received.subarray(0, end).toString("latin1").split("\r\n")
+      const match = /^CONNECT ([A-Za-z0-9.:-]+) HTTP\/1\.[01]$/.exec(lines[0] ?? "")
+      const target = match?.[1] ?? ""
+      const hosts = lines.slice(1).filter((line) => /^host:/i.test(line)).map((line) => line.slice(5).trim())
+      const allowed = !disposed && (target === publicHost || target === providerHost) &&
+        hosts.length === 1 && hosts[0] === target && end + 4 === received.length
+      calls.push({ authority: target, allowed })
+      if (!allowed) { deny(); return }
+      clearTimeout(timer); socket.off("data", parse); socket.pause()
+      const upstream = remember(connect({ host: "127.0.0.1", port: securePort }))
+      const close = () => { socket.destroy(); upstream.destroy() }
+      socket.once("close", close); upstream.once("close", close)
+      upstream.once("connect", () => {
+        if (disposed || socket.destroyed) { close(); return }
+        socket.write("HTTP/1.1 200 Connection Established\r\n\r\n")
+        socket.pipe(upstream); upstream.pipe(socket)
+      })
+    }
+    socket.on("data", parse)
   })
   try {
     await new Promise<void>((resolve, reject) => {
