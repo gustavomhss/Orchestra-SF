@@ -9,7 +9,7 @@ import { sfPlannerCaseReadAdmission } from "../../../../../../../apps/cli/src/su
 import { plannerObservationFixture, observePlannerPhase } from "./planner-observation-batch-fixture.ts"
 import type { compositionTestDeadline } from "./composition-test-deadline.ts"
 
-export async function sensitivityObservationFixture(deadline: ReturnType<typeof compositionTestDeadline>, options: { sourceOnly?: boolean } = {}) {
+export async function sensitivityObservationFixture(deadline: ReturnType<typeof compositionTestDeadline>, options: { sourceOnly?: boolean; sharedBase?: boolean } = {}) {
   const fixture = await plannerObservationFixture(deadline, false, options)
   const units = createPlannerSensitivityUnits({ host: fixture.business.host, cases: fixture.business.cases,
     scenarios: fixture.scenarios, store: fixture.business.results, evidence: fixture.business.context, rules: fixture.portfolio.rules })

@@ -16,6 +16,7 @@ import { createSfOutcomeSelectionRegistry } from "../../../../modules/sucafina/S
 import { createSfDomainOutcomeAccess } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts"
 import { createSfReviewOutcomeAdapter } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/outcome-review.ts"
 import { createPlannerMateriality } from "../../../../modules/sucafina/Sucafinav1/product/planner/materiality.ts"
+import { resolveStoredPlannerScenarios } from "../../../../modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
 import { createPlannerObservedProjection } from "../../../../modules/sucafina/Sucafinav1/product/planner/observed.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
@@ -83,7 +84,7 @@ export function createSfMemoryServices(input: SfMemoryServicesInput) {
     if (stored.status !== "ok" || !stored.value || stored.value.some((record, index) => !record || record.schema !== "sf-decision-result-v1" ||
       record.kind !== "scenario" || record.resultRef !== selection.scenarioRefs[index] || record.caseRef.id !== selection.caseRef.id ||
       record.caseRef.incarnation !== selection.caseRef.incarnation || record.caseRef.version > selection.caseRef.version || record.resultDigest !== digestSfValue(record.result))) return false
-    const resolved = await Promise.all(selection.scenarioRefs.map((ref) => scenarios.resolve(ref, call)))
+    const resolved = await resolveStoredPlannerScenarios(scenarios, selection.scenarioRefs, call)
     const again = await read()
     return resolved.every((result, index) => result.status === "ok" && same(result.value.result, stored.value![index]!.result)) &&
       again.status === "ok" && stored.storageVersion === again.storageVersion && same(stored.value, again.value) && await host.revalidate(call)

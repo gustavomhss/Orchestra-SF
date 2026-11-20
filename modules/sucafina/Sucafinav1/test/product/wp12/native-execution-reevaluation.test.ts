@@ -49,6 +49,7 @@ test("reevaluation reopens a real human choice and Planner condition without pro
       const registration = await context.services.productHttp?.(context.request(condition, "/sucafina/dashboard?sf=memory-condition"), "dashboard")
       if (!registration) throw new Error("The real material condition registration route is missing")
       const registered = object(await registration.json())
+      if (registration.status !== 200) console.error("wp12 memory-condition response", { status: registration.status, body: registered })
       expect(registration.status).toBe(200)
       expect(registered.status).toBe("ok")
       const listed = await readMemory(context, "memory-conditions", chosen.caseRef)
