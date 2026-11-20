@@ -1,6 +1,6 @@
 export * as SessionProcess from "./session-process"
 
-import { Clock, Context, Deferred, Duration, Effect, Exit, Fiber, Layer, Option, Scope, Stream } from "effect"
+import { Clock, Context, Deferred, Duration, Effect, Exit, Fiber, Layer, Option, Schema, Scope, Stream } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 import type { ChildProcessHandle } from "effect/unstable/process/ChildProcessSpawner"
 import { AppProcess } from "./process"
@@ -11,6 +11,7 @@ import { OmniBackground } from "./omni-background"
 import { OutputInspector } from "./output-inspector"
 import { SessionV2 } from "./session"
 import { HostMaintenance } from "./host-maintenance"
+import { SessionOwner } from "./session/owner"
 
 export const RING_BYTES = OmniBackground.RING_BYTES
 export const TAIL_BYTES = OmniBackground.TAIL_BYTES
@@ -85,6 +86,7 @@ type Entry = {
 
 const make = Effect.gen(function* () {
   const maintenance = yield* HostMaintenance.Service
+  const owners = yield* SessionOwner.Service
   const appProcess = yield* AppProcess.Service
   const events = yield* EventV2.Service
   const scope = yield* Scope.Scope
@@ -285,7 +287,16 @@ const make = Effect.gen(function* () {
         yield* Deferred.succeed(entry.done, snapshot(entry))
       }
     }), { concurrency: "unbounded", discard: true })))))
-  return Service.of({ launch: (input) => maintenance.admit(launch(input)), list, get, wait, cancel, stopSession })
+  const owned = <A, E>(sessionID: string, action: "read" | "run" | "control", work: Effect.Effect<A, E>) =>
+    Effect.suspend(() => SessionOwner.guard(owners, Schema.decodeUnknownSync(SessionV2.ID)(sessionID), action, () => work))
+  return Service.of({
+    launch: (input) => maintenance.admit(owned(input.sessionID, "run", launch(input))),
+    list: (id, tail) => owned(id, "read", list(id, tail)),
+    get: (id, processID) => owned(id, "read", get(id, processID)),
+    wait: (id, processID, timeout) => owned(id, "read", wait(id, processID, timeout)),
+    cancel: (id, processID) => owned(id, "control", cancel(id, processID)),
+    stopSession: (id) => owned(id, "control", stopSession(id)),
+  })
 })
 
 // A Session refuses a synthetic message while a turn runs; the notice waits for that turn to settle and tries again,
@@ -302,4 +313,4 @@ function deliver(sessions: SessionV2.Interface, sessionID: SessionV2.ID, text: s
 
 const layer = Layer.effect(Service, make)
 
-export const node = makeGlobalNode({ service: Service, layer, deps: [AppProcess.node, EventV2.node, HostMaintenance.node] })
+export const node = makeGlobalNode({ service: Service, layer, deps: [AppProcess.node, EventV2.node, HostMaintenance.node, SessionOwner.node] })
