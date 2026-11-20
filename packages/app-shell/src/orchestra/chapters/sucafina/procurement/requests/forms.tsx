@@ -64,7 +64,8 @@ export function SfRequisitionForm(props: PrProps) {
                   aria-labelledby={id + "-label"} aria-invalid={error() ? "true" : undefined}
                   aria-describedby={error() ? id + "-error" : undefined}
                   value={textValue(value())}
-                  onInput={(event) => edit(field, (field === "estAmount" || field === "estAnnual") && event.currentTarget.value === "" ? null : event.currentTarget.value)} />
+                  onInput={(event) => edit(field, field === "estAmount" || field === "estAnnual" ?
+                    event.currentTarget.value === "" ? null : event.currentTarget.valueAsNumber : event.currentTarget.value)} />
               }>
                 <textarea name={path} rows={3} value={textValue(value())}
                   aria-labelledby={id + "-label"} aria-invalid={error() ? "true" : undefined}

@@ -1,6 +1,6 @@
 import { batch, createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "solid-js"
 import { Dynamic } from "solid-js/web"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
@@ -520,8 +520,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         !stageAllowed(review.action) || !sourceAvailable() || view.sending) return
     if (review.action !== "create" && (!review.ref || version() !== review.version ||
         row()?.status !== review.status)) return
-    const pr = review.pr
-    const po = review.po
+    // Use the same materialized review data for the digest and strict wire codec.
+    const pr = review.pr ? structuredClone(unwrap(review.pr)) : undefined
+    const po = review.po ? structuredClone(unwrap(review.po)) : undefined
     if (pr && (!activePr() || JSON.stringify(activePr()?.value) !== JSON.stringify(pr) ||
         (review.ref && activePr()?.baseVersion !== review.version))) return
     if (po && (!activePo() || JSON.stringify(activePo()?.value) !== JSON.stringify(po) ||
@@ -541,11 +542,11 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       ...(review.ref ? { id: review.ref } : {}) }
     const input = (() => {
       switch (review.action) {
-        case "create": return { ...base, action: "create" as const, values: { pr: review.pr! } }
-        case "save-pr": return { ...base, action: "save" as const, values: { pr: review.pr! } }
-        case "save-po": return { ...base, action: "save" as const, values: { po: review.po! } }
-        case "submit_pr": return { ...base, action: "submit_pr" as const, values: { pr: review.pr! } }
-        case "submit_po": return { ...base, action: "submit_po" as const, values: { po: review.po! } }
+        case "create": return { ...base, action: "create" as const, values: { pr: pr! } }
+        case "save-pr": return { ...base, action: "save" as const, values: { pr: pr! } }
+        case "save-po": return { ...base, action: "save" as const, values: { po: po! } }
+        case "submit_pr": return { ...base, action: "submit_pr" as const, values: { pr: pr! } }
+        case "submit_po": return { ...base, action: "submit_po" as const, values: { po: po! } }
         case "issue": return { ...base, action: "issue" as const, values: {} }
         case "cancel": return { ...base, action: "cancel" as const, values: { reason: review.reason } }
         case "delete": return { ...base, action: "delete" as const, values: {} }
@@ -591,8 +592,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           poController: po ? poDraft() : undefined, payload: JSON.stringify(input),
         }) || inFlight !== abort || !stageAllowed(review.action, true) ||
         (pr && (!activePr() || JSON.stringify(activePr()?.value) !== JSON.stringify(pr) ||
+          JSON.stringify(review.pr) !== JSON.stringify(pr) ||
           activePr()?.baseVersion !== (review.ref ? review.version : null))) ||
         (po && (!activePo() || JSON.stringify(activePo()?.value) !== JSON.stringify(po) ||
+          JSON.stringify(review.po) !== JSON.stringify(po) ||
           activePo()?.baseVersion !== review.version))) {
       declineBeforePost()
       return
@@ -625,15 +628,15 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       const result = await (async () => {
         switch (review.action) {
           case "create": return client["domain.command.CAP25.create"](
-            { ...base, action: "create", values: { pr: review.pr! } }, options)
+            { ...base, action: "create", values: { pr: pr! } }, options)
           case "save-pr": return client["domain.command.CAP25.save"](
-            { ...base, action: "save", values: { pr: review.pr! } }, options)
+            { ...base, action: "save", values: { pr: pr! } }, options)
           case "save-po": return client["domain.command.CAP25.save"](
-            { ...base, action: "save", values: { po: review.po! } }, options)
+            { ...base, action: "save", values: { po: po! } }, options)
           case "submit_pr": return client["domain.command.CAP25.submit_pr"](
-            { ...base, action: "submit_pr", values: { pr: review.pr! } }, options)
+            { ...base, action: "submit_pr", values: { pr: pr! } }, options)
           case "submit_po": return client["domain.command.CAP25.submit_po"](
-            { ...base, action: "submit_po", values: { po: review.po! } }, options)
+            { ...base, action: "submit_po", values: { po: po! } }, options)
           case "issue": return client["domain.command.CAP25.issue"](
             { ...base, action: "issue", values: {} }, options)
           case "cancel": return client["domain.command.CAP25.cancel"](

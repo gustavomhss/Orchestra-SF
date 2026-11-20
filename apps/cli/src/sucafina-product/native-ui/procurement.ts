@@ -27,7 +27,7 @@ const pages: Readonly<Record<Capability, Page>> = {
 const selectors: Readonly<Record<Capability, readonly string[]>> = {
   CAP24: ["year", "month"],
   CAP25: ["year", "month", "filter", "q", "request"],
-  CAP26: ["year", "month"],
+  CAP26: ["year", "month", "request"],
   CAP27: ["year", "month", "status", "q", "supplier"],
   CAP28: ["year", "month"],
 }
@@ -174,6 +174,8 @@ function selectSupplier(source: Record<string, unknown>, includeBank: boolean) {
     safe.commercial = pick(source.commercial, ["notes"])
   if (Object.hasOwn(source, "compliance"))
     safe.compliance = pick(source.compliance, ["notes"])
+  if (Object.hasOwn(source, "attachments"))
+    safe.attachments = rows(source.attachments).map((asset) => pick(asset, ["id", "name", "type", "bytes", "size"]))
   return safe
 }
 function versionsFor(view: View, keys: readonly string[]) {
