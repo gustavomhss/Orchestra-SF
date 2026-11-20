@@ -12,6 +12,20 @@ export function contributionBody(output: ContributionEnvelope): string {
     case "DecisionBrief": return `<p>${esc(output.payload.objective)}</p>${list(output.payload.conditions.map((item) => item.reason))}`
     case "QuestionProposal": return `<p>${esc(output.payload.question)}</p><p>${output.payload.recipientRef ? `Recipient: ${esc(output.payload.recipientRef)}` : "Recipient not selected"}</p>`
     case "FinancialAnalysis": return `<p>${esc(output.payload.explanation)}</p><p>Comparison: ${esc(output.payload.comparison.comparisonStatus)} · Known difference: ${output.payload.knownDifference ?? "Unavailable"}</p>${output.payload.analysisBasis === "import-preview" ? "<p>Import preview; not applied.</p>" : ""}${list(output.payload.gaps)}`
+    case "AlternativeDraft": {
+      const proposal = output.payload.proposal
+      const result = proposal.result
+      const complete = result.comparisonStatus === "complete"
+      const amount = complete ? result.total : result.knownSubtotal
+      return `<h4>${esc(proposal.title)}</h4><p>Proposal only; not applied.</p>
+<p>Coverage reference: ${esc(output.payload.coverageRef)}</p>
+<p>Comparison: ${esc(result.comparisonStatus)} · Cost coverage: ${esc(result.costCoverage.coverageState)}</p>
+<p>${complete ? "Total" : "Known subtotal"}: ${amount === null ? "Unavailable" : esc(String(amount))} ${esc(result.currency)}</p>
+<p>Period: ${esc(result.horizon.start)} – ${esc(result.horizon.end)}</p>
+${complete ? "" : "<p>Review the unresolved coverage</p>"}${list(result.unresolvedConditions)}
+${list(result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [entry.reason] : []))}
+${list(result.restrictions)}`
+    }
     case "ScenarioComparison": return `<p>Comparison: ${esc(output.payload.comparisonStatus)} · ${output.payload.comparisonStatus === "complete" ? "Difference" : "Known difference"}: ${output.payload.knownDifference ?? "Unavailable"}</p>${list(output.payload.costCoverageRefs)}${output.payload.comparisonStatus === "complete" ? "" : "<p>Review the unresolved coverage</p>"}${list(output.payload.unresolvedConditions)}`
     case "SensitivityResult": return `<p>Comparison: ${esc(output.payload.comparisonStatus)} · ${output.payload.thresholdEvidence.state === "exact" ? `Threshold: ${output.payload.thresholdEvidence.value}` : output.payload.thresholdEvidence.state === "sampled" ? `Sampled interval: ${output.payload.thresholdEvidence.interval.minimum} – ${output.payload.thresholdEvidence.interval.maximum}` : `Threshold unavailable: ${esc(output.payload.thresholdEvidence.reason)}`} ${esc(output.payload.unit)}</p>${list(output.payload.evaluated.map((point) => `${point.parameterValue}: ${point.value ?? "Unavailable"}`))}${list(output.payload.unresolvedConditions.map((item) => item.reason))}`
     case "CommercialComparison": {

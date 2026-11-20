@@ -21,6 +21,95 @@ consumption from a fresh restore-only branch has been observed.
 
 These are infrastructure and integration proofs. They do not measure or qualify the complete product suite.
 
+## Follow-up: complete cache inputs, timings and reproducible shard requests
+
+[PR #425](https://github.com/gustavomhss/Orchestra-SF/pull/425) is the focused follow-up to the integrated rescue.
+Its validation is recorded separately from the historical observations below.
+
+The installed tree uses `modules-v5`. Its pre-install fingerprint includes the lockfile, root configuration,
+workspace manifests from the admitted workspace patterns, declared patches, local package archives,
+the actual node-pty postinstall source/configuration, the action/helper recipe, Bun version, Node ABI and production mode.
+Discovery is bounded and never walks installed dependencies. Unsupported hooks or local dependency forms fail
+explicitly; future dynamic postinstall inputs must be added to this policy. A miss installs with a frozen lockfile.
+A hit skips installation and setuptools. Callers that already prepared Node 24 use `reuse-node: "true"`;
+the action checks the major before using it.
+
+A shared-cache source can be promoted through a reviewed change to `.github/sf-cache-source.json` on `dev`:
+
+```json
+{
+  "schema": 1,
+  "sourceRef": "sf-join-four",
+  "sourceSha": "<exact reviewed 40-character integration head>"
+}
+```
+
+The default-branch writer reads that promotion only when the file changed in the push.
+Ordinary dependency pushes still use their own exact `dev` source; a stored promotion does not silently override them.
+Both paths preserve the admitted-ref check, live-head equality, exact checkout, read-only token and Linux x64.
+A source that advances before the writer verifies it fails closed; refresh the reviewed promotion instead of
+bypassing its check. The retained pin records a past promotion, not a claim that the current head is still warm.
+
+Bun jobs retain a separate `timings.json` from the JUnit they already produced, including green jobs.
+The sidecar records source SHA, run/attempt, job name, suite/directory/shard, step conclusion, partial capture
+and observed file/case durations. File cost is the sum of captured case durations; it does not claim to include
+unreported fixture/setup time or to equal wall time. Missing or malformed reports from failed steps are explicit;
+success without a report cannot become a complete timing observation.
+Focused Sucafina `test-ci` requests also emit JUnit and are always marked partial.
+These performance artifacts never use the acceptance-artifact prefix and do not change acceptance receipts.
+
+The cost parser retains legacy v1 historical inputs and admits strict v2 `OBSERVED_TIMINGS` provenance.
+No green weight is fabricated and the 170 historical weights remain unchanged.
+New observations can be reviewed before recalibration; a smaller modeled load is not proof of a faster suite.
+
+Before the next complete product batch, generate requests from the same integrated source and plan:
+
+```sh
+node script/sf-ci/gate.mjs plan CI-SF > sf-shard-plan.json
+node script/sf-ci/shard-adoption.mjs generate \
+  --plan sf-shard-plan.json --source <integrated-source-sha> --out <new-batch-directory>
+```
+
+Generation writes `batch.json` and eight requests; it does not dispatch tests. The publisher must create each new
+ref without overwriting a prior attempt. Each snapshot has exactly one source parent and changes only `.ci-run.json`.
+Before installing dependencies, `test-ci` checks its actual parent/diff/ref, regenerated plan digest and exact request.
+Generated requests and manifest-selected Bun jobs prefix file arguments with `./`, matching the canonical uploader's
+explicit-file behavior while leaving selection inventories and receipt digests unchanged.
+The eight collected bindings can be checked with `verify-batch`; all are labeled `selection-only`.
+Existing focused requests remain supported, but a managed shard ref without its binding fails.
+An old snapshot cannot acquire this behavior by rerunning its old SHA.
+
+Test steps now finish before their existing job ceilings: surgical 40/45 minutes, SF shards 26/30,
+other Bun families 24/28 and UI journeys 20/24. Individual test deadlines, retries and assertions are unchanged.
+The remaining time is a diagnostic opportunity, not a guarantee against a stalled setup or hard runner termination.
+
+The full product run stays reserved until the active WPs are closed. The next integrated run must still provide
+authentic case coverage, reconcile pending/stale baselines and measure actual shard wall times and runner minutes.
+
+### Follow-up validation history
+
+The first scoped [probe 44665814246](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44665814246),
+snapshot `95bf65fdd974976d0c663c443718030600c97a8b`, remained **RED**.
+It passed 133 of 134 Node controls and all 13 Python timing tests. The workflow ownership guard
+correctly rejected an additional run script until timing collection received a narrow explicit contract.
+The default-candidate fingerprint also exposed a Bun Transpiler limitation with the real postinstall shebang;
+only the import-analysis string was corrected, while the fingerprint retains the original bytes.
+No Bun product tests or real JUnit timing proof ran in that first attempt.
+
+
+The second scoped [probe 44667265276](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667265276),
+snapshot `a2d58a3ecf23a645689fb37e204af5bc177ed229`, also remained **RED**.
+All 287 targeted regressions passed: 137 Node, 13 Python, 102 Bun cache/runner and 35 real static-ownership cases.
+The real JUnit collector and unchanged acceptance identity agreed on all five selected files; request generation
+covered 888 files in eight disjoint parts without dispatching them. Frozen installs passed on both SF and the
+default candidate, and the complete input fingerprint was unchanged after installation (64 inputs, 36 module paths).
+The cold installs took 24.69s for SF and 20.26s for the default candidate; these are single install observations.
+Core typecheck passed. Sucafina typecheck exposed the inherited `summary-settings.test.ts` fixture passing an
+unbranded string as an `AbsolutePath`. The probe also wrote diagnostic logs inside the checkout, which the
+scratch-file guard correctly rejected. Those logs belong in the runner temporary directory.
+Two additional protected-path findings against `origin/dev` were already present in the SF source; they require
+separate integration review and are not cleared by this CI optimization or by a successful focused guard.
+
 ## Where the time went
 
 The observations were captured at 2026-11-20 01:52:56 UTC (2026-11-19 in São Paulo).
@@ -86,7 +175,7 @@ skipping or absence. Passing the wiring tests does not claim that these commands
 
 The inherited cache warmer is disabled, including on the default `dev` branch.
 The old actions restored caches while their save conditions excluded PRs and `ci-run-*` refs.
-The updated `setup-bun` action keeps its keys and paths, adds an explicit save opt-in,
+The first rescue kept the then-current keys and paths, added an explicit save opt-in,
 and reports exact hits, keys, install outcome and save-step outcomes in the job summary.
 It also exposes `modules-cache-hit`, `bun-cache-hit` and `modules-cache-key`.
 

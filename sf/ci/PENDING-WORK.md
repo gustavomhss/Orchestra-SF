@@ -1,12 +1,46 @@
 # Orchestra-SF — Backlog integral para encerrar CI/Testes e habilitar go-live
 
-> **Status:** OPEN / CI-ONLY MIGRATION UNDER REVIEW / PRODUCT CI RED / AZURE RELEASE BLOCKED
+> **Status:** CI RESCUE INTEGRATED / FOLLOW-UP IN REVIEW / PRODUCT QUALIFICATION PENDING / AZURE RELEASE BLOCKED
 >
-> **Atualizado:** 2026-11-16 (America/Sao_Paulo). Registro de evidência observado no PR #242 com head de código `0e4848847b85d3d5f97d03de63574c5461c50cba` e base `close-final-candidate@1cb77b8deb144e01a655c36987922338b1474003`. A publicação deste próprio documento produzirá um **novo** SHA: o run citado abaixo não qualifica automaticamente o novo SHA.
+> **Atualizado:** 2026-11-19 (America/Sao_Paulo). Integração: `sf-join-four`. A segunda rodada está no [PR #425](https://github.com/gustavomhss/Orchestra-SF/pull/425). SHAs e resultados focados ficam em [PERFORMANCE.md](./PERFORMANCE.md); nenhum deles qualifica automaticamente um SHA posterior.
 >
-> **Repositório:** `gustavomhss/Orchestra-SF` · **Branch:** `sf-ci-lean` · **PR:** [#242](https://github.com/gustavomhss/Orchestra-SF/pull/242) (draft, não mergeado) · **Run-base:** [43956369500](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43956369500).
+> **Referência histórica preservada:** o [PR #242](https://github.com/gustavomhss/Orchestra-SF/pull/242) continua aberto, draft e não mergeado em `close-final-candidate`. O snapshot de 16/11 (`sf-ci-lean@0e4848847b85d3d5f97d03de63574c5461c50cba`, base `1cb77b8deb144e01a655c36987922338b1474003`, [run 43956369500](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43956369500)) é histórico; as suas falhas não são uma triagem atual do head de integração.
 
 Este documento é o **backlog operacional das pendências**. Não é uma declaração de homologação. Distingue explicitamente (A) **entrega do harness CI**, (B) **correção da suíte/produto**, e (C) **qualificação de release Azure**. Qualquer item sem prova real fica ABERTO/BLOQUEADO, nunca PASS ou NOT_APPLICABLE.
+
+## 0. Estado operacional reconciliado
+
+O primeiro rescue foi integrado pelos PRs [#413](https://github.com/gustavomhss/Orchestra-SF/pull/413),
+[#418](https://github.com/gustavomhss/Orchestra-SF/pull/418) e
+[#419](https://github.com/gustavomhss/Orchestra-SF/pull/419). O writer compartilhado está em `dev`
+pelos PRs [#408](https://github.com/gustavomhss/Orchestra-SF/pull/408) e
+[#416](https://github.com/gustavomhss/Orchestra-SF/pull/416). A execução focada
+[44661129868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661129868)
+passou 176 testes e o typecheck real de Sucafina; o relatório registra o SHA exato e a prova de cache.
+
+A rodada do PR #425 trata os inputs omitidos do cache, a preparação duplicada do Node,
+o registro de tempos de execuções verdes/vermelhas, a geração vinculada dos oito shards e
+a publicação de diagnósticos antes do limite total do job. O seu estado de validação e promoção
+fica em [PERFORMANCE.md](./PERFORMANCE.md).
+
+Pendências de qualificação continuam explícitas:
+
+- `CI-SF`, `CI-UI-DECISIONS` e `CI-UI-REPORTS` ainda têm baseline `PENDING_REAL_COMPLETE_RUN`.
+- O baseline browser de 32 arquivos precisa ser reconciliado com o inventário atual, que já cresceu; somente uma execução real verde pode fornecer o novo inventário de casos.
+- As frentes de composição/runtime, incluindo [#414](https://github.com/gustavomhss/Orchestra-SF/pull/414),
+  [#420](https://github.com/gustavomhss/Orchestra-SF/pull/420) e [#403](https://github.com/gustavomhss/Orchestra-SF/pull/403),
+  estão em trabalho independente. O rescue não substitui suas provas.
+- A comparação global com `origin/dev` ainda encontra `protected-paths` em `godfile-waivers.json` e
+  `script/spawn-allowlist.json`, herdados da integração. A validação focada mede regressões sem conceder
+  aprovação a esses paths; a integração final precisa da revisão correspondente e de guards estritos verdes.
+- Depois do fechamento dos WPs, o próximo lote deve congelar um SHA integrado, gerar novamente
+  o plano e os oito requests e medir o custo real. Rerun de um snapshot antigo conserva seu código e sua lista antiga.
+- O próximo `sf-ci` completo só ocorre quando esses WPs estiverem fechados. Provas focadas
+  podem continuar; não se deduz `PRODUCT_CI_GREEN` delas.
+
+As tabelas de falhas nas seções 3 e 5 preservam a captura de 16/11, com sua origem explícita.
+Os IDs de aceite das seções 4 e 6 continuam sendo obrigações; não se fecham por inferência a partir
+de um PR de performance. Required checks e Azure não foram alterados nesta rodada.
 
 ## 1. Decisão de produto congelada — não reabrir o escopo
 
@@ -20,13 +54,13 @@ Não alterar o contrato para satisfazer os testes. Não reduzir asserts, criar i
 
 | Marco | Critério de conclusão objetivo | Situação na evidência atual |
 |---|---|---|
-| **CI_HARNESS_VALIDATED** | Preflight/negative controls, seletor Linux, CLI/Atlas/Browser selections, Omni, checks de proteção, JUnit/Playwright e `sf/verify` fail-closed demonstrados no **mesmo** commit; classificação exaustiva das falhas; revisão de equivalência | **PARCIAL**: controles passam, falta revisão independente e última qualificação do PR |
-| **PRODUCT_CI_GREEN** | Static + **oito famílias completas** verdes, com recibos íntegros do exato SHA e sem falha/skips; `sf/verify=success` | **NÃO**: static, SF, App-Browser e UI instaladas vermelhas |
+| **CI_HARNESS_VALIDATED** | Preflight/negative controls, seletor Linux, CLI/Atlas/Browser selections, Omni, checks de proteção, JUnit/Playwright e `sf/verify` fail-closed demonstrados no **mesmo** commit; classificação exaustiva das falhas; revisão de equivalência | **VALIDAÇÃO FOCADA REGISTRADA**: rescue revisado e integrado; percurso completo do gate e qualificação final do candidato permanecem pendentes |
+| **PRODUCT_CI_GREEN** | Static + **oito famílias completas** verdes, com recibos íntegros do exato SHA e sem falha/skips; `sf/verify=success` | **NÃO COMPROVADO NO HEAD ATUAL**: WPs ativos e baselines completos ainda pendentes; RED históricos estão na seção 3 |
 | **AZURE_RELEASE_QUALIFIED** | Azure instalado real + identidade/autorização/origem, persistência/backup/restauração, smoke/rollback, F04, AM01–AM06 e revisores independentes na mesma release candidata | **BLOQUEADO**, sem ativação validada no workflow de release |
 
 **Regra de decisão:** podemos aprovar a *arquitetura do harness* com `PRODUCT_RED` documentado, **mas não** podemos declarar `sf/verify` verde, migrar gates obrigatórios como se o produto estivesse aprovado, nem declarar go-live.
 
-## 3. Snapshot verificado do run de referência
+## 3. Snapshot histórico verificado do run de referência (16/11)
 
 Fonte: [Actions run 43956369500](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43956369500), PR head `0e4848847b85d3d5f97d03de63574c5461c50cba`. A execução de PR usa SHA de **merge ref**; conservar o SHA real de `github.sha` de cada run em todos os recibos. Status congelado **no momento da coleta**, não inventar conclusão posteriormente.
 
@@ -53,8 +87,8 @@ Itens abaixo são a linha de chegada **da nossa campanha**, separada da correç�
 
 | ID | Prioridade | Responsável funcional* | Ação exata | Definition of Done / evidência |
 |---|---|---|---|---|
-| CI-01 | P0 | CI/Harness | Capturar um **run completo sem cancelamento** no head final deste PR; guardar run ID, merge SHA, head SHA, job IDs, horários e conclusões dos 12 jobs | Tabela revalidada com status final de **cada** job; in-progress não vira sucesso por inferência |
-| CI-02 | P0 | CI/Harness | Validar preflight independente: Linux X64, `gate.test.mjs`, 39 testes de `test-ci-request`, 8 suites e inventário das provas release-only | Logs `sf/preflight=success`, regressões `0 fail`; alterações de manifesto/paths/ABI precisam falhar |
+| CI-01 | P0 | CI/Harness | Capturar um **run completo sem cancelamento** no head final deste PR; guardar run ID, merge SHA, head SHA, job IDs, horários e conclusões de cada job emitido, incluindo os oito shards SF | Tabela revalidada com status final de **cada** job; in-progress não vira sucesso por inferência |
+| CI-02 | P0 | CI/Harness | Validar preflight independente: Linux X64, `gate.test.mjs`, regressões atuais de `test-ci-request`, 8 suites e inventário das provas release-only | Logs `sf/preflight=success`, regressões `0 fail`; alterações de manifesto/paths/ABI precisam falhar |
 | CI-03 | P0 | CI/Harness | Exercitar `sf/verify` real na presença de upstream RED, confirmando o diagnóstico **antes** do download de artefatos | O job final termina em **failure** e informa todos os upstream failures; não há green, skip camuflado ou diagnóstico enganoso de artifact |
 | CI-04 | P0 | CI/Harness + revisor independente | Revisar equivalência dos 8 recipes entre `modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json` e `sf/ci/suites.json`; mapa de cobertura por requisito e dependência real | Checklist assinado, especialmente por redução de `CI-CLI` e `CI-ATLAS-BUSINESS`; nenhuma dependência Linux usada pelo SF ficou órfã |
 | CI-05 | P0 | CI/Harness | Validar seleção de testes por manifesto, não por lista YAML paralela: paths CLI/Atlas existem e são realmente executados; browser varre `test-browser/sucafina-native`; SF unit tree é admitida | Teste de seleção vazia/duplicada/alterada falha; teste novo em diretório admitido entra automaticamente; recibo exige execução não vazia |
@@ -73,7 +107,7 @@ Itens abaixo são a linha de chegada **da nossa campanha**, separada da correç�
 
 ## 5. Backlog P1 — falhas reais da suíte/produto (não resolver por silenciamento de CI)
 
-As correções aqui pertencem às equipes de **produto/fixtures**. Elas são **bloqueadoras de `PRODUCT_CI_GREEN`**, mas não justificam recolocar Windows/macOS ou aceitar falso positivo.
+Esta tabela preserva a captura histórica de 16/11; cada item precisa ser confrontado com os fixes e evidências atuais antes de ser tratado como defeito ainda aberto. As correções pertencem às equipes de **produto/fixtures**. Elas são **bloqueadoras de `PRODUCT_CI_GREEN`**, mas não justificam recolocar Windows/macOS ou aceitar falso positivo.
 
 | ID | Dono sugerido | Defeito/família | Arquivo/evidência | Aceite |
 |---|---|---|---|---|
@@ -103,15 +137,15 @@ Se após correção um teste falhar por fixture, corrigir o fixture **preservand
 
 ## 7. Ordem de execução — caminho crítico, sem reabrir o canônico
 
-**Fase A — concluir CI (PR #242).** Capturar run final, verificar `sf/preflight`, `sf/verify` fail-closed e oito recibos no percurso verde, cobrir seleção/release-only; classificar todos os RED, medir custo; revisão fria da seleção e políticas. Se o produto continuar RED, registrar `CI_HARNESS_VALIDATED / PRODUCT_RED`, não `CI_GREEN`.
+**Fase A — concluir o aceite do CI integrado.** O rescue focado já está integrado em `sf-join-four`; o piloto #242 continua separado. Depois de fechar os WPs, capturar run final do candidato congelado, verificar `sf/preflight`, `sf/verify` fail-closed e oito recibos no percurso verde, cobrir seleção/release-only; classificar todos os RED, medir custo; revisão fria da seleção e políticas. Se o produto continuar RED, registrar `CI_HARNESS_VALIDATED / PRODUCT_RED`, não `CI_GREEN`.
 
-**Fase B — resolver o produto sem mexer no CI novo.** Abrir PRs isolados para TypeScript, Procurement/browser, SF/Budget/Planner, Operations, Decisions e Reports. Cada correção deve passar testes focados **no Linux** e posteriormente o gate completo do **novo SHA**, sem pular testes. Sincronizar o candidato congelado C.
+**Fase B — fechar os WPs de produto ativos.** Manter PRs isolados para TypeScript, Procurement/browser, SF/Budget/Planner, Operations, Decisions e Reports. Cada correção deve passar testes focados **no Linux** e posteriormente o gate completo do **novo SHA**, sem pular testes. Sincronizar o candidato congelado C.
 
 **Fase C — liberar Azure apenas quando demonstrado.** Integrar instalação Linux e identidade, provar F04/backup/restore, AM01–AM06, revisões e rollback. Autorizar migração de required checks sem janela de bypass; desligar o Epic somente em mudança separada e aprovada.
 
 ## 8. O que já foi entregue e não deve ser refeito
 
-No PR #242: workflow `sf-ci.yml` Linux-only; runner `test-ci` Linux-x64; um trigger PR; seleção autoritativa de CLI/Atlas pelo manifesto; pasta SF browser; verificador de recibos com SHA/attempt/runner/count/digest; evidência Playwright minimizada; fail-fast em vermelho; preflight separado; diagnóstico `precheck` antes do download; `AGENTS.md` idêntico à base; `sf-release.yml` fail-closed; prova F04 real separada da Q01 pura (cinco casos preservados); Litestream do operador local separado do release Linux.
+Entrega histórica do piloto #242, posteriormente evoluída na integração: workflow `sf-ci.yml` Linux-only; runner `test-ci` Linux-x64; um trigger PR; seleção autoritativa de CLI/Atlas pelo manifesto; pasta SF browser; verificador de recibos com SHA/attempt/runner/count/digest; evidência Playwright minimizada; fail-fast em vermelho; preflight separado; diagnóstico `precheck` antes do download; `AGENTS.md` idêntico à base; `sf-release.yml` fail-closed; prova F04 real separada da Q01 pura (cinco casos preservados); Litestream do operador local separado do release Linux.
 
 **Provas efetivamente observadas:** preflight PASS (incluindo 39 testes do seletor Linux), Omni PASS, CLI PASS, App-src PASS, Atlas PASS em 43956369500; guards 78 regras, 0 gate, 1 warning; divergências do produto continuaram vermelhas. Resultados **não se transferem** a futuros SHAs.
 
@@ -123,4 +157,4 @@ No PR #242: workflow `sf-ci.yml` Linux-only; runner `test-ci` Linux-x64; um trig
 - Nunca autoaprovar proteção de branch, nunca publicar segredos em artefatos, nunca afrouxar validações de origem/permissão/CAS/revogação, nunca declarar “não aplicável” por indisponibilidade.
 - O PR #242 permanece **DRAFT, NÃO MERGEADO**; o Epic legado segue intacto. A ferramenta de leitura de branch protection retornou `403 Resource not accessible by integration`: a alteração de required checks precisa ser verificada por pessoa com permissão e **não foi executada**.
 
-**Status final deste documento:** backlog capturado e tarefas separadas. CI framework em validação; suíte do produto RED; Azure release BLOCKED. A linha de chegada é fechada e verificável — nenhum desses estados é automaticamente homologado por esta documentação.
+**Status operacional:** primeiro rescue de CI integrado e comprovado por testes focados; segunda rodada no PR #425; qualificação completa do produto e baselines pendentes; Azure release BLOCKED. As evidências históricas permanecem vinculadas aos seus SHAs.

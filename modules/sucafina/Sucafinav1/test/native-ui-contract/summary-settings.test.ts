@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { AbsolutePath } from "@orchestra/core/schema"
 import { randomBytes } from "node:crypto"
 import { mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -32,7 +33,7 @@ async function entered(pause: ReturnType<typeof gate>) {
 // Actual SQLite, encrypted operator session, product authority, F01 mapper and
 // mounted router. The fixture's policy knobs only REMOVE the source actor's access.
 async function fixture() {
-  const root = await mkdtemp(path.join(await realpath(tmpdir()), "sf-summary-settings-"))
+  const root = AbsolutePath.make(await mkdtemp(path.join(await realpath(tmpdir()), "sf-summary-settings-")))
   const driver = await openLocalStore(path.join(root, "business"))
   const store = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources,
     createId: () => crypto.randomUUID(), projectScope: createSfSourceScopeProjector(() => "2026-11-20T00:00:00Z") })

@@ -15,11 +15,51 @@ function seconds(value) {
   return value
 }
 
-/** Read historical load hints only. The profile is never a selection inventory. */
-export function parseShardCosts(profile) {
-  if (profile?.schemaVersion !== 1 || profile.status !== "HISTORICAL_RED_OR_PARTIAL" || profile.unit !== "seconds") {
-    fail("unsupported historical cost profile")
+const v2ProfileKeys = new Set([
+  "schemaVersion", "status", "unit", "measurement", "pathPrefix", "fallbackSeconds", "minimumObservedSeconds",
+  "sourceCount", "observedFiles", "weightedFiles", "sources", "exclusionsFromCostProfile", "costs",
+])
+const v2SourceKeys = new Set([
+  "id", "runId", "runAttempt", "jobName", "jobId", "headSha", "suiteId", "directory", "status",
+  "conclusionScope", "partial", "observedFiles", "passedTests", "failedTests", "skippedTests",
+  "reportSha256", "shardIndex", "shardCount",
+])
+
+function observedSource(source) {
+  if (Object.keys(source).some((key) => !v2SourceKeys.has(key)) ||
+      !Number.isSafeInteger(source.runAttempt) || source.runAttempt < 1 ||
+      typeof source.jobName !== "string" || !/^[A-Za-z_][A-Za-z0-9_-]{0,99}$/.test(source.jobName) ||
+      (source.jobId !== undefined && (!Number.isSafeInteger(source.jobId) || source.jobId < 1)) ||
+      typeof source.suiteId !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(source.suiteId) ||
+      typeof source.reportSha256 !== "string" || !/^[a-f0-9]{64}$/.test(source.reportSha256) ||
+      !["test-step", "test-command"].includes(source.conclusionScope) ||
+      !["success", "failure", "cancelled", "timed_out"].includes(source.status) ||
+      !Number.isSafeInteger(source.skippedTests) || source.skippedTests < 0) {
+    fail("invalid observed source provenance")
   }
+  if (source.directory !== ".") relativePath(source.directory)
+  if ((source.shardIndex === undefined) !== (source.shardCount === undefined) ||
+      (source.shardIndex !== undefined && (!Number.isSafeInteger(source.shardIndex) ||
+        !Number.isSafeInteger(source.shardCount) || source.shardIndex < 1 || source.shardIndex > source.shardCount))) {
+    fail("invalid source shard identity")
+  }
+  const tests = source.passedTests + source.failedTests + source.skippedTests
+  if (!Number.isSafeInteger(tests) || source.observedFiles > tests ||
+      (source.status === "success" && (source.failedTests !== 0 || source.passedTests < 1 || source.observedFiles < 1)) ||
+      (source.status !== "success" && !source.partial) || (source.skippedTests > 0 && !source.partial)) {
+    fail("source conclusion or completeness contradicts observations")
+  }
+}
+
+/** Read advisory load hints only. Neither schema is an acceptance receipt or a selection inventory. */
+export function parseShardCosts(profile) {
+  const observed = profile?.schemaVersion === 2
+  if ((!observed && profile?.schemaVersion !== 1) ||
+      profile.status !== (observed ? "OBSERVED_TIMINGS" : "HISTORICAL_RED_OR_PARTIAL") || profile.unit !== "seconds") {
+    fail("unsupported cost profile")
+  }
+  if (observed && (profile.measurement !== "junit-case-seconds" ||
+      Object.keys(profile).some((key) => !v2ProfileKeys.has(key)))) fail("invalid observed profile fields")
   if (typeof profile.pathPrefix !== "string" || !profile.pathPrefix.endsWith("/")) fail("missing path prefix")
   relativePath(profile.pathPrefix.slice(0, -1))
   const fallbackSeconds = seconds(profile.fallbackSeconds)
@@ -29,15 +69,30 @@ export function parseShardCosts(profile) {
   if (profile.sourceCount !== profile.sources.length || profile.weightedFiles !== profile.costs.length ||
       !Number.isSafeInteger(profile.observedFiles) || profile.observedFiles < profile.costs.length) fail("profile count mismatch")
   const sources = new Set()
+  const observations = new Set()
+  const remaining = new Map()
   for (const source of profile.sources) {
-    if (!source || typeof source.id !== "string" || !/^[a-z0-9-]+$/.test(source.id) || sources.has(source.id) ||
-        !Number.isSafeInteger(source.runId) || source.runId < 1 || !Number.isSafeInteger(source.jobId) || source.jobId < 1 ||
+    if (!source || typeof source !== "object" || Array.isArray(source) ||
+        typeof source.id !== "string" || !/^[a-z0-9-]+$/.test(source.id) || sources.has(source.id) ||
+        !Number.isSafeInteger(source.runId) || source.runId < 1 ||
         typeof source.headSha !== "string" || !/^[a-f0-9]{40}$/.test(source.headSha) || typeof source.partial !== "boolean" ||
-        !["failure", "cancelled", "in_progress"].includes(source.status) ||
         !["observedFiles", "passedTests", "failedTests"].every((key) => Number.isSafeInteger(source[key]) && source[key] >= 0)) {
       fail("invalid or duplicate source provenance")
     }
+    if (observed) {
+      observedSource(source)
+      const identity = JSON.stringify([source.runId, source.runAttempt, source.jobName, source.suiteId, source.shardIndex ?? null])
+      if (observations.has(identity)) fail("duplicate observed execution")
+      observations.add(identity)
+      remaining.set(source.id, source.observedFiles)
+    } else if (!Number.isSafeInteger(source.jobId) || source.jobId < 1 ||
+        !["failure", "cancelled", "in_progress"].includes(source.status)) {
+      fail("invalid historical source provenance")
+    }
     sources.add(source.id)
+  }
+  if (observed && new Set(profile.sources.map((source) => JSON.stringify([source.suiteId, source.directory]))).size !== 1) {
+    fail("mixed suite or directory observations")
   }
   if (profile.sources.reduce((total, source) => total + source.observedFiles, 0) !== profile.observedFiles) fail("source file count mismatch")
   // These entries invalidate old timings after structural changes; they do not
@@ -45,7 +100,8 @@ export function parseShardCosts(profile) {
   const excluded = new Set()
   for (const item of profile.exclusionsFromCostProfile) {
     const file = relativePath(item?.path)
-    if (item.reason !== "STRUCTURE_CHANGED" || excluded.has(file)) fail("invalid or duplicate timing exclusion")
+    if ((observed && Object.keys(item).some((key) => !["path", "reason"].includes(key))) ||
+        item.reason !== "STRUCTURE_CHANGED" || excluded.has(file)) fail("invalid or duplicate timing exclusion")
     excluded.add(file)
   }
   const weights = new Map()
@@ -57,15 +113,20 @@ export function parseShardCosts(profile) {
     if (cost < minimum || !sources.has(row[2]) || weights.has(file) || excluded.has(file)) {
       fail("invalid, duplicate or invalidated historical cost: " + file)
     }
+    if (observed) {
+      const left = remaining.get(row[2]) - 1
+      if (left < 0) fail("cost rows exceed source observations")
+      remaining.set(row[2], left)
+    }
     weights.set(file, cost)
   }
-  return { weights, fallbackSeconds }
+  return { weights, fallbackSeconds, profileStatus: profile.status }
 }
 
 /**
  * Deterministic longest-processing-time assignment. Input files alone define
- * coverage. Historical red/partial costs and fallback values are scheduling
- * hints, not successful runtimes, evidence receipts or predicted wall time.
+ * coverage. Observed costs (including red/partial history) and fallback values
+ * are scheduling hints, not evidence receipts or predicted wall time.
  */
 export function planShards(files, count, options = {}) {
   if (!Array.isArray(files) || !files.length) fail("empty or invalid file selection")

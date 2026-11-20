@@ -8,6 +8,8 @@ import { Context, Layer } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { ProductHost } from "../../../../../../apps/cli/src/host.ts"
 import { createSfHostRuntime } from "../../../../../../apps/cli/src/sucafina-product/host-context.ts"
+import { createSfAnalysisHttp } from "../../../../../../apps/cli/src/sucafina-product/analysis-http.ts"
+import { createPlannerProduct } from "../../../product/planner/product.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
@@ -36,6 +38,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
   const installationId = randomUUID()
   const operator = { installationId, uid: 1000, name: "Test operator" }
   const principalRef = `macos:${installationId}:${operator.uid}`
+  let runtime: Awaited<ReturnType<typeof createSfHostRuntime>> | undefined
   let workbench: ReturnType<typeof createSfWorkbenchHttp> | undefined
   let identity: ReturnType<typeof createOperatorIdentity> | undefined
   let web: ReturnType<typeof HttpRouter.toWebHandler> | undefined
@@ -43,18 +46,27 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     const localAuth = await identity?.handle(request)
     if (localAuth) return localAuth
     if (new URL(request.url).pathname.startsWith("/api/")) return web?.handler(request, Context.makeUnsafe<unknown>(new Map())) ?? new Response(null, { status: 503 })
-    return await workbench?.(request, "dashboard") ?? new Response(null, { status: 404 })
+    return await runtime?.services?.()?.productHttp?.(request, "dashboard") ??
+      await workbench?.(request, "dashboard") ?? new Response(null, { status: 404 })
   } })
   const origin = server.url.origin
   identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: driver.secrets, key: randomBytes(32) })
   const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID,
     projectScope: createSfSourceScopeProjector(() => new Date().toISOString()) })
-  let runtime: Awaited<ReturnType<typeof createSfHostRuntime>> | undefined
   try {
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
+    // Business fixture data only. C06 issues its scope; the installed host must
+    // resolve the resulting evidence before it can enter a case or skill input.
+    await persistence.transaction("planner", async (snapshot) => {
+      snapshot.data.versions = [{ id: "analysis-v0", name: "Renewal source", year: 2027, closed: 1,
+        lines: [{ id: "renewal-line", name: "Licenses", ownerId: "owner", sec: "opex", el: "licenses", cur: "USD",
+          b: Array(12).fill(120), a: [100, ...Array(11).fill(null)], f: [null, ...Array(11).fill(120)] }],
+        fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
+      return { commit: true, value: undefined }
+    })
     runtime = await createSfHostRuntime({ installationId, directory, sourceRoot: path.resolve(import.meta.dir, "../../../product/ai"), origin,
       mount: "/sucafina", persistence, authenticate: identity.authenticate,
-      grants: [{ principalRef, namespaces: ["cases", "contributions"], operations: ["sf_case_draft", "sf_case_read"], humanActions: ["analysis.start", "analysis.read", "analysis.cancel"] }],
+      grants: [{ principalRef, namespaces: ["cases", "contributions", "preferences"], operations: ["sf_case_draft", "sf_case_read", "sf_source_get"], humanActions: ["analysis.prepare", "analysis.start", "analysis.read", "analysis.cancel"] }],
       environment: async () => ({ at: new Date().toISOString(), id: randomUUID, directory: [] }) })
     workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => runtime?.services?.() })
     web = HttpRouter.toWebHandler(createEmbeddedRoutes({ host: [...ProductHost.contributions(), ...runtime.contributions] })
@@ -73,7 +85,8 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     })
 
     const services = runtime.services?.()
-    if (!services) throw new Error("host services unavailable after host startup")
+    if (!services?.analysisInputs || !services.analyses || !services.productHttp) throw new Error("analysis host services unavailable after host startup")
+    const { analysisInputs, analyses } = services
     expect(services.selected).toHaveLength(5)
     for (const selected of services.selected) {
       expect(selected.skills.length).toBeGreaterThan(0)
@@ -114,7 +127,27 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
       method: "POST", headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() },
       body: JSON.stringify({ operation, input }),
     })
-    const draftInput = { objective: "Frame the current renewal", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: ["Cost", "Coverage"], sourceRefs: [] }
+    // Source issuance uses a real UI admission and the canonical C06 issuer.
+    // Coverage is outside this source-only fixture and must never be fabricated.
+    const sourceProduct = createPlannerProduct({ host: services.host, scopedSources: persistence,
+      coverageFor: async () => { throw new Error("Source issuance must not request fixture coverage") } })
+    const sourceSelection = { versionId: "analysis-v0" }
+    const sourceRequest = new Request(`${origin}/sucafina/planner`, { method: "POST",
+      headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() } })
+    const sourceAdmission = await services.ui.admit(sourceRequest, "sf_source_get", digestSfValue(sourceSelection))
+    if (sourceAdmission.status !== "ok") throw new Error("Real source issuer admission unavailable")
+    const source = await (async () => {
+      try {
+        expect(await services.ui.validate(sourceAdmission.value, "sf_source_get", digestSfValue(sourceSelection))).toBe(true)
+        const issued = await sourceProduct.issueSource(sourceSelection.versionId, sourceAdmission.value)
+        if (issued.status !== "ok") throw new Error(`Canonical Planner source unavailable: ${issued.reason}`)
+        expect(issued.value.evidence.target).toMatchObject({ surface: "planner", recordType: "planner-version",
+          recordId: sourceSelection.versionId, period: { start: "2027-01-01", end: "2027-12-31" } })
+        return issued.value.evidence
+      } finally { services.ui.finish(sourceAdmission.value) }
+    })()
+    expect(services.host.requestFor(sourceAdmission.value)).toBeUndefined()
+    const draftInput = { objective: "Frame the current renewal", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: ["Cost", "Coverage"], sourceRefs: [source] }
     const draft = await command("sf_case_draft", draftInput)
     expect(draft.status).toBe(200)
     const created = await draft.json()
@@ -135,17 +168,64 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     const intentRuntime = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-enquadrar-decisao"))
     const intentSkill = intentRuntime?.skills.find((skill) => skill.id === "sf-enquadrar-decisao")
     if (!intentRuntime || !intentSkill) throw new Error("intent skill must be registered")
-    const intentRequest = { caseRef: { id: currentCase.id, incarnation: currentCase.incarnation, version: currentCase.version },
+    const intentRequest: SfAnalysisRequest = { caseRef: { id: currentCase.id, incarnation: currentCase.incarnation, version: currentCase.version },
       profileId: intentRuntime.profile.id, profileVersion: intentRuntime.profile.version, skillId: intentSkill.id, skillVersion: intentSkill.version,
       manifestDigest: intentRuntime.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: intentSkill.allowedOperations,
       objective: currentCase.objective }
     const intentPrepare = { action: "prepare", input: { request: intentRequest, selection: {} } }
     const framed = await post(intentPrepare)
     expect(framed.status).toBe(200)
-    expect(await framed.json()).toEqual({ status: "ok", value: { intentText: currentCase.objective, case: intentRequest.caseRef,
-      context: { surface: "dashboard", period: currentCase.horizon, currency: currentCase.currency, sourceRefs: [] }, selectedSourceRefs: currentCase.sourceRefs } })
-    expect((await post({ ...intentPrepare, input: { ...intentPrepare.input, selection: { sourceRefs: ["forged"] } } })).status).toBe(400)
-    expect((await post({ ...intentPrepare, input: { ...intentPrepare.input, request: { ...intentRequest, caseRef: { ...intentRequest.caseRef, version: currentCase.version + 1 } } } })).status).toBe(409)
+    const framedBody = await framed.json()
+    expect(currentCase.sourceRefs).toEqual([source])
+    expect(framedBody).toEqual({ status: "ok", value: { intentText: currentCase.objective, case: intentRequest.caseRef,
+      context: { surface: "planner", period: currentCase.horizon, currency: currentCase.currency, sourceRefs: [{
+        surface: source.target.surface, type: source.target.recordType, id: source.target.recordId,
+        incarnation: source.target.incarnation, version: source.target.version, fields: source.target.fields,
+        period: source.target.period, observedAt: expect.any(String),
+      }] }, selectedSourceRefs: currentCase.sourceRefs } })
+    expect(Number.isFinite(Date.parse(framedBody.value.context.sourceRefs[0].observedAt))).toBe(true)
+    const preparedSelections = await services.state.read(stateRequest, "preferences", (state) =>
+      Object.entries(state.preferences).filter(([key]) => key.startsWith("sf:analysis-selection:")))
+    if (preparedSelections.status !== "ok") throw new Error("Actual prepared selection unavailable")
+    expect(preparedSelections.value).toHaveLength(1)
+    expect(preparedSelections.value[0]![1]).toMatchObject({ request: intentRequest, selection: {},
+      inputDigest: digestSfValue(framedBody.value) })
+    const caseBeforeRefusals = await services.state.read(stateRequest, "cases", (state) => state.cases)
+    if (caseBeforeRefusals.status !== "ok") throw new Error("Actual case state unavailable")
+    const refused = async (body: unknown, status: number, value: { status: string; reason: string }) => {
+      const response = await post(body)
+      expect(response.status).toBe(status)
+      expect(await response.json()).toEqual(value)
+    }
+    await refused({ ...intentPrepare, input: { ...intentPrepare.input, selection: { sourceRefs: ["forged"] } } },
+      400, { status: "needs-input", reason: "invalid-analysis-input" })
+    await refused({ ...intentPrepare, input: { ...intentPrepare.input, selection: { evidenceRefIds: [] } } },
+      400, { status: "needs-input", reason: "intent-single-surface-period-selection-required" })
+    await refused({ ...intentPrepare, input: { ...intentPrepare.input, selection: { evidenceRefIds: ["forged"] } } },
+      503, { status: "unavailable", reason: "analysis-source-unavailable" })
+    await refused({ ...intentPrepare, input: { ...intentPrepare.input, request: { ...intentRequest, caseRef: { ...intentRequest.caseRef, version: currentCase.version + 1 } } } },
+      403, { status: "denied", reason: "case-selection-unavailable" })
+    // Neither a read lease, a different preparation payload, nor a closed lease
+    // may be reused as preparation authority in the installed producer.
+    const authorityRequest = () => new Request(`${origin}/sucafina/dashboard?sf=workbench-analysis`, { method: "POST",
+      headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() } })
+    const readLease = await services.human.admit(authorityRequest(), "analysis.read", { runRef: "sf-run-forged-reference" })
+    if (readLease.status !== "ok") throw new Error("Real read admission unavailable")
+    try {
+      expect(await analysisInputs.prepare(readLease.value, intentPrepare.input))
+        .toEqual({ status: "denied", reason: "analysis-input-authority-unavailable" })
+    } finally { services.human.finish(readLease.value) }
+    const prepareLease = await services.human.admit(authorityRequest(), "analysis.prepare", intentPrepare.input)
+    if (prepareLease.status !== "ok") throw new Error("Real preparation admission unavailable")
+    try {
+      expect(await services.human.authorize(prepareLease.value, "analysis.prepare", intentPrepare.input)).toBe(true)
+      expect(await analysisInputs.prepare(prepareLease.value, { ...intentPrepare.input, selection: { evidenceRefIds: [source.refId] } }))
+        .toEqual({ status: "denied", reason: "analysis-input-authority-unavailable" })
+    } finally { services.human.finish(prepareLease.value) }
+    expect(await analysisInputs.prepare(prepareLease.value, intentPrepare.input))
+      .toEqual({ status: "denied", reason: "analysis-input-authority-unavailable" })
+    expect(services.host.requestFor(readLease.value)).toBeUndefined()
+    expect(services.host.requestFor(prepareLease.value)).toBeUndefined()
     const scenarioRuntime = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-comparar-cenarios"))
     const scenarioSkill = scenarioRuntime?.skills.find((skill) => skill.id === "sf-comparar-cenarios")
     if (!scenarioRuntime || !scenarioSkill) throw new Error("scenario skill must be registered")
@@ -154,7 +234,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     const scenarioPrepare = { action: "prepare", input: { request: scenarioRequest, selection: { caseRef: scenarioRequest.caseRef,
       alternatives: [{ id: "missing-first", version: 1 }, { id: "missing-second", version: 1 }] } } }
     // A real empty case cannot acquire invented saved alternatives through selection.
-    expect((await post(scenarioPrepare)).status).toBe(409)
+    await refused(scenarioPrepare, 503, { status: "unavailable", reason: "scenario-alternative-unavailable" })
     expect((await post({ ...scenarioPrepare, input: { ...scenarioPrepare.input, selection: { ...scenarioPrepare.input.selection,
       alternatives: [{ id: "same", version: 1 }, { id: "same", version: 1 }] } } })).status).toBe(400)
     expect((await post({ ...scenarioPrepare, input: { ...scenarioPrepare.input, selection: { ...scenarioPrepare.input.selection,
@@ -165,7 +245,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     const reviewPrepare = { action: "prepare", input: { request: { ...intentRequest, profileId: reviewer.profile.id,
       profileVersion: reviewer.profile.version, skillId: reviewSkill.id, skillVersion: reviewSkill.version, manifestDigest: reviewer.manifestDigest,
       requestedOperationScope: reviewSkill.allowedOperations }, selection: { authorAnalysis: { runRef: "missing-author-run", outputDigest: "a".repeat(64) } } } }
-    expect((await post(reviewPrepare)).status).toBe(403)
+    await refused(reviewPrepare, 400, { status: "needs-input", reason: "invalid-analysis-input" })
     expect((await post({ ...reviewPrepare, input: { ...reviewPrepare.input, selection: { ...reviewPrepare.input.selection,
       comparison: { fabricated: true } } } })).status).toBe(400)
     const model = (await services.models().catch(() => []))[0]
@@ -178,16 +258,21 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
         outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations, objective: "Review forecast" },
       selection: {},
     } }
-    expect((await post(prepare)).status).toBe(503)
+    await refused(prepare, 403, { status: "denied", reason: "case-selection-unavailable" })
     // Exercise the optional boundary with real authority and an intentionally invalid producer payload.
     // This checks schema/selection rejection; it is not a native analysis or producer witness.
     let prepareCalls = 0
-    const boundary = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => ({ ...services,
-      analysisInputs: { prepare: async () => { prepareCalls++; return { status: "ok" as const, value: {} } } },
+    const boundary = createSfAnalysisHttp({ origin, mount: "/sucafina", runtime: () => ({ human: services.human,
+      selected: services.selected, models: services.models, start: analyses.start,
+      inputs: { prepare: async () => { prepareCalls++; return { status: "ok" as const, value: {} } } },
     }) })
-    const boundaryPost = (body: unknown) => boundary(new Request(`${origin}/sucafina/dashboard?sf=workbench-analysis`, {
-      method: "POST", headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify(body),
-    }), "dashboard")
+    const historyBoundary = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
+    const boundaryPost = async (body: unknown) => {
+      const request = new Request(`${origin}/sucafina/dashboard?sf=workbench-analysis`, {
+        method: "POST", headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify(body),
+      })
+      return await boundary(request, "dashboard") ?? await historyBoundary(request, "dashboard")
+    }
     expect((await boundaryPost(prepare))?.status).toBe(503)
     expect(prepareCalls).toBe(1)
     expect((await boundaryPost({ ...prepare, input: { ...prepare.input, request: { ...prepare.input.request, manifestDigest: "forged" } } }))?.status).toBe(403)
@@ -214,6 +299,11 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     expect(missingIdempotency.status).toBe(400)
     const unchanged = await services.state.read(stateRequest, "contributions", (state) => ({ runs: Object.keys(state.nativeRuns ?? {}), outputs: Object.keys(state.contributions) }))
     expect(unchanged.status === "ok" && unchanged.value).toEqual({ runs: [], outputs: [] })
+    const selectionsAfter = await services.state.read(stateRequest, "preferences", (state) =>
+      Object.entries(state.preferences).filter(([key]) => key.startsWith("sf:analysis-selection:")))
+    expect(selectionsAfter.status === "ok" && selectionsAfter.value).toEqual(preparedSelections.value)
+    const casesAfter = await services.state.read(stateRequest, "cases", (state) => state.cases)
+    expect(casesAfter.status === "ok" && casesAfter.value).toEqual(caseBeforeRefusals.value)
     await identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie: cookie ?? "", origin } }))
     expect((await post(intentPrepare)).status).toBe(403)
   } finally {
@@ -371,13 +461,65 @@ test("Reviewer consumer rejects a supplied comparison, evidence or nonreviewer p
   expect(f.state.authorReads).toBe(0)
 })
 
-test("analysis output returns a denial when access changes during optional review discovery", async () => {
+test("analysis output renders an authorized contribution and closes its read lease", async () => {
   const f = await reviewConsumerFixture()
-  // Only the HTTP consumer's declared read/model methods are exercised here.
-  // Neither this adapter fixture nor its fake model catalog executes a native run.
-  const runtime: Parameters<typeof handleSfAnalysis>[2] = { ...f.services, models: async () => { f.state.allowed = false; return [] } }
+  let revalidations = 0
+  let modelReads = 0
+  const runtime: Parameters<typeof handleSfAnalysis>[2] = {
+    ...f.services,
+    models: async () => { modelReads++; return [] },
+    ui: { ...f.services.ui, revalidate: async (context) => {
+      revalidations++
+      return f.services.ui.revalidate(context)
+    } },
+  }
+  const response = await handleSfAnalysis(f.request({ action: "output", runRef: f.input.selection.authorAnalysis.runRef }), f.origin, runtime)
+  expect(response.status).toBe(200)
+  const body = await response.json()
+  expect(body).toMatchObject({ status: "ok", value: { outputRef: f.output.id } })
+  expect(body.value.html).toContain("Scenario comparison")
+  expect(body.value.html).toContain(f.input.selection.authorAnalysis.runRef)
+  expect(revalidations).toBe(2)
+  expect(f.state.outputReads).toBe(1)
+  expect(modelReads).toBe(0)
+  expect(f.state.readAdmissions).toBe(1)
+  expect(f.state.readFinishes).toBe(f.state.readAdmissions)
+})
+
+test.each(["output", "render"] as const)("analysis output returns a denial when access changes after %s", async (phase) => {
+  const f = await reviewConsumerFixture()
+  const analyses = f.services.analyses
+  if (!analyses) throw new Error("The consumer fixture requires its declared analysis read port")
+  let revalidations = 0
+  let modelReads = 0
+  // The former optional model discovery was after rendering. Exercise both
+  // current egress fences; this contract fixture executes no native analysis.
+  const runtime: Parameters<typeof handleSfAnalysis>[2] = {
+    ...f.services,
+    models: async () => { modelReads++; return [] },
+    analyses: {
+      ...analyses,
+      output: async (context, runRef) => {
+        const result = await analyses.output(context, runRef)
+        expect(result.status).toBe("ok")
+        if (phase === "output") f.state.allowed = false
+        return result
+      },
+    },
+    ui: { ...f.services.ui, revalidate: async (context) => {
+      revalidations++
+      // The second consumer check is reached only after contribution HTML
+      // was rendered successfully. Revoke before its real authority lookup.
+      if (phase === "render" && revalidations === 2) f.state.allowed = false
+      return f.services.ui.revalidate(context)
+    } },
+  }
   const response = await handleSfAnalysis(f.request({ action: "output", runRef: f.input.selection.authorAnalysis.runRef }), f.origin, runtime)
   expect(response.status).toBe(403)
   expect(await response.json()).toEqual({ status: "denied" })
+  expect(revalidations).toBe(phase === "output" ? 1 : 2)
+  expect(f.state.outputReads).toBe(1)
+  expect(modelReads).toBe(0)
+  expect(f.state.readAdmissions).toBe(1)
   expect(f.state.readFinishes).toBe(f.state.readAdmissions)
 })
