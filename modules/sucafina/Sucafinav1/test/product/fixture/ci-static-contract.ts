@@ -6,7 +6,7 @@ import { createHash } from "node:crypto"
 // checking command substrings would accept an early exit or swallowed status.
 // Reviewed from a5b15b51b78469a054ba97b0e87fd1e36e31f73a; a shell edit needs review.
 const GUARD_SCRIPT_SHA256 = "c41fe51b3553131a13dd11596fe792dd7e31352619d45a27aecfb855c5074893"
-const fail = (message: string): never => { throw new Error("SF_CI_STATIC_OWNERSHIP: " + message) }
+function fail(message: string): never { throw new Error("SF_CI_STATIC_OWNERSHIP: " + message) }
 function object(value: unknown, label: string): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) fail(label + " must be an object")
   return Object.fromEntries(Object.entries(value))
