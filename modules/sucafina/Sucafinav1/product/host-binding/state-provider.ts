@@ -367,8 +367,8 @@ export function sfTransactionKey(
 }
 
 /** Match one durable intention without adopting an unscoped or foreign Team receipt. */
-export function sfTransactionLookup(
-  state: Pick<SfProductState, "transactions">,
+export function sfTransactionLookup<TValue>(
+  state: { transactions: Readonly<Record<string, TValue>> },
   authority: SfStateAuthority,
   command: Pick<SfStateMutation, "namespace" | "targetRef" | "idempotencyKey">,
 ) {
