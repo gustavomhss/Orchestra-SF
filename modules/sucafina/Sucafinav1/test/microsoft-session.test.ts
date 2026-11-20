@@ -18,7 +18,7 @@ const context = { surface: "planner" as const, roleMap: [
 
 afterEach(async () => { for (const close of cleanups.splice(0)) await close() })
 
-async function fixture(input: { sessionSeconds?: number; loginSeconds?: number; tokenSeconds?: number; teams?: "direct"; grantedScopes?: readonly string[] | null } = {}) {
+async function fixture(input: { sessionSeconds?: number; loginSeconds?: number; tokenSeconds?: number; teams?: "direct"; grantedScopes?: string | null } = {}) {
   const provider = await microsoftFixture({ tokenSeconds: input.tokenSeconds, teams: input.teams, grantedScopes: input.grantedScopes })
   const directory = await mkdtemp(join(tmpdir(), "sf-microsoft-session-"))
   const store = await openLocalStore(directory)
@@ -344,7 +344,7 @@ test("logout requires exact same-origin POST and ignores forwarded origins", asy
   expect((await f.logout(login.cookie))?.headers.getSetCookie().every((value) => value.includes("Max-Age=0") && value.includes("Secure"))).toBe(true)
 })
 
-async function teamsFixture(input: { sessionSeconds?: number; tokenSeconds?: number; grantedScopes?: readonly string[] | null } = {}) {
+async function teamsFixture(input: { sessionSeconds?: number; tokenSeconds?: number; grantedScopes?: string | null } = {}) {
   const f = await fixture({ ...input, teams: "direct" })
   const read = f.identity.teamDirectory
   if (!read) throw new Error("Explicit Microsoft Teams capability was not composed")
@@ -403,7 +403,7 @@ test("Teams directory rejects missing, duplicate, foreign-origin and wrong-mount
 })
 
 test("Teams directory preserves missing consent and provider failure as errors instead of empty membership", async () => {
-  const reduced = await teamsFixture({ grantedScopes: ["User.Read"] })
+  const reduced = await teamsFixture({ grantedScopes: "User.Read" })
   const login = await reduced.login()
   const before = reduced.provider.requests.length
   expect(await reduced.readTeams(login.cookie)).toEqual({ state: "unavailable", reason: "consent_required" })
@@ -483,5 +483,16 @@ test("Teams directory cannot revive a copied cookie after reopening the real pri
   if (!read) throw new Error("Explicit capability missing")
   const before = f.provider.requests.length
   expect(await read(f.request("/planner", login.cookie))).toEqual({ state: "unauthenticated" })
+  expect(f.provider.requests.length).toBe(before)
+})
+
+test("Teams directory never retains prior consent when refreshed credentials omit scope", async () => {
+  const f = await teamsFixture({ grantedScopes: null, tokenSeconds: 90 })
+  const login = await f.login()
+  expect((await f.readTeams(login.cookie)).state).toBe("complete")
+  f.provider.clock.value += 40000
+  await f.identity.prepare(f.request("/planner", login.cookie))
+  const before = f.provider.requests.length
+  expect(await f.readTeams(login.cookie)).toEqual({ state: "unavailable", reason: "consent_required" })
   expect(f.provider.requests.length).toBe(before)
 })
