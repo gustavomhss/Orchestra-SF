@@ -10,6 +10,11 @@ import { createDashboardRecordSourceIssuer } from "../../product/integration/das
 import type { SfScopedSourcePort } from "../../product/integration/source-lifecycle.ts"
 import { createSfDashboardRecordSourceAccess } from "../../product/decision-memory/source-access.ts"
 import { oid, other } from "../microsoft-login/oidc-fixture.ts"
+import { randomUUID } from "node:crypto"
+import type { TrustedDomainContext } from "../../product/contracts/sf-execution.ts"
+import { createFixtureBusiness } from "../product/wp02/business-services-fixture.ts"
+import { createCollaborationHost } from "../../product/collaboration/host.ts"
+import { createProcurementCollectionMemberIssuer } from "../../product/procurement/collection-member.ts"
 
 // Integration contracts for the G04 composition. These are not browser-pool
 // declarations and do not count toward its fixed 40-source/206-body evidence.
@@ -308,5 +313,147 @@ test("record observation rejects a changed selector on the original request duri
     expect(result.state).toBe("unavailable")
     expect(Object.hasOwn(result, "authorizedProjection")).toBe(false)
     expect(f.reads).toBe(2)
+  } finally { await f.close() }
+}, 15_000)
+
+
+// This producer proof is separate from the fixed browser inventory. It mounts
+// actual Work/Procurement/BCS over the same private grants, OIDC and SQLite.
+async function workObservationFixture() {
+  const fixture = await createMicrosoftComponentFixture({
+    at: "2026-11-14T08:00:00Z",
+    grants: [{ principalRef: oid, namespaces: ["cases", "threads", "relations", "confirmations", "preferences"],
+      operations: ["sf_work_list"] }],
+  })
+  let business: Awaited<ReturnType<typeof createFixtureBusiness>> | undefined
+  try {
+    for (const surface of ["dashboard", "planner", "procurement"] as const)
+      await fixture.persistence.initializeSources(surface)
+    const changeSubject = (title: string) => fixture.persistence.transaction("procurement", async (snapshot) => {
+      snapshot.data.store = { settings: { currency: "USD", fxRates: [] }, suppliers: [], requests: {
+        "PR-observed": { version: 1, request: {
+          number: "PR-observed", createdBy: oid, status: "pr_pending", pr: { title, currency: "USD", total: 100 },
+          prApprovalBaseCurrency: "USD", prApproval: { amount: 100, steps: [{ status: "pending", holderId: oid, levelName: "Review" }] },
+          history: [{ action: "Requisition submitted for approval", at: "2026-11-01T08:00:00Z" }],
+        } },
+      } }
+      return { commit: true, value: undefined }
+    })
+    await changeSubject("Current approval")
+    const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
+    const authority = fixture.productAuthority({ proposalCoverageWrites, dashboardHostWrites })
+    const services = business = await createFixtureBusiness({
+      authority, persistence: fixture.persistence, proposalCoverageWrites, dashboardHostWrites,
+    })
+    const period = { start: "2026-01-01", end: "2026-12-31" }
+    const withCall = async <T>(payload: unknown, work: (call: TrustedDomainContext) => Promise<T>) => {
+      const request = fixture.request("/dashboard?sf=workbench-work", fixture.cookie, {
+        method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload),
+      })
+      const digest = digestSfValue(payload)
+      const admitted = await authority.ui.admit(request, "sf_work_list", digest)
+      if (admitted.status !== "ok") throw new Error("Actual Work admission failed: " + admitted.status)
+      try {
+        if (!await authority.ui.validate(admitted.value, "sf_work_list", digest)) throw new Error("Actual Work validation failed")
+        return await work(admitted.value)
+      } finally { authority.ui.finish(admitted.value) }
+    }
+    const selected = await withCall({ purpose: "work-selection", period },
+      (call) => services.procurementSelections.create(call, period))
+    if (selected.status !== "ok") throw new Error("Actual Procurement selection failed: " + selected.status + " " + selected.reason)
+    const selection = { selectionRef: selected.value.selectionRef, period }
+    const counts = { initialSources: 0, initialApproved: 0, captured: 0, laterSources: 0 }
+    const hooks: { afterInitial?: () => Promise<void> } = {}
+    let phase = "before-list"
+    const capture = createProcurementCollectionMemberIssuer({
+      collection: services.registry, individual: services.individual, revalidate: authority.host.revalidate,
+    })
+    const collaboration = createCollaborationHost({
+      host: authority.host, state: authority.state, creationTarget: authority.creationTarget,
+      scopedSources: fixture.persistence, evidence: services.context,
+      procurement: { list: async (reference, call) => {
+        const result = await services.procurement.list(reference, call)
+        if (result.status === "ok") phase = "projected"
+        return result
+      } },
+      collections: services.registry, cases: services.cases, authority: authority.authority, human: authority.human,
+      captureWorkSource: async (reference, call) => {
+        phase = "capture"; counts.captured++
+        try { return await capture(reference, call) }
+        finally { phase = "after-capture" }
+      },
+      requiredAuthority: { sf_work_list: ["threads:read", "relations:read", "confirmations:read"],
+        sf_question_prepare: ["threads:read", "cases:read"], sf_answer_read: ["threads:read"],
+        sf_relation_read: ["relations:read"], sf_handoff_prepare: ["threads:read", "relations:read"] },
+      createId: randomUUID, now: () => fixture.clock.at,
+    })
+    const sources = collaboration.authority.sources
+    collaboration.authority.sources = async (refs, call) => {
+      const initial = phase === "projected"
+      if (initial) counts.initialSources++
+      if (phase === "after-capture") counts.laterSources++
+      const allowed = await sources(refs, call)
+      if (initial && allowed) {
+        counts.initialApproved++
+        const hook = hooks.afterInitial
+        hooks.afterInitial = undefined
+        await hook?.()
+      }
+      return allowed
+    }
+    return { ...fixture, counts, hooks, changeSubject,
+      read: () => withCall(selection, (call) => collaboration.work.listPresentation(selection, call)),
+      async close() { try { services.dispose() } finally { await fixture.close() } },
+    }
+  } catch (error) {
+    try { business?.dispose() } finally { await fixture.close() }
+    throw error
+  }
+}
+
+test("Work projects identical complete Procurement evidence once per item and keeps independent capture and final checks", async () => {
+  const f = await workObservationFixture()
+  try {
+    const providerStart = f.provider.requests.length
+    const result = await f.read()
+    expect(result.status).toBe("ok")
+    if (result.status !== "ok") throw new Error("Actual Work projection unavailable: " + result.reason)
+    expect(result.value.items).toHaveLength(1)
+    const item = result.value.items[0]!
+    expect(item.kind).toBe("procurement")
+    expect(item.title).toBe("Current approval")
+    expect(item.approvalStage).toBe("Review")
+    expect(item.ownerRef).toBe(oid)
+    expect(item.destination?.kind).toBe("procurement-request")
+    expect(f.counts.initialSources).toBe(1)
+    expect(f.counts.initialApproved).toBe(1)
+    expect(f.counts.captured).toBe(1)
+    expect(f.counts.laterSources).toBeGreaterThan(0)
+    console.info("G04 actual Work observation counts", { ...f.counts,
+      providerReads: f.provider.requests.length - providerStart })
+  } finally { await f.close() }
+}, 15_000)
+
+test("Work refuses changed Procurement material after its first actual source check", async () => {
+  const f = await workObservationFixture()
+  try {
+    f.hooks.afterInitial = async () => { await f.changeSubject("Changed after current observation") }
+    const result = await f.read()
+    expect(f.counts.initialApproved).toBe(1)
+    expect(["denied", "unavailable", "stale"]).toContain(result.status)
+    expect(Object.hasOwn(result, "value")).toBe(false)
+    expect(f.counts.captured).toBe(1)
+  } finally { await f.close() }
+}, 15_000)
+
+test("Work refuses current Team revocation after its first actual source check", async () => {
+  const f = await workObservationFixture()
+  try {
+    f.hooks.afterInitial = async () => { f.policy.readable = false }
+    const result = await f.read()
+    expect(f.counts.initialApproved).toBe(1)
+    expect(["denied", "unavailable", "stale"]).toContain(result.status)
+    expect(Object.hasOwn(result, "value")).toBe(false)
+    expect(f.counts.captured).toBe(1)
   } finally { await f.close() }
 }, 15_000)

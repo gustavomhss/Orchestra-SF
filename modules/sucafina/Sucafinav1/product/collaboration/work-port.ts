@@ -181,17 +181,28 @@ export function createCollaborationWorkPort(input: {
         const status = projection.values.find((value) => value.id === "status")
         if (holder?.value !== own || typeof status?.value !== "string") continue
         const refs = holder.sourceRefs
-        if (!refs.length || !await input.collaboration.authority.sources(refs, context)) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
+        if (!refs.length) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
         const target = refs[0]
         if (!target || target.kind !== "record" || target.target.surface !== "procurement" || target.target.recordType !== "procurement-request") return { status: "unavailable", reason: "work-destination-unavailable" }
         const displayed = projection.values.filter((value) => ["holder", "status", "subject", "approvalStage"].includes(value.id) && value.value !== null)
         const displayedRefs = displayed.flatMap((value) => value.sourceRefs)
-        if (new Set(displayed.map((value) => value.id)).size !== displayed.length || displayed.some((value) => !value.sourceRefs.length || value.sourceRefs.some((ref) => ref.kind !== "record" || ref.target.surface !== "procurement" || ref.target.recordType !== "procurement-request" || ref.target.recordId !== target.target.recordId || !ref.target.fields.includes(value.id))) || !await input.collaboration.authority.sources(displayedRefs, context)) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
-        presentationProofs.push(...displayedRefs)
+        if (new Set(displayed.map((value) => value.id)).size !== displayed.length || displayed.some((value) => !value.sourceRefs.length || value.sourceRefs.some((ref) => ref.kind !== "record" || ref.target.surface !== "procurement" || ref.target.recordType !== "procurement-request" || ref.target.recordId !== target.target.recordId || !ref.target.fields.includes(value.id)))) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
         const subject = projection.values.find((value) => value.id === "subject")?.value
         const approvalStage = projection.values.find((value) => value.id === "approvalStage")
-        if (typeof approvalStage?.value === "string" && (!approvalStage.sourceRefs.length || !await input.collaboration.authority.sources(approvalStage.sourceRefs, context))) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
-        if (typeof approvalStage?.value === "string") presentationProofs.push(...approvalStage.sourceRefs)
+        const approvalRefs = typeof approvalStage?.value === "string" ? approvalStage.sourceRefs : []
+        if (typeof approvalStage?.value === "string" && !approvalRefs.length) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
+        const material = digestSfValue(projection), targetDigest = digestSfValue(target)
+        // The canonical record projection uses one complete evidence reference for
+        // these fields. Validate that exact union once in this synchronous phase;
+        // heterogeneous adapters retain their existing independent checks.
+        const sameEvidence = [...refs, ...displayedRefs, ...approvalRefs].every((ref) => digestSfValue(ref) === targetDigest)
+        const authorized = sameEvidence
+          ? await input.collaboration.authority.sources([target], context)
+          : await input.collaboration.authority.sources(refs, context) &&
+            await input.collaboration.authority.sources(displayedRefs, context) &&
+            (!approvalRefs.length || await input.collaboration.authority.sources(approvalRefs, context))
+        if (!authorized || digestSfValue(projection) !== material) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
+        presentationProofs.push(...displayedRefs, ...approvalRefs)
         const captured = input.collaboration.captureWorkSource ? await input.collaboration.captureWorkSource(target.refId, context) : undefined
         if (captured && (captured.status !== "ok" || !await input.collaboration.authority.sources([captured.value], context))) return { status: "unavailable", reason: "procurement-work-source-unavailable" }
         const individual = captured?.status === "ok" ? captured.value : undefined
