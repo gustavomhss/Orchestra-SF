@@ -123,6 +123,7 @@ export type LocationError = LayerNode.Error<typeof locationServices>
 export function buildLocationServiceMap(
   replacements: LayerNode.Replacements = [],
   extra: ReadonlyArray<Node.LocationNode<unknown, LocationError>> = [],
+  globalContext?: Effect.Effect<Context.Context<never>>,
 ): Layer.Layer<LocationServiceMap.Service, never, SessionOwner.Service> {
   return Layer.effect(
     LocationServiceMap.Service,
@@ -161,9 +162,12 @@ export function buildLocationServiceMap(
               }),
             ),
             Layer.provide(
-              LayerNode.compile(location.hoisted, [
-                [LocationServiceMap.node, Layer.effect(LocationServiceMap.Service, Deferred.await(self))],
-              ]),
+              Layer.unwrap(Effect.map(globalContext ?? Effect.context<never>(), (existingContext) =>
+                LayerNode.compile(location.hoisted, [
+                  [LocationServiceMap.node, Layer.effect(LocationServiceMap.Service, Deferred.await(self))],
+                ], { existingContext }),
+              )),
+
             ),
           )
         },

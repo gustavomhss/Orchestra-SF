@@ -9,6 +9,8 @@ import { AuthorityControl } from "../../src/database/authority-control"
 import { AuthoritySqlFence } from "../../src/database/authority-sql-fence"
 import { openAuthorityControl } from "../../src/database/sqlite.bun"
 import { AppNodeBuilder } from "../../src/effect/app-node-builder"
+import type { Node } from "../../src/effect/app-node"
+import type { LocationError } from "../../src/location-services"
 import { LayerNode } from "../../src/effect/layer-node"
 import { EventV2 } from "../../src/event"
 import { Global } from "../../src/global"
@@ -50,6 +52,8 @@ export async function teamSessionFixture<Extra extends LayerNode.Node<unknown, u
   sessionSeconds?: number
   legacyID?: SessionV2.ID
   extraNodes?: readonly Extra[]
+  locationNodes?: ReadonlyArray<Node.LocationNode<unknown, LocationError>>
+  replacements?: LayerNode.Replacements
 } = {}) {
   const declared = input.actions ?? SessionAccess.Actions
   const f = await teamProductFixture({
@@ -88,7 +92,9 @@ export async function teamSessionFixture<Extra extends LayerNode.Node<unknown, u
       [SessionExecution.node, execution],
       [Global.node, Global.layerWith({ home: f.directory, data: f.directory, config: f.directory,
         cache: f.directory, state: f.directory })],
+      ...input.replacements ?? [],
     ],
+    input.locationNodes,
   ))
   const run = <A, E>(body: Effect.Effect<A, E, Services | LayerNode.Output<Extra> | Scope.Scope>) =>
     Effect.runPromise(body.pipe(Effect.provide(layer()), Effect.scoped))

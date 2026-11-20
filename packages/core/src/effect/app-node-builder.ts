@@ -17,7 +17,7 @@ export function build<A, E>(
 
     // Only build the location service map if it's actually needed
     if (LayerNode.hasUnbound(root, LocationServiceMap.node) && !hasReplacement(replacements, LocationServiceMap.node)) {
-      const locationMap = buildLocationServiceMap(replacements, locationNodes)
+      const locationMap = buildLocationServiceMap(replacements, locationNodes, Deferred.await(globalContext))
       const locationMapNode = makeGlobalNode({ service: LocationServiceMap.Service, layer: locationMap, deps: [SessionOwner.node] })
       allReplacements = replacements.concat([[LocationServiceMap.node, locationMapNode]])
     }
