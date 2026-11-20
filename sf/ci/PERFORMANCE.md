@@ -1,5 +1,12 @@
 # CI performance: measured cost and execution ownership
 
+The follow-up is integrated: [PR #425](https://github.com/gustavomhss/Orchestra-SF/pull/425) into
+`sf-join-four` and [PR #429](https://github.com/gustavomhss/Orchestra-SF/pull/429) into `dev`.
+The real default writer and a fresh canonical `test-ci` consumer both completed **SUCCESS**.
+The consumer restored the exact `modules-v5` tree in **11.508s**, skipped installation and passed
+**29 tests in two files**; its test job took **50s**. These are scoped observations, not a full-suite speedup.
+The [closure record](#follow-up-closure-and-operational-proof) below retains all probe failures and remaining qualification gates.
+
 The CI rescue is integrated into `sf-join-four` through
 [PR #413](https://github.com/gustavomhss/Orchestra-SF/pull/413), merge
 `72830e53adfcb2059575b249e76c88753beb04e8`.
@@ -23,8 +30,12 @@ These are infrastructure and integration proofs. They do not measure or qualify 
 
 ## Follow-up: complete cache inputs, timings and reproducible shard requests
 
-[PR #425](https://github.com/gustavomhss/Orchestra-SF/pull/425) is the focused follow-up to the integrated rescue.
-Its validation is recorded separately from the historical observations below.
+[PR #425](https://github.com/gustavomhss/Orchestra-SF/pull/425) merged at
+`c74724c3e82f9a3fd3bdf2cd5492d966069caed8`. Its reviewed code source was
+`b5312caba2a8825c2061dfafab926a3feed370cf`; the default companion
+[PR #429](https://github.com/gustavomhss/Orchestra-SF/pull/429) merged at
+`c777c057b23f40d835c2c26387954202d4bad4c4`.
+Validation is recorded separately from the historical observations below.
 
 The installed tree uses `modules-v5`. Its pre-install fingerprint includes the lockfile, root configuration,
 workspace manifests from the admitted workspace patterns, declared patches, local package archives,
@@ -109,6 +120,98 @@ unbranded string as an `AbsolutePath`. The probe also wrote diagnostic logs insi
 scratch-file guard correctly rejected. Those logs belong in the runner temporary directory.
 Two additional protected-path findings against `origin/dev` were already present in the SF source; they require
 separate integration review and are not cleared by this CI optimization or by a successful focused guard.
+
+
+### Follow-up closure and operational proof
+
+The source-bound [probe 44668900773](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668900773/job/136064849329)
+executed snapshot `125b6f37d1353506cde20a01feb7c4d0c5cbd2b5`. Its only differences from the reviewed
+source `b5312caba2a8825c2061dfafab926a3feed370cf` are two isolated proof files, neither merged into SF.
+
+| Component actually executed | Result |
+| --- | --- |
+| Node gate/profile/cache-promotion/shard-binding controls | 137 pass, 0 fail |
+| Python timing producer | 13 pass |
+| Bun cache and surgical-runner controls | 102 pass, 0 fail |
+| Static ownership and real explicit-file JUnit | 35 pass, 0 fail |
+| Real Summary Settings fixture | 7 pass, 0 fail; 5,532 assertions preserved |
+| Total targeted tests | **294 pass** |
+| Core and Sucafina package typechecks | Both **SUCCESS** |
+| Spawn imports | 5,157 files checked; 71 admitted sites; **SUCCESS** |
+| Strict guard against pinned SF base `23f851dbc6b86c0a571dd95f4b2bb2558b9dc1cd` | 78 rules, 23 changed paths, **0 gates, 0 warnings, 0 errors** |
+
+The whole run remains **RED**: preparation of the historical comparison worktree attempted to smudge a
+missing 94 MB Git LFS quarantine object and failed before the default-base comparison. The earlier
+[workflow-validation attempt 44668762966](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668762966)
+also remains RED; it created no jobs because the temporary probe used a runner context at the wrong YAML level.
+The fixture fix and all executed checks above are not relabeled by either auxiliary failure.
+
+The [guard supplement 44669419937](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44669419937/job/136066538518),
+snapshot `f4909f2d9efe4bde784f30ed817deba50a7119c8`, adds only its isolated workflow to the same reviewed source.
+It uses checkout-equivalent LFS handling and actually completed the inheritance comparison:
+both SF baseline and candidate have the same two `protected-paths` findings against `dev`, with
+`approved: []`, no bootstrap/setup errors, the same merge-base and **zero newly introduced gates**.
+The protected blobs and guard engine were also checked unchanged.
+Its focused guard reported 78 rules, 22 paths and zero gates/warnings/errors.
+That whole supplement remains **RED** because a redundant spawn check lacked installed workspace dependencies;
+the original source proof had already passed that check with dependencies installed.
+The evidence is composed from these exact results, not a claim that either entire diagnostic workflow was green.
+
+The global SF comparison with `dev` therefore remains **BLOCKED_INHERITED** for `godfile-waivers.json`
+and `script/spawn-allowlist.json`. Their historical approvals in PRs #243 and #337 do not become approvals
+for a new integration. This follow-up applied no approval label or simulated approval.
+
+For the default writer, [run 44670478053](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670478053)
+completed **SUCCESS** on snapshot `e63efe1914ddcb2d86bb591bf97c4bf146b71e17`, adding only one proof workflow
+to final default candidate `d49548646d0ca59b7712b9048d7047ee059cd541`.
+The actual promotion resolved to reviewed SF source `95d3ffdc5478edcfa0ce012ba7f367ef7ab39259`;
+22 promotion controls passed, and strict guards against `origin/dev` reported 78 rules, 9 paths and zero
+gates/warnings/errors. The earlier [promotion proof 44670175392](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670175392)
+also passed. A concurrent SF advance changed only product/docs/test paths; the pin was refreshed and validated
+before merging instead of bypassing the live-head check.
+
+[Writer 44670593832](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670593832),
+[job 136070330738](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670593832/job/136070330738),
+completed **SUCCESS** after the default merge. The log confirms `reviewed-promotion`,
+`Cache scope=refs/heads/dev`, live-head equality and checkout of
+`sf-join-four@95d3ffdc5478edcfa0ce012ba7f367ef7ab39259`.
+The installed tree missed; the frozen install completed 2,953 packages in **20.47s**, and the writer saved:
+
+```text
+Linux-X64-modules-v5-8203f9ed54ed7097f7b51057049bfe9b2d0639c34535573853b2bbee2a18a586
+```
+
+Bun downloads, ripgrep and Omni had exact hits. The writer job took **71s** (the run took 74s).
+
+The fresh canonical [consumer 44670849654](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670849654)
+also completed **SUCCESS**. Snapshot `2f84c5a5a4523a6171cc4489d1763de89cff73fd` has exactly one parent,
+the reviewed source above, and adds only `.ci-run.json` (blob `15fa51dfb94fca3c1320e2987467fad1cf314030`).
+It ran on the previously nonexistent ref `ci-run-linux-cacheproof-95d3ffdc5478-44670593832`.
+
+| Fresh consumer observation | Actual result |
+| --- | --- |
+| Installed dependency cache | Exact hit on the writer's `modules-v5-8203f9ed...` key |
+| Fingerprint | 60 ms |
+| Installed-tree restore | **11.508s** |
+| Complete `setup-bun` step | **14s** |
+| Second Node setup, Bun-download restore, setuptools, install and both saves | All skipped; save requested was false |
+| Ripgrep and Omni caches | Both exact hits |
+| Tests | **29 pass, 0 fail**, two explicit files; Bun reported **3.55s** |
+| Test job / cleanup job | **50s / 4s**, both SUCCESS |
+| Fresh ref after cleanup | Removed; subsequent lookup returned 404 |
+
+The two files were Microsoft Entra client tests and the corrected Summary Settings fixture.
+The real collector reported `capture: partial`, two files and 29 cases.
+The separate [performance artifact](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670849654/artifacts/14600206024)
+has digest `sha256:da1a320900e7e7a5f98af2dd1468a53f398040739d59cb44e955c414910f5e20`.
+Its observed retention ends on 2026-11-27; this document retains the measured summary and provenance.
+The Omni control was correctly `not applicable` because none of these selected tests declared a spawn;
+this proves a binary-cache hit, not execution through Omni.
+
+The writer-to-new-ref reuse path is now observed end to end. The 71s writer, 50s focused consumer and
+294-control source proof are different scopes; none is a before/after measurement of the complete product suite.
+The 170 historical shard weights remain unchanged. No complete eight-shard batch or `sf-ci` was dispatched,
+and pending baselines, product WPs, global integration clearance and Azure qualification remain open.
 
 ## Where the time went
 
