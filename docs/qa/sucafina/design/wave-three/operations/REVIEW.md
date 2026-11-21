@@ -1,5 +1,11 @@
 # Wave three — Operations design review
 
+## Verified group outcome
+
+Five native Sucafina areas are complete for this group: CAP11, CAP12, CAP13, CAP15 and CAP16. The final browser evidence contains **25 distinct states, 72 complete normal captures and five real reviewed writes with same-view projection and fresh source readback**. All six journeys passed across the three bounded execution groups below, with zero console or page errors. No preview was skipped. User acceptance remains separate from these verification results.
+
+The persistent [operations evidence gallery](../evidence/operations/README.md) contains the 72 final captures and their source provenance.
+
 ## Scope and provenance
 
 Branch `sf-polish-ops` starts at plan commit `24c02f7f366ecea94a8511c88cdaf2bebcb46be6`, directly descended from the approved `dev` snapshot. This group contains five native Sucafina areas: CAP11 Service, CAP12 Security, CAP13 Risks, CAP15 Stakeholders and CAP16 Performance. Legacy screens, the native HuGR shell, transport, schema, grants and source producers are outside the change.
@@ -42,26 +48,162 @@ CAP16 weights, quarters, scores and ownership remain exact source scalars. The n
 
 Loading, empty, filtered-empty, partial, read-only, denied, stale/conflict, failed, saved and outcome-unknown rendering remains owned by the existing surface/controller and shared state components.
 
-## Validation status
+## Final validation and evidence
 
-Product source review is complete for this commit. Catalog inspection confirms unchanged existing English values and explicit BR entries for every new key. Repository work used GitHub MCP only; no local runtime, shell, mock network or independent CI was used.
+Repository work used GitHub MCP only. The integration owner executed the existing scoped Actions; this worker created no workflow, independent CI, local runtime, shell session or network mock. Four catalog comparisons against plan `24c02f7f366ecea94a8511c88cdaf2bebcb46be6` confirm **239 existing EN values unchanged and 148 new keys with explicit BR copy** (u04 33, u29 75, u30 15, u31 25).
 
-The integration owner will run the existing scoped Actions gates and the group journey `design-wave-three-operations.spec.ts` against an isolated real native installation. Visual PASS is **not** claimed before actual captures are inspected. User acceptance is separate from code and test success.
+| Group | Run and browser job | Snapshot | Result | Normal captures | Artifact |
+| --- | --- | --- | --- | ---: | --- |
+| Service + Security EN | [44947197315](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44947197315), job 136976994257 | `2f1eb6a1e32ceec4ca089997eb8d3f150be838d1` | 2 passed, 3.0m | 23 | 14723368990 |
+| Risks + Relationships + Performance EN | [44949738285](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44949738285), job 136984804316 | `e158407ead3653bde7078e2b605be22f6c2e7416` | 3 passed, 4.1m | 24 | 14725441289 |
+| Portuguese desktop + 390px | [44949742205](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44949742205), job 136984816760 | `8dedf27d08394db4399d4e393183f75b4ce79c79` | 1 passed, 2.6m | 25 | 14725630442 |
 
-### Authored real-installation journeys
+Service/security use their final unchanged consumer blobs. Records and BR run against the integrated `8d5a1e9317712fa9be2afd80cc8bc1dead6434cd` patch. The only subsequent product delta removes the inactive temporary CAP16 diagnostic: inverting that removal reconstructs the tested file byte for byte. Both mutation bodies remain identical to the earlier non-diagnostic code (collection commit 3,317 bytes; performance perform 4,927 bytes). The keyed review capture changes only the presentation subtree. The final combined source/type gates remain owned and recorded by integration.
 
-The operations group contains six production journeys across three bounded specs: service/security English in `design-wave-three-operations.spec.ts`, risks/relationships/performance English in `design-wave-three-operations-records.spec.ts`, and the localized journey in `design-wave-three-operations-br.spec.ts`. Five independent English installations cover CAP11, CAP12, CAP13, CAP15 and CAP16 respectively. Together they cover all five areas in dark/light desktop, lower-page ticket/application/campaign/incident/owner panels, grouped forms and review cancellation, then perform five real reviewed commands with updated same-view projection and fresh navigation/readback: CAP11 SLA, CAP12 campaign, CAP13 risk, CAP15 relationship and CAP16 sub-item. Each journey records its own write count and browser diagnostics without request payloads or credentials. A failure in service no longer blocks security or the collection/performance journey.
+The operations group has six production journeys across three specs: service/security English in `design-wave-three-operations.spec.ts`, risks/relationships/performance English in `design-wave-three-operations-records.spec.ts`, and Portuguese in `design-wave-three-operations-br.spec.ts`. Five independent English installations prevent one area from concealing another's write. Each journey records one POST, verifies the updated same-view projection, then enters the view again through the owner-bound route and reads the persisted value. All source traffic uses the isolated installation origin.
 
-The sixth reuses the genuine scoped operator cookie in a BR context, captures all five desktop/390 px overviews, opens each focused editor and review, checks reflow and every review action in the viewport, and verifies revision retains the draft without sending a command. The root helper owns installation/authentication and capture bounds. These are authored journeys; passing execution is not yet claimed.
+The BR journey reuses the genuine scoped operator cookie, opens each editor and review, confirms all three review actions fit the narrow viewport, and verifies revision retains the draft. It sends **zero commands**. CAP13/CAP15/CAP16 long editors also prove a positive bounded native scroll height, content taller than that height and actual scrollTop movement. The helper was restored into the records split after its omission was caught at runtime; integration also expanded the E2E type gate to include all three specs.
 
-### Pending evidence
+### Five verified browser writes
 
-- Desktop dark/light overview and active editor/review for all five areas.
-- BR localization and 390 px reflow, including visible review actions.
-- CAP11 settings/import and heatmap editor; CAP12 campaign departments and explicitly unscoped actions.
-- CAP13/CAP15 detail, edit and save review cancellation; CAP13 delete review cancellation.
-- CAP16 item, sub-item detail, editor and review; preserved draft after review cancellation.
-- Real writes, readback, browser errors and the unchanged producer command families.
+| Area | Canonical operation | Reviewed change | Evidence after confirmation |
+| --- | --- | --- | --- |
+| CAP11 | `domain.command.CAP11.save-sla` | Incident SLA 98.4 → 98.6; the other source levels remain 97.2 and 99.7 in review. | Review closes; 98.6 appears in the same overview and after fresh owner-bound entry; exactly one POST. |
+| CAP12 | `domain.command.CAP12.save-campaign` | Campaign notes become “Design test data · Reviewed with the regional source owner.” | Review closes; notes appear in the same projection and after fresh entry; exactly one POST. Incident deletion is reviewed and canceled. |
+| CAP13 | `domain.command.CAP13.save` | Risk notes become “Design test data · Risk ownership and mitigation reviewed.” | Applied status/search checks pass; review closes; detail and fresh read show the notes; exactly one POST. Deletion is canceled. |
+| CAP15 | `domain.command.CAP15.save` | Relationship notes become “Design test data · Engagement plan reviewed with the service owner.” | Draft cancel/revise retains the notes; review closes; detail and fresh read show them; exactly one POST. |
+| CAP16 | `domain.command.CAP16.save-sub` | Sub-item notes become “Design test data · Quarterly evidence checked before confirmation.” | Cancel/revise retains notes and score 3; the excess-allocation checkbox stays unchecked; review closes and both same-view detail and fresh read show the notes; exactly one POST. |
+
+Source fixture construction is excluded from this five-write count. Monthly replacement, settings and destructive reviews are inspected without performing destructive source operations.
+
+### Conservative state and capture count
+
+| Area | Distinct states | Primary captures | Variants | Total images |
+| --- | ---: | ---: | ---: | ---: |
+| CAP11 | 7 | 7 | 9 | 16 |
+| CAP12 | 4 | 4 | 12 | 16 |
+| CAP13 | 5 | 5 | 8 | 13 |
+| CAP15 | 4 | 4 | 7 | 11 |
+| CAP16 | 5 | 5 | 11 | 16 |
+| **Total** | **25** | **25** | **47** | **72** |
+
+A state is a distinct overview, record detail, editor or review operation. Locale, theme, viewport, filtering, source disclosures, panel scrolling and repeated navigation are capture variants. The 25 states below each have a dedicated primary capture; no unphotographed state is included in the total. This is the verified journey inventory, not an assertion that every possible source command or authorization state was exercised.
+
+| Area | Distinct state | Primary capture name |
+| --- | --- | --- |
+| CAP11 | Overview | `CAP11-operations-dark-desktop-test-data` |
+| CAP11 | Category editor | `CAP11-categories-editor-dark-desktop-test-data` |
+| CAP11 | Application heatmap editor | `CAP11-application-editor-dark-desktop-test-data` |
+| CAP11 | Monthly replacement editor | `CAP11-import-editor-dark-desktop-test-data` |
+| CAP11 | Monthly replacement review | `CAP11-import-review-top-dark-desktop-test-data` |
+| CAP11 | SLA editor | `CAP11-sla-editor-dark-desktop-test-data` |
+| CAP11 | SLA review | `CAP11-sla-review-dark-desktop-test-data` |
+| CAP12 | Overview | `CAP12-operations-dark-desktop-test-data` |
+| CAP12 | Incident deletion review | `CAP12-incident-delete-review-top-dark-desktop-test-data` |
+| CAP12 | Campaign editor | `CAP12-campaign-editor-dark-desktop-test-data` |
+| CAP12 | Campaign review | `CAP12-campaign-review-top-dark-desktop-test-data` |
+| CAP13 | Risk register | `CAP13-operations-dark-desktop-test-data` |
+| CAP13 | Risk detail | `CAP13-detail-dark-desktop-test-data` |
+| CAP13 | Risk deletion review | `CAP13-delete-review-dark-desktop-test-data` |
+| CAP13 | Risk editor | `CAP13-editor-dark-desktop-test-data` |
+| CAP13 | Risk save review | `CAP13-review-top-dark-desktop-test-data` |
+| CAP15 | Relationship register | `CAP15-operations-dark-desktop-test-data` |
+| CAP15 | Relationship detail | `CAP15-detail-dark-desktop-test-data` |
+| CAP15 | Relationship editor | `CAP15-editor-dark-desktop-test-data` |
+| CAP15 | Relationship save review | `CAP15-review-top-dark-desktop-test-data` |
+| CAP16 | Performance overview | `CAP16-operations-dark-desktop-test-data` |
+| CAP16 | Item editor | `CAP16-item-editor-dark-desktop-test-data` |
+| CAP16 | Sub-item detail | `CAP16-subitem-detail-dark-desktop-test-data` |
+| CAP16 | Sub-item editor | `CAP16-subitem-editor-dark-desktop-test-data` |
+| CAP16 | Sub-item review | `CAP16-subitem-review-top-dark-desktop-test-data` |
+
+### Final visual critique
+
+The final service evidence shows aligned ticket category/type/measure columns, exact zero values and explicit application absences. Monthly replacement Original/Current compare the real admitted month, and the review footer is reachable through the native scroll region. Security KPIs align as 4×2 on desktop and 2 columns at 390px; campaign rates are concise while their exact source values remain disclosed. Campaign departments, incident deletion identity, explicit proposed deletion and action footers remain legible.
+
+Peer review covered CAP13/CAP15 BR overview, detail, editor and review. Its one Priority word-break finding was corrected and re-inspected in the final BR desktop/390px captures: “acompanhamento” remains whole and neighboring columns still fit. The final English risk/relationship review headings correctly identify Edit. Typed option labels translate in presentation while source values remain unchanged.
+
+CAP16 final desktop sub-item editor, review top/footer and lower owner/quarter panels were directly inspected. Source weight 0.6, score 3, target 98%, ownership and quarter values remain readable. The unchanged allocation confirmation appears at the review top; all three actions fit the footer. BR quarter fields stay paired in reading order and actions stack without cuts. Source status strings on/ahead remain raw because the contract accepts text rather than an enum.
+
+### Scope and evidence limits
+
+- Actual browser zoom at 200% was not measured. The 390px viewport and bounded native scroll/reflow assertions are the narrow-layout evidence.
+- The five listed save operations are qualified by real writes and fresh reads. Other CRUD paths retain their source contracts and presentation, but no full command-matrix qualification is claimed.
+- Genuine lost responses, owner revocation, denied access and concurrent CAS conflicts were not fabricated. Their existing controllers/fences remain; the presentation failures documented below are distinct from a validated network-loss scenario.
+- CAP13 route.query.filter risk-tier deep links retain their existing path and were not qualified or given new support. Visible search/status and applicable owner selection use only already authorized records.
+- CAP12 management actions without a source reporting period remain explicitly unscoped. CAP16 has no producer global score; the UI explains that absence and does not calculate one.
+- Ops6's completed log could not be retrieved through the connector. Its exact failure count/cause remains unproven; later bounded executions diagnose their own observed failures.
+- Canonical PNGs and source evidence are in the listed Actions artifacts; bounded JPEG previews support direct visual critique. Integration owns the persistent gallery and final combined gates. No user approval or merge is inferred from green tests.
+
+### Capture variants
+
+The following 47 names complete the 72-image manifest together with the 25 primary names above.
+
+### CAP11 capture variants
+
+- `CAP11-operations-light-desktop-test-data`
+- `CAP11-ticket-ledger-dark-desktop-test-data`
+- `CAP11-application-health-dark-desktop-test-data`
+- `CAP11-settings-dark-desktop-test-data`
+- `CAP11-import-review-dark-desktop-test-data`
+- `CAP11-operations-pt-BR-dark-desktop-test-data`
+- `CAP11-operations-pt-BR-dark-390-test-data`
+- `CAP11-editor-pt-BR-dark-390-test-data`
+- `CAP11-review-pt-BR-dark-390-test-data`
+
+### CAP12 capture variants
+
+- `CAP12-operations-light-desktop-test-data`
+- `CAP12-campaign-departments-dark-desktop-test-data`
+- `CAP12-incidents-dark-desktop-test-data`
+- `CAP12-incident-delete-review-dark-desktop-test-data`
+- `CAP12-unscoped-actions-dark-desktop-test-data`
+- `CAP12-department-editor-dark-desktop-test-data`
+- `CAP12-campaign-review-dark-desktop-test-data`
+- `CAP12-operations-pt-BR-dark-desktop-test-data`
+- `CAP12-operations-pt-BR-dark-390-test-data`
+- `CAP12-editor-pt-BR-dark-390-test-data`
+- `CAP12-departments-pt-BR-dark-390-test-data`
+- `CAP12-review-pt-BR-dark-390-test-data`
+
+### CAP13 capture variants
+
+- `CAP13-operations-light-desktop-test-data`
+- `CAP13-filtered-empty-dark-desktop-test-data`
+- `CAP13-review-dark-desktop-test-data`
+- `CAP13-operations-pt-BR-dark-desktop-test-data`
+- `CAP13-operations-pt-BR-dark-390-test-data`
+- `CAP13-detail-pt-BR-dark-390-test-data`
+- `CAP13-editor-pt-BR-dark-390-test-data`
+- `CAP13-review-pt-BR-dark-390-test-data`
+
+### CAP15 capture variants
+
+- `CAP15-operations-light-desktop-test-data`
+- `CAP15-review-dark-desktop-test-data`
+- `CAP15-operations-pt-BR-dark-desktop-test-data`
+- `CAP15-operations-pt-BR-dark-390-test-data`
+- `CAP15-detail-pt-BR-dark-390-test-data`
+- `CAP15-editor-pt-BR-dark-390-test-data`
+- `CAP15-review-pt-BR-dark-390-test-data`
+
+### CAP16 capture variants
+
+- `CAP16-operations-light-desktop-test-data`
+- `CAP16-items-dark-desktop-test-data`
+- `CAP16-owner-assignments-dark-desktop-test-data`
+- `CAP16-subitem-quarters-dark-desktop-test-data`
+- `CAP16-subitem-review-dark-desktop-test-data`
+- `CAP16-operations-pt-BR-dark-desktop-test-data`
+- `CAP16-operations-pt-BR-dark-390-test-data`
+- `CAP16-subitem-detail-pt-BR-dark-390-test-data`
+- `CAP16-editor-pt-BR-dark-390-test-data`
+- `CAP16-quarter-editor-pt-BR-dark-390-test-data`
+- `CAP16-review-pt-BR-dark-390-test-data`
+
+## Earlier evidence and corrective iterations
+
+The sections below preserve the evidence at each earlier stage, including failures and then-pending work. The final validation above records the completed browser result.
 
 ## First real browser evidence and corrective pass
 
@@ -177,3 +319,9 @@ The save-review Show for CAP13/CAP15 now uses keyed content and captures the exi
 CAP16 has the same review structure and now exhibits a real exception when leaving the reviewed write. Its corresponding review-edit subtree uses the same keyed capture. No independent CAP16 stack was obtained in Ops8; this is recorded as the correction of a homologous presentation structure, not as a separate proved stack diagnosis. Only CAP16 temporarily retains the same minimal stage/name/stack-frames diagnostic in its existing catch as a contingency if the next execution still fails. It contains no first-line error message, payload or credentials and will be removed after locating the cause or a clean run.
 
 BR run `44948463018` / job `136980887105` passed in 1.9 minutes with 25 complete normal captures and zero console/page errors. The final desktop CAP15 priority capture keeps “acompanhamento” whole, wrapping only between words; the 390px record layout remains intact. Direct inspection of the new CAP16 desktop sub-item editor and review top/footer found complete source values, paired quarters, reachable actions and the original excess-allocation checkbox still unchecked. Final success requires three clean record writes, same-view projection and fresh source readback after this patch; no failing assertion is weakened.
+
+## Final clean execution and diagnostic removal (Ops9)
+
+Records run 44949738285 completed with three passing journeys in 4.1 minutes; all three page-close diagnostics contain empty consoleErrors/pageErrors arrays. The strict write-count, same-view projection and fresh readback assertions pass for CAP13, CAP15 and CAP16. BR run 44949742205 passes its single journey in 2.6 minutes with the same empty diagnostics. The 24 records and 25 BR captures are complete, with no skipped or failed capture in either final group. Together with unchanged service/security evidence, this closes the five writes and the 25-state/72-capture map above.
+
+After the clean execution, only the temporary CAP16 stage variable, its stage assignments and expanded stack logger are removed. The original catch logger and uncertain-outcome behavior remain. Applying the exact inverse of this removal reconstructs the tested performance file byte for byte; no command, condition, controller call, confirmation, refresh, layout, catalog or spec changes accompany it. The final product contains no temporary diagnostic from this investigation. The clean CAP16 write confirms the homologous keyed-capture correction; no earlier independent CAP16 stack is retroactively claimed.
