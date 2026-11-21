@@ -40,6 +40,7 @@ import { SessionArchive } from "./session/archive"
 import { SessionLifecycle } from "./session/lifecycle"
 import { SessionSubagentModels } from "./session/subagent-models"
 import type { Permission } from "@orchestra/schema/permission"
+import { SessionPrompt } from "./host/session-prompt"
 
 export const RevertState = Revert.State
 export type RevertState = Revert.State
@@ -132,7 +133,7 @@ export class PromptConflictError extends Schema.TaggedErrorClass<PromptConflictE
   sessionID: SessionSchema.ID,
   messageID: SessionMessage.ID,
 }) {}
-/** An installed `prompt` hook refused the prompt before admission; `detail` is what the person reads. */
+/** A pre-admission prompt observer or installed hook refused; `detail` is what the person reads. */
 export class PromptBlockedError extends Schema.TaggedErrorClass<PromptBlockedError>()("Session.PromptBlockedError", {
   sessionID: SessionSchema.ID,
   reason: Schema.String,
@@ -272,6 +273,7 @@ const layer = Layer.effect(
     const store = yield* SessionStore.Service
     const locations = yield* LocationServiceMap.Service
     const global = yield* Global.Service
+    const promptObserver = yield* SessionPrompt.Service
     const decodeMessage = Schema.decodeUnknownEffect(SessionMessage.Message)
     const encodeMessage = Schema.encodeSync(SessionMessage.Message)
     const isDurableSessionEvent = Schema.is(SessionEvent.Durable)
@@ -300,16 +302,27 @@ const layer = Layer.effect(
       ).pipe(Effect.provide(locations.get(session.location)))
     })
 
-    // Before admission and interruptible, since an Ask waits for a person: a refused prompt is never admitted. A message
+    // Before admission and interruptible, since an observer or hook may wait for a person: a refused prompt is never admitted. A message
     // ID that already names a durable prompt is left to admission, which reconciles an exact retry or refuses a
     // conflict, without asking again. It reads the Session first, as admission did.
     const promptHooks = Effect.fnUntraced(function* (input: {
       readonly id: SessionMessage.ID
       readonly sessionID: SessionSchema.ID
       readonly prompt: PromptInput.Prompt
+      readonly delivery?: SessionInput.Delivery
     }) {
       const session = yield* result.get(input.sessionID)
       if ((yield* SessionInput.find(db, input.id)) || (yield* store.message(input.id))) return []
+      yield* promptObserver.beforePrompt({
+        session,
+        messageID: input.id,
+        prompt: input.prompt,
+        delivery: input.delivery ?? "steer",
+      }).pipe(Effect.mapError((error) => new PromptBlockedError({
+        sessionID: session.id,
+        reason: error.reason,
+        detail: error.message,
+      })))
       return yield* hook(session, { operation: "prompt", text: input.prompt.text, messageID: input.id }).pipe(
         Effect.catch((error) => {
           const err = error as { _tag?: string; reason?: string; message?: string }
@@ -824,6 +837,7 @@ export const node = makeGlobalNode({
     SessionProjector.node,
     SessionArchive.node,
     SessionSubagentModels.node,
+    SessionPrompt.node,
     Global.node,
   ],
 })

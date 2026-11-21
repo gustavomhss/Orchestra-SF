@@ -44,6 +44,10 @@ export function configure(
   if (command.action === "configure-group") {
     if (typeof command.values.role !== "string" || typeof command.values.entra !== "string")
       return { ok: false, status: 422 }
+    const group = command.values.entra.trim()
+    if (environment.microsoftGroupIdsOnly && group &&
+      (!group.startsWith("group:") || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(group.slice(6))))
+      return { ok: false, status: 422 }
     const map = roleMap(snapshot, surface)
     const result = setGroupName(
       map,

@@ -4,7 +4,9 @@ import { isIP } from "node:net"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { NodeHttpServerRequest, NodeStream } from "@effect/platform-node"
+import { SfFileRoutes } from "@orchestra/schema/sucafina/files/routes"
 import { SfReviewRoutes } from "@orchestra/schema/sucafina/reviews/routes"
+import type { Host } from "@orchestra/core/host"
 import { Effect, Option, Stream } from "effect"
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 
@@ -19,6 +21,7 @@ type Installation = {
   mount: `/${string}`
   handler: (request: Request) => Promise<Response | undefined>
   dispose: () => void | Promise<void>
+  host?: readonly Host.Contribution[]
 }
 
 /** The operator selects trusted code at startup. HTTP requests cannot select the factory or its origin. */
@@ -30,9 +33,19 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
   const host = isIP(hostname) === 6 ? `[${hostname}]` : hostname
   if (host === hostname && !/^[a-z0-9.-]+$/i.test(host)) throw new Error("Invalid installation hostname")
   const origin = new URL(`http://${host}:${port}`)
-  const factory: unknown = (await import(pathToFileURL(await realpath(file)).href)).default
+  const entry = await realpath(file)
+  const module = await import(pathToFileURL(entry).href)
+  const factory: unknown = module.default
   if (typeof factory !== "function") throw new Error("Installation factory must be the default export")
-  const value: unknown = await factory({ origin: origin.origin })
+  const runtime = module.nativeSfLocalInstallation === true ? await import("./host-context") : undefined
+  const value: unknown = await factory({
+    origin: origin.origin,
+    ...(runtime ? {
+      createHostRuntime: runtime.createSfHostRuntime,
+      createCurrentChoiceFence: runtime.createCurrentChoiceFence,
+      sourceRoot: path.resolve(path.dirname(entry), "../product/ai"),
+    } : {}),
+  })
   if (!value || typeof value !== "object" || !("dispose" in value) || typeof value.dispose !== "function") {
     throw new Error("Installation factory must provide a disposer")
   }
@@ -50,6 +63,12 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     await installation.dispose()
     throw new Error("Trusted installation ingress requires a loopback listener, canonical HTTP origin and authorizer")
   }
+  const hostContributions = runtime && !ingress ? installation.host : undefined
+  if (hostContributions !== undefined && (!Array.isArray(hostContributions) ||
+    hostContributions.some((contribution) => !contribution || typeof contribution.id !== "string" || !contribution.id.trim()))) {
+    await installation.dispose()
+    throw new Error("Native installation host contributions require stable IDs")
+  }
   const report = SfReviewRoutes["reviews.report.prepare"]
   const dashboard = report.pathTemplate.replace("{mount}", installation.mount)
   const isDashboard = (pathname: string) => pathname === dashboard ||
@@ -59,10 +78,16 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     if (method === "POST" && isDashboard(url.pathname) &&
       url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract") return 25 * 1024 * 1024
   }
+  const importAdmit = SfFileRoutes["files.import-admit"]
+  const localImportLimit = (url: URL) => runtime && url.searchParams.size === 1 &&
+    url.searchParams.get("sf") === importAdmit.fixedQuery.sf &&
+    (url.pathname === dashboard || url.pathname === installation.mount + "/planner")
+      ? importAdmit.maxRequestBytes
+      : undefined
   const bodyLimit = (incoming: HttpServerRequest.HttpServerRequest) => {
     if (ingress || incoming.method !== "POST") return undefined
     const url = Option.getOrUndefined(HttpServerRequest.toURL(incoming))
-    if (url?.origin === origin.origin) return contractLimit(incoming.method, url)
+    if (url?.origin === origin.origin) return localImportLimit(url) ?? contractLimit(incoming.method, url)
   }
   const route = Effect.gen(function* () {
     const incoming = yield* HttpServerRequest.HttpServerRequest
@@ -83,7 +108,9 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
       return HttpServerResponse.empty({ status: 404 })
     }
     const configured = yield* HttpServerRequest.MaxBodySize
-    const max = Number(configured ?? (ingress ? contractLimit(incoming.method, url) : undefined) ?? 16 * 1024 * 1024)
+    const routeLimit = ingress ? contractLimit(incoming.method, url)
+      : incoming.method === importAdmit.method ? localImportLimit(url) : undefined
+    const max = Number(configured ?? routeLimit ?? 16 * 1024 * 1024)
     const reportLimit = incoming.method === report.method && isDashboard(url.pathname) &&
       url.searchParams.size === 1 && url.searchParams.get("sf") === report.fixedQuery.sf ? Math.min(max, report.maxRequestBytes) : undefined
     const oversized = () => reportLimit === undefined
@@ -155,6 +182,7 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     dispose: () => installation.dispose(),
     bodyLimit,
     dedicated: ingress !== undefined,
+    host: hostContributions,
     // Effect registers a trailing wildcard for both the mount and its subtree.
     layer: HttpRouter.add("*", `${installation.mount}/*`, route),
   }

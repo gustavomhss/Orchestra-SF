@@ -20,6 +20,11 @@ export type Contribution = {
   domain: Domain
   render: (page: string, data: Record<string, unknown>, context: RenderContext) => string | undefined
 }
+export type ApplicationPageView = {
+  data: Record<string, unknown>
+  current: (snapshot: Snapshot, actor: Actor) => boolean | Promise<boolean>
+  finish: () => void
+}
 export type Application = {
   authenticate: (
     request: Request,
@@ -32,6 +37,8 @@ export type Application = {
   domains: Record<Surface, readonly Contribution[]>
   maxJsonBytes: number
   workbookLimits?: Partial<WorkbookLimits>
+  product?: (request: Request, surface: Surface) => Promise<Response | undefined>
+  productView?: (request: Request, surface: Surface, page: string | undefined) => Promise<ApplicationPageView | Response | undefined>
   assets?: { persistence: AssetPersistence; services: AssetServices }
 }
 
@@ -55,6 +62,8 @@ export function createApplication(mount: string, application: Application) {
       ((origin && origin !== url.origin) || request.headers.get("sec-fetch-site") === "cross-site")
     )
       return reply("Access denied", 403)
+    const product = await application.product?.(request, surface)
+    if (product) return product
     const uploading = request.method === "POST" && url.searchParams.has("upload")
     const parsed =
       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined

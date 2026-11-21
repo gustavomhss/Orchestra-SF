@@ -29,6 +29,8 @@ export type AssetPersistence = {
 }
 export type AssetServices = {
   scan: (bytes: Uint8Array, type: string) => Promise<boolean>
+  /** Private configuration of the same scan callback; never a live/clean scanner verdict. */
+  scannerConfiguration?: Readonly<{ host: "127.0.0.1"; port: number }> | null
   signingKey: Uint8Array
 }
 const CONTRACT_EXTENSIONS = new Set([
@@ -365,16 +367,19 @@ function findRecord(snapshot: Snapshot, kind: AssetKind, id: string): Record<str
   const request = object(object(requests[id]).request)
   return Object.keys(request).length ? request : undefined
 }
-function canChange(actor: Actor, kind: AssetKind, value: unknown) {
+/** Role-only prerequisite shared with observation; record access, stage and CAS remain below. */
+export function canChangeAssetKind(actor: Actor, kind: AssetKind) {
   if (!actor.canWrite) return false
   if (kind === "contract")
-    return (
-      actor.roles.includes("admin") ||
+    return actor.roles.includes("admin") ||
       (actor.roles.includes("contributor") && actor.assigned?.includes("contracts") === true)
-    )
   if (kind === "supplier") return actor.roles.some((role) => ["admin", "supplier admin"].includes(role))
+  return (kind === "quote" || kind === "signed-po") && actor.roles.includes("buyer")
+}
+function canChange(actor: Actor, kind: AssetKind, value: unknown) {
+  if (!canChangeAssetKind(actor, kind)) return false
+  if (kind === "contract" || kind === "supplier") return true
   const record = object(value)
-  if (!actor.roles.includes("buyer")) return false
   return kind === "quote"
     ? ["sourcing", "src_rejected"].includes(text(record.status))
     : ["po_approved", "po_issued"].includes(text(record.status))
