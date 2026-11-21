@@ -1,12 +1,12 @@
 import { expect, type Page, type Request, type TestInfo } from "@playwright/test"
-import type { SfCase } from "../../src/orchestra/chapters/sucafina/decisions/choice/model"
-import { decodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
+import type { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
 import { waveThreeData } from "./design-support/wave-three-data"
 import {
   waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop,
 } from "./design-support/wave-four"
 
+type SfCase = Extract<typeof SfDecisions.operations["projection.case"]["output"]["Type"], { status: "ok" }>["value"]["projection"]["case"]
 type Owner = Parameters<typeof enter>[1]
 type Screen = { id: string; href: string; title: string; titleBr: string }
 
@@ -70,9 +70,12 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   }
   const main = await findCase(waveFourDecisionsData.objective)
   const editable = await findCase(waveFourDecisionsData.editableObjective)
-  const caseRef = decodeSfRouteRef(main.pathname.split("/").at(-1)!)
-  const editableRef = decodeSfRouteRef(editable.pathname.split("/").at(-1)!)
-  if (!caseRef || !editableRef) throw new Error("The original case route is not decodable")
+  // The original UI33 href is admitted and decoded by the native route, not a test codec.
+  await enter(page, owner, main.href, "Case summary")
+  const caseRef = await page.locator('[data-sf-decision="UI34"]').getAttribute("data-sf-case-ref")
+  await enter(page, owner, editable.href, "Case summary")
+  const editableRef = await page.locator('[data-sf-decision="UI34"]').getAttribute("data-sf-case-ref")
+  if (!caseRef || !editableRef) throw new Error("The native case route omitted its source reference")
   expect(caseRef).toMatch(/^case:[^:]+:[^:]+$/)
   const source = await readCase(page, installation.origin, installation.mount, caseRef)
   const editableSource = await readCase(page, installation.origin, installation.mount, editableRef)
