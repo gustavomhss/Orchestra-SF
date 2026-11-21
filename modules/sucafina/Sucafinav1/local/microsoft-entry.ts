@@ -1,4 +1,5 @@
 import path from "node:path"
+import type { openCorporateRecoveryRegister } from "../runtime/corporate-recovery-register.ts"
 import { loadMicrosoftIngressAuthorizer } from "../runtime/microsoft-configuration.ts"
 import { microsoftRequest, prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 import type { EntraOptions, EntraTeamsSessionResult } from "../runtime/local-contract.ts"
@@ -17,7 +18,9 @@ export async function createMicrosoftInstallation(
   context: { origin: string },
   file: string | undefined,
   environment: Readonly<Record<string, string | undefined>> = process.env,
-  overrides: Pick<EntraOptions, "fetch" | "now"> = {},
+  overrides: Pick<EntraOptions, "fetch" | "now"> & {
+    openRecoveryRegister?: typeof openCorporateRecoveryRegister
+  } = {},
 ) {
   const listener = new URL(context.origin)
   if (listener.hostname !== "127.0.0.1" && listener.hostname !== "[::1]")
@@ -35,7 +38,7 @@ export async function createMicrosoftInstallation(
         throw new Error("Corporate recovery requires a non-root service and explicit Microsoft Teams administration")
       const { createCorporateRecoveryHttp } = await import("../runtime/corporate-recovery-http.ts")
       const { openCorporateRecoveryRegister } = await import("../runtime/corporate-recovery-register.ts")
-      const register = await openCorporateRecoveryRegister(registerPath, directory)
+      const register = await (overrides.openRecoveryRegister ?? openCorporateRecoveryRegister)(registerPath, directory)
       return createCorporateRecoveryHttp({ config, directory, identity, now, register })
     })()
     const readTeams = identity.teamDirectory
@@ -92,6 +95,7 @@ export async function createMicrosoftInstallation(
           if (route) return runTeamBusiness({
             request, route, admission: access, authorizeTeam: teamAccess, identity, config, directory,
             keys: prepared.loaded.keys, now,
+            decisionIntentions: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? store : undefined,
           })
           return new Response(null, { status: 303, headers: {
             ...headers, Location: config.mount + "/teams/" + access.profile.teamObjectId + "/" + surface,
