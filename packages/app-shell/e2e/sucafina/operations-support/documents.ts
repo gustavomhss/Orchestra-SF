@@ -494,6 +494,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(projectedVersion).toBe(beforeVersion + 1)
   const readerRow = reader.locator(`tr[data-sf-row="${supplier}"]`)
   await expect(readerRow).toHaveCount(1)
+  await expect(readerRow.locator('button[data-sf-action="edit"]')).toBeEnabled()
   await readerRow.getByRole("button", { name: "Open record", exact: true }).click()
   const readerDetail = reader.locator("[data-sf-record-detail]")
   await expect(readerDetail).toHaveCount(1)
