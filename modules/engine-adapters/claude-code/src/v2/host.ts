@@ -133,15 +133,13 @@ export const make = Effect.gen(function* () {
   // Session ids whose governed playbook has loaded: a governed tool is refused until its session has one. It outlives a
   // turn (each turn is a new Claude Code process on the same session) but belongs to this host, not to the process.
   const governed = new Set<string>()
+  // Direct loads provide delivery evidence. Only the MCP skill settlement below changes the governed gate.
   const observed = new Map<string, ExecutionHost.SkillLoadFacts>()
   const governedLoad = (sessionID: string) => {
     governed.delete(sessionID)
     governed.add(sessionID)
     const oldest = governed.values().next().value
-    if (governed.size > GOVERNED_SESSIONS && oldest !== undefined) {
-      governed.delete(oldest)
-      observed.delete(oldest)
-    }
+    if (governed.size > GOVERNED_SESSIONS && oldest !== undefined) governed.delete(oldest)
   }
   const host: ExecutionHost.Interface = {
     id: ID,
@@ -150,8 +148,10 @@ export const make = Effect.gen(function* () {
       const facts = ExecutionHost.consumeSkillLoad(receipt, host)
       if (facts?.skillName !== GOVERNED_PLAYBOOK || !facts.source.reserved || !facts.source.key.trim() ||
         !facts.source.location.trim() || !/^[0-9a-f]{64}$/.test(facts.source.contentDigest)) return
-      governedLoad(facts.sessionID)
+      observed.delete(facts.sessionID)
       observed.set(facts.sessionID, facts)
+      const oldest = observed.keys().next().value
+      if (observed.size > GOVERNED_SESSIONS && oldest !== undefined) observed.delete(oldest)
     }),
     observedSkillLoad: (input) => Effect.sync(() => {
       const facts = observed.get(input.sessionID)

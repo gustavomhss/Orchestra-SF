@@ -17,10 +17,16 @@ import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { EventV2 } from "@orchestra/core/event"
 import { FSUtil } from "@orchestra/core/fs-util"
 import { Location } from "@orchestra/core/location"
+import { Project } from "@orchestra/core/project"
+import { ProjectTable } from "@orchestra/core/project/sql"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SkillV2 } from "@orchestra/core/skill"
 import { SessionEvent } from "@orchestra/core/session/event"
 import { SessionMessage } from "@orchestra/core/session/message"
+import { SessionTable } from "@orchestra/core/session/sql"
+import { ToolOutputStore } from "@orchestra/core/tool-output-store"
+import { ToolRegistry } from "@orchestra/core/tool/registry"
+import { SkillTool } from "@orchestra/core/tool/skill"
 import { SessionDirectCommands } from "../../../../packages/core/src/session/runner/direct-commands"
 import { tempLocationLayer } from "../../../../packages/core/test/fixture/location"
 import { tmpdir } from "../../../../packages/core/test/fixture/tmpdir"
@@ -93,9 +99,17 @@ const connectMcp = async (options: Options) => {
 }
 const plainTool = (name: string) => new ToolDefinition({ name, description: name, inputSchema: { type: "object", properties: {} } })
 
-test("only a real reserved direct load opens the same host's governed gate", async () => {
+test("reserved direct loads record evidence and the governed gate requires a successful MCP skill load", async () => {
   const probed: unknown[] = []
+  const loadErrors: boolean[] = []
+  let load = false
   during = async (options) => {
+    if (load) {
+      const mcp = await connectMcp(options)
+      const result = await mcp.callTool({ name: SkillTool.name, arguments: { name: "maestro-run-governed" } })
+      loadErrors.push(result.isError === true)
+      await mcp.close()
+    }
     probed.push(await permissionCall(options, "mcp__orchestra__maestro_plan", { goal: "x" }, `probe-${probed.length}`))
   }
   const turnFor = (id: string) => turnOf({
@@ -104,8 +118,9 @@ test("only a real reserved direct load opens the same host's governed gate", asy
     authorize: () => Effect.succeed({}),
   })
   const layer = AppNodeBuilder.build(
-    LayerNode.group([Database.node, EventV2.node, FSUtil.node, SkillV2.node, Location.node]),
-    [[Location.node, tempLocationLayer]],
+    LayerNode.group([Database.node, EventV2.node, FSUtil.node, SkillV2.node, Location.node, AgentV2.node,
+      ToolRegistry.node, ToolRegistry.toolsNode, SkillTool.node]),
+    [[Location.node, tempLocationLayer], [ToolOutputStore.node, ToolOutputStore.nodeWithoutConfig]],
   )
   await provided((host) => Effect.scoped(Effect.gen(function* () {
     const tmp = yield* Effect.acquireRelease(Effect.promise(() => tmpdir()), (dir) => Effect.promise(() => dir[Symbol.asyncDispose]()))
@@ -150,19 +165,49 @@ test("only a real reserved direct load opens the same host's governed gate", asy
     })
     expect(yield* host.observedSkillLoad!({ sessionID: SessionSchema.ID.make("ses_forged"), skillName: "maestro-run-governed" })).toBeUndefined()
     yield* Stream.runCollect(host.stream(turnFor("ses_forged")))
-    expect(yield* SessionDirectCommands.skill(deps, { sessionID: SessionSchema.ID.make("ses_reserved"), skill: "maestro-run-governed" })).toBe(true)
-    const facts = yield* host.observedSkillLoad!({ sessionID: SessionSchema.ID.make("ses_reserved"), skillName: "maestro-run-governed" })
+    const sessionID = SessionSchema.ID.make("ses_reserved")
+    yield* database.db.insert(ProjectTable).values({ id: Project.ID.global, worktree: AbsolutePath.make(tmp.path), sandboxes: [] }).onConflictDoNothing().run().pipe(Effect.orDie)
+    yield* database.db.insert(SessionTable).values({ id: sessionID, project_id: Project.ID.global, slug: sessionID,
+      directory: tmp.path, title: "Test", version: "test", agent: AgentV2.defaultID }).run().pipe(Effect.orDie)
+    const query = { sessionID, skillName: "maestro-run-governed" }
+    expect(yield* SessionDirectCommands.skill(deps, { sessionID, skill: query.skillName })).toBe(true)
+    const facts = yield* host.observedSkillLoad!(query)
     expect(facts).toMatchObject({ sessionID: "ses_reserved", skillName: "maestro-run-governed", source: { reserved: true } })
     expect(facts?.loadedMessageID).toBeDefined()
     expect(facts?.source.contentDigest).toMatch(/^[0-9a-f]{64}$/)
     expect(Object.isFrozen(facts)).toBe(true)
-    expect(yield* host.observedSkillLoad!({ sessionID: SessionSchema.ID.make("ses_reserved"), skillName: "other" })).toBeUndefined()
-    yield* Stream.runCollect(host.stream(turnFor("ses_reserved")))
+    expect(yield* host.observedSkillLoad!({ sessionID, skillName: "other" })).toBeUndefined()
+    yield* Stream.runCollect(host.stream(turnFor(sessionID)))
+
+    const registry = yield* ToolRegistry.Service
+    const registered = yield* registry.materialize()
+    const nativeTurn = {
+      ...turnFor(sessionID),
+      tools: [registered.definition(SkillTool.name)!, plainTool("maestro_plan")],
+      execute: (call: Parameters<ExecutionHost.Turn["execute"]>[0]) => registered.settle({
+        sessionID, agent: AgentV2.defaultID, assistantMessageID: SessionMessage.ID.make("msg_mcp_skill"),
+        call: { ...call, type: "tool-call" },
+      }).pipe(Effect.orDie),
+    } satisfies ExecutionHost.Turn
+    const agents = yield* AgentV2.Service
+    const changePermission = (effect: "deny" | "allow") => agents.transform((draft) => draft.update(AgentV2.defaultID, (agent) => {
+      agent.permissions = [{ action: SkillTool.name, resource: query.skillName, effect }]
+    }))
+    load = true
+    yield* changePermission("deny")
+    yield* Stream.runCollect(host.stream(nativeTurn))
+    yield* changePermission("allow")
+    yield* Stream.runCollect(host.stream(nativeTurn))
+    load = false
+    expect(yield* host.observedSkillLoad!(query)).toBe(facts)
     const other = yield* ClaudeCodeHost.make
-    expect(yield* other.observedSkillLoad!({ sessionID: SessionSchema.ID.make("ses_reserved"), skillName: "maestro-run-governed" })).toBeUndefined()
-    yield* Stream.runCollect(other.stream(turnFor("ses_reserved")))
+    expect(yield* other.observedSkillLoad!(query)).toBeUndefined()
+    yield* Stream.runCollect(other.stream(turnFor(sessionID)))
   }).pipe(Effect.provide(layer))))
+  expect(loadErrors).toEqual([true, false])
   expect(probed).toEqual([
+    { behavior: "deny", message: expect.stringContaining("maestro-run-governed") },
+    { behavior: "deny", message: expect.stringContaining("maestro-run-governed") },
     { behavior: "deny", message: expect.stringContaining("maestro-run-governed") },
     { behavior: "deny", message: expect.stringContaining("maestro-run-governed") },
     { behavior: "deny", message: expect.stringContaining("maestro-run-governed") },
@@ -172,11 +217,16 @@ test("only a real reserved direct load opens the same host's governed gate", asy
   ])
 })
 
-test("authenticated facts share governed eviction; MCP-only loads never fabricate facts", async () => {
+test("bounded direct evidence is independent of MCP authorization", async () => {
+  const probed: unknown[] = []
+  let load = true
   during = async (options) => {
-    const mcp = await connectMcp(options)
-    await mcp.callTool({ name: "skill", arguments: { name: "maestro-run-governed" } })
-    await mcp.close()
+    if (load) {
+      const mcp = await connectMcp(options)
+      await mcp.callTool({ name: "skill", arguments: { name: "maestro-run-governed" } })
+      await mcp.close()
+    }
+    probed.push(await permissionCall(options, "mcp__orchestra__maestro_plan", { goal: "x" }, `probe-${probed.length}`))
   }
   const layer = AppNodeBuilder.build(
     LayerNode.group([Database.node, EventV2.node, FSUtil.node, SkillV2.node, Location.node]),
@@ -187,22 +237,33 @@ test("authenticated facts share governed eviction; MCP-only loads never fabricat
     yield* skills.transform((draft) => draft.source({ type: "embedded", skill: SkillV2.Info.make({
       name: "maestro-run-governed", location: AbsolutePath.make("/bundled.md"), content: "instructions",
     }) }, { reserved: true }))
-    const sid = SessionSchema.ID.make("ses_authentic")
-    const query = { sessionID: sid, skillName: "maestro-run-governed" }
-    expect(yield* SessionDirectCommands.skill({
-      skills, events: yield* EventV2.Service, fs: yield* FSUtil.Service, database: yield* Database.Service, host,
-    }, { sessionID: sid, skill: query.skillName })).toBe(true)
-    expect(yield* host.observedSkillLoad!(query)).toBeDefined()
-    for (let index = 0; index < ClaudeCodeHost.GOVERNED_SESSIONS; index++) {
-      const session = SessionSchema.ID.make(`ses_mcp_${index}`)
-      yield* Stream.runCollect(host.stream(turnOf({
-        session: { id: session, location: { directory: "/project" } } as unknown as SessionSchema.Info,
-        tools: [plainTool("skill")], execute: () => Effect.succeed({ result: { type: "text" as const, value: "ok" } }),
-      })))
-      expect(yield* host.observedSkillLoad!({ sessionID: session, skillName: query.skillName })).toBeUndefined()
-    }
-    expect(yield* host.observedSkillLoad!(query)).toBeUndefined()
+    const events = yield* EventV2.Service
+    const filesystem = yield* FSUtil.Service
+    const database = yield* Database.Service
+    const deps = { skills, events, fs: filesystem, database, host }
+    const skillName = "maestro-run-governed"
+    const oldest = SessionSchema.ID.make("ses_direct_oldest")
+    expect(yield* SessionDirectCommands.skill(deps, { sessionID: oldest, skill: skillName })).toBe(true)
+    const mcpSession = SessionSchema.ID.make("ses_mcp_only")
+    const mcpTurn = turnOf({
+      session: { id: mcpSession, location: { directory: "/project" } } as unknown as SessionSchema.Info,
+      tools: [plainTool("skill"), plainTool("maestro_plan")],
+      execute: () => Effect.succeed({ result: { type: "text" as const, value: "ok" } }),
+    })
+    yield* Stream.runCollect(host.stream(mcpTurn))
+    expect(yield* host.observedSkillLoad!({ sessionID: mcpSession, skillName })).toBeUndefined()
+    expect(yield* host.observedSkillLoad!({ sessionID: oldest, skillName })).toBeDefined()
+    const sessions = Array.from({ length: ClaudeCodeHost.GOVERNED_SESSIONS }, (_, index) => SessionSchema.ID.make(`ses_direct_${index}`))
+    yield* Effect.forEach(sessions, (sessionID) => SessionDirectCommands.skill(deps, { sessionID, skill: skillName }), { discard: true })
+    expect(yield* host.observedSkillLoad!({ sessionID: oldest, skillName })).toBeUndefined()
+    expect(yield* host.observedSkillLoad!({ sessionID: sessions.at(-1)!, skillName })).toBeDefined()
+    load = false
+    yield* Stream.runCollect(host.stream(mcpTurn))
   }).pipe(Effect.provide(layer))))
+  expect(probed).toEqual([
+    { behavior: "allow", updatedInput: { goal: "x" } },
+    { behavior: "allow", updatedInput: { goal: "x" } },
+  ])
 }, 60_000)
 
 test("a call that never reaches MCP does not hand its tool_use id to the next call of the tool", async () => {
