@@ -1,5 +1,6 @@
 import { createEffect, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
+import { snapshotDecisionRequest } from "../intent/request"
 import type { Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
@@ -100,12 +101,12 @@ export function SfQuestionConsume(props: Readonly<{
     commandAbort = controller
     setUi({ state: "loading", submitting: true })
     try {
-      const result = await createSfCollaborationClient(ready.transport)["collaboration.question-consume"]({
+      const result = await createSfCollaborationClient(ready.transport)["collaboration.question-consume"](snapshotDecisionRequest({
         proposal: contribution,
         sourceRef,
         period: props.caseRecord.horizon,
         mutation: { expectedStorageVersion: storageVersion, idempotencyKey },
-      }, { signal: controller.signal, idempotencyKey })
+      }), { signal: controller.signal, idempotencyKey })
       if (controller.signal.aborted || generation !== props.owner.generation()) return
       if (props.caseRecord.version !== version || !props.caseRecord.sourceRefs.some((source) => source.refId === sourceRef)) {
         setUi({ state: "stale", submitting: false })
