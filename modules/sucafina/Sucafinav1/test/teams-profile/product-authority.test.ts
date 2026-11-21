@@ -1,7 +1,7 @@
 import { afterEach, expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
 import { writeFile } from "node:fs/promises"
-import { Schema } from "effect"
+import { Effect, Schema } from "effect"
 import { SessionSchema } from "@orchestra/core/session/schema"
 import type { ResidentProfile, SkillLoadReceipt } from "../../product/contracts/resident-ai.ts"
 import { selection } from "../product/wp10/resident-runtime/fixture.ts"
@@ -586,4 +586,32 @@ test("product-authority-01: zero eligible Teams deny native binding before priva
   expect(result.status).toBe("denied")
   expect(calls).toEqual({ selection: 0, session: 0 })
   expect(await stored(f)).toBeUndefined()
+})
+
+test("Core admission excludes a native run when its exact case belongs to a different Team or loses provenance", async () => {
+  const f = await fixture({ enabled: [profileA, profileB], grants: [{ ...productGrant(), sessionActions: ["read"] }] })
+  const decision = await seed(f)
+  const sessionID = SessionSchema.ID.make("ses_case_origin")
+  await f.store.transaction("dashboard", async (snapshot) => {
+    const product = object(snapshot.data.__sfProductV1)
+    // The real C08 draft provides provenance. Seed only the derivative link
+    // examined by Core admission, without starting a model or creating a session.
+    product.nativeRuns = {
+      originRun: { principalRef: oid, caseRef: { id: decision.id, incarnation: decision.incarnation }, native: { sessionID } },
+    }
+    return { commit: true, value: undefined }
+  })
+  const own = await f.authority.readCoreSessionAdmission(f.businessRequest(profileA))
+  const foreign = await f.authority.readCoreSessionAdmission(f.businessRequest(profileB))
+  if (!own || !foreign) throw new Error("Current admission for both eligible Teams required")
+  expect(await Effect.runPromise(own.authorize("read", sessionID))).toBe(true)
+  expect(await Effect.runPromise(foreign.authorize("read", sessionID))).toBe(false)
+  expect(await Effect.runPromise(foreign.excludedSessions())).toEqual([sessionID])
+
+  await f.store.transaction("dashboard", async (snapshot) => {
+    object(snapshot.data.__sfProductV1).transactions = {}
+    return { commit: true, value: undefined }
+  })
+  expect(await Effect.runPromise(own.authorize("read", sessionID))).toBe(false)
+  expect(await Effect.runPromise(own.excludedSessions())).toEqual([sessionID])
 })

@@ -6,6 +6,7 @@ import type { SfNativeRunRecord, SfProductStatePort, SfStateNamespace } from "..
 import type { Snapshot } from "../../runtime/contract.ts"
 import { alternativeProvenanceKey, verifyAlternativePublication } from "../decisions/alternative-provenance.ts"
 import type { AlternativeCapabilityProvenance } from "../decisions/alternative-provenance.ts"
+import { sfCaseTeamScopeMatches } from "../host-binding/state-provider.ts"
 import { hasSfRunSkillReceipt, matchesSfRunOutput } from "./run-provenance.ts"
 
 /** Conditions for a metadata-only stale write, never an authority or content grant. */
@@ -67,6 +68,14 @@ export function createSfRunStore(input: {
       const record = state.nativeRuns?.[runRef]
       if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision ||
         !record || record.runRef !== runRef || record.principalRef !== authority.principalRef || record.policyVersion !== authority.policyVersion || record.accessRevision !== authority.accessRevision) return undefined
+      if (authority.profile) {
+        const ref = record.caseRef
+        if (!ref) return undefined
+        const current = state.cases[ref.id]
+        if (!current || current.id !== ref.id || current.incarnation !== ref.incarnation ||
+          !Array.isArray(current.participants) || !current.participants.includes(authority.principalRef) ||
+          !sfCaseTeamScopeMatches(state, authority, current)) return undefined
+      }
       return record
     })
     if (found.status !== "ok") return "reason" in found ? { status: found.status, reason: found.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
@@ -98,7 +107,8 @@ export function createSfRunStore(input: {
       const current = state.cases[found.value.caseRef.id]
       if (!current || current.incarnation !== found.value.caseRef.incarnation || !Number.isSafeInteger(current.version) || current.version < found.value.caseRef.version ||
         !current.participants.includes(authority.principalRef) || authority.principalRef !== found.value.principalRef ||
-        authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
+        authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision ||
+        (authority.profile && (current.id !== found.value.caseRef.id || !sfCaseTeamScopeMatches(state, authority, current)))) return undefined
       return current
     })
     const current = await readCase()

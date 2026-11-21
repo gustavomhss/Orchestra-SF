@@ -37,7 +37,7 @@ export async function procurementComparison(page: Page, info: TestInfo) {
   await expect(detail.locator("p").filter({ hasText: /^Status:/ })).toHaveText("Status: src_pending")
   await expect(detail.locator("p").filter({ hasText: /^Current source version:/ })).toHaveText(/^Current source version: [1-9]\d*$/)
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
-  await expect(page.getByRole("status").filter({ hasText: /^Sourcing is not editable in the current request stage\.$/ })).toBeVisible()
+  await expect(page.getByRole("status", { name: "Sourcing is not editable in the current request stage.", exact: true })).toBeVisible()
   await expect(page.getByRole("button", { name: "Submit sourcing", exact: true })).toHaveCount(0)
   await page.goto("/orchestra/sf-procurement/requests")
   const queue = page.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Value basis", exact: true }) })

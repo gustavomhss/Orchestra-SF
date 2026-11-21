@@ -7,7 +7,8 @@ import { composeSfInstallation } from "../../../../../apps/cli/src/sucafina-prod
 import { createMicrosoftInstallation } from "../../local/entry.ts"
 import type { SfProductGrant } from "../../product/integration/product-authority.ts"
 import type { LocalConfiguration } from "../../runtime/local-configuration.ts"
-import { openLocalStore, type LocalStore } from "../../runtime/local-store.ts"
+import type { LocalStore } from "../../runtime/local-contract.ts"
+import { openLocalStore } from "../../runtime/local-store.ts"
 import { prepareMicrosoftInstallation } from "../../runtime/microsoft-installation.ts"
 import { microsoftNativeHost } from "../microsoft-login/native-host.ts"
 import { group, microsoftFixture, oid } from "../microsoft-login/oidc-fixture.ts"
@@ -35,7 +36,10 @@ export async function openInstalledTeamFixture(input: {
     await writeFile(disk.file, JSON.stringify({ ...disk.config, groups: input.groups, grants: input.grants,
       teams: "direct", supremeAdminGroupId: group }), { mode: 0o600 })
     const provider = await microsoftFixture({ teams: "direct" })
-    const overrides = { fetch: provider.fetch, now: () => new Date(provider.clock.value) }
+    // The installed credential collector runs against the real wall clock.
+    // Sign synthetic claims in that time domain and keep production expiry.
+    provider.clock.value = Date.now()
+    const overrides = { fetch: provider.fetch }
     if (input.seed) {
       // Bind the validated installation before the source fixture can create its
       // private store. Production must still reject adoption of unbound data.

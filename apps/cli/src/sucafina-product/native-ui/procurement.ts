@@ -1,5 +1,4 @@
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
-import type { SfReadableContext } from "@orchestra/schema/sucafina/context"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { requestDraftActions } from "../../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { object, rows, text } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -10,7 +9,6 @@ import { procurementKeys } from "../../../../../modules/sucafina/Sucafinav1/src/
 import { approvalQueue, procurementDashboard } from "../../../../../modules/sucafina/Sucafinav1/src/procurement-screen.ts"
 import type { RequestView } from "../../../../../modules/sucafina/Sucafinav1/src/procurement-screen.ts"
 import { publicSfData } from "../../../../../modules/sucafina/Sucafinav1/product/integration/public-state.ts"
-import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { readProcurementQueueView, procurementApprovalGroups } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/queue-view.ts"
 import { projectSourcingComparison } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/sources.ts"
 import type { ProcurementQueueView } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/queue-view.ts"
@@ -28,7 +26,7 @@ const pages: Readonly<Record<Capability, Page>> = {
 const selectors: Readonly<Record<Capability, readonly string[]>> = {
   CAP24: ["year", "month"],
   CAP25: ["year", "month", "filter", "q", "request"],
-  CAP26: ["year", "month", "request"],
+  CAP26: ["year", "month"],
   CAP27: ["year", "month", "status", "q", "supplier"],
   CAP28: ["year", "month"],
 }
@@ -165,7 +163,7 @@ function selectRequest(source: Record<string, unknown>, detail: boolean, actor: 
     request.history = rows(source.history).map((entry) => pick(entry, ["at", "by", "action", "note"]))
   return { ...request, allowedDraftActions: requestDraftActions(source, actor) }
 }
-function selectSupplier(source: Record<string, unknown>, includeBank: boolean, includeAssets = false) {
+function selectSupplier(source: Record<string, unknown>, includeBank: boolean) {
   const safe = pick(source, includeBank ? [...supplierKeys, ...bankKeys] : supplierKeys)
   if (Object.hasOwn(source, "history"))
     safe.history = rows(source.history).map((entry) => pick(entry, ["field"]))
@@ -175,8 +173,6 @@ function selectSupplier(source: Record<string, unknown>, includeBank: boolean, i
     safe.commercial = pick(source.commercial, ["notes"])
   if (Object.hasOwn(source, "compliance"))
     safe.compliance = pick(source.compliance, ["notes"])
-  if (includeAssets)
-    safe.attachments = rows(source.attachments).map((asset) => pick(asset, ["id", "name", "type", "bytes", "size"]))
   return safe
 }
 function versionsFor(view: View, keys: readonly string[]) {
@@ -240,7 +236,6 @@ function publishedRequestBasis(row: Record<string, unknown>, snapshot: Snapshot,
 }
 function pageData(
   capability: Capability, view: View, actor: Actor, prepared: Record<string, unknown>, snapshot: Snapshot,
-  assetSupplier?: string,
 ) {
   const data = view.data
   const requests = rows(data.requests)
@@ -281,9 +276,7 @@ function pageData(
   }
   if (capability === "CAP27") return {
     data: {
-      suppliers: suppliers.map((row) => selectSupplier(row,
-        actor.roles.some((role) => role === "admin" || role === "supplier admin"),
-        assetSupplier !== undefined && row.id === assetSupplier)),
+      suppliers: suppliers.map((row) => selectSupplier(row, actor.roles.some((role) => role === "admin" || role === "supplier admin"))),
       requests: requestsSummary, formSettings,
       bankVerificationAvailable: data.bankVerificationAvailable === true,
     },
@@ -350,11 +343,6 @@ function sameStamp(
     a.hostId === b.hostId && a.principalRef === b.principalRef &&
     a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision
 }
-function supplierAssetReadReady(context: SfReadableContext) {
-  return context.availability.some((resource) => resource.family === "files" &&
-    ["files.asset.link", "files.asset.download"].every((id) => resource.operations.some((operation) =>
-      operation.operationId === id && operation.state === "ready" && operation.operational)))
-}
 function makePageHandler(deps: SfNativeHostDependencies, capability: Capability) {
   const page = pages[capability]
   return async (request: Request): Promise<Response> => {
@@ -374,7 +362,6 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
       item.capabilityId === capability && item.surface === "procurement" &&
       item.page === page && item.canRead)
     if (!destination) return refusal("denied")
-    const assetSupplier = capability === "CAP27" && supplierAssetReadReady(bound.value) ? selection.supplier : undefined
     // Source controls/actor are checked again under the original producer's lock.
     let prepared: Exclude<Awaited<ReturnType<NonNullable<typeof deps.application.productView>>>, Response> | undefined
     try {
@@ -412,7 +399,7 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
           { ...snapshot, data: publicSfData(snapshot.data) }, actor,
           environment,
         )
-        const projection = pageData(capability, view, actor, prepared?.data ?? {}, snapshot, assetSupplier)
+        const projection = pageData(capability, view, actor, prepared?.data ?? {}, snapshot)
         if (!projection)
           return { commit: false, value: { status: "unavailable" as const, reason: "procurement-projection-unavailable" } }
         return {
@@ -436,10 +423,6 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
       const currentDestination = current.value.destinations.find((item) =>
         item.capabilityId === capability && item.surface === "procurement" && item.page === page && item.canRead)
       if (!currentDestination) return refusal("denied")
-      if (assetSupplier !== undefined && (!supplierAssetReadReady(current.value) ||
-          current.value.contractRevision !== bound.value.contractRevision ||
-          digestSfValue(current.value.stamp.team ?? null) !== digestSfValue(bound.value.stamp.team ?? null)))
-        return refusal("stale", "procurement-context-changed")
       if (JSON.stringify(currentDestination.allowedActionIds) !== JSON.stringify(destination.allowedActionIds))
         return refusal("stale", "procurement-actions-changed")
       return response(result, 200)

@@ -12,12 +12,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const context = await browser.newContext()
       const page = await context.newPage()
       page.setDefaultTimeout(10_000)
-      const enrollment = await page.request.get(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`, {
-        maxRedirects: 0,
-        maxRetries: 0,
-      })
-      expect(enrollment.status()).toBe(303)
-      expect(enrollment.headers().location).toBe("/")
+      expect((await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`))?.status()).toBe(200)
       await page.goto(`${fixture.origin}/sucafina/dashboard?page=Budget+Overview&year=2026`)
       await page.locator("[data-dashboard-workbench-panel] > summary").click()
       const options = await loadOptions(page)

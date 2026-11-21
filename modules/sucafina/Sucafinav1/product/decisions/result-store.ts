@@ -1,4 +1,4 @@
-import { sfTransactionLookup } from "../host-binding/state-provider.ts"
+import { sfCaseTeamScopeMatches, sfTransactionIdentity, sfTransactionLookup, sfTransactionProfileMatches } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -6,7 +6,8 @@ import type { DecisionCase } from "../contracts/decisions.ts"
 import type { SfOperationOutputMap } from "../contracts/outputs.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import type { SfProductStatePort } from "../contracts/state.ts"
+import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
+import { object } from "../../runtime/contract.ts"
 import { historicalCalculationMatches } from "./calculation-history.ts"
 import type { HistoricalCalculationRead } from "./calculation-history.ts"
 
@@ -102,11 +103,10 @@ export function createSfDecisionResultStore(input: {
     const historicalRequest = ledger ? structuredClone(ledger) : undefined
     const source = input.host.requestFor(context)
     if (!source || !request.resultRef.trim() || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
-    const current = await input.state.read(source, "cases", (state, authority) => {
-      if (!sameAuthority(authority, context)) return undefined
-      const stored = (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef]
-      return stored ? { stored, current: state.cases[stored.caseRef.id] } : undefined
-    }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    const observe = (expected?: CaseRef) => input.state.read(source, "cases", (state, authority) =>
+      sameAuthority(authority, context) ? scopedResult(state, authority, request.resultRef, expected) : undefined)
+      .catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    const current = await observe()
     if (current.status !== "ok") return { status: current.status === "preview" ? "unavailable" : current.status, reason: "result-unavailable" }
     const value = structuredClone(current.value)
     if (!value || value.stored.kind !== request.kind || !validResult(value.stored) || value.stored.resultRef !== request.resultRef || value.stored.resultDigest !== digestSfValue(value.stored.result)) return { status: "unavailable", reason: "result-unavailable" }
@@ -114,7 +114,7 @@ export function createSfDecisionResultStore(input: {
     if (calculation && (value.stored.kind !== "scenario" || !input.verifyCalculationSources && calculationSources(value.stored).some((ref) => ref.kind !== "record"))) return { status: "unavailable", reason: "calculation-source-unsupported" }
     if (!allowedCase(value.current, value.stored.caseRef, context, historical) || !await authorizeCase(value.current!, context).catch(() => false) || !await verifySources(value.stored, calculation && value.stored.kind === "scenario" ? calculationSources(value.stored) : value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     if (calculation && value.stored.kind === "scenario" && input.verifyCalculationSources && !await verifyCalculationSources(value.stored, context).catch(() => false)) return { status: "unavailable", reason: "calculation-source-unproven" }
-    const again = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[value.stored.caseRef.id], stored: (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef] } : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    const again = await observe(value.stored.caseRef)
     if (again.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
     const latest = structuredClone(again.value)
     if (historicalRequest && (!latest?.stored || !historicalCalculationMatches(latest.current, latest.stored, historicalRequest, context) || digestSfValue(latest.current) !== digestSfValue(value.current))) return { status: "denied", reason: "historical-calculation-changed" }
@@ -127,7 +127,7 @@ export function createSfDecisionResultStore(input: {
     if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     // Source replay can await domain reads. Observe the same authorized case and result
     // after that last callback, under C08's read fence, before releasing the value.
-    const final = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[value.stored.caseRef.id], stored: (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef] } : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    const final = await observe(value.stored.caseRef)
     if (final.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
     const observed = structuredClone(final.value)
     if (historicalRequest && (!observed?.stored || !historicalCalculationMatches(observed.current, observed.stored, historicalRequest, context) || digestSfValue(observed.current) !== digestSfValue(latest.current))) return { status: "denied", reason: "historical-calculation-changed" }
@@ -172,8 +172,7 @@ export function createSfDecisionResultStore(input: {
     const observe = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context)
       ? references.map((reference, index) => {
         if (failures[index]) return undefined
-        const stored = state.decisionResults?.[reference]
-        return stored ? { stored, current: state.cases[stored.caseRef.id] } : undefined
+        return scopedResult(state, authority, reference)
       }) : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
     const first = await observe()
     if (first.status !== "ok") return failRemaining({ status: first.status === "preview" ? "unavailable" : first.status, reason: "result-unavailable" })
@@ -243,21 +242,19 @@ export function createSfDecisionResultStore(input: {
     const request = structuredClone(incoming)
     const source = input.host.requestFor(context)
     if (!source || !request.idempotencyKey.trim() || !/^[a-f0-9]{64}$/.test(request.requestDigest) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
-    const current = await input.state.read(source, "cases", (state, authority) => {
-      if (!(sameAuthority(authority, context))) return undefined
+    const observe = () => input.state.read(source, "cases", (state, authority) => {
+      if (!sameAuthority(authority, context)) return undefined
+      const decision = scopedCase(state, authority, request.caseRef)
+      if (authority.profile && !allowedCase(decision, request.caseRef, context)) return undefined
       const savedIntent = sfTransactionLookup(state, authority, { namespace: "cases", targetRef: request.caseRef.id, idempotencyKey: `decision-result:${request.idempotencyKey}` })
       if (savedIntent.status === "ambiguous") return undefined
-      return { decision: state.cases[request.caseRef.id], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
+      return { decision, prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
     }).catch(() => undefined)
+    const current = await observe()
     if (!current || current.status !== "ok" || !current.value) return { status: "unavailable", reason: "result-unavailable" }
     if (!allowedCase(current.value.decision, request.caseRef, context) || !await authorizeCase(current.value.decision!, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     if (!current.value.prior) {
-      const again = await input.state.read(source, "cases", (state, authority) => {
-        if (!(sameAuthority(authority, context))) return undefined
-        const savedIntent = sfTransactionLookup(state, authority, { namespace: "cases", targetRef: request.caseRef.id, idempotencyKey: `decision-result:${request.idempotencyKey}` })
-        if (savedIntent.status === "ambiguous") return undefined
-        return { decision: state.cases[request.caseRef.id], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
-      }).catch(() => undefined)
+      const again = await observe()
       if (!again || again.status !== "ok" || !again.value || again.value.prior || !allowedCase(again.value.decision, request.caseRef, context) || !await authorizeCase(again.value.decision!, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "stale", reason: "result-state-changed" }
       return { status: "ok", value: { state: "not-found" } }
     }
@@ -273,7 +270,9 @@ export function createSfDecisionResultStore(input: {
     if (!validResult(request) || !/^[a-f0-9]{64}$/.test(request.requestDigest) || !request.idempotencyKey.trim() || !request.caseRef.id.trim() || !request.caseRef.incarnation.trim() || !Number.isSafeInteger(request.caseRef.version) || request.caseRef.version < 0) return { status: "needs-input", reason: "invalid-result" }
     const source = input.host.requestFor(context)
     if (!source || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
-    const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    const current = await input.state.read(source, "cases", (state, authority) =>
+      sameAuthority(authority, context) ? scopedCase(state, authority, request.caseRef) : undefined)
+      .catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
     if (current.status !== "ok") return { status: current.status === "preview" ? "unavailable" : current.status, reason: "case-unavailable" }
     if (!allowedCase(current.value, request.caseRef, context) || !await authorizeCase(current.value!, context).catch(() => false) || !await verifySources(request, request.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     const id = input.createId()
@@ -300,6 +299,56 @@ export function createSfDecisionResultStore(input: {
     return digestSfValue(result.value) === receipt.storedDigest ? result : { status: "conflict", reason: "idempotency-content-changed" }
   }
   return { write, read, readForCalculation, readHistoricalCalculation, readHistoricalScenario, readByRequest }
+}
+
+function scopedCase(state: Readonly<SfProductState>, authority: SfStateAuthority, ref: Pick<CaseRef, "id" | "incarnation">) {
+  const current = state.cases[ref.id]
+  if (!authority.profile) return current
+  return current?.id === ref.id && current.incarnation === ref.incarnation &&
+    current.participants.includes(authority.principalRef) && sfCaseTeamScopeMatches(state, authority, current) ? current : undefined
+}
+
+function scopedResult(state: Readonly<SfProductState>, authority: SfStateAuthority, resultRef: string, expected?: CaseRef) {
+  const stored = state.decisionResults?.[resultRef]
+  if (!stored) return undefined
+  const current = scopedCase(state, authority, expected ?? stored.caseRef)
+  if (authority.profile && (!current || stored.resultRef !== resultRef || stored.caseRef.id !== current.id ||
+      stored.caseRef.incarnation !== current.incarnation || !sameTeamResultReceipt(state, authority, stored))) return undefined
+  return { stored, current }
+}
+
+/** Match the atomic writer to this exact result, without requiring the reader to be its author. */
+function sameTeamResultReceipt(state: Readonly<SfProductState>, authority: SfStateAuthority, stored: StoredDecisionResult) {
+  const ref = digestSfValue(stored.caseRef)
+  let found = false
+  for (const [key, tx] of Object.entries(state.transactions)) {
+    if (tx?.namespace !== "cases" || tx.targetRef !== stored.caseRef.id) continue
+    const value = object(tx.value)
+    if (value.resultRef !== stored.resultRef) continue
+    const intent = sfTransactionIdentity(key)
+    if (found || !intent || intent.namespace !== "cases" || intent.targetRef !== stored.caseRef.id ||
+        intent.principalRef !== tx.principalRef || !sfTransactionProfileMatches(authority.profile, key) ||
+        tx.targetIncarnation !== stored.caseRef.incarnation || tx.incarnation !== state.incarnation ||
+        !/^[a-f0-9]{64}$/.test(tx.commandDigest) || !Number.isSafeInteger(tx.storageVersion) ||
+        tx.storageVersion <= 0 || tx.storageVersion > state.versions.cases ||
+        !Number.isSafeInteger(tx.aggregateRevision) || tx.aggregateRevision < tx.storageVersion ||
+        tx.aggregateRevision > state.revision || digestSfValue(value.caseRef) !== ref) return false
+    if (intent.idempotencyKey.startsWith("decision-result:")) {
+      const receipt = resultReceipt(value)
+      if (!receipt || tx.principalRef !== stored.principalRef || receipt.kind !== stored.kind ||
+          receipt.requestDigest !== stored.requestDigest || receipt.storedDigest !== digestSfValue(stored)) return false
+    } else {
+      // The two promotion producers save an exact reference pair in the same
+      // transaction as the result. A Current Choice promotion retains its
+      // source result author, who can differ from this transaction's author.
+      const analysis = intent.idempotencyKey.endsWith(":promote-analysis")
+      if (stored.kind !== "scenario" || Object.keys(value).length !== 2 ||
+          (analysis ? tx.principalRef !== stored.principalRef : !intent.idempotencyKey.endsWith(":promote-current-choice")))
+        return false
+    }
+    found = true
+  }
+  return found
 }
 
 /** Old full receipts remain readable; no migration rewrites accepted history. */

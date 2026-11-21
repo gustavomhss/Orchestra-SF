@@ -2,7 +2,8 @@ import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
 import { Schema } from "effect"
 import JSZip from "jszip"
-import { SfReviewsReportPrepare, SfReviewsReviewAgenda, SfReviewsReviewAgendaOptions, SfReviewsReviewPreserve, SfReviewsReviewRead } from "@orchestra/schema/sucafina/reviews"
+import { SfReviewsReviewAgenda, SfReviewsReviewAgendaOptions, SfReviewsReviewPreserve, SfReviewsReviewRead } from "@orchestra/schema/sucafina/reviews"
+import { decodeSfOperationOutput } from "../../product/contracts/schema-admission.ts"
 import { DashboardPortfolio } from "../../runtime/dashboard-portfolio.ts"
 import { group, oid } from "../microsoft-login/oidc-fixture.ts"
 import { publicOrigin } from "../microsoft-login/private-fixture.ts"
@@ -37,31 +38,32 @@ test("installed Microsoft Team preserves a Dashboard review and downloads its or
       body: JSON.stringify(options.payload) })
   }
   const catalogResponse = await send("review-agenda", { query: { ...period, domain: "dashboard" } })
-  const catalog = Schema.decodeUnknownSync(SfReviewsReviewAgendaOptions.output)(await catalogResponse.json())
-  expect(catalogResponse.status).toBe(200)
+  const catalog = Schema.decodeUnknownSync(SfReviewsReviewAgendaOptions.output)(await successfulJson(catalogResponse, "agenda catalog"))
   if (catalog.status !== "ok") throw new Error("Installed Team agenda catalog unavailable")
   const project = catalog.value.options.find((option) => option.item.kind === "dashboard" && option.item.topic === "all-projects")
   if (!project) throw new Error("Installed Team agenda did not issue the live Dashboard project source")
   const previewResponse = await send("review-agenda", { payload: { items: [project.item] } })
-  const preview = Schema.decodeUnknownSync(SfReviewsReviewAgenda.output)(await previewResponse.json())
-  expect(previewResponse.status).toBe(200)
+  const preview = Schema.decodeUnknownSync(SfReviewsReviewAgenda.output)(await successfulJson(previewResponse, "agenda preview"))
   if (preview.status !== "ok") throw new Error("Installed Team agenda preview unavailable")
   expect(preview.value.sectionRefs).toHaveLength(1)
   const preservedResponse = await send("review-preserve", { payload: {
     selectionRef: preview.value.selectionRef, sectionRefs: preview.value.sectionRefs,
   } })
-  const preserved = Schema.decodeUnknownSync(SfReviewsReviewPreserve.output)(await preservedResponse.json())
-  expect(preservedResponse.status).toBe(200)
+  const preserved = Schema.decodeUnknownSync(SfReviewsReviewPreserve.output)(await successfulJson(preservedResponse, "preserve review"))
   if (preserved.status !== "ok") throw new Error("Installed Team review preservation unavailable")
   const reviewRef = preserved.value.id
   const reopened = await send("review-read", { query: { reviewRef } })
-  expect(reopened.status).toBe(200)
-  expect(Schema.decodeUnknownSync(SfReviewsReviewRead.output)(await reopened.json())).toEqual(preserved)
+  expect(Schema.decodeUnknownSync(SfReviewsReviewRead.output)(await successfulJson(reopened, "reopen review"))).toEqual(preserved)
 
   const reportResponse = await send("review-report", { payload: { reviewRef, format: "docx", sectionRefs: preview.value.sectionRefs } })
-  const report = Schema.decodeUnknownSync(SfReviewsReportPrepare.output)(await reportResponse.json())
-  expect(reportResponse.status).toBe(200)
-  if (report.status !== "ok") throw new Error("Installed Team report preparation unavailable")
+  const report = Schema.decodeUnknownSync(Schema.Struct({
+    status: Schema.Literal("ok"),
+    outputRef: Schema.String.check(Schema.isPattern(/^report:[a-f0-9]{64}$/)),
+    result: Schema.Unknown,
+  }))(await successfulJson(reportResponse, "prepare DOCX"))
+  const material = decodeSfOperationOutput("sf_report_prepare", report.result)
+  if (!material.ok) throw new Error("Installed Team report producer returned invalid material")
+  expect(material.value.reviewSelectionRef).toBe(reviewRef)
   const artifactRef = report.outputRef
   const foreign = JSON.stringify({ contractRevision: "sf-team-profile/1", kind: "team",
     profile: { ...fixture.team.profile, teamObjectId: "88888888-8888-4888-8888-888888888888" } })
@@ -76,6 +78,19 @@ test("installed Microsoft Team preserves a Dashboard review and downloads its or
   expect(download.headers.get("content-type")).toBe("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
   const office = await JSZip.loadAsync(await download.arrayBuffer())
   const document = await office.file("word/document.xml")?.async("string")
-  expect(document).toContain(title)
-  expect(document).toContain(note)
+  if (!document) throw new Error("Installed Teams report has no Word document body")
+  // Table cells can split a source value into multiple Word text runs.
+  const content = Array.from(document.matchAll(/<w:t(?:\s[^>]*)?>([^<]*)<\/w:t>/g), (run) => run[1]).join("")
+  expect(content.includes(title)).toBe(true)
+  expect(content.includes(note)).toBe(true)
 }, 180_000)
+
+async function successfulJson(response: Response, stage: string): Promise<unknown> {
+  const value: unknown = await response.json().catch(() => undefined)
+  if (response.status !== 200) {
+    const reason = value && typeof value === "object" && "reason" in value && typeof value.reason === "string" &&
+      /^[a-z][a-z0-9-]{0,79}$/.test(value.reason) ? " (" + value.reason + ")" : ""
+    throw new Error("Installed Reports " + stage + " returned HTTP " + response.status + reason)
+  }
+  return value
+}

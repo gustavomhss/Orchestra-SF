@@ -4,8 +4,6 @@ Choose a document from the accessible source list to add it to search. The list 
 
 Open **Documents** from the existing Sucafina page. The Request selector narrows the source list to attachments of that Request. Selecting a file captures the current Request and attachment revisions. If either changes before opening it, refresh the list and review the current file. A selection belongs to the authenticated person who obtained it and expires after five minutes.
 
-In **Suppliers**, open a supplier to review its source documents. If your role permits attachments, select a file and choose **Admit / scan / link**. The server checks the file and links it to the current supplier revision. Choose **Download (verify access)** beside a linked file to download it after a fresh access check.
-
 Sucafina accepts UTF-8 plain text, DOCX and PDFs with a text layer. Scanned PDFs without a text layer are not converted to text. The parser accepts files up to 20 MiB, up to 500 PDF pages, and up to 1,000,000 characters of extracted text. DOCX processing also limits expanded XML to 8 MiB and the archive to 2,000 entries. Processing has a 15-second parser timeout. The attachment's own configured upload and scanner limits still apply when they are stricter.
 
 Search is lexical: it finds matching text, not semantic equivalents. Open a result to see the authorized original file. Search results are source evidence, not confirmed facts or instructions for the assistant.

@@ -10,7 +10,7 @@ import { readTeamContextQuery } from "../../../../../modules/sucafina/Sucafinav1
 import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import type { SfNativeHostDependencies } from "./router.ts"
 
-type TrustedContextReader = (request: Request, expected: SfExpectedContextBinding) => Promise<SfContextResult>
+type TrustedContextReader = (request: Request, expected: SfExpectedContextBinding, scope?: "authority") => Promise<SfContextResult>
 type HostWithReader = Readonly<{ nativeUiProducts?: Readonly<{
   /** I00 installs a read-only live view of runtime.identity(), never caller data. */
   currentBinding?: () => Readonly<{ installationId: string; projectId: string; hostId: string }> | undefined
@@ -74,8 +74,8 @@ export function createSfContextHandler(
     runtime: () => SfHostServices | HostWithReader | undefined
     application?: SfNativeHostDependencies["application"]
   }>,
-): Readonly<{ readContext(request: Request): Promise<SfContextResult>; handle(request: Request): Promise<Response> }> {
-  const read = async (request: Request, internal: boolean): Promise<SfContextResult> => {
+): Readonly<{ readContext: SfNativeHostDependencies["readContext"]; handle(request: Request): Promise<Response> }> {
+  const read = async (request: Request, internal: boolean, scope?: "authority"): Promise<SfContextResult> => {
     const services = deps.runtime() as HostWithReader | undefined
     const producer = services?.nativeUiProducts
     const expected = internal ? producer?.currentBinding?.() : expectedContext(request, deps.origin, deps.mount)
@@ -86,7 +86,7 @@ export function createSfContextHandler(
     if (!reader || !producer?.currentBinding) return { status: "unavailable", reason: "host-unavailable" }
     if (!sameBinding(expected, producer.currentBinding()))
       return { status: "unavailable", reason: "contract-mismatch" }
-    const result = await reader(request, expected).catch((): SfContextResult =>
+    const result = await reader(request, expected, scope).catch((): SfContextResult =>
       ({ status: "unavailable", reason: "host-unavailable" }))
     if (request.signal.aborted || !sameBinding(expected, producer.currentBinding()) ||
         deps.runtime() !== services) return { status: "unavailable", reason: "contract-mismatch" }
@@ -122,7 +122,7 @@ export function createSfContextHandler(
       !validAvailability(value)) return { status: "unavailable", reason: "contract-mismatch" }
     return result
   }
-  const readContext = (request: Request) => read(request, true)
+  const readContext: SfNativeHostDependencies["readContext"] = (request, scope) => read(request, true, scope)
   const handle = async (request: Request): Promise<Response> => {
     const producer = (deps.runtime() as HostWithReader | undefined)?.nativeUiProducts
     if (producer?.teamTenantId !== undefined || new URL(request.url).searchParams.has("contractRevision")) {

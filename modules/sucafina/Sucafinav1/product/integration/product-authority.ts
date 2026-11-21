@@ -24,7 +24,7 @@ import type { TrustedExecutionBinding } from "../contracts/sf-execution.ts"
 import type { SfStateAuthority, SfStateNamespace } from "../contracts/state.ts"
 import { parseCaseRef } from "../decisions/case-port.ts"
 import { createSfExecutionBindingRegistry } from "../host-binding/execution-context.ts"
-import { createSfProductState, sfCaseTeamScopeMatchesSnapshot } from "../host-binding/state-provider.ts"
+import { createSfProductState, sfCaseTeamScopeMatches, sfCaseTeamScopeMatchesSnapshot } from "../host-binding/state-provider.ts"
 import { createSfDomainAuthority, createSfUiAuthority } from "./ui-authority.ts"
 import { createSfHumanAuthority, sfHumanActions, sfHumanReadActions } from "./human-authority.ts"
 import type { SfHumanAction } from "./human-authority.ts"
@@ -328,7 +328,8 @@ export function createSfProductAuthority(input: {
         run.policyVersion !== authority.policyVersion || digestSfValue(run.caseRef) !== digestSfValue(value.caseRef) ||
         digestSfValue(run.selection) !== digestSfValue(value.selected) || value.skillReceipts[0]?.skillId !== run.skillId || !currentCase || currentCase.id !== value.caseRef.id ||
         currentCase.incarnation !== value.caseRef.incarnation || (purpose === "interrupt" ? currentCase.version < value.caseRef.version : currentCase.version !== value.caseRef.version) ||
-        !currentCase.participants.includes(authority.principalRef) || (run.native && (run.native.sessionID !== value.sessionID ||
+        !currentCase.participants.includes(authority.principalRef) || !sfCaseTeamScopeMatches(stored, authority, currentCase) ||
+        (run.native && (run.native.sessionID !== value.sessionID ||
           digestSfValue(value.skillReceipts[0]) !== digestSfValue(run.native.skillReceipt)))) return undefined
       return run
     }).catch(() => undefined)
@@ -534,8 +535,10 @@ export function createSfProductAuthority(input: {
         const ref = object(run.caseRef)
         const currentCase = typeof ref.id === "string" ? object(object(stored.cases)[ref.id]) : {}
         if (!actor.grant.namespaces.includes("cases") || !actor.grant.namespaces.includes("contributions") ||
-          !currentCase.id || currentCase.id !== ref.id || currentCase.incarnation !== ref.incarnation ||
-          !Array.isArray(currentCase.participants) || !currentCase.participants.includes(actor.principalRef))
+          typeof ref.id !== "string" || !ref.id || typeof ref.incarnation !== "string" ||
+          currentCase.id !== ref.id || currentCase.incarnation !== ref.incarnation ||
+          !Array.isArray(currentCase.participants) || !currentCase.participants.includes(actor.principalRef) ||
+          !sfCaseTeamScopeMatchesSnapshot(snapshot, binding.owner.profile, { id: ref.id, incarnation: ref.incarnation }))
           denied.add(sessionID)
       }
       for (const [sessionID, count] of runs) if (count !== 1) denied.add(sessionID)

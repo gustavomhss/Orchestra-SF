@@ -152,10 +152,15 @@ test("receipt-consumer: result recovery distinguishes missing, same-Team receipt
   expect(saved.status).toBe("ok")
   if (saved.status !== "ok") throw new Error("Real result persistence required")
   expect(await port.readByRequest(lookup, context)).toEqual({ status: "ok", value: { state: "found", result: saved.value } })
+  const byRef = { resultRef: saved.value.resultRef, kind: request.kind }
+  expect(await port.read(byRef, context)).toEqual(saved)
   f.authority.ui.finish(context)
   const before = await stored(f)
 
   const foreign = await lease(f.authority, post(f, randomUUID(), profileB), "sf_scenario_compare", request)
+  const foreignResult = await port.read(byRef, foreign)
+  expect(foreignResult.status).not.toBe("ok")
+  expect(foreignResult).not.toHaveProperty("value")
   const recovered = await port.readByRequest(lookup, foreign)
   expect(recovered.status).not.toBe("ok")
   expect(recovered).not.toHaveProperty("value")
