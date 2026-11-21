@@ -20,11 +20,11 @@ export function createTeamProfileAccess(input: {
   const installationId = teamProfileInstallationId(input)
   const binding = { installationId, tenantId: input.tenantId, origin: input.origin, mount: input.mount }
   const enabled = new Set(input.enabledTeamIds)
-  return async (request: Request, teamObjectId?: string) => {
+  return async (request: Request, teamObjectId?: string, options?: { refreshSession?: boolean }) => {
     const intent = readTeamProfileIntent(request, binding)
     if (!intent || (teamObjectId && intent.kind === "team" && teamObjectId !== intent.profile.teamObjectId))
       return { status: "denied" } as const
-    await input.prepare(request)
+    if (options?.refreshSession !== false) await input.prepare(request)
     const observation = await input.observeTeams(request)
     const observed = observation.result
     if (request.signal.aborted) return { status: "denied" } as const
