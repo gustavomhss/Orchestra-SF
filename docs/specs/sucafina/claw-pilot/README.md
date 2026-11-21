@@ -6,8 +6,8 @@ O Core expõe `Inbox.readStored(db)` para ler a Inbox persistida da instalação
 
 ## Dependências para ligar o MCP
 
-1. Revisar e integrar em `dev` os commits da branch `sf-install-dev` com o [listener e a factory Microsoft](../../../guides/sucafina-microsoft-installation.md). A branch `claw-dev` já carrega esses commits localmente.
-2. Integrar a projeção nativa de Meu trabalho e a autorização `sf_work_list`. A composição do Claw usa o mesmo principal para autorizar a seleção, ler a Inbox e devolver o resultado.
+1. Integrar o listener mínimo da frente compartilhada `serve-installation` em `dev`. A branch local `sf-install-dev` guarda o port da [factory Microsoft](../../../guides/sucafina-microsoft-installation.md), já incluído como candidato em `claw-dev`. Reaplique a composição Microsoft sobre o listener compartilhado quando ele entrar. Use uma única entrega do listener.
+2. Integrar a projeção nativa de Meu trabalho e a autorização `sf_work_list`. O produtor existente lê threads, relações, confirmações, seleções e Procurement pela autoridade de produto. A composição do Claw usa o mesmo principal para autorizar a seleção, ler a Inbox e devolver o resultado.
 3. Ligar `sf_pendencias` à factory, configurar os itens permitidos por conta e empacotar o CLI Linux, a factory e o Web da mesma revisão. O pacote precisa do recibo que o instalador corporativo verifica.
 4. Na instalação corporativa, comprovar a leitura com duas contas Entra, a negativa de acesso cruzado e o retorno dos quatro especialistas ao Maestro.
 
