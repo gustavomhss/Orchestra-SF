@@ -13,6 +13,7 @@ import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewConfirmation } from "../../shared/change-review"
 import { SfProcurementSettingsFields } from "./fields"
 import { SETTINGS_REF, changedSettings, settingsReview } from "./model"
+import { receiveSettingsSource } from "./draft"
 import type { Settings, SettingsProjection } from "./model"
 import "./settings.css"
 import "../overview/presentation.css"
@@ -180,7 +181,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const controller = draft()
     const currentVersion = projection?.value.versions.settings?.version
     if (projection && controller && currentVersion !== undefined)
-      controller.receiveRemote({ baseVersion: currentVersion, value: projection.value.data.settings })
+      receiveSettingsSource(controller, { baseVersion: currentVersion, value: projection.value.data.settings })
   })
   const snapshot = () => draft()?.snapshot()
   const active = () => {

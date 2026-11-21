@@ -3,6 +3,10 @@ import { act } from "../../../modules/sucafina/porta/act"
 import { createRenderEffect, createRoot } from "solid-js"
 import { createStore, unwrap } from "solid-js/store"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
+import type { SfEditScopeKey, SfOwnerKey, SfRef } from "@orchestra/schema/sucafina/context"
+import { createSfDraft } from "../src/orchestra/chapters/sucafina/shared/draft"
+import { receiveSettingsSource } from "../src/orchestra/chapters/sucafina/procurement/settings/draft"
+import type { Settings } from "../src/orchestra/chapters/sucafina/procurement/settings/model"
 import { poFromRecord, prFromRecord, type SfRequest } from "../src/orchestra/chapters/sucafina/procurement/requests/model"
 import { editableSourcing } from "../src/orchestra/chapters/sucafina/procurement/sourcing/model"
 
@@ -149,4 +153,46 @@ describe("procurement drafts at the original JSON command boundary", () => {
     }
   })
 
+})
+
+describe("procurement settings source delivery", () => {
+  test("source delivery does not observe its own draft publication and retains version conflicts", () => {
+    createRoot((dispose) => {
+      try {
+        const [projection, setProjection] = createStore({
+          version: 1, settings: { currency: "USD", reminderDays: 7 },
+        })
+        const controller = createSfDraft<Settings>({
+          ownerKey: "settings-test-owner" as SfOwnerKey,
+          surfaceId: "CAP28",
+          identity: { kind: "record", recordRef: "settings" as SfRef },
+          editScopeKey: "CAP28:test" as SfEditScopeKey,
+          baseVersion: projection.version,
+          base: projection.settings,
+          value: projection.settings,
+        })
+        let deliveries = 0
+        createRenderEffect(() => {
+          deliveries++
+          if (deliveries > 3) throw new Error("Source delivery subscribed to its own draft publication")
+          receiveSettingsSource(controller, {
+            baseVersion: projection.version, value: projection.settings,
+          })
+        })
+        expect(deliveries).toBe(1)
+        controller.edit({ currency: "USD", reminderDays: 9 })
+        expect(deliveries).toBe(1)
+        setProjection({ version: 2, settings: { currency: "USD", reminderDays: 8 } })
+        expect(deliveries).toBe(2)
+        const state = controller.snapshot()
+        expect(state.availability).toBe("active")
+        if (state.availability !== "active") throw new Error("Settings draft unavailable")
+        expect(state.value.reminderDays).toBe(9)
+        expect(state.baseVersion).toBe(1)
+        expect(state.conflict?.currentVersion).toBe(2)
+        expect(state.conflict?.current.reminderDays).toBe(8)
+        expect(state.phase).toBe("conflict")
+      } finally { dispose() }
+    })
+  })
 })

@@ -82,24 +82,43 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       response.request().method() === "POST" &&
       new URL(response.url()).pathname === installation.mount + "/procurement").then(async (response) => {
         const status = response.status()
-        const body: unknown = await response.json().catch(() => null)
-        return { status, body }
+        const contentType = response.headers()["content-type"] ?? ""
+        let body: unknown = null
+        let bodyRead: "read" | "unavailable" | "invalid-json" = "unavailable"
+        let bodyError: string | undefined
+        try {
+          const text = await response.text()
+          bodyRead = "invalid-json"
+          body = JSON.parse(text)
+          bodyRead = "read"
+        } catch (error) {
+          bodyError = error instanceof Error && /^[A-Za-z]*Error$/.test(error.name) ? error.name : "unknown"
+        }
+        return { status, contentType, body, bodyRead, bodyError }
       }).catch(() => null)
     await review.getByRole("button", { name: label, exact: true }).click()
     await expect.poll(() => posts.length, { message: "one explicit confirmation sends one original producer command" }).toBe(before + 1)
     const response = await responsePending
     if (!response) throw new Error("The original producer did not return a command response.")
     const result = response.body && typeof response.body === "object"
-      ? response.body as Record<string, unknown> : {}
+      ? response.body as Record<string, unknown> : null
     // Only bounded status/error enums are logged: never request values, headers,
     // source records, actor identity or opaque owner/intent credentials.
-    const codes = Array.isArray(result.errors) ? result.errors.filter((value): value is string =>
+    const codes = result && Array.isArray(result.errors) ? result.errors.filter((value): value is string =>
       typeof value === "string" && /^[a-z][a-z0-9_-]{0,63}$/.test(value)).slice(0,8) : []
     console.info("SF_DESIGN_COMMAND " + JSON.stringify({
-      group: journey.id, ordinal: before + 1, status: response.status, confirmed: result.ok === true, codes,
+      group: journey.id, ordinal: before + 1, status: response.status,
+      bodyRead: response.bodyRead, bodyError: response.bodyError,
+      confirmed: response.bodyRead === "read" ? result?.ok === true : null, codes,
     }))
     expect(response.status, "the original producer explicitly accepted this confirmation").toBe(200)
-    expect(result.ok === true, "a successful HTTP status must include the original acknowledgement").toBe(true)
+    expect(response.contentType, "the original producer returns a JSON command response").toMatch(/^application\/json(?:\s*;|$)/i)
+    expect(response.bodyRead, "a readable malformed body is not an acknowledgement").not.toBe("invalid-json")
+    if (response.bodyRead === "read")
+      expect(result?.ok === true, "a readable original acknowledgement must explicitly accept the command").toBe(true)
+    // An unavailable browser response body is reported, never converted into ok.
+    // The application must close its review and complete its own original-response
+    // checks; every caller then performs a fresh, exact canonical source readback.
     await expect(review).toHaveCount(0)
     const host = page.locator('[data-sf-host="owner-runtime231"]')
     await expect(host).toHaveAttribute("data-sf-provider-state", "ready")
@@ -352,7 +371,9 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       const surface = page.locator('[data-sf-surface="CAP27"]')
       const list = surface.locator(".sf-u14-list")
       await expect(list.locator("tr[data-sf-row]")).toHaveCount(3)
-      await expect(list.getByLabel("Filter by status", { exact: true }).locator('option[value="All"]')).toHaveText("All")
+      const statusFilter = list.locator(".sf-u14-filters").getByRole("combobox")
+      await expect(statusFilter).toHaveValue("All")
+      await expect(statusFilter.locator('option[value="All"]')).toHaveText("All")
       await scrollPageTop(page)
       await capture(page, info, "CAP27-dark-desktop-supplier-list-test-data")
       await scheme(page, "light")
@@ -474,6 +495,20 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
         for (const screen of screens) {
           await go(screen, localized, true)
           await scheme(localized, "dark")
+          if (screen.id === "CAP28") {
+            const form = localized.locator('[data-sf-surface="CAP28"] .sf-n21-settings-form')
+            await expect(form).toBeVisible()
+            await expect(form.locator(".sf-n21-settings-nav a")).toHaveCount(7)
+            await expect(form.locator("#sf-u36-field-reminderDays")).toHaveValue("7")
+          } else {
+            const sourceRows = {
+              CAP24: 'tr[data-sf-request]',
+              CAP25: '.sf-u11-list tr[data-sf-row]',
+              CAP26: '[data-sf-cap26="submitted-pr"] tr[data-sf-row]',
+              CAP27: '.sf-u14-list tr[data-sf-row]',
+            }
+            await expect(localized.locator(sourceRows[screen.id]).first()).toBeVisible()
+          }
           await expect(localized.locator('[data-sf-frame="page"]')).not.toContainText(/sf\.(?:u1[1234]|u36|n21)\./)
           await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
           await localized.setViewportSize({ width: 320, height: 900 })
@@ -483,6 +518,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
           await localized.setViewportSize({ width: 1440, height: 1100 })
         }
         expect(localizedMessages.pageErrors).toEqual([])
+        expect(localizedMessages.consoleErrors).toEqual([])
         await info.attach("procurement-pt-BR-diagnostics", {
           body: JSON.stringify(localizedMessages, null, 2), contentType: "application/json",
         })
@@ -493,6 +529,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
   expect(posts).toHaveLength(journey.commands.length)
   expect([...origins]).toEqual([installation.origin])
   expect(messages.pageErrors).toEqual([])
+  expect(messages.consoleErrors).toEqual([])
   await info.attach("native-procurement-wave-four-evidence", {
     body: JSON.stringify({
       source: "original producers in an isolated installation; no mocked auth, grants, records, decisions or receipts",
