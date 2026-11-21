@@ -9,7 +9,7 @@ import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/fr
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { readRequestBody } from "../../../../modules/sucafina/Sucafinav1/runtime/request-body.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+import { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions, type CurrentChoiceFence } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
 import { probeSfAtlasScanner } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"
 import { initializeAbsentSfProductState } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { sfHumanActions } from "../../../../modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
@@ -167,7 +167,7 @@ export function createSfTeamCurrentChoice() {
         business.bindDecisionDomain(domain)
         try {
           if (mode === "decision-archive-choice") return await archiveTeamChoice({
-            request, authority, business, current: input.current,
+            request, authority, business, fence, current: input.current,
           })
           currentChoice = createSfCurrentChoiceServices({ authority, business, fence, proposalCoverageWrites })
           const current = createSfCurrentChoiceHttp({ origin, mount, runtime: () => ({ authority, currentChoice }) })
@@ -190,9 +190,10 @@ async function archiveTeamChoice(input: {
   request: Request
   authority: ReturnType<typeof createSfProductAuthority>
   business: ReturnType<typeof createSfBusinessServices>
+  fence: CurrentChoiceFence
   current: () => Promise<boolean>
 }) {
-  const { authority, business, request, current } = input
+  const { authority, business, request, current, fence } = input
   const reply = (status: number, value: unknown) => Response.json(value, { status, headers: { "Cache-Control": "no-store" } })
   if (request.method !== "POST") return reply(405, { status: "denied" })
   const params = new URL(request.url).searchParams
@@ -212,20 +213,36 @@ async function archiveTeamChoice(input: {
     const entry = state.outbox[JSON.stringify([caseRef.id, caseRef.incarnation, events[0].id])]
     if (entry?.writerPrincipalRef !== actor.principalRef || entry.accessRevision !== actor.accessRevision ||
         entry.eventRef.target.eventId !== events[0].id) return undefined
-    return entry.eventRef
+    return { ref: entry.eventRef, key: JSON.stringify([caseRef.id, caseRef.incarnation, events[0].id]) }
   })
   if (pending.status !== "ok" || !pending.value) return reply(403, { status: "denied" })
-  const ref = pending.value
+  const { ref, key } = pending.value
   const digest = digestSfValue(ref)
   const admitted = await authority.ui.admit(request, "sf_evidence_get", digest)
   if (admitted.status !== "ok") return reply(403, { status: "denied" })
   try {
     if (!await authority.ui.validate(admitted.value, "sf_evidence_get", digest) || !await current())
       return reply(403, { status: "denied" })
-    const receipt = await business.context.emitFromLedger(ref, admitted.value)
+    const event = await fence.run(admitted.value, async () => {
+      // The outbox reader and the Atlas append must agree on the same case
+      // inside the real SQLite transaction, even if an edit wins the race.
+      fence.observe(admitted.value, (snapshots) => {
+        const decision = object(object(object(snapshots.dashboard.data.__sfProductV1).cases)[caseRef.id])
+        return decision.incarnation === caseRef.incarnation && decision.version === caseRef.version
+      })
+      if (!await fence.check(admitted.value)) return undefined
+      const receipt = await business.context.emitFromLedger(ref, admitted.value)
+      if (!(receipt.status === "committed" || receipt.status === "already-committed") || receipt.scanner.status !== "clean" ||
+          receipt.sourceEventId !== ref.target.eventId || !receipt.eventId) return undefined
+      const stored = await authority.state.read(request, "outbox", (state) => {
+        const item = state.outbox[key]
+        return item?.state === "settled" && digestSfValue(item.eventRef) === digest && item.receipt.status === "committed" &&
+          item.receipt.eventId === receipt.eventId && item.receipt.scanner.status === "clean"
+      })
+      return stored.status === "ok" && stored.value ? receipt.eventId : undefined
+    }).catch(() => undefined)
     if (!await current()) return reply(403, { status: "denied" })
-    if (receipt.status !== "committed" || receipt.scanner.status !== "clean") return reply(503, { status: "unavailable" })
-    return reply(200, { status: "ok", eventId: receipt.eventId })
+    return event ? reply(200, { status: "ok", eventId: event }) : reply(503, { status: "unavailable" })
   } finally { authority.ui.finish(admitted.value) }
 }
 
