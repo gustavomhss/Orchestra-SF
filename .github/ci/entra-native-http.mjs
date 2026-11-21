@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import { readFile } from "node:fs/promises"
 import { resolve, sep } from "node:path"
+import { createRequire } from "node:module"
 
 const { SF_PROOF_PORT: port, SF_PROOF_KEY: ingressProof, SF_PROOF_WEB: webRoot } = process.env
 assert(port && ingressProof && webRoot)
@@ -102,4 +103,57 @@ assert.equal((await request(expectedTeamRoute, { cookie: denied })).status, 403,
 const deniedContext = await request(context, { cookie: denied, accept: "application/json" })
 assert([200, 403].includes(deniedContext.status), "native Team context denies account")
 assert.deepEqual(await deniedContext.json(), { status: "denied" }, "no Team payload is returned")
-console.log("ENTRA_NATIVE_PACKAGE_OK: installed Web and JS, separate signed sessions, no-Team and direct-Team 403")
+// Load Playwright from the candidate's locked workspace, not a global install.
+const { chromium } = createRequire(resolve(process.env.GITHUB_WORKSPACE, "packages/app-shell/package.json"))("@playwright/test")
+const browser = await chromium.launch()
+try {
+  for (const [session, eligible] of [[allowed, true], [denied, false]]) {
+    const browserContext = await browser.newContext({ serviceWorkers: "block" })
+    try {
+      const separator = session.indexOf("=")
+      await browserContext.addCookies([{
+        name: session.slice(0, separator), value: session.slice(separator + 1),
+        domain: new URL(origin).hostname, path: mount, secure: true, httpOnly: true, sameSite: "Lax",
+      }])
+      // Preserve the browser's HTTPS origin. Forward only this host through the real
+      // installed loopback listener using the same ingress proof as the proxy.
+      await browserContext.route("**/*", async (route) => {
+        const incoming = route.request()
+        const url = new URL(incoming.url())
+        if (url.origin !== origin) return route.abort()
+        const headers = await incoming.allHeaders()
+        delete headers["content-length"]
+        const upstream = await fetch(local + url.pathname + url.search, {
+          method: incoming.method(),
+          redirect: "manual",
+          signal: AbortSignal.timeout(15_000),
+          headers: { ...headers, host, "x-sf-ingress-proof": ingressProof },
+          body: incoming.postDataBuffer() ?? undefined,
+        })
+        const forwarded = Object.fromEntries(upstream.headers)
+        delete forwarded["content-encoding"]
+        delete forwarded["content-length"]
+        await route.fulfill({ status: upstream.status, headers: forwarded, body: Buffer.from(await upstream.arrayBuffer()) })
+      })
+      const tab = await browserContext.newPage()
+      const shell = tab.locator("[data-sf-teams-shell]")
+      await tab.goto(origin + "/", { waitUntil: "domcontentloaded", timeout: 30_000 })
+      await shell.waitFor({ timeout: 25_000 })
+      if (eligible) {
+        await tab.locator(`[data-sf-team-selected="${team}"]`).waitFor({ timeout: 25_000 })
+      } else {
+        await tab.waitForFunction(() => {
+          const node = document.querySelector("[data-sf-teams-shell]")
+          const status = node?.getAttribute("data-sf-teams-state")
+          return status === "denied" || (status === "authenticated" && !node.hasAttribute("data-sf-team-selected"))
+        }, undefined, { timeout: 25_000 })
+        assert.equal(await tab.locator("[data-sf-team-selected]").count(), 0, "no Team is rendered for the ineligible account")
+      }
+    } finally {
+      await browserContext.close()
+    }
+  }
+} finally {
+  await browser.close()
+}
+console.log("ENTRA_NATIVE_PACKAGE_OK: installed Web rendered by Chromium, exact JS bytes, separate signed sessions, no-Team and direct-Team 403")
