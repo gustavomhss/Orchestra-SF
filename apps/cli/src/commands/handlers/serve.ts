@@ -7,7 +7,7 @@ import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { PermissionSaved } from "@orchestra/core/permission/saved"
 import { SessionV2 } from "@orchestra/core/session"
 import { Context, Effect, Layer, Option } from "effect"
-import { HttpRouter, HttpServer } from "effect/unstable/http"
+import { HttpMiddleware, HttpRouter, HttpServer } from "effect/unstable/http"
 import { createServer } from "node:http"
 import { writeSync } from "node:fs"
 import path from "node:path"
@@ -89,13 +89,15 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
           }),
           (loaded) => Effect.promise(async () => { await loaded.dispose() }),
         )
+        const dedicated = installation?.dedicated === true
+        if (dedicated && input.register) return yield* Effect.fail(new Error("Trusted ingress listeners cannot register as the daemon"))
         const daemon = yield* Daemon.Service
         // A desktop-owned child gets a per-launch password and never touches the daemon's password file.
-        const password = launchPassword || (yield* daemon.password())
-        const root = yield* Effect.promise(() => webRoot())
+        const password = dedicated ? undefined : launchPassword || (yield* daemon.password())
+        const root = dedicated ? undefined : yield* Effect.promise(() => webRoot())
         // Legacy transcripts on this database are copied to V2 before the server answers: a Session is eligible only
         // while it has no V2 message, so a prompt reaching an old Session first would skip its history forever.
-        yield* Effect.gen(function* () {
+        if (!dedicated) yield* Effect.gen(function* () {
           const database = yield* Database.Service
           const imported = yield* SessionV2.SessionLegacyImport.run(database.db)
           if (imported > 0) console.log(`imported ${imported} legacy session transcripts`)
@@ -124,17 +126,27 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
     )
 })
 
+type SfInstallation = Awaited<ReturnType<typeof import("../../sucafina-product/installation").loadSfInstallation>>
+type ListenerRoutes =
+  | { dedicated: true; layer: SfInstallation["layer"] }
+  | { dedicated: false; layer: ReturnType<typeof createRoutes> }
+
 function listen(
   input: ServeInput,
-  password: string,
+  password: string | undefined,
   root: string | undefined,
   allowedHosts: ReadonlyArray<string>,
-  installation?: Awaited<ReturnType<typeof import("../../sucafina-product/installation").loadSfInstallation>>,
+  installation?: SfInstallation,
 ) {
-  const routes = Layer.merge(
-    createRoutes({ password, host: hosts(), webRoot: root, allowedHosts, cors: input.cors, requestBodyLimit: installation?.bodyLimit }),
-    installation?.layer ?? Layer.empty,
-  )
+  const routes: ListenerRoutes = installation?.dedicated
+    ? { dedicated: true, layer: installation.layer }
+    : {
+      dedicated: false,
+      layer: Layer.merge(
+        createRoutes({ password, host: hosts(), webRoot: root, allowedHosts, cors: input.cors, requestBodyLimit: installation?.bodyLimit }),
+        installation?.layer ?? Layer.empty,
+      ),
+    }
   if (Option.isSome(input.port)) return bind(input.hostname, input.port.value, routes)
   const next = (port: number): ReturnType<typeof bind> =>
     bind(input.hostname, port, routes).pipe(
@@ -143,21 +155,22 @@ function listen(
   return next(4096)
 }
 
-function bind(
-  hostname: string,
-  port: number,
-  routes: ReturnType<typeof createRoutes>,
-) {
+function bind(hostname: string, port: number, routes: ListenerRoutes) {
   const server = createServer()
-  return Layer.build(
-    HttpRouter.serve(routes, {
-      disableListenLog: true,
-      disableLogger: true,
-    }).pipe(
-      Layer.provideMerge(NodeHttpServer.layer(() => server, { port, host: hostname })),
-      Layer.provide(AppNodeBuilder.build(LayerNode.group([Credential.node, PermissionSaved.node, ClaudeCodeAccount.node]))),
-    ),
-  ).pipe(Effect.map((context) => ({ address: Context.get(context, HttpServer.HttpServer).address, server })))
+  const node = NodeHttpServer.layer(() => server, { port, host: hostname })
+  const options = { disableListenLog: true, disableLogger: true }
+  return Effect.gen(function* () {
+    const context = routes.dedicated
+      // The native HTTP tracer sees original headers and OAuth callback queries before the product can strip them.
+      ? yield* Layer.build(HttpRouter.serve(routes.layer, options).pipe(Layer.provideMerge(node))).pipe(
+        Effect.provideService(HttpMiddleware.TracerDisabledWhen, () => true),
+      )
+      : yield* Layer.build(HttpRouter.serve(routes.layer, options).pipe(
+        Layer.provideMerge(node),
+        Layer.provide(AppNodeBuilder.build(LayerNode.group([Credential.node, PermissionSaved.node, ClaudeCodeAccount.node]))),
+      ))
+    return { address: Context.get(context, HttpServer.HttpServer).address, server }
+  })
 }
 
 // The Dock tools exist only when the desktop that owns this child handed it a Dock channel.

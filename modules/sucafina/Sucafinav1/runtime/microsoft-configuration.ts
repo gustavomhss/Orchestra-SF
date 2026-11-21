@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto"
+import { randomUUID, timingSafeEqual } from "node:crypto"
 import { constants } from "node:fs"
 import { link, lstat, open, realpath, unlink } from "node:fs/promises"
 import path from "node:path"
@@ -47,6 +47,15 @@ export async function loadMicrosoftConfiguration(file: string) {
   // Validate availability before any business database opens; retain only the reader.
   await clientSecret()
   return { config, directory, keys: { session: keys[0], bank: keys[1], assets: keys[2] }, clientSecret }
+}
+
+/** Use the owner-only proxy credential without exposing it to installation handlers. */
+export async function loadMicrosoftIngressAuthorizer(directory: string) {
+  const proof = (await privateBytes(path.join(directory, "ingress-secret.txt"), 66)).toString("utf8").replace(/\r?\n$/, "")
+  if (!/^[a-f0-9]{64}$/.test(proof)) throw new Error("Invalid Microsoft ingress credential")
+  const expected = Buffer.from(proof, "hex")
+  return (received: string | undefined) => typeof received === "string" && /^[a-f0-9]{64}$/.test(received) &&
+    timingSafeEqual(expected, Buffer.from(received, "hex"))
 }
 
 export function validateMicrosoftConfiguration(value: unknown): MicrosoftConfiguration {

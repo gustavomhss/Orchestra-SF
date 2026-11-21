@@ -1,10 +1,18 @@
 import { realpath } from "node:fs/promises"
+import { IncomingMessage } from "node:http"
 import { isIP } from "node:net"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { NodeHttpServerRequest, NodeStream } from "@effect/platform-node"
 import { Effect, Option, Stream } from "effect"
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+
+type TrustedIngress = {
+  origin: string
+  authorize: (proof: string | undefined) => boolean
+}
+
+const ingressProofHeader = "x-sf-ingress-proof"
 
 type Installation = {
   mount: `/${string}`
@@ -36,8 +44,13 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     throw new Error("Installation factory must provide a valid, non-API mount and handler")
   }
   const installation = value as Installation
+  const ingress = "trustedIngress" in value ? parseTrustedIngress(value.trustedIngress, hostname) : undefined
+  if ("trustedIngress" in value && !ingress) {
+    await installation.dispose()
+    throw new Error("Trusted installation ingress requires a loopback listener, canonical HTTP origin and authorizer")
+  }
   const bodyLimit = (incoming: HttpServerRequest.HttpServerRequest) => {
-    if (incoming.method !== "POST") return undefined
+    if (ingress || incoming.method !== "POST") return undefined
     const url = Option.getOrUndefined(HttpServerRequest.toURL(incoming))
     if (url?.origin === origin.origin && url.pathname === `${installation.mount}/dashboard` &&
       url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract") {
@@ -46,13 +59,19 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
   }
   const route = Effect.gen(function* () {
     const incoming = yield* HttpServerRequest.HttpServerRequest
-    const authority = incoming.headers.host?.toLowerCase()
-    if (authority !== origin.host && !(port === 80 && authority === `${origin.host}:80`)) {
-      return HttpServerResponse.empty({ status: 403 })
+    if (!ingress) {
+      const authority = incoming.headers.host?.toLowerCase()
+      if (authority !== origin.host && !(port === 80 && authority === `${origin.host}:80`)) {
+        return HttpServerResponse.empty({ status: 403 })
+      }
     }
     const source = incoming.source instanceof Request ? incoming.source : undefined
-    const url = source ? new URL(source.url) : Option.getOrUndefined(HttpServerRequest.toURL(incoming))
-    if (url?.origin !== origin.origin) return HttpServerResponse.empty({ status: 403 })
+    const url = ingress
+      ? incoming.source instanceof IncomingMessage ? trustedIngressUrl(incoming.source, ingress) : undefined
+      : source ? new URL(source.url) : Option.getOrUndefined(HttpServerRequest.toURL(incoming))
+    if (!url || (!ingress && url.origin !== origin.origin)) {
+      return HttpServerResponse.empty({ status: 403, headers: ingress ? { connection: "close" } : undefined })
+    }
     if (url.pathname !== installation.mount && !url.pathname.startsWith(`${installation.mount}/`)) {
       return HttpServerResponse.empty({ status: 404 })
     }
@@ -87,8 +106,9 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
         node.on("error", ignoreDisconnect)
         node.once("close", () => node.off("error", ignoreDisconnect))
       }
+      const headers = ingress ? corporateHeaders(incoming.headers, url.host) : incoming.headers
       const response = await installation.handler(new Request(url, {
-        method: incoming.method, headers: incoming.headers, signal, ...(body ? { body, duplex: "half" } : {}),
+        method: incoming.method, headers, signal, ...(body ? { body, duplex: "half" } : {}),
       })).catch(() => new Response(null, { status: 503 }))
       if (body && !body.locked) void body.cancel().catch(() => undefined)
       if (exceeded) return HttpServerResponse.empty({ status: 413, headers: { connection: "close" } })
@@ -99,7 +119,51 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
   return {
     dispose: () => installation.dispose(),
     bodyLimit,
+    dedicated: ingress !== undefined,
     // Effect registers a trailing wildcard for both the mount and its subtree.
     layer: HttpRouter.add("*", `${installation.mount}/*`, route),
   }
+}
+
+function parseTrustedIngress(value: unknown, hostname: string) {
+  if (hostname !== "127.0.0.1" && hostname !== "::1") return undefined
+  if (!value || typeof value !== "object" ||
+      !("origin" in value) || typeof value.origin !== "string" || !URL.canParse(value.origin) ||
+      !("authorize" in value) || typeof value.authorize !== "function") return undefined
+  const origin = new URL(value.origin)
+  if (origin.protocol !== "http:" || origin.origin !== value.origin) return undefined
+  return { origin, authorize: value.authorize as TrustedIngress["authorize"] }
+}
+
+function trustedIngressUrl(node: IncomingMessage, ingress: { origin: URL; authorize: TrustedIngress["authorize"] }) {
+  const peer = node.socket.remoteAddress
+  if (peer !== "127.0.0.1" && peer !== "::1" && peer !== "::ffff:127.0.0.1") return undefined
+  const target = node.url
+  if (!target?.startsWith("/") || target.startsWith("//") || target.includes("\\") || target.includes("#")) return undefined
+  const headers = node.rawHeaders
+  const values: { host?: string; proof?: string } = {}
+  for (let offset = 0; offset < headers.length; offset += 2) {
+    const name = headers[offset]?.toLowerCase()
+    const field = name === "host" ? "host" : name === ingressProofHeader ? "proof" : undefined
+    if (!field) continue
+    if (values[field] !== undefined) return undefined
+    values[field] = headers[offset + 1]
+  }
+  if (values.host?.toLowerCase() !== ingress.origin.host || !values.proof) return undefined
+  try {
+    if (ingress.authorize(values.proof) !== true) return undefined
+    const url = new URL(target, ingress.origin)
+    return url.origin === ingress.origin.origin ? url : undefined
+  } catch {
+    return undefined
+  }
+}
+
+function corporateHeaders(incoming: HeadersInit, host: string) {
+  const headers = new Headers(incoming)
+  for (const name of [...headers.keys()]) {
+    if (name === ingressProofHeader || name === "forwarded" || name.startsWith("x-forwarded-")) headers.delete(name)
+  }
+  headers.set("host", host)
+  return headers
 }

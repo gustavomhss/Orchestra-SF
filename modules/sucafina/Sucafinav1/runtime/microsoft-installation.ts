@@ -1,6 +1,6 @@
 import { createEntraClient } from "./entra-client.ts"
 import { requireLocalIsolation } from "./local-configuration.ts"
-import type { EntraOptions, LocalSecrets } from "./local-contract.ts"
+import type { CorporateLocalSecrets, EntraOptions } from "./local-contract.ts"
 import { createMicrosoftIdentity } from "./local-identity.ts"
 import { bindMicrosoftInstallation, loadMicrosoftConfiguration } from "./microsoft-configuration.ts"
 
@@ -34,7 +34,7 @@ export async function prepareMicrosoftInstallation(
   })
   return {
     loaded: { config, directory, keys }, transport,
-    createIdentity(secrets: LocalSecrets) {
+    createIdentity(secrets: CorporateLocalSecrets) {
       const identity = createMicrosoftIdentity({
         origin: config.origin, mount: config.mount, tenantId: config.tenantId, clientId: config.clientId,
         client, secrets, key: keys.session, sessionSeconds: config.sessionSeconds, loginSeconds: config.loginSeconds,
@@ -53,6 +53,7 @@ export function microsoftRequest(request: Request, transport: MicrosoftTransport
       request.headers.get("host")?.toLowerCase() !== new URL(transport.ingressOrigin).host.toLowerCase()) return undefined
   const headers = new Headers(request.headers)
   headers.delete("forwarded")
+  headers.delete("x-sf-ingress-proof")
   for (const name of [...headers.keys()]) if (name.startsWith("x-forwarded-")) headers.delete(name)
   headers.set("host", new URL(transport.publicOrigin).host)
   return new Request(transport.publicOrigin + url.pathname + url.search, {
