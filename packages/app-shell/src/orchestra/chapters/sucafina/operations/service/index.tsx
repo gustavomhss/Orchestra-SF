@@ -144,6 +144,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
     year: props.route.query.year, month: props.route.query.month,
     refresh: 0, editor: null, submitting: false, operationState: "idle", errorText: null,
   })
+  const reviewLocked = () => state.submitting || state.operationState === "unknown"
   const setEditorReview = (review: boolean) =>
     setState("editor", (current) => current ? { ...current, review } : null)
   let draft: Draft | undefined
@@ -883,7 +884,14 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                     <p class="sf-ops-caption">{t(sourceKey(editor.review ? "design.reviewHint" : "design.editHint"))}</p>
                   </header>
                   <Show when={!editor.review} fallback={
-                    <Show when={activeDraft()} keyed>{(snapshot) => <SfChangeReview
+                    <Show when={activeDraft()} keyed>{(snapshot) => <>
+                      <Show when={state.operationState === "unknown"}>
+                        <button type="button" class="mx-btn" disabled={state.submitting}
+                          onClick={() => setState("refresh", (value) => value + 1)}>{t("sf.s03.checkOutcome" as SfCopyKey)}</button>
+                      </Show>
+                      <fieldset disabled={reviewLocked()} aria-busy={state.submitting}
+                        aria-label={t(commonKey("review"))}>
+                    <SfChangeReview
                       operation={{
                         ref: editor.operationRef,
                         label: message(sourceKey("action." + editor.action)),
@@ -920,10 +928,15 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                       }}
                       state={reviewState()}
                       onConfirm={() => { void submitReviewed() }}
-                      onRevise={() => { setEditorReview(false); draft?.setPhase("dirty") }}
-                      onCancel={() => setEditorReview(false)}
-                       onReconcile={() => setState("refresh", (value) => value + 1)}
-                    />}</Show>
+                      onRevise={() => {
+                        if (reviewLocked()) return
+                        setEditorReview(false); draft?.setPhase("dirty")
+                      }}
+                      onCancel={() => { if (!reviewLocked()) setEditorReview(false) }}
+                      onReconcile={state.operationState === "unknown" ? undefined
+                        : () => setState("refresh", (value) => value + 1)}
+                    /></fieldset>
+                    </>}</Show>
                   }>
                     <form onSubmit={(event) => { event.preventDefault(); showReview() }}>
                       <Show when={editor.action === "save-tickets"}>

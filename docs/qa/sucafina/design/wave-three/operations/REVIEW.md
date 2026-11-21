@@ -124,6 +124,12 @@ CAP13/CAP15 now materialize command values with Object.entries/Object.fromEntrie
 
 These corrections need the independent runtime writes and final scoped type gates; source inspection alone is not recorded as a successful write.
 
+## Pending and unknown review controls
+
+CAP11/CAP12 Cancel/Revise callbacks now reject transitions while a command is submitting or its outcome is unknown. A local native disabled fieldset makes this restriction visible and keyboard-safe, without changing shared S03. The existing Check outcome action remains available outside that disabled fieldset during outcome-unknown and calls the same scoped refresh; the duplicate internal reconcile button is omitted in that state. Existing fieldset styling already resets its border, padding and width, so the normal review geometry is unchanged. No draft, pending operation, idempotency or command is cleared by closing presentation.
+
+This is a local guard confirmed by source review; the campaign does not simulate lost responses or claim runtime qualification of artificial outcome-unknown states. The normal real writes and final browser captures remain the execution gate. Scope is now frozen except for concrete runtime or gate findings.
+
 ## User guide notes for integration
 
 Service: select year/month, inspect SLA/history and ticket categories, edit the required section, then review. Categories/applications are under their disclosure. Monthly replacement is prepared and reviewed before sending.
