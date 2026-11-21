@@ -45,6 +45,8 @@ async function fixture(options: {
   route?: (request: Request) => Response | Promise<Response | undefined> | undefined
   directoryLimit?: number
   teams?: EntraOptions["teams"]
+  profile?: EntraOptions["profile"]
+  clientSecret?: EntraOptions["clientSecret"]
   grantedScopes?: string
 } = {}) {
   const fixtureTenant = options.tenantId ?? tenant
@@ -70,7 +72,10 @@ async function fixture(options: {
     }
     throw new Error(`Unexpected fixture request: ${url.origin}${url.pathname}`)
   }
-  const client = createEntraClient({ tenantId: fixtureTenant, clientId, now: () => new Date(epoch * 1000), fetch, directoryLimit: options.directoryLimit, teams: options.teams })
+  const client = createEntraClient({
+    tenantId: fixtureTenant, clientId, now: () => new Date(epoch * 1000), fetch,
+    directoryLimit: options.directoryLimit, teams: options.teams, profile: options.profile, clientSecret: options.clientSecret,
+  })
   return { client, requests, signed }
 }
 
@@ -397,6 +402,67 @@ const teamB = "88888888-8888-4888-8888-888888888888"
 const teamRow = (id = teamA) => ({ id, tenantId: tenant, displayName: "Shared display name", isArchived: false })
 const teamsInput = (tokens: EntraTokens) =>
   ({ tokens, principal: { tenantId: tenant, principalObjectId: oid } })
+
+test("confidential Teams login requests the delegated scope and sends the private credential only to the token endpoint", async () => {
+  const secret = "synthetic-confidential-client-secret"
+  const credentialReads: string[] = []
+  const options = {
+    profile: "web-confidential",
+    clientSecret: async () => { credentialReads.push(secret); return secret },
+    claims: { sub: "signed-corporate-subject" },
+  } as const
+  const authorize = { state: "state", nonce: input.nonce, challenge: "challenge", redirectUri: "https://sf.test/sucafina/auth/callback" }
+  const minimal = await fixture(options)
+  const url = new URL(await minimal.client.authorization(authorize))
+  const minimalScopes = ["openid", "profile", "offline_access", "User.Read"]
+  expect(url.searchParams.get("scope")?.split(" ")).toEqual(minimalScopes)
+  expect(minimal.client.joinedTeams).toBeUndefined()
+
+  const teams = await fixture({ ...options, teams: "direct", grantedScopes: teamScope })
+  const teamsUrl = new URL(await teams.client.authorization(authorize))
+  expect(teamsUrl.searchParams.get("scope")?.split(" ")).toEqual([...minimalScopes, teamScope])
+  expect(teamsUrl.searchParams.has("client_secret")).toBe(false)
+  expect(credentialReads).toHaveLength(0)
+  expect(teams.client).toMatchObject({ tenantId: tenant, clientId, profile: "web-confidential" })
+  const result = await teams.client.exchange({ ...input, redirectUri: authorize.redirectUri })
+  expect(result.tokens.grantedScopes).toEqual([teamScope])
+  const request = teams.requests.find((request) => request.url === metadata.token_endpoint)
+  const form = new URLSearchParams(await request?.text())
+  expect(form.get("client_secret")).toBe(secret)
+  expect(form.get("scope")?.split(" ")).toEqual([...minimalScopes, teamScope])
+  await teams.client.refresh("synthetic-refresh")
+  const refresh = teams.requests.at(-1)
+  const refreshForm = new URLSearchParams(await refresh?.text())
+  expect(refresh?.url).toBe(metadata.token_endpoint)
+  expect(refreshForm.get("client_secret")).toBe(secret)
+  expect(refreshForm.has("scope")).toBe(false)
+  expect(credentialReads).toHaveLength(2)
+  expect(teams.requests.every((request) => !request.url.includes(secret))).toBe(true)
+})
+
+test("confidential Teams login fails closed on invalid token endpoint, credential and unobserved consent", async () => {
+  const secret = "synthetic-secret-from-provider"
+  const credentialReads: string[] = []
+  const options = {
+    profile: "web-confidential",
+    clientSecret: async () => { credentialReads.push(secret); return secret },
+    teams: "direct",
+    claims: { sub: "signed-corporate-subject" },
+  } as const
+  const wrongEndpoint = await fixture({ ...options, discovery: { token_endpoint: "https://foreign.test/token" } })
+  await failure(() => wrongEndpoint.client.exchange(input))
+  expect(credentialReads).toHaveLength(0)
+
+  const missingCredential = await fixture({ ...options, clientSecret: async () => { throw new Error(secret) } })
+  expect(await failure(() => missingCredential.client.exchange(input))).not.toContain(secret)
+  expect(missingCredential.requests.some((request) => request.url === metadata.token_endpoint)).toBe(false)
+
+  const missingConsent = await fixture(options)
+  const signed = await missingConsent.client.exchange(input)
+  expect(signed.tokens.grantedScopes).toBeUndefined()
+  expect(await missingConsent.client.joinedTeams!(teamsInput(signed.tokens))).toEqual({ state: "unavailable", reason: "consent_required" })
+  expect(missingConsent.requests.some((request) => new URL(request.url).pathname === joinedPath)).toBe(false)
+})
 
 test("Teams opt-in adds only the delegated scope and uses the signed principal across pages", async () => {
   expect((await fixture()).client.joinedTeams).toBeUndefined()
