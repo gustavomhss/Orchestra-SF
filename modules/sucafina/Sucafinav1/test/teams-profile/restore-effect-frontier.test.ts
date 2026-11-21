@@ -1,8 +1,10 @@
 import { afterEach, expect, test } from "bun:test"
+import { Database } from "bun:sqlite"
 import { randomUUID } from "node:crypto"
 import path from "node:path"
 import { roleMap } from "../../runtime/admin.ts"
 import { createLocalBackups } from "../../runtime/local-backups.ts"
+import { openLocalStore } from "../../runtime/local-store.ts"
 import { restoreBackup } from "../../runtime/operations.ts"
 import { captureSfCorporateRestoreRetention, captureSfRestoreRetention } from "../../runtime/restore-effect-frontier.ts"
 import { createDecisionCasePort } from "../../product/decisions/case-port.ts"
@@ -267,17 +269,80 @@ test("restore-frontier-08: external evidence and checkpoint must each be dominat
 
 test("restore-frontier-09: stale consistent snapshots and retained evidence cannot match a newer independent pin", async () => {
   const f = await fixture()
-  const stale = await f.snapshot()
+  const checkpoint = await f.backups.capture(f.store, "dashboard", f.at)
+  const archive = await f.backups.source.load("dashboard", checkpoint.id)
+  if (!archive) throw new Error("Expected a verified private checkpoint")
+  const stale = archive.snapshot
   const staleFrontier = inspectSfProductRestoreFrontier(stale)
-  expect((await draft(f, randomUUID())).status).toBe("ok")
-  const current = await f.snapshot()
-  const latest = inspectSfProductRestoreFrontier(current)
-  if (!staleFrontier || !latest) throw new Error("Expected product frontiers")
-  const pin = admission(stale, latest)
-  expect(() => captureSfCorporateRestoreRetention(stale, stale, staleFrontier, pin))
-    .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
-  expect(() => captureSfCorporateRestoreRetention(current, stale, latest, pin)).not.toThrow()
-  expect(await f.snapshot()).toEqual(current)
+  if (!staleFrontier) throw new Error("Expected the original checkpoint frontier")
+  expect(staleFrontier.transactions).toHaveLength(0)
+
+  const key = randomUUID()
+  // Drop the acknowledgement only after the actual signed producer settles.
+  await expect(draft(f, key).then((outcome) => {
+    if (outcome.status !== "ok") throw new Error("The real C08 operation did not commit")
+    throw new Error("Simulated loss of the committed response")
+  })).rejects.toThrow("Simulated loss of the committed response")
+  const committed = await f.snapshot()
+  const retained = inspectSfProductRestoreFrontier(committed)
+  if (!retained) throw new Error("Expected the independently observed committed frontier")
+  expect(retained.transactions).toHaveLength(1)
+  const cases = Object.keys(object(object(committed.data.__sfProductV1).cases))
+  expect(cases).toHaveLength(1)
+
+  // The test controls the issuer and keeps this pin outside either business
+  // database and the archive. This exercises comparison, not production trust.
+  const control = new Database(":memory:", { strict: true })
+  const installationDigest = digestSfValue(f.binding)
+  const generation = 2
+  try {
+    control.exec(`CREATE TABLE restore_pin (
+      generation INTEGER PRIMARY KEY, installation_digest TEXT NOT NULL,
+      checkpoint_digest TEXT NOT NULL, frontier_digest TEXT NOT NULL
+    )`)
+    control.query("INSERT INTO restore_pin VALUES (?, ?, ?, ?)").run(
+      generation, installationDigest, digestSfValue(stale), digestSfValue(retained),
+    )
+    const pin = control.query<{
+      generation: number; installationDigest: string; checkpointDigest: string; frontierDigest: string
+    }, [number]>(`SELECT generation, installation_digest AS installationDigest,
+      checkpoint_digest AS checkpointDigest, frontier_digest AS frontierDigest
+      FROM restore_pin WHERE generation = ?`).get(generation)
+    if (!pin) throw new Error("Expected the independent current restore pin")
+    const proof = { installationDigest, generation, pin }
+
+    const rewound = await openLocalStore(path.join(f.directory, "rewound-corporate-business"))
+    cleanups.push(rewound.dispose)
+    await rewound.transaction("dashboard", async (snapshot) => {
+      Object.assign(snapshot, structuredClone(stale))
+      return { commit: true, value: undefined }
+    })
+    await expect(rewound.transaction("dashboard", async (snapshot) => {
+      expect(inspectSfProductRestoreFrontier(snapshot)).toEqual(staleFrontier)
+      captureSfCorporateRestoreRetention(snapshot, stale, staleFrontier, proof)
+      return { commit: false, value: undefined }
+    })).rejects.toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+    expect(await rewound.transaction("dashboard", async (snapshot) => ({
+      commit: false, value: structuredClone(snapshot),
+    }))).toEqual(stale)
+
+    const reopened = await f.reopen()
+    const candidate = await reopened.store.transaction("dashboard", async (snapshot) => {
+      const proposed = structuredClone(stale)
+      captureSfCorporateRestoreRetention(snapshot, stale, retained, proof).apply(proposed.data)
+      return { commit: false, value: proposed }
+    })
+    expect(inspectSfProductRestoreFrontier(candidate)).toEqual(retained)
+    expect(await f.snapshot()).toEqual(committed)
+    const restarted = f.makeAuthority(reopened).authority
+    expect(await draft(f, key, restarted)).toMatchObject({ status: "ok" })
+    expect(await draft(f, key, restarted, profileB)).toMatchObject({ status: "denied" })
+    const retried = await f.snapshot()
+    expect(inspectSfProductRestoreFrontier(retried)).toEqual(retained)
+    expect(Object.keys(object(object(retried.data.__sfProductV1).cases))).toEqual(cases)
+  } finally {
+    control.close()
+  }
 })
 
 test("restore-frontier-10: current pin is bound to installation, checkpoint and generation", async () => {
