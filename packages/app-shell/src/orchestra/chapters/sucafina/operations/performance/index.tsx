@@ -439,7 +439,6 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
     const signal = new AbortController()
     const confirmedWeights = store.confirmedWeights
     setStore({ busy: true, error: null })
-    let performStage = "prepare-pending"
     try {
       if (!isDelete && currentDraft?.availability === "active") {
         const payload = new TextEncoder().encode(JSON.stringify([
@@ -448,10 +447,8 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
           .map((byte) => byte.toString(16).padStart(2, "0")).join("")
         editing!.controller.setPending({ operationRef: commandRef,
           idempotencyKey, payloadDigest: digest, expectedVersion: store.cas })
-        performStage = "publish-submitting"
         editing!.controller.setPhase("submitting")
       }
-      performStage = "send-command"
       const client = createSfDomainClient(r.value.transport)
       // Exactly five frozen A01 operations, never a free action/path dispatcher.
       const response = isDelete && deleting!.kind === "delete-item"
@@ -477,19 +474,15 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
             values: subValues(currentDraft.value, editing?.sourceSub),
           }, { signal: signal.signal, idempotencyKey })
         : null
-      performStage = "present-result"
       if (ready()?.key !== r.key) return
       if (response?.kind === "response" && response.status >= 200 &&
           response.status < 300 && response.body.ok) {
-        performStage = "publish-confirmed"
         setStore({ warnings: response.body.warnings || [], error: null,
           mode: "overview", confirmedWeights: false })
-        performStage = "track-confirmed"
         if (!isDelete && editing && currentDraft?.availability === "active")
           setConfirmed({ controller: editing.controller, operationRef: commandRef,
             kind: currentDraft.value.kind, itemId: editing.itemId,
             subId: currentDraft.value.subId || null })
-        performStage = "reload-source"
         refresh()
       } else if (response?.kind === "transport-error" &&
           response.reason === "outcome-unknown" || response === null) {
@@ -506,12 +499,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
         setStore({ error: t("sf.common.unavailable"), mode: isDelete ? "overview" : "edit" })
       }
     } catch (error: unknown) {
-      const stack = error instanceof Error ? error.stack?.split("\n").slice(1, 7).join("\n")
-        .replace(/https?:\/\/[^/\s)]+/g, "[origin]")
-        .replace(/[?#][^\s)]*/g, "")
-        .slice(0, 2048) : undefined
-      console.error("N16 CAP16 mutation result unknown", performStage,
-        error instanceof Error ? error.name : "unknown", stack ?? "")
+      console.error("N16 CAP16 mutation result unknown")
       editing?.controller.setPhase("outcome-unknown")
       setStore({ uncertain: true, error: t("sf.common.operationUnknown") })
     } finally {
