@@ -89,23 +89,24 @@ export async function detachCompileSourceMaps(
 
 type Layout = ReturnType<typeof readLinuxBunGraph>
 
-function graphPointer(layout: Layout, field: number, terminator = false) {
+function graphPointer(layout: Layout, field: number, terminator = 0) {
   const start = layout.graph.readUInt32LE(field)
   const end = start + layout.graph.readUInt32LE(field + 4)
-  requireMap(end <= layout.tableOffset)
-  if (terminator && start !== end) {
-    requireMap(end < layout.tableOffset && layout.graph[end] === 0)
-    return { start, end: end + 1 }
-  }
-  return { start, end }
+  requireMap(end + terminator <= layout.tableOffset)
+  if (terminator === 1) requireMap(layout.graph[end] === 0)
+  if (terminator === 2) requireMap((start | end) % 2 === 0 && layout.graph.readUInt16LE(end) === 0)
+  return { start, end: end + terminator }
 }
 
 function protectedGraphRanges(layout: Layout) {
   const ranges = []
   for (const rows of layout.modules.values()) {
     for (const row of rows) {
-      for (const field of [0, 8, 24, 32, 40]) {
-        const pointer = graphPointer(layout, row + field, field === 0 || field === 40)
+      const encoding = layout.graph.readUInt8(row + 48)
+      requireMap(encoding <= 2)
+      const terminators = [1, encoding === 2 ? 2 : 1, 0, 0, layout.graph.readUInt32LE(row + 44) ? 1 : 0]
+      for (const [index, field] of [0, 8, 24, 32, 40].entries()) {
+        const pointer = graphPointer(layout, row + field, terminators[index])
         if (pointer.start !== pointer.end) ranges.push(pointer)
       }
     }
