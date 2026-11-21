@@ -1,23 +1,29 @@
-import { configure, controls, roleMap } from "./admin.ts"
+import { configure, roleMap } from "./admin.ts"
 import { createHash } from "node:crypto"
 import type { ResolvedActor, RoleRow, Surface } from "../src/identity.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../src/nav.ts"
-import { documentHtml, links, pageMain } from "../src/screen-shell.ts"
+import { visibleRequests } from "../src/requests.ts"
 import type { Actor, Command, Domain, Environment, Persistence, Result, Snapshot } from "./contract.ts"
-import { changed, conflict, object, rows, text } from "./contract.ts"
+import { object, rows, text } from "./contract.ts"
 import { download } from "./downloads.ts"
 import type { WorkbookLimits } from "./workbooks.ts"
-import { migrateDashboard } from "../src/dashboard-role.ts"
-import { prepareDashboardImport } from "./dashboard-import.ts"
+import { executeDashboardBackupImport } from "./dashboard-backup.ts"
 import { assetLink, captureRecordAssets, deleteRecordAssets, downloadAsset, uploadAsset } from "./assets.ts"
 import type { AssetKind, AssetPersistence, AssetServices, BlobTransaction } from "./assets.ts"
-import { esc } from "../src/screen-shell.ts"
 import type { RenderContext } from "./ui.ts"
+import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
+import { publicSfData } from "../product/integration/public-state.ts"
+import { readProcurementQueueView } from "../product/procurement/queue-view.ts"
 
 export type Contribution = {
   pages: readonly string[]
   domain: Domain
   render: (page: string, data: Record<string, unknown>, context: RenderContext) => string | undefined
+}
+export type ApplicationPageView = {
+  data: Record<string, unknown>
+  current: (snapshot: Snapshot, actor: Actor) => boolean | Promise<boolean>
+  finish: () => void
 }
 export type Application = {
   authenticate: (
@@ -30,6 +36,9 @@ export type Application = {
   maxJsonBytes: number
   workbookLimits?: Partial<WorkbookLimits>
   assets?: { persistence: AssetPersistence; services: AssetServices }
+  product?: (request: Request, surface: Surface) => Promise<Response | undefined>
+  // Prepare outside the page lock; fence the retained projection against the authenticated snapshot inside it.
+  productView?: (request: Request, surface: Surface, page: string | undefined) => Promise<ApplicationPageView | Response | undefined>
 }
 
 /** Mount this in the installation's existing fetch composition. It starts no listener and selects no database. */
@@ -46,6 +55,10 @@ export function createApplication(mount: string, application: Application) {
     if (surface !== "dashboard" && surface !== "planner" && surface !== "procurement") return reply("Not found", 404)
     if (!["GET", "HEAD", "POST"].includes(request.method))
       return reply("Method not allowed", 405, { Allow: "GET, HEAD, POST" })
+    // Old document pages are no longer a product interface. API/export/asset dispatch stays below.
+    const decommissioned = () => reply(request.method === "HEAD" ? null : "legacy console decommissioned — use /", 404, {
+      "Content-Type": "text/plain; charset=utf-8",
+    })
     const origin = request.headers.get("origin")
     if (
       request.method === "POST" &&
@@ -53,6 +66,20 @@ export function createApplication(mount: string, application: Application) {
     )
       return reply("Access denied", 403)
     const uploading = request.method === "POST" && url.searchParams.has("upload")
+    // The authorized C02 JSON projection is a data contract, not a second HTML
+    // console. It retains the same source selection, snapshot and revocation fence.
+    const queueProjection = surface === "procurement" && ["GET", "HEAD"].includes(request.method) &&
+      url.searchParams.get("projection") === "c02" &&
+      ["Requests", "My approvals"].includes(url.searchParams.get("page") ?? "")
+    if (queueProjection && (url.searchParams.getAll("projection").length !== 1 || url.searchParams.getAll("page").length !== 1))
+      return reply("Invalid projection selection", 400)
+    // Product operations own fresh authentication and transactions; never nest them in the page lock.
+    const product = await application.product?.(request, surface)
+    if (product) {
+      // Product JSON and native operations keep their existing authorization and behavior.
+      if (request.method !== "POST" && product.headers.get("content-type")?.toLowerCase().includes("text/html")) return decommissioned()
+      return product
+    }
     const parsed =
       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
     if (parsed instanceof Response) return parsed
@@ -63,8 +90,13 @@ export function createApplication(mount: string, application: Application) {
         : application.persistence.transaction(surface, work, { signal: request.signal })
     if (request.method !== "POST" && url.searchParams.has("download"))
       return serveDownload(request, surface, application, transaction, environment)
+    // Native projections were dispatched by the installation; retain authorized asset GETs.
+    if (request.method !== "POST" && !queueProjection && !url.searchParams.has("asset") && !url.searchParams.has("asset-link"))
+      return decommissioned()
     const preparedUpload = uploading ? await prepareUpload(request, surface, application, transaction) : undefined
     if (preparedUpload instanceof Response) return preparedUpload
+    const productView = request.method === "POST" ? undefined : await application.productView?.(request, surface, url.searchParams.get("page") ?? undefined)
+    if (productView instanceof Response) return productView
     const response = await transaction(async (snapshot, blobs) => {
       // Resolve current roles INSIDE the same transaction that rereads records and locks.
       const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
@@ -123,6 +155,11 @@ export function createApplication(mount: string, application: Application) {
           (surface === "dashboard" ? kind !== "contract" : surface !== "procurement" || kind === "contract")
         )
           return { commit: false, value: reply("Invalid attachment", 400) }
+        if (
+          surface === "procurement" && (kind === "quote" || kind === "signed-po") &&
+          !canViewProcurementRequest(snapshot, actor, url.searchParams.get("record") ?? "")
+        )
+          return { commit: false, value: json({ ok: false, status: 404 }, 404) }
         const cap =
           kind === "contract"
             ? 25 * 1024 * 1024
@@ -212,6 +249,10 @@ export function createApplication(mount: string, application: Application) {
         }
       }
       if (parsed) {
+        if (surface === "dashboard") {
+          const preview = handleDashboardPreview(snapshot, actor, parsed, environment, decodeCommand)
+          if (preview) return { commit: preview.commit, value: json(preview.value, preview.value.ok ? 200 : preview.value.status) }
+        }
         if (!actor.canWrite)
           return {
             commit: false,
@@ -269,66 +310,8 @@ export function createApplication(mount: string, application: Application) {
           }
         }
         if (parsed.action === "backup-import" && surface === "dashboard") {
-          if (!actor.roles.includes("admin"))
-            return {
-              commit: false,
-              value: json({ ok: false, status: 403 }, 403),
-            }
-          const stale = conflict(snapshot, "dataset", parsed, snapshot.data)
-          if (stale) return { commit: false, value: json(stale, 409) }
-          const imported = migrateDashboard(
-            object(parsed.values.data),
-            actor,
-            parsed.confirmed === true,
-            new Date(environment.at).getFullYear(),
-          )
-          if (!imported.ok)
-            return {
-              commit: false,
-              value: json({ ok: false, errors: ["Confirm dataset replacement."] }, 422),
-            }
-          const prepared = prepareDashboardImport(snapshot.data, imported.data)
-          if (!prepared.ok) return { commit: false, value: json({ ok: false, errors: prepared.errors }, 422) }
-          const before = structuredClone(snapshot.data)
-          snapshot.data = prepared.data
-          for (const [key, version] of Object.entries(snapshot.versions))
-            if (key !== "dataset")
-              snapshot.versions[key] = {
-                version: version.version + 1,
-                by: actor.id,
-              }
-          for (const collection of [
-            "opexOwners",
-            "opexEntries",
-            "capexProjects",
-            "capexEntries",
-            "members",
-            "leaders",
-            "hotTopics",
-            "projects",
-            "risks",
-            "contracts",
-            "stakeholders",
-            "opsTickets",
-            "opsSLA",
-            "opsHeatmap",
-            "secKpi",
-            "secActions",
-            "secIncidents",
-            "secPhishing",
-          ])
-            for (const record of rows(snapshot.data[collection])) {
-              const key = `${collection}:${String(record.id ?? "")}`
-              if (!snapshot.versions[key]) snapshot.versions[key] = { version: 1, by: actor.id }
-            }
-          for (const key of ["itperf", "cio", "budgetCurrentMonth", "revenueByYear"])
-            if (snapshot.data[key] !== undefined && !snapshot.versions[key])
-              snapshot.versions[key] = { version: 1, by: actor.id }
-          changed(snapshot, "dataset", actor, environment.at, before, snapshot.data)
-          snapshot.audit[snapshot.audit.length - 1].name = environment.directory.find(
-            (person) => person.id === actor.id,
-          )?.name
-          return { commit: true, value: json({ ok: true }, 200) }
+          const result = executeDashboardBackupImport(snapshot, actor, parsed, environment)
+          return { commit: result.commit, value: json(result.value, result.status) }
         }
         const deletionKind =
           parsed.action === "delete" && page === "Vendor Contracts"
@@ -388,96 +371,16 @@ export function createApplication(mount: string, application: Application) {
           value: json(response, result.ok ? 200 : result.status),
         }
       }
-      const year = yearParam(url.searchParams.get("year"))
-      const own = yearParam(
-        url.searchParams.get(
-          page === "Executive Dashboard" ? "execYear" : page === "IT Operations" ? "opsYear" : "secYear",
-        ) ?? url.searchParams.get("own"),
-      )
-      if (year === null || own === null) return { commit: false, value: reply("Invalid year", 400) }
-      const now = new Date(environment.at)
-      const sidebar = year ?? 2026
-      const monthParam =
-        url.searchParams.get(
-          page === "IT Operations"
-            ? "operationsMonth"
-            : page === "IT Security KPIs"
-              ? "securityMonth"
-              : "executiveMonth",
-        ) ?? url.searchParams.get("month")
-      if (monthParam && !/^([1-9]|1[0-2])$/.test(monthParam))
-        return { commit: false, value: reply("Invalid month", 400) }
-      const selected =
-        surface === "dashboard" && ["Executive Dashboard", "IT Operations", "IT Security KPIs"].includes(page)
-          ? (own ?? Math.min(2027, Math.max(2024, now.getFullYear())))
-          : sidebar
-      const auditBefore = snapshot.audit.length
-      const view = contribution.domain.view(snapshot, actor, environment)
-      const filters = Object.fromEntries(
-        [
-          "version",
-          "owner",
-          "class",
-          "q",
-          "mode",
-          "filter",
-          "status",
-          "risk",
-          "priority",
-          "topicStatus",
-          "memberStatus",
-          "projectStatus",
-          "projectRisk",
-          "stakeholderPriority",
-          "opsMonth",
-          "tab",
-          "request",
-          "supplier",
-        ]
-          .filter((key) => url.searchParams.has(key))
-          .map((key) => [key, url.searchParams.get(key)]),
-      )
-      const content = contribution.render(
-        page,
-        { ...view.data, ...filters, sidebarYear: sidebar },
-        {
-          actor,
-          year: selected,
-          month: monthParam ? Number(monthParam) : now.getMonth() + 1,
-          at: environment.at,
-          versions: view.versions,
-        },
-      )
-      if (content === undefined)
-        return {
-          commit: false,
-          value: reply("Page implementation unavailable", 503),
-        }
-      const nav = allowed.map((key, index) => ({ key, index }))
-      const html = documentHtml(
-        surface === "dashboard" ? "CIO Dashboard" : surface === "planner" ? "IT Budget Planner" : "IT Procurement",
-        surface,
-        links(nav),
-        pageMain(
-          { drawn: true, key: page, index: allowed.indexOf(page) },
-          content +
-            controls(snapshot, surface, page, actor, environment) +
-            privateFileControls(surface, page, actor, snapshot, environment, application.assets?.services) +
-            auditControls(actor, snapshot, url.searchParams),
-        ),
-        fileControls(surface, page, actor, snapshot.versions.dataset?.version ?? 0, allowed, sidebar),
-        surface === "dashboard"
-          ? `<label>FY<select data-year="sidebar" data-query="year">${[2024, 2025, 2026, 2027].map((year) => `<option value="${year}"${year === sidebar ? " selected" : ""}>${year}</option>`).join("")}</select></label>`
-          : "",
-      )
-      return {
-        commit: snapshot.audit.length !== auditBefore,
-        value: reply(request.method === "HEAD" ? null : html, 200, {
-          "Content-Type": "text/html; charset=utf-8",
-          "Content-Security-Policy": htmlPolicy(html),
-        }),
+      if (queueProjection) {
+        // Never serialize a prepared projection until the very same authorized
+        // producer selection has been rechecked under the current data lock.
+        const queue = readProcurementQueueView(productView?.data.procurementQueueView)
+        if (!queue || !productView || !await productView.current(snapshot, actor))
+          return { commit: false, value: json({ status: "unavailable", reason: "procurement-queue-unavailable" }, 503) }
+        return { commit: false, value: json({ status: "ok", value: queue }, 200) }
       }
-    })
+      return { commit: false, value: decommissioned() }
+    }).finally(() => productView?.finish())
     return request.method === "HEAD"
       ? new Response(null, {
           status: response.status,
@@ -510,6 +413,10 @@ async function readCommand(request: Request, maximum: number): Promise<Command |
     return offset + chunk.byteLength
   }, 0)
   const decoded: unknown = await new Response(bytes).json().catch(() => undefined)
+  return decodeCommand(decoded) ?? reply("Invalid command", 400)
+}
+
+function decodeCommand(decoded: unknown): Command | undefined {
   const input = object(decoded)
   const allowed = ["page", "action", "id", "version", "values", "confirmed"]
   if (
@@ -526,7 +433,7 @@ async function readCommand(request: Request, maximum: number): Promise<Command |
     (input.id !== undefined && typeof input.id !== "string") ||
     (input.confirmed !== undefined && typeof input.confirmed !== "boolean")
   )
-    return reply("Invalid command", 400)
+    return undefined
   return {
     page: text(input.page),
     action: text(input.action),
@@ -559,10 +466,6 @@ function redact(value: unknown, privateKeys: string[]): unknown {
       .map(([key, entry]) => [key, redact(entry, privateKeys)]),
   )
 }
-function yearParam(value: string | null): number | null | undefined {
-  if (!value) return undefined
-  return /^202[4-7]$/.test(value) ? Number(value) : null
-}
 function json(value: unknown, status: number) {
   return reply(JSON.stringify(value), status, {
     "Content-Type": "application/json; charset=utf-8",
@@ -581,32 +484,8 @@ function reply(body: string | null, status: number, headers: Record<string, stri
 }
 
 export function htmlPolicy(html: string) {
-  const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1] ?? ""
-  return `default-src 'self'; script-src 'sha256-${createHash("sha256").update(script).digest("base64")}'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; form-action 'self'`
-}
-function fileControls(
-  surface: Surface,
-  page: string,
-  actor: Actor,
-  version: number,
-  allowed: string[],
-  sidebarYear: number,
-) {
-  if (surface === "planner")
-    return '<aside data-slot="excel"><h2>Excel</h2><a href="?download=xlsx">Export Excel</a></aside>'
-  if (surface === "procurement")
-    return page === "Suppliers"
-      ? '<a href="?download=suppliers">Export suppliers CSV</a>'
-      : '<a href="?download=register">Export register CSV</a>'
-  return `<aside data-slot="footer"><details class="editor-panel"><summary>Reports and backup</summary><form method="get" class="report-form"><input type="hidden" name="page" value="${esc(page)}"><label>Format<select name="download"><option value="pptx">PowerPoint</option><option value="docx">Word</option></select></label><label>Year<select name="year">${[2024, 2025, 2026, 2027].map((year) => `<option${year === sidebarYear ? " selected" : ""}>${year}</option>`).join("")}</select></label><label>Title<input name="title"></label><fieldset><legend>Topics</legend>${allowed
-    .filter((key) => key !== "Talent Review" || actor.roles.includes("admin"))
-    .map(
-      (key) =>
-        `<label><input type="checkbox" name="topic" value="${esc(key)}"${key === "Executive Dashboard" ? " checked" : ""}>${esc(key)}</label>`,
-    )
-    .join(
-      "",
-    )}</fieldset><button>Generate Report</button></form>${actor.roles.includes("admin") ? `<a href="?download=json">Export JSON</a><form data-command="backup-import" data-page="${esc(page)}" data-record="" data-version="${version}"><label>Import JSON<input type="file" name="data" accept="application/json,.json" required></label><button${actor.canWrite ? "" : " disabled"}>Import JSON</button></form>` : ""}</details></aside>`
+  const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)].filter((match) => !/(?:^|\s)src\s*=/i.test(match[1]!)).map((match) => `'sha256-${createHash("sha256").update(match[2]!).digest("base64")}'`)
+  return `default-src 'self'; script-src ${scripts.length ? [...new Set(scripts)].join(" ") : "'none'"}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; form-action 'self'`
 }
 async function readBytes(request: Request, maximum: number): Promise<Uint8Array | Response> {
   const reader = request.body?.getReader()
@@ -639,90 +518,6 @@ function safeObject(value: unknown): boolean {
   )
 }
 
-function privateFileControls(
-  surface: Surface,
-  page: string,
-  actor: Actor,
-  snapshot: import("./contract.ts").Snapshot,
-  environment: Environment,
-  services?: AssetServices,
-) {
-  if (!services) return ""
-  const visible: string[] = []
-  for (const asset of rows(snapshot.data.assets)) {
-    const link = assetLink(snapshot, actor, environment, services, text(asset.id))
-    if (link.ok && "query" in link)
-      visible.push(
-        `<li><a href="${esc(`?${link.query}&page=${encodeURIComponent(page)}`)}">${esc(text(asset.name))}</a></li>`,
-      )
-  }
-  const store = object(snapshot.data.store)
-  const requestRecords = Object.values(object(store.requests)).map((row) => object(object(row).request))
-  const uploads =
-    surface === "dashboard" && page === "Vendor Contracts"
-      ? rows(snapshot.data.contracts).map((record) => ({
-          id: String(record.id),
-          name: text(record.vendor),
-          kind: "contract",
-          versionKey: `contracts:${String(record.id)}`,
-          allowed:
-            actor.roles.includes("admin") ||
-            (actor.roles.includes("contributor") && actor.assigned?.includes("contracts") === true),
-        }))
-      : surface === "procurement" && page === "Suppliers"
-        ? rows(store.suppliers).map((record) => ({
-            id: String(record.id),
-            name: text(record.legalName),
-            kind: "supplier",
-            versionKey: `suppliers:${String(record.id)}`,
-            allowed: actor.roles.some((role) => ["admin", "supplier admin"].includes(role)),
-          }))
-        : surface === "procurement" && page === "Requests"
-          ? requestRecords
-              .filter(
-                (record) =>
-                  ["sourcing", "src_rejected", "po_approved", "po_issued"].includes(text(record.status)) &&
-                  actor.roles.includes("buyer"),
-              )
-              .map((record) => ({
-                id: text(record.number),
-                name: text(object(record.pr).title) || text(record.number),
-                kind: ["sourcing", "src_rejected"].includes(text(record.status)) ? "quote" : "signed-po",
-                versionKey: `requests:${text(record.number)}`,
-                allowed: true,
-              }))
-          : []
-  if (!visible.length && !uploads.some((upload) => upload.allowed && actor.canWrite)) return ""
-  return `<section><h2>Documents</h2><ul>${visible.join("")}</ul>${uploads
-    .filter((upload) => upload.allowed && actor.canWrite)
-    .map(
-      (upload) =>
-        `<form data-private-upload="${esc(upload.kind)}" data-page="${esc(page)}" data-record="${esc(upload.id)}" data-version="${snapshot.versions[upload.versionKey]?.version ?? 0}"><label>${esc(upload.name)}<input type="file" name="file" required></label><button type="submit">Upload document</button></form>`,
-    )
-    .join("")}</section>`
-}
-function auditControls(actor: Actor, snapshot: import("./contract.ts").Snapshot, query: URLSearchParams) {
-  if (!actor.roles.includes("admin") || !snapshot.audit.length) return ""
-  const offset = Math.max(0, Number(query.get("auditOffset")) || 0)
-  const entries = snapshot.audit.toReversed().slice(offset, offset + 50)
-  const next = new URLSearchParams(query)
-  next.set("auditOffset", String(offset + 50))
-  return `<details><summary>Audit history</summary><table><thead><tr><th>When</th><th>Who</th><th>Record</th><th>Before</th><th>After</th></tr></thead><tbody>${entries.map((entry) => `<tr><td>${esc(entry.at)}</td><td>${esc(entry.name || entry.who)}</td><td>${esc(entry.record)}</td><td>${auditValue(entry.was)}</td><td>${auditValue(entry.became)}</td></tr>`).join("")}</tbody></table>${offset + 50 < snapshot.audit.length ? `<a href="?${esc(next.toString())}">Older entries</a>` : ""}</details>`
-}
-function auditValue(value: unknown): string {
-  if (value === null || value === undefined) return "—"
-  if (Array.isArray(value))
-    return `<details><summary>${value.length} records</summary>${value.map(auditValue).join("")}</details>`
-  if (typeof value === "object")
-    return `<dl>${Object.entries(value)
-      .map(
-        ([key, entry]) =>
-          `<dt>${esc(key)}</dt><dd>${["iban", "account", "swift"].includes(key.toLowerCase()) ? "Protected" : auditValue(entry)}</dd>`,
-      )
-      .join("")}</dl>`
-  return esc(String(value))
-}
-
 type TransactionRunner = <T>(
   work: (snapshot: Snapshot, blobs?: BlobTransaction) => Promise<{ commit: boolean; value: T }>,
 ) => Promise<T>
@@ -735,7 +530,7 @@ async function serveDownload(
 ): Promise<Response> {
   const query = new URL(request.url).searchParams
   const kind = query.get("download") ?? ""
-  const prepared = await transaction<Response | { snapshot: Snapshot; actor: Actor }>(async (snapshot) => {
+  const prepared = await transaction<Response | { snapshot: Snapshot; actor: Actor; sourceDigest: string }>(async (snapshot) => {
     const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
     if (!principal || !principal.id || principal.id.startsWith("local:"))
       return { commit: false, value: reply("Authentication required", 401) }
@@ -791,7 +586,7 @@ async function serveDownload(
         })
     return {
       commit: readsMembers && rows(snapshot.data.members).length > 0,
-      value: { snapshot: structuredClone(snapshot), actor },
+      value: { snapshot: structuredClone({ ...snapshot, data: publicSfData(snapshot.data) }), actor, sourceDigest: downloadSnapshotDigest(snapshot) },
     }
   })
   if (prepared instanceof Response)
@@ -805,6 +600,21 @@ async function serveDownload(
   request.signal.throwIfAborted()
   const file = await download(kind, prepared.snapshot, prepared.actor, environment, query)
   request.signal.throwIfAborted()
+  // Re-authorize AFTER generation. Neither a captured actor nor a completed export authorizes egress.
+  const current = await transaction(async (snapshot) => {
+    const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+    if (!principal || !principal.id || principal.id.startsWith("local:")) return { commit: false, value: 403 }
+    const roles = principal.roles.filter((row) => row.surface === surface).map((row) => row.role)
+    const actor: Actor = { id: principal.id, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), roles }
+    if (JSON.stringify(actor) !== JSON.stringify(prepared.actor)) return { commit: false, value: 403 }
+    return { commit: false, value: downloadSnapshotDigest(snapshot) === prepared.sourceDigest ? 200 : 409 }
+  })
+  request.signal.throwIfAborted()
+  if (current !== 200)
+    return new Response(request.method === "HEAD" ? null : current === 403 ? "Access denied" : "Export source changed; download again.", {
+      status: current,
+      headers: { "Cache-Control": "no-store" },
+    })
   if (!file.ok)
     return request.method === "HEAD"
       ? new Response(null, {
@@ -821,6 +631,17 @@ async function serveDownload(
     },
   })
 }
+/** The captured public surface and its versions, not private product state or read audits, define legacy export provenance. */
+function downloadSnapshotDigest(snapshot: Snapshot) {
+  return createHash("sha256").update(JSON.stringify({ data: publicSfData(snapshot.data), versions: snapshot.versions })).digest("hex")
+}
+function canViewProcurementRequest(snapshot: Snapshot, actor: { id: string; roles: string[] }, id: string) {
+  const records = object(object(snapshot.data.store).requests)
+  if (!Object.hasOwn(records, id)) return false
+  const request = object(object(records[id]).request)
+  return visibleRequests([{ createdBy: text(request.createdBy) }], actor).length > 0
+}
+
 async function prepareUpload(
   request: Request,
   surface: Surface,
@@ -839,10 +660,20 @@ async function prepareUpload(
     const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
     if (
       !principal ||
+      !principal.id ||
+      principal.id.startsWith("local:") ||
       !principal.canWrite ||
       !principal.roles.some((row) => row.surface === surface && row.role !== "viewer")
     )
       return { commit: false, value: reply("Access denied", 403) }
+    if (
+      surface === "procurement" && (kind === "quote" || kind === "signed-po") &&
+      !canViewProcurementRequest(snapshot, {
+        id: principal.id,
+        roles: principal.roles.filter((row) => row.surface === surface).map((row) => row.role),
+      }, query.get("record") ?? "")
+    )
+      return { commit: false, value: json({ ok: false, status: 404 }, 404) }
     const cap =
       kind === "contract"
         ? 25 * 1024 * 1024

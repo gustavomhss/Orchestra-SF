@@ -1,3 +1,6 @@
+import { mountSfFilesOriginalRoutes } from "./native-ui/files-routing"
+import type { SfFilesHostSources } from "./native-ui/files"
+import type { Inbox } from "@orchestra/schema/inbox"
 import path from "node:path"
 import { realpath } from "node:fs/promises"
 import { pathToFileURL } from "node:url"
@@ -20,14 +23,21 @@ export type SfInstallation = {
   dispose: () => void | Promise<void>
   host?: ReadonlyArray<Host.Contribution>
   transport?: MicrosoftTransport
+  claw?: (request: Request) => Promise<Response | undefined>
+  nativeFiles?: SfFilesHostSources
 }
 
 /** Explicit trusted-code factory, selected by the owner; never derived from an HTTP request. */
-export async function loadSfInstallation(file: string, origin: string, publicOrigin?: string) {
+export async function loadSfInstallation(file: string, origin: string, publicOrigin?: string, readInbox?: () => Promise<readonly Inbox.Item[]>) {
   if (!path.isAbsolute(file) || new URL(origin).origin !== origin) throw new Error("SF_INSTALLATION_ABSOLUTE_PATH_AND_ORIGIN_REQUIRED")
   const module = await import(pathToFileURL(await realpath(file)).href)
   if (typeof module.default !== "function") throw new Error("SF_INSTALLATION_FACTORY_REQUIRED")
-  const value: unknown = await module.default({ origin, publicOrigin })
+  const { createSfHostRuntime, createCurrentChoiceFence } = await import("./host-context")
+  const { createMicrosoftClaw } = await import("./claw-pending")
+  const value: unknown = await module.default({ origin, publicOrigin, createHostRuntime: createSfHostRuntime, createCurrentChoiceFence,
+    sourceRoot: path.resolve(path.dirname(await realpath(file)), "../product/ai"),
+    ...(readInbox ? { createClaw: (input: Omit<Parameters<typeof createMicrosoftClaw>[0], "readInbox">) =>
+      createMicrosoftClaw({ ...input, readInbox }) } : {}) })
   const installation = await composeSfInstallation(value, origin).catch(async (error: unknown) => {
     if (value && typeof value === "object" && "dispose" in value && typeof value.dispose === "function")
       await value.dispose()
@@ -47,6 +57,9 @@ export async function composeSfInstallation(value: unknown, origin: string) {
   const installation = value as SfInstallation
   const transport = readTransport("transport" in value ? value.transport : undefined, origin)
   const requestOrigin = transport?.ingressOrigin ?? origin
+  const files = installation.nativeFiles ? mountSfFilesOriginalRoutes({
+    origin: transport?.publicOrigin ?? origin, mount: installation.mount, sources: installation.nativeFiles,
+  }) : undefined
   // Effect starts its HTTP span before route middleware and includes the full query.
   // Disable listener tracing for this explicit cloud installation, including malformed callbacks.
   const privacy = transport ? Layer.succeed(HttpMiddleware.TracerDisabledWhen)(() => true) : Layer.empty
@@ -61,11 +74,25 @@ export async function composeSfInstallation(value: unknown, origin: string) {
       (url.pathname !== installation.mount && !url.pathname.startsWith(`${installation.mount}/`))) return rejectIncoming(incoming, 403)
     if ((incoming.method === "GET" || incoming.method === "HEAD") && (sanitized.headers["transfer-encoding"] !== undefined || Number(sanitized.headers["content-length"]) > 0)) return rejectIncoming(incoming, 400)
     const configured = yield* HttpServerRequest.MaxBodySize
-    const defaultLimit = 16 * 1024 * 1024
-    const maximum = Number(configured ?? defaultLimit)
-    const contractUpload = incoming.method === "POST" && url.pathname === `${installation.mount}/dashboard` &&
-      url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract"
-    const limit = contractUpload && maximum === defaultLimit ? 25 * 1024 * 1024 : maximum
+    const maximum = Number(configured ?? 16 * 1024 * 1024)
+    const mode = url.searchParams.get("sf")
+    // Keep the domain's 25MiB contract stream budget, while honoring smaller explicit host limits.
+    // Original import HTTP consumes up to 16MiB of file bytes PLUS the
+    // bounded multipart envelope. Do not disable a smaller explicit ingress cap.
+    const originalImport = incoming.method === "POST" &&
+      (url.pathname === `${installation.mount}/planner` ||
+        url.pathname === `${installation.mount}/dashboard`) &&
+      url.searchParams.size === 1 && url.searchParams.get("sf") === "import-admit"
+    const maxImportEnvelope = 16 * 1024 * 1024 + 64 * 1024
+    const clawConnect = url.pathname === `${installation.mount}/api/claw/connect`
+    const limit = clawConnect ? 0 : mode === "workbench" || mode?.startsWith("workbench-")
+      ? Math.min(maximum, 65536)
+      : originalImport
+        ? maximum === 16 * 1024 * 1024
+          ? maxImportEnvelope : Math.min(maximum, maxImportEnvelope)
+      : incoming.method === "POST" && url.pathname === `${installation.mount}/dashboard` && !url.searchParams.has("sf") && url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract"
+        ? maximum === 16 * 1024 * 1024 ? 25 * 1024 * 1024 : Math.min(maximum, 25 * 1024 * 1024)
+        : maximum
     const response = yield* Effect.tryPromise({
       try: async (signal) => {
         const node = source ? undefined : NodeHttpServerRequest.toIncomingMessage(sanitized)
@@ -154,7 +181,11 @@ export async function composeSfInstallation(value: unknown, origin: string) {
               })
               : web
             if (transport) request.headers.set("host", new URL(transport.publicOrigin).host)
-            const result = await installation.handler(request).catch(() => new Response(null, { status: 503, headers: {
+            const result = await (async () =>
+              (files ? await files(request) : undefined) ??
+              (url.pathname === `${installation.mount}/api/claw/mcp` || clawConnect ? await installation.claw?.(request) : undefined) ??
+              await installation.handler(request)
+            )().catch(() => new Response(null, { status: 503, headers: {
               "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
             } }))
             // Some domain parsers classify reader errors themselves. Only this private budget can override them.

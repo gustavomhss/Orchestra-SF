@@ -6,8 +6,9 @@ export async function scanLocalFile(bytes: Uint8Array, endpoint: { host: "127.0.
   if (endpoint.host !== "127.0.0.1" || !Number.isInteger(endpoint.port) || endpoint.port < 1 || endpoint.port > 65535) return false
   return new Promise<boolean>((resolve) => {
     const socket = createConnection({ host: endpoint.host, port: endpoint.port })
+    const expected = Buffer.from("stream: OK\0")
     const output: Buffer[] = []
-    const finished = { value: false, offset: -1 }
+    const finished = { value: false, offset: -1, received: 0 }
     const finish = (clean: boolean) => {
       if (finished.value) return
       finished.value = true
@@ -18,12 +19,16 @@ export async function scanLocalFile(bytes: Uint8Array, endpoint: { host: "127.0.
     const deadline = setTimeout(() => finish(false), 30000)
     socket.on("error", () => finish(false))
     socket.on("close", () => finish(false))
+    // Non-session INSTREAM ends at EOF. A clean prefix cannot hide another
+    // record, a truncated reply or a response sent before the complete upload.
+    socket.on("end", () => finish(finished.offset > bytes.length && finished.received === expected.length))
     socket.on("data", (chunk) => {
+      if (finished.offset <= bytes.length) return finish(false)
+      finished.received += chunk.length
+      if (finished.received > expected.length) return finish(false)
       output.push(chunk)
       const response = Buffer.concat(output)
-      if (response.length > 4096) return finish(false)
-      const end = response.indexOf(0)
-      if (end >= 0) finish(response.subarray(0, end).toString("utf8") === "stream: OK")
+      if (!response.equals(expected.subarray(0, response.length))) finish(false)
     })
     const send = () => {
       if (finished.value) return

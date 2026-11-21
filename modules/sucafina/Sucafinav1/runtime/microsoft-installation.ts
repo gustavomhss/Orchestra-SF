@@ -1,4 +1,4 @@
-import { createEntraClient } from "./entra-client.ts"
+import { createEntraClient } from "./microsoft-entra-client.ts"
 import { createMicrosoftIdentity } from "./microsoft-identity.ts"
 import type { EntraOptions, LocalSecrets } from "./local-contract.ts"
 import { requireLocalIsolation } from "./local-configuration.ts"
@@ -23,7 +23,7 @@ export async function prepareMicrosoftInstallation(
   const client = createEntraClient({ tenantId: config.tenantId, clientId: config.clientId, profile: "web-confidential", clientSecret: privateConfiguration.clientSecret, ...overrides })
   const transport: MicrosoftTransport = Object.freeze({ kind: "explicit-https-proxy", listenerOrigin: config.listenerOrigin, ingressOrigin: config.ingressOrigin, publicOrigin: config.origin })
   return {
-    loaded: { config, directory, keys }, client, transport,
+    loaded: { config, directory, keys }, client, grants: config.grants, workspaceDirectory: config.workspaceDirectory, transport, clawScopes: privateConfiguration.clawScopes,
     createIdentity: (secrets: LocalSecrets) => createMicrosoftIdentity({ origin: config.origin, mount: config.mount, tenantId: config.tenantId, clientId: config.clientId, client, secrets, key: keys.session, sessionSeconds: config.sessionSeconds, loginSeconds: config.loginSeconds, now: overrides.now }),
   }
 }

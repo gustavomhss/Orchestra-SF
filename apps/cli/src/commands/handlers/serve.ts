@@ -84,6 +84,13 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
         if (installationFile === "") return yield* Effect.fail(new Error("Explicit installation path required"))
         if (publicOrigin !== undefined && (installationFile === undefined || !URL.canParse(publicOrigin) ||
           new URL(publicOrigin).origin !== publicOrigin)) return yield* Effect.fail(new Error("Explicit installation and canonical public origin required"))
+        const readInbox = async () => {
+          const { Inbox } = await import("@orchestra/core/inbox")
+          return Effect.runPromise(Effect.gen(function* () {
+            const database = yield* Database.Service
+            return yield* Inbox.readStored(database.db)
+          }).pipe(Effect.provide(AppNodeBuilder.build(LayerNode.group([Database.node])))))
+        }
         const installation = installationFile
           ? yield* Effect.acquireRelease(
             Effect.tryPromise({
@@ -92,7 +99,7 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
                 if (port === undefined) throw new Error("An explicit installation requires an explicit port")
                 const hostname = input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname
                 const { loadSfInstallation } = await import("../../sucafina-product/installation")
-                return loadSfInstallation(installationFile, new URL(`http://${hostname}:${port}`).origin, publicOrigin)
+                return loadSfInstallation(installationFile, new URL(`http://${hostname}:${port}`).origin, publicOrigin, readInbox)
               },
               catch: (error) => error instanceof Error ? error : new Error("Installation unavailable"),
             }),

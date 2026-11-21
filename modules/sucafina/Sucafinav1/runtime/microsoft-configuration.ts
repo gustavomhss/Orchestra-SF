@@ -3,10 +3,10 @@ import { constants } from "node:fs"
 import { link, lstat, open, realpath, unlink } from "node:fs/promises"
 import path from "node:path"
 import { isIP } from "node:net"
+import { isSfPeriod } from "../product/contracts/validation.ts"
+import type { WorkListRequest } from "../product/contracts/operations.ts"
 import type { LocalConfiguration } from "./local-configuration.ts"
-import { emptyMap } from "../src/identity.ts"
-
-const microsoftUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+import { microsoftPolicy, microsoftUuid, record } from "./microsoft-policy.ts"
 
 export type MicrosoftConfiguration = LocalConfiguration & {
   deployment: "azure-https"
@@ -16,8 +16,15 @@ export type MicrosoftConfiguration = LocalConfiguration & {
   listenerOrigin: string
   ingressOrigin: string
   workspaceDirectory: string
+  grants: ReturnType<typeof microsoftPolicy>["grants"]
   sessionSeconds: number
   loginSeconds: number
+}
+
+export type MicrosoftClawScope = {
+  principalRef: string
+  period: WorkListRequest["period"]
+  inboxRefs: readonly string[]
 }
 
 /** Loads no tenant defaults and no operator fallback. Secret values stay in private server closures. */
@@ -42,7 +49,35 @@ export async function loadMicrosoftConfiguration(file: string) {
   }
   // Validate availability before any business database opens; retain only the reader.
   await clientSecret()
-  return { config, directory, keys: { session: keys[0], bank: keys[1], assets: keys[2] }, clientSecret }
+  const clawFile = path.join(directory, "claw.json")
+  const claw = await lstat(clawFile).catch((error: unknown) => {
+    if (hasCode(error, "ENOENT")) return undefined
+    throw error
+  })
+  const clawScopes = claw ? validateClawScopes(privateJson((await privateBytes(clawFile, 32768)).toString("utf8"))) : []
+  return { config, directory, keys: { session: keys[0], bank: keys[1], assets: keys[2] }, clientSecret, clawScopes }
+}
+
+function validateClawScopes(value: unknown): MicrosoftClawScope[] {
+  if (!Array.isArray(value) || value.length < 1 || value.length > 2) throw new Error("Invalid Microsoft Claw pilot scope")
+  const principals = new Set<string>()
+  const inboxRefs = new Set<string>()
+  return value.map((scope: unknown) => {
+    if (!record(scope) || Object.keys(scope).length !== 3 ||
+      typeof scope.principalRef !== "string" || !microsoftUuid.test(scope.principalRef) ||
+      !isSfPeriod(scope.period) || !Array.isArray(scope.inboxRefs) || scope.inboxRefs.length > 100)
+      throw new Error("Invalid Microsoft Claw principal scope")
+    const principalRef = scope.principalRef.toLowerCase()
+    if (principals.has(principalRef)) throw new Error("Duplicate Microsoft Claw principal")
+    principals.add(principalRef)
+    const refs = scope.inboxRefs.map((ref: unknown) => {
+      if (typeof ref !== "string" || !/^[0-9a-f]{64}$/.test(ref) || inboxRefs.has(ref))
+        throw new Error("Invalid or shared Microsoft Claw Inbox reference")
+      inboxRefs.add(ref)
+      return ref
+    })
+    return { principalRef, period: scope.period, inboxRefs: refs }
+  })
 }
 
 export function validateMicrosoftConfiguration(value: unknown): MicrosoftConfiguration {
@@ -62,27 +97,8 @@ export function validateMicrosoftConfiguration(value: unknown): MicrosoftConfigu
   const sessionSeconds = value.sessionSeconds ?? 28800
   const loginSeconds = value.loginSeconds ?? 600
   if (typeof sessionSeconds !== "number" || !Number.isSafeInteger(sessionSeconds) || sessionSeconds < 60 || sessionSeconds > 28800 || typeof loginSeconds !== "number" || !Number.isSafeInteger(loginSeconds) || loginSeconds < 30 || loginSeconds > 600) throw new Error("Invalid Microsoft session lifetime")
-  // The producer owns product grants. This profile admits Entra users to the
-  // existing SF routes using live group membership and their persisted role maps.
-  if (!Array.isArray(value.grants) || value.grants.length > 1000 || value.grants.some((grant: unknown) =>
-    !record(grant) || typeof grant.principalRef !== "string" || !microsoftUuid.test(grant.principalRef)))
-    throw new Error("Explicit Microsoft product grants required")
-  const configured = value.groups
-  if (!record(configured) || Object.keys(configured).length !== 3) throw new Error("Explicit Microsoft surface assignments required")
-  const groups: LocalConfiguration["groups"] = { dashboard: {}, planner: {}, procurement: {} }
-  for (const surface of ["dashboard", "planner", "procurement"] as const) {
-    const mapping = configured[surface]
-    if (!record(mapping)) throw new Error("Explicit Microsoft surface assignments required")
-    for (const [role, group] of Object.entries(mapping)) {
-      if (!emptyMap().some((row) => row.surface === surface && row.role === role) ||
-        typeof group !== "string" || !group.startsWith("group:") || !microsoftUuid.test(group.slice(6)))
-        throw new Error("Immutable Microsoft group assignment required")
-      groups[surface][role] = group.toLowerCase()
-    }
-    Object.freeze(groups[surface])
-  }
-  Object.freeze(groups)
-  return Object.freeze({ version: 1, deployment: "azure-https", authentication: "microsoft", origin: value.origin, listenerOrigin: value.listenerOrigin as string, ingressOrigin: value.ingressOrigin as string, mount: value.mount, tenantId: value.tenantId.toLowerCase(), clientId: value.clientId.toLowerCase(), groups, workspaceDirectory: value.workspaceDirectory, scanner: value.scanner === null ? null : Object.freeze({ host: "127.0.0.1", port: (value.scanner as { port: number }).port }), sessionSeconds, loginSeconds })
+  const policy = microsoftPolicy(value)
+  return Object.freeze({ version: 1, deployment: "azure-https", authentication: "microsoft", origin: value.origin, listenerOrigin: value.listenerOrigin as string, ingressOrigin: value.ingressOrigin as string, mount: value.mount, tenantId: value.tenantId.toLowerCase(), clientId: value.clientId.toLowerCase(), groups: policy.groups, grants: policy.grants, workspaceDirectory: value.workspaceDirectory, scanner: value.scanner === null ? null : Object.freeze({ host: "127.0.0.1", port: (value.scanner as { port: number }).port }), sessionSeconds, loginSeconds })
 }
 
 /** Persist the namespace before opening cloud data. Reusing a directory for another tenant/app is rejected. */
@@ -139,8 +155,4 @@ function hasCode(value: unknown, code: string) {
 function privateJson(value: string): unknown {
   try { return JSON.parse(value) }
   catch { throw new Error("Invalid private Microsoft configuration JSON") }
-}
-
-function record(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value)
 }

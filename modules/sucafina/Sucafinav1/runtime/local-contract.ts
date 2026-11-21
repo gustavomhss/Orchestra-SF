@@ -25,6 +25,7 @@ export type AuthenticationSecrets = {
 export type LocalSecrets = {
   put: (key: string, value: Uint8Array, expiresAt: number, at?: number) => Promise<void>
   get: (key: string, at: number) => Promise<Uint8Array | undefined>
+  getActive?: (key: string, revokedKey: string, at: number) => Promise<Uint8Array | undefined>
   take: (key: string, at: number) => Promise<Uint8Array | undefined>
   remove: (key: string) => Promise<void>
   /** Required by the Microsoft composition; optional only for retained local adapters. */
@@ -32,14 +33,35 @@ export type LocalSecrets = {
 }
 export type LocalStore = Persistence & AssetPersistence & { secrets: LocalSecrets; dispose: () => Promise<void> }
 export type DirectoryPerson = { id: string; name: string }
-export type EntraTokens = { accessToken: string; refreshToken?: string; idToken?: string; expiresAt: number }
+export type EntraTokens = { accessToken: string; refreshToken?: string; idToken?: string; expiresAt: number; grantedScopes?: readonly string[] }
 /** Complete server-only directory view; group IDs are transitive memberships. */
 export type EntraGraphDirectory = Readonly<{
   users: readonly Readonly<{ id: string; name: string; department: string; jobTitle: string; managerId: string | null; groupIds: readonly string[] }>[]
   groups: readonly Readonly<{ id: string; name: string; team: boolean }>[]
 }>
+/** An observation available to the server for a verified Microsoft principal. */
+export type EntraTeamsResult =
+  | Readonly<{
+      state: "complete"
+      tenantId: string
+      principalObjectId: string
+      source: "joinedTeams"
+      membership: "direct"
+      teams: readonly Readonly<{ teamObjectId: string; name: string; archived: boolean }>[]
+    }>
+  | Readonly<{
+      state: "unavailable"
+      reason: "capability_disabled" | "consent_required" | "token_expired" | "identity_mismatch" | "unauthenticated" | "forbidden" | "throttled" | "timeout" | "provider_unavailable" | "invalid_response" | "incomplete" | "limit_exceeded"
+      retryAfterMs?: number
+    }>
+export type EntraTeamsSessionResult = EntraTeamsResult | Readonly<{ state: "unauthenticated" }>
+export type EntraTeamsInput = Readonly<{
+  tokens: Pick<EntraTokens, "accessToken" | "expiresAt" | "grantedScopes">
+  principal: Readonly<{ tenantId: string; principalObjectId: string }>
+}>
 export type EntraClient = {
   /** Immutable issuer/application boundary; optional only for retained local test adapters. */
+  joinedTeams?: (input: EntraTeamsInput) => Promise<EntraTeamsResult>
   readonly tenantId?: string
   readonly clientId?: string
   readonly profile?: "local-public" | "web-confidential"
@@ -53,6 +75,7 @@ export type EntraClient = {
   resolve: (accessToken: string, map: readonly RoleRow[]) => Promise<ResolvedActor>
 }
 export type EntraOptions = {
+  teams?: "direct"
   tenantId: string
   clientId: string
   profile?: "local-public" | "web-confidential"
@@ -63,6 +86,7 @@ export type EntraOptions = {
   directoryLimit?: number
 }
 export type LocalIdentity = {
+  teamDirectory?: (request: Request) => Promise<EntraTeamsSessionResult>
   handle: (request: Request) => Promise<Response | undefined>
   /** Refreshes credentials before entering the business transaction. */
   prepare: (request: Request) => Promise<void>

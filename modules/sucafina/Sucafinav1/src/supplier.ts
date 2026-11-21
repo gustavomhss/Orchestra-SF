@@ -54,8 +54,9 @@ export function presentSupplier(supplier: BankSupplier, actor: { roles: string[]
       account: supplier.account ? open(supplier.account, key) : supplier.account,
     }
   }
-  const { iban: _iban, account: _account, ...rest } = supplier
-  return { ...rest, iban: "masked", account: "masked" }
+  const restricted = ["iban", "account", "bankname", "swift", "accountholder", "bankcountry", "history"]
+  const visible = Object.fromEntries(Object.entries(supplier).filter(([field]) => !restricted.includes(field.toLowerCase()))) as BankSupplier
+  return { ...visible, iban: "masked", account: "masked" }
 }
 
 export function supplierCsv(suppliers: BankSupplier[], actor: { roles: string[] }, key: Uint8Array): Record<string, string>[] {
@@ -114,9 +115,15 @@ function privileged(actor: { roles: string[] }): boolean {
   return actor.roles.includes("admin") || actor.roles.includes("supplier admin")
 }
 
+export function supplierActivationRequirements(supplier: BankSupplier): string[] {
+  return [
+    ...ACTIVATE.filter((field) => !supplier[field]),
+    ...(supplier.dueDiligence === true ? [] : ["dueDiligence"]),
+    ...(supplier.taxId || supplier.regNo ? [] : ["taxId or regNo"]),
+    ...(supplier.iban || supplier.bankName ? [] : ["iban or bankName"]),
+  ]
+}
+
 function canActivate(supplier: BankSupplier): boolean {
-  if (ACTIVATE.some((field) => !supplier[field])) return false
-  if (supplier.dueDiligence !== true) return false
-  if (!supplier.taxId && !supplier.regNo) return false
-  return Boolean(supplier.iban || supplier.bankName)
+  return supplierActivationRequirements(supplier).length === 0
 }

@@ -132,6 +132,18 @@ export function createAuthenticationSecrets(options: {
         return row ? new Uint8Array(row.payload) : undefined
       })
     },
+    async getActive(key, revokedKey, at) {
+      clock(at)
+      return options.read((db) => {
+        const row = db.query<PayloadRow, [string, number, string, number]>(`
+          SELECT payload, expires_at FROM authentication_payloads
+          WHERE key = ? AND expires_at > ?
+            AND NOT EXISTS (SELECT 1 FROM authentication_payloads WHERE key = ? AND expires_at > ?)
+        `).get(key, at, revokedKey, at)
+        if (!row || (managed(key) && !permitted(db, key, at))) return undefined
+        return new Uint8Array(row.payload)
+      })
+    },
     async take(key, at) {
       clock(at)
       return options.write((db) => {
