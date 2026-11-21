@@ -1,6 +1,6 @@
 # CAP04 — OPEX design review
 
-Status: implemented candidate, reviewed in the real application on integration candidate `263e694ef565376cc1af61cae0dc9e44777075b8`. The scoped browser journey passed. This is not user acceptance.
+Status: native CAP04 candidate `5012d7adf0e5d02576fe6a0add6f79331a812137` reviewed through the complete earlier visual pass and the additional final 320px detail capture below. The scoped browser journey passed. User visual acceptance remains pending.
 
 ## Scope and source
 
@@ -72,6 +72,14 @@ Images actually inspected in this final pass:
 The detail keeps identity and annual budget distinct from the monthly ledger. Known amounts align with their financial columns and absent source values remain dashes. The new-line and monthly forms have a clear label/input hierarchy; the three monthly financial fields align. Desktop review has three readable comparison columns. In the scrolled 320px review capture, all three actions are wholly visible with separate targets. Portuguese detail shows the genuinely refreshed January forecast `14.600`; the subsequent editor/review keeps the new `14800` draft separate from the `14600` source and version 2. No relevant visual defect was identified that justified another product patch.
 
 A prior pass inspected the four list/toolbar captures (dark desktop, dark 1440×800, light desktop, light 320px) from run `44918211856`: search alignment, budget alignment and narrow row reflow were sound. That earlier journey failed later in CAP02 and is not presented as a green test run. Root subsequently corrected the shared navigation strip; the final eight captures above include the corrected navigation.
+
+## Final 320px detail inspection
+
+Inspected only `CAP04-dark-320-detail-test-data` from [run 44920647017](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44920647017), job `136895711016`, on product `5012d7adf0e5d02576fe6a0add6f79331a812137`. Root's consolidated journey reports one pass in 2.9 minutes and 39 captures. CAP04 product code is unchanged from the complete pass recorded above; this is additional viewport evidence, not a new redesign.
+
+At 320 CSS pixels, the selected line identity wraps across two readable lines without clipping. The header Edit and Delete controls remain fully visible, separated, and comfortably sized. The annual budget remains readable. The monthly ledger presents January's budget `15,000`, actual `12,400` and forecast `14,200` in three aligned columns with visible labels; those values are not clipped or merged. The first row's remaining metadata continues below the captured viewport. No material visual defect was found and no product patch was made.
+
+This image verifies the header's Edit action visually. It does not show the monthly edit buttons, the later month blocks or the ledger footer, so this narrow capture is not cited as visual inspection of those controls. The earlier desktop and 320px review evidence remains recorded above. Approval by the user and any golden-image baseline remain pending.
 
 ## Verification limits
 

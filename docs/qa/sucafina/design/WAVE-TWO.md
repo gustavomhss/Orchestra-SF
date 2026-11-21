@@ -1,35 +1,41 @@
 # Wave two — native Sucafina design
 
-Status: IN_PROGRESS. User authorized this wave with “do it” after approving wave one.
+Status: **VISUALLY_REVIEWED_AWAITING_USER**. User authorized this wave with “do it” after approving wave one. The implementation and its verification are complete; this wave has no user-approval record yet.
 
 ## Branch and reference
 
-- Integration branch: `sf-design-two`, created directly from `dev bcdc109326de02e20c01c32ffb6b00bee3ff978d`.
+- Integration branch: [`sf-design-two`](https://github.com/gustavomhss/Orchestra-SF/tree/sf-design-two), created directly from `dev bcdc109326de02e20c01c32ffb6b00bee3ff978d`.
+- Verified product: [`5012d7adf0e5d02576fe6a0add6f79331a812137`](https://github.com/gustavomhss/Orchestra-SF/commit/5012d7adf0e5d02576fe6a0add6f79331a812137).
 - Approved reference: `sf-design-polish 8f18ca831df7b144d843e6b0b3477825abe88e46`.
-- The approved product is `245e15bf10b5c5287fa9338aa98d0adb28aeda76`; its images and acceptance record remain unchanged.
-- Common ancestor: `1fd255026dec8e1db1f4342f7ec206a6812b42ea`. The current dev and approved branch have no overlapping changed paths. Approved blobs are integrated onto the current dev tree, retaining every upstream change.
-- No writes to shared dev, release or deployment.
+- The first-wave approved product is `245e15bf10b5c5287fa9338aa98d0adb28aeda76`; its images and explicit user acceptance remain unchanged.
+- The approved first-wave tree was integrated onto the current dev tree. Forty of the 41 upstream-changed paths are preserved byte for byte; one exported return type required a type-only annotation. See [integration](wave-two/INTEGRATION.md).
+- No writes to shared dev, merge or deployment.
 
-## Three assigned surfaces
+## Three independently assigned surfaces
 
-| Surface | Screen | Routes | Required states | Owner |
-| --- | --- | --- | --- | --- |
-| CAP02 | Hot Topics | /orchestra/sf-dashboard/hot-topics; /new; /:topicRef; /:topicRef/edit | List, filter, detail, create/edit, review, delete review, loading/empty/error | redesign_topics |
-| CAP03 | Visão de orçamento | /orchestra/sf-dashboard/budget | Source totals, annual selection, missing/unscoped values, month/revenue editors, review/cancel/discard | redesign_budget |
-| CAP04 | OPEX: realizado e previsão | /orchestra/sf-dashboard/opex; /new; /:lineRef; /:lineRef/edit | List, filter, detail, monthly entries, create/edit, review, delete review, loading/empty/error | redesign_opex |
+| Surface | Screen | Agent / branch | Delivered composition |
+| --- | --- | --- | --- |
+| CAP02 | Hot Topics | `redesign_topics` / `sf-redesign-topics` | One readable list; separated detail, 760px editor and dedicated review; consistent metadata and fields; confirmed save and fresh re-edit |
+| CAP03 | Visão do orçamento | `redesign_budget` / `sf-redesign-budget` | Compact year toolbar; metrics and OPEX/CAPEX ledger in one financial surface; honest scope/absence; annual settings and focused review |
+| CAP04 | OPEX: realizado e previsão | `redesign_opex` / `sf-redesign-opex` | Aligned list and filter; full-width identity/annual-budget detail; monthly ledger; focused editor and review; narrow reflow |
 
-The full 70-surface inventory remains in `inventory.json`. These are positions 4–6; remaining screens are inventory only. CAP05 shares implementation with CAP04 but is outside the redesign scope.
+These are positions 4–6 in the [70-surface inventory](inventory.json). With the three approved first-wave screens, six have been reworked and **64 remain inventoried**. CAP05 shares implementation with CAP04 but stays outside this redesign.
 
-## Design contract
+## Design contract and preserved behavior
 
-Use `.claude/skills/orchestra-design-system`, `.claude/skills/orchestra-visual-qa` and `packages/app-shell/src/orchestra/DESIGN.md`. Match the approved compact native composition: 1160px maximum, 32/24/16px gutters, native Inter typography, token colors, raised/soft fill hierarchy, 44px interaction targets and one primary action per active view. Keep clear information hierarchy, coherent alignment, comfortable form sizing and dedicated review composition. Scope new CSS to the assigned surface.
+The source of truth is `packages/app-shell/src/orchestra/DESIGN.md`, read with the repository's `orchestra-design-system` and `orchestra-visual-qa` skills. Current quiet-glass rules govern older broad guidance. The approved foundation supplies a 1160px maximum width, 32/24/16px gutters, native type, token colors, material hierarchy, 44px targets and one primary action per active view.
 
-Do not modify the legacy white/green UI or native HuGR core. Preserve routing, owner selection, grants, source truth, CAS, idempotency, draft recovery and unknown outcomes. Never fabricate totals, currency, permissions or receipts. Existing English copy is frozen; new strings require English and Brazilian Portuguese keys and terminology verification.
+Styles are scoped to each assigned surface. The compact source navigation is shared by CAP01–04 with the original approved geometry. Existing routing, owner selection, grants, source truth, CAS, idempotency, pending/unknown outcomes and draft recovery remain enforced by their original ports. No substituted currency or fabricated totals are introduced. Existing English strings are frozen; new strings have English and Brazilian Portuguese keys.
 
-## Ownership and validation
+The native HuGR core and legacy white/green console are outside the design scope. Root owns integration, the native Sucafina access menu, test harness, Actions execution and consolidated evidence. The three workers own their individual page design and critique.
 
-Three independent agents own the three surfaces. Root owns integration, common access/frame changes, the test harness, actual Actions execution, visual review and final evidence. CAP03 must not change approved CAP01 presentation through shared U02 CSS. CAP04 must not change CAP05 presentation through shared budget components.
+## Result and review
 
-GitHub connector only for repository operations. No local builds, tests or product runtime. Use the existing scoped Actions workflow with a real isolated installation, genuine enrollment and real producer data. No workflow, guard, allowlist or authorization bypasses.
+- **PASS:** [final real browser journey](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44920647017), 1 test, 2.9 minutes, three genuine confirmed writes.
+- **PASS:** [application/E2E types, guards and palette parity](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44920652075), 4 checks; 78 guards, zero errors, five documented advisory warnings; all seven palette files unchanged.
+- **PASS:** [six confirmed-draft registry cases](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44919739363), 29 assertions; relevant blobs unchanged in the final product.
+- **39 actual captures**, 11 in Portuguese: [gallery](wave-two/evidence/README.md), [manifest](wave-two/evidence/manifest.json).
+- Exact behavior coverage, image review, diagnostic history and limits: [VALIDATION.md](wave-two/VALIDATION.md).
+- Worker reports: [Topics](wave-two/topics/REVIEW.md), [Budget](wave-two/budget/REVIEW.md), [OPEX](wave-two/opex/REVIEW.md).
 
-Final review requires actual desktop dark/light, narrow layout and Brazilian Portuguese captures, visible editor/review/cancel behavior, application and E2E type checks, repository guards and palette generation parity. Prior wave green runs are historical evidence, not validation of this wave. User approval remains pending until the new result is presented.
+All repository operations used the GitHub connector. Verification used the existing scoped Actions workflow with a real isolated installation and canonical producer data. No local product runtime, workflow or guard bypass was used. Reflow is not presented as browser zoom; unvisited states and remaining screens are not declared verified.

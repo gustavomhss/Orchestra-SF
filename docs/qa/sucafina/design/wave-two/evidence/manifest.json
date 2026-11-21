@@ -1,0 +1,987 @@
+{
+  "schemaVersion": 1,
+  "repository": "gustavomhss/Orchestra-SF",
+  "date": "2026-11-21",
+  "timezone": "America/Sao_Paulo",
+  "status": "VISUALLY_REVIEWED_AWAITING_USER",
+  "branch": "sf-design-two",
+  "createdFrom": {
+    "branch": "dev",
+    "commit": "bcdc109326de02e20c01c32ffb6b00bee3ff978d"
+  },
+  "productCommit": "5012d7adf0e5d02576fe6a0add6f79331a812137",
+  "scope": [
+    "CAP02",
+    "CAP03",
+    "CAP04"
+  ],
+  "source": "Actual native production bundle; isolated canonical producers; genuine installation and enrollment",
+  "testData": true,
+  "fixturesAreCustomerData": false,
+  "realConfirmedWrites": 3,
+  "browser": {
+    "engine": "Chromium",
+    "runId": 44920647017,
+    "jobId": 136895711016,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44920647017",
+    "snapshotCommit": "270682e59522aaa5eb13486ea9a12e7a1d8b18f1",
+    "result": "PASS",
+    "passed": 1,
+    "failed": 0,
+    "retries": 0,
+    "duration": "2.9m",
+    "pageErrorAssertions": "Zero in both en-US and pt-BR contexts",
+    "consoleErrors": "Recorded in diagnostic attachments; no zero-console-error claim",
+    "previewCount": 39,
+    "previewSkips": 0
+  },
+  "artifacts": {
+    "canonicalPngAndDiagnostics": {
+      "id": 14713935784,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 48782184,
+      "digest": "sha256:e632f3b61555497aa643efb34988ee1154b7bb516a926e5ceaefe0ce03497910",
+      "createdAt": "2026-11-21T15:47:08Z",
+      "expiresAt": "2026-11-28T15:47:04Z",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44920647017/artifacts/14713935784"
+    },
+    "persistentPreviews": {
+      "format": "JPEG",
+      "quality": 78,
+      "count": 39,
+      "bytes": 3248755,
+      "note": "These files persist in the repository. Original PNG attachments are retained by the Actions artifact until its expiry."
+    }
+  },
+  "verification": {
+    "gates": {
+      "runId": 44920652075,
+      "jobId": 136895726744,
+      "snapshotCommit": "85c2129a35fd00eeebfe4c421e0366a1109bb1fd",
+      "productCommit": "5012d7adf0e5d02576fe6a0add6f79331a812137",
+      "result": "PASS",
+      "checks": 4,
+      "assertions": 11,
+      "applicationTypes": "PASS",
+      "e2eTypes": "PASS",
+      "guards": {
+        "rules": 78,
+        "errors": 0,
+        "warnings": 5,
+        "approvals": 0
+      },
+      "paletteFilesUnchanged": 7
+    },
+    "draftRegistry": {
+      "runId": 44919739363,
+      "jobId": 136892953895,
+      "snapshotCommit": "16247b0e6f7de087e8ce5d03fe0934fd53de4ac9",
+      "productCommit": "263e694ef565376cc1af61cae0dc9e44777075b8",
+      "result": "PASS",
+      "passed": 6,
+      "failed": 0,
+      "assertions": 29,
+      "finalRegistryContractsAndTestBlobsUnchanged": true
+    }
+  },
+  "matrix": {
+    "desktop": [
+      {
+        "width": 1440,
+        "height": 1100
+      },
+      {
+        "width": 1440,
+        "height": 800
+      }
+    ],
+    "narrow": {
+      "width": 320,
+      "height": 900
+    },
+    "schemes": [
+      "dark",
+      "light"
+    ],
+    "locales": [
+      "en-US",
+      "pt-BR"
+    ],
+    "portugueseCaptures": 11,
+    "actualBrowserZoom": "NOT_MEASURED",
+    "exhaustiveCrossBrowser": false
+  },
+  "acceptance": {
+    "status": "AWAITING_USER_REVIEW",
+    "userApproval": null,
+    "goldenBaseline": null,
+    "firstWaveApproval": "Preserved separately; applies only to UI29/UI33/CAP01"
+  },
+  "reports": {
+    "validation": "../VALIDATION.md",
+    "integration": "../INTEGRATION.md",
+    "topics": "../topics/REVIEW.md",
+    "budget": "../budget/REVIEW.md",
+    "opex": "../opex/REVIEW.md"
+  },
+  "captures": [
+    {
+      "name": "CAP02-dark-desktop-test-data",
+      "file": "CAP02-dark-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-dark-desktop-test-data.jpg",
+      "blobSha": "1f665ae06118eb1087201f546161164584863127",
+      "bytes": 99374,
+      "surface": "CAP02",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP02-dark-1440x800-test-data",
+      "file": "CAP02-dark-1440x800-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-dark-1440x800-test-data.jpg",
+      "blobSha": "f4edb6b4f8a9566c3d0f4e49a64f9dcca5e099fb",
+      "bytes": 87736,
+      "surface": "CAP02",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 800
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 800
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP02-light-desktop-test-data",
+      "file": "CAP02-light-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-light-desktop-test-data.jpg",
+      "blobSha": "038541590689c8021c7904d6acdc56a619a6efd8",
+      "bytes": 104472,
+      "surface": "CAP02",
+      "locale": "en-US",
+      "scheme": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP02-light-320-test-data",
+      "file": "CAP02-light-320-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-light-320-test-data.jpg",
+      "blobSha": "258da64d6cf36dfc477f5da87ec7e3bde173e9ea",
+      "bytes": 31904,
+      "surface": "CAP02",
+      "locale": "en-US",
+      "scheme": "light",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 320,
+        "height": 900
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP03-dark-desktop-test-data",
+      "file": "CAP03-dark-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP03-dark-desktop-test-data.jpg",
+      "blobSha": "68b9e695030277de38b5277a055b5ef4ed386d1d",
+      "bytes": 95693,
+      "surface": "CAP03",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP03-dark-1440x800-test-data",
+      "file": "CAP03-dark-1440x800-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP03-dark-1440x800-test-data.jpg",
+      "blobSha": "8b97384f01363eabaae0e173e45bc5e5c6e48022",
+      "bytes": 84115,
+      "surface": "CAP03",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 800
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 800
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP03-light-desktop-test-data",
+      "file": "CAP03-light-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP03-light-desktop-test-data.jpg",
+      "blobSha": "ca14cfbf422fc3f226838b951fee36d9d6133fbf",
+      "bytes": 99243,
+      "surface": "CAP03",
+      "locale": "en-US",
+      "scheme": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP03-light-320-test-data",
+      "file": "CAP03-light-320-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP03-light-320-test-data.jpg",
+      "blobSha": "65fcfcd3e6bf4c48ad94884c40de9e75702a0afa",
+      "bytes": 31704,
+      "surface": "CAP03",
+      "locale": "en-US",
+      "scheme": "light",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 320,
+        "height": 900
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-dark-desktop-test-data",
+      "file": "CAP04-dark-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-dark-desktop-test-data.jpg",
+      "blobSha": "a0d1dc36ba7bce71b34094076549f55045bc17b2",
+      "bytes": 94120,
+      "surface": "CAP04",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-dark-1440x800-test-data",
+      "file": "CAP04-dark-1440x800-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-dark-1440x800-test-data.jpg",
+      "blobSha": "d681f8af1825d010851a28f44502a1e7b4654287",
+      "bytes": 82759,
+      "surface": "CAP04",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 800
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 800
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-light-desktop-test-data",
+      "file": "CAP04-light-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-light-desktop-test-data.jpg",
+      "blobSha": "2afaa326ca9f213b2f49d068a69166f72ab0fe49",
+      "bytes": 98767,
+      "surface": "CAP04",
+      "locale": "en-US",
+      "scheme": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-light-320-test-data",
+      "file": "CAP04-light-320-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-light-320-test-data.jpg",
+      "blobSha": "e1cf51392737ed58e12f205c2e3096b3ea73e916",
+      "bytes": 29953,
+      "surface": "CAP04",
+      "locale": "en-US",
+      "scheme": "light",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 320,
+        "height": 900
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP02-dark-desktop-editor-test-data",
+      "file": "CAP02-dark-desktop-editor-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-dark-desktop-editor-test-data.jpg",
+      "blobSha": "121bffb4e5788740d0d22fce3674eab9bd85d820",
+      "bytes": 92599,
+      "surface": "CAP02",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "editor",
+      "stateLabel": "Editor",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP02-dark-desktop-review-test-data",
+      "file": "CAP02-dark-desktop-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-dark-desktop-review-test-data.jpg",
+      "blobSha": "30ccddd56c418e34d28b32899ee58d6bb6633cbe",
+      "bytes": 97439,
+      "surface": "CAP02",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "review",
+      "stateLabel": "Revisão",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP02-dark-320-review-test-data",
+      "file": "CAP02-dark-320-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-dark-320-review-test-data.jpg",
+      "blobSha": "819eef3df3b665af097c44c99863769b32ae8725",
+      "bytes": 28538,
+      "surface": "CAP02",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "state": "review",
+      "stateLabel": "Revisão",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 320,
+        "height": 900
+      },
+      "reviewRegion": "Scrolled review action region"
+    },
+    {
+      "name": "CAP02-dark-desktop-detail-test-data",
+      "file": "CAP02-dark-desktop-detail-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-dark-desktop-detail-test-data.jpg",
+      "blobSha": "cb0a740290083a54d7f79cd3759b2c6d46ffde6e",
+      "bytes": 96790,
+      "surface": "CAP02",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "detail",
+      "stateLabel": "Detalhe",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP02-dark-320-related-test-data",
+      "file": "CAP02-dark-320-related-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-dark-320-related-test-data.jpg",
+      "blobSha": "b085ef67f31eb013a5372577b7a871194413617c",
+      "bytes": 30130,
+      "surface": "CAP02",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "state": "related",
+      "stateLabel": "Detalhe — seletor com foco",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 320,
+        "height": 900
+      },
+      "reviewRegion": "Scrolled lower detail; focused reference selector"
+    },
+    {
+      "name": "CAP02-dark-desktop-existing-review-test-data",
+      "file": "CAP02-dark-desktop-existing-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-dark-desktop-existing-review-test-data.jpg",
+      "blobSha": "679a164c099662025aa51919152303156a94cdef",
+      "bytes": 122646,
+      "surface": "CAP02",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "existing-review",
+      "stateLabel": "Revisão de edição existente",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP02-dark-desktop-saved-test-data",
+      "file": "CAP02-dark-desktop-saved-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-dark-desktop-saved-test-data.jpg",
+      "blobSha": "8b9cd96aeae8d2d5913b2c500abda996fd209e62",
+      "bytes": 75700,
+      "surface": "CAP02",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "saved",
+      "stateLabel": "Confirmação de salvamento",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP03-dark-desktop-annual-test-data",
+      "file": "CAP03-dark-desktop-annual-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP03-dark-desktop-annual-test-data.jpg",
+      "blobSha": "293b8c1bca6b6e29bca10886de8b4e010d0e8532",
+      "bytes": 90234,
+      "surface": "CAP03",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "annual",
+      "stateLabel": "Ano selecionado — ausência explícita",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP03-dark-desktop-review-test-data",
+      "file": "CAP03-dark-desktop-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP03-dark-desktop-review-test-data.jpg",
+      "blobSha": "9b1db5b6098dcb510ec1b1824a34086b21f83abd",
+      "bytes": 99705,
+      "surface": "CAP03",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "review",
+      "stateLabel": "Revisão",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP03-dark-320-review-test-data",
+      "file": "CAP03-dark-320-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP03-dark-320-review-test-data.jpg",
+      "blobSha": "a3d6d8ac17370423fdc42f1c7bc5b6406a47ee6f",
+      "bytes": 29611,
+      "surface": "CAP03",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "state": "review",
+      "stateLabel": "Revisão",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 320,
+        "height": 900
+      },
+      "reviewRegion": "Scrolled review action region"
+    },
+    {
+      "name": "CAP04-dark-desktop-new-line-test-data",
+      "file": "CAP04-dark-desktop-new-line-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-dark-desktop-new-line-test-data.jpg",
+      "blobSha": "0c66b7558ff9b20e33a456830e1d6071ad15675b",
+      "bytes": 82958,
+      "surface": "CAP04",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "new-line",
+      "stateLabel": "Nova linha",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-dark-desktop-detail-test-data",
+      "file": "CAP04-dark-desktop-detail-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-dark-desktop-detail-test-data.jpg",
+      "blobSha": "c8dd8fbf2d8c66b5256e96357204975b74105c8b",
+      "bytes": 117382,
+      "surface": "CAP04",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "detail",
+      "stateLabel": "Detalhe",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-dark-320-detail-test-data",
+      "file": "CAP04-dark-320-detail-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-dark-320-detail-test-data.jpg",
+      "blobSha": "55df7f5a34566132e360f0f7b2bdd92a3c43986f",
+      "bytes": 31745,
+      "surface": "CAP04",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "state": "detail",
+      "stateLabel": "Detalhe",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 320,
+        "height": 900
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-dark-desktop-editor-test-data",
+      "file": "CAP04-dark-desktop-editor-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-dark-desktop-editor-test-data.jpg",
+      "blobSha": "c5e9f89610bb4a22d5d7bced0fa56e9ae27fa0e4",
+      "bytes": 82779,
+      "surface": "CAP04",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "editor",
+      "stateLabel": "Editor",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-dark-desktop-review-test-data",
+      "file": "CAP04-dark-desktop-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-dark-desktop-review-test-data.jpg",
+      "blobSha": "7b17348132e55fce5f043d93fe6dbfad10338797",
+      "bytes": 87051,
+      "surface": "CAP04",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "review",
+      "stateLabel": "Revisão",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-dark-320-review-test-data",
+      "file": "CAP04-dark-320-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-dark-320-review-test-data.jpg",
+      "blobSha": "f6c9bd648607dc673a32e88710b1a1841a909140",
+      "bytes": 21638,
+      "surface": "CAP04",
+      "locale": "en-US",
+      "scheme": "dark",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "state": "review",
+      "stateLabel": "Revisão",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 320,
+        "height": 900
+      },
+      "reviewRegion": "Scrolled review action region"
+    },
+    {
+      "name": "CAP02-pt-BR-dark-desktop-test-data",
+      "file": "CAP02-pt-BR-dark-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-pt-BR-dark-desktop-test-data.jpg",
+      "blobSha": "e376d6d0ab77a724f9cfa9d9ba6160dc1be4b7df",
+      "bytes": 111616,
+      "surface": "CAP02",
+      "locale": "pt-BR",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP03-pt-BR-dark-desktop-test-data",
+      "file": "CAP03-pt-BR-dark-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP03-pt-BR-dark-desktop-test-data.jpg",
+      "blobSha": "accc6c2584a546c4b190bf513e806e3b18b6df79",
+      "bytes": 100432,
+      "surface": "CAP03",
+      "locale": "pt-BR",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-pt-BR-dark-desktop-test-data",
+      "file": "CAP04-pt-BR-dark-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-pt-BR-dark-desktop-test-data.jpg",
+      "blobSha": "b418a2a724dea8352d64576a311af691f404095e",
+      "bytes": 100989,
+      "surface": "CAP04",
+      "locale": "pt-BR",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "main",
+      "stateLabel": "Vista principal",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP02-pt-BR-dark-desktop-detail-test-data",
+      "file": "CAP02-pt-BR-dark-desktop-detail-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-pt-BR-dark-desktop-detail-test-data.jpg",
+      "blobSha": "aa60857e73346c7c8c551a7e094b73e93d3eef16",
+      "bytes": 102464,
+      "surface": "CAP02",
+      "locale": "pt-BR",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "detail",
+      "stateLabel": "Detalhe",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP02-pt-BR-dark-desktop-editor-test-data",
+      "file": "CAP02-pt-BR-dark-desktop-editor-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-pt-BR-dark-desktop-editor-test-data.jpg",
+      "blobSha": "c91aacf7c6c26724df744c0b64a4ff6b6d3b9859",
+      "bytes": 95668,
+      "surface": "CAP02",
+      "locale": "pt-BR",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "editor",
+      "stateLabel": "Editor",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP02-pt-BR-dark-desktop-review-test-data",
+      "file": "CAP02-pt-BR-dark-desktop-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP02-pt-BR-dark-desktop-review-test-data.jpg",
+      "blobSha": "aa5e31f6375cab495703e37410f3c4b120a2cec9",
+      "bytes": 100820,
+      "surface": "CAP02",
+      "locale": "pt-BR",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "review",
+      "stateLabel": "Revisão",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP03-pt-BR-dark-desktop-editor-test-data",
+      "file": "CAP03-pt-BR-dark-desktop-editor-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP03-pt-BR-dark-desktop-editor-test-data.jpg",
+      "blobSha": "c43088da4c8fa651f9a24cc085b1bd2cce67e83d",
+      "bytes": 101672,
+      "surface": "CAP03",
+      "locale": "pt-BR",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "editor",
+      "stateLabel": "Editor",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP03-pt-BR-dark-desktop-review-test-data",
+      "file": "CAP03-pt-BR-dark-desktop-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP03-pt-BR-dark-desktop-review-test-data.jpg",
+      "blobSha": "fbed104cccee0ca9b734485f973809a37d79a2ef",
+      "bytes": 104693,
+      "surface": "CAP03",
+      "locale": "pt-BR",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "review",
+      "stateLabel": "Revisão",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-pt-BR-dark-desktop-detail-test-data",
+      "file": "CAP04-pt-BR-dark-desktop-detail-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-pt-BR-dark-desktop-detail-test-data.jpg",
+      "blobSha": "cb22468138c9c1044678b64413fbb1e087d75ec5",
+      "bytes": 122772,
+      "surface": "CAP04",
+      "locale": "pt-BR",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "detail",
+      "stateLabel": "Detalhe",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-pt-BR-dark-desktop-editor-test-data",
+      "file": "CAP04-pt-BR-dark-desktop-editor-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-pt-BR-dark-desktop-editor-test-data.jpg",
+      "blobSha": "80af16fd51879a7c3332805b85916d17a556a8f5",
+      "bytes": 88092,
+      "surface": "CAP04",
+      "locale": "pt-BR",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "editor",
+      "stateLabel": "Editor",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    },
+    {
+      "name": "CAP04-pt-BR-dark-desktop-review-test-data",
+      "file": "CAP04-pt-BR-dark-desktop-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/wave-two/evidence/CAP04-pt-BR-dark-desktop-review-test-data.jpg",
+      "blobSha": "b41f8416e60cd086258d85818fc85ecf02b9ec02",
+      "bytes": 92752,
+      "surface": "CAP04",
+      "locale": "pt-BR",
+      "scheme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "state": "review",
+      "stateLabel": "Revisão",
+      "captureExtent": "viewport",
+      "imageSize": {
+        "width": 1440,
+        "height": 1100
+      },
+      "reviewRegion": "See image; content may continue below viewport"
+    }
+  ]
+}

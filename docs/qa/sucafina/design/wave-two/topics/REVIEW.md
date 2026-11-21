@@ -1,6 +1,6 @@
 # CAP02 — Hot Topics redesign
 
-Status: REAL JOURNEY PASS AND VISUAL REVIEW COMPLETED FOR CANDIDATE 263e694; CAP02 REFERENCE-SELECTOR POLISH AWAITS UPDATED CAPTURE. No user visual approval or golden baseline.
+Status: REAL JOURNEY PASS; FINAL CAP02 REFERENCE-SELECTOR POLISH VISUALLY VERIFIED ON CANDIDATE 5012d7a. User visual approval and golden baseline remain pending.
 
 ## Scope and origin
 
@@ -50,7 +50,7 @@ Primary localization reference inspected: Mozilla Firefox's maintained pt-BR glo
 
 ## Validation and limits
 
-No local build, test, app execution or owner-app restart. Root owns the consolidated Actions runs and actual dark/light, Portuguese and narrow captures. Static source comparison confirmed unchanged remove logic, preserved save dispatch/admission semantics and preservation of all existing catalog pairs. Candidate 263e694ef565376cc1af61cae0dc9e44777075b8 passed the real-installation journey and the focused registry tests documented below. The subsequent reference-selector CSS polish is not yet covered by a new capture. No user visual approval or golden baseline has been recorded. A 320px viewport is reflow evidence, not browser-zoom evidence.
+No local build, test, app execution or owner-app restart. Root owns the consolidated Actions runs and actual dark/light, Portuguese and narrow captures. Static source comparison confirmed unchanged remove logic, preserved save dispatch/admission semantics and preservation of all existing catalog pairs. Candidate 263e694ef565376cc1af61cae0dc9e44777075b8 passed the real-installation journey and the focused registry tests documented below. The subsequent reference-selector CSS polish is covered by the two targeted final captures on candidate 5012d7adf0e5d02576fe6a0add6f79331a812137 documented below. No user visual approval or golden baseline has been recorded. A 320px viewport is reflow evidence, not browser-zoom evidence.
 
 ## Inherited confirmation lifecycle repair
 
@@ -120,4 +120,19 @@ The detail image shows **Executive references → Open canonical record** with t
 
 With root authorization, only `hot-topics/topics.css` now extends the existing native input treatment to `.sf-topics-related select`: 44px minimum height, native line/fill/radius, padding, full available width and inherited color scheme. Scoped related-section rules provide a 12px title/row gap and 8px label/control gap, with shrinkable label sizing for narrow screens. No shared cross-link markup, targets, commands, strings or authorization/admission code changes.
 
-**Updated image pending:** these thirteen images predate this final CSS correction. Root will rerun the existing journey on the integrated candidate and replace the detail evidence. The patch is source-complete but has not been visually accepted before that render. This report is a worker critique, not user approval or a golden-baseline designation.
+**Status at the 263e694 review:** these thirteen images predated the final CSS correction, so the corrected detail remained pending until another real render. That later targeted verification is recorded below; the original image inventory and finding are retained as history. This report is a worker critique, not user approval or a golden-baseline designation.
+
+## Final targeted verification — candidate 5012d7a
+
+Product candidate: `5012d7adf0e5d02576fe6a0add6f79331a812137`.
+
+The existing real-installation journey passed again: [run 44920647017](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44920647017), [job 136895711016](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44920647017/job/136895711016), **1 passed (2.9m)**. The log contains 39 preview names. This targeted review reconstructed and rendered only the following two requested images, one at a time:
+
+| Image name | Observed result |
+| --- | --- |
+| `CAP02-pt-BR-dark-desktop-detail-test-data` | Referências executivas now has clear separation between heading, label and selector. The selector has the native filled surface, border, radius and 44px height; its Portuguese prompt and chevron fit. The detail metadata, Notes, edit/delete controls and source disclosure remain aligned. |
+| `CAP02-dark-320-related-test-data` | The reference selector fits the narrow card, with a complete visible focus outline and a full-height control. Label and field are separated, edit/delete actions remain complete, and the source disclosure fits below. No horizontal clipping is visible in the captured region. |
+
+**Worker verdict:** the specific reference-selector finish defect observed in the 263e694 detail image is resolved in these actual final renders. No additional material defect was found in the two inspected areas. No product changes or CI executions were made during this final verification; only this review document was updated.
+
+The 320px image is a scrolled capture of the lower detail/related-reference region, not a full-page image or browser-zoom test. The other 37 final preview names were not reconstructed by this worker in this targeted pass. The thirteen-image review of candidate 263e694 above remains the recorded broader CAP02 review; the final two images specifically close its last visual finding. User approval and any golden-baseline designation are still pending.

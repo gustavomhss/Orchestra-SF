@@ -3,16 +3,16 @@
   "repository": "gustavomhss/Orchestra-SF",
   "date": "2026-11-21",
   "target": {
-    "branch": "sf-design-polish",
+    "branch": "sf-design-two",
     "createdFrom": "dev",
-    "baseCommit": "948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1",
+    "baseCommit": "bcdc109326de02e20c01c32ffb6b00bee3ff978d",
     "nativeFrontendPresent": true,
-    "latestDevInspected": "65ec572f32ef635478198750bf733e8f7c13d086",
+    "latestDevInspected": "bcdc109326de02e20c01c32ffb6b00bee3ff978d",
     "latestDevNativeFrontendPresent": true,
-    "nativeFrontendPresentInDevBase": false,
-    "synchronizedDevCommit": "1fd255026dec8e1db1f4342f7ec206a6812b42ea",
-    "reviewedProductCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76",
-    "latestDevInspectionScope": "Compatibility declarations; synchronized base is recorded separately"
+    "nativeFrontendPresentInDevBase": true,
+    "approvedReference": "8f18ca831df7b144d843e6b0b3477825abe88e46",
+    "reviewedProductCommit": "5012d7adf0e5d02576fe6a0add6f79331a812137",
+    "latestDevInspectionScope": "The branch was created directly from this dev commit before the approved first-wave tree was integrated."
   },
   "source": {
     "branch": "dev",
@@ -43,29 +43,45 @@
     "CAP01"
   ],
   "verification": {
-    "inventory": "Matched all route-registry surface IDs and existing component blobs; no runtime claim",
+    "inventory": "70 surfaces, 165 routes, 15 chapters and 75 component entrypoints verified in the final candidate tree; original registry blob unchanged.",
     "sourceTreeTruncated": false,
     "targetPackagesTreeTruncated": false,
-    "build": "PASS: real native Web bundle, run 44913429642",
-    "typecheck": "PASS: application and E2E, run 44913434039",
-    "tests": "PASS: installed first-wave and Portuguese journey, run 44913429642",
-    "screenshots": "28 real browser JPEGs + canonical PNG attachments",
+    "typecheck": "PASS: application and E2E, run 44920652075",
+    "tests": "PASS: real Chromium journey, 1 passed (2.9m), run 44920647017; 3 genuine confirmed writes",
+    "screenshots": "39 actual native captures, including 11 pt-BR; 0 preview skips; persistent JPEGs and canonical PNG artifact",
     "browserActualZoom": "NOT_MEASURED",
     "guards": {
-      "run": 44913434039,
+      "run": 44920652075,
+      "rules": 78,
       "errors": 0,
-      "warnings": 2,
+      "warnings": 5,
       "approved": 0
     },
     "palette": {
-      "run": 44913434039,
+      "run": 44920652075,
       "generatedFilesUnchanged": 7
     },
-    "visualReview": "Root and three workers reviewed actual captured states; see VALIDATION.md",
-    "userAcceptance": "APPROVED_BY_USER",
-    "currentCandidateInventory": "70 surfaces and75 component entrypoints verified in current candidate tree; route-registry blob unchanged",
-    "currentCandidateRouteInventory": "70 surfaces,165 route patterns,15 chapters; original route-registry blob unchanged",
-    "localeScope": "en-US desktop dark/light, short/narrow; pt-BR desktop dark including decision editor/review; native date format not qualified"
+    "draftRegistry": {
+      "run": 44919739363,
+      "pass": 6,
+      "fail": 0,
+      "assertions": 29,
+      "testedProduct": "263e694ef565376cc1af61cae0dc9e44777075b8",
+      "identicalRegistryAndTestBlobsInFinal": true
+    },
+    "visualReview": "Broader worker review on 263e694 plus final targeted CAP02 reference selector and CAP04 320px detail review on 5012d7a; exact inspected states and limits in each worker report.",
+    "userAcceptance": "AWAITING_USER_REVIEW",
+    "firstWaveUserAcceptance": "APPROVED_BY_USER",
+    "localeScope": "en-US dark/light desktop, short/narrow; pt-BR dark desktop including editor/review/detail; not an exhaustive cross-browser or zoom matrix.",
+    "browser": {
+      "run": 44920647017,
+      "job": 136895711016,
+      "result": "PASS",
+      "passed": 1,
+      "failed": 0,
+      "previewCount": 39,
+      "portuguesePreviews": 11
+    }
   },
   "surfaces": [
     {
@@ -122,16 +138,22 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/index.tsx",
-          "blobSha": "7103038361edb190390e948d1f8f1ac5fe45fa0b"
+          "blobSha": "3d75f9688ac6543c131d13084baf54f2dba1de2a"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "NOT_RUN",
-      "status": "INVENTORIED_NOT_REDESIGNED",
+      "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "VISUALLY_REVIEWED_AWAITING_USER",
       "designWork": {
-        "status": "INVENTORIED_NOT_ASSIGNED"
+        "status": "IMPLEMENTED_VISUALLY_REVIEWED",
+        "worker": "redesign_topics",
+        "branch": "sf-redesign-topics",
+        "commit": "864a1d6c50c8c4a9bf034454d26d544935c605f6",
+        "report": "wave-two/topics/REVIEW.md",
+        "productCommit": "5012d7adf0e5d02576fe6a0add6f79331a812137"
       },
-      "presentInCandidate": true
+      "presentInCandidate": true,
+      "secondWaveOrder": 1
     },
     {
       "id": "CAP03",
@@ -147,16 +169,22 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx",
-          "blobSha": "e5986221a5b5fe2d94a395d794b9894846cafaa9"
+          "blobSha": "f82946f091f58090491b39adf36d97e45310dac2"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "NOT_RUN",
-      "status": "INVENTORIED_NOT_REDESIGNED",
+      "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "VISUALLY_REVIEWED_AWAITING_USER",
       "designWork": {
-        "status": "INVENTORIED_NOT_ASSIGNED"
+        "status": "IMPLEMENTED_VISUALLY_REVIEWED",
+        "worker": "redesign_budget",
+        "branch": "sf-redesign-budget",
+        "commit": "91df44727430b780efe34b1201ee7f2442a788c3",
+        "report": "wave-two/budget/REVIEW.md",
+        "productCommit": "5012d7adf0e5d02576fe6a0add6f79331a812137"
       },
-      "presentInCandidate": true
+      "presentInCandidate": true,
+      "secondWaveOrder": 2
     },
     {
       "id": "CAP04",
@@ -188,12 +216,18 @@
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "NOT_RUN",
-      "status": "INVENTORIED_NOT_REDESIGNED",
+      "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "VISUALLY_REVIEWED_AWAITING_USER",
       "designWork": {
-        "status": "INVENTORIED_NOT_ASSIGNED"
+        "status": "IMPLEMENTED_VISUALLY_REVIEWED",
+        "worker": "redesign_opex",
+        "branch": "sf-redesign-opex",
+        "commit": "38882b87e73ba15adfa1566826aec048f137a40c",
+        "report": "wave-two/opex/REVIEW.md",
+        "productCommit": "5012d7adf0e5d02576fe6a0add6f79331a812137"
       },
-      "presentInCandidate": true
+      "presentInCandidate": true,
+      "secondWaveOrder": 3
     },
     {
       "id": "CAP05",
@@ -2365,9 +2399,112 @@
     }
   },
   "candidateSource": {
-    "commit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76",
-    "nativeTree": "5d1c1cc68ebed049ac0f3c6da34c8d8c885f3263",
+    "commit": "5012d7adf0e5d02576fe6a0add6f79331a812137",
+    "nativeTree": "3e5d9f790c65fccdad016f1bb89ae4acf539d4d0",
     "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
     "routeRegistryUnchanged": true
+  },
+  "firstWaveVerifiedSnapshot": {
+    "target": {
+      "branch": "sf-design-polish",
+      "createdFrom": "dev",
+      "baseCommit": "948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1",
+      "nativeFrontendPresent": true,
+      "latestDevInspected": "65ec572f32ef635478198750bf733e8f7c13d086",
+      "latestDevNativeFrontendPresent": true,
+      "nativeFrontendPresentInDevBase": false,
+      "synchronizedDevCommit": "1fd255026dec8e1db1f4342f7ec206a6812b42ea",
+      "reviewedProductCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76",
+      "latestDevInspectionScope": "Compatibility declarations; synchronized base is recorded separately"
+    },
+    "verification": {
+      "inventory": "Matched all route-registry surface IDs and existing component blobs; no runtime claim",
+      "sourceTreeTruncated": false,
+      "targetPackagesTreeTruncated": false,
+      "build": "PASS: real native Web bundle, run 44913429642",
+      "typecheck": "PASS: application and E2E, run 44913434039",
+      "tests": "PASS: installed first-wave and Portuguese journey, run 44913429642",
+      "screenshots": "28 real browser JPEGs + canonical PNG attachments",
+      "browserActualZoom": "NOT_MEASURED",
+      "guards": {
+        "run": 44913434039,
+        "errors": 0,
+        "warnings": 2,
+        "approved": 0
+      },
+      "palette": {
+        "run": 44913434039,
+        "generatedFilesUnchanged": 7
+      },
+      "visualReview": "Root and three workers reviewed actual captured states; see VALIDATION.md",
+      "userAcceptance": "APPROVED_BY_USER",
+      "currentCandidateInventory": "70 surfaces and75 component entrypoints verified in current candidate tree; route-registry blob unchanged",
+      "currentCandidateRouteInventory": "70 surfaces,165 route patterns,15 chapters; original route-registry blob unchanged",
+      "localeScope": "en-US desktop dark/light, short/narrow; pt-BR desktop dark including decision editor/review; native date format not qualified"
+    },
+    "candidateSource": {
+      "commit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76",
+      "nativeTree": "5d1c1cc68ebed049ac0f3c6da34c8d8c885f3263",
+      "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
+      "routeRegistryUnchanged": true
+    }
+  },
+  "secondWave": [
+    "CAP02",
+    "CAP03",
+    "CAP04"
+  ],
+  "secondWaveDelivery": {
+    "status": "VISUALLY_REVIEWED_AWAITING_USER",
+    "authorization": "User: do it, after explicitly approving UI29/UI33/CAP01.",
+    "appliedToProduct": true,
+    "appliedToBranch": "sf-design-two",
+    "productCommit": "5012d7adf0e5d02576fe6a0add6f79331a812137",
+    "workers": [
+      {
+        "surface": "CAP02",
+        "agent": "redesign_topics",
+        "branch": "sf-redesign-topics",
+        "commit": "864a1d6c50c8c4a9bf034454d26d544935c605f6",
+        "report": "wave-two/topics/REVIEW.md"
+      },
+      {
+        "surface": "CAP03",
+        "agent": "redesign_budget",
+        "branch": "sf-redesign-budget",
+        "commit": "91df44727430b780efe34b1201ee7f2442a788c3",
+        "report": "wave-two/budget/REVIEW.md"
+      },
+      {
+        "surface": "CAP04",
+        "agent": "redesign_opex",
+        "branch": "sf-redesign-opex",
+        "commit": "38882b87e73ba15adfa1566826aec048f137a40c",
+        "report": "wave-two/opex/REVIEW.md"
+      }
+    ],
+    "summary": "WAVE-TWO.md",
+    "currentStatusDocument": "wave-two/VALIDATION.md",
+    "evidence": "wave-two/evidence/manifest.json",
+    "gallery": "wave-two/evidence/README.md",
+    "acceptance": {
+      "status": "AWAITING_USER_REVIEW",
+      "scope": [
+        "CAP02",
+        "CAP03",
+        "CAP04"
+      ],
+      "productCommit": "5012d7adf0e5d02576fe6a0add6f79331a812137",
+      "userApproval": null,
+      "goldenBaseline": null
+    },
+    "remainingInventoried": 64,
+    "validationRuns": {
+      "browser": 44920647017,
+      "gates": 44920652075,
+      "draftRegistry": 44919739363
+    },
+    "captureCount": 39,
+    "portugueseCaptureCount": 11
   }
 }
