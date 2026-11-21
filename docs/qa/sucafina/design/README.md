@@ -8,6 +8,12 @@ Target branch: `sf-design-polish`, created directly from `dev` at [`948fab6ef2f8
 
 The inventory below describes the native Solid frontend read from [`sf-join-four @ fdeb988881c927f952a2d9fd5b8002c892f56635`](https://github.com/gustavomhss/Orchestra-SF/tree/fdeb988881c927f952a2d9fd5b8002c892f56635). This is an explicit, read-only reference; it is **not** the branch base and has not been merged or copied into the product. The legacy HTML console is excluded.
 
+## First-wave artifacts
+
+Three real workers completed scoped implementation patches, and the root reviewer reconstructed all seven proposed product files against the pinned source. See [WAVE-ONE.md](WAVE-ONE.md) for the three commits, concrete changes, source-review evidence and unresolved integration dependency. **The patches have not changed the application and are not visually approved.**
+
+The later dev head `b5297b938735eab8ae37a686f01015f37c727724` was also inspected and still lacks the native Sucafina frontend. Its two commits after the branch base modify no app-shell files.
+
 ## Exact inventory
 
 The source route registry contains **70 unique surfaces, 165 route patterns and 15 native chapters**. These numbers describe route recognition; they do not prove runtime admission, data availability or visual acceptance. Every entrypoint below exists as a blob in the pinned native source tree. `inventory.json` preserves every route variant and source blob SHA, including create, edit, detail, review, comparison and alias routes.
