@@ -443,13 +443,17 @@ test("Corporate Team directory scopes assignment choices to the mounted Team", a
     expect((await settings(financePerson))?.status).toBe(200)
 
     provider.roster = "missing-finance"
-    const settingsPage = () => f.installation.handler(ingress(`/teams/${teamObjectId}/procurement?page=Settings`, { cookie }))
-    const previous = await (await settingsPage())?.text()
+    const approvalPicker = async () => {
+      const response = await f.installation.handler(ingress(`/teams/${teamObjectId}/procurement?page=Settings`, { cookie }))
+      expect(response?.status).toBe(200)
+      return (await response!.text()).match(/<select name="levels\.0\.holderId">[\s\S]*?<\/select>/)?.[0]
+    }
+    const previous = await approvalPicker()
     expect(previous).toContain('value="keep-previous-holder" selected')
     expect(previous).not.toContain(financePerson)
     expect((await settings("keep-previous-holder", 2))?.status).toBe(200)
     provider.roster = "complete"
-    expect(await (await settingsPage())?.text()).toContain(`value="${financePerson}" selected`)
+    expect(await approvalPicker()).toContain(`value="${financePerson}" selected`)
 
     for (const state of ["incomplete", "down"]) {
       provider.roster = state
