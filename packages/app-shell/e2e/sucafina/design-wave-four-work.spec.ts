@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto"
 import { expect } from "@playwright/test"
 import { waveFourTest, enter, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage } from "./design-support/wave-four"
 import { waveFourProcurementData } from "./design-support/wave-four-procurement-data"
+import { seedWaveFourWork } from "./design-support/wave-four-work-seed"
 
 const screens = [
   { id: "UI30", path: "/orchestra/sf-work", title: "Meu trabalho" },
@@ -29,7 +30,24 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     }
   })
 
-  if (area.id === "UI30") await waveFourTest.step("UI30 reads the actual period, assigned requisition and reauthorized destination", async () => {
+  if (area.id === "UI30") await waveFourTest.step("UI30 reads the actual period, original local handoff and reauthorized destination", async () => {
+    const seeded = await seedWaveFourWork({
+      actorId: installation.actorId,
+      request: async (pathname, init) => {
+        const headers = new Headers(init?.headers)
+        if (init?.method === "POST") headers.set("Origin", installation.origin)
+        const response = await page.context().request.fetch(installation.origin + installation.mount + pathname, {
+          method: init?.method ?? "GET",
+          headers: Object.fromEntries(headers),
+          ...(typeof init?.body === "string" ? { data: init.body } : {}),
+          timeout: 40_000,
+        })
+        // Adapt the real Playwright HTTP response without changing its bytes or status.
+        return new Response(new Uint8Array(await response.body()), {
+          status: response.status(), headers: response.headers(),
+        })
+      },
+    }, installation.year)
     await enter(page, owner, new URL("/orchestra/sf-work", installation.origin).href, "My work")
     const surface = page.locator('[data-sf-surface="UI30"]')
     await expect(surface).toHaveAttribute("data-sf-wave", "four")
@@ -38,14 +56,15 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     await surface.locator("[data-sf-work-start]").fill(installation.year + "-01-01")
     await surface.locator("[data-sf-work-end]").fill(installation.year + "-12-31")
     await surface.getByRole("button", { name: "Load my work", exact: true }).click()
-    const item = surface.getByRole("row").filter({ hasText: waveFourProcurementData.requests.prApproval })
+    await expect(surface.getByRole("row").filter({ hasText: waveFourProcurementData.requests.prApproval })).toBeVisible()
+    const item = surface.getByRole("row").filter({ hasText: seeded.title })
     await expect(item).toBeVisible()
     await capture(page, info, "UI30-dark-desktop-assigned-work")
     await item.getByRole("button", { name: "Work details", exact: true }).click()
     const details = surface.locator("[data-sf-work-detail]")
-    await expect(details.getByRole("heading", { name: waveFourProcurementData.requests.prApproval, exact: true })).toBeVisible()
-    await expect(details.locator("[data-sf-work-owner-ref]")).toHaveAttribute("data-sf-work-owner-ref", installation.actorId)
-    await expect(details.locator("[data-sf-work-source-version]")).not.toBeEmpty()
+    await expect(details.getByRole("heading", { name: seeded.title, exact: true })).toBeVisible()
+    await expect(details.locator("[data-sf-work-owner-ref]")).toHaveAttribute("data-sf-work-owner-ref", seeded.ownerRef)
+    await expect(details.locator("[data-sf-work-source-version]")).toHaveText(String(seeded.sourceVersion))
     await expect(surface.locator(".sf-work-list")).toBeHidden()
     await details.getByRole("button", { name: "Check current destination", exact: true }).click()
     await expect(details.getByRole("button", { name: "Open current source", exact: true })).toBeVisible()
@@ -64,9 +83,10 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     await page.setViewportSize({ width: 1440, height: 1100 })
     await item.getByRole("button", { name: "Work details", exact: true }).click()
     await details.getByRole("button", { name: "Open authorized destination", exact: true }).click()
-    await expect(page).toHaveURL((url) => url.origin === installation.origin && url.pathname.startsWith("/orchestra/sf-procurement/requests/"))
-    await ready(page, "Requests")
-    await expect(page.locator('[data-sf-surface="CAP25"]')).toContainText(waveFourProcurementData.requests.prApproval)
+    await expect(page).toHaveURL((url) => url.origin === installation.origin &&
+      url.pathname === "/orchestra/sf-dashboard/hot-topics/r_" + Buffer.from(seeded.topicId, "utf8").toString("base64url"))
+    await ready(page, "Hot Topics & Actions")
+    await expect(page.locator('[data-sf-surface="CAP02"]')).toContainText(seeded.title)
   })
 
   if (area.id === "UI31") await waveFourTest.step("UI31 sends search text only in the private POST body and renders the real empty result", async () => {
@@ -83,11 +103,23 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     const query = "Design test data · source without an uploaded document"
     await surface.getByLabel("Words to search", { exact: true }).fill(query)
     const reply = page.waitForResponse((response) => new URL(response.url()).pathname === installation.mount + "/api/ui/projections/search")
-      .then(async (response) => ({ status: response.status(), body: await response.json() as unknown }))
+      .then(async (response) => ({
+        status: response.status(), contentType: response.headers()["content-type"],
+        headers: await response.request().allHeaders(),
+      }))
     await surface.getByRole("button", { name: "Search", exact: true }).click()
     const response = await reply
     expect(response.status).toBe(200)
-    expect(response.body).toMatchObject({ status: "ok", value: { matches: [] } })
+    expect(response.contentType).toContain("application/json")
+    // A fresh original HTTP read avoids Chromium's evicted response-body cache.
+    const headers = { ...response.headers }
+    delete headers["content-length"]
+    delete headers.host
+    const reread = await page.context().request.post(searchRequests[0]!.url, {
+      headers, data: { q: query },
+    })
+    expect(reread.status()).toBe(200)
+    expect(await reread.json()).toMatchObject({ status: "ok", value: { matches: [] } })
     await expect(surface.locator('[data-sf-state="empty"]')).toBeVisible()
     expect(searchRequests).toHaveLength(1)
     expect(searchRequests[0]?.method).toBe("POST")
@@ -214,8 +246,8 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     body: JSON.stringify({
       areas: [area.id], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
       widths: [1440, 320], confirmedBrowserWrites: writes.length,
-      source: "genuine native installation; assigned Procurement source, private search and original V1 preferences",
-      limitations: ["No uploaded searchable document", "Native V2 views and preferred entry are not admitted", "Actual browser zoom not measured"],
+      source: "genuine native installation; original Procurement collection and local Handoff command, private search and original V1 preferences",
+      limitations: ["Procurement work-item detail returned 503 in the earlier run; positive Work detail uses the original Hot Topic handoff", "No uploaded searchable document", "Native V2 views and preferred entry are not admitted", "Actual browser zoom not measured"],
       ...diagnostics,
     }, null, 2), contentType: "application/json",
   })
