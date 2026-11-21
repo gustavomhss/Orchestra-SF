@@ -5,6 +5,7 @@ import { join } from "node:path"
 import { exportJWK, generateKeyPair, SignJWT } from "jose"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
+import { bindMicrosoftInstallation } from "../runtime/microsoft-configuration.ts"
 import { microsoftRequest, prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 
 const listenerOrigin = "http://127.0.0.1:4110"
@@ -14,6 +15,7 @@ const mount = "/sucafina"
 const tenantId = "11111111-1111-4111-8111-111111111111"
 const clientId = "22222222-2222-4222-8222-222222222222"
 const oid = "33333333-3333-4333-8333-333333333333"
+const grantPrincipal = "a3333333-3333-4333-8333-333333333333"
 const teamObjectId = "44444444-4444-4444-8444-444444444444"
 const authority = "https://login.microsoftonline.com/" + tenantId
 const graph = "https://graph.microsoft.com/v1.0"
@@ -31,11 +33,13 @@ async function fixture(teams: "direct" | undefined, fetch: (request: Request) =>
     await writeFile(file, JSON.stringify({
       version: 1, deployment: "azure-https", authentication: "microsoft",
       origin, listenerOrigin, ingressOrigin, mount, tenantId, clientId, workspaceDirectory,
-      groups: { dashboard: {}, planner: {}, procurement: {} }, grants: [], scanner: null,
+      groups: { dashboard: {}, planner: {}, procurement: {} },
+      grants: [{ principalRef: grantPrincipal.toUpperCase(), operations: ["sf_case_read"] }],
+      supremeAdminGroupId: grantPrincipal.toUpperCase(), scanner: null,
       ...(teams ? { teams } : {}),
     }))
     await writeFile(join(directory, "client-secret.txt"), secret, { mode: 0o600 })
-    const prepared = await prepareMicrosoftInstallation({ origin: listenerOrigin }, file, {
+    const environment = {
       ORCHESTRA_DB: join(directory, "host-data", "orchestra.db"),
       ORCHESTRA_INHERIT_CREDENTIALS: "0",
       ORCHESTRA_CONFIG_DIR: join(directory, "host-config"),
@@ -45,7 +49,16 @@ async function fixture(teams: "direct" | undefined, fetch: (request: Request) =>
       XDG_CONFIG_HOME: join(directory, "host-config"),
       XDG_CACHE_HOME: join(directory, "host-cache"),
       XDG_STATE_HOME: join(directory, "host-state"),
-    }, { fetch, now: () => new Date(epoch * 1000) })
+    }
+    const prepare = () => prepareMicrosoftInstallation({ origin: listenerOrigin }, file, environment,
+      { fetch, now: () => new Date(epoch * 1000) })
+    const [prepared, concurrent] = await Promise.all([prepare(), prepare()])
+    expect(concurrent.loaded.config).toEqual(prepared.loaded.config)
+    expect(prepared.loaded.config.grants).toEqual([{ principalRef: grantPrincipal, operations: ["sf_case_read"] }])
+    expect(Object.isFrozen(prepared.loaded.config.grants[0]?.operations)).toBe(true)
+    expect(prepared.loaded.config.supremeAdminGroupId).toBe(grantPrincipal)
+    await expect(bindMicrosoftInstallation(directory, { ...prepared.loaded.config, tenantId: oid })).rejects
+      .toThrow("Microsoft installation identity cannot change")
     const store = await openLocalStore(join(directory, "business-microsoft"))
     try {
       const identity = prepared.createIdentity(store.secrets)
