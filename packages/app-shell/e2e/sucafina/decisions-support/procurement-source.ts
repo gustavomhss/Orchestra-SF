@@ -3,7 +3,7 @@ import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navig
 import { Schema } from "effect"
 import { SfDecisionsProposalAdvance, SfDecisionsProposalReview } from "@orchestra/schema/sucafina/decisions"
 import type { startPlannerInstallation } from "../wp03/installation-fixture"
-import { asRecord } from "./journey"
+import { asRecord, observeDecisionReply } from "./journey"
 
 const requestPattern = /^PR-\d{4}-\d+$/
 const stages = [
@@ -67,21 +67,19 @@ export async function approveExactRequisition(page: Page, installation: Awaited<
     const expected = { targetId: requestId, domainVersion: Number(review.expectedVersion), currentAmount,
       amount: operation.amount, currency, domainApplied: false }
     const panel = (surface: Page) => surface.getByRole("region", { name: "Procurement proposal", exact: true })
-    const command = (surface: Page, kind: "submit" | "approve") =>
-      surface.waitForResponse((response) => {
-        const url = new URL(response.url())
-        return url.origin === installation.origin && url.pathname === "/sucafina/procurement" &&
-          url.search === "?sf=decision-proposal-advance" && response.request().method() === "POST"
-      }).then(async (response) => {
-        expect(response.status()).toBe(200)
-        expect(response.headers()["content-type"]).toContain("application/json")
-        expect(response.request().postDataJSON()).toEqual({ ...selection, action: { kind, reviewDigest: expect.stringMatching(/^[a-f0-9]{64}$/) } })
-        const result = Schema.decodeUnknownSync(SfDecisionsProposalAdvance.output)(await response.json())
-        if (result.status !== "ok") throw new Error(`Proposal ${kind} failed with ${result.status}`)
-        expect(result.value).toMatchObject(expected)
-        return result.value
-      })
-    const [submitted] = await Promise.all([command(page, "submit"), panel(page).getByRole("button", { name: "Submit exact proposal for approval", exact: true }).click()])
+    const command = async (surface: Page, kind: "submit" | "approve", button: Locator) => {
+      const response = await observeDecisionReply(surface, (request) =>
+        request.url() === `${installation.origin}/sucafina/procurement?sf=decision-proposal-advance` && request.method() === "POST",
+        () => button.click())
+      expect(response.status()).toBe(200)
+      expect(response.headers()["content-type"]).toContain("application/json")
+      expect(response.request().postDataJSON()).toEqual({ ...selection, action: { kind, reviewDigest: expect.stringMatching(/^[a-f0-9]{64}$/) } })
+      const result = Schema.decodeUnknownSync(SfDecisionsProposalAdvance.output)(await response.json())
+      if (result.status !== "ok") throw new Error(`Proposal ${kind} failed with ${result.status}`)
+      expect(result.value).toMatchObject(expected)
+      return result.value
+    }
+    const submitted = await command(page, "submit", panel(page).getByRole("button", { name: "Submit exact proposal for approval", exact: true }))
     expect(submitted).toMatchObject({ state: "pending", step: { index: 0 }, allowedActions: [] })
     await expect(panel(page).getByRole("button", { name: "Approve exact proposal", exact: true })).toHaveCount(0)
     const href = await panel(page).getByRole("link", { name: "Open approver view", exact: true }).getAttribute("href")
@@ -101,7 +99,7 @@ export async function approveExactRequisition(page: Page, installation: Awaited<
         await expect(panel(approvalPage).getByText(`${currentAmount} ${currency}`, { exact: true })).toBeVisible()
         await expect(panel(approvalPage).getByText(`${operation.amount} ${currency}`, { exact: true })).toBeVisible()
         await expect(panel(approvalPage).getByRole("status")).toHaveText("Pending approval")
-        const [approved] = await Promise.all([command(approvalPage, "approve"), panel(approvalPage).getByRole("button", { name: "Approve exact proposal", exact: true }).click()])
+        const approved = await command(approvalPage, "approve", panel(approvalPage).getByRole("button", { name: "Approve exact proposal", exact: true }))
         expect(approved.proposalDigest).toBe(submitted.proposalDigest)
         expect(approved.state).toBe(index === 0 ? "pending" : "approved")
         if (index === 0) expect(approved.step?.index).toBe(1)
@@ -147,8 +145,6 @@ async function domainCommand(page: Page, origin: string, command: Command, openR
   }
   const posted: Request[] = []
   const observe = (request: Request) => { if (matches(request)) posted.push(request) }
-  const onFailure = (request: Request) => { if (matches(request)) rejectFailure(new Error(`Procurement ${command.action} transport failed; reconcile before any retry`)) }
-  let rejectFailure!: (error: Error) => void
   page.on("request", observe)
   try {
     await expect(openReview).toBeEnabled()
@@ -160,15 +156,10 @@ async function domainCommand(page: Page, origin: string, command: Command, openR
     const confirm = review.getByRole("button", { name: confirmName, exact: true })
     await expect(confirm).toBeEnabled()
     expect(posted, "The command is sent only after the review is confirmed").toHaveLength(0)
-    const failed = new Promise<never>((_, reject) => { rejectFailure = reject })
-    page.on("requestfailed", onFailure)
-    const receipt = page.waitForResponse((item) => matches(item.request())).then(async (response) => {
-      expect(response.status()).toBe(200)
-      expect(response.headers()["content-type"]).toContain("application/json")
-      expect(asRecord(await response.json()).ok).toBe(true)
-      return response
-    })
-    const [response] = await Promise.all([Promise.race([receipt, failed]), confirm.click()])
+    const response = await observeDecisionReply(page, matches, () => confirm.click())
+    expect(response.status()).toBe(200)
+    expect(response.headers()["content-type"]).toContain("application/json")
+    expect(asRecord(await response.json()).ok).toBe(true)
     expect(posted).toHaveLength(1)
     expect(posted[0]).toBe(response.request())
     expect(response.request().postDataJSON()).toMatchObject({ page: command.page, action: command.action, ...(command.id ? { id: command.id, version: command.version } : {}) })
@@ -176,7 +167,6 @@ async function domainCommand(page: Page, origin: string, command: Command, openR
     return response
   } finally {
     page.off("request", observe)
-    page.off("requestfailed", onFailure)
   }
 }
 

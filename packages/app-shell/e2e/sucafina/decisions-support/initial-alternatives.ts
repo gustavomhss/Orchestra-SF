@@ -1,6 +1,6 @@
 import { expect, test, type Page, type Request } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { asRecord, assertPortfolioCatalog, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, readCase, readReply, reopenCase } from "./journey"
+import { asRecord, assertPortfolioCatalog, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, observeDecisionReply, readCase, readReply, reopenCase } from "./journey"
 import { createPlannerSources, sourceNames } from "./planner-sources"
 import { loseAlternativeResponse } from "./alternative-response"
 
@@ -34,15 +34,14 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
       await select.selectOption({ label })
       const selected = await select.inputValue()
       const inspect = editor.getByRole("button", { name: "Inspect selected source", exact: true })
-      const [inspection] = await Promise.all([page.waitForResponse((response) => {
-        const url = new URL(response.url())
-        return url.origin === installation.origin && isCommand(response.request(), "bi-data", "GET") &&
+      const response = await observeDecisionReply(page, (request) => {
+        const url = new URL(request.url())
+        return url.origin === installation.origin && isCommand(request, "bi-data", "GET") &&
           url.searchParams.get("baseRef") === selected && url.searchParams.get("candidateRef") === selected
-      }).then(async (response) => {
-        expect(response.status()).toBe(200)
-        expect(response.headers()["content-type"]).toContain("application/json")
-        return asRecord(await response.json())
-      }), inspect.click()])
+      }, () => inspect.click())
+      expect(response.status()).toBe(200)
+      expect(response.headers()["content-type"]).toContain("application/json")
+      const inspection = asRecord(await response.json())
       expect(asRecord(inspection.projection).components).toEqual(expect.arrayContaining([
         expect.objectContaining({ amount: entry.monthlyAmount, currency: "USD",
           period: { start: "2027-01-01", end: "2027-01-31" } }),
@@ -160,8 +159,8 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
       expect(lost.payload).toEqual(payload)
       expect(original.key).toMatch(/^[a-f0-9-]{36}$/)
       expect(original.key).not.toBe(promotions[0]!.key)
-      const [read] = await Promise.all([waitForAttachedRead(page, installation.origin, reference, source.refDigest),
-        editor.getByRole("button", { name: "Check saved outcome", exact: true }).click()])
+      const read = await observeDecisionReply(page, attachedRead(installation.origin, reference, source.refDigest),
+        () => editor.getByRole("button", { name: "Check saved outcome", exact: true }).click())
       const recovered = asRecord(asRecord((await readReply(read, observations)).value).selected)
       expect(recovered.caseRef).toEqual(receipt.caseRef)
       const forecast = asRecord(recovered.forecast)
@@ -281,8 +280,8 @@ async function prepareAlternative(page: Page, origin: string, reference: string,
   const caseRef = { id: before.id, incarnation: before.incarnation, version: before.version }
   const editor = page.getByRole("region", { name: `Create ${ordinal} alternative`, exact: true })
   await editor.getByRole("combobox", { name: "Attached Planner source", exact: true }).selectOption(source.refDigest)
-  const [read] = await Promise.all([waitForAttachedRead(page, origin, reference, source.refDigest),
-    editor.getByRole("button", { name: "Inspect attached forecast", exact: true }).click()])
+  const read = await observeDecisionReply(page, attachedRead(origin, reference, source.refDigest),
+    () => editor.getByRole("button", { name: "Inspect attached forecast", exact: true }).click())
   const inspection = asRecord(asRecord((await readReply(read, observations)).value).selected)
   expect(inspection.caseRef).toEqual(caseRef)
   const forecast = asRecord(inspection.forecast)
@@ -322,11 +321,11 @@ async function prepareAlternative(page: Page, origin: string, reference: string,
     confirm: promotionReview.getByRole("button", { name: `Confirm ${ordinal} alternative`, exact: true }) }
 }
 
-function waitForAttachedRead(page: Page, origin: string, reference: string, sourceDigest: string) {
-  return page.waitForResponse((response) => {
-    const url = new URL(response.url())
-    return url.origin === origin && isCommand(response.request(), "decision-controls", "GET") &&
+function attachedRead(origin: string, reference: string, sourceDigest: string) {
+  return (request: Request) => {
+    const url = new URL(request.url())
+    return url.origin === origin && isCommand(request, "decision-controls", "GET") &&
       url.searchParams.get("case") === reference && url.searchParams.get("source") === sourceDigest &&
       url.searchParams.get("procurement") === "attached" && url.searchParams.get("format") === "json"
-  })
+  }
 }

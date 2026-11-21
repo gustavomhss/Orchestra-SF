@@ -2,7 +2,7 @@ import { expect, test, type Locator, type Page, type Request } from "@playwright
 import { Schema } from "effect"
 import { SfDecisionsChoiceRead } from "@orchestra/schema/sucafina/decisions"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, isCommand, readCase, readReply, reopenCase } from "./journey"
+import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, isCommand, observeDecisionReply, readCase, readReply, reopenCase } from "./journey"
 import { loseClosureResponse } from "./closure-response"
 import { changePlannerSource } from "./planner-sources"
 import { knownIncreaseCriterion, type initialAlternativesJourney } from "./initial-alternatives"
@@ -28,12 +28,10 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
   }
   page.on("request", capture)
   try {
-    const [projection] = await Promise.all([
-      page.waitForResponse((response) => response.request().method() === "GET" &&
-        response.url() === `${origin}/sucafina/api/ui/projections/case?${new URLSearchParams({ caseRef: reference })}`)
-        .then((response) => readReply(response, observations)),
-      openCase(page, origin, selection),
-    ])
+    const source = await observeDecisionReply(page, (request) => request.method() === "GET" &&
+      request.url() === `${origin}/sucafina/api/ui/projections/case?${new URLSearchParams({ caseRef: reference })}`,
+      () => openCase(page, origin, selection))
+    const projection = await readReply(source, observations)
     const before = await currentCase(page, selection, 4, "comparing")
     const principal = asRecord(projection.context).principalRef
     expect(typeof principal).toBe("string")
@@ -78,13 +76,10 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
     const comparisonResult = page.getByRole("region", { name: "Comparison", exact: true })
     const compareExactPair = async () => {
       // The native comparison must return the exact ordered C10 request.
-      const [{ request, reply }] = await Promise.all([
-        page.waitForResponse((response) => response.url() === `${origin}/sucafina/dashboard?sf=decision-compare` &&
-          isCommand(response.request(), "decision-compare")).then(async (response) => ({
-          request: response.request(), reply: await readReply(response, observations),
-        })),
-        compare.click(),
-      ])
+      const observed = await observeDecisionReply(page, (request) => request.url() === `${origin}/sucafina/dashboard?sf=decision-compare` &&
+        isCommand(request, "decision-compare"), () => compare.click())
+      const request = observed.request()
+      const reply = await readReply(observed, observations)
       expect(request.postDataJSON()).toEqual({ caseRef, baselineAlternativeId: alternatives[0]!.id,
         alternativeId: alternative.id, criteria })
       const value = asRecord(reply.value)
@@ -238,16 +233,13 @@ async function currentCase(page: Page, selection: Selection, version: number, st
 
 async function openChoice(page: Page, origin: string, selection: Selection, version: number, observations: Record<string, unknown>[]) {
   const pathname = casePath(selection.reference) + "/choice"
-  const [reply] = await Promise.all([
-    page.waitForResponse((response) => isCaseJsonRead(response.request(), origin, "current-choice", selection.reference))
-      .then((response) => readReply(response, observations)),
-    (async () => {
-      await page.goto(origin + pathname)
-      await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === pathname)
-      await expect(page.getByRole("heading", { name: "Current choice", exact: true, level: 1 }),
-        "UI38 requires the installed owner to publish decisions.choice.read").toBeVisible()
-    })(),
-  ])
+  const observed = await observeDecisionReply(page, (request) => isCaseJsonRead(request, origin, "current-choice", selection.reference), async () => {
+    await page.goto(origin + pathname)
+    await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === pathname)
+    await expect(page.getByRole("heading", { name: "Current choice", exact: true, level: 1 }),
+      "UI38 requires the installed owner to publish decisions.choice.read").toBeVisible()
+  })
+  const reply = await readReply(observed, observations)
   const result = Schema.decodeUnknownSync(Schema.toType(SfDecisionsChoiceRead.output), { onExcessProperty: "error" })(reply)
   if (result.status !== "ok" || !result.value.selected) throw new Error("The producer did not return the exact authorized choice scope")
   const selected = result.value.selected
@@ -306,11 +298,9 @@ async function registerRule(page: Page, origin: string, current: Awaited<ReturnT
   const rule = page.getByRole("group", { name: "Numeric comparison rule", exact: true })
   const criterion = rule.getByRole("combobox", { name: "Criterion for numeric comparison", exact: true })
   await criterion.selectOption(criterionId)
-  const [reply] = await Promise.all([
-    page.waitForResponse((response) => isCaseJsonRead(response.request(), origin, "decision-controls", reference))
-      .then((response) => readReply(response, observations)),
-    rule.getByRole("button", { name: "Load comparison rule", exact: true }).click(),
-  ])
+  const observed = await observeDecisionReply(page, (request) => isCaseJsonRead(request, origin, "decision-controls", reference),
+    () => rule.getByRole("button", { name: "Load comparison rule", exact: true }).click())
+  const reply = await readReply(observed, observations)
   const selected = asRecord(asRecord(reply.value).selected)
   expect(selected.caseRef).toEqual(caseRef)
   expect((selected.rules as unknown[]).map(asRecord).filter((rule) => rule.id === criterionId)).toEqual([{ id: criterionId, expectedVersion: 0 }])

@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test"
-import { asRecord, caseIdentity, clickCommand, draft, isCommand, readCase, readReply, reopenCase } from "./journey"
+import { asRecord, caseIdentity, clickCommand, draft, isCommand, observeDecisionReply, readCase, readReply, reopenCase } from "./journey"
 import { initialAlternativesJourney, knownIncreaseCriterion } from "./initial-alternatives"
 import { approveExactRequisition, createRequisition, openRequisition } from "./procurement-source"
 import type { startPlannerInstallation } from "../wp03/installation-fixture"
@@ -36,14 +36,10 @@ export async function procurementClosureJourney(page: Page, installation: Awaite
     const justification = eligibility.getByRole("textbox", { name: "Justificativa para registrar a escolha", exact: true })
     const criteria = before.criteria.map((criterion) => criterion.id)
     const compare = async () => {
-      const [compared] = await Promise.all([
-        page.waitForResponse((response) => response.url() === `${origin}/sucafina/dashboard?sf=decision-compare` &&
-          isCommand(response.request(), "decision-compare")).then(async (response) => {
-          expect(response.request().postDataJSON()).toEqual({ caseRef, baselineAlternativeId: baseline.saved.id, alternativeId: candidate.saved.id, criteria })
-          return asRecord((await readReply(response, observations)).value)
-        }),
-        page.getByRole("button", { name: "Compare alternatives", exact: true }).click(),
-      ])
+      const response = await observeDecisionReply(page, (request) => request.url() === `${origin}/sucafina/dashboard?sf=decision-compare` &&
+        isCommand(request, "decision-compare"), () => page.getByRole("button", { name: "Compare alternatives", exact: true }).click())
+      expect(response.request().postDataJSON()).toEqual({ caseRef, baselineAlternativeId: baseline.saved.id, alternativeId: candidate.saved.id, criteria })
+      const compared = asRecord((await readReply(response, observations)).value)
       const scenarioRefs = [baseline.resultRef, candidate.resultRef]
       expect(compared.request).toEqual({ scenarioRefs, criteria })
       expect(compared.comparison).toMatchObject({ baselineResultRef: scenarioRefs[0], alternativeResultRef: scenarioRefs[1],
@@ -213,16 +209,14 @@ async function attachRequisition(page: Page, origin: string, reference: string, 
 }
 
 async function readControls(page: Page, origin: string, reference: string, button: Locator, observations: Record<string, unknown>[], source?: string) {
-  const [reply] = await Promise.all([
-    page.waitForResponse((response) => {
-      const url = new URL(response.url())
-      return url.origin === origin && isCommand(response.request(), "decision-controls", "GET") &&
-        url.searchParams.get("format") === "json" && url.searchParams.get("case") === reference &&
-        url.searchParams.size === (source ? 5 : 3) && (!source ||
-          url.searchParams.get("source") === source && url.searchParams.get("procurement") === "attached")
-    }).then((response) => readReply(response, observations)),
-    button.click(),
-  ])
+  const observed = await observeDecisionReply(page, (request) => {
+    const url = new URL(request.url())
+    return url.origin === origin && isCommand(request, "decision-controls", "GET") &&
+      url.searchParams.get("format") === "json" && url.searchParams.get("case") === reference &&
+      url.searchParams.size === (source ? 5 : 3) && (!source ||
+        url.searchParams.get("source") === source && url.searchParams.get("procurement") === "attached")
+  }, () => button.click())
+  const reply = await readReply(observed, observations)
   return asRecord(asRecord(reply.value).selected)
 }
 

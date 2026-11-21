@@ -1,5 +1,7 @@
 import { expect, test } from "bun:test"
+import { Schema } from "effect"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import { object, rows } from "../runtime/contract.ts"
 import { createApplication } from "../runtime/application.ts"
 import { domain, pages, render } from "../runtime/dashboard-portfolio.ts"
@@ -151,9 +153,10 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
   const phase = (stage: string) => console.info("SF_NATIVE_RUNTIME_STAGE",
     JSON.stringify({ stage, elapsedMs: Math.round(performance.now() - started) }))
   phase("build native fixture")
-  const [{ createNativeDashboardFixture }, { launchBrowserDriver }] = await Promise.all([
+  const [{ createNativeDashboardFixture }, { launchBrowserDriver }, { forwardOnce }] = await Promise.all([
     import("./product/wp02/native-browser-fixture.ts"),
     import("./product/wp02/browser-driver-fixture.ts"),
+    import("../../../../packages/app-shell/e2e/sucafina/operations-support/runtime.ts"),
   ])
   const native = await createNativeDashboardFixture()
   phase("launch native browser")
@@ -165,6 +168,23 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     const context = await browserDriver.browser.newContext()
     await context.addCookies([native.cookie])
     const page = await context.newPage()
+    const riskSource = native.origin + "/sucafina/api/ui/pages/CAP13"
+    const decodeRiskRead = Schema.decodeUnknownSync(Schema.toType(SfDomain.operations["domain.page.CAP13"].output),
+      { onExcessProperty: "error" })
+    const captureRiskRead = async (endpoint: string, action: () => Promise<unknown>) => {
+      const original = await forwardOnce(page, endpoint, "GET")
+      try {
+        const [{ response, request }] = await Promise.all([original.completed, action()])
+        expect(request.url()).toBe(endpoint)
+        expect(response.headers()["content-type"]).toContain("application/json")
+        const result = decodeRiskRead(await response.json())
+        if (result.status !== "ok") throw new Error("The original CAP13 read was not admitted: " + result.status)
+        expect(result.context.principalRef).toBe(native.principalRef)
+        return { status: response.status(), value: result.value }
+      } finally {
+        await original.close()
+      }
+    }
     const errors: string[] = []
     const writes: unknown[] = []
     page.on("pageerror", (error) => errors.push(error.message))
@@ -215,15 +235,10 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     const created = page.waitForResponse((response) => response.request().method() === "POST" &&
       new URL(response.url()).pathname === "/sucafina/dashboard")
     // Save must refresh the current CAP13 source without navigation or retrying the command.
-    const createdRead = page.waitForResponse((response) => {
-      const url = new URL(response.url())
-      return response.request().method() === "GET" && url.origin === native.origin &&
-        url.pathname === "/sucafina/api/ui/pages/CAP13"
-    }, { timeout: Math.max(1, 43_000 - (performance.now() - started)) }).then(async (response) => ({
-      status: response.status(), value: object(object(await response.json()).value),
-    })).catch(() => undefined)
-    await page.getByRole("button", { name: "Save", exact: true }).click()
-    expect((await created).status()).toBe(200)
+    const createdPage = await captureRiskRead(riskSource, async () => {
+      await page.getByRole("button", { name: "Save", exact: true }).click()
+      expect((await created).status()).toBe(200)
+    })
     const stored = await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
       value: { rows: rows(snapshot.data.risks), versions: { ...snapshot.versions } } }))
     expect(stored.rows).toMatchObject([{ name: "Browser risk", impact: 3, probability: 2 }])
@@ -231,8 +246,6 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     if (typeof riskId !== "string" || !riskId) throw new Error("The original risk command did not return a stored record")
     expect(stored.versions["risks:" + riskId]?.version).toBe(1)
     phase("observe the automatically refreshed risk")
-    const createdPage = await createdRead
-    if (!createdPage) throw new Error("The confirmed risk save did not produce a readable CAP13 refresh")
     expect(createdPage.status).toBe(200)
     expect(createdPage.value).toMatchObject({ data: { risks: [{ id: riskId }] }, versions: { ["risks:" + riskId]: 1 } })
     const edit = page.locator('tr[data-sf-row="' + riskId + '"] button[data-sf-action="edit"]')
@@ -251,14 +264,12 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     })
     expect(remote.status()).toBe(200)
     phase("observe remote edit while focused")
-    const focusedRead = page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP13" &&
-      new URL(response.url()).searchParams.get("status") === "open")
     // Dispatch the existing public control without moving focus out of the
     // editor. No private window hook or fabricated producer response is used.
-    await filters.getByRole("button", { name: "Apply filters", exact: true }).dispatchEvent("click")
-    const focused = await focusedRead
-    expect(focused.status()).toBe(200)
-    expect(object(object(await focused.json()).value).versions).toMatchObject({ ["risks:" + riskId]: 2 })
+    const focused = await captureRiskRead(riskSource + "?status=open",
+      () => filters.getByRole("button", { name: "Apply filters", exact: true }).dispatchEvent("click"))
+    expect(focused.status).toBe(200)
+    expect(focused.value.versions).toMatchObject({ ["risks:" + riskId]: 2 })
     expect(await cell.inputValue()).toBe("Unsaved typing")
     phase("observe remote edit after blur")
     await cell.blur()
@@ -278,11 +289,9 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     expect(await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
       value: snapshot.versions["risks:" + riskId]?.version }))).toBe(2)
     phase("reload and confirm current CAS")
-    const reloadRead = page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP13")
-    await page.reload()
-    const reloaded = await reloadRead
-    expect(reloaded.status()).toBe(200)
-    expect(object(object(await reloaded.json()).value).versions).toMatchObject({ ["risks:" + riskId]: 2 })
+    const reloaded = await captureRiskRead(riskSource, () => page.reload())
+    expect(reloaded.status).toBe(200)
+    expect(reloaded.value.versions).toMatchObject({ ["risks:" + riskId]: 2 })
     await edit.click()
     expect(await cell.inputValue()).toBe("Remote edit")
     // Verify that the fresh editor really binds the restored source's CAS 2.
@@ -290,16 +299,15 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     phase("submit fresh reviewed CAS")
     const freshSave = page.waitForResponse((response) => response.request().method() === "POST" &&
       new URL(response.url()).pathname === "/sucafina/dashboard")
-    const freshRead = page.waitForResponse((response) => response.request().method() === "GET" &&
-      new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP13")
-    await page.getByRole("button", { name: "Save", exact: true }).click()
-    const fresh = await freshSave
-    expect(fresh.status()).toBe(200)
-    expect(fresh.request().postDataJSON()).toMatchObject({ page: "IT Risks", action: "save", id: riskId, version: 2,
-      values: { name: "Remote edit", impact: "4", probability: "2" } })
-    const confirmed = await freshRead
-    expect(confirmed.status()).toBe(200)
-    expect(object(object(await confirmed.json()).value).versions).toMatchObject({ ["risks:" + riskId]: 3 })
+    const confirmed = await captureRiskRead(riskSource, async () => {
+      await page.getByRole("button", { name: "Save", exact: true }).click()
+      const fresh = await freshSave
+      expect(fresh.status()).toBe(200)
+      expect(fresh.request().postDataJSON()).toMatchObject({ page: "IT Risks", action: "save", id: riskId, version: 2,
+        values: { name: "Remote edit", impact: "4", probability: "2" } })
+    })
+    expect(confirmed.status).toBe(200)
+    expect(confirmed.value.versions).toMatchObject({ ["risks:" + riskId]: 3 })
     await editor.waitFor({ state: "hidden" })
     await page.locator('tr[data-sf-row="' + riskId + '"]').getByText("Remote edit", { exact: true }).waitFor()
     await mkdir(join(process.cwd(), "../../test-ci-evidence"), { recursive: true })

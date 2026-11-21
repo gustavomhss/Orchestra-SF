@@ -153,9 +153,12 @@ export async function captureProcurementCommand(page: Page, account: Account, co
   }
 }
 
-export async function forwardOnce(page: Page, endpoint: string | (() => string | undefined), method: "GET" | "POST",
+export async function forwardOnce(page: Page, endpoint: string | ((url: URL) => string | boolean | undefined), method: "GET" | "POST",
   beforeDelivery?: (response: APIResponse) => Promise<void>) {
-  const match = (url: URL) => url.href === (typeof endpoint === "string" ? endpoint : endpoint())
+  const match = (url: URL) => {
+    const expected = typeof endpoint === "string" ? endpoint : endpoint(url)
+    return typeof expected === "boolean" ? expected : url.href === expected
+  }
   const producer = Promise.withResolvers<{ response: APIResponse; request: Request }>()
   void producer.promise.catch(() => undefined)
   const forward = async (route: Route) => {

@@ -1,4 +1,4 @@
-import { expect, test, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
+import { expect, test, type Locator, type Page, type Request, type Response, type Route, type TestInfo } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
 import { Schema } from "effect"
 import { SfDecisionsPortfolioCatalog, SfProjectionCase } from "@orchestra/schema/sucafina/decisions"
@@ -168,7 +168,36 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
   }
 }
 
-export async function readReply(response: Response, observations: Record<string, unknown>[]) {
+/** Read the one original producer reply outside Chromium's evictable response cache. */
+export async function observeDecisionReply(page: Page, matches: (request: Request) => boolean, action: () => Promise<unknown>) {
+  const completed = Promise.withResolvers<Pick<Response, "request" | "url" | "status" | "headers" | "json">>()
+  const routePattern = `${new URL(page.url()).origin}/sucafina/**`
+  let sent = false
+  const forward = async (route: Route) => {
+    const request = route.request()
+    if (!matches(request)) return route.fallback()
+    // Later requests still reach their real producer but are distinct from the
+    // response this user action is observing.
+    if (sent) return route.fallback()
+    sent = true
+    try {
+      const response = await route.fetch({ maxRedirects: 0, maxRetries: 0 })
+      await route.fulfill({ response })
+      completed.resolve({ request: () => request, url: () => response.url(), status: () => response.status(),
+        headers: () => response.headers(), json: () => response.json() })
+    } catch (error) {
+      completed.reject(error)
+      await route.abort("failed").catch(() => undefined)
+    }
+  }
+  await page.route(routePattern, forward)
+  try {
+    const [response] = await Promise.all([completed.promise, action()])
+    return response
+  } finally { await page.unroute(routePattern, forward) }
+}
+
+export async function readReply(response: Pick<Response, "url" | "status" | "headers" | "json">, observations: Record<string, unknown>[]) {
   return checkedReply({ mode: new URL(response.url()).searchParams.get("sf"), httpStatus: response.status(),
     contentType: response.headers()["content-type"] ?? "" }, () => response.json(), observations)
 }
@@ -215,20 +244,17 @@ export async function assertPortfolioCatalog(page: Page, origin: string, referen
   }
   page.on("request", observe)
   try {
-    const [listed] = await Promise.all([
-      page.waitForResponse((response) => response.url() === `${origin}/sucafina/api/ui/projections/cases` && response.request().method() === "GET"),
-      page.goto(`${origin}/orchestra/sf-portfolio/scenarios`),
-    ])
+    const listed = await observeDecisionReply(page,
+      (request) => request.url() === `${origin}/sucafina/api/ui/projections/cases` && request.method() === "GET",
+      () => page.goto(`${origin}/orchestra/sf-portfolio/scenarios`))
     const list = await readReply(listed, observations)
     expect(asRecord(list.value).cases).toEqual([{ caseRef: reference, title: saved.objective, version }])
     const portfolio = page.locator('[data-sf-scenarios][data-sf-surface="UI42"]')
     const select = portfolio.getByRole("button", { name: `${saved.objective} Case version ${version}`, exact: true })
     await expect(select).toBeEnabled()
     expect(catalogRequests).toHaveLength(0)
-    const [reply] = await Promise.all([
-      page.waitForResponse((response) => response.url() === catalogUrl && response.request().method() === "POST"),
-      select.click(),
-    ])
+    const reply = await observeDecisionReply(page, (request) => request.url() === catalogUrl && request.method() === "POST",
+      () => select.click())
     expect(reply.request().postDataJSON()).toEqual({ purpose: "catalog", caseRefs: [caseRef] })
     const catalog = Schema.decodeUnknownSync(Schema.toType(SfDecisionsPortfolioCatalog.output), { onExcessProperty: "error" })(await readReply(reply, observations))
     if (catalog.status !== "ok") throw new Error("The original catalog was not admitted")

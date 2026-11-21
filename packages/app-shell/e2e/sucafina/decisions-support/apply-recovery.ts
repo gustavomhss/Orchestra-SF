@@ -1,11 +1,11 @@
-import { expect, test, type Locator, type Page, type Request, type Response } from "@playwright/test"
+import { expect, test, type Locator, type Page, type Request } from "@playwright/test"
 import { Schema } from "effect"
 import {
   SfDecisionsChoiceRead, SfDecisionsDecisionPrepareChanges, SfDecisionsDecisionApply,
   SfDecisionsDecisionRecover, SfDecisionsDecisionReview,
 } from "@orchestra/schema/sucafina/decisions"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { asRecord, caseIdentity, enterWorkbench, isCommand, readCase, reopenCase } from "./journey"
+import { asRecord, caseIdentity, enterWorkbench, isCommand, observeDecisionReply, readCase, reopenCase } from "./journey"
 import { loseClosureResponse } from "./closure-response"
 import { openRequisition } from "./procurement-source"
 
@@ -54,14 +54,11 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
   try {
     await test.step("read the recorded conditioned Procurement choice in UI38", async () => {
       const pathname = `${casePath(reference)}/choice`
-      const [response] = await Promise.all([
-        page.waitForResponse((reply) => {
-          const url = new URL(reply.url())
-          return url.origin === origin && isCommand(reply.request(), "current-choice", "GET") && url.searchParams.size === 3 &&
-            url.searchParams.get("format") === "json" && url.searchParams.get("case") === reference
-        }),
-        page.goto(origin + pathname),
-      ])
+      const response = await observeDecisionReply(page, (request) => {
+        const url = new URL(request.url())
+        return url.origin === origin && isCommand(request, "current-choice", "GET") && url.searchParams.size === 3 &&
+          url.searchParams.get("format") === "json" && url.searchParams.get("case") === reference
+      }, () => page.goto(origin + pathname))
       await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === pathname)
       await expect(page.getByRole("heading", { name: "Current choice", exact: true, level: 1 })).toBeVisible()
       const options = Schema.decodeUnknownSync(Schema.toType(SfDecisionsChoiceRead.output), { onExcessProperty: "error" })(
@@ -94,16 +91,13 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
       const pending = page.getByRole("region", { name: "Prepare Procurement proposal", exact: true })
       await expect(pending).toContainText(`${requestId} · ${operation.amount} ${operation.currency}`)
       const prepare = pending.getByRole("button", { name: "Prepare Procurement proposal", exact: true })
-      const [result] = await Promise.all([
-        page.waitForResponse((reply) => procurementCommand(reply.request(), origin, "decision-prepare-changes")).then(async (reply) => {
-          expect(reply.request().postDataJSON()).toEqual({ caseRef: chosenRef, choiceId, operations: [operation] })
-          expect(reply.request().headers()["idempotency-key"]).toMatch(commandKey)
-          return Schema.decodeUnknownSync(Schema.toType(SfDecisionsDecisionPrepareChanges.output), { onExcessProperty: "error" })(
-            await producerReply(reply, observations, "UI39 exact Procurement preparation"),
-          )
-        }),
-        prepare.click(),
-      ])
+      const reply = await observeDecisionReply(page, (request) => procurementCommand(request, origin, "decision-prepare-changes"),
+        () => prepare.click())
+      expect(reply.request().postDataJSON()).toEqual({ caseRef: chosenRef, choiceId, operations: [operation] })
+      expect(reply.request().headers()["idempotency-key"]).toMatch(commandKey)
+      const result = Schema.decodeUnknownSync(Schema.toType(SfDecisionsDecisionPrepareChanges.output), { onExcessProperty: "error" })(
+        await producerReply(reply, observations, "UI39 exact Procurement preparation"),
+      )
       if (result.status !== "ok") throw new Error(`C12 preparation failed: ${result.status} ${result.reason ?? ""}`)
       expect(result.value.caseRef).toEqual({ ...chosenRef, version: chosenRef.version + 1 })
       expect(commands).toEqual([])
@@ -221,10 +215,8 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
       const editReview = editor.getByRole("group", { name: "Review source attachments", exact: true })
       await expect(editReview.getByText(`Current version: ${beforeRef.version}`, { exact: true })).toBeVisible()
       await expect(editReview.getByText(revisedObjective, { exact: true })).toBeVisible()
-      const [reply] = await Promise.all([
-        audit.waitForResponse((response) => response.url() === `${origin}/sucafina/dashboard?sf=decision-edit` && isCommand(response.request(), "decision-edit")),
-        editReview.getByRole("button", { name: "Save decision", exact: true }).click(),
-      ])
+      const reply = await observeDecisionReply(audit, (request) => request.url() === `${origin}/sucafina/dashboard?sf=decision-edit` &&
+        isCommand(request, "decision-edit"), () => editReview.getByRole("button", { name: "Save decision", exact: true }).click())
       expect(reply.request().postDataJSON()).toEqual({ caseRef: beforeRef, objective: revisedObjective, criteria: before.criteria,
         horizon: before.horizon, currency: before.currency, sourceRefs: before.sourceRefs })
       expect(reply.request().headers()["idempotency-key"]).toMatch(commandKey)
@@ -252,10 +244,7 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
         const recover = fresh.getByRole("button", { name: "Recover recorded receipt", exact: true })
         await expect(recover, "The fresh page must be authorized for decisions.decision-recover").toBeEnabled()
         expect(commands).toEqual([lost.failed])
-        const [reply] = await Promise.all([
-          fresh.waitForResponse((response) => procurementCommand(response.request(), origin, "decision-recover")),
-          recover.click(),
-        ])
+        const reply = await observeDecisionReply(fresh, (request) => procurementCommand(request, origin, "decision-recover"), () => recover.click())
         const request = reply.request()
         expect(request.postDataJSON()).toEqual({ purpose: "recover", caseRef: edited.ref, choiceId, changeId: change.id })
         expect(request.headers()["idempotency-key"]).toMatch(commandKey)
@@ -299,10 +288,7 @@ async function readChangeReview(page: Page, origin: string, input: { caseRef: Ca
   observations: Record<string, unknown>[], stage: string) {
   const button = page.getByRole("button", { name: "Read producer review", exact: true })
   await expect(button, stage).toBeEnabled()
-  const [response] = await Promise.all([
-    page.waitForResponse((reply) => procurementCommand(reply.request(), origin, "decision-review")),
-    button.click(),
-  ])
+  const response = await observeDecisionReply(page, (request) => procurementCommand(request, origin, "decision-review"), () => button.click())
   expect(response.request().postDataJSON()).toEqual(input)
   const result = Schema.decodeUnknownSync(Schema.toType(SfDecisionsDecisionReview.output), { onExcessProperty: "error" })(
     await producerReply(response, observations, stage),
@@ -316,7 +302,7 @@ async function readChangeReview(page: Page, origin: string, input: { caseRef: Ca
   return result.value
 }
 
-async function producerReply(response: Response, observations: Record<string, unknown>[], stage: string) {
+async function producerReply(response: Awaited<ReturnType<typeof observeDecisionReply>>, observations: Record<string, unknown>[], stage: string) {
   const url = new URL(response.url())
   const path = url.pathname + url.search
   expect(response.headers()["content-type"], `${stage}: expected JSON from ${path}`).toContain("application/json")

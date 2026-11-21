@@ -111,7 +111,20 @@ export async function documentJourney(page: Page, info: TestInfo) {
     const candidate = new URL(url)
     return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + "/procurement" && candidate.searchParams.get("sf") === mode
   }
-  const waiting = (mode: string, method = "GET") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
+  const observe = async (tab: Page, target: Parameters<typeof forwardOnce>[1], method: "GET" | "POST" = "GET",
+    beforeDelivery?: (response: APIResponse) => Promise<void>) => {
+    const capture = await forwardOnce(tab, target, method, beforeDelivery)
+    const completed = capture.completed.finally(() => capture.close())
+    void completed.catch(() => undefined)
+    return { completed }
+  }
+  const presentationEndpoint = (ref: DocumentEvidence["ref"]) => (url: URL) => {
+    if (!isMode(url.href, "document-open") || url.searchParams.size !== 2 || url.searchParams.getAll("ref").length !== 1) return false
+    const requested = url.searchParams.get("ref")
+    if (!requested) return false
+    const value = JSON.parse(requested) as { refId?: unknown; refDigest?: unknown } | null
+    return value?.refId === ref.refId && value.refDigest === ref.refDigest
+  }
   const { supplier, supplierNumber } = await createDocumentSupplier(page, account, key, name)
   const supplierRow = page.locator(`tr[data-sf-row="${supplier}"]`).filter({ has: page.getByRole("cell", { name, exact: true }) })
   await expect(supplierRow).toHaveCount(1)
@@ -194,7 +207,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
     const mode = new URL(request.url()).searchParams.get("sf")
     if (request.method() === "POST" && mode && ["document-admit", "document-schema", "document-extract", "document-confirm"].includes(mode) && isMode(request.url(), mode)) requests.push(mode)
   })
-  const discovered = waiting("document-sources")
+  const discovered = await observe(page, endpoint("document-sources"))
   const catalogRoute = chapterURL(account, "/orchestra/sf-documents")
   const catalogLeaf = '[data-sf-leaf="u24"][data-sf-surface="UI58"]'
   expect((await page.goto(catalogRoute.href))?.status()).toBe(200)
@@ -202,26 +215,33 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(root).toHaveCount(1)
   await expect(root.getByRole("searchbox")).toBeVisible()
   await expect(root.getByRole("button", { name: "Open document", exact: true })).toBeDisabled()
-  const sources = await valueOf<Source[]>(await discovered)
+  const sources = await valueOf<Source[]>((await discovered.completed).response)
   const selected = sources.filter((source) => source.label === filename)
   expect(selected).toHaveLength(1)
   expect(selected[0]!.surface).toBe("procurement")
-  await root.getByLabel("Document", { exact: true }).selectOption(selected[0]!.selectionRef)
-  const admittedResponse = waiting("document-admit", "POST"), emptyCandidates = waiting("document-candidates")
+  const document = root.getByRole("combobox", { name: "Document", exact: true })
+  await expect(document.getByRole("option", { name: filename, exact: true })).toHaveAttribute("value", selected[0]!.selectionRef)
+  await document.selectOption({ value: selected[0]!.selectionRef })
+  let admittedRef: string | undefined
+  const [admitted, emptyCandidates] = await Promise.all([
+    observe(page, endpoint("document-admit"), "POST", async (response) => {
+      admittedRef = (await valueOf<{ documentRef: string }>(response)).documentRef
+      expect(admittedRef).not.toBe("")
+    }),
+    observe(page, () => admittedRef ? endpoint("document-candidates", { documentRef: admittedRef }) : undefined),
+  ])
   await root.getByRole("button", { name: "Open document", exact: true }).click()
-  const admissionTransport = await admittedResponse
-  expect(admissionTransport.request().postDataJSON()).toEqual({ selectionRef: selected[0]!.selectionRef })
-  const { documentRef } = await valueOf<{ documentRef: string }>(admissionTransport)
-  expect(documentRef).not.toBe("")
-  expect(await valueOf<DocumentEvidence[]>(await emptyCandidates)).toEqual([])
+  const admission = await admitted.completed
+  expect(admission.request.postDataJSON()).toEqual({ selectionRef: selected[0]!.selectionRef })
+  const { documentRef } = await valueOf<{ documentRef: string }>(admission.response)
+  expect(documentRef).toBe(admittedRef)
+  expect(await valueOf<DocumentEvidence[]>((await emptyCandidates.completed).response)).toEqual([])
   await expect(root).toHaveAttribute("data-sf-read-state", "ready")
   await expect(root.getByText("No extracted candidates yet.", { exact: true })).toBeVisible()
   const documentRoute = `/orchestra/sf-documents/${encodeSfRouteRef(documentRef)}`
   const evidenceURL = chapterURL(account, documentRoute + "/evidence")
   const scenarioURL = chapterURL(account, documentRoute + "/scenario")
-  const waitForCandidates = () => page.waitForResponse((response) =>
-    isMode(response.url(), "document-candidates") && response.request().method() === "GET" &&
-    new URL(response.url()).searchParams.get("documentRef") === documentRef)
+  const observeCandidates = () => observe(page, endpoint("document-candidates", { documentRef }))
   const readSchemas = () => page.request.get(endpoint("document-schemas", { documentRef }), { maxRetries: 0 }).then((response) => valueOf<Schema[]>(response))
   const readCandidates = () => page.request.get(endpoint("document-candidates", { documentRef }), { maxRetries: 0 }).then((response) => valueOf<DocumentEvidence[]>(response))
   expect(await readSchemas()).toEqual([])
@@ -231,32 +251,36 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(await readSchemas()).toEqual([])
   expect(await readCandidates()).toEqual([])
   await root.getByLabel("Field label", { exact: true }).fill("Price")
-  await root.getByLabel("Type", { exact: true }).selectOption("number")
+  await root.getByRole("combobox", { name: "Type", exact: true }).selectOption("number")
   await root.getByLabel("Unit", { exact: true }).fill("USD")
-  const schemaResponse = waiting("document-schema", "POST"), extractionResponse = waiting("document-extract", "POST"), candidateResponse = waitForCandidates()
+  const [schemaResponse, extractionResponse, candidateResponse] = await Promise.all([
+    observe(page, endpoint("document-schema"), "POST"),
+    observe(page, endpoint("document-extract"), "POST"),
+    observeCandidates(),
+  ])
   await root.getByRole("button", { name: "Extract candidate", exact: true }).click()
-  const schemaTransport = await schemaResponse
-  expect(schemaTransport.request().postDataJSON()).toEqual({ documentRef, fields: [{ id: "Price", type: "number", unit: "USD" }] })
-  const schema = await valueOf<Schema>(schemaTransport)
+  const schemaTransport = await schemaResponse.completed
+  expect(schemaTransport.request.postDataJSON()).toEqual({ documentRef, fields: [{ id: "Price", type: "number", unit: "USD" }] })
+  const schema = await valueOf<Schema>(schemaTransport.response)
   expect(schema).toMatchObject({ version: 1, fields: [{ id: "Price", type: "number", unit: "USD" }] })
   expect(schema.ref).toBe(`schema:${schema.id}:1`)
   expect(schema.id).toMatch(/^schema_[a-f0-9]{40}$/)
-  const extractionTransport = await extractionResponse
-  expect(extractionTransport.request().postDataJSON()).toEqual({ documentRef, fieldSchemaRef: schema.ref })
-  const candidate = await valueOf<DocumentEvidence>(extractionTransport)
+  const extractionTransport = await extractionResponse.completed
+  expect(extractionTransport.request.postDataJSON()).toEqual({ documentRef, fieldSchemaRef: schema.ref })
+  const candidate = await valueOf<DocumentEvidence>(extractionTransport.response)
   expect(candidate).toMatchObject({ fileRef: documentRef, fieldCandidate: "Price", value: 42, unit: "USD", status: "extracted", textRange: { start: 7, end: 9, unit: "utf16" } })
   expect(candidate.ref).toMatchObject({ schema: "sf-evidence-v1", kind: "document", refId: candidate.id, target: { documentId: documentRef, revision: candidate.version, blobDigest: { algorithm: "sha256", value: blobDigest }, fieldCandidateId: candidate.id, segment: { start: 7, end: 9, unit: "utf16", textDigest: { algorithm: "sha256", value: createHash("sha256").update("42").digest("hex") } } } })
   expect(candidate.ref.target.confirmationVersion).toBeUndefined()
-  expect(await valueOf<DocumentEvidence[]>(await candidateResponse)).toEqual([candidate])
+  expect(await valueOf<DocumentEvidence[]>((await candidateResponse.completed).response)).toEqual([candidate])
   await expect(root).toHaveAttribute("data-sf-phase", "candidates")
   await expect(root.locator("[data-sf-evidence-id]")).toHaveCount(1)
   await expect(root.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" })).toBeVisible()
   const continueToEvidence = root.getByRole("link", { name: /^(Document evidence|Evidência do documento)$/ })
   await expect(continueToEvidence).toHaveAttribute("href", evidenceURL.pathname + evidenceURL.search)
-  const routedCandidates = waitForCandidates()
+  const routedCandidates = await observeCandidates()
   await continueToEvidence.click()
   await expect(page).toHaveURL(evidenceURL.href)
-  expect(await valueOf<DocumentEvidence[]>(await routedCandidates)).toEqual([candidate])
+  expect(await valueOf<DocumentEvidence[]>((await routedCandidates.completed).response)).toEqual([candidate])
 
   const evidence = page.locator('[data-sf-leaf="u24"][data-sf-surface="UI59"]')
   const cards = evidence.locator("[data-sf-evidence-id]")
@@ -264,9 +288,9 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(cards).toHaveCount(1)
   const reviewSelection = extractedCard.getByRole("button", { name: /^(Confirm selection|Confirmar seleção)$/ })
   await expect(reviewSelection).toBeDisabled()
-  const presentationResponse = waiting("document-open")
+  const presentationResponse = await observe(page, presentationEndpoint(candidate.ref))
   await extractedCard.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
-  const presentationTransport = await presentationResponse
+  const presentationTransport = (await presentationResponse.completed).response
   expect(JSON.parse(new URL(presentationTransport.url()).searchParams.get("ref")!)).toEqual(candidate.ref)
   const presentation = await valueOf<Presentation>(presentationTransport)
   expect(presentation).toMatchObject({ title: filename, excerpt: text.slice(candidate.textRange.start, candidate.textRange.end), location: candidate.location })
@@ -281,14 +305,16 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(confirmationReview).toContainText("Price: 42 USD")
   await expect(confirmationReview.locator("blockquote")).toHaveText("42")
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract"])
-  const confirmResponse = waiting("document-confirm", "POST"), confirmedCandidates = waitForCandidates()
+  const [confirmResponse, confirmedCandidates] = await Promise.all([
+    observe(page, endpoint("document-confirm"), "POST"), observeCandidates(),
+  ])
   await confirmationReview.getByRole("button", { name: "Confirm this field", exact: true }).click()
-  const confirmationTransport = await confirmResponse
-  expect(confirmationTransport.request().postDataJSON()).toEqual(candidate)
-  const confirmed = await valueOf<DocumentEvidence>(confirmationTransport)
+  const confirmationTransport = await confirmResponse.completed
+  expect(confirmationTransport.request.postDataJSON()).toEqual(candidate)
+  const confirmed = await valueOf<DocumentEvidence>(confirmationTransport.response)
   expect(confirmed).toEqual({ ...candidate, status: "confirmed", ref: { ...candidate.ref, refDigest: expect.stringMatching(/^[a-f0-9]{64}$/), target: { ...candidate.ref.target, confirmationVersion: 1 } } })
   expect(confirmed.ref.refDigest).not.toBe(candidate.ref.refDigest)
-  expect(await valueOf<DocumentEvidence[]>(await confirmedCandidates)).toEqual([confirmed])
+  expect(await valueOf<DocumentEvidence[]>((await confirmedCandidates.completed).response)).toEqual([confirmed])
   await expect(evidence).toHaveAttribute("data-sf-phase", "confirmed")
   await expect(cards).toHaveCount(1)
   const confirmedSelector = `[data-sf-evidence-id=${JSON.stringify(confirmed.id)}][data-sf-evidence-state="confirmed"]`
@@ -297,19 +323,19 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(scenarioLink).toHaveAttribute("href", scenarioURL.pathname + scenarioURL.search)
   expect(await readSchemas()).toEqual([schema])
   expect(await readCandidates()).toEqual([confirmed])
-  const scenarioCandidates = waitForCandidates()
+  const scenarioCandidates = await observeCandidates()
   await scenarioLink.click()
   await expect(page).toHaveURL(scenarioURL.href)
-  expect(await valueOf<DocumentEvidence[]>(await scenarioCandidates)).toEqual([confirmed])
+  expect(await valueOf<DocumentEvidence[]>((await scenarioCandidates.completed).response)).toEqual([confirmed])
   const scenario = page.locator('[data-sf-leaf="u24"][data-sf-surface="UI60"]')
   const scenarioCard = scenario.locator(confirmedSelector)
   const scenarioAction = scenarioCard.getByRole("button", { name: scenarioLabel, exact: true })
   await expect(scenarioAction).toBeVisible()
   await expect(scenario.getByRole("button", { name: "Preview scenario", exact: true })).toBeDisabled()
   await expect(scenario.locator('[data-sf-scenario="preview"]')).toHaveCount(0)
-  const confirmedSource = waiting("document-open")
+  const confirmedSource = await observe(page, presentationEndpoint(confirmed.ref))
   await scenarioCard.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
-  const confirmedSourceTransport = await confirmedSource
+  const confirmedSourceTransport = (await confirmedSource.completed).response
   expect(JSON.parse(new URL(confirmedSourceTransport.url()).searchParams.get("ref")!)).toEqual(confirmed.ref)
   const currentPresentation = await valueOf<Presentation>(confirmedSourceTransport)
   expect(currentPresentation).toMatchObject({ title: presentation.title, excerpt: presentation.excerpt, location: presentation.location })
@@ -320,17 +346,17 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect((await reader.goto(catalogRoute.href))?.status()).toBe(200)
   const readerCatalog = reader.locator(catalogLeaf)
   await expect(readerCatalog).toHaveCount(1)
-  await expect(reader.getByLabel("Document", { exact: true }).getByRole("option", { name: filename, exact: true })).toHaveCount(1)
-  const reloadSources = reader.waitForResponse((response) => isMode(response.url(), "document-sources") && response.request().method() === "GET")
+  await expect(reader.getByRole("combobox", { name: "Document", exact: true }).getByRole("option", { name: filename, exact: true })).toHaveCount(1)
+  const reloadSources = await observe(reader, endpoint("document-sources"))
   expect((await reader.reload())?.status()).toBe(200)
-  expect((await valueOf<Source[]>(await reloadSources)).filter((source) => source.label === filename).map(({ label, surface }) => ({ label, surface }))).toEqual([{ label: filename, surface: "procurement" }])
+  expect((await valueOf<Source[]>((await reloadSources.completed).response)).filter((source) => source.label === filename).map(({ label, surface }) => ({ label, surface }))).toEqual([{ label: filename, surface: "procurement" }])
   expect(await readCandidates()).toEqual([confirmed])
   expect(await readSchemas()).toEqual([schema])
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract", "document-confirm"])
   const cap27 = new URL(account.baseURL + "/api/ui/pages/CAP27").href
-  const projection = reader.waitForResponse((response) => response.request().method() === "GET" && response.url() === cap27)
+  const projection = await observe(reader, cap27)
   expect((await reader.goto(chapterURL(account, "/orchestra/sf-procurement/suppliers").href))?.status()).toBe(200)
-  const projected = await projection
+  const projected = (await projection.completed).response
   expect(projected.status()).toBe(200)
   const projectedBody = await projected.json() as { status: string; value?: { versions?: Record<string, { version?: number }> } }
   expect(projectedBody.status).toBe("ok")
@@ -373,9 +399,9 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const revokedBody = await revokedSource.json() as { status: string; value?: unknown }
   expect(revokedBody.status).toBe("stale")
   expect(revokedBody.value).toBeUndefined()
-  const revokedCandidates = waitForCandidates()
+  const revokedCandidates = await observeCandidates()
   await scenario.getByRole("button", { name: "Refresh sources", exact: true }).click()
-  const revokedCandidateRead = await revokedCandidates
+  const revokedCandidateRead = (await revokedCandidates.completed).response
   expect(revokedCandidateRead.status()).toBe(503)
   expect(await revokedCandidateRead.json()).toMatchObject({ status: "unavailable" })
   await expect(page).toHaveURL(scenarioURL.href)
@@ -385,10 +411,10 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(scenarioAction).toHaveCount(0)
   await expect(scenario.locator('[data-sf-scenario="preview"]')).toHaveCount(0)
 
-  const refreshed = reader.waitForResponse((response) => isMode(response.url(), "document-sources") && response.request().method() === "GET")
+  const refreshed = await observe(reader, endpoint("document-sources"))
   expect((await reader.goto(catalogRoute.href))?.status()).toBe(200)
-  expect((await valueOf<Source[]>(await refreshed)).filter((source) => source.label === filename)).toEqual([])
-  await expect(readerCatalog.getByLabel("Document", { exact: true }).getByRole("option", { name: filename, exact: true })).toHaveCount(0)
+  expect((await valueOf<Source[]>((await refreshed.completed).response)).filter((source) => source.label === filename)).toEqual([])
+  await expect(readerCatalog.getByRole("combobox", { name: "Document", exact: true }).getByRole("option", { name: filename, exact: true })).toHaveCount(0)
   await expect(readerCatalog.locator("[data-sf-evidence-id]")).toHaveCount(0)
   await expect(readerCatalog.getByRole("button", { name: "Open document", exact: true })).toBeDisabled()
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract", "document-confirm"])

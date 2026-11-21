@@ -257,7 +257,13 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
       source.goto("/orchestra/sf-dashboard/opex/" + encodeReviewRef("reports-opex") + "?" + new URLSearchParams({ year })))
     expect(loadedResponse.status).toBe(200)
     expect(loadedBody.status).toBe("ok")
-    const versions = object(object(loadedBody.value).versions)
+    const loaded = object(loadedBody.value)
+    expect(loaded.capabilityId).toBe("CAP04")
+    expect(object(loaded.selection).year).toBe(corpus.year)
+    expect(object(loaded.data).opexEntries).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: "reports-opex-01", ownerId: "reports-opex", month: 1, year: corpus.year, forecast: 110 }),
+    ]))
+    const versions = object(loaded.versions)
     const version = Number(versions["opexEntries:reports-opex-01"])
     expect(Number.isSafeInteger(version) && version >= 1).toBe(true)
     const month = source.locator('.sf-budget-detail tr[data-sf-month="1"]')
@@ -278,10 +284,6 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     await expect(current.locator("dl > div").filter({ has: source.getByText("forecast", { exact: true }) }).locator("dd")).toHaveText("110")
     await expect(proposed.locator("dl > div").filter({ has: source.getByText("forecast", { exact: true }) }).locator("dd")).toHaveText("190")
     expect(mutations, "Reviewing the native draft must not write the source").toHaveLength(0)
-    const beforeApply = await readSourceData(source.request, app)
-    expect(beforeApply.opexEntries).toEqual(expect.arrayContaining([
-      expect.objectContaining({ id: "reports-opex-01", forecast: 110 }),
-    ]))
     await expect(confirmation.getByRole("button", { name: "Save", exact: true })).toBeEnabled()
     const { response: refreshedResponse, body: refreshedBody, actionResult: applyResponse } = await observeOpexRead(() =>
       observeOriginalJson(source, new URL(app.dashboardURL), "POST",
@@ -296,13 +298,15 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     expect(applyResponse.body).toMatchObject({ ok: true })
     expect(refreshedResponse.status).toBe(200)
     expect(refreshedBody.status).toBe("ok")
-    expect(object(object(refreshedBody.value).versions)["opexEntries:reports-opex-01"]).toBe(version + 1)
+    const refreshed = object(refreshedBody.value)
+    expect(refreshed.capabilityId).toBe("CAP04")
+    expect(object(refreshed.selection).year).toBe(corpus.year)
+    expect(object(refreshed.versions)["opexEntries:reports-opex-01"]).toBe(version + 1)
+    expect(object(refreshed.data).opexEntries).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: "reports-opex-01", ownerId: "reports-opex", month: 1, year: corpus.year, forecast: 190 }),
+    ]))
     expect(mutations, "One explicit confirmation must submit once").toHaveLength(1)
     await expect(editor).toHaveCount(0)
-    const { response: reloadedResponse, body: reloadedBody } = await observeOpexRead(() => source.reload())
-    expect(reloadedResponse.status).toBe(200)
-    expect(reloadedBody.status).toBe("ok")
-    expect(object(object(reloadedBody.value).versions)["opexEntries:reports-opex-01"]).toBe(version + 1)
     await expect(month.getByRole("button", { name: "Save month", exact: true })).toBeEnabled()
     await month.getByRole("button", { name: "Save month", exact: true }).click()
     await expect(form.getByLabel("forecast", { exact: true })).toHaveValue("190")
@@ -396,7 +400,10 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
 }
 
 export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview, budgetSection: PreservedSection) {
-  await observePreservedReview(page, app, saved, () => page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id)))
+  const path = "/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id)
+  const current = new URL(page.url())
+  if (current.origin !== app.origin || current.pathname !== path)
+    await observePreservedReview(page, app, saved, () => page.goto(path))
   const article = page.locator('[data-sf-surface="UI48"]').locator('article[data-review-ref="' + saved.id + '"]')
   await expect(article).toHaveAttribute("data-review-version", String(saved.version))
   const surface = page.locator('[data-sf-surface="UI48"]')
