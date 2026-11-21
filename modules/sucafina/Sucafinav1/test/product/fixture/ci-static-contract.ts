@@ -4,8 +4,10 @@ import { createHash } from "node:crypto"
 // Execution belongs to sf/static-and-contracts. These are wiring proofs, never
 // receipts that a compiler or guard ran. The reviewed shell is locked whole:
 // checking command substrings would accept an early exit or swallowed status.
-// Reviewed from a5b15b51b78469a054ba97b0e87fd1e36e31f73a; a shell edit needs review.
-const GUARD_SCRIPT_SHA256 = "c41fe51b3553131a13dd11596fe792dd7e31352619d45a27aecfb855c5074893"
+// The reviewed guard script binds its checkout and receipt to the candidate SHA
+// (the PR head on pull_request, or github.sha for workflow_dispatch).
+const CANDIDATE_SOURCE_EXPRESSION = "${{ github.event.pull_request.head.sha || github.sha }}"
+const GUARD_SCRIPT_SHA256 = "c54aef2ce90e959aa5839f3b16b92deb9ed2e2dda403512d42e13dfe12faf4ee"
 function fail(message: string): never { throw new Error("SF_CI_STATIC_OWNERSHIP: " + message) }
 function object(value: unknown, label: string): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) fail(label + " must be an object")
@@ -45,7 +47,7 @@ export function assertStaticOwnership(workflow: string, prerequisite: (needs: un
   const parsed: unknown = Bun.YAML.parse(workflow)
   const document = object(parsed, "workflow")
   assert.deepEqual(object(document.env, "workflow environment"),
-    { CI: "true", FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true" },
+    { CI: "true", FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true", SF_PRODUCT_SOURCE_SHA: CANDIDATE_SOURCE_EXPRESSION },
     "SF_CI_STATIC_OWNERSHIP: workflow environment changed")
   const jobs = object(document.jobs, "jobs")
   const owner = object(jobs.static, "static")
@@ -87,7 +89,7 @@ export function assertStaticOwnership(workflow: string, prerequisite: (needs: un
   const final = named(verify, "Fail closed on every missing/failed suite, skipped job or mismatched SHA")
   assert.deepEqual(lines(requiredStep(final)), [
     "set -euo pipefail",
-    'test "$GITHUB_SHA" = "$(git rev-parse HEAD)"',
+    'test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"',
     'export SF_CHECKOUT_TREE_SHA="$(git rev-parse \'HEAD^{tree}\')"',
     "node script/sf-ci/gate.mjs verify",
   ], "SF_CI_STATIC_OWNERSHIP: final verification script changed")
@@ -98,8 +100,9 @@ export function assertStaticOwnership(workflow: string, prerequisite: (needs: un
   }
   // Synthetic inputs exercise the actual gate. They are not execution evidence.
   const allSuccess = Object.fromEntries(needs.map((name) => [name, { result: "success" }]))
-  const admitted = prerequisite(allSuccess)
-  if (typeof admitted !== "number" || admitted < 1) fail("prerequisite checker is vacuous")
+  assert.doesNotThrow(() => {
+    assert.equal(prerequisite(allSuccess), needs.length)
+  }, "SF_CI_STATIC_OWNERSHIP: verify dependencies disagree with prerequisite checker")
   for (const result of ["failure", "cancelled", "skipped", "in_progress"]) {
     assert.throws(() => prerequisite({ ...allSuccess, static: { result } }),
       /upstream jobs not successful:.*static=/, "SF_CI_STATIC_OWNERSHIP: static " + result + " was admitted")

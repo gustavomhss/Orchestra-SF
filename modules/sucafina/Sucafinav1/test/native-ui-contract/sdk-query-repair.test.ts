@@ -11,6 +11,8 @@ import {
   type SfTrustedInstallationSource,
 } from "../../../../../packages/server/src/sucafina-installations.ts"
 
+const teamSelection = { contractRevision: "sf-team-profile/1", installationId: "installation-A",
+  tenantId: "11111111-1111-4111-8111-111111111111" } as const
 const discoveryUrl = (query: string) => `https://selected.example/api/sucafina/installations?${query}`
 
 test("SDK discovery query has the exact top-level Struct fields required by the real generator", () => {
@@ -21,7 +23,7 @@ test("SDK discovery query has the exact top-level Struct fields required by the 
   if (!SchemaAST.isObjects(ast)) throw new Error("Discovery query must remain a Struct")
   expect(ast.indexSignatures).toHaveLength(0)
   expect(ast.propertySignatures.map((field) => field.name)).toEqual([
-    "select", "installationId", "projectId", "location",
+    "select", "contractRevision", "tenantId", "installationId", "projectId", "location",
   ])
   expect(Schema.is(SfInstallationQuery)({
     select: "ids", installationId: "installation-A", projectId: "project-A",
@@ -29,6 +31,11 @@ test("SDK discovery query has the exact top-level Struct fields required by the 
   expect(Schema.is(SfInstallationQuery)({
     select: "location", location: { directory: "/work/a", workspace: "workspace-A" },
   })).toBe(true)
+  expect(Schema.is(SfInstallationQuery)({
+    select: "current", contractRevision: teamSelection.contractRevision,
+  })).toBe(true)
+  expect(Schema.is(SfInstallationQuery)({ select: "installation", ...teamSelection })).toBe(true)
+  expect(Schema.is(SfInstallationQuery)({ select: "installation", ...teamSelection, tenantId: "tenant-name" })).toBe(false)
   expect(Schema.is(SfInstallationQuery)({ select: "other" })).toBe(false)
   // HTTP DTO is a Struct for codegen; semantic selection remains discriminated.
   expect(Schema.is(SfInstallationSelector)({
@@ -37,7 +44,7 @@ test("SDK discovery query has the exact top-level Struct fields required by the 
   expect(Schema.is(SfInstallationSelector)({ select: "ids", location: { directory: "/work/a" } })).toBe(false)
 })
 
-test("raw URL parser retains both exact wire branches and rejects partial/mixed/duplicate/unknown selectors", () => {
+test("raw URL parser retains all four exact wire branches and rejects partial/mixed/duplicate/unknown selectors", () => {
   expect(parseSfInstallationSelector(discoveryUrl(
     "select=ids&installationId=installation-A&projectId=project-A",
   ))).toEqual({ select: "ids", installationId: "installation-A", projectId: "project-A" })
@@ -52,7 +59,23 @@ test("raw URL parser retains both exact wire branches and rejects partial/mixed/
     "select=location&location%5Bdirectory%5D=%2Fwork%2Fa&location%5Bworkspace%5D=workspace-A",
   ))).toEqual({ select: "location", location: { directory: "/work/a", workspace: "workspace-A" } })
 
+  const currentQuery = new URLSearchParams({ select: "current", contractRevision: teamSelection.contractRevision })
+  const installationQuery = new URLSearchParams({ select: "installation", ...teamSelection })
+  expect(parseSfInstallationSelector(discoveryUrl(currentQuery.toString()))).toEqual({
+    select: "current", contractRevision: teamSelection.contractRevision,
+  })
+  expect(parseSfInstallationSelector(discoveryUrl(installationQuery.toString()))).toEqual({
+    select: "installation", ...teamSelection,
+  })
+
   const invalid = [
+    "select=current",
+    "select=current&contractRevision=sf-native-ui%2F1",
+    `${currentQuery}&installationId=${teamSelection.installationId}`,
+    `${installationQuery}&projectId=project-B`,
+    `${installationQuery}&tenantId=${teamSelection.tenantId}`,
+    "select=installation&contractRevision=sf-team-profile%2F1&installationId=installation-A",
+    "select=installation&contractRevision=sf-team-profile%2F1&installationId=installation-A&tenantId=tenant-name",
     "select=ids&installationId=installation-A",
     "select=ids&installationId=installation-A&projectId=",
     "select=ids&installationId=installation-A&projectId=project-A&hostId=host-B",

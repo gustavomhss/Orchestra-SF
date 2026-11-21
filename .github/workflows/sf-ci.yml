@@ -462,6 +462,9 @@ jobs:
       - uses: ./.github/actions/omni-binaries
         with:
           artifact: sf-omni-linux-${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Install pinned Chromium for the SF Bun shard
+        working-directory: modules/sucafina
+        run: node node_modules/@playwright/test/cli.js install --with-deps --only-shell chromium
       - name: Execute exact manifest-selected Bun files
         id: tests
         timeout-minutes: 26
