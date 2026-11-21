@@ -94,7 +94,14 @@ export async function runTeamBusiness(input: {
         authenticate: (original, context) => original === request && context?.surface === "dashboard" ? currentActor() : Promise.resolve(null),
       })
     }
-    const sourceStore = input.teamCurrentChoice?.sources(store) ?? store
+    const sourceStore = input.teamCurrentChoice?.sources(store) ??
+      (config.clawPurchasePeriod && route.surface === "procurement" ? await (async () => {
+        const { createSfSourcePersistence } = await import("../product/integration/source-lifecycle.ts")
+        const { enumerateSfSources } = await import("../product/integration/source-inventory.ts")
+        const { projectSfProcurementScope } = await import("../product/integration/procurement-projections.ts")
+        return createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources,
+          projectScope: projectSfProcurementScope, createId: randomUUID, bootstrapOnWrite: true })
+      })() : store)
     const persistence: AssetPersistence = {
       transaction: (surface, work, options) => sourceStore.transaction(surface, async (snapshot, blobs) => {
         const result = await work(snapshot, blobs)

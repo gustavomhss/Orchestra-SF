@@ -52,6 +52,12 @@ export async function loadSfInstallation(
   const value: unknown = await factory({
     origin: origin.origin,
     ...(teamCurrentChoice ? { teamCurrentChoice } : {}),
+    ...(module.nativeSfTeamInstallation === true ? {
+      loadTeamPurchaseMcp: async () => {
+        const { createSfTeamPurchaseMcp } = await import("./team-purchase-mcp")
+        return createSfTeamPurchaseMcp
+      },
+    } : {}),
     ...(runtime ? {
       createHostRuntime: runtime.createSfHostRuntime,
       createCurrentChoiceFence: runtime.createCurrentChoiceFence,

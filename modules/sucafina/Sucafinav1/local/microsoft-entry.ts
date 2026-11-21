@@ -14,7 +14,11 @@ import { esc } from "../src/screen-shell.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 
 export const nativeSfTeamInstallation = true
-type InstallationContext = { origin: string; teamCurrentChoice?: SfTeamCurrentChoice }
+type InstallationContext = {
+  origin: string
+  teamCurrentChoice?: SfTeamCurrentChoice
+  loadTeamPurchaseMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamPurchaseMcp>
+}
 
 export default function installation(context: InstallationContext) {
   return createMicrosoftInstallation(context, process.env.SUCAFINA_MICROSOFT_CONFIG)
@@ -56,6 +60,12 @@ export async function createMicrosoftInstallation(
       enabledTeamIds: config.enabledTeamIds ?? [], prepare: identity.prepare, observeTeams: identity.observeTeams,
     })
     if (nativeWeb && !teamAccess) throw new Error("Native Team Web admission is unavailable")
+    const purchasePeriod = config.clawPurchasePeriod
+    const purchaseMcp = purchasePeriod ? await (async () => {
+      if (!teamAccess || !context.loadTeamPurchaseMcp) throw new Error("Purchase MCP requires the Microsoft Team host")
+      const createPurchaseMcp = await context.loadTeamPurchaseMcp()
+      return createPurchaseMcp({ config, directory, identity, authorizeTeam: teamAccess, period: purchasePeriod, now })
+    })() : undefined
     const headers = { "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" }
     const htmlHeaders = { ...headers, "Content-Type": "text/html; charset=utf-8",
       "Content-Security-Policy": "default-src 'none'; frame-ancestors 'self'; base-uri 'none'" }
@@ -96,6 +106,8 @@ export async function createMicrosoftInstallation(
         const auth = await identity.handle(request)
         if (auth) return auth
         if (web && url.pathname === config.mount + "/api/ui/context") return web.context.handle(request)
+        const purchase = await purchaseMcp?.(request)
+        if (purchase) return purchase
         const recovered = await recovery?.(request)
         if (recovered) return recovered
         const route = teamAccess ? teamBusinessRoute(url.pathname, config.mount) : undefined
