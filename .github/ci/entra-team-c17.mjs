@@ -135,8 +135,15 @@ export async function exerciseTeamC17(input) {
   assert.deepEqual(await absent.json(), { status: "unavailable", reason: "choice-source-continuity-unavailable" })
   assert.equal(digestSfValue(state()), before, "no prepared write without Atlas")
 
-  const archived = await post("decision-archive-choice", caseRef)
+  const captureKey = randomUUID()
+  const archive = async () => ok(await postRaw("decision-archive-choice", caseRef, {
+    key: captureKey, timeout: 120_000,
+  }), "decision-archive-choice")
+  const archived = await archive()
   assert.match(archived.eventId, /\S/)
+  const archivedState = digestSfValue(state())
+  assert.equal((await archive()).eventId, archived.eventId, "archive replay returns canonical event")
+  assert.equal(digestSfValue(state()), archivedState, "archive replay did not write a second event")
   assert.equal((await tab.reload({ waitUntil: "domcontentloaded", timeout: 120_000 })).status(), 200)
   await button.waitFor({ state: "visible", timeout: 30_000 })
   assert(await button.isEnabled())
