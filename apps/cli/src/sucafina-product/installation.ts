@@ -7,6 +7,7 @@ import { NodeHttpServerRequest, NodeStream } from "@effect/platform-node"
 import { SfFileRoutes } from "@orchestra/schema/sucafina/files/routes"
 import { SfReviewRoutes } from "@orchestra/schema/sucafina/reviews/routes"
 import type { Host } from "@orchestra/core/host"
+import { parseSfInstallationSelector, readSfInstallations } from "@orchestra/server/sucafina-installations"
 import { WebUi } from "@orchestra/server/web-ui"
 import type { Options } from "@orchestra/server/routes"
 import { Effect, Option, Stream } from "effect"
@@ -73,9 +74,10 @@ export async function loadSfInstallation(
   }
   const nativeWeb = "nativeWeb" in value && value.nativeWeb === true
   const webRoot = nativeWeb && ingress ? await resolveWebRoot?.().catch(() => undefined) : undefined
-  if (nativeWeb && !webRoot) {
+  const webDiscovery = webRoot ? installation.discovery : undefined
+  if (nativeWeb && (!webRoot || !webDiscovery)) {
     await installation.dispose()
-    throw new Error("Native installation Web requires trusted ingress and a built Web bundle")
+    throw new Error("Native installation Web requires trusted ingress, installed discovery and a built Web bundle")
   }
   const hostContributions = runtime && !ingress ? installation.host : undefined
   if (hostContributions !== undefined && (!Array.isArray(hostContributions) ||
@@ -119,8 +121,21 @@ export async function loadSfInstallation(
       return HttpServerResponse.empty({ status: 403, headers: ingress ? { connection: "close" } : undefined })
     }
     const mounted = url.pathname === installation.mount || url.pathname.startsWith(`${installation.mount}/`)
-    const discovery = !!webRoot && url.pathname === "/api/sucafina/installations"
-    if (!mounted && !discovery) {
+    if (webDiscovery && url.pathname === "/api/sucafina/installations") {
+      const headers = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" }
+      if (incoming.method !== "GET")
+        return HttpServerResponse.empty({ status: 405, headers: { ...headers, Allow: "GET" } })
+      if (incoming.headers["transfer-encoding"] || Number(incoming.headers["content-length"]) > 0)
+        return HttpServerResponse.empty({ status: 400, headers: { ...headers, connection: "close" } })
+      const selector = yield* Effect.try(() => parseSfInstallationSelector(url.href)).pipe(Effect.option)
+      if (Option.isNone(selector) || (selector.value.select !== "current" && selector.value.select !== "installation"))
+        return HttpServerResponse.empty({ status: 400, headers })
+      // This identifies the configured installation. Team admission is still checked by its mounted context endpoint.
+      return yield* Effect.tryPromise((signal) => readSfInstallations(webDiscovery, selector.value, signal)).pipe(
+        Effect.map((result) => HttpServerResponse.jsonUnsafe(result, { headers })),
+      )
+    }
+    if (!mounted) {
       if (webRoot && (incoming.method === "GET" || incoming.method === "HEAD")) {
         if (incoming.headers["transfer-encoding"] || Number(incoming.headers["content-length"]) > 0)
           return HttpServerResponse.empty({ status: 400, headers: { connection: "close" } })
