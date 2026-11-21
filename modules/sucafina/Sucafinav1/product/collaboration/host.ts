@@ -253,7 +253,17 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       replayPersistence.dashboardSourceFence === answerFence && input.state === answerState &&
       answerState.read === readAnswerState && isInstalledSfStateRead(readAnswerState) && threadReads.read === answerRead,
   })
-  const threadHistory = input.threadHistoryWrites ? createThreadHistory({ host: input.host, state: input.state, replayCurrent, read: threadReads.read, readHistorical: threadReads.readHistorical, prepareReviewThreadFence, authorizeReviewRecipient: authority.reviewRecipientSources, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, authorizeSources: async (basis, context) => await authority.readHistoricalSources(basis.evidenceRefs, context) && await authority.readReviewThreadBasis(basis, context), human: input.human, fence: createCollaborationMutationFence(input.host), target: input.creationTarget, threadHistoryWrites: input.threadHistoryWrites }) : undefined
+  const authorizeHistoricalBasis = async (basis: ThreadSourceContext, context: TrustedDomainContext) =>
+    await authority.readHistoricalSources(basis.evidenceRefs, context) && await authority.readReviewThreadBasis(basis, context)
+  const threadHistory = input.threadHistoryWrites ? createThreadHistory({ host: input.host, state: input.state, replayCurrent, read: threadReads.read, readHistorical: threadReads.readHistorical, prepareReviewThreadFence, authorizeReviewRecipient: authority.reviewRecipientSources, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, authorizeSources: authorizeHistoricalBasis,
+    // Each mutation observation still authorizes the historical evidence and the
+    // pinned C05 source. The resident reader can hold both under one sealed root.
+    authorizeEditBasis: async (thread, basis, context) => {
+      if (!replayCurrent()) return authorizeHistoricalBasis(basis, context)
+      const batched = await authority.readRecipientReviewLeg(thread, basis, basis.evidenceRefs, context,
+        () => authority.readHistoricalSources(basis.evidenceRefs, context))
+      return batched ?? authorizeHistoricalBasis(basis, context)
+    }, human: input.human, fence: createCollaborationMutationFence(input.host), target: input.creationTarget, threadHistoryWrites: input.threadHistoryWrites }) : undefined
   const storageVersion = async (namespace: "threads" | "relations" | "confirmations", context: TrustedDomainContext): Promise<PortResult<number>> => {
     const request = input.host.requestFor(context)
     if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "collaboration-state-unavailable" }

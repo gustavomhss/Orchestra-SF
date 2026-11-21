@@ -24,6 +24,7 @@ export function createThreadHistory(input: {
   read: ReturnType<typeof createRecipientAwareThreadReads>["read"]
   readHistorical?: ReturnType<typeof createRecipientAwareThreadReads>["readHistorical"]
   authorizeSources?: (basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
+  authorizeEditBasis?: (thread: CollaborationThread, basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
   prepareReviewThreadFence?: PrepareReviewThreadFence
   authorizeReviewRecipient?: (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
   checkReviewRecipientAtCommit?: (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => boolean
@@ -73,7 +74,9 @@ export function createThreadHistory(input: {
       if (!message || message.authorRef !== context.binding.principalRef || message.version >= Number.MAX_SAFE_INTEGER) return { status: "denied", reason: "thread-access-unavailable" }
       const basis = threadMessageContext(prior, message)
       if (!basis) return { status: "unavailable", reason: "thread-history-unavailable" }
-      const readable = input.authorizeSources ? await input.authorizeSources(basis, context).catch(() => undefined) : true
+      const authorizeEditBasis = input.authorizeEditBasis
+      const authorizeSelected = () => authorizeEditBasis?.(prior, basis, context) ?? input.authorizeSources?.(basis, context) ?? Promise.resolve(true)
+      const readable = await authorizeSelected().catch(() => undefined)
       if (readable === false || input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request) return { status: "denied", reason: "thread-history-unavailable" }
       if (readable !== true) return { status: "unavailable", reason: "thread-read-unavailable" }
       const review = basis.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
@@ -92,7 +95,7 @@ export function createThreadHistory(input: {
       const read = input.read
       const authorizeSources = input.authorizeSources
       const current = () => input.state === state && state.read === readState && state.transaction === transaction && input.host === host && host.requestFor === requestFor && host.revalidate === revalidate &&
-        input.read === read && input.authorizeSources === authorizeSources && requestFor.call(host, context) === request && !request.signal.aborted
+        input.read === read && input.authorizeSources === authorizeSources && input.authorizeEditBasis === authorizeEditBasis && requestFor.call(host, context) === request && !request.signal.aborted
       const releaseReceipt = async (version: number, installedReview = false): Promise<PortResult<{ id: string; messageId: string; version: number }>> => {
         const loaded = await load(id, context)
         if (loaded.status !== "ok") return loaded
@@ -122,7 +125,7 @@ export function createThreadHistory(input: {
             actor.principalRef === context.binding.principalRef && actor.accessRevision === context.binding.accessRevision &&
             actor.policyVersion === context.binding.policyVersion ? digestSfValue(stored.threads[id]) : undefined)
           return current() && observed.status === "ok" && observed.value === priorDigest &&
-            !!authorizeSources && await authorizeSources(basis, context) && current() && framework()
+            !!authorizeSources && await authorizeSelected() && current() && framework()
         }
         const observed = await load(id, context)
         return observed.status === "ok" && digestSfValue(observed.value.thread) === priorDigest && (!input.authorizeSources || await input.authorizeSources(basis, context))
