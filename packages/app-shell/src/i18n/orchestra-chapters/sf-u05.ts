@@ -228,7 +228,7 @@ export const SF_U05_COPY_BR: Readonly<Record<keyof typeof SF_U05_COPY, string>> 
   "sf.u05.projects.milestone.inprogress": "Em andamento",
   "sf.u05.projects.milestone.upcoming": "Previsto",
   "sf.u05.projects.milestone.late": "Atrasado",
-  "sf.u05.projects.importBlocked": "A importação exige prévia do produtor, versões exatas e autorização explícita."
+  "sf.u05.projects.importBlocked": "A importação exige prévia do produtor, versões exatas e autorização explícita.",
   "sf.u05.design.collectionLead": "Acompanhe entregas, responsáveis e investimento registrado nos projetos.",
   "sf.u05.design.overviewLead": "Uma visão do portfólio com os próximos marcos em destaque.",
   "sf.u05.design.source": "Sobre esta visão",
