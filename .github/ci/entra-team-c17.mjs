@@ -196,6 +196,13 @@ export async function exerciseTeamC17(input) {
   const replay = await ok(await postRaw("current-choice-prepare", prepare, { key: commandKey, timeout: 320_000 }), "same-key C17 replay")
   assert.equal(replay.value.bindingDigest, result.value.bindingDigest)
   assert.equal(digestSfValue(snapshotRows()), record, "replay duplicated or changed the persisted calculation")
+  const different = await postRaw("current-choice-prepare", {
+    ...prepare, coverageRef: prepare.coverageRef + "-different",
+  }, { key: commandKey, timeout: 120_000 })
+  assert.equal(different.status, 409, "same key with changed input")
+  assert.deepEqual(await different.json(), { status: "conflict", reason: "choice-preview-idempotency-changed" })
+  assert.equal(digestSfValue(snapshotRows()), record, "conflicting replay wrote state")
+  console.log("C17_TEAM_PREPARE_REPLAY_OK")
   const otherSession = await signIn("other")
   const otherContext = new URLSearchParams({
     contractRevision: binding.contractRevision, installationId: binding.installationId, tenantId: binding.tenantId,
