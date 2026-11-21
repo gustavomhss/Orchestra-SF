@@ -53,6 +53,7 @@ it.live.skipIf(process.platform !== "linux")(
       for (const operationId of [
         "projection.work-selection", "collaboration.work-list", "projection.search",
         "decisions.choice.read", "decisions.command.sf_question_prepare",
+        "intelligence.analysis.choices", "intelligence.analysis.list",
       ] as const) {
         expect(operations.find((operation) => operation.operationId === operationId), operationId).toEqual({
           operationId, state: "ready", reason: null, operational: true,

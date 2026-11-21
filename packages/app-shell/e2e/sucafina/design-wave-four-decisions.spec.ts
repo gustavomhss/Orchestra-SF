@@ -139,7 +139,8 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   if (!caseRef || !editableRef) throw new Error("The native case route omitted its source reference")
   expect(caseRef).toMatch(/^case:[^:]+:[^:]+$/)
   const availability = await observeAvailability(page, owner)
-  for (const operation of ["decisions.choice.read", "decisions.command.sf_question_prepare"])
+  for (const operation of ["decisions.choice.read", "decisions.command.sf_question_prepare",
+    "intelligence.analysis.choices", "intelligence.analysis.list"])
     expect(availability.find((entry) => entry.operation === operation)).toMatchObject({ state: "ready", operational: true })
   const source = await readCase(page, installation.origin, installation.mount, caseRef)
   const editableSource = await readCase(page, installation.origin, installation.mount, editableRef)
@@ -181,6 +182,10 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await editor.getByRole("button", { name: "Review source attachments", exact: true }).click()
     const review = editor.getByRole("group", { name: "Review source attachments", exact: true })
     await expect(review).toContainText(waveFourDecisionsData.editedObjective)
+    const reviewedSources = review.locator("details.sf-decision-source-scope")
+    await reviewedSources.locator("summary").click()
+    for (const source of editableSource.sourceRefs) await expect(reviewedSources).toContainText(source.refId)
+    await reviewedSources.locator("summary").click()
     await expect(editor.locator("textarea")).toHaveCount(1)
     await expect(objective).toBeHidden()
     expect(writes).toHaveLength(0)
@@ -319,13 +324,19 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
       const request = response.request()
       return request.method() === "POST" && new URL(request.url()).searchParams.get("sf") === "workbench-analysis" &&
         object(request.postDataJSON()).action === "choices"
-    }).then(async (response) => ({
-      status: response.status(), body: object(await response.json()),
-    }))
-    // Consume the CDP body as it arrives, before readiness can outlive its response handle.
-    const [response] = await Promise.all([choicesResponse, openScreen(page, owner, screens[7]!)])
-    expect(response.status).toBe(200)
-    const body = response.body
+    }).then((response) => ({ status: response.status(), request: response.request() }))
+    const [nativeRead] = await Promise.all([choicesResponse, openScreen(page, owner, screens[7]!)])
+    expect(nativeRead.status).toBe(200)
+    expect(new URL(nativeRead.request.url()).origin).toBe(installation.origin)
+    expect(nativeRead.request.postDataJSON()).toEqual({ action: "choices" })
+    // This original POST is a read. APIRequestContext retains its body independently
+    // of Chromium's response-handle lifetime; no CDP body or simulated response is used.
+    const response = await page.request.post(nativeRead.request.url(), {
+      headers: { origin: installation.origin, "content-type": "application/json", "idempotency-key": crypto.randomUUID() },
+      data: nativeRead.request.postDataJSON(),
+    })
+    expect(response.status()).toBe(200)
+    const body = object(await response.json())
     expect(body.status).toBe("ok")
     const choices = object(body.value)
     const cases = choices.cases as { caseRef: { id: string; incarnation: string; version: number }; label: string }[]
@@ -343,7 +354,9 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     if (models.length) await page.getByLabel("Admitted model", { exact: true }).selectOption({ index: 1 })
     if (!analyses.length) await expect(page.getByText("No admitted analysis option is available.", { exact: true })).toBeVisible()
     if (analyses.length && !models.length) await expect(page.getByText("No admitted model is available.", { exact: true })).toBeVisible()
-    if (published < 0 || !models.length) {
+    const preparationAvailable = availability.some((entry) => entry.operation === "intelligence.analysis.prepare" &&
+      entry.state === "ready" && entry.operational === true)
+    if (published < 0 || !models.length || !preparationAvailable) {
       await expect(page.getByRole("button", { name: "Prepare analysis", exact: true })).toBeDisabled()
     } else {
       await page.getByRole("button", { name: "Prepare analysis", exact: true }).click()
@@ -357,7 +370,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
       await expect(page.getByLabel("Analysis objective", { exact: true })).toHaveValue(waveFourDecisionsData.objective)
     }
     await info.attach("UI41-original-catalog-counts", { contentType: "application/json",
-      body: JSON.stringify({ cases: cases.length, analyses: analyses.length, models: models.length, preparedInputExercised: published >= 0 && models.length > 0 }) })
+      body: JSON.stringify({ cases: cases.length, analyses: analyses.length, models: models.length, preparationAvailable, preparedInputExercised: published >= 0 && models.length > 0 && preparationAvailable }) })
   })
 
   for (const color of ["dark", "light"] as const) {

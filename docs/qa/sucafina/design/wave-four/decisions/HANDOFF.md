@@ -106,3 +106,35 @@ observeSfDecisionReadingHealth({
 The source callback only captures actual installed identities. C08 namespace reads, original UI admission/validation and final revalidation establish infrastructure readiness. Question preparation requires the exact original descriptor in both arrays and cases/threads read authority; choice requires its registered real fence and cases/preferences read authority. No health probe calls options, dispatch, prepare, promote or receipt production. All acquired leases finish exactly once, and the binding is rechecked after finish.
 
 Run the 21 new health tests in the parent's CLI gate. They use the real UI authority, C08 state reader, source-lifecycle implementation and current-choice fence over the existing isolated test driver; they reject denial, missing namespace authority, copied fence/descriptor, dependency replacement, revision drift, source failure, abort and disposal during finish. No new test has been executed locally.
+
+## UI41 native catalog and history reads
+
+The follow-up adds `native-ui/analysis-reading-health.ts`, `apps/cli/test/sucafina-analysis-reading-health.test.ts` (19 original-boundary cases), and exactly two binding-union entries: `intelligence.analysis.choices` / `intelligence.analysis.list`. No preparation, start or cancellation readiness is inferred. A successful catalog response may contain no models and keeps preparation blocked.
+
+Parent-owned host callsite:
+
+```ts
+import { observeSfAnalysisReadingHealth } from "./native-ui/analysis-reading-health.ts"
+
+// Add to the nativeUiContext operational Promise.allSettled:
+observeSfAnalysisReadingHealth({
+  ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+  binding: input.nativeReadBinding,
+  source: (operationId) => {
+    if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch ||
+      services.analyses !== analyses || services.selected !== selected || !state.models) return undefined
+    if (operationId === "intelligence.analysis.choices") return {
+      producer: productHttp,
+      dependencies: [analysisHttp, readSfImportAnalysisChoices, services.models, state.models,
+        selected, nativeSearchDispatch, business.cases, business.cases.read, authority.human, authority.human.admit, input.persistence],
+    }
+    return { producer: productHttp,
+      dependencies: [analyses, analyses.list, business.cases, business.cases.read,
+        authority.human, authority.human.admit, authority.human.authorize, input.persistence] }
+  },
+}, request, stamp),
+```
+
+The original choices producer uses the private `analysis.prepare` action even though choices itself is a read. History uses `analysis.read`. The health observer retains these exact action admissions, verifies Cases/Contributions metadata through the canonical state reader, and never enumerates cases, queries a provider, prepares input or produces a run/output. Original source methods and the mounted product binding remain fenced across awaited reads and final lease disposal.
+
+The UI41 test awaits the actual browser POST status and native view acknowledgement, then compares its visible selectors with a fresh authorized read of that same original endpoint through `page.request`. This API response retains its body independently of Chromium/CDP. Both responses must succeed. There is no intercepted response, fabricated catalog, grant or model. Selection/input preparation assertions remain conditional on actual native availability and the real catalog.
