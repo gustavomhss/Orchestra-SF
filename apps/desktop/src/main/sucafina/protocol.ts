@@ -1,7 +1,8 @@
 import { randomUUID } from "node:crypto"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import type { SfOperationBindings, SfJson } from "@orchestra/schema/sucafina/common"
-import type { SfDesktopInvocation } from "@orchestra/client/sucafina/transport"
+import { sfFilesSourceQuery, sfIsUploadOperation, SF_FILE_ASSET_LIMIT, SF_FILE_IMPORT_LIMIT,
+  SF_FILE_MULTIPART_LIMIT, type SfDesktopInvocation } from "@orchestra/client/sucafina/transport"
 import type { SfInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 
 type OperationMetadata = Readonly<{
@@ -78,7 +79,16 @@ export function planSfOperation(input: Readonly<{
     if (!queryKey(key) || CONTROL.test(value)) return { status: "contract-unavailable" }
     target.searchParams.set(key, value)
   }
-  if (meta.method === "GET" && source) {
+  const query = operationId.startsWith("files.") ? sfFilesSourceQuery(operationId, source) : undefined
+  if (["files.import-targets", "files.asset.link", "files.asset.download", "files.asset.upload", "files.export.review",
+    "files.document-open", "files.document-scenario-targets"].includes(operationId) && !query)
+    return { status: "invalid-response" }
+  if (query) {
+    for (const [key, value] of Object.entries(query)) {
+      if (!queryKey(key) || CONTROL.test(value) || target.searchParams.has(key)) return { status: "invalid-response" }
+      target.searchParams.set(key, value)
+    }
+  } else if (meta.method === "GET" && source) {
     for (const [key, value] of Object.entries(source)) {
       if (usesSurface && key === "surface") continue
       if (!queryKey(key) || target.searchParams.has(key)) return { status: "invalid-response" }
@@ -117,22 +127,30 @@ export function planSfOperation(input: Readonly<{
       return { status: "invalid-response" }
     const value: Record<string, unknown> = { ...(original ?? {}), ...fixed }
     const upload = input.request.upload
+    const uploadOperation = sfIsUploadOperation(operationId)
+    if (uploadOperation && !upload) return { status: "invalid-response" }
     if (upload) {
-      if (operationId !== "files.import-admit" && operationId !== "files.asset.upload")
-        return { status: "contract-unavailable" }
+      if (!uploadOperation) return { status: "contract-unavailable" }
       if (typeof upload.fileName !== "string" || !upload.fileName || upload.fileName.length > 255
-        || /[\/\\\x00-\x1f\x7f"]/.test(upload.fileName)
-        || typeof upload.mediaType !== "string" || !/^[A-Za-z0-9!#$&^_.+-]+\/[A-Za-z0-9!#$&^_.+-]+$/.test(upload.mediaType)
+         || /[\/\\\x00-\x1f\x7f"]/.test(upload.fileName)
+        || typeof upload.mediaType !== "string" || upload.mediaType.length > 128
+        || !/^[A-Za-z0-9!#$&^_.+-]+\/[A-Za-z0-9!#$&^_.+-]+$/.test(upload.mediaType)
         || !(upload.bytes instanceof Uint8Array) || upload.bytes.byteLength === 0)
         return { status: "invalid-response" }
-      const limit = meta.maxRequestBytes ?? 16 * 1024 * 1024
-      if (upload.bytes.byteLength > limit) return { status: "invalid-response" }
+      const isImport = operationId === "files.import-admit"
+      const limit = isImport ? SF_FILE_IMPORT_LIMIT : SF_FILE_ASSET_LIMIT
+      if (upload.bytes.byteLength > limit || value[isImport ? "fileName" : "name"] !== upload.fileName
+        || value.mediaType !== upload.mediaType) return { status: "invalid-response" }
       if (operationId === "files.import-admit") {
         const ext = upload.fileName.split(".").pop()?.toLowerCase()
-        const formFields: Record<string, unknown> = { ...(value as Record<string, unknown>), surface: source?.surface }
-        if (!ext || !["xlsx", "xls", "json"].includes(ext) || upload.bytes.byteLength > 16 * 1024 * 1024
+        if (Object.keys(value).some((key) => !["selectionRef", "options", "fileName", "mediaType"].includes(key)))
+          return { status: "invalid-response" }
+        const formFields: Record<string, unknown> = {
+          surface: source?.surface, selectionRef: value.selectionRef, options: value.options,
+        }
+        if (!ext || !["xlsx", "xls", "json"].includes(ext)
           || typeof formFields.surface !== "string" || !SURFACES.has(formFields.surface)
-          || typeof formFields.selectionRef !== "string" || !("options" in formFields))
+          || typeof formFields.selectionRef !== "string" || !("options" in value))
           return { status: "invalid-response" }
         const boundary = "sf-" + randomUUID().replaceAll("-", "")
         const pieces: Buffer[] = []
@@ -147,18 +165,23 @@ export function planSfOperation(input: Readonly<{
         pieces.push(Buffer.from("\r\n--" + boundary + "--\r\n"))
         body = Buffer.concat(pieces)
         headers["Content-Type"] = "multipart/form-data; boundary=" + boundary
-        if (body.byteLength > 16 * 1024 * 1024 + 65_536) return { status: "invalid-response" }
+        if (body.byteLength > SF_FILE_MULTIPART_LIMIT) return { status: "invalid-response" }
       } else {
         body = upload.bytes
         headers["Content-Type"] = upload.mediaType
       }
     } else {
-      body = Buffer.from(JSON.stringify(value), "utf8")
+      const document = operationId === "files.document-confirm"
+      const payload = document && !("action" in value) ? value.evidence : value
+      if (document && (!isRecord(payload) || ("action" in value && value.action !== "reject" && value.action !== "link")))
+        return { status: "invalid-response" }
+      body = Buffer.from(JSON.stringify(payload), "utf8")
       headers["Content-Type"] = "application/json"
     }
     if (meta.maxRequestBytes !== undefined && body.byteLength > meta.maxRequestBytes)
       return { status: "invalid-response" }
-    if (meta.maxRequestBytes === undefined && body.byteLength > (input.request.upload ? 16 * 1024 * 1024 + 65536 : 2 * 1024 * 1024))
+    if (meta.maxRequestBytes === undefined && body.byteLength >
+      (operationId === "files.asset.upload" ? SF_FILE_ASSET_LIMIT : upload ? SF_FILE_MULTIPART_LIMIT : 2 * 1024 * 1024))
       return { status: "invalid-response" }
   } else if (input.request.upload || input.request.idempotencyKey) return { status: "invalid-response" }
   return { status: "ok", value: {

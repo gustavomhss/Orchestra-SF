@@ -22,6 +22,7 @@ import { SfWork } from "@orchestra/schema/sucafina/work"
 import { SfMemory } from "@orchestra/schema/sucafina/memory"
 import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
 import { SfFilesOperationBindings } from "./files/codecs"
+import { sfIsByteOperation, sfIsUploadOperation } from "./transport/files"
 
 type Contract = Readonly<{
   operationId: string
@@ -105,5 +106,20 @@ export const SfNativeOperationBindings: SfOperationBindings = (() => {
     || Object.keys(membersRoute.fixedQuery).length !== 1
     || bindings.has(membersId)) throw new Error("SF_NATIVE_MEMBERS_CODEC_MISSING")
   bindings.set(membersId, membersCodec)
+  // Use the dedicated F02 codecs: upload metadata excludes binary bytes and
+  // download outputs remain byte-only. A codec is not producer availability.
+  for (const [id, fileCodec] of Object.entries(SfFilesOperationBindings)) {
+    if (id === membersId) continue
+    if (!Schema.is(SfOperationId)(id) || !id.startsWith("files.") || !fileCodec || bindings.has(id))
+      throw new Error("SF_NATIVE_FILE_CODEC_MISMATCH")
+    const route = SfOperationRegistry[id]
+    const bytes = sfIsByteOperation(id)
+    if (!route || route.pathTemplate !== "{mount}/{surface}" ||
+      route.responseMode !== (bytes ? "bytes" : "json") ||
+      bytes && (route.method !== "GET" || route.effect !== "read") ||
+      sfIsUploadOperation(id) && (route.method !== "POST" || route.effect !== "mutation"))
+      throw new Error("SF_NATIVE_FILE_ROUTE_MISMATCH")
+    bindings.set(id, fileCodec)
+  }
   return Object.freeze(Object.fromEntries(bindings))
 })()

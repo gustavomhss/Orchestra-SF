@@ -52,3 +52,54 @@ test("members export uses the installed byte codec and bounded desktop chunks", 
     .toEqual(["ctx.context", "files.export.members"])
   expect(calls.filter((call) => call.kind === "response-chunk").map((call) => call.sequence)).toEqual([0, 1])
 })
+
+test("document actions retain their distinct mounted request bodies", async () => {
+  const descriptor = { installationId: "installation", projectId: "project", hostId: "host",
+    publicOrigin: "https://installation.example", mount: "/sucafina", authMode: "microsoft" as const,
+    contractRevision: "sf-native-ui/1" as const }
+  const stamp = { installationId: "installation", projectId: "project", hostId: "host", principalRef: "person",
+    policyVersion: "policy", accessRevision: "revision" }
+  const ref = { schema: "sf-evidence-v1" as const, kind: "document" as const, refId: "ref",
+    installationId: "installation", projectId: "project", refDigest: "digest", evidenceLevel: "claim" as const,
+    target: { documentId: "doc", incarnation: "inc", revision: 1,
+      blobDigest: { algorithm: "sha256" as const, value: "digest" },
+      segment: { start: 0, end: 2, unit: "utf16" as const, textDigest: { algorithm: "sha256" as const, value: "digest" } },
+      fieldCandidateId: "candidate", confirmationVersion: 1 } }
+  const evidence = { id: "candidate", fileRef: "doc", version: 1, location: "page 1",
+    textRange: { start: 0, end: 2, unit: "utf16" as const }, fieldCandidate: "amount",
+    value: 42, status: "extracted" as const, ref }
+  const context = { status: "ok", value: { stamp, contractRevision: "sf-native-ui/1", authMode: "microsoft",
+    destinations: [], availability: [{ family: "files", resource: "documents", state: "ready",
+      operations: [{ operationId: "files.document-confirm", state: "ready", reason: null, operational: true }] }] } }
+  const bodies: unknown[] = []
+  const previous = Object.getOwnPropertyDescriptor(globalThis, "window")
+  Object.defineProperty(globalThis, "window", { configurable: true, value: { location: { origin: descriptor.publicOrigin } } })
+  try {
+    const transport = createSfTransport({ binding: descriptor, generation: 1, currentGeneration: () => 1,
+      operations: SfNativeOperationBindings,
+      fetch: async (url, init) => {
+        if (init?.method === "POST") {
+          expect(String(url)).toBe("https://installation.example/sucafina/dashboard?sf=document-confirm")
+          bodies.push(JSON.parse(String(init.body)))
+          return Response.json({ status: "ok", value: evidence })
+        }
+        return Response.json(context)
+      },
+    })
+    const signal = new AbortController().signal
+    expect((await createSfContextClient(transport)["ctx.context"]({
+      installationId: "installation", projectId: "project", hostId: "host",
+    }, { signal })).kind).toBe("response")
+    const client = createSfFilesClient(transport)
+    const reject = { action: "reject" as const, evidence, reason: "Incorrect value", page: 1 }
+    const link = { action: "link" as const, documentRef: ref, baseRef: "base", targetRef: "target:1",
+      period: { start: "2026-01-01", end: "2026-12-31" } }
+    await client["files.document-confirm"]({ surface: "dashboard", evidence }, { signal, idempotencyKey: "123e4567-e89b-42d3-a456-426614174000" })
+    await client["files.document-confirm"]({ surface: "dashboard", ...reject }, { signal, idempotencyKey: "123e4567-e89b-42d3-a456-426614174001" })
+    await client["files.document-confirm"]({ surface: "dashboard", ...link }, { signal, idempotencyKey: "123e4567-e89b-42d3-a456-426614174002" })
+    expect(bodies).toEqual([evidence, reject, link])
+  } finally {
+    if (previous) Object.defineProperty(globalThis, "window", previous)
+    else Reflect.deleteProperty(globalThis, "window")
+  }
+})

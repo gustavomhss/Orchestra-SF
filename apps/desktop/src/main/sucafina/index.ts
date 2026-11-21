@@ -275,8 +275,9 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
       || !nonempty(raw.operationId) || binding.requests.has(raw.requestId) || binding.requests.size >= 32)
       return failure("invalid-response")
     const request = raw as Extract<SfDesktopInvocation, { kind: "request" }>
+    const originalContext = binding.context
     const plan = planSfOperation({ request, descriptor: binding.descriptor,
-      operations: deps.operations, principalRef: binding.context?.stamp.principalRef })
+      operations: deps.operations, principalRef: originalContext?.stamp.principalRef })
     if (plan.status !== "ok") return failure(plan.status === "contract-unavailable" ? "contract-unavailable" : "invalid-response")
     const pending: Pending = { requestId: request.requestId, controller: new AbortController(), effect: plan.value.effect,
       sequence: 0, pulling: false }
@@ -284,6 +285,20 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
     binding.controller.signal.addEventListener("abort", onRetired, { once: true })
     binding.requests.set(request.requestId, pending)
     try {
+      if (request.operationId.startsWith("files.")) {
+        if (!originalContext) return failure("contract-unavailable")
+        const fresh = await loadSfDesktopContext({ net: deps.electron.net, session: binding.session,
+          descriptor: binding.descriptor, operations: deps.operations, signal: pending.controller.signal })
+        if (!binding.active || !validOwner(binding.owner) || pending.controller.signal.aborted
+          || binding.requests.get(request.requestId) !== pending) return failure("aborted")
+        if (fresh.status !== "ok" || binding.context !== originalContext ||
+          fresh.context.stamp.principalRef !== originalContext.stamp.principalRef ||
+          fresh.context.stamp.policyVersion !== originalContext.stamp.policyVersion ||
+          fresh.context.stamp.accessRevision !== originalContext.stamp.accessRevision ||
+          !fresh.context.availability.some((resource) => resource.operations.some((operation) =>
+            operation.operationId === request.operationId && operation.state === "ready" && operation.operational)))
+          return failure("contract-unavailable")
+      }
       const reply = await requestSfHttp({
         net: deps.electron.net, session: binding.session, origin: binding.descriptor.publicOrigin,
         url: plan.value.url, method: plan.value.method, mode: plan.value.mode, body: plan.value.body,

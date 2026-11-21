@@ -5,6 +5,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import type { SfInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import type { SfOperationBindings } from "@orchestra/schema/sucafina/common"
+import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfDesktopBroker, type SfDesktopBrokerDependencies } from "./index"
 import { createSfConnectionRegistry, validateSfCandidate, type SfDesktopOwner } from "./connections"
 import { allowSfAuthNavigation } from "./auth"
@@ -51,7 +52,7 @@ afterEach(async () => {
   await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })))
 })
 
-function brokerFixture() {
+function brokerFixture(files?: { state: "ready" | "unavailable"; accessRevision: string }) {
   const ipc = new Map<string, (event: unknown, arg: unknown) => Promise<unknown>>()
   const sessionNames: string[] = []
   const invalidations: unknown[] = []
@@ -107,15 +108,27 @@ function brokerFixture() {
             req.emit("error", new Error("offline"))
             return
           }
+          const url = new URL(options.url)
+          const operation = files?.state === "ready"
+            ? { operationId: "files.asset.link", state: "ready", operational: true, reason: null }
+            : { operationId: "files.asset.link", state: "unavailable", operational: false, reason: "producer-unavailable" }
+          const body = url.pathname === "/api/sucafina/installations" ? { installations: [descriptor] }
+            : files && url.pathname === "/sucafina/api/ui/context" ? { status: "ok", value: {
+                contractRevision: descriptor.contractRevision, authMode: descriptor.authMode,
+                stamp: { installationId: descriptor.installationId, projectId: descriptor.projectId, hostId: descriptor.hostId,
+                  principalRef: "person", policyVersion: "policy", accessRevision: files.accessRevision },
+                destinations: [], availability: [{ family: "files", resource: "documents", state: operation.state, operations: [operation] }],
+              } }
+            : files && url.searchParams.has("asset-link") ? { ok: true, query: "asset=fixture", expires: "2030-01-01T00:00:00Z" }
+            : undefined
           const response = Object.assign(new EventEmitter(), {
-            headers: options.url.includes("installations") ? { "content-type": "application/json" } : {},
-            statusCode: options.url.includes("installations") ? 200 : 204,
+            headers: body ? { "content-type": "application/json" } : {},
+            statusCode: body ? 200 : 204,
             pause: () => undefined, resume: () => undefined,
           })
           req.emit("response", response)
           queueMicrotask(() => {
-            if (options.url.includes("installations"))
-              response.emit("data", Buffer.from(JSON.stringify({ installations: [descriptor] })))
+            if (body) response.emit("data", Buffer.from(JSON.stringify(body)))
             response.emit("end")
           })
         })
@@ -125,7 +138,7 @@ function brokerFixture() {
   }
   const broker = createSfDesktopBroker({
     electron: api as unknown as SfDesktopBrokerDependencies["electron"],
-    operations: codecs,
+    operations: files ? SfNativeOperationBindings : codecs,
     isRendererUrl: (url) => url.startsWith("oc://renderer/"),
     isMainWindow: (win) => [...owners].some((owner) => owner.win === win),
     ownedConnection: () => undefined,
@@ -219,6 +232,37 @@ test("logout fences the old handle first and clears only that SF jar if offline"
     })
     expect(later).toEqual({ kind: "transport-error", reason: "contract-unavailable" })
     expect(fixture.cleared).toBeGreaterThan(1) // discovery plus logout jar
+  } finally { await fixture.broker.dispose() }
+})
+
+test("Files dispatch requires the same authorized context and current producer readiness", async () => {
+  const files = { state: "ready" as "ready" | "unavailable", accessRevision: "revision-1" }
+  const fixture = brokerFixture(files)
+  try {
+    const owner = fakeOwner(30)
+    await fixture.call("sf-native-register-connection", owner.event, candidate)
+    const binding = await fixture.call("sf-native-bind", owner.event, {
+      serverKey: candidate.serverKey, projectId: descriptor.projectId, installationId: descriptor.installationId,
+    }) as { status: string; bindingHandle: string; generation: number }
+    expect(binding.status).toBe("ok")
+    const invoke = (operationId: string, input: unknown) => fixture.call("sf-native-invoke", owner.event, {
+      kind: "request", requestId: crypto.randomUUID(), bindingHandle: binding.bindingHandle, generation: binding.generation,
+      operationId, input,
+    })
+    const readAsset = () => invoke("files.asset.link", { surface: "dashboard", assetId: "fixture" })
+    expect(await invoke("ctx.context", { installationId: descriptor.installationId,
+      projectId: descriptor.projectId, hostId: descriptor.hostId })).toMatchObject({ kind: "json-response", status: 200 })
+    expect(await readAsset()).toMatchObject({ kind: "json-response", status: 200, body: { ok: true } })
+    const destination = descriptor.publicOrigin + "/sucafina/dashboard?asset-link=fixture"
+    expect(fixture.queries.filter((query) => query.url === destination)).toHaveLength(1)
+
+    files.state = "unavailable"
+    expect(await readAsset()).toEqual({ kind: "transport-error", reason: "contract-unavailable" })
+    files.state = "ready"
+    files.accessRevision = "revision-2"
+    expect(await readAsset()).toEqual({ kind: "transport-error", reason: "contract-unavailable" })
+    expect(fixture.queries.filter((query) => query.url === destination)).toHaveLength(1)
+    expect(fixture.queries.filter((query) => new URL(query.url).pathname === "/sucafina/api/ui/context")).toHaveLength(4)
   } finally { await fixture.broker.dispose() }
 })
 
