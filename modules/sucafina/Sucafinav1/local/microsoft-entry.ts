@@ -117,6 +117,7 @@ export async function createMicrosoftInstallation(
           await identity.prepare(request)
           return await identity.person(request) ? new Response(null, { status: 204, headers }) : signIn()
         }
+        const webLanding = web && request.method === "GET" && !url.search && request.headers.get("accept")?.includes("text/html")
         const access = await teamAccess(request, route?.teamObjectId)
         if (access.status === "allowed") {
           if (route) return runTeamBusiness({
@@ -125,11 +126,11 @@ export async function createMicrosoftInstallation(
             decisionIntentions: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? store : undefined,
           })
           return new Response(null, { status: 303, headers: {
-            ...headers, Location: web && !url.search ? "/" : config.mount + "/teams/" + access.profile.teamObjectId + "/" + surface,
+            ...headers, Location: webLanding ? "/" : config.mount + "/teams/" + access.profile.teamObjectId + "/" + surface,
           } })
         }
         if (access.status === "selection-required") {
-          if (web && request.method === "GET" && !url.search && request.headers.get("accept")?.includes("text/html"))
+          if (webLanding)
             return new Response(null, { status: 303, headers: { ...headers, Location: "/" } })
           if (request.method === "HEAD") return new Response(null, { status: 409, headers })
           if (!request.headers.get("accept")?.includes("text/html")) return Response.json(access, { status: 409, headers })

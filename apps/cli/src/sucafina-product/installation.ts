@@ -158,6 +158,11 @@ export async function loadSfInstallation(
           })
           response.headers.set("Cache-Control", "no-store")
           response.headers.set("X-Content-Type-Options", "nosniff")
+          const policy = response.headers.get("Content-Security-Policy")
+          if (policy) {
+            response.headers.set("Content-Security-Policy", policy + "; frame-ancestors 'self'")
+            response.headers.set("Referrer-Policy", "no-referrer")
+          }
           return HttpServerResponse.fromWeb(response)
         })
       }
