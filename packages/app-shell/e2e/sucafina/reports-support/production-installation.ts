@@ -15,8 +15,8 @@ export type ReportsInstallation = {
   actorId: string
   dashboardURL: string
   workbenchURL: string
-  /** Runs only the named Reports-owned Bun setup entry, with this private config. */
-  setup: (operation: string, args?: readonly string[]) => Promise<string>
+  /** Runs only the named setup entry with this private config and an optional shorter process deadline. */
+  setup: (operation: string, args?: readonly string[], options?: { timeoutMs?: number }) => Promise<string>
   /** Redeems a new, real, single-use operator enrollment without tracing its code. */
   signIn: (page: Page) => Promise<void>
   /** Bounded, allowlisted CLI transport errors; contains no raw stdout/stderr. */
@@ -99,9 +99,11 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
       killSignal: "SIGTERM",
       forceKillAfter: "5 seconds",
     })
-    const run = (args: readonly string[]) => track(async () => {
+    const run = (args: readonly string[], timeoutMs = input.startupTimeoutMs) => track(async () => {
+      if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > input.startupTimeoutMs)
+        throw new Error("Reports setup requires a valid process deadline")
       const result = await Effect.runPromise(launcher.run(command(args), {
-        timeout: input.startupTimeoutMs,
+        timeout: timeoutMs,
         maxOutputBytes: 64 * 1024,
         maxErrorBytes: 64 * 1024,
         signal: lifetime.signal,
@@ -123,7 +125,8 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
         actorId: `macos:${profile.localOperator.installationId}:${profile.localOperator.uid}`,
         dashboardURL: `${profile.origin}${profile.mount}/dashboard`,
         workbenchURL: `${profile.origin}${profile.mount}/dashboard?sf=workbench`,
-        setup: (operation: string, args: readonly string[] = []) => run(["run", entry, operation, config, ...args]),
+        setup: (operation: string, args: readonly string[] = [], options?: { timeoutMs?: number }) =>
+          run(["run", entry, operation, config, ...args], options?.timeoutMs),
       }
       yield* Effect.promise(() => track(() => input.initialize(installation)))
 

@@ -59,13 +59,16 @@ export function createSfDecisionBaselineServices(input: {
 }
 
 /** Snapshot callbacks consume an actor authenticated earlier by this same installation. */
-export function createSfDecisionPlannerActors(authority: ReturnType<typeof createSfProductAuthority>) {
-  const captured = new WeakMap<TrustedDomainContext, { actor: Actor; roles: string; access: string; binding: string; expires: number }>()
+export function createSfDecisionPlannerActors(authority: ReturnType<typeof createSfProductAuthority>, options?: {
+  requestIsCurrent: (call: TrustedDomainContext) => boolean
+}) {
+  const captured = new WeakMap<TrustedDomainContext, { actor: Actor; roles: string; access: string; binding: string; request: Request; expires: number }>()
   const host = authority.host
+  const requestIsCurrent = options?.requestIsCurrent
   return {
     capture: async (call: TrustedDomainContext) => {
       const request = host.requestFor(call)
-      if (!request || !await host.revalidate(call)) return false
+      if (!request || requestIsCurrent && !requestIsCurrent(call) || !await host.revalidate(call)) return false
       const binding = digestSfValue([call.kind, call.binding])
       const value = await host.persistence.transaction("planner", async (snapshot) => {
         const principal = await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
@@ -77,15 +80,23 @@ export function createSfDecisionPlannerActors(authority: ReturnType<typeof creat
         if (!roles.length) return { commit: false, value: undefined }
         const actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"),
           assigned: Array.isArray(access.assigned) ? access.assigned as string[] : [], domains: Array.isArray(access.domains) ? access.domains as string[] : [] }
-        return { commit: false, value: { actor, roles: digestSfValue(roleMap(snapshot, "planner")), access: digestSfValue(object(snapshot.data.access)[principal.id]), binding, expires: Date.now() + 30_000 } }
+        return { commit: false, value: { actor, roles: digestSfValue(roleMap(snapshot, "planner")), access: digestSfValue(object(snapshot.data.access)[principal.id]), binding, request, expires: Date.now() + 30_000 } }
       }, { signal: request.signal })
-      if (!value || binding !== digestSfValue([call.kind, call.binding]) || !await host.revalidate(call)) return false
+      if (!value || binding !== digestSfValue([call.kind, call.binding]) || !await host.revalidate(call) ||
+          requestIsCurrent && (host.requestFor(call) !== request || request.signal.aborted || !requestIsCurrent(call))) return false
       captured.set(call, value)
       return true
     },
     locked: (snapshot: Snapshot, call: TrustedDomainContext) => {
       const value = captured.get(call)
-      return value && value.expires > Date.now() && value.binding === digestSfValue([call.kind, call.binding]) && value.roles === digestSfValue(roleMap(snapshot, "planner")) &&
+      if (!value) return undefined
+      // The CurrentChoice fence reauthenticates every locked snapshot, including
+      // the commit:false recapture. Expiring the old witness inside that read
+      // would prevent a live request from ever publishing its refreshed witness.
+      const current = requestIsCurrent
+        ? host.requestFor(call) === value.request && !value.request.signal.aborted && requestIsCurrent(call)
+        : value.expires > Date.now()
+      return current && value.binding === digestSfValue([call.kind, call.binding]) && value.roles === digestSfValue(roleMap(snapshot, "planner")) &&
         value.access === digestSfValue(object(snapshot.data.access)[value.actor.id]) ? structuredClone(value.actor) : undefined
     },
     release: (call: TrustedDomainContext) => { captured.delete(call) },

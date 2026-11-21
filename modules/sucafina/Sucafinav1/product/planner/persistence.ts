@@ -4,7 +4,7 @@ import type { ScenarioComparison, ScenarioResult } from "../contracts/decisions.
 import type { ScenarioCompareRequest, ScenarioRequest } from "../contracts/operations.ts"
 import type { PlannerPort, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
+import type { createSfDecisionResultStore, StoredDecisionResult } from "../decisions/result-store.ts"
 import type { createCriterionComparisonBindings } from "../decisions/criterion-comparison.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { PlannerScenarioHost } from "./scenario-comparison-port.ts"
@@ -14,6 +14,7 @@ import { plannerScenarioDigest } from "./preview-comparison.ts"
 type CaseRef = { id: string; incarnation: string; version: number }
 type Input = { kind: "scenario"; request: ScenarioRequest; result: ScenarioResult } | { kind: "comparison"; request: ScenarioCompareRequest; result: ScenarioComparison }
 type Replay = Partial<Pick<PlannerPort, "simulateScenario" | "compareScenarios">>
+type ObserveScenarioWrite = (stored: Extract<StoredDecisionResult, { kind: "scenario" }>) => void
 
 /** Persist produced outputs only under a host-authorized, current case. */
 export function createPlannerResultPersistence(input: {
@@ -23,7 +24,8 @@ export function createPlannerResultPersistence(input: {
   replay?: Replay
   resolveCase: (context: TrustedDomainContext) => Promise<PortResult<CaseRef>>
 }) {
-  const persist = async (incoming: Input, callId: string, context: TrustedDomainContext, replay = input.replay): Promise<PortResult<{ resultRef: string }>> => {
+  const persist = async (incoming: Input, callId: string, context: TrustedDomainContext, replay = input.replay,
+    observeScenario?: ObserveScenarioWrite): Promise<PortResult<{ resultRef: string }>> => {
     const value = structuredClone(incoming)
     if (!callId.trim()) return { status: "denied", reason: "missing-call-identity" }
     const operation = value.kind === "scenario" ? "sf_scenario_simulate" : "sf_scenario_compare"
@@ -34,13 +36,15 @@ export function createPlannerResultPersistence(input: {
     if (value.kind === "scenario") {
       const simulate = replay?.simulateScenario
       if (!simulate) return { status: "unavailable", reason: "scenario-replay-unavailable" }
+      const selectedDigest = digestSfValue(selected.value)
+      const expectedScenario = plannerScenarioDigest(value.result)
       const validate = async (): Promise<PortResult<true>> => {
         const current = structuredClone(await simulate(structuredClone(value.request), context))
         if (current.status !== "ok") return current
-        if (plannerScenarioDigest(current.value) !== plannerScenarioDigest(value.result)) return { status: "stale", reason: "scenario-replay-changed" }
+        if (plannerScenarioDigest(current.value) !== expectedScenario) return { status: "stale", reason: "scenario-replay-changed" }
         const latestCase = await input.resolveCase(context)
         if (latestCase.status !== "ok") return latestCase
-        if (digestSfValue(latestCase.value) !== digestSfValue(selected.value)) return { status: "stale", reason: "scenario-case-changed" }
+        if (digestSfValue(latestCase.value) !== selectedDigest) return { status: "stale", reason: "scenario-case-changed" }
         return { status: "ok", value: true }
       }
       const current = await validate()
@@ -51,6 +55,7 @@ export function createPlannerResultPersistence(input: {
       if (saved.status !== "ok") return saved
       const latest = await validate()
       if (latest.status !== "ok") return latest
+      if (saved.value.kind === "scenario") observeScenario?.(saved.value)
       return { status: "ok", value: { resultRef: saved.value.resultRef } }
     }
     const scenarios = input.scenarios
@@ -108,8 +113,9 @@ export function createPlannerResultPersistence(input: {
     }
     return { status: "ok", value: { resultRef: saved.value.resultRef } }
   }
-  return async (incoming: Input, callId: string, context: TrustedDomainContext, replay?: Replay): Promise<PortResult<{ resultRef: string }>> => {
-    try { return await persist(incoming, callId, context, replay ?? input.replay) }
+  return async (incoming: Input, callId: string, context: TrustedDomainContext, replay?: Replay,
+    observeScenario?: ObserveScenarioWrite): Promise<PortResult<{ resultRef: string }>> => {
+    try { return await persist(incoming, callId, context, replay ?? input.replay, observeScenario) }
     catch { return { status: "unavailable", reason: "planner-result-persistence-unavailable" } }
   }
 }

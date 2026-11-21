@@ -20,6 +20,16 @@ type AuthorityDataReader = <S extends Surface>(surfaces: readonly S[]) => Readon
 // Only openLocalStore can register its own closed reader. This is neither an
 // adapter capability nor an authorization cache; unknown owners stay legacy.
 const readonlyAuthorityReaders = new WeakMap<object, AuthorityDataReader>()
+type LocalSnapshotStability = Readonly<{
+  mutable?: { surface: Surface; snapshot: Snapshot }
+  current: () => boolean
+}>
+const snapshotStabilityReaders = new WeakMap<object, () => LocalSnapshotStability | undefined>()
+
+/** Attest which snapshots cannot change inside the same live LocalStore root. */
+export function observeLocalSnapshotStability(owner: object): LocalSnapshotStability | undefined {
+  return snapshotStabilityReaders.get(owner)?.()
+}
 const snapshotReadPairs = new WeakMap<object, { single: object; present: () => boolean }>()
 
 /** Both detached readers must come from the same LocalStore. */
@@ -213,7 +223,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     return identity
   }
   type ReadScope = {
-    root: { identity: object; db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: SnapshotCopies; aclCopies?: AclCopies; bytesIdentity?: object; preimage?: { surface: Surface; current: () => boolean; snapshot: () => Snapshot }; poisoned: boolean; readers: number; readOnly?: true }
+    root: { identity: object; db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: SnapshotCopies; aclCopies?: AclCopies; bytesIdentity?: object; preimage?: { surface: Surface; current: () => boolean; snapshot: () => Snapshot }; poisoned: boolean; readers: number; readOnly?: true; mutableSurface?: Surface }
     parent?: ReadScope
     open: boolean
     signal?: AbortSignal
@@ -627,7 +637,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           generations.set(key, generation)
           snapshot.sfBlobGenerations = Object.fromEntries(generations)
         }
-        const scope: ReadScope = { root: { identity: {}, db, snapshots, copies, aclCopies, bytesIdentity: snapshotBytesIdentity(byteKeys), ...(currentPreimage && preimage ? { preimage: { surface, current: currentPreimage, snapshot: preimage } } : {}), poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
+        const scope: ReadScope = { root: { identity: {}, db, snapshots, copies, aclCopies, bytesIdentity: snapshotBytesIdentity(byteKeys), mutableSurface: surface, ...(currentPreimage && preimage ? { preimage: { surface, current: currentPreimage, snapshot: preimage } } : {}), poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
         const requireOpen = () => {
           requireScope(scope)
           if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
@@ -838,6 +848,26 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       const descriptor = Object.getOwnPropertyDescriptor(store, name)
       return descriptor && Object.hasOwn(descriptor, "value") && descriptor.value === original[index]
     })
+  snapshotStabilityReaders.set(store, () => {
+    const scope = context.getStore()
+    if (!scope) return undefined
+    requireScope(scope)
+    const root = scope.root
+    const mutable = Object.hasOwn(root, "mutableSurface") ? root.mutableSurface : undefined
+    const readonly = Object.hasOwn(root, "readOnly") && root.readOnly === true
+    // transactionAll exposes all surfaces, and a target preimage may switch
+    // the view of the owning callback. Keep both on the complete observation.
+    if (!(readonly || mutable) || root.poisoned || Object.hasOwn(root, "preimage") || !sameStore() || !snapshotDecoderCurrent()) return undefined
+    if (!root.snapshots.dashboard || !root.snapshots.planner || !root.snapshots.procurement)
+      throw new Error("Local transaction snapshots unavailable")
+    const current = () => {
+      if (context.getStore() !== scope || scope.root !== root || root.poisoned || Object.hasOwn(root, "preimage") ||
+          !sameStore() || !snapshotDecoderCurrent()) return false
+      requireScope(scope)
+      return true
+    }
+    return Object.freeze({ current, ...(mutable ? { mutable: { surface: mutable, snapshot: copyCurrentSnapshot(scope, mutable) } } : {}) })
+  })
   readonlyAuthorityReaders.set(store, <S extends Surface>(surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined => {
     const scope = context.getStore()
     if (!scope) return undefined

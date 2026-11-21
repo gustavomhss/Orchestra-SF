@@ -57,16 +57,16 @@ export function plannerSourceActor(snapshot: Snapshot, principal: Awaited<Return
   return { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((x): x is string => typeof x === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((x): x is string => typeof x === "string") : [] }
 }
 
-export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; evidence?: BusinessContextService; sensitivity?: PlannerPort["evaluateSensitivity"] }): PlannerPort {
+export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; evidence?: BusinessContextService; sensitivity?: PlannerPort["evaluateSensitivity"] }): PlannerPort {
   return {
     compareForecast: (request, binding) => compareForecast(input, request, binding),
-    simulateScenario: (request, binding) => simulateScenario({ ...input, inputs: input.scenarioInputs, compare: (request, binding) => compareForecast(input, request, binding), project: projectPlannerSource, qualify: buildPlannerFinancialProjection }, request, binding),
+    simulateScenario: (request, binding) => simulateScenario({ ...input, inputs: input.scenarioInputs, compare: (request, binding, expected) => compareForecast(input, request, binding, expected), project: projectPlannerSource, qualify: buildPlannerFinancialProjection }, request, binding),
     compareScenarios: (request, binding) => input.scenarios ? compareScenarios({ ...input, scenarios: input.scenarios }, request, binding) : Promise.resolve({ status: "unavailable", reason: "scenario-comparison-not-connected" }),
     evaluateSensitivity: input.sensitivity ?? (async () => ({ status: "unavailable", reason: "sensitivity-not-connected" })),
   }
 }
 
-async function compareForecast(input: { host: DomainPortHost; sources: PlannerSourceHost }, incoming: ForecastCompareRequest, binding: TrustedDomainContext): Promise<PortResult<FinancialAnalysis>> {
+async function compareForecast(input: { host: DomainPortHost; sources: PlannerSourceHost }, incoming: ForecastCompareRequest, binding: TrustedDomainContext, expected?: { source: string; coverage: string }): Promise<PortResult<FinancialAnalysis>> {
   const parsed = decodeSfOperationInput("sf_forecast_compare", incoming)
   if (!parsed.ok) return { status: "needs-input", reason: "invalid-forecast-input" }
   const request = parsed.value
@@ -90,12 +90,14 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   const source = await readPair((reference) => input.sources.resolveForecastSource(reference, binding))
   const failure = source.find((result) => result.status !== "ok")
   if (failure) return failure
+  if (expected && (!sameSource || digestSfValue(source[0]) !== expected.source)) return { status: "stale", reason: "source-changed" }
   if (source[0].status !== "ok" || source[1].status !== "ok") return { status: "unavailable", reason: "source-unavailable" }
   const selected = structuredClone([source[0].value, source[1].value])
   const evidence = selected.map((entry) => entry.evidence)
   if (evidence.some((ref, index) => ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== binding.binding.installationId || ref.projectId !== binding.binding.projectId || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || ref.target.recordId !== selected[index].versionId || !ref.target.period || ref.target.period.start > request.period.start || ref.target.period.end < request.period.end))
     return { status: "denied", reason: "source-scope-mismatch" }
   const coverage = await readPair((reference) => input.sources.resolveForecastCoverage(reference, binding))
+  if (expected && digestSfValue(coverage[0]) !== expected.coverage) return { status: "stale", reason: "coverage-changed" }
   const coverageFailure = coverage.find((entry) => entry.status !== "ok" && entry.status !== "unavailable" && entry.status !== "needs-input")
   if (coverageFailure && coverageFailure.status !== "ok") return coverageFailure
   const read = async () => input.host.persistence.transaction("planner", async (snapshot) => {
@@ -127,9 +129,9 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   const latest = await read()
   if (!(await input.host.revalidate(binding)) || !latest || latest.some((projection, index) => !projection || digestSfValue({ versionId: evidence[index].target.recordId, projection }) !== evidence[index].target.projectionDigest)) return { status: "stale", reason: "source-or-authority-changed" }
   const refreshed = await readPair((reference) => input.sources.resolveForecastSource(reference, binding))
-  if (!(await input.host.revalidate(binding)) || refreshed.some((entry, index) => entry.status !== "ok" || entry.value.evidence.refDigest !== evidence[index].refDigest)) return { status: "stale", reason: "source-revoked-or-replaced" }
+  if (!(await input.host.revalidate(binding)) || expected && digestSfValue(refreshed[0]) !== expected.source || refreshed.some((entry, index) => entry.status !== "ok" || entry.value.evidence.refDigest !== evidence[index].refDigest)) return { status: "stale", reason: "source-revoked-or-replaced" }
   const latestCoverage = await readPair((reference) => input.sources.resolveForecastCoverage(reference, binding))
-  if (!(await input.host.revalidate(binding)) || latestCoverage.some((entry, index) => digestSfValue(entry) !== digestSfValue(coverage[index]))) return { status: "stale", reason: "coverage-or-authority-changed" }
+  if (!(await input.host.revalidate(binding)) || expected && digestSfValue(latestCoverage[0]) !== expected.coverage || latestCoverage.some((entry, index) => digestSfValue(entry) !== digestSfValue(coverage[index]))) return { status: "stale", reason: "coverage-or-authority-changed" }
   const common = { analysisBasis: "domain" as const, domainApplied: true, baseline: base, candidate, sourceRefs: evidence, gaps }
   if (complete && difference !== null) {
     const comparison = { baselineResultRef: request.baseRef, alternativeResultRef: request.candidateRef, costCoverageRefs: refs, criterionResults: [], unresolvedConditions: [], comparisonStatus: "complete" as const, knownDifference: difference, completeDifference: difference }
