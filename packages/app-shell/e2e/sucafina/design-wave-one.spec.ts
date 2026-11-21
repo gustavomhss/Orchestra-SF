@@ -355,15 +355,17 @@ designTest("installed native first-wave design · real operator, source data, re
   await editor.getByRole("button", { name: "Discard draft", exact: true }).click()
   await expect(editor.getByLabel("Total IT users", { exact: true })).toHaveValue("128")
   expect([...sourceOrigins]).toEqual([installation.origin])
-  // A fresh Portuguese browser context reuses only the actual issued session
-  // cookies and the app's documented persisted language preference (br).
+  // The original operator cookie is scoped to /sucafina, not the origin root.
+  // Preserve the actual issued cookie and its policy when changing locale.
+  const localizedCookies = await page.context().cookies(installation.origin + installation.mount)
+  expect(localizedCookies.filter((cookie) => /^sucafina_operator_[a-f0-9]{24}$/.test(cookie.name)).length).toBe(1)
   // No producer data, response or authorization is fabricated.
   const portuguese = await browser.newContext({
     locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
     reducedMotion: "reduce", colorScheme: "dark",
     httpCredentials: { username: "orchestra", password: installation.serverPassword },
     storageState: {
-      cookies: await page.context().cookies(installation.origin),
+      cookies: localizedCookies,
       origins: [{
         origin: installation.origin,
         localStorage: [{ name: "orchestra.global.dat:language", value: JSON.stringify({ locale: "br" }) }],
