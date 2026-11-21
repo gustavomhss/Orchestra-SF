@@ -228,8 +228,19 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
     queueMicrotask(() => {
       const active = activeId()
       const cell = active && focusTarget?.ownerDocument.getElementById(active)
-      if (cell && focusTarget?.contains(cell))
-        cell.scrollIntoView({ block: "nearest", inline: "nearest" })
+      if (!cell || !focusTarget?.contains(cell) || !scroller) return
+      // Reserve the real sticky boundaries, including any per-column offsets,
+      // so a visible month cannot land underneath its row or column headers.
+      const metadata = cell.parentElement?.querySelectorAll<HTMLElement>(".sf-s02-meta") ?? []
+      const header = focusTarget.querySelector<HTMLElement>(".sf-s02-header")
+      const bounds = scroller.getBoundingClientRect()
+      const rtl = focusTarget.ownerDocument.defaultView?.getComputedStyle(scroller).direction === "rtl"
+      scroller.style.scrollPaddingInlineStart = Math.max(0, ...Array.from(metadata, (item) => {
+        const edge = item.getBoundingClientRect()
+        return rtl ? bounds.right - edge.left : edge.right - bounds.left
+      })) + "px"
+      scroller.style.scrollPaddingBlockStart = (header?.getBoundingClientRect().height ?? 0) + "px"
+      cell.scrollIntoView({ block: "nearest", inline: "nearest" })
     })
   }
 
