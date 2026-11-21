@@ -222,7 +222,7 @@ jobs:
             TMPDIR="$config/host-tmp" ORCHESTRA_CONFIG_DIR="$config/host-config" \
             ORCHESTRA_CREDENTIAL_KEY_FILE="$config/host-credential.key" ORCHESTRA_DB="$config/host-data/orchestra.db" \
             ORCHESTRA_INHERIT_CREDENTIALS=0 ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict \
-            SUCAFINA_MICROSOFT_CONFIG="$config/installation.json" \
+            SUCAFINA_NATIVE_TEAM_WEB=1 SUCAFINA_MICROSOFT_CONFIG="$config/installation.json" \
             "$installed/orchestra" serve --hostname 127.0.0.1 --port "$CI_PORT" --installation "$installed/local/entry.mjs" \
             >"$CI_RUNTIME/server.log" 2>&1 &
           server=$!
@@ -251,7 +251,7 @@ jobs:
             TMPDIR="$config/host-tmp" ORCHESTRA_CONFIG_DIR="$config/host-config" \
             ORCHESTRA_CREDENTIAL_KEY_FILE="$config/host-credential.key" ORCHESTRA_DB="$config/host-data/orchestra.db" \
             ORCHESTRA_INHERIT_CREDENTIALS=0 ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict \
-            SUCAFINA_MICROSOFT_CONFIG="$config/installation.json" SF_PROOF_FACTORY="$installed/local/entry.mjs" \
+            SUCAFINA_NATIVE_TEAM_WEB=1 SUCAFINA_MICROSOFT_CONFIG="$config/installation.json" SF_PROOF_FACTORY="$installed/local/entry.mjs" \
             "$installed/orchestra" serve --hostname 127.0.0.1 --port "$CI_PORT" \
             --installation "$RUNNER_TEMP/azure-entra-proof/entra-native-provider.mjs" >"$CI_RUNTIME/auth-server.log" 2>&1 &
           server=$!

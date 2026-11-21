@@ -26,7 +26,7 @@ function request(path, { cookie, withProof = true, accept = "text/html" } = {}) 
 }
 
 async function signIn(identity) {
-  const start = await request(mount + "/auth/login")
+  const start = await request(mount + "/auth/login?returnTo=%2F")
   assert.equal(start.status, 303, "login start")
   const authority = new URL(start.headers.get("location"))
   assert.equal(authority.origin, "https://login.microsoftonline.com")
@@ -40,6 +40,7 @@ async function signIn(identity) {
   const params = new URLSearchParams({ code: [identity, nonce, challenge].join("."), state })
   const finish = await request(mount + "/auth/callback?" + params, { cookie: login.split(";")[0] })
   assert.equal(finish.status, 303, "signed callback")
+  assert.equal(new URL(finish.headers.get("location"), origin).href, origin + "/", "callback returns to native Web root")
   const session = finish.headers.getSetCookie().find((value) => value.includes("_session="))
   assert(session?.includes("; Secure") && session.includes("; HttpOnly"))
   return session.split(";")[0]
@@ -92,6 +93,7 @@ const query = new URLSearchParams({
   teamObjectId: team,
 })
 const context = mount + "/api/ui/context?" + query
+assert.equal((await request(context, { accept: "application/json" })).status, 401, "native Team context requires login")
 const admitted = await request(context, { cookie: allowed, accept: "application/json" })
 assert.equal(admitted.status, 200, "eligible account reads the Team context")
 const admittedContext = await admitted.json()
@@ -103,7 +105,7 @@ assert(denied !== allowed, "isolated session cookies")
 assert.equal((await request(dashboard, { cookie: denied })).status, 403, "authenticated account with no Team")
 assert.equal((await request(expectedTeamRoute, { cookie: denied })).status, 403, "direct Team URL cannot bypass admission")
 const deniedContext = await request(context, { cookie: denied, accept: "application/json" })
-assert([200, 403].includes(deniedContext.status), "native Team context denies account")
+assert.equal(deniedContext.status, 403, "native Team context denies account")
 const deniedResult = await deniedContext.json()
 assert(deniedResult?.status === "denied" && Object.keys(deniedResult).length === 1, "no Team payload is returned")
 console.log("ENTRA_NATIVE_TEAM_DENIAL_OK: authenticated account received 403 on dashboard and direct Team URL")
