@@ -3,9 +3,36 @@ import { Effect } from "effect"
 import { eq } from "drizzle-orm"
 import { Board } from "@orchestra/schema/board"
 import { BoardIssueTable, BoardProjectTable, BoardQuestionTable } from "../../src/board/sql"
+import { Inbox } from "../../src/inbox"
 import { InboxDraftTable, InboxRowTable } from "../../src/inbox/sql"
 import { ProjectTable } from "../../src/project/sql"
 import { directory, fixture, location } from "./work-service-fixture"
+
+fixture("stored Inbox reads the installation without provider acquisition or legacy adoption", ({ inbox, db, calls }) =>
+  Effect.gen(function* () {
+    yield* inbox.connect({ source: "jira", token: "fixture-read", site: "https://example.atlassian.net", email: "owner@example.com" })
+    const stored = yield* inbox.upsert({
+      source: "mail", externalId: "stored", actor: "owner", snippet: "Pending", threadId: "stored", reply: true,
+    })
+    yield* db.insert(InboxRowTable).values({
+      owner: "legacy-owner",
+      source: "mail",
+      external_id: "unadopted",
+      list_id: "in_99",
+      actor: "owner",
+      snippet: "Unadopted",
+      thread_id: "unadopted",
+      reply: true,
+      open: true,
+    }).run()
+
+    const items = yield* Inbox.readStored(db)
+    expect(items.find((item) => item.id === stored.id)?.waiting).toBe(true)
+    expect(items.some((item) => item.externalId === "unadopted")).toBe(false)
+    expect(yield* db.select().from(InboxRowTable).where(eq(InboxRowTable.owner, "legacy-owner")).all()).toHaveLength(1)
+    expect(calls).toHaveLength(0)
+  }),
+)
 
 fixture(
   "Board owner requests project locally, reconcile resolution and never hand an owner decision back to Maestro",

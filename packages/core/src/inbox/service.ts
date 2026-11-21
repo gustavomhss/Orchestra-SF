@@ -699,6 +699,14 @@ export const layer = (
     }),
   )
 
+/** Reads the stored installation Inbox without adopting legacy rows or acquiring provider data. */
+export const readStored = Effect.fn("Inbox.readStored")(function* (db: Database.Interface["db"]) {
+  const saved = yield* load(db, installOwner, { adoptLegacy: false })
+  const people = yield* loadPeople(db)
+  const now = yield* Clock.currentTimeMillis
+  return open(people, saved).list(now)
+})
+
 export const node = makeLocationNode({
   service: Service,
   layer: layer(),
