@@ -22,6 +22,7 @@ export async function detachCompileSourceMaps(
   const changes: { start: number; end: number }[] = []
   const files = new Map<string, string>()
   const modules = []
+  const invalidMaps: string[] = []
   for (const [name, rows] of layout.modules) {
     requireMap(name.startsWith(namespace) && rows.length === 1)
     const row = rows[0]!
@@ -43,7 +44,15 @@ export async function detachCompileSourceMaps(
     requireMap(emitted !== undefined && !files.has(mapName))
     requireMap(protectedRanges.every((range) => map.start >= range.end || map.end <= range.start))
     const embedded = layout.graph.subarray(map.start, map.end)
-    const bound = verifyEmbeddedMap(embedded, emitted)
+    let bound: ReturnType<typeof verifyEmbeddedMap>
+    try {
+      bound = verifyEmbeddedMap(embedded, emitted)
+    } catch (cause) {
+      const error = cause instanceof Error && cause.message.startsWith("CLI_COMPILE_SOURCE_MAP_")
+        ? cause.message : "CLI_COMPILE_SOURCE_MAP_COULD_NOT_DECODE"
+      invalidMaps.push(`${mapName}: ${error}`)
+      continue
+    }
     files.set(mapName, bound.json)
     const embeddedOffset = layout.graphOffset + map.start
     modules.push({ ...code, status: "matched-compiler-map" as const, map: mapName,
@@ -56,6 +65,7 @@ export async function detachCompileSourceMaps(
       { start: layout.graphOffset + row + 16, end: layout.graphOffset + row + 24 },
     )
   }
+  if (invalidMaps.length) throw new Error(invalidMaps.sort().join("\n"))
   requireMap(files.size > 0 && maps.size === files.size)
   const stripped = Buffer.from(binary)
   let previousEnd = 0
@@ -136,8 +146,11 @@ function verifyEmbeddedMap(embedded: Buffer, emitted: Buffer) {
   const sources = embedded.readUInt32LE(0)
   const mappingStart = 8 + 16 * sources
   const mappingEnd = mappingStart + embedded.readUInt32LE(4)
-  requireMap(sources > 0 && sources === map.sources.length && sources === map.sourcesContent.length &&
+  requireMap(sources === map.sources.length && sources === map.sourcesContent.length &&
     mappingStart < mappingEnd && mappingEnd <= embedded.length)
+  // A synthetic split stub can have a map with no source positions, such as
+  // Bun's loader-generated stub for a dynamically imported Text module.
+  if (sources === 0) requireMap(map.mappings === "" && map.names.length === 0 && mappingEnd === embedded.length)
   const slice = (field: number) => {
     const start = embedded.readUInt32LE(field)
     const end = start + embedded.readUInt32LE(field + 4)
