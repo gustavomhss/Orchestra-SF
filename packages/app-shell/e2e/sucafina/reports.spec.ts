@@ -46,6 +46,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
     let submitted: Awaited<ReturnType<typeof submitHumanAnswer>>
     let confirmed: Awaited<ReturnType<typeof confirmSubmittedHumanAnswer>>
     let edited: Awaited<ReturnType<typeof editHumanAnswer>>
+    let recovered: Awaited<ReturnType<typeof editHumanAnswer>>
 
     reportsTest.beforeAll(async ({ browser }, info) => {
       info.setTimeout(180_000)
@@ -127,14 +128,19 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
       }, null, 2), contentType: "application/json" })
     })
 
-    reportsTest("RPT-02e recovers a lost edit receipt and reads the previous versions after reload", async ({}, info) => {
+    reportsTest("RPT-02e recovers a lost edit receipt with the original intent", async ({}, info) => {
       const { app, page } = journey
       const { api, answer } = confirmed
-      const recovered = await reportsTest.step("Recover a committed edit after its response is lost, using only the exact original intent", () =>
+      recovered = await reportsTest.step("Recover a committed edit after its response is lost, using only the exact original intent", () =>
         editHumanAnswer(page, app, api, { ...answer, message: edited },
           "Second explicit human edit retained through response loss. REPORTS_HUMAN_EDIT_LOST_RESPONSE", { loseResponse: true, info }))
       expect(recovered.incarnation).toBe(answer.message.incarnation)
       expect(recovered.version).toBe(answer.message.version + 2)
+    })
+
+    reportsTest("RPT-02f reopens the edited answer and reads both previous versions", async () => {
+      const { app, page } = journey
+      const { api, answer } = confirmed
       const beforeReopen = await api.version()
       const threadRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
       const reviewRead = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))

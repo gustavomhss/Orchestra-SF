@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test"
-import type { APIRequestContext } from "@playwright/test"
+import type { APIRequestContext, Page } from "@playwright/test"
+import { responseFor } from "./model.ts"
 
 type ObjectValue = Record<string, unknown>
 export type ReviewPin = { reviewRef: string; reviewVersion: number; reviewDigest: string; sectionId: string }
@@ -168,7 +169,22 @@ export async function expectReusedReviewAnswer(api: ReportsCollaboration, answer
   return reused
 }
 
-export async function expectEditedReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer, input: { body: string }, edited: unknown) {
+/** Observe the installed view's genuine read after its edit receipt. */
+export function watchEditRefresh(page: Page, mount: string, questionId: string) {
+  const matches = responseFor(mount, "collaboration-answer-read", "POST")
+  const pending = page.waitForResponse((response) => matches(response) && object(response.request().postDataJSON()).questionId === questionId)
+  void pending.catch(() => undefined)
+  return async () => {
+    const response = await pending
+    expect(response.status()).toBe(503)
+    expect(response.headers()["cache-control"]).toContain("no-store")
+    const body = object(await response.json())
+    expect(body).toEqual({ status: "unavailable", reason: "answer-reuse-unavailable" })
+    return { httpStatus: response.status(), body }
+  }
+}
+
+export async function expectEditedReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer, input: { body: string }, edited: unknown, observedReuse?: { httpStatus: number; body: unknown }) {
   expect(edited).toEqual({ id: answer.questionId, messageId: answer.message.id, version: answer.message.version + 1 })
   const current = await api.thread(answer.questionId)
   const matches = array(current.messages).map(message).filter((entry) => entry.id === answer.message.id)
@@ -182,7 +198,7 @@ export async function expectEditedReviewAnswer(api: ReportsCollaboration, answer
     questionId: answer.questionId, messageId: answer.message.id, incarnation: answer.message.incarnation, version: answer.message.version,
   })
   expect(staleSelection).toEqual({ httpStatus: 409, body: { status: "stale", reason: "answer-selection-changed" } })
-  const staleReuse = await api.post("collaboration-answer-read", { questionId: answer.questionId })
+  const staleReuse = observedReuse ?? await api.post("collaboration-answer-read", { questionId: answer.questionId })
   expect(staleReuse).toEqual({ httpStatus: 503, body: { status: "unavailable", reason: "answer-reuse-unavailable" } })
   const historical = object(await api.ok("collaboration-thread-history", {
     id: answer.questionId, messageId: answer.message.id, incarnation: answer.message.incarnation, version: answer.message.version,

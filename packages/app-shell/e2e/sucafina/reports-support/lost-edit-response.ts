@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test"
 import type { Locator, Page, Request, Route, TestInfo } from "@playwright/test"
+import { watchEditRefresh } from "./confirmation.ts"
 import type { ReportsCollaboration, ReviewAnswer } from "./confirmation.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
 import { observeReviewTransport } from "./review-flow.ts"
@@ -84,6 +85,7 @@ export async function recoverLostEditResponse(input: {
     expect(writes, "A newer authorized version must never silently rebase and send the retained edit").toEqual([receipt.serialized])
     expect(await api.version()).toBe(input.expectedStorageVersion + 1)
 
+    const refresh = watchEditRefresh(page, app.dashboardURL, answer.questionId)
     const transport = observeReviewTransport(page, app, mode)
     const recovered = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
     void recovered.catch(() => undefined)
@@ -102,6 +104,7 @@ export async function recoverLostEditResponse(input: {
     const result = object(await response.json())
     expect(result.status).toBe("ok")
     expect(result.value).toEqual(receipt.value)
+    const observedReuse = await refresh()
     await expect(discussion.getByRole("status")).toHaveText("Answer edited. Its previous version remains protected history; review the new answer before confirming again.")
     await expect(editor).toHaveValue(input.body)
     expect(writes).toEqual([receipt.serialized, receipt.serialized])
@@ -117,7 +120,7 @@ export async function recoverLostEditResponse(input: {
         reconciliation: "current authorized thread read before explicit replay with original payload, key and expected versions",
       }, null, 2), contentType: "application/json",
     })
-    return { payload: receipt.payload, value: result.value }
+    return { payload: receipt.payload, value: result.value, observedReuse }
   } finally {
     page.off("request", record)
     await page.unroute(matches, drop)

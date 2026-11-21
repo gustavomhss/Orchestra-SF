@@ -156,12 +156,12 @@ export async function editHumanAnswer(page: Page, app: ReportsInstallation, api:
     ? await recoverFailedEditRequest({ page, app, api, discussion, article, answer, body, expectedStorageVersion: beforeEdit, info: recovery.info })
     : recovery && "loseResponse" in recovery
       ? await recoverLostEditResponse({ page, app, api, discussion, article, answer, body, expectedStorageVersion: beforeEdit, info: recovery.info })
-      : await submit(page, app, article.getByRole("button", { name: "Save answer edit", exact: true }), "collaboration-thread-edit")
+      : { ...await submit(page, app, article.getByRole("button", { name: "Save answer edit", exact: true }), "collaboration-thread-edit"), observedReuse: undefined }
   expect(edited.payload).toMatchObject({
     id: answer.questionId, messageId: answer.message.id, expectedVersion: answer.message.version, body,
   })
   expectMutation(edited.payload.mutation, beforeEdit)
-  const current = await expectEditedReviewAnswer(api, answer, { body }, edited.value)
+  const current = await expectEditedReviewAnswer(api, answer, { body }, edited.value, edited.observedReuse)
   await expect(discussion.getByRole("status")).toHaveText("Answer edited. Its previous version remains protected history; review the new answer before confirming again.")
   await expect(article).toContainText(body)
   const unavailable = discussion.getByRole("region", { name: "Confirmed answer", exact: true })

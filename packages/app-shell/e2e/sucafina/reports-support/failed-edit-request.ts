@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test"
 import type { Locator, Page, Request, Route, TestInfo } from "@playwright/test"
+import { watchEditRefresh } from "./confirmation.ts"
 import type { ReportsCollaboration, ReviewAnswer } from "./confirmation.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
 import { observeReviewTransport } from "./review-flow.ts"
@@ -78,6 +79,7 @@ export async function recoverFailedEditRequest(input: {
     expect(writes, "Reconciliation must not submit the retained edit").toEqual([attempt.serialized])
     expect(await api.version()).toBe(input.expectedStorageVersion)
 
+    const refresh = watchEditRefresh(page, app.dashboardURL, answer.questionId)
     const transport = observeReviewTransport(page, app, mode)
     const recovered = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
     void recovered.catch(() => undefined)
@@ -95,6 +97,7 @@ export async function recoverFailedEditRequest(input: {
     expect(await response.request().headerValue("idempotency-key")).toBe(attempt.key)
     const result = object(await response.json())
     expect(result.status).toBe("ok")
+    const observedReuse = await refresh()
     await expect(discussion.getByRole("status")).toHaveText("Answer edited. Its previous version remains protected history; review the new answer before confirming again.")
     await expect(editor).toHaveValue(input.body)
     expect(writes).toEqual([attempt.serialized, attempt.serialized])
@@ -113,7 +116,7 @@ export async function recoverFailedEditRequest(input: {
         reconciliation: "authorized thread reread before an explicit same-intent retry",
       }, null, 2), contentType: "application/json",
     })
-    return { payload: attempt.payload, value: result.value }
+    return { payload: attempt.payload, value: result.value, observedReuse }
   } finally {
     page.off("request", record)
     await page.unroute(matches, drop)
