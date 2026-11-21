@@ -340,7 +340,7 @@ test("a store with a warm writer rolls back its staged writes if the SQLite file
     finally { checkpoint.close() }
     await link(file, original)
     await writeFile(replacement, "different database file", { mode: 0o600 })
-    await expect(store.transaction("dashboard", async (snapshot, blobs) => {
+    await expect(store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
       snapshot.data.marker = "staged"
       await blobs.put("document", bytes, "application/octet-stream")
       await rename(replacement, file)
