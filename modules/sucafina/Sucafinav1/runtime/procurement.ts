@@ -581,7 +581,9 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     if (step && text(saved.request.status).endsWith("_pending"))
       queueNotice(snapshot, {
         kind: "pending",
-        to: typeof step.holderId === "string" ? [step.holderId] : [],
+        to: typeof step.holderId === "string" &&
+          (environment.directoryScope !== "team" || environment.directory.some((person) => person.id === step.holderId))
+          ? [step.holderId] : [],
         record: actualId,
         at: environment.at,
       })
@@ -589,7 +591,9 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
       queueNotice(snapshot, {
         roles: ["buyer"],
         kind: command.action === "approve" ? "approved" : "rejected",
-        to: [...new Set([text(saved.request.createdBy), text(saved.request.buyerId)].filter(Boolean))],
+        to: [...new Set([text(saved.request.createdBy), text(saved.request.buyerId)].filter((id) =>
+          id && (environment.directoryScope !== "team" || environment.directory.some((person) => person.id === id)),
+        ))],
         record: actualId,
         at: environment.at,
       })
@@ -599,6 +603,8 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     value: visible ? (saved?.request ?? { deleted: was }) : undefined,
   }
 }
+const keepPreviousHolder = "keep-previous-holder"
+
 function settings(snapshot: Snapshot, store: Store, actor: Actor, command: Command, environment: Environment): Result {
   if (!has(actor, "admin")) return { ok: false, status: 403 }
   if (!["save", "reset"].includes(command.action)) return { ok: false, status: 400 }
@@ -618,11 +624,14 @@ function settings(snapshot: Snapshot, store: Store, actor: Actor, command: Comma
         .map((line) => line.trim())
         .filter(Boolean)
   }
+  const currentHolders = new Map(rows(store.settings.levels).map((level) => [text(level.id), text(level.holderId)]))
   const levels = rows(next.levels).map(
     (level): Record<string, unknown> => ({
       ...level,
       id: String(level.id ?? ""),
-      holderId: level.holderId == null || level.holderId === "" ? null : String(level.holderId),
+      holderId: environment.directoryScope === "team" && level.holderId === keepPreviousHolder
+        ? currentHolders.get(text(level.id)) || keepPreviousHolder
+        : level.holderId == null || level.holderId === "" ? null : String(level.holderId),
     }),
   )
   const fx = rows(next.fxRates)
@@ -645,6 +654,15 @@ function settings(snapshot: Snapshot, store: Store, actor: Actor, command: Comma
     new Set(fx.map((rate) => rate.code)).size !== fx.length
   )
     return { ok: false, status: 422, errors: ["Invalid matrix or currencies"] }
+  if (environment.directoryScope === "team") {
+    if (new Set(levels.map((level) => text(level.id))).size !== levels.length)
+      return { ok: false, status: 422, errors: ["Duplicate approval level"] }
+    if (levels.some((level) => {
+      const holderId = text(level.holderId)
+      return holderId && holderId !== currentHolders.get(text(level.id)) &&
+        !environment.directory.some((person) => person.id === holderId)
+    })) return { ok: false, status: 422, errors: ["Approval holder must belong to the Team"] }
+  }
   if (next.uploadCap != null && !(finite(next.uploadCap) > 0))
     return { ok: false, status: 422, errors: ["Upload cap must be positive"] }
   if (
@@ -852,6 +870,7 @@ export const domain: Domain = {
         suppliers,
         register,
         directory: environment.directory,
+        directoryScope: environment.directoryScope,
         formSettings: pick(store.settings, [
           "currency",
           "fxRates",
@@ -1105,15 +1124,18 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             "escalationDays",
           ]) +
           '</fieldset><fieldset class="form-section"><legend>Approval matrix</legend>' +
-          repeatRows("levels", rows(settings.levels), ["id", "name", "threshold"], (row, prefix) =>
-            selectField(`${prefix}.holderId`, "Approval holder", row.holderId, [
+          repeatRows("levels", rows(settings.levels), ["id", "name", "threshold"], (row, prefix) => {
+            const holder = text(row.holderId)
+            const unavailable = data.directoryScope === "team" && !!holder && !directory.some((person) => person.id === holder)
+            return selectField(`${prefix}.holderId`, "Approval holder", unavailable ? keepPreviousHolder : holder, [
               { value: "", label: "Unassigned" },
+              ...(unavailable ? [{ value: keepPreviousHolder, label: "Keep previous holder (unavailable)" }] : []),
               ...directory.map((person) => ({
                 value: String(person.id ?? ""),
                 label: text(person.name),
               })),
-            ]),
-          ) +
+            ])
+          }) +
           '</fieldset><fieldset class="form-section"><legend>Currencies</legend>' +
           repeatRows("fxRates", rows(settings.fxRates), ["code", "rate"]) +
           fields([{ name: "fxUpdated", label: "Rates last updated", type: "date", value: settings.fxUpdated }]) +

@@ -33,11 +33,13 @@ export function createTeamProfileAccess(input: {
     const selectedId = teamObjectId ?? (intent.kind === "team" ? intent.profile.teamObjectId : undefined)
     const selected = selectedId ? eligible.find((team) => team.teamObjectId === selectedId) :
       eligible.length === 1 ? eligible[0] : undefined
+    const readMembers = observation.readMembers
     if (selected && observation.verifyCurrent) return {
       status: "allowed",
       profile: { installationId, tenantId: input.tenantId, teamObjectId: selected.teamObjectId },
       principalObjectId: observed.principalObjectId,
       verifyCurrent: observation.verifyCurrent,
+      ...(readMembers ? { readMembers: () => readMembers(selected.teamObjectId) } : {}),
     } as const
     if (selectedId || eligible.length === 0) return { status: "denied" } as const
     if (eligible.length === 1) return { status: "unavailable" } as const

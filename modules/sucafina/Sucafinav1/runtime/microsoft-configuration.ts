@@ -14,6 +14,7 @@ export type MicrosoftConfiguration = LocalConfiguration & {
   tenantId: string
   clientId: string
   teams?: "direct"
+  teamDirectory?: "members"
   enabledTeamIds?: readonly string[]
   supremeAdminGroupId?: string
   /** Opaque grant envelopes for the product policy to validate. */
@@ -60,7 +61,7 @@ export async function loadMicrosoftIngressAuthorizer(directory: string) {
 }
 
 export function validateMicrosoftConfiguration(value: unknown): MicrosoftConfiguration {
-  if (!record(value) || value.version !== 1 || value.deployment !== "azure-https" || value.authentication !== "microsoft" || Object.keys(value).some((key) => !["version", "deployment", "authentication", "origin", "listenerOrigin", "ingressOrigin", "mount", "tenantId", "clientId", "teams", "enabledTeamIds", "supremeAdminGroupId", "groups", "grants", "workspaceDirectory", "scanner", "sessionSeconds", "loginSeconds"].includes(key))) throw new Error("Explicit Microsoft HTTPS configuration required")
+  if (!record(value) || value.version !== 1 || value.deployment !== "azure-https" || value.authentication !== "microsoft" || Object.keys(value).some((key) => !["version", "deployment", "authentication", "origin", "listenerOrigin", "ingressOrigin", "mount", "tenantId", "clientId", "teams", "teamDirectory", "enabledTeamIds", "supremeAdminGroupId", "groups", "grants", "workspaceDirectory", "scanner", "sessionSeconds", "loginSeconds"].includes(key))) throw new Error("Explicit Microsoft HTTPS configuration required")
   if (typeof value.origin !== "string" || !URL.canParse(value.origin)) throw new Error("Microsoft HTTPS public origin required")
   const origin = new URL(value.origin)
   if (origin.origin !== value.origin || origin.protocol !== "https:" || origin.port || isIP(origin.hostname) || origin.hostname.startsWith("[") || !origin.hostname.includes(".") || origin.hostname.endsWith(".") || origin.hostname.endsWith(".localhost") || origin.hostname.endsWith(".local") || origin.hostname.includes("..")) throw new Error("Microsoft HTTPS public origin required")
@@ -72,6 +73,8 @@ export function validateMicrosoftConfiguration(value: unknown): MicrosoftConfigu
   if (typeof value.mount !== "string" || !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(value.mount)) throw new Error("Invalid Microsoft mount")
   if (typeof value.tenantId !== "string" || !microsoftUuid.test(value.tenantId) || typeof value.clientId !== "string" || !microsoftUuid.test(value.clientId)) throw new Error("Microsoft resource tenant and client IDs required")
   if ("teams" in value && value.teams !== "direct") throw new Error("Invalid Microsoft Teams capability")
+  if ("teamDirectory" in value && (value.teamDirectory !== "members" || value.teams !== "direct"))
+    throw new Error("Microsoft Team directory requires direct Teams membership")
   const enabledTeamIds = value.enabledTeamIds === undefined ? undefined : validateEnabledTeamIds(value.enabledTeamIds, value.teams)
   if ("supremeAdminGroupId" in value && (typeof value.supremeAdminGroupId !== "string" || !microsoftUuid.test(value.supremeAdminGroupId))) throw new Error("Immutable Microsoft supreme administration group ID required")
   if (typeof value.workspaceDirectory !== "string" || !path.isAbsolute(value.workspaceDirectory) || path.resolve(value.workspaceDirectory) !== value.workspaceDirectory) throw new Error("Separate canonical Microsoft agent workspace required")
@@ -101,7 +104,7 @@ export function validateMicrosoftConfiguration(value: unknown): MicrosoftConfigu
     Object.freeze(groups[surface])
   }
   Object.freeze(groups)
-  return Object.freeze({ version: 1, deployment: "azure-https", authentication: "microsoft", origin: value.origin, listenerOrigin: value.listenerOrigin as string, ingressOrigin: value.ingressOrigin as string, mount: value.mount, tenantId: value.tenantId.toLowerCase(), clientId: value.clientId.toLowerCase(), ...(value.teams === "direct" ? { teams: value.teams, enabledTeamIds: enabledTeamIds ?? Object.freeze([]) } : {}), ...(typeof value.supremeAdminGroupId === "string" ? { supremeAdminGroupId: value.supremeAdminGroupId.toLowerCase() } : {}), groups, grants, workspaceDirectory: value.workspaceDirectory, scanner: value.scanner === null ? null : Object.freeze({ host: "127.0.0.1", port: (value.scanner as { port: number }).port }), sessionSeconds, loginSeconds })
+  return Object.freeze({ version: 1, deployment: "azure-https", authentication: "microsoft", origin: value.origin, listenerOrigin: value.listenerOrigin as string, ingressOrigin: value.ingressOrigin as string, mount: value.mount, tenantId: value.tenantId.toLowerCase(), clientId: value.clientId.toLowerCase(), ...(value.teams === "direct" ? { teams: value.teams, enabledTeamIds: enabledTeamIds ?? Object.freeze([]) } : {}), ...(value.teamDirectory === "members" ? { teamDirectory: value.teamDirectory } : {}), ...(typeof value.supremeAdminGroupId === "string" ? { supremeAdminGroupId: value.supremeAdminGroupId.toLowerCase() } : {}), groups, grants, workspaceDirectory: value.workspaceDirectory, scanner: value.scanner === null ? null : Object.freeze({ host: "127.0.0.1", port: (value.scanner as { port: number }).port }), sessionSeconds, loginSeconds })
 }
 
 function validateEnabledTeamIds(value: unknown, teams: unknown): readonly string[] {

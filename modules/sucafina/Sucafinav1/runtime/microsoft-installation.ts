@@ -25,7 +25,7 @@ export async function prepareMicrosoftInstallation(
   await bindMicrosoftInstallation(directory, config)
   const client = createEntraClient({
     tenantId: config.tenantId, clientId: config.clientId, profile: "web-confidential", clientSecret,
-    ...(config.teams === "direct" ? { teams: config.teams } : {}),
+    ...(config.teams === "direct" ? { teams: config.teams } : {}), teamDirectory: config.teamDirectory,
     fetch: overrides.fetch, now: overrides.now,
   })
   const transport: MicrosoftTransport = Object.freeze({

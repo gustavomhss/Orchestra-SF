@@ -45,6 +45,7 @@ async function fixture(options: {
   route?: (request: Request) => Response | Promise<Response | undefined> | undefined
   directoryLimit?: number
   teams?: EntraOptions["teams"]
+  teamDirectory?: EntraOptions["teamDirectory"]
   profile?: EntraOptions["profile"]
   clientSecret?: EntraOptions["clientSecret"]
   grantedScopes?: string
@@ -74,7 +75,7 @@ async function fixture(options: {
   }
   const client = createEntraClient({
     tenantId: fixtureTenant, clientId, now: () => new Date(epoch * 1000), fetch,
-    directoryLimit: options.directoryLimit, teams: options.teams, profile: options.profile, clientSecret: options.clientSecret,
+    directoryLimit: options.directoryLimit, teams: options.teams, teamDirectory: options.teamDirectory, profile: options.profile, clientSecret: options.clientSecret,
   })
   return { client, requests, signed }
 }
@@ -549,6 +550,108 @@ test("Teams consent must be observed on both initial and refreshed credentials",
   const refreshedCount = granted.requests.length
   expect(await granted.client.joinedTeams!(teamsInput(refreshed))).toEqual({ state: "unavailable", reason: "consent_required" })
   expect(granted.requests).toHaveLength(refreshedCount)
+})
+
+const membersEndpoint = `${graph}/teams/${teamA}/members`
+const membersUrl = `${membersEndpoint}?$select=userId,displayName,tenantId`
+const memberScope = "TeamMember.Read.All"
+const memberProfile = {
+  profile: "web-confidential",
+  clientSecret: async () => "synthetic-team-directory-secret",
+  claims: { sub: "signed-corporate-subject" },
+  teams: "direct",
+  teamDirectory: "members",
+  grantedScopes: `User.Read ${teamScope} ${memberScope}`,
+} as const
+const memberRow = (id = oid, tenantId = tenant) => ({
+  "@odata.type": "#microsoft.graph.aadUserConversationMember",
+  id: "opaque-membership-resource-id",
+  userId: id,
+  tenantId,
+  displayName: `Person ${id.slice(0, 4)}`,
+  email: "discarded@example.org",
+  roles: ["owner"],
+})
+
+test("Teams roster requests delegated consent only for the confidential direct Teams profile", async () => {
+  expect((await fixture({ ...memberProfile, teamDirectory: undefined })).client.teamMembers).toBeUndefined()
+  expect(() => createEntraClient({ tenantId: tenant, clientId, teams: "direct", teamDirectory: "members" })).toThrow("Invalid Team member directory capability")
+  expect(() => createEntraClient({ tenantId: tenant, clientId, ...memberProfile, teams: undefined })).toThrow("Invalid Team member directory capability")
+  const f = await fixture({ ...memberProfile, grantedScopes: teamScope })
+  const authorization = new URL(await f.client.authorization({ state: "state", nonce: input.nonce, challenge: "challenge", redirectUri }))
+  expect(authorization.searchParams.get("scope")?.split(" ")).toEqual(["openid", "profile", "offline_access", "User.Read", teamScope, memberScope])
+  const exchanged = await f.client.exchange(input)
+  const post = f.requests.find((request) => request.url === metadata.token_endpoint)
+  expect(new URLSearchParams(await post?.text()).get("scope")).toBe(authorization.searchParams.get("scope"))
+  const count = f.requests.length
+  expect(await failure(() => f.client.teamMembers!({ ...teamsInput(exchanged.tokens), teamObjectId: teamA }))).toContain("consent required")
+  expect(f.requests).toHaveLength(count)
+})
+
+test("Teams roster follows only the selected Team's pages and projects same-tenant user IDs and names", async () => {
+  const next = `${membersEndpoint}?%24select=userId%2CdisplayName%2CtenantId&%24skiptoken=opaque%2Bcursor`
+  const f = await fixture({ ...memberProfile, route: (request) => {
+    if (request.url === membersUrl) return Response.json({
+      value: [memberRow(), memberRow(oid, teamB), { "@odata.type": "#microsoft.graph.skypeUserConversationMember", displayName: "Excluded" }],
+      "@odata.count": 4,
+      "@odata.nextLink": next,
+    })
+    if (request.url === next) return Response.json({ value: [memberRow(other)] })
+  } })
+  const signed = await f.client.exchange(input)
+  const start = f.requests.length
+  expect(await f.client.teamMembers!({ ...teamsInput(signed.tokens), teamObjectId: teamA })).toEqual([
+    { id: oid, name: "Person 3333" },
+    { id: other, name: "Person 5555" },
+  ])
+  const meUrl = `${graph}/me?$select=id,displayName`
+  expect(f.requests.slice(start).map((request) => request.url)).toEqual([meUrl, membersUrl, next, meUrl])
+})
+
+for (const scenario of [
+  { name: "different Team", data: { "@odata.nextLink": `${graph}/teams/${teamB}/members?$skiptoken=2` } },
+  { name: "alternate path spelling", data: { "@odata.nextLink": `${graph}/teams/${teamA}/other/../members?$skiptoken=2` } },
+  { name: "foreign origin", data: { "@odata.nextLink": membersUrl.replace("graph.microsoft.com", "foreign.example") + "&$skiptoken=2" } },
+  { name: "duplicate cursor key", data: { "@odata.nextLink": `${membersEndpoint}?$skiptoken=2&%24skiptoken=3` } },
+  { name: "unsafe query", data: { "@odata.nextLink": `${membersEndpoint}?$skip=2&$expand=team` } },
+  { name: "altered projection", data: { "@odata.nextLink": `${membersEndpoint}?$skip=2&$select=email,roles` } },
+  { name: "missing tenant", data: { value: [memberRow(), { ...memberRow(other), tenantId: undefined }] } },
+  { name: "missing signed actor", data: { value: [memberRow(other)] } },
+  { name: "duplicate member", data: { value: [memberRow(), memberRow()] } },
+  { name: "excess total", data: { "@odata.count": 10001 } },
+  { name: "incomplete total", data: { "@odata.count": 2 } },
+]) {
+  test(`Teams roster rejects ${scenario.name} without releasing earlier names`, async () => {
+    const f = await fixture({ ...memberProfile, route: (request) =>
+      request.url === membersUrl ? Response.json({ value: [memberRow()], ...scenario.data }) : undefined })
+    const signed = await f.client.exchange(input)
+    const start = f.requests.length
+    await failure(() => f.client.teamMembers!({ ...teamsInput(signed.tokens), teamObjectId: teamA }))
+    expect(f.requests.slice(start).map((request) => new URL(request.url).pathname)).toEqual(["/v1.0/me", `/v1.0/teams/${teamA}/members`])
+  })
+}
+
+test("Teams roster detects equivalent cursor loops and fences changed /me", async () => {
+  const next = `${membersEndpoint}?$skiptoken=abc`
+  const looping = await fixture({ ...memberProfile, route: (request) => {
+    if (request.url === membersUrl) return Response.json({ value: [memberRow()], "@odata.nextLink": next })
+    if (request.url === next) return Response.json({ value: [], "@odata.nextLink": `${membersEndpoint}?%24skiptoken=%61bc` })
+  } })
+  const signed = await looping.client.exchange(input)
+  expect(await failure(() => looping.client.teamMembers!({ ...teamsInput(signed.tokens), teamObjectId: teamA }))).toContain("Cyclic")
+  expect(looping.requests.filter((request) => request.url.startsWith(membersEndpoint))).toHaveLength(2)
+
+  const meCalls = { count: 0 }
+  const changed = await fixture({ ...memberProfile, route: (request) => {
+    if (request.url === membersUrl) return Response.json({ value: [memberRow()] })
+    if (new URL(request.url).pathname === "/v1.0/me" && ++meCalls.count === 3) return Response.json({ id: other, displayName: "Different user" })
+  } })
+  const changedTokens = (await changed.client.exchange(input)).tokens
+  const start = changed.requests.length
+  await failure(() => changed.client.teamMembers!({ ...teamsInput(changedTokens), teamObjectId: teamA, principal: { tenantId: other, principalObjectId: oid } }))
+  await failure(() => changed.client.teamMembers!({ ...teamsInput({ ...changedTokens, expiresAt: epoch * 1000 }), teamObjectId: teamA }))
+  expect(changed.requests).toHaveLength(start)
+  expect(await failure(() => changed.client.teamMembers!({ ...teamsInput(changedTokens), teamObjectId: teamA }))).toContain("identity mismatch")
 })
 
 test("Teams rejects an expired credential or a foreign tenant before Graph and fences changed /me", async () => {
