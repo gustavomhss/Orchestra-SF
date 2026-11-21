@@ -4,17 +4,17 @@ import { hash, parseCanonicalJson } from "./team-profile-residue.mjs"
 export const original = Object.freeze({
   repository: "gustavomhss/Orchestra-SF",
   repositoryId: 1455724710,
-  sourceSHA: "0869f0467d7f89ae752c3cc2aa44c5f77c40d3e6",
-  sourceTreeSHA: "30b8140a9329b190b14d43757c7f4d6e0e92dc9f",
-  runId: 44911103813,
+  sourceSHA: "761abac2f8ee4106db0347189ff304a4a79bf026",
+  sourceTreeSHA: "77729b280763c07a82d55ad9de78a66fd53fc991",
+  runId: 44917163192,
   runAttempt: 1,
   workflowId: 417570814,
   workflowSHA: "a1109e8f42d0f15088679a4e2d48338e8a37186d",
-  artifactId: 14709069818,
-  containerDigest: "sha256:9d02f7b2147dead61cb3a1fec6e161b8cbf39b7515f8b2a6c7377ea8582a8f68",
+  artifactId: 14712293140,
+  containerDigest: "sha256:052cd62893000057ced6c4cfe6568d401c90920be5a75e8822de15c41f9282d1",
   tar: "orchestra-sf-entra-linux-x64-baseline.tar.gz",
-  tarSHA: "f6973ae1f18749aa93e776bec47eed36aca5e0144e51f4e033622bc094dd3c7e",
-  manifestSHA: "cafe594324c89cb0f0395850a7ae5ccd410ae1cfc358894ad11313ab2a24fb1f",
+  tarSHA: "11dd277f241fc222aeda1a7b49b749ac9c4557ff0478b6c6e7fa6fd1ba50f779",
+  manifestSHA: "32a2e3e98c2e9e477035348bb339c82a412ec4e893f73c1fa9c4e041e62cec22",
 })
 
 export function verifyProducer(run, artifact) {

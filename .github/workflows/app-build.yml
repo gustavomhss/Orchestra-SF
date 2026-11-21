@@ -1,5 +1,5 @@
 name: G09 historical package proof
-run-name: "G09 #581 · 44911103813"
+run-name: "G09 C17 Linux · 44917163192"
 
 on:
   workflow_dispatch:
@@ -14,14 +14,14 @@ permissions:
 
 jobs:
   g09:
-    if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/g09-581-proof'
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/g09-c17-proof'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
-      PACKAGE_SHA: 0869f0467d7f89ae752c3cc2aa44c5f77c40d3e6
+      PACKAGE_SHA: 761abac2f8ee4106db0347189ff304a4a79bf026
       PRODUCER_SHA: a1109e8f42d0f15088679a4e2d48338e8a37186d
-      ZIP_SHA: 9d02f7b2147dead61cb3a1fec6e161b8cbf39b7515f8b2a6c7377ea8582a8f68
-      TAR_SHA: f6973ae1f18749aa93e776bec47eed36aca5e0144e51f4e033622bc094dd3c7e
+      ZIP_SHA: 052cd62893000057ced6c4cfe6568d401c90920be5a75e8822de15c41f9282d1
+      TAR_SHA: 11dd277f241fc222aeda1a7b49b749ac9c4557ff0478b6c6e7fa6fd1ba50f779
     steps:
       - name: Check out G09 verifier
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
@@ -52,9 +52,9 @@ jobs:
           test "$(git -C auditor rev-parse HEAD)" = "$GITHUB_SHA"
           test "$(git -C candidate rev-parse HEAD)" = "$PACKAGE_SHA"
           test "$(git -C producer rev-parse HEAD)" = "$PRODUCER_SHA"
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs/44911103813" > "$out/producer-run.json"
-          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14709069818" > "$out/producer-artifact.json"
-          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14709069818/zip" > "$out/original.zip"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/44917163192" > "$out/producer-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14712293140" > "$out/producer-artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14712293140/zip" > "$out/original.zip"
           printf '%s  %s\n' "$ZIP_SHA" "$out/original.zip" | sha256sum --check
           for name in orchestra-sf-entra-linux-x64-baseline.tar.gz orchestra-sf-entra-package-receipt.json ci-validation.json; do
             unzip -p "$out/original.zip" "$name" > "$out/$name"
@@ -87,7 +87,7 @@ jobs:
           SF_PRODUCT_SOURCE_SHA="$GITHUB_SHA" SF_TEAMS_RESIDUE_COMMIT_FILE="$out/tool.commit" \
             SF_TEAMS_RESIDUE_TRACKED_FILE="$out/tool.tree" SF_TEAMS_RESIDUE_CONTROLS_FILE="$out/controls.json" \
             node --test script/sf-ci/team-profile-residue.test.mjs script/sf-ci/g09-581-package.test.mjs | tee "$out/controls.log"
-      - name: Audit the unmodified #581 bytes
+      - name: Audit the original Linux tar with C17
         env:
           G09_TRUST_JSON: ${{ vars.G09_TRUST_JSON }}
         shell: bash
@@ -96,7 +96,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: g09-581-evidence
+          name: g09-c17-evidence
           path: |
             ${{ runner.temp }}/g09/report.json
             ${{ runner.temp }}/g09/controls.json
