@@ -245,7 +245,7 @@ function equalDestinations(a: readonly Destination[], b: readonly Destination[])
 export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
   currentBinding: SfLiveContextSources["currentBinding"]
   readContext: (request: Request, expected: Binding) => Promise<SfContextResult>
-  readRequestContext: (request: Request, expected: Binding) => Promise<SfContextResult>
+  readRequestContext: (request: Request, expected: Binding, scope?: "authority") => Promise<SfContextResult>
   teamTenantId?: string
   readTeamContext: (request: Request, expected: SfTeamContextQuery) => Promise<SfTeamContextResult>
 }> {
@@ -254,7 +254,7 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
     throw new Error("SF_LIVE_CONTEXT_CONFIG_INVALID")
 
   const currentBinding = source.currentBinding
-  const read = async (request: Request, expected: Binding, internal: boolean): Promise<SfContextResult> => {
+  const read = async (request: Request, expected: Binding, internal: boolean, scope?: "authority"): Promise<SfContextResult> => {
     if (!internal && source.teams || !originalRequest(request, expected, source.origin, source.mount, internal)) return mismatch()
     const firstBinding = currentBinding()
     if (!firstBinding) return { status: "unavailable", reason: "identity-unavailable" }
@@ -277,7 +277,9 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
     if (!destinations) return mismatch()
 
     const readOperations = async (): Promise<ReadonlyMap<string, SfOperationAvailability> | undefined> => {
-      if (!source.operational) return operational([])
+      // Internal projections with their own resource authorization need an
+      // up-to-date authority stamp, independent of unrelated producer health.
+      if (scope === "authority" || !source.operational) return operational([])
       const actual = await source.operational(request, admittedStamp)
       if (request.signal.aborted || !stillCurrent()) return undefined
       // These two settings operations are local-operator UI69 producers. Mode
@@ -380,7 +382,7 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
   return Object.freeze({ currentBinding,
     ...(source.teams ? { teamTenantId: source.teams.tenantId } : {}),
     readContext: (request: Request, expected: Binding) => read(request, expected, false),
-    readRequestContext: (request: Request, expected: Binding) => read(request, expected, true),
+    readRequestContext: (request: Request, expected: Binding, scope?: "authority") => read(request, expected, true, scope),
     readTeamContext,
   })
 }

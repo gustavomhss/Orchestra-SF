@@ -4,6 +4,7 @@ import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import { object } from "../../runtime/contract.ts"
 import { consumeLocalTransactionAbort, observeLocalTransactionAbort } from "../../runtime/local-store.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
+import type { DecisionCase } from "../contracts/decisions.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { sfProductStateAdditiveFields } from "../contracts/state-layout.ts"
@@ -75,17 +76,24 @@ export async function appendSfTransactionAbort(input: {
 const namespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"] as const
 const storedNamespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "transactions"] as const
 
+type CaseOriginState = Pick<SfProductState, "transactions" | "versions" | "revision" | "incarnation">
+type CaseReadState = CaseOriginState & Pick<SfProductState, "cases">
+
 // Only selectors constructed here may project before cloning. This registry
 // retains code identity, never an observed case, snapshot or admitted authority.
 const caseReads = new WeakMap<object, {
   id: string
-  project: (cases: SfProductState["cases"], authority: SfStateAuthority) => unknown
+  project: (state: CaseReadState, authority: SfStateAuthority) => unknown
 }>()
 const readinessReads = new WeakMap<object, { namespace: SfStateNamespace; mode: "read" | "write"; select: (state: SfProductState, authority: SfStateAuthority) => { storageVersion: number; aggregateRevision: number; incarnation: string } | undefined }>()
 
 export function selectSfCase(id: string, context: TrustedDomainContext) {
-  const read = (state: Pick<SfProductState, "cases">, authority: SfStateAuthority) =>
-    authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[id] : undefined
+  const read = (state: CaseReadState, authority: SfStateAuthority) => {
+    if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion ||
+        authority.accessRevision !== context.binding.accessRevision) return undefined
+    const value = state.cases[id]
+    return value && sfCaseTeamScopeMatches(state, authority, value) ? value : undefined
+  }
   // Mutable or accessor-backed contexts retain the opaque callback path. The
   // predicate still runs after C08 admission, at its original observation time.
   const binding = Object.getOwnPropertyDescriptor(context, "binding")
@@ -93,27 +101,26 @@ export function selectSfCase(id: string, context: TrustedDomainContext) {
     ["principalRef", "policyVersion", "accessRevision"].every((key) => {
       const field = Object.getOwnPropertyDescriptor(binding.value, key)
       return !!field && "value" in field && typeof field.value === "string"
-    })) caseReads.set(read, { id, project: (cases, authority) => read({ cases }, authority) })
+    })) caseReads.set(read, { id, project: read })
   return read
 }
 
 /**
- * Projects the owner only from the same current state authority as the case.
+ * Projects the owner after matching the case's durable original Team.
  * The result is display/storage metadata and never a transferable admission.
  * Preserve the registered single-case clone path; large unrelated cases stay private.
  */
 export function selectSfCaseWithOwner(id: string, context: TrustedDomainContext) {
   const selected = selectSfCase(id, context)
-  const project = (cases: SfProductState["cases"], authority: SfStateAuthority) => {
-    const value = selected({ cases }, authority)
+  const read = (state: CaseReadState, authority: SfStateAuthority) => {
+    const value = selected(state, authority)
     const owner = value && authority.profile ? Schema.decodeUnknownSync(TeamProfile.Owner)({
       profile: authority.profile,
       principal: { tenantId: authority.profile.tenantId, principalObjectId: authority.principalRef },
     }) : undefined
     return { value, ...(owner ? { owner } : {}) }
   }
-  const read = (state: Pick<SfProductState, "cases">, authority: SfStateAuthority) => project(state.cases, authority)
-  if (caseReads.has(selected)) caseReads.set(read, { id, project })
+  if (caseReads.has(selected)) caseReads.set(read, { id, project: read })
   return read
 }
 
@@ -267,7 +274,9 @@ export function createSfProductState(input: {
           ? structuredClone(readiness.select(state, authority)) as T
           : selection && selected?.enumerable && "value" in selected && selected.value &&
           typeof selected.value === "object" && !Array.isArray(selected.value)
-          ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
+          ? await selection.project({ cases: { [selection.id]: structuredClone(selected.value) },
+            transactions: state.transactions, versions: state.versions, revision: state.revision,
+            incarnation: state.incarnation }, authority) as T
           : selectedResults ? await read(selectedResults, authority)
           : await read(structuredClone(state), authority)
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
@@ -547,4 +556,69 @@ export function sfTransactionProfileMatches(profile: TeamProfile.Ref | undefined
   if (!profile) return intent.profile === undefined
   return intent.profile?.installationId === profile.installationId &&
     intent.profile.tenantId === profile.tenantId && intent.profile.teamObjectId === profile.teamObjectId
+}
+
+type CaseIdentity = Pick<DecisionCase, "id" | "incarnation">
+
+function caseIdentity(value: CaseIdentity) {
+  return JSON.stringify([value.id, value.incarnation])
+}
+
+/** Cases and their original creation receipts commit in the same C08 transaction. */
+function caseCreationOrigins(state: CaseOriginState, installationId: string, onlyIdentity?: string) {
+  const origins = new Map<string, TeamProfile.Ref | null>()
+  const workspace = `sf-workspace:${encodeURIComponent(installationId)}`
+  const scopeDigest = digestSfValue(["cases"])
+  for (const [key, receipt] of Object.entries(state.transactions)) {
+    if (receipt?.namespace !== "cases" || receipt.targetRef !== workspace) continue
+    const value = object(receipt.value)
+    if (typeof value.id !== "string" || !value.id || typeof value.incarnation !== "string" || !value.incarnation) continue
+    const identity = caseIdentity({ id: value.id, incarnation: value.incarnation })
+    if (onlyIdentity !== undefined && identity !== onlyIdentity) continue
+    const intent = sfTransactionIdentity(key)
+    // Ambiguous origins and legacy receipts without a Team stay invisible.
+    // The current admitted profile can never supply missing provenance.
+    if (origins.has(identity) || intent?.namespace !== "cases" || intent.targetRef !== workspace ||
+        intent.profile?.installationId !== installationId || intent.principalRef !== receipt.principalRef ||
+        receipt.targetIncarnation !== installationId || receipt.incarnation !== state.incarnation ||
+        receipt.scopeDigest !== scopeDigest || !Number.isSafeInteger(receipt.storageVersion) ||
+        receipt.storageVersion <= 0 || receipt.storageVersion > state.versions.cases ||
+        !Number.isSafeInteger(receipt.aggregateRevision) || receipt.aggregateRevision < receipt.storageVersion ||
+        receipt.aggregateRevision > state.revision || value.version !== 1 || value.state !== "draft" ||
+        !Array.isArray(value.participants) || value.participants.length !== 1 || value.participants[0] !== receipt.principalRef ||
+        !Array.isArray(value.criteria) || !Array.isArray(value.sourceRefs) ||
+        receipt.commandDigest !== digestSfValue({ objective: value.objective, horizon: value.horizon, currency: value.currency,
+          criteria: value.criteria.map((criterion) => object(criterion).description), sourceRefs: value.sourceRefs })) {
+      origins.set(identity, null)
+      continue
+    }
+    origins.set(identity, intent.profile)
+  }
+  return origins
+}
+
+function sameCaseProfile(original: TeamProfile.Ref | null | undefined, current: TeamProfile.Ref) {
+  return original?.installationId === current.installationId && original.tenantId === current.tenantId &&
+    original.teamObjectId === current.teamObjectId
+}
+
+export function sfCaseTeamScopeMatches(state: CaseOriginState, authority: Pick<SfStateAuthority, "profile">, value: CaseIdentity) {
+  const profile = authority.profile
+  if (!profile) return true
+  const identity = caseIdentity(value)
+  return sameCaseProfile(caseCreationOrigins(state, profile.installationId, identity).get(identity), profile)
+}
+
+/** Resolve a case target against the snapshot already held by the writer. */
+export function sfCaseTeamScopeMatchesSnapshot(snapshot: Snapshot, profile: TeamProfile.Ref | undefined, value: CaseIdentity) {
+  if (!profile) return true
+  const state = readSfState(snapshot)
+  return !!state && sfCaseTeamScopeMatches(state, { profile }, value)
+}
+
+export function sfCaseCandidatesForAuthority(state: CaseReadState, authority: SfStateAuthority) {
+  const profile = authority.profile
+  const origins = profile && caseCreationOrigins(state, profile.installationId)
+  return Object.values(state.cases).filter((value) => value.participants.includes(authority.principalRef) &&
+    (!profile || sameCaseProfile(origins?.get(caseIdentity(value)), profile)))
 }

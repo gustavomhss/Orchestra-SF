@@ -16,7 +16,7 @@ export type SfNativeHostDependencies = Readonly<{
   mount: string
   application: Application
   runtime: () => SfHostServices | undefined
-  readContext: (request: Request) => Promise<SfContextResult>
+  readContext: (request: Request, scope?: "authority") => Promise<SfContextResult>
 }>
 
 export type SfProjectionHandler = Readonly<{

@@ -8,6 +8,7 @@ import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import { sfCaseCandidatesForAuthority } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { observeSfCaseSource } from "./case-health.ts"
 import { contextualCaseReturn } from "../../../../../modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router.ts"
@@ -69,7 +70,7 @@ async function readCase(request: Request, deps: SfNativeHostDependencies): Promi
   if (!parsed.ok) return failed(request, "needs-input", "invalid-case-selector")
   const runtime = deps.runtime()
   if (!runtime) return failed(request, "unavailable", "decision-host-unavailable")
-  const identity = await deps.readContext(request)
+  const identity = await deps.readContext(request, "authority")
   if (identity.status !== "ok") return failed(request, identity.status)
   const stamp = identity.value.stamp
   const operationDigest = digestSfValue(parsed.value)
@@ -87,7 +88,7 @@ async function readCase(request: Request, deps: SfNativeHostDependencies): Promi
     })
     if (rawReturn !== null && !returnTo) return failed(request, "needs-input", "contextual-return-unavailable")
     if (!await runtime.ui.revalidate(admitted.value)) return failed(request, "denied", "case-access-changed")
-    const current = await deps.readContext(request)
+    const current = await deps.readContext(request, "authority")
     if (current.status !== "ok" || digestSfValue(current.value.stamp) !== digestSfValue(stamp))
       return failed(request, "stale", "case-context-changed")
     return response(request, 200, { status: "ok", context: stamp, value: { projection: projection.value, ...(returnTo ? { returnTo } : {}) } })
@@ -104,7 +105,7 @@ async function readCases(request: Request, deps: SfNativeHostDependencies): Prom
   if (!exactQuery(new URL(request.url), [])) return failed(request, "needs-input", "invalid-case-list-query")
   const runtime = deps.runtime()
   if (!runtime) return failed(request, "unavailable", "decision-host-unavailable")
-  const identity = await deps.readContext(request)
+  const identity = await deps.readContext(request, "authority")
   if (identity.status !== "ok") return failed(request, identity.status)
   const stamp = identity.value.stamp
   const operationDigest = digestSfValue({})
@@ -117,7 +118,7 @@ async function readCases(request: Request, deps: SfNativeHostDependencies): Prom
       if (authority.principalRef !== admitted.value.binding.principalRef ||
         authority.policyVersion !== admitted.value.binding.policyVersion ||
         authority.accessRevision !== admitted.value.binding.accessRevision) return undefined
-      return Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).map(encodeCaseRef)
+      return sfCaseCandidatesForAuthority(state, authority).map(encodeCaseRef)
     })
     const listed = await identities()
     const empty = listed.status === "unavailable" && listed.reason === "product-state-uninitialized"
@@ -152,7 +153,7 @@ async function readCases(request: Request, deps: SfNativeHostDependencies): Prom
       : again.status !== "ok" || !again.value || digestSfValue(again.value) !== digestSfValue(refs))
       return failed(request, "stale", "case-list-changed")
     if (!await runtime.ui.revalidate(admitted.value)) return failed(request, "denied", "case-list-access-changed")
-    const current = await deps.readContext(request)
+    const current = await deps.readContext(request, "authority")
     if (current.status !== "ok" || digestSfValue(current.value.stamp) !== digestSfValue(stamp))
       return failed(request, "stale", "case-context-changed")
     return response(request, 200, { status: "ok", context: stamp, value: { cases } })
