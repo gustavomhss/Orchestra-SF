@@ -30,6 +30,18 @@ export type Snapshot = {
   sequences: Record<string, number>
   audit: Audit[]
   notices: Notice[]
+  sfCommandPreviews?: Record<string, { principalRef: string; actorDigest: string; command: Command; baseDigest: string; commandDigest: string; ids: string[]; expiresAt: string; receipt?: Result }>
+  // Host-private blob generations survive deletion and are updated atomically with blob bytes.
+  sfBlobGenerations?: Record<string, number>
+  // Host-private source lifecycle metadata. Business views and JSON export expose only data/versions.
+  sfSources?: {
+    schemaVersion: 1
+    records: Record<string, { incarnation: string; version: number; alive: boolean; inputDigest: string }>
+    scopes?: Record<string, {
+      scope: { principalRef: string; accessRevision: string; policyVersion: string; recordType: string; recordId: string; selector: unknown }
+      incarnation: string; sourceIncarnation: string; version: number; alive: boolean; inputDigest: string
+    }>
+  }
 }
 export type Environment = {
   at: string
@@ -64,6 +76,19 @@ export type Persistence = {
   // commit=false, cancellation, callback failure or commit failure writes nothing, including after restart.
   // Production adapters must run the conformance suite against their real driver; the test Map adapter is not durability proof.
   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+  transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+  currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
+  // Lexical presence only: the same scope lifetime/abort checks, without copying
+  // or validating snapshot contents. Never a source witness or authorization.
+  // Adapters without this capability retain currentSnapshots for presence checks.
+  hasCurrentSnapshots?: () => boolean
+  // Internal root-only scope, not source admission or business authorization.
+  // Consumers must still use their canonical transaction(surface, work) inside it
+  // so every wrapper keeps its guards. No snapshot or commit capability is exposed.
+  // Fresh SQL, independent copies, abort/lifetime fences and joined readers are
+  // required. Any attempted write poisons the root even when its error is caught.
+  // Older adapters omit this capability and retain their existing transaction path.
+  readSnapshotRoot?: <T>(work: () => Promise<T>, options?: TransactionOptions) => Promise<T>
 }
 
 export function object(value: unknown): Record<string, unknown> {
