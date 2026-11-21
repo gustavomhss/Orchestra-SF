@@ -119,10 +119,10 @@ export type CreateSfHostRuntime = (input: {
     | "dashboard.dashboard-workbench" | "dashboard.dashboard-hot-topic-source" | "dashboard.dashboard-draft-read"
     | "dashboard.dashboard-hot-topic-draft" | "dashboard.dashboard-hot-topic-drafts" | "dashboard.dashboard-hot-topic-draft-outcome" | "dashboard.dashboard-capture"
     | "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read"
-    | "decisions.choice.read" | "decisions.decision-compare"
+    | "decisions.choice.read" | "decisions.current-choice-prepare" | "decisions.current-choice-promote" | "decisions.decision-compare"
     | "decisions.decision-coverage" | "decisions.decision-criteria" | "decisions.decision-promote" | "decisions.decision-choose"
     | "decisions.portfolio.catalog"
-    | "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover"
+    | "decisions.decision-prepare-changes" | "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover"
     | "decisions.procurement-proposal-review" | "decisions.procurement-proposal-advance"
     | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision", producer: object) => object | undefined
   nativeActions?: (request: Request, stamp: import("@orchestra/schema/sucafina/context").SfContextStamp,

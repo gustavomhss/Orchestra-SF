@@ -6,7 +6,7 @@ import { selectSfNamespaceHealth } from "../../../../../modules/sucafina/Sucafin
 import { sfHasOperationalResource } from "./live-context.ts"
 
 type Operation = "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read" |
-  "decisions.choice.read" | "decisions.decision-compare" |
+  "decisions.choice.read" | "decisions.current-choice-prepare" | "decisions.current-choice-promote" | "decisions.decision-compare" |
   "decisions.decision-coverage" | "decisions.decision-criteria" | "decisions.decision-promote" | "decisions.decision-choose" |
   "decisions.portfolio.catalog" | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision"
 
@@ -25,6 +25,8 @@ export async function observeSfDecisionIntentHealth(input: {
     { id: "decisions.decision-edit", operation: "sf_case_read", method: "POST", query: "decision-edit", path: "{mount}/dashboard", write: true, human: "decisions.edit" },
     { id: "decisions.controls.read", operation: "sf_case_read", method: "GET", query: "decision-controls", path: "{mount}/dashboard", write: false, human: null },
     { id: "decisions.choice.read", operation: "sf_case_read", method: "GET", query: "current-choice", path: "{mount}/dashboard", write: false, human: null, preferences: "read" },
+    { id: "decisions.current-choice-prepare", operation: "sf_case_read", method: "POST", query: "current-choice-prepare", path: "{mount}/dashboard", write: true, human: "planner.preview", preferences: "write" },
+    { id: "decisions.current-choice-promote", operation: "sf_case_read", method: "POST", query: "current-choice-promote", path: "{mount}/dashboard", write: true, human: "decisions.promote-alternative", preferences: "read" },
     { id: "decisions.decision-compare", operation: "sf-human:decisions.portfolio.read", method: "POST", query: "decision-compare", path: "{mount}/dashboard", write: false, human: null, preferences: "read" },
     { id: "decisions.decision-coverage", operation: "sf_case_read", method: "POST", query: "decision-coverage", path: "{mount}/dashboard", write: true, human: "decisions.coverage", preferences: "write" },
     { id: "decisions.decision-criteria", operation: "sf_case_read", method: "POST", query: "decision-criteria", path: "{mount}/dashboard", write: true, human: "decisions.criteria", preferences: "write" },
@@ -43,6 +45,8 @@ export async function observeSfDecisionIntentHealth(input: {
       metadata.pathTemplate !== candidate.path || metadata.fixedQuery.sf !== candidate.query || metadata.responseMode !== "json") return []
     if (candidate.id === "decisions.choice.read" && (metadata.effect !== "read" ||
       !("format" in metadata.fixedQuery) || metadata.fixedQuery.format !== "json" || Object.keys(metadata.fixedQuery).length !== 2)) return []
+    if ((candidate.id === "decisions.current-choice-prepare" || candidate.id === "decisions.current-choice-promote") &&
+      (metadata.effect !== (candidate.id === "decisions.current-choice-prepare" ? "prepare" : "mutation") || Object.keys(metadata.fixedQuery).length !== 1)) return []
     if (candidate.id === "decisions.decision-compare" && (metadata.effect !== "read" || Object.keys(metadata.fixedQuery).length !== 1)) return []
     if ((candidate.id === "decisions.decision-criteria" || candidate.id === "decisions.decision-choose") &&
       (metadata.effect !== "mutation" || Object.keys(metadata.fixedQuery).length !== 1)) return []

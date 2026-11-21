@@ -13,7 +13,7 @@ import { createSfDecisionResultStore } from "../../../product/decisions/result-s
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { comparePlannerScenarios } from "../../../product/planner/comparison.ts"
-import { createC12ProcurementProposal, verifyC12ProcurementProposal } from "../../../product/procurement/c12-proposal.ts"
+import { createC12ProcurementProposal, requiresC12ProcurementProposal, verifyC12ProcurementProposal } from "../../../product/procurement/c12-proposal.ts"
 import type { C12ProposalAction, C12ProposalHost, C12ProposalRecord } from "../../../product/procurement/c12-proposal.ts"
 import { createProcurementScenarioDraftPreparation, createProcurementScenarioPreparation } from "../../../product/procurement/scenario-preparation.ts"
 import { scenarioAt, scenarioPeriod } from "../procurement-decision-producer/fixture.ts"
@@ -145,11 +145,19 @@ test("M31: the unwritten 140 USD needs every canonical matrix approval before a 
     const comparison = comparePlannerScenarios({ baselineRef: baseline.value.scenario.id, alternativeRef: preview.value.scenario.id, baselineCoverageRef: baseline.value.coverageRef, alternativeCoverageRef: preview.value.coverageRef, baseline: baseline.value.scenario, alternative: preview.value.scenario })
     const chosen = createChoiceSnapshot({ case: decision, alternativeId: preview.value.assessment.alternativeId, alternativeVersion: preview.value.assessment.alternativeVersion, comparison, criteria: ["amount"], values: [{ criterionRef: "amount", value: 140, unit: "currency", currency: "USD", horizon: scenarioPeriod }], evidenceRefs: [draft.review.source], id: "m31-choice", principalRef: "alice", reason: "Send the unwritten estimate for approval", at: scenarioAt })
     if (chosen.status !== "ok") throw new Error(`Proposal choice unavailable: ${chosen.reason}`)
-    const prepared = await createProcurementScenarioPreparation({ host: fixture.host, sources: fixture.sources })({ operation, choice: chosen.choice, operationId: "m31-command", idempotencyKey: "m31-key" }, draft.context)
+    const prepare = createProcurementScenarioPreparation({ host: fixture.host, sources: fixture.sources })
+    const prepared = await prepare({ operation, choice: chosen.choice, operationId: "m31-command", idempotencyKey: "m31-key" }, draft.context)
+    const zero = { ...operation, amount: 0 }
+    const zeroChoice = { ...chosen.choice, scenario: { ...chosen.choice.scenario, operations: [zero] } }
+    expect(await prepare({ operation: zero, choice: zeroChoice, operationId: "zero-command", idempotencyKey: "zero-key" }, draft.context))
+      .toEqual({ status: "needs-input", reason: "positive-requisition-amount-required" })
     if (prepared.status !== "ok") throw new Error(`Proposal command unavailable: ${prepared.reason}`)
     const choiceCase: DecisionCase = { ...decision, version: 2, state: "chosen", choices: [chosen.choice] }
     const change = prepareDomainChange({ case: choiceCase, expectedCaseVersion: 2, choiceId: chosen.choice.id, command: prepared.value.command, preview: prepared.value.preview, id: "m31-change" })
     if (change.status !== "ok") throw new Error(`Proposal change unavailable: ${change.reason}`)
+    const legacyOperation = change.change.operation
+    const legacyZeroChange = { ...change.change, operation: { ...legacyOperation, command: { ...legacyOperation.command, values: { pr: { estAmount: 0 } } } } }
+    expect(requiresC12ProcurementProposal(legacyZeroChange)).toBe(true)
     const storedCase = { ...choiceCase, version: 3, preparedChanges: [change.change] }
     const selector = { caseRef: { ...caseRef, version: 3 }, choiceId: chosen.choice.id, changeId: change.change.id }
     await supportsAll(async (snapshots) => {
@@ -198,7 +206,7 @@ test("M31: the unwritten 140 USD needs every canonical matrix approval before a 
       return proposal.advance(selector, action, await lease(id, action))
     }
     // Test composition only: the real domain write follows the predicate under the same SQLite lock.
-    const attemptApply = async (id = "alice") => {
+    const attemptApply = async (id = "alice", legacyZero = false) => {
       const request = new Request("https://scenario.invalid/m31", { method: "POST", headers: { authorization: `Bearer ${id}` } })
       const digest = digestSfValue({ selector, apply: true })
       const admitted = await ui.admit(request, "m31-apply", digest)
@@ -207,7 +215,8 @@ test("M31: the unwritten 140 USD needs every canonical matrix approval before a 
         const principal = await adapter.authenticate(request, { surface: "procurement", roleMap: roleMap(snapshots.procurement, "procurement") })
         if (!principal || !await ui.revalidate(admitted.value) || !ui.matchesIntent(admitted.value, "m31-apply", digest)) return { commit: false, value: { status: "denied", reason: "current-authority-unavailable" } }
         const actor = { id: principal.id, canWrite: principal.canWrite, roles: principal.roles.filter((role) => role.surface === "procurement").map((role) => role.role) }
-        const decision = snapshots.dashboard.data.m31Case as DecisionCase
+        const savedCase = snapshots.dashboard.data.m31Case as DecisionCase
+        const decision = legacyZero ? { ...savedCase, choices: [zeroChoice], preparedChanges: [legacyZeroChange] } : savedCase
         const record = snapshots.dashboard.data.m31Record as C12ProposalRecord | undefined
         const proof = verifyC12ProcurementProposal({ procurement: snapshots.procurement, decision, record, selector, context: admitted.value, actor })
         if (proof.status !== "ok") return { commit: false, value: proof }
@@ -221,6 +230,7 @@ test("M31: the unwritten 140 USD needs every canonical matrix approval before a 
     const unsubmitted = await review("alice")
     if (unsubmitted.status !== "ok") throw new Error(`Proposal review unavailable: ${unsubmitted.reason}`)
     expect(unsubmitted.value).toMatchObject({ state: "unsubmitted", currentAmount: 100, amount: 140, currency: "USD", domainApplied: false, allowedActions: ["submit"] })
+    expect(await attemptApply("alice", true)).toEqual({ status: "stale", reason: "proposal-source-or-choice-changed" })
     expect(await attemptApply()).toEqual({ status: "denied", reason: "proposal-approval-required" })
     expect((await proposal.review({ ...selector, caseRef: { ...selector.caseRef, version: 2 } }, await lease("alice"))).status).toBe("stale")
     const submitted = await advance("alice", "submit", unsubmitted.value.reviewDigest)

@@ -1,7 +1,7 @@
 import { expect, test, type Locator, type Page, type Request, type Response } from "@playwright/test"
 import { Schema } from "effect"
 import {
-  SfDecisionsChoiceRead, SfDecisionsCurrentChoicePrepare, SfDecisionsDecisionApply,
+  SfDecisionsChoiceRead, SfDecisionsDecisionPrepareChanges, SfDecisionsDecisionApply,
   SfDecisionsDecisionRecover, SfDecisionsDecisionReview,
 } from "@orchestra/schema/sucafina/decisions"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
@@ -33,7 +33,7 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
   const operation = choice.scenario.operations[0]!
   expect(operation).toMatchObject({ kind: "replace", currency: original.currency, period: original.horizon })
   expect(operation.replacementRef).toBeUndefined()
-  expect(typeof operation.amount === "number" && Number.isFinite(operation.amount) && operation.amount >= 0).toBe(true)
+  expect(typeof operation.amount === "number" && Number.isFinite(operation.amount) && operation.amount > 0).toBe(true)
   const sources = choice.result.sourceRefs.flatMap((ref) => ref.kind === "record" && ref.refId === operation.targetRef &&
     ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" ? [ref] : [])
   expect(sources).toHaveLength(1)
@@ -52,7 +52,7 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
   const audit = await context.newPage()
   context.on("request", record)
   try {
-    await test.step("review current sources for the exact authorized Procurement choice in UI38", async () => {
+    await test.step("read the recorded conditioned Procurement choice in UI38", async () => {
       const pathname = `${casePath(reference)}/choice`
       const [response] = await Promise.all([
         page.waitForResponse((reply) => {
@@ -79,49 +79,37 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
         .locator(`article[data-choice-id=${JSON.stringify(choiceId)}]`)
       await expect(card.getByRole("heading", { name: option.title, exact: true })).toBeVisible()
       await expect(card.getByRole("region", { name: "Registered result", exact: true }).getByText(choice.reason, { exact: true })).toBeVisible()
-      const prepare = card.getByRole("button", { name: "Review current sources", exact: true })
-      if (!option.request) {
-        await expect(prepare).toBeDisabled()
-        throw new Error(`UI38 current-choice returned no preparation request for ${choiceId}: ${option.reason}`)
-      }
-      expect(option.request).toEqual({ caseRef: chosenRef, choiceId,
-        alternativeRef: { id: choice.alternativeId, version: choice.alternativeVersion }, coverageRef: expect.stringMatching(/\S/) })
-      await expect(prepare, "UI38 requires live decisions.current-choice-prepare availability for the admitted choice request").toBeEnabled()
-      const [prepared] = await Promise.all([
-        page.waitForResponse((reply) => reply.url() === `${origin}/sucafina/dashboard?sf=current-choice-prepare` && isCommand(reply.request(), "current-choice-prepare")),
-        prepare.click(),
-      ])
-      expect(prepared.request().postDataJSON()).toEqual(option.request)
-      expect(prepared.request().headers()["idempotency-key"]).toMatch(commandKey)
-      const result = Schema.decodeUnknownSync(Schema.toType(SfDecisionsCurrentChoicePrepare.output), { onExcessProperty: "error" })(
-        await producerReply(prepared, observations, "UI38 current-choice preparation"),
-      )
-      if (result.status !== "ok") throw new Error("UI38 did not return a current-choice review")
-      const { promotion, historical, current } = result.value
-      expect(historical).toEqual(choice.result)
-      expect(promotion).toMatchObject({ caseRef: chosenRef, choiceId, alternativeRef: option.request.alternativeRef,
-        scenario: { operations: [operation], assumptions: choice.scenario.assumptions } })
-      await expect(prepare).toHaveAttribute("aria-pressed", "true")
-      await expect(reviewPanel(page).getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+      await expect(card.getByRole("region", { name: "Registered result", exact: true })).toContainText("conditioned")
+      expect(choice.result.comparisonStatus).toBe("conditioned")
+      expect(choice.result.total).toBeNull()
+      expect(choice.result.unresolvedConditions.some((condition) => condition.startsWith("external-operation:"))).toBe(true)
       expect(commands).toEqual([])
-      if (current.comparisonStatus !== "complete" || current.costCoverage.coverageState !== "complete" ||
-        current.unresolvedConditions.length || current.restrictions.length)
-        await expect(reviewPanel(page).getByRole("button", { name: "Promote reviewed choice", exact: true })).toBeDisabled()
-      expect({ comparisonStatus: current.comparisonStatus, costCoverage: { coverageState: current.costCoverage.coverageState },
-        unresolvedConditions: current.unresolvedConditions, restrictions: current.restrictions },
-      "UI38 cannot advance a conditioned or incomplete Procurement result").toEqual({
-        comparisonStatus: "complete", costCoverage: { coverageState: "complete" }, unresolvedConditions: [], restrictions: [],
-      })
     })
 
-    const { change, preparedRef } = await test.step("require the exact producer-persisted Procurement preparation in UI39", async () => {
+    const { change, preparedRef } = await test.step("explicitly prepare and reread the exact Procurement proposal in UI39", async () => {
       const pathname = `${casePath(reference)}/changes`
       await page.goto(origin + pathname)
       await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === pathname)
       await expect(page.getByRole("heading", { name: "Prepared changes", exact: true, level: 1 })).toBeVisible()
+      const pending = page.getByRole("region", { name: "Prepare Procurement proposal", exact: true })
+      await expect(pending).toContainText(`${requestId} · ${operation.amount} ${operation.currency}`)
+      const prepare = pending.getByRole("button", { name: "Prepare Procurement proposal", exact: true })
+      const [result] = await Promise.all([
+        page.waitForResponse((reply) => procurementCommand(reply.request(), origin, "decision-prepare-changes")).then(async (reply) => {
+          expect(reply.request().postDataJSON()).toEqual({ caseRef: chosenRef, choiceId, operations: [operation] })
+          expect(reply.request().headers()["idempotency-key"]).toMatch(commandKey)
+          return Schema.decodeUnknownSync(Schema.toType(SfDecisionsDecisionPrepareChanges.output), { onExcessProperty: "error" })(
+            await producerReply(reply, observations, "UI39 exact Procurement preparation"),
+          )
+        }),
+        prepare.click(),
+      ])
+      if (result.status !== "ok") throw new Error(`C12 preparation failed: ${result.status} ${result.reason ?? ""}`)
+      expect(result.value.caseRef).toEqual({ ...chosenRef, version: chosenRef.version + 1 })
+      expect(commands).toEqual([])
       const prepared = await readCase(page, reference)
       expect(prepared).toMatchObject({ objective, choices: original.choices, receipts: [] })
-      // UI38's recalculation (and alternative promotion) does not persist a C12 command.
+      // Preparing the exact domain command keeps the original choice and its economic conditions.
       const changes = prepared.preparedChanges.filter((item) => item.choiceId === choiceId && item.target.surface === "procurement" &&
         item.target.type === "procurement-request" && item.target.id === requestId && item.target.incarnation === source.target.incarnation)
       expect(changes, "UI39 requires a real C12 prepared change for this choice and requisition; UI38 review is not decision-prepare-changes").toHaveLength(1)

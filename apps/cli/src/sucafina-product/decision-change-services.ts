@@ -71,7 +71,7 @@ export function createSfDecisionChangeServices(input: {
         const values = object(change.command.command.values)
         const pr = object(values.pr)
         return value.status !== "ok" || !same(value.value.evidence, change.targetEvidence) || change.targetEvidence.refId !== operation.targetRef ||
-          operation.kind !== "replace" || operation.replacementRef !== undefined || typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount < 0 ||
+          operation.kind !== "replace" || operation.replacementRef !== undefined || typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount <= 0 ||
           operation.currency !== value.value.context.currency || !same(operation.period, value.value.context.period) || !same(change.preview, selected.choice.result) ||
           change.command.command.page !== "Requests" || change.command.command.action !== "save" || change.command.command.id !== change.command.target.id ||
           !same(Object.keys(values), ["pr"]) || !same(Object.keys(pr), ["estAmount"]) || pr.estAmount !== operation.amount

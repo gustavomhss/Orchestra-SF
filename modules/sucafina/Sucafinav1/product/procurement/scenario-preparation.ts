@@ -20,7 +20,7 @@ export function createProcurementScenarioPreparation(input: { host: DomainPortHo
   return async (requestSelection: { operation: ScenarioOperation; choice: ChoiceRecord; operationId: string; idempotencyKey: string }, binding: TrustedDomainContext): Promise<PortResult<{ command: PreparedCommand; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }>; preview: ChoiceRecord["result"] }>> => {
     const selection = structuredClone(requestSelection)
     const operation = selection.operation
-    if (operation.kind !== "replace" || operation.replacementRef !== undefined || typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount < 0 || !operation.currency || !operation.period) return { status: "needs-input", reason: "explicit-requisition-amount-required" }
+    if (operation.kind !== "replace" || operation.replacementRef !== undefined || typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount <= 0 || !operation.currency || !operation.period) return { status: "needs-input", reason: "positive-requisition-amount-required" }
     if (!selection.choice.scenario.operations.some((candidate) => digestSfValue(candidate) === digestSfValue(operation))) return { status: "denied", reason: "operation-not-in-choice" }
     const request = input.host.requestFor(binding)
     if (!request || !await input.host.revalidate(binding)) return { status: "denied", reason: "current-authority-unavailable" }

@@ -35,6 +35,7 @@ export async function createOperationsInstallation(input: {
   mount: string
   operators: readonly { principalRef: string; readOnly: boolean }[]
   grants?: Parameters<CreateSfHostRuntime>[0]["grants"]
+  currentChoiceFence?: Parameters<CreateSfHostRuntime>[0]["currentChoiceFence"]
   persistence: LocalStore & SfScopedSourcePort
   authenticate: Application["authenticate"]
   isAuthenticated: (request: Request) => Promise<boolean>
@@ -71,6 +72,7 @@ export async function createOperationsInstallation(input: {
     authMode: "local-operator",
     isAuthenticated: input.isAuthenticated,
     persistence: input.persistence,
+    currentChoiceFence: input.currentChoiceFence,
     authenticate: input.authenticate,
     environment: input.environment,
     assets,

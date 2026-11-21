@@ -14,6 +14,8 @@ import type { Command } from "../../../../../modules/sucafina/Sucafinav1/runtime
 import { createSfSourcePersistence } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+import type { SfHostRuntime } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+import { createCurrentChoiceFence } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
 import { sfHumanActions } from "../../../../../modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
 import freeze from "../../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 import { initializeAbsentSfProductState } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
@@ -51,7 +53,19 @@ const { PermissionSaved } = await import("@orchestra/core/permission/saved")
 const { ClaudeCodeAccount } = await import("@orchestra/core/claude-code-account")
 const at = "2026-11-13T12:00:00Z"
 const driver = await openLocalStore(directory)
-const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID }) }
+let choiceRuntime: Pick<SfHostRuntime, "identity" | "services"> | undefined
+const currentChoiceFence = approvalDirectory ? createCurrentChoiceFence({
+  persistence: driver,
+  host: () => {
+    const host = choiceRuntime?.services?.()?.host
+    if (!host) throw new Error("Decisions current choice host unavailable")
+    return host
+  },
+  identity: () => choiceRuntime?.identity(),
+  operationIdentity: (call) => call.kind === "ui" ? choiceRuntime?.services?.()?.ui.operationIdentity(call) : undefined,
+}) : undefined
+const persistence = currentChoiceFence?.persistence ?? driver
+const store = { ...persistence, ...createSfSourcePersistence({ persistence, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID }) }
 for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
 await initializeAbsentSfProductState(store, randomUUID)
 const manifest = approvalDirectory ? path.join(directory, "decision-approval-manifest.json") : path.join(import.meta.dirname, ".host-manifest.json")
@@ -119,8 +133,9 @@ const installation = await createOperationsInstallation({
   })) } : {}),
   persistence: store, authenticate,
   isAuthenticated: async (request) => Boolean(await sessionAccount(request)),
-  environment, signingKey, scanner,
+  environment, signingKey, scanner, currentChoiceFence,
 })
+choiceRuntime = installation
 const embedded = HttpRouter.toWebHandler(createEmbeddedRoutes({
   host: installation.host,
   sucafinaInstallations: installation.discovery,

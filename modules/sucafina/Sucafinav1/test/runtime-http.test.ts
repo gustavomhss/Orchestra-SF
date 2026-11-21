@@ -173,17 +173,39 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
       if (request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/dashboard")
         writes.push(request.postDataJSON())
     })
+    page.on("response", (response) => {
+      const url = new URL(response.url())
+      if (url.origin !== native.origin || !["/api/health", "/api/sucafina/installations",
+        "/sucafina/api/ui/context", "/sucafina/api/ui/pages/CAP13"].includes(url.pathname)) return
+      console.info("SF_NATIVE_RUNTIME_READ", JSON.stringify({ path: url.pathname, status: response.status() }))
+    })
     const riskPage = native.origin + "/orchestra/sf-operations/risks"
     phase("open real risk page")
     expect((await page.goto(riskPage))?.ok()).toBe(true)
     phase("open new risk editor")
-    await page.getByRole("button", { name: "New risk", exact: true }).click()
+    await page.getByRole("button", { name: "New risk", exact: true }).click({
+      timeout: Math.max(1, 43_000 - (performance.now() - started)),
+    }).catch(async (error) => {
+      const owner = await page.evaluate(() => {
+        const host = document.querySelector<HTMLElement>('[data-sf-host="owner-runtime231"]')
+        const chapter = host?.querySelector<HTMLElement>('[data-sf-surface="CAP13"]')
+        return { discovery: host?.dataset.sfDiscoveryState, provider: host?.dataset.sfProviderState,
+          reason: host?.dataset.sfProviderReason, view: host?.dataset.sfViewState, authorized: chapter?.dataset.sfAuthorized }
+      }).catch(() => undefined)
+      console.info("SF_NATIVE_RUNTIME_ADMISSION", JSON.stringify({ owner, pageErrors: errors.length }))
+      throw error
+    })
     const editor = page.locator("form.sf-u30-editor")
     const cell = editor.getByLabel("Risk description", { exact: true })
+    phase("fill risk description")
     await cell.fill("Browser risk")
+    phase("choose risk impact")
     await editor.getByLabel("Impact", { exact: true }).selectOption("3")
+    phase("choose risk probability")
     await editor.getByLabel("Probability", { exact: true }).selectOption("2")
+    phase("choose risk status")
     await editor.getByLabel("Status", { exact: true }).selectOption("open")
+    phase("review the new risk")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     phase("submit reviewed risk")
     const created = page.waitForResponse((response) => response.request().method() === "POST" &&

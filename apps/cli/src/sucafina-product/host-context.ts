@@ -976,7 +976,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
       const observations = await Promise.allSettled([
         // Only the mounted Current Choice producer can attest this operation.
         input.operational?.(request, stamp).then((items) => items.filter((item) =>
-          item.operationId !== "decisions.choice.read" && item.operationId !== "decisions.decision-compare" &&
+          item.operationId !== "decisions.choice.read" && item.operationId !== "decisions.current-choice-prepare" && item.operationId !== "decisions.current-choice-promote" &&
+          item.operationId !== "decisions.decision-prepare-changes" && item.operationId !== "decisions.decision-compare" &&
            item.operationId !== "decisions.decision-criteria" && item.operationId !== "decisions.decision-choose")) ?? Promise.resolve([]),
         observeSfPersonalViewsHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
           source: () => identity() && services.personalViews === personalViews ? personalViews : undefined }, request, stamp),
@@ -1040,10 +1041,12 @@ export const createSfHostRuntimeWithRoutineNative = async (
           humanActions: authority.humanActions, source: (operationId) => {
             const owner = identity()
             if (services.productHttp !== productHttp || !owner) return undefined
-            if (operationId === "decisions.choice.read") {
+            if (operationId === "decisions.choice.read" || operationId === "decisions.current-choice-prepare" || operationId === "decisions.current-choice-promote") {
               if (owner.installationId !== stamp.installationId || owner.projectId !== stamp.projectId || owner.hostId !== stamp.hostId ||
                 !currentChoice || !currentChoiceFence?.persistence.transactionAll || !currentChoiceFence.persistence.currentSnapshots) return undefined
-              return { producer: productHttp, dependencies: [owner, currentChoiceHttp, currentChoice, currentChoice.options,
+              const operation = operationId === "decisions.choice.read" ? currentChoice.options :
+                operationId === "decisions.current-choice-prepare" ? currentChoice.prepare : currentChoice.promote
+              return { producer: productHttp, dependencies: [owner, currentChoiceHttp, currentChoice, operation,
                 currentChoiceFence, currentChoiceFence.persistence.transactionAll, currentChoiceFence.persistence.currentSnapshots,
                 authority.host.requestFor, authority.host.revalidate, authority.ui.operationIdentity, business.cases.read, input.persistence] }
             }
@@ -1087,6 +1090,10 @@ export const createSfHostRuntimeWithRoutineNative = async (
           humanActions: authority.humanActions, source: (operationId) => {
             if (services.productHttp !== productHttp || !identity()) return undefined
             const producer = business.procurementDecisions
+            if (operationId === "decisions.decision-prepare-changes")
+              return { producer: productHttp, dependencies: [authority, authority.human.admit, authority.state.transaction,
+                portfolioHttp, extended.portfolioServices.mutations.prepareChanges, producer.prepareDomainCommands,
+                business.cases, business.withCase, input.persistence] }
             const operation = operationId === "decisions.decision-review" ? producer.reviewChange :
               operationId === "decisions.decision-apply" ? producer.apply : operationId === "decisions.decision-recover" ? producer.recover :
               operationId === "decisions.procurement-proposal-review" ? producer.proposal.review : producer.proposal.advance

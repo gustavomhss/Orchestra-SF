@@ -116,12 +116,15 @@ export function createSfPreparedApply(input: {
         const prior = Object.values(state.receipts).filter((item) => item.surface === selected.target.surface && item.idempotencyKey === selected.idempotencyKey && item.targetIncarnation === selected.target.incarnation && item.principalRef === actor.id)
         if (prior.length > 1) return { commit: false, value: { failure: "unavailable" as const } }
         if (prior[0]) return prior[0].commandDigest === selected.operation.commandDigest ? { commit: false, value: { existing: prior[0] } } : { commit: false, value: { failure: "conflict" as const } }
-        if (input.verifyPreparation && !input.verifyPreparation(snapshot, actual, request, selected, actor, context)) return { commit: false, value: null }
         const mutation = input.resolveMutation(snapshot, selected, actor, context)
         if (!mutation || mutation.surface !== selected.target.surface || mutation.targetIncarnation !== selected.target.incarnation || mutation.idempotencyKey !== selected.idempotencyKey || mutation.commandDigest !== selected.operation.commandDigest || mutation.expectedVersion !== selected.expectedVersion || selected.operation.expectedVersion !== selected.expectedVersion || selected.operation.command.version !== selected.expectedVersion || selected.operation.idempotencyKey !== selected.idempotencyKey || digestSfValue(selected.operation.target) !== digestSfValue(selected.target) || state.receipts[id]) return { commit: false, value: null }
+        const preparationCurrent = input.verifyPreparation?.(snapshot, actual, request, selected, actor, context) ?? true
         const staged = structuredClone(snapshot)
         const outcome = mutation.execute(staged, actor, input.environment(context))
         const status = outcome.value && typeof outcome.value === "object" && !Array.isArray(outcome.value) && "status" in outcome.value ? outcome.value.status : undefined
+        // Source drift can invalidate approval and the prepared command together.
+        // A canonical conflict settles that reserved attempt without a domain write.
+        if (!preparationCurrent && (outcome.commit || status !== "conflict")) return { commit: false, value: null }
         if (!outcome.commit && status !== "conflict" && status !== "denied" && status !== "failed") return { commit: false, value: { failure: "unavailable" as const } }
         const target = outcome.commit ? staged : snapshot
         const version = input.receiptVersion(target, selected, actor)

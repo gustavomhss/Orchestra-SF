@@ -66,7 +66,7 @@ export function requiresC12ProcurementProposal(change: PreparedChange) {
   const amount = object(command.values.pr).estAmount
   return change.target.surface === "procurement" && change.target.type === "procurement-request" &&
     command.page === "Requests" && command.action === "save" && command.id === change.target.id &&
-    command.version > 0 && typeof amount === "number" && Number.isFinite(amount) && amount > 0 &&
+    command.version > 0 && typeof amount === "number" && Number.isFinite(amount) &&
     digestSfValue(command.values) === digestSfValue({ pr: { estAmount: amount } })
 }
 

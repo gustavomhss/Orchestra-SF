@@ -5,7 +5,7 @@ import type { CreateSfHostRuntime, SfHostServices } from "../../../../../modules
 import { selectSfNamespaceHealth } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { sfHasOperationalResource } from "./live-context.ts"
 
-type Operation = "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover" | "decisions.procurement-proposal-review" | "decisions.procurement-proposal-advance"
+type Operation = "decisions.decision-prepare-changes" | "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover" | "decisions.procurement-proposal-review" | "decisions.procurement-proposal-advance"
 
 /** Observe the installed C12 producers; selected case/target authorization stays in their original handlers. */
 export async function observeSfDecisionApplicationHealth(input: {
@@ -18,6 +18,7 @@ export async function observeSfDecisionApplicationHealth(input: {
   if (!input.binding || request.signal.aborted) return []
   const bindingFor = input.binding, sourceFor = input.source, ui = input.ui, state = input.state
   const candidates = [
+    { id: "decisions.decision-prepare-changes", query: "decision-prepare-changes", human: "decisions.prepare-changes", write: true },
     { id: "decisions.decision-review", query: "decision-review", human: "decisions.portfolio.read", write: false },
     { id: "decisions.decision-apply", query: "decision-apply", human: "decisions.apply", write: true },
     { id: "decisions.decision-recover", query: "decision-recover", human: "decisions.apply", write: true },
@@ -26,6 +27,7 @@ export async function observeSfDecisionApplicationHealth(input: {
   ] as const
   const results = await Promise.allSettled(candidates.map(async (candidate) => {
     const metadata = SfOperationRegistry[candidate.id]
+    if (candidate.id === "decisions.decision-prepare-changes" && metadata.effect !== "prepare") return []
     if (!sfHasOperationalResource(candidate.id) || metadata.method !== "POST" ||
       metadata.pathTemplate !== "{mount}/procurement" || metadata.fixedQuery.sf !== candidate.query ||
       metadata.responseMode !== "json") return []
@@ -52,8 +54,10 @@ export async function observeSfDecisionApplicationHealth(input: {
         !(await input.humanActions(request)).includes(candidate.human)) return []
       // C12 links the case to an actual receipt. Infrastructure reads use the
       // original C08 selectors; no application, grant or receipt is manufactured.
-      for (const namespace of candidate.query.startsWith("decision-proposal-") ? ["cases"] as const : ["cases", "receipts"] as const) {
-        const mode = namespace === "cases" && candidate.write ? "write" : "read"
+      const namespaces = candidate.id === "decisions.decision-prepare-changes" ? ["cases", "preferences"] as const :
+        candidate.query.startsWith("decision-proposal-") ? ["cases"] as const : ["cases", "receipts"] as const
+      for (const namespace of namespaces) {
+        const mode = namespace !== "receipts" && candidate.write ? "write" : "read"
         const read = () => state.read(request, namespace, selectSfNamespaceHealth(namespace, stamp, mode))
         const first = await read(), second = await read()
         if (first.status !== "ok" || second.status !== "ok" || !first.value || !second.value ||

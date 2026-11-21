@@ -55,6 +55,22 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     if (!r?.requiresProcurementApproval || !data) return undefined
     return { caseRef: { id: data.id, incarnation: data.incarnation, version: data.version }, choiceId: r.choiceId, changeId: r.changeId }
   })
+  const proposalPreparation = createMemo(() => {
+    const data = view.caseData
+    const choice = data?.choices.at(-1)
+    if (!data || !choice || !["chosen", "partially-applied"].includes(data.state)) return undefined
+    const selected = choice.scenario.operations.flatMap((operation) => {
+      if (operation.kind !== "replace" || operation.replacementRef !== undefined || typeof operation.amount !== "number" ||
+        !Number.isFinite(operation.amount) || operation.amount <= 0) return []
+      const sources = choice.result.sourceRefs.flatMap((ref) => ref.kind === "record" && ref.refId === operation.targetRef &&
+        ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" ? [ref.target] : [])
+      if (sources.length !== 1 || data.preparedChanges.some((change) => change.choiceId === choice.id &&
+        change.target.surface === "procurement" && change.target.id === sources[0]!.recordId &&
+        change.target.incarnation === sources[0]!.incarnation)) return []
+      return [{ operation, requestId: sources[0]!.recordId }]
+    })
+    return selected.length ? { caseRef: { id: data.id, incarnation: data.incarnation, version: data.version }, choiceId: choice.id, selected } : undefined
+  })
   let readAbort: AbortController | undefined
   let writeAbort: AbortController | undefined
   let serial = 0
@@ -195,6 +211,42 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
         console.error("N25 UI39 review unavailable", error instanceof Error ? error.name : "unknown")
         setView("state", "unavailable")
       }
+    } finally {
+      if (fence === mutationFence) setView("busy", false)
+    }
+  }
+
+  const prepareProposal = async () => {
+    const ready = owner.ready()
+    const request = proposalPreparation()
+    if (!ready || !request || !operationGranted("decisions.decision-prepare-changes") || view.busy ||
+      view.outcomeUnknown || !["ready", "empty"].includes(active())) return
+    const controller = new AbortController()
+    const generation = owner.generation()
+    const fence = ++mutationFence
+    writeAbort = controller
+    setView({ busy: true, review: null, reviewIntent: null })
+    try {
+      const result = await createSfDecisionsClient(ready.transport)["decisions.decision-prepare-changes"](
+        { caseRef: request.caseRef, choiceId: request.choiceId, operations: request.selected.map((item) => item.operation) },
+        { signal: controller.signal, idempotencyKey: crypto.randomUUID() },
+      )
+      if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
+      if (result.kind === "response" && result.body.status === "ok") {
+        const confirmed = result.body.value.caseRef
+        if (confirmed.id !== request.caseRef.id || confirmed.incarnation !== request.caseRef.incarnation ||
+          confirmed.version !== request.caseRef.version + 1) {
+          setView("state", "stale")
+          return
+        }
+        await read()
+      } else {
+        const state = result.kind === "response" ? u18PortState(result) : u18TransportState(result)
+        if (state === "denied" || state === "session-expired") clearPrivate(state)
+        else setView("state", state === "outcome-unknown" ? "unavailable" : state)
+      }
+    } catch {
+      if (!controller.signal.aborted && generation === owner.generation()) setView("state", "unavailable")
     } finally {
       if (fence === mutationFence) setView("busy", false)
     }
@@ -392,6 +444,15 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
         {(data) => <>
           <section class="sf-u18-section">
             <h2>{t("sf.u18.changes.title")}</h2>
+            <Show when={proposalPreparation()}>
+              {(request) => <section class="mx-card sf-u18-section" aria-label={t("sf.u18.proposal.prepare")}>
+                <ul><For each={request().selected}>{(item) => <li>{item.requestId} · {item.operation.amount} {item.operation.currency}</li>}</For></ul>
+                <button type="button" class="mx-btn primary" disabled={view.busy || view.outcomeUnknown || !["ready", "empty"].includes(active()) ||
+                  !operationGranted("decisions.decision-prepare-changes")} onClick={() => void prepareProposal()}>
+                  {t("sf.u18.proposal.prepare")}
+                </button>
+              </section>}
+            </Show>
             <Show when={data().preparedChanges.length > 0} fallback={<p>{language.t("sf.common.empty")}</p>}>
               <ul class="sf-u18-change-list">
                 <For each={data().preparedChanges}>
