@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { mountSfFilesOriginalRoutes } from "../src/sucafina-product/native-ui/files-routing"
+import { mountSfFilesOriginalRoutes } from "../../../modules/sucafina/Sucafinav1/runtime/native-files/routing.ts"
 
 const origin = "https://sf.example"
 const mount = "/sf"

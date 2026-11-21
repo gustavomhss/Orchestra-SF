@@ -19,6 +19,7 @@ import { createLocalIdentity } from "../runtime/local-identity.ts"
 import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
+import { mountSfFilesOriginalRoutes } from "../runtime/native-files/routing.ts"
 
 /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
 export default async function installation(context: { origin: string }) {
@@ -76,6 +77,9 @@ export async function createLocalInstallation(context: { origin: string }, file:
     maxJsonBytes: 2 * 1024 * 1024,
     assets: { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes) => scanLocalFile(bytes, config.scanner) } },
   })
+  const files = operator ? mountSfFilesOriginalRoutes({
+    origin: config.origin, mount: config.mount, sources: { application: business },
+  }) : undefined
   return {
     mount: config.mount,
     async handler(request: Request) {
@@ -155,7 +159,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
         if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
       }
-      const response = await business(request)
+      const response = await files?.(request) ?? await business(request)
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
       if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
       return localChrome(response)

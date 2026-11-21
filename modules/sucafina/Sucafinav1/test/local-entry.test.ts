@@ -102,6 +102,50 @@ test("explicit local operator opens all surfaces after private enrollment and vi
   } finally { await installation.dispose(); await f.store.dispose() }
 })
 
+test("local operator Files export uses the installed business producer and its session", async () => {
+  const f = await localAccess()
+  const installation = await createLocalInstallation({ origin }, f.file, f.environment)
+  try {
+    await f.store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.hotTopics = [{ id: "topic", action: "Installed Files export" }]
+      snapshot.data.__sfProductV1 = { marker: "private authority data" }
+      return { commit: true, value: undefined }
+    })
+    const route = `${origin}/sucafina/dashboard?download=json`
+    expect((await installation.handler(new Request(route)))?.status).toBe(303)
+
+    const enrolled = await installation.handler(new Request(`${origin}/sucafina/auth/local?code=${f.code}`))
+    const cookie = enrolled!.headers.getSetCookie()[0].split(";")[0]
+    const maintenance = await installation.handler(new Request(`${origin}/sucafina/backups`, {
+      method: "POST", headers: { cookie, origin, "content-type": "application/json" },
+      body: JSON.stringify({ action: "run-maintenance" }),
+    }))
+    expect(maintenance?.status).toBe(200)
+    const exported = await installation.handler(new Request(route, { headers: { cookie } }))
+    expect(exported?.status).toBe(200)
+    expect(exported?.headers.get("content-disposition")).toContain("cio-dashboard.json")
+    const data = await exported?.json()
+    expect(data).toMatchObject({ hotTopics: [{ id: "topic", action: "Installed Files export" }] })
+    expect(data).not.toHaveProperty("__sfProductV1")
+    const wrongMethod = await installation.handler(new Request(route, { method: "POST", headers: { cookie, origin } }))
+    expect(wrongMethod?.status).toBe(405)
+    expect(wrongMethod?.headers.get("allow")).toBe("GET")
+
+    const headers = { cookie }
+    const head = await installation.handler(new Request(route, { method: "HEAD", headers }))
+    expect(head?.status).toBe(200)
+    expect(head?.body).toBeNull()
+    const conflictingHead = await installation.handler(new Request(route + "&download=xlsx", { method: "HEAD", headers }))
+    expect(conflictingHead?.status).toBe(400)
+
+    const documents = `${origin}/sucafina/dashboard?sf=document-requests`
+    expect((await installation.handler(new Request(documents, { headers })))?.status).toBe(503)
+    const documentsHead = await installation.handler(new Request(documents, { method: "HEAD", headers }))
+    expect(documentsHead?.status).toBe(405)
+    expect(documentsHead?.body).toBeNull()
+  } finally { await installation.dispose(); await f.store.dispose() }
+})
+
 test("local owner writes persist in isolated local data and audit the actual OS account", async () => {
   const f = await localAccess()
   const installation = await createLocalInstallation({ origin }, f.file, f.environment)
