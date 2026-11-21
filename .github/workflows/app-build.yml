@@ -275,6 +275,7 @@ jobs:
           cmp apps/cli/dist/cli-linux-x64-baseline/bin/orchestra "$vm/current/bin/orchestra"
 
       - name: Exercise installed native Web, Team admission and C17 on loopback
+        id: installed-c17
         env:
           CHECK_RUN_ID: ${{ job.check_run_id }}
           SOURCE_REVISION: ${{ steps.source.outputs.sha }}
@@ -429,6 +430,16 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: orchestra-sf-entra-linux-${{ steps.source.outputs.sha }}
+          path: ${{ runner.temp }}/azure-entra-package
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+
+      - name: Preserve verified bytes if the installed C17 proof fails
+        if: failure() && steps.installed-c17.outcome == 'failure'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: unqualified-linux-c17-diagnostic-${{ steps.source.outputs.sha }}
           path: ${{ runner.temp }}/azure-entra-package
           if-no-files-found: error
           retention-days: 7
