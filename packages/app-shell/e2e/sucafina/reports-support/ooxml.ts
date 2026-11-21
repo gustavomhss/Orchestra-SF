@@ -33,7 +33,9 @@ export async function inspectReport(file: string, format: "docx" | "pptx", saved
   expect(content).toContain(saved.id)
   expect(content).toContain(corpus.annual.start)
   expect(content).toContain(corpus.annual.end)
-  expect(captured.some((row) => row.cells[0].includes("REPORTS_LONG_NOTE_END"))).toBe(true)
+  const longNote = corpus.projects.find((project) => project.notes.endsWith("REPORTS_LONG_NOTE_END"))!
+  const noteId = `projects[id:${longNote.id}].notes`
+  expect(captured.filter((row) => row.valueId === noteId).map((row) => row.cells[0])).toEqual([displayText(`${noteId}: ${longNote.notes}`)])
   expect(content).toContain("No records.")
   expect(content).toContain(`${corpus.forecastField}: ${corpus.before}`)
   expect(content).not.toContain(`${corpus.forecastField}: ${corpus.after}`)
@@ -74,7 +76,9 @@ function xmlTableRows(xml: string, format: "docx" | "pptx", part: string): Physi
   const rows = new RegExp(`<${namespace}:tr(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${namespace}:tr>`, "g")
   return [...xml.matchAll(rows)].flatMap((row, index) => {
     const cells = new RegExp(`<${namespace}:tc(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${namespace}:tc>`, "g")
-    const parsed = [...row[1]!.matchAll(cells)].map((cell) => tableCell(cell[1]!, format))
+    const contents = [...row[1]!.matchAll(cells)].map((cell) => cell[1]!)
+    const hasBoldLabels = format === "docx" && docxContinuationLabels(contents)
+    const parsed = contents.map((cell) => tableCell(cell, format, hasBoldLabels))
     const values = parsed.map((cell) => cell.value)
     const continuation = parsed.map((cell) => cell.continuation) as Continuation
     expect(values, `${format}: ${part} table row ${index + 1} must have value, period and sources cells`).toHaveLength(3)
@@ -82,26 +86,30 @@ function xmlTableRows(xml: string, format: "docx" | "pptx", part: string): Physi
       expect(continuation.every((label) => label === undefined), "Table headers cannot carry captured-record continuation labels").toBe(true)
       return []
     }
+    if (hasBoldLabels) {
+      const properties = /<w:trPr(?:\s[^>]*)?>([\s\S]*?)<\/w:trPr>/.exec(row[1]!)?.[1] ?? ""
+      expect(properties, `DOCX continuation row ${index + 1} must stay together`).toMatch(/<w:cantSplit\s*\/>/)
+    }
     return [{ part, row: index + 1, cells: values as Cells, continuation }]
   })
 }
 
-/** Only an explicitly styled, first paragraph can be layout context. Its identity is checked against the current logical row below. */
-function tableCell(xml: string, format: "docx" | "pptx") {
-  if (format === "pptx") return { value: xmlParagraphs(xml, format).join(""), continuation: undefined }
-  const paragraphs = [...xml.matchAll(/<w:p(?:\s[^>]*)?>[\s\S]*?<\/w:p>/g)].map((paragraph) => paragraph[0])
-  let continuation: string | undefined
-  const value = paragraphs.map((paragraph, index) => {
-    const properties = paragraph.match(/<w:pPr(?:\s[^>]*)?>([\s\S]*?)<\/w:pPr>/)?.[1] ?? ""
-    const styles = [...properties.matchAll(/<w:pStyle\b[^>]*\/>/g)].map((style) => xmlAttributes(style[0])["w:val"])
-    if (!styles.includes("SfCapturedContinuation")) return xmlParagraphs(paragraph, format).join("")
-    expect(styles, "A continuation paragraph has one unambiguous style").toEqual(["SfCapturedContinuation"])
-    expect(index, "Continuation context must be the first paragraph in its cell").toBe(0)
-    expect(continuation, "Only one continuation paragraph is allowed per cell").toBeUndefined()
-    continuation = xmlParagraphs(paragraph, format).join("")
-    return ""
-  }).join("")
-  return { value, continuation }
+/** The installed exporter leads each continuation cell with a bold layout label. */
+function docxContinuationLabels(cells: string[]) {
+  if (cells.length !== 3) return false
+  const first = cells.map((cell) => /<w:p(?:\s[^>]*)?>[\s\S]*?<\/w:p>/.exec(cell)?.[0] ?? "")
+  if (first.some((paragraph) => !/<w:b\s*\/>/.test(paragraph))) return false
+  const labels = first.map((paragraph) => xmlParagraphs(paragraph, "docx").join(""))
+  return /^Record [1-9]\d* · .+ \(continued\)$/.test(labels[0]!) &&
+    /^Period: .+ \(continued\)$/.test(labels[1]!) &&
+    labels[2] === "Sources (continued from the same captured record)"
+}
+
+/** The layout label's identity is checked against the exact logical row below. */
+function tableCell(xml: string, format: "docx" | "pptx", hasBoldLabels: boolean) {
+  const paragraphs = xmlParagraphs(xml, format)
+  return hasBoldLabels ? { value: paragraphs.slice(1).join(""), continuation: normalize(paragraphs[0]!) }
+    : { value: paragraphs.join(""), continuation: undefined }
 }
 
 function verifyContinuation(fragment: PhysicalRow, wanted: ExpectedRow, first: boolean) {
@@ -109,22 +117,11 @@ function verifyContinuation(fragment: PhysicalRow, wanted: ExpectedRow, first: b
     expect(fragment.continuation.every((label) => label === undefined), `docx: first fragment of ${wanted.valueId} cannot be a continuation`).toBe(true)
     return
   }
-  const [value, period, sources] = fragment.continuation
-  const prefix = `Record ${wanted.ordinal} · `
-  const suffix = " (continued)"
-  expect(value?.startsWith(prefix) && value.endsWith(suffix), `docx: continuation must identify record ${wanted.ordinal}`).toBe(true)
-  expect(period?.startsWith("Period: ") && period.endsWith(suffix), `docx: continuation must retain its period`).toBe(true)
-  expect(sources, `docx: continuation must retain its source association`).toBe("Sources (continued from the same captured record)")
-  // Soft wrapping may insert spaces in these short human labels. Complete data
-  // remains subject to the exact ordered value/period/source assertions below.
-  const matchesLabel = (label: string, expected: string) => {
-    const truncated = label.endsWith("…")
-    const shown = (truncated ? label.slice(0, -1) : label).replace(/\s/g, "")
-    const complete = displayText(expected).replace(/\s/g, "")
-    return truncated ? shown.length > 0 && shown.length < complete.length && complete.startsWith(shown) : shown === complete
-  }
-  expect(matchesLabel(value!.slice(prefix.length, -suffix.length), wanted.valueId), `docx: continuation label must belong to ${wanted.valueId}`).toBe(true)
-  expect(matchesLabel(period!.slice("Period: ".length, -suffix.length), wanted.cells[1]), `docx: continuation period must belong to ${wanted.valueId}`).toBe(true)
+  expect(fragment.continuation, `docx: continuation must identify record ${wanted.ordinal} (${wanted.valueId})`).toEqual([
+    `Record ${wanted.ordinal} · ${wanted.valueId} (continued)`,
+    `Period: ${wanted.cells[1]} (continued)`,
+    "Sources (continued from the same captured record)",
+  ])
 }
 
 /** Both formats split long cells into successive physical rows, including across pages or slides. */
