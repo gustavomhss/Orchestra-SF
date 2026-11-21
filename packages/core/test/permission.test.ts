@@ -333,6 +333,54 @@ describe("PermissionV2", () => {
     }),
   )
 
+  it.effect("denies calls without resources even under configured and saved allows", () =>
+    Effect.gen(function* () {
+      yield* setup([{ action: "read", resource: "*", effect: "allow" }])
+      const saved = yield* PermissionSaved.Service
+      yield* saved.add({ projectID: Project.ID.global, action: "read", resources: ["*"] })
+      const service = yield* PermissionV2.Service
+      const empty = assertion({ resources: [] })
+
+      expect(yield* service.evaluate(empty)).toBe("deny")
+      expect(yield* service.ask(empty)).toMatchObject({ effect: "deny" })
+      expect(yield* service.authorize(empty).pipe(Effect.flip)).toBeInstanceOf(PermissionV2.BlockedError)
+      expect(yield* service.askExplicit(empty).pipe(Effect.flip)).toBeInstanceOf(PermissionV2.BlockedError)
+      expect(yield* service.list()).toEqual([])
+    }),
+  )
+
+  it.effect("enforces recorded Session denies while keeping order within each configured ruleset", () =>
+    Effect.gen(function* () {
+      yield* setup([
+        { action: "read", resource: "*", effect: "deny" },
+        { action: "read", resource: "src/*", effect: "allow" },
+      ])
+      const { db } = yield* Database.Service
+      yield* db
+        .update(SessionTable)
+        .set({
+          permission: [
+            { permission: "read", pattern: "*", action: "allow" },
+            { permission: "read", pattern: "src/private/*", action: "deny" },
+            { permission: "read", pattern: "src/private/allowed.ts", action: "allow" },
+          ],
+        })
+        .where(eq(SessionTable.id, assertion().sessionID))
+        .run()
+        .pipe(Effect.orDie)
+      const saved = yield* PermissionSaved.Service
+      yield* saved.add({ projectID: Project.ID.global, action: "read", resources: ["*"] })
+      const service = yield* PermissionV2.Service
+
+      expect(yield* service.evaluate(assertion({ resources: ["README.md"] }))).toBe("deny")
+      const privateResource = assertion({ resources: ["src/private/secret.ts"] })
+      expect(yield* service.evaluate(privateResource)).toBe("deny")
+      expect(yield* service.askExplicit(privateResource).pipe(Effect.flip)).toBeInstanceOf(PermissionV2.BlockedError)
+      expect(yield* service.evaluate(assertion({ resources: ["src/private/allowed.ts"] }))).toBe("allow")
+      expect(yield* service.evaluate(assertion())).toBe("allow")
+    }),
+  )
+
   it.effect("allows managed output reads without granting external directory access", () =>
     Effect.gen(function* () {
       yield* setup([
