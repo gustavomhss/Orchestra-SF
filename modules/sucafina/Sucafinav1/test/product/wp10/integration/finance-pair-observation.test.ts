@@ -7,11 +7,12 @@ import { expect, test } from "bun:test"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
-import { createSfFinancePairObservation } from "../../../../../../../apps/cli/src/sucafina-product/finance-pair-observation.ts"
+import { createSfPortfolioCoverageAuthority } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-coverage-authority.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
-import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
+
+import type { SensitivityRequest } from "../../../../product/contracts/operations.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
@@ -23,7 +24,7 @@ import { compositionTestDeadline } from "./composition-test-deadline.ts"
 
 type Counts = { physical: number; roots: number; work: number; afterClose?: { root: number; work: number; outside: boolean } }
 
-test("Finance observes the exact candidate and baseline with fewer physical reads and closes on revocation or source change", async () => {
+test("Finance uses the wired coverage pair and closes on revocation or source change", async () => {
   const deadline = compositionTestDeadline("finance-pair-observation")
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-finance-pair-"))
   deadline.own(() => rm(directory, { recursive: true, force: true }))
@@ -128,14 +129,10 @@ test("Finance observes the exact candidate and baseline with fewer physical read
     const scenarios = business.plannerProduct.scenarios
     if (!scenarios) throw new Error("Canonical scenario reader unavailable")
     const pair = { scenarioRefs: [results[1]!.reference, results[0]!.reference], criteria: [] }
-    let selected: TrustedUiContext | undefined = admitted
-    const observe = createSfFinancePairObservation({ host: business.host, state: authority.state, lockedSourceFences: business.lockedSourceFences,
-      selectedScope: (call) => call === selected ? { ref, current: () => call === selected } : undefined,
-      readerIdentities: () => [scenarios.resolveMany, scenarios.resolve, business.cases.read, business.plannerSources.resolveForecastSource] })
+    const observe = business.withPlannerObservation
     const measure = async (grouped: boolean, afterRoot?: () => Promise<void>) => {
       const counts: Counts = { physical: 0, roots: 0, work: 0 }
       const call = ok(await authority.ui.admit(request(), "sf_scenario_simulate", admissionDigest))
-      selected = call
       try {
         expect(await authority.ui.validate(call, "sf_scenario_simulate", admissionDigest)).toBe(true)
         const result = await business.withCase(call, ref, {}, async () => {
@@ -150,7 +147,7 @@ test("Finance observes the exact candidate and baseline with fewer physical read
           } finally { control.counts = undefined; control.afterRoot = undefined }
         })
         return { result, counts }
-      } finally { selected = admitted; authority.ui.finish(call) }
+      } finally { authority.ui.finish(call) }
     }
     const scalar = await measure(false)
     const value = ok(scalar.result)
@@ -162,6 +159,53 @@ test("Finance observes the exact candidate and baseline with fewer physical read
     expect(grouped.counts.physical).toBeLessThan(scalar.counts.physical)
     const typedFailure = { status: "stale", reason: "fixture-canonical-stale" } as const
     expect(await business.withCase(admitted, ref, {}, () => observe(pair, admitted, async () => typedFailure))).toEqual(typedFailure)
+    const coverageRequest: SensitivityRequest = { scenarioRef: pair.scenarioRefs[0]!,
+      parameterBounds: { parameterRef: "line:1", minimum: 0, maximum: 400, steps: 2 },
+      criterion: { id: "cost", operator: "lte", value: 0 } }
+    const actor = { principalRef: admitted.binding.principalRef, accessRevision: admitted.binding.accessRevision, policyVersion: admitted.binding.policyVersion }
+    const coverage = createSfPortfolioCoverageAuthority({ authority, business, registries: {
+      selection: { read: async () => ({ status: "ok", value: {
+        ...actor, schema: "sf-portfolio-selection-v1", selectionRef: "fixture-selection", caseRef: ref,
+        baselineAlternativeId: "baseline", alternativeId: "candidate", baselineRef: pair.scenarioRefs[1]!,
+        alternativeRef: pair.scenarioRefs[0]!, criteria: ["cost"], comparisonDigest: digestSfValue(pair),
+        version: 1, createdAt: at, selectionDigest: digestSfValue(ref),
+      } }) },
+      rules: { resolve: async () => ({ status: "ok", value: {
+        ...actor, schema: "sf-criterion-rule-v1", ruleRef: "fixture-rule", caseRef: ref,
+        criterionId: "cost", metricRef: "planner:known-subtotal-difference", operator: "lte", value: 0,
+        unit: "USD", period, evidenceRefs: basis.sourceRefs, version: 1, criterionDigest: digestSfValue(ref),
+        installationId: admitted.binding.installationId, projectId: admitted.binding.projectId,
+        createdAt: at, recordDigest: digestSfValue(pair),
+      } }) },
+    } })
+    const scalarReads: string[] = []
+    const readHistorical = business.results.readHistoricalScenario
+    business.results.readHistoricalScenario = async (request, call) => {
+      scalarReads.push(request.resultRef)
+      return readHistorical(request, call)
+    }
+    let pairCalls = 0
+    business.withPlannerObservation = async (incoming, call, work) => {
+      pairCalls++
+      expect(incoming).toEqual(pair)
+      expect(call).toBe(admitted)
+      expect(scalarReads).toEqual(pair.scenarioRefs)
+      const resolved = ok(await observe(incoming, call, work))
+      expect(Array.isArray(resolved)).toBe(true)
+      expect(resolved).toMatchObject(value.map((entry) => ({ status: "ok", value: { result: ok(entry).result } })))
+      return typedFailure
+    }
+    try {
+      const runCoverage = (baselineRef: string) => business.withCase(admitted, ref, {}, () => coverage(coverageRequest, baselineRef, admitted))
+      expect(await runCoverage(coverageRequest.scenarioRef)).toEqual({ status: "unavailable", reason: "portfolio-coverage-selection-mismatch" })
+      expect(scalarReads).toEqual([])
+      expect(pairCalls).toBe(0)
+      expect(await runCoverage(pair.scenarioRefs[1]!)).toEqual(typedFailure)
+      expect(pairCalls).toBe(1)
+    } finally {
+      business.results.readHistoricalScenario = readHistorical
+      business.withPlannerObservation = observe
+    }
     const revoked = await measure(true, async () => { control.active = false })
     expect(revoked.result.status).not.toBe("ok")
     expect(revoked.counts.work).toBe(1)
