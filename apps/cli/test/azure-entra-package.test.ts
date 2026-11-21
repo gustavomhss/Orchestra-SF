@@ -43,7 +43,11 @@ it.live.skipIf(process.platform !== "linux")(
     const workspace = resolve(import.meta.dir, "../../..")
     const source = join(fixture.input.dist, `cli-${target}`)
     const out = join(fixture.root, "entra-package")
+    const web = join(fixture.root, "web")
+    const index = '<!doctype html><html data-orchestra-brand="sucafina" data-sucafina-artwork="ready"><title>Sucafina</title></html>'
     const before = yield* Effect.promise(async () => {
+      await mkdir(web)
+      await writeFile(join(web, "index.html"), index)
       await rename(fixture.source, source)
       await writeFile(join(source, "package.json"), JSON.stringify({
         name: `@humanguardrail/cli-${target}`, version: fixture.input.version, os: ["linux"], cpu: ["x64"],
@@ -56,10 +60,14 @@ it.live.skipIf(process.platform !== "linux")(
     const git = yield* app.run(ChildProcess.make("git", ["rev-parse", "--verify", "HEAD"], { cwd: workspace }))
     expect(git.exitCode).toBe(0)
     const sha = git.stdout.toString().trim()
-    const produced = yield* app.run(ChildProcess.make(process.execPath, [
+    const packager = [
       join(workspace, "apps/cli/script/azure-entra-package.ts"),
-      "--dist", fixture.input.dist, "--out", out, "--source-sha", sha,
-    ], { cwd: workspace }))
+      "--dist", fixture.input.dist, "--source-sha", sha, "--web", web,
+    ]
+    const overlapping = yield* app.run(ChildProcess.make(process.execPath, [...packager, "--out", join(web, "package")], { cwd: workspace }))
+    expect(overlapping.exitCode).not.toBe(0)
+    expect(overlapping.stderr.toString()).toContain("Package output overlaps a distribution source")
+    const produced = yield* app.run(ChildProcess.make(process.execPath, [...packager, "--out", out], { cwd: workspace }))
     if (produced.exitCode !== 0) throw new Error(produced.stderr.toString())
 
     yield* Effect.promise(async () => {
@@ -68,6 +76,11 @@ it.live.skipIf(process.platform !== "linux")(
       const extracted = join(fixture.root, "extracted")
       await mkdir(extracted)
       await new Bun.Archive(bytes).extract(extracted)
+      expect(await readFile(join(extracted, "bin/web/index.html"), "utf8")).toBe(index)
+      const manifest = await Bun.file(join(extracted, "distribution.json")).json()
+      expect(manifest.files).toContainEqual(expect.objectContaining({
+        path: "bin/web/index.html", sha256: hash(Buffer.from(index)),
+      }))
       const bundlePath = join(extracted, "bin/local/entry.mjs")
       const bundleSha256 = hash(await readFile(bundlePath))
       const receipt = await Bun.file(join(out, "orchestra-sf-entra-package-receipt.json")).json()
