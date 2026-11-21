@@ -18,6 +18,21 @@ const archiveFile = "orchestra-sf-entra-linux-x64-baseline.tar.gz"
 const factorySource = "modules/sucafina/Sucafinav1/local/microsoft-entry.ts"
 const hash = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex")
 
+type PackagedFactory = {
+  default: unknown
+  createMicrosoftInstallation: (
+    context: { origin: string },
+    file: string,
+    environment: Record<string, string>,
+    overrides: { fetch(): Promise<Response> },
+  ) => Promise<{
+    mount: string
+    trustedIngress: { origin: string; authorize(proof?: string): boolean }
+    handler(request: Request): Promise<Response | undefined>
+    dispose(): Promise<void>
+  }>
+}
+
 it.live.skipIf(process.platform !== "linux")(
   "Azure Entra package preserves the raw CLI and mounts the extracted Microsoft factory",
   () => Effect.scoped(Effect.gen(function* () {
@@ -83,8 +98,7 @@ it.live.skipIf(process.platform !== "linux")(
       await writeFile(join(directory, "client-secret.txt"), "synthetic-package-test", { mode: 0o600 })
       await writeFile(join(directory, "ingress-secret.txt"), proof, { mode: 0o600 })
 
-      const factory: typeof import("../../../modules/sucafina/Sucafinav1/local/microsoft-entry") =
-        await import(pathToFileURL(bundlePath).href)
+      const factory: PackagedFactory = await import(pathToFileURL(bundlePath).href)
       expect(typeof factory.default).toBe("function")
       const external = { calls: 0 }
       const installation = await factory.createMicrosoftInstallation({ origin }, file, {

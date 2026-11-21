@@ -150,7 +150,11 @@ async function stageFactory(workspace: string, destination: string) {
 async function requireCheckout(workspace: string, expected: string) {
   const actual = (await $`git rev-parse --verify HEAD`.cwd(workspace).text()).trim()
   if (actual !== expected) throw new Error("The checkout does not match --source-sha")
-  if ((await $`git status --porcelain=v1 --untracked-files=all`.cwd(workspace).text()).trim())
+  // test-ci normalizes its request and records it outside the package's source inputs.
+  const metadata = process.env.CI === "true" && process.env.GITHUB_REF_NAME?.startsWith("ci-run-")
+    ? [":(exclude,top).ci-run.json", ":(exclude,top)test-ci-evidence/request.json"] : []
+  const status = (await $`git status --porcelain=v1 --untracked-files=all -- . ${metadata}`.cwd(workspace).text()).trim()
+  if (status)
     throw new Error("The Entra package requires a clean source checkout")
   return actual
 }
