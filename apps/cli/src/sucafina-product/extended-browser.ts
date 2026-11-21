@@ -32,7 +32,23 @@ if (root && bootstrap) {
     try { return await work() }
     finally { if (--foregroundRequests === 0) root.removeAttribute("data-sf-review-foreground") }
   }
-  let probing = false
+  let focusProbe: AbortController | undefined
+  const navigation = (window as Window & { navigation?: EventTarget & {
+    navigate: (url: string) => { committed: Promise<unknown>; finished: Promise<unknown> }
+  } }).navigation
+  const resumeNavigation = () => root.removeAttribute("data-sf-review-navigating")
+  const beginNavigation = () => {
+    root.setAttribute("data-sf-review-navigating", "")
+    root.dispatchEvent(new Event("sucafina:review-foreground-start", { bubbles: true }))
+    focusProbe?.abort()
+  }
+  navigation?.addEventListener("navigate", (event) => {
+    if (closed || !("navigationType" in event) || event.navigationType !== "reload" ||
+      !("signal" in event) || !(event.signal instanceof AbortSignal) || event.signal.aborted) return
+    beginNavigation()
+    event.signal.addEventListener("abort", resumeNavigation, { once: true })
+  })
+  navigation?.addEventListener("navigateerror", resumeNavigation)
   const clearPrivate = () => {
     if (closed) return
     closed = true; generation += 1
@@ -55,9 +71,9 @@ if (root && bootstrap) {
     } catch { return undefined } finally { clearTimeout(timer); pending.delete(controller) }
   })
   const probe = async () => {
-    if (closed || probing) return
-    probing = true
+    if (closed || focusProbe || foregroundRequests || root.hasAttribute("data-sf-review-navigating")) return
     const controller = new AbortController(); pending.add(controller)
+    focusProbe = controller
     const timer = setTimeout(() => controller.abort(), 30_000)
     try {
       const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
@@ -67,7 +83,7 @@ if (root && bootstrap) {
       // Its refresh retains pending human commands and never retries a mutation.
       if (response.ok && !closed && !controller.signal.aborted) await discussion?.refresh()
     } catch { /* A network failure does not authorize a new render or erase preserved history. */ }
-    finally { clearTimeout(timer); pending.delete(controller); probing = false }
+    finally { clearTimeout(timer); pending.delete(controller); focusProbe = undefined }
   }
   window.addEventListener("focus", () => { void probe() })
   // The shell has just reopened this exact review/preparation under current
@@ -192,19 +208,14 @@ if (root && bootstrap) {
       openReview: (reference) => {
         if (closed || root.hasAttribute("data-sf-review-navigating")) return
         const destination = reviewUrl(reference)
-        const navigation = (window as Window & { navigation?: {
-          navigate: (url: string) => { committed: Promise<unknown>; finished: Promise<unknown> }
-        } }).navigation
         if (typeof navigation?.navigate !== "function") { location.assign(destination); return }
-        const resume = () => root.removeAttribute("data-sf-review-navigating")
-        root.setAttribute("data-sf-review-navigating", "")
-        root.dispatchEvent(new Event("sucafina:review-foreground-start", { bubbles: true }))
+        beginNavigation()
         try {
           // The outgoing document remains alive until the destination commits.
           // Let this actual navigation settle before resuming its background poll.
           const transition = navigation.navigate(destination.href)
-          void Promise.all([transition.committed, transition.finished]).then(resume, resume)
-        } catch { resume() }
+          void Promise.all([transition.committed, transition.finished]).then(resumeNavigation, resumeNavigation)
+        } catch { resumeNavigation() }
       } })
     const choices = document.createElement("fieldset"), legend = document.createElement("legend"), message = document.createElement("p")
     legend.textContent = "Seleção da revisão sucessora"; choices.append(legend); message.setAttribute("role", "status")
