@@ -4,6 +4,7 @@ import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SfPageFrame, type SfCopyKey, type SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
+import { SfActionButton } from "../../shared/frame/presentation"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfCreateCase } from "./create"
 import { useSfCases, sfOperationReady } from "./model"
@@ -48,11 +49,7 @@ export function SfCasesView(props: SfSurfaceProps): JSX.Element {
         disabled: !isPage() || !canCreate(), busy: false,
         onInvoke: () => setUi("create", true),
       }}
-      secondaryActions={[{
-        id: "refresh-case-list", labelKey: key("sf.ui33.check"), tone: "secondary",
-        disabled: cases.read.state === "loading", busy: false,
-        onInvoke: () => cases.reload(),
-      }]}
+      secondaryActions={[]}
     >
       <div class="sf-n24 sf-cases" data-sf-creating={ui.create ? "true" : "false"}>
         <Show when={isPage()} fallback={<SfStatePanel state="invalid" messageKey={key("sf.ui33.unavailable")} />}>
@@ -79,6 +76,11 @@ export function SfCasesView(props: SfSurfaceProps): JSX.Element {
                   <button class="mx-btn" type="button" onClick={() => setUi("filter", "")}>{t("sf.ui33.clear")}</button>
                 </Show>
               </div>
+              <SfActionButton variant="secondary" action={{
+                id: "refresh-case-list", labelKey: key("sf.ui33.check"), tone: "secondary",
+                disabled: cases.read.state === "loading", busy: false,
+                onInvoke: () => cases.reload(),
+              }} />
             </div>
             <Show when={state() === "ready"}>
               <ul class="sf-n24-record-list sf-cases-records">

@@ -34,8 +34,22 @@ const screens = [
 ] as const
 let previewBytes = 0
 
+type Cap01ReadDiagnostic = {
+  httpStatus: number | null
+  selection: Record<string, number>
+  body: Record<string, unknown>
+}
+type CaptureDiagnostics = {
+  consoleErrors: string[]
+  pageErrors: string[]
+  cap01Reads: Cap01ReadDiagnostic[]
+}
+const diagnosticsByPage = new WeakMap<Page, CaptureDiagnostics>()
+
 designTest.afterEach(async ({ page }, info) => {
-  if (info.status === info.expectedStatus || page.isClosed()) return
+  if (info.status === info.expectedStatus) return
+  await emitFailureDiagnostics(page, info)
+  if (page.isClosed()) return
   try {
     await capture(page, info, "FAILED-native-wave-one-test-data", true)
   } catch {
@@ -47,12 +61,37 @@ designTest("installed native first-wave design · real operator, source data, re
   designTest.setTimeout(240_000)
   expect(info.project.metadata.bundle, "use the existing production runner").toBe("production")
   previewBytes = 0
-  const errors: string[] = []
-  const consoleErrors: string[] = []
+  const diagnostics: CaptureDiagnostics = { consoleErrors: [], pageErrors: [], cap01Reads: [] }
+  diagnosticsByPage.set(page, diagnostics)
+  const errors = diagnostics.pageErrors
+  const consoleErrors = diagnostics.consoleErrors
   const sourceOrigins = new Set<string>()
   const creationRequests: string[] = []
-  page.on("pageerror", (error) => errors.push(error.name + ": " + error.message))
-  page.on("console", (message) => { if (message.type() === "error") consoleErrors.push(message.text()) })
+  page.on("pageerror", (error) => recordMessage(errors, error.stack ?? error.name + ": " + error.message))
+  page.on("console", (message) => { if (message.type() === "error") recordMessage(consoleErrors, message.text()) })
+  // Original GET route verified in native-ui/domain.ts; never log headers,
+  // enrollment URLs, or an unfiltered response envelope.
+  const cap01Path = installation.mount + "/api/ui/pages/CAP01"
+  page.on("response", (response) => {
+    const url = new URL(response.url())
+    if (response.request().method() !== "GET" || url.origin !== installation.origin || url.pathname !== cap01Path) return
+    const entry: Cap01ReadDiagnostic = {
+      httpStatus: response.status(), selection: numericSelection(Object.fromEntries(url.searchParams)),
+      body: { state: "response body pending" },
+    }
+    recordRead(diagnostics, entry)
+    void response.text().then((body) => { entry.body = readBodyDiagnostic(body) }).catch(() => {
+      entry.body = { state: "response body unavailable" }
+    })
+  })
+  page.on("requestfailed", (request) => {
+    const url = new URL(request.url())
+    if (request.method() !== "GET" || url.origin !== installation.origin || url.pathname !== cap01Path) return
+    recordRead(diagnostics, {
+      httpStatus: null, selection: numericSelection(Object.fromEntries(url.searchParams)),
+      body: { failure: redact(request.failure()?.errorText ?? "transport failed").slice(0, 512) },
+    })
+  })
   page.on("request", (request) => {
     const url = new URL(request.url())
     if (url.pathname === "/api/sucafina/installations" || url.pathname.startsWith(installation.mount + "/"))
@@ -117,6 +156,12 @@ designTest("installed native first-wave design · real operator, source data, re
   await expect(confirm).toBeEnabled()
   await reflow(page)
   await capture(page, info, "UI33-dark-desktop-inline-review-test-data", true)
+  const createPanel = page.getByRole("region", { name: "Create a decision", exact: true })
+  await createPanel.scrollIntoViewIfNeeded()
+  await expect(createPanel).toBeInViewport({ ratio: 1 })
+  await expect(confirm).toBeInViewport({ ratio: 1 })
+  await expect(form.getByRole("button", { name: "Cancel", exact: true })).toBeInViewport({ ratio: 1 })
+  await capture(page, info, "UI33-dark-desktop-review-actions-test-data", true)
   await confirm.click()
   const opened = form.getByRole("link", { name: "Open decision", exact: true })
   await expect(opened).toBeVisible()
@@ -134,7 +179,7 @@ designTest("installed native first-wave design · real operator, source data, re
   await search.fill("no-matching-design-test-case")
   await expect(list.getByRole("listitem")).toHaveCount(0)
   await search.press("Tab")
-  const clear = list.getByRole("button")
+  const clear = list.getByRole("button", { name: "Clear filter", exact: true })
   await expect(clear).toHaveCount(1)
   await expect(clear).toBeFocused()
   await expect(clear).toHaveCSS("outline-style", "solid")
@@ -164,36 +209,6 @@ designTest("installed native first-wave design · real operator, source data, re
     if (screen.id === "CAP01") {
       await page.locator("[data-dashboard-signals]").scrollIntoViewIfNeeded()
       await capture(page, info, "CAP01-dark-desktop-signals-test-data", true)
-      const yearControl = page.getByLabel("Year", { exact: true })
-      await expect(yearControl).toBeVisible()
-      await expect(yearControl).toBeEnabled()
-      await expect(yearControl.getByRole("option", { name: String(installation.year), exact: true })).toHaveCount(1)
-      await yearControl.selectOption(String(installation.year))
-      await expect(yearControl).toHaveValue(String(installation.year))
-      await ready(page, "Executive Dashboard")
-      // The original annual summary has no activeRisks field. Do not promote
-      // the separately supplied current risk count into a selected-year value.
-      const annualRisks = page.locator('[data-sf-metric="risks"]')
-      await expect(annualRisks).toHaveAttribute("data-sf-value", "missing")
-      await expect(annualRisks.locator("dd")).toHaveText("Not available from this source")
-      const monthControl = page.getByLabel("Month", { exact: true })
-      await expect(monthControl).toBeVisible()
-      await expect(monthControl).toBeEnabled()
-      await expect(monthControl.getByRole("option", { name: String(installation.month), exact: true })).toHaveCount(1)
-      await monthControl.selectOption(String(installation.month))
-      await expect(monthControl).toHaveValue(String(installation.month))
-      const editor = page.locator('[data-sf-u02-edit="save-users"]')
-      await expect(editor.getByLabel("Total IT users", { exact: true })).toHaveValue("128")
-      await editor.getByLabel("Total IT users", { exact: true }).fill("129")
-      await editor.getByRole("button", { name: "Review source change", exact: true }).click()
-      const change = page.locator('[data-component="sf-change-review"]')
-      await expect(change.getByRole("button", { name: "Confirm save", exact: true })).toBeEnabled()
-      await change.scrollIntoViewIfNeeded()
-      await capture(page, info, "CAP01-dark-desktop-inline-review-test-data", true)
-      await change.getByRole("button", { name: "Cancel review", exact: true }).click()
-      await expect(change).toHaveCount(0)
-      await editor.getByRole("button", { name: "Discard draft", exact: true }).click()
-      await expect(editor.getByLabel("Total IT users", { exact: true })).toHaveValue("128")
     }
   }
   await scheme(page, "light")
@@ -214,7 +229,9 @@ designTest("installed native first-wave design · real operator, source data, re
   await fillCase(form, installation.year, objective + " · unsubmitted review")
   await form.getByRole("button", { name: "Review creation", exact: true }).click()
   await expect(form.getByRole("group", { name: "Review creation", exact: true }).getByRole("listitem")).toHaveText(criteria)
-  await form.getByRole("button", { name: "Confirm this decision creation", exact: true }).scrollIntoViewIfNeeded()
+  const narrowActions = form.locator(".sf-n24-actions")
+  await narrowActions.scrollIntoViewIfNeeded()
+  await expect(narrowActions).toBeInViewport({ ratio: 1 })
   await reflow(page)
   await capture(page, info, "UI33-light-320-inline-review-test-data", true)
   await form.getByRole("button", { name: "Cancel", exact: true }).click()
@@ -231,11 +248,46 @@ designTest("installed native first-wave design · real operator, source data, re
   await narrowResume.scrollIntoViewIfNeeded()
   await expect(narrowResume).toBeInViewport({ ratio: 1 })
   await capture(page, info, "UI29-dark-390-resume-test-data", true)
+  // Collect all static views first. The real editor remains a required gate:
+  // any unavailable source, broken draft or review still fails this test.
+  await page.setViewportSize({ width: 1440, height: 1100 })
+  await enter(screens[2])
+  await scheme(page, "dark")
+  const yearControl = page.getByLabel("Year", { exact: true })
+  await expect(yearControl).toBeVisible()
+  await expect(yearControl).toBeEnabled()
+  await expect(yearControl.getByRole("option", { name: String(installation.year), exact: true })).toHaveCount(1)
+  await yearControl.selectOption(String(installation.year))
+  await expect(yearControl).toHaveValue(String(installation.year))
+  await ready(page, "Executive Dashboard")
+  // The original annual summary has no activeRisks field. Do not promote
+  // the separately supplied current risk count into a selected-year value.
+  const annualRisks = page.locator('[data-sf-metric="risks"]')
+  await expect(annualRisks).toHaveAttribute("data-sf-value", "missing")
+  await expect(annualRisks.locator("dd")).toHaveText("Not available from this source")
+  const monthControl = page.getByLabel("Month", { exact: true })
+  await expect(monthControl).toBeVisible()
+  await expect(monthControl).toBeEnabled()
+  await expect(monthControl.getByRole("option", { name: String(installation.month), exact: true })).toHaveCount(1)
+  await monthControl.selectOption(String(installation.month))
+  await expect(monthControl).toHaveValue(String(installation.month))
+  const editor = page.locator('[data-sf-u02-edit="save-users"]')
+  await expect(editor.getByLabel("Total IT users", { exact: true })).toHaveValue("128")
+  await editor.getByLabel("Total IT users", { exact: true }).fill("129")
+  await editor.getByRole("button", { name: "Review source change", exact: true }).click()
+  const change = page.locator('[data-component="sf-change-review"]')
+  await expect(change.getByRole("button", { name: "Confirm save", exact: true })).toBeEnabled()
+  await change.scrollIntoViewIfNeeded()
+  await capture(page, info, "CAP01-dark-desktop-inline-review-test-data", true)
+  await change.getByRole("button", { name: "Cancel review", exact: true }).click()
+  await expect(change).toHaveCount(0)
+  await editor.getByRole("button", { name: "Discard draft", exact: true }).click()
+  await expect(editor.getByLabel("Total IT users", { exact: true })).toHaveValue("128")
   expect([...sourceOrigins]).toEqual([installation.origin])
   await info.attach("native-wave-one-evidence", {
     body: JSON.stringify({ source: "isolated canonical producer test data", casesCreated: creationRequests.length,
       views: ["UI29", "UI33", "CAP01"], widths: [1440, 320, 390], schemes: ["dark", "light"],
-      actualBrowserZoom: "not measured", consoleErrors: consoleErrors.map(redact), pageErrors: errors.map(redact) }, null, 2),
+      actualBrowserZoom: "not measured", consoleErrors, pageErrors: errors, cap01Reads: diagnostics.cap01Reads }, null, 2),
     contentType: "application/json",
   })
   expect(errors, "unhandled errors from the real native application").toEqual([])
@@ -303,6 +355,65 @@ async function capture(page: Page, info: TestInfo, name: string, preview: boolea
     console.info("SF_DESIGN_PREVIEW " + JSON.stringify({ name, part: part + 1, parts, data: encoded.slice(part * 24000, (part + 1) * 24000) }))
 }
 
+function recordMessage(messages: string[], value: string) {
+  const safe = redact(value).slice(0, 1024)
+  if (!messages.includes(safe)) messages.push(safe)
+  if (messages.length > 8) messages.shift()
+}
+
+function recordRead(diagnostics: CaptureDiagnostics, entry: Cap01ReadDiagnostic) {
+  diagnostics.cap01Reads.push(entry)
+  if (diagnostics.cap01Reads.length > 8) diagnostics.cap01Reads.shift()
+}
+
+function numericSelection(value: unknown): Record<string, number> {
+  if (!value || typeof value !== "object") return {}
+  const selection: Record<string, number> = {}
+  for (const key of ["year", "month", "execYear", "executiveMonth", "opsMonth"]) {
+    const field: unknown = Reflect.get(value, key)
+    if (typeof field === "number" && Number.isFinite(field)) selection[key] = field
+    if (typeof field === "string" && /^\d{1,4}$/.test(field)) selection[key] = Number(field)
+  }
+  return selection
+}
+
+function readBodyDiagnostic(text: string): Record<string, unknown> {
+  try {
+    const parsed: unknown = JSON.parse(text)
+    if (!parsed || typeof parsed !== "object") return { state: "non-object JSON response" }
+    const status: unknown = Reflect.get(parsed, "status")
+    const reason: unknown = Reflect.get(parsed, "reason")
+    const value: unknown = Reflect.get(parsed, "value")
+    const selection = value && typeof value === "object" ? Reflect.get(value, "selection") : undefined
+    return {
+      status: typeof status === "string" ? redact(status).slice(0, 64) : "not provided",
+      ...(typeof reason === "string" ? { reason: redact(reason).slice(0, 512) } : {}),
+      selection: numericSelection(selection),
+    }
+  } catch {
+    return { state: "non-JSON response", excerpt: redact(text).slice(0, 512) }
+  }
+}
+
+async function emitFailureDiagnostics(page: Page, info: TestInfo) {
+  const diagnostics = diagnosticsByPage.get(page) ?? { consoleErrors: [], pageErrors: [], cap01Reads: [] }
+  await info.attach("FAILED-native-wave-one-diagnostics", {
+    body: JSON.stringify(diagnostics, null, 2), contentType: "application/json",
+  })
+  console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "summary", testStatus: info.status,
+    consoleErrors: diagnostics.consoleErrors.length, pageErrors: diagnostics.pageErrors.length,
+    cap01Reads: diagnostics.cap01Reads.length }))
+  for (const [index, message] of diagnostics.consoleErrors.entries())
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "console-error", index, message }))
+  for (const [index, message] of diagnostics.pageErrors.entries())
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "page-error", index, message }))
+  for (const [index, read] of diagnostics.cap01Reads.entries())
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "CAP01-read", index, ...read }))
+}
+
 function redact(value: string) {
-  return value.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/code=[^&\s"']+/g, "code=[redacted]")
+  return value.replace(/[a-f0-9]{64}/g, "[redacted]")
+    .replace(/https?:\/\/[^\s"'<>]+/g, "[url]")
+    .replace(/\b(?:Bearer|Basic)\s+[A-Za-z0-9._~+/-]+=*/gi, "[credential]")
+    .replace(/\b(code|token|password|secret|authorization)\s*[:=]\s*("[^"]*"|'[^']*'|[^\s&,]+)/gi, "$1=[redacted]")
 }

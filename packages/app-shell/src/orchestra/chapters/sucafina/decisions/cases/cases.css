@@ -39,9 +39,12 @@
 }
 .sf-cases .sf-cases-list-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) auto;
   align-items: end;
   gap: var(--sf-cases-space-md) var(--sf-cases-space-lg);
+}
+.sf-cases .sf-cases-list-head > .sf-action {
+  justify-self: end;
 }
 .sf-cases .sf-cases-list-head h2 {
   padding-block: var(--sf-cases-space-sm);
@@ -252,6 +255,7 @@
   min-inline-size: 0;
 }
 .sf-cases .sf-cases-review-criteria ol {
+  list-style: decimal;
   display: grid;
   gap: var(--sf-cases-space-xs);
   margin: var(--sf-cases-space-sm) 0 0;
@@ -346,6 +350,12 @@
   }
   .sf-cases .sf-cases-open {
     justify-self: stretch;
+  }
+  .sf-cases .sf-cases-list-head > .sf-action {
+    justify-self: stretch;
+  }
+  .sf-cases .sf-cases-list-head > .sf-action .sf-action-button {
+    inline-size: 100%;
   }
   .sf-cases .sf-n24-actions {
     display: grid;

@@ -1,4 +1,4 @@
-import { Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
+import { Show, createEffect, createMemo, createSignal, onCleanup, untrack } from "solid-js"
 import type { JSX } from "solid-js"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfOwnerKey, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
@@ -182,7 +182,9 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
     const version = props.version
     const value = props.value
     if (version !== undefined) {
-      draft().receiveRemote({ baseVersion: version, value: { text: value === undefined ? "" : String(value) } })
+      const controller = draft()
+      // Remote sync must not subscribe this effect to the draft state it publishes.
+      untrack(() => controller.receiveRemote({ baseVersion: version, value: { text: value === undefined ? "" : String(value) } }))
     }
   })
   const [review, setReview] = createSignal<SfU02ReviewIntent>()
