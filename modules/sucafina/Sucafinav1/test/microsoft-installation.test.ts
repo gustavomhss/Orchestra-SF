@@ -1,11 +1,16 @@
 import { createSfTeamPurchaseMcp } from "../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts"
+import { LayerNode } from "@orchestra/core/effect/layer-node"
+import { AppProcess } from "@orchestra/core/process"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { expect, test } from "bun:test"
 import { Database } from "bun:sqlite"
-import { Schema } from "effect"
+import { Effect, Schema } from "effect"
+import { ChildProcess } from "effect/unstable/process"
 import { mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
+import { fileURLToPath } from "node:url"
 import { exportJWK, generateKeyPair, SignJWT } from "jose"
 import { createMicrosoftInstallation } from "../local/microsoft-entry.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
@@ -15,7 +20,7 @@ import { createLocalBackups } from "../runtime/local-backups.ts"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
 import type { LocalConfiguration } from "../runtime/local-configuration.ts"
 import { initialProcurementSettings } from "../src/initial-settings.ts"
-import { changed } from "../runtime/contract.ts"
+import { changed, object } from "../runtime/contract.ts"
 import { teamProfileInstallationId } from "../runtime/team-profile-access.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { bindMicrosoftInstallation } from "../runtime/microsoft-configuration.ts"
@@ -176,7 +181,7 @@ test("Installed purchase MCP keeps paired A/B procurement in its admitted Team",
     throw new Error("Unexpected synthetic Microsoft request")
   }
   const f = await fixture("direct", fetch, [teamObjectId, secondTeamId], {
-    dashboard: {}, planner: {}, procurement: { requester: "group:" + grantPrincipal },
+    dashboard: {}, planner: {}, procurement: { requester: "group:" + grantPrincipal, buyer: "group:" + grantPrincipal },
   }, undefined, { purchasePrincipals: principals })
   try {
     const signIn = async (principal: string) => {
@@ -206,16 +211,18 @@ test("Installed purchase MCP keeps paired A/B procurement in its admitted Team",
     ].map(async ([principal, team, ref, label]) => {
       const cookie = await signIn(principal!)
       const partition = digestSfValue({ installationId, tenantId, teamObjectId: team })
-      const store = await openLocalStore(join(f.directory, "business-teams", partition))
+      const storePath = join(f.directory, "business-teams", partition)
+      const store = await openLocalStore(storePath)
       try {
         await store.transaction("procurement", async (snapshot) => {
           const at = new Date(epoch * 1000).toISOString()
           const entry = { version: 1, request: {
-            number: ref, createdBy: principal, createdAt: at, status: "sourcing",
-            pr: { title: "Test purchase " + label },
-            sourcing: { selectedId: null, quotes: [1, 2, 3].map((id) => ({
-              id: label + id, supplier: "Supplier " + label + id, total: id * 100,
-              currency: "USD", techPass: true, scores: {}, techScores: {}, commScores: {},
+            number: ref, createdBy: principal, buyerId: principal, createdAt: at, status: "sourcing", history: [],
+            pr: { title: "Test purchase " + label, estAmount: 100, recurring: false, expenseType: "OPEX" },
+            prApproval: null, po: null,
+            sourcing: { selectedId: null, fxSnapshot: null, approval: null, contractStrategy: "new", quotes: [1, 2, 3].map((id) => ({
+              id: label + id, supplier: "Supplier " + label + id, total: id * 100, qty: 1, unitPrice: id * 100,
+              currency: "USD", techPass: true, scores: [5, 4, 3, 4, 5], cscores: [0, 4, 5],
             })) },
           } }
           snapshot.data.store = { settings: initialProcurementSettings(), requests: { [ref!]: entry } }
@@ -223,7 +230,7 @@ test("Installed purchase MCP keeps paired A/B procurement in its admitted Team",
           return { commit: true, value: undefined }
         })
       } finally { await store.dispose() }
-      return { cookie, team: team!, ref: ref!, label, token: await pair(cookie, team!) }
+      return { cookie, team: team!, ref: ref!, label, storePath, token: await pair(cookie, team!) }
     }))
     const rpc = (token: string, method: string, params?: Record<string, unknown>, extra?: Record<string, string>) =>
       f.installation.handler(ingress("/api/claw/mcp", {
@@ -255,6 +262,63 @@ test("Installed purchase MCP keeps paired A/B procurement in its admitted Team",
       }
     }
     const a = cases[0]!
+    if (process.platform === "linux") {
+      expectSpawn(import.meta.path)
+      const control = crypto.randomUUID()
+      const proxy = Bun.serve({ hostname: "127.0.0.1", port: 0, async fetch(request) {
+        const pathname = new URL(request.url).pathname
+        if (request.method !== "POST") return new Response(null, { status: 405 })
+        if (pathname === mount + "/api/claw/mcp") {
+          const headers = Object.fromEntries(Array.from(request.headers).filter(([name]) => name !== "host"))
+          return await f.installation.handler(ingress("/api/claw/mcp", headers, {
+            method: "POST", body: await request.text(),
+          })) ?? new Response(null, { status: 404 })
+        }
+        if (pathname !== "/confirm" || request.headers.get("authorization") !== "Bearer " + control)
+          return new Response(null, { status: 404 })
+        const input = await request.json() as { reviewUrl: string; version: number; quoteId: string }
+        const review = new URL(input.reviewUrl)
+        expect(review.origin).toBe(origin)
+        expect(review.pathname).toBe(`${mount}/teams/${a.team}/procurement`)
+        expect(review.searchParams.get("request")).toBe(a.ref)
+        expect(input.quoteId).toBe("A1")
+        const confirmed = await f.installation.handler(ingress(review.pathname.slice(mount.length) + "?page=Requests", {
+          cookie: a.cookie, origin, "content-type": "application/json",
+        }, { method: "POST", body: JSON.stringify({
+          page: "Requests", action: "select_quote", id: a.ref, version: input.version, values: { quoteId: input.quoteId },
+        }) }))
+        expect(confirmed?.status, await confirmed?.clone().text()).toBe(200)
+        expect(await confirmed?.json()).toMatchObject({ ok: true })
+        const persisted = await openLocalStore(a.storePath)
+        try {
+          await persisted.transaction("procurement", async (snapshot) => {
+            const entry = object(object(object(snapshot.data.store).requests)[a.ref])
+            expect(snapshot.versions[`requests:${a.ref}`]?.version).toBe(2)
+            expect(entry).toMatchObject({ version: 2, request: {
+              status: "sourcing", sourcing: { selectedId: "A1" }, po: { sourceQuoteId: "A1" }, history: [{
+                by: oid, action: "Quotation selected — PO proposal generated", note: "Supplier A1",
+              }],
+            } })
+            return { commit: false, value: undefined }
+          })
+        } finally { await persisted.dispose() }
+        return new Response(null, { status: 204 })
+      } })
+      try {
+        const script = fileURLToPath(new URL("../../../../packages/script/test/sf-purchase-invoke.node-smoke.mjs", import.meta.url))
+        const run = await Effect.runPromise(Effect.gen(function* () {
+          const processService = yield* AppProcess.Service
+          const result = yield* processService.run(ChildProcess.make("node", [script, "--installed-fixture"]), {
+            stdin: JSON.stringify({ url: proxy.url.origin, control, tokens: { A: a.token, B: cases[1]!.token } }),
+            timeout: "10 minutes", maxErrorBytes: 16_384, maxOutputBytes: 16_384,
+          })
+          return yield* AppProcess.requireSuccess(result)
+        }).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
+        const receipt = run.stdout.toString().split("\n").find((line) => line.startsWith("SF synthetic purchase "))
+        expect(receipt).toBe("SF synthetic purchase PR-2026-0901: A/B 4/4, confirmed A1, version 1 -> 2, one quotation selection in history.")
+        console.log(receipt)
+      } finally { await proxy.stop(true) }
+    }
     membership.revokeOnRoleCheck = true
     expect((await call(a.token, a.ref))?.status).toBe(403)
     expect(membership.teamRemoved).toBe(true)
@@ -267,7 +331,7 @@ test("Installed purchase MCP keeps paired A/B procurement in its admitted Team",
     })))?.status).toBe(204)
     expect((await call(rotated, a.ref))?.status).toBe(403)
   } finally { await f.close() }
-}, 20_000)
+}, 620_000)
 
 test("Corporate dashboard authorizes only current, enabled direct Teams from the signed HTTPS session", async () => {
   const keys = await generateKeyPair("RS256", { extractable: true })
