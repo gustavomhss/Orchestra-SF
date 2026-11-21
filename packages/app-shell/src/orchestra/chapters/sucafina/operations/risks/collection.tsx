@@ -322,6 +322,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
     const callKey = crypto.randomUUID()
     const abort = new AbortController()
     setStore({ busy: true, error: null })
+    let commitStage = "prepare-pending"
     try {
       if (action === "save" && snap?.availability === "active") {
         const bytes = new TextEncoder().encode(JSON.stringify(
@@ -330,8 +331,10 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
           .map((n) => n.toString(16).padStart(2, "0")).join("")
         currentDraft!.controller.setPending({ operationRef, idempotencyKey: callKey,
           payloadDigest: digest, expectedVersion: row ? version(row)! : null })
+        commitStage = "publish-submitting"
         currentDraft!.controller.setPhase("submitting")
       }
+      commitStage = "send-command"
       const result: WriteResult = action === "save" && snap?.availability === "active"
         ? await spec.save(r.ready.transport, { id: row ? String(row.id) : undefined,
           version: row ? version(row)! : 0, values: snap.value }, abort.signal, callKey)
@@ -339,12 +342,16 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
           ? await spec.delete(r.ready.transport, { id: String(row.id), version: version(row)! },
             abort.signal, callKey)
           : { kind: "error", state: "invalid", errors: [] }
+      commitStage = "present-result"
       if (nowReady()?.identity !== r.identity) return
       if (result.kind === "ok") {
+        commitStage = "publish-confirmed"
         setStore({ error: null, warnings: result.warnings, mode: action === "delete" ? "list" : "detail",
           selected: action === "delete" ? null : store.selected })
+        commitStage = "track-confirmed"
         if (action === "save") setConfirmed({ draft: currentDraft!.controller, operationRef,
           id: row ? idOf(row.id) : null })
+        commitStage = "reload-source"
         refresh()
       } else if (result.kind === "outcome-unknown") {
         currentDraft?.controller.setPhase("outcome-unknown")
@@ -357,7 +364,12 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
           setStore({ status: result.state, ownerId: "", rows: undefined, actions: [] })
       }
     } catch (error: unknown) {
-      console.error("N16 mutation result unknown")
+      const stack = error instanceof Error ? error.stack?.split("\n").slice(1, 7).join("\n")
+        .replace(/https?:\/\/[^/\s)]+/g, "[origin]")
+        .replace(/[?#][^\s)]*/g, "")
+        .slice(0, 2048) : undefined
+      console.error("N16 mutation result unknown", commitStage,
+        error instanceof Error ? error.name : "unknown", stack ?? "")
       currentDraft?.controller.setPhase("outcome-unknown")
       setStore({ unknown: true, error: t("sf.common.operationUnknown") })
     } finally {

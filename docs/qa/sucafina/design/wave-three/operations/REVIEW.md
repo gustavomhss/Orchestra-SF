@@ -159,3 +159,11 @@ Security: select the reference period, inspect producer KPIs, open annual/monthl
 Risks and relationships: use the register filter, open the record for the full detail, then edit and review. Assessment factors and priority labels retain the same saved values.
 
 Performance: review commitments and their source weights, open a sub-item for ownership and quarterly detail, then edit or add the corresponding item/sub-item. Weights use the original fractional scale; a global score is unavailable unless the source supplies one.
+
+## Bounded verification after the six-journey split (Ops7, in progress)
+
+Service/security run `44947197315` passed both real-write journeys (3.0m), and BR run `44947277075` passed the desktop/390px journey (1.8m); both reported no page or console errors. Their logs yielded 23 and 25 complete normal previews respectively. CAP11 monthly replacement now verifies source values in Original and Current source instead of an empty-month claim.
+
+Records run `44947272207` / job `136977226477` completed with three failures. CAP13 and CAP15 reached Save, then the local `N16 mutation result unknown` catch kept the review unresolved; the current evidence does not identify the throw or establish success. A temporary diagnostic reports only the local phase, error name and stack frames without the message/first line or payload. The existing uncertain-outcome behavior is preserved. CAP16 stopped before Save because the split records spec lacked the `scrollableEditor` helper; its identical existing helper is restored from the BR spec, retaining the bounded-height and real-scroll assertions. The missing helper is a test-split defect, separate from the product mutation failure.
+
+Peer visual review of the final BR CAP13/CAP15 overview, detail, editor and review captures found one presentation defect: CAP15 desktop split the word “acompanhamento” inside the Priority column. A local CSS rule reserves room for the priority value and permits wrapping between words. No other refinement is included. This visual finding is independent of the unresolved records mutation failure. Final records writes, final state mapping and visual completion remain pending.

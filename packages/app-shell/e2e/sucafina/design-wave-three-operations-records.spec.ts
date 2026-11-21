@@ -308,6 +308,16 @@ async function loaded(page: Page, id: typeof screens[number]["id"]) {
   await scrollPageTop(page)
 }
 
+async function scrollableEditor(page: Page) {
+  const scroller = page.locator('[data-sf-frame="page"] .mx-page')
+  const sizes = await scroller.evaluate((element) => ({ client: element.clientHeight, content: element.scrollHeight }))
+  expect(sizes.client, "the frame receives bounded height through the native view wrapper").toBeGreaterThan(0)
+  expect(sizes.content, "the long editor stays inside the native scroll region").toBeGreaterThan(sizes.client)
+  await scroller.evaluate((element) => element.scrollTo({ top: element.scrollHeight, behavior: "instant" }))
+  await expect.poll(() => scroller.evaluate((element) => element.scrollTop)).toBeGreaterThan(0)
+  await scrollPageTop(page)
+}
+
 async function editorGeometry(editor: Locator) {
   await expect(editor).toBeVisible()
   const bounds = await editor.boundingBox()
