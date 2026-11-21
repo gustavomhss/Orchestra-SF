@@ -83,16 +83,16 @@ export function createAuthenticationSecrets(options: {
     clock(at)
     return options.read((db) => current(db, key, at))
   }
-  const usage = (db: Database): Usage => db.query<Usage, []>(`
+  const usage = (db: Database, at: number): Usage => db.query<Usage, [number, number]>(`
     SELECT
       (SELECT COUNT(*) FROM authentication_issuance) +
         (SELECT COUNT(*) FROM authentication_payloads AS p WHERE NOT EXISTS (SELECT 1 FROM authentication_issuance AS h WHERE h.key = p.key)) AS records,
       (SELECT COUNT(*) FROM authentication_issuance) AS handles,
       (SELECT COUNT(*) FROM authentication_payloads) AS payloads,
       (SELECT COALESCE(SUM(length(payload)), 0) FROM authentication_payloads) AS bytes,
-      (SELECT COUNT(*) FROM authentication_issuance WHERE kind = 'login' AND state IN ('issued', 'pending')) +
-        (SELECT COUNT(*) FROM authentication_payloads AS p WHERE length(p.key) = 135 AND substr(p.key, 65, 7) = ':login:' AND NOT EXISTS (SELECT 1 FROM authentication_issuance AS h WHERE h.key = p.key)) AS challenges
-  `).get()!
+      (SELECT COUNT(*) FROM authentication_issuance WHERE kind = 'login' AND state IN ('issued', 'pending') AND expires_at > ?) +
+        (SELECT COUNT(*) FROM authentication_payloads AS p WHERE length(p.key) = 135 AND substr(p.key, 65, 7) = ':login:' AND p.expires_at > ? AND NOT EXISTS (SELECT 1 FROM authentication_issuance AS h WHERE h.key = p.key)) AS challenges
+  `).get(at, at)!
   const payload = (db: Database, key: string, at: number) => db.query<PayloadRow, [string, number]>("SELECT payload, expires_at FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)
   const markRevoked = (db: Database, key: string, handle: AuthHandle) => {
     // Conversion preserves the existing logical key and its fixed lifetime; it never admits an unknown handle.
@@ -116,7 +116,7 @@ export function createAuthenticationSecrets(options: {
           const previous = payload(db, key, at)
           const handle = current(db, key, at)
           if (!previous || !handle || expiresAt !== previous.expires_at || expiresAt !== handle.expiresAt || expiresAt <= at) return
-          const counted = usage(db)
+          const counted = usage(db, at)
           if (counted.bytes - previous.payload.byteLength + bytes.byteLength > options.limits.maxBytes) return
           db.query("UPDATE authentication_payloads SET payload = ? WHERE key = ?").run(bytes, key)
           return
@@ -183,7 +183,7 @@ export function createAuthenticationSecrets(options: {
           if (db.query<{ found: number }, [string, string]>("SELECT 1 AS found FROM authentication_issuance WHERE key = ? UNION ALL SELECT 1 AS found FROM authentication_payloads WHERE key = ? LIMIT 1").get(input.key, input.key) || current(db, input.key, input.at)) return false
           const parent = input.parent ? current(db, input.parent, input.at) : undefined
           if (keyParts.kind === "session" && (!parent || parent.state !== "pending" || parent.expiresAt <= input.at || parent.retainUntil < input.expiresAt)) return false
-          const counted = usage(db)
+          const counted = usage(db, input.at)
           if (counted.records >= options.limits.maxRecords || counted.bytes + bytes.byteLength > options.limits.maxBytes ||
             (keyParts.kind === "login" && counted.challenges >= options.limits.maxChallenges)) return false
           db.query("INSERT INTO authentication_issuance (key, kind, state, expires_at, retain_until, parent_key) VALUES (?, ?, ?, ?, ?, ?)")

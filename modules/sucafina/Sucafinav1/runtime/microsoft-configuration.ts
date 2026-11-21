@@ -1,5 +1,6 @@
+import { randomUUID } from "node:crypto"
 import { constants } from "node:fs"
-import { lstat, open, realpath } from "node:fs/promises"
+import { link, lstat, open, realpath, unlink } from "node:fs/promises"
 import path from "node:path"
 import { isIP } from "node:net"
 import type { LocalConfiguration } from "./local-configuration.ts"
@@ -54,7 +55,7 @@ export function validateMicrosoftConfiguration(value: unknown): MicrosoftConfigu
     const url = new URL(value[key])
     if (url.origin !== value[key] || url.protocol !== "http:" || !url.hostname) throw new Error("Explicit Microsoft HTTP proxy origin required")
   }
-  if (typeof value.mount !== "string" || !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(value.mount)) throw new Error("Invalid Microsoft mount")
+  if (typeof value.mount !== "string" || !/^\/[A-Za-z0-9_-]+$/.test(value.mount)) throw new Error("Invalid Microsoft mount")
   if (typeof value.tenantId !== "string" || !microsoftUuid.test(value.tenantId) || typeof value.clientId !== "string" || !microsoftUuid.test(value.clientId)) throw new Error("Microsoft resource tenant and client IDs required")
   if (typeof value.workspaceDirectory !== "string" || !path.isAbsolute(value.workspaceDirectory) || path.resolve(value.workspaceDirectory) !== value.workspaceDirectory) throw new Error("Separate canonical Microsoft agent workspace required")
   if (!("scanner" in value) || (value.scanner !== null && (!record(value.scanner) || value.scanner.host !== "127.0.0.1" || typeof value.scanner.port !== "number" || !Number.isInteger(value.scanner.port) || value.scanner.port < 1 || value.scanner.port > 65535 || Object.keys(value.scanner).some((key) => !["host", "port"].includes(key))))) throw new Error("Invalid Microsoft scanner configuration")
@@ -91,13 +92,21 @@ export async function bindMicrosoftInstallation(directory: string, config: Micro
   const existing = await lstat(file).catch((error: unknown) => { if (hasCode(error, "ENOENT")) return undefined; throw error })
   if (!existing) {
     if (await lstat(path.join(directory, "business-microsoft")).catch((error: unknown) => { if (hasCode(error, "ENOENT")) return undefined; throw error })) throw new Error("Unbound Microsoft business directory cannot be adopted")
-    const handle = await open(file, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600).catch((error: unknown) => { if (hasCode(error, "EEXIST")) return undefined; throw error })
-    if (handle) {
-      try { await handle.writeFile(`${JSON.stringify(binding)}\n`); await handle.sync() }
-      finally { await handle.close() }
+    for (const name of ["business", "business-local"]) {
+      if (await lstat(path.join(directory, name)).catch((error: unknown) => { if (hasCode(error, "ENOENT")) return undefined; throw error }))
+        throw new Error("Microsoft installation requires a separate private directory from local profiles")
     }
+    const temporary = path.join(directory, `.microsoft-identity-${randomUUID()}`)
+    const handle = await open(temporary, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600)
+    try {
+      try {
+        await handle.writeFile(`${JSON.stringify(binding)}\n`)
+        await handle.sync()
+      } finally { await handle.close() }
+      await link(temporary, file).catch((error: unknown) => { if (!hasCode(error, "EEXIST")) throw error })
+    } finally { await unlink(temporary) }
   }
-  const stored = privateJson((await privateBytes(file, 4096)).toString("utf8"))
+  const stored = privateJson((await privateBytes(file, 4096, { allowBindingLink: true })).toString("utf8"))
   if (!record(stored) || Object.keys(stored).length !== 3 || stored.version !== 1 || stored.tenantId !== config.tenantId || stored.clientId !== config.clientId) throw new Error("Microsoft installation identity cannot change")
 }
 
@@ -106,12 +115,12 @@ async function privateDirectory(directory: string) {
   if (!metadata.isDirectory() || metadata.isSymbolicLink() || process.getuid?.() !== metadata.uid || (metadata.mode & 0o077) !== 0 || await realpath(directory) !== directory) throw new Error("Private owner-only Microsoft directory required")
 }
 
-async function privateBytes(file: string, maximum: number) {
+async function privateBytes(file: string, maximum: number, options?: { allowBindingLink?: boolean }) {
   if (await realpath(path.dirname(file)) !== path.dirname(file)) throw new Error("Private Microsoft file path required")
   const handle = await open(file, constants.O_RDONLY | constants.O_NOFOLLOW)
   try {
     const metadata = await handle.stat()
-    if (!metadata.isFile() || process.getuid?.() !== metadata.uid || (metadata.mode & 0o077) !== 0 || metadata.nlink !== 1 || metadata.size < 1 || metadata.size > maximum) throw new Error("Private owner-only Microsoft file required")
+    if (!metadata.isFile() || process.getuid?.() !== metadata.uid || (metadata.mode & 0o077) !== 0 || (!options?.allowBindingLink && metadata.nlink !== 1) || metadata.size < 1 || metadata.size > maximum) throw new Error("Private owner-only Microsoft file required")
     const bytes = await handle.readFile()
     if (bytes.byteLength > maximum) throw new Error("Microsoft private file exceeds limit")
     return bytes

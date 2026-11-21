@@ -23,12 +23,13 @@ import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-
 import { scanLocalFile } from "../runtime/local-scanner.ts"
 
 /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
-export default async function installation(context: { origin: string }) {
+export default async function installation(context: { origin: string; publicOrigin?: string }) {
   if (process.env.SUCAFINA_MICROSOFT_CONFIG !== undefined) {
     const microsoft = await prepareMicrosoftInstallation(context, process.env.SUCAFINA_MICROSOFT_CONFIG)
     const configured = await createConfiguredInstallation(microsoft.loaded, microsoft)
     return { ...configured, transport: microsoft.transport }
   }
+  if (context.publicOrigin !== undefined && context.publicOrigin !== context.origin) throw new Error("Local installation public origin mismatch")
   return createLocalInstallation(context, process.env.SUCAFINA_LOCAL_CONFIG)
 }
 

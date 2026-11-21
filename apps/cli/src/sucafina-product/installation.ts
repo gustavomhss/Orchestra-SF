@@ -27,7 +27,7 @@ export async function loadSfInstallation(file: string, origin: string, publicOri
   if (!path.isAbsolute(file) || new URL(origin).origin !== origin) throw new Error("SF_INSTALLATION_ABSOLUTE_PATH_AND_ORIGIN_REQUIRED")
   const module = await import(pathToFileURL(await realpath(file)).href)
   if (typeof module.default !== "function") throw new Error("SF_INSTALLATION_FACTORY_REQUIRED")
-  const value: unknown = await module.default({ origin })
+  const value: unknown = await module.default({ origin, publicOrigin })
   const installation = await composeSfInstallation(value, origin).catch(async (error: unknown) => {
     if (value && typeof value === "object" && "dispose" in value && typeof value.dispose === "function")
       await value.dispose()
@@ -112,14 +112,33 @@ export async function composeSfInstallation(value: unknown, origin: string) {
             if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
             return bodyFailure(400)
           }
-          const raw = incoming.method === "GET" || incoming.method === "HEAD" ? null : source ? source.body : Stream.toReadableStream(
-            NodeStream.fromReadable<Uint8Array, RequestBodyError>({
-              evaluate: () => NodeHttpServerRequest.toIncomingMessage(sanitized),
-              // Cancelling the reader must not destroy the socket before the 413 response is flushed.
-              closeOnDone: false,
-              onError: () => new RequestBodyError(400),
-            }), { strategy: { highWaterMark: 0 } },
-          )
+          const body = { reader: undefined as ReadableStreamDefaultReader<Uint8Array> | undefined }
+          const raw = incoming.method === "GET" || incoming.method === "HEAD" ? null : source ? source.body : new ReadableStream<Uint8Array>({
+            async pull(controller) {
+              // The Node adapter starts pulling when constructed. Defer it until the consumer asks for bytes.
+              const reader = body.reader ??= Stream.toReadableStream(NodeStream.fromReadable<Uint8Array, RequestBodyError>({
+                evaluate: () => NodeHttpServerRequest.toIncomingMessage(sanitized),
+                closeOnDone: false,
+                onError: () => new RequestBodyError(400),
+              }), { strategy: { highWaterMark: 0 } }).getReader()
+              const chunk = await reader.read()
+              if (body.reader !== reader) return
+              if (!chunk.done) {
+                controller.enqueue(chunk.value)
+                return
+              }
+              reader.releaseLock()
+              body.reader = undefined
+              controller.close()
+            },
+            async cancel(reason) {
+              const reader = body.reader
+              if (!reader) return
+              body.reader = undefined
+              try { await reader.cancel(reason) }
+              finally { reader.releaseLock() }
+            },
+          }, { highWaterMark: 0 })
           const bounded = limitRequestBody(raw, { limit, declared, signal: boundSignal })
           try {
             if (bounded.failure()) return bodyFailure(bounded.failure()!.status)
