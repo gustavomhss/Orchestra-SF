@@ -58,6 +58,7 @@ const program = Effect.scoped(Effect.gen(function* () {
     serverPassword,
     seed: async ({ config, store, actorId }) => {
       configuration = config
+      process.stdout.write("SF_DESIGN_STAGE configuration\n")
       const loaded = await loadLocalConfiguration(config)
       const operator = loaded.config.localOperator
       if (fourthWave) {
@@ -68,6 +69,7 @@ const program = Effect.scoped(Effect.gen(function* () {
           ...loaded.config, localOperator: { ...operator, buyer: true },
         }, null, 2) + "\n", { mode: 0o600 })
       }
+      process.stdout.write("SF_DESIGN_STAGE dashboard-seed\n")
       await store.transaction("dashboard", async (snapshot) => {
         const actor: Actor = { id: actorId, roles: ["admin"], canWrite: true }
         const environment = { at: now.toISOString(), id: randomUUID, directory: [] }
@@ -160,6 +162,7 @@ const program = Effect.scoped(Effect.gen(function* () {
         if (thirdWave) seedWaveThreeDashboard(snapshot, actor, environment, year, month)
         return { commit: true, value: undefined }
       })
+      process.stdout.write("SF_DESIGN_STAGE planner-seed\n")
       if (thirdWave) await store.transaction("planner", async (snapshot) => {
         const actor: Actor = { id: actorId, roles: ["admin"], canWrite: true }
         const environment = { at: now.toISOString(), id: randomUUID, directory: [] }
@@ -167,15 +170,22 @@ const program = Effect.scoped(Effect.gen(function* () {
         if (fourthWave) seedWaveFourPlanner(snapshot, actor, environment, year)
         return { commit: true, value: undefined }
       })
+      process.stdout.write("SF_DESIGN_STAGE procurement-seed\n")
       if (fourthWave) await store.transaction("procurement", async (snapshot) => {
         if (!operator?.name) throw new Error("Native procurement directory identity is unavailable")
         seedWaveFourProcurement(snapshot, { id: actorId, roles: ["admin", "buyer"], canWrite: true },
           { at: now.toISOString(), id: randomUUID, directory: [{ id: actorId, name: operator.name }] }, year)
         return { commit: true, value: undefined }
       })
+      process.stdout.write("SF_DESIGN_STAGE seed-complete\n")
     },
   })
-  if (fourthWave) yield* Effect.promise(() => seedWaveFourDecisions(installed, year))
+  process.stdout.write("SF_DESIGN_STAGE native-ready\n")
+  if (fourthWave) {
+    process.stdout.write("SF_DESIGN_STAGE decisions-seed\n")
+    yield* Effect.promise(() => seedWaveFourDecisions(installed, year))
+    process.stdout.write("SF_DESIGN_STAGE decisions-ready\n")
+  }
   if (!configuration) throw new Error("Native installation configuration was not observed")
   // The fixture consumed its own enrollment. Mint a new genuine one-use handoff
   // for the browser; no cookie, authority map or successful projection is invented.
@@ -204,7 +214,10 @@ try {
 } catch (error: unknown) {
   if (!stop.signal.aborted) {
     const message = error instanceof Error ? error.stack ?? error.message : String(error)
-    process.stderr.write(message.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/code=[^&\s"']+/g, "code=[redacted]").slice(-8192) + "\n")
+    const safe = message.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/code=[^&\s"\']+/g, "code=[redacted]").slice(-8192)
+    // Persist the bounded diagnostic before exit; the process exit event can beat stderr delivery.
+    await writeFile(path.join(privateRoot, "failure.txt"), safe, { mode: 0o600 }).catch(() => undefined)
+    process.stderr.write(safe + "\n")
     process.exitCode = 1
   }
 }
