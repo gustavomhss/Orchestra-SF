@@ -120,3 +120,34 @@ export function verifyInstalledC17({ receiptBytes, log, spec, source, artifact, 
     "C17 markers missing from the producer log")
   return hash(receiptBytes)
 }
+
+export const treeSitterProbe = Object.freeze({
+  runId: "44938712507",
+  jobId: "136950960448",
+  workflowSHA: "a7c28cab7225808d010f2dc3a43e724d30699e6c",
+  specPath: ".github/ci/archive-tree-sitter-proof.py",
+  specSha256: "11bd52434b94dfe0f095f1b559c7d6aeec5d94b883e2ce5dc8014bcb6dc1584f",
+  receiptSha256: "0409e19342c44da5978382e5149c4a586c7b630ebc9a82549ee942572823fdab",
+  logSha256: "c9f21abc6cf9268fd9278b6c56cc0a653d1c83ef3a40566dd90193b60ba007c6",
+})
+
+export function verifyTreeSitterProbe({ receiptBytes, log, spec, archive }) {
+  const receipt = JSON.parse(receiptBytes)
+  assert.deepEqual([
+    hash(receiptBytes), hash(log), spec.path, spec.sha256,
+    receipt.schema, receipt.status, receipt.sourceSHA, receipt.workflowSHA, receipt.runId,
+    receipt.runAttempt, receipt.checkRunId, receipt.artifactId, receipt.archiveSha256,
+    receipt.binarySha256, receipt.sourceSha256?.probe,
+  ], [
+    treeSitterProbe.receiptSha256, treeSitterProbe.logSha256, treeSitterProbe.specPath, treeSitterProbe.specSha256,
+    "sf-archive-tree-sitter-proof-v1", "pass", original.sourceSHA, treeSitterProbe.workflowSHA, treeSitterProbe.runId,
+    "1", treeSitterProbe.jobId, String(original.artifactId), original.tarSHA,
+    original.packedCliSha256, spec.sha256,
+  ], "Tree-sitter execution must bind the authentic probe and the exact tar")
+  assert(log.includes(Buffer.from(receipt.caseName + ": PASS")))
+  const companions = Object.entries(receipt.companions)
+  const members = new Map(archive.map((file) => [file.path, file.sha256]))
+  assert.equal(companions.length, 15)
+  for (const [name, digest] of companions) assert.equal(members.get(name), digest)
+  return treeSitterProbe.receiptSha256
+}

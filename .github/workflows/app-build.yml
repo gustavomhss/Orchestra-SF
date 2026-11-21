@@ -20,6 +20,7 @@ jobs:
     env:
       PACKAGE_SHA: e32bd1186d966de218d49825aca00728d2e87175
       PRODUCER_SHA: 47c0e101f3ce03edd58e5ca84fe88fec9f09e591
+      TREE_SITTER_SHA: a7c28cab7225808d010f2dc3a43e724d30699e6c
       ZIP_SHA: b94e62d50aec2a06422ee69c5fc8c319cd20be1f9ef0e66898a7fd6f9c92b15c
       TAR_SHA: 04226af757d903dc496f6a5f5599864f325a278c5cf141216a5ce7a36bb3a9c1
     steps:
@@ -39,6 +40,12 @@ jobs:
         with:
           ref: ${{ env.PRODUCER_SHA }}
           path: producer
+          persist-credentials: false
+      - name: Check out the Tree-sitter execution harness
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ env.TREE_SITTER_SHA }}
+          path: tree-sitter-probe
           persist-credentials: false
       - name: Collect original artifact by immutable ID
         env:
@@ -60,6 +67,14 @@ jobs:
             unzip -p "$out/original.zip" "$name" > "$out/$name"
           done
           printf '%s  %s\n' "$TAR_SHA" "$out/orchestra-sf-entra-linux-x64-baseline.tar.gz" | sha256sum --check
+          test "$(git -C tree-sitter-probe rev-parse HEAD)" = "$TREE_SITTER_SHA"
+          git -C tree-sitter-probe cat-file commit HEAD > "$out/tree-sitter.commit"
+          git -C tree-sitter-probe ls-tree -r -z HEAD > "$out/tree-sitter.tree"
+          git -C tree-sitter-probe show HEAD:.github/ci/archive-tree-sitter-proof.py > "$out/tree-sitter-harness.py"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14720892156/zip" > "$out/tree-sitter.zip"
+          printf '%s  %s\n' d9a80fe108ce9f4b64c1caaf5d6a47b652bba07690247f2a65b0cc037d23de7e "$out/tree-sitter.zip" | sha256sum --check
+          unzip -p "$out/tree-sitter.zip" proof.json > "$out/tree-sitter-receipt.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/jobs/136950960448/logs" > "$out/tree-sitter-job.log"
           if [[ -n "$SIDE_CAR_ARTIFACT_ID" ]]; then
             [[ "$SIDE_CAR_ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]
             gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$SIDE_CAR_ARTIFACT_ID/zip" > "$out/evidence.zip"

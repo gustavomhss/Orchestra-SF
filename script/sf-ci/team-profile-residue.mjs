@@ -800,6 +800,7 @@ export function auditResidues(input) {
     ...(historical ? {
       producerReceiptSha256: artifact.receiptSha256, validatorSha256: historical.validatorSha256,
       ...(artifact.installedC17Sha256 === undefined ? {} : { installedC17Sha256: artifact.installedC17Sha256 }),
+      ...(artifact.executedTreeSitterSha256 === undefined ? {} : { executedTreeSitterSha256: artifact.executedTreeSitterSha256 }),
       ...(artifact.compileEvidenceSha256 === undefined ? {} : {
         compileEvidenceSha256: artifact.compileEvidenceSha256, packedCliSha256: artifact.packedCliSha256,
         compileProvenanceSha256: artifact.compileProvenanceSha256, webManifestSha256: artifact.webManifestSha256,

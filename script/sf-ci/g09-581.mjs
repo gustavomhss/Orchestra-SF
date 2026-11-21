@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import { readFile, writeFile, realpath } from "node:fs/promises"
 import path from "node:path"
 import { auditResidues, gitBlob, hash, parseCanonicalJson, readSource, readTarArchive, record, verifyGitSource } from "./team-profile-residue.mjs"
-import { original, verifyOriginalBytes, verifyProducer, verifyInstalledC17 } from "./g09-581-package.mjs"
+import { original, verifyOriginalBytes, verifyProducer, verifyInstalledC17, treeSitterProbe, verifyTreeSitterProbe } from "./g09-581-package.mjs"
 
 const [candidateArg, producerArg, evidenceRoot] = process.argv.slice(2)
 const env = process.env
@@ -55,6 +55,14 @@ async function audit() {
     receiptBytes: await read("c17-team-proof.json"), log: await read("c17-team-proof.log"),
     spec: evidenceFiles.get(".github/ci/entra-team-c17.mjs"), source, artifact, archive: archiveFiles,
   })
+  const treeSitterSource = verifyGitSource(await read("tree-sitter.commit"), await read("tree-sitter.tree"), treeSitterProbe.workflowSHA)
+  const probeBytes = await read("tree-sitter-harness.py")
+  assert.equal(gitBlob(probeBytes), treeSitterSource.entries.find((entry) => entry.path === treeSitterProbe.specPath)?.oid)
+  const probe = record("source", treeSitterProbe.specPath, probeBytes)
+  artifact.executedTreeSitterSha256 = verifyTreeSitterProbe({
+    receiptBytes: await read("tree-sitter-receipt.json"), log: await read("tree-sitter-job.log"), spec: probe, archive: archiveFiles,
+  })
+  evidenceFiles.set(probe.path, probe)
   const historical = {
     toolSource: tool, toolRecords, evidenceFiles,
     validatorSha256: hash(JSON.stringify(toolRecords.map((file) => [file.path, file.sha256]))),
