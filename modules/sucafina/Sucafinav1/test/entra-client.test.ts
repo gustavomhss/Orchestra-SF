@@ -270,6 +270,48 @@ test("membership response cannot grant an unrequested group ID", async () => {
   await failure(() => f.client.resolve("synthetic-access", [row("Finance's owners", "admin")]))
 })
 
+test("confidential role resolution checks configured group object IDs directly", async () => {
+  const member = "abcdefab-cdef-4abc-8abc-abcdefabcdef"
+  const f = await fixture({
+    profile: "web-confidential",
+    clientSecret: async () => "synthetic-secret",
+    route: async (request) => {
+      if (request.url !== `${graph}/me/checkMemberGroups`) return
+      expect(request.method).toBe("POST")
+      expect(await request.json()).toEqual({ groupIds: [member, other] })
+      return Response.json({ value: [member.toUpperCase()] })
+    },
+  })
+  expect(await f.client.resolve("synthetic-access", [
+    row(`group:${member.toUpperCase()}`, "admin"),
+    row(`group:${other}`),
+    row(null, "admin"),
+  ])).toEqual({ id: oid, roles: [{ surface: "dashboard", role: "admin" }], canWrite: true })
+  expect(f.requests.map((request) => new URL(request.url).pathname))
+    .toEqual(["/v1.0/me", "/v1.0/me/checkMemberGroups"])
+})
+
+test("confidential role resolution rejects malformed mappings before checking membership", async () => {
+  const f = await fixture({ profile: "web-confidential", clientSecret: async () => "synthetic-secret" })
+  for (const mapping of ["", "Finance owners", group, "group:not-a-uuid", `group:${group} `]) {
+    expect(await failure(() => f.client.resolve("synthetic-access", [row(`group:${group}`), row(mapping, "admin")])))
+      .toContain("Invalid Entra group mapping")
+  }
+  expect(f.requests.every((request) => new URL(request.url).pathname === "/v1.0/me")).toBe(true)
+})
+
+test("confidential role resolution fails closed on malformed or unrequested membership IDs", async () => {
+  for (const value of [[group, other], [group, "bad-id"], [group, 42], [group, group]]) {
+    const f = await fixture({
+      profile: "web-confidential",
+      clientSecret: async () => "synthetic-secret",
+      route: (request) => request.url === `${graph}/me/checkMemberGroups` ? Response.json({ value }) : undefined,
+    })
+    expect(await failure(() => f.client.resolve("synthetic-access", [row(`group:${group}`, "admin")])))
+      .toContain("Invalid Entra membership response")
+  }
+})
+
 for (const config of [{ tenantId: "common", clientId }, { tenantId: tenant, clientId: "invalid" }, { tenantId: "", clientId }]) {
   test(`invalid UUID configuration fails before network: ${JSON.stringify(config)}`, async () => {
     const requests: Request[] = []
