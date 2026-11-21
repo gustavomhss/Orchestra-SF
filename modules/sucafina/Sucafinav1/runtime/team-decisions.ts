@@ -33,19 +33,20 @@ export async function runTeamDecisions(input: {
   })
   const unavailable = () => Promise.reject(new Error("Team Decisions evidence provider unavailable"))
   const assets: AssetPersistence = persistence
+  const guardedPersistence = {
+    ...persistence,
+    transaction: (surface, work, options) => assets.transaction(surface, async (snapshot, blobs) => {
+      const result = await work(snapshot, blobs)
+      if (result.commit && !await current()) throw new Error("Team Decisions authority changed before commit")
+      return result
+    }, options),
+  } satisfies AssetPersistence
   const authority = createSfProductAuthority({
     identity: () => hostIdentity,
     installationId: partition,
     origin,
     policyVersion: "sf-product-v1",
-    persistence: {
-      ...persistence,
-      transaction: (surface, work, options) => assets.transaction(surface, async (snapshot, blobs) => {
-        const result = await work(snapshot, blobs)
-        if (result.commit && !await current()) throw new Error("Team Decisions authority changed before commit")
-        return result
-      }, options),
-    },
+    persistence: guardedPersistence,
     authenticate,
     environment: async () => ({ at: at(), id: randomUUID, directory: [] }),
     grants: [{ principalRef: principalId, namespaces: ["cases"], operations: ["sf_case_draft"] }],
