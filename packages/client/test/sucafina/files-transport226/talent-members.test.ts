@@ -152,3 +152,40 @@ test("a web Files download cannot adopt an access revision established during it
     else Reflect.deleteProperty(globalThis, "window")
   }
 })
+
+test("a rejected Files read preserves HTTP 403 after clearing its owner stamp", async () => {
+  const descriptor = { installationId: "installation", projectId: "project", hostId: "host",
+    publicOrigin: "https://installation.example", mount: "/sucafina", authMode: "microsoft" as const,
+    contractRevision: "sf-native-ui/1" as const }
+  const expectation = { installationId: descriptor.installationId, projectId: descriptor.projectId, hostId: descriptor.hostId }
+  const stamp = { ...expectation, principalRef: "owner", policyVersion: "policy", accessRevision: "revision" }
+  const options = { signal: new AbortController().signal }
+  const routes: string[] = []
+  const previous = Object.getOwnPropertyDescriptor(globalThis, "window")
+  Object.defineProperty(globalThis, "window", { configurable: true, value: { location: { origin: descriptor.publicOrigin } } })
+  try {
+    const transport = createSfTransport({ binding: descriptor, generation: 1, currentGeneration: () => 1,
+      operations: SfNativeOperationBindings,
+      fetch: async (input) => {
+        const url = new URL(String(input))
+        routes.push(url.pathname + (url.searchParams.has("sf") ? "?sf=" + url.searchParams.get("sf") : ""))
+        if (url.searchParams.get("sf") === "document-sources")
+          return Response.json({ status: "denied" }, { status: 403 })
+        return Response.json({ status: "ok", value: {
+          stamp, contractRevision: "sf-native-ui/1", authMode: "microsoft", destinations: [],
+          availability: [{ family: "files", resource: "documents", state: "ready",
+            operations: [{ operationId: "files.document-sources", state: "ready", reason: null, operational: true }] }],
+        } })
+      },
+    })
+    expect((await createSfContextClient(transport)["ctx.context"](expectation, options)).kind).toBe("response")
+    const documents = createSfFilesClient(transport)
+    const result = await documents["files.document-sources"]({ surface: "procurement" }, options)
+    expect(result).toMatchObject({ kind: "response", status: 403, body: { status: "denied" } })
+    expect((await documents["files.document-sources"]({ surface: "procurement" }, options)).kind).toBe("transport-error")
+    expect(routes).toEqual(["/sucafina/api/ui/context", "/sucafina/api/ui/context", "/sucafina/procurement?sf=document-sources"])
+  } finally {
+    if (previous) Object.defineProperty(globalThis, "window", previous)
+    else Reflect.deleteProperty(globalThis, "window")
+  }
+})

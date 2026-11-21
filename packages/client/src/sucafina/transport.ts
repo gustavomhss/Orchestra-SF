@@ -490,8 +490,17 @@ export function createSfTransport(options: Readonly<{
       if (wireDecoded.status !== "ok") return failure(uncertain ? "outcome-unknown" : "invalid-response")
       const parsedOutput = Schema.decodeUnknownOption(Schema.toType(operation.output), { onExcessProperty: "error" })(wireDecoded.value)
       if (Option.isNone(parsedOutput)) return failure(uncertain ? "outcome-unknown" : "invalid-response")
-      if (webFiles && !await revalidateFileOwner())
-        return failure(mutating ? "outcome-unknown" : "contract-unavailable")
+      if (webFiles) {
+        if (response.status === 401 || response.status === 403) {
+          // The server's rejection already cleared the local stamp. Keep the
+          // typed denial, but never release a success payload under that status.
+          const denied = asJsonObject(wireDecoded.value)
+          if (!denied || "value" in denied || denied.status === "ok" || denied.ok === true)
+            return failure("contract-unavailable")
+        } else if (!await revalidateFileOwner()) {
+          return failure(mutating ? "outcome-unknown" : "contract-unavailable")
+        }
+      }
       if (operation.operationId === "ctx.context") {
         if (!validContextOutcome(parsedOutput.value, options.binding, response.status)) {
           clear()
