@@ -117,9 +117,12 @@ export function SfTeamWebApp() {
               const choice = choices().find((item) => item.profile.teamObjectId === event.currentTarget.value)
               if (choice) void load(choice.profile.teamObjectId)
             }}>
-              <Show when={!selected()}><option value="" disabled>{language.t("sf.teams.select")}</option></Show>
+              <Show when={!selected()}><option value="" disabled selected>{language.t("sf.teams.select")}</option></Show>
               <For each={choices()}>{(choice) =>
-                <option value={choice.profile.teamObjectId}>{choice.displayName}</option>
+                <option value={choice.profile.teamObjectId} selected={selected()?.profile.teamObjectId === choice.profile.teamObjectId}>
+                  {choices().filter((item) => item.displayName === choice.displayName).length > 1
+                    ? choice.displayName + " · " + choice.profile.teamObjectId : choice.displayName}
+                </option>
               }</For>
             </select>
           </label>

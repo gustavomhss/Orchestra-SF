@@ -38,6 +38,7 @@ export async function readTeamWebContext(binding: SfTeamInstallationDescriptor, 
   const { stamp, profile } = result.value
   if (stamp.installationId !== binding.installationId || stamp.hostId !== binding.hostId ||
       stamp.projectId !== binding.projectId || profile.principal.tenantId !== binding.tenantId ||
+      profile.teams.status === "ready" && !stamp.team ||
       teamObjectId && (profile.teams.status !== "ready" || profile.teams.selected.teamObjectId !== teamObjectId)) return
   return result
 }
