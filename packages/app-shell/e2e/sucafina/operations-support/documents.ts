@@ -290,16 +290,14 @@ export async function documentJourney(page: Page, info: TestInfo) {
       phases.linkBrowserResponse = { elapsedMs: elapsedMs(), status: response.status() }
     recordContext("response", response.request(), response.status())
   }
-  const linkCapture = await forwardOnce(page, linkURL.href, "GET", async (response) => {
-    phases.linkIssued = { elapsedMs: elapsedMs(), status: response.status() }
-  })
   page.on("request", requestObserved)
   page.on("requestfailed", requestFailed)
   page.on("response", responseObserved)
-  const issuedLink = linkCapture.completed.then(async ({ response }) => {
-    phases.linkDelivered = { elapsedMs: elapsedMs(), status: response.status() }
+  const issuedLink = page.waitForResponse((response) =>
+    response.request().method() === "GET" && response.url() === linkURL.href).then(async (response) => {
     expect(response.status()).toBe(200)
     const link = await response.json() as { ok?: boolean; query?: string }
+    phases.linkDelivered = { elapsedMs: elapsedMs(), status: response.status() }
     expect(link.ok).toBe(true)
     return link.query
   })
@@ -321,7 +319,6 @@ export async function documentJourney(page: Page, info: TestInfo) {
     const evidence = JSON.stringify({ elapsedMs: elapsedMs(), phases, contextCounts, contextEvents })
     if (!phases.chromiumDownload) console.info("SF_FILES_DOCUMENT_DOWNLOAD_PHASES", evidence)
     await info.attach("operations-document-download-phases.json", { body: evidence, contentType: "application/json" }).catch(() => undefined)
-    await linkCapture.close()
   })
   expect(assetURL.search.slice(1) === signedQuery, "download uses the producer's exact signed query").toBe(true)
   expect(assetURL.searchParams.get("asset")).toBe(asset)
