@@ -147,27 +147,31 @@ const editSub = (itemId: string, sub?: Sub): FormData => ({
   statusQ3: stringOr(sub?.statusQ3), statusQ4: stringOr(sub?.statusQ4),
   notes: text(sub?.notes),
 })
-const contractValues = (v: FormData): ContractValues => ({
+// A01 accepts JSON records: preserve supplied scalars and omit absent optional fields.
+const contractValues = (v: FormData): ContractValues => Object.fromEntries(Object.entries({
   name: v.name, year: finite(v.year),
-})
-const itemValues = (v: FormData): ItemValues => ({
+}).filter(([, value]) => value !== undefined))
+const itemValues = (v: FormData): ItemValues => Object.fromEntries(Object.entries({
   itemId: v.itemId, name: v.name, description: v.description,
   totalWeight: finite(v.totalWeight), ownerWeight: finite(v.ownerWeight),
   co1Weight: finite(v.co1Weight), co2Weight: finite(v.co2Weight), color: v.color,
-})
+}).filter(([, value]) => value !== undefined))
 const subValues = (v: FormData, source?: Sub): SubValues => ({
-  itemId: v.itemId || "", subId: v.subId, label: v.label, objective: v.objective,
-  target: v.target === stringOr(source?.target) ? source?.target : v.target,
-  description: v.description, totalWeight: finite(v.totalWeight), owner: v.owner,
-  ownerWeight: finite(v.ownerWeight), co1: v.co1, co1Weight: finite(v.co1Weight),
-  co2: v.co2, co2Weight: finite(v.co2Weight), score: finite(v.score),
-  status: v.status,
-  q1: v.q1 === stringOr(source?.q1) ? source?.q1 : v.q1,
-  q2: v.q2 === stringOr(source?.q2) ? source?.q2 : v.q2,
-  q3: v.q3 === stringOr(source?.q3) ? source?.q3 : v.q3,
-  q4: v.q4 === stringOr(source?.q4) ? source?.q4 : v.q4,
-  statusQ1: v.statusQ1, statusQ2: v.statusQ2,
-  statusQ3: v.statusQ3, statusQ4: v.statusQ4, notes: v.notes,
+  itemId: v.itemId || "",
+  ...Object.fromEntries(Object.entries({
+    subId: v.subId, label: v.label, objective: v.objective,
+    target: v.target === stringOr(source?.target) ? source?.target : v.target,
+    description: v.description, totalWeight: finite(v.totalWeight), owner: v.owner,
+    ownerWeight: finite(v.ownerWeight), co1: v.co1, co1Weight: finite(v.co1Weight),
+    co2: v.co2, co2Weight: finite(v.co2Weight), score: finite(v.score),
+    status: v.status,
+    q1: v.q1 === stringOr(source?.q1) ? source?.q1 : v.q1,
+    q2: v.q2 === stringOr(source?.q2) ? source?.q2 : v.q2,
+    q3: v.q3 === stringOr(source?.q3) ? source?.q3 : v.q3,
+    q4: v.q4 === stringOr(source?.q4) ? source?.q4 : v.q4,
+    statusQ1: v.statusQ1, statusQ2: v.statusQ2,
+    statusQ3: v.statusQ3, statusQ4: v.statusQ4, notes: v.notes,
+  }).filter(([, value]) => value !== undefined)),
 })
 const finiteEdit = (v: FormData): boolean => {
   const nums: readonly (keyof FormData)[] = v.kind === "contract" ? ["year"]

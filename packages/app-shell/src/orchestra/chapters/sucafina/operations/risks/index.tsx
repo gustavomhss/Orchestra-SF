@@ -84,7 +84,9 @@ const spec: CollectionSpec<"CAP13", Risk, RiskValues> = {
   },
   save:async(transport,command,signal,idempotencyKey)=>
     writeOutcome(await createSfDomainClient(transport)["domain.command.CAP13.save"](
-      {id:command.id,version:command.version,values:command.values},{signal,idempotencyKey})),
+      {...(command.id===undefined?{}:{id:command.id}),version:command.version,
+        values:Object.fromEntries(Object.entries(command.values).filter(([,value])=>value!==undefined))},
+      {signal,idempotencyKey})),
   delete:async(transport,command,signal,idempotencyKey)=>
     writeOutcome(await createSfDomainClient(transport)["domain.command.CAP13.delete"](
       {id:command.id,version:command.version,values:{}},{signal,idempotencyKey})),

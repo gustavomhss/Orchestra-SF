@@ -116,6 +116,14 @@ CAP13, CAP15 and CAP16 now have separate English installations, retaining one re
 
 Direct review of the new CAP12 incident deletion image revealed empty source cards and a UUID-only operation identity. Its presentation now includes the already captured incident/campaign/action fields in original/current source, uses the record title/name/text where available, and explains the proposed removal with new EN/BR copy. The exact deletion binding, version and command remain unchanged; the journey cancels deletion. Long reviews also get a top capture in addition to their existing action-footer capture.
 
+## JSON command boundary before the sixth execution
+
+The canonical Finance browser probe established that explicit optional `undefined` values are rejected by the strict JSON codec. Source inspection showed the same complete path here: CAP13 `riskValues` constructs absent ownerId/leaderId as undefined; CAP15 has equivalent optional fields; the shared draft retains those values in a signal, and the collection save previously forwarded them directly. No intervening serialization removes them. This is sufficient evidence to correct the consumer boundary before knowingly repeating that failure.
+
+CAP13/CAP15 now materialize command values with Object.entries/Object.fromEntries, omit only entries whose value is undefined, and omit an absent top-level id for creation. Zero, null, empty strings and other supplied values are retained; unknown supplied string keys still reach canonical schema validation. CAP16's three existing DTO constructors use the same omission rule: a new item/sub-item has no id yet, and untouched absent target/quarter scalars must stay absent. The required parent itemId remains explicit. Existing field conversion, owner/version, confirmation, draft, digest, idempotency and producer behavior are unchanged.
+
+These corrections need the independent runtime writes and final scoped type gates; source inspection alone is not recorded as a successful write.
+
 ## User guide notes for integration
 
 Service: select year/month, inspect SLA/history and ticket categories, edit the required section, then review. Categories/applications are under their disclosure. Monthly replacement is prepared and reviewed before sending.

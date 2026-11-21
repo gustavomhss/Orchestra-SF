@@ -77,7 +77,9 @@ const spec: CollectionSpec<"CAP15", Stakeholder, Values> = {
   },
   save:async(transport,command,signal,idempotencyKey)=>
     writeOutcome(await createSfDomainClient(transport)["domain.command.CAP15.save"](
-      {id:command.id,version:command.version,values:command.values},{signal,idempotencyKey})),
+      {...(command.id===undefined?{}:{id:command.id}),version:command.version,
+        values:Object.fromEntries(Object.entries(command.values).filter(([,value])=>value!==undefined))},
+      {signal,idempotencyKey})),
   delete:async(transport,command,signal,idempotencyKey)=>
     writeOutcome(await createSfDomainClient(transport)["domain.command.CAP15.delete"](
       {id:command.id,version:command.version,values:{}},{signal,idempotencyKey})),
