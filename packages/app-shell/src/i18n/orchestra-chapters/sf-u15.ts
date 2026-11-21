@@ -1,6 +1,5 @@
-// N22 U15, frozen CAP14 surface copy. Legacy dashboard field labels retain
-// their exact source English until a sourced translation is approved (COPY-01).
-// I00/125 owns the central dictionary import; this leaf only exports symbols.
+// Existing English entries remain frozen. Brazilian Portuguese follows the native Sucafina campaign terminology.
+// This leaf owns its catalog only; the shared dictionary composition is unchanged.
 export const SF_U15_COPY = {
   "sf.cap14.title": "Vendor Contracts",
   "sf.cap14.primary": "New contract",
@@ -64,10 +63,17 @@ export const SF_U15_COPY = {
   "sf.u15.option.fixed": "fixed",
   "sf.u15.option.na": "na",
   "sf.u15.option.auto": "auto",
+  "sf.u15.back": "Back to contracts",
+  "sf.u15.records": "Contracts",
+  "sf.u15.listHint": "Review suppliers, terms and supporting documents in one place.",
+  "sf.u15.editHint": "Keep the contract details together. Review every change before confirming.",
+  "sf.u15.missing": "Not provided by the source",
+  "sf.u15.sourceDetails": "Source details",
+  "sf.u15.reviewTitle": "Review contract",
+  "sf.u15.requiredHint": "Vendor is required. Other fields may be left empty when not provided.",
 } as const
 
-export const SF_U15_COPY_BR: Record<keyof typeof SF_U15_COPY, string> = {
-  ...SF_U15_COPY,
+export const SF_U15_COPY_BR: Readonly<Record<keyof typeof SF_U15_COPY, string>> = {
   "sf.cap14.title": "Contratos com fornecedores",
   "sf.cap14.primary": "Novo contrato",
   "sf.u15.list": "Contratos com fornecedores",
@@ -108,4 +114,34 @@ export const SF_U15_COPY_BR: Record<keyof typeof SF_U15_COPY, string> = {
   "sf.u15.unavailableLink": "Não há referência de decisão autorizada nesta projeção.",
   "sf.u15.documents": "Documentos referenciados pela fonte",
   "sf.u15.noDocuments": "Nenhuma referência de documento autorizada.",
-};
+  "sf.u15.field.vendor": "Fornecedor",
+  "sf.u15.field.num": "Número do contrato",
+  "sf.u15.field.renewal": "Data de renovação",
+  "sf.u15.field.name": "Nome do contrato",
+  "sf.u15.field.desc": "Descrição",
+  "sf.u15.field.category": "Categoria",
+  "sf.u15.field.owner": "Responsável",
+  "sf.u15.field.start": "Início",
+  "sf.u15.field.end": "Término",
+  "sf.u15.field.amount": "Valor",
+  "sf.u15.field.amtType": "Periodicidade do valor",
+  "sf.u15.field.renewType": "Renovação",
+  "sf.u15.field.notice": "Prazo de aviso",
+  "sf.u15.field.eval": "Avaliação",
+  "sf.u15.field.notes": "Observações",
+  "sf.u15.field.currency": "Moeda",
+  "sf.u15.option.total": "Total",
+  "sf.u15.option.monthly": "Mensal",
+  "sf.u15.option.annual": "Anual",
+  "sf.u15.option.fixed": "Fixa",
+  "sf.u15.option.na": "Não se aplica",
+  "sf.u15.option.auto": "Automática",
+  "sf.u15.back": "Voltar aos contratos",
+  "sf.u15.records": "Contratos",
+  "sf.u15.listHint": "Revise fornecedores, vigências e documentos em um só lugar.",
+  "sf.u15.editHint": "Mantenha os dados do contrato juntos. Revise as alterações antes de confirmar.",
+  "sf.u15.missing": "Não informado pela fonte",
+  "sf.u15.sourceDetails": "Detalhes da fonte",
+  "sf.u15.reviewTitle": "Revisar contrato",
+  "sf.u15.requiredHint": "Informe o fornecedor. Os demais campos podem ficar vazios quando não informados.",
+}

@@ -1,3 +1,5 @@
+import { useNavigate } from "@solidjs/router"
+import { Icon } from "@orchestra/ui/icon"
 import { createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
@@ -71,12 +73,14 @@ function editableVendor(values: SfVendorEdit): boolean {
 export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
   const sf = useSfContext()
   const language = useLanguage()
+  const navigate = useNavigate()
   const inputId = createUniqueId()
   const [view, setView] = createStore({
     state: "loading" as SfUiState,
     read: undefined as Ready | undefined,
     selected: undefined as SfRef | undefined,
     creating: false,
+    editing: false,
     filter: "",
     sort: { kind: "none" } as SfSort,
     refresh: 0,
@@ -87,12 +91,14 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     newIntentRef: crypto.randomUUID() as SfIntentRef,
     layoutMode: "split" as "single" | "split" | "split-context",
   })
+  let stage: HTMLDivElement | undefined
   let inFlight: AbortController | undefined
   const t = (value: Key) => language.t(value as Parameters<typeof language.t>[0])
   const routeRef = () =>
     (props.route.kind === "detail" || props.route.kind === "edit") ? props.route.params.contractRef : undefined
   const selectedRef = () => routeRef() ?? view.selected
   const creating = () => props.route.kind === "new" || view.creating
+  const editing = () => creating() || props.route.kind === "edit" || view.editing
   const contextActions = () =>
     sf.ready()?.context.destinations.find((entry) => entry.capabilityId === "CAP14" && entry.canRead)?.allowedActionIds ?? []
   const actionAllowed = (action: SfVendorAction) =>
@@ -111,6 +117,15 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     return row && ref && version !== undefined ? { row, ref, version } : undefined
   })
   const sourceAvailable = () => !!view.read && view.state === "ready"
+  createEffect(() => {
+    const selected = selectedRef()
+    const mode = view.reviewing ? "review" : editing() ? "edit" : "detail"
+    if (!selected && !creating()) return
+    queueMicrotask(() => {
+      if (mode !== (view.reviewing ? "review" : editing() ? "edit" : "detail")) return
+      stage?.querySelector<HTMLElement>(".sf-u15-detail-head h2")?.focus()
+    })
+  })
   const sameOwner = (ownerKey: string, epoch: number) => {
     const current = sf.state()
     return sf.generation() === epoch && current.status === "ready" && current.ownerKey === ownerKey
@@ -229,11 +244,11 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     { id: "vendor", labelKey: tableKey("sf.u15.field.vendor"), align: "start", sortKey: "vendor",
       widthPolicy: { kind: "flex", minPx: 130, weight: 3 }, render: (row) => <span>{safeField(row, "vendor")}</span> },
     { id: "num", labelKey: tableKey("sf.u15.field.num"), align: "start", sortKey: "num",
-      widthPolicy: { kind: "content", minPx: 90, maxPx: 190 }, render: (row) => <span>{safeField(row, "num")}</span> },
+      widthPolicy: { kind: "content", minPx: 90, maxPx: 190 }, render: (row) => <><span class="sf-u15-cell-label" aria-hidden="true">{t("sf.u15.field.num")}</span><span>{safeField(row, "num") || <span class="sf-u15-missing" aria-label={t("sf.u15.missing")}>—</span>}</span></> },
     { id: "name", labelKey: tableKey("sf.u15.field.name"), align: "start", sortKey: "name",
-      widthPolicy: { kind: "flex", minPx: 130, weight: 2 }, render: (row) => <span>{safeField(row, "name")}</span> },
+      widthPolicy: { kind: "flex", minPx: 130, weight: 2 }, render: (row) => <><span class="sf-u15-cell-label" aria-hidden="true">{t("sf.u15.field.name")}</span><span>{safeField(row, "name") || <span class="sf-u15-missing" aria-label={t("sf.u15.missing")}>—</span>}</span></> },
     { id: "end", labelKey: tableKey("sf.u15.field.end"), align: "start", sortKey: "end",
-      widthPolicy: { kind: "content", minPx: 96, maxPx: 160 }, render: (row) => <span>{safeField(row, "end")}</span> },
+      widthPolicy: { kind: "content", minPx: 96, maxPx: 160 }, render: (row) => <><span class="sf-u15-cell-label" aria-hidden="true">{t("sf.u15.field.end")}</span><span>{safeField(row, "end") || <span class="sf-u15-missing" aria-label={t("sf.u15.missing")}>—</span>}</span></> },
   ]
 
   const beginReview = (action: SfVendorAction) => {
@@ -383,7 +398,8 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     const label = t(fieldKey(field))
     const disabled = view.sending || !!view.reviewing || view.outcomeUnknown || !current
     return <label class="sf-u15-field" data-field={field}>
-      <span>{label}</span>
+
+      <span>{label}<Show when={field === "vendor"}><span aria-hidden="true"> *</span></Show></span>
       <Show when={choices} fallback={
         field === "desc" || field === "notes" ?
           <textarea rows={3} disabled={disabled} value={value == null ? "" : String(value)}
@@ -399,7 +415,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
         {(items) => <select disabled={disabled} value={value == null ? "" : String(value)}
           onChange={(event) => setField(field, event.currentTarget.value)}>
           <For each={items()}>{(option) => <option value={option}>
-            {field === "eval" ? option : t(("sf.u15.option." + option) as Key)}
+            {field === "eval" ? option || "—" : t(("sf.u15.option." + option) as Key)}
           </option>}</For>
         </select>}
       </Show>
@@ -439,86 +455,112 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     />
   }
 
-  return <section data-component="sf-vendor-contracts" aria-busy={view.sending}>
+  return <section data-component="sf-vendor-contracts" data-sf-surface="CAP14" aria-busy={view.sending}>
     <SfPageFrame
       titleKey={key("sf.cap14.title")}
-      context={[]}
-      tabs={[]}
-      activeTab={null}
-      primaryAction={actionAllowed("save") ? {
+      context={[]} tabs={[]} activeTab={null}
+      primaryAction={actionAllowed("save") && !selectedRow() && !creating() ? {
         id: "new", labelKey: key("sf.cap14.primary"), tone: "primary",
         disabled: view.sending || view.outcomeUnknown, busy: view.sending,
         onInvoke: () => {
-          setView({ creating: true, selected: undefined,
+          setView({ creating: true, selected: undefined, editing: true,
             newIntentRef: crypto.randomUUID() as SfIntentRef, reviewing: undefined })
         },
       } : undefined}
-      secondaryActions={[]}
-      density="comfortable"
-      layout={view.layoutMode === "single" ? "reading" : "split"}
+      secondaryActions={[]} density="comfortable" layout="reading"
       onLayoutMode={(mode) => setView("layoutMode", mode)}
     >
       <Show when={view.state === "ready" && view.read !== undefined} fallback={
         <SfStatePanel state={view.state} messageKey={key("sf.u15.notAvailable")}
           onRetryRead={view.state === "denied" ? undefined : refresh} />
       }>
-        <div class="sf-u15-layout">
-          <div class="sf-u15-list">
-            <label for={inputId}>{t("sf.u15.filter")}</label>
-            <div class="sf-u15-filters">
-              <input id={inputId} type="search" placeholder={t("sf.u15.filterPlaceholder")}
-                value={view.filter} onInput={(event) => setView("filter", event.currentTarget.value)} />
-              <button type="button" class="mx-btn" disabled={!view.filter}
-                onClick={() => setView("filter", "")}>{t("sf.u15.clearFilter")}</button>
-            </div>
-            <SfDataTable
-              rows={filteredRows()} getRowKey={vendorRef} columns={columns}
+        <div class="sf-u15-layout" data-sf-wave="three" ref={stage}>
+          <section class="sf-u15-list" hidden={Boolean(selectedRow() || creating() || view.reviewing)} aria-labelledby={inputId + "-list"}>
+            <header class="sf-u15-list-head">
+              <div><div class="sf-u15-title-row"><h2 id={inputId + "-list"}>{t("sf.u15.list")}</h2>
+                <span class="sf-u15-count" aria-label={t("sf.u15.records")}>{filteredRows().length}</span></div>
+                <p>{t("sf.u15.listHint")}</p></div>
+              <div class="sf-u15-filters">
+                <label for={inputId}>{t("sf.u15.filter")}</label>
+                <div class="sf-u15-search-control"><Icon name="magnifying-glass" size="small" />
+                  <input id={inputId} type="search" placeholder={t("sf.u15.filterPlaceholder")}
+                    value={view.filter} onInput={(event) => setView("filter", event.currentTarget.value)} />
+                  <Show when={view.filter}><button type="button" class="mx-btn" aria-label={t("sf.u15.clearFilter")}
+                    onClick={() => setView("filter", "")}><Icon name="close-small" size="small" /></button></Show>
+                </div>
+              </div>
+            </header>
+            <SfDataTable rows={filteredRows()} getRowKey={vendorRef} columns={columns}
               selectedKey={selectedRef()} sort={view.sort} page={{ kind: "none", total: filteredRows().length }}
               onSort={(sort) => setView("sort", sort)} onPage={() => undefined}
-              onSelect={(ref) => setView({ selected: ref, creating: false, reviewing: undefined })}
+              onSelect={(ref) => setView({ selected: ref, creating: false, editing: false, reviewing: undefined })}
               rowActions={() => []} onRowAction={() => undefined}
               captionKey={tableKey("sf.u15.list")} density="comfortable"
-              state={filteredRows().length ? "ready" : view.read?.records.length ? "filtered-empty" : "empty"}
-            />
-          </div>
-          <div class="sf-u15-detail">
-            <Show when={selectedRow() || creating()} fallback={<p role="status">{t("sf.u15.open")}</p>}>
+              state={filteredRows().length ? "ready" : view.read?.records.length ? "filtered-empty" : "empty"} />
+          </section>
+          <Show when={selectedRow() || creating()}>
+            <section class="sf-u15-detail" data-sf-contract-stage={view.reviewing ? "review" : editing() ? "edit" : "detail"}>
               <header class="sf-u15-detail-head">
-                <h2>{creating() ? t("sf.cap14.primary") : safeField(selectedRow()!, "vendor")}</h2>
+                <div class="sf-u15-detail-nav" hidden={Boolean(view.reviewing)}>
+                  <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown || Boolean(editing() && activeDraft()?.dirty)}
+                    onClick={() => {
+                      if (routeRef() || props.route.kind === "new") navigate(buildHref())
+                      else setView({ selected: undefined, creating: false, editing: false })
+                    }}><Icon name="arrow-left" size="small" />{t("sf.u15.back")}</button>
+                  <Show when={!editing() && actionAllowed("save") && currentVersion() !== undefined}>
+                    <button type="button" class="mx-btn primary" disabled={view.sending || view.outcomeUnknown}
+                      onClick={() => setView("editing", true)}>{t("sf.u15.edit")}</button>
+                  </Show>
+                </div>
+                <h2 tabindex="-1">{view.reviewing ? t("sf.u15.reviewTitle") : creating() ? t("sf.cap14.primary") :
+                  editing() ? t("sf.u15.edit") : safeField(selectedRow()!, "vendor")}</h2>
+                <Show when={editing() && !view.reviewing}><p>{t("sf.u15.editHint")}</p></Show>
                 <Show when={selectedRow() && selectedRef()}>
-                  <a href={buildHref(selectedRef())}>{t("sf.u15.open")}</a>
-                  <span>{t("sf.u15.version")}: {currentVersion() ?? "—"}</span>
+                  <details class="sf-u15-source">
+                    <summary>{t("sf.u15.sourceDetails")}<Icon name="chevron-down" size="small" /></summary>
+                    <dl><div><dt>{t("sf.u15.contractId")}</dt><dd><code>{selectedRef()}</code></dd></div>
+                      <div><dt>{t("sf.u15.version")}</dt><dd>{currentVersion() ?? "—"}</dd></div></dl>
+                    <a href={buildHref(selectedRef())}>{t("sf.u15.open")}</a>
+                  </details>
                 </Show>
               </header>
               <Show when={sourceAvailable() && (creating() || selectedRow())}>
-                <Show when={activeDraft() && (creating() || props.route.kind === "edit" || view.selected)}>
-                  <div class="sf-u15-edit">
-                    <For each={EDIT_SECTIONS}>{(section) => <fieldset>
+                <Show when={activeDraft()}>
+                  <form class="sf-u15-edit" hidden={!editing() || Boolean(view.reviewing)}
+                    aria-label={t(creating() ? "sf.cap14.primary" : "sf.u15.edit")}
+                    onSubmit={(event) => { event.preventDefault(); beginReview("save") }}>
+                    <p class="sf-u15-field-hint">{t("sf.u15.requiredHint")}</p>
+                    <For each={EDIT_SECTIONS}>{(section) => <fieldset data-sf-section={section.id}>
                       <legend>{t(section.title)}</legend>
                       <div class="sf-u15-fields"><For each={section.fields}>{(field) => renderField(field)}</For></div>
                     </fieldset>}</For>
                     <Show when={selectedRow()?.currency !== undefined}>
-                      <p>{t("sf.u15.field.currency")}: {safeField(selectedRow()!, "currency")}</p>
+                      <p class="sf-u15-field-hint">{t("sf.u15.field.currency")}: {safeField(selectedRow()!, "currency")}</p>
                     </Show>
                     <div class="sf-u15-actions">
-                      <button type="button" class="mx-btn primary"
-                        disabled={view.sending || view.outcomeUnknown || !!view.reviewing ||
-                          !activeDraft() || !editableVendor(activeDraft()!.value)}
-                        onClick={() => beginReview("save")}>{t("sf.u15.reviewSave")}</button>
+                      <button type="submit" class="mx-btn primary" disabled={view.sending || view.outcomeUnknown ||
+                        !!view.reviewing || !activeDraft() || !editableVendor(activeDraft()!.value)}>{t("sf.u15.reviewSave")}</button>
                       <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown}
                         onClick={() => {
                           draft()?.discard()
-                          setView({ reviewing: undefined, creating: false })
+                          setView({ reviewing: undefined, creating: false, editing: false })
+                          if (props.route.kind === "edit" || props.route.kind === "new") navigate(buildHref(selectedRef()))
                         }}>{t("sf.u15.discard")}</button>
                     </div>
-                  </div>
+                  </form>
                 </Show>
                 <Show when={!creating() && !!selectedRow()}>
-                  <div class="sf-u15-read">
-                    <For each={EDIT_SECTIONS}>{(section) => <section>
+                  <div class="sf-u15-read" hidden={editing() || Boolean(view.reviewing)}>
+                    <For each={EDIT_SECTIONS}>{(section) => <section data-sf-section={section.id}>
                       <h3>{t(section.title)}</h3>
                       <dl><For each={section.fields}>{(field) =>
-                        <div><dt>{t(fieldKey(field))}</dt><dd>{safeField(selectedRow()!, field)}</dd></div>
+                        <div data-sf-field={field}><dt>{t(fieldKey(field))}</dt>
+                          <dd><Show when={safeField(selectedRow()!, field) !== ""} fallback={
+                            <span class="sf-u15-missing" data-sf-value="missing"><span aria-hidden="true">—</span><span class="sf-u15-sr">{t("sf.u15.missing")}</span></span>
+                          }><bdi>{field === "amtType" || field === "renewType"
+                            ? t(("sf.u15.option." + safeField(selectedRow()!, field)) as Key)
+                            : safeField(selectedRow()!, field)}</bdi></Show></dd>
+                        </div>
                       }</For></dl>
                     </section>}</For>
                     <section>
@@ -526,8 +568,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
                       <Show when={assetTarget()} fallback={<p>{t("sf.u15.noDocuments")}</p>}>
                         {(target) => <SfBoundAssets surface="dashboard" page="Vendor Contracts"
                           uploadKind={actionAllowed("save") ? "contract" : undefined}
-                          recordRef={target().ref} recordVersion={target().version}
-                          assets={target().row.docs ?? []}
+                          recordRef={target().ref} recordVersion={target().version} assets={target().row.docs ?? []}
                           disabled={view.sending || view.outcomeUnknown || !!view.reviewing || !sourceAvailable() || !actionAllowed("save")}
                           onReconcile={refresh} />}
                       </Show>
@@ -535,22 +576,21 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
                     <section>
                       <h3>{t("sf.u15.link")}</h3>
                       <Show when={assetTarget()} fallback={<p>{t("sf.u15.unavailableLink")}</p>}>
-                        {(target) => <SfContractRequestLinks contractRef={target().ref}
-                          contractVersion={target().version} routeHref={props.route.href}
-                          disabled={view.sending || view.outcomeUnknown || !!view.reviewing || !sourceAvailable()} />}
+                        {(target) => <SfContractRequestLinks contractRef={target().ref} contractVersion={target().version}
+                          routeHref={props.route.href} disabled={view.sending || view.outcomeUnknown || !!view.reviewing || !sourceAvailable()} />}
                       </Show>
                     </section>
                     <Show when={actionAllowed("delete") && currentVersion() !== undefined}>
-                      <button type="button" class="mx-btn danger"
+                      <footer class="sf-u15-actions"><button type="button" class="mx-btn danger"
                         disabled={view.sending || view.outcomeUnknown}
-                        onClick={() => beginReview("delete")}>{t("sf.u15.reviewDelete")}</button>
+                        onClick={() => beginReview("delete")}>{t("sf.u15.reviewDelete")}</button></footer>
                     </Show>
                   </div>
                 </Show>
               </Show>
-              {fieldReview()}
-            </Show>
-          </div>
+              <div class="sf-u15-review" hidden={!view.reviewing}>{fieldReview()}</div>
+            </section>
+          </Show>
         </div>
       </Show>
       <Show when={view.notice}>
