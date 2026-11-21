@@ -3,10 +3,12 @@ import path from "node:path"
 import { expect, test } from "@playwright/test"
 import type { Locator, Page, TestInfo } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
+import { connectInstalledShell } from "../installed-shell"
 
 type Account = { baseURL: string; principal: string; enrollments: Record<string, string> }
-type Manifest = { origin: string; accounts: { first: Account; second: Account; viewer: Account }; records: { supplier: string; comparison: string } }
+type Manifest = { origin: string; directory: string; accounts: { first: Account; second: Account; viewer: Account }; records: { supplier: string; comparison: string } }
 
+test.use({ trace: "off", video: "off", screenshot: "off" })
 test.describe.configure({ retries: 0 })
 
 async function readManifest() {
@@ -20,6 +22,9 @@ async function login(page: Page, account: "first" | "second" | "viewer", scenari
   if (!enrollment) throw new Error("The selected real-host enrollment is unavailable")
   const response = await page.request.get(enrollment, { maxRedirects: 0 })
   expect(response.status()).toBe(303)
+  await connectInstalledShell(page, {
+    root: manifest.directory, origin: manifest.origin, mount: new URL(selected.baseURL).pathname, actorId: selected.principal,
+  })
   const nativeOrigin = new URL(selected.baseURL)
   nativeOrigin.port = "3000"
   const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", nativeOrigin).href)
@@ -32,8 +37,9 @@ async function login(page: Page, account: "first" | "second" | "viewer", scenari
   await expect(source).toHaveAttribute("data-source-ref", /.+/)
   await expect(source).toHaveAttribute("data-source-digest", /^[a-f0-9]{64}$/)
   await expect(source).toHaveAttribute("data-source-version", /^\d+$/)
-  if (account === "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toHaveCount(0)
-  if (account !== "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
+  const create = page.locator("form[data-command='create'][data-page='Requests']").getByRole("button", { name: "Create request", exact: true })
+  if (account === "viewer") await expect(create).toHaveCount(0)
+  if (account !== "viewer") await expect(create).toBeEnabled()
   return selected
 }
 

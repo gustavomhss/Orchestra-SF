@@ -5,6 +5,8 @@ import { missingFxRefusal } from "./operations-support/procurement-refusal"
 import { importJourney } from "./operations-support/imports"
 import { documentJourney } from "./operations-support/documents"
 
+test.use({ trace: "off", video: "off", screenshot: "off" })
+
 // Each annotation identifies a criterion slice, not a claim of complete or executed acceptance.
 // Full coverage, source pins and unresolved C06/host dependencies live in final-e2e/operations/.
 test.describe("CI-UI-OPERATIONS", () => {

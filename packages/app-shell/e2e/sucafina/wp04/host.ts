@@ -2,7 +2,7 @@ import { randomBytes, randomUUID } from "node:crypto"
 import { chmod, mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
-import { Layer } from "effect"
+import { Effect, Layer } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import type { Application } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import { openLocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
@@ -38,13 +38,21 @@ Object.assign(process.env, {
 // These imports capture host configuration, so load them after private setup.
 // Global completes asynchronous directory initialization before graph modules
 // read Global.node; concurrent roots can otherwise observe its uninitialized export.
-await import("@orchestra/core/global")
-const { createEmbeddedRoutes } = await import("../../../../server/src/routes.ts")
+const { Global } = await import("@orchestra/core/global")
+if (Global.Path.state !== path.join(directory, "host-state", "orchestra"))
+  throw new Error("WP04_HOST_STATE_IS_NOT_PRIVATE")
+const { createRoutes } = await import("../../../../server/src/routes.ts")
 const { createOperationsInstallation } = await import("../operations-support/installation.ts")
 const { AppNodeBuilder } = await import("@orchestra/core/effect/app-node-builder")
+const { filesystem } = await import("@orchestra/core/effect/app-node-platform")
 const { LayerNode } = await import("@orchestra/core/effect/layer-node")
 const { PermissionSaved } = await import("@orchestra/core/permission/saved")
 const { ClaudeCodeAccount } = await import("@orchestra/core/claude-code-account")
+const { Daemon } = await import("../../../../../apps/cli/src/services/daemon.ts")
+const password = await Effect.gen(function* () {
+  const daemon = yield* Daemon.Service
+  return yield* daemon.password()
+}).pipe(Effect.provide(Daemon.layer), Effect.provide(AppNodeBuilder.build(filesystem)), Effect.runPromise)
 const at = "2026-11-13T12:00:00Z"
 const driver = await openLocalStore(directory)
 const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID }) }
@@ -111,7 +119,8 @@ const installation = await createOperationsInstallation({
   isAuthenticated: async (request) => Boolean(await sessionAccount(request)),
   environment, signingKey, scanner,
 })
-const embedded = HttpRouter.toWebHandler(createEmbeddedRoutes({
+const embedded = HttpRouter.toWebHandler(createRoutes({
+  password,
   host: installation.host,
   sucafinaInstallations: installation.discovery,
 }).pipe(
@@ -121,7 +130,9 @@ const embedded = HttpRouter.toWebHandler(createEmbeddedRoutes({
   ]))),
   Layer.provide(HttpServer.layerServices),
 ), { disableLogger: true })
-const health = await embedded.handler(new Request(origin + "/api/health"))
+const health = await embedded.handler(new Request(origin + "/api/health", {
+  headers: { authorization: "Basic " + Buffer.from("orchestra:" + password).toString("base64") },
+}))
 if (health.status !== 200 || !installation.identity()) throw new Error("OPERATIONS_REAL_HOST_NOT_READY")
 const records = await store.transaction("procurement", async (snapshot) => {
   const actor = { id: people[0]!.id, roles: ["admin", "buyer"], canWrite: true }

@@ -2,11 +2,13 @@ import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { expect } from "@playwright/test"
 import type { Page, TestInfo } from "@playwright/test"
+import { connectInstalledShell } from "../installed-shell"
 
 export type Account = { baseURL: string; principal: string; origin: string }
 type EnrolledAccount = Omit<Account, "origin"> & { enrollments: Record<string, string> }
 type Manifest = {
   origin: string
+  directory: string
   accounts: Record<"first" | "second" | "viewer", EnrolledAccount>
   records: { supplier: string; comparison: string }
 }
@@ -25,6 +27,7 @@ export async function readManifest(): Promise<Manifest> {
   expect(origin.protocol, "Operations must use the isolated local Actions fixture").toBe("http:")
   expect(["127.0.0.1", "localhost", "[::1]"]).toContain(origin.hostname)
   expect(origin.origin).toBe(manifest.origin)
+  expect(path.isAbsolute(manifest.directory)).toBe(true)
   for (const key of ["first", "second", "viewer"] as const) {
     const account = manifest.accounts[key]
     const base = new URL(account.baseURL)
@@ -51,11 +54,15 @@ export async function login(page: Page, key: "first" | "second" | "viewer", scen
   const admitted = await page.request.get(enrollment, { maxRedirects: 0, maxRetries: 0 })
   expect(admitted.status(), "The real local-operator enrollment must succeed once").toBe(303)
   const account = { baseURL: selected.baseURL, principal: selected.principal, origin: manifest.origin }
+  await connectInstalledShell(page, {
+    root: manifest.directory, origin: account.origin, mount: new URL(account.baseURL).pathname, actorId: account.principal,
+  })
   const response = await page.goto("/orchestra/sf-procurement/requests/new")
   expect(response?.status(), "The authenticated Procurement application must be mounted").toBe(200)
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toHaveCount(1)
-  await expect(page.locator("form[data-command='create'][data-page='Requests']").getByRole("button", { name: "Create request", exact: true })).toHaveCount(key === "viewer" ? 0 : 1)
-  if (key !== "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
+  const create = page.locator("form[data-command='create'][data-page='Requests']").getByRole("button", { name: "Create request", exact: true })
+  await expect(create).toHaveCount(key === "viewer" ? 0 : 1)
+  if (key !== "viewer") await expect(create).toBeEnabled()
   return account
 }
 
