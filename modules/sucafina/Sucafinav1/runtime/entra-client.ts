@@ -93,7 +93,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     if (!accessToken || /[\x00-\x20\x7f]/.test(accessToken)) throw new Error("Invalid access token")
     if (!URL.canParse(url)) throw new Error("Invalid Graph endpoint")
     const target = new URL(url)
-    if (target.origin !== "https://graph.microsoft.com" || !["/v1.0/me", "/v1.0/users", "/v1.0/groups", "/v1.0/me/checkMemberGroups", ...(teams === "direct" ? ["/v1.0/me/joinedTeams"] : [])].includes(target.pathname) || target.username || target.password || target.hash) throw new Error("Invalid Graph endpoint")
+    if (target.origin !== "https://graph.microsoft.com" || !["/v1.0/me", "/v1.0/users", "/v1.0/me/checkMemberGroups", ...(confidential ? [] : ["/v1.0/groups"]), ...(teams === "direct" ? ["/v1.0/me/joinedTeams"] : [])].includes(target.pathname) || target.username || target.password || target.hash) throw new Error("Invalid Graph endpoint")
     if (body && target.pathname !== "/v1.0/me/checkMemberGroups") throw new Error("Invalid Graph method")
     return request(url, {
       method: body ? "POST" : "GET",
@@ -276,8 +276,13 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     },
     async resolve(accessToken, map) {
       const identity = await person(accessToken)
-      const names = [...new Set(map.flatMap((row) => row.entra?.trim() ? [row.entra] : []))]
+      const names = [...new Set(map.flatMap((row) => row.entra != null && (confidential || row.entra.trim()) ? [row.entra] : []))]
       const groups = await Promise.all(names.map(async (name) => {
+        if (confidential) {
+          const id = name.slice("group:".length)
+          if (!name.startsWith("group:") || !uuid.test(id)) throw new Error("Invalid Entra group mapping")
+          return { name, id: id.toLowerCase() }
+        }
         const url = new URL(`${graph}/groups`)
         url.search = new URLSearchParams({ "$filter": `displayName eq '${name.replaceAll("'", "''")}'`, "$select": "id,displayName", "$top": "2" }).toString()
         const data = await graphRequest(accessToken, url.href)
@@ -292,8 +297,13 @@ export function createEntraClient(options: EntraOptions): EntraClient {
       for (const offset of Array.from({ length: Math.ceil(ids.length / 20) }, (_, index) => index * 20)) {
         const requested = ids.slice(offset, offset + 20)
         const data = await graphRequest(accessToken, `${graph}/me/checkMemberGroups`, { groupIds: requested })
-        if (!Array.isArray(data.value) || data.value.some((id) => typeof id !== "string" || (!uuid.test(id) || !requested.includes(id.toLowerCase())))) throw new Error("Invalid Entra membership response")
-        data.value.forEach((id: string) => members.add(id.toLowerCase()))
+        if (!Array.isArray(data.value) || (confidential && data["@odata.nextLink"] !== undefined)) throw new Error("Invalid Entra membership response")
+        data.value.forEach((id: unknown) => {
+          if (typeof id !== "string" || !uuid.test(id)) throw new Error("Invalid Entra membership response")
+          const normalized = id.toLowerCase()
+          if (!requested.includes(normalized) || (confidential && members.has(normalized))) throw new Error("Invalid Entra membership response")
+          members.add(normalized)
+        })
       }
       const roles = map.flatMap((row) => groups.some((group) => group.name === row.entra && group.id && members.has(group.id)) ? [{ surface: row.surface, role: row.role }] : [])
       return { id: identity.id, roles, canWrite: roles.some((role) => role.role !== "viewer") }

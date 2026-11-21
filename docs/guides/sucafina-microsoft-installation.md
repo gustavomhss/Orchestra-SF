@@ -6,7 +6,7 @@ A configuração fixa as origens do listener, do proxy e da aplicação pública
 
 Em modo `"teams": "direct"`, defina `enabledTeamIds` no descritor privado com os IDs de objeto dos Teams autorizados para esta instalação. Por exemplo, `"enabledTeamIds": ["44444444-4444-4444-8444-444444444444"]`. A configuração é carregada na inicialização. Uma lista vazia ou ausente bloqueia o acesso por Team.
 
-A entrada da instalação e o dashboard exigem membresia direta e atual em um Team habilitado e ativo. A instalação seleciona automaticamente quando há uma única opção. Quando há várias, retorna HTTP 409 com as opções elegíveis. O cliente envia o `profile` da opção escolhida no cabeçalho `X-SF-Team-Profile` com `contractRevision: "sf-team-profile/1"` e `kind: "team"`. A instalação consulta o Graph novamente antes de aceitar a escolha. A ausência de acesso resulta em HTTP 403. Uma consulta indisponível ou incompleta resulta em HTTP 503.
+A entrada da instalação e o dashboard exigem membresia direta e atual em um Team habilitado e ativo. A instalação seleciona automaticamente quando há uma única opção. Quando há várias, o navegador oferece links para os Teams elegíveis. Clientes HTTP recebem as opções em JSON com HTTP 409 e podem visitar a rota do Team ou enviar o `profile` escolhido no cabeçalho `X-SF-Team-Profile` com `contractRevision: "sf-team-profile/1"` e `kind: "team"`. A instalação consulta o Graph novamente antes de aceitar a escolha. A ausência de acesso resulta em HTTP 403. Uma consulta indisponível ou incompleta resulta em HTTP 503.
 
 ## Montagem no host
 
@@ -16,4 +16,10 @@ No diretório do descritor, com acesso exclusivo ao usuário do serviço, crie `
 
 Crie `ingress-secret.txt` no diretório privado da instalação, com modo `0600` e 32 bytes aleatórios codificados em 64 caracteres hexadecimais minúsculos. Configure o proxy para substituir qualquer `X-SF-Ingress-Proof` recebido do cliente pelo valor privado. O host exige uma conexão loopback e confere esse valor antes de encaminhar a requisição. O cabeçalho é removido antes de chegar à instalação.
 
-O listener corporativo é dedicado ao mount da instalação, com login e logout. Encaminhe apenas esse caminho e seus descendentes no proxy. Aplique limites de taxa por cliente e de concorrência a `/auth/login` e `/auth/callback` antes do encaminhamento ao listener. Use os caminhos do mount ou do dashboard ao iniciar o fluxo de login. A leitura de membresia fica disponível ao código do servidor. A admissão ao dashboard antecede as permissões de negócio de cada fluxo.
+O listener corporativo é dedicado ao mount da instalação, com login e logout. Encaminhe apenas esse caminho e seus descendentes no proxy. Aplique limites de taxa por cliente e de concorrência a `/auth/login` e `/auth/callback` antes do encaminhamento ao listener. Use os caminhos do mount ou do dashboard ao iniciar o fluxo de login. A leitura de membresia fica disponível ao código do servidor.
+
+## Fluxos por Team
+
+Dashboard, Planner e Procurement usam as rotas `<mount>/teams/<teamObjectId>/<aplicação>`. Os links e formulários mantêm o Team na URL, inclusive quando dois Teams estão abertos em abas diferentes. Cada Team tem seu próprio banco, anexos, versões e auditoria. Registros preexistentes seguem onde foram criados até a migração explícita.
+
+A membresia dá acesso à avaliação dos papéis da aplicação. Configure os papéis no descritor privado em `groups.dashboard`, `groups.planner` e `groups.procurement`, em formato `group:<ID de objeto Entra>`. A instalação resolve esses grupos para a conta autenticada. O diretório de pessoas deste recorte usa a identidade autenticada, então fluxos de seleção de outras pessoas ficam limitados até a integração de diretório. A habilitação de restauração e tarefas programadas por Team tem validação própria.

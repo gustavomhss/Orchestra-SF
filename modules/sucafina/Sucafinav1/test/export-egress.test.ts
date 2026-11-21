@@ -11,6 +11,7 @@ test.each([
   dashboard.data.hotTopics = [{ id: "topic", action: "Visible row", __sfProductV1: { token: "private state" } }]
   dashboard.data.__sfProductV1 = { marker: "private state" }
   const store = testPersistence({ dashboard })
+  const roles = [{ surface: "dashboard" as const, role: "admin", entra: "installation-group", version: 0, by: "" }]
   let reads = 0
   const business = createModule("/sf", {
     persistence: {
@@ -25,9 +26,13 @@ test.each([
         return store.persistence.transaction(surface, work, options)
       },
     },
-    authenticate: async () => change === "access" && reads > 1
-      ? null
-      : { id: "export-user", canWrite: true, roles: [{ surface: "dashboard", role: "admin" }] },
+    rolePolicy: () => roles,
+    authenticate: async (_request, context) => {
+      expect(context?.roleMap).toEqual(roles)
+      return change === "access" && reads > 1
+        ? null
+        : { id: "export-user", canWrite: true, roles: [{ surface: "dashboard", role: "admin" }] }
+    },
     environment: async () => ({ at: "2026-11-21T00:00:00Z", id: () => "unused", directory: [] }),
     maxJsonBytes: 65_536,
   })

@@ -36,6 +36,10 @@ export type EntraTeamsResult =
       retryAfterMs?: number
     }>
 export type EntraTeamsSessionResult = EntraTeamsResult | Readonly<{ state: "unauthenticated" }>
+export type EntraTeamsObservation = Readonly<{
+  result: EntraTeamsSessionResult
+  verifyCurrent?: () => Promise<boolean>
+}>
 export type EntraTeamsInput = Readonly<{
   tokens: Pick<EntraTokens, "accessToken" | "expiresAt" | "grantedScopes">
   principal: Readonly<{ tenantId: string; principalObjectId: string }>
@@ -65,6 +69,8 @@ export type EntraOptions = {
 export type LocalIdentity = {
   /** Reads direct Teams from the current encrypted session. */
   teamDirectory?: (request: Request) => Promise<EntraTeamsSessionResult>
+  /** Keeps the exact encrypted session generation server-side across business awaits. */
+  observeTeams?: (request: Request) => Promise<EntraTeamsObservation>
   handle: (request: Request) => Promise<Response | undefined>
   /** Refreshes credentials before entering the business transaction. */
   prepare: (request: Request) => Promise<void>
