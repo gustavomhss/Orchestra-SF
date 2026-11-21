@@ -167,7 +167,7 @@ if (root instanceof HTMLElement) {
             <AppInterface
               defaultServer={ServerConnection.Key.make(getDefaultUrl())}
               canonicalLocalServer={canonical ? ServerConnection.key(canonical) : undefined}
-              servers={canonical ? [canonical] : undefined}
+              servers={[server]}
             />
           </AppBaseProviders>
         </PlatformProvider>
