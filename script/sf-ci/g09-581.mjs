@@ -17,7 +17,7 @@ const optional = async (name) => {
 async function audit() {
   assert.deepEqual([env.GITHUB_ACTIONS, env.GITHUB_REPOSITORY, Number(env.GITHUB_REPOSITORY_ID), env.RUNNER_OS,
     env.RUNNER_ARCH, env.GITHUB_REF],
-  ["true", original.repository, original.repositoryId, "Linux", "X64", "refs/heads/g09-c17-proof"])
+  ["true", original.repository, original.repositoryId, "Linux", "X64", "refs/heads/g09-c17-ledger"])
   const candidate = await realpath(candidateArg)
   const producer = await realpath(producerArg)
   const verified = verifyGitSource(await read("source.commit"), await read("source.tree"), original.sourceSHA)
@@ -30,6 +30,8 @@ async function audit() {
   const artifact = verifyOriginalBytes({
     source, zip: await read("original.zip"), compressed, archiveFiles,
     receiptBytes: await read("orchestra-sf-entra-package-receipt.json"), proofBytes: await read("ci-validation.json"),
+    compileEvidenceBytes: await read("compile-evidence.json"), compileProvenanceBytes: await read("compile-provenance.json"),
+    webManifestBytes: await read("web-build-manifest.json"),
   })
   const tool = verifyGitSource(await read("tool.commit"), await read("tool.tree"), env.GITHUB_SHA)
   const toolPaths = ["team-profile-residue.mjs", "team-profile-residue.test.mjs", "g09-581-package.mjs", "g09-581.mjs"]

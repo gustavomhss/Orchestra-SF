@@ -1,5 +1,5 @@
 name: G09 historical package proof
-run-name: "G09 C17 Linux · 44917163192"
+run-name: "G09 C17 Linux · 44919211871"
 
 on:
   workflow_dispatch:
@@ -14,14 +14,14 @@ permissions:
 
 jobs:
   g09:
-    if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/g09-c17-proof'
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/g09-c17-ledger'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       PACKAGE_SHA: 761abac2f8ee4106db0347189ff304a4a79bf026
-      PRODUCER_SHA: a1109e8f42d0f15088679a4e2d48338e8a37186d
-      ZIP_SHA: 052cd62893000057ced6c4cfe6568d401c90920be5a75e8822de15c41f9282d1
-      TAR_SHA: 11dd277f241fc222aeda1a7b49b749ac9c4557ff0478b6c6e7fa6fd1ba50f779
+      PRODUCER_SHA: 652fc3d2d251edbf843d9e219a3435248bf3dec5
+      ZIP_SHA: c3a31e10b25e81cc1b6e8234f77ed16ed6ea86c4d3c7e6026b67f5fc6187e8e7
+      TAR_SHA: 7a2ab7102528a7de1998b30635bb02e3907ea1afc033e07d71c12cc6906158e9
     steps:
       - name: Check out G09 verifier
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
@@ -52,11 +52,11 @@ jobs:
           test "$(git -C auditor rev-parse HEAD)" = "$GITHUB_SHA"
           test "$(git -C candidate rev-parse HEAD)" = "$PACKAGE_SHA"
           test "$(git -C producer rev-parse HEAD)" = "$PRODUCER_SHA"
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs/44917163192" > "$out/producer-run.json"
-          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14712293140" > "$out/producer-artifact.json"
-          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14712293140/zip" > "$out/original.zip"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/44919211871" > "$out/producer-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14713077730" > "$out/producer-artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14713077730/zip" > "$out/original.zip"
           printf '%s  %s\n' "$ZIP_SHA" "$out/original.zip" | sha256sum --check
-          for name in orchestra-sf-entra-linux-x64-baseline.tar.gz orchestra-sf-entra-package-receipt.json ci-validation.json; do
+          for name in orchestra-sf-entra-linux-x64-baseline.tar.gz orchestra-sf-entra-package-receipt.json ci-validation.json compile-evidence.json compile-provenance.json web-build-manifest.json; do
             unzip -p "$out/original.zip" "$name" > "$out/$name"
           done
           printf '%s  %s\n' "$TAR_SHA" "$out/orchestra-sf-entra-linux-x64-baseline.tar.gz" | sha256sum --check
@@ -96,7 +96,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: g09-c17-evidence
+          name: g09-c17-ledger-evidence
           path: |
             ${{ runner.temp }}/g09/report.json
             ${{ runner.temp }}/g09/controls.json

@@ -799,6 +799,10 @@ export function auditResidues(input) {
     artifactId: artifact?.artifact?.id, artifactDigest: artifact?.artifact?.digest,
     ...(historical ? {
       producerReceiptSha256: artifact.receiptSha256, validatorSha256: historical.validatorSha256,
+      ...(artifact.compileEvidenceSha256 === undefined ? {} : {
+        compileEvidenceSha256: artifact.compileEvidenceSha256, packedCliSha256: artifact.packedCliSha256,
+        compileProvenanceSha256: artifact.compileProvenanceSha256, webManifestSha256: artifact.webManifestSha256,
+      }),
     } : {}) }
   const blockers = [], inline = catalog.dispositions.map((item) => { reviewDisposition(item); return item })
   let reviewAuthentication
