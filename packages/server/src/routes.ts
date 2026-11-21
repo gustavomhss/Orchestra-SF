@@ -36,6 +36,7 @@ import { BodyLimit } from "./body-limit"
 import { corsLayer } from "./cors"
 import { hostPolicyLayer } from "./host-policy"
 import { handlers } from "./handlers"
+import { SfInstallationSource, type SfTrustedInstallationSource } from "./sucafina-installations"
 import { authorizationLayer } from "./middleware/authorization"
 import { schemaErrorLayer } from "./middleware/schema-error"
 import { PtyEnvironment } from "@orchestra/core/host/pty-environment"
@@ -91,6 +92,7 @@ export interface Options {
   readonly cors?: ReadonlyArray<string>
   /** Allowed HTTP hostnames; omitted leaves host admission to the embedding application. */
   readonly allowedHosts?: ReadonlyArray<string>
+  readonly sucafinaInstallations?: SfTrustedInstallationSource
   /** A trusted host can raise the body limit on its own upload routes. */
   readonly requestBodyLimit?: (request: HttpServerRequest.HttpServerRequest) => number | undefined
   /** Replaces the capability operator; tests and sdk-next embed their own. */
@@ -108,7 +110,7 @@ export function createRoutes(options: Options = {}) {
   )
 }
 
-export function createEmbeddedRoutes(options: Pick<Options, "host" | "operator" | "verifier" | "allowedHosts"> = {}) {
+export function createEmbeddedRoutes(options: Pick<Options, "host" | "operator" | "verifier" | "allowedHosts" | "sucafinaInstallations"> = {}) {
   return makeRoutes(ServerAuth.Config.configLayer({ username: "orchestra", password: Option.none() }), options)
 }
 
@@ -129,6 +131,10 @@ function makeRoutes<AuthError, AuthServices>(
 
   const api = HttpApiBuilder.layer(Api, { openapiPath: "/openapi.json" }).pipe(
     Layer.provide(handlers),
+    Layer.provide(Layer.succeed(SfInstallationSource, options.sucafinaInstallations ?? {
+      current: async () => undefined,
+      forAdmittedLocation: async () => [],
+    })),
     Layer.provide(merged.references),
     Layer.provide(sessionLocationLayer),
     Layer.provide(inboxLocationLayer),

@@ -175,9 +175,23 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
     }) : undefined
     const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount, ...(recoveryDrill ? { recoveryDrill } : {}), ...(operator ? { operator: { id: `macos:${operator.installationId}:${operator.uid}`, name: operator.name } } : {}), schedule: !!operator })
     services.jobs = jobs
+    const discovered = runtime ? {
+      publicOrigin: config.origin,
+      mount: config.mount,
+      authMode: "local-operator" as const,
+      identity: () => runtime?.identity(),
+    } : undefined
     return {
       mount: config.mount,
       ...(runtime ? { host: runtime.contributions } : {}),
+      ...(discovered ? { discovery: {
+        current: async (signal: AbortSignal) => signal.aborted ? undefined : discovered,
+        forAdmittedLocation: async (location: Readonly<{ directory: string; workspace?: string }>, signal: AbortSignal) => {
+          const installed = discovered.identity()
+          if (signal.aborted || !installed || location.workspace || location.directory !== installed.location.directory) return []
+          return [discovered]
+        },
+      } } : {}),
       async handler(request: Request) {
         const url = new URL(request.url)
         if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })

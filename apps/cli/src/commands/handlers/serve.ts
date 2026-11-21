@@ -143,7 +143,7 @@ function listen(
     : {
       dedicated: false,
       layer: Layer.merge(
-        createRoutes({ password, host: [...hosts(), ...(installation?.host ?? [])], webRoot: root, allowedHosts, cors: input.cors, requestBodyLimit: installation?.bodyLimit }),
+        createRoutes({ password, host: [...hosts(), ...(installation?.host ?? [])], webRoot: root, allowedHosts, cors: input.cors, requestBodyLimit: installation?.bodyLimit, sucafinaInstallations: installation?.discovery }),
         installation?.layer ?? Layer.empty,
       ),
     }
