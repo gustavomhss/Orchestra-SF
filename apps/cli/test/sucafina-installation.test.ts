@@ -116,6 +116,9 @@ const serveInstallation = (trusted: boolean) => () =>
         const tooLarge = await dispatch(report, { method: "POST", headers: ingressHeaders, body: new Uint8Array(65_537) })
         expect(tooLarge.status).toBe(413)
         expect(await tooLarge.json()).toEqual({ status: "needs-input", reason: "request-too-large" })
+        expect((await dispatch(report + "&upload=contract", {
+          method: "POST", headers: ingressHeaders, body: new Uint8Array(65_537),
+        })).status).toBe(200)
         const chunked = await unfinishedPost(hostname, port, report, [`Host: ${host}`, `X-SF-Ingress-Proof: ${proof}`], [
           "a".repeat(32_768), "b".repeat(32_769),
         ])
