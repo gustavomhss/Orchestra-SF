@@ -245,13 +245,19 @@ test("secrets get is read-only inside a business write; expiry, atomic take and 
     const store = await open({ lockTimeoutMs: 100 })
     const other = await open({ lockTimeoutMs: 100 })
     await store.secrets.put("token", bytes, 200)
+    const getActive = store.secrets.getActive
+    if (!getActive) throw new Error("Atomic credential reader unavailable")
     await store.transaction("dashboard", async (snapshot) => {
+      expect(await getActive("token", "revoked", 199)).toEqual(bytes)
       expect(await store.secrets.get("token", 199)).toEqual(bytes)
       expect(await store.secrets.get("token", 200)).toBeUndefined()
       expect(await store.secrets.get("token", 199)).toEqual(bytes)
       snapshot.data.saved = true
       return { commit: true, value: null }
     })
+    await other.secrets.put("revoked", new Uint8Array([1]), 200)
+    expect(await store.secrets.get("token", 199)).toEqual(bytes)
+    expect(await getActive("token", "revoked", 199)).toBeUndefined()
     const taken = await Promise.all([store.secrets.take("token", 199), other.secrets.take("token", 199)])
     expect(taken.filter((item) => item !== undefined)).toEqual([bytes])
     expect(await store.secrets.get("token", 199)).toBeUndefined()

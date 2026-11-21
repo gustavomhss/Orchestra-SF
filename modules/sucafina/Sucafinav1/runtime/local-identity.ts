@@ -36,6 +36,7 @@ export function createLocalIdentity(options: {
   const configuredTenant = options.client.tenantId
   const teamTenant = configuredTenant && entraObjectId.test(configuredTenant) ? configuredTenant.toLowerCase() : undefined
   const readTeams = options.client.joinedTeams?.bind(options.client)
+  const readActiveSession = options.secrets.getActive?.bind(options.secrets)
   const slot = (kind: string, handle: string) => `${kind}:${createHash("sha256").update(handle).digest("hex")}`
   const cookie = (kind: string, value: string, seconds: number) => `${cookiePrefix}_${kind}=${value}; Path=${options.mount}; HttpOnly; SameSite=Lax; Max-Age=${seconds}${origin.protocol === "https:" ? "; Secure" : ""}`
   const handle = (request: Request, kind: string) => {
@@ -58,15 +59,17 @@ export function createLocalIdentity(options: {
     decipher.setAuthTag(value.slice(13, 29))
     return JSON.parse(Buffer.concat([decipher.update(value.slice(29)), decipher.final()]).toString("utf8")) as unknown
   }
-  const session = async (request: Request): Promise<{ handle: string; value: Session } | undefined> => {
+  const readSession = async (storageKey: string, encrypted: Uint8Array | undefined) => {
+    if (!encrypted) return undefined
+    const value = await Promise.resolve().then(() => open(storageKey, encrypted)).catch(() => undefined)
+    return validSession(value) && value.expiresAt > now() ? value : undefined
+  }
+  const session = async (request: Request) => {
     const id = handle(request, "session")
     if (!id || await options.secrets.get(slot("revoked", id), now())) return undefined
     const storageKey = slot("session", id)
-    const encrypted = await options.secrets.get(storageKey, now())
-    if (!encrypted) return undefined
-    const value = await Promise.resolve().then(() => open(storageKey, encrypted)).catch(() => undefined)
-    if (!validSession(value) || value.expiresAt <= now()) return undefined
-    return { handle: id, value }
+    const value = await readSession(storageKey, await options.secrets.get(storageKey, now()))
+    return value && { handle: id, value }
   }
   const ready = async (request: Request) => {
     const current = await session(request)
@@ -79,11 +82,15 @@ export function createLocalIdentity(options: {
         !(url.pathname === options.mount || url.pathname.startsWith(options.mount + "/")) ||
         request.headers.get("sec-fetch-site") === "cross-site" ||
         (request.headers.has("origin") && request.headers.get("origin") !== origin.origin)) return undefined
-    const current = await ready(request)
-    const principal = current?.value.teamPrincipal
-    if (request.signal.aborted || !current || !principal || principal.tenantId !== teamTenant ||
-        refreshing.has(current.handle)) return undefined
-    return current
+    const id = handle(request, "session")
+    if (!id || !readActiveSession) return undefined
+    const storageKey = slot("session", id)
+    const encrypted = await readActiveSession(storageKey, slot("revoked", id), now())
+    const value = await readSession(storageKey, encrypted)
+    if (request.signal.aborted || !encrypted || !value || !value.teamPrincipal ||
+        value.teamPrincipal.tenantId !== teamTenant || value.tokens.expiresAt <= now() ||
+        refreshing.has(id)) return undefined
+    return { handle: id, value, encrypted }
   }
   const headers = () => new Headers({ "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" })
   const error = (status: number) => new Response("Authentication unavailable", { status, headers: headers() })
@@ -140,7 +147,7 @@ export function createLocalIdentity(options: {
       const value: Session = {
         ...result,
         expiresAt: now() + sessionSeconds * 1000,
-        ...(readTeams && teamTenant ? { teamPrincipal: {
+        ...(readTeams && teamTenant && readActiveSession ? { teamPrincipal: {
           tenantId: teamTenant, principalObjectId: result.person.id.toLowerCase(),
         } } : {}),
       }
@@ -168,20 +175,21 @@ export function createLocalIdentity(options: {
       refreshing.set(current.handle, work)
       await work
     },
-    ...(readTeams && teamTenant ? {
+    ...(readTeams && teamTenant && readActiveSession ? {
       async teamDirectory(request: Request): Promise<EntraTeamsSessionResult> {
         const current = await teamReadCurrent(request)
         const principal = current?.value.teamPrincipal
         if (!current || !principal) return { state: "unauthenticated" }
         const tokens = current.value.tokens
         const observed = await readTeams({
-          principal,
+          principal: { ...principal },
           tokens: { accessToken: tokens.accessToken, expiresAt: tokens.expiresAt, grantedScopes: tokens.grantedScopes },
         }).catch((): EntraTeamsResult => ({ state: "unavailable", reason: "provider_unavailable" }))
         const latest = await teamReadCurrent(request)
-        if (!latest || latest.handle !== current.handle || latest.value.person.id !== current.value.person.id ||
-            latest.value.tokens.accessToken !== tokens.accessToken || latest.value.tokens.expiresAt !== tokens.expiresAt ||
-            JSON.stringify(latest.value.tokens.grantedScopes) !== JSON.stringify(tokens.grantedScopes))
+        // Every write seals the credential with a fresh IV, including a refresh
+        // that receives the same plaintext fields from Entra.
+        if (!latest || latest.handle !== current.handle || latest.encrypted.byteLength !== current.encrypted.byteLength ||
+            !timingSafeEqual(latest.encrypted, current.encrypted))
           return { state: "unauthenticated" }
         if (observed.state === "complete" &&
             (observed.tenantId !== principal.tenantId || observed.principalObjectId !== principal.principalObjectId))

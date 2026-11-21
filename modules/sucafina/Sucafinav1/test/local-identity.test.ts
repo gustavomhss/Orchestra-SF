@@ -13,23 +13,31 @@ function fixture(joinedTeams?: EntraClient["joinedTeams"]) {
   const records = new Map<string, { value: Uint8Array; expires: number }>()
   const reads: string[] = []
   const writes: string[] = []
-  const calls = { exchange: 0, refresh: 0, resolve: 0, state: "", nonce: "", challenge: "", verifier: "", wrongPerson: false }
+  const calls = { exchange: 0, refresh: 0, resolve: 0, readActive: 0, state: "", nonce: "", challenge: "", verifier: "", wrongPerson: false, refreshWithSameToken: false }
   const clock = { value: 1800000000000 }
+  const originalTokenExpiry = clock.value + 120000
   const secrets: LocalSecrets = {
     async put(key, value, expires) { writes.push(key); records.set(key, { value: new Uint8Array(value), expires }) },
     async get(key, at) { reads.push(key); const record = records.get(key); return record && record.expires > at ? new Uint8Array(record.value) : undefined },
+    async getActive(key, revokedKey, at) {
+      calls.readActive++
+      const revocation = records.get(revokedKey)
+      const record = records.get(key)
+      if (revocation && revocation.expires > at) return undefined
+      return record && record.expires > at ? new Uint8Array(record.value) : undefined
+    },
     async take(key, at) { const value = await secrets.get(key, at); records.delete(key); return value },
     async remove(key) { writes.push(key); records.delete(key) },
   }
-  const tokens = () => ({
-    accessToken: "PRIVATE_ACCESS_TOKEN", refreshToken: "PRIVATE_REFRESH_TOKEN", expiresAt: clock.value + 120000,
+  const tokens = (expiresAt = clock.value + 120000) => ({
+    accessToken: "PRIVATE_ACCESS_TOKEN", refreshToken: "PRIVATE_REFRESH_TOKEN", expiresAt,
     ...(joinedTeams ? { grantedScopes: ["Team.ReadBasic.All"] } : {}),
   })
   const client: EntraClient = {
     ...(joinedTeams ? { tenantId, joinedTeams } : {}),
     async authorization(input) { calls.state = input.state; calls.nonce = input.nonce; calls.challenge = input.challenge; return `https://login.microsoftonline.com/authorize?state=${input.state}` },
     async exchange(input) { calls.exchange++; calls.verifier = input.verifier; expect(input.nonce).toBe(calls.nonce); return { person, tokens: tokens() } },
-    async refresh() { calls.refresh++; return tokens() },
+    async refresh() { calls.refresh++; return tokens(calls.refreshWithSameToken ? originalTokenExpiry : undefined) },
     async person() { return calls.wrongPerson ? { ...person, id: "1fe3ac10-c944-4eb6-8812-c67f5202a32f" } : person },
     async directory() { return [person] },
     async resolve(_token, map) { calls.resolve++; return { id: person.id, canWrite: true, roles: map.filter((row) => row.entra).map((row) => ({ surface: row.surface, role: row.role })) } },
@@ -143,6 +151,7 @@ test("Team membership reads only the Microsoft principal stored with the opaque 
   if (!read) throw new Error("Team observation must be available for the configured client")
   const { cookie } = await f.login()
   const headers = { "x-sf-team-profile": JSON.stringify({ tenantId: teamId, principalObjectId: teamId }) }
+  f.reads.length = 0
   const result = await read(f.request("/planner?tenantId=" + teamId + "&principalObjectId=" + teamId, cookie, { headers }))
   expect(result).toEqual(directMembership())
   expect(observed).toEqual([{
@@ -151,6 +160,8 @@ test("Team membership reads only the Microsoft principal stored with the opaque 
   }])
   expect(JSON.stringify(result)).not.toContain("PRIVATE")
   expect(f.calls.resolve).toBe(0)
+  expect(f.calls.readActive).toBe(2)
+  expect(f.reads).toEqual([])
 })
 
 test("Team membership requires a current session on the original installation request", async () => {
@@ -180,7 +191,7 @@ test("Team membership discards another principal returned by the provider", asyn
   expect(await read(f.request("/planner", cookie))).toEqual({ state: "unavailable", reason: "identity_mismatch" })
 })
 
-for (const action of ["logout", "refresh"] as const) {
+for (const action of ["logout", "a refresh with identical token fields"] as const) {
   test(`Team membership discards Graph results when ${action} changes the session in flight`, async () => {
     const entered = Promise.withResolvers<void>()
     const release = Promise.withResolvers<void>()
@@ -200,6 +211,7 @@ for (const action of ["logout", "refresh"] as const) {
         const response = await f.identity.handle(f.request("/auth/logout", cookie, { method: "POST", headers: { origin } }))
         expect(response?.status).toBe(204)
       } else {
+        f.calls.refreshWithSameToken = true
         f.clock.value += 61000
         await f.identity.prepare(request)
         expect(f.calls.refresh).toBe(1)

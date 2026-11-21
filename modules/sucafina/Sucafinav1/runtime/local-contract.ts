@@ -6,6 +6,8 @@ import type { RoleRow, ResolvedActor, Surface } from "../src/identity.ts"
 export type LocalSecrets = {
   put: (key: string, value: Uint8Array, expiresAt: number) => Promise<void>
   get: (key: string, at: number) => Promise<Uint8Array | undefined>
+  /** Read credential and revocation marker in the same store snapshot. */
+  getActive?: (key: string, revokedKey: string, at: number) => Promise<Uint8Array | undefined>
   take: (key: string, at: number) => Promise<Uint8Array | undefined>
   remove: (key: string) => Promise<void>
 }

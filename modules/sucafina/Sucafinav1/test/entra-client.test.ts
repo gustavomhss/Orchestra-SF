@@ -132,7 +132,7 @@ test("refresh supports rotation and does not invent an omitted id_token", async 
   expect(tokens).toEqual({ accessToken: "synthetic-access", refreshToken: "rotated", expiresAt: (epoch + 1200) * 1000 })
   expect(tokens.idToken).toBeUndefined()
   const request = f.requests.find((request) => request.url === metadata.token_endpoint)!
-  expect(Object.fromEntries(new URLSearchParams(await request.text()))).toMatchObject({ grant_type: "refresh_token", client_id: clientId, refresh_token: "old-refresh" })
+  expect(Object.fromEntries(new URLSearchParams(await request.text()))).toMatchObject({ grant_type: "refresh_token", client_id: clientId, refresh_token: "old-refresh", scope: scopes.join(" ") })
   expect(f.requests.some((request) => request.url.startsWith(graph))).toBe(false)
 })
 
@@ -406,6 +406,7 @@ test("Teams opt-in adds only the delegated scope and uses the signed principal a
   } })
   const authorize = new URL(await f.client.authorization({ state: "state", nonce: input.nonce, challenge: "challenge", redirectUri }))
   expect(authorize.searchParams.get("scope")?.split(" ")).toEqual([...scopes, teamScope])
+  expect(f.client.tenantId).toBe(tenant)
   const signed = await f.client.exchange(input)
   expect(signed.tokens.grantedScopes).toEqual(["User.Read", teamScope])
   expect(await f.client.joinedTeams!(teamsInput(signed.tokens))).toEqual({
@@ -432,6 +433,11 @@ test("Teams consent must be observed on both initial and refreshed credentials",
   } })
   expect((await granted.client.exchange(input)).tokens.grantedScopes).toEqual([teamScope])
   const refreshed = await granted.client.refresh("synthetic-refresh")
+  const refreshRequest = granted.requests.at(-1)!
+  expect(refreshRequest.url).toBe(metadata.token_endpoint)
+  const form = new URLSearchParams(await refreshRequest.text())
+  expect(form.get("grant_type")).toBe("refresh_token")
+  expect(form.has("scope")).toBe(false)
   const refreshedCount = granted.requests.length
   expect(await granted.client.joinedTeams!(teamsInput(refreshed))).toEqual({ state: "unavailable", reason: "consent_required" })
   expect(granted.requests).toHaveLength(refreshedCount)

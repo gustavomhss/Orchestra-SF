@@ -210,6 +210,15 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const row = db.query<{ payload: Uint8Array }, [string, number]>("SELECT payload FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)
         return row ? new Uint8Array(row.payload) : undefined
       }),
+      getActive: (key, revokedKey, at) => operation(false, async (db) => {
+        if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
+        const row = db.query<{ payload: Uint8Array }, [string, number, string, number]>(`
+          SELECT payload FROM authentication_payloads
+          WHERE key = ? AND expires_at > ?
+            AND NOT EXISTS (SELECT 1 FROM authentication_payloads WHERE key = ? AND expires_at > ?)
+        `).get(key, at, revokedKey, at)
+        return row ? new Uint8Array(row.payload) : undefined
+      }),
       take: (key, at) => operation(true, async (db) => {
         if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
         const row = db.query<{ payload: Uint8Array }, [string, number]>("SELECT payload FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)

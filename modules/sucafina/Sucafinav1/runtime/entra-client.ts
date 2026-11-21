@@ -165,10 +165,13 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   }
 
   async function redeem(url: string, fields: Record<string, string>) {
+    const form = new URLSearchParams({ client_id: options.clientId, ...fields })
+    // Keep the original delegated grant on refresh. A fresh login requests Teams consent.
+    if (teams !== "direct" || fields.grant_type !== "refresh_token") form.set("scope", scopes)
     const data = await request(url, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ client_id: options.clientId, scope: scopes, ...fields }),
+      body: form,
     })
     if (data.error !== undefined || typeof data.access_token !== "string" || !data.access_token.trim() || typeof data.expires_in !== "number" || !Number.isFinite(data.expires_in) || data.expires_in <= 0) throw new Error("Invalid Entra token response")
     if (data.refresh_token !== undefined && (typeof data.refresh_token !== "string" || !data.refresh_token.trim())) throw new Error("Invalid refresh token response")
