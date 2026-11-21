@@ -1,5 +1,5 @@
 import { SfFileRoutes } from "@orchestra/schema/sucafina/files/routes"
-import { createSfFilesHostBindings, type SfFilesHostSources } from "./files"
+import { createSfFilesHostBindings, type SfFilesHostSources } from "./bindings.ts"
 
 const fail = (status: number, headers?: Record<string, string>) =>
   Response.json({ status: "invalid" }, { status, headers: { "Cache-Control": "no-store", ...headers } })
