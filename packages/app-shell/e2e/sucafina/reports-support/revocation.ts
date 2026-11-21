@@ -37,10 +37,14 @@ export async function revokeReportsSession(input: {
     const meeting = retained.getByRole("region", { name: "Preserved review meeting", exact: true })
     await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
     await expectConfirmedAnswerVisible(retained, answer)
-    const localPending = await retainUnsentReply(page, app, answer, "logout")
-    cleanup.push(localPending.cleanup)
-    const retainedPending = await retainUnsentReply(retained, app, answer, "retained")
-    cleanup.push(retainedPending.cleanup)
+    const retain = async (target: Page, purpose: string) => {
+      const pending = await retainUnsentReply(target, app, answer, purpose)
+      cleanup.push(pending.cleanup)
+      return pending
+    }
+    const [localPending, retainedPending] = await Promise.all([
+      retain(page, "logout"), retain(retained, "retained"),
+    ])
     expect(retainedPending.storageVersion).toBe(localPending.storageVersion)
     expect(retainedPending.key).not.toBe(localPending.key)
     const pendingLogout = page.waitForResponse((response) => response.url() === `${app.origin}${app.mount}/auth/logout` && response.request().method() === "POST")

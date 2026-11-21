@@ -1,4 +1,5 @@
 import { hasActiveSfSnapshot, hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
+import type { Snapshot } from "../../runtime/contract.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -45,14 +46,37 @@ export function createReviewAnswerSource(input: {
     if (!basis || !isReviewThreadContext(basis.reviewContext) || observation?.state !== "available") return false
     try {
       const lease = leases.get(observation.accessLeaseRef)
-      const request = input.host.requestFor(context)
-      const stored = () => {
-        const snapshot = input.host.persistence.currentSnapshots?.()?.dashboard
-        return snapshot && object(object(snapshot.data.__sfProductV1).reviews)[basis.reviewContext.reviewRef]
+      const host = input.host
+      const request = host.requestFor(context)
+      if (!lease || lease.authorityScopeDigest !== key(scope, basis, context) || !request || request.signal.aborted ||
+          !lease.current() || digestSfValue(observation) !== lease.observationDigest) return false
+      const persistence = host.persistence
+      const atomic = context.kind === "ui" && hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
+      const readSealed = atomic?.readSealed
+      const readDashboard = atomic?.currentSnapshot
+      const admitted = readDashboard && readSealed?.call(atomic)
+      const reviewRef = basis.reviewContext.reviewRef
+      const storedReview = (snapshot: Snapshot | undefined, ref: string) =>
+        snapshot && object(object(snapshot.data.__sfProductV1).reviews)[ref]
+      // The digest is pure over the sealed root. Each checkpoint still
+      // independently obtains the current root and runs the real authority.
+      let sealedDigest: string | undefined
+      const matchesStoredReview = () => {
+        if (!admitted) return digestSfValue(storedReview(input.host.persistence.currentSnapshots?.()?.dashboard,
+          basis.reviewContext.reviewRef)) === lease.reviewDigest
+        if (input.host !== host || host.persistence !== persistence || host.requestFor(context) !== request || request.signal.aborted ||
+          basis.reviewContext.reviewRef !== reviewRef || !atomic || !readDashboard || atomic.readSealed !== readSealed ||
+          persistence.dashboardSourceFence !== atomic || atomic.currentSnapshot !== readDashboard ||
+          !hasSfDashboardSourceFence(persistence) || !admitted.current()) return false
+        const observed = readSealed?.call(atomic)
+        if (!observed || observed.identity !== admitted.identity || !observed.current()) return false
+        sealedDigest ??= digestSfValue(storedReview(readDashboard.call(persistence, "dashboard"), reviewRef))
+        return sealedDigest === lease.reviewDigest && observed.current() && admitted.current()
       }
-      if (!lease || lease.authorityScopeDigest !== key(scope, basis, context) || !request || request.signal.aborted || !lease.current() || digestSfValue(observation) !== lease.observationDigest || digestSfValue(stored()) !== lease.reviewDigest || !await input.host.revalidate(context)) return false
-      if (!await lease.fence() || !lease.current() || digestSfValue(stored()) !== lease.reviewDigest || !await input.host.revalidate(context)) return false
-      return await lease.fence() && lease.current() && !request.signal.aborted && digestSfValue(stored()) === lease.reviewDigest && await input.host.revalidate(context) && lease.current() && !request.signal.aborted && digestSfValue(stored()) === lease.reviewDigest
+      if (!matchesStoredReview() || !await input.host.revalidate(context)) return false
+      if (!await lease.fence() || !lease.current() || !matchesStoredReview() || !await input.host.revalidate(context)) return false
+      return await lease.fence() && lease.current() && !request.signal.aborted && matchesStoredReview() &&
+        await input.host.revalidate(context) && lease.current() && !request.signal.aborted && matchesStoredReview()
     } catch { return false }
   }
   return {

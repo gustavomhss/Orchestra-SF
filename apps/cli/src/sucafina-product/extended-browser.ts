@@ -59,6 +59,11 @@ if (root && bootstrap) {
       destination.searchParams.get("sf") !== "review") return
     event.signal.addEventListener("abort", beginNavigation(), { once: true })
   })
+  // Browser reloads can keep the outgoing document alive while the new GET
+  // waits for the installation. That document must not start another poll.
+  window.addEventListener("beforeunload", () => {
+    if (!closed && !root.hasAttribute("data-sf-review-navigating")) beginNavigation()
+  })
   const clearPrivate = () => {
     if (closed) return
     closed = true; generation += 1
