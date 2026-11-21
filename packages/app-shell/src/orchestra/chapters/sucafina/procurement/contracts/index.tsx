@@ -98,6 +98,12 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     value === "monthly" ? t("sf.u15.option.monthly") : value === "annual" ? t("sf.u15.option.annual") :
     value === "fixed" ? t("sf.u15.option.fixed") : value === "na" ? t("sf.u15.option.na") :
     value === "auto" ? t("sf.u15.option.auto") : value
+  const readField = (row: SfVendorContract, field: Field) => {
+    const value = row[field]
+    if (field === "amount" && typeof value === "number")
+      return new Intl.NumberFormat(language.intl(), { maximumFractionDigits: 20 }).format(value)
+    return field === "amtType" || field === "renewType" ? optionText(safeField(row, field)) : safeField(row, field)
+  }
   const routeRef = () =>
     (props.route.kind === "detail" || props.route.kind === "edit") ? props.route.params.contractRef : undefined
   const selectedRef = () => routeRef() ?? view.selected
@@ -252,7 +258,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     { id: "name", labelKey: tableKey("sf.u15.field.name"), align: "start", sortKey: "name",
       widthPolicy: { kind: "flex", minPx: 130, weight: 2 }, render: (row) => <><span class="sf-u15-cell-label" aria-hidden="true">{t("sf.u15.field.name")}</span><span>{safeField(row, "name") || <span class="sf-u15-missing" aria-label={t("sf.u15.missing")}>—</span>}</span></> },
     { id: "end", labelKey: tableKey("sf.u15.field.end"), align: "start", sortKey: "end",
-      widthPolicy: { kind: "content", minPx: 96, maxPx: 160 }, render: (row) => <><span class="sf-u15-cell-label" aria-hidden="true">{t("sf.u15.field.end")}</span><span>{safeField(row, "end") || <span class="sf-u15-missing" aria-label={t("sf.u15.missing")}>—</span>}</span></> },
+      widthPolicy: { kind: "content", minPx: 96, maxPx: 160 }, render: (row) => <><span class="sf-u15-cell-label" aria-hidden="true">{t("sf.u15.field.end")}</span><span class="sf-u15-date">{safeField(row, "end") || <span class="sf-u15-missing" aria-label={t("sf.u15.missing")}>—</span>}</span></> },
   ]
 
   const beginReview = (action: SfVendorAction) => {
@@ -487,7 +493,8 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
               <div class="sf-u15-filters">
                 <label for={inputId}>{t("sf.u15.filter")}</label>
                 <div class="sf-u15-search-control"><Icon name="magnifying-glass" size="small" />
-                  <input id={inputId} type="search" placeholder={t("sf.u15.filterPlaceholder")}
+                  <span class="sf-u15-sr" id={inputId + "-search-hint"}>{t("sf.u15.filterPlaceholder")}</span>
+                  <input id={inputId} type="search" placeholder={t("sf.u15.filter")} aria-describedby={inputId + "-search-hint"}
                     value={view.filter} onInput={(event) => setView("filter", event.currentTarget.value)} />
                   <Show when={view.filter}><button type="button" class="mx-btn" aria-label={t("sf.u15.clearFilter")}
                     onClick={() => setView("filter", "")}><Icon name="close-small" size="small" /></button></Show>
@@ -561,9 +568,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
                         <div data-sf-field={field}><dt>{t(fieldKey(field))}</dt>
                           <dd><Show when={safeField(selectedRow()!, field) !== ""} fallback={
                             <span class="sf-u15-missing" data-sf-value="missing"><span aria-hidden="true">—</span><span class="sf-u15-sr">{t("sf.u15.missing")}</span></span>
-                          }><bdi>{field === "amtType" || field === "renewType"
-                            ? optionText(safeField(selectedRow()!, field))
-                            : safeField(selectedRow()!, field)}</bdi></Show></dd>
+                          }><bdi>{readField(selectedRow()!, field)}</bdi></Show></dd>
                         </div>
                       }</For></dl>
                     </section>}</For>

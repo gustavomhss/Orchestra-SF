@@ -20,6 +20,7 @@ Branch `sf-polish-ops` starts at plan commit `24c02f7f366ecea94a8511c88cdaf2bebc
 - Native type tokens: md body, sm secondary copy, lg row headings, xl section headings, 2xl focused titles and 3xl recorded measures.
 - Panels use native raised/soft materials, line tokens, 20 px desktop padding and 16 px narrow padding. No replacement palette, blur system or font asset is introduced.
 - All visible input/action targets are at least 44 px tall. Long text wraps; action groups reflow.
+- CAP13/CAP15 and CAP16 outer view wrappers explicitly pass the host flex sizing and minimum block size to the frame. A long-editor browser assertion checks bounded height and real internal scroll movement.
 - Editors and review stages have a 760 px maximum width. The list/overview remains mounted but hidden during editing and review; source draft controllers are not replaced.
 - CAP11 ticket and SLA tables retain a 560 px readable minimum, with a 760 px application ledger inside named keyboard-focusable scrollers.
 - CAP12 history/department tables retain a 560 px minimum and incidents an 820 px minimum. Campaign department editors use responsive labeled fields rather than a horizontal editing table.
@@ -37,7 +38,7 @@ CAP12 `secActions` rows expose no reporting period in the existing DTO. The sele
 
 CAP13/CAP15 missing fields and factors remain unavailable rather than becoming zero. Detail and list option labels are localized without changing saved enum values.
 
-CAP16 weights, quarters, scores and ownership remain exact source scalars. The newly navigable sub-item detail uses the existing focus item/sub-item state and the existing edit/delete handlers.
+CAP16 weights, quarters, scores and ownership remain exact source scalars. The newly navigable sub-item detail uses the existing focus item/sub-item state and the existing edit/delete handlers. The A01 read schema exposes status/statusQ1–4 as `SfDomainScalar`; `performanceSubSave` accepts `text`, not a closed enum. Detail and review therefore retain the source status text. The existing main-status editor options are unchanged.
 
 Loading, empty, filtered-empty, partial, read-only, denied, stale/conflict, failed, saved and outcome-unknown rendering remains owned by the existing surface/controller and shared state components.
 
@@ -61,6 +62,20 @@ The second reuses the genuine scoped operator cookie in a BR context, captures a
 - CAP13/CAP15 detail, edit and delete review cancellation.
 - CAP16 item, sub-item detail, editor and review; preserved draft after review cancellation.
 - Real writes, readback, browser errors and the unchanged producer command families.
+
+## First real browser evidence and corrective pass
+
+The integration run [44938732155](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44938732155), browser job 136951014336, emitted 50 complete JPEG previews plus canonical PNG attachments. Its integration source preceded the outer flex-wrapper correction.
+
+- The Portuguese journey passed for all five desktop/390 px overviews and their detail/editor/review interactions.
+- The English journey rendered all five dark/light overviews. CAP11 SLA and CAP12 campaign writes were confirmed through fresh source readback.
+- English stopped at CAP13 fresh readback; CAP15/CAP16 English writes had not run. The test used disappearance of the editor as its post-save wait even though CAP13/15/16 already remove that editor on entering review. Navigation could therefore interrupt a pending command. The corrected journey waits for the review to close and the updated projection to appear before fresh navigation. This correction still requires the next integration run; no successful CAP13 write is inferred from the failed run.
+- CAP11 ledgers/application notes and focused import layout were visually legible, with exact zero/missing distinctions. No ticket measure was renamed in the underlying source.
+- CAP12 needed a balanced four-by-two KPI band. Its original precision exposed a 17-character fractional rate at headline size. The corrected presentation uses locale-aware formatting with at most two decimals and exposes the full original numeric string in an accessible source-rate disclosure. The test checks both 4.17% and the exact 4.166666666666666%.
+- CAP13/CAP15 desktop headings and narrow scalar cells broke words (Probability, Perception and monitoring). Scoped word-boundary wrapping and unbroken scalar status/date/factor values correct that defect without truncation.
+- The inspected 390 px CAP11 editor and CAP13/CAP15 registers retained readable labels, 44 px controls and contained horizontal geometry.
+
+The corrected state is not yet a final visual PASS. Remaining evidence is the rerun, CAP15/CAP16 English write/readback and final captures of the corrected layouts.
 
 ## User guide notes for integration
 

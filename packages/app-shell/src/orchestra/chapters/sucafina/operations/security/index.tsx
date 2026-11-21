@@ -205,6 +205,8 @@ function formFields(editor: SecurityEditor, value: FormValues, label: (field: st
 export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   const language = useLanguage()
   const t = (copy: SfCopyKey) => language.t(copy as Parameters<typeof language.t>[0])
+  const rateLabel = (value: number | null) => value === null ? t(key("table.noData"))
+    : new Intl.NumberFormat(language.intl(), { maximumFractionDigits: 2 }).format(value) + "%"
   const reviewFieldsFor = (editor: SecurityEditor, value: FormValues) =>
     formFields(editor, value, (field) => t(key("design." + field)))
   const owner = useSfContext()
@@ -869,11 +871,21 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                   </header>
                   <Show when={state.page!.data.display?.campaigns.find((display) => display.id === String(campaign.id))}
                     fallback={<p class="sf-security-empty">{t(key("design.metricsUnavailable"))}</p>}>
-                    {(detail) => <dl class="sf-security-rates">
-                      <div><dt>{t(key("table.failure"))}</dt><dd>{detail().failureRate === null ? t(key("table.noData")) : String(detail().failureRate) + "%"}</dd></div>
-                      <div><dt>{t(key("table.entered"))}</dt><dd>{detail().enteredRate === null ? t(key("table.noData")) : String(detail().enteredRate) + "%"}</dd></div>
-                      <div><dt>{t(key("table.reported"))}</dt><dd>{detail().reportedRate === null ? t(key("table.noData")) : String(detail().reportedRate) + "%"}</dd></div>
-                    </dl>}
+                    {(detail) => <>
+                      <dl class="sf-security-rates">
+                        <div><dt>{t(key("table.failure"))}</dt><dd>{rateLabel(detail().failureRate)}</dd></div>
+                        <div><dt>{t(key("table.entered"))}</dt><dd>{rateLabel(detail().enteredRate)}</dd></div>
+                        <div><dt>{t(key("table.reported"))}</dt><dd>{rateLabel(detail().reportedRate)}</dd></div>
+                      </dl>
+                      <details class="sf-security-disclosure" data-sf-source-rates>
+                        <summary>{t(key("design.exactRates"))}</summary>
+                        <dl class="sf-security-source-values sf-security-rate-source">
+                          <div><dt>{t(key("table.failure"))}</dt><dd>{detail().failureRate === null ? t(key("table.noData")) : String(detail().failureRate) + "%"}</dd></div>
+                          <div><dt>{t(key("table.entered"))}</dt><dd>{detail().enteredRate === null ? t(key("table.noData")) : String(detail().enteredRate) + "%"}</dd></div>
+                          <div><dt>{t(key("table.reported"))}</dt><dd>{detail().reportedRate === null ? t(key("table.noData")) : String(detail().reportedRate) + "%"}</dd></div>
+                        </dl>
+                      </details>
+                    </>}
                   </Show>
                   <Show when={campaign.notes}><p class="sf-security-note">{campaign.notes}</p></Show>
                   <details class="sf-security-disclosure">

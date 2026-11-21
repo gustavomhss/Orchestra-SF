@@ -521,7 +521,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
       version: state.baseVersion ?? store.cas, fields: state.base ? fields(state.base) : [] }
   }
 
-  return <div data-sf-authorized={current()}>
+  return <div class="sf-u31-host" data-sf-authorized={current()}>
     <SfPageFrame titleKey={key("sf.cap16.title")} context={[]} tabs={[]} activeTab={null}
       density="comfortable" layout="work" onLayoutMode={() => undefined}
       primaryAction={store.mode === "overview" && !store.focusSub && allowed("save-item") ? {

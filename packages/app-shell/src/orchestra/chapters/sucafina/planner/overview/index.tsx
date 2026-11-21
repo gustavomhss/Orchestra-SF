@@ -343,6 +343,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                           {(entry) => <span data-series={entry[0]}><i aria-hidden="true" />{copy.t(key(entry[1]))}</span>}
                         </For>
                       </div>
+                      <div class="sf-u06-plot-scroll" role="region" tabIndex={0} aria-label={copy.t(key("sf.u06.monthlyTrend"))}>
                       <svg class="sf-u06-plot" viewBox="0 0 640 248" aria-hidden="true">
                         <For each={plot().ticks}>{(tick) => <g>
                           <line class="sf-u06-gridline" x1="62" x2="590" y1={tick.y} y2={tick.y} />
@@ -354,6 +355,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                         </g>}</For>
                         <For each={plot().months}>{(month) => <text class="sf-u06-axis" x={month.x} y="237" text-anchor="middle">{month.label}</text>}</For>
                       </svg>
+                      </div>
                     </SfChartFrame>
                     <section class="sf-u06-comparison-panel" aria-labelledby="sf-u06-compare-title">
                     <header class="sf-u06-compare-head"><h2 id="sf-u06-compare-title">{copy.t(key("sf.u06.compareBudgets"))}</h2><p>{copy.t(key("sf.u06.versionsHint"))}</p></header>

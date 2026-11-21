@@ -135,6 +135,15 @@ waveThreeTest("installed native finance wave · five areas and original financia
     await capture(page, info, "CAP14-light-desktop-list-test-data")
     await narrow()
     await scrollPageTop(page)
+    expect(await list.locator("tr[data-sf-row]").evaluateAll((rows) => rows.flatMap((row) => {
+      const cells = Array.from(row.querySelectorAll("td")).filter((cell) => getComputedStyle(cell).display !== "none")
+      return cells.slice(0, -1).flatMap((cell, index) => {
+        const content = document.createRange()
+        content.selectNodeContents(cell)
+        const overlap = content.getBoundingClientRect().bottom - cells[index + 1]!.getBoundingClientRect().top
+        return overlap > 1 ? [{ cell: index, overlap }] : []
+      })
+    })), "long contract metadata stays above the following field at 320 px").toEqual([])
     await capture(page, info, "CAP14-light-320-list-test-data")
     await desktop()
     await scheme(page, "dark")
@@ -158,7 +167,7 @@ waveThreeTest("installed native finance wave · five areas and original financia
     await expect(stage).toHaveAttribute("data-sf-contract-stage", "edit")
     const editor = stage.getByRole("form", { name: "Edit contract", exact: true })
     await expect(editor.locator("[data-field]")).toHaveCount(15)
-    await expect(editor.getByLabel("Vendor", { exact: true })).toHaveValue(waveThreeData.contracts.vendor)
+    await expect(editor.getByRole("textbox", { name: "Vendor", exact: true })).toHaveValue(waveThreeData.contracts.vendor)
     await editor.getByLabel("Notice period", { exact: true }).fill("120 days")
     await editor.getByLabel("Notes", { exact: true }).fill("Design test data · Updated notice and supporting contract evidence.")
     await scrollPageTop(page)
@@ -194,7 +203,7 @@ waveThreeTest("installed native finance wave · five areas and original financia
     await stage.getByRole("button", { name: "Back to contracts", exact: true }).click()
     await surface.getByRole("button", { name: "New contract", exact: true }).click()
     const create = surface.getByRole("form", { name: "New contract", exact: true })
-    await create.getByLabel("Vendor", { exact: true }).fill("Design test data · Proposed supplier")
+    await create.getByRole("textbox", { name: "Vendor", exact: true }).fill("Design test data · Proposed supplier")
     await create.getByLabel("Contract name", { exact: true }).fill("Design test data · Regional assurance agreement")
     await create.getByLabel("Amount", { exact: true }).fill("36000")
     await create.getByLabel("Amount type", { exact: true }).selectOption("annual")

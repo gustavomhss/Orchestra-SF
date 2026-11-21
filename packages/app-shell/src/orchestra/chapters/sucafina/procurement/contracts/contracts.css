@@ -29,7 +29,7 @@
 [data-component="sf-vendor-contracts"] :is(input,select,textarea) { box-sizing: border-box; min-inline-size: 0; inline-size: 100%; border: var(--sf-finance-rule) solid var(--mx-line); border-radius: var(--orchestra-radius-sm); background: var(--mx-soft); color: var(--mx-strong); padding: var(--sf-finance-sm) var(--sf-finance-md); font: inherit; }
 [data-component="sf-vendor-contracts"] :is(input,select,textarea):disabled { opacity: .6; }
 [data-component="sf-vendor-contracts"] textarea { min-block-size: var(--sf-finance-textarea); resize: vertical; }
-[data-component="sf-vendor-contracts"] .sf-u15-layout { display: grid; gap: var(--sf-finance-xl); min-inline-size: 0; }
+[data-component="sf-vendor-contracts"] .sf-u15-layout { display: grid; gap: var(--sf-finance-xl); min-inline-size: 0; font: var(--orchestra-font-size-md)/1.6 var(--mx-sans); }
 [data-component="sf-vendor-contracts"] :is(.sf-u15-list,.sf-u15-detail) { min-inline-size: 0; border: var(--sf-finance-rule) solid var(--mx-line); border-radius: var(--orchestra-radius-lg); background: var(--mx-raised); box-shadow: var(--mx-card-shadow); }
 [data-component="sf-vendor-contracts"] .sf-u15-list-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--sf-finance-lg) var(--sf-finance-2xl); padding: var(--sf-finance-xl); }
 [data-component="sf-vendor-contracts"] .sf-u15-title-row { display: flex; align-items: center; flex-wrap: wrap; gap: var(--sf-finance-sm); }
@@ -43,6 +43,7 @@
 [data-component="sf-vendor-contracts"] :is(.sf-u15-sr,.sf-u15-filters > label) { position: absolute; inline-size: var(--sf-finance-rule); block-size: var(--sf-finance-rule); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 [data-component="sf-vendor-contracts"] .sf-u15-cell-label { display: none; }
 [data-component="sf-vendor-contracts"] .sf-u15-missing { color: var(--mx-dim); }
+[data-component="sf-vendor-contracts"] .sf-u15-date { white-space: nowrap; font-variant-numeric: tabular-nums; }
 [data-component="sf-vendor-contracts"] .sf-s01-table-scroll { border: 0; border-block-start: var(--sf-finance-rule) solid var(--mx-line); border-radius: 0; background: transparent; }
 [data-component="sf-vendor-contracts"] .sf-s01-table :is(th,td) { padding: var(--sf-finance-md) var(--sf-finance-xl); border-color: var(--mx-line); }
 [data-component="sf-vendor-contracts"] .sf-s01-table th { block-size: var(--sf-finance-hit); color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
@@ -103,15 +104,20 @@
   [data-component="sf-vendor-contracts"] .sf-s01-table tbody { display: block; }
   [data-component="sf-vendor-contracts"] .sf-s01-table tbody tr { display: grid; gap: var(--sf-finance-md); grid-template-columns: minmax(0,1fr); padding: var(--sf-finance-lg); border-block-end: var(--sf-finance-rule) solid var(--mx-line); }
   [data-component="sf-vendor-contracts"] .sf-s01-table tbody tr:last-child { border: 0; }
-  [data-component="sf-vendor-contracts"] .sf-s01-table[data-sf-density="comfortable"] td { display: flex; justify-content: space-between; gap: var(--sf-finance-md); inline-size: auto; min-inline-size: 0; min-block-size: 0; padding: 0; border: 0; }
+  [data-component="sf-vendor-contracts"] .sf-s01-table[data-sf-density="comfortable"] td { display: flex; justify-content: space-between; gap: var(--sf-finance-md); inline-size: auto; min-inline-size: 0; block-size: auto; min-block-size: 0; padding: 0; border: 0; }
   [data-component="sf-vendor-contracts"] .sf-s01-table[data-sf-density="comfortable"] .sf-s01-actions-cell { display: none; }
   [data-component="sf-vendor-contracts"] .sf-s01-primary-cell { inline-size: 100%; align-items: flex-start; }
   [data-component="sf-vendor-contracts"] .sf-u15-cell-label { display: block; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); flex: 0 0 35%; }
   [data-component="sf-vendor-contracts"] .sf-s03-snapshots { grid-template-columns: minmax(0,1fr); }
 }
 @container sf-frame (max-width: 420px) {
+  [data-component="sf-vendor-contracts"] .sf-s01-primary-cell { flex-direction: column; gap: 0; }
   [data-component="sf-vendor-contracts"] :is(.sf-u15-fields,.sf-u15-read dl) { grid-template-columns: minmax(0,1fr); }
   [data-component="sf-vendor-contracts"] :is(.sf-u15-actions,.sf-s03-actions) { display: grid; grid-template-columns: minmax(0,1fr); }
   [data-component="sf-vendor-contracts"] :is(.sf-u15-actions,.sf-s03-actions) > button { inline-size: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { [data-component="sf-vendor-contracts"] * { scroll-behavior: auto; transition-duration: 0s; animation-duration: 0s; } }
+
+[data-component="sf-vendor-contracts"] .sf-u15-source a { display: inline-flex; align-items: center; min-block-size: var(--sf-finance-hit); max-inline-size: 100%; overflow-wrap: anywhere; }
+
+[data-component="sf-vendor-contracts"] .sf-u15-list .sf-s01-table col:last-child { display: none; }

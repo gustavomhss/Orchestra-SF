@@ -155,6 +155,7 @@ export const SF_U29_COPY = {
   "sf.cap12.design.department.reported": "Reported",
   "sf.cap12.design.field.departments": "Departments",
   "sf.cap12.design.field.consequences": "Consequences",
+  "sf.cap12.design.exactRates": "Exact rates from the source",
   "sf.cap12.design.yes": "Yes",
   "sf.cap12.design.no": "No",
 } as const
@@ -275,6 +276,7 @@ export const SF_U29_COPY_BR = {
   "sf.cap12.design.department.reported": "Reportaram",
   "sf.cap12.design.field.departments": "Departamentos",
   "sf.cap12.design.field.consequences": "Consequências",
+  "sf.cap12.design.exactRates": "Taxas exatas da fonte",
   "sf.cap12.design.yes": "Sim",
   "sf.cap12.design.no": "Não",
 } as const
