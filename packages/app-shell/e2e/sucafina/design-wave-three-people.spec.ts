@@ -1,5 +1,4 @@
 import { expect } from "@playwright/test"
-import type { SfContextResult } from "@orchestra/schema/sucafina/context"
 import { waveThreeTest, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter } from "./design-support/wave-three"
 import { waveThreeData } from "./design-support/wave-three-data"
 
@@ -239,40 +238,6 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     const url = new URL(request.url())
     if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/")) mutations.push(url.pathname)
   })
-  // Observe the real owner-bound navigation response. Only the CAP10 admission
-  // projection is recorded; cookies, context stamps and credentials are omitted.
-  const contextReads: Promise<void>[] = []
-  const seenContexts = new Set<string>()
-  page.on("response", (response) => {
-    const url = new URL(response.url())
-    if (url.origin !== installation.origin || !url.pathname.endsWith("/api/ui/context")) return
-    contextReads.push((async () => {
-      try {
-        const result = await response.json() as SfContextResult
-        const value = result.status === "ok" ? result.value : undefined
-        const observation = {
-          httpStatus: response.status(),
-          status: result.status,
-          destinations: value?.destinations.filter((entry) => entry.capabilityId === "CAP10")
-            .map(({ capabilityId, surface, page, canRead, allowedActionIds }) =>
-              ({ capabilityId, surface, page, canRead, allowedActionIds })) ?? [],
-          availability: value?.availability.filter((entry) => entry.family === "domain-read" && entry.resource === "CAP10")
-            .map(({ family, resource, state, operations }) => ({
-              family, resource, state,
-              operations: operations.map(({ operationId, state, reason, operational }) =>
-                ({ operationId, state, reason, operational })),
-            })) ?? [],
-        }
-        const body = JSON.stringify(observation)
-        if (seenContexts.has(body)) return
-        seenContexts.add(body)
-        console.log("SF_DESIGN_CAP10_CONTEXT " + body)
-        await info.attach("CAP10-context-admission-" + seenContexts.size, { body, contentType: "application/json" })
-      } catch {
-        console.log("SF_DESIGN_CAP10_CONTEXT " + JSON.stringify({ httpStatus: response.status(), status: "response-unreadable" }))
-      }
-    })())
-  })
   await waveThreeTest.step("portfolio and project collection across both schemes and narrow reflow", async () => {
     for (const screen of portfolioScreens) {
       await page.setViewportSize({ width: 1440, height: 1100 })
@@ -280,7 +245,6 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
       const surface = page.locator('[data-sf-surface="' + screen.id + '"]')
       await expect(surface.locator("tr[data-sf-row]")).toHaveCount(3)
       await expect(surface).toContainText(waveThreeData.projects.primary)
-      await Promise.all(contextReads)
       await scheme(page, "dark")
       await capture(page, info, screen.id + "-dark-desktop-test-data")
       if (screen.id === "CAP09") {
