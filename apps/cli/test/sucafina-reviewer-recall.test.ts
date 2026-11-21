@@ -30,6 +30,7 @@ import type { CaseRecall } from "../../../modules/sucafina/Sucafinav1/product/co
 import type { PortResult } from "../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { SfStateResult } from "../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import { createResidentAiBundle } from "../../../modules/sucafina/Sucafinav1/product/ai/resident.ts"
+import { sfRunSourceFence } from "../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
 import type { TrustedUiContext } from "../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { encodeCaseRef } from "../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { probeSfAtlasScanner } from "../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"
@@ -84,21 +85,32 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
   const fixture: { renewPeriod?: () => Promise<void> } = {}
   let turns = 0
   let tokenCounts = 0
+  let titleTokenCounts = 0
   // Replay the provider wire only. C15 still counts, persists a receipt and
   // authorizes the actual tool call through the full product host.
   const replayFetch = (async (incoming: RequestInfo | URL, init?: RequestInit) => {
     const request = new Request(incoming, init)
     if (new URL(request.url).origin !== "https://api.openai.com") return fetch(incoming, init)
+    const payload = object(await request.json())
+    const messages = (Array.isArray(payload.input) ? payload.input : []).map(object)
+    const title = messages.some((message) => message.role === "user" && (typeof message.content === "string"
+      ? message.content.startsWith("Generate a title for this conversation:")
+      : Array.isArray(message.content) && message.content.some((part) => {
+        const text = object(part).text
+        return typeof text === "string" && text.startsWith("Generate a title for this conversation:")
+      })))
     if (request.url === "https://api.openai.com/v1/responses/input_tokens") {
-      tokenCounts++
-      console.info(`SF_REVIEWER_PROOF token count ${tokenCounts}`)
-      if (tokenCounts === 1) await fixture.renewPeriod?.()
+      if (title) titleTokenCounts++
+      else tokenCounts++
+      console.info(`SF_REVIEWER_PROOF token oracle ${title ? "title" : `reviewer ${tokenCounts}`}`)
       return Response.json({ object: "response.input_tokens", input_tokens: 120 })
     }
     expect(request.url).toBe("https://api.openai.com/v1/responses")
-    const payload = object(await request.json())
-    turns++
-    console.info(`SF_REVIEWER_PROOF model turn ${turns}`)
+    if (!title) {
+      turns++
+      console.info(`SF_REVIEWER_PROOF reviewer model turn ${turns}, oracle calls ${tokenCounts}`)
+      await fixture.renewPeriod?.()
+    }
     const toolCalls = () => {
       expect(Array.isArray(payload.tools) && payload.tools.some((tool) => object(tool).name === operation)).toBe(true)
       return Object.entries(toolInputs).map(([id, ref]) => ({ type: "response.output_item.done", item: {
@@ -107,24 +119,20 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
       } }))
     }
     const finalText = () => {
-      const messages = Array.isArray(payload.input) ? payload.input : []
-      const prompt = messages.flatMap((message) => {
-        const content = object(message).content
-        return (Array.isArray(content) ? content : []).flatMap((part) => {
-          const text = object(part).text
-          if (typeof text !== "string" || !text.trimStart().startsWith("{")) return []
-          const candidate = object(JSON.parse(text))
-          return Object.hasOwn(candidate, "skillInput") ? [candidate] : []
-        })
-      })[0]
-      const canonical = object(object(object(prompt?.context).decisionRecall).result)
-      const matches = canonical.matches as CaseRecall["matches"]
+      const outputs = Object.fromEntries(messages.filter((message) => message.type === "function_call_output" && typeof message.output === "string")
+        .map((message) => [String(message.call_id), object(JSON.parse(String(message.output)))]))
+      const accepted = outputs["call-selected"]
+      expect(accepted?.status).toBe("ok")
+      expect(outputs["call-outside"]?.status).toBe("unavailable")
+      const result = object(accepted?.result)
+      const matches = result.matches as CaseRecall["matches"]
       expect(matches).toHaveLength(1)
       return [{ type: "response.output_text.delta", item_id: "reviewer-answer", delta: JSON.stringify({
-        kind: "CaseRecall", payload: canonical, evidenceRefs: matches.flatMap((match) => match.evidenceRefs),
+        kind: "CaseRecall", payload: result, evidenceRefs: matches.flatMap((match) => match.evidenceRefs),
       }) }]
     }
-    const events = [...(turns === 1 ? toolCalls() : finalText()), { type: "response.completed", response: {} }]
+    const events = [...(title ? [{ type: "response.output_text.delta", item_id: "reviewer-title", delta: "Decision recall fixture" }]
+      : turns === 1 ? toolCalls() : finalText()), { type: "response.completed", response: {} }]
     const wire = events.map((event) => "data: " + JSON.stringify(event) + "\n\n").join("")
     return new Response(wire, { headers: { "content-type": "text/event-stream" } })
   }) as typeof fetch
@@ -249,13 +257,19 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           expect((await prepare(precedent, "other")).status).not.toBe("ok")
           const skillInput = value(await step("prepare authorized precedent", 50_000, (signal) => prepare(precedent, "reviewer", signal)), "prepare authorized precedent")
           const businessDigest = async () => {
-            const product = value(await services.state.read(request(), "cases", (state) =>
-              ({ cases: state.cases, atlas: state.atlas, outbox: state.outbox })), "business snapshot")
+            const product = value(await services.state.read(request(), "cases", (state) => ({ cases: state.cases,
+              // C15 owns only its native reservation/receipt records in preferences.
+              preferences: Object.fromEntries(Object.entries(state.preferences).filter(([key]) => !key.startsWith("sf:native-session:"))),
+              receipts: state.receipts, atlas: state.atlas, outbox: state.outbox,
+            })), "business snapshot")
             const surfaces = await store.transactionAll!(async (snapshots) => ({ commit: false,
               value: Object.values(snapshots).map((snapshot) => Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1"))) }))
             return digestSfValue({ product, surfaces })
           }
+          const sourceFences = () => store.transactionAll!(async (snapshots) => ({ commit: false,
+            value: { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } }))
           const initial = await step("snapshot business state", 10_000, businessDigest)
+          const sourceBefore = await sourceFences()
           toolInputs.selected = encodeCaseRef(precedent)
           toolInputs.outside = encodeCaseRef(outside)
           const start = { request: analysis, skillInput, model: { providerID, id: modelID } }
@@ -289,7 +303,16 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           })
           const run = value(await step("read the reviewer run", 100_000, (signal) =>
             human("analysis.read", { runRef }, (call) => analyses.read(call, runRef), "reviewer", signal)), "read reviewer")
-          if (run.state !== "ready" || !run.native) throw new Error(`Reviewer ended as ${run.state} (${run.reason ?? "unknown"}) after ${turns} provider turns`)
+          const sourceAfter = await sourceFences()
+          console.info(`SF_REVIEWER_PROOF changed source fences ${Object.keys(sourceBefore).filter((surface) =>
+            sourceBefore[surface as keyof typeof sourceBefore] !== sourceAfter[surface as keyof typeof sourceBefore]).join(",") || "none"}`)
+          expect(await step("verify business state", 10_000, businessDigest)).toBe(initial)
+          if (!run.native) throw new Error(`Reviewer ended as ${run.state} without a native session`)
+          const budgetReceipts = value(await services.state.read(request(), "preferences", (state) => {
+            const receipts = object(state.preferences[`sf:native-session:${run.native!.sessionID}`]).tokenReceipts
+            return Array.isArray(receipts) ? receipts.length : undefined
+          }), "read persisted native budget evidence")
+          console.info(`SF_REVIEWER_PROOF budget receipts ${budgetReceipts ?? "missing"}, oracle calls ${tokenCounts} reviewer / ${titleTokenCounts} title`)
           const sessionID = SessionSchema.ID.make(run.native.sessionID)
           const messages = await step("read the native tool receipts", 8_000, (signal) => Effect.runPromise(sessions.messages({ sessionID }), { signal }))
           const calls = messages.flatMap((message) => message.type === "assistant" ? message.content.flatMap((part) =>
@@ -300,12 +323,15 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           expect(object(accepted?.result).matches).toEqual([expect.objectContaining({ caseRef: precedent,
             evidenceRefs: expect.arrayContaining([source]), memoryRecordRef: archived.eventId })])
           expect(calls.find((call) => call.status === "unavailable")).toHaveProperty("reason", "unavailable")
+          console.info("SF_REVIEWER_PROOF native receipts verified")
+          if (run.state !== "ready") throw new Error(`Reviewer ended as ${run.state} (${run.reason ?? "unknown"}) after ${turns} provider turns`)
           const output = value(await step("read verified contribution", 100_000, (signal) =>
             human("analysis.read", { runRef }, (call) => analyses.output(call, runRef), "reviewer", signal)), "read verified contribution")
           expect(output).toMatchObject({ kind: "CaseRecall", state: "ready", evidenceRefs: expect.arrayContaining([source]),
             runProvenance: expect.objectContaining({ profileId: "sf_reviewer", nativeSessionId: run.native.sessionID }) })
+          expect(turns).toBe(2)
           expect(tokenCounts).toBe(2)
-          expect(await step("verify business state", 10_000, businessDigest)).toBe(initial)
+          expect(budgetReceipts).toBe(tokenCounts + titleTokenCounts)
         } finally { business.dispose() }
       })
     }).pipe(Effect.scoped, Effect.provide(layer), Effect.runPromise)
