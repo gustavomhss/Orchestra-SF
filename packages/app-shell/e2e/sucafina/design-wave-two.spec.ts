@@ -5,7 +5,7 @@ import { waveTwoTest, observePage, ready, scheme, scrollPageTop, reflow, reviewA
 const screens = [
   { id: "CAP02", path: "/orchestra/sf-dashboard/hot-topics", title: "Hot Topics & Actions", br: "Hot Topics e ações" },
   { id: "CAP03", path: "/orchestra/sf-dashboard/budget", title: "Budget Overview", br: "Visão do orçamento" },
-  { id: "CAP04", path: "/orchestra/sf-dashboard/opex", title: "OPEX Detail", br: "Detalhe OPEX" },
+  { id: "CAP04", path: "/orchestra/sf-dashboard/opex", title: "OPEX Detail", br: "Detalhamento de OPEX" },
 ] as const
 const newTopic = "Dados de teste · Consolidar a previsão de despesas regionais"
 const topicNotes = "Conferir os registros de origem e registrar a decisão antes de concluir a revisão."
