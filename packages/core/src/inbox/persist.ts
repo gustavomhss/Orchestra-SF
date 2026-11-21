@@ -15,9 +15,9 @@ export function known(store: ReturnType<typeof open>, id: string) {
   return store.snapshot().rows.some((row) => row.listId === id)
 }
 
-export function load(db: Db | Tx, owner: string) {
+export function load(db: Db | Tx, owner: string, options?: { adoptLegacy?: boolean }) {
   return Effect.gen(function* () {
-    yield* adoptRows(db)
+    if (options?.adoptLegacy !== false) yield* adoptRows(db)
     const rows = yield* db.select().from(InboxRowTable).where(eq(InboxRowTable.owner, owner)).all().pipe(Effect.orDie)
     const drafts = yield* db
       .select()
