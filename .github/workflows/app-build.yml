@@ -99,7 +99,7 @@ jobs:
         working-directory: apps/web
         env:
           ORCHESTRA_BRAND: sucafina
-        run: bun run build --base / --sourcemap false
+        run: bun run build --base / --sourcemap false --manifest linux-web-build-manifest.json
 
       - name: Retrieve the hosted proof harness
         env:
@@ -118,6 +118,7 @@ jobs:
         run: |
           set -euo pipefail
           archive_dir="$RUNNER_TEMP/azure-entra-package"
+          mv apps/web/dist/linux-web-build-manifest.json "$RUNNER_TEMP/"
           bun apps/cli/script/azure-entra-package.ts --dist "$PWD/apps/cli/dist" --web "$PWD/apps/web/dist" --out "$archive_dir" --source-sha "$SOURCE_REVISION"
           filename=orchestra-sf-entra-linux-x64-baseline.tar.gz
           observed="$(sha256sum "$archive_dir/$filename" | cut -d' ' -f1)"
@@ -127,6 +128,65 @@ jobs:
             --artifact "$archive_dir/$filename" --receipt "$archive_dir/orchestra-sf-entra-package-receipt.json" \
             --candidate "$SOURCE_REVISION" --sha256 "$observed"
           printf '%s  %s\n' "$observed" "$filename" > "$archive_dir/SHA256SUMS"
+
+      - name: Bind compiler evidence to the packaged Linux executable
+        env:
+          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          archive_dir="$RUNNER_TEMP/azure-entra-package"
+          ledgers=(apps/cli/dist/compile-evidence-linux-x64-baseline-*.json)
+          if (( ${#ledgers[@]} != 1 )); then
+            printf '%s\n' "Expected exactly one Linux compiler evidence file" >&2
+            exit 1
+          fi
+          ledger="${ledgers[0]}"
+          receipt="$archive_dir/orchestra-sf-entra-package-receipt.json"
+          tarball="$archive_dir/orchestra-sf-entra-linux-x64-baseline.tar.gz"
+          binary_sha="$(tar -xOf "$tarball" bin/orchestra | sha256sum | cut -d' ' -f1)"
+          compiler="$(bun --version)"
+          jq -e --arg binary "$binary_sha" --arg compiler "$compiler" '
+            .schema == "orchestra-compile-evidence-v2" and
+            .target == "linux-x64-baseline" and .bun == $compiler and
+            .binary.sha256 == $binary and (.inputs | length) > 0 and
+            (.metafile.outputs | length) > 0
+          ' "$ledger" > /dev/null
+
+          web_manifest="$RUNNER_TEMP/linux-web-build-manifest.json"
+          tar -xOf "$tarball" distribution.json | jq -e --slurpfile web "$web_manifest" '
+            ($web[0] | type == "object" and any(.[]; .isEntry == true)) and
+            ([.files[].path] as $files | all($web[0][];
+              (.file | type == "string") and
+              (("bin/web/" + .file) as $path | $files | index($path) != null)
+            ))
+          ' > /dev/null
+          install -m 0644 "$ledger" "$archive_dir/compile-evidence.json"
+          install -m 0644 "$web_manifest" "$archive_dir/web-build-manifest.json"
+          (
+            cd "$archive_dir"
+            sha256sum compile-evidence.json web-build-manifest.json >> SHA256SUMS
+          )
+
+          jq -e --arg source "$SOURCE_REVISION" --arg tree "$(git rev-parse 'HEAD^{tree}')" \
+            --arg workflow "$GITHUB_SHA" --arg run "$GITHUB_RUN_ID" --arg attempt "$GITHUB_RUN_ATTEMPT" \
+            --arg job "$GITHUB_JOB" --arg checkRun "$CHECK_RUN_ID" \
+            --arg bun "$compiler" --arg binary "$binary_sha" \
+            --arg ledger "$(sha256sum "$archive_dir/compile-evidence.json" | cut -d' ' -f1)" \
+            --arg web "$(sha256sum "$archive_dir/web-build-manifest.json" | cut -d' ' -f1)" '
+              select(.sourceSHA == $source and .checkoutSHA == $source and .runID == $run and
+                .runAttempt == $attempt and ($checkRun | test("^[1-9][0-9]*$"))) |
+              {
+                schema: "sf-linux-compile-provenance-v1",
+                sourceSHA: $source, sourceTreeSHA: $tree, workflowSHA: $workflow,
+                runId: $run, runAttempt: $attempt, job: $job, checkRunId: $checkRun,
+                target, bun: $bun, archiveSha256, manifestSha256,
+                binary: {path: "bin/orchestra", sha256: $binary},
+                ledger: {file: "compile-evidence.json", sha256: $ledger},
+                webManifest: {file: "web-build-manifest.json", sha256: $web}
+              }
+            ' "$receipt" > "$archive_dir/compile-provenance.json"
 
       - name: Select the release in a temporary installation root
         env:
