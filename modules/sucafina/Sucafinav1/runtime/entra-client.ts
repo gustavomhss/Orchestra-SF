@@ -10,9 +10,17 @@ const requestTimeout = 10000
 export function createEntraClient(options: EntraOptions): EntraClient {
   if (!uuid.test(options.tenantId) || !uuid.test(options.clientId)) throw new Error("Invalid Entra configuration")
   const tenant = options.tenantId.toLowerCase()
+  const profile = options.profile === undefined ? "local-public" : options.profile
+  const clientSecret = options.clientSecret
+  if ((profile !== "local-public" && profile !== "web-confidential") ||
+      (profile === "web-confidential" ? typeof clientSecret !== "function" : clientSecret !== undefined))
+    throw new Error("Invalid Entra client profile")
+  const confidential = profile === "web-confidential"
+  const clientId = confidential ? options.clientId.toLowerCase() : options.clientId
   const teams = options.teams
   if (teams !== undefined && teams !== "direct") throw new Error("Invalid Teams capability")
-  const scopes = teams === "direct" ? `${localScopes} Team.ReadBasic.All` : localScopes
+  const baseScopes = confidential ? "openid profile offline_access User.Read" : localScopes
+  const scopes = teams === "direct" ? `${baseScopes} Team.ReadBasic.All` : baseScopes
   const authority = `https://login.microsoftonline.com/${tenant}`
   const issuer = `${authority}/v2.0`
   const now = options.now ?? (() => new Date())
@@ -165,9 +173,15 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   }
 
   async function redeem(url: string, fields: Record<string, string>) {
-    const form = new URLSearchParams({ client_id: options.clientId, ...fields })
+    const form = new URLSearchParams({ client_id: clientId, ...fields })
     // Keep the original delegated grant on refresh. A fresh login requests Teams consent.
-    if (teams !== "direct" || fields.grant_type !== "refresh_token") form.set("scope", scopes)
+    if ((!confidential && teams !== "direct") || fields.grant_type !== "refresh_token") form.set("scope", scopes)
+    if (clientSecret) {
+      const secret = await Promise.resolve().then(clientSecret).catch(() => undefined)
+      if (typeof secret !== "string" || !secret.trim() || secret.length > 4096 || /[\x00-\x1f\x7f]/.test(secret))
+        throw new Error("Entra client credential unavailable")
+      form.set("client_secret", secret)
+    }
     const data = await request(url, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -176,6 +190,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     if (data.error !== undefined || typeof data.access_token !== "string" || !data.access_token.trim() || typeof data.expires_in !== "number" || !Number.isFinite(data.expires_in) || data.expires_in <= 0) throw new Error("Invalid Entra token response")
     if (data.refresh_token !== undefined && (typeof data.refresh_token !== "string" || !data.refresh_token.trim())) throw new Error("Invalid refresh token response")
     if (data.id_token !== undefined && (typeof data.id_token !== "string" || !data.id_token.trim())) throw new Error("Invalid identity token response")
+    if (confidential && data.token_type !== "Bearer") throw new Error("Invalid Entra token type")
     const grantedScopes = teams === "direct" && data.scope !== undefined ? parseGrantedScopes(data.scope) : undefined
     const tokens: EntraTokens = {
       accessToken: data.access_token,
@@ -189,11 +204,14 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   }
 
   return {
-    ...(teams === "direct" ? { tenantId: tenant, joinedTeams } : {}),
+    tenantId: tenant,
+    clientId: clientId.toLowerCase(),
+    profile,
+    ...(teams === "direct" ? { joinedTeams } : {}),
     async authorization(input) {
       const metadata = await discovery()
       const url = new URL(metadata.authorize)
-      url.search = new URLSearchParams({ client_id: options.clientId, response_type: "code", response_mode: "query", redirect_uri: input.redirectUri, scope: scopes, state: input.state, nonce: input.nonce, code_challenge: input.challenge, code_challenge_method: "S256" }).toString()
+      url.search = new URLSearchParams({ client_id: clientId, response_type: "code", response_mode: "query", redirect_uri: input.redirectUri, scope: scopes, state: input.state, nonce: input.nonce, code_challenge: input.challenge, code_challenge_method: "S256" }).toString()
       return url.href
     },
     async exchange(input) {
@@ -204,10 +222,15 @@ export function createEntraClient(options: EntraOptions): EntraClient {
       if (!Array.isArray(keyset.keys) || keyset.keys.length === 0 || keyset.keys.length > 100) throw new Error("Invalid Entra signing keys")
       const signingKeys = keyset.keys.map((key) => record(key))
       // Local JWKS resolution keeps all network I/O behind the bounded injected transport.
-      const verified = await Promise.resolve().then(() => jwtVerify(tokens.idToken!, createLocalJWKSet({ keys: signingKeys }), { algorithms: ["RS256"], issuer, audience: options.clientId, currentDate: now(), requiredClaims: ["exp", "iat", "tid", "oid", "nonce"] })).catch(() => {
+      const verified = await Promise.resolve().then(() => jwtVerify(tokens.idToken!, createLocalJWKSet({ keys: signingKeys }), { algorithms: ["RS256"], issuer, audience: clientId, currentDate: now(), requiredClaims: ["exp", "iat", "tid", "oid", "nonce", ...(confidential ? ["sub"] : [])] })).catch(() => {
         throw new Error("Entra identity verification failed")
       })
       if ((typeof verified.payload.tid !== "string" || verified.payload.tid.toLowerCase() !== tenant) || typeof verified.payload.oid !== "string" || !uuid.test(verified.payload.oid) || verified.payload.nonce !== input.nonce || typeof verified.payload.iat !== "number" || verified.payload.iat > Math.floor(now().getTime() / 1000)) throw new Error("Invalid Entra identity claims")
+      const claims = verified.payload
+      if (confidential && (claims.aud !== clientId || typeof claims.sub !== "string" || !claims.sub.trim() ||
+          typeof claims.iat !== "number" || !Number.isSafeInteger(claims.iat) || claims.iat <= 0 ||
+          typeof claims.exp !== "number" || !Number.isSafeInteger(claims.exp) || claims.exp <= claims.iat ||
+          (claims.ver !== undefined && claims.ver !== "2.0"))) throw new Error("Invalid Entra identity claims")
       const identity = await person(tokens.accessToken)
       if (identity.id !== verified.payload.oid.toLowerCase()) throw new Error("Entra identity mismatch")
       return { tokens, person: identity }

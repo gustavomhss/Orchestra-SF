@@ -36,6 +36,8 @@ export type EntraTeamsInput = Readonly<{
 }>
 export type EntraClient = {
   readonly tenantId?: string
+  readonly clientId?: string
+  readonly profile?: "local-public" | "web-confidential"
   joinedTeams?: (input: EntraTeamsInput) => Promise<EntraTeamsResult>
   authorization: (input: { state: string; nonce: string; challenge: string; redirectUri: string }) => Promise<string>
   exchange: (input: { code: string; verifier: string; redirectUri: string; nonce: string }) => Promise<{ tokens: EntraTokens; person: DirectoryPerson }>
@@ -45,6 +47,8 @@ export type EntraClient = {
   resolve: (accessToken: string, map: readonly RoleRow[]) => Promise<ResolvedActor>
 }
 export type EntraOptions = {
+  profile?: "local-public" | "web-confidential"
+  clientSecret?: () => Promise<string>
   teams?: "direct"
   tenantId: string
   clientId: string

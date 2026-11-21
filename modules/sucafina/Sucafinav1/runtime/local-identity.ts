@@ -1,4 +1,5 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
+import { isIP } from "node:net"
 import type { DirectoryPerson, EntraClient, EntraTeamsInput, EntraTeamsResult, EntraTeamsSessionResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
 
 type Session = {
@@ -10,8 +11,7 @@ type Session = {
 type Login = { nonce: string; verifier: string; returnTo: string }
 const entraObjectId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
-/** Browser cookies contain opaque handles. Tokens and PKCE material are encrypted only in the private store. */
-export function createLocalIdentity(options: {
+type IdentityOptions = {
   origin: string
   mount: string
   client: EntraClient
@@ -20,10 +20,34 @@ export function createLocalIdentity(options: {
   now?: () => Date
   sessionSeconds?: number
   loginSeconds?: number
-}): LocalIdentity {
+}
+
+/** The local profile is explicitly bound to loopback. */
+export function createLocalIdentity(options: IdentityOptions): LocalIdentity {
   const origin = new URL(options.origin)
   if (origin.origin !== options.origin || !["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname) || !["http:", "https:"].includes(origin.protocol))
     throw new Error("Explicit loopback origin required")
+  if (options.client.profile === "web-confidential") throw new Error("Confidential client requires Microsoft HTTPS identity")
+  return createIdentity(options, origin)
+}
+
+/** Separate HTTPS identity for an owner-selected confidential Entra application. */
+export function createMicrosoftIdentity(options: IdentityOptions & { tenantId: string; clientId: string }): LocalIdentity {
+  const origin = new URL(options.origin)
+  if (origin.origin !== options.origin || origin.protocol !== "https:" || origin.port || isIP(origin.hostname) ||
+      origin.hostname.startsWith("[") || !origin.hostname.includes(".") || origin.hostname.endsWith(".local") ||
+      origin.hostname.endsWith(".localhost") || origin.hostname.endsWith(".") || origin.hostname.includes(".."))
+    throw new Error("Explicit Microsoft HTTPS origin required")
+  if (!entraObjectId.test(options.tenantId) || !entraObjectId.test(options.clientId) ||
+      options.client.tenantId !== options.tenantId || options.client.clientId !== options.clientId ||
+      options.client.profile !== "web-confidential")
+    throw new Error("Fixed Microsoft tenant and confidential client required")
+  const namespace = createHash("sha256").update(JSON.stringify(["microsoft", options.origin, options.mount, options.tenantId, options.clientId])).digest("hex")
+  return createIdentity(options, origin, namespace)
+}
+
+/** Browser cookies carry opaque handles while the private store holds encrypted credentials. */
+function createIdentity(options: IdentityOptions, origin: URL, namespace?: string): LocalIdentity {
   if (!/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(options.mount) || options.key.byteLength !== 32)
     throw new Error("Invalid local identity configuration")
   const now = () => (options.now?.() ?? new Date()).getTime()
@@ -31,13 +55,15 @@ export function createLocalIdentity(options: {
   const sessionSeconds = options.sessionSeconds ?? 28800
   const loginSeconds = options.loginSeconds ?? 600
   if (![sessionSeconds, loginSeconds].every((value) => Number.isSafeInteger(value) && value > 0)) throw new Error("Invalid session lifetime")
-  const cookiePrefix = `sucafina_${createHash("sha256").update(options.mount).digest("hex").slice(0, 12)}`
+  const cookiePrefix = namespace ? `__Secure-sucafina_${namespace.slice(0, 12)}` :
+    `sucafina_${createHash("sha256").update(options.mount).digest("hex").slice(0, 12)}`
   const refreshing = new Map<string, Promise<void>>()
   const configuredTenant = options.client.tenantId
   const teamTenant = configuredTenant && entraObjectId.test(configuredTenant) ? configuredTenant.toLowerCase() : undefined
   const readTeams = options.client.joinedTeams?.bind(options.client)
   const readActiveSession = options.secrets.getActive?.bind(options.secrets)
-  const slot = (kind: string, handle: string) => `${kind}:${createHash("sha256").update(handle).digest("hex")}`
+  const slot = (kind: string, handle: string) =>
+    `${namespace ? namespace + ":" : ""}${kind}:${createHash("sha256").update(handle).digest("hex")}`
   const cookie = (kind: string, value: string, seconds: number) => `${cookiePrefix}_${kind}=${value}; Path=${options.mount}; HttpOnly; SameSite=Lax; Max-Age=${seconds}${origin.protocol === "https:" ? "; Secure" : ""}`
   const handle = (request: Request, kind: string) => {
     const values = (request.headers.get("cookie") ?? "").split(";").map((part) => part.trim()).filter((part) => part.startsWith(`${cookiePrefix}_${kind}=`))
