@@ -290,11 +290,13 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
       const request = response.request()
       return request.method() === "POST" && new URL(request.url()).searchParams.get("sf") === "workbench-analysis" &&
         object(request.postDataJSON()).action === "choices"
-    })
-    await openScreen(page, owner, screens[7]!)
-    const response = await choicesResponse
-    expect(response.status()).toBe(200)
-    const body = object(await response.json())
+    }).then(async (response) => ({
+      status: response.status(), body: object(await response.json()),
+    }))
+    // Consume the CDP body as it arrives, before readiness can outlive its response handle.
+    const [response] = await Promise.all([choicesResponse, openScreen(page, owner, screens[7]!)])
+    expect(response.status).toBe(200)
+    const body = response.body
     expect(body.status).toBe("ok")
     const choices = object(body.value)
     const cases = choices.cases as { caseRef: { id: string; incarnation: string; version: number }; label: string }[]
