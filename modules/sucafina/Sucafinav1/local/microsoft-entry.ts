@@ -6,6 +6,7 @@ import { scanLocalFile } from "../runtime/local-scanner.ts"
 import { loadMicrosoftIngressAuthorizer } from "../runtime/microsoft-configuration.ts"
 import { microsoftRequest, prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 import type { EntraOptions, EntraTeamsSessionResult } from "../runtime/local-contract.ts"
+import { createTeamProfileAccess } from "../runtime/team-profile-access.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 
 export default function installation(context: { origin: string }) {
@@ -29,6 +30,10 @@ export async function createMicrosoftInstallation(
   try {
     const identity = prepared.createIdentity(store.secrets)
     const readTeams = identity.teamDirectory
+    const teamAccess = readTeams && createTeamProfileAccess({
+      origin: config.origin, mount: config.mount, directory, tenantId: config.tenantId,
+      enabledTeamIds: config.enabledTeamIds ?? [], prepare: identity.prepare, readTeams,
+    })
     const business = createModule(config.mount, {
       persistence: store,
       authenticate: identity.authenticate,
@@ -67,10 +72,22 @@ export async function createMicrosoftInstallation(
         const root = url.pathname === config.mount || url.pathname === `${config.mount}/`
         const surface = url.pathname.slice(config.mount.length + 1)
         if (!root && surface !== "dashboard" && surface !== "planner" && surface !== "procurement") return undefined
-        await identity.prepare(request)
         if (root && request.method !== "GET" && request.method !== "HEAD") {
           return new Response(null, { status: 405, headers: { ...headers, Allow: "GET, HEAD" } })
         }
+        if (teamAccess && (root || surface === "dashboard")) {
+          const access = await teamAccess(request)
+          if (access.status === "selection-required") return Response.json(access, { status: 409, headers })
+          if (access.status === "unauthenticated") {
+            return request.method === "GET" || request.method === "HEAD"
+              ? new Response(null, { status: 303, headers: { ...headers, Location: `${config.mount}/auth/login` } })
+              : new Response(null, { status: 401, headers })
+          }
+          if (access.status !== "allowed") return new Response(null, { status: access.status === "denied" ? 403 : 503, headers })
+          if (root) return new Response(null, { status: 204, headers })
+          return business(request)
+        }
+        await identity.prepare(request)
         if (request.method === "GET" || request.method === "HEAD") {
           const target = root ? `${config.mount}/dashboard` : url.pathname + url.search
           if (!await identity.person(request)) return new Response(null, { status: 303, headers: {

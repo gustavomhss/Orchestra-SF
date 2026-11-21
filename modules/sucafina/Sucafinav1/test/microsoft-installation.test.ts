@@ -1,4 +1,6 @@
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { expect, test } from "bun:test"
+import { Schema } from "effect"
 import { mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -17,6 +19,8 @@ const clientId = "22222222-2222-4222-8222-222222222222"
 const oid = "33333333-3333-4333-8333-333333333333"
 const grantPrincipal = "a3333333-3333-4333-8333-333333333333"
 const teamObjectId = "44444444-4444-4444-8444-444444444444"
+const secondTeamId = "55555555-5555-4555-8555-555555555555"
+const disabledTeamId = "66666666-6666-4666-8666-666666666666"
 const authority = "https://login.microsoftonline.com/" + tenantId
 const graph = "https://graph.microsoft.com/v1.0"
 const secret = "synthetic-private-installation-secret"
@@ -24,7 +28,11 @@ const ingressProof = "a".repeat(64)
 const accessToken = "synthetic-private-installation-access"
 const epoch = 1794398400
 
-async function fixture(teams: "direct" | undefined, fetch: (request: Request) => Promise<Response>) {
+async function fixture(
+  teams: "direct" | undefined,
+  fetch: (request: Request) => Promise<Response>,
+  enabledTeamIds?: unknown,
+) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sf-microsoft-installation-"))
   const directory = join(root, "installation")
   const workspaceDirectory = join(root, "workspace")
@@ -42,6 +50,7 @@ async function fixture(teams: "direct" | undefined, fetch: (request: Request) =>
       grants: [{ principalRef: grantPrincipal.toUpperCase(), operations: ["sf_case_read"] }],
       supremeAdminGroupId: grantPrincipal.toUpperCase(), scanner: null,
       ...(teams ? { teams } : {}),
+      enabledTeamIds,
     }))
     await writeFile(join(directory, "client-secret.txt"), secret, { mode: 0o600 })
     await writeFile(join(directory, "ingress-secret.txt"), ingressProof, { mode: 0o600 })
@@ -90,11 +99,15 @@ const ingress = (relative: string, headers?: Record<string, string>) => new Requ
   headers: { host: new URL(ingressOrigin).host, ...headers },
 })
 
-test("Corporate installation opts into direct Teams on the signed HTTPS session", async () => {
+test("Corporate dashboard authorizes only current, enabled direct Teams from the signed HTTPS session", async () => {
   const keys = await generateKeyPair("RS256", { extractable: true })
   const jwk = await exportJWK(keys.publicKey)
-  const login = { nonce: "", member: true }
+  const login = { nonce: "" }
   const graphCalls: string[] = []
+  const finance = { id: teamObjectId, tenantId, displayName: "Finance", isArchived: false }
+  const planning = { ...finance, id: secondTeamId, displayName: "Planning" }
+  const disabled = { ...finance, id: disabledTeamId, displayName: "Disabled" }
+  const membership = { teams: [finance, disabled], incomplete: false, down: false, group: true }
   const f = await fixture("direct", async (request) => {
     const url = new URL(request.url)
     if (url.href === authority + "/v2.0/.well-known/openid-configuration") return discovery()
@@ -115,12 +128,18 @@ test("Corporate installation opts into direct Teams on the signed HTTPS session"
       if (url.pathname === "/v1.0/me") return Response.json({ id: oid, displayName: "Verified person" })
       if (url.pathname === "/v1.0/me/checkMemberGroups") {
         expect(await request.json()).toEqual({ groupIds: [grantPrincipal] })
-        return Response.json({ value: login.member ? [grantPrincipal] : [] })
+        return Response.json({ value: membership.group ? [grantPrincipal] : [] })
       }
-      if (url.href === graph + "/me/joinedTeams") return Response.json({ value: [{ id: teamObjectId, tenantId, displayName: "Finance", isArchived: false }] })
+      if (url.href === graph + "/me/joinedTeams") {
+        if (membership.down) return new Response(null, { status: 503 })
+        return Response.json({
+          value: membership.teams,
+          ...(membership.incomplete ? { "@odata.count": membership.teams.length + 1 } : {}),
+        })
+      }
     }
     throw new Error("Unexpected synthetic Microsoft request")
-  })
+  }, [teamObjectId.toUpperCase(), secondTeamId])
   try {
     expect(f.installation.mount).toBe(mount)
     expect(f.installation.trustedIngress.origin).toBe(ingressOrigin)
@@ -130,7 +149,7 @@ test("Corporate installation opts into direct Teams on the signed HTTPS session"
     expect(f.installation.trustedIngress.authorize(ingressProof + ", " + ingressProof)).toBe(false)
     const anonymous = await f.installation.handler(ingress("/dashboard"))
     expect(anonymous?.status).toBe(303)
-    expect(anonymous?.headers.get("location")).toBe(`${mount}/auth/login?returnTo=${encodeURIComponent(`${mount}/dashboard`)}`)
+    expect(anonymous?.headers.get("location")).toBe(mount + "/auth/login")
     const begin = await f.installation.handler(ingress("/auth/login", { "x-forwarded-host": "foreign.example.test" }))
     expect(begin?.status).toBe(303)
     const authorize = new URL(begin!.headers.get("location")!)
@@ -149,27 +168,90 @@ test("Corporate installation opts into direct Teams on the signed HTTPS session"
     expect(sessionCookie).not.toContain(accessToken)
     expect(graphCalls).toEqual(["/v1.0/me"])
     const headers = { cookie: sessionCookie.split(";")[0] }
-    for (const surface of ["dashboard", "planner", "procurement"]) {
-      const page = await f.installation.handler(ingress(`/${surface}`, headers))
-      expect(page?.status).toBe(200)
-      expect(page?.headers.get("content-type")).toContain("text/html")
-    }
-    login.member = false
-    expect((await f.installation.handler(ingress("/dashboard", headers)))?.status).toBe(403)
+    const callbackTarget = new URL(finish!.headers.get("location")!, origin)
+    expect(callbackTarget.href).toBe(origin + mount + "/dashboard")
+    expect((await f.installation.handler(ingress(callbackTarget.pathname.slice(mount.length), {
+      ...headers, "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "document",
+    })))?.status).toBe(200)
     expect(await f.installation.handler(ingress("/teams", headers))).toBeUndefined()
     expect((await f.installation.handler(ingress("/auth/login", { host: "foreign.example.test" })))?.status).toBe(403)
     expect((await f.installation.handler(new Request(listenerOrigin + mount + "/auth/login", {
       headers: { host: new URL(ingressOrigin).host },
     })))?.status).toBe(403)
-    graphCalls.length = 0
     const result = await f.installation.teamDirectory!(ingress("/dashboard?principalObjectId=caller", headers))
     expect(result).toEqual({
       state: "complete", tenantId, principalObjectId: oid, source: "joinedTeams", membership: "direct",
-      teams: [{ teamObjectId, name: "Finance", archived: false }],
+      teams: [
+        { teamObjectId, name: "Finance", archived: false },
+        { teamObjectId: disabledTeamId, name: "Disabled", archived: false },
+      ],
     })
     expect(JSON.stringify(result)).not.toContain(accessToken)
-    expect(graphCalls).toEqual(["/v1.0/me", "/v1.0/me/joinedTeams", "/v1.0/me"])
+    const read = ["/v1.0/me", "/v1.0/me/joinedTeams", "/v1.0/me"]
+    const businessRead = ["/v1.0/me", "/v1.0/me", "/v1.0/me/checkMemberGroups"]
+    expect(graphCalls).toEqual(["/v1.0/me", ...read, ...businessRead, ...read])
+
+    const dashboard = (fields?: Record<string, string>) =>
+      f.installation.handler(ingress("/dashboard", { ...headers, ...fields }))
+    expect((await dashboard({ "x-sf-team-profile": "" }))?.status).toBe(403)
+    expect((await dashboard({ "sec-fetch-site": "cross-site" }))?.status).toBe(403)
+    expect((await f.installation.handler(ingress("/dashboard?teamObjectId=" + teamObjectId, headers)))?.status).toBe(403)
+    expect(graphCalls).toEqual(["/v1.0/me", ...read, ...businessRead, ...read])
+
+    membership.teams = [finance, planning, disabled]
+    const selection = await dashboard()
+    expect(selection?.status).toBe(409)
+    expect(selection?.headers.get("Cache-Control")).toBe("no-store")
+    const selected = Schema.decodeUnknownSync(TeamProfile.TeamState)(await selection?.json())
+    if (selected.status !== "selection-required") throw new Error("Expected Team selection")
+    expect(selected.choices.map((choice) => choice.displayName)).toEqual(["Finance", "Planning"])
+    const profile = selected.choices[1]!.profile
+    const selector = (target: unknown) => ({
+      "x-sf-team-profile": JSON.stringify({ contractRevision: "sf-team-profile/1", kind: "team", profile: target }),
+    })
+    const page = await dashboard(selector(profile))
+    expect(page?.status).toBe(200)
+    expect(page?.headers.get("content-type")).toContain("text/html")
+    expect((await dashboard({
+      ...selector(profile), "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "document",
+    }))?.status).toBe(403)
+    expect((await f.installation.handler(ingress("", { ...headers, ...selector(profile) })))?.status).toBe(204)
+    expect((await dashboard(selector({ ...profile, teamObjectId: disabledTeamId })))?.status).toBe(403)
+    expect((await dashboard(selector({ ...profile, installationId: "other-installation" })))?.status).toBe(403)
+    expect((await dashboard(selector({ ...profile, tenantId: clientId })))?.status).toBe(403)
+
+    membership.teams = [finance, disabled, { ...planning, isArchived: true }]
+    expect((await dashboard(selector(profile)))?.status).toBe(403)
+    membership.teams = [finance, disabled]
+    expect((await dashboard(selector(profile)))?.status).toBe(403)
+    membership.incomplete = true
+    expect((await dashboard())?.status).toBe(503)
+    membership.incomplete = false
+    membership.down = true
+    expect((await dashboard())?.status).toBe(503)
+    membership.down = false
+    membership.teams = [disabled]
+    expect((await f.installation.handler(ingress("", headers)))?.status).toBe(403)
+    const mutation = new Request(ingress("/dashboard", headers), {
+      method: "POST", headers: { ...headers, host: new URL(ingressOrigin).host, origin },
+    })
+    expect((await f.installation.handler(mutation))?.status).toBe(403)
+    for (const surface of ["planner", "procurement"]) {
+      expect((await f.installation.handler(ingress(`/${surface}`, headers)))?.status).toBe(200)
+    }
+    membership.teams = [finance]
+    membership.group = false
+    for (const surface of ["dashboard", "planner", "procurement"]) {
+      expect((await f.installation.handler(ingress(`/${surface}`, headers)))?.status).toBe(403)
+    }
   } finally { await f.close() }
+})
+
+test("Corporate enabled Team config rejects malformed and duplicate IDs and requires direct Teams mode", async () => {
+  const unexpectedProvider = async () => { throw new Error("Unexpected Microsoft request") }
+  await expect(fixture("direct", unexpectedProvider, [teamObjectId, teamObjectId.toUpperCase()])).rejects.toThrow("Duplicate enabled Team ID")
+  await expect(fixture("direct", unexpectedProvider, ["Finance"])).rejects.toThrow("Invalid enabled Team ID")
+  await expect(fixture(undefined, unexpectedProvider, [teamObjectId])).rejects.toThrow("Enabled Team IDs require direct Teams membership")
 })
 
 test("Corporate profile without Teams opt-in keeps minimum login scopes", async () => {

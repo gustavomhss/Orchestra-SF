@@ -19,11 +19,21 @@ export function readTeamProfileSelector(request: Request, binding: Binding): Tea
     const decoded = Schema.decodeUnknownOption(TeamProfile.Selector)(input)
     return Option.isSome(decoded) ? decoded.value : undefined
   }
-  // Business selectors travel only in this closed header. A conflicting URL
-  // intent, an administration intent or a legacy repo selector cannot choose SF.
+  const intent = teamHeaderIntent(request, binding, url)
+  return intent?.kind === "team" ? intent : undefined
+}
+
+/** Distinguish implicit selection from a malformed or conflicting explicit selector. */
+export function readTeamProfileIntent(request: Request, binding: Binding) {
+  const url = originalUrl(request, binding, true)
+  return url ? teamHeaderIntent(request, binding, url) : undefined
+}
+
+function teamHeaderIntent(request: Request, binding: Binding, url: URL) {
   if (["contractRevision", "kind", "teamObjectId", "tenantId", "installationId"].some((key) => url.searchParams.has(key)))
     return undefined
   const text = request.headers.get("x-sf-team-profile")
+  if (text === null) return { kind: "selection" as const }
   if (!text || new TextEncoder().encode(text).byteLength > 2048) return undefined
   const value = originalJson(text)
   if (!value) return undefined
@@ -50,12 +60,20 @@ export function readTeamContextQuery(request: Request, binding: Binding): TeamPr
   return decoded.value
 }
 
-function originalUrl(request: Request, binding: Binding): URL | undefined {
-  if (request.signal.aborted || request.headers.get("sec-fetch-site") === "cross-site" ||
-    request.headers.has("origin") && request.headers.get("origin") !== binding.origin) return undefined
+/** Entra's redirect chain may still be cross-site when the browser reaches the landing page. */
+export function isTeamLandingNavigation(request: Request, pathname: string, mount: string) {
+  return request.method === "GET" && (pathname === mount || pathname === mount + "/dashboard") &&
+    request.headers.get("sec-fetch-mode") === "navigate" && request.headers.get("sec-fetch-dest") === "document" &&
+    !request.headers.has("x-sf-team-profile")
+}
+
+function originalUrl(request: Request, binding: Binding, landing = false): URL | undefined {
   const url = new URL(request.url)
+  if (request.signal.aborted || request.headers.has("origin") && request.headers.get("origin") !== binding.origin ||
+      request.headers.get("sec-fetch-site") === "cross-site" && !(landing && isTeamLandingNavigation(request, url.pathname, binding.mount)))
+    return undefined
   if (url.origin !== binding.origin || url.username || url.password || url.hash ||
-    !url.pathname.startsWith(binding.mount + "/") || url.search.length > 4096 ||
+    (!url.pathname.startsWith(binding.mount + "/") && !(landing && url.pathname === binding.mount)) || url.search.length > 4096 ||
     /%(?![\da-fA-F]{2})/.test(url.search) ||
     [...url.searchParams.keys()].some((key) => url.searchParams.getAll(key).length !== 1)) return undefined
   return url

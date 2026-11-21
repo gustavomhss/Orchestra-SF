@@ -1,6 +1,7 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { isIP } from "node:net"
 import type { CorporateLocalSecrets, DirectoryPerson, EntraClient, EntraTeamsInput, EntraTeamsResult, EntraTeamsSessionResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
+import { isTeamLandingNavigation } from "./team-profile-selector.ts"
 
 type Session = {
   person: DirectoryPerson
@@ -116,7 +117,7 @@ function createIdentity(
     const url = new URL(request.url)
     if (request.signal.aborted || url.origin !== origin.origin ||
         !(url.pathname === options.mount || url.pathname.startsWith(options.mount + "/")) ||
-        request.headers.get("sec-fetch-site") === "cross-site" ||
+        (request.headers.get("sec-fetch-site") === "cross-site" && !isTeamLandingNavigation(request, url.pathname, options.mount)) ||
         (request.headers.has("origin") && request.headers.get("origin") !== origin.origin)) return undefined
     const id = handle(request, "session")
     if (!id || !readActiveSession) return undefined
