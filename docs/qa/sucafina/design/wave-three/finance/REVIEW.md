@@ -1,6 +1,6 @@
 # Wave three — finance design review
 
-Status: IMPLEMENTED, awaiting the integrated Actions run and visual critique of its real captures.
+Status: VERIFIED for the five scoped native areas. The final real-installation Actions journey passed. Thirty-five functional states were exercised; 26 have dedicated imagery and nine were exercised without their own capture. The final evidence and limitations below supersede the pending notes in the historical execution log.
 
 Branch: `sf-polish-finance`.
 Pinned parent: `24c02f7f366ecea94a8511c88cdaf2bebcb46be6`, descended directly from the accepted `dev` snapshot `acc0181508ceda7416bce57284b2307a9b20385b`.
@@ -53,11 +53,11 @@ All pre-existing English catalog entries were compared with the pinned parent an
 
 No producer calculations, forecasts, allocation, FX, totals, defaults, grants, source revisions, pending/unknown handling, idempotency keys, receipt contracts or CAS checks were replaced. The new chart calculates display coordinates only. Original English labels and source field identifiers are not redesigned into new business meaning.
 
-## Validation and limitations
+## Initial validation and retained limitations
 
 Repository work used GitHub MCP only. No local command, build, test, runtime, server or CI execution was performed by this worker.
 
-Initial inspection verified JSX tag balance, local catalog key completeness, frozen English values and scoped style ownership. This is not a typecheck or visual acceptance. The integration owner will run the maintained Actions gates and the real-installation Playwright journey. Capture-based critique is pending and will be appended here before design acceptance.
+Initial inspection verified JSX tag balance, local catalog key completeness, frozen English values and scoped style ownership. This is not a typecheck or visual acceptance. The integration owner subsequently ran the maintained Actions gates and the real-installation Playwright journey. The historical failures, corrections and final capture-based acceptance are recorded below.
 
 CAP17 is read-only; no creation flow is claimed. CAP19 retains the original project/line edit flows; this wave does not invent an unsupported project-creation dispatcher. Error, denied, revoked and outcome-unknown states retain their real controllers and receive scoped styling; they will not be claimed as visually exercised unless the real Actions journey reaches them without mocks.
 
@@ -71,7 +71,7 @@ Known CAP05 status enums now use explicit local EN/BR presentation keys. Unrecog
 
 Official Playwright guides read before authoring: [best practices](https://playwright.dev/docs/best-practices), [auto-waiting](https://playwright.dev/docs/actionability), [assertions](https://playwright.dev/docs/test-assertions), [locators](https://playwright.dev/docs/locators), [network](https://playwright.dev/docs/network) and [test isolation](https://playwright.dev/docs/browser-contexts). Assertions use observable original UI outcomes, not wall-clock sleeps or mocked success.
 
-The prepared journey is not a PASS claim. Integration execution and capture critique remain pending.
+This was the prepared scope before execution. The final PASS below records the states actually reached and the exact capture count.
 
 
 ## First real Actions critique — 21 November 2026
@@ -170,9 +170,156 @@ The sixth execution is required to verify the strengthened sticky-cell regressio
 
 Run [44946398674](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44946398674), job 136974566786, passed the strengthened grid assertions: December was visible, line identity and currency occupied separate sticky columns, Home brought January outside both sticky boundaries, and focus stayed on the grid. Direct inspection of the dark December and light January captures confirmed opaque, legible metadata and intact monthly values. CAP19 then reached its desktop/narrow project cards and narrow project editor with the admitted approval/date absences correctly displayed.
 
-This run stopped on a test-matcher mismatch, before project confirmation. The log resolved the actual native option as <option value="" disabled>, but the generic toBeDisabled matcher reported enabled for that option. Both English and Portuguese assertions now inspect the native HTMLOptionElement.disabled property directly using toHaveJSProperty("disabled", true). The product markup and control behavior remain unchanged.
+This run stopped on a test-matcher mismatch, before project confirmation. The log resolved the actual native option as `<option value="" disabled>`, but the generic toBeDisabled matcher reported enabled for that option. Both English and Portuguese assertions now inspect the native HTMLOptionElement.disabled property directly using toHaveJSProperty("disabled", true). The product markup and control behavior remain unchanged.
 
 Forty captures were emitted with no console or page errors. The remaining execution must still complete CAP19 description save/fresh read, line/spread review and pt-BR editor capture. There are no further pending product adjustments from the inspected states.
 
 
 Before the next run, the project-save response assertion was checked against the unchanged endpoint and transport: runtime/application.ts returns HTTP200 with top-level { ok: true, warnings?: ... } on an accepted domain command; SfDomainCommandCap19Save declares LegacyResult at POST {mount}/planner with fixed page CAPEX/action save; the client forwards that operation and the transport decodes its output without inventing a nested receipt. The browser assertion therefore checks response.ok() and the actual top-level ok:true, followed by an independent persisted-description read.
+
+
+## Final verification and capture acceptance
+
+Final production-browser run [44947193512](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44947193512), job [136976981561](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44947193512/job/136976981561), passed both isolated native-installation journeys in 3.6 minutes. Its snapshot is `8d8d8f9d573ca386d29ed65304fe62bb2c8d445b`, built from integration product `68ad2eec9d92bcd0a81823646c04678944487e85`. All 47 captures were emitted completely, with zero preview skips. All four page-context closure diagnostics contained empty console-error and page-error arrays.
+
+The focused CAP14 command regressions remain PASS: [44943957335](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44943957335), four tests and 27 assertions using the real Solid browser-condition proxy and unchanged schema/codec. The final shared-product regression of the six previously approved areas also passed: [44946402767](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44946402767), two tests, 67 complete captures and zero skips. The last finance patch after that product snapshot changed only the option assertion and this report.
+
+Direct final-image critique confirmed:
+- CAP18 December preserves distinct opaque line/currency columns and readable source values. The Home assertion proves January is outside the sticky boundaries and grid focus is retained; the light January capture confirms the result visually.
+- CAP19 project cards retain the real approval/date absences. The focused project editor and its 320px review actions remain within the native geometry.
+- The confirmed-project image shows the revised description after a fresh native entry. The spread review preserves the original source values and its explicit lack of an impact preview, and was cancelled without dispatch.
+- The pt-BR 320px project editor uses localized labels and preserves source text, with the same single-column reflow and native scroll.
+
+No further product change is requested from these inspected states.
+
+### Exact accounting
+
+These are five campaign areas, not 35 new pages. Themes, locale, viewport, source variants, successful-save images and repeated visits do not create additional functional states. The count was independently checked by the People reviewer against the actual journey and capture names.
+
+| Area | Functional states visited | States with dedicated capture | States without dedicated capture | Final images |
+| --- | ---: | ---: | ---: | ---: |
+| CAP05 — dashboard CAPEX | 10 | 7 | 3 | 11 |
+| CAP14 — vendor contracts | 7 | 6 | 1 | 10 |
+| CAP17 — Planner overview | 1 | 1 | 0 | 5 |
+| CAP18 — Planner OPEX | 10 | 7 | 3 | 11 |
+| CAP19 — Planner CAPEX | 7 | 5 | 2 | 10 |
+| **Total** | **35** | **26** | **9** | **47** |
+
+The 47 images consist of 26 principal state captures and 21 variants. The nine states without their own image were exercised by the passing journey; no separate visual critique is claimed for them.
+
+### State-to-capture map
+
+Capture names below are the canonical attachment names in the final Actions run. A representative image is listed for each captured state; additional themes, widths and locales retain their full names in the manifest that follows.
+
+| Area | Functional state | Dedicated capture or evidence |
+| --- | --- | --- |
+| CAP05 | Project list | `CAP05-dark-desktop-list-test-data` |
+| CAP05 | Twelve-month project detail | `CAP05-dark-desktop-twelve-months-test-data` |
+| CAP05 | Annual editor | Functional interaction only; no dedicated image |
+| CAP05 | Annual review | `CAP05-dark-desktop-annual-review-test-data` |
+| CAP05 | Deviation editor | Functional interaction only; no dedicated image |
+| CAP05 | Deviation review | `CAP05-dark-desktop-deviation-review-test-data` |
+| CAP05 | Monthly editor | `CAP05-dark-desktop-month-editor-test-data` |
+| CAP05 | Monthly review | `CAP05-dark-320-month-review-actions-test-data` |
+| CAP05 | Project creation | `CAP05-dark-desktop-create-test-data` |
+| CAP05 | Project-creation review | Functional interaction only; no dedicated image |
+| CAP14 | Contract list | `CAP14-dark-desktop-list-test-data` |
+| CAP14 | Contract source detail | `CAP14-dark-desktop-contract-detail-test-data` |
+| CAP14 | Fifteen-field editor | `CAP14-dark-desktop-fifteen-field-editor-test-data` |
+| CAP14 | Edit review | `CAP14-dark-320-review-actions-test-data` |
+| CAP14 | Deletion review | `CAP14-dark-desktop-delete-review-test-data` |
+| CAP14 | Contract creation | Functional interaction only; no dedicated image |
+| CAP14 | Contract-creation review | `CAP14-dark-desktop-create-review-test-data` |
+| CAP17 | Overview with metrics, series and comparison | `CAP17-dark-desktop-summary-and-series-test-data` |
+| CAP18 | Monthly plan | `CAP18-dark-desktop-monthly-grid-start-test-data` |
+| CAP18 | Original-producer paste preview | `CAP18-dark-desktop-original-producer-paste-preview-test-data` |
+| CAP18 | Line list | Functional interaction only; no dedicated image |
+| CAP18 | Line editor | `CAP18-dark-desktop-record-editor-test-data` |
+| CAP18 | Line review | `CAP18-dark-320-record-review-actions-test-data` |
+| CAP18 | Line creation | Functional interaction only; no dedicated image |
+| CAP18 | Line-creation review | `CAP18-dark-desktop-create-review-test-data` |
+| CAP18 | Plan settings | Functional interaction only; no dedicated image |
+| CAP18 | Closed-month review | `CAP18-dark-desktop-closed-month-review-test-data` |
+| CAP18 | Split review | `CAP18-dark-desktop-split-review-test-data` |
+| CAP19 | Monthly plan | `CAP19-dark-desktop-monthly-grid-test-data` |
+| CAP19 | Project list | `CAP19-dark-desktop-projects-test-data` |
+| CAP19 | Project editor | `CAP19-dark-320-project-editor-test-data` |
+| CAP19 | Project review | `CAP19-dark-320-project-review-actions-test-data` |
+| CAP19 | Line list | Functional interaction only; no dedicated image |
+| CAP19 | Line editor | Functional interaction only; no dedicated image |
+| CAP19 | Spread review | `CAP19-dark-desktop-spread-review-test-data` |
+
+### Exact original-source writes
+
+There were **three confirmed mutations in the browser journey**, separate from canonical fixture construction:
+
+| Command | Actual change | Confirmation |
+| --- | --- | --- |
+| CAP05 save-entry | January forecast changed from 19,100 to 19,500 on the seeded project. | Exactly one additional source POST; editor closed; the reread monthly detail showed 19,500. |
+| CAP14 save | Notice period changed to 120 days and notes changed to the test's revised supporting evidence, in one command. | Exactly one additional source POST; verified-current-record notice; source detail reread showed 120 days. |
+| CAP19 save, projects collection | Description changed to the revised infrastructure resilience text. | Original POST succeeded with top-level ok:true; review closed; a fresh native entry and project reopen showed the persisted description. |
+
+CAP18 issued one original-producer monthly-preview POST for two pasted budget values and cancelled the preview without Apply. It was not a mutation. Annual/deviation/create/delete/closed/split/spread reviews were inspected or exercised and then revised/cancelled/discarded without dispatch. No destructive command was confirmed by this journey.
+
+### Limits preserved in the delivered result
+
+- CAP19's native project projection omits approval state and investment dates even when those fields exist in the underlying source. Both locales show and test the real absence. The wave does not expand the projection, infer approval or fill dates.
+- The contract producer normalizes absent amounts to zero. Its zero is displayed as a real observed zero. The CAP14 DTO preserves null received at its boundary, but the pre-existing source-to-editor null normalization is unchanged; no end-to-end source-null preservation claim is made.
+- CAP05 source months without a record and Planner null actuals remain distinct from recorded zero. No currency, source amount, source preview, calculation or receipt is invented.
+- Owner/project identifiers remain source identifiers when the admitted projection does not provide a display name. The UI does not invent a person or project label for them.
+- CAP17 is read-only. CAP19 retains its original project/line edit operations; this wave does not add an unsupported creation dispatcher.
+- Error, denial, revocation, conflict and outcome-unknown behavior remains governed by the original source/controllers. These special states were not forced with mocks and are not included in the 35 successfully exercised work states.
+- Widths 1440px and 320px, dark/light schemes and en-US/pt-BR were exercised. Actual browser zoom was not measured. RTL scroll-boundary logic is retained, but no RTL-locale capture is claimed.
+- Nine functional states were visited without a dedicated screenshot, as listed above. The final acceptance is limited to the evidence actually collected.
+
+### Complete final capture manifest
+
+```text
+CAP05-dark-desktop-list-test-data
+CAP05-light-desktop-list-test-data
+CAP05-light-320-list-test-data
+CAP05-dark-desktop-twelve-months-test-data
+CAP05-dark-320-monthly-records-test-data
+CAP05-dark-desktop-annual-review-test-data
+CAP05-dark-desktop-deviation-review-test-data
+CAP05-dark-desktop-month-editor-test-data
+CAP05-dark-320-month-review-actions-test-data
+CAP05-dark-desktop-create-test-data
+CAP14-dark-desktop-list-test-data
+CAP14-light-desktop-list-test-data
+CAP14-light-320-list-test-data
+CAP14-dark-desktop-contract-detail-test-data
+CAP14-dark-desktop-fifteen-field-editor-test-data
+CAP14-dark-320-editor-test-data
+CAP14-dark-320-review-actions-test-data
+CAP14-dark-desktop-delete-review-test-data
+CAP14-dark-desktop-create-review-test-data
+CAP05-pt-BR-dark-desktop-test-data
+CAP14-pt-BR-dark-desktop-test-data
+CAP17-dark-desktop-summary-and-series-test-data
+CAP17-light-desktop-summary-test-data
+CAP17-light-320-summary-test-data
+CAP17-light-320-version-comparison-test-data
+CAP18-dark-desktop-monthly-grid-start-test-data
+CAP18-dark-desktop-monthly-grid-december-test-data
+CAP18-light-desktop-grid-test-data
+CAP18-dark-desktop-original-producer-paste-preview-test-data
+CAP18-dark-320-source-months-test-data
+CAP18-dark-desktop-record-editor-test-data
+CAP18-dark-320-record-review-actions-test-data
+CAP18-dark-desktop-create-review-test-data
+CAP18-dark-desktop-closed-month-review-test-data
+CAP18-dark-desktop-split-review-test-data
+CAP19-dark-desktop-monthly-grid-test-data
+CAP19-light-desktop-monthly-grid-test-data
+CAP19-dark-desktop-projects-test-data
+CAP19-dark-320-projects-test-data
+CAP19-dark-320-project-editor-test-data
+CAP19-dark-320-project-review-actions-test-data
+CAP19-dark-desktop-confirmed-project-test-data
+CAP19-dark-desktop-spread-review-test-data
+CAP17-pt-BR-dark-desktop-test-data
+CAP18-pt-BR-dark-desktop-test-data
+CAP19-pt-BR-dark-desktop-test-data
+CAP19-pt-BR-dark-320-project-editor-test-data
+```
