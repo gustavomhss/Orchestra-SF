@@ -57,6 +57,8 @@ import { showToast } from "./utils/toast"
 import { errorMessage } from "@/pages/layout/helpers"
 
 import { OrchestraChapterRoute } from "@/orchestra/chapter-route"
+import { BrandLoading } from "@/orchestra/brand-loading"
+import { isSucafinaBrand } from "@/orchestra/brand-identity"
 
 // The session and home pages are separate chunks so the entry script parses less before the first paint. A host
 // calls preloadAppRoutes() while it is still waiting for its server, so the route renders without a Suspense pause.
@@ -475,7 +477,7 @@ function ConnectionGate(
     props.disableHealthCheck
       ? true
       : Effect.gen(function* () {
-          if (!server.current) return true
+          if (!server.current) return false
           const trusted = checked.key === server.key
           checked.key = undefined
           if (trusted) return true
@@ -531,7 +533,7 @@ function ConnectionGate(
         </Show>
       </Show>
       <Show when={loading()}>
-        <div class="fixed inset-0 z-[9999] bg-background-base" data-tauri-drag-region data-app-loading />
+        {isSucafinaBrand() ? <BrandLoading /> : <div class="fixed inset-0 z-[9999] bg-background-base" data-tauri-drag-region data-app-loading />}
       </Show>
     </>
   )
