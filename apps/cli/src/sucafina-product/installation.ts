@@ -7,7 +7,7 @@ import { Effect, Option, Stream } from "effect"
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 
 type Installation = {
-  mount: string
+  mount: `/${string}`
   handler: (request: Request) => Promise<Response | undefined>
   dispose: () => void | Promise<void>
 }

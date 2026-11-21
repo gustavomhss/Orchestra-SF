@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { mkdtemp, rm } from "node:fs/promises"
-import { request } from "node:http"
+import { connect } from "node:net"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
@@ -83,14 +83,28 @@ it.live.skipIf(process.platform === "win32")("serve mounts the factory on the No
       expect(contract.status).toBe(200)
       expect(await contract.json()).toBe(body.byteLength)
       expect((await dispatch("/sucafina/dashboard?upload=contract&upload=contract", { method: "POST", body })).status).toBe(413)
-      expect(await new Promise<number | undefined>((resolve, reject) => {
-        const upload = request(`${origin}/sucafina/reject`, { method: "POST", signal: AbortSignal.timeout(8_000) }, (response) => {
-          response.resume()
-          response.once("end", () => { resolve(response.statusCode); upload.destroy() })
+      const rejected = await new Promise<string>((resolve, reject) => {
+        const socket = connect(port, hostname)
+        socket.setTimeout(8_000, () => {
+          socket.destroy()
+          reject(new Error("Timed out waiting for the early upload rejection"))
         })
-        upload.once("error", reject)
-        upload.write("first chunk")
-      })).toBe(413)
+        socket.once("error", reject)
+        socket.once("close", () => reject(new Error("Upload socket closed before returning the status line")))
+        socket.once("connect", () => {
+          // Deliver a complete chunk but leave the request body open until the server answers.
+          socket.write(`POST /sucafina/reject HTTP/1.1\r\nHost: ${hostname}:${port}\r\nTransfer-Encoding: chunked\r\n\r\nb\r\nfirst chunk\r\n`)
+        })
+        let response = ""
+        socket.on("data", (bytes) => {
+          response += bytes.toString()
+          if (!response.includes("\r\n\r\n")) return
+          resolve(response)
+          socket.destroy()
+        })
+      })
+      expect(rejected).toMatch(/^HTTP\/1\.1 413 /)
+      expect(rejected).toMatch(/\r\nConnection: close\r\n/i)
     })
     yield* child.kill({ killSignal: "SIGTERM" })
     yield* child.exitCode.pipe(Effect.timeout("8 seconds"))
