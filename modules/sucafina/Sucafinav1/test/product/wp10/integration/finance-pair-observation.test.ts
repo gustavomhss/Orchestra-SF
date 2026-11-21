@@ -11,13 +11,17 @@ import { createSfFinancePairObservation } from "../../../../../../../apps/cli/sr
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
+import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
 import { resolvePlannerScenarioBatch } from "../../../../product/planner/scenario-comparison-port.ts"
+import { rows } from "../../../../runtime/contract.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
+
+type Counts = { physical: number; roots: number; work: number; afterClose?: { root: number; work: number; outside: boolean } }
 
 test("Finance observes the exact candidate and baseline with fewer physical reads and closes on revocation or source change", async () => {
   const deadline = compositionTestDeadline("finance-pair-observation")
@@ -27,7 +31,7 @@ test("Finance observes the exact candidate and baseline with fewer physical read
   deadline.own(() => store.dispose())
   const at = "2027-02-02T00:00:00Z", period = { start: "2027-01-01", end: "2027-12-31" }
   const physical = new AsyncLocalStorage<boolean>()
-  const control: { active: boolean; counts?: { physical: number; roots: number; work: number }; afterRoot?: () => Promise<void> } = { active: true }
+  const control: { active: boolean; counts?: Counts; afterRoot?: () => Promise<void> } = { active: true }
   const transaction = store.transaction, all = store.transactionAll, root = store.readSnapshotRoot
   store.transaction = (surface, work, options) => {
     if (control.counts && !physical.getStore()) control.counts.physical++
@@ -45,6 +49,8 @@ test("Finance observes the exact candidate and baseline with fewer physical read
     const value = await root(() => physical.run(true, work), options)
     const after = control.afterRoot
     control.afterRoot = undefined
+    if (after && control.counts) control.counts.afterClose = { root: control.counts.roots, work: control.counts.work,
+      outside: !physical.getStore() && store.currentSnapshots() === undefined }
     await after?.()
     return value
   }
@@ -103,7 +109,7 @@ test("Finance observes the exact candidate and baseline with fewer physical read
       return { commit: true, value: true }
     })
     expect(seed.status).toBe("ok")
-    const results = []
+    const results: { reference: string; alternative: DecisionCase["alternatives"][number] }[] = []
     for (const [id, source] of [["baseline", baseline], ["candidate", candidate]] as const) {
       const scenario = { baseRef: source.refId, operations: [], assumptions: [] }
       const result = ok(await business.withCase(admitted, ref, {}, () => business.planner.simulateScenario(scenario, admitted)))
@@ -122,23 +128,28 @@ test("Finance observes the exact candidate and baseline with fewer physical read
     const scenarios = business.plannerProduct.scenarios
     if (!scenarios) throw new Error("Canonical scenario reader unavailable")
     const pair = { scenarioRefs: [results[1]!.reference, results[0]!.reference], criteria: [] }
+    let selected: TrustedUiContext | undefined = admitted
     const observe = createSfFinancePairObservation({ host: business.host, state: authority.state, lockedSourceFences: business.lockedSourceFences,
-      selectedScope: (call) => call === admitted ? { ref, current: () => true } : undefined,
+      selectedScope: (call) => call === selected ? { ref, current: () => call === selected } : undefined,
       readerIdentities: () => [scenarios.resolveMany, scenarios.resolve, business.cases.read, business.plannerSources.resolveForecastSource] })
     const measure = async (grouped: boolean, afterRoot?: () => Promise<void>) => {
-      const counts = { physical: 0, roots: 0, work: 0 }
-      const result = await business.withCase(admitted, ref, {}, async () => {
-        control.counts = counts
-        control.afterRoot = afterRoot
-        try {
-          const work = async () => {
-            counts.work++
-            return { status: "ok" as const, value: await resolvePlannerScenarioBatch(scenarios, pair.scenarioRefs, admitted) }
-          }
-          return grouped ? await observe(pair, admitted, work) : await work()
-        } finally { control.counts = undefined; control.afterRoot = undefined }
-      })
-      return { result, counts }
+      const counts: Counts = { physical: 0, roots: 0, work: 0 }
+      const call = ok(await authority.ui.admit(request(), "sf_scenario_simulate", admissionDigest))
+      selected = call
+      try {
+        const result = await business.withCase(call, ref, {}, async () => {
+          control.counts = counts
+          control.afterRoot = afterRoot
+          try {
+            const work = async () => {
+              counts.work++
+              return { status: "ok" as const, value: await resolvePlannerScenarioBatch(scenarios, pair.scenarioRefs, call) }
+            }
+            return grouped ? await observe(pair, call, work) : await work()
+          } finally { control.counts = undefined; control.afterRoot = undefined }
+        })
+        return { result, counts }
+      } finally { selected = admitted; authority.ui.finish(call) }
     }
     const scalar = await measure(false)
     const value = ok(scalar.result)
@@ -153,19 +164,30 @@ test("Finance observes the exact candidate and baseline with fewer physical read
     const revoked = await measure(true, async () => { control.active = false })
     expect(revoked.result.status).not.toBe("ok")
     expect(revoked.counts.work).toBe(1)
+    expect(revoked.counts.afterClose).toEqual({ root: 1, work: 1, outside: true })
     control.active = true
     const changed = await measure(true, async () => {
       await persistence.transaction("planner", async (snapshot) => {
-        snapshot.data.financeObservationMarker = "changed-after-close"
+        baselineAmounts(snapshot.data)[0] = 999
         return { commit: true, value: undefined }
       })
     })
     expect(changed.result.status).not.toBe("ok")
     expect(changed.counts.work).toBe(1)
+    expect(changed.counts.afterClose).toEqual({ root: 1, work: 1, outside: true })
+    expect(await persistence.transaction("planner", async (snapshot) => ({
+      commit: false, value: baselineAmounts(snapshot.data)[0],
+    }))).toBe(999)
   } finally { await deadline.close() }
 }, 120_000)
 
 function ok<Value>(result: PortResult<Value>) {
   if (result.status !== "ok") throw new Error(JSON.stringify(result))
   return result.value
+}
+
+function baselineAmounts(data: Record<string, unknown>): unknown[] {
+  const line = rows(rows(data.versions).find((version) => version.id === "v0")?.lines)[0]
+  if (!line || !Array.isArray(line.f)) throw new Error("Fixture forecast line unavailable")
+  return line.f
 }
