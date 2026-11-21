@@ -140,6 +140,7 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await page.setViewportSize({ width: 320, height: 900 })
     await reflow(page)
     const related = detail.locator(".sf-topics-related select")
+    await expect(related).toBeEnabled()
     await related.focus()
     await expect(related).toBeFocused()
     await expect(related).toBeInViewport({ ratio: 1 })
