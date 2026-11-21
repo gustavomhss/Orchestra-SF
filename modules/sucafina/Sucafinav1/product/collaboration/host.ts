@@ -225,9 +225,13 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     if (review.status !== "ok") return { status: "unavailable" as const, reason: "thread-read-unavailable" }
     if (!review.value.bound) return denied
     if (!review.value.local) return undefined
+    const continuity = await prepareReplyContinuity(basis.evidenceRefs, context, current)
+    if (!current()) return denied
+    if (continuity === "reissue") return undefined
+    if (!continuity) return { status: "unavailable" as const, reason: "thread-source-unavailable" }
     return replyThread(id, body, mutation, context, Object.freeze({ request, current, threadDigest: digestSfValue(thread),
       sameScope: (prior: typeof thread) => sameThreadReadScope(thread, prior) && prior.messages.every((message) => message.authorRef === thread.recipientRef),
-      prepareContinuity: () => prepareReplyContinuity(basis.evidenceRefs, context, current) }))
+      continuity }))
   }
   const threadReads = createRecipientAwareThreadReads(collaboration.threads, recipientThread)
   const resolveWorkDestination = input.workDestination ? createWorkDestinationResolver({ ...input.workDestination, host: input.host, work: collaboration.work }) : undefined

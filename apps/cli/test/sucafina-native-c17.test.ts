@@ -13,6 +13,8 @@ import type { ReviewAgendaCatalog } from "../../../modules/sucafina/Sucafinav1/p
 import type { ReviewAgendaPreview } from "../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
 import { sfReviewArtifactBlobKey, validateReportArtifact } from "../../../modules/sucafina/Sucafinav1/runtime/artifact.ts"
 import { object } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import type { Snapshot } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import type { BlobTransaction } from "../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
 import { DashboardPortfolio } from "../../../modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts"
 import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import { withNativeInstallation } from "./fixture/sucafina-native-installation"
@@ -108,7 +110,7 @@ it.live.skipIf(process.platform === "win32")(
       const store = await openLocalStore(installation.businessDirectory)
       try {
         const blobKey = sfReviewArtifactBlobKey(artifactRef)
-        const persisted = await store.transaction("dashboard", async (snapshot, blobs) => {
+        const persisted = await store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
           const state = object(snapshot.data.__sfProductV1)
           const command = digestSfValue({ operation: "sf_report_prepare", key: reportKey })
           return {
@@ -141,7 +143,7 @@ it.live.skipIf(process.platform === "win32")(
 
         // Reopen the same artifact through production after installing the
         // historical inline representation with the original receipt intact.
-        await store.transaction("dashboard", async (snapshot, blobs) => {
+        await store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
           const documents = object(object(snapshot.data.__sfProductV1).documents)
           const inline = object(documents[artifactRef])
           delete inline.byteLength

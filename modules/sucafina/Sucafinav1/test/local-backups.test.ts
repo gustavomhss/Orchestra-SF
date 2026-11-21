@@ -123,7 +123,7 @@ test("private report blobs survive archive verification, the scratch drill, and 
       digest: createHash("sha256").update(reportBytes).digest("hex"),
     }
     const product = { documents: { [ref]: report } }
-    await store.transaction("dashboard", async (snapshot, blobs) => {
+    await store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
       snapshot.data.__sfProductV1 = product
       await blobs.put(reportKey, reportBytes, report.mediaType)
       return { commit: true, value: undefined }
@@ -134,14 +134,14 @@ test("private report blobs survive archive verification, the scratch drill, and 
     expect(saved.manifest.blobs[1]).toEqual({ key: reportKey, bytes: reportBytes.length, sha256: report.digest })
     expect(await backups.verify("dashboard", saved.id, at)).toMatchObject({ at })
     expect(await restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 0, at)).toEqual({ ok: true })
-    await target.transaction("dashboard", async (snapshot, blobs) => {
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
       expect(snapshot.data.__sfProductV1).toEqual(product)
       expect(snapshot.data.assets).toEqual([{ key, bytes: bytes.length }])
       expect(await blobs.get(key)).toEqual(bytes)
       expect(await blobs.get(reportKey)).toEqual(reportBytes)
       return { commit: false, value: undefined }
     })
-    await target.transaction("dashboard", async (_snapshot, blobs) => {
+    await target.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
       await blobs.put(reportKey, bytes, report.mediaType)
       return { commit: true, value: undefined }
     })
@@ -157,7 +157,7 @@ test("private report blobs survive archive verification, the scratch drill, and 
     })).rejects.toThrow("SF_RESTORE_BLOB_FRONTIER_CONFLICT")
     expect(await read(target)).toEqual(before)
     expect(await restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 1, at)).toEqual({ ok: true })
-    expect(await target.transaction("dashboard", async (_snapshot, blobs) => ({
+    expect(await target.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => ({
       commit: false,
       value: await blobs.get(reportKey),
     }))).toEqual(reportBytes)
@@ -166,7 +166,7 @@ test("private report blobs survive archive verification, the scratch drill, and 
     const liveKey = sfReviewArtifactBlobKey(liveRef)
     const liveReport = { ...report, digest: createHash("sha256").update(bytes).digest("hex") }
     const liveProduct = { documents: { [liveRef]: liveReport } }
-    await target.transaction("dashboard", async (snapshot, blobs) => {
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
       snapshot.data.__sfProductV1 = { documents: { [ref]: { ...report, name: "other-review.docx" } } }
       await blobs.put(key, reportBytes, "application/octet-stream")
       return { commit: true, value: undefined }
@@ -176,7 +176,7 @@ test("private report blobs survive archive verification, the scratch drill, and 
       .rejects.toThrow("Backup conflicts with a current private report")
     expect(await read(target)).toEqual(mismatched)
 
-    await target.transaction("dashboard", async (snapshot, blobs) => {
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
       snapshot.data.__sfProductV1 = liveProduct
       await blobs.remove(reportKey)
       await blobs.put(liveKey, bytes, report.mediaType)
@@ -203,27 +203,27 @@ test("private report blobs survive archive verification, the scratch drill, and 
       verifyCurrent: async () => true,
     })).toEqual({ ok: true })
     expect(applied).toHaveLength(1)
-    await target.transaction("dashboard", async (snapshot, blobs) => {
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
       expect(snapshot.data.__sfProductV1).toEqual(liveProduct)
       expect(await blobs.get(liveKey)).toEqual(bytes)
       expect(await blobs.get(reportKey)).toBeUndefined()
       return { commit: false, value: undefined }
     })
 
-    await target.transaction("dashboard", async (_snapshot, blobs) => {
+    await target.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
       await blobs.put(reportKey, bytes, report.mediaType)
       return { commit: true, value: undefined }
     })
     await expect(restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 4, at))
       .rejects.toThrow("Backup cannot overwrite an unbound private report blob")
-    await target.transaction("dashboard", async (snapshot, blobs) => {
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
       expect(snapshot.data.__sfProductV1).toEqual(liveProduct)
       expect(await blobs.get(liveKey)).toEqual(bytes)
       await blobs.put(reportKey, reportBytes, report.mediaType)
       return { commit: true, value: undefined }
     })
     expect(await restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 4, at)).toEqual({ ok: true })
-    await target.transaction("dashboard", async (snapshot, blobs) => {
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
       expect(snapshot.data.__sfProductV1).toEqual(product)
       expect(await blobs.get(reportKey)).toEqual(reportBytes)
       expect(await blobs.get(liveKey)).toBeUndefined()

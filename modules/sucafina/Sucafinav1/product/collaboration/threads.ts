@@ -36,7 +36,7 @@ type RoutedReply = {
   threadDigest: string
   current: () => boolean
   sameScope: (thread: CollaborationThread) => boolean
-  prepareContinuity: () => Promise<(() => boolean) | undefined>
+  continuity: () => boolean
 }
 
 /** The host authorizes the source and recipient by identity without granting either new access. */
@@ -201,9 +201,6 @@ export function createThreadPort(input: {
     if (!routeCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
     const routedRow = !route || digestSfValue(prior) === route.threadDigest
     if (!routedRow && !route?.sameScope(prior)) return { status: "conflict", reason: "thread-changed" }
-    const continuity = route && await route.prepareContinuity()
-    if (!routeCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
-    if (route && !continuity) return { status: "unavailable", reason: "thread-source-unavailable" }
     const review = prior.messages[0]?.sourceContext?.reviewContext ? await input.state.read(request, "reviews", selectSfReviewAuthority((authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion)) : undefined
     if (review && (input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request)) return { status: "denied", reason: "review-thread-context-unavailable" }
     if (review && "reason" in review) return review
@@ -236,7 +233,7 @@ export function createThreadPort(input: {
     if (selected.action.kind === "reply" && (!messageId?.trim() || !incarnation?.trim() || prior.messages.some((message) => message.id === messageId || message.incarnation === incarnation))) return { status: "unavailable", reason: "identity-unavailable" }
     const saved = await input.state.transaction(request, command, stageSfReviewThreadWrite<CollaborationThread | null>(async (state, authority) => {
       if (!routeCurrent() || authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || reviewBasis && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence) || !input.mutationFence.check(fence) || prior.recipientRef && !checkThreadRecipient(prior.recipientRef, prior.evidenceRefs, context, reviewBasis, checkReviewRecipient) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open" ||
-        route && (!routeCurrent() || !continuity?.())) return { commit: false, value: null }
+        route && (!routeCurrent() || !route.continuity())) return { commit: false, value: null }
       const next: CollaborationThread = selected.action.kind === "reply" ? { ...prior, messages: [...prior.messages, { id: messageId!, incarnation: incarnation!, version: 1, authorRef: context.binding.principalRef, body: selected.action.body, createdAt: input.now(), ...(prior.messages[0]?.sourceContext?.reviewContext ? { sourceContext: structuredClone(prior.messages[0].sourceContext) } : {}) }] } : { ...prior, state: "resolved" }
       if (!isThread(next)) return { commit: false, value: null }
       state.threads[id] = next

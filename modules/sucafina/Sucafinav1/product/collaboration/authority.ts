@@ -164,6 +164,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     // retained record, verifies its ACL, and independently verifies freshness.
     const resolved = await resolve.call(evidence, { refs: structuredClone(refs) }, context)
     if (!current() || resolved.length !== refs.length) return undefined
+    let requiresReissue = false
     const liveRefs = resolved.flatMap((item, index) => {
       const original = refs[index]!
       const live = item.state === "fresh" ? item.ref : item.state === "historical" && item.authorizedProjection && item.differences ? item.currentRef : undefined
@@ -172,11 +173,18 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
         live.installationId !== original.installationId || live.projectId !== original.projectId || live.evidenceLevel !== original.evidenceLevel ||
         live.refDigest !== digestSfEvidenceRef(live) || live.target.surface !== "dashboard" ||
         live.target.recordType !== original.target.recordType || live.target.recordId !== original.target.recordId ||
-        live.target.incarnation !== original.target.incarnation || live.target.version < original.target.version ||
-        digestSfValue(live.target.fields) !== digestSfValue(original.target.fields) || digestSfValue(live.target.period) !== digestSfValue(original.target.period)) return []
+        digestSfValue(live.target.fields) !== digestSfValue(original.target.fields)) return []
+      // The recipient reader already understands legitimate scope rollovers.
+      // Leave those to its full reissue path before selecting this writer.
+      if (live.target.incarnation !== original.target.incarnation ||
+        digestSfValue(live.target.period) !== digestSfValue(original.target.period)) {
+        if (item.state !== "historical") return []
+        requiresReissue = true
+      } else if (live.target.version < original.target.version) return []
       return [live]
     })
     if (liveRefs.length !== refs.length) return undefined
+    if (requiresReissue) return "reissue" as const
     // Retain the physical and current scoped continuity of the discarded
     // recipient projection. The staged writer checks this same proof again.
     const fingerprint = (snapshot: Snapshot | undefined) => {
@@ -305,7 +313,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
         return !thread.recipientRef || !!await recipient(thread.recipientRef, context, mode === "read", sealedRead) &&
           (mode !== "write" || !!pin || await recipientSources(thread.recipientRef, thread.evidenceRefs, context))
       }
-      if (basis && mode === "read") {
+      if (basis && mode === "read" && validThreadSourceContext(basis)) {
         const scoped = await readScopedThreadLeg(thread, basis, [...thread.evidenceRefs, ...messageRefs], context, () => complete(true))
         if (scoped !== undefined) return scoped
       }

@@ -185,6 +185,7 @@ export function createSfReviewCollaboration(input: {
   }
   const observePinnedContext = async (pin: ReviewThreadContext, basis: ThreadSourceContext, call: TrustedDomainContext, requireFingerprint = false, leg?: {
     complete: () => Promise<boolean>
+    before?: () => Promise<boolean>
     cold?: { current: () => boolean; delegated: () => boolean }
     ineligible?: boolean
   }) => {
