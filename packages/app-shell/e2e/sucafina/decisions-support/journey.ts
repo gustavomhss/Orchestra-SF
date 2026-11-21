@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
+import { expect, test, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
 import { Schema } from "effect"
 import { SfDecisionsPortfolioCatalog, SfProjectionCase } from "@orchestra/schema/sucafina/decisions"
@@ -30,12 +30,22 @@ export function caseIdentity(reference: string) {
   return { id: decodeURIComponent(parts![1]!), incarnation: decodeURIComponent(parts![2]!) }
 }
 
-export async function withInstallation(page: Page, info: TestInfo,
-  action: (installation: Awaited<ReturnType<typeof startPlannerInstallation>>, observations: Record<string, unknown>[]) => Promise<void>,
-  options?: Parameters<typeof startPlannerInstallation>[1]) {
+type Installation = Awaited<ReturnType<typeof startPlannerInstallation>>
+
+export const decisionsTest = test.extend<{ installation: Installation; procurementApproval: boolean }>({
+  procurementApproval: [false, { option: true }],
+  // The fixture owns port 4174 and must release it even when a scenario times out.
+  installation: [async ({ procurementApproval }, use, info) => {
+    const installation = await startPlannerInstallation(info, { procurementApproval })
+    try { await use(installation) }
+    finally { await installation.stop() }
+  }, { timeout: 120_000 }],
+})
+
+export async function withInstallation(page: Page, info: TestInfo, installation: Installation,
+  action: (installation: Installation, observations: Record<string, unknown>[]) => Promise<void>) {
   const observations: Record<string, unknown>[] = []
   const body = { completed: false }
-  const installation = await startPlannerInstallation(info, options)
   const requests: { method: string; mode: string; operation?: string; idempotencyKey?: string }[] = []
   const listener = (request: Request) => {
     const url = new URL(request.url())
@@ -64,13 +74,11 @@ export async function withInstallation(page: Page, info: TestInfo,
     page.off("pageerror", onPageError)
     page.off("framenavigated", onNavigated)
     // Never retain cookies, authorization headers, enrollment URLs or arbitrary response bodies.
-    try {
-      await info.attach("decisions-observations.json", { contentType: "application/json", body: JSON.stringify({
-        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests, diagnostics: diagnostics.slice(-200),
-        verdict: "The Playwright runtime report owns the terminal test result.",
-        limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
-      }, null, 2) })
-    } finally { await installation.stop() }
+    await info.attach("decisions-observations.json", { contentType: "application/json", body: JSON.stringify({
+      selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests, diagnostics: diagnostics.slice(-200),
+      verdict: "The Playwright runtime report owns the terminal test result.",
+      limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
+    }, null, 2) })
   }
 }
 

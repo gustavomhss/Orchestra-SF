@@ -170,8 +170,12 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     page.on("pageerror", (error) => errors.push(error.message))
     page.on("dialog", (dialog) => dialog.accept())
     page.on("request", (request) => {
-      if (request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/dashboard")
+      const url = new URL(request.url())
+      if (url.origin !== native.origin) return
+      if (request.method() === "POST" && url.pathname === "/sucafina/dashboard")
         writes.push(request.postDataJSON())
+      if (request.method() === "GET" && url.pathname === "/sucafina/api/ui/pages/CAP13")
+        phase("request authorized risk source")
     })
     page.on("response", (response) => {
       const url = new URL(response.url())
@@ -210,6 +214,14 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     phase("submit reviewed risk")
     const created = page.waitForResponse((response) => response.request().method() === "POST" &&
       new URL(response.url()).pathname === "/sucafina/dashboard")
+    // Save must refresh the current CAP13 source without navigation or retrying the command.
+    const createdRead = page.waitForResponse((response) => {
+      const url = new URL(response.url())
+      return response.request().method() === "GET" && url.origin === native.origin &&
+        url.pathname === "/sucafina/api/ui/pages/CAP13"
+    }, { timeout: Math.max(1, 43_000 - (performance.now() - started)) }).then(async (response) => ({
+      status: response.status(), value: object(object(await response.json()).value),
+    })).catch(() => undefined)
     await page.getByRole("button", { name: "Save", exact: true }).click()
     expect((await created).status()).toBe(200)
     const stored = await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
@@ -218,6 +230,11 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     const riskId = stored.rows[0]?.id
     if (typeof riskId !== "string" || !riskId) throw new Error("The original risk command did not return a stored record")
     expect(stored.versions["risks:" + riskId]?.version).toBe(1)
+    phase("observe the automatically refreshed risk")
+    const createdPage = await createdRead
+    if (!createdPage) throw new Error("The confirmed risk save did not produce a readable CAP13 refresh")
+    expect(createdPage.status).toBe(200)
+    expect(createdPage.value).toMatchObject({ data: { risks: [{ id: riskId }] }, versions: { ["risks:" + riskId]: 1 } })
     const edit = page.locator('tr[data-sf-row="' + riskId + '"] button[data-sf-action="edit"]')
     phase("edit persisted risk")
     await edit.click()

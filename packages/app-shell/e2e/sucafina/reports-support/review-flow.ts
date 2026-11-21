@@ -16,7 +16,10 @@ const reportPageTopics = {
 type PreservedSection = PreservedReview["sections"][number]
 
 export async function prepareReview(page: Page, app: ReportsInstallation, corpus: ReportsCorpus, info: TestInfo, options: { removeOne?: boolean } = {}) {
-  await page.goto(`/orchestra/sf-dashboard/budget?${new URLSearchParams({ year: String(corpus.year) })}`)
+  const year = String(corpus.year)
+  const budgetURL = `/orchestra/sf-dashboard/budget?${new URLSearchParams({ year })}`
+  // The link belongs to CAP03's ready content, which follows the authorized Budget read.
+  await observeBudgetPage(page, app, corpus.year, () => page.goto(budgetURL))
   const reportsEntry = page.getByRole("link", { name: "Reports and backup", exact: true })
   await expect(reportsEntry).toBeVisible()
   await expect(reportsEntry).toHaveAttribute("href", "/orchestra/sf-reviews/agenda")
@@ -511,7 +514,8 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const open = sources.getByRole("link", { name: text(authorized.label), exact: true })
   await expect(open).toHaveCount(1)
   await expect(open).toHaveAttribute("href", destination.toString())
-  await open.click()
+  const current = await observeBudgetPage(page, app, corpus.year, () => open.click())
+  expect(object(object(current.data).totals).totalForecast).toBe(corpus.after)
   await expect(page).toHaveURL(destination.toString())
   const dashboard = page.locator('[data-sf-surface="CAP03"]')
   await expect(dashboard).toBeVisible()
@@ -519,9 +523,23 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   expect(target.origin).toBe(nativeOrigin)
   expect(target.pathname).toBe("/orchestra/sf-dashboard/budget")
   expect(target.searchParams.get("year")).toBe(String(corpus.year))
+  const locale = await page.locator("html").getAttribute("lang")
+  expect(locale).toBeTruthy()
+  const displayed = Intl.NumberFormat(locale!, { maximumFractionDigits: 2 }).format(corpus.after)
   await expect(dashboard.locator('[data-sf-metric="forecast"] dd'),
-    "UNBOUND WP1: the native year-selected forecast must expose the producer total instead of an unscoped warning").toHaveText(String(corpus.after))
+    "The native Budget must display the current producer total for the linked year").toHaveText(displayed)
   expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
+}
+
+async function observeBudgetPage(page: Page, app: ReportsInstallation, year: number, navigate: () => Promise<unknown>) {
+  const budget = await observeOriginalJson(page, new URL(`${app.mount}/api/ui/pages/CAP03`, app.origin), "GET",
+    (url) => url.searchParams.getAll("year").length === 1 && url.searchParams.get("year") === String(year), navigate)
+  expect(budget.response.status).toBe(200)
+  expect(budget.body.status).toBe("ok")
+  const projection = object(budget.body.value)
+  expect(projection.capabilityId).toBe("CAP03")
+  expect(object(projection.selection).year).toBe(year)
+  return projection
 }
 
 function encodeReviewRef(value: string) {

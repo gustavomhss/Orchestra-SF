@@ -1,4 +1,4 @@
-import { createEffect, createMemo, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
+import { batch, createEffect, createMemo, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
@@ -122,8 +122,8 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
     warnings: [] as readonly string[],
     busy: false,
     unknown: false,
-    reload: 0,
   })
+  const [readRevision, setReadRevision] = createSignal(0)
   const [draft, setDraft] = createSignal<LiveDraft<Row, Values> | null>(null)
   const [confirmed, setConfirmed] = createSignal<
     Readonly<{ draft: SfPublicDraftController<Values>; operationRef: SfOperationRef; id: SfRef | null }> | null>(null)
@@ -154,7 +154,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
     const matches = rows().filter((entry) => String(entry.id) === String(store.selected))
     return matches.length === 1 ? matches[0] : undefined
   }
-  const refresh = () => setStore("reload", (n) => n + 1)
+  const refresh = () => setReadRevision((revision) => revision + 1)
 
   createEffect(() => {
     const r = nowReady()
@@ -165,7 +165,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
       ...(store.filters.filter === undefined ? {} : { filter: store.filters.filter }),
       ...(store.filters.owner === undefined ? {} : { owner: store.filters.owner }),
     }
-    void store.reload
+    readRevision()
     if (!r || !r.state.context.destinations.some(
       (entry) => entry.capabilityId === spec.id && entry.canRead)) {
       lastOwner = ""
@@ -330,11 +330,12 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
           : { kind: "error", state: "invalid", errors: [] }
       if (nowReady()?.identity !== r.identity) return
       if (result.kind === "ok") {
-        setStore({ error: null, warnings: result.warnings, mode: action === "delete" ? "list" : "detail",
-          selected: action === "delete" ? null : store.selected })
-        if (action === "save") setConfirmed({ draft: currentDraft!.controller, operationRef,
-          id: row ? idOf(row.id) : null })
-        refresh()
+        batch(() => {
+          const id = action === "save" && row ? idOf(row.id) : null
+          if (action === "save") setConfirmed({ draft: currentDraft!.controller, operationRef, id })
+          setStore({ error: null, warnings: result.warnings, mode: id ? "detail" : "list", selected: id })
+          refresh()
+        })
       } else if (result.kind === "outcome-unknown") {
         currentDraft?.controller.setPhase("outcome-unknown")
         setStore({ unknown: true, error: t("sf.common.operationUnknown") })

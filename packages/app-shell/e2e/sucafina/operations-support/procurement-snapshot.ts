@@ -1,5 +1,7 @@
 import { randomUUID } from "node:crypto"
 import { expect, type Locator, type Page, type TestInfo } from "@playwright/test"
+import { Schema } from "effect"
+import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { captureProcurementCommand, login, observation, readManifest } from "./runtime"
 import type { Account } from "./runtime"
@@ -180,8 +182,18 @@ async function setEurRate(page: Page, account: Account, expectedRate: string, va
   expect(saved.status).toBe(200)
   expect(saved.body).toMatchObject({ ok: true })
   await expect(settings).toHaveAttribute("data-version", String(version + 1))
-  await page.reload()
-  await expect(settings).toHaveAttribute("data-version", String(version + 1))
   await expect(code).toHaveValue("EUR")
   await expect(rate).toHaveValue(value)
+  // Independently re-read the committed settings with the original session.
+  // Booting the complete shell again adds no persistence proof.
+  const projection = await page.request.get(account.baseURL + "/api/ui/pages/CAP28", { maxRetries: 0 })
+  expect(projection.status()).toBe(200)
+  expect(Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP28"].output)(await projection.json())).toMatchObject({
+    status: "ok",
+    context: { principalRef: account.principal, installationId: account.installationId, projectId: account.projectId },
+    value: {
+      versions: { settings: { version: version + 1 } },
+      data: { settings: { fxRates: expect.arrayContaining([{ code: "EUR", rate: Number(value) }]) } },
+    },
+  })
 }

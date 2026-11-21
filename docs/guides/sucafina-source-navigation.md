@@ -7,3 +7,5 @@ Os capítulos continuam na navegação principal do Orchestra. As 28 páginas or
 Os links usam os caminhos do manifesto nativo e a instalação selecionada pelo F01. O clique passa pela transição nativa existente, incluindo revisão de alterações não salvas, nova autorização e leitura da fonte. Uma indisponibilidade ou recusa aparece na própria página; nenhum link concede acesso.
 
 A perda de acesso remove a navegação junto com o contexto protegido. Abrir um link em outra aba também exige o fluxo normal de seleção e autorização do F01.
+
+Ao abrir o Budget Overview a partir de uma revisão preservada, a página mantém o ano indicado pelo link e mostra os totais anuais da fonte atual para esse ano. Os valores capturados na revisão continuam disponíveis no relatório preservado.

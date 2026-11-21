@@ -101,7 +101,7 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(page.locator(`article[data-sf-request-ref="${id}"] [data-stage="history"]`).getByRole("listitem")).toHaveText(historyText)
   await page.goto(`/orchestra/sf-procurement/approvals/${encoded}/review`)
   await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === `/orchestra/sf-procurement/approvals/${encoded}/review`)
-  await expect(page.getByText(/^(This record is not a submitted PR awaiting approval|The requested approval was not found)\.$/)).toBeVisible()
+  await expect(page.getByRole("alert").getByText("The submitted stage, holder or amount is incomplete.", { exact: true })).toBeVisible()
   await expect(page.getByRole("button", { name: "Approve PR", exact: true })).toHaveCount(0)
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
   await expect(page.locator("[data-sf-sourcing-stage]")).toHaveText("Stage: sourcing · Source version: " + version)

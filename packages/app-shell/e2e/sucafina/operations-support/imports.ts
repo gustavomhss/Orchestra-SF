@@ -1,6 +1,8 @@
 import { createHash, randomUUID } from "node:crypto"
 import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
+import { Schema } from "effect"
+import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import type { APIResponse, Locator, Page, Request, Route, TestInfo } from "@playwright/test"
 import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
@@ -116,33 +118,40 @@ async function exported(page: Page, account: Account, version: string) {
   }))
 }
 
-async function tokens(page: Page, account: Account, year: string, version: string, ids: string[]) {
+async function tokens(page: Page, account: Account, year: string, version: string, ids: string[], observeControls = true) {
   const query = new URLSearchParams({ year, version })
-  const route = chapterURL(account, `/orchestra/sf-planner/opex?${query}`)
   const endpoint = account.baseURL + "/api/ui/pages/CAP18?" + query
-  // The shell document can be 200 while the fresh, authorized OPEX projection is still loading.
-  const { response: projection, result: navigation } = await forwardedRead(page, endpoint, () => page.goto(route.href))
-  expect(navigation?.status()).toBe(200)
+  const projection = observeControls
+    ? (await forwardedRead(page, endpoint, async () => {
+        const route = chapterURL(account, `/orchestra/sf-planner/opex?${query}`)
+        expect((await page.goto(route.href))?.status()).toBe(200)
+      })).response
+    : await page.request.get(endpoint, { maxRetries: 0 })
   expect(projection.status()).toBe(200)
-  expect(await projection.json()).toMatchObject({
+  const decoded = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP18"].output)(await projection.json())
+  expect(decoded).toMatchObject({
     status: "ok",
     context: { principalRef: account.principal, installationId: account.installationId, projectId: account.projectId },
     value: { selection: { year: Number(year), versionId: version }, data: { selectedVersion: { year: Number(year), id: version } } },
   })
+  if (decoded.status !== "ok" || !decoded.value.data.grid) throw new Error("The authorized CAP18 grid is unavailable")
+  const grid = decoded.value.data.grid
   const surface = page.locator('[data-sf-surface="CAP18"]')
   const result: Record<string, number> = {}
   for (const id of ids) {
+    const matching = grid.rows.filter((row) => row.id === id)
+    expect(matching).toHaveLength(1)
+    const revision = matching[0]!.revision
+    expect(Number.isSafeInteger(revision)).toBe(true)
+    result[id] = revision
+    if (!observeControls) continue
     const row = surface.locator(`tbody tr[data-sf-row="${id}"]`)
     await expect(row).toHaveCount(1)
     await row.getByRole("button", { name: "Manage", exact: true }).click()
     const detail = page.getByRole("region", { name: "Manage record", exact: true })
     const line = detail.locator("p").filter({ has: page.getByText(id, { exact: true }) })
     await expect(line).toHaveCount(1)
-    const match = /Source revision:\s*(\d+)/.exec(await line.innerText())
-    expect(match).not.toBeNull()
-    const revision = Number(match![1])
-    expect(Number.isSafeInteger(revision)).toBe(true)
-    result[id] = revision
+    await expect(line).toContainText(new RegExp(`Source revision:\\s*${revision}(?![0-9])`))
   }
   return result
 }
@@ -342,8 +351,11 @@ export async function importJourney(page: Page, info: TestInfo) {
   await expect(root).toHaveAttribute("data-sf-phase", "reviewing")
   await expect(root.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
   await expect(root.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary")).toHaveCount(6)
-  expect(await exported(reader, account, version)).toEqual(before)
-  expect(await tokens(reader, account, fiscalYear, version, [renewal, fixed])).toEqual(beforeTokens)
+  const [afterPreview, previewTokens] = await Promise.all([
+    exported(reader, account, version), tokens(reader, account, fiscalYear, version, [renewal, fixed], false),
+  ])
+  expect(afterPreview).toEqual(before)
+  expect(previewTokens).toEqual(beforeTokens)
   const applies: Request[] = []
   const applyURL = modeURL(account, "planner", "import-apply").href
   const applyPayload = { manifestId: preview.id, version: preview.version }
@@ -376,11 +388,18 @@ export async function importJourney(page: Page, info: TestInfo) {
   await expect(root).toHaveAttribute("data-sf-phase", "unknown")
   await expect(root.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
   const refreshReceipt = root.getByRole("button", { name: "Refresh receipt", exact: true })
-  await page.route(referenceURL, (route) => route.abort("failed"), { times: 1 })
-  await Promise.all([
-    page.waitForEvent("requestfailed", isReference),
-    refreshReceipt.click(),
-  ])
+  const lostRead = Promise.withResolvers<void>()
+  const dropReceipt = async (route: Route) => {
+    if (!isReference(route.request())) return route.fallback()
+    try {
+      await route.abort("failed")
+      lostRead.resolve()
+    } catch (error) {
+      lostRead.reject(error)
+    }
+  }
+  await page.route(referenceURL, dropReceipt, { times: 1 })
+  await Promise.all([lostRead.promise, refreshReceipt.click()]).finally(() => page.unroute(referenceURL, dropReceipt))
   await expect(root).toHaveAttribute("data-sf-phase", "unknown")
   await expect(root).toHaveAttribute("data-sf-read-state", "unavailable")
   await expect(refreshReceipt).toBeEnabled()
@@ -440,8 +459,11 @@ export async function importJourney(page: Page, info: TestInfo) {
     await resultPage.close()
   }
   expect(applies.map((request) => request.postDataJSON())).toEqual([applyPayload])
-  expect(await exported(reader, account, version)).toEqual(after)
-  expect(await tokens(reader, account, fiscalYear, version, [renewal, fixed])).toEqual(afterTokens)
+  const [afterRecovery, recoveryTokens] = await Promise.all([
+    exported(reader, account, version), tokens(reader, account, fiscalYear, version, [renewal, fixed], false),
+  ])
+  expect(afterRecovery).toEqual(after)
+  expect(recoveryTokens).toEqual(afterTokens)
   // The Files transport preflights context before issuing a receipt read after cross-tab logout.
   const signedOut = reader.waitForResponse((response) => response.url() === account.baseURL + "/auth/logout" && response.request().method() === "POST")
   await reader.getByRole("button", { name: "Sign out", exact: true }).click()

@@ -34,7 +34,10 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
   const currentMonth = () => valueAt(data()?.budgetCurrentMonth, year())
   const revenue = () => valueAt(data()?.revenueByYear, year())
   const unscoped = () => t(key("sf.u02.sourceWarning"))
-  const periodTotals = () => year() === undefined ? data()?.totals : undefined
+  const periodTotals = () => {
+    const snapshot = read.snapshot()
+    return snapshot && (year() === undefined || snapshot.selection.year === year()) ? snapshot.data.totals : undefined
+  }
   const admitted = (action: "save-month" | "save-revenue") =>
     read.canAction(action, "domain.command.CAP03." + action)
   const stat = (id: string, label: Key, value: number | null | undefined) =>
@@ -63,18 +66,15 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
           <h2 id="sf-u02-budget-outlook">{t(key("sf.u02.financial"))}</h2>
           <p role="status">{unscoped()} {t(key("sf.u02.noCurrency"))}</p>
           <dl class="sf-u02-stats sf-u02-four">
-            {year() === undefined ? stat("budget", "sf.u02.budget", periodTotals()?.totalBudget) : unscopedStat("budget", "sf.u02.budget")}
-            {year() === undefined ? stat("actual", "sf.u02.actual", periodTotals()?.totalActual) : unscopedStat("actual", "sf.u02.actual")}
-            {year() === undefined ? stat("forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("forecast", "sf.u02.forecast")}
+            {year() === undefined || periodTotals() ? stat("budget", "sf.u02.budget", periodTotals()?.totalBudget) : unscopedStat("budget", "sf.u02.budget")}
+            {year() === undefined || periodTotals() ? stat("actual", "sf.u02.actual", periodTotals()?.totalActual) : unscopedStat("actual", "sf.u02.actual")}
+            {year() === undefined || periodTotals() ? stat("forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("forecast", "sf.u02.forecast")}
             {stat("revenue", "sf.u02.revenue", revenue())}
           </dl>
         </section>
         <section class="sf-u02-section" aria-labelledby="sf-u02-budget-variance">
           <h2 id="sf-u02-budget-variance">{t(key("sf.u02.budgetByLine"))}</h2>
-          <Show when={year() !== undefined}>
-            <p role="status">{unscoped()}</p>
-          </Show>
-          <Show when={year() === undefined && data()?.totals} fallback={year() === undefined ? <p role="status">{t(key("sf.u02.sourceMissing"))}</p> : null}>
+          <Show when={periodTotals()} fallback={<p role="status">{year() === undefined ? t(key("sf.u02.sourceMissing")) : unscoped()}</p>}>
             {(totals) => <div class="sf-u02-table-scroll"><table>
               <caption>{t(key("sf.u02.budgetByLine"))}</caption>
               <thead><tr><th scope="col">{t(key("sf.u02.line"))}</th>

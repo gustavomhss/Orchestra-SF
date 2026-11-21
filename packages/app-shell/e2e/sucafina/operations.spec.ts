@@ -27,6 +27,9 @@ test.describe("CI-UI-OPERATIONS", () => {
 
   test("OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects", async ({ page }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "WP06.T01.INV.01; WP06.T01.QLT.01; WP06.T02.INV.01; WP06.T02.INV.02; WP06.T02.QLT.18; WP06.T03.CHK.04; WP06.T03.INV.01; WP06.T03.INV.03; WP06.T03.QLT.02; WP06.T03.SUC.02; WP06.T04.CHK.02; WP06.T04.INV.01; WP06.T04.QLT.01" })
+    // The installed host spent the default minute reaching the committed Apply
+    // and first lost receipt read. Keep time for the independent revocation proof.
+    test.setTimeout(120_000)
     await importJourney(page, info)
   })
 
