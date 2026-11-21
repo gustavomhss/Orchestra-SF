@@ -155,7 +155,7 @@ async function sha256(payload: unknown): Promise<string> {
 
 /** One producer-bound source mutation; never an inferred side effect of render. */
 export function SfU02Edit(props: U02EditProps): JSX.Element {
-  const { t } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
   const context = useSfContext()
   let disposed = false
   onCleanup(() => { disposed = true })
@@ -229,6 +229,9 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
       fields: [{ path: reviewFields()[0].path, label: { key: key(props.valueLabelKey) },
         value: props.value === undefined ?
           { kind: "missing" as const, reason: { key: key("sf.u02.noValue") } } :
+          props.surfaceId === "CAP01" && props.actionId === "save-users" ?
+          { kind: "text" as const, text: { kind: "data" as const,
+            text: new Intl.NumberFormat(locale(), { maximumFractionDigits: 20 }).format(props.value) } } :
           { kind: "number" as const, value: props.value,
             unit: { kind: "unspecified" as const, label: { key: key("sf.u02.noCurrency") } },
             fractionDigits: 2 } }] }

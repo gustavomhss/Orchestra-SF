@@ -239,3 +239,12 @@
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   }
 }
+
+@container sf-frame (max-width: 479px) {
+  .sf-today .sf-today-case-copy {
+    flex-basis: 100%;
+  }
+  .sf-today .sf-today-resume-action {
+    inline-size: 100%;
+  }
+}
