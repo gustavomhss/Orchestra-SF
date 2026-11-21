@@ -3,7 +3,13 @@ import { expect } from "@playwright/test"
 import { waveFourTest, enter, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage } from "./design-support/wave-four"
 import { waveFourProcurementData } from "./design-support/wave-four-procurement-data"
 
-waveFourTest("native work, private search and existing saved views use their admitted producers", async ({ page, browser, installation, owner }, info) => {
+const screens = [
+  { id: "UI30", path: "/orchestra/sf-work", title: "Meu trabalho" },
+  { id: "UI31", path: "/orchestra/sf-home/search", title: "Busca" },
+  { id: "UI32", path: "/orchestra/sf-work/views", title: "Vistas salvas" },
+] as const
+
+for (const area of screens) waveFourTest(area.id + " · native work, private search and saved views use their admitted producer", async ({ page, browser, installation, owner }, info) => {
   waveFourTest.setTimeout(300_000)
   page.setDefaultTimeout(15_000)
   expect(info.project.metadata.bundle).toBe("production")
@@ -23,7 +29,7 @@ waveFourTest("native work, private search and existing saved views use their adm
     }
   })
 
-  await waveFourTest.step("UI30 reads the actual period, assigned requisition and reauthorized destination", async () => {
+  if (area.id === "UI30") await waveFourTest.step("UI30 reads the actual period, assigned requisition and reauthorized destination", async () => {
     await enter(page, owner, new URL("/orchestra/sf-work", installation.origin).href, "My work")
     const surface = page.locator('[data-sf-surface="UI30"]')
     await expect(surface).toHaveAttribute("data-sf-wave", "four")
@@ -63,7 +69,7 @@ waveFourTest("native work, private search and existing saved views use their adm
     await expect(page.locator('[data-sf-surface="CAP25"]')).toContainText(waveFourProcurementData.requests.prApproval)
   })
 
-  await waveFourTest.step("UI31 sends search text only in the private POST body and renders the real empty result", async () => {
+  if (area.id === "UI31") await waveFourTest.step("UI31 sends search text only in the private POST body and renders the real empty result", async () => {
     await page.setViewportSize({ width: 1440, height: 1100 })
     await enter(page, owner, new URL("/orchestra/sf-home/search", installation.origin).href, "Search")
     const surface = page.locator('[data-sf-surface="UI31"]')
@@ -98,7 +104,7 @@ waveFourTest("native work, private search and existing saved views use their adm
     await capture(page, info, "UI31-light-320-source-empty")
   })
 
-  await waveFourTest.step("UI32 edits a source-created V1 view, retains the draft through review and rereads version two", async () => {
+  if (area.id === "UI32") await waveFourTest.step("UI32 edits a source-created V1 view, retains the draft through review and rereads version two", async () => {
     const view = {
       id: "wave-four-opex-view",
       title: "Design test data · Regional OPEX view",
@@ -193,11 +199,7 @@ waveFourTest("native work, private search and existing saved views use their adm
     const localized = await portuguese.newPage()
     localized.setDefaultTimeout(15_000)
     const messages = observePage(localized)
-    for (const screen of [
-      { id: "UI30", path: "/orchestra/sf-work", title: "Meu trabalho" },
-      { id: "UI31", path: "/orchestra/sf-home/search", title: "Busca" },
-      { id: "UI32", path: "/orchestra/sf-work/views", title: "Vistas salvas" },
-    ]) {
+    for (const screen of [area]) {
       await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.title)
       await scheme(localized, "dark")
       await capture(localized, info, screen.id + "-pt-BR-dark-desktop")
@@ -208,9 +210,9 @@ waveFourTest("native work, private search and existing saved views use their adm
 
   expect(diagnostics.pageErrors).toEqual([])
   expect(diagnostics.consoleErrors).toEqual([])
-  await info.attach("native-wave-four-work-evidence", {
+  await info.attach(area.id + "-native-wave-four-evidence", {
     body: JSON.stringify({
-      areas: ["UI30", "UI31", "UI32"], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
+      areas: [area.id], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
       widths: [1440, 320], confirmedBrowserWrites: writes.length,
       source: "genuine native installation; assigned Procurement source, private search and original V1 preferences",
       limitations: ["No uploaded searchable document", "Native V2 views and preferred entry are not admitted", "Actual browser zoom not measured"],
