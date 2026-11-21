@@ -52,7 +52,7 @@ waveFourTest("native work, private search and existing saved views use their adm
     await capture(page, info, "UI30-light-320-authorized-detail")
     await details.getByRole("button", { name: "Return to list", exact: true }).click()
     await surface.locator("[data-sf-work-filter]").fill("no matching assigned action")
-    await expect(surface.getByText("No results match these filters.", { exact: true })).toBeVisible()
+    await expect(surface.getByText("No results for these filters.", { exact: true })).toBeVisible()
     await capture(page, info, "UI30-light-320-filtered-empty")
     await surface.locator("[data-sf-work-filter]").fill("")
     await page.setViewportSize({ width: 1440, height: 1100 })

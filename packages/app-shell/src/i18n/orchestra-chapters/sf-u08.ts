@@ -1,4 +1,4 @@
-/** U08. Existing renderer labels remain source-English where no pinned translation exists. */
+/** U08. Source English is preserved; the Brazilian Portuguese catalog uses Orchestra terminology. */
 export const SF_U08_COPY = {
   "sf.cap20.title": "Headcount",
   "sf.cap20.primary": "Review changes",

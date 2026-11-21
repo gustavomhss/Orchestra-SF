@@ -411,8 +411,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
       fields: reviewFields(draftFor(intent.collection, row)),
     }
   }
-  const proposedSnapshot = (): SfReviewSnapshot => {
-    const intent = screen.intent!
+  const proposedSnapshot = (intent: Intent): SfReviewSnapshot => {
     const value = selectedDraft()
     if (intent.kind === "common") return {
       kind: "draft", intentRef: (newIntent() ?? intent.ref) as SfIntentRef,
@@ -605,16 +604,16 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
               </form>
             )}
           </Show>
-          <Show when={screen.intent}>
+          <Show when={screen.intent} keyed>
             {(intent) => (
               <section class="sf-n20-review" aria-label={language.t(reviewTitle())}>
                 <SfChangeReview
                   operation={{
-                    ref: intent().ref as Parameters<typeof SfChangeReview>[0]["operation"]["ref"],
+                    ref: intent.ref as Parameters<typeof SfChangeReview>[0]["operation"]["ref"],
                     label: { key: key(reviewTitle()) },
-                    scope: { kind: "data", text: intent().collection },
+                    scope: { kind: "data", text: intent.collection },
                   }}
-                  base={revisionSnapshot()} current={revisionSnapshot()} proposed={proposedSnapshot()}
+                  base={revisionSnapshot()} current={revisionSnapshot()} proposed={proposedSnapshot(intent)}
                   effects={[]}
                   coverage={{
                     state: "partial", summary: { key: key("sf.common.partial") },
@@ -622,14 +621,14 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                   }}
                   blockingReasons={[]}
                   confirmation={{
-                    kind: "admitted", labelKey: key(intent().kind === "delete" ? "sf.cap21.action.delete" :
-                      intent().kind === "common" ? "sf.cap21.action.common" : "sf.cap21.action.save"),
-                    purpose: intent().kind === "common" ? "common" : intent().kind,
+                    kind: "admitted", labelKey: key(intent.kind === "delete" ? "sf.cap21.action.delete" :
+                      intent.kind === "common" ? "sf.cap21.action.common" : "sf.cap21.action.save"),
+                    purpose: intent.kind === "common" ? "common" : intent.kind,
                     binding: {
                       kind: "catalog-command",
-                      operationId: intent().kind === "common" ? "domain.command.CAP21.common"
-                        : intent().kind === "delete" ? "domain.command.CAP21.delete" : "domain.command.CAP21.save",
-                      version: { kind: "record", expectedVersion: intent().version },
+                      operationId: intent.kind === "common" ? "domain.command.CAP21.common"
+                        : intent.kind === "delete" ? "domain.command.CAP21.delete" : "domain.command.CAP21.save",
+                      version: { kind: "record", expectedVersion: intent.version },
                       confirmation: "presentation-only",
                     },
                   }}
@@ -638,8 +637,8 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                   onRevise={() => { draft()?.setPhase("dirty"); setScreen("intent", null) }}
                   onCancel={() => { draft()?.setPhase("dirty"); setScreen("intent", null) }}
                 />
-                <Show when={intent().kind === "delete" || intent().kind === "common"}>
-                  <p>{language.t(intent().kind === "delete" ? "sf.cap21.delete-warning" : "sf.cap21.common-warning")}</p>
+                <Show when={intent.kind === "delete" || intent.kind === "common"}>
+                  <p>{language.t(intent.kind === "delete" ? "sf.cap21.delete-warning" : "sf.cap21.common-warning")}</p>
                 </Show>
               </section>
             )}

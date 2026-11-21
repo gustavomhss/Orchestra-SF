@@ -395,8 +395,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       ],
     } : null
   }
-  const proposed = (): SfReviewSnapshot => {
-    const intent = screen.intent!
+  const proposed = (intent: Intent): SfReviewSnapshot => {
     const value = currentValue()
     const original = oldSnapshot()
     return {
@@ -571,18 +570,18 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
               </form>
             )}
           </Show>
-          <Show when={screen.intent}>
+          <Show when={screen.intent} keyed>
             {(intent) => (
               <section class="sf-n20-fx-review" aria-label={language.t(
-                intent().kind === "save" ? "sf.cap22.review-save" : "sf.cap22.review-delete",
+                intent.kind === "save" ? "sf.cap22.review-save" : "sf.cap22.review-delete",
               )}>
                 <SfChangeReview
                   operation={{
-                    ref: intent().ref as Parameters<typeof SfChangeReview>[0]["operation"]["ref"],
-                    label: { key: key(intent().kind === "save" ? "sf.cap22.review-save" : "sf.cap22.review-delete") },
+                    ref: intent.ref as Parameters<typeof SfChangeReview>[0]["operation"]["ref"],
+                    label: { key: key(intent.kind === "save" ? "sf.cap22.review-save" : "sf.cap22.review-delete") },
                     scope: { kind: "data", text: activeVersionId() ?? "" },
                   }}
-                  base={oldSnapshot()} current={oldSnapshot()} proposed={proposed()}
+                  base={oldSnapshot()} current={oldSnapshot()} proposed={proposed(intent)}
                   effects={[]}
                   coverage={{
                     state: "partial", summary: { key: key("sf.common.partial") },
@@ -590,12 +589,12 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                   }}
                   blockingReasons={[]}
                   confirmation={{
-                    kind: "admitted", labelKey: key(intent().kind === "save" ? "sf.cap22.action.save" : "sf.cap22.action.delete"),
-                    purpose: intent().kind,
+                    kind: "admitted", labelKey: key(intent.kind === "save" ? "sf.cap22.action.save" : "sf.cap22.action.delete"),
+                    purpose: intent.kind,
                     binding: {
                       kind: "catalog-command",
-                      operationId: intent().kind === "save" ? "domain.command.CAP22.save" : "domain.command.CAP22.delete",
-                      version: { kind: "record", expectedVersion: intent().version },
+                      operationId: intent.kind === "save" ? "domain.command.CAP22.save" : "domain.command.CAP22.delete",
+                      version: { kind: "record", expectedVersion: intent.version },
                       confirmation: "presentation-only",
                     },
                   }}
@@ -604,7 +603,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                   onRevise={() => { draft()?.setPhase("dirty"); setScreen("intent", null) }}
                   onCancel={() => { draft()?.setPhase("dirty"); setScreen("intent", null) }}
                 />
-                <Show when={intent().kind === "delete"}>
+                <Show when={intent.kind === "delete"}>
                   <p>{language.t("sf.cap22.delete-warning")}</p>
                 </Show>
               </section>
