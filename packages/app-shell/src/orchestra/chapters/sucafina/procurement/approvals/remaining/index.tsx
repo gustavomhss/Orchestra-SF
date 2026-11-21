@@ -99,12 +99,13 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
         entry.operations.some((operation)=>operation.operationId==="domain.command.CAP26."+decision&&
           operation.state==="ready"&&operation.operational))
   }
-  const read=async(token:string,requestRef:string|undefined,signal:AbortSignal):Promise<Read>=>{
+  // The native CAP26 contract reads the authorized queue, then the model selects the exact record.
+  const read=async(token:string,signal:AbortSignal):Promise<Read>=>{
     const ready=host.ready()
     if(!ready||authority()!==token)return {kind:"unavailable"}
     try{
       const response=await createSfProcurementClient(ready.transport)["domain.page.CAP26"](
-        requestRef?{request:requestRef}:{},{signal})
+        {},{signal})
       if(signal.aborted||authority()!==token)return {kind:"unavailable"}
       if(response.kind==="transport-error")return {kind:"unavailable"}
       if(response.status===401||response.body.status==="unauthenticated")return {kind:"session-expired"}
@@ -121,12 +122,12 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
       return {kind:"ok",page}
     }catch{return {kind:"unavailable"}}
   }
-  const refresh=async(token:string,requestRef?:string)=>{
+  const refresh=async(token:string)=>{
     readController?.abort()
     const controller=new AbortController()
     readController=controller
     const sequence=++readSequence
-    const result=await read(token,requestRef,controller.signal)
+    const result=await read(token,controller.signal)
     if(controller.signal.aborted||authority()!==token||sequence!==readSequence)return null
     if(result.kind!=="ok"){
       if(["denied","session-expired","invalid"].includes(result.kind)){
@@ -150,7 +151,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     setUi({token,page:null,state:token?"loading":"session-expired",selected:currentRef,
       group:"all",search:"",sort:{kind:"none"},review:null,phase:"idle",failure:null,
       unknownOperation:null,unknownBefore:null,changedAfterUnknown:false})
-    if(token)void refresh(token,currentRef??undefined)
+    if(token)void refresh(token)
     onCleanup(()=>{readController?.abort();commandController?.abort()})
   })
   const decisionDraft=createMemo(()=>{
@@ -160,7 +161,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
       surfaceId:"CAP26",identity:{kind:"record",recordRef:source.requestRef as SfRef},
       editScopeKey:"CAP26:remaining-decision" as SfEditScopeKey,
       baseVersion:source.version,base:emptyDraft,value:emptyDraft,
-      revalidation:{operationId:"domain.page.CAP26",input:{request:source.requestRef},
+      revalidation:{operationId:"domain.page.CAP26",input:{},
         fieldPaths:["status","createdBy",source.stage==="sourcing"?"sourcing":"po"],
         actionIds:source.actions},
     })
@@ -302,11 +303,19 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     const controller=new AbortController()
     commandController=controller
     setUi("phase","checking")
-    const fresh=await read(token,intent.source.requestRef,controller.signal)
+    const fresh=await read(token,controller.signal)
     if(controller.signal.aborted||authority()!==token){sending=false;return}
-    const current=fresh.kind==="ok"?findPendingApproval(fresh.page,intent.source.requestRef):null
-    if(fresh.kind!=="ok"||!current||!sameApproval(intent.source,current)||
-       !current.actions.includes(intent.decision)){
+    if(fresh.kind!=="ok"){
+      // Read failure retains the review; only a changed source produces a CAS conflict.
+      if(fresh.kind==="stale"){
+        setUi("review",null);setUi("phase","conflict")
+      }else{
+        setUi("state",fresh.kind);setUi("phase","reviewing")
+      }
+      sending=false;return
+    }
+    const current=findPendingApproval(fresh.page,intent.source.requestRef)
+    if(!sameApproval(intent.source,current)||!current.actions.includes(intent.decision)){
       setUi("review",null);setUi("phase","conflict");sending=false;return
     }
     const currentDraft=decisionDraft(),state=currentDraft?.snapshot()
@@ -377,7 +386,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
       setUi("phase","verifying")
       // A later approval level must be loaded under a fresh current holder,
       // version and server-side action admission, not the old decision draft.
-      await refresh(token,intent.source.requestRef)
+      await refresh(token)
       if(authority()===token)setUi("phase","producer-confirmed")
     }catch{
       if(!controller.signal.aborted&&authority()===token){
@@ -472,13 +481,13 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     onLayoutMode={(layout)=>setUi("layoutMode",layout)}
     secondaryActions={[{id:"refresh",labelKey:k("sf.u13.remaining.refresh"),tone:"secondary",
       disabled:phaseIsBusy(ui.phase),busy:false,onInvoke:()=>{
-        const token=authority();if(token)void refresh(token,ref()??undefined)
+        const token=authority();if(token)void refresh(token)
       }}]}
   >
     <div class="sf-u13-remaining-root sf-procurement-wave" data-sf-surface="CAP26" data-sf-wave="four" data-view={ui.review ? "review" : "records"}>
       <Show when={currentState()==="ready"||currentState()==="empty"||currentState()==="filtered-empty"||currentState()==="outcome-unknown"}
         fallback={<SfStatePanel state={currentState()} messageKey={k(stateKey())}
-          onRetryRead={()=>{const token=authority();if(token)void refresh(token,ref()??undefined)}}/>}>
+          onRetryRead={()=>{const token=authority();if(token)void refresh(token)}}/>}>
         <Show when={ui.phase==="outcome-unknown"||ui.phase==="source-changed"}>
           <p role="alert">{t("sf.u13.remaining.unknown")}</p>
           <Show when={ui.changedAfterUnknown}><p>{t("sf.u13.remaining.changed")}</p></Show>
@@ -486,7 +495,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
             operationRef={ui.unknownOperation!}
             producerStatus={{kind:"pending"}} effects={[]} receipts={[]}
             state="outcome-unknown"
-            onReconcileRead={()=>{const token=authority();if(token)void refresh(token,ref()??undefined)}}
+            onReconcileRead={()=>{const token=authority();if(token)void refresh(token)}}
           /></Show>
         </Show>
         <Show when={ui.phase==="producer-confirmed"}><p role="status">

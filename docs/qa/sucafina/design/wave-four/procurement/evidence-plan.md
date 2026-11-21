@@ -4,7 +4,7 @@
 
 Use the existing Actions production browser runner and `waveFourTest` fixture. The root workflow selects `design-wave-four-procurement.spec.ts`. Enrollment is a genuine one-use local-operator handoff. Authentication cookies and credentials never enter trace/video or screenshot annotations. Tests only record producer POST paths and scrubbed diagnostics.
 
-This document lists expected evidence. It is not an execution report. The first root-integrated procurement candidate is being exercised by the coordinator; final run URLs and screenshot judgments must be supplied from its observed output.
+This document separates planned coverage from the observed runs below. Complete acceptance requires all four installed test groups, their exact source readbacks, and visual inspection of their captured states.
 
 ## Capture families
 
@@ -15,6 +15,8 @@ This document lists expected evidence. It is not an execution report. The first 
 | `CAP26-*` | PR queue dark/light; 320 px PR decision actions; sourcing submitted facts; PO decision review; pt-BR desktop/320 |
 | `CAP27-*` | Supplier list dark/light/320; create editor; 320 px review actions; confirmed source detail; pt-BR desktop/320 |
 | `CAP28-*` | Policy form dark/light/320; 320 px changed-field review/actions; pt-BR desktop/320 |
+
+The spec registers four independent groups using the existing test-scoped original installation fixture. Request/sourcing/approval work retains its sequential dependencies and eight writes in one group; suppliers covers two writes; settings covers one; localization covers all five areas without writes. Each group checks its exact POST count. The same eleven command bodies and their source readbacks are retained without duplication. The capture plan contains 43 images.
 
 All capture filenames end with `test-data`. The harness attaches PNG files and emits bounded previews through the existing workflow. It resets the actual native `.mx-page` scroller before full-stage captures. Review-action captures deliberately scroll to the confirmation controls.
 
@@ -74,3 +76,12 @@ Actual browser zoom at 200% is not measured by this viewport exercise. The 320 p
 - The failure was in the test's deep-link construction: it encoded raw producer references with URI escaping instead of the original F01 opaque-reference codec. F01 correctly reported `invalid-link`. The five test deep links now use the existing `encodeSfRouteRef` implementation; no admission or routing rule was changed.
 - Requisition and sourcing review overview captures now include their actual headings and source columns. The comparison captures showed introductory facts above the table but insufficient table rows in the viewport. The capture now scrolls the comparison section itself into view and asserts its heading and first source row are visible.
 - CAP26–CAP28 and localized captures were not reached. This partial run establishes four acknowledgements and three explicit readbacks; it does not establish completion of all eleven writes/readbacks.
+
+## Observed run: 44961211176 and gate 44960551065
+
+- [Procurement run 44961211176](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44961211176), snapshot `edfcb0079767bbd180e4b3e97885eaffac46b3cb`, confirmed four original writes and their explicit source readbacks, including retained quotation description and notes after sourcing save.
+- CAP26 queue and narrow PR review captures completed. The fifth confirmation stopped before POST: its preflight GET received HTTP 400. The native handler accepts only year/month selectors for CAP26; the approval leaves had sent the unsupported request selector. Both approval leaves and their retained-draft descriptors now read the original authorized queue with an empty selector and locate the same exact record through the existing model. Record reference, source revision, context stamp, action admission, CAS and pending-command guards remain unchanged.
+- An unavailable/refused preflight read is now presented as that state, rather than claiming a source-version conflict. Explicit stale responses and actual revision mismatches retain the conflict path. Diagnostic response logging admits only status and the known `invalid-procurement-selection` enum; it never logs the source response.
+- Visual review of the earlier sourcing action capture found that the proposed selection displayed a dash while the command retained its selected quotation. The review now reads the selected ID from the sourcing draft for save/submit; the separate select-quote intent remains unchanged. The spec compares that selection before review and after source reread.
+- The [gate run 44960551065](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44960551065) passed all ten gates, including all nine browser-condition procurement tests. The numeric-input and original transition-gate regressions passed in that observed Actions execution.
+- The four-group arrangement allows supplier, policy and Portuguese coverage to execute independently of an earlier approval failure. Its execution and the revised CAP26 preflight are pending the next coordinated run.

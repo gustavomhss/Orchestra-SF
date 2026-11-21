@@ -120,12 +120,13 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     return projection?.kind === "submitted-pr" ? projection : null
   }
 
-  const sourceRead = async (expected: string, ref: string | undefined, signal: AbortSignal): Promise<ReadResult> => {
+  // CAP26 admits a queue projection; record identity remains in the draft/model CAS checks.
+  const sourceRead = async (expected: string, signal: AbortSignal): Promise<ReadResult> => {
     const ready = host.ready()
     if (!ready || authority() !== expected) return { kind: "unavailable" }
     try {
       const response = await createSfProcurementClient(ready.transport)["domain.page.CAP26"](
-        ref ? { request: ref } : {}, { signal },
+        {}, { signal },
       )
       if (signal.aborted || authority() !== expected) return { kind: "unavailable" }
       if (response.kind === "transport-error") return { kind: "unavailable" }
@@ -146,12 +147,12 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     }
   }
 
-  const refresh = async (token: string, ref?: string): Promise<Cap26PageOk | null> => {
+  const refresh = async (token: string): Promise<Cap26PageOk | null> => {
     readController?.abort()
     const controller = new AbortController()
     readController = controller
     const sequence = ++readSequence
-    const result = await sourceRead(token, ref, controller.signal)
+    const result = await sourceRead(token, controller.signal)
     if (controller.signal.aborted || authority() !== token || sequence !== readSequence) return null
     if (result.kind !== "ok") {
       if (result.kind === "denied" || result.kind === "session-expired" || result.kind === "not-found") {
@@ -179,7 +180,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
       review: null, pending: null, phase: "idle", failure: null,
     })
     if (token) {
-      void refresh(token, directRef).then((page) => {
+      void refresh(token).then((page) => {
         // A review deep link may open a read-only review of its *current*
         // submitted record, but never submits a command on navigation.
         if (!page || authority() !== token || props.route.kind !== "review") return
@@ -315,10 +316,21 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     actionController = controller
     setUi("phase", "checking")
     const ready = host.ready()
-    const before = ready && await sourceRead(token, intent.source.requestRef, controller.signal)
+    const before = ready && await sourceRead(token, controller.signal)
     if (!ready || controller.signal.aborted || authority() !== token) { actionBusy = false; return }
-    if (!before || before.kind !== "ok" ||
-        !samePrReview(intent.source, findSubmittedPr(before.page, intent.source.requestRef))) {
+    if (!before || before.kind !== "ok") {
+      // A refused/unavailable read is not evidence that the source version changed.
+      if (before?.kind === "stale") {
+        setUi("review", null)
+        setUi("phase", "conflict")
+      } else {
+        setUi("state", before?.kind ?? "unavailable")
+        setUi("phase", "reviewing")
+      }
+      actionBusy = false
+      return
+    }
+    if (!samePrReview(intent.source, findSubmittedPr(before.page, intent.source.requestRef))) {
       setUi("review", null)
       setUi("phase", "conflict")
       actionBusy = false
@@ -411,7 +423,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
       if (draft && draft.snapshot().availability === "active") draft.discard()
       setUi("pending", (pending) => pending ? { ...pending, producerAcknowledged: true } : pending)
       setUi("phase", "verifying")
-      const refreshed = await sourceRead(token, intent.source.requestRef, controller.signal)
+      const refreshed = await sourceRead(token, controller.signal)
       if (controller.signal.aborted || authority() !== token) return
       if (refreshed.kind !== "ok") {
         // 200 is a command acknowledgement; refetch is still needed for display.
@@ -446,7 +458,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     actionBusy = true
     const controller = new AbortController()
     actionController = controller
-    const reread = await sourceRead(token, pending.source.requestRef, controller.signal)
+    const reread = await sourceRead(token, controller.signal)
     if (!controller.signal.aborted && authority() === token) {
       if (reread.kind === "ok") {
         setUi("page", null)
@@ -473,7 +485,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     actionBusy = true
     const controller = new AbortController()
     actionController = controller
-    const result = await sourceRead(token, source.requestRef, controller.signal)
+    const result = await sourceRead(token, controller.signal)
     if (!controller.signal.aborted && authority() === token) {
       if (result.kind === "ok") {
         setUi("page", null)
@@ -573,7 +585,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
           if (ui.pending) { void reconcile(); return }
           if (orphanPending()) { void reconcileAbandoned(); return }
           const token = authority()
-          if (token) void refresh(token, routeRef() ?? undefined)
+          if (token) void refresh(token)
         }}
         onBack={onBack}
       >
@@ -597,7 +609,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                   type="search" value={ui.search} onInput={(event) => setUi("search", event.currentTarget.value)} />
               </label>
               <button type="button" class="mx-btn"
-                onClick={() => { const token = authority(); if (token) void refresh(token, routeRef() ?? undefined) }}>
+                onClick={() => { const token = authority(); if (token) void refresh(token) }}>
                 {t("sf.u13.refresh")}
               </button>
             </div>
