@@ -132,7 +132,10 @@ export async function loadSfInstallation(
         return HttpServerResponse.empty({ status: 405, headers: { ...headers, Allow: "GET" } })
       if (incoming.headers["transfer-encoding"] || Number(incoming.headers["content-length"]) > 0)
         return HttpServerResponse.empty({ status: 400, headers: { ...headers, connection: "close" } })
-      const selector = yield* Effect.try(() => parseSfInstallationSelector(url.href)).pipe(Effect.option)
+      const selector = yield* Effect.try({
+        try: () => parseSfInstallationSelector(url.href),
+        catch: () => "invalid-selector" as const,
+      }).pipe(Effect.option)
       if (Option.isNone(selector) || (selector.value.select !== "current" && selector.value.select !== "installation"))
         return HttpServerResponse.empty({ status: 400, headers })
       // This identifies the configured installation. Team admission is still checked by its mounted context endpoint.
@@ -144,7 +147,10 @@ export async function loadSfInstallation(
       if (webRoot && (incoming.method === "GET" || incoming.method === "HEAD")) {
         if (incoming.headers["transfer-encoding"] || Number(incoming.headers["content-length"]) > 0)
           return HttpServerResponse.empty({ status: 400, headers: { connection: "close" } })
-        const decoded = yield* Effect.try(() => decodeURIComponent(url.pathname)).pipe(Effect.option)
+        const decoded = yield* Effect.try({
+          try: () => decodeURIComponent(url.pathname),
+          catch: () => "malformed-path" as const,
+        }).pipe(Effect.option)
         if (Option.isNone(decoded) || decoded.value.includes("\\") || decoded.value.includes("\0") ||
           decoded.value.split("/").some((part) => part === "." || part === ".."))
           return HttpServerResponse.empty({ status: 400 })
@@ -158,6 +164,11 @@ export async function loadSfInstallation(
           })
           response.headers.set("Cache-Control", "no-store")
           response.headers.set("X-Content-Type-Options", "nosniff")
+          const policy = response.headers.get("Content-Security-Policy")
+          if (policy) {
+            response.headers.set("Content-Security-Policy", policy + "; frame-ancestors 'self'")
+            response.headers.set("Referrer-Policy", "no-referrer")
+          }
           return HttpServerResponse.fromWeb(response)
         })
       }
