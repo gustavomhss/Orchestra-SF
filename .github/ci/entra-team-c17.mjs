@@ -29,6 +29,11 @@ export async function exerciseTeamC17(input) {
   const other = digestSfValue({ installationId: binding.installationId, tenantId: binding.tenantId, teamObjectId: otherTeam })
   const base = join(process.env.CI_RUNTIME, "installation", "business-teams")
   const directory = join(base, partition)
+  const snapshotRows = () => {
+    const database = new Database(join(directory, "installation.sqlite"), { readonly: true, strict: true })
+    try { return database.query("SELECT surface, payload FROM snapshots ORDER BY surface").all() }
+    finally { database.close() }
+  }
   const state = () => {
     const database = new Database(join(directory, "installation.sqlite"), { readonly: true, strict: true })
     try {
@@ -77,7 +82,13 @@ export async function exerciseTeamC17(input) {
   const created = await post("workbench-command", { operation: "sf_case_draft",
     input: { objective, horizon, currency, criteria: [criterion], sourceRefs: [] } })
   const reference = created.outputRef
+  const unprovisioned = digestSfValue(snapshotRows())
+  const invalid = await read("decision-controls", { case: "different-case", format: "json" })
+  assert.equal(invalid.status, 403, "unknown case denied before source bootstrap")
+  assert.deepEqual(await invalid.json(), { status: "denied" })
+  assert.equal(digestSfValue(snapshotRows()), unprovisioned, "denied case provisioned a snapshot")
   const draft = await controls(reference)
+  console.log("C17_TEAM_CONTROLS_OK: case available before BI")
   const criteria = draft.decision.criteria.map((entry) => entry.id)
   assert.equal(criteria.length, 1)
   const options = (await ok(await read("bi-options", { viewId: "BI01", ...horizon }), "bi-options")).value
@@ -126,14 +137,15 @@ export async function exerciseTeamC17(input) {
   const target = tool.origin + url("current-choice", { case: reference })
   const section = tab.locator("section.sf-current-choice")
   const button = section.getByRole("button", { name: "Preparar escolha vigente", exact: true })
-  const before = digestSfValue(state())
+  const before = digestSfValue(snapshotRows())
   assert.equal((await tab.goto(target, { waitUntil: "domcontentloaded", timeout: 120_000 })).status(), 200)
   await button.waitFor({ state: "visible", timeout: 30_000 })
   assert(await button.isDisabled(), "prepare disabled until Atlas has the capture")
   const absent = await postRaw("current-choice-prepare", prepare, { timeout: 120_000 })
   assert.equal(absent.status, 503)
   assert.deepEqual(await absent.json(), { status: "unavailable", reason: "choice-source-continuity-unavailable" })
-  assert.equal(digestSfValue(state()), before, "no prepared write without Atlas")
+  assert.equal(digestSfValue(snapshotRows()), before, "no prepared write without Atlas")
+  console.log("C17_TEAM_WITHOUT_ATLAS_DENIED")
 
   const captureKey = randomUUID()
   const archive = async () => ok(await postRaw("decision-archive-choice", caseRef, {
@@ -141,9 +153,10 @@ export async function exerciseTeamC17(input) {
   }), "decision-archive-choice")
   const archived = await archive()
   assert.match(archived.eventId, /\S/)
-  const archivedState = digestSfValue(state())
+  const archivedState = digestSfValue(snapshotRows())
   assert.equal((await archive()).eventId, archived.eventId, "archive replay returns canonical event")
-  assert.equal(digestSfValue(state()), archivedState, "archive replay did not write a second event")
+  assert.equal(digestSfValue(snapshotRows()), archivedState, "archive replay did not write a second event")
+  console.log("C17_TEAM_ARCHIVE_OK")
   assert.equal((await tab.reload({ waitUntil: "domcontentloaded", timeout: 120_000 })).status(), 200)
   await button.waitFor({ state: "visible", timeout: 30_000 })
   assert(await button.isEnabled())
@@ -179,10 +192,10 @@ export async function exerciseTeamC17(input) {
   assert(await button.isEnabled())
   const commandKey = await resultResponse.request().headerValue("idempotency-key")
   assert(commandKey)
-  const record = digestSfValue(state())
+  const record = digestSfValue(snapshotRows())
   const replay = await ok(await postRaw("current-choice-prepare", prepare, { key: commandKey, timeout: 320_000 }), "same-key C17 replay")
   assert.equal(replay.value.bindingDigest, result.value.bindingDigest)
-  assert.equal(digestSfValue(state()), record, "replay duplicated or changed the persisted calculation")
+  assert.equal(digestSfValue(snapshotRows()), record, "replay duplicated or changed the persisted calculation")
   const otherSession = await signIn("other")
   const otherContext = new URLSearchParams({
     contractRevision: binding.contractRevision, installationId: binding.installationId, tenantId: binding.tenantId,
@@ -205,7 +218,7 @@ export async function exerciseTeamC17(input) {
     const refused = await postRaw("current-choice-prepare", prepare, { ...test, key: commandKey })
     assert.equal(refused.status, 403, test.name)
     assert.equal(await refused.text(), "", test.name + " returns no protected data")
-    assert.equal(digestSfValue(state()), record, test.name + " changed durable state")
+    assert.equal(digestSfValue(snapshotRows()), record, test.name + " changed durable state")
   }
   assert.equal(await access(join(base, other)).then(() => true, () => false), false, "denied cross-Team call opened another store")
   const receipt = {
