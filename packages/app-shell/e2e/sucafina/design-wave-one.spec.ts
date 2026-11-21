@@ -1,9 +1,9 @@
-import { test as base, expect, type Page, type TestInfo } from "@playwright/test"
+import { test, expect, type Page, type TestInfo } from "@playwright/test"
 import { ServerConnection } from "../../src/context/server-connection"
 import { authenticateDesignInstallation, withDesignInstallation, type DesignInstallation } from "./design-support/installation"
 
 type Owner = Awaited<ReturnType<typeof authenticateDesignInstallation>>
-const test = base.extend<{ installation: DesignInstallation; owner: Owner }>({
+const designTest = test.extend<{ installation: DesignInstallation; owner: Owner }>({
   installation: [async ({}, use) => { await withDesignInstallation(use) }, { timeout: 190_000 }],
   context: async ({ browser, installation }, use) => {
     const context = await browser.newContext({
@@ -18,8 +18,8 @@ const test = base.extend<{ installation: DesignInstallation; owner: Owner }>({
   },
 })
 // Enrollment is real, single use and private. It must never enter a retained trace.
-test.use({ trace: "off", video: "off" })
-test.describe.configure({ retries: 0 })
+designTest.use({ trace: "off", video: "off" })
+designTest.describe.configure({ retries: 0 })
 
 const objective = "Design test data · Compare regional supplier scenarios while preserving delivery continuity and source evidence"
 const criteria = [
@@ -34,7 +34,7 @@ const screens = [
 ] as const
 let previewBytes = 0
 
-test.afterEach(async ({ page }, info) => {
+designTest.afterEach(async ({ page }, info) => {
   if (info.status === info.expectedStatus || page.isClosed()) return
   try {
     await capture(page, info, "FAILED-native-wave-one-test-data", true)
@@ -43,8 +43,8 @@ test.afterEach(async ({ page }, info) => {
   }
 })
 
-test("installed native first-wave design · real operator, source data, review and captures", async ({ page, installation, owner }, info) => {
-  test.setTimeout(240_000)
+designTest("installed native first-wave design · real operator, source data, review and captures", async ({ page, installation, owner }, info) => {
+  designTest.setTimeout(240_000)
   expect(info.project.metadata.bundle, "use the existing production runner").toBe("production")
   previewBytes = 0
   const errors: string[] = []
@@ -146,13 +146,13 @@ test("installed native first-wave design · real operator, source data, review a
     await capture(page, info, screen.id + "-dark-desktop-test-data", true)
     if (screen.id === "UI29") {
       await page.getByRole("heading", { name: "Resume", exact: true }).scrollIntoViewIfNeeded()
-      await capture(page, info, "UI29-dark-desktop-resume-test-data", false)
+      await capture(page, info, "UI29-dark-desktop-resume-test-data", true)
       await page.getByRole("heading", { name: "Material changes", exact: true }).scrollIntoViewIfNeeded()
-      await capture(page, info, "UI29-dark-desktop-source-availability-test-data", false)
+      await capture(page, info, "UI29-dark-desktop-source-availability-test-data", true)
     }
     if (screen.id === "CAP01") {
       await page.locator("[data-dashboard-signals]").scrollIntoViewIfNeeded()
-      await capture(page, info, "CAP01-dark-desktop-signals-test-data", false)
+      await capture(page, info, "CAP01-dark-desktop-signals-test-data", true)
       await page.getByLabel("Year", { exact: true }).selectOption(String(installation.year))
       await expect(page.getByLabel("Year", { exact: true })).toHaveValue(String(installation.year))
       await expect(page.locator('[data-sf-metric="risks"] dd')).toHaveText("1")
@@ -166,6 +166,9 @@ test("installed native first-wave design · real operator, source data, review a
       await change.scrollIntoViewIfNeeded()
       await capture(page, info, "CAP01-dark-desktop-inline-review-test-data", true)
       await change.getByRole("button", { name: "Cancel review", exact: true }).click()
+      await expect(change).toHaveCount(0)
+      await editor.getByRole("button", { name: "Discard draft", exact: true }).click()
+      await expect(editor.getByLabel("Total IT users", { exact: true })).toHaveValue("128")
     }
   }
   await scheme(page, "light")
@@ -198,7 +201,7 @@ test("installed native first-wave design · real operator, source data, review a
   await enter(screens[0])
   await capture(page, info, "UI29-dark-390-test-data", true)
   await page.getByRole("heading", { name: "Resume", exact: true }).scrollIntoViewIfNeeded()
-  await capture(page, info, "UI29-dark-390-resume-test-data", false)
+  await capture(page, info, "UI29-dark-390-resume-test-data", true)
   expect([...sourceOrigins]).toEqual([installation.origin])
   await info.attach("native-wave-one-evidence", {
     body: JSON.stringify({ source: "isolated canonical producer test data", casesCreated: creationRequests.length,

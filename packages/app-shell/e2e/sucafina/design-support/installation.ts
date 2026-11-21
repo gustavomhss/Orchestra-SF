@@ -143,11 +143,16 @@ export async function authenticateDesignInstallation(context: BrowserContext, in
   if (handoff.origin !== installed.origin || handoff.pathname !== installed.mount + "/auth/local" ||
       handoff.searchParams.size !== 1 || !/^[a-f0-9]{64}$/.test(handoff.searchParams.get("code") ?? ""))
     throw new Error("Enrollment handoff is outside the actual native installation")
-  // Tracing is disabled for this spec. Do not follow the handler's dashboard
-  // redirect: the first browser document will be an actual /orchestra/ route.
-  const login = await context.request.get(handoff.href, { maxRedirects: 0, timeout: 20_000 })
-  if (login.status() !== 303 || login.headers()["location"] !== installed.mount + "/dashboard")
-    throw new Error("Original operator enrollment failed (" + login.status() + ")")
+  // Playwright reports API request URLs even with tracing off. Redeem the real
+  // handoff through native fetch so its one-use code never enters reporter steps.
+  // Do not follow the legacy redirect; the first document is /orchestra/.
+  const login = await fetch(handoff, { redirect: "manual", signal: AbortSignal.timeout(20_000) }).catch(() => {
+    throw new Error("Original operator enrollment transport failed")
+  })
+  if (login.status !== 303 || login.headers.get("location") !== installed.mount + "/dashboard")
+    throw new Error("Original operator enrollment failed (" + login.status + ")")
+  const issued = readOperatorSessionCookie(login.headers, origin.hostname, installed.mount)
+  await context.addCookies([{ ...issued, expires: Math.floor(Date.now() / 1000) + 28_800 }])
   const cookies = (await context.cookies(installed.origin + installed.mount)).filter((cookie) =>
     /^sucafina_operator_[a-f0-9]{24}$/.test(cookie.name))
   if (cookies.length !== 1 || !/^[a-f0-9]{64}$/.test(cookies[0]!.value) ||
@@ -161,6 +166,21 @@ export async function authenticateDesignInstallation(context: BrowserContext, in
       result.value.stamp.installationId !== descriptor.installationId)
     throw new Error("Authenticated native context does not belong to the actual operator")
   return descriptor
+}
+
+/** Preserve the exact cookie emitted by the original handler, including its policy. */
+function readOperatorSessionCookie(headers: Headers, hostname: string, mount: string) {
+  const values = headers.getSetCookie()
+  if (values.length !== 1) throw new Error("Original enrollment did not issue exactly one session")
+  const parts = values[0]!.split(";").map((part) => part.trim())
+  const issued = /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64})$/.exec(parts[0]!)
+  const attributes = parts.slice(1)
+  const required = ["Path=" + mount, "HttpOnly", "SameSite=Lax", "Max-Age=28800"]
+  if (!issued || attributes.length !== required.length || new Set(attributes).size !== required.length ||
+      !required.every((attribute) => attributes.includes(attribute)))
+    throw new Error("Original enrollment cookie policy did not match the native installation")
+  return { name: issued[1]!, value: issued[2]!, domain: hostname, path: mount,
+    httpOnly: true, secure: false, sameSite: "Lax" as const }
 }
 
 function redact(value: string) {
