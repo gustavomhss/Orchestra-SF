@@ -30,7 +30,9 @@ const privateCommands = ["sf-human:collaboration.work.list", "sf-human:collabora
  * ready result, source reference, receipt or authority context is supplied.
  */
 async function fixture() {
-  const controls = { allowed: true, revision: stamp.accessRevision, installed: true, calls: 0 }
+  const controls: { allowed: boolean; revision: string; installed: boolean; calls: number } = {
+    allowed: true, revision: stamp.accessRevision, installed: true, calls: 0,
+  }
   const hooks: { read?: (surface: Surface, snapshot: Snapshot) => Promise<void> } = {}
   const memory = testPersistence({
     procurement: { ...empty(), data: { store: { settings: { currency: "USD" } } } },
