@@ -9,10 +9,10 @@ import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canon
 
 // An identity reservation exists only while the source producer owns this snapshot.
 const creationBinders = new WeakMap<Snapshot, (recordType: string, recordId: string) => string>()
-const canonicalPrimitives = { stringify: JSON.stringify, keys: Object.keys, map: Array.prototype.map, sort: Array.prototype.sort }
+const canonicalPrimitives = { stringify: JSON.stringify, parse: JSON.parse, keys: Object.keys, map: Array.prototype.map, sort: Array.prototype.sort }
 
 function sealedDigestsCurrent() {
-  return JSON.stringify === canonicalPrimitives.stringify && Object.keys === canonicalPrimitives.keys &&
+  return JSON.stringify === canonicalPrimitives.stringify && JSON.parse === canonicalPrimitives.parse && Object.keys === canonicalPrimitives.keys &&
     Object.getPrototypeOf(Array.prototype) === Object.prototype &&
     Array.prototype.map === canonicalPrimitives.map && Array.prototype.sort === canonicalPrimitives.sort &&
     !Object.getOwnPropertyDescriptor(Array.prototype, "toJSON") && !Object.getOwnPropertyDescriptor(Object.prototype, "toJSON") &&

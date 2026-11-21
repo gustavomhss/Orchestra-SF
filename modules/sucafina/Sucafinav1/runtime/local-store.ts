@@ -164,7 +164,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     bytesIdentity?: object
   } => {
     const prior = materializations.get(surface)
-    if (payload !== undefined && prior?.payload === payload) {
+    if (payload !== undefined && prior?.payload === payload && snapshotDecoderCurrent()) {
       const materialize = () => materializeSnapshot(prior)
       const acl = prior.acl
       return { materialize, copy: materialize, bytesIdentity: prior.identity,
@@ -416,8 +416,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       const identity = rootIdentities.get(scope.root) ?? {}
       rootIdentities.set(scope.root, identity)
       const validity = { current: true }
-      return { snapshots, identity, bytesIdentity: scope.root.bytesIdentity, current: () => {
-        validity.current &&= active() && [...absent].every((name) => !Object.hasOwn(Object.prototype, name))
+      const bytesIdentity = snapshotDecoderCurrent() ? scope.root.bytesIdentity : undefined
+      return { snapshots, identity, bytesIdentity, current: () => {
+        validity.current &&= active() && (!bytesIdentity || snapshotDecoderCurrent()) && [...absent].every((name) => !Object.hasOwn(Object.prototype, name))
         return validity.current
       } }
     },
@@ -480,7 +481,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       const scope = context.getStore()
       if (!scope) return undefined
       requireScope(scope)
-      return { identity: scope.root.identity, bytesIdentity: scope.root.bytesIdentity, readOnly: scope.root.readOnly === true, poisoned: scope.root.poisoned }
+      return { identity: scope.root.identity, bytesIdentity: snapshotDecoderCurrent() ? scope.root.bytesIdentity : undefined, readOnly: scope.root.readOnly === true, poisoned: scope.root.poisoned }
     },
     hasCurrentSnapshots,
     currentSnapshots: () => {
@@ -857,11 +858,12 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     // this closure independently of the scope that clears its graphs on close.
     const absent = fields.filter((_field, index) => admitted.some((entry) => !entry.descriptors[index]))
     const integrity = { failed: false }
+    const bytesIdentity = snapshotDecoderCurrent() ? scope.root.bytesIdentity : undefined
     const current = (requirement?: "unpoisoned") => {
       requireScope(scope)
       if (integrity.failed) return false
       const valid = context.getStore() === scope && (requirement !== "unpoisoned" || !scope.root.poisoned) && sameStore() &&
-        absent.every((field) => Object.getOwnPropertyDescriptor(Object.prototype, field) === undefined)
+        (!bytesIdentity || snapshotDecoderCurrent()) && absent.every((field) => Object.getOwnPropertyDescriptor(Object.prototype, field) === undefined)
       if (!valid) integrity.failed = true
       return valid
     }
@@ -874,7 +876,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       })),
     }])) as Record<S, Pick<Snapshot, "data">>
     return surfaces.length === 0
-      ? { snapshots, current, scope: { identity: scope.root.identity, bytesIdentity: scope.root.bytesIdentity } }
+      ? { snapshots, current, scope: { identity: scope.root.identity, bytesIdentity } }
       : { snapshots, current }
   })
   return store
@@ -1040,6 +1042,17 @@ export function encodeSnapshot(snapshot: Snapshot): string {
 const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024
 const snapshotAclFields = ["roleMap", "access"] as const
 const aclCodec = { stringify: JSON.stringify, parse: JSON.parse, map: Array.prototype.map }
+const snapshotDecoder = {
+  fromEntries: Object.fromEntries, keys: Object.keys, defineProperty: Object.defineProperty,
+  isArray: Array.isArray, isFinite: Number.isFinite, Set, slice: String.prototype.slice, indexOf: String.prototype.indexOf,
+}
+
+function snapshotDecoderCurrent() {
+  return aclCodecCurrent() && Object.fromEntries === snapshotDecoder.fromEntries && Object.keys === snapshotDecoder.keys &&
+    Object.defineProperty === snapshotDecoder.defineProperty && Array.isArray === snapshotDecoder.isArray &&
+    Number.isFinite === snapshotDecoder.isFinite && Set === snapshotDecoder.Set &&
+    String.prototype.slice === snapshotDecoder.slice && String.prototype.indexOf === snapshotDecoder.indexOf
+}
 function aclCodecCurrent() {
   return JSON.stringify === aclCodec.stringify && JSON.parse === aclCodec.parse && Array.prototype.map === aclCodec.map &&
     !Object.getOwnPropertyDescriptor(Array.prototype, "toJSON") && !Object.getOwnPropertyDescriptor(Object.prototype, "toJSON")
@@ -1053,7 +1066,7 @@ type SnapshotMaterialization = Readonly<{
 }>
 
 function planSnapshotMaterialization(snapshot: Snapshot, payload: string): SnapshotMaterialization | undefined {
-  if (payload.length > SNAPSHOT_MATERIALIZATION_UNITS) return
+  if (payload.length > SNAPSHOT_MATERIALIZATION_UNITS || !snapshotDecoderCurrent()) return
   const parts: string[] = []
   const missing: string[] = []
   const largeStrings: string[] = []
