@@ -3,7 +3,7 @@ import type { Actor, Environment, Persistence, Snapshot } from "../../runtime/co
 import type { ForecastCompareRequest, CaseDraftRequest, CaseReadRequest, DashboardReadRequest, RequestReadRequest, SupplierReadRequest, ContractReadRequest, SourcingCompareRequest, ScenarioOperation, ScenarioRequest, ScenarioCompareRequest, SensitivityRequest, JsonValue } from "./operations.ts"
 import type { DomainProjection, ImportManifest, PreservedReview, RoutineResult, CommandReceipt } from "./context.ts"
 import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, ObservedResultProjection, CostCoverageAssessment, CostCoverageBasis } from "./decisions.ts"
-import type { BusinessEvidenceRef, BusinessContextService, AuthorizedCaseProjection } from "./business-context.ts"
+import type { BusinessEvidenceRef, BusinessContextService, AuthorizedCaseRead } from "./business-context.ts"
 import type { TrustedDomainContext, CapabilityResult } from "./sf-execution.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfProductStatePort } from "./state.ts"
@@ -52,7 +52,7 @@ export type PlannerSourceHost = {
 export type DecisionCasePort = {
   draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>
   prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<IntentFrame>>
-  read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<PortResult<AuthorizedCaseProjection>>
+  read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<PortResult<AuthorizedCaseRead>>
 }
 export type DashboardPort = {
   read: (request: DashboardReadRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>

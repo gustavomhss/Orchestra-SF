@@ -61,6 +61,10 @@ A configuração compartilhada de modelo e agentes não concede acesso a provedo
 
 Ao confirmar uma nova requisição no perfil Teams, o servidor guarda um recibo junto com a requisição. Se a conexão cair antes da confirmação, consulte **Requests** no Team original para verificar se a requisição aparece antes de criar outra. A interface não repete a criação automaticamente.
 
+## Criar o primeiro caso em Decisões
+
+Selecione o Team e abra **Decisões**. Em uma instalação nova, a lista pode estar vazia. Se o seu perfil tiver permissão de criação, use **Novo caso**. A confirmação grava o caso e inicializa seu armazenamento na mesma transação.
+
 ## Administração de perfis
 
 A administração é um destino independente da seleção de Team. O servidor verifica a associação atual ao grupo supremo configurado para cada leitura e alteração. Não é necessário participar do Team administrado, e a administração não concede acesso aos chats pessoais de seus participantes.

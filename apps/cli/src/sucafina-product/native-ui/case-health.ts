@@ -5,19 +5,20 @@ import { selectSfCaseHealth } from "../../../../../modules/sucafina/Sucafinav1/p
 
 /** C08 infrastructure health only: no case contents, list completeness or per-record access. */
 export async function observeSfCaseSource(runtime: SfHostServices | undefined, request: Request, stamp: SfContextStamp) {
-  if (!runtime || request.signal.aborted) return false
+  if (!runtime || request.signal.aborted) return
   const digest = digestSfValue({})
   const admitted = await runtime.ui.admit(request, "sf_case_read", digest)
-  if (admitted.status !== "ok") return false
+  if (admitted.status !== "ok") return
   try {
     const binding = admitted.value.binding
     if (binding.installationId !== stamp.installationId || binding.projectId !== stamp.projectId ||
       binding.principalRef !== stamp.principalRef || binding.policyVersion !== stamp.policyVersion ||
-      binding.accessRevision !== stamp.accessRevision || !await runtime.ui.validate(admitted.value, "sf_case_read", digest)) return false
+      binding.accessRevision !== stamp.accessRevision || !await runtime.ui.validate(admitted.value, "sf_case_read", digest)) return
     const health = await runtime.state.read(request, "cases", selectSfCaseHealth(stamp))
-    if (health.status !== "ok" || !health.value || health.storageVersion !== health.value.storageVersion ||
-      health.aggregateRevision !== health.value.aggregateRevision || health.incarnation !== health.value.incarnation) return false
-    return !request.signal.aborted && await runtime.ui.revalidate(admitted.value)
+    const status = health.status === "unavailable" && health.reason === "product-state-uninitialized" ? "empty"
+      : health.status === "ok" && health.value && health.storageVersion === health.value.storageVersion &&
+        health.aggregateRevision === health.value.aggregateRevision && health.incarnation === health.value.incarnation ? "ready" : undefined
+    if (status && !request.signal.aborted && await runtime.ui.revalidate(admitted.value)) return status
   } finally {
     runtime.ui.finish(admitted.value)
   }

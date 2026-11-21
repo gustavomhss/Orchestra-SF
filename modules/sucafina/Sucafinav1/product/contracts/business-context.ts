@@ -65,7 +65,7 @@ export type BusinessContextService = {
   emitFromLedger: (sourceEventRef: BusinessEvidenceRef, trustedCall: TrustedDomainContext) => Promise<MemoryWriteReceipt>
 }
 export type AuthorizedCaseProjection = {
-  context: { installationId: string; projectId: string; principalRef: string; policyVersion: string; accessRevision: string; owner?: TeamProfile.Owner } & (
+  context: { installationId: string; projectId: string; principalRef: string; policyVersion: string; accessRevision: string } & (
     | { kind: "native"; profileId: string }
     | { kind: "ui"; profileId?: never }
   )
@@ -73,6 +73,10 @@ export type AuthorizedCaseProjection = {
   events: readonly CaseLedgerEvent[]
   evidenceRefs: readonly BusinessEvidenceRef[]
   checkedAt: string
+}
+/** Private C08 result. The native HTTP envelope carries its own current Team owner. */
+export type AuthorizedCaseRead = AuthorizedCaseProjection & {
+  context: AuthorizedCaseProjection["context"] & { owner?: TeamProfile.Owner }
 }
 export type AuthorizedPolicyProjection = {
   context: AuthorizedCaseProjection["context"]

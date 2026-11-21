@@ -120,10 +120,12 @@ async function readCases(request: Request, deps: SfNativeHostDependencies): Prom
       return Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).map(encodeCaseRef)
     })
     const listed = await identities()
-    if (listed.status !== "ok" || !listed.value || listed.value.length > 100)
+    const empty = listed.status === "unavailable" && listed.reason === "product-state-uninitialized"
+    const refs = listed.status === "ok" ? listed.value : empty ? [] : undefined
+    if (!refs || refs.length > 100)
       return failed(request, "unavailable", "case-list-source-unavailable")
     const cases: CaseList[] = []
-    for (const caseRef of listed.value) {
+    for (const caseRef of refs) {
       if (!validRef(caseRef)) return failed(request, "unavailable", "case-selector-invalid")
       const decoded = decodeSfOperationInput("sf_case_read", { caseRef })
       if (!decoded.ok) return failed(request, "unavailable", "case-selector-invalid")
@@ -146,7 +148,8 @@ async function readCases(request: Request, deps: SfNativeHostDependencies): Prom
       }
     }
     const again = await identities()
-    if (again.status !== "ok" || !again.value || digestSfValue(again.value) !== digestSfValue(listed.value))
+    if (empty ? again.status !== "unavailable" || again.reason !== "product-state-uninitialized"
+      : again.status !== "ok" || !again.value || digestSfValue(again.value) !== digestSfValue(refs))
       return failed(request, "stale", "case-list-changed")
     if (!await runtime.ui.revalidate(admitted.value)) return failed(request, "denied", "case-list-access-changed")
     const current = await deps.readContext(request)
@@ -172,6 +175,7 @@ export function createSfDecisionsProjectionHandlers(deps: SfNativeHostDependenci
 export async function observeSfCases(deps: SfNativeHostDependencies, handlers: readonly SfProjectionHandler[], request: Request, stamp: SfContextStamp) {
   const ids = (["projection.cases", "projection.case"] as const).filter((id) => handlers.some((handler) => handler.operationId === id))
   if (!ids.length) return []
-  if (!await observeSfCaseSource(deps.runtime(), request, stamp)) return []
-  return ids.map((operationId) => ({ operationId, state: "ready" as const, reason: null, operational: true as const }))
+  const health = await observeSfCaseSource(deps.runtime(), request, stamp)
+  return ids.filter((id) => health === "ready" || health === "empty" && id === "projection.cases")
+    .map((operationId) => ({ operationId, state: "ready" as const, reason: null, operational: true as const }))
 }

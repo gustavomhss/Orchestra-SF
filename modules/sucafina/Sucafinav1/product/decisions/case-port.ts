@@ -1,6 +1,6 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
-import type { BusinessContextService, BusinessEvidenceRef, AuthorizedCaseProjection } from "../contracts/business-context.ts"
+import type { BusinessContextService, BusinessEvidenceRef, AuthorizedCaseRead } from "../contracts/business-context.ts"
 import type { DecisionCase, PreparedChangeView } from "../contracts/decisions.ts"
 import type { CommandReceipt, CommandReceiptView } from "../contracts/context.ts"
 import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
@@ -106,7 +106,7 @@ export function createDecisionCasePort(input: {
         // the live lease synchronously with the complete final snapshot.
         if (!again.value.value || digestSfValue(again.value.value) !== caseDigest || digestSfValue(value) !== caseDigest || digestSfValue(refs) !== refsDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
         const final = again.value.value
-        const projection: AuthorizedCaseProjection = {
+        const projection: AuthorizedCaseRead = {
           context: { ...(again.value.owner ? { owner: again.value.owner } : {}), installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision, ...(context.kind === "native" ? { kind: "native" as const, profileId: context.binding.profileId } : { kind: "ui" as const }) },
           case: { ...final, preparedChanges: final.preparedChanges.map(changeView), receipts: final.receipts.map((receipt) => receiptView(receipt, final.preparedChanges)) },
           events: final.ledger, evidenceRefs: refs, checkedAt,

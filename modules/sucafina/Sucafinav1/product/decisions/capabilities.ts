@@ -1,3 +1,5 @@
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { Schema } from "effect"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { sfOperationInputSchemas } from "../contracts/operations.ts"
 import { sfOperationOutputSchemas } from "../contracts/output-schemas.ts"
@@ -21,10 +23,18 @@ export async function readCase(value: unknown, context: TrustedDomainContext, ho
   if (!host.createReceipt(context, "sf_case_read", digestSfValue(parsed.value))) return reject("sf_case_read", "authority-unavailable", "invalid-binding")
   const result = await host.cases.read(parsed.value, context)
   if (result.status !== "ok") return reject("sf_case_read", result.reason, result.status === "denied" ? "invalid-binding" : "unavailable", result.status === "conflict" ? "stale" : result.status)
-  if (!decodeSfOperationOutput("sf_case_read", result.value).ok) return reject("sf_case_read", "invalid-case-projection", "unavailable", "unavailable")
-  const receipt = host.createReceipt(context, "sf_case_read", digestSfValue(parsed.value), digestSfValue(result.value))
+  // The private C08 owner is not part of the closed capability payload. Native
+  // HTTP independently binds its enclosing stamp to the same admitted request.
+  const { owner, ...caseContext } = result.value.context
+  if (owner !== undefined && (!Schema.is(TeamProfile.Owner)(owner) ||
+      owner.profile.installationId !== context.binding.installationId ||
+      owner.principal.principalObjectId !== context.binding.principalRef))
+    return reject("sf_case_read", "invalid-case-owner", "unavailable", "unavailable")
+  const output = decodeSfOperationOutput("sf_case_read", { ...result.value, context: caseContext })
+  if (!output.ok) return reject("sf_case_read", "invalid-case-projection", "unavailable", "unavailable")
+  const receipt = host.createReceipt(context, "sf_case_read", digestSfValue(parsed.value), digestSfValue(output.value))
   if (!receipt) return reject("sf_case_read", "authority-unavailable", "invalid-binding")
-  return { status: "ok", result: result.value, receipt }
+  return { status: "ok", result: output.value, receipt }
 }
 
 export async function draftCase(value: unknown, context: TrustedDomainContext, host: DecisionCapabilityHost): Promise<CapabilityResult> {

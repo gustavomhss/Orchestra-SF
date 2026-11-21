@@ -56,12 +56,17 @@ export async function observeSfDecisionIntentHealth(input: {
       if (candidate.human && !(await input.humanActions(request)).includes(candidate.human)) return []
       const read = () => state.read(request, "cases", selectSfNamespaceHealth("cases", stamp, candidate.write ? "write" : "read"))
       const first = await read(), second = await read()
-      if (first.status !== "ok" || second.status !== "ok" || !first.value || !second.value ||
+      // The original draft writer initializes C08 atomically at version zero.
+      const newCase = candidate.id === "decisions.command.sf_case_draft" &&
+        first.status === "unavailable" && first.reason === "product-state-uninitialized" &&
+        second.status === "unavailable" && second.reason === "product-state-uninitialized"
+      if (!newCase && (first.status !== "ok" || second.status !== "ok" || !first.value || !second.value ||
         first.storageVersion !== first.value.storageVersion || first.aggregateRevision !== first.value.aggregateRevision ||
         first.incarnation !== first.value.incarnation || second.storageVersion !== second.value.storageVersion ||
         second.aggregateRevision !== second.value.aggregateRevision || second.incarnation !== second.value.incarnation ||
         first.storageVersion !== second.storageVersion || first.aggregateRevision !== second.aggregateRevision ||
-        first.incarnation !== second.incarnation || !await ui.revalidate(admitted.value) ||
+        first.incarnation !== second.incarnation)) return []
+      if (!await ui.revalidate(admitted.value) ||
         ui.requestFor(admitted.value) !== request || !current()) return []
       if (candidate.human && !(await input.humanActions(request)).includes(candidate.human)) return []
       if (!await ui.revalidate(admitted.value) || !current()) return []

@@ -385,6 +385,6 @@ export function createSfWorkProjectionHandlers(deps: SfNativeHostDependencies): 
 
 /** Home's admitted case-source infrastructure, not individual case or routine readiness. */
 export async function observeSfHome(runtime: SfHostServices | undefined, request: Request, stamp: SfContextStamp) {
-  if (!await observeSfCaseSource(runtime, request, stamp)) return []
+  if (await observeSfCaseSource(runtime, request, stamp) !== "ready") return []
   return [{ operationId: "projection.home" as const, state: "ready" as const, reason: null, operational: true as const }]
 }
