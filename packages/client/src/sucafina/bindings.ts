@@ -97,6 +97,17 @@ export const SfNativeOperationBindings: SfOperationBindings = (() => {
   add(SfMemory.operations)
   add(SfAnalyses.operations)
   const membersId = "files.export.members"
+  // Restore the source A06 codec composition; Members keeps its stricter guard below.
+  const sourceFiles = Object.entries(SfFilesOperationBindings)
+  if (sourceFiles.length !== 28) throw new Error("SF_A06_28_OPERATIONS_REQUIRED")
+  for (const [candidate, fileCodec] of sourceFiles) {
+    if (!Schema.is(SfOperationId)(candidate)) throw new Error("SF_A06_OPERATION_UNKNOWN")
+    if (candidate === membersId) continue
+    const meta = SfOperationRegistry[candidate]
+    if (!meta || meta.responseMode === "navigation" || !fileCodec || bindings.has(candidate))
+      throw new Error("SF_A06_BINDING_CONFLICT")
+    bindings.set(candidate, fileCodec)
+  }
   const membersCodec = SfFilesOperationBindings[membersId]
   const membersRoute = SfOperationRegistry[membersId]
   if (!Schema.is(SfOperationId)(membersId) || !membersCodec
