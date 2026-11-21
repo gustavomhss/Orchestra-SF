@@ -30,11 +30,11 @@ export function createReviewAnswerSource(input: {
   host: Pick<DomainPortHost, "requestFor" | "revalidate" | "persistence">
   prepareAccess: (pin: ReviewThreadContext, basis: ReviewAnswerBasis, review: PreservedReview, context: TrustedDomainContext) => Promise<PortResult<{ fence: () => Promise<boolean> }>>
   readContext?: (pin: ReviewThreadContext, basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<PortResult<ReviewThreadSnapshot>>
-  reuseResolvedMaterial?: (snapshot: ReviewThreadSnapshot, context: TrustedDomainContext) => boolean
+  prepareResolvedMaterial?: (snapshot: ReviewThreadSnapshot) => (() => boolean) | undefined
 }) {
   const contexts = createReviewThreadContext(input)
   const readContext = input.readContext
-  const reuseResolvedMaterial = input.reuseResolvedMaterial
+  const prepareResolvedMaterial = input.prepareResolvedMaterial
   const resolved = new WeakMap<TrustedDomainContext, {
     scopeKey: string
     snapshot: ReviewThreadSnapshot
@@ -101,19 +101,22 @@ export function createReviewAnswerSource(input: {
         const persistence = host.persistence
         const atomic = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
         const prepareAccess = input.prepareAccess
-        const request = reuseResolvedMaterial && readContext && atomic && context.kind === "ui" && requestFor.call(host, context)
+        const request = prepareResolvedMaterial && readContext && atomic && context.kind === "ui" && requestFor.call(host, context)
         const lease = context.lease
         const current = () => !!request && !request.signal.aborted && context.lease === lease && input.host === host &&
           host.requestFor === requestFor && host.revalidate === revalidate && requestFor.call(host, context) === request &&
           input.reviews === reviews && reviews.read === readReview && host.persistence === persistence && !!atomic &&
           hasSfDashboardSourceFence(persistence) && persistence.dashboardSourceFence === atomic &&
-          input.readContext === readContext && input.prepareAccess === prepareAccess && input.reuseResolvedMaterial === reuseResolvedMaterial
+          input.readContext === readContext && input.prepareAccess === prepareAccess && input.prepareResolvedMaterial === prepareResolvedMaterial
         const found = await read(selected, context)
         if (found.status !== "ok") return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
         const material = answerMaterial(found.value, selected)
         if (!material) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
-        const resident = () => current() && reuseResolvedMaterial?.(found.value, context) === true
-        if (resident()) resolved.set(context, { scopeKey: key(material.scope, selected, context), snapshot: found.value, material, current: resident })
+        const proof = current() ? prepareResolvedMaterial?.(found.value) : undefined
+        if (proof?.()) resolved.set(context, {
+          scopeKey: key(material.scope, selected, context), snapshot: found.value, material,
+          current: () => current() && proof(),
+        })
         return { status: "ok", value: { scope: structuredClone(material.scope) } }
       } catch { return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" } }
     },

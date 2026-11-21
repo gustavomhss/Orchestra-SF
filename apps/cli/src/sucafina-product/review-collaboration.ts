@@ -49,6 +49,7 @@ export function createSfReviewCollaboration(input: {
     readScope?.revalidate === revalidateReview && readScope?.current === currentReview &&
     readScope?.prepareRevalidation === prepareRevalidation && readScope?.prepareColdRevalidation === prepareCold &&
     (!currentReview || currentReview())
+  const materialProofs = new WeakMap<object, () => boolean>()
   const leases = new WeakMap<TrustedDomainContext, Map<string, AccessLease>>()
   const sealedFingerprints = new WeakMap<object, { pin: string; value: string }>()
   const key = (pin: ReviewThreadContext, basis: ThreadSourceContext, call: TrustedDomainContext) => digestSfValue({ pin, basis, authority: call.binding })
@@ -271,7 +272,10 @@ export function createSfReviewCollaboration(input: {
         return { commit: false, value: current() && root.current() && (!fingerprint || fingerprint() === before) ? result : denied }
       }, { signal: request.signal, targetPreimageCurrent: atomic.holdTargetPreimage().current, sealedRead: true }))
     if (Object.hasOwn(completionFailure, "error")) throw completionFailure.error
-    return current() ? paired : denied
+    if (!current()) return denied
+    if (!leg && ready && strict.current() && paired.status === "ok" && localRecordReview(paired.value.review))
+      materialProofs.set(paired.value, () => current() && strict.current())
+    return paired
   }
   const authorizeReviewThreadContext: SfReviewCollaborationBinding["authorizeReviewThreadContext"] = async (pin, basis, call, purpose) => {
     if (!sameProducer() || !isReviewThreadContext(pin)) return false
@@ -346,8 +350,7 @@ export function createSfReviewCollaboration(input: {
   return { evidence: input.evidence, authorizeReviewThreadContext, reviewRecipientAuthority, readLeg,
     reviewAnswerSource: createReviewAnswerSource({
       reviews, host, prepareAccess, readContext: observePinnedContext,
-      reuseResolvedMaterial: ({ pin, review }, call) => sameProducer() && !!readScope && !!readerCurrent && localRecordReview(review) &&
-        !!prepareRevalidation?.call(readScope, pin.reviewRef, pin.reviewDigest, call),
+      prepareResolvedMaterial: (snapshot) => materialProofs.get(snapshot),
     }) }
 }
 

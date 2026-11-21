@@ -268,11 +268,12 @@ export function protectSfReviewReads(input: {
       if (captureDependencies && !dependencyPin) return undefined
       const binding = digestSfValue([call.kind, call.binding])
       const dependencies = dependencyPin ?? (() => true)
-      return async () => {
-        if (!sameCall(scope, call, binding) || !dependencies() || !scope.calls.get(call)?.has(id)) return denied()
+      const current = () => sameCall(scope, call, binding) && dependencies() && scope.calls.get(call)?.has(id) === true
+      return Object.assign(async () => {
+        if (!current()) return denied()
         const checked = await snapshot(id, call, scope, binding, dependencies, { digest })
         return checked.status === "ok" ? checked.value.validated ?? denied() : checked
-      }
+      }, { current })
     },
     run: async <Value>(request: Request, work: () => Promise<Value>): Promise<Value> => {
       const current = execution.getStore()
