@@ -57,3 +57,7 @@ Missing sources, denied admissions, changed mounted functions/catalogs, changed 
 `apps/cli/test/sucafina-work-health.test.ts` adds 16 focused cases using the original UI lease, C08 state and source lifecycle implementations over the repository's isolated test persistence driver. The cases cover healthy read-only observations, absent sources, denied admissions, source replacement while awaiting a read, access revision changes, inconsistent aggregate revisions, source exceptions with terminal cleanup, absent mounted Documents binding/copied descriptor and missing canonical Procurement source despite callable methods. Selection/item/destination/search/dispatch/blob functions fail the test if invoked.
 
 These new tests are written and source-reviewed, not locally executed. Root must include this file in the remote Actions gate and the CLI type boundary. The caller additions remain part of the root integration commit. The worker branch does not overwrite root's ongoing Planner spec corrections.
+
+## Year display after confirmed copy
+
+Root's review of [Planner run 44957998160](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44957998160) found a calendar year rendered as a grouped quantity (`2,026 Year`) in CAP23 metadata/review cards. The local year display helper now renders `String(year)` as text. The existing field label, source year, draft validation and command payload are preserved. No behavioral test is added for this isolated formatting correction; the next remote visual capture verifies it in context.
