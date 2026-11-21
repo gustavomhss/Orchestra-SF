@@ -50,9 +50,9 @@ The integration owner will run the existing scoped Actions gates and the group j
 
 ### Authored real-installation journeys
 
-The operations spec now contains four production journeys. Three independent English installations cover CAP11, CAP12 and CAP13/CAP15/CAP16 respectively. Together they cover all five areas in dark/light desktop, lower-page ticket/application/campaign/incident/owner panels, grouped forms and review cancellation, then perform five real reviewed commands with updated same-view projection and fresh navigation/readback: CAP11 SLA, CAP12 campaign, CAP13 risk, CAP15 relationship and CAP16 sub-item. Each journey records its own write count and browser diagnostics without request payloads or credentials. A failure in service no longer blocks security or the collection/performance journey.
+The operations spec now contains six production journeys. Five independent English installations cover CAP11, CAP12, CAP13, CAP15 and CAP16 respectively. Together they cover all five areas in dark/light desktop, lower-page ticket/application/campaign/incident/owner panels, grouped forms and review cancellation, then perform five real reviewed commands with updated same-view projection and fresh navigation/readback: CAP11 SLA, CAP12 campaign, CAP13 risk, CAP15 relationship and CAP16 sub-item. Each journey records its own write count and browser diagnostics without request payloads or credentials. A failure in service no longer blocks security or the collection/performance journey.
 
-The fourth reuses the genuine scoped operator cookie in a BR context, captures all five desktop/390 px overviews, opens each focused editor and review, checks reflow and every review action in the viewport, and verifies revision retains the draft without sending a command. The root helper owns installation/authentication and capture bounds. These are authored journeys; passing execution is not yet claimed.
+The sixth reuses the genuine scoped operator cookie in a BR context, captures all five desktop/390 px overviews, opens each focused editor and review, checks reflow and every review action in the viewport, and verifies revision retains the draft without sending a command. The root helper owns installation/authentication and capture bounds. These are authored journeys; passing execution is not yet claimed.
 
 ### Pending evidence
 
@@ -103,6 +103,32 @@ The bounded, redacted diagnostic in job 136961044738 identified the concrete fai
 The English spec is split into three isolated installations to expose failures independently. Its expectations remain strict: the new value must appear in the same mounted view before fresh navigation, the source must return it again, the exact number of commands must match, and console/page errors must be absent. Additional screenshots record already exercised category/heatmap/import/deletion states; they do not add commands.
 
 Run 44941155893 also verified all three long BR editors have bounded native scrolling, localized review labels in CAP13/CAP15 and paired quarter/status form order in CAP16. Run 44942005547 includes the narrow CAP12 KPI label-height correction. Final approval still waits for successful independent English writes.
+
+## Fifth browser execution: service/security writes pass; applied selection corrected
+
+Run [44943089044](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44943089044), browser job 136964366000, completed with three journeys passing and one failing (5.2 minutes), and emitted 52 complete previews including the failure capture. The independent CAP11 and CAP12 journeys passed their real reviewed writes, updated same-view projection, fresh source readback and zero console/page-error checks. The BR journey passed with zero errors. This proves the captured editor/snapshot cleanup fix for those exercised save paths.
+
+The collection journey failed before its first write: after applying status `closed`, the source-backed count returned 2 instead of 0. The strengthened count assertion exposed a real defect that the earlier transient loading-row assertion missed. The native domain projection returns all authorized records; the original q/status/owner selection exists in the legacy renderer rather than the native DTO. CAP13/CAP15 now select only from those already authorized rows inside their read consumers, using the applied query captured for that read. Search uses source text name/title/description fields, trimmed case-insensitive input; status and ownership use exact equality. Versions, actions, source values and producers are unchanged. Draft filter edits still wait for Apply. The spec checks both the unchanged pre-Apply count and the post-Apply result.
+
+The existing route.query.filter path is retained. Risk-tier deep links were not qualified and gained no support in this wave; no tier formula was copied into the native app and no module/runtime dependency was added. The visible panel exposes search and status.
+
+CAP13, CAP15 and CAP16 now have separate English installations, retaining one real write and strict same-view/fresh-read assertions in each. Their successful writes are still pending; no outcome is inferred from CAP11/CAP12 success.
+
+Direct review of the new CAP12 incident deletion image revealed empty source cards and a UUID-only operation identity. Its presentation now includes the already captured incident/campaign/action fields in original/current source, uses the record title/name/text where available, and explains the proposed removal with new EN/BR copy. Original/current source fields use the admitted source row to preserve absence/null as missing, including BooleanStored flags; an unknown flag is not presented as a confirmed No merely because the existing checkbox draft defaults to false. The exact deletion binding, version, draft values and command remain unchanged; the journey cancels deletion. Long reviews also get a top capture in addition to their existing action-footer capture.
+
+## JSON command boundary before the sixth execution
+
+The canonical Finance browser probe established that explicit optional `undefined` values are rejected by the strict JSON codec. Source inspection showed the same complete path here: CAP13 `riskValues` constructs absent ownerId/leaderId as undefined; CAP15 has equivalent optional fields; the shared draft retains those values in a signal, and the collection save previously forwarded them directly. No intervening serialization removes them. This is sufficient evidence to correct the consumer boundary before knowingly repeating that failure.
+
+CAP13/CAP15 now materialize command values with Object.entries/Object.fromEntries, omit only entries whose value is undefined, and omit an absent top-level id for creation. Zero, null, empty strings and other supplied values are retained; unknown supplied string keys still reach canonical schema validation. CAP16's three existing DTO constructors use the same omission rule: a new item/sub-item has no id yet, and untouched absent target/quarter scalars must stay absent. The required parent itemId remains explicit. Existing field conversion, owner/version, confirmation, draft, digest, idempotency and producer behavior are unchanged.
+
+These corrections need the independent runtime writes and final scoped type gates; source inspection alone is not recorded as a successful write.
+
+## Pending and unknown review controls
+
+CAP11/CAP12 Cancel/Revise callbacks now reject transitions while a command is submitting or its outcome is unknown. A local native disabled fieldset makes this restriction visible and keyboard-safe, without changing shared S03. The existing Check outcome action remains available outside that disabled fieldset during outcome-unknown and calls the same scoped refresh; the duplicate internal reconcile button is omitted in that state. Existing fieldset styling already resets its border, padding and width, so the normal review geometry is unchanged. No draft, pending operation, idempotency or command is cleared by closing presentation.
+
+This is a local guard confirmed by source review; the campaign does not simulate lost responses or claim runtime qualification of artificial outcome-unknown states. The normal real writes and final browser captures remain the execution gate. Scope is now frozen except for concrete runtime or gate findings.
 
 ## User guide notes for integration
 

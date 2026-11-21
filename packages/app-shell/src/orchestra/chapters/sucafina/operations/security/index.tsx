@@ -177,13 +177,16 @@ function securityReadState(page: SfSecurityPage): "ready" | "empty" | "filtered-
   return "filtered-empty"
 }
 
-function formFields(editor: SecurityEditor, value: FormValues, label: (field: string) => string): SfReviewField[] {
-  if (editor.command.startsWith("delete-")) return []
+function formFields(editor: SecurityEditor, value: FormValues, label: (field: string) => string,
+  source?: Readonly<Record<string, unknown>>): SfReviewField[] {
   const sourceFields = editor.entity === "kpi" ? [...SECURITY_KPI_FIELDS, "notes"] :
     editor.entity === "action" ? ["text", "done"] :
     editor.entity === "incident" ? [...fields, ...SECURITY_INCIDENT_FLAGS, "consequences"] :
     ["name", "start", "end", "notes", ...SECURITY_CAMPAIGN_FIELDS, "departments"]
-  return sourceFields.map((field) => {
+  return sourceFields.map((field): SfReviewField => {
+    if (source && (source[field] === undefined || source[field] === null))
+      return { path: field, label: msg(key("design.field." + field)),
+        value: { kind: "missing", reason: msg(common("unknown")) } }
     const content: SfReviewField["value"] = field === "departments"
       ? { kind: "list", items: departmentsOf(value[field]).map((department) => ({
         kind: "list", items: SECURITY_DEPARTMENT_FIELDS.map((name) => ({
@@ -207,14 +210,15 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   const t = (copy: SfCopyKey) => language.t(copy as Parameters<typeof language.t>[0])
   const rateLabel = (value: number | null) => value === null ? t(key("table.noData"))
     : new Intl.NumberFormat(language.intl(), { maximumFractionDigits: 2 }).format(value) + "%"
-  const reviewFieldsFor = (editor: SecurityEditor, value: FormValues) =>
-    formFields(editor, value, (field) => t(key("design." + field)))
+  const reviewFieldsFor = (editor: SecurityEditor, value: FormValues, source?: Readonly<Record<string, unknown>>) =>
+    formFields(editor, value, (field) => t(key("design." + field)), source)
   const owner = useSfContext()
   const [state, setState] = createStore<SecurityView>({
     state: "loading", page: undefined,
     year: props.route.query.year, month: props.route.query.month,
     editor: null, refresh: 0, submitting: false, operationState: "idle", errorText: null,
   })
+  const reviewLocked = () => state.submitting || state.operationState === "unknown"
   const setEditorReview = (review: boolean) =>
     setState("editor", (current) => current ? { ...current, review } : null)
   let draft: Draft | undefined
@@ -672,13 +676,16 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   }]))
   const removeDepartment = (index: number) =>
     edit("departments", JSON.stringify(departmentRows().filter((_row, i) => i !== index)))
-  const reviewSnapshot = (editor: SecurityEditor, value: FormValues, original: boolean, version: SfVersion = editor.version): SfReviewSnapshot => {
+  const reviewSnapshot = (editor: SecurityEditor, value: FormValues, original: boolean,
+    version: SfVersion = editor.version, source?: Readonly<Record<string, unknown>>): SfReviewSnapshot => {
+    if (!original && editor.command.startsWith("delete-"))
+      return { kind: "not-provided", reason: msg(key("design.deleteProposed")) }
     if (original && editor.identity.kind === "new")
       return { kind: "not-provided", reason: msg(common("empty")) }
     return original
       ? { kind: "persisted",
         ref: editor.identity.kind === "record" ? editor.identity.recordRef : ref(""),
-        version, fields: reviewFieldsFor(editor, value) }
+        version, fields: reviewFieldsFor(editor, value, source) }
       : { kind: "draft",
         intentRef: editor.identity.kind === "new" ? editor.identity.newIntentRef : intent("u29:" + editor.scope),
         sourceRef: editor.identity.kind === "record" ? editor.identity.recordRef : null,
@@ -1022,25 +1029,35 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                     <p class="sf-security-caption">{t(key(editor.review ? "design.reviewHint" : "design.editHint"))}</p>
                   </header>
                   <Show when={!editor.review} fallback={
-                    <Show when={activeDraft()} keyed>{(snapshot) => <SfChangeReview
+                    <Show when={activeDraft()} keyed>{(snapshot) => <>
+                      <Show when={state.operationState === "unknown"}>
+                        <button type="button" class="mx-btn" disabled={state.submitting}
+                          onClick={refresh}>{t("sf.s03.checkOutcome" as SfCopyKey)}</button>
+                      </Show>
+                      <fieldset disabled={reviewLocked()} aria-busy={state.submitting}
+                        aria-label={t(common("review"))}>
+                    <SfChangeReview
                       operation={{
                         ref: editor.operationRef,
                         label: msg(key("action." + editor.command)),
                         scope: { kind: "data", text:
-                          editor.id ?? String(editorPage.selection.year) + "-" + String(editorPage.selection.month) },
+                          stringOf(snapshot.value.title) || stringOf(snapshot.value.name) || stringOf(snapshot.value.text) ||
+                          editor.id || String(editorPage.selection.year) + "-" + String(editorPage.selection.month) },
                       }}
-                      base={reviewSnapshot(editor, snapshot.base ?? {}, true)}
+                      base={reviewSnapshot(editor, snapshot.base ?? {}, true, editor.version,
+                        editor.id ? securityRow(editorPage, editor.entity, editor.id) : undefined)}
                       current={reviewSnapshot(editor,
                          snapshot.conflict?.current ?? snapshot.base ?? {}, true,
                          snapshot.conflict?.currentVersion ?? editor.version,
+                         editor.id && state.page ? securityRow(state.page, editor.entity, editor.id) : undefined,
                        )}
                       proposed={reviewSnapshot(editor, snapshot.value, false)}
                       effects={[{
                         id: editor.command, domain: "dashboard",
                         title: { kind: "message", message: msg(key("action." + editor.command)) },
-                        state: "proposed", details: reviewFieldsFor(editor, snapshot.value),
+                        state: "proposed", details: editor.command.startsWith("delete-") ? [] : reviewFieldsFor(editor, snapshot.value),
                         ...(editor.command.startsWith("delete-") ?
-                          { reason: msg(common("deleteConfirmation")) } : {}),
+                          { reason: msg(key("design.deleteConfirmation")) } : {}),
                       }]}
                       coverage={{
                         state: "complete", summary: msg(common("currentSource")),
@@ -1062,16 +1079,19 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                       state={reviewerState()}
                       onConfirm={() => { void submitReviewed() }}
                       onRevise={() => {
+                        if (reviewLocked()) return
                         if (editor.command.startsWith("delete-") && state.operationState !== "conflict")
                           setState("editor", null)
                         else { setEditorReview(false); draft?.setPhase("dirty") }
                       }}
                       onCancel={() => {
+                        if (reviewLocked()) return
                         if (state.operationState === "conflict") setEditorReview(false)
                         else setState("editor", null)
                       }}
-                      onReconcile={refresh}
-                    />}</Show>
+                      onReconcile={state.operationState === "unknown" ? undefined : refresh}
+                    /></fieldset>
+                    </>}</Show>
                   }>
                     <form onSubmit={(event) => { event.preventDefault(); review() }}>
                       <Show when={editor.entity === "kpi"}>

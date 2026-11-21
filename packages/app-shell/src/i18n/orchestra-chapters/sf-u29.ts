@@ -158,6 +158,8 @@ export const SF_U29_COPY = {
   "sf.cap12.design.exactRates": "Exact rates from the source",
   "sf.cap12.design.yes": "Yes",
   "sf.cap12.design.no": "No",
+  "sf.cap12.design.deleteProposed": "This record will be deleted.",
+  "sf.cap12.design.deleteConfirmation": "Delete this record? This action cannot be undone.",
 } as const
 
 export const SF_U29_COPY_BR = {
@@ -279,4 +281,6 @@ export const SF_U29_COPY_BR = {
   "sf.cap12.design.exactRates": "Taxas exatas da fonte",
   "sf.cap12.design.yes": "Sim",
   "sf.cap12.design.no": "Não",
+  "sf.cap12.design.deleteProposed": "Este registro será excluído.",
+  "sf.cap12.design.deleteConfirmation": "Excluir este registro? Esta ação não pode ser desfeita.",
 } as const
