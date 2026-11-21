@@ -118,6 +118,12 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
       setFeedback("conflict");setStage("edit");return
     }
     const sentScope = props.record ? "edit:" + props.record.id : "new"
+    const submittedDraft = {
+      surfaceId: "CAP02" as const,
+      identity: props.record ? { kind: "record" as const, recordRef: props.record.id as SfRef } :
+        { kind: "new" as const, newIntentRef: newIntent },
+      editScopeKey: scope,
+    }
     setBusy(true);setStage("edit")
     const operationRef = ("domain.command.CAP02.save:" + crypto.randomUUID()) as SfOperationRef
     const idempotencyKey = crypto.randomUUID()
@@ -146,6 +152,7 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
         return
       }
       draft().confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
+      props.drafts.discard(submittedDraft, operationRef)
       setFeedback("saved")
       props.onSaved?.(transport, sentScope)
       props.onRefetch()

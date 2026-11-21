@@ -85,12 +85,18 @@ export function createSfOwnerDrafts(
       })
       return facade
     },
-    discard(input) {
+    discard(input, confirmedOperationRef) {
       if (!live()) return
       const key = identityKey(input.surfaceId, input.identity, input.editScopeKey)
       const found = entries.get(key)
       if (!found) return
       const snapshot = found.controller.snapshot()
+      if (confirmedOperationRef !== undefined) {
+        if (snapshot.availability !== "confirmed-without-projection" ||
+            snapshot.operationRef !== confirmedOperationRef || unresolved.has(key)) return
+        entries.delete(key)
+        return
+      }
       if (snapshot.availability !== "active" || snapshot.pendingOperation !== null || unresolved.has(key)) return
       found.controller.discard()
       entries.delete(key)

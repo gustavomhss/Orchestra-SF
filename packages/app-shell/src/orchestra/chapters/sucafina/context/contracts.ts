@@ -2,7 +2,7 @@ import type { Accessor, JSX } from "solid-js"
 import type {
   SfContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
   SfInstallationDescriptor, SfInstallationList, SfOwnerKey, SfOwnerSelection,
-  SfResolvedRoute, SfVersion, SurfaceId, SfRef, SfOperationId,
+  SfResolvedRoute, SfVersion, SurfaceId, SfRef, SfOperationId, SfOperationRef,
 } from "@orchestra/schema/sucafina/context"
 import type { SfJson } from "@orchestra/schema/sucafina/common"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
@@ -53,7 +53,8 @@ export type SfDraftRegistry = Readonly<{
   /** An existing draft is never fabricated by a read-only lookup. */
   peek<Value>(input: Readonly<{ surfaceId: SurfaceId; identity: SfDraftIdentity; editScopeKey: SfEditScopeKey }>): SfPublicDraftController<Value> | undefined
   acquire<Value>(input: Omit<SfDraftInput<Value>, "ownerKey"> & Readonly<{ revalidation: SfDraftReadBinding }>): SfPublicDraftController<Value>
-  discard(selection: Readonly<{ surfaceId: SurfaceId; identity: SfDraftIdentity; editScopeKey: SfEditScopeKey }>): void
+  /** Without a ref, discard an unsent draft. With a ref, release only that confirmed result. */
+  discard(selection: Readonly<{ surfaceId: SurfaceId; identity: SfDraftIdentity; editScopeKey: SfEditScopeKey }>, confirmedOperationRef?: SfOperationRef): void
   /** Tracks submitted original correlation without fabricating a server operationRef. */
   markUnresolved(selection: Readonly<{ surfaceId: SurfaceId; identity: SfDraftIdentity; editScopeKey: SfEditScopeKey }>, unresolved: boolean): void
 }>

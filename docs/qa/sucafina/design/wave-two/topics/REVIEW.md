@@ -70,4 +70,16 @@ Run `44918211856`, job `136888297405`, captured the initial twelve desktop/light
 
 The completion callback also receives the editor scope captured before the first await and checks it against the current route, in addition to checking the sending transport and owner generation. A late response from another editor route on the same transport cannot mark the current editor complete.
 
-Actual initial CAP02 captures inspected: dark desktop and light 320px. The list alignment and record reflow are intact. The inherited source navigation's oversized outlined buttons were the main visual inconsistency; root is applying the approved compact navigation to the three wave-two surfaces. Editor/review captures remain pending because this run stopped before creation.
+Actual initial CAP02 captures inspected: dark desktop, dark 1440×800, light desktop and light 320px. The list alignment and record reflow are intact. The inherited source navigation's oversized outlined buttons were the main visual inconsistency; root is applying the approved compact navigation to the three wave-two surfaces. Editor/review captures remain pending because this run stopped before creation.
+
+## Reopening a confirmed existing topic
+
+The owner registry retained the confirmed controller under the same record identity. A later acquire returned that completed controller, while receiveRemote, discard and confirmSave on the controller only operate on active snapshots. The approved Cases flow uses its own local creation state, so its completed-instance cleanup could not be copied to this registry.
+
+With root's explicit shared-file assignment, registry.discard now accepts an optional confirmedOperationRef. This mode only deletes an entry whose availability is confirmed-without-projection, whose stored operation reference exactly matches, and which has no unresolved marker. It returns without touching any other snapshot. Without the optional argument, the original discard path is unchanged; discardAll, quarantine, revalidation and revocation are unchanged.
+
+CAP02 captures the submitted draft identity before awaiting, confirms the actual successful producer result, then releases precisely that confirmed registry entry with the same operationRef. The stable page confirmation still prevents an immediate new editor. The source reread remains immediate, and reentering the record creates an active editor from its fresh projection/version. No pending, unknown, conflict or unsent edit is released by the confirmation option.
+
+A focused regression file was added to the existing Bun browser test suite:
+`packages/app-shell/test-browser/sucafina-draft-confirmation.test.ts`.
+It uses the real owner registry and draft controller; unrelated external dependencies throw if called. Cases cover omitted/wrong confirmation references, unresolved-marker protection, exact confirmed release, acquisition of a fresh version/value, pending/submitting/outcome-unknown protection, and unchanged ordinary discard behavior for clean/dirty/conflict drafts. Run through the existing Actions app test runner with browser conditions. No local test or additional CI was launched by this worker.
