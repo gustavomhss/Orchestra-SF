@@ -6,7 +6,6 @@ import path from "node:path"
 import { Catalog } from "@orchestra/core/catalog"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
-import { LayerNodePlatform } from "@orchestra/core/effect/app-node-platform"
 import { Host } from "@orchestra/core/host"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import { ModelV2 } from "@orchestra/core/model"
@@ -18,7 +17,7 @@ import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SessionSchema } from "@orchestra/core/session/schema"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { Effect, Layer } from "effect"
-import { FetchHttpClient, HttpClient, HttpClientResponse } from "effect/unstable/http"
+import { FetchHttpClient } from "effect/unstable/http"
 import { ProductHost } from "../src/host.ts"
 import { createSfHostRuntime } from "../src/sucafina-product/host-context.ts"
 import { createSfBusinessServices } from "../src/sucafina-product/business-services.ts"
@@ -72,50 +71,45 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
   let tokenCounts = 0
   // Replay the provider wire only. C15 still counts, persists a receipt and
   // authorizes the actual tool call through the full product host.
-  const transport = Layer.effect(HttpClient.HttpClient, Effect.gen(function* () {
-    const fallback = yield* HttpClient.HttpClient
-    return HttpClient.make((incoming) => {
-      if (new URL(incoming.url).origin !== "https://api.openai.com") return fallback.execute(incoming)
-      return Effect.sync(() => {
-        if (incoming.url === "https://api.openai.com/v1/responses/input_tokens") {
-          tokenCounts++
-          return HttpClientResponse.fromWeb(incoming, Response.json({ object: "response.input_tokens", input_tokens: 120 }))
-        }
-        expect(incoming.url).toBe("https://api.openai.com/v1/responses")
-        if (incoming.body._tag !== "Uint8Array") throw new Error("Expected a JSON provider request")
-        const payload = object(JSON.parse(new TextDecoder().decode(incoming.body.body)))
-        turns++
-        const toolCalls = () => {
-          expect(Array.isArray(payload.tools) && payload.tools.some((tool) => object(tool).name === operation)).toBe(true)
-          return Object.entries(toolInputs).map(([id, ref]) => ({ type: "response.output_item.done", item: {
-            type: "function_call", id: "item-" + id, call_id: "call-" + id, name: operation,
-            arguments: JSON.stringify({ selectionRefs: [ref], similarityCriteria: ["decision-type"], period, limit: 5 }),
-          } }))
-        }
-        const finalText = () => {
-          const messages = Array.isArray(payload.input) ? payload.input : []
-          const prompt = messages.flatMap((message) => {
-            const content = object(message).content
-            return (Array.isArray(content) ? content : []).flatMap((part) => {
-              const text = object(part).text
-              if (typeof text !== "string" || !text.trimStart().startsWith("{")) return []
-              const candidate = object(JSON.parse(text))
-              return Object.hasOwn(candidate, "skillInput") ? [candidate] : []
-            })
-          })[0]
-          const canonical = object(object(object(prompt?.context).decisionRecall).result)
-          const matches = canonical.matches as CaseRecall["matches"]
-          expect(matches).toHaveLength(1)
-          return [{ type: "response.output_text.delta", item_id: "reviewer-answer", delta: JSON.stringify({
-            kind: "CaseRecall", payload: canonical, evidenceRefs: matches.flatMap((match) => match.evidenceRefs),
-          }) }]
-        }
-        const events = [...(turns === 1 ? toolCalls() : finalText()), { type: "response.completed", response: {} }]
-        const wire = events.map((event) => "data: " + JSON.stringify(event) + "\n\n").join("")
-        return HttpClientResponse.fromWeb(incoming, new Response(wire, { headers: { "content-type": "text/event-stream" } }))
-      })
-    })
-  })).pipe(Layer.provide(FetchHttpClient.layer))
+  const replayFetch = (async (incoming: RequestInfo | URL, init?: RequestInit) => {
+    const request = new Request(incoming, init)
+    if (new URL(request.url).origin !== "https://api.openai.com") return fetch(incoming, init)
+    if (request.url === "https://api.openai.com/v1/responses/input_tokens") {
+      tokenCounts++
+      return Response.json({ object: "response.input_tokens", input_tokens: 120 })
+    }
+    expect(request.url).toBe("https://api.openai.com/v1/responses")
+    const payload = object(await request.json())
+    turns++
+    const toolCalls = () => {
+      expect(Array.isArray(payload.tools) && payload.tools.some((tool) => object(tool).name === operation)).toBe(true)
+      return Object.entries(toolInputs).map(([id, ref]) => ({ type: "response.output_item.done", item: {
+        type: "function_call", id: "item-" + id, call_id: "call-" + id, name: operation,
+        arguments: JSON.stringify({ selectionRefs: [ref], similarityCriteria: ["decision-type"], period, limit: 5 }),
+      } }))
+    }
+    const finalText = () => {
+      const messages = Array.isArray(payload.input) ? payload.input : []
+      const prompt = messages.flatMap((message) => {
+        const content = object(message).content
+        return (Array.isArray(content) ? content : []).flatMap((part) => {
+          const text = object(part).text
+          if (typeof text !== "string" || !text.trimStart().startsWith("{")) return []
+          const candidate = object(JSON.parse(text))
+          return Object.hasOwn(candidate, "skillInput") ? [candidate] : []
+        })
+      })[0]
+      const canonical = object(object(object(prompt?.context).decisionRecall).result)
+      const matches = canonical.matches as CaseRecall["matches"]
+      expect(matches).toHaveLength(1)
+      return [{ type: "response.output_text.delta", item_id: "reviewer-answer", delta: JSON.stringify({
+        kind: "CaseRecall", payload: canonical, evidenceRefs: matches.flatMap((match) => match.evidenceRefs),
+      }) }]
+    }
+    const events = [...(turns === 1 ? toolCalls() : finalText()), { type: "response.completed", response: {} }]
+    const wire = events.map((event) => "data: " + JSON.stringify(event) + "\n\n").join("")
+    return new Response(wire, { headers: { "content-type": "text/event-stream" } })
+  }) as typeof fetch
   try {
     const persistence = { ...store, ...createSfSourcePersistence({ persistence: store, createId: randomUUID,
       enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) }) }
@@ -139,7 +133,8 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
     })
     const merged = Host.merge([...ProductHost.contributions(), ...runtime.contributions])
     const layer = AppNodeBuilder.build(LayerNode.group([...merged.nodes, AppProcess.node, SessionV2.node, SessionExecution.node, LocationServiceMap.node]),
-      [[SessionExecution.node, SessionExecutionLocal.node], ...merged.replacements, [LayerNodePlatform.httpClient, transport]], merged.locationNodes)
+      [[SessionExecution.node, SessionExecutionLocal.node], ...merged.replacements], merged.locationNodes)
+      .pipe(Layer.provideMerge(Layer.succeed(FetchHttpClient.Fetch, replayFetch)))
     await Effect.gen(function* () {
       const sessions = yield* SessionV2.Service
       const locations = yield* LocationServiceMap.Service
