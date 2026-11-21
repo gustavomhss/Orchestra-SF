@@ -170,7 +170,12 @@ designTest("installed native first-wave design · real operator, source data, re
       await expect(yearControl.getByRole("option", { name: String(installation.year), exact: true })).toHaveCount(1)
       await yearControl.selectOption(String(installation.year))
       await expect(yearControl).toHaveValue(String(installation.year))
-      await expect(page.locator('[data-sf-metric="risks"] dd')).toHaveText("1")
+      await ready(page, "Executive Dashboard")
+      // The original annual summary has no activeRisks field. Do not promote
+      // the separately supplied current risk count into a selected-year value.
+      const annualRisks = page.locator('[data-sf-metric="risks"]')
+      await expect(annualRisks).toHaveAttribute("data-sf-value", "missing")
+      await expect(annualRisks.locator("dd")).toHaveText("Not available from this source")
       const monthControl = page.getByLabel("Month", { exact: true })
       await expect(monthControl).toBeVisible()
       await expect(monthControl).toBeEnabled()
