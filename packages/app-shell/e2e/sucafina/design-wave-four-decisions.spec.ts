@@ -58,7 +58,9 @@ async function readCase(page: Page, origin: string, mount: string, caseRef: stri
   return object(object(body.value).projection).case as SfCase
 }
 async function openScreen(page: Page, owner: Owner, screen: Screen, localized = false) {
-  await enter(page, owner, screen.href, localized ? screen.titleBr : screen.title)
+  // Current-choice options revalidate every authorized case before the selected choice.
+  await enter(page, owner, screen.href, localized ? screen.titleBr : screen.title,
+    screen.id === "UI35" || screen.id === "UI38" ? 40_000 : 10_000)
   const root = page.locator('[data-sf-decision="' + screen.id + '"]')
   await expect(root).toHaveAttribute("data-sf-wave", "four")
   await expect(root).toBeVisible()
