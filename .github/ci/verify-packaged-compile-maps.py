@@ -49,6 +49,8 @@ def read_modules(binary):
     require(byte_count == footer - start and 0 < row_count and module_size % 52 == 0
             and first_row + module_size <= footer and entry < row_count, "Invalid Bun module table")
     modules = {}
+    pointers = {}
+    protected = []
     for row in range(first_row, first_row + module_size, 52):
         name_offset, name_length, body_offset, body_length, map_offset, map_length = reader("IIIIII", row)
         require(map_offset == 0 and map_length == 0, "Packaged module still has a sourcemap pointer")
@@ -65,7 +67,16 @@ def read_modules(binary):
         require(name.startswith("/$bunfs/root/") and name not in modules, "Invalid or duplicated module name")
         offset = start + body_offset
         modules[name] = (offset, body_length, encoding, loader, digest(memoryview(binary)[offset:end]))
-    return modules
+        pointers[name] = (row + 16, row + 24)
+        protected.extend(((start + name_offset, name_end + 1), (offset, end + terminator)))
+        for field, terminates in ((24, False), (32, False), (40, True)):
+            reserved_offset, reserved_length = reader("II", row + field)
+            if reserved_length:
+                lo = start + reserved_offset
+                hi = lo + reserved_length + int(terminates)
+                require(start <= lo < hi <= first_row, "Invalid protected range in the module")
+                protected.append((lo, hi))
+    return modules, pointers, protected, (start, first_row)
 
 
 def main(archive, maps):
@@ -83,7 +94,8 @@ def main(archive, maps):
         start, end = region["start"], region["end"]
         require(prior_end <= start < end <= len(binary) and not any(binary[start:end]), "Invalid or unredacted debug range")
         prior_end = end
-    physical = read_modules(binary)
+    physical, pointers, protected, (graph_start, table_start) = read_modules(binary)
+    expected_ranges = set()
     names = set()
     mapped = set()
     for module in index["modules"]:
@@ -97,6 +109,12 @@ def main(archive, maps):
         require(module["status"] == "matched-compiler-map" and isinstance(module["coordinates"], int)
                 and module["coordinates"] >= 0 and map_name not in mapped
                 and re.fullmatch(r"[A-Za-z0-9_.-]+\.map", map_name), "Invalid compiler map record")
+        embedded = module["embeddedMap"]
+        begin = embedded["offset"]
+        end = begin + embedded["byteLength"]
+        require(graph_start <= begin < end <= table_start, f"Scrubbed map payload leaves graph data for {name}")
+        require(all(end <= lo or begin >= hi for lo, hi in protected), f"Scrubbed map overlaps protected bytes for {name}")
+        expected_ranges.update(((begin, end), pointers[name]))
         mapped.add(map_name)
         data = (maps / map_name).read_bytes()
         require(digest(data) == module["mapSha256"], f"Published source map bytes differ for {map_name}")
@@ -105,6 +123,8 @@ def main(archive, maps):
                 and content["version"] == 3
                 and content["sources"] == [source["source"] for source in module["sources"]],
                 f"Public map has unexpected fields or sources: {map_name}")
+    require(expected_ranges == {(item["start"], item["end"]) for item in index["scrubbedRanges"]}
+            and len(expected_ranges) == 2 * len(mapped), "Declared scrub ranges differ from the matched modules")
     require(names == physical.keys(), "Map index omits a packaged module")
     require(mapped and len(mapped) == index["detachedMapCount"]
             and {item.name for item in maps.iterdir()} == mapped | {"index.json"},
