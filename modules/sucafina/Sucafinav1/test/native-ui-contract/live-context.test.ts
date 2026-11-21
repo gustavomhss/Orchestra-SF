@@ -5,6 +5,7 @@
  * Positive AM/runtime admission remains NOT_RUN until 162/163/164 qualify C.
  */
 import { expect, test } from "bun:test"
+import { sfIsCatalogResource } from "@orchestra/schema/sucafina/context"
 import { createSfLiveContext, type SfLiveContextSources } from "../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
 
 const origin = "http://127.0.0.1:4096"
@@ -26,6 +27,25 @@ const sources = (overrides: Partial<SfLiveContextSources> = {}): SfLiveContextSo
 // Literal expectations retain the exact SfContextResult discriminants in bun:test overloads.
 const mismatch = { status: "unavailable", reason: "contract-mismatch" } as const
 const identities = { status: "unavailable", reason: "identity-unavailable" } as const
+
+test("F01 publishes the closed Decisions comparison resource without granting readiness", async () => {
+  const observation = {
+    operationId: "decisions.decision-compare", state: "ready", reason: null, operational: true,
+  } as const
+  const unobserved = await createSfLiveContext(sources()).readContext(request(), binding)
+  const observed = await createSfLiveContext(sources({
+    operational: async () => [observation],
+  })).readContext(request(), binding)
+  if (unobserved.status !== "ok" || observed.status !== "ok") throw new Error("F01 comparison context did not decode")
+  expect(unobserved.value.availability.every(sfIsCatalogResource)).toBe(true)
+  expect(unobserved.value.availability).toContainEqual({
+    family: "decisions", resource: "comparison", state: "unavailable",
+    operations: [{ operationId: observation.operationId, state: "unavailable", reason: "operational-source-unavailable", operational: false }],
+  })
+  expect(observed.value.availability).toContainEqual({
+    family: "decisions", resource: "comparison", state: "ready", operations: [observation],
+  })
+})
 
 test("F01 negative: no mounted runtime returns identity-unavailable without auth read", async () => {
   let reads = 0
