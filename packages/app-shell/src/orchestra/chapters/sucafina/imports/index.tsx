@@ -212,7 +212,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       ...(state.headerRow ? { headerRow: Number(state.headerRow) } : {}),
     },
   })
-  const refreshReference = async (manifestId: string, surface: ImportSurface, token: ReturnType<typeof fence>) => {
+  const refreshReference = async (manifestId: string, surface: ImportSurface, token: ReturnType<typeof fence>, publish = true) => {
     const api = client()
     if (!api || !permitted("files.import-reference")) return undefined
     const reply = await api["files.import-reference"]({ surface, importPreviewRef: manifestId }, { signal: token.signal })
@@ -222,6 +222,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       failure({ state: "invalid" })
       return undefined
     }
+    if (!publish || (state.phase === "unknown" && !reference.receipt)) return reference
     setState({ manifest: reference.manifest, detail: { digest: reference.digest, detail: reference.detail, receipt: reference.receipt },
       reference, phase: reference.receipt ? "receipt" : "preview",
       status: reference.manifest.state === "stale" ? "stale" : "ready", busy: false })
@@ -318,6 +319,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     setState({ reviewedSelectionRef: target.selectionRef, phase: "reviewing", busy: false, status: "ready" })
   }
   const cancelPreview = () => {
+    if (editLocked()) return
     fence()
     clearReview()
     setState({ status: "ready", busy: false })
@@ -332,13 +334,15 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
         selectedTarget()?.selectionRef !== state.reviewedSelectionRef)) ||
       !permitted("files.import-apply")) return
     const token = fence()
-    setState({ phase: "submitting", busy: true, status: "ready" })
+    setState({ busy: true, status: "ready" })
     const source = manifest.context.surface
     if (source !== "planner" && source !== "dashboard") { failure({ state: "invalid" }); return }
-    const fresh = await refreshReference(manifest.id, source, token)
-    if (!fresh || !current(token)) return
+    const fresh = await refreshReference(manifest.id, source, token, false)
+    if (!current(token)) return
+    if (!fresh) { setState("busy", false); return }
     if (fresh.manifest.version !== manifest.version || fresh.digest !== reference.digest ||
       fresh.manifest.state !== "preview" || fresh.manifest.domainApplied || fresh.receipt) {
+      setState("phase", "preview")
       failure({ state: "stale" })
       return
     }
@@ -354,7 +358,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const outcome = unpack(reply)
     if (outcome.kind === "failure") {
       // Do not infer that a mutation failed after a lost response; reconcile by read.
-      failure({ state: outcome.state === "unavailable" ? "outcome-unknown" : outcome.state }, true)
+      const uncertain = outcome.state === "unavailable" || outcome.state === "outcome-unknown"
+      if (!uncertain) setState("phase", "preview")
+      failure({ state: uncertain ? "outcome-unknown" : outcome.state }, true)
       return
     }
     if (outcome.value.id !== intent.id || outcome.value.state !== "applied" ||
@@ -362,22 +368,24 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       failure({ state: "outcome-unknown" }, true)
       return
     }
-    const settled = await refreshReference(intent.id, source, token)
-    if (current(token) && settled?.receipt) setState({ phase: "receipt", busy: false })
-    else if (current(token)) setState({ busy: false })
+    // The Apply response is not the receipt. Until it can be read, only reconciliation is allowed.
+    setState({ phase: "unknown", status: "outcome-unknown" })
+    await refreshReference(intent.id, source, token)
+    if (current(token)) setState("busy", false)
   }
   const reconcile = async () => {
-    const ref = state.manifest?.id ?? applyIntent?.id
-    if (!ref) return
+    const ref = applyIntent?.id ?? state.manifest?.id
+    if (!ref || state.busy || !permitted("files.import-reference")) return
     const token = fence()
-    setState({ busy: true, status: isImport() ? "ready" : "loading" })
+    const pending = state.phase === "unknown"
+    setState({ busy: true, status: pending ? "outcome-unknown" : isImport() ? "ready" : "loading" })
     const source = state.manifest?.context.surface ?? state.surface
     if (source !== "planner" && source !== "dashboard") { failure({ state: "invalid" }); return }
     const fresh = await refreshReference(ref, source, token)
     if (!current(token)) return
     if (!fresh) { setState("busy", false); return }
     if (fresh.receipt) setState({ phase: "receipt", status: "ready" })
-    else if (state.phase === "unknown" || applyIntent) setState({ phase: "unknown", status: "outcome-unknown" })
+    else if (pending || applyIntent) setState({ phase: "unknown", status: "outcome-unknown" })
     else setState({ phase: "reviewing", status: "ready" })
     setState("busy", false)
   }
@@ -596,7 +604,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       <section class="sf-files" data-sf-leaf="u23" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <SfStatePanel state={state.status} messageKey={key(message())}
-          onRetryRead={() => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) {
+          onRetryRead={state.phase === "unknown" ? undefined : () => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) {
               if (state.exportKind === "po") setState("poRefresh", state.poRefresh + 1)
               else void download()
             } }}
@@ -752,7 +760,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             </Show>
             <div class="sf-files-actions">
               <Show when={isImport()}>
-                <button type="button" class="mx-btn" disabled={state.busy}
+                <button type="button" class="mx-btn" disabled={editLocked()}
                   onClick={cancelPreview}>{t("sf.u23.cancel")}</button>
               </Show>
               <Show when={isReference() && props.surfaceId === "UI56" && state.manifest?.state === "preview" && !state.reference?.receipt && continuationHref("review")}>
@@ -825,10 +833,10 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
         </SfStatePanel>
         <Show when={state.status === "unavailable" || state.status === "outcome-unknown" || state.status === "stale"}>
           <p role="alert" class="sf-files-note">{t(message())}</p>
-          <Show when={state.phase === "unknown" && state.manifest}>
-            <button type="button" class="mx-btn" disabled={state.busy}
-              onClick={() => { void reconcile() }}>{t("sf.u23.reconcile")}</button>
-          </Show>
+        </Show>
+        <Show when={state.phase === "unknown" && state.manifest && permitted("files.import-reference")}>
+          <button type="button" class="mx-btn" disabled={state.busy}
+            onClick={() => { void reconcile() }}>{t("sf.u23.reconcile")}</button>
         </Show>
       </section>
     </SfPageFrame>

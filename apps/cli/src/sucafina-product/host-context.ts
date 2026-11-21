@@ -97,6 +97,7 @@ import { createSfNativeHostContribution } from "./native-host.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
 import { observeSfImportHealth } from "./native-ui/import-health.ts"
+import { observeSfDocumentHealth } from "./native-ui/document-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
@@ -990,6 +991,10 @@ export const createSfHostRuntimeWithRoutineNative = async (
               authority.host.revalidate, authority.host.requestFor, authority.ui.operationIdentity,
               input.persistence.readScopedSource, input.persistence.resolveScopedSource, imports.descriptors] }
         } }, request, stamp),
+        observeSfDocumentHealth({ authority, binding: input.nativeReadBinding, source: () =>
+          identity() && services.productHttp === productHttp && documents && input.assets
+            ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets } : undefined,
+        }, request, stamp),
         observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfReviewThreadContextHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfDashboardDraftHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
