@@ -273,7 +273,7 @@ export function createSfReviewCollaboration(input: {
       }, { signal: request.signal, targetPreimageCurrent: atomic.holdTargetPreimage().current, sealedRead: true }))
     if (Object.hasOwn(completionFailure, "error")) throw completionFailure.error
     if (!current()) return denied
-    if (!leg && ready && strict.current() && paired.status === "ok" && localRecordReview(paired.value.review))
+    if (!leg && readerCurrent && ready && strict.current() && paired.status === "ok" && localRecordReview(paired.value.review))
       materialProofs.set(paired.value, () => current() && strict.current())
     return paired
   }

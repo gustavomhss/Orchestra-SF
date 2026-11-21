@@ -4,7 +4,7 @@
 // contracts until the native issuer and same-owner installed browser prove them.
 import { expect } from "@playwright/test"
 import { openReportsJourney, reportsTest } from "./reports-support/fixture.ts"
-import { changeForecast, expectCapturedBudget, exportReview, followBudgetSource, openAndReopenMeeting, prepareReview, preserveNewRevision, readSourceData } from "./reports-support/review-flow.ts"
+import { changeForecast, expectCapturedBudget, exportReview, followBudgetSource, observeReviewTransport, openAndReopenMeeting, prepareReview, preserveNewRevision, readSourceData } from "./reports-support/review-flow.ts"
 import { expectReusedReviewValue } from "./reports-support/confirmation.ts"
 import { confirmSubmittedHumanAnswer, editHumanAnswer, expectConfirmedAnswerVisible, observed, submitHumanAnswer } from "./reports-support/human-answer-flow.ts"
 import { object, readReview, responseFor } from "./reports-support/model.ts"
@@ -74,20 +74,33 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
       const beforeReload = await api.version()
       const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
       const answerRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))
+      void answerRead.catch(() => undefined)
       await page.reload()
       const reopened = await read
       expect(reopened.status()).toBe(200)
       expect(object(await reopened.json()).value).toEqual(saved)
       const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
       await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
-      await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
-      await expectCapturedBudget(page, corpus)
       await reportsTest.step("Reuse after reopening without writing a new confirmation", async () => {
         const observedRead = await observed(await answerRead, "collaboration-answer-read")
         expect(observedRead.payload).toEqual({ questionId: answer.questionId })
         expectReusedReviewValue(answer, observedRead.value)
         expect(await api.version()).toBe(beforeReload)
         await expectConfirmedAnswerVisible(page, answer)
+      })
+      await reportsTest.step("Open Budget through a fresh authorized read after discussion startup", async () => {
+        const transport = observeReviewTransport(page, app, "review-read", "GET")
+        const budgetRead = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+        void budgetRead.catch(() => undefined)
+        try {
+          await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+          const response = await Promise.race([budgetRead, transport.failed])
+          expect(response.status()).toBe(200)
+          expect(object(await response.json()).value).toEqual(saved)
+          await expectCapturedBudget(page, corpus)
+        } finally {
+          await transport.finish(info)
+        }
       })
     })
 
