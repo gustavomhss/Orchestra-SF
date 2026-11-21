@@ -3880,6 +3880,29 @@ const adaptGroup53 = (raw: RawClient["server.inbox"]) => ({
   door: Endpoint53_37(raw),
 })
 
+type Endpoint54_0Request = Parameters<RawClient["server.sucafina"]["sucafina.installations"]>[0]
+type Endpoint54_0Input = {
+  readonly select: Endpoint54_0Request["query"]["select"]
+  readonly contractRevision?: Endpoint54_0Request["query"]["contractRevision"]
+  readonly tenantId?: Endpoint54_0Request["query"]["tenantId"]
+  readonly installationId?: Endpoint54_0Request["query"]["installationId"]
+  readonly projectId?: Endpoint54_0Request["query"]["projectId"]
+  readonly location?: Endpoint54_0Request["query"]["location"]
+}
+const Endpoint54_0 = (raw: RawClient["server.sucafina"]) => (input: Endpoint54_0Input) =>
+  raw["sucafina.installations"]({
+    query: {
+      select: input["select"],
+      ...(input["contractRevision"] === undefined ? {} : { contractRevision: input["contractRevision"] }),
+      ...(input["tenantId"] === undefined ? {} : { tenantId: input["tenantId"] }),
+      ...(input["installationId"] === undefined ? {} : { installationId: input["installationId"] }),
+      ...(input["projectId"] === undefined ? {} : { projectId: input["projectId"] }),
+      ...(input["location"] === undefined ? {} : { location: input["location"] }),
+    },
+  }).pipe(Effect.mapError(mapClientError))
+
+const adaptGroup54 = (raw: RawClient["server.sucafina"]) => ({ installations: Endpoint54_0(raw) })
+
 const adaptClient = (raw: RawClient) => ({
   health: adaptGroup0(raw["server.health"]),
   location: adaptGroup1(raw["server.location"]),
@@ -3935,6 +3958,7 @@ const adaptClient = (raw: RawClient) => ({
   artifacts: adaptGroup51(raw["server.capability.artifacts"]),
   capabilitySchedules: adaptGroup52(raw["server.capability.schedules"]),
   "server.inbox": adaptGroup53(raw["server.inbox"]),
+  sucafina: adaptGroup54(raw["server.sucafina"]),
 })
 
 export const make = (options?: {

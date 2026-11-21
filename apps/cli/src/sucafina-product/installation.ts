@@ -7,6 +7,7 @@ import { NodeHttpServerRequest, NodeStream } from "@effect/platform-node"
 import { SfFileRoutes } from "@orchestra/schema/sucafina/files/routes"
 import { SfReviewRoutes } from "@orchestra/schema/sucafina/reviews/routes"
 import type { Host } from "@orchestra/core/host"
+import type { Options } from "@orchestra/server/routes"
 import { Effect, Option, Stream } from "effect"
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 
@@ -22,6 +23,7 @@ type Installation = {
   handler: (request: Request) => Promise<Response | undefined>
   dispose: () => void | Promise<void>
   host?: readonly Host.Contribution[]
+  discovery?: Options["sucafinaInstallations"]
 }
 
 /** The operator selects trusted code at startup. HTTP requests cannot select the factory or its origin. */
@@ -183,6 +185,7 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     bodyLimit,
     dedicated: ingress !== undefined,
     host: hostContributions,
+    discovery: runtime && !ingress ? installation.discovery : undefined,
     // Effect registers a trailing wildcard for both the mount and its subtree.
     layer: HttpRouter.add("*", `${installation.mount}/*`, route),
   }

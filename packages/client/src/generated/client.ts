@@ -598,6 +598,8 @@ import type {
   ServerInboxSlackSyncOutput,
   ServerInboxDoorInput,
   ServerInboxDoorOutput,
+  SucafinaInstallationsInput,
+  SucafinaInstallationsOutput,
 } from "./types"
 import { ClientError } from "./client-error"
 import { makeResearch } from "./research"
@@ -4691,6 +4693,27 @@ export function make(options: ClientOptions) {
             path: `/api/inbox/door`,
             query: { location: input["location"] },
             body: { number: input["number"], from: input["from"] },
+            successStatus: 200,
+            declaredStatuses: [400, 401],
+            empty: false,
+          },
+          requestOptions,
+        ),
+    },
+    sucafina: {
+      installations: (input: SucafinaInstallationsInput, requestOptions?: RequestOptions) =>
+        request<SucafinaInstallationsOutput>(
+          {
+            method: "GET",
+            path: `/api/sucafina/installations`,
+            query: {
+              select: input["select"],
+              contractRevision: input["contractRevision"],
+              tenantId: input["tenantId"],
+              installationId: input["installationId"],
+              projectId: input["projectId"],
+              location: input["location"],
+            },
             successStatus: 200,
             declaredStatuses: [400, 401],
             empty: false,
