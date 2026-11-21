@@ -47,23 +47,29 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
   }
   const confirm = async (label: string) => {
     const before = posts.length
+    // Capture bytes as soon as CDP exposes the response, before confirmation
+    // can unmount the review or trigger the producer readback navigation.
     const responsePending = page.waitForResponse((response) =>
       response.request().method() === "POST" &&
-      new URL(response.url()).pathname === installation.mount + "/procurement").catch(() => null)
+      new URL(response.url()).pathname === installation.mount + "/procurement").then(async (response) => {
+        const status = response.status()
+        const body: unknown = await response.json().catch(() => null)
+        return { status, body }
+      }).catch(() => null)
     await review.getByRole("button", { name: label, exact: true }).click()
     await expect.poll(() => posts.length, { message: "one explicit confirmation sends one original producer command" }).toBe(before + 1)
     const response = await responsePending
     if (!response) throw new Error("The original producer did not return a command response.")
-    const body: unknown = await response.json().catch(() => null)
-    const result = body && typeof body === "object" ? body as Record<string, unknown> : {}
+    const result = response.body && typeof response.body === "object"
+      ? response.body as Record<string, unknown> : {}
     // Only bounded status/error enums are logged: never request values, headers,
     // source records, actor identity or opaque owner/intent credentials.
     const codes = Array.isArray(result.errors) ? result.errors.filter((value): value is string =>
       typeof value === "string" && /^[a-z][a-z0-9_-]{0,63}$/.test(value)).slice(0,8) : []
     console.info("SF_DESIGN_COMMAND " + JSON.stringify({
-      ordinal: before + 1, status: response.status(), confirmed: result.ok === true, codes,
+      ordinal: before + 1, status: response.status, confirmed: result.ok === true, codes,
     }))
-    expect(response.status(), "the original producer explicitly accepted this confirmation").toBe(200)
+    expect(response.status, "the original producer explicitly accepted this confirmation").toBe(200)
     expect(result.ok === true, "a successful HTTP status must include the original acknowledgement").toBe(true)
     await expect(review).toHaveCount(0)
     const host = page.locator('[data-sf-host="owner-runtime231"]')
