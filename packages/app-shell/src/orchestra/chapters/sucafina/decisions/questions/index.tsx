@@ -1,6 +1,7 @@
 import { A } from "@solidjs/router"
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
+import { snapshotDecisionRequest } from "../intent/request"
 import type { Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
@@ -106,7 +107,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
       input: {
         caseRef: caseRef(),
         question: { text: ui.text.trim(), ...(ui.criterion ? { criterionRef: ui.criterion } : {}) },
-        sourceRefs: [...original.sourceRefs],
+        sourceRefs: snapshotDecisionRequest(original.sourceRefs),
         ...(ui.recipient ? { recipientRef: ui.recipient } : {}),
       },
     }

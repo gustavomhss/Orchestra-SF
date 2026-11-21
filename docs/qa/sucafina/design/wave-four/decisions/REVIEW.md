@@ -33,6 +33,12 @@ The historical-choice response provides `caseRef.id` and `caseRef.incarnation`; 
 
 The typed F02 transport owns identity for POST read operations and rejects an explicit command idempotency key. `choices`, `list`, `read` and `output` now receive only their abort signal. Prepare/start/cancel retain fresh command keys. Owner generation, read epochs, aborts, frozen prepared input and unknown-outcome reconciliation remain intact.
 
+### Reactive metadata at the closed input boundary
+
+The first installed browser pass reached UI34, then its local review decoder rejected unchanged source references held by the Solid store. Solid 1.9.10 attaches non-enumerable proxy symbols to wrapped records; Effect 4 beta.83 checks `Reflect.ownKeys` when `onExcessProperty` is `error`. The source evidence therefore remained valid JSON while its in-memory wrapper was rejected before HTTP.
+
+UI34 and UI37 now take `structuredClone(unwrap(...))` snapshots of source references before decoding/sending. UI35/UI38 use the same copy for producer preparation/promotion objects already held in stores. UI41 copies its case reference/scope and frozen start request. String keys, versions, digests, explicit unknown keys, optional fields and source values are retained; F02 and the original closed schemas are unchanged. UI39/UI40 already construct their request objects from scalar fields and require no change. The browser journey still requires exact authoritative source-reference equality after UI34 save and one real UI37 preparation POST. `test-browser/sucafina-decision-command.test.ts` also exercises the actual browser-condition Solid tracked store, unchanged Effect schemas and native codecs, asserting the pre-fix rejection, exact detached values, question/analysis inputs and continued rejection of unexpected keys or explicit undefined.
+
 ## Canonical fixture and browser proof
 
 `seedWaveFourDecisions(installed, year): Promise<void>` runs after the native host starts. `installed.request` is the real authenticated original boundary. It uses:
@@ -59,7 +65,7 @@ Screenshots and source-count evidence are written by the shared Actions capture 
 
 ## Validation status and limits
 
-**Source reviewed; Actions attempts reached the real producer setup, but browser qualification is still pending.** The repository/user workflow permits execution only through consolidated GitHub Actions, owned by the integration agent. Initial runs reached native-ready and successfully created sources/cases/alternatives; run 44956714182 then exceeded the fixture's 40-second request boundary at decision-compare against the large Planner demonstration. The fixture now uses the small, canonical service scenario also exercised by the existing C17 journey, without enlarging that timeout. Screenshots do not yet exist in this branch and visual approval is not claimed.
+**Source gates passed; the installed browser journey is still being qualified.** The repository/user workflow permits execution only through consolidated GitHub Actions, owned by the integration agent. Gate run 44956908951 passed. Run 44956714182 exceeded the fixture's 40-second request boundary at decision-compare against the large Planner demonstration. With the small canonical Planner fixture, run 44957467750 completed comparison in 20.7 seconds and recording the choice in 27.6 seconds, then reached the native browser. Its first UI34 editor capture showed the intended native layout and focus ring, but review stopped on the reactive-metadata defect described above. The follow-up copies that metadata out before the original validation and still needs a browser rerun. All eight surfaces are not yet visually approved.
 
 This fixture does not provide an Atlas archive admitting current-choice recalculation. It does not prepare a domain application, so UI39 apply/recovery and UI40 populated receipt detail need a separate canonically admitted source setup for runtime qualification. These paths are preserved and styled, but are not marked browser-proven.
 

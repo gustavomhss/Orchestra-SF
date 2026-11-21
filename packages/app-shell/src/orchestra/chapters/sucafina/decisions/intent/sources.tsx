@@ -1,5 +1,6 @@
 import { createEffect, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
+import { snapshotDecisionRequest } from "./request"
 import { Option, Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import { createSfBiClient } from "@orchestra/client/sucafina/bi"
@@ -65,7 +66,9 @@ export function SfCaseSourcesEditor(props: Readonly<{
       caseRef: { id: record.id, incarnation: record.incarnation, version: record.version },
       objective: draft.objective.trim(),
       criteria: draft.criteria.map(({ id, description, required }) => ({ id, description: description.trim(), required })),
-      horizon: { start: draft.start, end: draft.end }, currency: draft.currency, sourceRefs: sources,
+      horizon: { start: draft.start, end: draft.end }, currency: draft.currency,
+      // Keep Solid metadata outside the closed input schema; all source values remain exact.
+      sourceRefs: snapshotDecisionRequest(sources),
     })
   const discover = async () => {
     const ready = owner.ready(), record = props.projection.case

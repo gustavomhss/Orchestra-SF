@@ -1,5 +1,6 @@
 import { For, Show, createEffect, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
+import { snapshotDecisionRequest } from "../intent/request"
 import { SfAnalysisOutput } from "./output"
 import { useLanguage } from "@/context/language"
 import { SF_U37_COPY } from "@/i18n/orchestra-chapters/sf-u37"
@@ -161,7 +162,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       runRef: "", output: null, notice: null,
     })
     const result = await createSfAnalysesClient(ready.transport)["intelligence.analysis.list"](
-      { caseRef: target.caseRef }, { signal },
+      { caseRef: { ...target.caseRef } }, { signal },
     ).catch(() => undefined)
     if (!authorized(ticket, generation, signal) || view.caseKey !== caseKey(target.caseRef)) return
     if (!result || result.kind !== "response" || result.body.status !== "ok") {
@@ -235,7 +236,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     const chosen = selectedCase()
     if (!ready || !selected || !chosen) return
     const request: Request = {
-      caseRef: chosen.caseRef,
+      caseRef: { ...chosen.caseRef },
       objective: view.objective.trim(),
       profileId: selected.profileId,
       profileVersion: selected.profileVersion,
@@ -243,7 +244,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       skillVersion: selected.skillVersion,
       manifestDigest: selected.manifestDigest,
       outputSchemaVersion: selected.outputSchemaVersion,
-      requestedOperationScope: selected.requestedOperationScope,
+      requestedOperationScope: [...selected.requestedOperationScope],
     }
     commandAbort?.abort()
     commandAbort = new AbortController()
@@ -290,7 +291,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     const generation = owner.generation()
     setView({ phase: "starting", notice: null })
     const result = await createSfAnalysesClient(ready.transport)["intelligence.analysis.start"](
-      { input: { request, skillInput, model } }, callOptions(signal),
+      snapshotDecisionRequest({ input: { request, skillInput, model } }), callOptions(signal),
     ).catch(() => undefined)
     if (!authorized(ticket, generation, signal)) return
     if (!result || result.kind !== "response") {

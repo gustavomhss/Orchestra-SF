@@ -4,6 +4,7 @@
  */
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
+import { snapshotDecisionRequest } from "../intent/request"
 import type { SfOperationRef } from "@orchestra/schema/sucafina/context"
 import { useLanguage } from "@/context/language"
 import type { SfSurfaceProps } from "../../context/contracts"
@@ -149,7 +150,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     setView({ review: null, selectedChoiceId: choiceId, busy: true, outcome: "idle", operationRef: key })
     try {
       const result = await createSfDecisionsClient(ready.transport)["decisions.current-choice-prepare"](
-        choice.request, { signal: controller.signal, idempotencyKey: key },
+        snapshotDecisionRequest(choice.request), { signal: controller.signal, idempotencyKey: key },
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
       if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
@@ -197,7 +198,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     setView({ busy: true, operationRef: key })
     try {
       const result = await createSfDecisionsClient(ready.transport)["decisions.current-choice-promote"](
-        review.promotion, { signal: controller.signal, idempotencyKey: key },
+        snapshotDecisionRequest(review.promotion), { signal: controller.signal, idempotencyKey: key },
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
       if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
