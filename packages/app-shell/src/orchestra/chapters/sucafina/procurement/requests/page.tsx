@@ -22,6 +22,7 @@ import {
   type SfPoEdit, type SfPrEdit, type SfRequest, type SfRequestCommand, type SfRequestsRead,
 } from "./model"
 import "./requests.css"
+import "../overview/presentation.css"
 
 type Key = keyof typeof SF_U11_REMAINING_COPY
 type Ready = Extract<SfRequestsRead, { kind: "ready" }>
@@ -124,6 +125,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     read: undefined as Ready | undefined,
     selected: undefined as SfRef | undefined,
     creating: false,
+    showList: false,
     filter: "",
     sort: { kind: "none" } as SfSort,
     refresh: 0,
@@ -662,7 +664,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       : current?.status === "sourcing" || current?.status === "src_rejected" ? "quote"
       : current?.status === "po_approved" || current?.status === "po_issued" ? "signed-po"
       : undefined
-    return <article class="sf-u11-detail" data-sf-request-ref={ref ?? undefined}>
+    return <article class="sf-u11-detail" data-sf-request-ref={ref ?? undefined} data-stage={view.reviewing ? "review" : "edit"}>
+      <button type="button" class="mx-link sf-procurement-back"
+        disabled={view.sending || view.outcomeUnknown || prPending() || poPending()}
+        onClick={() => setView("showList", true)}>{t("sf.u11.remaining.backList")}</button>
       <header class="sf-u11-detail-head">
         <h2>{creating() ? t("sf.u11.remaining.new") : current?.pr?.title ?? ref}</h2>
         <Show when={!creating() && ref}>
@@ -705,6 +710,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           </section>
         </Show>
       </header>
+      <div class="sf-u11-content" hidden={!!view.reviewing}>
       <Show when={current && ref}>
         <nav class="sf-u11-tabs" aria-label={t("sf.u11.remaining.progress")}>
           <a href={stageHref(ref!, "requisition")}>{t("sf.u11.remaining.pr")}</a>
@@ -834,30 +840,35 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           </Show>
         </div>
       </Show>
+      </div>
       {reviewPane()}
     </article>
   }
 
-  return <section data-component="sf-requests-pr-po" aria-busy={view.sending}>
+  return <section class="sf-procurement-wave" data-component="sf-requests-pr-po" data-sf-surface="CAP25" aria-busy={view.sending}>
     <SfPageFrame
       titleKey={copyKey("sf.u11.remaining.list")}
       context={[]} tabs={[]} activeTab={null}
-      primaryAction={actionAllowed("create") ? {
-        id: "create", labelKey: copyKey("sf.u11.remaining.new"), tone: "primary",
+      primaryAction={actionAllowed("create") && (view.showList || (!row() && !creating())) ? {
+        id: "create", labelKey: copyKey(creating() ? "sf.u11.remaining.resumeDraft" : "sf.u11.remaining.new"), tone: "primary",
         disabled: view.sending || view.outcomeUnknown, busy: view.sending,
-        onInvoke: () => setView({ creating: true, selected: undefined,
-          newIntentRef: crypto.randomUUID() as SfIntentRef, reviewing: undefined }),
+        onInvoke: () => {
+          if (creating()) { setView("showList", false); return }
+          setView({ creating: true, selected: undefined, showList: false,
+            newIntentRef: crypto.randomUUID() as SfIntentRef, reviewing: undefined })
+        },
       } : undefined}
       secondaryActions={[]} density="comfortable"
-      layout={view.layoutMode === "single" ? "reading" : "split"}
+      layout="work"
       onLayoutMode={(mode) => setView("layoutMode", mode)}
     >
+      <div class="sf-u11-surface" data-sf-wave="four">
       <Show when={sourceAvailable()} fallback={
         <SfStatePanel state={view.state} messageKey={copyKey("sf.u11.remaining.noSource")}
           onRetryRead={view.state === "denied" ? undefined : refresh} />
       }>
-        <div class="sf-u11-layout">
-          <div class="sf-u11-list">
+        <div class="sf-u11-layout" data-sf-wave="four" data-view={view.showList || (!row() && !creating()) ? "list" : "detail"}>
+          <div class="sf-u11-list" hidden={!view.showList && (!!row() || creating())}>
             <label for={searchId}>{t("sf.u11.remaining.filter")}</label>
             <div class="sf-u11-filters">
               <input id={searchId} type="search" placeholder={t("sf.u11.remaining.filterPlaceholder")}
@@ -868,13 +879,13 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
             <SfDataTable rows={rows()} getRowKey={(record) => requestRef(record)!}
               columns={columns} selectedKey={selectedRef()} sort={view.sort}
               page={{ kind: "none", total: rows().length }} onSort={(sort) => setView("sort", sort)}
-              onPage={() => undefined} onSelect={(ref) => setView({ selected: ref, creating: false, reviewing: undefined })}
+              onPage={() => undefined} onSelect={(ref) => setView({ selected: ref, creating: false, reviewing: undefined, showList: false })}
               rowActions={() => []} onRowAction={() => undefined}
               captionKey={tableKey("sf.u11.remaining.list")} density="comfortable"
               state={rows().length ? "ready" : view.read?.records.length ? "filtered-empty" : "empty"}
             />
           </div>
-          <div class="sf-u11-detail-wrap">
+          <div class="sf-u11-detail-wrap" hidden={view.showList || (!row() && !creating())}>
             <Show when={row() || creating()} fallback={<p role="status">{t("sf.u11.remaining.open")}</p>}>
               {renderDetail()}
             </Show>
@@ -887,6 +898,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           <button type="button" class="mx-btn" onClick={refresh}>{t("sf.u11.remaining.retry")}</button>
         </p>}
       </Show>
+      </div>
     </SfPageFrame>
   </section>
 }

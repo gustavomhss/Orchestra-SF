@@ -1,25 +1,12 @@
-/* U10.queue only. Typography, colors and focus states stay with Orchestra/F03/S01. */
+.sf-procurement-queue { display: grid; gap: 24px; min-inline-size: 0; }
 .sf-procurement-queue-filters {
-  box-sizing: border-box;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-  gap: 0.75rem;
-  margin: 0 0 1rem;
+  box-sizing: border-box; min-inline-size: 0; display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 16px; margin: 0; padding: 20px;
+  background: var(--mx-raised); border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg);
 }
-.sf-procurement-queue-filters > legend {
-  padding-inline: 0.25rem;
-}
-.sf-procurement-queue-filters > label {
-  min-width: 0;
-  display: grid;
-  gap: 0.35rem;
-}
-.sf-procurement-queue-filters select,
-.sf-procurement-queue-filters input[type="search"] {
-  box-sizing: border-box;
-  min-width: 0;
-  max-width: 100%;
-  width: 100%;
-  font: inherit;
-}
+.sf-procurement-queue-filters > legend { padding-inline: 8px; font-size: var(--orchestra-font-size-lg); color: var(--mx-strong); font-weight: 600; }
+.sf-procurement-queue-filters > label { min-inline-size: 0; display: grid; gap: 8px; }
+.sf-procurement-queue .sf-s01-list-pane { min-inline-size: 0; }
+.sf-procurement-queue .sf-s01-record-detail { padding: 20px; background: var(--mx-raised); border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg); }
+@media (max-width: 767px) { .sf-procurement-queue-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 479px) { .sf-procurement-queue-filters { grid-template-columns: minmax(0, 1fr); } }

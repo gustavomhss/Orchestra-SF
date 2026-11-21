@@ -63,9 +63,9 @@ export function SfRequisitionForm(props: PrProps) {
               </Show>
             }>
               <select name="pr.type" value={textValue(value())} onChange={(event) => edit("type", event.currentTarget.value)}>
-                <option value="">Choose…</option>
-                <option value="product">product</option>
-                <option value="service">service</option>
+                <option value="">{copy("sf.u11.remaining.choose")}</option>
+                <option value="product">{copy("sf.u11.remaining.product")}</option>
+                <option value="service">{copy("sf.u11.remaining.service")}</option>
               </select>
             </Show>
           }>

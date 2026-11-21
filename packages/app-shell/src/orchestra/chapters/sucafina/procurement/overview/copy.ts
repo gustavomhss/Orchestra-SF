@@ -3,6 +3,8 @@
 export const SF_N21_OVERVIEW_COPY = {
   "sf.cap24.title": "Dashboard",
   "sf.cap24.primary": "Open requests",
+  "sf.n21.sourceTotals": "Source totals",
+  "sf.n21.sourceCoverage": "Source coverage",
   "sf.n21.request": "Request",
   "sf.n21.status": "Status",
   "sf.n21.amount": "Amount",
@@ -26,6 +28,8 @@ export const SF_N21_OVERVIEW_COPY = {
 export const SF_N21_OVERVIEW_COPY_BR = {
   "sf.cap24.title": "Visão de Procurement",
   "sf.cap24.primary": "Abrir pedidos",
+  "sf.n21.sourceTotals": "Totais da fonte",
+  "sf.n21.sourceCoverage": "Cobertura da fonte",
   "sf.n21.request": "Request",
   "sf.n21.status": "Status",
   "sf.n21.amount": "Amount",

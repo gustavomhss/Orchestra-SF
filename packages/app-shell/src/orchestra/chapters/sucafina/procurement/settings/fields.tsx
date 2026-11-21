@@ -117,7 +117,16 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
   )
   return (
     <div class="sf-n21-settings-groups">
-      <fieldset class="mx-card sf-n21-fieldset">
+      <nav class="sf-n21-settings-nav" aria-label={t(key("sf.cap28.title"))}>
+        <a href="#sf-procurement-settings-general">{t(key("sf.u36.general"))}</a>
+        <a href="#sf-procurement-settings-matrix">{t(key("sf.u36.matrix"))}</a>
+        <a href="#sf-procurement-settings-currencies">{t(key("sf.u36.currencies"))}</a>
+        <a href="#sf-procurement-settings-criteria">{t(key("sf.u36.technical"))}</a>
+        <a href="#sf-procurement-settings-commCriteria">{t(key("sf.u36.commercial"))}</a>
+        <a href="#sf-procurement-settings-payments">{t(key("sf.u36.payments"))}</a>
+        <a href="#sf-procurement-settings-attachments">{t(key("sf.u36.attachments"))}</a>
+      </nav>
+      <fieldset class="sf-n21-fieldset" id="sf-procurement-settings-general">
         <legend>{t(key("sf.u36.general"))}</legend>
         <div class="sf-n21-field-grid">
           {scalar("currency", "sf.u36.currency", "text")}
@@ -141,7 +150,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
           {toggle("requireActiveSupplier", "sf.u36.active")}
         </div>
       </fieldset>
-      <fieldset class="mx-card sf-n21-fieldset">
+      <fieldset class="sf-n21-fieldset" id="sf-procurement-settings-attachments">
         <legend>{t(key("sf.u36.attachments"))}</legend>
         <div class="sf-n21-field-grid">
           {scalar("uploadCap", "sf.u36.upload", "number")}
@@ -149,7 +158,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
           {scalar("escalationDays", "sf.u36.escalation", "number")}
         </div>
       </fieldset>
-      <fieldset class="mx-card sf-n21-fieldset">
+      <fieldset class="sf-n21-fieldset" id="sf-procurement-settings-matrix">
         <legend>{t(key("sf.u36.matrix"))}</legend>
         <div class="sf-n21-repeat">
           <For each={props.settings.levels ?? []}>{(row, index) => (
@@ -186,7 +195,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
           {addButton("levels")}
         </div>
       </fieldset>
-      <fieldset class="mx-card sf-n21-fieldset">
+      <fieldset class="sf-n21-fieldset" id="sf-procurement-settings-currencies">
         <legend>{t(key("sf.u36.currencies"))}</legend>
         <div class="sf-n21-repeat">
           <For each={props.settings.fxRates ?? []}>{(rate, index) => (
@@ -213,7 +222,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
         {scalar("fxUpdated", "sf.u36.rateDate", "date")}
       </fieldset>
       <For each={["criteria", "commCriteria"] as const}>{(group) => (
-        <fieldset class="mx-card sf-n21-fieldset">
+        <fieldset class="sf-n21-fieldset" id={"sf-procurement-settings-" + group}>
           <legend>{t(key(group === "criteria" ? "sf.u36.technical" : "sf.u36.commercial"))}</legend>
           <div class="sf-n21-repeat">
             <For each={props.settings[group] ?? []}>{(criterion, index) => (
@@ -247,7 +256,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
           </div>
         </fieldset>
       )}</For>
-      <fieldset class="mx-card sf-n21-fieldset">
+      <fieldset class="sf-n21-fieldset" id="sf-procurement-settings-payments">
         <legend>{t(key("sf.u36.payments"))}</legend>
         <div class="sf-n21-field-grid">
           {scalar("paymentTerms", "sf.u36.paymentTerms", "textarea")}

@@ -14,6 +14,7 @@ import { SfProcurementSettingsFields } from "./fields"
 import { SETTINGS_REF, changedSettings, settingsReview } from "./model"
 import type { Settings, SettingsProjection } from "./model"
 import "./settings.css"
+import "../overview/presentation.css"
 
 type ReviewMode = "save" | null
 const key = (value: string) => value as SfCopyKey
@@ -327,13 +328,13 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       context={[]}
       tabs={[]}
       activeTab={null}
-      primaryAction={primary()}
+      primaryAction={view.review ? undefined : primary()}
       secondaryActions={[]}
       density="comfortable"
       layout="work"
       onLayoutMode={() => undefined}
     >
-      <div class="sf-n21-settings" data-sf-surface="CAP28">
+      <div class="sf-n21-settings sf-procurement-wave" data-sf-surface="CAP28" data-sf-wave="four" data-view={view.review ? "review" : "settings"}>
         <Show when={view.confirmed && view.state === "ready"}>
           <p class="sf-n21-settings-notice" role="status">{t(sfCommonKey("sf.common.saved"))}</p>
         </Show>

@@ -2,6 +2,11 @@
 // Pinned legacy field labels are preserved verbatim in pt-BR (COPY-01).
 // I00/125 owns the shared dictionary registration and merges this leaf once.
 export const SF_U11_REMAINING_COPY = {
+  "sf.u11.remaining.backList": "Back to requests",
+  "sf.u11.remaining.resumeDraft": "Resume draft",
+  "sf.u11.remaining.choose": "Choose…",
+  "sf.u11.remaining.product": "product",
+  "sf.u11.remaining.service": "service",
   "sf.u11.remaining.list": "Requests",
   "sf.u11.remaining.filter": "Search requests",
   "sf.u11.remaining.filterPlaceholder": "Number, title, status or requester",
@@ -108,6 +113,11 @@ export const SF_U11_REMAINING_COPY = {
 
 export const SF_U11_REMAINING_COPY_BR: Record<keyof typeof SF_U11_REMAINING_COPY, string> = {
   ...SF_U11_REMAINING_COPY,
+  "sf.u11.remaining.backList": "Voltar aos pedidos",
+  "sf.u11.remaining.resumeDraft": "Retomar rascunho",
+  "sf.u11.remaining.choose": "Escolha…",
+  "sf.u11.remaining.product": "produto",
+  "sf.u11.remaining.service": "serviço",
   "sf.u11.remaining.list": "Pedidos",
   "sf.u11.remaining.filter": "Pesquisar pedidos",
   "sf.u11.remaining.filterPlaceholder": "Número, título, status ou solicitante",

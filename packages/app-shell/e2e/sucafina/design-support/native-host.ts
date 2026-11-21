@@ -13,6 +13,10 @@ import { DashboardBudget } from "../../../../../modules/sucafina/Sucafinav1/runt
 import { DashboardPeople } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-people"
 import { DashboardPortfolio } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-portfolio"
 import { seedWaveThreeDashboard, seedWaveThreePlanner } from "./wave-three-seed"
+import { seedWaveFourPlanner } from "./wave-four-planner-seed"
+import { seedWaveFourProcurement } from "./wave-four-procurement-seed"
+import { seedWaveFourDecisions } from "./wave-four-decisions-seed"
+import { loadLocalConfiguration } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-configuration"
 
 const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../..")
 const privateRoot = process.argv[2]
@@ -21,7 +25,8 @@ if (Object.keys(process.env).some((key) => key.startsWith("VITE_")))
   throw new Error("Native capture build must not inherit Vite server overrides")
 
 const secondWave = process.argv[3] === "two"
-const thirdWave = process.argv[3] === "three" || process.argv[3] === "four"
+const fourthWave = process.argv[3] === "four"
+const thirdWave = process.argv[3] === "three" || fourthWave
 const now = new Date()
 const year = now.getUTCFullYear()
 const month = now.getUTCMonth() + 1
@@ -53,6 +58,16 @@ const program = Effect.scoped(Effect.gen(function* () {
     serverPassword,
     seed: async ({ config, store, actorId }) => {
       configuration = config
+      const loaded = await loadLocalConfiguration(config)
+      const operator = loaded.config.localOperator
+      if (fourthWave) {
+        if (!operator?.name) throw new Error("The native operator name is required for procurement")
+        // Configure the original installation policy before the real host starts.
+        // The original identity producer issues its roles; no grant or cookie is patched.
+        await writeFile(config, JSON.stringify({
+          ...loaded.config, localOperator: { ...operator, buyer: true },
+        }, null, 2) + "\n", { mode: 0o600 })
+      }
       await store.transaction("dashboard", async (snapshot) => {
         const actor: Actor = { id: actorId, roles: ["admin"], canWrite: true }
         const environment = { at: now.toISOString(), id: randomUUID, directory: [] }
@@ -146,12 +161,21 @@ const program = Effect.scoped(Effect.gen(function* () {
         return { commit: true, value: undefined }
       })
       if (thirdWave) await store.transaction("planner", async (snapshot) => {
-        seedWaveThreePlanner(snapshot, { id: actorId, roles: ["admin"], canWrite: true },
-          { at: now.toISOString(), id: randomUUID, directory: [] }, year)
+        const actor: Actor = { id: actorId, roles: ["admin"], canWrite: true }
+        const environment = { at: now.toISOString(), id: randomUUID, directory: [] }
+        seedWaveThreePlanner(snapshot, actor, environment, year)
+        if (fourthWave) seedWaveFourPlanner(snapshot, actor, environment, year)
+        return { commit: true, value: undefined }
+      })
+      if (fourthWave) await store.transaction("procurement", async (snapshot) => {
+        if (!operator?.name) throw new Error("Native procurement directory identity is unavailable")
+        seedWaveFourProcurement(snapshot, { id: actorId, roles: ["admin", "buyer"], canWrite: true },
+          { at: now.toISOString(), id: randomUUID, directory: [{ id: actorId, name: operator.name }] }, year)
         return { commit: true, value: undefined }
       })
     },
   })
+  if (fourthWave) yield* Effect.promise(() => seedWaveFourDecisions(installed, year))
   if (!configuration) throw new Error("Native installation configuration was not observed")
   // The fixture consumed its own enrollment. Mint a new genuine one-use handoff
   // for the browser; no cookie, authority map or successful projection is invented.

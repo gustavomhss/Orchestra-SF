@@ -20,6 +20,7 @@ import {
   type Cap26PageOk, type PendingApproval,
 } from "./model"
 import "./remaining.css"
+import "../../overview/presentation.css"
 
 type Read =
   | Readonly<{kind:"ok";page:Cap26PageOk}>
@@ -52,6 +53,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     state:SfUiState
     page:Cap26PageOk|null
     selected:string|null
+    showList:boolean
     group:ApprovalGroup|"all"
     search:string
     sort:SfSort
@@ -63,7 +65,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     unknownBefore:PendingApproval|null
     changedAfterUnknown:boolean
   }>({
-    token:null,state:"loading",page:null,selected:null,group:"all",search:"",
+    token:null,state:"loading",page:null,selected:null,showList:false,group:"all",search:"",
     sort:{kind:"none"},layoutMode:"split",review:null,phase:"idle",failure:null,
     unknownOperation:null,unknownBefore:null,changedAfterUnknown:false,
   })
@@ -394,6 +396,8 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     const draft=draftState()
     const conflict=draft?.availability==="active"?draft.conflict:null
     return <section class="sf-u13-remaining-detail">
+      <button type="button" class="mx-link sf-procurement-back" disabled={phaseIsBusy(ui.phase)}
+        onClick={() => setUi("showList", true)}>{t("sf.u13.remaining.back")}</button>
       <h2>{record.pr?.title??source.requestRef}</h2>
       <p>{t("sf.u13.remaining.stage")}: {t(source.stage==="sourcing"?"sf.u13.remaining.sourcing":"sf.u13.remaining.po")} ·
         {t("sf.u13.remaining.version")}: {source.version}</p>
@@ -444,7 +448,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
               onInput={(event)=>setNote("reason",event.currentTarget.value)}/>
           </label>
           <div class="sf-u13-remaining-actions">
-            <button type="button" class="mx-btn-primary"
+            <button type="button" class="mx-btn primary"
               disabled={!available("approve")||phaseIsBusy(ui.phase)||!!conflict}
               onClick={()=>begin("approve")}>{t("sf.u13.remaining.approve")}</button>
             <button type="button" class="mx-btn"
@@ -464,14 +468,14 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     titleKey={k("sf.cap26.title" as SfU13RemainingCopyKey)}
     subtitleKey={k("sf.u13.remaining.title")}
     context={[]} tabs={[]} activeTab={null} density="comfortable"
-    layout={ui.layoutMode==="single"?"reading":"split"}
+    layout="work"
     onLayoutMode={(layout)=>setUi("layoutMode",layout)}
     secondaryActions={[{id:"refresh",labelKey:k("sf.u13.remaining.refresh"),tone:"secondary",
       disabled:phaseIsBusy(ui.phase),busy:false,onInvoke:()=>{
         const token=authority();if(token)void refresh(token,ref()??undefined)
       }}]}
   >
-    <div class="sf-u13-remaining-root">
+    <div class="sf-u13-remaining-root sf-procurement-wave" data-sf-surface="CAP26" data-sf-wave="four" data-view={ui.review ? "review" : "records"}>
       <Show when={currentState()==="ready"||currentState()==="empty"||currentState()==="filtered-empty"||currentState()==="outcome-unknown"}
         fallback={<SfStatePanel state={currentState()} messageKey={k(stateKey())}
           onRetryRead={()=>{const token=authority();if(token)void refresh(token,ref()??undefined)}}/>}>
@@ -508,6 +512,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
           onRevise={()=>{setUi("review",null);setUi("phase","idle")}}
           onCancel={()=>{setUi("review",null);setUi("phase","idle")}}
         />}>
+          <div class="sf-u13-remaining-list" hidden={!ui.showList && !!approval()}>
           <div class="sf-u13-remaining-filters">
             <label>{t("sf.u13.remaining.search")}
               <input type="search" value={ui.search}
@@ -546,13 +551,14 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
             selectedKey={approval()?.requestRef as SfRef|undefined}
             sort={ui.sort} page={{kind:"none",total:queued().length}}
             onSort={(sort)=>setUi("sort",sort)}
-            onPage={()=>{}} onSelect={(recordRef)=>setUi("selected",recordRef)}
+            onPage={()=>{}} onSelect={(recordRef)=>{setUi("selected",recordRef);setUi("showList",false)}}
             rowActions={(item)=>item.actions.map((action)=>({id:action,
               labelKey:k(action==="approve"?"sf.u13.remaining.approve":"sf.u13.remaining.reject"),
               tone:action==="approve"?"secondary" as const:"danger" as const,
               disabled:phaseIsBusy(ui.phase),busy:false}))}
             onRowAction={({recordRef,actionId})=>{
               setUi("selected",recordRef)
+              setUi("showList",false)
               // Only opens the record. No command is dispatched on list action:
               // a source-bound decision must be reviewed explicitly.
               if(actionId==="approve"||actionId==="reject")setUi("failure",null)
@@ -560,7 +566,8 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
             captionKey={k("sf.u13.remaining.title")} density="comfortable"
             state={queued().length===0?"filtered-empty":"ready"}
           />
-          <Show when={approval()}>{detail()}</Show>
+          </div>
+          <div hidden={ui.showList}><Show when={approval()}>{detail()}</Show></div>
           <Show when={selected()?.kind==="not-pending"}><p role="status">{t("sf.u13.remaining.reopened")}</p></Show>
         </Show>
         </Show>
