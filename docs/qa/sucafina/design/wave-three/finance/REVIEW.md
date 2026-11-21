@@ -72,3 +72,18 @@ Known CAP05 status enums now use explicit local EN/BR presentation keys. Unrecog
 Official Playwright guides read before authoring: [best practices](https://playwright.dev/docs/best-practices), [auto-waiting](https://playwright.dev/docs/actionability), [assertions](https://playwright.dev/docs/test-assertions), [locators](https://playwright.dev/docs/locators), [network](https://playwright.dev/docs/network) and [test isolation](https://playwright.dev/docs/browser-contexts). Assertions use observable original UI outcomes, not wall-clock sleeps or mocked success.
 
 The prepared journey is not a PASS claim. Integration execution and capture critique remain pending.
+
+
+## First real Actions critique — 21 November 2026
+
+Integration run [44939055525](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44939055525) passed the maintained all-specs gates. Real production-browser run [44939045347](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44939045347), job 136951971544, reached CAP14 editing after completing the CAP05 journey, including the confirmed source forecast change from 19,100 to 19,500. The run then stopped on an exact label locator for Vendor: the required-field asterisk belongs to the label text. There were no page or console errors in the failure diagnostics. The two Vendor locators now use the textbox's accessible name.
+
+Fifteen canonical captures were emitted before the stop. Direct image inspection covered CAP05 dark desktop list and twelve-month detail, light 320px list and dark 320px review actions, plus CAP14 dark list, read stage, edit failure capture and light 320px list. CAP05's typography, alignment, real-zero/missing distinction, 44px actions and narrow review action stack were coherent. This is an acceptance of those observed states only.
+
+The CAP14 narrow capture exposed a real collision: its metadata cells still inherited S01's fixed 44px height after conversion to flex cells, so a long contract name overlapped the following date. The scoped fix resets block size to auto and the real journey now measures content against the following cell. At the narrowest width the record-opening action sits below the vendor name. The source date stays on one line in the desktop table, and the unused actions column is removed. Search uses its short registered label as the visible placeholder, while the existing full search hint remains available through an accessible description.
+
+The contract content stage explicitly reapplies the campaign's 13px body typography inside the native frame; numeric source amounts receive locale grouping only, with no currency invented and no value rewritten. The same inner-stage font inheritance is made explicit for Planner budgets. The contract source link has a 44px target.
+
+Static review additionally identified a small-screen chart risk: scaling the entire CAP17 SVG to the narrow container could shrink axis labels below a useful reading size. Its plot now retains a 640px minimum in a named, focusable local scroller while the existing accessible source table stays intact. This adjustment remains awaiting its first real capture. The shared chart, S01, native frame and controllers are not modified by these corrections.
+
+Re-execution and remaining CAP17–19 visual critique are pending. The first browser run is a recorded failure with a concrete correction, not a five-area PASS claim.

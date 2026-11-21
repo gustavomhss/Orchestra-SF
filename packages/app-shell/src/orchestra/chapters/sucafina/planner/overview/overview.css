@@ -12,6 +12,7 @@
   --sf-overview-version: 440px;
   --sf-overview-year: 112px;
   --sf-overview-table: 620px;
+  --sf-overview-plot: 640px;
   display: grid; gap: var(--sf-overview-xl); min-inline-size: 0;
   color: var(--mx-strong); font: var(--orchestra-font-size-md)/1.6 var(--mx-sans);
 }
@@ -51,7 +52,8 @@
 .sf-u06[data-sf-surface="CAP17"] .sf-u06-legend i { inline-size: var(--sf-overview-lg); block-size: var(--sf-overview-focus); background: var(--mx-blue); }
 .sf-u06[data-sf-surface="CAP17"] .sf-u06-legend [data-series="actual"] i { background: var(--mx-strong); }
 .sf-u06[data-sf-surface="CAP17"] .sf-u06-legend [data-series="outlook"] i { background: none; border-block-start: var(--sf-overview-focus) dashed var(--mx-dim); }
-.sf-u06[data-sf-surface="CAP17"] .sf-u06-plot { display: block; inline-size: 100%; block-size: auto; max-block-size: 360px; overflow: visible; }
+.sf-u06[data-sf-surface="CAP17"] .sf-u06-plot-scroll { min-inline-size: 0; max-inline-size: 100%; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; }
+.sf-u06[data-sf-surface="CAP17"] .sf-u06-plot { display: block; inline-size: 100%; min-inline-size: var(--sf-overview-plot); block-size: auto; max-block-size: 360px; }
 .sf-u06[data-sf-surface="CAP17"] .sf-u06-gridline { stroke: var(--mx-line); stroke-width: 1; }
 .sf-u06[data-sf-surface="CAP17"] .sf-u06-axis { fill: var(--mx-dim); font: var(--orchestra-font-size-sm) var(--mx-sans); text-transform: capitalize; }
 .sf-u06[data-sf-surface="CAP17"] .sf-u06-line { stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
