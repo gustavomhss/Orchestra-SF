@@ -1,3 +1,4 @@
+import { registerReviewEvidenceBatch } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/authority.ts"
 import type { BusinessContextService, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { ReviewThreadContextAuthorizer } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts"
 import type { ReviewThreadRecipientAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts"
@@ -27,9 +28,9 @@ export function createSfReviewCollaborationBinding(original: BusinessContextServ
   }
   const evidence: BusinessContextService = { ...original, resolve,
     context: (request, call) => Promise.all(request.refs.map((ref) => resolve(ref, call))) }
-  const authorizeReviewThreadContext: ReviewThreadContextAuthorizer = async (pin, basis, call) => {
+  const authorizeReviewThreadContext: ReviewThreadContextAuthorizer = async (pin, basis, call, purpose) => {
     const bound = holder.current, authorize = bound?.authorizeReviewThreadContext
-    return !!bound && !!authorize && await authorize(pin, basis, call) && holder.current === bound && !holder.closed && bound.authorizeReviewThreadContext === authorize
+    return !!bound && !!authorize && await authorize(pin, basis, call, purpose) && holder.current === bound && !holder.closed && bound.authorizeReviewThreadContext === authorize
   }
   const reviewRecipientAuthority: ReviewThreadRecipientAuthority = {
     authorize: async (recipient, basis, call) => {
@@ -75,6 +76,7 @@ export function createSfReviewCollaborationBinding(original: BusinessContextServ
     bind: (binding: SfReviewCollaborationBinding) => {
       if (holder.current || holder.closed) throw new Error("SF_REVIEW_COLLABORATION_ALREADY_BOUND")
       holder.current = Object.freeze({ ...binding })
+      registerReviewEvidenceBatch(evidence, reviewAnswerSource, authorizeReviewThreadContext, reviewRecipientAuthority)
     },
     dispose: () => { holder.closed = true; holder.current = undefined },
   }

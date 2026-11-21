@@ -1,5 +1,6 @@
+import { types } from "node:util"
 import type { Persistence, Snapshot } from "../../runtime/contract.ts"
-import { object } from "../../runtime/contract.ts"
+import { hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
 import { consumeLocalTransactionAbort, observeLocalTransactionAbort } from "../../runtime/local-store.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
@@ -68,6 +69,65 @@ export async function appendSfTransactionAbort(input: {
   } finally {
     abortJournalWrites.delete(work)
   }
+}
+
+const stagedReviewThreadWrites = new WeakSet<object>()
+const reviewReceiptReads = new WeakSet<object>()
+const installedStateReads = new WeakSet<object>()
+const installedStateTransactions = new WeakMap<object, SfProductStatePort["transaction"]>()
+const reviewAuthorityReads = new WeakMap<object, (authority: SfStateAuthority) => unknown>()
+
+export function isInstalledSfStateRead(read: SfProductStatePort["read"]) {
+  return installedStateReads.has(read)
+}
+
+/** The existing transaction validator returns a receipt; this probe cannot commit. */
+export async function probeSfReviewMutationReceipt<T>(
+  state: SfProductStatePort,
+  request: Request,
+  command: SfStateMutation,
+  context: TrustedDomainContext,
+  current: () => boolean,
+): Promise<SfStateResult<T | null> | undefined> {
+  const read = state.read
+  const transaction = state.transaction
+  if (installedStateTransactions.get(read) !== transaction) return undefined
+  const binding = digestSfValue([context.kind, context.binding])
+  const live = () => current() && state.read === read && state.transaction === transaction &&
+    !request.signal.aborted && digestSfValue([context.kind, context.binding]) === binding
+  const denied = { status: "denied" as const, reason: "product-authority-changed" }
+  const candidate = await state.read(request, "threads", (stored, actor) => {
+    const bound = actor.principalRef === context.binding.principalRef && actor.accessRevision === context.binding.accessRevision &&
+      actor.policyVersion === context.binding.policyVersion
+    return { bound, exists: bound && !!stored.transactions[JSON.stringify([actor.principalRef, command.namespace, command.targetRef, command.idempotencyKey])] }
+  })
+  if (!live()) return denied
+  if ("reason" in candidate) return candidate
+  if (candidate.status !== "ok") return { status: "unavailable", reason: "thread-read-unavailable" }
+  if (!candidate.value.bound) return denied
+  if (!candidate.value.exists) return undefined
+  const result = await state.transaction(request, command, stageSfReviewThreadWrite<T | null>(async () => ({ commit: false, value: null })))
+  return live() ? result : denied
+}
+
+/** Bind review/receipt observers to their two C08 maps. The state provider
+ * still checks the original namespace and executes the caller on a fresh copy. */
+export function selectSfReviewReceipts<T>(read: (state: Pick<SfProductState, "reviews" | "transactions">, authority: SfStateAuthority) => T | Promise<T>) {
+  reviewReceiptReads.add(read)
+  return read
+}
+
+/** Observe C08 authority and the storage version without materializing its state for the caller. */
+export function selectSfReviewAuthority<T>(project: (authority: SfStateAuthority) => T | Promise<T>) {
+  const read = (_state: Readonly<SfProductState>, authority: SfStateAuthority) => project(authority)
+  reviewAuthorityReads.set(read, project)
+  return read
+}
+
+/** A review thread mutation owns only staged product state, never the live domain snapshot. */
+export function stageSfReviewThreadWrite<T>(work: (state: SfProductState, authority: SfStateAuthority) => Promise<{ commit: boolean; value: T }>) {
+  stagedReviewThreadWrites.add(work)
+  return work
 }
 
 const namespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"] as const
@@ -206,9 +266,81 @@ function projectResultRead(state: SfProductState, selection: ResultSelection): S
   return structuredClone({ cases: chosenCases, decisionResults: chosenResults }) as unknown as SfProductState
 }
 
+
+/** Only this factory-owned callback may omit unrelated namespaces from a clone.
+ * All result envelopes remain one graph; filtering still occurs after cloning. */
+const scenarioReads = new WeakMap<object, {
+  project: (decisionResults: SfProductState["decisionResults"], authority: SfStateAuthority) => NonNullable<SfProductState["decisionResults"]>[string][] | undefined
+}>()
+
+export function selectSfScenarioCandidates(request: { caseRef: { id: string; incarnation: string; version: number } }, requestDigest: string, resultDigest: string, context: TrustedDomainContext) {
+  const read = (state: Pick<SfProductState, "decisionResults">, authority: SfStateAuthority) =>
+    authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? Object.values(state.decisionResults ?? {}).filter((item) => item.kind === "scenario" && item.caseRef.id === request.caseRef.id && item.caseRef.incarnation === request.caseRef.incarnation && item.caseRef.version <= request.caseRef.version && item.requestDigest === requestDigest && item.resultDigest === resultDigest) : undefined
+  // Do not snapshot the caller's mutable request or invoke proxy traps during
+  // registration. The original predicate observes both after C08 admission.
+  if (types.isProxy(context)) return read
+  const binding = Object.getOwnPropertyDescriptor(context, "binding")
+  if (Object.isFrozen(context) && binding && "value" in binding && binding.value && typeof binding.value === "object" && !types.isProxy(binding.value) && Object.isFrozen(binding.value) &&
+    ["principalRef", "policyVersion", "accessRevision"].every((key) => {
+      const field = Object.getOwnPropertyDescriptor(binding.value, key)
+      return !!field && "value" in field && typeof field.value === "string"
+    })) scenarioReads.set(read, { project: (decisionResults, authority) => read({ decisionResults }, authority) })
+  return read
+}
+
+function scenarioResultMap(state: SfProductState) {
+  if (types.isProxy(state)) return undefined
+  const field = Object.getOwnPropertyDescriptor(state, "decisionResults")
+  if (!field?.enumerable || !("value" in field) || !field.value || typeof field.value !== "object" || Array.isArray(field.value) || types.isProxy(field.value) ||
+    ![Object.prototype, null].includes(Object.getPrototypeOf(field.value))) return undefined
+  return field.value as NonNullable<SfProductState["decisionResults"]>
+}
+
+
+type CaseIdentity = Pick<SfProductState["cases"][string], "id" | "incarnation" | "version">
+const caseIdentityReads = new WeakMap<object, {
+  project: (cases: SfProductState["cases"], actor: SfStateAuthority) => CaseIdentity | undefined
+}>()
+
+/** Current case membership only; the consumer retains its own Request and scope fences. */
+export function selectSfCaseIdentity(captured: CaseIdentity, call: TrustedDomainContext) {
+  const read = (state: Pick<SfProductState, "cases">, actor: SfStateAuthority) => {
+    const value = state.cases[captured.id]
+    return value && value.incarnation === captured.incarnation && value.version === captured.version && value.participants.includes(actor.principalRef) &&
+      actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
+      ? { id: value.id, incarnation: value.incarnation, version: value.version } : undefined
+  }
+  // Preserve the original observation of captured and call inside the C08
+  // callback. Registration recognizes code and immutable data context only.
+  if (types.isProxy(call)) return read
+  const binding = Object.getOwnPropertyDescriptor(call, "binding")
+  if (Object.isFrozen(call) && binding && "value" in binding && binding.value && typeof binding.value === "object" && !types.isProxy(binding.value) && Object.isFrozen(binding.value) &&
+    ["principalRef", "policyVersion", "accessRevision"].every((key) => {
+      const field = Object.getOwnPropertyDescriptor(binding.value, key)
+      return !!field && "value" in field && typeof field.value === "string"
+    })) caseIdentityReads.set(read, { project: (cases, actor) => read({ cases }, actor) })
+  return read
+}
+
+function caseIdentityMap(state: SfProductState) {
+  if (types.isProxy(state)) return undefined
+  const field = Object.getOwnPropertyDescriptor(state, "cases")
+  if (!field?.enumerable || !("value" in field) || !field.value || typeof field.value !== "object" || Array.isArray(field.value) || types.isProxy(field.value) ||
+    ![Object.prototype, null].includes(Object.getPrototypeOf(field.value))) return undefined
+  return field.value as SfProductState["cases"]
+}
+
+const productStateReaders = new WeakMap<SfProductStatePort, (persistence: Persistence) => boolean>()
+
+/** Authenticate the original read callback and its exact snapshot provider. */
+export function isSfProductStateReader(port: SfProductStatePort, persistence: Persistence) {
+  return productStateReaders.get(port)?.(persistence) === true
+}
+
 /** The caller composes current product authority; a Dashboard role never grants it implicitly. */
 export function createSfProductState(input: {
   persistence: Persistence
+  stagedReviewThreadTarget?: string
   authorize: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, mode: "read" | "write") => Promise<SfStateAuthority | undefined>
   createId: () => string
   /** Root-private callback identities; never exposed through a product capability or serialized input. */
@@ -239,6 +371,19 @@ export function createSfProductState(input: {
           ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
         const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
         const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
+        const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
+        const scenarioResults = scenarioSelection ? scenarioResultMap(state) : undefined
+        const identitySelection = namespace === "cases" ? caseIdentityReads.get(read) : undefined
+        const identityCases = identitySelection ? caseIdentityMap(state) : undefined
+        const persistence = input.persistence
+        const authorityOnly = namespace === "reviews" ? reviewAuthorityReads.get(read) : undefined
+        const fence = namespace === "reviews" && (authorityOnly || reviewReceiptReads.has(read)) && hasSfDashboardSourceFence(persistence)
+          ? persistence.dashboardSourceFence : undefined
+        const seal = fence?.observeAuthority?.([])
+        const sealCurrent = () => !!seal && seal.current() && input.persistence === persistence &&
+          persistence.dashboardSourceFence === fence && hasSfDashboardSourceFence(persistence)
+        const sealed = sealCurrent()
+        const receipts = sealed && !authorityOnly ? structuredClone({ reviews: state.reviews, transactions: state.transactions }) as SfProductState : undefined
         // Keep missing/inherited, accessor and malformed lookups on the original
         // path. Durable SQLite snapshots contain plain cloneable data.
         const value = readiness
@@ -247,17 +392,23 @@ export function createSfProductState(input: {
           typeof selected.value === "object" && !Array.isArray(selected.value)
           ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
           : selectedResults ? await read(selectedResults, authority)
-          : await read(structuredClone(state), authority)
+          : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
+          : identitySelection && identityCases ? await identitySelection.project(structuredClone(identityCases), authority) as T
+          : sealed && authorityOnly ? await authorityOnly(authority) as T
+          : await read(receipts ?? structuredClone(state), authority)
+        if (sealed && !sealCurrent()) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
         const current = await input.authorize(request, snapshot, namespace, mode)
-        if (!sameAuthority(authority, current)) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
+        if (!sameAuthority(authority, current) || sealed && !sealCurrent())
+          return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         return { commit: false, value: { status: "ok", storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value } }
-      }, { signal: request.signal }),
+      }, { signal: request.signal, ...(input.stagedReviewThreadTarget && hasSfDashboardSourceFence(input.persistence)
+        ? { targetPreimageCurrent: input.persistence.dashboardSourceFence?.holdTargetPreimage().current, sealedRead: true } : {}) }),
     transaction: <T>(request: Request, command: SfStateMutation, work: (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>) => {
       if (command.idempotencyKey.startsWith(abortJournalPrefix) && !abortJournalWrites.has(work))
         return Promise.resolve({ status: "denied", reason: "transaction-abort-writer-required" })
       const rollback: { observation?: object; command?: SfStateMutation; envelope?: SfConfirmedTransactionAbort["envelope"] } = {}
-      const run = async (snapshot: Snapshot, domain: Snapshot): Promise<{ commit: boolean; value: SfStateResult<T> }> => {
+      const run = async (snapshot: Snapshot, domain: Snapshot, releasePreimage?: () => void): Promise<{ commit: boolean; value: SfStateResult<T> }> => {
         const authority = await input.authorize(request, snapshot, command.namespace, "write")
         if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
         const scope = [{ namespace: command.namespace, expectedStorageVersion: command.expectedStorageVersion }, ...command.additionalNamespaces ?? []]
@@ -361,11 +512,32 @@ export function createSfProductState(input: {
         staged.revision += 1
         scope.forEach((entry) => staged.versions[entry.namespace] += 1)
         staged.transactions[key] = { namespace: command.namespace, scopeDigest, principalRef: authority.principalRef, targetRef: command.targetRef, targetIncarnation: command.targetIncarnation, commandDigest: command.commandDigest, storageVersion: staged.versions[command.namespace], aggregateRevision: staged.revision, incarnation: staged.incarnation, value: structuredClone(result.value) }
+        releasePreimage?.()
         snapshot.data.__sfProductV1 = staged
         return { commit: true, value: { status: "ok", storageVersion: staged.versions[command.namespace], aggregateRevision: staged.revision, incarnation: staged.incarnation, value: result.value } }
       }
       if (command.sourceFence === "all" || command.namespace === "documents" || command.additionalNamespaces?.some((entry) => entry.namespace === "documents") || command.checkNamespaces?.some((entry) => entry.namespace === "documents") || command.domainSurface) {
         if (!input.persistence.transactionAll) return Promise.resolve({ status: "unavailable", reason: "cross-surface-transaction-unavailable" })
+        const atomic = hasSfDashboardSourceFence(input.persistence) ? input.persistence.dashboardSourceFence : undefined
+        if (atomic && input.stagedReviewThreadTarget === command.targetRef && stagedReviewThreadWrites.has(work) &&
+          command.namespace === "threads" && command.sourceFence === "all" && command.domainSurface === undefined &&
+          !command.additionalNamespaces?.length && command.checkNamespaces?.length === 1 && command.checkNamespaces[0]?.namespace === "reviews" &&
+          atomic.current()) {
+          const preimage = atomic.holdTargetPreimage()
+          const persistence = input.persistence
+          const current = () => input.persistence === persistence && persistence.dashboardSourceFence === atomic && hasSfDashboardSourceFence(persistence)
+          const changed = () => ({ commit: false, value: { status: "denied" as const, reason: "product-authority-changed" } })
+          return atomic.transaction("dashboard", async (snapshot) => {
+            if (!current()) return changed()
+            const result = await run(snapshot, snapshot, () => {
+              if (!current()) throw new Error("SF_STAGED_THREAD_STORAGE_CHANGED")
+              preimage.release()
+            })
+            return current() ? result : changed()
+          }, {
+            signal: request.signal, targetPreimageCurrent: preimage.current,
+          })
+        }
         const surface = command.domainSurface ?? "dashboard"
         return input.persistence.transactionAll((snapshots) => run(snapshots.dashboard, snapshots[surface]), { signal: request.signal }).catch((error: unknown): SfStateResult<T> => {
           const proof = rollback.observation && consumeLocalTransactionAbort(rollback.observation, error)
@@ -377,6 +549,21 @@ export function createSfProductState(input: {
       }
       return input.persistence.transaction("dashboard", (snapshot) => run(snapshot, snapshot), { signal: request.signal })
     },
+  }
+  if (!types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype) {
+    const driver = Object.getOwnPropertyDescriptor(input, "persistence")
+    const read = port.read
+    if (driver && Object.hasOwn(driver, "value") && driver.value) productStateReaders.set(port, (persistence) => {
+      const active = Object.getOwnPropertyDescriptor(input, "persistence")
+      const method = Object.getOwnPropertyDescriptor(port, "read")
+      return driver.value === persistence && Object.getPrototypeOf(input) === Object.prototype &&
+        !!active && Object.hasOwn(active, "value") && active.value === persistence &&
+        Object.getPrototypeOf(port) === Object.prototype && !!method && Object.hasOwn(method, "value") && method.value === read
+    })
+  }
+  if (hasSfDashboardSourceFence(input.persistence)) {
+    installedStateReads.add(port.read)
+    installedStateTransactions.set(port.read, port.transaction)
   }
   return port
 }

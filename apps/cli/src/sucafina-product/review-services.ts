@@ -51,8 +51,19 @@ export function createSfReviewServices(input: {
   const sources = async (call: TrustedDomainContext, refs: readonly SourceRef[]) => {
     if (!await host.revalidate(call)) return false
     const unique = [...new Map(refs.map((ref) => [digestSfValue(ref), ref])).values()]
-    const result = await Promise.all(unique.map(async (ref) => await currentSource(ref, call) || await historical.historicalSource(ref, call) || !!input.readers?.historicalSource && await input.readers.historicalSource(ref, call)))
-    return result.every(Boolean) && await host.revalidate(call)
+    const batch = historical.historicalSources(call)
+    if (!batch) {
+      const result = await Promise.all(unique.map(async (ref) => await currentSource(ref, call) ||
+        await historical.historicalSource(ref, call) || !!input.readers?.historicalSource && await input.readers.historicalSource(ref, call)))
+      return result.every(Boolean) && await host.revalidate(call)
+    }
+    const current = await Promise.all(unique.map((ref) => currentSource(ref, call)))
+    const stale = unique.filter((_ref, index) => !current[index])
+    const result = await batch(stale)
+    const readers = input.readers
+    const delegated = readers?.historicalSource
+    return (await Promise.all(stale.map((ref, index) => result[index] || !!delegated && delegated.call(readers, ref, call)))).every(Boolean) &&
+      await host.revalidate(call)
   }
   const sensitivity = input.portfolio.product?.contribution.persistentSensitivity
   const sensitivityReader: Parameters<typeof createReviewDecisionAccess>[0]["sensitivity"] = {

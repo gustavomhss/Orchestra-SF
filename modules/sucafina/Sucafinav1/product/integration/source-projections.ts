@@ -13,11 +13,11 @@ import type { SfSourceScope } from "./source-lifecycle.ts"
 import { projectSfProcurementScope } from "./procurement-projections.ts"
 import { normalizeDashboardRecords } from "../dashboard/records.ts"
 import { dashboardPerformanceAgendaRecords } from "../dashboard/agenda.ts"
-import { projectDashboardSource } from "../dashboard/port.ts"
+import { dashboardPageViewsCurrent, projectDashboardSource } from "../dashboard/port.ts"
 import { publicSfData } from "./public-state.ts"
 
 /** Saved roles define the projection, never authenticate a later caller. Reads authenticate again. */
-export function sfPlannerProjectionSelector(snapshot: Snapshot, actor: Actor) {
+export function sfPlannerProjectionSelector(snapshot: Pick<Snapshot, "data">, actor: Actor) {
   return { kind: "planner-source-v1", roles: [...actor.roles].sort(), canWrite: actor.canWrite, roleMapDigest: digestSfValue(roleMap(snapshot, "planner")) }
 }
 
@@ -27,10 +27,32 @@ export function sfPlannerRosterProjectionSelector(snapshot: Snapshot, actor: Act
 
 // The host shares this clock with its request environment; a client cannot supply it.
 export function createSfSourceScopeProjector(now: () => string) {
-  return (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => projectSfSourceScope(surface, snapshot, scope, now())
+  const observations = new WeakMap<object, Map<string, ReturnType<typeof projectDashboardScope>>>()
+  const primitives = { clone: structuredClone, parseDate: Date.parse, stringify: JSON.stringify }
+  return (surface: Surface, snapshot: Snapshot, scope: SfSourceScope, heldSource?: object) => {
+    const observedAt = now()
+    if (surface !== "dashboard" || !heldSource || structuredClone !== primitives.clone || Date.parse !== primitives.parseDate ||
+      JSON.stringify !== primitives.stringify || Object.hasOwn(Object.prototype, "toJSON") || Object.hasOwn(Array.prototype, "toJSON"))
+      return projectSfSourceScope(surface, snapshot, scope, observedAt)
+    const views = observations.get(heldSource) ?? new Map<string, ReturnType<typeof projectDashboardScope>>()
+    observations.set(heldSource, views)
+    return projectSfSourceScope(surface, snapshot, scope, observedAt, (source, actor, selector, at) => {
+      // The project register and forecast line readers share these page views.
+      // Leave the other pages on their original dependency paths.
+      if (!dashboardPageViewsCurrent() || !["Portfolio Dashboard", "All Projects", "OPEX Detail", "CAPEX Projects"].includes(selector.page))
+        return projectDashboardScope(source, actor, selector, at)
+      const key = digestSfValue({ actor, selector, at })
+      if (views.has(key)) return structuredClone(views.get(key))
+      const projected = projectDashboardScope(source, actor, selector, at)
+      // The page can be shared by many individual record observations. Every
+      // observer gets an independent result for the same sealed domain bytes.
+      if (views.size < 64) views.set(key, structuredClone(projected))
+      return projected
+    })
+  }
 }
 
-export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope: SfSourceScope, observedAt?: string) {
+export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope: SfSourceScope, observedAt?: string, projectPage = projectDashboardScope) {
   const selector = object(scope.selector)
   if (surface === "procurement") return projectSfProcurementScope(surface, snapshot, scope)
   if (surface === "dashboard") {
@@ -46,12 +68,12 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
     if (typeof selector.page !== "string" || !Array.isArray(selector.fields) || !selector.fields.every((field) => typeof field === "string") || !selector.period || typeof selector.period !== "object") return undefined
     if (typeof observedAt !== "string" || !Number.isFinite(Date.parse(observedAt))) return undefined
     const asOf = `${new Date(observedAt).toISOString().slice(0, 10)}T00:00:00Z`
-    if (scope.recordType === "dashboard-page" && scope.recordId === selector.page) return projectDashboardScope(snapshot, actor, { page: selector.page, fields: selector.fields, period: selector.period as Period }, asOf)
+    if (scope.recordType === "dashboard-page" && scope.recordId === selector.page) return projectPage(snapshot, actor, { page: selector.page, fields: selector.fields, period: selector.period as Period }, asOf)
     // Record scopes are admitted only through a page the same actor can view.
     if (scope.recordType === "dashboard-page" || scope.recordId === "__singleton__") return undefined
     if (scope.recordType === "itperf-item") {
       if (selector.page !== "IT Performance Contract" || !dashboardPerformanceAgendaRecords(snapshot.data.itperf)) return undefined
-      const projection = projectDashboardScope(snapshot, actor, { page: selector.page, fields: ["itperf"], period: selector.period as Period }, asOf)
+      const projection = projectPage(snapshot, actor, { page: selector.page, fields: ["itperf"], period: selector.period as Period }, asOf)
       const records = projection && dashboardPerformanceAgendaRecords(projection.selected.itperf)
       const matches = records?.filter((record) => String(record.id) === scope.recordId)
       if (!matches || matches.length !== 1 || selector.fields.some((field) => !Object.hasOwn(matches[0]!, field))) return undefined
@@ -59,7 +81,7 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
     }
     const logical = ["budgetYtd", "deviations", "budgetCurrentMonth", "revenueByYear"].includes(scope.recordType)
     const visible = logical ? projectDashboardSource(snapshot, actor, { at: asOf, id: () => "", directory: [] }, selector.page) : undefined
-    const projection = logical ? undefined : projectDashboardScope(snapshot, actor, { page: selector.page, fields: [scope.recordType], period: selector.period as Period }, asOf)
+    const projection = logical ? undefined : projectPage(snapshot, actor, { page: selector.page, fields: [scope.recordType], period: selector.period as Period }, asOf)
     const records = logical ? normalizeDashboardRecords(scope.recordType, snapshot.data[scope.recordType]) : projection?.selected[scope.recordType]
     if (!Array.isArray(records)) return undefined
     const matches = records.filter((entry) => String(object(entry).id ?? "") === scope.recordId)

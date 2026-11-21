@@ -1,8 +1,10 @@
 import type { SessionSchema } from "@orchestra/core/session/schema"
+import { types } from "node:util"
+import { currentSfReadonlyAuthorityData } from "./source-lifecycle.ts"
 import type { Application } from "../../runtime/application.ts"
 import { roleMap } from "../../runtime/admin.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../../src/nav.ts"
-import { object } from "../../runtime/contract.ts"
+import { hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
@@ -86,15 +88,56 @@ export function createSfProductAuthority(input: {
     Object.freeze(copy.location)
     return Object.freeze(copy)
   }
-  const principal = async (request: Request, dashboard: Snapshot, snapshots = input.persistence.currentSnapshots?.()) => {
+  const authorityData = <S extends Surface>(selected: readonly S[]) => {
+    if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) return undefined
+    const descriptor = Object.getOwnPropertyDescriptor(input, "persistence")
+    if (!descriptor || !(Object.hasOwn(descriptor, "value")) || !descriptor.value || typeof descriptor.value !== "object") return undefined
+    const owner = descriptor.value
+    const observation = currentSfReadonlyAuthorityData(owner, selected)
+    if (!observation) return undefined
+    const integrity = { failed: false }
+    return { snapshots: observation.snapshots, current: () => {
+      if (!observation.current() || integrity.failed || types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) {
+        integrity.failed = true
+        return false
+      }
+      const current = Object.getOwnPropertyDescriptor(input, "persistence")
+      const valid = !!current && Object.hasOwn(current, "value") && current.value === owner
+      if (!valid) integrity.failed = true
+      return valid
+    } }
+  }
+  const observeAuthority = <S extends Surface>(selected: readonly S[]) => {
+    if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) return undefined
+    const descriptor = Object.getOwnPropertyDescriptor(input, "persistence")
+    if (!descriptor || !Object.hasOwn(descriptor, "value") || !descriptor.value || typeof descriptor.value !== "object") return undefined
+    const persistence: typeof input.persistence = descriptor.value
+    if (!hasSfDashboardSourceFence(persistence)) return undefined
+    const fence = persistence.dashboardSourceFence
+    const observation = fence?.observeAuthority?.(selected)
+    if (!observation) return undefined
+    const integrity = { current: true }
+    return { snapshots: observation.snapshots, current: () => {
+      const active = Object.getOwnPropertyDescriptor(input, "persistence")
+      integrity.current &&= Object.getPrototypeOf(input) === Object.prototype && !!active && Object.hasOwn(active, "value") &&
+        active.value === persistence && persistence.dashboardSourceFence === fence && hasSfDashboardSourceFence(persistence) && observation.current()
+      return integrity.current
+    } }
+  }
+  const principal = async (request: Request, dashboard: Pick<Snapshot, "data">,
+    supplied?: { planner: Pick<Snapshot, "data">; procurement: Pick<Snapshot, "data"> }, suppliedCurrent?: () => boolean) => {
+    const projection = supplied ? undefined : (observeAuthority(["planner", "procurement"]) ?? authorityData(["planner", "procurement"]))
+    const snapshots = supplied ?? projection?.snapshots ?? input.persistence.currentSnapshots?.()
+    const currentRead = suppliedCurrent ?? projection?.current
     if (!snapshots) return undefined
     const current = identity()
     if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
       (request.headers.has("origin") && request.headers.get("origin") !== input.origin)) return undefined
     const identityDigest = digestSfValue(current)
-    const observe = async (surface: Surface, snapshot: Snapshot) => {
+    const observe = async (surface: Surface, snapshot: Pick<Snapshot, "data">) => {
+      if (currentRead && !currentRead()) return undefined
       const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
-      if (!actor) return undefined
+      if (!actor || (currentRead && !currentRead())) return undefined
       const access = object(object(snapshot.data.access)[actor.id])
       if ((access.assigned !== undefined && (!Array.isArray(access.assigned) || access.assigned.some((value) => typeof value !== "string"))) ||
         (access.domains !== undefined && (!Array.isArray(access.domains) || access.domains.some((value) => typeof value !== "string"))))
@@ -103,6 +146,7 @@ export function createSfProductAuthority(input: {
         domains: Array.isArray(access.domains) ? [...access.domains].toSorted() : [] }
     }
     const observed = await Promise.all(surfaces.map((surface) => observe(surface, surface === "dashboard" ? dashboard : snapshots[surface])))
+    if (currentRead && !currentRead()) return undefined
     const present = observed.filter((entry) => entry !== undefined)
     const first = present[0]?.actor
     if (!first?.id || first.id.startsWith("local:") || present.some((entry) => entry.actor.id !== first.id) || request.signal.aborted) return undefined
@@ -115,16 +159,35 @@ export function createSfProductAuthority(input: {
     const scopes = present.map((entry) => ({ surface: entry.surface, assigned: entry.assigned, domains: entry.domains }))
     const accessRevision = digestSfValue({ installationId: current.installationId, projectId: current.projectId,
       principalRef: first.id, roles, scopes, canWrite, namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(), humanActions: [...grant.humanActions ?? []].toSorted(), policyVersion: input.policyVersion })
-    if (digestSfValue(identity()) !== identityDigest) return undefined
+    if (digestSfValue(identity()) !== identityDigest || (currentRead && !currentRead())) return undefined
     return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
   }
   const resolve = async (request: Request) => {
+    const observed = observeAuthority(surfaces) ?? authorityData(surfaces)
+    if (observed) return principal(request, observed.snapshots.dashboard, observed.snapshots, observed.current)
     if (!input.persistence.currentSnapshots) return undefined
     const snapshots = input.persistence.currentSnapshots()
     if (snapshots) return principal(request, snapshots.dashboard, snapshots)
-    return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
+    const persistence = input.persistence
+    const fence = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
+    const read = fence?.readDashboardAuthority
+    if (fence && read) {
+      const current = () => input.persistence === persistence && persistence.dashboardSourceFence === fence &&
+        fence.readDashboardAuthority === read && hasSfDashboardSourceFence(persistence)
+      const resolved = await read.call(fence, async () => {
+        const authority = current() ? observeAuthority(surfaces) : undefined
+        if (!authority) return undefined
+        return principal(request, authority.snapshots.dashboard, authority.snapshots, () => current() && authority.current())
+      }, request.signal) as Awaited<ReturnType<typeof principal>>
+      return !request.signal.aborted && current() ? resolved : undefined
+    }
+    return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), {
+      signal: request.signal, ...(hasSfDashboardSourceFence(input.persistence)
+        ? { targetPreimageCurrent: input.persistence.dashboardSourceFence?.holdTargetPreimage().current, sealedRead: true } : {}),
+    })
   }
   const state = createSfProductState({
+    stagedReviewThreadTarget: creationTarget.ref,
     persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, nativePublicationGuards: input.nativePublicationGuards, signalRegistryWrites: input.signalRegistryWrites, caseSelectionWrites: input.caseSelectionWrites, threadHistoryWrites: input.threadHistoryWrites,
     dashboardHostWrites: input.dashboardHostWrites, procurementEvidenceWrites: input.procurementEvidenceWrites, analysisSelectionWrites: input.analysisSelectionWrites,
     authorize: async (request, snapshot, namespace, mode) => {

@@ -1,3 +1,4 @@
+import { probeSfReviewMutationReceipt } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { SfProductStatePort, SfProductState, SfStateAuthority } from "../contracts/state.ts"
@@ -18,6 +19,7 @@ type RevisionThread = CollaborationThread & { messageRevisions?: readonly Messag
 /** Historical content stays with the canonical thread and is shown only under current source access. */
 export function createThreadHistory(input: {
   state: SfProductStatePort
+  replayCurrent?: () => boolean
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
   read: ReturnType<typeof createRecipientAwareThreadReads>["read"]
   readHistorical?: ReturnType<typeof createRecipientAwareThreadReads>["readHistorical"]
@@ -79,13 +81,51 @@ export function createThreadHistory(input: {
       if (review && "reason" in review) return review
       if (basis.reviewContext && review?.status !== "ok") return { status: "unavailable", reason: "review-thread-context-unavailable" }
       if (review?.status === "ok" && !review.value) return { status: "denied", reason: "review-thread-context-unavailable" }
+      const command = { namespace: "threads" as const, ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue({ id, messageId, expectedVersion, body }), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }
+      const state = input.state
+      const readState = state.read
+      const transaction = state.transaction
+      const framework = input.replayCurrent
+      const host = input.host
+      const requestFor = host.requestFor
+      const revalidate = host.revalidate
+      const read = input.read
+      const authorizeSources = input.authorizeSources
+      const current = () => input.state === state && state.read === readState && state.transaction === transaction && input.host === host && host.requestFor === requestFor && host.revalidate === revalidate &&
+        input.read === read && input.authorizeSources === authorizeSources && requestFor.call(host, context) === request && !request.signal.aborted
+      const releaseReceipt = async (version: number, replay = false): Promise<PortResult<{ id: string; messageId: string; version: number }>> => {
+        const loaded = await load(id, context)
+        if (loaded.status !== "ok") return loaded
+        if (!current() || !await revalidate.call(host, context) || !current() || replay && (input.replayCurrent !== framework || !framework?.()) || !sameThreadReadScope(prior, loaded.value.thread)) return { status: "denied", reason: "thread-access-unavailable" }
+        if (!loaded.value.thread.messages.some((entry) => entry.id === message.id && entry.incarnation === message.incarnation && entry.version === version && entry.body === selected.body)) return { status: "stale", reason: "thread-content-changed" }
+        return { status: "ok", value: { id, messageId, version } }
+      }
+      if (basis.reviewContext && prior.recipientRef === context.binding.principalRef && framework?.()) {
+        const replay = await probeSfReviewMutationReceipt<number>(state, request, command, context, () => current() && input.replayCurrent === framework && framework())
+        if (replay) {
+          if ("reason" in replay) return replay
+          if (replay.status !== "ok" || !Number.isSafeInteger(replay.value) || replay.value !== expectedVersion + 1) return { status: "unavailable", reason: "thread-read-unavailable" }
+          return releaseReceipt(replay.value, true)
+        }
+      }
       const prepareReviewFence = input.prepareReviewThreadFence
       const checkReviewRecipient = input.checkReviewRecipientAtCommit
       const reviewFence = basis.reviewContext && prepareReviewFence ? await prepareReviewFence(basis, context) : undefined
-      if (basis.reviewContext && (!reviewFence || prior.recipientRef && (!input.authorizeReviewRecipient || !checkReviewRecipient || !await input.authorizeReviewRecipient(prior.recipientRef, basis, context)))) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
+      const ownReview = !!reviewFence && !!framework?.() && !!authorizeSources && prior.recipientRef === context.binding.principalRef
+      if (basis.reviewContext && (!reviewFence || prior.recipientRef && (!checkReviewRecipient ||
+        !ownReview && (!input.authorizeReviewRecipient || !await input.authorizeReviewRecipient(prior.recipientRef, basis, context))))) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
+      const priorDigest = digestSfValue(prior)
       const fence = await input.fence.prepare(async () => {
-        const current = await load(id, context)
-        return current.status === "ok" && digestSfValue(current.value.thread) === digestSfValue(prior) && (!input.authorizeSources || await input.authorizeSources(basis, context))
+        if (ownReview) {
+          if (!current() || input.replayCurrent !== framework || !framework?.() || !await revalidate.call(host, context)) return false
+          const observed = await state.read(request, "threads", (stored, actor) =>
+            actor.principalRef === context.binding.principalRef && actor.accessRevision === context.binding.accessRevision &&
+            actor.policyVersion === context.binding.policyVersion ? digestSfValue(stored.threads[id]) : undefined)
+          return current() && observed.status === "ok" && observed.value === priorDigest &&
+            !!authorizeSources && await authorizeSources(basis, context) && current() && framework()
+        }
+        const observed = await load(id, context)
+        return observed.status === "ok" && digestSfValue(observed.value.thread) === priorDigest && (!input.authorizeSources || await input.authorizeSources(basis, context))
       })
       if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
       const work = async (state: SfProductState, authority: SfStateAuthority) => {
@@ -94,15 +134,11 @@ export function createThreadHistory(input: {
         return { commit: true, value: message.version + 1 }
       }
       input.threadHistoryWrites.add(work)
-      const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue({ id, messageId, expectedVersion, body }), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.threadHistoryWrites.delete(work))
+      const saved = await input.state.transaction(request, command, work).finally(() => input.threadHistoryWrites.delete(work))
       if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
       if ("reason" in saved) return saved
       if (!saved.value) return { status: "unavailable", reason: "thread-access-unavailable" }
-      const current = await load(id, context)
-      if (current.status !== "ok") return current
-      if (input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request || !sameThreadReadScope(prior, current.value.thread)) return { status: "denied", reason: "thread-access-unavailable" }
-      if (!current.value.thread.messages.some((entry) => entry.id === message.id && entry.incarnation === message.incarnation && entry.version === saved.value)) return { status: "stale", reason: "thread-content-changed" }
-      return { status: "ok", value: { id, messageId, version: saved.value } }
+      return releaseReceipt(saved.value)
     },
     readVersion: async (id: string, messageId: string, incarnation: string, version: number, context: TrustedDomainContext): Promise<PortResult<{ message: Message } & ThreadSourceContext>> => {
       const request = input.host.requestFor(context)

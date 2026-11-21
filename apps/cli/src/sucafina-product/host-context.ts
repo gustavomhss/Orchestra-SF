@@ -1,4 +1,5 @@
-export { createCurrentChoiceFence } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+export { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+export { createSfSourcePersistence } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { createSfProcurementScenarioHttp } from "./procurement-scenario-services.ts"
 import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { createHash, randomUUID } from "node:crypto"

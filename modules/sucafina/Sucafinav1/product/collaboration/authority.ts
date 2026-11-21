@@ -1,5 +1,6 @@
+import type { createReviewAnswerSource } from "../reviews/review-answer-source.ts"
 import { roleMap } from "../../runtime/admin.ts"
-import { object } from "../../runtime/contract.ts"
+import { hasActiveSfSnapshot, hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
@@ -13,6 +14,36 @@ import { createRecipientCommitCheck, createRecipientSourceAuthorizer } from "./r
 import type { CollaborationRecipientAuthority, ReviewThreadRecipientAuthority } from "./recipient-authority.ts"
 
 /** Current source access and explicitly selected directory IDs are checked separately. */
+type ReviewAnswerSource = ReturnType<typeof createReviewAnswerSource>
+const reviewEvidenceBatches = new WeakMap<BusinessContextService, {
+  context: BusinessContextService["context"]; answerSource: ReviewAnswerSource; authorizeThread: ReviewThreadContextAuthorizer
+  recipient: ReviewThreadRecipientAuthority; providersCurrent: () => boolean
+}>()
+
+/** The resident binding resolves and authorizes each input independently. */
+export function registerReviewEvidenceBatch(evidence: BusinessContextService, answerSource: ReviewAnswerSource, authorizeThread: ReviewThreadContextAuthorizer, recipient: ReviewThreadRecipientAuthority) {
+  const resolve = answerSource.resolve
+  const observe = answerSource.observe
+  const fence = answerSource.fence
+  const prepare = answerSource.prepareThreadFence
+  const authorizeRecipient = recipient.authorize
+  const checkRecipient = recipient.checkAtCommit
+  const providersCurrent = () => answerSource.resolve === resolve && answerSource.observe === observe && answerSource.fence === fence &&
+    answerSource.prepareThreadFence === prepare && recipient.authorize === authorizeRecipient && recipient.checkAtCommit === checkRecipient
+  reviewEvidenceBatches.set(evidence, { context: evidence.context, answerSource, authorizeThread, recipient, providersCurrent })
+}
+
+export function isRegisteredReviewMutationSource(evidence: BusinessContextService, answerSource: object, authorizeThread?: ReviewThreadContextAuthorizer, recipient?: ReviewThreadRecipientAuthority) {
+  const installed = reviewEvidenceBatches.get(evidence)
+  return !!installed && installed.context === evidence.context && installed.answerSource === answerSource &&
+    installed.authorizeThread === authorizeThread && installed.recipient === recipient && installed.providersCurrent()
+}
+
+export function isRegisteredAnswerSource(evidence: BusinessContextService, answerSource: object) {
+  const installed = reviewEvidenceBatches.get(evidence)
+  return installed?.context === evidence.context && installed.answerSource === answerSource && installed.providersCurrent()
+}
+
 export function createCollaborationAuthority(input: { host: DomainPortHost; evidence: BusinessContextService; recipientAuthority?: CollaborationRecipientAuthority; reviewRecipientAuthority?: ReviewThreadRecipientAuthority; authorizeReviewThreadContext?: ReviewThreadContextAuthorizer }) {
   type ReviewRecipientLease = { proof: ReviewThreadRecipientAuthority; authorize: ReviewThreadRecipientAuthority["authorize"]; check: ReviewThreadRecipientAuthority["checkAtCommit"] }
   const reviewRecipientLeases = new WeakMap<TrustedDomainContext, Map<string, ReviewRecipientLease>>()
@@ -59,7 +90,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     const selected = structuredClone(basis)
     if (!validThreadSourceContext(selected) || !await input.host.revalidate(context)) return false
     if (!authorize) throw new Error("COLLABORATION_REVIEW_AUTHORITY_UNAVAILABLE")
-    return await authorize(selected.reviewContext!, selected, context) && input.authorizeReviewThreadContext === authorize && await input.host.revalidate(context)
+    return await authorize(selected.reviewContext!, selected, context, "read") && input.authorizeReviewThreadContext === authorize && await input.host.revalidate(context)
   }
   const reviewRecipientSources = async (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext, requireSelfLease = false) => {
     const selected = structuredClone(basis)
@@ -69,7 +100,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     if (recipientRef === context.binding.principalRef && !requireSelfLease) return await input.host.revalidate(context)
     // C08 already owns all source snapshots. Reuse only the privately prepared
     // authority here; preparing a new recipient lease could open a nested write.
-    if (input.host.persistence.currentSnapshots?.()) return checkReviewRecipient(recipientRef, selected, context, requireSelfLease)
+    if (hasActiveSfSnapshot(input.host.persistence)) return checkReviewRecipient(recipientRef, selected, context, requireSelfLease)
     const proof = input.reviewRecipientAuthority
     const authorize = proof?.authorize
     const checkAtCommit = proof?.checkAtCommit
@@ -124,17 +155,31 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
       if (pair.recipientRef && (!await recipient(pair.recipientRef, context) || !await recipientSources(pair.recipientRef, pair.evidenceRefs, context))) return false
       return sources(pair.evidenceRefs, context)
     },
-    authorizeThread: async (thread: { sourceRef: string; recipientRef?: string; evidenceRefs: readonly BusinessEvidenceRef[]; messages?: CollaborationThread["messages"] } & Partial<ThreadSourceContext>, context: TrustedDomainContext, mode: "read" | "write") => {
+    authorizeThread: async (thread: { sourceRef: string; recipientRef?: string; evidenceRefs: readonly BusinessEvidenceRef[]; messages?: CollaborationThread["messages"] } & Partial<ThreadSourceContext>, context: TrustedDomainContext, mode: "read" | "write" | "prepared-write") => {
       if (!Array.isArray(thread.evidenceRefs) || thread.evidenceRefs.some((ref) => !ref || typeof ref !== "object")) return false
       const pin = thread.messages ? thread.messages[0]?.sourceContext?.reviewContext : thread.reviewContext
       const basis = pin ? { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: thread.evidenceRefs, reviewContext: pin } : undefined
-      if (basis && (!validThreadSourceContext(basis) || !await (mode === "read" ? readReviewThreadBasis : reviewThreadBasis)(basis, context) || mode === "write" && thread.recipientRef && !await reviewRecipientSources(thread.recipientRef, basis, context))) return false
+      if (mode === "prepared-write" && (!basis || thread.recipientRef !== context.binding.principalRef)) return false
+      if (basis && (!validThreadSourceContext(basis) || !await (mode === "write" ? reviewThreadBasis : readReviewThreadBasis)(basis, context) || mode === "write" && thread.recipientRef && !await reviewRecipientSources(thread.recipientRef, basis, context))) return false
       const authorizeSources = mode === "read" ? pin ? readHistoricalSources : readSources : pin ? historicalSources : sources
-      if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef) || !await authorizeSources(thread.evidenceRefs, context)) return false
-      const messageRefs = [...new Map((thread.messages ?? []).flatMap((message) => message.sourceContext?.evidenceRefs ?? []).map((ref) => [ref.refDigest, ref])).values()]
-      if (messageRefs.length && !await authorizeSources(messageRefs, context)) return false
+      if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef)) return false
+      const messageRefs = (thread.messages ?? []).flatMap((message) => message.sourceContext?.evidenceRefs ?? [])
+      const evidence = input.evidence
+      const batch = reviewEvidenceBatches.get(evidence)?.context
+      if (pin && messageRefs.length && batch && evidence.context === batch && hasSfDashboardSourceFence(input.host.persistence)) {
+        // A message can repeat the exact thread source. Authorize the complete
+        // set once per observation, retaining every distinct body and version.
+        const request = input.host.requestFor(context)
+        const refs = [...new Map([...thread.evidenceRefs, ...messageRefs].map((ref) => [digestSfValue(ref), ref])).values()]
+        if (!request || request.signal.aborted || !await authorizeSources(refs, context) ||
+          input.evidence !== evidence || evidence.context !== batch || request.signal.aborted || input.host.requestFor(context) !== request) return false
+      } else {
+        if (!await authorizeSources(thread.evidenceRefs, context)) return false
+        const selected = [...new Map(messageRefs.map((ref) => [ref.refDigest, ref])).values()]
+        if (selected.length && !await authorizeSources(selected, context)) return false
+      }
       if (thread.recipientRef && (!await recipient(thread.recipientRef, context, mode === "read") || mode === "write" && !pin && !await recipientSources(thread.recipientRef, thread.evidenceRefs, context))) return false
-      if (!thread.messages) return mode === "write"
+      if (!thread.messages) return mode !== "read"
       return thread.recipientRef === context.binding.principalRef || thread.messages.some((message) => message.authorRef === context.binding.principalRef)
     },
     authorizeIntent: async (intent: HotTopicIntent, recipientRef: string | undefined, context: TrustedDomainContext) => {

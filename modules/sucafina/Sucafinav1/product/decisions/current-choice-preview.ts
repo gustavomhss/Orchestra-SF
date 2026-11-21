@@ -197,6 +197,12 @@ export type CurrentChoiceFence = {
   current: (context: TrustedDomainContext) => boolean
 }
 const currentChoiceFences = new WeakSet<object>()
+const currentChoiceStorage = new WeakMap<CurrentChoiceFence, () => CurrentChoicePersistence | undefined>()
+
+/** Prove that the factory's original wrappers still delegate to this driver. */
+export function currentChoiceOwnsSnapshotTransactions(fence: CurrentChoiceFence, driver: CurrentChoicePersistence) {
+  return currentChoiceStorage.get(fence)?.() === driver
+}
 
 export function isCurrentChoiceFence(value: unknown): value is CurrentChoiceFence {
   return !!value && typeof value === "object" && currentChoiceFences.has(value)
@@ -354,5 +360,18 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
     },
   }
   currentChoiceFences.add(fence)
+  const driver = input.persistence
+  const methods = ["transaction", "transactionAll", "currentSnapshots"] as const
+  const originals = methods.map((name) => ({ base: driver[name], wrapped: persistence[name] }))
+  currentChoiceStorage.set(fence, () => {
+    if (input.persistence !== driver || fence.persistence !== persistence) return undefined
+    const exact = methods.every((name, index) => {
+      const base = Object.getOwnPropertyDescriptor(driver, name)
+      const wrapped = Object.getOwnPropertyDescriptor(persistence, name)
+      return !!base && Object.hasOwn(base, "value") && base.value === originals[index]?.base &&
+        !!wrapped && Object.hasOwn(wrapped, "value") && wrapped.value === originals[index]?.wrapped
+    })
+    return exact ? driver : undefined
+  })
   return Object.freeze(fence)
 }

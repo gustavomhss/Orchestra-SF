@@ -43,6 +43,8 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     ...(runtime ? {
       createHostRuntime: runtime.createSfHostRuntime,
       createCurrentChoiceFence: runtime.createCurrentChoiceFence,
+      currentChoiceOwnsSnapshotTransactions: runtime.currentChoiceOwnsSnapshotTransactions,
+      createSfSourcePersistence: runtime.createSfSourcePersistence,
       sourceRoot: path.resolve(path.dirname(entry), "../product/ai"),
     } : {}),
   })

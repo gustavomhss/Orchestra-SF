@@ -1,4 +1,4 @@
-import { object } from "../../runtime/contract.ts"
+import { hasActiveSfSnapshot, hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -28,13 +28,18 @@ export function createReviewAnswerSource(input: {
   reviews: Pick<ReturnType<typeof createReviewPort>, "read">
   host: Pick<DomainPortHost, "requestFor" | "revalidate" | "persistence">
   prepareAccess: (pin: ReviewThreadContext, basis: ReviewAnswerBasis, review: PreservedReview, context: TrustedDomainContext) => Promise<PortResult<{ fence: () => Promise<boolean> }>>
+  readContext?: (pin: ReviewThreadContext, basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<PortResult<ReviewThreadSnapshot>>
 }) {
   const contexts = createReviewThreadContext(input)
+  const readContext = input.readContext
   const leases = new Map<string, { authorityScopeDigest: string; reviewDigest: string; observationDigest: string; fence: () => Promise<boolean>; current: () => boolean }>()
   const key = (scope: ConfirmationScope, basis: ReviewAnswerBasis, context: TrustedDomainContext) => digestSfValue({ scope, basis, authority: context.binding })
   const read = async (basis: ReviewAnswerBasis, context: TrustedDomainContext) => {
     if (!basis || !isReviewThreadContext(basis.reviewContext)) return { status: "unavailable" as const, reason: "review-answer-source-unavailable" }
-    return contexts.read(basis.reviewContext, basis, context)
+    if (!readContext) return contexts.read(basis.reviewContext, basis, context)
+    if (input.readContext !== readContext) return { status: "unavailable" as const, reason: "review-answer-source-unavailable" }
+    const result = await readContext(basis.reviewContext, basis, context)
+    return input.readContext === readContext ? result : { status: "unavailable" as const, reason: "review-answer-source-unavailable" }
   }
   const fence = async (scope: ConfirmationScope, observation: ReviewAnswerObservation, basis: ReviewAnswerBasis, context: TrustedDomainContext) => {
     if (!basis || !isReviewThreadContext(basis.reviewContext) || observation?.state !== "available") return false
@@ -74,29 +79,49 @@ export function createReviewAnswerSource(input: {
         const persistence = host.persistence
         const transactionAll = persistence.transactionAll
         const currentSnapshots = persistence.currentSnapshots
+        const atomic = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
         const prepareAccess = input.prepareAccess
         const request = requestFor.call(host, context)
-        const current = () => input.reviews === reviews && reviews.read === readReview && input.host === host && host.revalidate === revalidate && host.requestFor === requestFor && host.persistence === persistence && persistence.transactionAll === transactionAll && persistence.currentSnapshots === currentSnapshots && input.prepareAccess === prepareAccess && requestFor.call(host, context) === request && !request?.signal.aborted
-        if (!request || !transactionAll || !currentSnapshots || typeof prepareAccess !== "function" || currentSnapshots.call(persistence) || !current()) return undefined
+        const current = () => input.reviews === reviews && reviews.read === readReview && input.host === host && host.revalidate === revalidate && host.requestFor === requestFor && host.persistence === persistence && persistence.transactionAll === transactionAll && persistence.currentSnapshots === currentSnapshots && input.prepareAccess === prepareAccess && requestFor.call(host, context) === request && !request?.signal.aborted &&
+          (!atomic || persistence.dashboardSourceFence === atomic && hasSfDashboardSourceFence(persistence))
+        if (!request || !transactionAll || !currentSnapshots || typeof prepareAccess !== "function" || hasActiveSfSnapshot(persistence) || !current()) return undefined
         const found = await read(selected, context)
         if (!current() || found.status !== "ok") return undefined
         const access = await prepareAccess(structuredClone(found.value.pin), structuredClone(selected), structuredClone(found.value.review), context)
         if (!current() || access.status !== "ok" || typeof access.value.fence !== "function" || !await revalidate.call(host, context) || !current()) return undefined
         const accessLease = access.value
         const accessFence = accessLease.fence
-        const stored = () => {
-          const snapshot = currentSnapshots.call(persistence)?.dashboard
-          return snapshot && object(object(snapshot.data.__sfProductV1).reviews)[selected.reviewContext.reviewRef]
-        }
-        const unchanged = () => current() && accessLease.fence === accessFence && digestSfValue(stored()) === found.value.pin.reviewDigest
+        const digests = new WeakMap<object, string>()
         const threadFence = async () => {
           try {
+            if (!current()) return false
+            const admitted = atomic?.readSealed?.()
+            const observation = { first: admitted }
+            const storedDigest = () => {
+              if (admitted && !admitted.current()) return undefined
+              const sealed = admitted && (observation.first ?? atomic?.readSealed?.())
+              observation.first = undefined
+              if (admitted && (!sealed || sealed.identity !== admitted.identity || !sealed.current())) return undefined
+              const cached = sealed && digests.get(sealed.identity)
+              if (cached) return cached
+              const snapshot = (sealed ? sealed.read() : currentSnapshots.call(persistence))?.dashboard
+              const digest = digestSfValue(snapshot && object(object(snapshot.data.__sfProductV1).reviews)[selected.reviewContext.reviewRef])
+              if (sealed) {
+                if (!sealed.current()) return undefined
+                digests.set(sealed.identity, digest)
+              }
+              return digest
+            }
+            const unchanged = () => current() && accessLease.fence === accessFence && storedDigest() === found.value.pin.reviewDigest
             if (!unchanged() || !await revalidate.call(host, context) || !unchanged() || !await accessFence.call(accessLease) || !unchanged()) return false
             if (!await revalidate.call(host, context) || !unchanged() || !await accessFence.call(accessLease) || !unchanged()) return false
             return await revalidate.call(host, context) && unchanged()
           } catch { return false }
         }
-        const verified = await transactionAll.call(persistence, async () => ({ commit: false, value: await threadFence() }), { signal: request.signal })
+        const verify = async () => ({ commit: false, value: await threadFence() })
+        const verified = atomic
+          ? await atomic.transaction.call(persistence, "dashboard", verify, { signal: request.signal, targetPreimageCurrent: atomic.holdTargetPreimage().current, sealedRead: true })
+          : await transactionAll.call(persistence, verify, { signal: request.signal })
         return verified && current() && await revalidate.call(host, context) && current() ? threadFence : undefined
       } catch { return undefined }
     },
@@ -112,10 +137,12 @@ export function createReviewAnswerSource(input: {
         const persistence = host.persistence
         const transactionAll = persistence.transactionAll
         const currentSnapshots = persistence.currentSnapshots
+        const atomic = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
         const prepareAccess = input.prepareAccess
         const request = requestFor.call(host, context)
-        const current = () => input.reviews === reviews && reviews.read === readReview && input.host === host && host.revalidate === revalidate && host.requestFor === requestFor && host.persistence === persistence && persistence.transactionAll === transactionAll && persistence.currentSnapshots === currentSnapshots && input.prepareAccess === prepareAccess && requestFor.call(host, context) === request && !request?.signal.aborted
-        if (!request || !transactionAll || !currentSnapshots || typeof prepareAccess !== "function" || currentSnapshots.call(persistence) || !current()) return unavailable
+        const current = () => input.reviews === reviews && reviews.read === readReview && input.host === host && host.revalidate === revalidate && host.requestFor === requestFor && host.persistence === persistence && persistence.transactionAll === transactionAll && persistence.currentSnapshots === currentSnapshots && input.prepareAccess === prepareAccess && requestFor.call(host, context) === request && !request?.signal.aborted &&
+          (!atomic || persistence.dashboardSourceFence === atomic && hasSfDashboardSourceFence(persistence))
+        if (!request || !transactionAll || !currentSnapshots || typeof prepareAccess !== "function" || hasActiveSfSnapshot(persistence) || !current()) return unavailable
         const found = await read(selected.basis, context)
         if (!current() || found.status !== "ok") return unavailable
         const material = answerMaterial(found.value, selected.basis)
@@ -130,7 +157,10 @@ export function createReviewAnswerSource(input: {
         const leaseKey = observation.accessLeaseRef
         leases.set(leaseKey, { authorityScopeDigest: key(selected.scope, selected.basis, context), reviewDigest: found.value.pin.reviewDigest, observationDigest: digestSfValue(observation), fence: () => accessFence.call(accessLease), current: () => current() && accessLease.fence === accessFence })
         if (leases.size > 512) leases.delete(leases.keys().next().value!)
-        const verified = await transactionAll.call(persistence, async () => ({ commit: false, value: await fence(selected.scope, observation, selected.basis, context) }), { signal: request.signal }).catch(() => false)
+        const verify = async () => ({ commit: false, value: current() && await fence(selected.scope, observation, selected.basis, context) })
+        const verified = await (atomic
+          ? atomic.transaction("dashboard", verify, { signal: request.signal, targetPreimageCurrent: atomic.holdTargetPreimage().current, sealedRead: true })
+          : transactionAll.call(persistence, verify, { signal: request.signal })).catch(() => false)
         if (!verified || !current() || !await revalidate.call(host, context) || !current()) { leases.delete(leaseKey); return unavailable }
         return structuredClone(observation)
       } catch { return unavailable }

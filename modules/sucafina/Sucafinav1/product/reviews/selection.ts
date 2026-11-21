@@ -65,6 +65,11 @@ const dashboardTopics: Record<DashboardTopic, { page: string; title: string }> =
   "it-performance": { page: "IT Performance Contract", title: "IT Performance Contract" },
 }
 
+/** Canonical server-side page name only; this does not issue a selector or grant. */
+export function dashboardTopicPage(topic: string): string | undefined {
+  return isDashboardTopic(topic) ? dashboardTopics[topic].page : undefined
+}
+
 /** Resolves an ordered, editable agenda through the authenticated C02 producer ports. */
 export function createReviewAgendaSelection(input: {
   ports: ReviewAgendaPorts

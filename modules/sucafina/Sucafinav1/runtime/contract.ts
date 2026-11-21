@@ -70,7 +70,35 @@ export type Domain = {
   execute: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => Result
   view: (snapshot: Snapshot, actor: Actor, environment: Environment) => View
 }
-export type TransactionOptions = { signal?: AbortSignal }
+export type TransactionOptions = {
+  signal?: AbortSignal
+  // An installed staged writer keeps its target private and calls this false
+  // before publishing to the root snapshot. Nested reads still get fresh copies.
+  targetPreimageCurrent?: () => boolean
+  // A scoped Dashboard source observation may ask for a detached domain view
+  // of this exact held root. A missing or released root refuses the read.
+  dashboardSourceRoot?: object
+  /** Authorize only against the detached ACL from an installed read root. */
+  dashboardAclRoot?: object
+  /** The callback cannot publish in a held installed preimage. */
+  sealedRead?: true
+}
+
+export type SnapshotAuthorityRead = <S extends Surface>(surfaces: readonly S[]) => {
+  snapshots: Record<S, Pick<Snapshot, "data">>
+  identity: object
+  /** Identity of the exact persisted bytes, independently read by this root. */
+  bytesIdentity?: object
+  current: () => boolean
+} | undefined
+
+export type SealedSnapshotRead = () => {
+  identity: object
+  bytesIdentity?: object
+  current: () => boolean
+  read: () => Readonly<Record<Surface, Snapshot>> | undefined
+} | undefined
+export type HoldTargetPreimage = () => { current: () => boolean; release: () => void }
 
 export type Persistence = {
   // Installation contract: serializable durable commit of data, versions, sequences, audit and notices together.
@@ -80,7 +108,20 @@ export type Persistence = {
   // Production adapters must run the conformance suite against their real driver; the test Map adapter is not durability proof.
   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
   transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+  // The installed SQLite driver holds the other surfaces under the same lock
+  // when a command only writes Dashboard. Bind the capability to both methods.
+  dashboardSourceFence?: Readonly<Required<Pick<Persistence, "transaction" | "transactionAll">> &
+    Pick<Persistence, "currentSnapshots" | "currentSnapshot"> & {
+      current: () => boolean
+      holdTargetPreimage: HoldTargetPreimage
+      observeAuthority?: SnapshotAuthorityRead
+      readSealed?: SealedSnapshotRead
+      hasSnapshotRoot?: () => boolean
+      readDashboardAuthority?: <T>(work: () => Promise<T>, signal: AbortSignal) => Promise<T>
+    }>
   currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
+  currentSnapshot?: (surface: Surface) => Snapshot | undefined
+  currentSnapshotScope?: () => { identity: object; bytesIdentity?: object; readOnly: boolean; poisoned: boolean } | undefined
   // Lexical presence only: the same scope lifetime/abort checks, without copying
   // or validating snapshot contents. Never a source witness or authorization.
   // Adapters without this capability retain currentSnapshots for presence checks.
@@ -92,6 +133,18 @@ export type Persistence = {
   // required. Any attempted write poisons the root even when its error is caught.
   // Older adapters omit this capability and retain their existing transaction path.
   readSnapshotRoot?: <T>(work: () => Promise<T>, options?: TransactionOptions) => Promise<T>
+}
+
+export function hasSfDashboardSourceFence(persistence: Persistence) {
+  const property = Object.getOwnPropertyDescriptor(persistence, "dashboardSourceFence")
+  const fence: Persistence["dashboardSourceFence"] = property && Object.hasOwn(property, "value") ? property.value : undefined
+  return !!fence && fence.transaction === persistence.transaction && fence.transactionAll === persistence.transactionAll &&
+    fence.currentSnapshots === persistence.currentSnapshots && fence.currentSnapshot === persistence.currentSnapshot && fence.current()
+}
+
+export function hasActiveSfSnapshot(persistence: Persistence) {
+  const probe = hasSfDashboardSourceFence(persistence) && persistence.dashboardSourceFence?.hasSnapshotRoot
+  return probe ? probe() : persistence.hasCurrentSnapshots?.() ?? !!persistence.currentSnapshots?.()
 }
 
 export function object(value: unknown): Record<string, unknown> {

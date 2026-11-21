@@ -23,7 +23,7 @@ import { scanLocalFile } from "../runtime/local-scanner.ts"
 import { mountSfFilesOriginalRoutes } from "../runtime/native-files/routing.ts"
 import { mountSfReviewProjection } from "../../../../apps/cli/src/sucafina-product/native-ui/review-routing"
 import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
-import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
+import { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions } from "../product/decisions/current-choice-preview.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
 import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../product/integration/source-inventory.ts"
@@ -37,6 +37,8 @@ type SfLocalContext = {
   origin: string
   createHostRuntime?: CreateSfHostRuntime
   createCurrentChoiceFence?: typeof createCurrentChoiceFence
+  currentChoiceOwnsSnapshotTransactions?: typeof currentChoiceOwnsSnapshotTransactions
+  createSfSourcePersistence?: typeof createSfSourcePersistence
   sourceRoot?: string
 }
 
@@ -74,9 +76,24 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
       projectScope: createSfSourceScopeProjector(() => new Date().toISOString()),
       createId: randomUUID,
     }
-    const sourcePersistence = currentChoiceFence && createSfSourcePersistence({ ...sourceOptions, persistence: currentChoiceFence.persistence })
+    const verifyTransactions = context.createCurrentChoiceFence ? context.currentChoiceOwnsSnapshotTransactions : currentChoiceOwnsSnapshotTransactions
+    const ownsTransactions = currentChoiceFence && verifyTransactions?.(currentChoiceFence, driver) === true
+    const sourcePersistence = currentChoiceFence && (context.createSfSourcePersistence ?? createSfSourcePersistence)({
+      ...sourceOptions, persistence: currentChoiceFence.persistence,
+      ...(ownsTransactions ? { observeAuthority: driver.observeAuthority, holdTargetPreimage: driver.holdTargetPreimage,
+        hasSnapshotRoot: driver.hasSnapshotRoot, installedDashboardProjector: sourceOptions.projectScope } : {}),
+    })
     const runtimeStore = sourcePersistence && currentChoiceFence
-      ? { ...driver, ...currentChoiceFence.persistence, ...sourcePersistence }
+      ? { ...driver, ...currentChoiceFence.persistence, ...sourcePersistence,
+        ...(ownsTransactions && sourcePersistence.transactionAll && driver.holdTargetPreimage ? { dashboardSourceFence: Object.freeze({
+          transaction: sourcePersistence.transaction, transactionAll: sourcePersistence.transactionAll,
+          currentSnapshots: sourcePersistence.currentSnapshots, currentSnapshot: sourcePersistence.currentSnapshot,
+          observeAuthority: sourcePersistence.observeAuthority, readSealed: sourcePersistence.readSealed,
+          hasSnapshotRoot: sourcePersistence.hasSnapshotRoot, readDashboardAuthority: sourcePersistence.readDashboardAuthority,
+          holdTargetPreimage: driver.holdTargetPreimage,
+          current: () => verifyTransactions?.(currentChoiceFence, driver) === true,
+        }) } : {}),
+      }
       : undefined
     const store = runtimeStore ?? driver
     const restoration = sourcePersistence
