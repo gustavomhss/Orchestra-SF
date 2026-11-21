@@ -1,4 +1,4 @@
-import { Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
+import { Show, createEffect, createMemo, createSignal, onCleanup, untrack } from "solid-js"
 import type { JSX } from "solid-js"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfOwnerKey, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
@@ -155,7 +155,7 @@ async function sha256(payload: unknown): Promise<string> {
 
 /** One producer-bound source mutation; never an inferred side effect of render. */
 export function SfU02Edit(props: U02EditProps): JSX.Element {
-  const { t } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
   const context = useSfContext()
   let disposed = false
   onCleanup(() => { disposed = true })
@@ -182,7 +182,9 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
     const version = props.version
     const value = props.value
     if (version !== undefined) {
-      draft().receiveRemote({ baseVersion: version, value: { text: value === undefined ? "" : String(value) } })
+      const controller = draft()
+      // Remote sync must not subscribe this effect to the draft state it publishes.
+      untrack(() => controller.receiveRemote({ baseVersion: version, value: { text: value === undefined ? "" : String(value) } }))
     }
   })
   const [review, setReview] = createSignal<SfU02ReviewIntent>()
@@ -227,6 +229,9 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
       fields: [{ path: reviewFields()[0].path, label: { key: key(props.valueLabelKey) },
         value: props.value === undefined ?
           { kind: "missing" as const, reason: { key: key("sf.u02.noValue") } } :
+          props.surfaceId === "CAP01" && props.actionId === "save-users" ?
+          { kind: "text" as const, text: { kind: "data" as const,
+            text: new Intl.NumberFormat(locale(), { maximumFractionDigits: 20 }).format(props.value) } } :
           { kind: "number" as const, value: props.value,
             unit: { kind: "unspecified" as const, label: { key: key("sf.u02.noCurrency") } },
             fractionDigits: 2 } }] }

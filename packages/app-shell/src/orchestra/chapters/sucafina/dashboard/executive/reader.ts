@@ -184,6 +184,7 @@ export function useU02Projection<T>(
     diagnostic: () => store.diagnostic,
     refresh: () => batch(() => { setStore("periodFailure", null); setRevision((count) => count + 1) }),
     selection: () => ({ year: selection.year, month: selection.month, opsMonth: selection.opsMonth }),
+    resetBudgetPeriod: () => { if (surfaceId === "CAP03") void changeBudgetPeriod({}) },
     setYear: (year: number) => {
       if (validYear(year) === undefined) return
       if (surfaceId === "CAP03") { void changeBudgetPeriod({ year, ...(selection.month === undefined ? {} : { month: selection.month }) }); return }

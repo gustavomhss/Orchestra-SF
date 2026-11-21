@@ -17,7 +17,7 @@ export async function readCurrentTeamInstallation(signal: AbortSignal) {
     return binding
 }
 
-export async function readTeamWebContext(binding: SfTeamInstallationDescriptor, signal: AbortSignal, teamObjectId?: string) {
+export async function readTeamWebContext(binding: SfTeamInstallationDescriptor, signal: AbortSignal, teamObjectId?: string): Promise<Extract<SfTeamContextResult, { status: "ok" | "unauthenticated" | "denied" }> | undefined> {
   const url = new URL(binding.mount + "/api/ui/context", binding.publicOrigin)
   url.search = new URLSearchParams({
     contractRevision: binding.contractRevision,

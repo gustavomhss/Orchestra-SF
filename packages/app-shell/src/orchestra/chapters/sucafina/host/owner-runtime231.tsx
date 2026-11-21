@@ -12,6 +12,8 @@ import { useLocation, useNavigate } from "@solidjs/router"
 import { createEffect, createSignal, onCleanup, Show, Switch, Match, untrack, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
+import { DropdownMenu } from "@orchestra/ui/dropdown-menu"
+import { Icon } from "@orchestra/ui/icon"
 import { usePlatform } from "@/context/platform"
 import { useLanguage } from "@/context/language"
 import { ServerConnection } from "@/context/server-connection"
@@ -261,8 +263,14 @@ function MountedSurface(props: Readonly<{
   })
   onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
+  const polishedSurface = () => {
+    const surface = current()?.surfaceId
+    return surface === "UI29" || surface === "UI33" || surface === "CAP01" ||
+      surface === "CAP02" || surface === "CAP03" || surface === "CAP04"
+  }
   return (
     <>
+    <Show when={polishedSurface()} fallback={
     <div class="flex flex-wrap gap-2" role="toolbar" aria-label={language.t("sf.ui67.title")}>
       <button type="button" class="mx-btn" disabled={authBusy()}
         onClick={() => { void handle.reload() }}>{language.t("sf.ui67.refreshAccess")}</button>
@@ -271,6 +279,29 @@ function MountedSurface(props: Readonly<{
           onClick={() => { void signOut() }}>{language.t("sf.ui67.signOut")}</button>
       </Show>
     </div>
+    }>
+      <div class="sf-wave-access">
+        <DropdownMenu placement="bottom-end">
+          <DropdownMenu.Trigger class="sf-wave-access-trigger" disabled={authBusy()}>
+            <Icon name="shield" size="small" />
+            <span>{language.t("sf.ui67.title")}</span>
+            <Icon name="chevron-down" size="small" />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content class="sf-wave-access-menu" aria-label={language.t("sf.ui67.title")}>
+              <DropdownMenu.Item disabled={authBusy()} onSelect={() => { void handle.reload() }}>
+                <DropdownMenu.ItemLabel>{language.t("sf.ui67.refreshAccess")}</DropdownMenu.ItemLabel>
+              </DropdownMenu.Item>
+              <Show when={handle.state().status === "ready"}>
+                <DropdownMenu.Item disabled={authBusy()} onSelect={() => { void signOut() }}>
+                  <DropdownMenu.ItemLabel>{language.t("sf.ui67.signOut")}</DropdownMenu.ItemLabel>
+                </DropdownMenu.Item>
+              </Show>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu>
+      </div>
+    </Show>
     <Show when={authFailed()}><p role="alert">{language.t("sf.ui67.signOutFailed")}</p></Show>
     <Show when={props.gate()} fallback={<p role="status" data-sf-f01={handle.state().status}>{message()}</p>}>
       <SfSourceNavigation route={current} navigation={props.navigation} />

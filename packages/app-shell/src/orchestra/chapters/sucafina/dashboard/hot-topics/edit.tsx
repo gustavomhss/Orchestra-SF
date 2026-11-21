@@ -49,6 +49,7 @@ export type HotTopicEditProps = Readonly<{
   drafts: SfDraftRegistry
   canSave: boolean
   onRefetch: () => void
+  onSaved?: (transport: SfTransport, scope: string) => void
   scope: string
   readInput: SfJson
   onBack: () => void
@@ -81,6 +82,12 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
     const snapshot = draft().snapshot()
     return snapshot.availability === "active" ? snapshot : undefined
   }
+  let actionField: HTMLTextAreaElement | undefined
+  let stageHeading: HTMLHeadingElement | undefined
+  const revise = () => {
+    setStage("edit")
+    queueMicrotask(() => actionField?.focus())
+  }
   const value = () => active()?.value ?? blank
   const admitted = () => props.canSave && (props.record === undefined || props.version !== undefined) &&
     valid(value()) && !busy() && !!active() && !active()?.pendingOperation && !active()?.conflict
@@ -91,14 +98,14 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
   const field = (path: keyof TopicFields, label: Key, value: string | undefined): Readonly<{
     path: string; label: { key: SfCopyKey }; value: SfDisplayValue
   }> => ({
-    path, label: { key: key(label) }, value: value === undefined
+    path, label: { key: key(label) }, value: value === undefined || value === ""
       ? { kind: "missing", reason: { key: key("sf.u38.unknown") } }
       : { kind: "text", text: { kind: "data", text: value } },
   })
   const snapshotFields = (data: TopicFields) => ([
     field("action", "sf.u38.action", data.action), field("owner", "sf.u38.owner", data.owner),
-    field("due", "sf.u38.due", data.due), field("status", "sf.u38.status", data.status),
-    field("priority", "sf.u38.priority", data.priority), field("notes", "sf.u38.notes", data.notes),
+    field("due", "sf.u38.due", data.due), field("status", "sf.u38.status", t(key(("sf.u38." + data.status) as Key))),
+    field("priority", "sf.u38.priority", t(key(("sf.u38." + data.priority) as Key))), field("notes", "sf.u38.notes", data.notes),
   ])
   const original = () => props.record && props.version !== undefined
     ? { kind: "persisted" as const, ref: props.record.id as SfRef,
@@ -109,6 +116,13 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
     const current = active(), proposed = value()
     if (!admitted() || !current || current.baseVersion !== (props.record ? props.version ?? 0 : null)) {
       setFeedback("conflict");setStage("edit");return
+    }
+    const sentScope = props.record ? "edit:" + props.record.id : "new"
+    const submittedDraft = {
+      surfaceId: "CAP02" as const,
+      identity: props.record ? { kind: "record" as const, recordRef: props.record.id as SfRef } :
+        { kind: "new" as const, newIntentRef: newIntent },
+      editScopeKey: scope,
     }
     setBusy(true);setStage("edit")
     const operationRef = ("domain.command.CAP02.save:" + crypto.randomUUID()) as SfOperationRef
@@ -122,7 +136,8 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
       draft().setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: props.record ? props.version ?? 0 : null })
       if (!active()?.pendingOperation) {setFeedback("conflict");return}
       draft().setPhase("submitting")
-      const result = await createSfPeopleClient(props.transport)["domain.command.CAP02.save"]({
+      const transport = props.transport
+      const result = await createSfPeopleClient(transport)["domain.command.CAP02.save"]({
         ...(props.record ? { id: props.record.id } : {}), version: props.version ?? 0,
         values: { action: proposed.action, owner: proposed.owner, due: proposed.due,
           status: proposed.status, priority: proposed.priority, notes: proposed.notes },
@@ -137,22 +152,32 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
         return
       }
       draft().confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
+      props.drafts.discard(submittedDraft, operationRef)
       setFeedback("saved")
+      props.onSaved?.(transport, sentScope)
       props.onRefetch()
     } catch {
       draft().setPhase("outcome-unknown");setFeedback("unknown")
     } finally { setBusy(false) }
   }
-  return <section class="sf-u38-editor" data-sf-topic-editor>
-    <h2>{t(key(props.record ? "sf.u38.editTopic" : "sf.u38.newTopic"))}</h2>
+  return <section class="sf-u38-editor sf-topics-editor" data-sf-topic-editor
+    data-sf-stage={stage()} data-sf-topic-new={props.record ? "false" : "true"}>
+    <header class="sf-topics-editor-head">
+      <div>
+        <h2 ref={stageHeading} tabindex="-1">{t(key(stage() === "review" ? "sf.u38.reviewSave" : props.record ? "sf.u38.editTopic" : "sf.u38.newTopic"))}</h2>
+        <p>{t(key("sf.u38.version"))}: {props.version ?? (props.record ? t(key("sf.u38.unknown")) : 0)}</p>
+      </div>
+      <button type="button" class="mx-btn" disabled={busy()} onClick={props.onBack}>{t(key("sf.u38.back"))}</button>
+    </header>
     <Show when={active()} fallback={<p role="status">{t(key("sf.u38.savePending"))}</p>}>
       <Show when={stage() === "edit"}>
         <form onSubmit={(event) => { event.preventDefault(); if (admitted()) {
           draft().setPhase("reviewing");setStage("review")
+          queueMicrotask(() => stageHeading?.focus())
         } else setFeedback("invalid") }}>
-          <div class="sf-u38-form">
-            <label>{t(key("sf.u38.action"))}
-              <input required maxLength={16384} value={value().action}
+          <div class="sf-u38-form sf-topics-form">
+            <label class="sf-topics-action-field">{t(key("sf.u38.action"))}
+              <textarea ref={actionField} rows={2} required maxLength={16384} value={value().action}
                 disabled={busy() || !!active()?.pendingOperation}
                 onInput={(event) => edit("action", event.currentTarget.value)} /></label>
             <label>{t(key("sf.u38.owner"))}
@@ -162,13 +187,13 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
               <input value={value().due} disabled={busy() || !!active()?.pendingOperation}
                 onInput={(event) => edit("due", event.currentTarget.value)} /></label>
             <label>{t(key("sf.u38.status"))}
-              <select value={value().status} disabled={busy() || !!active()?.pendingOperation}
+              <select aria-label={t(key("sf.u38.status"))} value={value().status} disabled={busy() || !!active()?.pendingOperation}
                 onChange={(event) => edit("status", event.currentTarget.value as TopicFields["status"])}>
                 <For each={statusOptions}>{(status) =>
                   <option value={status}>{t(key(("sf.u38." + status) as Key))}</option>}</For>
               </select></label>
             <label>{t(key("sf.u38.priority"))}
-              <select value={value().priority} disabled={busy() || !!active()?.pendingOperation}
+              <select aria-label={t(key("sf.u38.priority"))} value={value().priority} disabled={busy() || !!active()?.pendingOperation}
                 onChange={(event) => edit("priority", event.currentTarget.value as TopicFields["priority"])}>
                 <For each={priorityOptions}>{(priority) =>
                   <option value={priority}>{t(key(("sf.u38." + priority) as Key))}</option>}</For>
@@ -177,18 +202,18 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
               <textarea rows={4} value={value().notes} disabled={busy() || !!active()?.pendingOperation}
                 onInput={(event) => edit("notes", event.currentTarget.value)} /></label>
           </div>
-          <p>{t(key("sf.u38.version"))}: {props.version ?? (props.record ? t(key("sf.u38.unknown")) : 0)}</p>
-          <div class="sf-u38-actions">
+          <div class="sf-u38-actions sf-topics-form-actions">
             <button type="submit" class="mx-btn primary" disabled={!admitted()}>{t(key("sf.u38.reviewSave"))}</button>
-            <button type="button" class="mx-btn" disabled={!!active()?.pendingOperation}
-              onClick={() => { draft().discard();setFeedback("none") }}>{t(key("sf.u38.discard"))}</button>
-            <button type="button" class="mx-btn" onClick={props.onBack}>{t(key("sf.u38.back"))}</button>
+            <button type="button" class="mx-btn" disabled={busy() || !!active()?.pendingOperation}
+              onClick={() => { draft().discard();setFeedback("none");queueMicrotask(() => actionField?.focus()) }}>
+              {t(key("sf.u38.discard"))}
+            </button>
           </div>
         </form>
       </Show>
       <Show when={stage() === "review" && admitted()}>
         <SfChangeReview operation={{ ref: ("topic-save:" + (props.record?.id ?? newIntent)) as SfOperationRef,
-            label: { key: key("sf.u38.reviewSave") }, scope: { kind: "data", text: props.scope } }}
+            label: { key: key("sf.u38.reviewSave") }, scope: { kind: "data", text: value().action } }}
           base={original()} current={original()}
           proposed={{ kind: "draft", intentRef: newIntent,
             sourceRef: props.record?.id ? props.record.id as SfRef : null, sourceVersion: props.version ?? 0,
@@ -203,7 +228,7 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
               version: { kind: "record", expectedVersion: props.version ?? 0 },
               confirmation: "presentation-only" } }}
           state="ready" onConfirm={() => { void save() }}
-          onRevise={() => setStage("edit")} onCancel={() => setStage("edit")} />
+          onRevise={revise} onCancel={revise} />
       </Show>
       <Show when={active()?.conflict}><p role="alert">{t(key("sf.u38.sourceChanged"))}</p></Show>
     </Show>

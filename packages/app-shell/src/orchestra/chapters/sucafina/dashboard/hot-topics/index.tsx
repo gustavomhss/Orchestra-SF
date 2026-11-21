@@ -1,7 +1,10 @@
-import { For, Show, createMemo, createSignal } from "solid-js"
+import { For, Show, createEffect, createMemo, createSignal } from "solid-js"
+import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
 import { useNavigate } from "@solidjs/router"
+import { Icon } from "@orchestra/ui/icon"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
+import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { encodeSfRouteRef } from "../../navigation-state"
@@ -11,11 +14,13 @@ import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview } from "../../shared/change-review"
 import { SF_STATE_FALLBACK_KEY, sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
 import type { SfCopyKey } from "../../shared/frame/types"
-import { SF_U38_COPY } from "@/i18n/orchestra-chapters/sf-u38"
+import { SF_U38_COPY, SF_U38_COPY_BR } from "@/i18n/orchestra-chapters/sf-u38"
 import { SfHotTopicEditor } from "./edit"
 import { useHotTopicsSource } from "./reader"
 import type { Topic, TopicStatus } from "./reader"
 import "./u38.css"
+import "./topics.css"
+import "../../shared/wave-one.css"
 
 type Key = keyof typeof SF_U38_COPY
 const key = (value: Key): SfCopyKey => value as SfCopyKey
@@ -57,10 +62,18 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
   }
   const navigate = useNavigate()
   const source = useHotTopicsSource(props.route)
+  const [completion, setCompletion] = createStore({ generation: -1, route: "" })
   const [deleteRequested, setDeleteRequested] = createSignal(false)
   const [deleteBusy, setDeleteBusy] = createSignal(false)
   const [deleteState, setDeleteState] = createSignal<"none" | "saved" | "unknown" | "rejected">("none")
   const [inlineRef, setInlineRef] = createSignal<string | null>(null)
+  let deleteButton: HTMLButtonElement | undefined
+  let detailHeading: HTMLHeadingElement | undefined
+  let confirmedMessage: HTMLParagraphElement | undefined
+  const cancelDelete = () => {
+    setDeleteRequested(false)
+    queueMicrotask(() => deleteButton?.focus())
+  }
   const list = () => source.records() ?? []
   const routeRef = () => props.route.kind === "detail" || props.route.kind === "edit" ?
     props.route.params.topicRef : undefined
@@ -79,9 +92,31 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
     setInlineRef(topic.id)
     navigate(topicPath(props, mode, topic.id))
   }
-  const back = () => { setInlineRef(null);setDeleteRequested(false);navigate(topicPath(props, "list")) }
+  const back = () => {
+    setCompletion({ generation: -1, route: "" })
+    setInlineRef(null);setDeleteRequested(false);navigate(topicPath(props, "list"))
+  }
   const edit = () => selected() ? open(selected()!, "edit") : undefined
   const current = () => source.owner()
+  const editorScope = () => props.route.kind === "new" ? "new" :
+    props.route.kind === "edit" ? "edit:" + props.route.params.topicRef : ""
+  const confirmationOwner = () => {
+    const ready = current()
+    return ready?.context.destinations.some((item) => item.capabilityId === "CAP02" && item.canRead) ? ready : undefined
+  }
+  const confirmed = () => completion.route !== "" && completion.route === editorScope() &&
+    completion.generation === source.context.generation() && !!confirmationOwner()
+  createEffect(() => {
+    if (completion.route && (!confirmationOwner() || completion.generation !== source.context.generation() ||
+        completion.route !== editorScope())) setCompletion({ generation: -1, route: "" })
+  })
+  // Only the transport that sent the successful command may publish this notice.
+  // No record values survive the source refresh, owner change or route change.
+  const onSaved = (transport: SfTransport, sentScope: string) => {
+    if (!sentScope || sentScope !== editorScope() || confirmationOwner()?.transport !== transport) return
+    setCompletion({ generation: source.context.generation(), route: sentScope })
+    queueMicrotask(() => confirmedMessage?.focus())
+  }
 
   async function remove() {
     const record = selected(), originalVersion = version()
@@ -112,115 +147,188 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
     reasonKey: !source.allowed("save") ? key("sf.u38.saveDenied") : undefined,
     onInvoke: () => navigate(topicPath(props, "new")),
   })
-  return <SfPageFrame titleKey={key("sf.cap02.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
-      density="comfortable" layout="work" onLayoutMode={() => {}} primaryAction={primaryAction()}>
-    <div class="sf-u38-page" data-sf-surface="CAP02">
+  return <SfPageFrame titleKey={key("sf.cap02.title")}
+      eyebrow={{ kind: "message", message: { key: "sf.design.eyebrow" as SfCopyKey } }}
+      context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
+      density="comfortable" layout="work" onLayoutMode={() => {}}
+      primaryAction={props.route.kind === "entry" ? primaryAction() : undefined}>
+    <div class="sf-u38-page sf-topics" data-sf-surface="CAP02" data-sf-wave="two" data-sf-view={props.route.kind}>
+      <Show when={confirmed()}>
+        <section class="sf-topics-editor sf-topics-confirmed" data-sf-topic-confirmed aria-labelledby="sf-topic-saved">
+          <p ref={confirmedMessage} tabindex="-1" id="sf-topic-saved" role="status" data-topic-feedback="saved">
+            {t(key("sf.u38.savedRefetch"))}
+          </p>
+          <button type="button" class="mx-btn primary" onClick={back}>{t(key("sf.u38.back"))}</button>
+        </section>
+      </Show>
       <SfStatePanel state={state()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[state()])}
         onRetryRead={source.refresh} onBack={back}>
         <Show when={props.route.kind === "entry"}>
-          <section class="sf-u38-section" aria-labelledby="sf-topics-list">
-            <h2 id="sf-topics-list">{t(key("sf.u38.topicList"))}</h2>
-            <label class="sf-u38-filter">{t(key("sf.u38.filter"))}
-              <select value={source.filter()} onChange={(event) => source.setFilter(event.currentTarget.value as TopicStatus)}>
-                <For each={statuses}>{(option) =>
-                  <option value={option}>{option ? t(key(labelForStatus(option)!)) : t(key("sf.u38.all"))}</option>
-                }</For>
-              </select>
-            </label>
-            <Show when={filtered().length} fallback={<p role="status">{t(sfCommonKey(source.filter() ? "sf.common.filterEmpty" : "sf.common.empty"))}</p>}>
-              <div class="sf-u38-table-scroll">
-                <table><caption>{t(key("sf.u38.topicList"))}</caption>
-                  <thead><tr><th scope="col">{t(key("sf.u38.action"))}</th>
-                    <th scope="col">{t(key("sf.u38.owner"))}</th>
-                    <th scope="col">{t(key("sf.u38.status"))}</th>
-                    <th scope="col">{t(key("sf.u38.priority"))}</th>
-                    <th scope="col">{t(key("sf.u38.due"))}</th>
-                    <th scope="col">{t(key("sf.u38.topicDetail"))}</th></tr></thead>
-                  <tbody><For each={filtered()}>{(topic) =>
-                    <tr data-sf-topic={topic.id}>
-                      <th scope="row">{topic.action ?? t(key("sf.u38.unknown"))}</th>
-                      <td>{topic.owner ?? t(key("sf.u38.unknown"))}</td>
-                      <td>{topic.status && labelForStatus(topic.status) ? t(key(labelForStatus(topic.status)!)) : t(key("sf.u38.unknown"))}</td>
-                      <td>{topic.priority && labelForPriority(topic.priority) ? t(key(labelForPriority(topic.priority)!)) : t(key("sf.u38.unknown"))}</td>
-                      <td>{topic.due ? <time dateTime={topic.due}>{shownDate(topic.due)}</time> : t(key("sf.u38.unknown"))}</td>
-                      <td><button type="button" class="mx-btn" onClick={() => open(topic, "detail")}>{t(key("sf.u38.show"))}</button></td>
-                    </tr>}</For></tbody>
-                </table>
+          <section class="sf-topics-list" data-sf-topic-list aria-labelledby="sf-topics-list">
+            <header class="sf-topics-list-head">
+              <div class="sf-topics-list-title">
+                <h2 id="sf-topics-list">{t(key("sf.u38.topicList"))}</h2>
+                <span class="sf-topics-count">
+                  <span class="sf-topics-sr-only">{t(key("sf.u38.filteredCount"))}: </span>
+                  {filtered().length}
+                </span>
               </div>
+              <div class="sf-topics-tools">
+                <label class="sf-topics-filter">
+                  <span class="sf-topics-sr-only">{t(key("sf.u38.filter"))}</span>
+                  <select aria-label={t(key("sf.u38.filter"))} value={source.filter()} onChange={(event) => source.setFilter(event.currentTarget.value as TopicStatus)}>
+                    <For each={statuses}>{(option) =>
+                      <option value={option}>{option ? t(key(labelForStatus(option)!)) : t(key("sf.u38.all"))}</option>
+                    }</For>
+                  </select>
+                </label>
+                <button type="button" class="mx-btn sf-topics-refresh" onClick={source.refresh}>
+                  {t(key("sf.u38.refresh"))}
+                </button>
+              </div>
+            </header>
+            <Show when={filtered().length} fallback={
+              <p class="sf-topics-empty" role="status">{t(sfCommonKey(source.filter() ? "sf.common.filterEmpty" : "sf.common.empty"))}</p>
+            }>
+              <table class="sf-topics-table">
+                <caption class="sf-topics-sr-only">{t(key("sf.u38.topicList"))}</caption>
+                <thead><tr>
+                  <th scope="col">{t(key("sf.u38.action"))}</th>
+                  <th scope="col">{t(key("sf.u38.owner"))}</th>
+                  <th scope="col">{t(key("sf.u38.status"))}</th>
+                  <th scope="col">{t(key("sf.u38.due"))}</th>
+                  <th scope="col"><span class="sf-topics-sr-only">{t(key("sf.u38.topicDetail"))}</span></th>
+                </tr></thead>
+                <tbody><For each={filtered()}>{(topic) =>
+                  <tr data-sf-topic={topic.id}>
+                    <th scope="row" class="sf-topics-action">
+                      <strong><bdi>{topic.action ?? t(key("sf.u38.unknown"))}</bdi></strong>
+                      <span class="sf-topics-priority" data-priority={topic.priority}>
+                        <span class="sf-topics-priority-dot" aria-hidden="true" />
+                        <span>{t(key("sf.u38.priority"))}: {topic.priority && labelForPriority(topic.priority) ? t(key(labelForPriority(topic.priority)!)) : t(key("sf.u38.unknown"))}</span>
+                      </span>
+                    </th>
+                    <td class="sf-topics-owner">
+                      <span class="sf-topics-cell-label">{t(key("sf.u38.owner"))}</span>
+                      <bdi>{topic.owner ?? t(key("sf.u38.unknown"))}</bdi>
+                    </td>
+                    <td class="sf-topics-status-cell">
+                      <span class="sf-topics-cell-label">{t(key("sf.u38.status"))}</span>
+                      <span class="sf-topics-status" data-status={topic.status}>
+                        {topic.status && labelForStatus(topic.status) ? t(key(labelForStatus(topic.status)!)) : t(key("sf.u38.unknown"))}
+                      </span>
+                    </td>
+                    <td class="sf-topics-due">
+                      <span class="sf-topics-cell-label">{t(key("sf.u38.due"))}</span>
+                      {topic.due ? <time dateTime={topic.due}>{shownDate(topic.due)}</time> : t(key("sf.u38.unknown"))}
+                    </td>
+                    <td class="sf-topics-open">
+                      <button type="button" class="mx-btn" onClick={() => open(topic, "detail")}>
+                        {t(key("sf.u38.show"))}<Icon name="arrow-right" size="small" />
+                      </button>
+                    </td>
+                  </tr>
+                }</For></tbody>
+              </table>
             </Show>
           </section>
         </Show>
-        <Show when={props.route.kind === "new" ? current() : undefined}>
+        <Show when={!confirmed() && props.route.kind === "new" ? current() : undefined}>
           {(ready) => <SfHotTopicEditor transport={ready().transport} drafts={ready().drafts}
             readInput={{ topicStatus: source.filter(), ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
               ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }) }}
-            canSave={source.allowed("save")} scope="new" version={0} onBack={back} onRefetch={source.refresh} />}
+            canSave={source.allowed("save")} scope="new" version={0} onBack={back} onRefetch={source.refresh} onSaved={onSaved} />}
         </Show>
         <Show when={props.route.kind === "edit" || props.route.kind === "detail" ? selected() : undefined}>
-          {(topic) => <section class="sf-u38-section" data-sf-topic-detail aria-labelledby="sf-topic-heading">
-            <header class="sf-u38-detail-header">
-              <h2 id="sf-topic-heading">{topic().action ?? t(key("sf.u38.topicDetail"))}</h2>
-              <button type="button" class="mx-btn" onClick={back}>{t(key("sf.u38.back"))}</button>
-            </header>
+          {(topic) => <>
             <Show when={props.route.kind === "detail"}>
-              <dl class="sf-u38-meta">
-                <div><dt>{t(key("sf.u38.owner"))}</dt><dd>{topic().owner || t(key("sf.u38.unknown"))}</dd></div>
-                <div><dt>{t(key("sf.u38.due"))}</dt><dd>{(() => { const due = topic().due; return due ? <time dateTime={due}>{shownDate(due)}</time> : t(key("sf.u38.unknown")) })()}</dd></div>
-                <div><dt>{t(key("sf.u38.status"))}</dt>
-                  <dd>{topic().status && labelForStatus(topic().status!) ? t(key(labelForStatus(topic().status!)!)) : t(key("sf.u38.unknown"))}</dd></div>
-                <div><dt>{t(key("sf.u38.priority"))}</dt>
-                  <dd>{topic().priority && labelForPriority(topic().priority!) ? t(key(labelForPriority(topic().priority!)!)) : t(key("sf.u38.unknown"))}</dd></div>
-                <div><dt>{t(key("sf.u38.notes"))}</dt><dd class="sf-u38-long">{topic().notes || t(key("sf.u38.unknown"))}</dd></div>
-                <div><dt>{t(key("sf.u38.version"))}</dt><dd>{version() ?? t(key("sf.u38.unknown"))}</dd></div>
-              </dl>
-              <div class="sf-u38-actions" data-sf-executive-handoff>
-                <SfExecutiveAction from={props.route}
-                  target={{ kind: "relations", source: { kind: "topic", ref: topic().id } }}
-                  label={{ pt: "Relacionar ação por referência", en: "Relate action by reference" }} />
-              </div>
-              <SfExecutiveRelatedLinks from={props.route} omit="topic" />
-              <div class="sf-u38-actions">
-                <button type="button" class="mx-btn primary" disabled={!source.allowed("save") || version() === undefined}
-                  onClick={edit}>{t(key("sf.u38.editTopic"))}</button>
-                <button type="button" class="mx-btn" disabled={!source.allowed("delete") ||
-                    version() === undefined || deleteBusy() || deleteState() === "unknown"}
-                  onClick={() => setDeleteRequested(true)}>{t(key("sf.u38.deleteTopic"))}</button>
-              </div>
-              <h3>{t(key("sf.u38.topicHistory"))}</h3>
-              <p>{t(key("sf.u38.noHistory"))}</p>
-              <Show when={deleteRequested() && version() !== undefined && source.allowed("delete")}>
-                <SfChangeReview operation={{ ref: ("topic-delete:" + topic().id) as SfOperationRef,
-                    label: { key: key("sf.u38.deleteTopic") }, scope: { kind: "data", text: topic().id } }}
-                  base={{ kind: "persisted", ref: topic().id as SfRef, version: version()!,
-                    fields: [{ path: "action", label: { key: key("sf.u38.action") },
-                      value: { kind: "text", text: { kind: "data", text: topic().action ?? "" } } }] }}
-                  current={{ kind: "persisted", ref: topic().id as SfRef, version: version()!,
-                    fields: [{ path: "action", label: { key: key("sf.u38.action") },
-                      value: { kind: "text", text: { kind: "data", text: topic().action ?? "" } } }] }}
-                  proposed={{ kind: "not-provided", reason: { key: key("sf.u38.deleteWarning") } }}
-                  effects={[]}
-                  coverage={{ state: "complete", summary: { key: key("sf.u38.confirmRisk") },
-                    reasons: [], knownCount: 1, expectedCount: 1 }}
-                  blockingReasons={[]}
-                  confirmation={{ kind: "admitted", labelKey: key("sf.u38.confirmDelete"),
-                    purpose: "delete", binding: { kind: "catalog-command", operationId: "domain.command.CAP02.delete",
-                      version: { kind: "record", expectedVersion: version()! }, confirmation: "presentation-only" } }}
-                  state="ready" onConfirm={() => {void remove()}}
-                  onRevise={() => setDeleteRequested(false)} onCancel={() => setDeleteRequested(false)} />
-              </Show>
-              <Show when={deleteState() !== "none"}><p role="alert" data-delete-state={deleteState()}>
-                {t(key(deleteState() === "saved" ? "sf.u38.savedRefetch" :
-                  deleteState() === "unknown" ? "sf.u38.savePending" : "sf.u38.applyError"))}
-              </p></Show>
+              <section class="sf-topics-detail" data-sf-topic-detail data-sf-deleting={deleteRequested() ? "true" : "false"}
+                aria-labelledby="sf-topic-heading">
+                <header class="sf-topics-detail-head">
+                  <div>
+                    <p class="sf-topics-overline">{t(key("sf.u38.topicDetail"))}</p>
+                    <h2 ref={detailHeading} tabindex="-1" id="sf-topic-heading">{topic().action ?? t(key("sf.u38.topicDetail"))}</h2>
+                  </div>
+                  <button type="button" class="mx-btn" disabled={deleteBusy()} onClick={back}>
+                    {t(key("sf.u38.back"))}
+                  </button>
+                </header>
+                <div class="sf-topics-detail-body" hidden={deleteRequested()}>
+                  <dl class="sf-topics-meta">
+                    <div><dt>{t(key("sf.u38.owner"))}</dt><dd>{topic().owner || t(key("sf.u38.unknown"))}</dd></div>
+                    <div><dt>{t(key("sf.u38.due"))}</dt><dd>{(() => { const due = topic().due; return due ? <time dateTime={due}>{shownDate(due)}</time> : t(key("sf.u38.unknown")) })()}</dd></div>
+                    <div><dt>{t(key("sf.u38.status"))}</dt>
+                      <dd><span class="sf-topics-status" data-status={topic().status}>
+                        {topic().status && labelForStatus(topic().status!) ? t(key(labelForStatus(topic().status!)!)) : t(key("sf.u38.unknown"))}
+                      </span></dd></div>
+                    <div><dt>{t(key("sf.u38.priority"))}</dt>
+                      <dd>{topic().priority && labelForPriority(topic().priority!) ? t(key(labelForPriority(topic().priority!)!)) : t(key("sf.u38.unknown"))}</dd></div>
+                  </dl>
+                  <section class="sf-topics-notes" aria-labelledby="sf-topic-notes">
+                    <h3 id="sf-topic-notes">{t(key("sf.u38.notes"))}</h3>
+                    <p>{topic().notes || t(key("sf.u38.unknown"))}</p>
+                  </section>
+                  <div class="sf-topics-detail-actions">
+                    <button type="button" class="mx-btn primary" disabled={!source.allowed("save") || version() === undefined || deleteBusy()}
+                      onClick={edit}>{t(key("sf.u38.editTopic"))}</button>
+                    <button ref={deleteButton} type="button" class="mx-btn danger" disabled={!source.allowed("delete") ||
+                        version() === undefined || deleteBusy() || deleteState() === "unknown"}
+                      onClick={() => { setDeleteRequested(true);queueMicrotask(() => detailHeading?.focus()) }}>{t(key("sf.u38.deleteTopic"))}</button>
+                  </div>
+                  <div class="sf-topics-related" data-sf-executive-handoff>
+                    <SfExecutiveAction from={props.route}
+                      target={{ kind: "relations", source: { kind: "topic", ref: topic().id } }}
+                      label={{ pt: SF_U38_COPY_BR["sf.u38.relate"], en: SF_U38_COPY["sf.u38.relate"] }} />
+                    <SfExecutiveRelatedLinks from={props.route} omit="topic" />
+                  </div>
+                  <details class="sf-topics-source">
+                    <summary>{t(key("sf.u38.source"))}<Icon name="chevron-down" size="small" /></summary>
+                    <div class="sf-topics-source-content">
+                      <dl>
+                        <div><dt>{t(key("sf.u38.confirmSelected"))}</dt><dd><code><bdi>{topic().id}</bdi></code></dd></div>
+                        <div><dt>{t(key("sf.u38.version"))}</dt><dd>{version() ?? t(key("sf.u38.unknown"))}</dd></div>
+                      </dl>
+                      <h3>{t(key("sf.u38.topicHistory"))}</h3>
+                      <p>{t(key("sf.u38.noHistory"))}</p>
+                    </div>
+                  </details>
+                </div>
+                <Show when={deleteRequested() && version() !== undefined && source.allowed("delete")}>
+                  <div class="sf-topics-delete-review">
+                    <SfChangeReview operation={{ ref: ("topic-delete:" + topic().id) as SfOperationRef,
+                        label: { key: key("sf.u38.deleteTopic") }, scope: { kind: "data", text: topic().id } }}
+                      base={{ kind: "persisted", ref: topic().id as SfRef, version: version()!,
+                        fields: [{ path: "action", label: { key: key("sf.u38.action") },
+                          value: { kind: "text", text: { kind: "data", text: topic().action ?? "" } } }] }}
+                      current={{ kind: "persisted", ref: topic().id as SfRef, version: version()!,
+                        fields: [{ path: "action", label: { key: key("sf.u38.action") },
+                          value: { kind: "text", text: { kind: "data", text: topic().action ?? "" } } }] }}
+                      proposed={{ kind: "not-provided", reason: { key: key("sf.u38.deleteWarning") } }}
+                      effects={[]}
+                      coverage={{ state: "complete", summary: { key: key("sf.u38.confirmRisk") },
+                        reasons: [], knownCount: 1, expectedCount: 1 }}
+                      blockingReasons={[]}
+                      confirmation={{ kind: "admitted", labelKey: key("sf.u38.confirmDelete"),
+                        purpose: "delete", binding: { kind: "catalog-command", operationId: "domain.command.CAP02.delete",
+                          version: { kind: "record", expectedVersion: version()! }, confirmation: "presentation-only" } }}
+                      state="ready" onConfirm={() => {void remove()}}
+                      onRevise={cancelDelete} onCancel={cancelDelete} />
+                  </div>
+                </Show>
+                <Show when={deleteState() !== "none"}><p role="alert" data-delete-state={deleteState()}>
+                  {t(key(deleteState() === "saved" ? "sf.u38.savedRefetch" :
+                    deleteState() === "unknown" ? "sf.u38.savePending" : "sf.u38.applyError"))}
+                </p></Show>
+              </section>
             </Show>
-            <Show when={props.route.kind === "edit" ? current() : undefined}>
+            <Show when={!confirmed() && props.route.kind === "edit" ? current() : undefined}>
               {(ready) => <SfHotTopicEditor record={topic()} version={version()} transport={ready().transport}
                 readInput={{ topicStatus: source.filter(), ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
                   ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }) }}
                 drafts={ready().drafts} canSave={source.allowed("save")}
-                scope={topic().id} onBack={back} onRefetch={source.refresh} />}
+                scope={topic().id} onBack={back} onRefetch={source.refresh} onSaved={onSaved} />}
             </Show>
-          </section>}
+          </>}
         </Show>
       </SfStatePanel>
     </div>

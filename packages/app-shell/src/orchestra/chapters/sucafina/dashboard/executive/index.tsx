@@ -1,5 +1,6 @@
 import { For, Show, createMemo } from "solid-js"
 import type { JSX } from "solid-js"
+import { Icon } from "@orchestra/ui/icon"
 import { useLanguage } from "@/context/language"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfSurfaceProps } from "../../context/contracts"
@@ -13,7 +14,8 @@ import { SF_U02_COPY } from "@/i18n/orchestra-chapters/sf-u02"
 import { SfU02Edit, sfU02ExecutiveTarget } from "./edit"
 import { useU02Projection, knownNumber } from "./reader"
 import { parseSfSignalPriorities, sfExecutiveSignals, sfExecutiveSignalTarget } from "./signals"
-import "./u02.css"
+import "../../shared/wave-one.css"
+import "./executive.css"
 
 type ExecutiveData = typeof SfDomainPageData.CAP01.Type
 type Key = keyof typeof SF_U02_COPY
@@ -83,16 +85,21 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
   const usersVersion = () => { const target = usersTarget();return target.kind === "unavailable" ? undefined : target.version }
   const benchmarkVersion = () => { const target = benchmarkTarget();return target.kind === "unavailable" ? undefined : target.version }
   const canEdit = (action: string) => reader.canAction(action, "domain.command.CAP01." + action)
+  const missingMetric = () => <span class="sf-u02-missing" title={missing()}>
+    <span aria-hidden="true">—</span><span class="sf-u02-sr-only">{missing()}</span>
+  </span>
   const stat = (id: string, label: Key, value: number | null | undefined) =>
-    <div class="sf-u02-stat" data-sf-metric={id}><dt>{t(key(label))}</dt><dd>{numeric(value)}</dd></div>
+    <div class="sf-u02-stat" data-sf-metric={id}
+      data-sf-value={knownNumber(value) === undefined ? "missing" : "number"}><dt>{t(key(label))}</dt><dd>{knownNumber(value) === undefined ? missingMetric() : numeric(value)}</dd></div>
   const unscopedStat = (id: string, label: Key) =>
-    <div class="sf-u02-stat" data-sf-metric={id} data-sf-scope="unscoped"><dt>{t(key(label))}</dt><dd>{unscoped()}</dd></div>
+    <div class="sf-u02-stat" data-sf-metric={id} data-sf-scope="unscoped" data-sf-value="missing"><dt>{t(key(label))}</dt><dd aria-describedby="sf-u02-financial-scope">{missingMetric()}</dd></div>
   const metricTable = () => {
-    if (year() !== undefined) return <p role="status">{unscoped()}</p>
+    if (year() !== undefined) return <p role="status">{t(key("sf.u02.sourceMissing"))}</p>
     const totals = periodTotals()
     if (!totals) return <p role="status">{t(key("sf.u02.sourceMissing"))}</p>
-    return <div class="sf-u02-table-scroll">
-      <table><caption>{t(key("sf.u02.budgetByLine"))}</caption>
+    return <div class="sf-u02-table-scroll sf-u02-financial-table" tabIndex={0} role="region"
+      aria-labelledby="sf-u02-financial-table-caption">
+      <table><caption id="sf-u02-financial-table-caption">{t(key("sf.u02.budgetByLine"))}</caption>
         <thead><tr><th scope="col">{t(key("sf.u02.line"))}</th>
           <th scope="col">{t(key("sf.u02.budget"))}</th>
           <th scope="col">{t(key("sf.u02.actual"))}</th>
@@ -109,9 +116,10 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
     </div>
   }
   return <SfPageFrame titleKey={key("sf.cap01.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
+      eyebrow={{ kind: "message", message: { key: "sf.design.eyebrow" as SfCopyKey } }}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
-    <div class="sf-u02-page" data-sf-surface="CAP01">
-      <nav class="flex flex-wrap gap-2" aria-label="Executive cross-links" data-sf-executive-crosslinks>
+    <div class="sf-u02-page" data-sf-surface="CAP01" data-sf-wave="executive">
+      <nav class="sf-u02-crosslinks" aria-label="Executive cross-links" data-sf-executive-crosslinks>
         <SfExecutiveAction from={props.route} target={{ kind: "agenda" }}
           label={{ pt: "Criar pauta de revisão", en: "Create review agenda" }} />
         <SfExecutiveAction from={props.route} target={{ kind: "topics" }}
@@ -123,121 +131,149 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
       </nav>
       <SfStatePanel state={reader.state()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[reader.state()])}
         onRetryRead={reader.refresh}>
-        <section class="sf-u02-section" aria-labelledby="sf-u02-period">
-          <h2 id="sf-u02-period">{t(key("sf.u02.period"))}</h2>
+        <section class="sf-u02-period" aria-labelledby="sf-u02-period">
+          <h2 id="sf-u02-period" class="sf-u02-sr-only">{t(key("sf.u02.period"))}</h2>
           <div class="sf-u02-controls">
             <label>{t(key("sf.u02.year"))}
-              <select value={year() ?? ""} onChange={(event) => reader.setYear(Number(event.currentTarget.value))}>
-                <option value="" disabled>{missing()}</option>
+              <select aria-label={t(key("sf.u02.year"))} value={year() ?? ""} onChange={(event) => reader.setYear(Number(event.currentTarget.value))}>
+                <option value="" disabled>{t(key("sf.u02.sourcePeriod"))}</option>
                 <For each={[2024, 2025, 2026, 2027]}>{(item) =>
                   <option value={item}>{item}</option>}</For>
               </select></label>
             <label>{t(key("sf.u02.month"))}
               <select aria-label={t(key("sf.u02.month"))} value={month() ?? ""} onChange={(event) => reader.setMonth(Number(event.currentTarget.value))}>
-                <option value="" disabled>{missing()}</option>
+                <option value="" disabled>{t(key("sf.u02.sourcePeriod"))}</option>
                 <For each={MONTHS}>{(item) => <option value={item}>{item}</option>}</For>
               </select></label>
             <label>{t(key("sf.u02.opsMonth"))}
-              <select value={selected().opsMonth ?? ""} onChange={(event) => reader.setOpsMonth(Number(event.currentTarget.value))}>
-                <option value="" disabled>{missing()}</option>
+              <select aria-label={t(key("sf.u02.opsMonth"))} value={selected().opsMonth ?? ""} onChange={(event) => reader.setOpsMonth(Number(event.currentTarget.value))}>
+                <option value="" disabled>{t(key("sf.u02.sourcePeriod"))}</option>
                 <For each={MONTHS}>{(item) => <option value={item}>{item}</option>}</For>
               </select></label>
           </div>
-          <p>{t(key("sf.u02.currentData"))}. {t(key("sf.u02.sourceWarning"))}</p>
+          <details class="sf-u02-provenance">
+            <summary><Icon name="help" size="small" />{t(key("sf.u02.aboutData"))}</summary>
+            <div><p>{t(key("sf.u02.currentData"))}</p><p>{t(key("sf.u02.sourceWarning"))}</p></div>
+          </details>
         </section>
-        <section class="sf-u02-section" aria-labelledby="sf-u02-financial">
-          <h2 id="sf-u02-financial">{t(key("sf.u02.financial"))}</h2>
-          <p role="status">{unscoped()}</p>
+
+        <section class="sf-u02-section sf-u02-financial" aria-labelledby="sf-u02-financial">
+          <header class="sf-u02-section-head">
+            <div class="sf-u02-section-title"><Icon name="review" size="small" />
+              <h2 id="sf-u02-financial">{t(key("sf.u02.financial"))}</h2></div>
+            <p class="sf-u02-note">{t(key("sf.u02.noCurrency"))}</p>
+          </header>
+          <Show when={year() !== undefined}>
+            <p class="sf-u02-scope-note" id="sf-u02-financial-scope" role="status">{unscoped()}</p>
+          </Show>
           <dl class="sf-u02-stats sf-u02-financial-metrics">
             {year() === undefined ? stat("budget", "sf.u02.budget", periodTotals()?.totalBudget) : unscopedStat("budget", "sf.u02.budget")}
             {year() === undefined ? stat("actual", "sf.u02.actual", periodTotals()?.totalActual) : unscopedStat("actual", "sf.u02.actual")}
             {year() === undefined ? stat("forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("forecast", "sf.u02.forecast")}
           </dl>
-          <p>{t(key("sf.u02.noCurrency"))}</p>
           <div data-sf-bi-slot="BI01">{metricTable()}</div>
-        </section>
-        <section class="sf-u02-section" aria-labelledby="sf-u02-variance">
-          <h2 id="sf-u02-variance">{t(key("sf.u02.variance"))}</h2>
-          <p>{t(key("sf.u02.sourceWarning"))}</p>
-          <dl class="sf-u02-stats">
-            {year() === undefined ? stat("opex-budget", "sf.u02.opex", periodTotals()?.opexBudget) : unscopedStat("opex-budget", "sf.u02.opex")}
-            {year() === undefined ? stat("capex-budget", "sf.u02.capex", periodTotals()?.capexBudget) : unscopedStat("capex-budget", "sf.u02.capex")}
-            {year() === undefined ? stat("total-forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("total-forecast", "sf.u02.forecast")}
-          </dl>
-        </section>
-        <section class="sf-u02-section" aria-labelledby="sf-u02-delivery">
-          <h2 id="sf-u02-delivery">{t(key("sf.u02.delivery"))}</h2>
-          <dl class="sf-u02-stats">
-            {stat("active", "sf.u02.active", executive()?.active)}
-            {stat("pmo-active", "sf.u02.pmoActive", executive()?.pmoActive)}
-            {stat("pmo-risk", "sf.u02.pmoRisk", executive()?.pmoAtRisk)}
-            {stat("risks", "sf.u02.activeRisks", executive()?.activeRisks)}
-            {stat("top-risks", "sf.u02.topRisks", executive()?.topRisks)}
-            {stat("on-target", "sf.u02.onTarget", executive()?.onTarget)}
-            {stat("departures", "sf.u02.departures", executive()?.departures)}
-          </dl>
-        </section>
-        <section class="sf-u02-section" aria-labelledby="sf-u02-people">
-          <h2 id="sf-u02-people">{t(key("sf.u02.people"))}</h2>
-          <dl class="sf-u02-stats sf-u02-people-metrics">
-            {stat("it-users", "sf.u02.users", data()?.people === undefined ? users()?.users : people()?.users)}
-            {stat("cost-per-user-opex", "sf.u02.costPerUserOpex", people()?.opexCostPerUser)}
-            {stat("cost-per-user-total", "sf.u02.costPerUserTotal", people()?.totalCostPerUser)}
-            <div class="sf-u02-stat" data-sf-metric="attrition"><dt>{t(key("sf.u02.attrition"))}</dt>
-              <dd>{knownNumber(people()?.attritionYtd) === undefined ? missing() :
-                <SfDisplayValueText value={{ kind: "number", value: people()!.attritionYtd!, fractionDigits: 2, unit: { kind: "percent" } }} />}</dd>
+          <details class="sf-u02-source-totals">
+            <summary>{t(key("sf.u02.sourceTotals"))}<Icon name="chevron-down" size="small" /></summary>
+            <div class="sf-u02-variance" aria-label={t(key("sf.u02.sourceTotals"))}>
+              <dl class="sf-u02-stats sf-u02-financial-metrics">
+                {year() === undefined ? stat("opex-budget", "sf.u02.opex", periodTotals()?.opexBudget) : unscopedStat("opex-budget", "sf.u02.opex")}
+                {year() === undefined ? stat("capex-budget", "sf.u02.capex", periodTotals()?.capexBudget) : unscopedStat("capex-budget", "sf.u02.capex")}
+                {year() === undefined ? stat("total-forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("total-forecast", "sf.u02.forecast")}
+              </dl>
+              <p class="sf-u02-note">{t(key("sf.u02.sourceWarning"))}</p>
             </div>
-          </dl>
-          <dl class="sf-u02-stats sf-u02-benchmark">
-            {stat("benchmark", "sf.u02.benchmark", benchmark()?.value)}
-          </dl>
+          </details>
         </section>
-        <section class="sf-u02-section" aria-labelledby="sf-u02-ops">
-          <h2 id="sf-u02-ops">{t(key("sf.u02.operations"))}</h2>
-          <dl class="sf-u02-stats">
-            {stat("opened", "sf.u02.opened", operations()?.opened)}
-            {stat("closed", "sf.u02.closed", operations()?.closed)}
-            {stat("backlog", "sf.u02.backlog", operations()?.backlog)}
-            {stat("delta", "sf.u02.netChange", operations()?.netChange)}
-            {stat("sla-inc", "sf.u02.incSla", operations()?.incSLA)}
-            {stat("sla-svc", "sf.u02.svcSla", operations()?.svcSLA)}
-          </dl>
-          <h3>{t(key("sf.u02.security"))}</h3>
-          <dl class="sf-u02-stats">
-            {stat("p1", "sf.u02.p1", operations()?.p1)}
-            {stat("open-security", "sf.u02.openSecurity", operations()?.openIncidents)}
-          </dl>
-        </section>
-        <section class="sf-u02-section" aria-labelledby="sf-u02-alerts" data-dashboard-signals
+
+        <div class="sf-u02-overview">
+          <section class="sf-u02-section sf-u02-detail-panel" aria-labelledby="sf-u02-delivery">
+            <div class="sf-u02-section-title"><Icon name="checklist" size="small" />
+              <h2 id="sf-u02-delivery">{t(key("sf.u02.delivery"))}</h2></div>
+            <dl class="sf-u02-stats sf-u02-records">
+              {stat("pmo-active", "sf.u02.pmoActive", executive()?.pmoActive)}
+              {stat("pmo-risk", "sf.u02.pmoRisk", executive()?.pmoAtRisk)}
+              {stat("risks", "sf.u02.activeRisks", executive()?.activeRisks)}
+              {stat("top-risks", "sf.u02.topRisks", executive()?.topRisks)}
+              {stat("on-target", "sf.u02.onTarget", executive()?.onTarget)}
+            </dl>
+            <section class="sf-u02-subsection" aria-labelledby="sf-u02-security">
+              <div class="sf-u02-section-title"><Icon name="shield" size="small" />
+                <h3 id="sf-u02-security">{t(key("sf.u02.security"))}</h3></div>
+              <dl class="sf-u02-stats sf-u02-records">
+                {stat("p1", "sf.u02.p1", operations()?.p1)}
+                {stat("open-security", "sf.u02.openSecurity", operations()?.openIncidents)}
+              </dl>
+            </section>
+          </section>
+          <section class="sf-u02-section sf-u02-detail-panel" aria-labelledby="sf-u02-people">
+            <div class="sf-u02-section-title"><Icon name="subagent" size="small" />
+              <h2 id="sf-u02-people">{t(key("sf.u02.people"))}</h2></div>
+            <dl class="sf-u02-stats sf-u02-records sf-u02-people-metrics">
+              {stat("it-users", "sf.u02.users", data()?.people === undefined ? users()?.users : people()?.users)}
+              {stat("active", "sf.u02.active", executive()?.active)}
+              {stat("departures", "sf.u02.departures", executive()?.departures)}
+              <div class="sf-u02-stat" data-sf-metric="attrition"
+                data-sf-value={knownNumber(people()?.attritionYtd) === undefined ? "missing" : "number"}><dt>{t(key("sf.u02.attrition"))}</dt>
+                <dd>{knownNumber(people()?.attritionYtd) === undefined ? missingMetric() :
+                  <SfDisplayValueText value={{ kind: "number", value: people()!.attritionYtd!, fractionDigits: 2, unit: { kind: "percent" } }} />}</dd>
+              </div>
+              {stat("cost-per-user-opex", "sf.u02.costPerUserOpex", people()?.opexCostPerUser)}
+              {stat("cost-per-user-total", "sf.u02.costPerUserTotal", people()?.totalCostPerUser)}
+              {stat("benchmark", "sf.u02.benchmark", benchmark()?.value)}
+            </dl>
+          </section>
+          <section class="sf-u02-section sf-u02-operations" aria-labelledby="sf-u02-ops">
+            <div class="sf-u02-section-title"><Icon name="sliders" size="small" />
+              <h2 id="sf-u02-ops">{t(key("sf.u02.operations"))}</h2></div>
+            <dl class="sf-u02-stats sf-u02-records">
+              {stat("opened", "sf.u02.opened", operations()?.opened)}
+              {stat("closed", "sf.u02.closed", operations()?.closed)}
+              {stat("backlog", "sf.u02.backlog", operations()?.backlog)}
+              {stat("delta", "sf.u02.netChange", operations()?.netChange)}
+              {stat("sla-inc", "sf.u02.incSla", operations()?.incSLA)}
+              {stat("sla-svc", "sf.u02.svcSla", operations()?.svcSLA)}
+            </dl>
+          </section>
+          <p class="sf-u02-missing-legend"><span aria-hidden="true">—</span> {missing()}</p>
+        </div>
+
+        <section class="sf-u02-section sf-u02-signals" aria-labelledby="sf-u02-alerts" data-dashboard-signals
           data-signal-order={JSON.stringify(signals().map((signal) => signal.id))}>
-          <h2 id="sf-u02-alerts">{t(key("sf.u02.signals"))}</h2>
-          <p>{language.plural("sf.u02.signalsShowing", entries().length, { shown: signals().length, total: entries().length })}</p>
-          <p>{language.plural("sf.u02.signalsPrioritized", entries().length, { prioritized: pinned().size, total: entries().length })}</p>
-          <Show when={signals().length} fallback={<p>{t(sfCommonKey("sf.common.empty"))}</p>}>
-            <div class="sf-u02-table-scroll"><table>
+          <header class="sf-u02-section-head">
+            <div class="sf-u02-section-title"><Icon name="warning" size="small" />
+              <h2 id="sf-u02-alerts">{t(key("sf.u02.signals"))}</h2></div>
+            <p class="sf-u02-note">{language.plural("sf.u02.signalsShowing", entries().length, { shown: signals().length, total: entries().length })}</p>
+          </header>
+          <Show when={signals().length} fallback={<p class="sf-u02-empty">{t(sfCommonKey("sf.common.empty"))}</p>}>
+            <div class="sf-u02-table-scroll sf-u02-signals-table" tabIndex={0} role="region"
+              aria-labelledby="sf-u02-alerts"><table>
               <thead><tr><th scope="col">{t(key("sf.u02.fact"))}</th>
                 <th scope="col">{t(key("sf.u02.rule"))}</th><th scope="col">{t(key("sf.u02.date"))}</th>
                 <th scope="col">{t(key("sf.u02.origin"))}</th><th scope="col">{t(key("sf.u02.priority"))}</th></tr></thead>
               <tbody><For each={signals()}>{(signal) =>
                 <tr data-signal-id={signal.id}><th scope="row">{signal.fact}</th><td>{signal.rule}</td>
                   <td><time dateTime={signal.date}>{signal.date ? shownDate(signal.date) : missing()}</time></td>
-                  <td><bdi>{signal.page + " / " + signal.recordId}</bdi>
+                  <td>
+                    <details class="sf-u02-signal-source"><summary>{signal.page}<Icon name="chevron-down" size="small" /></summary><bdi>{signal.recordId}</bdi></details>
                     <Show when={sfExecutiveSignalTarget(signal)}>{(target) =>
                       <SfExecutiveAction from={signalFrom()} target={target()}
                         label={{ key: key("sf.u02.openRecord") }} />}
                     </Show>
                   </td>
-                  <td><SfExecutiveAction from={signalFrom()} target={{ kind: "signal-priority", ids: nextPriority(signal.id) }}
-                    pressed={pinned().has(signal.id)}
-                    title={parseSfSignalPriorities(nextPriority(signal.id)) ? undefined : t(key("sf.u02.priorityLimit"))}
-                    label={{ key: key(pinned().has(signal.id) ? "sf.u02.unprioritizeSignal" : "sf.u02.prioritizeSignal"),
-                      params: { fact: signal.fact } }} /></td>
+                  <td><div role="group" aria-label={signal.fact}>
+                    <SfExecutiveAction from={signalFrom()} target={{ kind: "signal-priority", ids: nextPriority(signal.id) }}
+                      pressed={pinned().has(signal.id)}
+                      title={parseSfSignalPriorities(nextPriority(signal.id)) ? undefined : t(key("sf.u02.priorityLimit"))}
+                      label={{ key: key(pinned().has(signal.id) ? "sf.u02.unprioritize" : "sf.u02.prioritize") }} />
+                  </div></td>
                 </tr>}</For></tbody></table></div>
           </Show>
+          <p class="sf-u02-signals-foot">{language.plural("sf.u02.signalsPrioritized", entries().length, { prioritized: pinned().size, total: entries().length })}</p>
         </section>
         <Show when={year() !== undefined && month() !== undefined ? reader.owner() : undefined}>
-          {(ready) => <section class="sf-u02-section" aria-labelledby="sf-u02-inputs">
-            <h2 id="sf-u02-inputs">{t(key("sf.u02.inputs"))}</h2>
+          {(ready) => <section class="sf-u02-section sf-u02-inputs" aria-labelledby="sf-u02-inputs">
+            <div class="sf-u02-section-title"><Icon name="edit" size="small" />
+              <h2 id="sf-u02-inputs">{t(key("sf.u02.inputs"))}</h2></div>
             <div class="sf-u02-edit-grid">
               <Show when={canEdit("save-users") && usersTarget().kind === "unavailable"}><p role="status">{t(key("sf.u02.sourceMissing"))}</p></Show>
               <Show when={canEdit("save-users") && usersTarget().kind !== "unavailable"}>

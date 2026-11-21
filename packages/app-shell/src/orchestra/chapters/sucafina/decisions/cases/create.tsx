@@ -1,4 +1,5 @@
 import { A } from "@solidjs/router"
+import { Icon } from "@orchestra/ui/icon"
 import { createEffect, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
@@ -41,9 +42,11 @@ function pendingKeys(prefix: string): string[] | null {
 
 export function SfCreateCase(props: Readonly<{
   route: SfResolvedRoute<"UI33">
+  open: boolean
   context: () => SfContext | undefined
   transport: () => SfTransport | undefined
   onCreated: () => void
+  onClose: (confirmed: boolean) => void
 }>) {
   const language = useLanguage()
   const t = (key: string) => language.t(key as Parameters<typeof language.t>[0])
@@ -190,7 +193,36 @@ export function SfCreateCase(props: Readonly<{
       if (commandAbort === abort) commandAbort = undefined
     }
   }
+  let objectiveInput: HTMLTextAreaElement | undefined
+  let reviewHeading: HTMLHeadingElement | undefined
+  let createHeading: HTMLHeadingElement | undefined
+  let createdLink: HTMLAnchorElement | undefined
+  const reviewing = () => form.phase === "reviewing" || form.phase === "submitting"
+    || form.phase === "confirmed" || (form.hasPending && !!form.objective.trim())
+  // Hiding an unfinished editor keeps its store and recovery fences alive.
+  // Focus runs after the visible stage mounts, including draft re-opening.
+  createEffect(() => {
+    if (!props.open) return
+    queueMicrotask(() => {
+      if (!props.open) return
+      if (reviewing()) reviewHeading?.focus()
+      else if (form.hasPending) createHeading?.focus()
+      else objectiveInput?.focus()
+    })
+  })
+  createEffect(() => {
+    const phase = form.phase
+    if (phase !== "reviewing" && phase !== "confirmed") return
+    queueMicrotask(() => {
+      if (!props.open || form.phase !== phase) return
+      if (phase === "reviewing") reviewHeading?.focus()
+      else createdLink?.focus()
+    })
+  })
   const busy = () => form.phase === "submitting"
+  // Reconciliation can use the live list while this unknown result stays mounted.
+  // Closing here never clears its marker, discards its draft or resends a command.
+  const canReturnToList = () => !busy() && (!form.hasPending || form.phase === "unknown")
   const field = (label: string, value: string, onInput: (value: string) => void, type = "text") => (
     <label class="sf-n24-field">
       <span>{t(label)}</span>
@@ -200,37 +232,108 @@ export function SfCreateCase(props: Readonly<{
   )
   return (
     <section class="mx-card sf-n24-create" aria-labelledby="sf-create-case-title">
-      <h2 id="sf-create-case-title">{t("sf.ui33.new")}</h2>
-      <form onSubmit={(event) => { event.preventDefault(); if (form.phase === "reviewing") void submit(); else review() }}>
-        <div class="sf-n24-form-grid">
-          {field("sf.ui33.objective", form.objective, (value) => setForm("objective", value))}
-          {field("sf.ui33.start", form.start, (value) => setForm("start", value), "date")}
-          {field("sf.ui33.end", form.end, (value) => setForm("end", value), "date")}
-          {field("sf.ui33.currency", form.currency, (value) => setForm("currency", value.toUpperCase()))}
-          <label class="sf-n24-field sf-n24-span">
-            <span>{t("sf.ui33.criteria")}</span>
-            <textarea value={form.criteria} disabled={busy() || form.hasPending}
-              onInput={(event) => { setForm({ criteria: event.currentTarget.value, phase: "editing", message: "" }) }} required rows={5} />
-          </label>
+      <header class="sf-cases-create-head">
+        <div class="sf-cases-create-intro">
+          <h2 id="sf-create-case-title" ref={createHeading} tabindex="-1">{t("sf.ui33.new")}</h2>
+          <Show when={form.phase !== "confirmed" && form.phase !== "unknown"}>
+            <p>{t(reviewing() ? "sf.ui33.reviewHint" : "sf.ui33.createHint")}</p>
+          </Show>
         </div>
-        <Show when={form.phase === "reviewing"}>
-          <div class="sf-n24-review" role="group" aria-label={t("sf.ui33.createReview")}>
-            <p><strong>{t("sf.ui33.objective")}:</strong> <bdi>{form.objective.trim()}</bdi></p>
-            <p>{form.start} – {form.end} · <bdi>{form.currency.trim()}</bdi></p>
-            <ol>{form.criteria.split("\n").map((part) => part.trim()).filter(Boolean).map((criterion) => <li><bdi>{criterion}</bdi></li>)}</ol>
-            <p>sourceRefs: []</p>
+        <ol class="sf-cases-steps" aria-label={t("sf.ui33.new")}>
+          <li aria-current={!reviewing() ? "step" : undefined} data-complete={reviewing() ? "true" : undefined}>
+            <span class="sf-cases-step-number" aria-hidden="true">
+              <Show when={reviewing()} fallback="1"><Icon name="check-small" size="small" /></Show>
+            </span>
+            <span>{t("sf.ui33.detailsStep")}</span>
+          </li>
+          <li aria-current={reviewing() && form.phase !== "confirmed" ? "step" : undefined}
+            data-complete={form.phase === "confirmed" ? "true" : undefined}>
+            <span class="sf-cases-step-number" aria-hidden="true">
+              <Show when={form.phase === "confirmed"} fallback="2"><Icon name="check-small" size="small" /></Show>
+            </span>
+            <span>{t("sf.ui33.reviewStep")}</span>
+          </li>
+        </ol>
+      </header>
+      <form class="sf-cases-form" onSubmit={(event) => { event.preventDefault(); if (form.phase === "reviewing") void submit(); else review() }}>
+        <Show when={!reviewing()}>
+          <div class="sf-n24-form-grid">
+            <label class="sf-n24-field sf-cases-objective">
+              <span>{t("sf.ui33.objective")}</span>
+              <textarea ref={objectiveInput} value={form.objective} disabled={busy() || form.hasPending}
+                onInput={(event) => { setForm({ objective: event.currentTarget.value, phase: "editing", message: "" }) }} required rows={2} />
+            </label>
+            {field("sf.ui33.start", form.start, (value) => setForm("start", value), "date")}
+            {field("sf.ui33.end", form.end, (value) => setForm("end", value), "date")}
+            {field("sf.ui33.currency", form.currency, (value) => setForm("currency", value.toUpperCase()))}
+            <label class="sf-n24-field sf-n24-span">
+              <span>{t("sf.ui33.criteria")}</span>
+              <textarea value={form.criteria} disabled={busy() || form.hasPending}
+                onInput={(event) => { setForm({ criteria: event.currentTarget.value, phase: "editing", message: "" }) }} required rows={5} />
+            </label>
           </div>
         </Show>
-        <Show when={form.message}><p role="status" aria-live="polite">{t(form.message)}</p></Show>
+        <Show when={reviewing()}>
+          <div class="sf-cases-review" role="group" aria-labelledby="sf-create-case-review-title">
+            <h3 id="sf-create-case-review-title" ref={reviewHeading} tabindex="-1">{t("sf.ui33.createReview")}</h3>
+            <dl class="sf-cases-review-details">
+              <div class="sf-cases-objective">
+                <dt>{t("sf.ui33.objective")}</dt>
+                <dd><bdi>{form.objective.trim()}</bdi></dd>
+              </div>
+              <div>
+                <dt>{t("sf.ui33.start")}</dt>
+                <dd><bdi>{form.start}</bdi></dd>
+              </div>
+              <div>
+                <dt>{t("sf.ui33.end")}</dt>
+                <dd><bdi>{form.end}</bdi></dd>
+              </div>
+              <div>
+                <dt>{t("sf.ui33.currency")}</dt>
+                <dd><bdi>{form.currency.trim()}</bdi></dd>
+              </div>
+            </dl>
+            <div class="sf-cases-review-criteria">
+              <h4>{t("sf.ui34.criteria")}</h4>
+              <ol>{form.criteria.split("\n").map((part) => part.trim()).filter(Boolean).map((criterion) => <li><bdi>{criterion}</bdi></li>)}</ol>
+            </div>
+            <div class="sf-cases-source-note"><Icon name="link" size="small" /><span>{t("sf.ui34.noSources")}</span></div>
+          </div>
+        </Show>
+        <Show when={form.message}>
+          <div class="sf-cases-status" data-state={form.phase} role="status" aria-live="polite">
+            <Icon name={form.phase === "confirmed" ? "circle-check" : "warning"} />
+            <span>{t(form.message)}</span>
+          </div>
+        </Show>
         <div class="sf-n24-actions">
-          <button class="mx-btn primary" type="submit" disabled={!canSubmit() || busy()}>
-            {t(form.phase === "reviewing" ? "sf.ui33.createConfirm" : "sf.ui33.createReview")}
-          </button>
+          <Show when={form.phase !== "reviewing" && canReturnToList()}>
+            <button class="mx-btn sf-cases-cancel" type="button"
+              onClick={() => { if (canReturnToList()) props.onClose(form.phase === "confirmed") }}>
+              <Icon name="arrow-left" size="small" />
+              {t("sf.ui33.return")}
+            </button>
+          </Show>
           <Show when={form.phase === "reviewing"}>
-            <button class="mx-btn" type="button" onClick={() => setForm("phase", "editing")}>{t("sf.ui33.cancel")}</button>
+            <button class="mx-btn sf-cases-cancel" type="button"
+              onClick={() => { setForm("phase", "editing"); queueMicrotask(() => objectiveInput?.focus()) }}>
+              <Icon name="arrow-left" size="small" />
+              {t("sf.ui33.cancel")}
+            </button>
+          </Show>
+          <Show when={form.phase !== "confirmed"}>
+            <button class="mx-btn primary" type="submit" disabled={!canSubmit() || busy()} aria-busy={busy()}>
+              <Show when={form.phase === "reviewing" || busy()} fallback={<>{t("sf.ui33.createReview")}<Icon name="arrow-right" size="small" /></>}>
+                <Icon name="check" size="small" />
+                {t("sf.ui33.createConfirm")}
+              </Show>
+            </button>
           </Show>
           <Show when={form.phase === "confirmed" && form.createdRef}>
-            <A class="mx-btn" href={sfDecisionHref(props.route, "case", form.createdRef)}>{t("sf.ui33.caseOpen")}</A>
+            <A ref={createdLink} class="mx-btn primary" href={sfDecisionHref(props.route, "case", form.createdRef)}>
+              {t("sf.ui33.caseOpen")}<Icon name="arrow-right" size="small" />
+            </A>
           </Show>
         </div>
       </form>
