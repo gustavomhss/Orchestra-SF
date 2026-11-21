@@ -1,4 +1,5 @@
-export { createCurrentChoiceFence } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+export { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+export { createSfSourcePersistence } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { createSfProcurementScenarioHttp } from "./procurement-scenario-services.ts"
 import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { createHash, randomUUID } from "node:crypto"
@@ -89,6 +90,8 @@ import { createSfDashboardHttp } from "./dashboard-http.ts"
 import { createSfSourcingInputs } from "./sourcing-inputs.ts"
 import { createProcurementDecisionHttp } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
 import { createCollaborationHttp } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/http.ts"
+import { createCollaborationHttpRoutes } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts"
+import { sfUiCommandIdentity } from "./command-identity.ts"
 import { createCollaborationHumanAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/human.ts"
 import { sfHumanReadActions } from "../../../../modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
 import { createSfProductContribution, createSfProductDispatch } from "./contribution.ts"
@@ -97,6 +100,7 @@ import { createSfNativeHostContribution } from "./native-host.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
 import { observeSfImportHealth } from "./native-ui/import-health.ts"
+import { observeSfDocumentHealth } from "./native-ui/document-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
@@ -156,6 +160,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
     models?: SfHostServices["models"]; configuration?: string; generation: number;
     verifyGovernedLoad?: (session: SessionSchema.Info) => Promise<boolean> } = { generation: 0 }
   const requests = new Map<string, Request>()
+  const commandReadOperations = new Map<string, string>()
   const admittedInputs = new Map<string, SfAdmittedAnalysisInput>()
   const replayContexts = new WeakMap<TrustedDomainContext, string>()
   const alternativeCaptures = new Map<string, Map<string, AlternativeCapabilityProvenance>>()
@@ -179,13 +184,13 @@ export const createSfHostRuntimeWithRoutineNative = async (
     value.skills.every((skill) => parent.skills.some((allowed) => digestSfValue(allowed) === digestSfValue(skill))) &&
     value.operationIds.every((operation) => parent.operationIds.includes(operation)))
   const authority = createSfProductAuthority({ ...input, identity, proposalCoverageWrites, nativePublicationGuards, signalRegistryWrites, caseSelectionWrites, threadHistoryWrites, dashboardHostWrites, procurementEvidenceWrites, analysisSelectionWrites, policyVersion: "sf-product-v1", grants: input.grants ?? [], createId: randomUUID, now: Date.now,
-    commandIdentity: async (request, operation, digest) => {
-      if (request.method === "GET" || request.method === "HEAD") return randomUUID()
+    commandIdentity: async (request, operation) => {
       // MCP transports even read tools over POST. The snapshot has no write receipt to bind.
       if (request.method === "POST" && operation === "sf_work_list" &&
         new URL(request.url).pathname === `${input.mount}/api/claw/mcp`) return randomUUID()
-      const key = request.headers.get("Idempotency-Key")
-      return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined
+      return sfUiCommandIdentity(request, operation, {
+        origin: input.origin, mount: input.mount, readOperations: commandReadOperations, createId: randomUUID,
+      })
     },
     inspectSession: async (id) => state.store ? Effect.runPromise(state.store.get(id)) : undefined,
     verifySelection: async (value) => selectionMatches(value),
@@ -281,6 +286,10 @@ export const createSfHostRuntimeWithRoutineNative = async (
     documentRead: documents?.documents.reader, documentEvidenceList: documents?.documents.list,
     extraDescriptors: [...imports?.descriptors ?? [], ...documents?.descriptors ?? []] })
   preparedAuthority.business = business
+  for (const [mode, route] of createCollaborationHttpRoutes(business.collaboration)) {
+    if (!route.action && route.read && sfHumanReadActions.some((action) => action === route.read))
+      commandReadOperations.set(`collaboration-${mode}`, `sf-human:${route.read}`)
+  }
   const captureCurrent = (record: AlternativeCapabilityProvenance) => {
     const binding = alternativeBindings.get(record.receipt.runId)
     const proof = observed.get(record.receipt.nativeSessionId)
@@ -990,6 +999,10 @@ export const createSfHostRuntimeWithRoutineNative = async (
               authority.host.revalidate, authority.host.requestFor, authority.ui.operationIdentity,
               input.persistence.readScopedSource, input.persistence.resolveScopedSource, imports.descriptors] }
         } }, request, stamp),
+        observeSfDocumentHealth({ authority, binding: input.nativeReadBinding, source: () =>
+          identity() && services.productHttp === productHttp && documents && input.assets
+            ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets } : undefined,
+        }, request, stamp),
         observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfReviewThreadContextHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfDashboardDraftHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
@@ -1099,7 +1112,14 @@ export const createSfHostRuntimeWithRoutineNative = async (
     ? createSfReviewsProjectionHandlers({ origin: input.origin, mount: input.mount,
         authority, business, reviews: extended.reviews, persistence: input.persistence })
     : undefined
-  const productHttp: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface)
+  const collaborationRequest: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => {
+    const handler = collaborationHttp.get(surface)
+    if (!handler) return undefined
+    // C05 preparation and the final C08 fence share the original HTTP Request.
+    return extended.reviews?.readScope
+      ? extended.reviews.readScope.run(request, () => handler(request)) : handler(request)
+  }
+  const productHttp: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationRequest(request, surface) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface)
   const services: SfHostServices & { nativeUiProducts: typeof nativeUiProducts;
     routineEvidence: Pick<typeof nativePhases.services, "readExecution" | "openResult"> } = { ...authority, nativeUiProducts,
     ...(nativeReviewProjection ? { nativeReviewProjection } : {}),

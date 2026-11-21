@@ -1,3 +1,4 @@
+import { pinReviewReadProperties } from "./read-identity.ts"
 import { createHash } from "node:crypto"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
@@ -45,8 +46,57 @@ export type ReviewHost = {
   isHistoricalSelection?: (selectionRef: string, binding: TrustedDomainContext) => boolean
 }
 
-export function createReviewPort(host: ReviewHost) {
-  return {
+type ReviewReadValidation = Readonly<{
+  current: () => boolean
+  validate: (id: string, value: PreservedReview, binding: TrustedDomainContext, unchanged: () => boolean) => Promise<PortResult<PreservedReview>>
+}>
+const reviewReadValidations = new WeakMap<object, { read: unknown; validation: ReviewReadValidation }>()
+
+/** Only the exact factory port can lend its own body validation to a protected
+ * C08 reader. The consumer must supply an isolated body from that actual read;
+ * this function does not find a body, authenticate a receipt or retain authority. */
+export function sfReviewReadValidation(port: object): ReviewReadValidation | undefined {
+  const registered = reviewReadValidations.get(port)
+  if (!registered) return undefined
+  const descriptor = Object.getOwnPropertyDescriptor(port, "read")
+  return descriptor && "value" in descriptor && descriptor.value === registered.read ? registered.validation : undefined
+}
+
+export function createReviewPort(host: ReviewHost, readDependenciesCurrent?: () => boolean | undefined) {
+  const validateBody = async (id: string, value: PreservedReview, binding: TrustedDomainContext, current: () => Promise<boolean>, unchanged: () => boolean): Promise<PortResult<PreservedReview>> => {
+    if (!unchanged()) return { status: "denied", reason: "binding-unavailable" } as const
+    if (value.id !== id) return { status: "denied", reason: "review-target-changed" } as const
+    if (!Array.isArray(value.sections) || !Array.isArray(value.comments)) return { status: "unavailable", reason: "invalid-review-sources" } as const
+    if (!validReviewSources(value)) return { status: "unavailable", reason: "invalid-review-sources" } as const
+    const projections = value.sections.map((section) => section.content as DomainProjection)
+    // Classify source uncertainty before legacy boolean selection gates can
+    // collapse a temporarily unavailable source into a negative decision.
+    if (host.revalidateReadEvidence && (!await host.revalidateReadEvidence(binding, projections.flatMap((projection) => reviewProjectionEvidence(projection))) || !unchanged())) return { status: "denied", reason: "access-unavailable" } as const
+    if (!(await host.authorizeSections(binding, value.sections)) || !unchanged() || !(await host.authorizeComments(binding, value.comments)) || !unchanged()) return { status: "denied", reason: "access-unavailable" } as const
+    const comparisons = value.sections.flatMap((section) => {
+      const comparison = (section.content as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison
+      return comparison ? [comparison] : []
+    })
+    if (!(await host.authorizeOutcomeComparison(binding, comparisons)) || !unchanged()) return { status: "denied", reason: "access-unavailable" } as const
+    const outcomes = value.sections.flatMap((section) => {
+      const outcome = (section.content as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome
+      return outcome ? [outcome] : []
+    })
+    if (!(await host.authorizeOutcome(binding, outcomes)) || !unchanged()) return { status: "denied", reason: "access-unavailable" } as const
+    const decisions = value.sections.flatMap((section) => (section.content as DomainProjection).decision ? [(section.content as DomainProjection).decision!] : [])
+    if (!(await host.authorizeDecision(binding, decisions)) || !unchanged()) return { status: "denied", reason: "access-unavailable" } as const
+    const charts = value.sections.map((section) => (section.content as DomainProjection & { reviewChart?: ReviewChart }).reviewChart)
+    if (!(await host.authorizeSensitivity(binding, charts.flatMap((chart) => chart?.status === "ok" && chart.sensitivity ? [chart.sensitivity.result] : []))) || !unchanged()) return { status: "denied", reason: "access-unavailable" } as const
+    // Root and projection may contain the same exact source. Deduplicate only
+    // the complete body in this pass; distinct versions/scopes remain checked.
+    const sources = [...new Map([...value.sourceRefs, ...projections.flatMap(reviewProjectionSources)].map((ref) => [digestSfValue(ref), ref] as const)).values()]
+    if (!(await host.revalidate(binding, sources)) || !unchanged()) return { status: "denied", reason: "access-unavailable" } as const
+    if (projections.some((projection) => !projection || !Array.isArray(projection.values) || projection.values.some((value: DomainProjection["values"][number]) => !Array.isArray(value.sourceRefs) || (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))) || (value.value !== null && value.sourceRefs.length === 0)))) return { status: "unavailable", reason: "evidence-unavailable" } as const
+    if (!(await (host.revalidateReadEvidence ?? host.revalidateEvidence)(binding, projections.flatMap((projection) => reviewProjectionEvidence(projection)))) || !unchanged()) return { status: "denied", reason: "access-unavailable" } as const
+    if (!await current() || !unchanged()) return { status: "denied", reason: "binding-unavailable" } as const
+    return { status: "ok", value } as const
+  }
+  const reviews = {
     async preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period): Promise<PortResult<readonly ReviewSection[]>> {
       if (typeof selectionRef !== "string" || !selectionRef.trim() || !Array.isArray(incomingRefs) || !incomingRefs.length || incomingRefs.some((ref) => typeof ref !== "string" || !ref.trim()) || new Set(incomingRefs).size !== incomingRefs.length || (period !== undefined && !isSfPeriod(period))) return { status: "needs-input", reason: "invalid-selection" } as const
       const sectionRefs = [...incomingRefs]
@@ -139,36 +189,7 @@ export function createReviewPort(host: ReviewHost) {
         if ("reason" in result) return result
         if (result.status !== "ok") return { status: "unavailable", reason: "not-committed" }
         if (!result.value) return { status: "denied", reason: "review-target-changed" } as const
-        if (result.value.id !== id) return { status: "denied", reason: "review-target-changed" } as const
-        if (!Array.isArray(result.value.sections) || !Array.isArray(result.value.comments)) return { status: "unavailable", reason: "invalid-review-sources" } as const
-        if (!validReviewSources(result.value)) return { status: "unavailable", reason: "invalid-review-sources" } as const
-        const projections = result.value.sections.map((section) => section.content as DomainProjection)
-        // Classify source uncertainty before legacy boolean selection gates can
-        // collapse a temporarily unavailable source into a negative decision.
-        if (host.revalidateReadEvidence && !await host.revalidateReadEvidence(binding, projections.flatMap((projection) => reviewProjectionEvidence(projection)))) return { status: "denied", reason: "access-unavailable" } as const
-        if (!(await host.authorizeSections(binding, result.value.sections)) || !(await host.authorizeComments(binding, result.value.comments))) return { status: "denied", reason: "access-unavailable" } as const
-        const comparisons = result.value.sections.flatMap((section) => {
-          const comparison = (section.content as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison
-          return comparison ? [comparison] : []
-        })
-        if (!(await host.authorizeOutcomeComparison(binding, comparisons))) return { status: "denied", reason: "access-unavailable" } as const
-        const outcomes = result.value.sections.flatMap((section) => {
-          const outcome = (section.content as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome
-          return outcome ? [outcome] : []
-        })
-        if (!(await host.authorizeOutcome(binding, outcomes))) return { status: "denied", reason: "access-unavailable" } as const
-        const decisions = result.value.sections.flatMap((section) => (section.content as DomainProjection).decision ? [(section.content as DomainProjection).decision!] : [])
-        if (!(await host.authorizeDecision(binding, decisions))) return { status: "denied", reason: "access-unavailable" } as const
-        const charts = result.value.sections.map((section) => (section.content as DomainProjection & { reviewChart?: ReviewChart }).reviewChart)
-        if (!(await host.authorizeSensitivity(binding, charts.flatMap((chart) => chart?.status === "ok" && chart.sensitivity ? [chart.sensitivity.result] : [])))) return { status: "denied", reason: "access-unavailable" } as const
-        // Root and projection may contain the same exact source. Deduplicate only
-        // the complete body in this pass; distinct versions/scopes remain checked.
-        const sources = [...new Map([...result.value.sourceRefs, ...projections.flatMap(reviewProjectionSources)].map((ref) => [digestSfValue(ref), ref] as const)).values()]
-        if (!(await host.revalidate(binding, sources))) return { status: "denied", reason: "access-unavailable" } as const
-        if (projections.some((projection) => !projection || !Array.isArray(projection.values) || projection.values.some((value: DomainProjection["values"][number]) => !Array.isArray(value.sourceRefs) || (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))) || (value.value !== null && value.sourceRefs.length === 0)))) return { status: "unavailable", reason: "evidence-unavailable" } as const
-        if (!(await (host.revalidateReadEvidence ?? host.revalidateEvidence)(binding, projections.flatMap((projection) => reviewProjectionEvidence(projection))))) return { status: "denied", reason: "access-unavailable" } as const
-        if (!await current()) return { status: "denied", reason: "binding-unavailable" } as const
-        return { status: "ok", value: result.value } as const
+        return await validateBody(id, result.value, binding, current, () => true)
       } catch {
         const authorized = await current().catch(() => undefined)
         if (authorized === false) return { status: "denied", reason: "binding-unavailable" }
@@ -176,6 +197,34 @@ export function createReviewPort(host: ReviewHost) {
       }
     },
   }
+  // Opaque/accessor/inherited hosts retain their complete original read.
+  const methods = pinReviewReadProperties(host, ["state", "requestFor", "revalidateReadAccess", "revalidate",
+    "revalidateReadEvidence", "revalidateEvidence", "authorizeSections", "authorizeComments",
+    "authorizeOutcomeComparison", "authorizeOutcome", "authorizeDecision", "authorizeSensitivity"])
+  const state = methods && pinReviewReadProperties(methods.values.state, ["read"])
+  if (!methods || !state || readDependenciesCurrent && readDependenciesCurrent() !== true) return reviews
+  // Identity is only an admission/egress fence. Every dependency callback above
+  // still runs on every validation, including callbacks with mutable closures.
+  const currentDependencies = () => methods.current() && state.current() && (!readDependenciesCurrent || readDependenciesCurrent() === true)
+  const validation: ReviewReadValidation = Object.freeze({
+    current: currentDependencies,
+    validate: async (id: string, value: PreservedReview, binding: TrustedDomainContext, unchanged: () => boolean): Promise<PortResult<PreservedReview>> => {
+      const request = host.requestFor(binding)
+      const current = async () => currentDependencies() && unchanged() && !!request && host.requestFor(binding) === request &&
+        await (host.revalidateReadAccess ? host.revalidateReadAccess(binding) : host.revalidate(binding, [])) &&
+        currentDependencies() && unchanged() && host.requestFor(binding) === request
+      try {
+        if (!request || !await current()) return { status: "denied", reason: "binding-unavailable" }
+        return await validateBody(id, value, binding, current, () => currentDependencies() && unchanged())
+      } catch {
+        const authorized = await current().catch(() => undefined)
+        if (authorized === false) return { status: "denied", reason: "binding-unavailable" }
+        return { status: "unavailable", reason: "review-read-unavailable" }
+      }
+    },
+  })
+  reviewReadValidations.set(reviews, { read: reviews.read, validation })
+  return reviews
 }
 
 async function reopenReviewReceipt(value: unknown, expectedId: string, read: (id: string) => Promise<PortResult<PreservedReview>>): Promise<PortResult<PreservedReview>> {

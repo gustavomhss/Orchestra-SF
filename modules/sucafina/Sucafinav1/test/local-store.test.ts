@@ -75,6 +75,115 @@ test("real SQLite persists the entire snapshot, binary blobs and undefined acros
   })
 })
 
+test("a cold sealed preimage keeps independent reads detached from the writable target", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    await store.transaction("dashboard", async (snapshot) => {
+      await populate(snapshot)
+      return { commit: true, value: undefined }
+    })
+    await store.dispose()
+
+    const reopened = await open()
+    if (!reopened.holdTargetPreimage) throw new Error("LocalStore must provide its preimage guard")
+    const retained = reopened.holdTargetPreimage()
+    await reopened.transaction("dashboard", async (snapshot) => {
+      snapshot.data.record = { name: "staged" }
+      const first = await reopened.transaction("dashboard", async (preimage) => ({ commit: false, value: preimage }))
+      expect(first.data.record).toEqual({ name: "created", optional: undefined })
+      first.data.record = { name: "modified detached copy" }
+      const second = await reopened.transaction("dashboard", async (preimage) => ({ commit: false, value: preimage }))
+      expect(second.data.record).toEqual({ name: "created", optional: undefined })
+      expect(snapshot.data.record).toEqual({ name: "staged" })
+      retained.release()
+      return { commit: true, value: undefined }
+    }, { targetPreimageCurrent: retained.current })
+    expect((await read(reopened)).snapshot.data.record).toEqual({ name: "staged" })
+  })
+})
+
+test("large file bytes do not evict the bounded snapshot plan or alias its copies", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const encodedFile = "QUJD".repeat(5 * 1024 * 1024 / 4)
+    const escapedContent = "YWJj".repeat(16 * 1024) + '\n"preserved" \\ Ω'
+    await store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.artifact = { entries: [encodedFile, escapedContent, undefined] }
+      return { commit: true, value: undefined }
+    })
+    await store.dispose()
+
+    const reopened = await open()
+    if (!reopened.readSnapshotRoot) throw new Error("LocalStore must provide a read snapshot root")
+    const readArtifact = async () => {
+      const identity = reopened.currentSnapshotScope?.()?.bytesIdentity
+      if (!identity) throw new Error("The bounded plan must recognize the exact stored bytes")
+      const artifact = reopened.currentSnapshot?.("dashboard")?.data.artifact
+      if (!artifact || typeof artifact !== "object" || !("entries" in artifact) || !Array.isArray(artifact.entries))
+        throw new Error("The SQLite root did not preserve the file and its metadata")
+      return { identity, entries: artifact.entries }
+    }
+    const first = await reopened.readSnapshotRoot(readArtifact)
+    expect(first.entries).toEqual([encodedFile, escapedContent, undefined])
+    first.entries[0] = "modified detached copy"
+    const second = await reopened.readSnapshotRoot(readArtifact)
+    expect(second.identity).toBe(first.identity)
+    expect(second.entries).toEqual([encodedFile, escapedContent, undefined])
+  })
+})
+
+test("retains canonical byte identity when a valid snapshot exceeds the copy-plan node limit", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const entries = 201_000
+    await store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.records = Array.from({ length: entries }, (_, value) => value)
+      return { commit: true, value: undefined }
+    })
+    await store.dispose()
+
+    const reopened = await open()
+    if (!reopened.readSnapshotRoot) throw new Error("LocalStore must provide a read snapshot root")
+    const inspect = async () => {
+      const identity = reopened.currentSnapshotScope?.()?.bytesIdentity
+      const records = reopened.currentSnapshot?.("dashboard")?.data.records
+      if (!identity || !Array.isArray(records)) throw new Error("Observed local snapshot unavailable")
+      expect(records).toHaveLength(entries)
+      expect(records.at(-1)).toBe(entries - 1)
+      return identity
+    }
+    const first = await reopened.readSnapshotRoot(inspect)
+    expect(await reopened.readSnapshotRoot(inspect)).toBe(first)
+  })
+})
+
+test("fingerprints oversized SQLite rows without accepting a same-length replacement", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const body = "A".repeat(8 * 1024 * 1024)
+    const write = (suffix: string) => store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.attachment = body + suffix
+      return { commit: true, value: undefined }
+    })
+    if (!store.readSnapshotRoot) throw new Error("LocalStore must provide a read snapshot root")
+    const inspect = async (suffix: string) => {
+      const identity = store.currentSnapshotScope?.()?.bytesIdentity
+      const attachment = store.currentSnapshot?.("dashboard")?.data.attachment
+      if (!identity || typeof attachment !== "string") throw new Error("Oversized local snapshot unavailable")
+      expect(attachment.length).toBe(body.length + suffix.length)
+      expect(attachment.endsWith(suffix)).toBe(true)
+      return identity
+    }
+    await write("1")
+    const first = await store.readSnapshotRoot(() => inspect("1"))
+    expect(await store.readSnapshotRoot(() => inspect("1"))).toBe(first)
+    await write("2")
+    const second = await store.readSnapshotRoot(() => inspect("2"))
+    expect(first === second).toBe(false)
+    expect(await store.readSnapshotRoot(() => inspect("2"))).toBe(second)
+  })
+})
+
 test("codec preserves sentinel-shaped objects, tagged-looking arrays and nested undefined", async () => {
   await fixture(async (_directory, open) => {
     const store = await open()
@@ -205,7 +314,10 @@ test("surface namespaces isolate identical blob keys and snapshots", async () =>
       snapshot.data.other = true
       return { commit: true, value: null }
     })
-    expect(await read(store)).toEqual({ snapshot: { ...empty, data: { private: true } }, blob: bytes })
+    expect(await read(store)).toEqual({
+      snapshot: { ...empty, data: { private: true }, sfBlobGenerations: { document: 1 } },
+      blob: bytes,
+    })
   })
 })
 

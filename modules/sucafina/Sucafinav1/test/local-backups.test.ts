@@ -7,9 +7,10 @@ import type { Surface } from "../src/identity.ts"
 import type { Snapshot, TransactionOptions } from "../runtime/contract.ts"
 import type { BlobTransaction } from "../runtime/assets.ts"
 import type { LocalStore } from "../runtime/local-contract.ts"
+import { sfReviewArtifactBlobKey } from "../runtime/artifact.ts"
 import { createLocalBackups } from "../runtime/local-backups.ts"
 import { decodeSnapshot, openLocalStore } from "../runtime/local-store.ts"
-import { restoreBackup } from "../runtime/operations.ts"
+import { backupBlobInventory, restoreBackup } from "../runtime/operations.ts"
 
 const bytes = new Uint8Array([0, 255, 17, 128])
 const key = "../../private/日本語/document"
@@ -101,6 +102,133 @@ test("SQLite capture survives live deletion and reopens for actual atomic restor
     for (const path of storedFiles) expect((await stat(path)).mode & 0o777).toBe(0o600)
     const directories = new Set([directory, ...storedFiles.map((path) => join(path, ".."))])
     for (const path of directories) expect((await stat(path)).mode & 0o777).toBe(0o700)
+  })
+})
+
+test("private report blobs survive archive verification, the scratch drill, and atomic restore", async () => {
+  await fixture(async (root, store, target) => {
+    await seed(store)
+    const ref = "report:" + "a".repeat(64)
+    const reportKey = sfReviewArtifactBlobKey(ref)
+    const reportBytes = new Uint8Array([0x50, 0x4b, 0x03, 0x04])
+    const reservedAsset = { ...((await read(store)).snapshot), data: { assets: [{ key: reportKey, bytes: reportBytes.length }] } }
+    expect(() => backupBlobInventory(reservedAsset, "dashboard")).toThrow("Invalid backup asset in private report namespace")
+    expect(backupBlobInventory(reservedAsset, "procurement").has(reportKey)).toBe(true)
+    const report = {
+      kind: "sf-review-artifact-v2",
+      name: "review.docx",
+      format: "docx",
+      mediaType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      byteLength: reportBytes.length,
+      digest: createHash("sha256").update(reportBytes).digest("hex"),
+    }
+    const product = { documents: { [ref]: report } }
+    await store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
+      snapshot.data.__sfProductV1 = product
+      await blobs.put(reportKey, reportBytes, report.mediaType)
+      return { commit: true, value: undefined }
+    })
+    const backups = await createLocalBackups(join(root, "archives"))
+    const saved = await backups.capture(store, "dashboard", at)
+    expect(saved.manifest.blobs.map((blob) => blob.key)).toEqual([key, reportKey])
+    expect(saved.manifest.blobs[1]).toEqual({ key: reportKey, bytes: reportBytes.length, sha256: report.digest })
+    expect(await backups.verify("dashboard", saved.id, at)).toMatchObject({ at })
+    expect(await restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 0, at)).toEqual({ ok: true })
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
+      expect(snapshot.data.__sfProductV1).toEqual(product)
+      expect(snapshot.data.assets).toEqual([{ key, bytes: bytes.length }])
+      expect(await blobs.get(key)).toEqual(bytes)
+      expect(await blobs.get(reportKey)).toEqual(reportBytes)
+      return { commit: false, value: undefined }
+    })
+    await target.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
+      await blobs.put(reportKey, bytes, report.mediaType)
+      return { commit: true, value: undefined }
+    })
+    const before = await read(target)
+    await expect(restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 1, at, {
+      retain: () => ({
+        verifyBlobReplacement(existing, restored) {
+          if (existing && !Buffer.from(existing).equals(restored)) throw new Error("SF_RESTORE_BLOB_FRONTIER_CONFLICT")
+        },
+        apply() {},
+      }),
+      verifyCurrent: async () => true,
+    })).rejects.toThrow("SF_RESTORE_BLOB_FRONTIER_CONFLICT")
+    expect(await read(target)).toEqual(before)
+    expect(await restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 1, at)).toEqual({ ok: true })
+    expect(await target.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => ({
+      commit: false,
+      value: await blobs.get(reportKey),
+    }))).toEqual(reportBytes)
+
+    const liveRef = "report:" + "b".repeat(64)
+    const liveKey = sfReviewArtifactBlobKey(liveRef)
+    const liveReport = { ...report, digest: createHash("sha256").update(bytes).digest("hex") }
+    const liveProduct = { documents: { [liveRef]: liveReport } }
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
+      snapshot.data.__sfProductV1 = { documents: { [ref]: { ...report, name: "other-review.docx" } } }
+      await blobs.put(key, reportBytes, "application/octet-stream")
+      return { commit: true, value: undefined }
+    })
+    const mismatched = await read(target)
+    await expect(restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 2, at))
+      .rejects.toThrow("Backup conflicts with a current private report")
+    expect(await read(target)).toEqual(mismatched)
+
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
+      snapshot.data.__sfProductV1 = liveProduct
+      await blobs.remove(reportKey)
+      await blobs.put(liveKey, bytes, report.mediaType)
+      return { commit: true, value: undefined }
+    })
+    const corruptSource = {
+      ...backups.source,
+      readBlob: async (surface: Surface, id: string, ref: string) =>
+        ref === reportKey ? bytes : backups.source.readBlob(surface, id, ref),
+    }
+    await expect(restoreBackup(target, corruptSource, "dashboard", saved.id, admin, true, 2, at, undefined, { retainCurrentProduct: true }))
+      .rejects.toThrow("Missing or corrupt private backup blob")
+    expect(await restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 2, at, undefined, { retainCurrentProduct: true }))
+      .toEqual({ ok: true })
+    const applied: Snapshot["data"][] = []
+    expect(await restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 3, at, {
+      retain: (current) => ({
+        verifyBlobReplacement() {},
+        apply(data) {
+          data.__sfProductV1 = structuredClone(current.data.__sfProductV1)
+          applied.push(data)
+        },
+      }),
+      verifyCurrent: async () => true,
+    })).toEqual({ ok: true })
+    expect(applied).toHaveLength(1)
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
+      expect(snapshot.data.__sfProductV1).toEqual(liveProduct)
+      expect(await blobs.get(liveKey)).toEqual(bytes)
+      expect(await blobs.get(reportKey)).toBeUndefined()
+      return { commit: false, value: undefined }
+    })
+
+    await target.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
+      await blobs.put(reportKey, bytes, report.mediaType)
+      return { commit: true, value: undefined }
+    })
+    await expect(restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 4, at))
+      .rejects.toThrow("Backup cannot overwrite an unbound private report blob")
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
+      expect(snapshot.data.__sfProductV1).toEqual(liveProduct)
+      expect(await blobs.get(liveKey)).toEqual(bytes)
+      await blobs.put(reportKey, reportBytes, report.mediaType)
+      return { commit: true, value: undefined }
+    })
+    expect(await restoreBackup(target, backups.source, "dashboard", saved.id, admin, true, 4, at)).toEqual({ ok: true })
+    await target.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
+      expect(snapshot.data.__sfProductV1).toEqual(product)
+      expect(await blobs.get(reportKey)).toEqual(reportBytes)
+      expect(await blobs.get(liveKey)).toBeUndefined()
+      return { commit: false, value: undefined }
+    })
   })
 })
 

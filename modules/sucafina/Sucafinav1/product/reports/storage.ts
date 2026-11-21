@@ -13,12 +13,12 @@ import type { ReviewChart } from "../reviews/port.ts"
 import type { DomainProjection } from "../contracts/context.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import type { SfProductStatePort } from "../contracts/state.ts"
+import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
+import { sfReviewArtifactBlobReader, stageSfReviewArtifactWrite } from "../host-binding/state-provider.ts"
 import { validReportArtifactMetadata, validateReportArtifact } from "../../runtime/artifact.ts"
 
 type ArtifactInput = Parameters<ReviewCapabilityHost["artifacts"]["put"]>[0]
 type StoredReport = {
-  kind: "sf-review-artifact-v1"
   reviewRef: string
   reviewDigest: string
   renderDigest?: string
@@ -34,8 +34,7 @@ type StoredReport = {
   recordCount: number
   evidenceRefs: ArtifactInput["evidenceRefs"]
   digest: string
-  bytes: string
-}
+} & ({ kind: "sf-review-artifact-v1"; bytes: string } | { kind: "sf-review-artifact-v2"; byteLength: number })
 
 /** Private product-state persistence; the installation must provide its durable C08 adapter. */
 export function createReviewArtifactStorage(input: {
@@ -46,6 +45,7 @@ export function createReviewArtifactStorage(input: {
   operationIdentity: (context: TrustedDomainContext, entry: ArtifactInput) => string | undefined
   maxBytes: number
 }) {
+  const readBlob = sfReviewArtifactBlobReader(input.state)
   async function load(ref: string, context: TrustedDomainContext): Promise<PortResult<{ stored: StoredReport; bytes: Uint8Array }>> {
     const request = input.host.requestFor(context)
     if (!request || !await input.host.revalidate(context) || !/^report:[a-f0-9]{64}$/.test(ref)) return { status: "denied", reason: "artifact-unavailable" }
@@ -57,12 +57,25 @@ export function createReviewArtifactStorage(input: {
     const stored = result.value as StoredReport
     // The stored policy stamp describes creation. Authority above and the exact
     // preserved review below are checked under the current policy on every read.
-    if (stored.kind !== "sf-review-artifact-v1" || stored.principalRef !== context.binding.principalRef || stored.installationId !== context.binding.installationId || stored.projectId !== context.binding.projectId || typeof stored.policyVersion !== "string" || !stored.policyVersion.trim() || !Array.isArray(stored.sectionRefs) || !Array.isArray(stored.evidenceRefs) || typeof stored.bytes !== "string" || typeof stored.digest !== "string" || typeof stored.name !== "string" || typeof stored.mediaType !== "string" || !stored.inclusion || typeof stored.inclusion !== "object" || typeof stored.reviewRef !== "string" || typeof stored.reviewDigest !== "string" || !["docx", "pptx"].includes(stored.format) || !Number.isSafeInteger(stored.recordCount) || stored.recordCount < 0) return { status: "denied", reason: "artifact-unavailable" }
+    if ((stored.kind !== "sf-review-artifact-v1" && stored.kind !== "sf-review-artifact-v2") || stored.principalRef !== context.binding.principalRef || stored.installationId !== context.binding.installationId || stored.projectId !== context.binding.projectId || typeof stored.policyVersion !== "string" || !stored.policyVersion.trim() || !Array.isArray(stored.sectionRefs) || !Array.isArray(stored.evidenceRefs) || typeof stored.digest !== "string" || typeof stored.name !== "string" || typeof stored.mediaType !== "string" || !stored.inclusion || typeof stored.inclusion !== "object" || typeof stored.reviewRef !== "string" || typeof stored.reviewDigest !== "string" || !["docx", "pptx"].includes(stored.format) || !Number.isSafeInteger(stored.recordCount) || stored.recordCount < 0) return { status: "denied", reason: "artifact-unavailable" }
     if (!validReportArtifactMetadata({ name: stored.name, type: stored.mediaType }, stored.format)) return { status: "denied", reason: "artifact-unavailable" }
-    // Reject oversized encodings before allocating their decoded bytes.
-    if (!Number.isSafeInteger(input.maxBytes) || input.maxBytes <= 0 || !stored.bytes.length || stored.bytes.length > Math.ceil(input.maxBytes / 3) * 4 || !/^[a-f0-9]{64}$/.test(stored.digest)) return { status: "unavailable", reason: "artifact-integrity-failed" }
-    const bytes = Buffer.from(stored.bytes, "base64")
-    if (!bytes.length || bytes.length > input.maxBytes || bytes.toString("base64") !== stored.bytes || createHash("sha256").update(bytes).digest("hex") !== stored.digest || !await validateReportArtifact({ name: stored.name, type: stored.mediaType, bytes }, stored.format, input.maxBytes)) return { status: "unavailable", reason: "artifact-integrity-failed" }
+    // Reject oversized encodings before allocating any decoded bytes.
+    const invalid = { status: "unavailable" as const, reason: "artifact-integrity-failed" }
+    if (!Number.isSafeInteger(input.maxBytes) || input.maxBytes <= 0 || !/^[a-f0-9]{64}$/.test(stored.digest)) return invalid
+    let bytes: Uint8Array | undefined
+    if (stored.kind === "sf-review-artifact-v1") {
+      if (typeof stored.bytes !== "string" || !stored.bytes.length || stored.bytes.length > Math.ceil(input.maxBytes / 3) * 4) return invalid
+      const inline = Buffer.from(stored.bytes, "base64")
+      if (inline.toString("base64") !== stored.bytes) return invalid
+      bytes = inline
+    } else {
+      if (!readBlob || sfReviewArtifactBlobReader(input.state) !== readBlob ||
+          !Number.isSafeInteger(stored.byteLength) || stored.byteLength < 1 || stored.byteLength > input.maxBytes) return invalid
+      bytes = await readBlob(request, ref, digestSfValue(stored), context.binding)
+      if (bytes?.byteLength !== stored.byteLength) return invalid
+    }
+    if (!bytes?.length || bytes.length > input.maxBytes || createHash("sha256").update(bytes).digest("hex") !== stored.digest ||
+        !await validateReportArtifact({ name: stored.name, type: stored.mediaType, bytes }, stored.format, input.maxBytes)) return invalid
     const review = await input.reviews.read(stored.reviewRef, context)
     if (review.status !== "ok" || digestSfValue(review.value) !== stored.reviewDigest) return { status: "denied", reason: "artifact-unavailable" }
     const inclusion = reviewInclusion(review.value, stored.sectionRefs)
@@ -98,7 +111,15 @@ export function createReviewArtifactStorage(input: {
       // Detach the sealed bytes and metadata before the asynchronous ZIP inspection.
       const artifact = { name: entry.artifact.name, type: entry.artifact.type, bytes: new Uint8Array(entry.artifact.bytes) }
       const digest = createHash("sha256").update(artifact.bytes).digest("hex")
-      const stored: StoredReport = { kind: "sf-review-artifact-v1", reviewRef: entry.reviewRef, reviewDigest: digestSfValue(review.value), renderDigest, inclusion, sectionRefs: [...entry.sectionRefs], principalRef: context.binding.principalRef, installationId: context.binding.installationId, projectId: context.binding.projectId, policyVersion: context.binding.policyVersion, format: entry.format, name: artifact.name, mediaType: artifact.type, recordCount: entry.recordCount, evidenceRefs: structuredClone(entry.evidenceRefs), digest, bytes: Buffer.from(artifact.bytes).toString("base64") }
+      const stored: StoredReport = {
+        reviewRef: entry.reviewRef, reviewDigest: digestSfValue(review.value), renderDigest, inclusion,
+        sectionRefs: [...entry.sectionRefs], principalRef: context.binding.principalRef,
+        installationId: context.binding.installationId, projectId: context.binding.projectId, policyVersion: context.binding.policyVersion,
+        format: entry.format, name: artifact.name, mediaType: artifact.type, recordCount: entry.recordCount,
+        evidenceRefs: structuredClone(entry.evidenceRefs), digest,
+        ...(readBlob ? { kind: "sf-review-artifact-v2", byteLength: artifact.bytes.byteLength } as const :
+          { kind: "sf-review-artifact-v1", bytes: Buffer.from(artifact.bytes).toString("base64") } as const),
+      }
       trace("VALIDATE_ENTER")
       const valid = await validateReportArtifact(artifact, stored.format, input.maxBytes)
       trace("VALIDATE_DONE")
@@ -122,11 +143,15 @@ export function createReviewArtifactStorage(input: {
         return { status: "ok", value: { artifactRef: ref } }
       }
       trace("TX_ENTER")
-      const saved = await input.state.transaction(request, { namespace: "documents", expectedStorageVersion: before.status === "ok" ? before.storageVersion : 0, targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation, idempotencyKey: operation, commandDigest }, async (state, authority) => {
+      const write = async (state: SfProductState, authority: SfStateAuthority) => {
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || state.documents[ref]) return { commit: false, value: false }
         state.documents[ref] = stored
         return { commit: true, value: true }
-      })
+      }
+      const saved = await input.state.transaction(request, {
+        namespace: "documents", expectedStorageVersion: before.status === "ok" ? before.storageVersion : 0,
+        targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation, idempotencyKey: operation, commandDigest,
+      }, readBlob ? stageSfReviewArtifactWrite({ ref, bytes: artifact.bytes, mediaType: artifact.type, digest }, write) : write)
       trace("TX_DONE")
       if (saved.status === "unavailable" || saved.status === "denied") return saved
       if (saved.status !== "ok" || !saved.value) {
@@ -159,7 +184,8 @@ export function createReviewArtifactStorage(input: {
 
 function reportIntent(stored: StoredReport) {
   return {
-    kind: stored.kind, reviewRef: stored.reviewRef, reviewDigest: stored.reviewDigest, renderDigest: stored.renderDigest ?? "legacy-renderer",
+    // Byte placement is storage metadata, not part of the original intent.
+    kind: "sf-review-artifact-v1", reviewRef: stored.reviewRef, reviewDigest: stored.reviewDigest, renderDigest: stored.renderDigest ?? "legacy-renderer",
     inclusion: stored.inclusion, sectionRefs: stored.sectionRefs, principalRef: stored.principalRef,
     installationId: stored.installationId, projectId: stored.projectId, policyVersion: stored.policyVersion,
     format: stored.format, name: stored.name, mediaType: stored.mediaType,
