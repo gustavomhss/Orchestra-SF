@@ -434,7 +434,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
           <div class="sf-n20-fx-toolbar">
             <label>
               <span>{language.t("sf.cap22.version")}</span>
-              <select class="mx-input" value={screen.versionId ?? selectedVersion()?.id ?? ""}
+              <select class="mx-input" aria-label={language.t("sf.cap22.version")} value={screen.versionId ?? selectedVersion()?.id ?? ""}
                 disabled={screen.busy || screen.lockedOutcome}
                 onChange={(event) => changeVersion(event.currentTarget.value)}>
                 <For each={screen.page?.value.data.versions ?? []}>

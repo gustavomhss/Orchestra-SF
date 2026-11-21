@@ -416,6 +416,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
                           <span class="block">{t(key("sf.ui32.density"))}</span>
                           <select
                             class="mx-input"
+                            aria-label={t(key("sf.ui32.density"))}
                             value={state().value.density ?? "comfortable"}
                             disabled={!mayMutate("views.save") || !!state().pendingOperation}
                             onChange={(event) => {

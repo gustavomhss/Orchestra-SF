@@ -412,7 +412,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
             <div class="sf-u08" data-sf-surface="CAP20" data-sf-polish="planner" data-sf-wave="four" hidden={!!currentReview()}>
               <div class="sf-u08-toolbar">
                 <label>{t("sf.u08.version")}
-                  <select value={page().data.selectedVersion?.id ?? ""}
+                  <select aria-label={t("sf.u08.version")} value={page().data.selectedVersion?.id ?? ""}
                     onChange={(event) => {
                       const id = event.currentTarget.value
                       if (!id || state.busy) return
