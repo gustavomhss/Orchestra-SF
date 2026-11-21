@@ -121,13 +121,9 @@ async function stageFactory(workspace: string, destination: string) {
   })
   if (!built.success || built.outputs.length !== 1 || built.outputs[0]?.kind !== "entry-point" || !built.metafile)
     throw new Error("Entra factory must build as one ESM entry point")
-  const inputs = await Promise.all(Object.entries(built.metafile.inputs).map(async ([key, input]) => {
+  const inputs = await Promise.all(Object.keys(built.metafile.inputs).map(async (key) => {
     const file = await realpath(resolve(key))
     if (!file.startsWith(workspace + sep)) throw new Error(`Entra factory input outside checkout: ${key}`)
-    for (const imported of input.imports) {
-      if (imported.external && !isBuiltin(imported.path) && !imported.path.startsWith("bun:"))
-        throw new Error(`Unexpected external Entra factory import: ${imported.path}`)
-    }
     return { path: relative(workspace, file).split(sep).join("/"), sha256: digest(await readFile(file)) }
   }))
   inputs.sort((a, b) => a.path.localeCompare(b.path, "en"))
@@ -136,6 +132,12 @@ async function stageFactory(workspace: string, destination: string) {
 
   const bundle = new Uint8Array(await built.outputs[0].arrayBuffer())
   if (!bundle.length) throw new Error("Empty Entra factory bundle")
+  // Input metadata includes imports that were eliminated from the emitted program.
+  const imports = new Bun.Transpiler({ loader: "js" }).scanImports(bundle)
+  for (const imported of imports) {
+    if (!isBuiltin(imported.path) && !imported.path.startsWith("bun:"))
+      throw new Error(`Unexpected external Entra factory import: ${imported.path}`)
+  }
   const sha256 = digest(bundle)
   const closure = { schema: "sf-factory-closure-v1", entry, bundle: { path: bundlePath, sha256 }, inputs, assets: [] }
   await mkdir(join(destination, "bin/local"))
