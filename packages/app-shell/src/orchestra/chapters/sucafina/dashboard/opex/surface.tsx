@@ -1,4 +1,6 @@
 import { useNavigate } from "@solidjs/router"
+import { Icon } from "@orchestra/ui/icon"
+import type { SF_U39_COPY } from "@/i18n/orchestra-chapters/sf-u39"
 import { createEffect, createMemo, createSignal, createUniqueId, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { SfCallOptions } from "@orchestra/client/sucafina/transport"
@@ -26,12 +28,16 @@ import {
   type BudgetCapability, type BudgetCommand, type BudgetCommandName,
   type BudgetEntry, type BudgetForm, type BudgetOwner, type BudgetPage,
 } from "./model"
+import { SfOpexDetail } from "./opex-detail"
+import "../../shared/wave-one.css"
 import "./surface.css"
+import "./opex.css"
 
 /** U39 + U40 share presentation, never producer logic or a new dispatcher. */
 export type SfBudgetRoute = SfResolvedRoute<"CAP04" | "CAP05">
 export type SfBudgetSurfaceProps = Readonly<{ capability: BudgetCapability; route: SfBudgetRoute }>
 
+const opexKey = (value: keyof typeof SF_U39_COPY): SfCopyKey => value as SfCopyKey
 const months = Array.from({ length: 12 }, (_, index) => index + 1)
 // Keep list presentation state in memory only, scoped to the F01 owner's
 // draft-registry object AND the capability. Never serialize name searches in
@@ -77,7 +83,17 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
   const amountText = (value: number | null | undefined) =>
     value === null || value === undefined ? t(key("missing")) :
     new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(value) + " · " + unspecified()
+  const opexAmount = (value: number | null | undefined) => value === null || value === undefined
+    ? <span class="sf-opex-missing" data-sf-value="missing"><span aria-hidden="true">—</span><span class="sf-opex-sr">{t(key("missing"))}</span></span>
+    : <span class="sf-budget-number">{new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(value)}</span>
+  const monthName = (month: number) => new Intl.DateTimeFormat(locale(), { month: "short", timeZone: "UTC" })
+    .format(new Date(Date.UTC(year(), month - 1, 1)))
+  const flagLabel = (flag: string | undefined) => flag === "dev-green" ? t(opexKey("sf.u39.flagGreen")) :
+    flag === "dev-amber" ? t(opexKey("sf.u39.flagAmber")) :
+    flag === "dev-red" ? t(opexKey("sf.u39.flagRed")) : flag ?? t(key("missing"))
+  const fieldDisplay = () => props.capability === "CAP04" ? undefined : { display: "contents" as const }
   const formId = createUniqueId()
+  let stage: HTMLDivElement | undefined
   const [view, setView] = createStore<{
     page: BudgetPage | undefined
     state: SfUiState
@@ -99,6 +115,24 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
   let confirmedOperation: SfOperationRef | undefined
   const [layoutMode, setLayoutMode] = createSignal<"single" | "split" | "split-context">("single")
   let activeSubmissionRef: SfOperationRef | undefined
+  createEffect<{ editor: Editing | undefined; phase: string | undefined }>((prior) => {
+    const editor = editing()
+    const phase = editor ? editPhase(editor) : undefined
+    const revising = prior?.phase === "reviewing" && phase === "dirty"
+    if (props.capability === "CAP04" && editor &&
+        (prior?.editor !== editor || phase === "reviewing" && prior?.phase !== phase || revising)) {
+      queueMicrotask(() => {
+        if (editing() !== editor || !stage?.isConnected) return
+        const target = revising
+          ? stage.querySelector<HTMLElement>(".sf-budget-form input:not([readonly]), .sf-budget-form select")
+          : stage.querySelector<HTMLElement>(".sf-budget-editor .sf-s03-head h2, .sf-budget-editor [data-sf-editor-heading]")
+        if (!target) return
+        if (target.tagName === "H2") target.tabIndex = -1
+        target.focus()
+      })
+    }
+    return { editor, phase }
+  })
   const rememberView = (partial: Partial<{ filter: string; sort: SfSort }>) => {
     const registry = context.ready()?.drafts
     if (!registry) return
@@ -700,13 +734,14 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       : []
   const ownerColumns: readonly SfColumn<BudgetOwner>[] = [
     { id: "name", labelKey: key("name"), align: "start", sortKey: "name", widthPolicy: { kind: "flex", minPx: 180, weight: 2 }, render: (owner) => <bdi>{owner.name ?? t(key("missing"))}</bdi> },
-    { id: "budget", labelKey: key("annualBudget"), align: "end", sortKey: "budget", widthPolicy: { kind: "content", minPx: 140, maxPx: 220 }, render: (owner) => <span class="sf-budget-number">{amountText(owner.budget)}</span> },
+    { id: "budget", labelKey: key("annualBudget"), align: "end", sortKey: "budget", widthPolicy: { kind: "content", minPx: 140, maxPx: 220 }, render: (owner) => <Show when={props.capability === "CAP04"} fallback={<span class="sf-budget-number">{amountText(owner.budget)}</span>}><span class="sf-opex-cell-label" aria-hidden="true">{t(key("annualBudget"))}</span>{opexAmount(owner.budget)}</Show> },
     ...(props.capability === "CAP05" ? [{
       id: "status", labelKey: key("status"), align: "start" as const, widthPolicy: { kind: "content" as const, minPx: 120, maxPx: 180 },
       render: (owner: BudgetOwner) => <bdi>{owner.status ?? t(key("missing"))}</bdi>,
     }] : []),
   ]
-  const pageAction = (): SfAction | undefined => !allowed("save") ? undefined : ({
+  const pageAction = (): SfAction | undefined => !allowed("save") ||
+    props.capability === "CAP04" && (props.route.kind !== "entry" || editing()) ? undefined : ({
     id: "new", labelKey: primaryKey(), tone: "primary",
     disabled: view.busy, busy: view.busy, onInvoke: () => navigate(listHref("new")),
   })
@@ -715,21 +750,30 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const deviation = deviationFor(owner, month)
     return (
       <tr data-sf-month={month}>
-        <th scope="row">{month}</th>
-        <td>{amountText(entry?.budget)}</td>
-        <td>{amountText(entry?.actual)}</td>
-        <td>{amountText(entry?.forecast)}</td>
-        <td>{deviation?.flag === undefined ? t(key("missing")) : deviation.flag}</td>
-        <td><bdi>{deviation?.text ?? t(key("missing"))}</bdi></td>
+        <th scope="row">{props.capability === "CAP04" ? monthName(month) : month}</th>
+        <td><Show when={props.capability === "CAP04"} fallback={amountText(entry?.budget)}>
+          <span class="sf-opex-cell-label" aria-hidden="true">{t(key("budget"))}</span>{opexAmount(entry?.budget)}
+        </Show></td>
+        <td><Show when={props.capability === "CAP04"} fallback={amountText(entry?.actual)}>
+          <span class="sf-opex-cell-label" aria-hidden="true">{t(key("actual"))}</span>{opexAmount(entry?.actual)}
+        </Show></td>
+        <td><Show when={props.capability === "CAP04"} fallback={amountText(entry?.forecast)}>
+          <span class="sf-opex-cell-label" aria-hidden="true">{t(key("forecast"))}</span>{opexAmount(entry?.forecast)}
+        </Show></td>
+        <td><Show when={props.capability === "CAP04"} fallback={deviation?.flag === undefined ? t(key("missing")) : deviation.flag}>
+          <span class="sf-opex-cell-label" aria-hidden="true">{t(key("flag"))}</span>
+          <span class="sf-opex-flag" data-sf-flag={deviation?.flag}>{deviation?.flag === undefined ? opexAmount(undefined) : flagLabel(deviation.flag)}</span>
+        </Show></td>
+        <td><Show when={props.capability === "CAP04"} fallback={<bdi>{deviation?.text ?? t(key("missing"))}</bdi>}><span class="sf-opex-cell-label" aria-hidden="true">{t(key("notes"))}</span>{deviation?.text == null ? opexAmount(undefined) : <bdi>{deviation.text}</bdi>}</Show></td>
         <Show when={allowed("save-entry") || allowed("save-deviation")}>
-          <td class="sf-budget-row-actions">
+          <td class="sf-budget-row-actions"><div class="sf-opex-row-actions" style={fieldDisplay()}>
             <Show when={allowed("save-entry")}>
               <button type="button" class="mx-btn" disabled={view.busy} data-sf-action="save-entry" onClick={() => startEdit("save-entry", owner, month)}>{t(key("saveMonth"))}</button>
             </Show>
             <Show when={allowed("save-deviation")}>
               <button type="button" class="mx-btn" disabled={view.busy} data-sf-action="save-deviation" onClick={() => startEdit("save-deviation", owner, month)}>{t(key("saveDeviation"))}</button>
             </Show>
-          </td>
+          </div></td>
         </Show>
       </tr>
     )
@@ -803,6 +847,32 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     />
   )
 
+  const opexDetail = (owner: BudgetOwner) => <SfOpexDetail
+    owner={owner} year={year()} budget={opexAmount(owner.budget)}
+    version={view.page?.versions[ownerCollection(props.capability) + ":" + owner.id]}
+    state={view.page?.entries ? "ready" : "partial"}
+    rows={<For each={months}>{(month) => showMonth(owner, month)}</For>}
+    canEditMonths={allowed("save-entry") || allowed("save-deviation")}
+    hasHint={Boolean(hintFor(owner))}
+    hint={<Show when={hintFor(owner)}>
+      {(hint) => <dl class="sf-budget-hint">
+        <div><dt>{t(key("yearAmount"))}</dt><dd>{opexAmount(hint().amount)}</dd></div>
+        <div><dt>{t(key("month"))}</dt><dd>{hint().months}</dd></div>
+        <div><dt>{t(key("sourceVersion"))}</dt><dd>{view.page?.versions.budgetYtd ?? t(key("missing"))}</dd></div>
+      </dl>}
+    </Show>}
+    actions={[
+      ...(allowed("save") ? [{ id: "edit", labelKey: sfCommonKey("sf.common.edit"), tone: "primary" as const, disabled: view.busy, busy: view.busy, onInvoke: () => navigate(listHref("edit", String(owner.id))) }] : []),
+      ...(allowed("delete") ? [{ id: "delete", labelKey: key("delete"), tone: "danger" as const, disabled: view.busy, busy: view.busy, onInvoke: () => startEdit("delete", owner) }] : []),
+    ]}
+    annualActions={[
+      ...(allowed("annual-entry") ? [{ id: "annual-entry", labelKey: key("applyAnnual"), tone: "secondary" as const, disabled: view.busy, busy: view.busy, onInvoke: () => startEdit("annual-entry", owner) }] : []),
+      ...(allowed("year-amount") ? [{ id: "year-amount", labelKey: key("applyYear"), tone: "secondary" as const, disabled: view.busy, busy: view.busy, onInvoke: () => startEdit("year-amount", owner) }] : []),
+    ]}
+    sourceActions={sourceAction()}
+    onBack={() => navigate(listHref("entry"))}
+  />
+
   const BudgetEditor = (editorProps: Readonly<{ editor: Editing }>): JSX.Element => {
     const editor = editorProps.editor
     const active = () => {
@@ -819,8 +889,10 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       <Show when={phase() === "outcome-unknown"} fallback={
         <Show when={phase() === "reviewing" || editor.action === "delete"} fallback={
       <form class="sf-budget-form mx-card" aria-label={t(key("record"))} onSubmit={(event) => { event.preventDefault(); beginReview() }}>
-        <h2>{editor.action === "save" ? t(key("save")) : editor.action === "save-entry" ? t(key("saveMonth")) : editor.action === "save-deviation" ? t(key("saveDeviation")) : editor.action === "annual-entry" ? t(key("applyAnnual")) : t(key("applyYear"))}</h2>
-        <p>{t(key("year"))}: {year()} · {t(key("sourceVersion"))}: {editor.version}</p>
+        <h2 data-sf-editor-heading>{editor.action === "save" ? (props.capability === "CAP04" ? t(opexKey(editor.owner ? "sf.u39.editLine" : "sf.u39.newLine")) : t(key("save"))) : editor.action === "save-entry" ? t(key("saveMonth")) : editor.action === "save-deviation" ? t(key("saveDeviation")) : editor.action === "annual-entry" ? t(key("applyAnnual")) : t(key("applyYear"))}</h2>
+        <Show when={props.capability === "CAP04" && editor.owner}><p class="sf-opex-editor-owner"><bdi>{editor.owner?.name}</bdi></p></Show>
+        <p class="sf-opex-editor-meta">{t(key("year"))}: {year()} · {t(key("sourceVersion"))}: {editor.version}</p>
+        <Show when={props.capability === "CAP04"}><p class="sf-opex-editor-hint">{t(opexKey("sf.u39.editorHint"))}</p></Show>
         <Show when={phase() === "submitting"}>
           <p role="status" aria-live="polite">{t(sfCommonKey("sf.common.loading"))}</p>
         </Show>
@@ -833,47 +905,63 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
             }</For></dl>
           </section>}
         </Show>
+        <div class="sf-opex-fields" style={fieldDisplay()}>
         <Show when={editor.action === "save"}>
+          <div class="sf-opex-field sf-opex-field-wide" style={fieldDisplay()}>
           <label for={formId + "-name"}>{t(key("name"))}</label>
           <input id={formId + "-name"} required type="text" value={form().name} disabled={fieldsLocked()} onInput={(event) => updateField("name", event.currentTarget.value)} />
+          </div><div class="sf-opex-field" style={fieldDisplay()}>
           <label for={formId + "-budget"}>{t(key("annualBudget"))}</label>
           <input id={formId + "-budget"} required type="number" step="any" value={form().budget} disabled={fieldsLocked()} onInput={(event) => updateField("budget", event.currentTarget.value)} />
+          </div>
         </Show>
         <Show when={editor.action === "save-entry"}>
+          <div class="sf-opex-field sf-opex-month-field" style={fieldDisplay()}>
           <label for={formId + "-month"}>{t(key("month"))}</label>
           <input id={formId + "-month"} type="number" value={form().month} readOnly />
+          </div>
           <For each={["budget", "actual", "forecast"] as const}>{(field) => (
-            <>
+            <div class="sf-opex-field" style={fieldDisplay()}>
               <label for={formId + "-" + field}>{t(key(field))}</label>
               <input id={formId + "-" + field} required type="number" step="any" value={form()[field]} disabled={fieldsLocked()} onInput={(event) => updateField(field, event.currentTarget.value)} />
-            </>
+            </div>
           )}</For>
         </Show>
         <Show when={editor.action === "save-deviation"}>
+          <div class="sf-opex-field sf-opex-month-field" style={fieldDisplay()}>
           <label for={formId + "-month"}>{t(key("month"))}</label>
           <input id={formId + "-month"} type="number" value={form().month} readOnly />
+          </div><div class="sf-opex-field" style={fieldDisplay()}>
           <label for={formId + "-flag"}>{t(key("flag"))}</label>
           <select id={formId + "-flag"} value={form().flag} disabled={fieldsLocked()} onChange={(event) => updateField("flag", event.currentTarget.value)}>
             <option value=""></option>
-            <option value="dev-green">dev-green</option>
-            <option value="dev-amber">dev-amber</option>
-            <option value="dev-red">dev-red</option>
+            <option value="dev-green">{props.capability === "CAP04" ? flagLabel("dev-green") : "dev-green"}</option>
+            <option value="dev-amber">{props.capability === "CAP04" ? flagLabel("dev-amber") : "dev-amber"}</option>
+            <option value="dev-red">{props.capability === "CAP04" ? flagLabel("dev-red") : "dev-red"}</option>
           </select>
+          </div><div class="sf-opex-field sf-opex-field-wide" style={fieldDisplay()}>
           <label for={formId + "-notes"}>{t(key("notes"))}</label>
           <textarea id={formId + "-notes"} value={form().text} disabled={fieldsLocked()} onInput={(event) => updateField("text", event.currentTarget.value)} />
+          </div>
         </Show>
         <Show when={editor.action === "annual-entry"}>
+          <div class="sf-opex-field" style={fieldDisplay()}>
           <label for={formId + "-annual"}>{t(key("annual"))}</label>
           <input id={formId + "-annual"} required type="number" step="any" value={form().annual} disabled={fieldsLocked()} onInput={(event) => updateField("annual", event.currentTarget.value)} />
+          </div><div class="sf-opex-field" style={fieldDisplay()}>
           <label for={formId + "-field"}>{t(key("field"))}</label>
           <select id={formId + "-field"} value={form().field} disabled={fieldsLocked()} onChange={(event) => updateField("field", event.currentTarget.value)}>
-            <option value="budget">budget</option><option value="actual">actual</option><option value="forecast">forecast</option>
+            <option value="budget">{props.capability === "CAP04" ? t(key("budget")) : "budget"}</option><option value="actual">{props.capability === "CAP04" ? t(key("actual")) : "actual"}</option><option value="forecast">{props.capability === "CAP04" ? t(key("forecast")) : "forecast"}</option>
           </select>
+          </div>
         </Show>
         <Show when={editor.action === "year-amount"}>
+          <div class="sf-opex-field" style={fieldDisplay()}>
           <label for={formId + "-amount"}>{t(key("yearAmount"))}</label>
           <input id={formId + "-amount"} type="number" step="any" value={form().amount} disabled={fieldsLocked()} onInput={(event) => updateField("amount", event.currentTarget.value)} />
+          </div>
         </Show>
+        </div>
         <Show when={view.error}><p role="alert" class="sf-budget-error">{view.error}</p></Show>
         <div class="sf-budget-actions">
           <button class="mx-btn primary" type="submit" disabled={view.busy}>{t(sfCommonKey("sf.common.review"))}</button>
@@ -925,13 +1013,17 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     <div class="sf-budget-surface" data-sf-budget={props.capability} data-sf-layout-mode={layoutMode()}>
       <SfPageFrame
         titleKey={titleKey()}
-        context={[{ id: "year", label: { key: key("year") }, value: { kind: "data", text: String(year()) } }]}
+        eyebrow={props.capability === "CAP04" ? { kind: "message", message: { key: "sf.design.eyebrow" as SfCopyKey } } : undefined}
+        context={props.capability === "CAP04" ? [] : [{ id: "year", label: { key: key("year") }, value: { kind: "data", text: String(year()) } }]}
         tabs={[]} activeTab={null}
         primaryAction={pageAction()}
         secondaryActions={[]}
         density="comfortable" layout="split"
         onLayoutMode={(mode) => setLayoutMode(mode)}
       >
+        <div ref={stage} data-sf-wave={props.capability === "CAP04" ? "two" : undefined}
+          data-sf-surface={props.capability === "CAP04" ? "CAP04" : undefined} style={{ display: "contents" }}>
+        <Show when={props.capability === "CAP04"} fallback={
         <SfContextBar
           state={pageState()}
           selection={[{ control: "year", optionId: String(year()) }]}
@@ -946,6 +1038,19 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
             }
           }}
         />
+        }>
+          <div class="sf-opex-toolbar">
+            <label class="sf-opex-year">{t(key("year"))}
+              <select value={year()} disabled={view.busy || Boolean(editing())} onChange={(event) => {
+                const selectedYear = Number(event.currentTarget.value)
+                if ([2024, 2025, 2026, 2027].includes(selectedYear)) navigate(listHref("entry", undefined, selectedYear))
+              }}>
+                <For each={[2024, 2025, 2026, 2027]}>{(value) => <option value={value}>{value}</option>}</For>
+              </select>
+            </label>
+            <p class="sf-opex-currency">{unspecified()}</p>
+          </div>
+        </Show>
         <Show when={view.message}><p class="sf-budget-status" role="status">{t(view.message!)}</p></Show>
         <Show when={view.error && !editing()}><p class="sf-budget-error" role="alert">{view.error}</p></Show>
         <SfStatePanel
@@ -956,13 +1061,34 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
           onLogin={() => { void context.reload() }}
         >
           <div class="sf-budget-body">
-            <section class="sf-budget-owners" aria-label={t(titleKey())}>
-              <label for={formId + "-filter"}>{t(key("filter"))}</label>
-              <input id={formId + "-filter"} type="search" value={view.filter} onInput={(event) => {
-                const filter = event.currentTarget.value
-                setView("filter", filter)
-                rememberView({ filter })
-              }} />
+            <section class="sf-budget-owners" hidden={props.capability === "CAP04" && Boolean(shownSelected() || editing())} aria-label={t(titleKey())}>
+              <div class="sf-opex-list-head" style={fieldDisplay()}>
+                <Show when={props.capability === "CAP04"}>
+                  <div class="sf-opex-list-title"><h2 tabindex="-1">{t(opexKey("sf.u39.expenses"))}</h2>
+                    <span class="sf-opex-count"><span class="sf-opex-sr">{t(opexKey("sf.u39.linesCount"))}: </span>{filtered().length}</span>
+                  </div>
+                </Show>
+                <div class="sf-opex-search-tools" style={fieldDisplay()}>
+                  <label class="sf-opex-search" for={formId + "-filter"}>
+                    <span>{t(key("filter"))}</span>
+                    <Show when={props.capability === "CAP04"}><Icon name="magnifying-glass" size="small" /></Show>
+                  </label>
+                  <input id={formId + "-filter"} type="search" value={view.filter}
+                    placeholder={props.capability === "CAP04" ? t(opexKey("sf.u39.searchPlaceholder")) : undefined}
+                    onInput={(event) => {
+                      const filter = event.currentTarget.value
+                      setView("filter", filter)
+                      rememberView({ filter })
+                    }} />
+                  <Show when={props.capability === "CAP04" && view.filter}>
+                    <button type="button" class="mx-btn sf-opex-clear" aria-label={t(opexKey("sf.u39.clearFilter"))}
+                      onClick={() => { setView("filter", ""); rememberView({ filter: "" }); stage?.querySelector<HTMLInputElement>('input[type="search"]')?.focus() }}>
+                      <Icon name="close-small" size="small" />
+                    </button>
+                  </Show>
+                </div>
+              </div>
+              <Show when={props.capability === "CAP04"}><p class="sf-opex-list-hint">{t(opexKey("sf.u39.listHint"))}</p></Show>
               <Show when={view.filter.trim() && filtered().length === 0}>
                 <SfStatePanel state="filtered-empty" messageKey={sfCommonKey("sf.common.filterEmpty")} />
               </Show>
@@ -995,7 +1121,9 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
               </Show>
             </section>
             <Show when={shownSelected()}>
-              {(owner) => <section class="sf-budget-detail" aria-label={t(key("record"))}>{detail(owner())}</section>}
+              {(owner) => <section class="sf-budget-detail" hidden={props.capability === "CAP04" && Boolean(editing())} aria-label={t(key("record"))}>
+                <Show when={props.capability === "CAP04"} fallback={detail(owner())}>{opexDetail(owner())}</Show>
+              </section>}
             </Show>
           </div>
         </SfStatePanel>
@@ -1005,6 +1133,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
             <BudgetEditor editor={editor} />
           </section>}
         </Show>
+        </div>
       </SfPageFrame>
     </div>
   )
