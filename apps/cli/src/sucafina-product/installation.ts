@@ -50,16 +50,20 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     await installation.dispose()
     throw new Error("Trusted installation ingress requires a loopback listener, canonical HTTP origin and authorizer")
   }
+  const report = SfReviewRoutes["reviews.report.prepare"]
+  const dashboard = report.pathTemplate.replace("{mount}", installation.mount)
+  const isDashboard = (pathname: string) => pathname === dashboard ||
+    (!!ingress && /^\/teams\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/dashboard$/.test(pathname.slice(installation.mount.length)) &&
+      pathname.startsWith(installation.mount + "/"))
+  const contractLimit = (method: string, url: URL) => {
+    if (method === "POST" && isDashboard(url.pathname) &&
+      url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract") return 25 * 1024 * 1024
+  }
   const bodyLimit = (incoming: HttpServerRequest.HttpServerRequest) => {
     if (ingress || incoming.method !== "POST") return undefined
     const url = Option.getOrUndefined(HttpServerRequest.toURL(incoming))
-    if (url?.origin === origin.origin && url.pathname === `${installation.mount}/dashboard` &&
-      url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract") {
-      return 25 * 1024 * 1024
-    }
+    if (url?.origin === origin.origin) return contractLimit(incoming.method, url)
   }
-  const report = SfReviewRoutes["reviews.report.prepare"]
-  const reportPath = report.pathTemplate.replace("{mount}", installation.mount)
   const route = Effect.gen(function* () {
     const incoming = yield* HttpServerRequest.HttpServerRequest
     if (!ingress) {
@@ -78,15 +82,17 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     if (url.pathname !== installation.mount && !url.pathname.startsWith(`${installation.mount}/`)) {
       return HttpServerResponse.empty({ status: 404 })
     }
-    const max = Number((yield* HttpServerRequest.MaxBodySize) ?? 16 * 1024 * 1024)
-    const reportLimit = incoming.method === report.method && url.pathname === reportPath &&
+    const configured = yield* HttpServerRequest.MaxBodySize
+    const max = Number(configured ?? (ingress ? contractLimit(incoming.method, url) : undefined) ?? 16 * 1024 * 1024)
+    const reportLimit = incoming.method === report.method && isDashboard(url.pathname) &&
       url.searchParams.size === 1 && url.searchParams.get("sf") === report.fixedQuery.sf ? Math.min(max, report.maxRequestBytes) : undefined
     const oversized = () => reportLimit === undefined
       ? HttpServerResponse.empty({ status: 413, headers: { connection: "close" } })
       : HttpServerResponse.jsonUnsafe({ status: "needs-input", reason: "request-too-large" }, {
         status: 413, headers: { connection: "close", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
       })
-    if (reportLimit !== undefined && Number(incoming.headers["content-length"]) > reportLimit) return oversized()
+    if ((ingress || reportLimit !== undefined) && Number(incoming.headers["content-length"]) > (reportLimit ?? max))
+      return oversized()
     return yield* Effect.tryPromise(async (signal) => {
       let bytes = 0
       let exceeded = false

@@ -1,5 +1,6 @@
 import { Option, Schema } from "effect"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import type { Surface } from "../src/identity.ts"
 
 type Binding = Readonly<{ installationId: string; tenantId: string; origin: string; mount: string }>
 
@@ -60,9 +61,19 @@ export function readTeamContextQuery(request: Request, binding: Binding): TeamPr
   return decoded.value
 }
 
+export function teamBusinessRoute(pathname: string, mount: string): { mount: string; teamObjectId: string; surface: Surface } | undefined {
+  const prefix = mount + "/teams/"
+  if (!pathname.startsWith(prefix)) return undefined
+  const [teamObjectId, surface, trailing] = pathname.slice(prefix.length).split("/")
+  if (!teamObjectId || trailing !== undefined || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(teamObjectId) ||
+      (surface !== "dashboard" && surface !== "planner" && surface !== "procurement")) return undefined
+  return { mount: prefix + teamObjectId, teamObjectId, surface }
+}
+
 /** Entra's redirect chain may still be cross-site when the browser reaches the landing page. */
-export function isTeamLandingNavigation(request: Request, pathname: string, mount: string) {
-  return request.method === "GET" && (pathname === mount || pathname === mount + "/dashboard") &&
+export function isTeamLandingNavigation(request: Request, url: URL, mount: string) {
+  return request.method === "GET" && !url.search &&
+    (url.pathname === mount || ["dashboard", "planner", "procurement"].some((surface) => url.pathname === mount + "/" + surface) || !!teamBusinessRoute(url.pathname, mount)) &&
     request.headers.get("sec-fetch-mode") === "navigate" && request.headers.get("sec-fetch-dest") === "document" &&
     !request.headers.has("x-sf-team-profile")
 }
@@ -70,12 +81,15 @@ export function isTeamLandingNavigation(request: Request, pathname: string, moun
 function originalUrl(request: Request, binding: Binding, landing = false): URL | undefined {
   const url = new URL(request.url)
   if (request.signal.aborted || request.headers.has("origin") && request.headers.get("origin") !== binding.origin ||
-      request.headers.get("sec-fetch-site") === "cross-site" && !(landing && isTeamLandingNavigation(request, url.pathname, binding.mount)))
+      request.headers.get("sec-fetch-site") === "cross-site" && !(landing && isTeamLandingNavigation(request, url, binding.mount)))
     return undefined
+  const repeatedTopics = landing && (request.method === "GET" || request.method === "HEAD") &&
+    teamBusinessRoute(url.pathname, binding.mount)?.surface === "dashboard" &&
+    ["docx", "pptx"].includes(url.searchParams.get("download") ?? "")
   if (url.origin !== binding.origin || url.username || url.password || url.hash ||
     (!url.pathname.startsWith(binding.mount + "/") && !(landing && url.pathname === binding.mount)) || url.search.length > 4096 ||
     /%(?![\da-fA-F]{2})/.test(url.search) ||
-    [...url.searchParams.keys()].some((key) => url.searchParams.getAll(key).length !== 1)) return undefined
+    [...url.searchParams.keys()].some((key) => !(repeatedTopics && key === "topic") && url.searchParams.getAll(key).length !== 1)) return undefined
   return url
 }
 
