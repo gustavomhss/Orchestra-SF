@@ -32,6 +32,7 @@ export type Snapshot = {
   notices: Notice[]
 }
 export type Environment = {
+  microsoftGroupIdsOnly?: boolean
   at: string
   id: () => string
   directory: { id: string; name: string }[]

@@ -49,13 +49,16 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     await installation.dispose()
     throw new Error("Trusted installation ingress requires a loopback listener, canonical HTTP origin and authorizer")
   }
-  const bodyLimit = (incoming: HttpServerRequest.HttpServerRequest) => {
-    if (ingress || incoming.method !== "POST") return undefined
-    const url = Option.getOrUndefined(HttpServerRequest.toURL(incoming))
-    if (url?.origin === origin.origin && url.pathname === `${installation.mount}/dashboard` &&
+  const contractLimit = (method: string, url: URL) => {
+    if (method === "POST" && url.pathname === `${installation.mount}/dashboard` &&
       url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract") {
       return 25 * 1024 * 1024
     }
+  }
+  const bodyLimit = (incoming: HttpServerRequest.HttpServerRequest) => {
+    if (ingress || incoming.method !== "POST") return undefined
+    const url = Option.getOrUndefined(HttpServerRequest.toURL(incoming))
+    if (url?.origin === origin.origin) return contractLimit(incoming.method, url)
   }
   const route = Effect.gen(function* () {
     const incoming = yield* HttpServerRequest.HttpServerRequest
@@ -75,7 +78,11 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     if (url.pathname !== installation.mount && !url.pathname.startsWith(`${installation.mount}/`)) {
       return HttpServerResponse.empty({ status: 404 })
     }
-    const max = Number((yield* HttpServerRequest.MaxBodySize) ?? 16 * 1024 * 1024)
+    const configured = yield* HttpServerRequest.MaxBodySize
+    const max = Number(configured ?? (ingress ? contractLimit(incoming.method, url) : undefined) ?? 16 * 1024 * 1024)
+    if (ingress && Number(incoming.headers["content-length"]) > max) {
+      return HttpServerResponse.empty({ status: 413, headers: { connection: "close" } })
+    }
     return yield* Effect.tryPromise(async (signal) => {
       if (source) {
         const response = await installation.handler(new Request(source, { signal: AbortSignal.any([source.signal, signal]) }))

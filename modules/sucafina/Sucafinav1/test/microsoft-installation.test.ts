@@ -34,7 +34,11 @@ async function fixture(teams: "direct" | undefined, fetch: (request: Request) =>
     await writeFile(file, JSON.stringify({
       version: 1, deployment: "azure-https", authentication: "microsoft",
       origin, listenerOrigin, ingressOrigin, mount, tenantId, clientId, workspaceDirectory,
-      groups: { dashboard: {}, planner: {}, procurement: {} },
+      groups: {
+        dashboard: { viewer: `group:${grantPrincipal}` },
+        planner: { viewer: `group:${grantPrincipal}` },
+        procurement: { viewer: `group:${grantPrincipal}` },
+      },
       grants: [{ principalRef: grantPrincipal.toUpperCase(), operations: ["sf_case_read"] }],
       supremeAdminGroupId: grantPrincipal.toUpperCase(), scanner: null,
       ...(teams ? { teams } : {}),
@@ -89,7 +93,7 @@ const ingress = (relative: string, headers?: Record<string, string>) => new Requ
 test("Corporate installation opts into direct Teams on the signed HTTPS session", async () => {
   const keys = await generateKeyPair("RS256", { extractable: true })
   const jwk = await exportJWK(keys.publicKey)
-  const login = { nonce: "" }
+  const login = { nonce: "", member: true }
   const graphCalls: string[] = []
   const f = await fixture("direct", async (request) => {
     const url = new URL(request.url)
@@ -109,6 +113,10 @@ test("Corporate installation opts into direct Teams on the signed HTTPS session"
       graphCalls.push(url.pathname)
       expect(request.headers.get("authorization")).toBe("Bearer " + accessToken)
       if (url.pathname === "/v1.0/me") return Response.json({ id: oid, displayName: "Verified person" })
+      if (url.pathname === "/v1.0/me/checkMemberGroups") {
+        expect(await request.json()).toEqual({ groupIds: [grantPrincipal] })
+        return Response.json({ value: login.member ? [grantPrincipal] : [] })
+      }
       if (url.href === graph + "/me/joinedTeams") return Response.json({ value: [{ id: teamObjectId, tenantId, displayName: "Finance", isArchived: false }] })
     }
     throw new Error("Unexpected synthetic Microsoft request")
@@ -122,7 +130,7 @@ test("Corporate installation opts into direct Teams on the signed HTTPS session"
     expect(f.installation.trustedIngress.authorize(ingressProof + ", " + ingressProof)).toBe(false)
     const anonymous = await f.installation.handler(ingress("/dashboard"))
     expect(anonymous?.status).toBe(303)
-    expect(anonymous?.headers.get("location")).toBe(mount + "/auth/login")
+    expect(anonymous?.headers.get("location")).toBe(`${mount}/auth/login?returnTo=${encodeURIComponent(`${mount}/dashboard`)}`)
     const begin = await f.installation.handler(ingress("/auth/login", { "x-forwarded-host": "foreign.example.test" }))
     expect(begin?.status).toBe(303)
     const authorize = new URL(begin!.headers.get("location")!)
@@ -141,19 +149,26 @@ test("Corporate installation opts into direct Teams on the signed HTTPS session"
     expect(sessionCookie).not.toContain(accessToken)
     expect(graphCalls).toEqual(["/v1.0/me"])
     const headers = { cookie: sessionCookie.split(";")[0] }
-    expect((await f.installation.handler(ingress("/dashboard", headers)))?.status).toBe(204)
+    for (const surface of ["dashboard", "planner", "procurement"]) {
+      const page = await f.installation.handler(ingress(`/${surface}`, headers))
+      expect(page?.status).toBe(200)
+      expect(page?.headers.get("content-type")).toContain("text/html")
+    }
+    login.member = false
+    expect((await f.installation.handler(ingress("/dashboard", headers)))?.status).toBe(403)
     expect(await f.installation.handler(ingress("/teams", headers))).toBeUndefined()
     expect((await f.installation.handler(ingress("/auth/login", { host: "foreign.example.test" })))?.status).toBe(403)
     expect((await f.installation.handler(new Request(listenerOrigin + mount + "/auth/login", {
       headers: { host: new URL(ingressOrigin).host },
     })))?.status).toBe(403)
+    graphCalls.length = 0
     const result = await f.installation.teamDirectory!(ingress("/dashboard?principalObjectId=caller", headers))
     expect(result).toEqual({
       state: "complete", tenantId, principalObjectId: oid, source: "joinedTeams", membership: "direct",
       teams: [{ teamObjectId, name: "Finance", archived: false }],
     })
     expect(JSON.stringify(result)).not.toContain(accessToken)
-    expect(graphCalls).toEqual(["/v1.0/me", "/v1.0/me", "/v1.0/me/joinedTeams", "/v1.0/me"])
+    expect(graphCalls).toEqual(["/v1.0/me", "/v1.0/me/joinedTeams", "/v1.0/me"])
   } finally { await f.close() }
 })
 

@@ -1,4 +1,5 @@
 import { createLocalJWKSet, jwtVerify } from "jose"
+import { emptyMap } from "../src/identity.ts"
 import type { EntraClient, EntraOptions, EntraTeamsInput, EntraTeamsResult, EntraTokens } from "./local-contract.ts"
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -241,6 +242,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     },
     person,
     async directory(accessToken) {
+      if (confidential) return [await person(accessToken)]
       const people: { id: string; name: string }[] = []
       const visited = new Set<string>()
       const identities = new Set<string>()
@@ -275,9 +277,16 @@ export function createEntraClient(options: EntraOptions): EntraClient {
       }
     },
     async resolve(accessToken, map) {
+      if (confidential && map.some((row) => !emptyMap().some((role) => role.surface === row.surface && role.role === row.role))) {
+        throw new Error("Invalid product role mapping")
+      }
       const identity = await person(accessToken)
       const names = [...new Set(map.flatMap((row) => row.entra?.trim() ? [row.entra] : []))]
       const groups = await Promise.all(names.map(async (name) => {
+        if (confidential) {
+          if (!name.startsWith("group:") || !uuid.test(name.slice(6))) throw new Error("Immutable Entra group ID required")
+          return { name, id: name.slice(6).toLowerCase() }
+        }
         const url = new URL(`${graph}/groups`)
         url.search = new URLSearchParams({ "$filter": `displayName eq '${name.replaceAll("'", "''")}'`, "$select": "id,displayName", "$top": "2" }).toString()
         const data = await graphRequest(accessToken, url.href)

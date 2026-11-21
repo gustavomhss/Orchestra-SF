@@ -126,6 +126,14 @@ const serveInstallation = (trusted: boolean) => () =>
           origin, requestOrigin: `http://${host}`, path: "/sucafina/planner?year=2026",
           ingressProof: null, forwardingHeaders: [], method: "POST", cookie: "installation=fixture", body: "original body",
         })
+        const attachment = new Uint8Array(17 * 1024 * 1024)
+        const upload = (query: string) => dispatch(`/sucafina/dashboard?${query}`, {
+          method: "POST", headers: { host, "x-sf-ingress-proof": proof }, body: attachment,
+        })
+        const contract = await upload("upload=contract")
+        expect(contract.status).toBe(200)
+        expect(await contract.json()).toBe(attachment.byteLength)
+        expect((await upload("upload=contract&upload=contract")).status).toBe(413)
         return
       }
       const base = await dispatch("/sucafina")
