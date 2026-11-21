@@ -137,9 +137,11 @@ export function readSfProjectPage(payload: unknown): SfProjectPage | null {
   const versions: Record<string, number> = {}
   if (object(source.versions)) {
     for (const [key, value] of Object.entries(source.versions)) {
-      if (!key.startsWith("projects:") || !object(value) ||
-          !Number.isSafeInteger(value.version) || (value.version as number) < 0) continue
-      versions[key] = value.version as number
+      // A01 SfDomainVersionNumbers projects the producer's CAS as an integer.
+      // Missing or malformed entries stay unavailable; never synthesize zero.
+      if (!key.startsWith("projects:") || typeof value !== "number" ||
+          !Number.isSafeInteger(value) || value < 0) continue
+      versions[key] = value
     }
   }
   return {

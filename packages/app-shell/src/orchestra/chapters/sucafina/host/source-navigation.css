@@ -6,7 +6,7 @@
 .sf-source-navigation a[aria-disabled="true"] { opacity:.65 }
 
 /* Native owner navigation remains a single compact strip, on the same 1160px axis. */
-[data-sf-source-navigation="sf-dashboard"]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"])[aria-current="page"]) {
+[data-sf-source-navigation]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"], [data-sf-capability="CAP05"], [data-sf-capability="CAP06"], [data-sf-capability="CAP07"], [data-sf-capability="CAP08"], [data-sf-capability="CAP09"], [data-sf-capability="CAP10"], [data-sf-capability="CAP11"], [data-sf-capability="CAP12"], [data-sf-capability="CAP13"], [data-sf-capability="CAP14"], [data-sf-capability="CAP15"], [data-sf-capability="CAP16"], [data-sf-capability="CAP17"], [data-sf-capability="CAP18"], [data-sf-capability="CAP19"])[aria-current="page"]) {
   --sf-exec-nav-max: 1160px;
   --sf-exec-nav-gutter: 32px;
   --sf-exec-nav-gap: 4px;
@@ -36,7 +36,7 @@
   font-weight: 400;
   line-height: var(--sf-exec-nav-leading);
 }
-[data-sf-source-navigation="sf-dashboard"]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"])[aria-current="page"]) > a {
+[data-sf-source-navigation]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"], [data-sf-capability="CAP05"], [data-sf-capability="CAP06"], [data-sf-capability="CAP07"], [data-sf-capability="CAP08"], [data-sf-capability="CAP09"], [data-sf-capability="CAP10"], [data-sf-capability="CAP11"], [data-sf-capability="CAP12"], [data-sf-capability="CAP13"], [data-sf-capability="CAP14"], [data-sf-capability="CAP15"], [data-sf-capability="CAP16"], [data-sf-capability="CAP17"], [data-sf-capability="CAP18"], [data-sf-capability="CAP19"])[aria-current="page"]) > a {
   box-sizing: border-box;
   flex: none;
   min-block-size: var(--sf-exec-nav-hit);
@@ -49,25 +49,25 @@
   white-space: nowrap;
   text-decoration: none;
 }
-[data-sf-source-navigation="sf-dashboard"]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"])[aria-current="page"]) > a[aria-current="page"] {
+[data-sf-source-navigation]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"], [data-sf-capability="CAP05"], [data-sf-capability="CAP06"], [data-sf-capability="CAP07"], [data-sf-capability="CAP08"], [data-sf-capability="CAP09"], [data-sf-capability="CAP10"], [data-sf-capability="CAP11"], [data-sf-capability="CAP12"], [data-sf-capability="CAP13"], [data-sf-capability="CAP14"], [data-sf-capability="CAP15"], [data-sf-capability="CAP16"], [data-sf-capability="CAP17"], [data-sf-capability="CAP18"], [data-sf-capability="CAP19"])[aria-current="page"]) > a[aria-current="page"] {
   border-block-end-color: var(--mx-blue);
   color: var(--mx-strong);
   font-family: var(--mx-emphasis);
   font-weight: 600;
 }
-[data-sf-source-navigation="sf-dashboard"]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"])[aria-current="page"]) > a:not([aria-disabled="true"]):hover {
+[data-sf-source-navigation]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"], [data-sf-capability="CAP05"], [data-sf-capability="CAP06"], [data-sf-capability="CAP07"], [data-sf-capability="CAP08"], [data-sf-capability="CAP09"], [data-sf-capability="CAP10"], [data-sf-capability="CAP11"], [data-sf-capability="CAP12"], [data-sf-capability="CAP13"], [data-sf-capability="CAP14"], [data-sf-capability="CAP15"], [data-sf-capability="CAP16"], [data-sf-capability="CAP17"], [data-sf-capability="CAP18"], [data-sf-capability="CAP19"])[aria-current="page"]) > a:not([aria-disabled="true"]):hover {
   color: var(--mx-strong);
   background: var(--mx-soft);
 }
-[data-sf-source-navigation="sf-dashboard"]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"])[aria-current="page"]) > a:focus-visible {
+[data-sf-source-navigation]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"], [data-sf-capability="CAP05"], [data-sf-capability="CAP06"], [data-sf-capability="CAP07"], [data-sf-capability="CAP08"], [data-sf-capability="CAP09"], [data-sf-capability="CAP10"], [data-sf-capability="CAP11"], [data-sf-capability="CAP12"], [data-sf-capability="CAP13"], [data-sf-capability="CAP14"], [data-sf-capability="CAP15"], [data-sf-capability="CAP16"], [data-sf-capability="CAP17"], [data-sf-capability="CAP18"], [data-sf-capability="CAP19"])[aria-current="page"]) > a:focus-visible {
   outline: var(--sf-exec-nav-focus) solid var(--mx-blue);
   outline-offset: calc(-1 * var(--sf-exec-nav-focus));
 }
 @media (min-width: 768px) and (max-width: 1023px) {
-  [data-sf-source-navigation="sf-dashboard"]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"])[aria-current="page"]) { --sf-exec-nav-gutter: 24px; }
+  [data-sf-source-navigation]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"], [data-sf-capability="CAP05"], [data-sf-capability="CAP06"], [data-sf-capability="CAP07"], [data-sf-capability="CAP08"], [data-sf-capability="CAP09"], [data-sf-capability="CAP10"], [data-sf-capability="CAP11"], [data-sf-capability="CAP12"], [data-sf-capability="CAP13"], [data-sf-capability="CAP14"], [data-sf-capability="CAP15"], [data-sf-capability="CAP16"], [data-sf-capability="CAP17"], [data-sf-capability="CAP18"], [data-sf-capability="CAP19"])[aria-current="page"]) { --sf-exec-nav-gutter: 24px; }
 }
 @media (max-width: 767px) {
-  [data-sf-source-navigation="sf-dashboard"]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"])[aria-current="page"]) {
+  [data-sf-source-navigation]:has(> a:is([data-sf-capability="CAP01"], [data-sf-capability="CAP02"], [data-sf-capability="CAP03"], [data-sf-capability="CAP04"], [data-sf-capability="CAP05"], [data-sf-capability="CAP06"], [data-sf-capability="CAP07"], [data-sf-capability="CAP08"], [data-sf-capability="CAP09"], [data-sf-capability="CAP10"], [data-sf-capability="CAP11"], [data-sf-capability="CAP12"], [data-sf-capability="CAP13"], [data-sf-capability="CAP14"], [data-sf-capability="CAP15"], [data-sf-capability="CAP16"], [data-sf-capability="CAP17"], [data-sf-capability="CAP18"], [data-sf-capability="CAP19"])[aria-current="page"]) {
     --sf-exec-nav-gutter: 16px;
     --sf-exec-nav-fade: 12px;
     padding-inline-end: var(--sf-exec-nav-fade);

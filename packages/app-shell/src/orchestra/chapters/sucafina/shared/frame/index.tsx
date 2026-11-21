@@ -32,6 +32,7 @@ import type {
 } from "./types"
 import { SfStatePanel } from "../states"
 import "./frame.css"
+import "../wave-one.css"
 
 export type {
   SfAction, SfChartFrameProps, SfChartTable, SfContextBarProps, SfCopyKey, SfCoverage,

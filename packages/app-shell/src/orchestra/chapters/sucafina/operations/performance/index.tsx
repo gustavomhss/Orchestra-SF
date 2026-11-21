@@ -110,6 +110,20 @@ const EDIT_FIELDS: Readonly<Record<EditKind, readonly Field[]>> = {
     { name: "notes", label: "sf.u31.notes", kind: "textarea" },
   ],
 }
+const EDIT_GROUPS: Readonly<Record<EditKind, readonly Readonly<{ label: string; fields: readonly FieldName[] }>[]>> = {
+  contract: [{ label: "sf.u31.design.contractDetails", fields: ["name", "year"] }],
+  item: [
+    { label: "sf.u31.design.commitment", fields: ["name", "description", "color"] },
+    { label: "sf.u31.design.allocations", fields: ["totalWeight", "ownerWeight", "co1Weight", "co2Weight"] },
+  ],
+  sub: [
+    { label: "sf.u31.design.commitment", fields: ["label", "objective", "description", "target"] },
+    { label: "sf.u31.design.measurement", fields: ["totalWeight", "score", "status"] },
+    { label: "sf.u31.design.ownership", fields: ["owner", "ownerWeight", "co1", "co1Weight", "co2", "co2Weight"] },
+    { label: "sf.u31.design.quarterly", fields: ["q1", "statusQ1", "q2", "statusQ2", "q3", "statusQ3", "q4", "statusQ4"] },
+    { label: "sf.u31.notes", fields: ["notes"] },
+  ],
+}
 const editContract = (data: Performance): FormData => ({
   kind: "contract", name: text(data.name), year: stringOr(data.year),
 })
@@ -133,27 +147,31 @@ const editSub = (itemId: string, sub?: Sub): FormData => ({
   statusQ3: stringOr(sub?.statusQ3), statusQ4: stringOr(sub?.statusQ4),
   notes: text(sub?.notes),
 })
-const contractValues = (v: FormData): ContractValues => ({
+// A01 accepts JSON records: preserve supplied scalars and omit absent optional fields.
+const contractValues = (v: FormData): ContractValues => Object.fromEntries(Object.entries({
   name: v.name, year: finite(v.year),
-})
-const itemValues = (v: FormData): ItemValues => ({
+}).filter(([, value]) => value !== undefined))
+const itemValues = (v: FormData): ItemValues => Object.fromEntries(Object.entries({
   itemId: v.itemId, name: v.name, description: v.description,
   totalWeight: finite(v.totalWeight), ownerWeight: finite(v.ownerWeight),
   co1Weight: finite(v.co1Weight), co2Weight: finite(v.co2Weight), color: v.color,
-})
+}).filter(([, value]) => value !== undefined))
 const subValues = (v: FormData, source?: Sub): SubValues => ({
-  itemId: v.itemId || "", subId: v.subId, label: v.label, objective: v.objective,
-  target: v.target === stringOr(source?.target) ? source?.target : v.target,
-  description: v.description, totalWeight: finite(v.totalWeight), owner: v.owner,
-  ownerWeight: finite(v.ownerWeight), co1: v.co1, co1Weight: finite(v.co1Weight),
-  co2: v.co2, co2Weight: finite(v.co2Weight), score: finite(v.score),
-  status: v.status,
-  q1: v.q1 === stringOr(source?.q1) ? source?.q1 : v.q1,
-  q2: v.q2 === stringOr(source?.q2) ? source?.q2 : v.q2,
-  q3: v.q3 === stringOr(source?.q3) ? source?.q3 : v.q3,
-  q4: v.q4 === stringOr(source?.q4) ? source?.q4 : v.q4,
-  statusQ1: v.statusQ1, statusQ2: v.statusQ2,
-  statusQ3: v.statusQ3, statusQ4: v.statusQ4, notes: v.notes,
+  itemId: v.itemId || "",
+  ...Object.fromEntries(Object.entries({
+    subId: v.subId, label: v.label, objective: v.objective,
+    target: v.target === stringOr(source?.target) ? source?.target : v.target,
+    description: v.description, totalWeight: finite(v.totalWeight), owner: v.owner,
+    ownerWeight: finite(v.ownerWeight), co1: v.co1, co1Weight: finite(v.co1Weight),
+    co2: v.co2, co2Weight: finite(v.co2Weight), score: finite(v.score),
+    status: v.status,
+    q1: v.q1 === stringOr(source?.q1) ? source?.q1 : v.q1,
+    q2: v.q2 === stringOr(source?.q2) ? source?.q2 : v.q2,
+    q3: v.q3 === stringOr(source?.q3) ? source?.q3 : v.q3,
+    q4: v.q4 === stringOr(source?.q4) ? source?.q4 : v.q4,
+    statusQ1: v.statusQ1, statusQ2: v.statusQ2,
+    statusQ3: v.statusQ3, statusQ4: v.statusQ4, notes: v.notes,
+  }).filter(([, value]) => value !== undefined)),
 })
 const finiteEdit = (v: FormData): boolean => {
   const nums: readonly (keyof FormData)[] = v.kind === "contract" ? ["year"]
@@ -165,8 +183,10 @@ const finiteEdit = (v: FormData): boolean => {
       Number.isFinite(Number(raw)) && (key !== "year" || Number.isInteger(Number(raw)))
   })
 }
+const groupFields = (kind: EditKind, names: readonly FieldName[]): readonly Field[] =>
+  names.flatMap((name) => EDIT_FIELDS[kind].filter((field) => field.name === name))
 function fields(value: FormData): readonly SfReviewField[] {
-  return EDIT_FIELDS[value.kind].map((field) => ({
+  return EDIT_GROUPS[value.kind].flatMap((group) => groupFields(value.kind, group.fields)).map((field) => ({
     path: field.name, label: labelMessage(field.label),
     value: value[field.name] === undefined
       ? { kind: "missing", reason: labelMessage("sf.common.unknown") }
@@ -507,10 +527,10 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
       version: state.baseVersion ?? store.cas, fields: state.base ? fields(state.base) : [] }
   }
 
-  return <div data-sf-surface="CAP16" data-sf-authorized={current()}>
+  return <div class="sf-u31-host" data-sf-authorized={current()}>
     <SfPageFrame titleKey={key("sf.cap16.title")} context={[]} tabs={[]} activeTab={null}
       density="comfortable" layout="work" onLayoutMode={() => undefined}
-      primaryAction={allowed("save-item") ? {
+      primaryAction={store.mode === "overview" && !store.focusSub && allowed("save-item") ? {
         id: "new-item", labelKey: key("sf.cap16.primary"), tone: "primary",
         disabled: store.busy || store.uncertain, busy: store.busy,
         onInvoke: () => beginEdit("item"),
@@ -519,7 +539,8 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
       <SfStatePanel state={store.state} messageKey={key(readCopy())}
         onRetryRead={refresh} onBack={() => setStore({ mode: "overview", focusItem: null, focusSub: null })}>
         <Show when={data()}>
-          {(performance) => <div class="sf-u31-shell">
+          {(performance) => <div class="sf-u31-shell" data-sf-surface="CAP16" data-sf-wave="three"
+            data-sf-view={store.mode === "overview" && store.focusSub ? "detail" : store.mode}>
             <Show when={store.error}>
               {(error) => <p class="sf-u31-error" role="alert"><bdi>{error()}</bdi></p>}
             </Show>
@@ -530,136 +551,176 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
             <Show when={store.warnings.length}>
               <ul role="status"><For each={store.warnings}>{(warning) => <li><bdi>{warning}</bdi></li>}</For></ul>
             </Show>
-            <section id="performance-contract" aria-labelledby="sf-u31-contract">
-              <h2 id="sf-u31-contract">{t("sf.u31.contract")}</h2>
-              <dl class="sf-u31-definitions">
-                <dt>{t("sf.u31.name")}</dt><dd><bdi>{text(performance().name)}</bdi></dd>
-                <dt>{t("sf.u31.year")}</dt><dd><bdi>{text(performance().year)}</bdi></dd>
-                <dt>{t("sf.u31.noGlobalScore")}</dt>
-                <dd>{t("sf.common.unavailable")}</dd>
-              </dl>
-              <Show when={allowed("save")}>
-                <button class="mx-btn" type="button" onClick={() => beginEdit("contract")}>
-                  {t("sf.u31.saveContract")}
-                </button>
-              </Show>
-            </section>
-            <div class="sf-u31-grid">
-              <section class="sf-u31-panel" aria-labelledby="sf-u31-items">
-                <h2 id="sf-u31-items">{t("sf.u31.item")}</h2>
-                <Show when={items().length} fallback={<p>{t("sf.common.empty")}</p>}>
-                  <div class="sf-u31-cards">
-                    <For each={items()}>
-                      {(item) => {
+            <div class="sf-u31-overview" hidden={store.mode !== "overview"}>
+              <div class="sf-u31-overview-main" hidden={!!store.focusSub}>
+                <section class="sf-u31-panel sf-u31-contract" id="performance-contract" aria-labelledby="sf-u31-contract">
+                  <header class="sf-u31-section-head">
+                    <div><p class="sf-u31-caption">{t("sf.u31.contract")}</p>
+                      <h2 id="sf-u31-contract"><bdi>{text(performance().name) || t("sf.common.unavailable")}</bdi></h2>
+                      <p class="sf-u31-caption">{t("sf.u31.year")} · {text(performance().year) || t("sf.common.unavailable")}</p>
+                    </div>
+                    <Show when={allowed("save")}><button class="mx-btn" type="button" onClick={() => beginEdit("contract")}>
+                      {t("sf.u31.design.editContract")}</button></Show>
+                  </header>
+                  <div class="sf-u31-source-note">
+                    <span>{t("sf.u31.noGlobalScore")}: {t("sf.common.unavailable")}</span>
+                    <p>{t("sf.u31.design.noGlobalScoreHint")}</p>
+                  </div>
+                </section>
+
+                <section class="sf-u31-objectives" aria-labelledby="sf-u31-items">
+                  <header class="sf-u31-section-head">
+                    <div><h2 id="sf-u31-items">{t("sf.u31.design.items")}</h2>
+                      <p class="sf-u31-caption">{t("sf.u31.design.weightHint")}</p></div>
+                  </header>
+                  <Show when={items().length} fallback={<p class="sf-u31-empty">{t("sf.common.empty")}</p>}>
+                    <div class="sf-u31-cards">
+                      <For each={items()}>{(item) => {
                         const itemRef = () => reference(item.id)
                         return <article class="sf-u31-item" data-sf-performance-item={itemRef() || undefined}>
-                          <h3><bdi>{text(item.name)}</bdi></h3>
-                          <dl class="sf-u31-definitions">
-                            <dt>{t("sf.u31.itemWeight")}</dt><dd><bdi>{text(item.totalWeight)}</bdi></dd>
-                            <dt>{t("sf.u31.ownerWeight")}</dt><dd><bdi>{text(item.ownerWeight)}</bdi></dd>
-                            <dt>{t("sf.u31.co1Weight")}</dt><dd><bdi>{text(item.co1Weight)}</bdi></dd>
-                            <dt>{t("sf.u31.co2Weight")}</dt><dd><bdi>{text(item.co2Weight)}</bdi></dd>
-                            <Show when={item.description !== undefined}>
-                              <dt>{t("sf.u31.description")}</dt><dd><bdi>{text(item.description)}</bdi></dd>
-                            </Show>
-                            <Show when={item.color !== undefined}>
-                              <dt>{t("sf.u31.color")}</dt><dd><bdi>{text(item.color)}</bdi></dd>
-                            </Show>
+                          <header class="sf-u31-section-head">
+                            <div><h3><bdi>{text(item.name) || t("sf.common.unavailable")}</bdi></h3>
+                              <Show when={item.description}><p class="sf-u31-caption"><bdi>{text(item.description)}</bdi></p></Show>
+                            </div>
+                            <div class="sf-u31-actions">
+                              <Show when={allowed("save-item") && itemRef()}><button type="button" class="mx-btn"
+                                onClick={() => beginEdit("item",item)}>{t("sf.u31.design.editItem")}</button></Show>
+                              <Show when={allowed("save-sub") && itemRef()}><button type="button" class="mx-btn"
+                                onClick={() => beginEdit("sub",item)}>{t("sf.u31.addSub")}</button></Show>
+                            </div>
+                          </header>
+                          <dl class="sf-u31-weights">
+                            <div><dt>{t("sf.u31.design.itemAllocation")}</dt><dd>{text(item.totalWeight) || t("sf.common.unavailable")}</dd></div>
+                            <div><dt>{t("sf.u31.ownerWeight")}</dt><dd>{text(item.ownerWeight) || t("sf.common.unavailable")}</dd></div>
+                            <div><dt>{t("sf.u31.co1Weight")}</dt><dd>{text(item.co1Weight) || t("sf.common.unavailable")}</dd></div>
+                            <div><dt>{t("sf.u31.co2Weight")}</dt><dd>{text(item.co2Weight) || t("sf.common.unavailable")}</dd></div>
                           </dl>
-                          <div class="sf-u31-actions">
-                            <Show when={allowed("save-item") && itemRef()}>
-                              <button type="button" class="mx-btn"
-                                onClick={() => beginEdit("item",item)}>{t("sf.u31.saveItem")}</button>
-                            </Show>
-                            <Show when={allowed("delete-item") && itemRef()}>
-                              <button type="button" class="mx-btn danger"
-                                onClick={() => beginRemove("delete-item",item)}>{t("sf.u31.deleteItem")}</button>
-                            </Show>
-                            <Show when={allowed("save-sub") && itemRef()}>
-                              <button type="button" class="mx-btn"
-                                onClick={() => beginEdit("sub",item)}>{t("sf.u31.addSub")}</button>
-                            </Show>
-                          </div>
-                          <Show when={(item.subs || []).length} fallback={<p>{t("sf.common.empty")}</p>}>
-                            <div class="sf-u31-rows" role="region" aria-label={t("sf.u31.subName")} tabindex="0">
+                          <Show when={(item.subs || []).length} fallback={<p class="sf-u31-empty">{t("sf.u31.design.noSubitems")}</p>}>
+                            <div class="sf-u31-rows sf-u31-sub-ledger" role="region" aria-label={t("sf.u31.design.subitems")} tabindex="0">
                               <table><thead><tr>
                                 <th scope="col">{t("sf.u31.subName")}</th>
-                                <th scope="col">{t("sf.u31.totalWeight")}</th>
+                                <th scope="col">{t("sf.u31.design.allocation")}</th>
                                 <th scope="col">{t("sf.u31.score")}</th>
                                 <th scope="col">{t("sf.u31.status")}</th>
                                 <th scope="col">{t("sf.u31.owner")}</th>
-                                <th scope="col">{t("sf.u31.q1")}</th>
-                                <th scope="col">{t("sf.u31.q2")}</th>
-                                <th scope="col">{t("sf.u31.q3")}</th>
-                                <th scope="col">{t("sf.u31.q4")}</th>
                                 <th scope="col">{t("sf.u31.readChange")}</th>
                               </tr></thead><tbody>
                                 <For each={item.subs || []}>{(sub) => <tr data-sf-performance-sub={reference(sub.id) || undefined}>
-                                  <th scope="row"><bdi>{text(sub.label)}</bdi></th>
-                                  <td><bdi>{text(sub.totalWeight)}</bdi></td>
-                                  <td><bdi>{text(sub.score)}</bdi></td>
-                                  <td><bdi>{text(sub.status)}</bdi></td>
-                                  <td><bdi>{text(sub.owner)}</bdi></td>
-                                  <td><bdi>{text(sub.q1)}</bdi></td>
-                                  <td><bdi>{text(sub.q2)}</bdi></td>
-                                  <td><bdi>{text(sub.q3)}</bdi></td>
-                                  <td><bdi>{text(sub.q4)}</bdi></td>
-                                  <td><div class="sf-u31-actions">
-                                    <Show when={allowed("save-sub") && reference(sub.id) && itemRef()}>
-                                      <button type="button" class="mx-btn" onClick={() => beginEdit("sub",item,sub)}>
-                                        {t("sf.u31.saveSub")}</button>
-                                    </Show>
-                                    <Show when={allowed("delete-sub") && reference(sub.id) && itemRef()}>
-                                      <button type="button" class="mx-btn danger"
-                                        onClick={() => beginRemove("delete-sub",item,sub)}>
-                                        {t("sf.u31.deleteSub")}</button>
-                                    </Show>
+                                  <th scope="row"><button type="button" class="sf-u31-open"
+                                    disabled={!reference(sub.id) || !itemRef()}
+                                    onClick={() => setStore({ focusItem: itemRef(), focusSub: reference(sub.id) })}>
+                                    <bdi>{text(sub.label) || t("sf.common.unavailable")}</bdi>
+                                    <span>{t("sf.u31.design.viewDetails")}</span>
+                                  </button></th>
+                                  <td class="sf-u31-number" data-label={t("sf.u31.design.allocation")}>{text(sub.totalWeight) || t("sf.common.unavailable")}</td>
+                                  <td class="sf-u31-number" data-label={t("sf.u31.score")}>{text(sub.score) || t("sf.common.unavailable")}</td>
+                                  <td data-label={t("sf.u31.status")}><span class="sf-u31-status">
+                                    {sub.status ? statusOptions.some((option) => option === sub.status) ? t("sf.u31.status." + sub.status) : text(sub.status) : t("sf.common.unavailable")}</span></td>
+                                  <td data-label={t("sf.u31.owner")}><bdi>{text(sub.owner) || t("sf.common.unavailable")}</bdi></td>
+                                  <td class="sf-u31-row-actions"><div class="sf-u31-actions">
+                                    <Show when={allowed("save-sub") && reference(sub.id) && itemRef()}><button type="button" class="mx-btn"
+                                      onClick={() => beginEdit("sub",item,sub)}>{t("sf.u31.design.editSub")}</button></Show>
+                                    <Show when={allowed("delete-sub") && reference(sub.id) && itemRef()}><button type="button" class="mx-btn danger"
+                                      onClick={() => beginRemove("delete-sub",item,sub)}>{t("sf.u31.deleteSub")}</button></Show>
                                   </div></td>
                                 </tr>}</For>
                               </tbody></table>
                             </div>
                           </Show>
-                          <Show when={store.focusItem === itemRef() && store.focusSub}>
-                            <For each={(item.subs || []).filter((sub) => reference(sub.id) === store.focusSub)}>
-                              {(sub) => <dl class="sf-u31-definitions">
-                                <dt>{t("sf.u31.objective")}</dt><dd><bdi>{text(sub.objective)}</bdi></dd>
-                                <dt>{t("sf.u31.target")}</dt><dd><bdi>{text(sub.target)}</bdi></dd>
-                                <dt>{t("sf.u31.co1")}</dt><dd><bdi>{text(sub.co1)}</bdi></dd>
-                                <dt>{t("sf.u31.co2")}</dt><dd><bdi>{text(sub.co2)}</bdi></dd>
-                                <dt>{t("sf.u31.notes")}</dt><dd><bdi>{text(sub.notes)}</bdi></dd>
-                                <dt>{t("sf.u31.q1") + " " + t("sf.u31.status")}</dt><dd><bdi>{text(sub.statusQ1)}</bdi></dd>
-                                <dt>{t("sf.u31.q2") + " " + t("sf.u31.status")}</dt><dd><bdi>{text(sub.statusQ2)}</bdi></dd>
-                                <dt>{t("sf.u31.q3") + " " + t("sf.u31.status")}</dt><dd><bdi>{text(sub.statusQ3)}</bdi></dd>
-                                <dt>{t("sf.u31.q4") + " " + t("sf.u31.status")}</dt><dd><bdi>{text(sub.statusQ4)}</bdi></dd>
-                              </dl>}
-                            </For>
-                          </Show>
+                          <details class="sf-u31-source">
+                            <summary>{t("sf.u31.design.itemSource")}</summary>
+                            <dl class="sf-u31-definitions">
+                              <div><dt>{t("sf.u31.design.reference")}</dt><dd>{itemRef() || t("sf.common.unavailable")}</dd></div>
+                              <Show when={item.color !== undefined}><div><dt>{t("sf.u31.color")}</dt><dd><bdi>{text(item.color) || t("sf.common.unavailable")}</bdi></dd></div></Show>
+                            </dl>
+                            <Show when={allowed("delete-item") && itemRef()}><button type="button" class="mx-btn danger"
+                              onClick={() => beginRemove("delete-item",item)}>{t("sf.u31.deleteItem")}</button></Show>
+                          </details>
                         </article>
-                      }}
-                    </For>
-                  </div>
-                </Show>
-              </section>
-              <section class="sf-u31-panel" id="owner-dashboard" aria-labelledby="sf-u31-owners">
-                <h2 id="sf-u31-owners">{t("sf.u31.ownerDashboard")}</h2>
-                <p>{t("sf.common.currentSource")}</p>
-                <Show when={ownerAssignments().length} fallback={<p>{t("sf.common.empty")}</p>}>
-                  <div class="sf-u31-rows" role="region" aria-label={t("sf.u31.ownerDashboard")} tabindex="0">
-                    <table><thead><tr><th scope="col">{t("sf.u31.owner")}</th>
-                      <th scope="col">{t("sf.u31.role")}</th>
-                      <th scope="col">{t("sf.u31.subName")}</th>
-                      <th scope="col">{t("sf.u31.allocations")}</th>
-                    </tr></thead><tbody>
-                      <For each={ownerAssignments()}>{(assignment) => <tr>
-                        <th scope="row"><bdi>{assignment.name}</bdi></th>
-                        <td>{t("sf.u31." + assignment.role)}</td>
-                        <td><bdi>{assignment.item + " / " + assignment.sub}</bdi></td>
-                        <td><bdi>{text(assignment.weight)}</bdi></td>
-                      </tr>}</For>
-                    </tbody></table>
-                  </div>
-                </Show>
-              </section>
+                      }}</For>
+                    </div>
+                  </Show>
+                </section>
+
+                <section class="sf-u31-panel" id="owner-dashboard" aria-labelledby="sf-u31-owners">
+                  <header class="sf-u31-section-head">
+                    <div><h2 id="sf-u31-owners">{t("sf.u31.ownerDashboard")}</h2>
+                      <p class="sf-u31-caption">{t("sf.u31.design.ownerHint")}</p></div>
+                  </header>
+                  <Show when={ownerAssignments().length} fallback={<p class="sf-u31-empty">{t("sf.common.empty")}</p>}>
+                    <div class="sf-u31-rows" role="region" aria-label={t("sf.u31.ownerDashboard")} tabindex="0">
+                      <table><thead><tr><th scope="col">{t("sf.u31.owner")}</th>
+                        <th scope="col">{t("sf.u31.role")}</th><th scope="col">{t("sf.u31.subName")}</th>
+                        <th scope="col">{t("sf.u31.allocations")}</th>
+                      </tr></thead><tbody>
+                        <For each={ownerAssignments()}>{(assignment) => <tr>
+                          <th scope="row"><bdi>{assignment.name}</bdi></th>
+                          <td>{t("sf.u31." + assignment.role)}</td>
+                          <td><bdi>{assignment.item + " / " + assignment.sub}</bdi></td>
+                          <td class="sf-u31-number">{text(assignment.weight) || t("sf.common.unavailable")}</td>
+                        </tr>}</For>
+                      </tbody></table>
+                    </div>
+                  </Show>
+                </section>
+              </div>
+
+              <Show when={store.focusSub}>
+                <For each={items().filter((item) => reference(item.id) === store.focusItem)}>{(item) =>
+                  <For each={(item.subs || []).filter((sub) => reference(sub.id) === store.focusSub)}>{(sub) => (
+                    <section class="sf-u31-panel sf-u31-sub-detail" data-sf-performance-detail>
+                      <button type="button" class="mx-btn sf-u31-back" onClick={() => setStore({ focusItem: null, focusSub: null })}>
+                        {t("sf.common.back")}</button>
+                      <header class="sf-u31-section-head">
+                        <div><p class="sf-u31-caption"><bdi>{text(item.name)}</bdi></p>
+                          <h2><bdi>{text(sub.label) || t("sf.common.unavailable")}</bdi></h2></div>
+                        <div class="sf-u31-actions">
+                          <Show when={allowed("save-sub") && reference(sub.id) && reference(item.id)}><button type="button" class="mx-btn primary"
+                            onClick={() => beginEdit("sub",item,sub)}>{t("sf.u31.design.editSub")}</button></Show>
+                          <Show when={allowed("delete-sub") && reference(sub.id) && reference(item.id)}><button type="button" class="mx-btn danger"
+                            onClick={() => beginRemove("delete-sub",item,sub)}>{t("sf.u31.deleteSub")}</button></Show>
+                        </div>
+                      </header>
+                      <dl class="sf-u31-weights">
+                        <div><dt>{t("sf.u31.totalWeight")}</dt><dd>{text(sub.totalWeight) || t("sf.common.unavailable")}</dd></div>
+                        <div><dt>{t("sf.u31.score")}</dt><dd>{text(sub.score) || t("sf.common.unavailable")}</dd></div>
+                        <div><dt>{t("sf.u31.status")}</dt><dd class="sf-u31-status-value">
+                          {sub.status ? statusOptions.some((option) => option === sub.status) ? t("sf.u31.status." + sub.status) : text(sub.status) : t("sf.common.unavailable")}</dd></div>
+                      </dl>
+                      <dl class="sf-u31-definitions">
+                        <div><dt>{t("sf.u31.objective")}</dt><dd><bdi>{text(sub.objective) || t("sf.common.unavailable")}</bdi></dd></div>
+                        <div><dt>{t("sf.u31.target")}</dt><dd><bdi>{text(sub.target) || t("sf.common.unavailable")}</bdi></dd></div>
+                        <div class="sf-u31-wide"><dt>{t("sf.u31.description")}</dt><dd><bdi>{text(sub.description) || t("sf.common.unavailable")}</bdi></dd></div>
+                      </dl>
+                      <section class="sf-u31-detail-section" aria-label={t("sf.u31.design.ownership")}>
+                        <h3>{t("sf.u31.design.ownership")}</h3>
+                        <dl class="sf-u31-definitions">
+                          <div><dt>{t("sf.u31.owner")}</dt><dd><bdi>{text(sub.owner) || t("sf.common.unavailable")}</bdi></dd></div>
+                          <div><dt>{t("sf.u31.ownerWeight")}</dt><dd>{text(sub.ownerWeight) || t("sf.common.unavailable")}</dd></div>
+                          <div><dt>{t("sf.u31.co1")}</dt><dd><bdi>{text(sub.co1) || t("sf.common.unavailable")}</bdi></dd></div>
+                          <div><dt>{t("sf.u31.co1Weight")}</dt><dd>{text(sub.co1Weight) || t("sf.common.unavailable")}</dd></div>
+                          <div><dt>{t("sf.u31.co2")}</dt><dd><bdi>{text(sub.co2) || t("sf.common.unavailable")}</bdi></dd></div>
+                          <div><dt>{t("sf.u31.co2Weight")}</dt><dd>{text(sub.co2Weight) || t("sf.common.unavailable")}</dd></div>
+                        </dl>
+                      </section>
+                      <section class="sf-u31-detail-section" aria-label={t("sf.u31.design.quarterly")}>
+                        <h3>{t("sf.u31.design.quarterly")}</h3>
+                        <dl class="sf-u31-quarters">
+                          <For each={["q1", "q2", "q3", "q4"] as const}>{(quarter) => <div>
+                            <dt>{t("sf.u31." + quarter)}</dt>
+                            <dd><bdi>{text(sub[quarter]) || t("sf.common.unavailable")}</bdi></dd>
+                            <dd class="sf-u31-caption"><bdi>{text(sub[quarter === "q1" ? "statusQ1" : quarter === "q2" ? "statusQ2"
+                              : quarter === "q3" ? "statusQ3" : "statusQ4"]) || t("sf.common.unavailable")}</bdi></dd>
+                          </div>}</For>
+                        </dl>
+                      </section>
+                      <section class="sf-u31-detail-section">
+                        <h3>{t("sf.u31.notes")}</h3><p class="sf-u31-note"><bdi>{text(sub.notes) || t("sf.common.unavailable")}</bdi></p>
+                      </section>
+                    </section>
+                  )}</For>
+                }</For>
+              </Show>
             </div>
             <Show when={store.mode === "edit" && snapshot()?.availability === "active" ? active() : null}>
               {(editing) => {
@@ -670,34 +731,42 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                   if (previous.availability === "active")
                     editing().controller.edit({ ...previous.value, [field]: value })
                 }
-                return <form class="sf-u31-panel" data-sf-performance-editor
+                return <form class="sf-u31-panel sf-u31-editor" data-sf-performance-editor data-sf-editor
                   onSubmit={(event) => { event.preventDefault(); beginReview() }}>
-                  <h2>{t(editing().command === "save" ? "sf.u31.saveContract"
-                    : editing().command === "save-item" ? "sf.u31.saveItem" : "sf.u31.saveSub")}</h2>
-                  <div class="sf-u31-fieldset">
-                    <For each={EDIT_FIELDS[draft()?.kind || "item"]}>
-                      {(field) => <label>{t(field.label)}
+                  <header class="sf-u31-editor-head">
+                    <h2>{t(editing().command === "save" ? "sf.u31.design.editContract"
+                      : editing().command === "save-item" ? "sf.u31.design.editItem" : "sf.u31.design.editSub")}</h2>
+                    <p class="sf-u31-caption">{t("sf.u31.design.editHint")}</p>
+                  </header>
+                  <For each={EDIT_GROUPS[draft()?.kind || "item"]}>{(group) => (
+                    <fieldset class="sf-u31-field-group">
+                      <legend>{t(group.label)}</legend>
+                      <div class="sf-u31-fieldset">
+                    <For each={groupFields(draft()?.kind || "item", group.fields)}>
+                      {(field) => <label data-field-kind={field.kind} data-field-name={field.name}>{t(field.label)}
                         <Show when={field.kind === "textarea"} fallback={
                           <Show when={field.kind === "select"} fallback={
-                            <input type={field.kind === "number" ? "number" : "text"}
+                            <input name={field.name} aria-label={t(field.label)} type={field.kind === "number" ? "number" : "text"}
                               step={field.kind === "number" ? "any" : undefined}
                               min={field.name === "score" ? 1 : undefined}
                               required={field.required} value={draft() ? text(draft()![field.name]) : ""}
                               onInput={(event) => modify(field.name,event.currentTarget.value)} />
                           }>
-                            <select value={draft() ? text(draft()![field.name]) : ""}
+                            <select name={field.name} aria-label={t(field.label)} value={draft() ? text(draft()![field.name]) : ""}
                               onChange={(event) => modify(field.name,event.currentTarget.value)}>
                               <For each={field.options || []}>{(option) =>
                                 <option value={option}>{t("sf.u31.status." + (option || "blank"))}</option>}</For>
                             </select>
                           </Show>
                         }>
-                          <textarea value={draft() ? text(draft()![field.name]) : ""}
+                          <textarea name={field.name} aria-label={t(field.label)} value={draft() ? text(draft()![field.name]) : ""}
                             onInput={(event) => modify(field.name,event.currentTarget.value)} />
                         </Show>
                       </label>}
                     </For>
-                  </div>
+                      </div>
+                    </fieldset>
+                  )}</For>
                   <div class="sf-u31-actions">
                     <button type="submit" class="mx-btn primary" disabled={store.busy || store.uncertain}>
                       {t("sf.common.review")}
@@ -712,22 +781,22 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                 </form>
               }}
             </Show>
-            <Show when={store.mode === "review-edit" && snapshot()?.availability === "active" ? active() : null}>
+            <Show when={store.mode === "review-edit" && snapshot()?.availability === "active" ? active() : null} keyed>
               {(editing) => {
-                const currentDraft = () => editing().controller.snapshot()
+                const currentDraft = () => editing.controller.snapshot()
                 const proposed = () => { const state = currentDraft(); return state.availability === "active" ? state.value : undefined }
-                return <section class="sf-u31-panel" aria-label={t("sf.common.review")}>
-                  <label><input type="checkbox" checked={store.confirmedWeights}
+                return <section class="sf-u31-panel sf-u31-review" aria-label={t("sf.common.review")}>
+                  <label class="sf-u31-confirm"><input type="checkbox" checked={store.confirmedWeights}
                     onChange={(event) => setStore("confirmedWeights", event.currentTarget.checked)} />
                     {t("sf.u31.confirmWeights")}</label>
                   <SfChangeReview
-                    operation={{ ref: editing().operationRef,
-                      label: labelMessage(editing().command === "save" ? "sf.u31.saveContract"
-                        : editing().command === "save-item" ? "sf.u31.saveItem" : "sf.u31.saveSub"),
+                    operation={{ ref: editing.operationRef,
+                      label: labelMessage(editing.command === "save" ? "sf.u31.saveContract"
+                        : editing.command === "save-item" ? "sf.u31.saveItem" : "sf.u31.saveSub"),
                       scope: { kind: "message", message: labelMessage("sf.cap16.title") } }}
                     base={sourceReview()} current={sourceReview()}
                     proposed={(() => {
-                      const identity = editing().identity
+                      const identity = editing.identity
                       const state = currentDraft()
                       const value = state.availability === "active" ? state.value : undefined
                       return { kind: "draft" as const, intentRef: identity.kind === "new"
@@ -742,9 +811,9 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                     coverage={{ state: "complete", summary: labelMessage("sf.common.currentSource"),
                       reasons: [], knownCount: null, expectedCount: null }}
                     blockingReasons={store.uncertain ? [labelMessage("sf.common.operationUnknown")] : []}
-                    confirmation={!store.uncertain && allowed(editing().command)
+                    confirmation={!store.uncertain && allowed(editing.command)
                       ? { kind: "admitted", labelKey: key("sf.common.save"), purpose: "save",
-                        binding: { kind: "catalog-command", operationId: opId[editing().command],
+                        binding: { kind: "catalog-command", operationId: opId[editing.command],
                           version: { kind: "record", expectedVersion: store.cas! },
                           confirmation: store.confirmedWeights ? "producer-confirmed-field" : "presentation-only" } }
                       : { kind: "blocked", labelKey: key("sf.common.unavailable"),
@@ -759,7 +828,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
               }}
             </Show>
             <Show when={store.mode === "review-delete" ? removal() : null}>
-              {(target) => <section class="sf-u31-panel" aria-label={t("sf.common.review")}>
+              {(target) => <section class="sf-u31-panel sf-u31-review" aria-label={t("sf.common.review")}>
                 <SfChangeReview operation={{ ref: target().operationRef,
                   label: labelMessage(target().kind === "delete-item" ? "sf.u31.deleteItem" : "sf.u31.deleteSub"),
                   scope: { kind: "message", message: labelMessage("sf.cap16.title") } }}

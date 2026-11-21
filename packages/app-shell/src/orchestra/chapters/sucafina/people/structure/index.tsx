@@ -79,7 +79,8 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
     deleting: DeleteIntent | undefined
     pendingDelete: boolean
     message: string
-  }>({ selection: undefined, deleting: undefined, pendingDelete: false, message: "" })
+    search: string
+  }>({ selection: undefined, deleting: undefined, pendingDelete: false, message: "", search: "" })
   const current = () => session.ready()
   const source = () => current()?.value.data
   const selectionFromRoute = (): Selection | undefined => {
@@ -107,8 +108,8 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
   const leader = (id: string) => source()?.leaders.find((person) => person.id === id)
   const member = (id: string) => source()?.members.find((person) => person.id === id)
   const nameForLeader = (leaderId: string | number | undefined) =>
-    source()?.leaders.find((person) => person.id === String(leaderId ?? ""))?.name ??
-      t(key("sf.u03.noLeader"))
+    leaderId === undefined || String(leaderId) === "" ? t(key("sf.u03.noLeader")) :
+      source()?.leaders.find((person) => person.id === String(leaderId))?.name ?? String(leaderId)
   const version = (kind: string, id: string) => current()?.value.versions[kind + ":" + id] ?? 0
   const close = () => {
     setLocal("selection", undefined)
@@ -260,180 +261,219 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
     session.ui() === "unavailable" ? sfCommonKey("sf.common.unavailable") :
     session.ui() === "stale" ? sfCommonKey("sf.common.stale") :
     sfCommonKey("sf.common.loading")
+  const visibleMembers = () => {
+    const search = local.search.trim().toLocaleLowerCase()
+    return source()?.members.filter((person) => !search ||
+      [person.name, person.title, person.location, nameForLeader(person.leaderId)]
+        .some((value) => String(value ?? "").toLocaleLowerCase().includes(search))) ?? []
+  }
+  const fieldValue = (field: string, value: unknown) => {
+    if (value === undefined || value === null || value === "") return t(key("sf.u03.design.notRecorded"))
+    if (field === "leaderId") return nameForLeader(String(value))
+    const labels: Readonly<Record<string, SfCopyKey>> = {
+      Active: key("sf.u03.active"), "On Leave": key("sf.u03.onLeave"),
+      Terminated: key("sf.u03.terminated"), Employee: key("sf.u03.employee"), Contractor: key("sf.u03.contractor"),
+    }
+    return (field === "status" || field === "type") && labels[String(value)] ?
+      t(labels[String(value)]!) : String(value)
+  }
   return (
-    <SfPageFrame titleKey={key("sf.cap07.title")}
-      context={current() ? [{ id: "installation", label: { key: key("sf.u03.installation") },
-        value: { kind: "data", text: current()!.context.stamp.installationId } }] : []}
+    <SfPageFrame titleKey={key("sf.cap07.title")} context={[]}
       tabs={[]} activeTab={null}
-      primaryAction={{
+      primaryAction={!selected() && !local.deleting ? {
         id: "add-member", labelKey: key("sf.cap07.primary"),
         tone: "primary", disabled: !session.can("saveMember"), busy: false,
         reasonKey: !session.can("saveMember") ? sfCommonKey("sf.common.readOnly") : undefined,
         onInvoke: () => setLocal("selection", { kind: "new-member", edit: true }),
-      }}
+      } : undefined}
       secondaryActions={[]} density="comfortable" layout="work"
       onLayoutMode={() => undefined}>
+      <div class="sf-people-workspace" data-sf-wave="three" data-sf-surface="CAP07"
+        data-sf-stage={local.deleting ? "delete" : selected()?.edit ? "editor" : selected() ? "detail" : "collection"}>
       <SfStatePanel state={session.ui()} messageKey={stateMessage()}
         onRetryRead={() => { void session.reload() }}>
         <Show when={source()}>
           {(data) => (
             <>
-              <section class="sf-people-section" aria-label={t(key("sf.u03.cio"))}>
-                <h2>{t(key("sf.u03.cio"))}</h2>
-                <div class="sf-people-detail mx-card">
-                  <dl>
-                    <div><dt>{t(key("sf.u03.name"))}</dt><dd>{data().cio.name ?? "—"}</dd></div>
-                    <div><dt>{t(key("sf.u03.title"))}</dt><dd>{data().cio.title ?? "—"}</dd></div>
-                    <div><dt>{t(key("sf.u03.location"))}</dt><dd>{data().cio.location ?? "—"}</dd></div>
-                    <div><dt>{t(key("sf.u03.start"))}</dt><dd>{data().cio.start ?? "—"}</dd></div>
+              <div class="sf-people-collection" hidden={!!selected() || !!local.deleting}>
+                <p class="sf-people-lead">{t(key("sf.u03.design.structureLead"))}</p>
+                <section class="sf-people-section sf-people-cio" aria-label={t(key("sf.u03.cio"))}>
+                  <div class="sf-people-section-heading">
+                    <div>
+                      <p class="sf-people-eyebrow">{t(key("sf.u03.cio"))}</p>
+                      <h2><bdi>{data().cio.name || t(key("sf.u03.design.notRecorded"))}</bdi></h2>
+                      <p><bdi>{data().cio.title || t(key("sf.u03.design.notRecorded"))}</bdi></p>
+                    </div>
+                    <Show when={session.can("saveCio")}>
+                      <button type="button" class="mx-btn"
+                        onClick={() => setLocal("selection", { kind: "cio", edit: true })}>
+                        {t(key("sf.u03.editCio"))}
+                      </button>
+                    </Show>
+                  </div>
+                  <dl class="sf-people-profile-meta">
+                    <div><dt>{t(key("sf.u03.location"))}</dt><dd>{data().cio.location || t(key("sf.u03.design.notRecorded"))}</dd></div>
+                    <div><dt>{t(key("sf.u03.start"))}</dt><dd>{data().cio.start || t(key("sf.u03.design.notRecorded"))}</dd></div>
                   </dl>
-                  <Show when={session.can("saveCio")}>
-                    <button type="button" class="mx-btn"
-                      onClick={() => setLocal("selection", { kind: "cio", edit: true })}>
-                      {t(key("sf.u03.editCio"))}
-                    </button>
+                </section>
+                <section class="sf-people-section" aria-label={t(key("sf.u03.leaders"))}>
+                  <div class="sf-people-section-heading">
+                    <div><h2>{t(key("sf.u03.leaders"))}</h2><p>{t(key("sf.u03.design.leadersLead"))}</p></div>
+                    <Show when={session.can("saveLeader")}>
+                      <button class="mx-btn" type="button"
+                        onClick={() => setLocal("selection", { kind: "new-leader", edit: true })}>
+                        {t(key("sf.u03.addLeader"))}
+                      </button>
+                    </Show>
+                  </div>
+                  <div class="sf-people-table-region" role="region" tabindex="0" aria-label={t(key("sf.u03.leaders"))}>
+                    <table class="sf-people-table">
+                      <thead><tr>
+                        <th scope="col">{t(key("sf.u03.leader"))}</th>
+                        <th scope="col">{t(key("sf.u03.domain"))}</th>
+                        <th scope="col">{t(key("sf.u03.members"))}</th>
+                        <th scope="col">{t(key("sf.u03.design.actions"))}</th>
+                      </tr></thead>
+                      <tbody><For each={data().leaders}>
+                        {(person) => (
+                          <tr data-sf-record={person.id}>
+                            <th scope="row" data-label={t(key("sf.u03.leader"))}>
+                              <button type="button" class="sf-people-record-link"
+                                onClick={() => setLocal("selection", { kind: "leader", id: person.id, edit: false })}>
+                                <bdi>{person.name ?? person.id}</bdi>
+                              </button>
+                              <Show when={person.title}><small class="sf-people-row-meta"><bdi>{person.title}</bdi></small></Show>
+                            </th>
+                            <td data-label={t(key("sf.u03.domain"))}>{person.domain || t(key("sf.u03.design.notRecorded"))}</td>
+                            <td data-label={t(key("sf.u03.members"))}>
+                              <span class="sf-people-member-names">{data().members.filter((row) => String(row.leaderId ?? "") === person.id)
+                                .map((row) => row.name ?? row.id).join(", ") || t(key("sf.u03.design.notRecorded"))}</span>
+                            </td>
+                            <td data-label={t(key("sf.u03.design.actions"))}><div class="sf-people-row-actions">
+                              <Show when={session.can("saveLeader")}>
+                                <button type="button" class="mx-btn"
+                                  onClick={() => setLocal("selection", { kind: "leader", id: person.id, edit: true })}>{t(key("sf.u03.edit"))}</button>
+                              </Show>
+                              <Show when={session.can("deleteLeader")}>
+                                <button type="button" class="mx-btn sf-people-danger"
+                                  onClick={() => chooseDelete("leader", person.id)}>{t(key("sf.u03.deleteLeader"))}</button>
+                              </Show>
+                            </div></td>
+                          </tr>
+                        )}
+                      </For></tbody>
+                    </table>
+                  </div>
+                  <Show when={!data().leaders.length}>
+                    <SfStatePanel state="empty" messageKey={sfCommonKey("sf.common.empty")} />
                   </Show>
-                </div>
-              </section>
-              <section class="sf-people-section" aria-label={t(key("sf.u03.leaders"))}>
-                <div class="sf-people-toolbar">
-                  <h2>{t(key("sf.u03.leaders"))}</h2>
-                  <Show when={session.can("saveLeader")}>
-                    <button class="mx-btn" type="button"
-                      onClick={() => setLocal("selection", { kind: "new-leader", edit: true })}>
-                      {t(key("sf.u03.addLeader"))}
-                    </button>
+                </section>
+                <section class="sf-people-section" aria-label={t(key("sf.u03.members"))}>
+                  <div class="sf-people-section-heading"><div>
+                    <h2>{t(key("sf.u03.members"))}</h2><p>{t(key("sf.u03.design.membersLead"))}</p>
+                  </div></div>
+                  <div class="sf-people-toolbar">
+                    <label class="sf-people-search">{t(key("sf.u03.design.searchMembers"))}
+                      <input type="search" value={local.search}
+                        onInput={(event) => setLocal("search", event.currentTarget.value)} />
+                    </label>
+                  </div>
+                  <div class="sf-people-table-region" role="region" tabindex="0" aria-label={t(key("sf.u03.members"))}>
+                    <table class="sf-people-table">
+                      <thead><tr>
+                        <th scope="col">{t(key("sf.u03.name"))}</th><th scope="col">{t(key("sf.u03.leader"))}</th>
+                        <th scope="col">{t(key("sf.u03.status"))}</th><th scope="col">{t(key("sf.u03.design.actions"))}</th>
+                      </tr></thead>
+                      <tbody><For each={visibleMembers()}>
+                        {(person) => (
+                          <tr data-sf-record={person.id}>
+                            <th scope="row" data-label={t(key("sf.u03.name"))}>
+                              <button type="button" class="sf-people-record-link"
+                                onClick={() => setLocal("selection", { kind: "member", id: person.id, edit: false })}>
+                                <bdi>{person.name ?? person.id}</bdi>
+                              </button>
+                              <Show when={person.title}><small class="sf-people-row-meta"><bdi>{person.title}</bdi></small></Show>
+                            </th>
+                            <td data-label={t(key("sf.u03.leader"))}><bdi>{nameForLeader(person.leaderId)}</bdi></td>
+                            <td data-label={t(key("sf.u03.status"))}><span class="sf-people-status">{fieldValue("status", person.status)}</span></td>
+                            <td data-label={t(key("sf.u03.design.actions"))}><div class="sf-people-row-actions">
+                              <Show when={session.can("saveMember")}>
+                                <button type="button" class="mx-btn"
+                                  onClick={() => setLocal("selection", { kind: "member", id: person.id, edit: true })}>{t(key("sf.u03.edit"))}</button>
+                              </Show>
+                              <Show when={session.can("deleteMember")}>
+                                <button type="button" class="mx-btn sf-people-danger"
+                                  onClick={() => chooseDelete("member", person.id)}>{t(key("sf.u03.deleteMember"))}</button>
+                              </Show>
+                            </div></td>
+                          </tr>
+                        )}
+                      </For></tbody>
+                    </table>
+                  </div>
+                  <Show when={!visibleMembers().length}>
+                    <SfStatePanel state={data().members.length ? "filtered-empty" : "empty"}
+                      messageKey={data().members.length ? key("sf.u03.design.noMembers") : sfCommonKey("sf.common.empty")} />
                   </Show>
+                </section>
+              </div>
+              <Show when={selected() && !local.deleting}>
+                <div class="sf-people-stage-nav">
+                  <button type="button" class="mx-btn" onClick={close}>{t(key("sf.u03.design.backToStructure"))}</button>
                 </div>
-                <div class="sf-people-table-region" role="region" tabindex="0"
-                  aria-label={t(key("sf.u03.leaders"))}>
-                  <table class="sf-people-table">
-                    <thead><tr>
-                      <th scope="col">{t(key("sf.u03.leader"))}</th>
-                      <th scope="col">{t(key("sf.u03.domain"))}</th>
-                      <th scope="col">{t(key("sf.u03.members"))}</th>
-                      <th scope="col">{t(key("sf.u03.edit"))}</th>
-                    </tr></thead>
-                    <tbody><For each={data().leaders}>
-                      {(person) => (
-                        <tr aria-selected={selected()?.kind === "leader" && selectedId() === person.id}>
-                          <th scope="row"><button type="button" class="mx-btn"
-                            onClick={() => setLocal("selection", { kind: "leader", id: person.id, edit: false })}>
-                            {person.name ?? person.id}
-                          </button></th>
-                          <td>{person.domain ?? "—"}</td>
-                          <td>{data().members.filter((row) => String(row.leaderId ?? "") === person.id)
-                            .map((row) => row.name ?? row.id).join(", ") || "—"}</td>
-                          <td>
-                            <Show when={session.can("saveLeader")}>
-                              <button type="button" class="mx-btn"
-                                onClick={() => setLocal("selection", { kind: "leader", id: person.id, edit: true })}>
-                                {t(key("sf.u03.edit"))}
-                              </button>
-                            </Show>
-                            <Show when={session.can("deleteLeader")}>
-                              <button type="button" class="mx-btn"
-                                onClick={() => chooseDelete("leader", person.id)}>
-                                {t(key("sf.u03.deleteLeader"))}
-                              </button>
-                            </Show>
-                          </td>
-                        </tr>
-                      )}
-                    </For></tbody>
-                  </table>
-                </div>
-              </section>
-              <section class="sf-people-section" aria-label={t(key("sf.u03.members"))}>
-                <h2>{t(key("sf.u03.members"))}</h2>
-                <div class="sf-people-table-region" role="region" tabindex="0"
-                  aria-label={t(key("sf.u03.members"))}>
-                  <table class="sf-people-table">
-                    <thead><tr>
-                      <th scope="col">{t(key("sf.u03.name"))}</th>
-                      <th scope="col">{t(key("sf.u03.leader"))}</th>
-                      <th scope="col">{t(key("sf.u03.status"))}</th>
-                      <th scope="col">{t(key("sf.u03.edit"))}</th>
-                    </tr></thead>
-                    <tbody><For each={data().members}>
-                      {(person) => (
-                        <tr aria-selected={selected()?.kind === "member" && selectedId() === person.id}>
-                          <th scope="row"><button type="button" class="mx-btn"
-                            onClick={() => setLocal("selection", { kind: "member", id: person.id, edit: false })}>
-                            {person.name ?? person.id}
-                          </button></th>
-                          <td>{nameForLeader(person.leaderId)}</td>
-                          <td>{person.status ?? "—"}</td>
-                          <td>
-                            <Show when={session.can("saveMember")}>
-                              <button type="button" class="mx-btn"
-                                onClick={() => setLocal("selection", { kind: "member", id: person.id, edit: true })}>
-                                {t(key("sf.u03.edit"))}
-                              </button>
-                            </Show>
-                            <Show when={session.can("deleteMember")}>
-                              <button type="button" class="mx-btn"
-                                onClick={() => chooseDelete("member", person.id)}>
-                                {t(key("sf.u03.deleteMember"))}
-                              </button>
-                            </Show>
-                          </td>
-                        </tr>
-                      )}
-                    </For></tbody>
-                  </table>
-                </div>
-              </section>
-              <Show when={selected() && !selected()!.edit}>
+              </Show>
+              <Show when={selected() && !selected()!.edit && !local.deleting}>
                 <section class="sf-people-section sf-people-detail" data-sf-selection="details">
-                  <h2>{t(key("sf.u03.details"))}</h2>
-                  <Show when={detailRow()}
-                    fallback={<SfStatePanel state="not-found" messageKey={sfCommonKey("sf.common.removed")} />}>
+                  <div class="sf-people-section-heading">
+                    <div><p class="sf-people-eyebrow">{t(key("sf.u03.details"))}</p>
+                      <h2><bdi>{detailRow()?.name || t(key("sf.u03.design.notRecorded"))}</bdi></h2></div>
+                    <Show when={detailRow() && session.can(selected()?.kind === "leader" ? "saveLeader" : "saveMember")}>
+                      <button type="button" class="mx-btn primary" onClick={() => {
+                        const choice = selected()
+                        if (choice?.kind === "leader" || choice?.kind === "member") setLocal("selection", { ...choice, edit: true })
+                      }}>{t(key("sf.u03.edit"))}</button>
+                    </Show>
+                  </div>
+                  <Show when={detailRow()} fallback={<SfStatePanel state="not-found" messageKey={sfCommonKey("sf.common.removed")} />}>
                     {(row) => <dl>
-                      <For each={Object.entries(row()).filter(([field]) =>
-                        !["id", "cls", "outlook", "notes"].includes(field))}>
-                        {([field, value]) => <div><dt>{t(fieldCopy[field] ?? key("sf.u03.details"))}</dt><dd>{String(value ?? "")}</dd></div>}
+                      <For each={Object.entries(row()).filter(([field]) => !["id", "cls", "outlook", "notes"].includes(field))}>
+                        {([field, value]) => <div><dt>{t(fieldCopy[field] ?? key("sf.u03.details"))}</dt><dd><bdi>{fieldValue(field, value)}</bdi></dd></div>}
                       </For>
                     </dl>}
                   </Show>
                 </section>
               </Show>
-              <Show when={activeEditor()}>
-                {(editor) => <section class="sf-people-section" data-sf-selection="editor">
-                  <SfPeopleEditor surfaceId="CAP07"
-                    scopeKey={"people:structure:" + String(props.route.query.year ?? "current")}
-                    entity={editor().entity}
-                    recordRef={editor().recordRef}
-                    version={editor().version}
-                    original={editor().original}
-                    fields={editor().fields} action={editor().action}
-                    admitted={session.can(editor().action.id)}
-                    drafts={session.ready()!.drafts}
-                    onClose={close}
-                    onCommit={(values, expected, keyId, signal) =>
-                      saveRecord(editor().choice, values, expected, keyId, signal)}
-                  />
-                </section>}
-              </Show>
+              <div hidden={!!local.deleting}>
+                <Show when={activeEditor()}>
+                  {(editor) => <section class="sf-people-editor-stage" data-sf-selection="editor">
+                    <SfPeopleEditor surfaceId="CAP07"
+                      scopeKey={"people:structure:" + String(props.route.query.year ?? "current")}
+                      entity={editor().entity} recordRef={editor().recordRef} version={editor().version}
+                      original={editor().original} fields={editor().fields} action={editor().action}
+                      admitted={session.can(editor().action.id)} drafts={session.ready()!.drafts}
+                      onClose={close}
+                      onCommit={(values, expected, keyId, signal) => saveRecord(editor().choice, values, expected, keyId, signal)}
+                    />
+                  </section>}
+                </Show>
+              </div>
               <Show when={local.deleting}>
                 {(intent) => <section class="sf-people-deletion" role="alertdialog"
-                  aria-labelledby="sf-people-delete-title" aria-modal="false">
-                  <h2 id="sf-people-delete-title">
-                    {t(key(intent().kind === "leader" ? "sf.u03.deleteLeader" : "sf.u03.deleteMember"))}
-                  </h2>
-                  <p>{intent().kind === "leader" ? leader(intent().id)?.name : member(intent().id)?.name}</p>
+                  aria-labelledby="sf-people-delete-title" aria-describedby="sf-people-delete-hint" aria-modal="false">
+                  <p class="sf-people-eyebrow">{t(key("sf.u03.details"))}</p>
+                  <h2 id="sf-people-delete-title">{t(key(intent().kind === "leader" ? "sf.u03.deleteLeader" : "sf.u03.deleteMember"))}</h2>
+                  <p id="sf-people-delete-hint">{t(key("sf.u03.design.deleteHint"))}</p>
+                  <p class="sf-people-delete-record"><bdi>{intent().kind === "leader" ? leader(intent().id)?.name ?? intent().id : member(intent().id)?.name ?? intent().id}</bdi></p>
                   <Show when={intent().kind === "leader"}>
                     <p>{t(key("sf.u03.affectedMembers"))}: {data().members.filter(
                       (person) => String(person.leaderId ?? "") === intent().id).length}</p>
                   </Show>
-                  <button type="button" class="mx-btn" disabled={local.pendingDelete}
-                    onClick={() => { void confirmDelete() }}>
-                    {t(key("sf.u03.delete"))}
-                  </button>
-                  <button type="button" class="mx-btn" disabled={local.pendingDelete}
-                    onClick={() => setLocal("deleting", undefined)}>
-                    {t(sfCommonKey("sf.common.back"))}
-                  </button>
+                  <div class="sf-people-actions">
+                    <button type="button" class="mx-btn sf-people-danger" disabled={local.pendingDelete}
+                      onClick={() => { void confirmDelete() }}>{t(key("sf.u03.delete"))}</button>
+                    <button type="button" class="mx-btn" disabled={local.pendingDelete}
+                      onClick={() => setLocal("deleting", undefined)}>{t(sfCommonKey("sf.common.back"))}</button>
+                  </div>
                 </section>}
               </Show>
               <Show when={local.message}><p role="alert" class="sf-people-error">{local.message}</p></Show>
@@ -441,6 +481,7 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
           )}
         </Show>
       </SfStatePanel>
+      </div>
     </SfPageFrame>
   )
 }

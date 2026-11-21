@@ -91,7 +91,10 @@ export function vendorCommandInput(
   action: SfVendorAction, ref: SfRef | undefined, version: number, values: SfVendorEdit,
 ): SfVendorSave | Parameters<DomainClient["domain.command.CAP14.delete"]>[0] {
   if (action === "delete") return { id: ref, version, values: {} }
-  return { ...(ref ? { id: ref } : {}), version, values }
+  // Snapshot the review store before hashing or dispatching. Reactive metadata
+  // and undefined optionals are not JSON fields; every other value stays literal.
+  return { ...(ref ? { id: ref } : {}), version,
+    values: Object.fromEntries(Object.entries(values).filter(([, value]) => value !== undefined)) }
 }
 
 export function vendorAuthorizedAction(

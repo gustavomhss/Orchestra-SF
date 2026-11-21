@@ -63,7 +63,7 @@ export function SfSourceNavigation(props: Readonly<{
   createEffect(() => {
     const surface = props.route()?.surfaceId
     void links()
-    if (surface !== "CAP01" && surface !== "CAP02" && surface !== "CAP03" && surface !== "CAP04") return
+    if (!surface || !/^CAP(?:0[1-9]|1[0-9])$/.test(surface)) return
     const reveal = () => {
       const strip = navigation
       const active = strip?.querySelector<HTMLElement>('a[aria-current="page"]')

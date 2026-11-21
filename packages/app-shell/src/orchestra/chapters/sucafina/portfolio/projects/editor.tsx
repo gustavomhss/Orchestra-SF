@@ -1,10 +1,11 @@
-import { createMemo, For, Show, type JSX } from "solid-js"
+import { createMemo, createUniqueId, For, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SF_U05_COPY } from "@/i18n/orchestra-chapters/sf-u05"
 import type { SfPublicDraftController } from "../../context/contracts"
-import type { SfProjectEdit, SfProjectMilestone } from "./model"
+import type { SfProjectEdit, SfProjectMilestone, SfProjectRecord } from "./model"
 import { MILESTONE_STATUS, PROJECT_RISK, PROJECT_STATUS, sfProjectValues } from "./model"
+import { sfProjectStatusKey, sfProjectRiskKey, sfMilestoneStatusKey } from "./presentation"
 
 type CopyKey = keyof typeof SF_U05_COPY
 const editFields: readonly { id: keyof SfProjectEdit; label: CopyKey; type: "text" | "date" | "number" | "textarea" }[] = [
@@ -22,6 +23,7 @@ const editFields: readonly { id: keyof SfProjectEdit; label: CopyKey; type: "tex
 
 export function SfProjectEditor(props: Readonly<{
   draft: SfPublicDraftController<SfProjectEdit>
+  source: SfProjectRecord | null
   allowed: boolean
   busy: boolean
   review: boolean
@@ -32,6 +34,7 @@ export function SfProjectEditor(props: Readonly<{
   onDiscard: () => void
 }>): JSX.Element {
   const language = useLanguage()
+  const fieldId = createUniqueId()
   const t = (key: CopyKey) => language.t(key as Parameters<typeof language.t>[0])
   const snapshot = () => props.draft.snapshot()
   const active = () => {
@@ -47,38 +50,45 @@ export function SfProjectEditor(props: Readonly<{
     if (!original || unavailable()) return
     props.draft.edit({ ...original, [key]: value })
   }
-  const statusKey = (status: SfProjectEdit["status"]): CopyKey =>
-    status === "Planning" ? "sf.u05.projects.status.Planning" : status === "In Progress" ?
-      "sf.u05.projects.status.InProgress" : status === "On Hold" ? "sf.u05.projects.status.OnHold" :
-        "sf.u05.projects.status.Completed"
-  const riskKey = (risk: SfProjectEdit["risk"]): CopyKey =>
-    risk === "Low" ? "sf.u05.projects.risk.Low" : risk === "Medium" ?
-      "sf.u05.projects.risk.Medium" : "sf.u05.projects.risk.High"
+  const reviewFields: readonly { id: keyof SfProjectEdit; label: CopyKey }[] = [
+    editFields[0]!, { id: "status", label: "sf.u05.projects.form.status" },
+    { id: "risk", label: "sf.u05.projects.form.risk" },
+    ...editFields.slice(1, 9), { id: "watchList", label: "sf.u05.projects.form.watchList" }, editFields[9]!,
+  ]
+  const display = (field: keyof SfProjectEdit, value: unknown) => {
+    if (value === null || value === undefined || value === "") return t("sf.u05.projects.notRecorded")
+    if (field === "status" && PROJECT_STATUS.some((status) => status === value))
+      return t(sfProjectStatusKey(value as SfProjectRecord["status"]))
+    if (field === "risk" && PROJECT_RISK.some((risk) => risk === value))
+      return t(sfProjectRiskKey(value as SfProjectRecord["risk"]))
+    if (typeof value === "boolean") return t(value ? "sf.u05.design.yes" : "sf.u05.design.no")
+    return String(value)
+  }
   return (
     <Show when={edit()} fallback={<p role="status">{t("sf.u05.projects.readOnly")}</p>}>
       {(current) => (
-        <form class="sf-u05-editor" data-sf-project-editor onSubmit={(event) => {
+        <form class="sf-u05-editor" data-sf-project-editor data-sf-stage={props.review ? "review" : "form"} onSubmit={(event) => {
           event.preventDefault()
           if (canReview() && !props.review) props.onReview()
         }}>
           <fieldset disabled={unavailable()} aria-label={t("sf.u05.projects.general")}>
             <legend>{t("sf.u05.projects.general")}</legend>
             <div class="sf-u05-editor-grid">
-              <label class="sf-u05-field">{t("sf.u05.projects.form.name")}
+              <label class="sf-u05-field" data-sf-field="name">{t("sf.u05.projects.form.name")}
                 <input required value={current().name} onInput={(event) => update("name", event.currentTarget.value)} />
               </label>
-              <label class="sf-u05-field">{t("sf.u05.projects.form.status")}
-                <select value={current().status} onChange={(event) => update("status", event.currentTarget.value as SfProjectEdit["status"])}>
-                  <For each={PROJECT_STATUS}>{(status) => <option value={status}>{t(statusKey(status))}</option>}</For>
+              <div class="sf-u05-field"><label for={fieldId + "-status"}>{t("sf.u05.projects.form.status")}</label>
+                <select id={fieldId + "-status"} value={current().status} onChange={(event) => update("status", event.currentTarget.value as SfProjectEdit["status"])}>
+                  <For each={PROJECT_STATUS}>{(status) => <option value={status}>{t(sfProjectStatusKey(status))}</option>}</For>
                 </select>
-              </label>
-              <label class="sf-u05-field">{t("sf.u05.projects.form.risk")}
-                <select value={current().risk} onChange={(event) => update("risk", event.currentTarget.value as SfProjectEdit["risk"])}>
-                  <For each={PROJECT_RISK}>{(risk) => <option value={risk}>{t(riskKey(risk))}</option>}</For>
+              </div>
+              <div class="sf-u05-field"><label for={fieldId + "-risk"}>{t("sf.u05.projects.form.risk")}</label>
+                <select id={fieldId + "-risk"} value={current().risk} onChange={(event) => update("risk", event.currentTarget.value as SfProjectEdit["risk"])}>
+                  <For each={PROJECT_RISK}>{(risk) => <option value={risk}>{t(sfProjectRiskKey(risk))}</option>}</For>
                 </select>
-              </label>
+              </div>
               <For each={editFields.slice(1, 4)}>{(field) => (
-                <label class="sf-u05-field">{t(field.label)}
+                <label class="sf-u05-field" data-sf-field={field.id} classList={{ "sf-u05-field-wide": field.type === "textarea" }}>{t(field.label)}
                   {field.type === "textarea" ?
                     <textarea value={String(current()[field.id])} onInput={(event) => update(field.id, event.currentTarget.value as never)} /> :
                     <input value={String(current()[field.id])} onInput={(event) => update(field.id, event.currentTarget.value as never)} />}
@@ -117,14 +127,14 @@ export function SfProjectEditor(props: Readonly<{
           </fieldset>
           <fieldset disabled={unavailable()}>
             <legend>{t("sf.u05.projects.notes")}</legend>
-            <label class="sf-u05-field">{t("sf.u05.projects.form.notes")}
+            <label class="sf-u05-field" data-sf-field="notes">{t("sf.u05.projects.form.notes")}
               <textarea value={current().notes} rows={4} onInput={(event) => update("notes", event.currentTarget.value)} />
             </label>
           </fieldset>
           <Show when={props.review} fallback={
             <div class="sf-u05-form-actions">
               <button type="submit" class="mx-btn primary" disabled={!canReview()}>
-                {t(props.isNew ? "sf.u05.projects.create" : "sf.u05.projects.save")}
+                {t("sf.u05.design.reviewChanges")}
               </button>
               <button type="button" class="mx-btn" disabled={unavailable()} onClick={props.onDiscard}>
                 {t("sf.u05.projects.discard")}
@@ -132,14 +142,27 @@ export function SfProjectEditor(props: Readonly<{
             </div>
           }>
             <section class="sf-u05-review" role="region" aria-label={t("sf.u05.projects.review")}>
-              <h3>{t("sf.u05.projects.confirmSave")}</h3>
+              <h3>{t("sf.u05.design.proposed")}</h3>
               <p>{t("sf.u05.projects.review")}</p>
+              <div class="sf-u05-review-values" role="region" tabindex="0" aria-label={t("sf.u05.design.reviewTitle")}>
+                <table>
+                  <thead><tr><th scope="col">{t("sf.u05.design.field")}</th>
+                    <Show when={!props.isNew}><th scope="col">{t("sf.u05.design.current")}</th></Show>
+                    <th scope="col">{t("sf.u05.design.proposed")}</th></tr></thead>
+                  <tbody><For each={reviewFields}>{(field) => <tr
+                    data-sf-changed={String(props.source?.[field.id] ?? "") !== String(current()[field.id])}>
+                    <th scope="row">{t(field.label)}</th>
+                    <Show when={!props.isNew}><td data-label={t("sf.u05.design.current")}>{display(field.id, props.source?.[field.id])}</td></Show>
+                    <td data-label={t("sf.u05.design.proposed")}>{display(field.id, current()[field.id])}</td>
+                  </tr>}</For></tbody>
+                </table>
+              </div>
               <div class="sf-u05-form-actions">
                 <button type="button" class="mx-btn primary" disabled={!canReview()} onClick={props.onConfirm}>
                   {t("sf.u05.projects.confirmSave")}
                 </button>
                 <button type="button" class="mx-btn" onClick={props.onCancelReview}>
-                  {t("sf.u05.projects.discard")}
+                  {t("sf.u05.design.revise")}
                 </button>
               </div>
             </section>
@@ -167,6 +190,7 @@ export function SfMilestoneEditor(props: Readonly<{
   onDelete: (milestoneId: string) => void
 }>): JSX.Element {
   const language = useLanguage()
+  const fieldId = createUniqueId()
   const t = (key: CopyKey) => language.t(key as Parameters<typeof language.t>[0])
   const [draft, setDraft] = createStore<MilestoneDraft>({
     milestoneId: props.source?.id ?? "", name: props.source?.name ?? "",
@@ -182,20 +206,22 @@ export function SfMilestoneEditor(props: Readonly<{
     }}>
       <fieldset disabled={!usable()}>
         <legend>{t("sf.u05.projects.milestone")}</legend>
+        <div class="sf-u05-editor-grid">
         <label class="sf-u05-field">{t("sf.u05.projects.milestoneName")}
           <input required value={draft.name} onInput={(event) => setDraft("name", event.currentTarget.value)} />
         </label>
         <label class="sf-u05-field">{t("sf.u05.projects.date")}
           <input type="date" value={draft.date} onInput={(event) => setDraft("date", event.currentTarget.value)} />
         </label>
-        <label class="sf-u05-field">{t("sf.u05.projects.milestoneStatus")}
-          <select value={draft.status ?? "upcoming"} onChange={(event) => setDraft("status", event.currentTarget.value as SfMilestoneDraft["status"])}>
-            <For each={MILESTONE_STATUS}>{(status) => <option value={status}>{status}</option>}</For>
+        <div class="sf-u05-field"><label for={fieldId + "-status"}>{t("sf.u05.projects.milestoneStatus")}</label>
+          <select id={fieldId + "-status"} value={draft.status ?? "upcoming"} onChange={(event) => setDraft("status", event.currentTarget.value as SfMilestoneDraft["status"])}>
+            <For each={MILESTONE_STATUS}>{(status) => <option value={status}>{t(sfMilestoneStatusKey(status))}</option>}</For>
           </select>
-        </label>
-        <label class="sf-u05-field">{t("sf.u05.projects.milestoneNotes")}
+        </div>
+        <label class="sf-u05-field sf-u05-field-wide">{t("sf.u05.projects.milestoneNotes")}
           <textarea value={draft.notes} onInput={(event) => setDraft("notes", event.currentTarget.value)} />
         </label>
+        </div>
       </fieldset>
       <div class="sf-u05-form-actions">
         <button type="submit" class="mx-btn" disabled={!usable() || !draft.name.trim()}>
