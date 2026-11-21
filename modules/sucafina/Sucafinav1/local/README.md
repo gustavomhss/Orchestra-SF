@@ -66,6 +66,8 @@ Para iniciar em primeiro plano, após instalar as dependências do checkout e do
 
 A prontidão técnica está em `http://localhost:4110/sucafina/status`, sem divulgar IDs, grupos ou credenciais. O status distingue configuração de comprovação real e identifica uploads indisponíveis sem scanner. A porta desta instalação é fixa em 4110.
 
+O launcher passa `serve --hostname localhost --port 4110 --installation` ao CLI. A opção exige o caminho absoluto da factory confiável e uma porta explícita. O CLI monta a aplicação na origem configurada e o módulo controla a autenticação das suas próprias rotas.
+
 Abrir `http://localhost:4110/sucafina/dashboard`, `/planner` ou `/procurement`. No perfil Microsoft, sem os IDs reais o módulo responde 503 de configuração, sem conceder acesso. O perfil local explícito descrito acima usa autenticação própria de homologação. Se a porta estiver ocupada, o início falha. Para encerrar, usar Ctrl-C somente nesse terminal; não encerrar o app Orchestra existente. Alterar o arquivo privado exige novo início somente desta instância.
 
 O launcher define XDG, banco do host, chave de credenciais e diretório temporário próprios **antes** de importar o host; também desativa herança de credenciais e configuração de projeto. O factory verifica esses caminhos antes de o host migrar o banco. O SQLite de negócio fica em `business/installation.sqlite`: dados, versões, sequências, auditoria e BLOBs privados participam da mesma transação. Credenciais cifradas ficam em tabela separada e não entram no backup de negócio.

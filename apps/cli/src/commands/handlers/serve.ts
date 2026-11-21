@@ -6,8 +6,7 @@ import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { PermissionSaved } from "@orchestra/core/permission/saved"
 import { SessionV2 } from "@orchestra/core/session"
-import { Context, Layer, Option } from "effect"
-import * as Effect from "effect/Effect"
+import { Context, Effect, Layer, Option } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { createServer } from "node:http"
 import { writeSync } from "node:fs"
@@ -34,6 +33,7 @@ export type ServeInput = {
   readonly hostname: string
   readonly port: Option.Option<number>
   readonly register: boolean
+  readonly installation?: Option.Option<string>
   readonly cors?: ReadonlyArray<string>
   readonly allowedHosts?: ReadonlyArray<string>
   /** Runs once the server answers, with the address it bound. */
@@ -76,13 +76,22 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
             process.exit()
           }),
         )
-        const daemon = yield* Daemon.Service
-        // A desktop-owned child gets a per-launch password in env and never touches the daemon's password file.
-        const password = process.env.ORCHESTRA_SERVER_PASSWORD || (yield* daemon.password())
-        // The password is captured: drop it from the environment so no child (stdio MCP server, LSP, PTY, omni) inherits it.
+        // Keep desktop launch credentials out of the factory and any children it starts.
+        const launchPassword = process.env.ORCHESTRA_SERVER_PASSWORD
         // The server authenticates from the value passed to createRoutes, never from env.
         delete process.env.ORCHESTRA_SERVER_PASSWORD
         delete process.env.ORCHESTRA_SERVER_USERNAME
+        const installationFile = Option.getOrUndefined(input.installation ?? Option.none())
+        const installation = installationFile === undefined ? undefined : yield* Effect.acquireRelease(
+          Effect.tryPromise(async () => {
+            const { loadSfInstallation } = await import("../../sucafina-product/installation")
+            return loadSfInstallation(installationFile, input.hostname, Option.getOrUndefined(input.port))
+          }),
+          (loaded) => Effect.promise(async () => { await loaded.dispose() }),
+        )
+        const daemon = yield* Daemon.Service
+        // A desktop-owned child gets a per-launch password and never touches the daemon's password file.
+        const password = launchPassword || (yield* daemon.password())
         const root = yield* Effect.promise(() => webRoot())
         // Legacy transcripts on this database are copied to V2 before the server answers: a Session is eligible only
         // while it has no V2 message, so a prompt reaching an old Session first would skip its history forever.
@@ -95,7 +104,7 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
           Effect.catchCause((cause) => Effect.logError("legacy session import failed", cause)),
         )
         const allowedHosts = listenerHosts(input.hostname, input.allowedHosts)
-        const listening = yield* listen(input.hostname, input.port, password, hosts(), root, allowedHosts, input.cors)
+        const listening = yield* listen(input, password, root, allowedHosts, installation)
         const address = listening.address
         // Closing the server waits for every open connection, and the event stream never ends on its own. Scope
         // finalizers run in reverse, so this drops the connections before the server closes.
@@ -116,17 +125,19 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
 })
 
 function listen(
-  hostname: string,
-  port: Option.Option<number>,
+  input: ServeInput,
   password: string,
-  host: ReturnType<typeof hosts>,
   root: string | undefined,
   allowedHosts: ReadonlyArray<string>,
-  cors?: ReadonlyArray<string>,
+  installation?: Awaited<ReturnType<typeof import("../../sucafina-product/installation").loadSfInstallation>>,
 ) {
-  if (Option.isSome(port)) return bind(hostname, port.value, password, host, root, allowedHosts, cors)
+  const routes = Layer.merge(
+    createRoutes({ password, host: hosts(), webRoot: root, allowedHosts, cors: input.cors, requestBodyLimit: installation?.bodyLimit }),
+    installation?.layer ?? Layer.empty,
+  )
+  if (Option.isSome(input.port)) return bind(input.hostname, input.port.value, routes)
   const next = (port: number): ReturnType<typeof bind> =>
-    bind(hostname, port, password, host, root, allowedHosts, cors).pipe(
+    bind(input.hostname, port, routes).pipe(
       Effect.catch((error) => (port === 65_535 || !addressInUse(error) ? Effect.fail(error) : next(port + 1))),
     )
   return next(4096)
@@ -135,15 +146,11 @@ function listen(
 function bind(
   hostname: string,
   port: number,
-  password: string,
-  host: ReturnType<typeof hosts>,
-  root: string | undefined,
-  allowedHosts: ReadonlyArray<string>,
-  cors?: ReadonlyArray<string>,
+  routes: ReturnType<typeof createRoutes>,
 ) {
   const server = createServer()
   return Layer.build(
-    HttpRouter.serve(createRoutes({ password, host, webRoot: root, cors, allowedHosts }), {
+    HttpRouter.serve(routes, {
       disableListenLog: true,
       disableLogger: true,
     }).pipe(
