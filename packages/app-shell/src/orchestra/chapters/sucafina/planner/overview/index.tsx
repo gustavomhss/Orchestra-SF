@@ -7,7 +7,7 @@ import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
-import { SfPageFrame, SfContextBar, SfChartFrame } from "../../shared/frame"
+import { SfPageFrame, SfChartFrame } from "../../shared/frame"
 import type { SfCopyKey, SfMessage, SfUiState, SfDisplayValue, SfChartTable } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { useSfPresentation } from "../../shared/frame/presentation"
@@ -22,7 +22,7 @@ type Version = Page["data"]["versions"][number]
 const key = (value: keyof typeof SF_U06_COPY | "sf.common.empty" | "sf.common.loading" |
   "sf.common.unavailable" | "sf.common.noAccess" | "sf.common.invalidLink" |
   "sf.common.stale" | "sf.common.loginAgain" | "sf.common.partial" | "sf.common.removed" |
-  "sf.common.observedZero" | "sf.u02.noCurrency"): SfCopyKey => value as SfCopyKey
+  "sf.common.observedZero" | "sf.u02.noCurrency" | "sf.design.eyebrow"): SfCopyKey => value as SfCopyKey
 const message = (value: keyof typeof SF_U06_COPY | "sf.u02.noCurrency", params?: Record<string, string | number>): SfMessage =>
   ({ key: key(value), params })
 const data = (value: string) => ({ kind: "data" as const, text: value })
@@ -44,7 +44,7 @@ function currencyValue(value: number | null): SfDisplayValue {
   return { kind: "number", value, unit: { kind: "unspecified", label: message("sf.u02.noCurrency") }, fractionDigits: 2 }
 }
 
-function chartTable(summary: Summary): SfChartTable {
+function chartTable(summary: Summary, locale: string, year: number): SfChartTable {
   return {
     caption: message("sf.u06.budget"),
     columns: [
@@ -56,7 +56,7 @@ function chartTable(summary: Summary): SfChartTable {
     rows: months.map((month, index) => ({
       id: month,
       cells: {
-        month: { kind: "text" as const, text: data(month) },
+        month: { kind: "text" as const, text: data(new Intl.DateTimeFormat(locale, { month: "short", timeZone: "UTC" }).format(new Date(Date.UTC(year, index, 1)))) },
         budget: currencyValue(summary.budget[index] ?? null),
         actual: currencyValue(summary.actual[index] ?? null),
         outlook: currencyValue(summary.outlook[index] ?? null),
@@ -182,7 +182,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
     const partial = !!source && (source.warnings.length > 0 || known !== 12)
     return {
       state: partial ? "partial" as const : source ? "complete" as const : "unavailable" as const,
-      summary: message("sf.u06.budget"),
+      summary: message("sf.u06.sourceDetails"),
       reasons: source?.warnings.map((warning) => message("sf.u06.missingFx", { codes: warning })) ?? [],
       knownCount: known,
       expectedCount: source ? 12 : null,
@@ -207,27 +207,39 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
       })),
     }))
   }
+  // Coordinates describe the source series only. No financial values are inferred or filled.
   const plot = () => {
     const source = summary()
-    const numbers = source ? [...source.budget, ...source.actual, ...source.outlook].filter((v): v is number => v !== null) : []
+    const numbers = source ? [...source.budget, ...source.actual, ...source.outlook].filter((value): value is number => value !== null) : []
     const min = Math.min(0, ...numbers)
     const max = Math.max(1, ...numbers)
-    return series().flatMap((line, seriesIndex) => line.points.flatMap((point, index) => (
-      point.value.kind === "known" ? [{
-        id: line.id + "-" + point.id,
-        x: 24 + index * 30 + (seriesIndex - 1) * 6,
-        y: 124 - ((point.value.value - min) / (max - min)) * 100,
-        className: "sf-u06-point-" + line.id,
-      }] : []
-    )))
+    const y = (value: number) => 210 - ((value - min) / (max - min)) * 180
+    return {
+      ticks: [0, 1, 2, 3].map((step) => {
+        const value = min + ((max - min) * step / 3)
+        return { value, y: y(value), label: new Intl.NumberFormat(copy.locale(), { notation: "compact", maximumFractionDigits: 1 }).format(value) }
+      }),
+      lines: series().map((line) => {
+        let connected = false
+        const path = line.points.map((point, index) => {
+          if (point.value.kind !== "known") { connected = false; return "" }
+          const command = connected ? "L" : "M"
+          connected = true
+          return command + (62 + index * 48) + "," + y(point.value.value)
+        }).join(" ")
+        const points = line.points.flatMap((point, index) => point.value.kind === "known"
+          ? [{ id: line.id + "-" + point.id, x: 62 + index * 48, y: y(point.value.value) }] : [])
+        return { id: line.id, path, points }
+      }),
+      months: months.map((month, index) => ({ id: month, x: 62 + index * 48,
+        label: new Intl.DateTimeFormat(copy.locale(), { month: "short", timeZone: "UTC" }).format(new Date(Date.UTC(year() ?? 2026, index, 1))) })),
+    }
   }
   return (
     <SfPageFrame
       titleKey={key("sf.cap17.title")}
-      context={selected() ? [
-        { id: "year", label: message("sf.u06.year"), value: data(String(selected()!.year)) },
-        { id: "version", label: message("sf.u06.version"), value: data(selected()!.name) },
-      ] : []}
+      eyebrow={{ kind: "message", message: { key: key("sf.design.eyebrow") } }}
+      context={[]}
       tabs={[]}
       activeTab={null}
       primaryAction={{
@@ -235,18 +247,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
         disabled: !canCompare() || view.state !== "ready",
         onInvoke: () => open("compare", { year: year() }),
       }}
-      secondaryActions={[
-        {
-          id: "versions", labelKey: key("sf.u06.version"), tone: "secondary" as const,
-          disabled: !canCompare(), busy: false,
-          onInvoke: () => open("versions", { year: year() }),
-        },
-        {
-          id: "import", labelKey: key("sf.u06.importWorkbook"), tone: "secondary" as const,
-          disabled: !importReady(), busy: false,
-          onInvoke: () => open("import"),
-        },
-      ]}
+      secondaryActions={[]}
       density="comfortable"
       layout="reading"
       onLayoutMode={() => undefined}
@@ -259,39 +260,42 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
       >
         <Show when={page()}>
           {(loaded) => (
-            <section class="sf-u06" data-sf-surface="CAP17">
-              <SfContextBar
-                state={view.state}
-                selection={[
-                  { control: "year", optionId: year() === undefined ? null : String(year()) },
-                  { control: "version", optionId: selected()?.id ?? null },
-                ]}
-                catalog={[
-                  ...[...new Set(loaded().data.versions.map((version) => version.year))]
-                    .sort((a, b) => a - b).map((value) => ({
-                      id: String(value), control: "year" as const, value,
-                      label: data(String(value)), available: true,
-                    })),
-                  ...versionOptions().map((version) => ({
-                    id: version.id, control: "version" as const, value: version.id,
-                    label: data(version.name), available: true,
-                  })),
-                ]}
-                lockedReasons={[]}
-                onRequestChange={(change) => {
-                  if (change.control === "year") {
-                    const available = loaded().data.versions.find((version) => String(version.year) === change.optionId)
+            <section class="sf-u06" data-sf-wave="three" data-sf-surface="CAP17">
+              <div class="sf-u06-toolbar">
+                <label>{copy.t(key("sf.u06.year"))}
+                  <select aria-label={copy.t(key("sf.u06.year"))} value={year() ?? ""} onChange={(event) => {
+                    const available = loaded().data.versions.find((version) => String(version.year) === event.currentTarget.value)
                     if (available) open("overview", { year: available.year, version: available.id })
-                  }
-                  if (change.control === "version") {
-                    const available = versionOptions().find((version) => version.id === change.optionId)
+                    event.currentTarget.value = String(year() ?? "")
+                  }}>
+                    <Show when={year() === undefined}><option value="" disabled>—</option></Show>
+                    <For each={[...new Set(loaded().data.versions.map((version) => version.year))].sort((a, b) => a - b)}>
+                      {(value) => <option value={value}>{value}</option>}
+                    </For>
+                  </select>
+                </label>
+                <label class="sf-u06-version">{copy.t(key("sf.u06.version"))}
+                  <select aria-label={copy.t(key("sf.u06.version"))} value={selected()?.id ?? ""} onChange={(event) => {
+                    const available = versionOptions().find((version) => version.id === event.currentTarget.value)
                     if (available) open("overview", { year: available.year, version: available.id })
-                  }
-                }}
-              />
+                    event.currentTarget.value = selected()?.id ?? ""
+                  }}>
+                    <Show when={!selected()}><option value="" disabled>—</option></Show>
+                    <For each={versionOptions()}>{(version) => <option value={version.id}>{version.name}</option>}</For>
+                  </select>
+                </label>
+                <div class="sf-u06-toolbar-actions">
+                  <button type="button" class="mx-btn" disabled={!canCompare()}
+                    onClick={() => open("versions", { year: year() })}>{copy.t(key("sf.u06.manageVersions"))}</button>
+                  <button type="button" class="mx-btn" disabled={!importReady()}
+                    onClick={() => open("import")}>{copy.t(key("sf.u06.importWorkbook"))}</button>
+                </div>
+              </div>
               <Show when={summary()} fallback={<p role="status">{copy.t(key("sf.u06.noVersion"))}</p>}>
                 {(item) => (
                   <>
+                    <section class="sf-u06-summary" aria-labelledby="sf-u06-summary-title">
+                      <header><h2 id="sf-u06-summary-title">{copy.t(key("sf.u06.financialOverview"))}</h2><p>{copy.t(key("sf.u02.noCurrency"))}</p></header>
                     <dl class="sf-u06-metrics">
                       <For each={[
                         { label: "sf.u06.budget", value: item().total },
@@ -302,12 +306,14 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                         {(metric) => (
                           <div class="sf-u06-metric">
                             <dt>{copy.t(key(metric.label))}</dt>
-                            <dd>{metric.value === null ? copy.t(key("sf.u06.missingActual")) :
-                              new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(metric.value) + " " + copy.t(key("sf.u02.noCurrency"))}</dd>
+                            <dd data-sf-value={metric.value === null ? "missing" : "known"}>{metric.value === null ? <><span aria-hidden="true">—</span><span class="sf-u06-sr">{copy.t(key("sf.u06.missingActual"))}</span></> :
+                              new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(metric.value)}</dd>
                           </div>
                         )}
                       </For>
                     </dl>
+                    <p class="sf-u06-missing-legend">{copy.t(key("sf.u06.missingLegend"))}</p>
+                    </section>
                     <Show when={item().warnings.length > 0}>
                       <ul class="sf-u06-warnings" role="status">
                         <For each={item().warnings}>
@@ -316,24 +322,38 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                       </ul>
                     </Show>
                     <SfChartFrame
-                      titleKey={key("sf.u06.budget")}
-                      questionKey={key("sf.u06.missingActual")}
+                      titleKey={key("sf.u06.monthlyTrend")}
+                      questionKey={key("sf.u06.monthlyHint")}
                       context={[{ label: message("sf.u06.year"), value: data(String(year())) }]}
                       coverage={coverage()}
                       series={series()}
-                      table={chartTable(item())}
+                      table={chartTable(item(), copy.locale(), year() ?? 2026)}
                       selection={view.selectedMonth as SfRef | null}
                       state={coverage().state === "partial" ? "partial" : "ready"}
                       onSelect={(ref) => setView("selectedMonth", ref)}
                       onOpenSource={() => undefined}
                     >
-                      <svg class="sf-u06-plot" viewBox="0 0 390 155" aria-hidden={"true"}>
-                        <path d="M 16 10 V 128 H 380" fill="none" stroke="currentColor" opacity=".4"/>
-                        <For each={plot()}>
-                          {(point) => <circle class={point.className} cx={point.x} cy={point.y} r="4" />}
+                      <div class="sf-u06-legend" aria-label={copy.t(key("sf.u06.monthlyTrend"))}>
+                        <For each={[["budget", "sf.u06.budget"], ["actual", "sf.u06.actual"], ["outlook", "sf.u06.outlookShort"]] as const}>
+                          {(entry) => <span data-series={entry[0]}><i aria-hidden="true" />{copy.t(key(entry[1]))}</span>}
                         </For>
+                      </div>
+                      <div class="sf-u06-plot-scroll" role="region" tabIndex={0} aria-label={copy.t(key("sf.u06.monthlyTrend"))}>
+                      <svg class="sf-u06-plot" viewBox="0 0 640 248" aria-hidden="true">
+                        <For each={plot().ticks}>{(tick) => <g>
+                          <line class="sf-u06-gridline" x1="62" x2="590" y1={tick.y} y2={tick.y} />
+                          <text class="sf-u06-axis" x="50" y={tick.y + 4} text-anchor="end">{tick.label}</text>
+                        </g>}</For>
+                        <For each={plot().lines}>{(line) => <g data-series={line.id}>
+                          <path class={"sf-u06-line sf-u06-line-" + line.id} d={line.path} fill="none" />
+                          <For each={line.points}>{(point) => <circle class={"sf-u06-point-" + line.id} cx={point.x} cy={point.y} r="3.5" />}</For>
+                        </g>}</For>
+                        <For each={plot().months}>{(month) => <text class="sf-u06-axis" x={month.x} y="237" text-anchor="middle">{month.label}</text>}</For>
                       </svg>
+                      </div>
                     </SfChartFrame>
+                    <section class="sf-u06-comparison-panel" aria-labelledby="sf-u06-compare-title">
+                    <header class="sf-u06-compare-head"><h2 id="sf-u06-compare-title">{copy.t(key("sf.u06.compareBudgets"))}</h2><p>{copy.t(key("sf.u06.versionsHint"))}</p></header>
                     <div class="sf-u06-compare">
                       <label for="sf-u06-compare-filter">{copy.t(key("sf.u06.compareBudget"))}</label>
                       <select id="sf-u06-compare-filter" class="mx-input"
@@ -356,8 +376,8 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                       !versionOptions().some((version) => version.id === props.route.query.filter)}>
                       <p role="status">{copy.t(key("sf.u06.invalidComparison"))}</p>
                     </Show>
-                    <section class="sf-u06-comparison-list" aria-label={copy.t(key("sf.u06.compareBudgets"))}>
-                      <div class="sf-u06-scroll">
+                    <div class="sf-u06-comparison-list">
+                      <div class="sf-u06-scroll" tabIndex={0} role="region" aria-label={copy.t(key("sf.u06.comparisonTable"))}>
                         <table>
                           <caption>{copy.t(key("sf.u06.compareBudgets"))}</caption>
                           <thead><tr>
@@ -372,15 +392,16 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                             )}>
                               {(comparison) => <tr>
                                 <th scope="row">{comparison.name}</th>
-                                <td>{comparison.total === null ? copy.t(key("sf.u06.missingActual")) :
-                                  new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(comparison.total) + " " + copy.t(key("sf.u02.noCurrency"))}</td>
-                                <td>{comparison.fte === null ? copy.t(key("sf.u06.missingActual")) :
+                                <td data-label={copy.t(key("sf.u06.budget"))}>{comparison.total === null ? copy.t(key("sf.u06.missingActual")) :
+                                  new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(comparison.total)}</td>
+                                <td data-label={copy.t(key("sf.u06.fteDecember"))}>{comparison.fte === null ? copy.t(key("sf.u06.missingActual")) :
                                   new Intl.NumberFormat(copy.locale()).format(comparison.fte)}</td>
                               </tr>}
                             </For>
                           </tbody>
                         </table>
                       </div>
+                    </div>
                     </section>
                   </>
                 )}

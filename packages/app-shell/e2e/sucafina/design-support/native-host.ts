@@ -12,6 +12,7 @@ import type { Actor, Command, Domain } from "../../../../../modules/sucafina/Suc
 import { DashboardBudget } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-budget"
 import { DashboardPeople } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-people"
 import { DashboardPortfolio } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-portfolio"
+import { seedWaveThreeDashboard, seedWaveThreePlanner } from "./wave-three-seed"
 
 const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../..")
 const privateRoot = process.argv[2]
@@ -20,6 +21,7 @@ if (Object.keys(process.env).some((key) => key.startsWith("VITE_")))
   throw new Error("Native capture build must not inherit Vite server overrides")
 
 const secondWave = process.argv[3] === "two"
+const thirdWave = process.argv[3] === "three"
 const now = new Date()
 const year = now.getUTCFullYear()
 const month = now.getUTCMonth() + 1
@@ -140,6 +142,12 @@ const program = Effect.scoped(Effect.gen(function* () {
             values: { ...topic, notes: "Registro demonstrativo criado pelo produtor na instalação isolada de teste." },
           })
         }
+        if (thirdWave) seedWaveThreeDashboard(snapshot, actor, environment, year, month)
+        return { commit: true, value: undefined }
+      })
+      if (thirdWave) await store.transaction("planner", async (snapshot) => {
+        seedWaveThreePlanner(snapshot, { id: actorId, roles: ["admin"], canWrite: true },
+          { at: now.toISOString(), id: randomUUID, directory: [] }, year)
         return { commit: true, value: undefined }
       })
     },

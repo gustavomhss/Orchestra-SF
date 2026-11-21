@@ -44,11 +44,13 @@ const spec: CollectionSpec<"CAP15", Stakeholder, Values> = {
   readOperation:"domain.page.CAP15",saveOperation:"domain.command.CAP15.save",
   deleteOperation:"domain.command.CAP15.delete",
   fields,
+  groups: [
+    { label: "sf.u30.design.relationship", fields: ["name","position","title","company","department","role","email"] },
+    { label: "sf.u30.design.assessment", fields: ["biz","iti","perc","priority"] },
+    { label: "sf.u30.design.engagement", fields: ["owner","action","actions","notes"] },
+  ],
   columns:[
-    {name:"name",label:"sf.u30.stakeholder.name"},
-    {name:"position",label:"sf.u30.stakeholder.position"},
-    {name:"company",label:"sf.u30.stakeholder.company"},
-    {name:"department",label:"sf.u30.stakeholder.department"},
+    {name:"name",label:"sf.u30.stakeholder.name",secondary:["position","company","department"]},
     {name:"biz",label:"sf.u30.stakeholder.biz"},
     {name:"iti",label:"sf.u30.stakeholder.iti"},
     {name:"perc",label:"sf.u30.stakeholder.perc"},
@@ -63,14 +65,21 @@ const spec: CollectionSpec<"CAP15", Stakeholder, Values> = {
     const response=await createSfDomainClient(transport)["domain.page.CAP15"](query,{signal})
     if(response.kind!=="response"||response.body.status!=="ok")return {kind:"error",state:readFailure(response)}
     const rows=response.body.value.data.stakeholders
-    return rows===undefined?{kind:"error",state:"unavailable"}:{
-      kind:"ok",rows,versions:response.body.value.versions,
+    // This source exposes name/title and owner, with no status/vendor/description fields.
+    const search=query.q?.trim().toLowerCase()??""
+    const selected=rows?.filter((row)=>
+      (!search||[row.name,row.title].some((value)=>typeof value==="string"&&value.toLowerCase().includes(search)))&&
+      !query.status&&(!query.owner||row.owner===query.owner))
+    return selected===undefined?{kind:"error",state:"unavailable"}:{
+      kind:"ok",rows:selected,versions:response.body.value.versions,
       actions:response.body.value.allowedActionIds,
     }
   },
   save:async(transport,command,signal,idempotencyKey)=>
     writeOutcome(await createSfDomainClient(transport)["domain.command.CAP15.save"](
-      {id:command.id,version:command.version,values:command.values},{signal,idempotencyKey})),
+      {...(command.id===undefined?{}:{id:command.id}),version:command.version,
+        values:Object.fromEntries(Object.entries(command.values).filter(([,value])=>value!==undefined))},
+      {signal,idempotencyKey})),
   delete:async(transport,command,signal,idempotencyKey)=>
     writeOutcome(await createSfDomainClient(transport)["domain.command.CAP15.delete"](
       {id:command.id,version:command.version,values:{}},{signal,idempotencyKey})),

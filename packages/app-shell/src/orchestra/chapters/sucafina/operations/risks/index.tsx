@@ -13,7 +13,7 @@ const riskStatus = (value: unknown): RiskValues["status"] =>
   value === "open" || value === "mitigating" || value === "monitoring" || value === "closed" ? value : undefined
 const fields: readonly Field<Risk, RiskValues>[] = [
   {name:"title",label:"sf.u30.risk.title",kind:"text"},
-  {name:"name",label:"sf.u30.risk.name",kind:"text",required:true},
+  {name:"name",label:"sf.u30.risk.name",kind:"textarea",required:true},
   {name:"action",label:"sf.u30.risk.action",kind:"textarea"},
   {name:"responsible",label:"sf.u30.risk.responsible",kind:"text"},
   {name:"desc",label:"sf.u30.risk.desc",kind:"textarea"},
@@ -50,8 +50,14 @@ const spec: CollectionSpec<"CAP13", Risk, RiskValues> = {
   readOperation:"domain.page.CAP13",saveOperation:"domain.command.CAP13.save",
   deleteOperation:"domain.command.CAP13.delete",
   fields,
+  groups: [
+    { label: "sf.u30.design.riskProfile", fields: ["title","name","desc","category"] },
+    { label: "sf.u30.design.assessment", fields: ["impact","probability","status","due"] },
+    { label: "sf.u30.design.response", fields: ["responsible","owner","action","mitigation","notes"] },
+    { label: "sf.u30.design.references", fields: ["ownerId","leaderId"] },
+  ],
   columns:[
-    {name:"title",label:"sf.u30.risk.title"}, {name:"name",label:"sf.u30.risk.name"},
+    {name:"title",label:"sf.u30.risk.title",secondary:["name"]},
     {name:"responsible",label:"sf.u30.risk.responsible"},
     {name:"status",label:"sf.u30.risk.status"}, {name:"impact",label:"sf.u30.risk.impact"},
     {name:"probability",label:"sf.u30.risk.probability"},
@@ -65,14 +71,22 @@ const spec: CollectionSpec<"CAP13", Risk, RiskValues> = {
     const response=await createSfDomainClient(transport)["domain.page.CAP13"](query,{signal})
     if(response.kind!=="response"||response.body.status!=="ok")return {kind:"error",state:readFailure(response)}
     const rows=response.body.value.data.risks
-    return rows===undefined?{kind:"error",state:"unavailable"}:{
-      kind:"ok", rows, versions:response.body.value.versions,
+    // The native projection contains all authorized records; Apply selects this read's query.
+    const search=query.q?.trim().toLowerCase()??""
+    const selected=rows?.filter((row)=>
+      (!search||[row.name,row.title,row.desc].some((value)=>typeof value==="string"&&value.toLowerCase().includes(search)))&&
+      (!query.status||row.status===query.status)&&
+      (!query.owner||[row.owner,row.responsible].includes(query.owner)))
+    return selected===undefined?{kind:"error",state:"unavailable"}:{
+      kind:"ok", rows:selected, versions:response.body.value.versions,
       actions:response.body.value.allowedActionIds,
     }
   },
   save:async(transport,command,signal,idempotencyKey)=>
     writeOutcome(await createSfDomainClient(transport)["domain.command.CAP13.save"](
-      {id:command.id,version:command.version,values:command.values},{signal,idempotencyKey})),
+      {...(command.id===undefined?{}:{id:command.id}),version:command.version,
+        values:Object.fromEntries(Object.entries(command.values).filter(([,value])=>value!==undefined))},
+      {signal,idempotencyKey})),
   delete:async(transport,command,signal,idempotencyKey)=>
     writeOutcome(await createSfDomainClient(transport)["domain.command.CAP13.delete"](
       {id:command.id,version:command.version,values:{}},{signal,idempotencyKey})),
