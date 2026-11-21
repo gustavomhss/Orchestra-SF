@@ -45,3 +45,5 @@ CREATE TABLE recovery_pins (
   PRIMARY KEY (installation_digest, partition_digest, generation)
 ) STRICT;
 ```
+
+Para habilitar o comando de criação de rascunho de Decisions no QA, defina `SUCAFINA_NATIVE_TEAM_DECISIONS=1` e conceda `namespaces: ["cases"]` e `operations: ["sf_case_draft"]` ao principal de teste. O produtor exige o papel de contributor ou admin no dashboard e a membresia atual no Team. O cliente usa `POST <mount>/teams/<teamObjectId>/dashboard?sf=workbench-command` com uma chave `Idempotency-Key` estável. O comando e seu recibo ficam na partição usada pela rota de recuperação. A chave fica vinculada à requisição original e ao Team na área privada da instalação, fora da partição restaurada.

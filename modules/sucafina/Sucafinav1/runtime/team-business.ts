@@ -5,7 +5,7 @@ import { digestSfValue } from "../product/contracts/canonical.ts"
 import { emptyMap } from "../src/identity.ts"
 import type { ResolvedActor, Surface } from "../src/identity.ts"
 import type { AssetPersistence } from "./assets.ts"
-import type { DirectoryPerson, LocalIdentity } from "./local-contract.ts"
+import type { DirectoryPerson, LocalIdentity, LocalStore } from "./local-contract.ts"
 import { scanLocalFile } from "./local-scanner.ts"
 import { openLocalStore } from "./local-store.ts"
 import type { MicrosoftConfiguration } from "./microsoft-configuration.ts"
@@ -26,6 +26,7 @@ export async function runTeamBusiness(input: {
   directory: string
   keys: { assets: Uint8Array; bank: Uint8Array }
   now: () => Date
+  decisionIntentions?: Pick<LocalStore, "transaction">
 }) {
   const { request, route, admission, identity, config, keys } = input
   const partition = digestSfValue(admission.profile)
@@ -56,8 +57,24 @@ export async function runTeamBusiness(input: {
         current.status !== "allowed" || current.principalObjectId !== admission.principalObjectId) return false
     return admission.verifyCurrent()
   }
-  const store = await openLocalStore(path.join(input.directory, "business-teams", partition))
+  const storeDirectory = path.join(input.directory, "business-teams", partition)
+  const store = await openLocalStore(storeDirectory)
   try {
+    if (input.decisionIntentions && route.surface === "dashboard" && new URL(request.url).searchParams.get("sf") === "workbench-command") {
+      const grants = config.grants.filter((grant) => grant.principalRef === admission.principalObjectId)
+      const grant = grants[0]
+      if (grants.length !== 1 || !Array.isArray(grant?.namespaces) || !grant.namespaces.includes("cases") ||
+          !Array.isArray(grant.operations) || !grant.operations.includes("sf_case_draft")) return denied()
+      const actor = await currentActor()
+      if (!actor?.canWrite || !actor.roles.some((role) => role.surface === "dashboard" && (role.role === "admin" || role.role === "contributor"))) return denied()
+      authorized.actor = actor
+      const { runTeamDecisions } = await import("./team-decisions.ts")
+      return await runTeamDecisions({
+        request, directory: storeDirectory, partition, principalId: admission.principalObjectId,
+        persistence: store, intentions: input.decisionIntentions, current: reauthorize, now: input.now,
+        authenticate: (original, context) => original === request && context?.surface === "dashboard" ? currentActor() : Promise.resolve(null),
+      })
+    }
     const persistence: AssetPersistence = {
       transaction: (surface, work, options) => store.transaction(surface, async (snapshot, blobs) => {
         const result = await work(snapshot, blobs)
