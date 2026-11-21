@@ -511,7 +511,11 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     return fields.map(([label, value]) => ({
       path: label,
       label: message(label),
-      value: value.length ? ({ kind: "text", text: { kind: "data", text: value } } as SfDisplayValue) :
+      value: value.length ? ({ kind: "text", text: { kind: "data", text:
+        props.capability === "CAP04" && label === "flag" ? flagLabel(value) :
+        props.capability === "CAP04" && label === "field" &&
+          (value === "budget" || value === "actual" || value === "forecast") ? t(key(value)) : value,
+      } } as SfDisplayValue) :
         ({ kind: "missing", reason: { key: key("missing") } } as SfDisplayValue),
     }))
   }

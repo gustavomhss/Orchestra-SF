@@ -20,7 +20,7 @@ Forms use native Inter, 13px input text, 12px labels, 20px titles and 44px contr
 
 ## Behavior preserved
 
-The source segment from `rememberView` through immediately before `sourceAction` is byte-identical to the foundation. It contains year/route selection, filtering and sorting, reads, source reconciliation, draft acquisition, validation, CAS, pending digests/idempotency, later edits, unknown outcomes, confirmation and discard. `model.ts` and `surface.css` are unchanged.
+The source segment from `rememberView` through immediately before `sourceAction` is byte-identical to the foundation except for one presentation-only translation in `draftFields`: CAP04 reviews display stored deviation flag colors through `flagLabel` and annual field names through their existing dictionary keys. The underlying `BudgetForm` values, commands and payloads remain unchanged, and CAP05 displays its original strings. Year/route selection, filtering and sorting, reads, source reconciliation, draft acquisition, validation, CAS, pending digests/idempotency, later edits, unknown outcomes, confirmation and discard are unchanged. `model.ts` and `surface.css` are unchanged.
 
 CAP05 keeps the original frame context, context bar, amountText output, generic detail, action visibility and original table/editor CSS. Presentation wrappers flatten with `display: contents` for CAP05. No wave marker or CAP04 CSS applies there. The new focus effect is CAP04-only.
 
