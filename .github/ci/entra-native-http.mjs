@@ -79,7 +79,7 @@ assert(real.startsWith(resolve(webRoot) + sep))
 const payload = await request(asset.pathname, { cookie: allowed })
 assert.equal(payload.status, 200, "Web JavaScript asset")
 assert.match(payload.headers.get("content-type") ?? "", /javascript/i)
-assert.deepEqual(Buffer.from(await payload.arrayBuffer()), await readFile(real), "served bundle matches installed bytes")
+assert(Buffer.from(await payload.arrayBuffer()).equals(await readFile(real)), "served bundle matches installed bytes")
 
 const query = new URLSearchParams({
   contractRevision: binding.contractRevision,
@@ -97,12 +97,14 @@ assert.equal(admittedContext.status, "ok")
 assert.equal(admittedContext.value.profile.teams.selected.teamObjectId, team)
 
 const denied = await signIn("denied")
-assert.notEqual(denied, allowed, "isolated session cookies")
+assert(denied !== allowed, "isolated session cookies")
 assert.equal((await request(dashboard, { cookie: denied })).status, 403, "authenticated account with no Team")
 assert.equal((await request(expectedTeamRoute, { cookie: denied })).status, 403, "direct Team URL cannot bypass admission")
 const deniedContext = await request(context, { cookie: denied, accept: "application/json" })
 assert([200, 403].includes(deniedContext.status), "native Team context denies account")
-assert.deepEqual(await deniedContext.json(), { status: "denied" }, "no Team payload is returned")
+const deniedResult = await deniedContext.json()
+assert(deniedResult?.status === "denied" && Object.keys(deniedResult).length === 1, "no Team payload is returned")
+console.log("ENTRA_NATIVE_TEAM_DENIAL_OK: authenticated account received 403 on dashboard and direct Team URL")
 // Load Playwright from the candidate's locked workspace, not a global install.
 const { chromium } = createRequire(resolve(process.env.GITHUB_WORKSPACE, "packages/app-shell/package.json"))("@playwright/test")
 const browser = await chromium.launch()
