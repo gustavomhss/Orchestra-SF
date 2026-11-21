@@ -13,6 +13,7 @@ import type { SfReviewSnapshot, SfReviewField } from "../../shared/change-review
 import type { SfCopyKey, SfMessage, SfText, SfUiState } from "../../shared/frame"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
+import { procurementCommandSnapshot } from "../command-snapshot"
 import type { SfU12CopyKey } from "@/i18n/orchestra-chapters/sf-u12"
 import { isPoWritable } from "../requests/model"
 import {
@@ -442,10 +443,11 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     }
     const intentRef=crypto.randomUUID() as SfOperationRef
     const idempotencyKey=crypto.randomUUID()
+    const sourcing=procurementCommandSnapshot(intent.sourcing)
     const payload=intent.action==="select_quote"?{page:"Requests",action:"select_quote",
       id:intent.requestRef,version:intent.version,values:{quoteId:intent.quoteId}}:
       {page:"Requests",action:intent.action,id:intent.requestRef,
-       version:intent.version,values:{sourcing:intent.sourcing}}
+       version:intent.version,values:{sourcing}}
     const payloadJson=JSON.stringify(payload)
     let digest:string
     try{
@@ -489,9 +491,9 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           values:{quoteId:intent.quoteId!}},options)
         : intent.action==="submit_sourcing"
           ? await client["domain.command.CAP25.submit_sourcing"]({...requestBody,action:"submit_sourcing",
-            values:{sourcing:intent.sourcing}},options)
+            values:{sourcing}},options)
           : await client["domain.command.CAP25.save"]({...requestBody,action:"save",
-            values:{sourcing:intent.sourcing}},options)
+            values:{sourcing}},options)
       if(controller.signal.aborted||authority()!==token)return
       if(response.kind==="transport-error"){
         controllerDraft.setPhase("outcome-unknown")

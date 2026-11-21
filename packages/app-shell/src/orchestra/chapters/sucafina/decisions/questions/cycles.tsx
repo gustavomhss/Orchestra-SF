@@ -1,5 +1,6 @@
 import { createEffect, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
+import { snapshotDecisionRequest } from "../intent/request"
 import type { Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
@@ -62,7 +63,7 @@ export function SfQuestionCycles(props: Readonly<{ owner: SfContextHandle; caseR
     const abort = new AbortController()
     onCleanup(() => abort.abort())
     void createSfCollaborationClient(active.transport)["collaboration.cycle-read"](
-      { caseRef: ref, selection: { selectionRef: selected.selectionRef, period: selected.period } },
+      snapshotDecisionRequest({ caseRef: ref, selection: { selectionRef: selected.selectionRef, period: selected.period } }),
       { signal: abort.signal },
     ).then((result) => {
       if (abort.signal.aborted || props.owner.generation() !== generation) return

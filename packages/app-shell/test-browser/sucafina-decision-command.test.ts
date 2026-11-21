@@ -6,6 +6,7 @@ import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import type { SfOperationCodec } from "@orchestra/schema/sucafina/common"
 import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
+import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
 import { snapshotDecisionRequest } from "../src/orchestra/chapters/sucafina/decisions/intent/request"
 
 const edit = SfDecisions.operations["decisions.decision-edit"]
@@ -85,6 +86,36 @@ describe("Decision snapshots cross the unchanged native schema and JSON codec", 
         const input = { caseRef: { ...state.caseRef } }
         expect(admitted(SfAnalyses.operations["intelligence.analysis.list"].input,
           SfNativeOperationBindings["intelligence.analysis.list"]!, input)).toEqual({ caseRef: original().caseRef })
+      } finally { dispose() }
+    })
+  })
+
+  test("tracked cycle periods and prepared contributions preserve source versions and mutation identity", () => {
+    createRoot((dispose) => {
+      try {
+        const source = original()
+        const originalContribution = {
+          kind: "contribution" as const, outputRef: "design-test-output", outputDigest: "c".repeat(64),
+          caseRef: source.caseRef, result: { caseRef: "case:design-test-case:design-test-incarnation",
+            question: "Design test prepared question", expectedCaseVersion: 2, evidenceRefs: source.sourceRefs },
+        }
+        const [state] = createStore({ selection: { selectionRef: "design-test-selection", period: source.horizon! },
+          contribution: originalContribution })
+        createRenderEffect(() => { JSON.stringify(state) })
+        const cycle = snapshotDecisionRequest({ caseRef: "case:design-test-case:design-test-incarnation",
+          selection: { selectionRef: state.selection.selectionRef, period: state.selection.period } })
+        expect(admitted(SfCollaboration.operations["collaboration.cycle-read"].input,
+          SfNativeOperationBindings["collaboration.cycle-read"]!, cycle)).toEqual({
+            caseRef: "case:design-test-case:design-test-incarnation",
+            selection: { selectionRef: "design-test-selection", period: source.horizon },
+          })
+        const mutation = { expectedStorageVersion: 4, idempotencyKey: "design-test-original-intent" }
+        const consumed = snapshotDecisionRequest({ proposal: state.contribution,
+          sourceRef: source.sourceRefs[0]!.refId, period: state.selection.period, mutation })
+        expect(admitted(SfCollaboration.operations["collaboration.question-consume"].input,
+          SfNativeOperationBindings["collaboration.question-consume"]!, consumed)).toEqual({
+            proposal: originalContribution, sourceRef: source.sourceRefs[0]!.refId, period: source.horizon, mutation,
+          })
       } finally { dispose() }
     })
   })
