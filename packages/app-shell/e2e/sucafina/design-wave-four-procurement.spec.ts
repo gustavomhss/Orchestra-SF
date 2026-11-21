@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test"
 import { waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop, reviewActions } from "./design-support/wave-four"
 import { waveFourProcurementData } from "./design-support/wave-four-procurement-data"
+import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
 const screens = [
   { id: "CAP24", path: "/orchestra/sf-procurement/overview", title: "Dashboard", br: "Visão de Procurement" },
@@ -195,18 +196,24 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
       url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
     const surface = page.locator(".sf-u12-root")
     await expect(surface.locator(".sf-u12-comparison tr[data-sf-row]")).toHaveCount(3)
+    const comparisonOverview = async () => {
+      const comparison = surface.locator(".sf-u12-comparison")
+      await comparison.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest", behavior: "instant" }))
+      await expect(comparison.getByRole("heading", { level: 3 })).toBeInViewport()
+      await expect(comparison.locator("tr[data-sf-row]").first()).toBeInViewport()
+    }
     await surface.locator(".sf-u12-switch").getByRole("button", { name: "Sourcing", exact: true }).click()
     const editor = surface.locator(".sf-u12-editor")
     await expect(editor.locator(".sf-u12-quote")).toHaveCount(3)
     await expect(editor.locator(".sf-u12-quote").first().getByLabel("Description", { exact: true })).toHaveValue(data.description)
     await surface.locator(".sf-u12-switch").getByRole("button", { name: "Compare quotations", exact: true }).click()
     await expect(surface.locator(".sf-u12-comparison tr[data-sf-row]")).toHaveCount(3)
-    await scrollPageTop(page)
+    await comparisonOverview()
     await capture(page, info, "CAP25-dark-desktop-recorded-quote-comparison-test-data")
     await scheme(page, "light")
     await capture(page, info, "CAP25-light-desktop-recorded-quote-comparison-test-data")
     await narrow()
-    await scrollPageTop(page)
+    await comparisonOverview()
     await capture(page, info, "CAP25-light-320-recorded-quote-comparison-test-data")
     await desktop()
     await scheme(page, "dark")
@@ -228,7 +235,7 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
     await capture(page, info, "CAP25-dark-desktop-sourcing-review-actions-test-data")
     await confirm("Confirm once")
     await expect(surface).toHaveAttribute("data-confirmation-phase", "producer-confirmed")
-    await record("/orchestra/sf-procurement/requests/" + encodeURIComponent(requestRef(data.requests.sourcing)) + "/sourcing")
+    await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(requestRef(data.requests.sourcing)) + "/sourcing")
     await expect(editor.getByLabel("Evaluator", { exact: true })).toHaveValue(evaluator)
     await expect(editor.locator(".sf-u12-quote").first().getByLabel("Description", { exact: true })).toHaveValue(data.description)
     await expect(editor.locator(".sf-u12-quote").first().getByLabel("Notes", { exact: true }))
@@ -264,7 +271,7 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
 
   await waveFourTest.step("CAP26 · original sourcing and PO decisions; rejected order remains editable", async () => {
     const sourceRef = requestRef(data.requests.sourceApproval)
-    await record("/orchestra/sf-procurement/approvals/" + encodeURIComponent(sourceRef) + "/review", "My approvals")
+    await record("/orchestra/sf-procurement/approvals/" + encodeSfRouteRef(sourceRef) + "/review", "My approvals")
     const surface = page.locator(".sf-u13-remaining-root")
     const detail = surface.locator(".sf-u13-remaining-detail")
     await expect(detail).toContainText(data.requests.sourceApproval)
@@ -278,7 +285,7 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
     await assertRowStatus(data.requests.sourceApproval, "po_draft")
 
     const poRef = requestRef(data.requests.poApproval)
-    await record("/orchestra/sf-procurement/approvals/" + encodeURIComponent(poRef) + "/review", "My approvals")
+    await record("/orchestra/sf-procurement/approvals/" + encodeSfRouteRef(poRef) + "/review", "My approvals")
     await expect(detail).toContainText("Submitted PO terms")
     await expect(detail).toContainText("22400")
     await detail.getByLabel("Rejection reason", { exact: true })
@@ -290,13 +297,13 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
     await capture(page, info, "CAP26-dark-desktop-po-decision-review-actions-test-data")
     await confirm("Confirm once")
     await assertRowStatus(data.requests.poApproval, "po_rejected")
-    await record("/orchestra/sf-procurement/requests/" + encodeURIComponent(poRef) + "/po")
+    await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(poRef) + "/po")
     const po = page.locator("[data-sf-po-fields]")
     await expect(po.locator(".sf-u11-line").first().getByLabel("Unit price", { exact: true })).toHaveValue("22400")
     await po.getByLabel("Delivery conditions", { exact: true }).fill("Design test data · Regional service owner accepts delivery after review.")
     await page.locator(".sf-u11-detail").getByRole("button", { name: "Save purchase order draft", exact: true }).click()
     await confirm("Confirm action")
-    await record("/orchestra/sf-procurement/requests/" + encodeURIComponent(poRef) + "/po")
+    await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(poRef) + "/po")
     await expect(po.getByLabel("Delivery conditions", { exact: true })).toHaveValue("Design test data · Regional service owner accepts delivery after review.")
     await expect(po.locator(".sf-u11-line").first().getByLabel("Notes", { exact: true })).toHaveValue("Design test data · Recorded line detail.")
     await scrollPageTop(page)
