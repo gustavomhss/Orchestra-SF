@@ -36,30 +36,26 @@ export const reportsTest = test.extend<{ reports: ReportFixture }>({
 })
 
 /** Serial checkpoints share the original browser and durable installation. */
-export async function openReportsJourney(browser: Browser, info: TestInfo) {
-  const context = await browser.newContext()
+export function openReportsJourney(browser: Browser, info: TestInfo) {
   const release = Promise.withResolvers<void>()
   const ready = Promise.withResolvers<ReportFixture & { page: Page }>()
-  const page = await context.newPage().catch(async (error: unknown) => {
-    await context.close()
-    throw error
-  })
-  const installation = withSeededReports(page, info, async (fixture) => {
-    ready.resolve({ ...fixture, page })
-    await release.promise
-  })
-  void installation.catch(ready.reject)
-  const close = async () => {
-    release.resolve()
+  const installation = browser.newContext().then(async (context) => {
     try {
-      await installation
+      const page = await context.newPage()
+      await withSeededReports(page, info, async (fixture) => {
+        ready.resolve({ ...fixture, page })
+        await release.promise
+      })
     } finally {
       await context.close()
     }
-  }
-  const started = await ready.promise.catch(async (error: unknown) => {
-    await close().catch(() => undefined)
-    throw error
   })
-  return { ...started, close }
+  void installation.catch(ready.reject)
+  return {
+    ready: ready.promise,
+    close: () => {
+      release.resolve()
+      return installation
+    },
+  }
 }

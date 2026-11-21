@@ -40,16 +40,22 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
 
   reportsTest.describe("RPT-02 · exact human answer and history", () => {
     reportsTest.describe.configure({ mode: "serial" })
-    let journey: Awaited<ReturnType<typeof openReportsJourney>>
+    let installation: ReturnType<typeof openReportsJourney>
+    let journey: Awaited<ReturnType<typeof openReportsJourney>["ready"]>
     let saved: Awaited<ReturnType<typeof prepareReview>>["saved"]
     let submitted: Awaited<ReturnType<typeof submitHumanAnswer>>
     let confirmed: Awaited<ReturnType<typeof confirmSubmittedHumanAnswer>>
     let edited: Awaited<ReturnType<typeof editHumanAnswer>>
 
     reportsTest.beforeAll(async ({ browser }, info) => {
-      journey = await openReportsJourney(browser, info)
+      info.setTimeout(180_000)
+      installation = openReportsJourney(browser, info)
+      journey = await installation.ready
     })
-    reportsTest.afterAll(() => journey?.close())
+    reportsTest.afterAll(async ({}, info) => {
+      info.setTimeout(180_000)
+      await installation?.close()
+    })
 
     reportsTest("RPT-02a recovers the question and reply receipts from the installed Review", async ({}, info) => {
       info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — UI48 confirmations/resumo nao provam a resposta humana C05 exata, reuso sem nova escrita, rejeicao do seletor apos edit e historia intacta." })
@@ -153,15 +159,21 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
 
   reportsTest.describe("RPT-04 · real session revocation", () => {
     reportsTest.describe.configure({ mode: "serial" })
-    let journey: Awaited<ReturnType<typeof openReportsJourney>>
+    let installation: ReturnType<typeof openReportsJourney>
+    let journey: Awaited<ReturnType<typeof openReportsJourney>["ready"]>
     let saved: Awaited<ReturnType<typeof prepareReview>>["saved"]
     let artifact: Awaited<ReturnType<typeof exportReview>>
     let answer: Awaited<ReturnType<typeof confirmHumanAnswer>>["answer"]
 
     reportsTest.beforeAll(async ({ browser }, info) => {
-      journey = await openReportsJourney(browser, info)
+      info.setTimeout(180_000)
+      installation = openReportsJourney(browser, info)
+      journey = await installation.ready
     })
-    reportsTest.afterAll(() => journey?.close())
+    reportsTest.afterAll(async ({}, info) => {
+      info.setTimeout(180_000)
+      await installation?.close()
+    })
 
     reportsTest("RPT-04a confirms the preserved answer and obtains the protected Office artifact", async ({}, info) => {
       info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — falta prova nativa de revogacao real e invalidacao dos caches de meeting, Office e resposta C05 para principal anterior, mais controle positivo com novo owner." })
