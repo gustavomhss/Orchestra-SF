@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import { readFile } from "node:fs/promises"
 import { resolve, sep } from "node:path"
 import { createRequire } from "node:module"
+import { exerciseTeamC17 } from "./entra-team-c17.mjs"
 
 const { SF_PROOF_PORT: port, SF_PROOF_KEY: ingressProof, SF_PROOF_WEB: webRoot } = process.env
 assert(port && ingressProof && webRoot)
@@ -12,13 +13,18 @@ const team = "44444444-4444-4444-8444-444444444444"
 const dashboard = mount + "/dashboard"
 const expectedTeamRoute = mount + "/teams/" + team + "/dashboard"
 const host = "sf-ingress.example.test:" + port
-function request(path, { cookie, withProof = true, accept = "text/html" } = {}) {
+function request(path, { cookie, withProof = true, accept = "text/html", method = "GET", json, idempotencyKey, originHeader, timeout = 20_000 } = {}) {
   return fetch(local + path, {
     redirect: "manual",
-    signal: AbortSignal.timeout(20_000),
+    method,
+    body: json === undefined ? undefined : JSON.stringify(json),
+    signal: AbortSignal.timeout(timeout),
     headers: {
       accept,
       host,
+      ...(json === undefined ? {} : { "content-type": "application/json" }),
+      ...(json === undefined && !originHeader ? {} : { origin }),
+      ...(idempotencyKey ? { "idempotency-key": idempotencyKey } : {}),
       ...(withProof ? { "x-sf-ingress-proof": ingressProof } : {}),
       ...(cookie ? { cookie } : {}),
     },
@@ -132,7 +138,7 @@ try {
         const upstream = await fetch(local + url.pathname + url.search, {
           method: incoming.method(),
           redirect: "manual",
-          signal: AbortSignal.timeout(15_000),
+          signal: AbortSignal.timeout(url.searchParams.get("sf") === "current-choice-prepare" ? 320_000 : url.searchParams.has("sf") ? 120_000 : 15_000),
           headers: { ...headers, host, "x-sf-ingress-proof": ingressProof },
           body: incoming.postDataBuffer() ?? undefined,
         })
@@ -147,6 +153,7 @@ try {
       await shell.waitFor({ timeout: 25_000 })
       if (eligible) {
         await tab.locator(`[data-sf-team-selected="${team}"]`).waitFor({ timeout: 25_000 })
+        await exerciseTeamC17({ tab, request, origin, binding, team, allowed, denied, signIn })
       } else {
         await tab.waitForFunction(() => {
           const node = document.querySelector("[data-sf-teams-shell]")

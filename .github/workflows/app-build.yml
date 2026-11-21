@@ -1,5 +1,5 @@
 name: app-build
-run-name: Azure Entra C17 package proof with Bun 1.4.1
+run-name: Azure Entra installed Team CurrentChoice proof
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
         required: true
 
 concurrency:
-  group: c17-bun-proof
+  group: c17-team-proof
   cancel-in-progress: false
 
 permissions:
@@ -22,7 +22,7 @@ defaults:
 
 jobs:
   build:
-    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/c17-bun-proof'"
+    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/c17-team-proof'"
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
@@ -107,7 +107,7 @@ jobs:
         working-directory: apps/web
         env:
           ORCHESTRA_BRAND: sucafina
-        run: bun run build --base / --sourcemap false --manifest linux-web-build-manifest.json
+        run: bun run build --base / --sourcemap hidden --manifest linux-web-build-manifest.json
 
       - name: Retrieve the hosted proof harness
         env:
@@ -116,7 +116,7 @@ jobs:
           set -euo pipefail
           git fetch --depth 1 origin "$WORKFLOW_SHA"
           mkdir -m 0700 "$RUNNER_TEMP/azure-entra-proof"
-          for fixture in entra-native-provider.mjs entra-native-http.mjs; do
+          for fixture in entra-native-provider.mjs entra-native-http.mjs entra-team-c17.mjs; do
             git show "$WORKFLOW_SHA:.github/ci/$fixture" > "$RUNNER_TEMP/azure-entra-proof/$fixture"
           done
 
@@ -127,7 +127,29 @@ jobs:
           set -euo pipefail
           archive_dir="$RUNNER_TEMP/azure-entra-package"
           mv apps/web/dist/linux-web-build-manifest.json "$RUNNER_TEMP/"
-          bun apps/cli/script/azure-entra-package.ts --dist "$PWD/apps/cli/dist" --web "$PWD/apps/web/dist" --out "$archive_dir" --source-sha "$SOURCE_REVISION"
+          python3 -B - "$RUNNER_TEMP/web-source-maps" <<'PYMAP'
+          import hashlib, json, sys
+          from pathlib import Path
+
+          web = Path("apps/web/dist")
+          maps = Path(sys.argv[1])
+          maps.mkdir(mode=0o700)
+          records = []
+          digest = lambda file: hashlib.sha256(file.read_bytes()).hexdigest()
+          for mapping in sorted(web.rglob("*.map")):
+              emitted = mapping.with_suffix("")
+              assert emitted.is_file()
+              rel = mapping.relative_to(web)
+              destination = maps / rel
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              mapping.rename(destination)
+              records.append({"output": "bin/web/" + emitted.relative_to(web).as_posix(),
+                              "outputSha256": digest(emitted), "map": rel.as_posix(), "mapSha256": digest(destination)})
+          assert records and any(item["output"].endswith(".js") for item in records)
+          (maps / "index.json").write_text(json.dumps(records) + "\n")
+          PYMAP
+          bun apps/cli/script/azure-entra-package.ts --dist "$PWD/apps/cli/dist" --web "$PWD/apps/web/dist" --out "$archive_dir" --source-sha "$SOURCE_REVISION" --factory-source-map
+          tar -C "$RUNNER_TEMP/web-source-maps" -czf "$archive_dir/web-source-maps.tar.gz" .
           filename=orchestra-sf-entra-linux-x64-baseline.tar.gz
           observed="$(sha256sum "$archive_dir/$filename" | cut -d' ' -f1)"
           expected="$(jq -er '.archiveSha256' "$archive_dir/orchestra-sf-entra-package-receipt.json")"
@@ -136,6 +158,10 @@ jobs:
             --artifact "$archive_dir/$filename" --receipt "$archive_dir/orchestra-sf-entra-package-receipt.json" \
             --candidate "$SOURCE_REVISION" --sha256 "$observed"
           printf '%s  %s\n' "$observed" "$filename" > "$archive_dir/SHA256SUMS"
+          tar -xOf "$archive_dir/$filename" distribution.json | jq -e --slurpfile maps "$RUNNER_TEMP/web-source-maps/index.json" '
+            ([.files[] | {key:.path, value:.sha256}] | from_entries) as $packed |
+            all($maps[0][]; .output as $path | $packed[$path] == .outputSha256)
+          ' > /dev/null
 
       - name: Bind compiler evidence to the packaged Linux executable
         env:
@@ -174,7 +200,8 @@ jobs:
           install -m 0644 "$web_manifest" "$archive_dir/web-build-manifest.json"
           (
             cd "$archive_dir"
-            sha256sum compile-evidence.json web-build-manifest.json >> SHA256SUMS
+            sha256sum compile-evidence.json web-build-manifest.json web-source-maps.tar.gz \
+              factory-source-map.json factory-source-map-receipt.json >> SHA256SUMS
           )
 
           jq -e --arg source "$SOURCE_REVISION" --arg tree "$(git rev-parse 'HEAD^{tree}')" \
@@ -247,8 +274,9 @@ jobs:
           PY
           cmp apps/cli/dist/cli-linux-x64-baseline/bin/orchestra "$vm/current/bin/orchestra"
 
-      - name: Exercise installed native Web and Team admission on loopback
+      - name: Exercise installed native Web, Team admission and C17 on loopback
         env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
           SOURCE_REVISION: ${{ steps.source.outputs.sha }}
         run: |
           set -euo pipefail
@@ -262,6 +290,8 @@ jobs:
             import { mkdir, writeFile } from "node:fs/promises"
             import { join } from "node:path"
             import { prepareLocalConfiguration } from "./modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
+            import freeze from "./modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
+            import { sfHumanActions } from "./modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
             const root = process.env.CI_RUNTIME
             const directory = join(root, "installation")
             const workspaceDirectory = join(root, "workspace")
@@ -274,11 +304,16 @@ jobs:
               ingressOrigin: "http://sf-ingress.example.test:" + port, mount: "/sucafina",
               tenantId: "11111111-1111-4111-8111-111111111111", clientId: "22222222-2222-4222-8222-222222222222",
               workspaceDirectory,
-              teams: "direct", enabledTeamIds: ["44444444-4444-4444-8444-444444444444"],
+              teams: "direct", enabledTeamIds: ["44444444-4444-4444-8444-444444444444", "44444444-4444-4444-8444-444444444445"],
               groups: {
                 dashboard: { admin: "group:55555555-5555-4555-8555-555555555555" },
-                planner: {}, procurement: {},
-              }, grants: [], scanner: null,
+                planner: { admin: "group:55555555-5555-4555-8555-555555555555" }, procurement: {},
+              }, grants: [{
+                principalRef: "33333333-3333-4333-8333-333333333333",
+                namespaces: ["cases", "preferences", "atlas", "outbox", "bi-artifacts"],
+                operations: freeze.operations.map((entry) => entry.operation),
+                humanActions: sfHumanActions,
+              }], scanner: null,
             }))
             await writeFile(join(directory, "client-secret.txt"), "hosted-ci-only", { mode: 0o600 })
             await writeFile(join(directory, "ingress-secret.txt"), process.env.CI_PROOF, { mode: 0o600 })
@@ -292,7 +327,7 @@ jobs:
             TMPDIR="$config/host-tmp" ORCHESTRA_CONFIG_DIR="$config/host-config" \
             ORCHESTRA_CREDENTIAL_KEY_FILE="$config/host-credential.key" ORCHESTRA_DB="$config/host-data/orchestra.db" \
             ORCHESTRA_INHERIT_CREDENTIALS=0 ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict \
-            SUCAFINA_NATIVE_TEAM_WEB=1 SUCAFINA_MICROSOFT_CONFIG="$config/installation.json" \
+            SUCAFINA_NATIVE_TEAM_DECISIONS=1 SUCAFINA_NATIVE_TEAM_WEB=1 SUCAFINA_MICROSOFT_CONFIG="$config/installation.json" \
             "$installed/orchestra" serve --hostname 127.0.0.1 --port "$CI_PORT" --installation "$installed/local/entry.mjs" \
             >"$CI_RUNTIME/server.log" 2>&1 &
           server=$!
@@ -321,7 +356,7 @@ jobs:
             TMPDIR="$config/host-tmp" ORCHESTRA_CONFIG_DIR="$config/host-config" \
             ORCHESTRA_CREDENTIAL_KEY_FILE="$config/host-credential.key" ORCHESTRA_DB="$config/host-data/orchestra.db" \
             ORCHESTRA_INHERIT_CREDENTIALS=0 ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict \
-            SUCAFINA_NATIVE_TEAM_WEB=1 SUCAFINA_MICROSOFT_CONFIG="$config/installation.json" SF_PROOF_FACTORY="$installed/local/entry.mjs" \
+            SUCAFINA_NATIVE_TEAM_DECISIONS=1 SUCAFINA_NATIVE_TEAM_WEB=1 SUCAFINA_MICROSOFT_CONFIG="$config/installation.json" SF_PROOF_FACTORY="$installed/local/entry.mjs" \
             "$installed/orchestra" serve --hostname 127.0.0.1 --port "$CI_PORT" \
             --installation "$RUNNER_TEMP/azure-entra-proof/entra-native-provider.mjs" >"$CI_RUNTIME/auth-server.log" 2>&1 &
           server=$!
@@ -337,13 +372,37 @@ jobs:
             cat "$CI_RUNTIME/auth-server.log"
             exit 1
           fi
+          archive_dir="$RUNNER_TEMP/azure-entra-package"
+          running_bin="$(readlink -f "/proc/$server/exe")"
+          packed_factory="$(readlink -f "$installed/local/entry.mjs")"
+          test "$running_bin" = "$(readlink -f "$installed/orchestra")"
+          binary_sha="$(sha256sum "/proc/$server/exe" | cut -d' ' -f1)"
+          factory_sha="$(sha256sum "$packed_factory" | cut -d' ' -f1)"
+          test "$binary_sha" = "$(jq -er '.binary.sha256' "$archive_dir/compile-provenance.json")"
+          test "$factory_sha" = "$(jq -er '.bundleSha256' "$archive_dir/orchestra-sf-entra-package-receipt.json")"
+          export SF_C17_RECEIPT="$CI_RUNTIME/c17-observed.json"
           if ! SF_PROOF_PORT="$CI_PORT" SF_PROOF_KEY="$CI_PROOF" SF_PROOF_WEB="$installed/web" \
-            bun "$RUNNER_TEMP/azure-entra-proof/entra-native-http.mjs"; then
+            bun "$RUNNER_TEMP/azure-entra-proof/entra-native-http.mjs" | tee "$archive_dir/c17-team-proof.log"; then
             # Report runtime exception classes and stack frames without request data.
             grep -E '^((Type|Reference|Syntax|Range|Aggregate)Error|[[:space:]]+at )' "$CI_RUNTIME/auth-server.log" \
               | sed -E 's/[?].*$//' | tail -30 || true
             exit 1
           fi
+          grep -F 'C17_TEAM_PACKAGE_OK' "$archive_dir/c17-team-proof.log" > /dev/null
+          jq -e --arg job "$CHECK_RUN_ID" --arg runtime "$binary_sha" --arg factory "$factory_sha" \
+            --arg spec "$(sha256sum "$RUNNER_TEMP/azure-entra-proof/entra-team-c17.mjs" | cut -d' ' -f1)" \
+            --arg log "$(sha256sum "$archive_dir/c17-team-proof.log" | cut -d' ' -f1)" \
+            --slurpfile package "$archive_dir/compile-provenance.json" '
+              select(.status == "pass" and .syntheticEntra and .prepared == 200 and .beforeAtlas == 503 and
+                .reload == 200 and .replay == 200 and .noTeam == 403 and .crossTeam == 403 and .revoked == 403 and .promotion == false) |
+              . + {schema: "sf-c17-installed-team-proof-v1", sourceSHA: $package[0].sourceSHA,
+                sourceTreeSHA: $package[0].sourceTreeSHA, workflowSHA: $package[0].workflowSHA,
+                runId: $package[0].runId, runAttempt: $package[0].runAttempt, jobId: $job,
+                tarSha256: $package[0].archiveSha256, binary: {path:"bin/orchestra", sha256:$runtime},
+                factory: {path:"bin/local/entry.mjs", sha256:$factory},
+                spec: {path:".github/ci/entra-team-c17.mjs", sha256:$spec},
+                teamDecisionsEnabled: true, evidenceSha256: $log}
+            ' "$SF_C17_RECEIPT" > "$archive_dir/c17-team-proof.json"
           printf '{"sourceSHA":"%s","temporaryInstall":true,"nativeWeb":true,"chromium":true,"noTeam":403,"directTeam":403,"syntheticProvider":true}\n' \
             "$SOURCE_REVISION" > "$RUNNER_TEMP/azure-entra-package/ci-validation.json"
 
