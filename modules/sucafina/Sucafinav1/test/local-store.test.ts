@@ -94,6 +94,7 @@ test("a cold sealed preimage keeps independent reads detached from the writable 
       const second = await reopened.transaction("dashboard", async (preimage) => ({ commit: false, value: preimage }))
       expect(second.data.record).toEqual({ name: "created", optional: undefined })
       expect(snapshot.data.record).toEqual({ name: "staged" })
+      retained.release()
       return { commit: true, value: undefined }
     }, { targetPreimageCurrent: retained.current })
     expect((await read(reopened)).snapshot.data.record).toEqual({ name: "staged" })
