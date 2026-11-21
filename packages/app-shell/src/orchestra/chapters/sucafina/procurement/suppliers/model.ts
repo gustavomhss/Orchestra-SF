@@ -28,6 +28,18 @@ export function supplierEdit(source: Supplier): SupplierEdit {
   ]) as SupplierEdit
 }
 
+/** Detach the reviewed edit from the store and omit absent properties before the JSON codec. */
+export function supplierCommandSnapshot(edit: SupplierEdit): SupplierEdit {
+  function copy(value: unknown): unknown {
+    if (Array.isArray(value)) return value.map(copy)
+    if (value === null || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) return value
+    return Object.fromEntries(Object.entries(value)
+      .filter(([, field]) => field !== undefined)
+      .map(([key, field]) => [key, copy(field)]))
+  }
+  return copy(edit) as SupplierEdit
+}
+
 export function supplierVersion(page: Cap27PageOk, ref: string): number | null {
   const version = page.value.versions["suppliers:" + ref]?.version
   return typeof version === "number" && Number.isSafeInteger(version) && version >= 0 ? version : null
@@ -48,6 +60,7 @@ export function uniqueSupplier(page: Cap27PageOk, ref: string) {
 /** Snapshot equality is an invalidation check, never an authorization grant. */
 export function supplierRevision(page: Cap27PageOk, ref: string): string | null {
   const record = uniqueSupplier(page, ref), version = supplierVersion(page, ref)
-  if (!record || version === null) return null
+  // Only the exact record projection can bind review and confirmation.
+  if (!record || version === null || page.value.selection.supplier !== ref) return null
   return JSON.stringify({ record, version, stamp: page.context, selection: page.value.selection, actions: page.value.allowedActionIds })
 }
