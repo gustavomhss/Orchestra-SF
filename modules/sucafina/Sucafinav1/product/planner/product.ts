@@ -1,3 +1,4 @@
+import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { ScenarioRequest } from "../contracts/operations.ts"
 import type { BusinessContextService } from "../contracts/business-context.ts"
 import type { DomainPortHost, PlannerPort, PlannerSourceHost } from "../contracts/ports.ts"
@@ -22,7 +23,7 @@ export type StandaloneScenarioProducer = {
 }
 
 /** Bind Planner to the installation's authenticated source lifecycle and domain ports. */
-export function createPlannerProduct(input: { standalone?: StandaloneScenarioProducer; host: DomainPortHost; scopedSources: SfScopedSourcePort; coverageFor: PlannerSourceHost["resolveForecastCoverage"]; evidence?: BusinessContextService; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; verifyAssumption?: PlannerScenarioInputs["verifyAssumption"]; sensitivity?: PlannerPort["evaluateSensitivity"]; storedScenarios?: Omit<Parameters<typeof createStoredPlannerScenarioHost>[0], "planner">; versionAuthorize?: Parameters<typeof createPlannerVersionsHost>[0]["humanAuthorize"] }) {
+export function createPlannerProduct(input: { standalone?: StandaloneScenarioProducer; host: DomainPortHost; scopedSources: SfScopedSourcePort; coverageFor: PlannerSourceHost["resolveForecastCoverage"]; evidence?: BusinessContextService; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; verifyAssumption?: PlannerScenarioInputs["verifyAssumption"]; sensitivity?: PlannerPort["evaluateSensitivity"]; storedScenarios?: Omit<Parameters<typeof createStoredPlannerScenarioHost>[0], "planner">; versionAuthorize?: Parameters<typeof createPlannerVersionsHost>[0]["humanAuthorize"] }) {
   const plannerSources = createSfPlannerSourceHost({ host: input.host, scopedSources: input.scopedSources, coverageFor: input.coverageFor })
   const sources: PlannerSourceHost = input.standalone ? { ...plannerSources,
     resolveForecastSource: (reference, context) => input.standalone!.supportsSource(reference)

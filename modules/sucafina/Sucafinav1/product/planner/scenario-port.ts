@@ -5,7 +5,7 @@ import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { SourceRef } from "../contracts/context.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
-import type { ScenarioRequest } from "../contracts/operations.ts"
+import type { ForecastCompareRequest, ScenarioRequest } from "../contracts/operations.ts"
 import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { simulatePlannerOperations } from "./scenario.ts"
@@ -19,7 +19,9 @@ export type PlannerScenarioInputs = {
   verifyAssumption: (assumption: ScenarioRequest["assumptions"][number], context: TrustedDomainContext) => Promise<PortResult<{ fingerprint: string }>>
 }
 
-export async function simulateScenario(input: { host: DomainPortHost; sources: PlannerSourceHost; evidence?: BusinessContextService; inputs?: PlannerScenarioInputs; compare: PlannerPort["compareForecast"]; project: (snapshot: Snapshot, actor: Actor, versionId: string) => Record<string, unknown> | undefined; qualify: typeof buildPlannerFinancialProjection }, incoming: ScenarioRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["simulateScenario"]> {
+type ExpectedForecast = { source: string; coverage: string }
+
+export async function simulateScenario(input: { host: DomainPortHost; sources: PlannerSourceHost; evidence?: BusinessContextService; inputs?: PlannerScenarioInputs; compare: (request: ForecastCompareRequest, context: TrustedDomainContext, expected?: ExpectedForecast) => ReturnType<PlannerPort["compareForecast"]>; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; project: (snapshot: Snapshot, actor: Actor, versionId: string) => Record<string, unknown> | undefined; qualify: typeof buildPlannerFinancialProjection }, incoming: ScenarioRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["simulateScenario"]> {
   const parsed = decodeSfOperationInput("sf_scenario_simulate", incoming)
   if (!parsed.ok) return { status: "needs-input", reason: "invalid-scenario-input" }
   const request = parsed.value
@@ -93,9 +95,18 @@ export async function simulateScenario(input: { host: DomainPortHost; sources: P
     const absent = component.amount === null || !changed.has(component.id) && absentBefore.has(component.id)
     return { ...component, amount: absent ? null : component.amount, evidenceState: absent ? "absent" as const : changed.has(component.id) ? "hypothetical" as const : component.evidenceState }
   })
-  const rechecked = await input.compare({ baseRef: request.baseRef, candidateRef: request.baseRef, period, currency }, binding)
-  const coverageAgain = await input.sources.resolveForecastCoverage(request.baseRef, binding)
-  if (rechecked.status !== "ok" || rechecked.value.sourceRefs.some((ref) => ref.refDigest !== source.value.evidence.refDigest) || digestSfValue(coverageAgain) !== digestSfValue(coverage) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "source-or-authority-changed" }
+  const expected = !request.operations.length && !request.assumptions.length && input.currentChoicePreparing?.(binding, request.baseRef) &&
+    [source.value.evidence, ...coverage.value.basis.sourceRefs, ...coverage.value.assessment.evaluatedSourceRefs,
+      ...coverage.value.assessment.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
+      .every((ref) => ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version")
+    ? { source: digestSfValue(source), coverage: digestSfValue(coverage) } : undefined
+  if (!expected) {
+    const rechecked = await input.compare({ baseRef: request.baseRef, candidateRef: request.baseRef, period, currency }, binding)
+    const coverageAgain = await input.sources.resolveForecastCoverage(request.baseRef, binding)
+    if (rechecked.status !== "ok" || rechecked.value.sourceRefs.some((ref) => ref.refDigest !== source.value.evidence.refDigest) ||
+        digestSfValue(coverageAgain) !== digestSfValue(coverage) || !await input.host.revalidate(binding))
+      return { status: "stale", reason: "source-or-authority-changed" }
+  }
   const confirmationsAgain = await Promise.all(confirmed.map((assumption) => input.inputs!.verifyAssumption(assumption, binding)))
   if (confirmationsAgain.some((entry, index) => digestSfValue(entry) !== digestSfValue(confirmations[index]))) return { status: "stale", reason: "assumption-confirmation-changed" }
   const replacementEgress = await Promise.all(request.operations.map((operation) => operation.replacementRef && input.inputs ? input.inputs.resolveAmount(operation.replacementRef, binding) : undefined))
@@ -107,9 +118,19 @@ export async function simulateScenario(input: { host: DomainPortHost; sources: P
   if (!request.operations.length && !request.assumptions.length) {
     // A request without hypothetical inputs observes the current source. Financial
     // completeness authenticates that observation; it never executes a choice or command.
-    const latestSource = structuredClone(await input.sources.resolveForecastSource(request.baseRef, binding))
-    const latestCoverage = structuredClone(await input.sources.resolveForecastCoverage(request.baseRef, binding))
-    if (digestSfValue(latestSource) !== digestSfValue(source) || digestSfValue(latestCoverage) !== digestSfValue(coverage) || http.signal.aborted || !await input.host.revalidate(binding)) return { status: "stale", reason: "source-scenario-evidence-changed" }
+    // The installed preparation's final comparison independently pins both
+    // complete results to the original observations across its Planner reads.
+    if (expected) {
+      const latest = await input.compare({ baseRef: request.baseRef, candidateRef: request.baseRef, period, currency }, binding, expected)
+      if (latest.status !== "ok" || http.signal.aborted || !input.currentChoicePreparing?.(binding, request.baseRef) || input.host.requestFor(binding) !== http)
+        return { status: "stale", reason: "source-scenario-evidence-changed" }
+    }
+    if (!expected) {
+      const latestSource = structuredClone(await input.sources.resolveForecastSource(request.baseRef, binding))
+      const latestCoverage = structuredClone(await input.sources.resolveForecastCoverage(request.baseRef, binding))
+      if (digestSfValue(latestSource) !== digestSfValue(source) || digestSfValue(latestCoverage) !== digestSfValue(coverage) || http.signal.aborted || !await input.host.revalidate(binding))
+        return { status: "stale", reason: "source-scenario-evidence-changed" }
+    }
     const assessment = coverage.value.assessment
     const sourceRefs = [source.value.evidence, ...coverage.value.basis.sourceRefs, ...assessment.evaluatedSourceRefs, ...assessment.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
       .filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index)

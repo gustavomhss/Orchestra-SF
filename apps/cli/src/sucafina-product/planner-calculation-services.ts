@@ -10,8 +10,8 @@ import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/produc
 import { createScenarioRequestStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
 import { createPlannerCalculationEvidence } from "../../../../modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts"
 import { createPlannerPort } from "../../../../modules/sucafina/Sucafinav1/product/planner/port.ts"
-import { plannerScenarioDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
 import type { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
+import { plannerScenarioDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
 import { createSfPlannerCalculationHistory } from "./planner-calculation-history.ts"
 import { createSfPlannerCalculationReadScope, plannerRequestIdentity } from "./planner-calculation-read-scope.ts"
 import { createSfPlannerCalculationRoot } from "./planner-calculation-root.ts"
@@ -24,6 +24,7 @@ type ProducerInput = Parameters<typeof createScenarioRequestStore>[0]
 type Persist = ReturnType<typeof createPlannerResultPersistence>
 type CalculationVerifier = ReturnType<typeof createPlannerCalculationEvidence>
 type StoredScenario = Parameters<CalculationVerifier["verifyCalculationSources"]>[0]
+type ObserveRegisteredRequest = (resultRef: string, recordDigest: string) => void
 type PlannerRecord = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Calculation = Extract<BusinessEvidenceRef, { kind: "calculation" }>
 type LocalSourcePlan = { record: PlannerRecord; calculations: readonly Calculation[] }
@@ -45,9 +46,11 @@ export function createSfPlannerCalculationServices(input: {
   lockedSourceFences: () => SourceFences | undefined
   withCalculationCase: SfCalculationCaseScope
   withHistoricalCalculationCase: SfCalculationCaseScope
+  currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean
   resolveHistoricalForecastCoverage: PlannerSourceHost["resolveForecastCoverage"]
 }) {
-  const captures = new WeakMap<TrustedDomainContext, { requestDigest: string; resultDigest: string; resultRef?: string; sources: SourceFences }>()
+  const captures = new WeakMap<TrustedDomainContext, { requestDigest: string; resultDigest: string; resultRef?: string; sources: SourceFences;
+    producerResult?: { request: Request; lease: TrustedDomainContext["lease"]; bindingDigest: string; stored: StoredScenario } }>()
   // Track ancestors of one invocation; parallel readers of the same real run
   // must not be mistaken for a persisted cycle or borrow each other's proof.
   type ReplayScope = { call: TrustedDomainContext; request: Request; requestDigest: string; binding: string; runs: ReadonlySet<string>; runId: string; open: boolean; observation?: ReadObservation }
@@ -69,7 +72,13 @@ export function createSfPlannerCalculationServices(input: {
     },
     authorizeProducer: async (request, resultRef, engineVersion, call) => {
       const captured = captures.get(call)
-      return !!captured && captured.resultRef === resultRef && captured.requestDigest === digestSfValue(request) && engineVersion === "planner-runtime-v1" && await input.host.revalidate(call)
+      if (!captured || captured.resultRef !== resultRef || captured.requestDigest !== digestSfValue(request) ||
+          engineVersion !== "planner-runtime-v1" || !await input.host.revalidate(call) || captures.get(call) !== captured) return false
+      const proof = captured.producerResult
+      if (!proof) return true
+      if (input.host.requestFor(call) !== proof.request || proof.request.signal.aborted || call.lease !== proof.lease ||
+          proof.bindingDigest !== digestSfValue(call.binding)) return false
+      return proof.stored
     },
     verifySnapshot: (snapshot, record, call) => {
       const captured = captures.get(call)
@@ -82,7 +91,7 @@ export function createSfPlannerCalculationServices(input: {
   })
   // Keep the conservative producer lane available. Nested issuance uses the actual
   // Planner product below, including its input resolvers and live evidence service.
-  const recordOnlyFor = (coverageFor: PlannerSourceHost["resolveForecastCoverage"]) => createPlannerPort({ host: input.host, sources: { ...input.sources,
+  const recordOnlyFor = (coverageFor: PlannerSourceHost["resolveForecastCoverage"], currentChoicePreparing?: typeof input.currentChoicePreparing) => createPlannerPort({ host: input.host, currentChoicePreparing, sources: { ...input.sources,
     resolveForecastCoverage: async (reference, call) => {
       const coverage = await coverageFor(reference, call)
       if (coverage.status !== "ok") return coverage
@@ -93,7 +102,7 @@ export function createSfPlannerCalculationServices(input: {
       return coverage
     },
   } })
-  const recordOnly = recordOnlyFor(input.sources.resolveForecastCoverage)
+  const recordOnly = recordOnlyFor(input.sources.resolveForecastCoverage, input.currentChoicePreparing)
   const historicalRecordOnly = recordOnlyFor(input.resolveHistoricalForecastCoverage)
   const historical = createSfPlannerCalculationHistory({ host: input.host, state: input.state, authorizeCase: input.authorizeCase, evidence: input.evidence,
     replayRecordOnly: historicalRecordOnly.simulateScenario, withCalculationCase: input.withHistoricalCalculationCase, lockedSourceFences: input.lockedSourceFences,
@@ -302,23 +311,47 @@ export function createSfPlannerCalculationServices(input: {
     })
   }
   const issue: typeof calculation.issue = (runId, call) => issueObserved(runId, call, async (value) => ({ status: "ok", value }))
-  const persistAndIssue = async (incoming: Extract<Parameters<Persist>[0], { kind: "scenario" }>, callId: string,
-    call: TrustedDomainContext, comparisonReplay?: Parameters<Persist>[3]): Promise<PortResult<{ resultRef: string; calculation: Calculation }>> => {
+  const persistScenario = async (incoming: Extract<Parameters<Persist>[0], { kind: "scenario" }>, callId: string,
+    call: TrustedDomainContext, comparisonReplay?: Parameters<Persist>[3], observeRegisteredRequest?: ObserveRegisteredRequest): Promise<PortResult<{ resultRef: string; calculation?: Calculation }>> => {
     if (captures.has(call)) return { status: "unavailable", reason: "calculation-publication-already-active" }
     const value = structuredClone(incoming)
     const fences = await input.readSourceFences(call)
     if (!fences) return { status: "unavailable", reason: "calculation-source-fence-unavailable" }
-    const replay = await input.replayScenario(value.request, call)
-    if (replay.status !== "ok") return replay
-    if (plannerScenarioDigest(replay.value) !== plannerScenarioDigest(value.result)) return { status: "stale", reason: "calculation-result-replay-changed" }
-    const captured = { requestDigest: digestSfValue(value.request), resultDigest: digestSfValue(value.result), resultRef: undefined as string | undefined, sources: fences }
+    const useWriterReadback = !!observeRegisteredRequest && call.kind === "ui" && !value.request.assumptions.length && !value.request.operations.length &&
+      !!plannerRecordSources({ sourceRefs: value.result.sourceRefs, result: value.result })
+    if (!useWriterReadback) {
+      const replay = await input.replayScenario(value.request, call)
+      if (replay.status !== "ok") return replay
+      if (plannerScenarioDigest(replay.value) !== plannerScenarioDigest(value.result)) return { status: "stale", reason: "calculation-result-replay-changed" }
+    }
+    const captured: NonNullable<ReturnType<typeof captures.get>> = { requestDigest: digestSfValue(value.request), resultDigest: digestSfValue(value.result), sources: fences }
     captures.set(call, captured)
     try {
-      const saved = await input.persist(value, callId, call, { ...comparisonReplay, simulateScenario: input.replayScenario })
+      const request = input.host.requestFor(call)
+      const lease = call.lease
+      const bindingDigest = digestSfValue(call.binding)
+      // For record-only CurrentChoice the writer already runs the canonical
+      // simulator on both sides of its commit.
+      const saved = await input.persist(value, callId, call, { ...comparisonReplay, simulateScenario: input.replayScenario }, useWriterReadback ? (stored) => {
+        // Only share the writer's verified envelope for the same live call and
+        // physical Planner sources. Registration still re-reads the exact C08
+        // envelope and separately verifies sources after its own commit.
+        if (request && input.host.requestFor(call) === request && !request.signal.aborted && call.lease === lease &&
+            bindingDigest === digestSfValue(call.binding) && stored.requestDigest === captured.requestDigest &&
+            stored.resultDigest === captured.resultDigest && plannerRecordSources(stored))
+          captured.producerResult = { request, lease, bindingDigest, stored: structuredClone(stored) }
+      } : undefined)
       if (saved.status !== "ok") return saved
       captured.resultRef = saved.value.resultRef
+      if (captured.producerResult?.stored.resultRef !== captured.resultRef) delete captured.producerResult
       let published: PortResult<Calculation> | undefined
-      const registered = await requests.register({ resultRef: saved.value.resultRef, request: value.request, engineVersion: "planner-runtime-v1" }, call, async (stored, verify) => {
+      const registered = await requests.register({ resultRef: saved.value.resultRef, request: value.request, engineVersion: "planner-runtime-v1" }, call, async (stored, verify, committedDigest) => {
+        if (captured.producerResult) {
+          const observed = await verify()
+          if (observed.status !== "ok") return observed
+          return digestSfValue(observed.value) === committedDigest ? observed
+            : { status: "unavailable", reason: "calculation-request-binding-unavailable" }
+        }
         if (call.kind !== "ui" || !input.host.persistence.currentSnapshotScope ||
           value.request.assumptions.some((assumption) => assumption.state !== "hypothetical") ||
           value.request.operations.some((operation) => operation.replacementRef) ||
@@ -333,14 +366,35 @@ export function createSfPlannerCalculationServices(input: {
         return receipt ?? { status: "unavailable", reason: "calculation-request-binding-unavailable" }
       })
       if (registered.status !== "ok") return { status: registered.status, reason: "calculation-request-binding-unavailable" }
+      const proof = captured.producerResult
+      if (proof) {
+        // Installed record-only CurrentChoice consumes the saved result, with
+        // a separately verified request, and does not publish a Calculation.
+        // Later evidence reads still replay that registered request on demand.
+        if (!await input.host.revalidate(call) || captures.get(call) !== captured ||
+            input.host.requestFor(call) !== proof.request || proof.request.signal.aborted ||
+            call.lease !== proof.lease || digestSfValue(call.binding) !== proof.bindingDigest)
+          return { status: "denied", reason: "calculation-authority-changed" }
+        observeRegisteredRequest?.(saved.value.resultRef, digestSfValue(registered.value))
+        return { status: "ok", value: { resultRef: saved.value.resultRef } }
+      }
       const issued = published ?? await issue(saved.value.resultRef, call)
       return issued.status === "ok" ? { status: "ok", value: { resultRef: saved.value.resultRef, calculation: issued.value } } : issued
     } catch { return { status: "unavailable", reason: "calculation-publication-unavailable" } }
     finally { captures.delete(call) }
   }
-  const persist: Persist = async (incoming, callId, call, comparisonReplay) => {
+  const persistAndIssue = async (incoming: Extract<Parameters<Persist>[0], { kind: "scenario" }>, callId: string,
+    call: TrustedDomainContext, comparisonReplay?: Parameters<Persist>[3]): Promise<PortResult<{ resultRef: string; calculation: Calculation }>> => {
+    const persisted = await persistScenario(incoming, callId, call, comparisonReplay)
+    if (persisted.status !== "ok") return persisted
+    return persisted.value.calculation
+      ? { status: "ok", value: { resultRef: persisted.value.resultRef, calculation: persisted.value.calculation } }
+      : { status: "unavailable", reason: "calculation-publication-unavailable" }
+  }
+  const persistResult = async (incoming: Parameters<Persist>[0], callId: string, call: TrustedDomainContext,
+    comparisonReplay?: Parameters<Persist>[3], observeRegisteredRequest?: ObserveRegisteredRequest): ReturnType<Persist> => {
     if (incoming.kind !== "scenario") return input.persist(incoming, callId, call, comparisonReplay)
-    const published = await persistAndIssue(incoming, callId, call, comparisonReplay)
+    const published = await persistScenario(incoming, callId, call, comparisonReplay, observeRegisteredRequest)
     return published.status === "ok" ? { status: "ok", value: { resultRef: published.value.resultRef } } : published
   }
   const resolveEvidence = async (ref: BusinessEvidenceRef, call: TrustedDomainContext, cited?: boolean): Promise<BusinessEvidenceResolution> => {
@@ -401,10 +455,12 @@ export function createSfPlannerCalculationServices(input: {
       return resolved.status === "ok" && digestSfValue(ref) === digestSfValue(captured) ? resolved.value : unavailable()
     } catch { return unavailable() }
   }
-  return { persist, persistAndIssue, issue, resolveEvidence, resolveHistoricalEvidence: historical.resolve, verifyCalculationSources, requests: { read: requests.read } }
+  const persist: Persist = (incoming, callId, call, replay) => persistResult(incoming, callId, call, replay)
+  return { persist, persistCurrentChoice: persistResult, persistAndIssue, issue,
+    resolveEvidence, resolveHistoricalEvidence: historical.resolve, verifyCalculationSources, requests: { read: requests.read } }
 }
 
-function plannerRecordSources(stored: StoredScenario): readonly PlannerRecord[] | undefined {
+function plannerRecordSources(stored: Pick<StoredScenario, "sourceRefs" | "result">): readonly PlannerRecord[] | undefined {
   const refs = [...stored.sourceRefs, ...stored.result.sourceRefs, ...stored.result.costCoverage.evaluatedSourceRefs,
     ...stored.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
   if (!refs.length || !refs.every((ref): ref is PlannerRecord => ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version")) return undefined
