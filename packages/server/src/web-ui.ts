@@ -23,12 +23,23 @@ export async function resolveRoot(candidates: ReadonlyArray<string | undefined>)
   return undefined
 }
 
+export async function read(root: string, pathname: string, options: { index: boolean; head?: boolean }) {
+  const base = path.resolve(root)
+  const requested = path.resolve(base, "." + pathname)
+  const inside = requested === base || requested.startsWith(base + path.sep)
+  const file = inside && await exists(requested) ? requested : options.index ? path.join(base, "index.html") : undefined
+  if (!file) return new Response(null, { status: 404 })
+  const bytes = new Uint8Array(await Bun.file(file).arrayBuffer())
+  const headers = new Headers({ "content-type": Bun.file(file).type })
+  if (file.endsWith(".html")) headers.set("content-security-policy", cspForHtml(new TextDecoder().decode(bytes)))
+  return new Response(options.head ? null : bytes, { headers })
+}
+
 /**
  * Serves the built app-shell web UI from `root` for every GET the API does not claim. A path with no file falls back to
  * `index.html` so client-side routes load, as the earlier runtime's embedded UI did. The files are public: the API keeps its own auth.
  */
 export function layer(root: string) {
-  const base = path.resolve(root)
   return HttpRouter.add(
     "GET",
     "/*",
@@ -40,17 +51,9 @@ export function layer(root: string) {
         catch: () => "malformed" as const,
       }).pipe(Effect.option)
       if (Option.isNone(decoded)) return HttpServerResponse.empty({ status: 400 })
-      const pathname = decoded.value
-      const requested = path.resolve(base, "." + pathname)
-      // A path that climbs out of the root is answered like a missing file, never read.
-      const inside = requested === base || requested.startsWith(base + path.sep)
-      return yield* Effect.promise(async () => {
-        const file = inside && (await exists(requested)) ? requested : path.join(base, "index.html")
-        const body = new Uint8Array(await Bun.file(file).arrayBuffer())
-        const headers = new Headers({ "content-type": Bun.file(file).type })
-        if (file.endsWith(".html")) headers.set("content-security-policy", cspForHtml(new TextDecoder().decode(body)))
-        return HttpServerResponse.raw(body, { headers })
-      })
+      return yield* Effect.promise(() => read(root, decoded.value, { index: true })).pipe(
+        Effect.map(HttpServerResponse.fromWeb),
+      )
     }),
   )
 }

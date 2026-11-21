@@ -7,6 +7,7 @@ import { NodeHttpServerRequest, NodeStream } from "@effect/platform-node"
 import { SfFileRoutes } from "@orchestra/schema/sucafina/files/routes"
 import { SfReviewRoutes } from "@orchestra/schema/sucafina/reviews/routes"
 import type { Host } from "@orchestra/core/host"
+import { WebUi } from "@orchestra/server/web-ui"
 import type { Options } from "@orchestra/server/routes"
 import { Effect, Option, Stream } from "effect"
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
@@ -27,7 +28,12 @@ type Installation = {
 }
 
 /** The operator selects trusted code at startup. HTTP requests cannot select the factory or its origin. */
-export async function loadSfInstallation(file: string, hostname: string, port: number | undefined) {
+export async function loadSfInstallation(
+  file: string,
+  hostname: string,
+  port: number | undefined,
+  resolveWebRoot?: () => Promise<string | undefined>,
+) {
   if (!path.isAbsolute(file)) throw new Error("--installation requires an absolute factory path")
   if (!port || !Number.isInteger(port) || port < 1 || port > 65_535) {
     throw new Error("--installation requires an explicit port from 1 to 65535")
@@ -64,6 +70,12 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
   if ("trustedIngress" in value && !ingress) {
     await installation.dispose()
     throw new Error("Trusted installation ingress requires a loopback listener, canonical HTTP origin and authorizer")
+  }
+  const nativeWeb = "nativeWeb" in value && value.nativeWeb === true
+  const webRoot = nativeWeb && ingress ? await resolveWebRoot?.().catch(() => undefined) : undefined
+  if (nativeWeb && !webRoot) {
+    await installation.dispose()
+    throw new Error("Native installation Web requires trusted ingress and a built Web bundle")
   }
   const hostContributions = runtime && !ingress ? installation.host : undefined
   if (hostContributions !== undefined && (!Array.isArray(hostContributions) ||
@@ -106,7 +118,27 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     if (!url || (!ingress && url.origin !== origin.origin)) {
       return HttpServerResponse.empty({ status: 403, headers: ingress ? { connection: "close" } : undefined })
     }
-    if (url.pathname !== installation.mount && !url.pathname.startsWith(`${installation.mount}/`)) {
+    const mounted = url.pathname === installation.mount || url.pathname.startsWith(`${installation.mount}/`)
+    const discovery = !!webRoot && url.pathname === "/api/sucafina/installations"
+    if (!mounted && !discovery) {
+      if (webRoot && (incoming.method === "GET" || incoming.method === "HEAD")) {
+        if (incoming.headers["transfer-encoding"] || Number(incoming.headers["content-length"]) > 0)
+          return HttpServerResponse.empty({ status: 400, headers: { connection: "close" } })
+        const decoded = yield* Effect.try(() => decodeURIComponent(url.pathname)).pipe(Effect.option)
+        if (Option.isNone(decoded) || decoded.value.includes("\\") || decoded.value.includes("\0") ||
+          decoded.value.split("/").some((part) => part === "." || part === ".."))
+          return HttpServerResponse.empty({ status: 400 })
+        const index = decoded.value === "/" || decoded.value.startsWith("/orchestra/")
+        const asset = decoded.value.startsWith("/assets/") || decoded.value.startsWith("/brand/sucafina/")
+        if (index || asset) return yield* Effect.promise(async () => {
+          const response = await WebUi.read(webRoot, index ? "/" : decoded.value, {
+            index, head: incoming.method === "HEAD",
+          })
+          response.headers.set("Cache-Control", "no-store")
+          response.headers.set("X-Content-Type-Options", "nosniff")
+          return HttpServerResponse.fromWeb(response)
+        })
+      }
       return HttpServerResponse.empty({ status: 404 })
     }
     const configured = yield* HttpServerRequest.MaxBodySize
@@ -186,8 +218,8 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     dedicated: ingress !== undefined,
     host: hostContributions,
     discovery: runtime && !ingress ? installation.discovery : undefined,
-    // Effect registers a trailing wildcard for both the mount and its subtree.
-    layer: HttpRouter.add("*", `${installation.mount}/*`, route),
+    // An opted-in Web shell needs paths outside the mount. They still cross the same trusted-ingress gate.
+    layer: HttpRouter.add("*", webRoot ? "/*" : `${installation.mount}/*`, route),
   }
 }
 
