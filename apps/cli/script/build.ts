@@ -174,7 +174,7 @@ for (const { item, name, omni, omniFiles, treeSitter } of prepared) {
       ? await import("./compile-text-evidence")
       : undefined
     const proveText = textEvidence?.linuxBunTextWitness(binaryBytes)
-    const inputs = await Promise.all(Object.keys(metafile.inputs).filter(onDisk).map(async (key) => {
+    const checked = await Promise.allSettled(Object.keys(metafile.inputs).filter(onDisk).map(async (key) => {
       const canonical = await realpath(path.resolve(dir, key)).catch((cause: unknown) => {
         throw new Error(`CLI_COMPILER_INPUT_NOT_OBSERVED: ${key}`, { cause })
       })
@@ -189,14 +189,30 @@ for (const { item, name, omni, omniFiles, treeSitter } of prepared) {
       }
       const compilerBytes = metafile.inputs[key].bytes
       if (input.analysisBytes === compilerBytes) return { key, ...input, compilerBytes }
-      const analysisEdges = analysisMetafile && textImportEdges(analysisMetafile.inputs, input.analysisKey)
-      const compilerEdges = textImportEdges(metafile.inputs, key)
+      const analysisEdges = analysisMetafile && textEvidence?.textInputEdges(analysisMetafile, input.analysisKey)
+      const compilerEdges = textEvidence?.textInputEdges(metafile, key)
+      const sameEdges = analysisEdges !== undefined && compilerEdges !== undefined &&
+        JSON.stringify(analysisEdges.identities) === JSON.stringify(compilerEdges.identities)
       if (!proveText || input.transform !== "bun-native" || input.analysisBytes !== input.bytes || compilerBytes !== 0 ||
-          !analysisEdges || !compilerEdges || JSON.stringify(analysisEdges) !== JSON.stringify(compilerEdges))
-        throw new Error(`CLI_COMPILER_EFFECTIVE_INPUT_CHANGED: ${key}`)
-      const embedded = proveText(canonical, Buffer.from(await Bun.file(canonical).arrayBuffer()), input.sha256)
-      return { key, ...input, compilerBytes, effectiveInput: { rule: "bun-1.4.1-preencoded-text", ...embedded } }
+          !compilerEdges || !analysisEdges || !sameEdges) {
+        const counts = `raw=${input.bytes}, analysis=${input.analysisBytes}, compile=${compilerBytes}`
+        const edges = `analysisEdges=${analysisEdges?.identities.length ?? 0}, compilerEdges=${compilerEdges?.identities.length ?? 0}, sameEdges=${sameEdges}`
+        throw new Error(`CLI_COMPILER_EFFECTIVE_INPUT_CHANGED: ${key} (${counts}, ${edges}, transform=${input.transform})`)
+      }
+      try {
+        const raw = Buffer.from(await Bun.file(canonical).arrayBuffer())
+        const embedded = proveText(canonical, raw, input.sha256, compilerEdges.chunks)
+        return { key, ...input, compilerBytes, effectiveInput: {
+          rule: "bun-1.4.1-preencoded-text", analysisChunks: analysisEdges.chunks,
+          compilerChunks: compilerEdges.chunks, ...embedded,
+        } }
+      } catch (cause) {
+        throw new Error(`CLI_COMPILER_TEXT_BINDING_FAILED: ${key} (chunks=${compilerEdges.chunks.length})`, { cause })
+      }
     }))
+    const failures = checked.flatMap((input) => input.status === "rejected" ? [String(input.reason)] : [])
+    if (failures.length) throw new Error(failures.sort().join("\n"))
+    const inputs = checked.flatMap((input) => input.status === "fulfilled" ? [input.value] : [])
     if (inputs.length !== before.length || new Set(inputs.map((input) => input.path)).size !== observed.size ||
         before.some((input) => !inputs.some((compiled) => compiled.path === input.path)))
       throw new Error("CLI_COMPILER_ANALYSIS_INPUT_SET_DIFFERENT")
@@ -250,17 +266,6 @@ type CompilerInput = Awaited<ReturnType<typeof sourceFile>> & {
   packageFile?: Awaited<ReturnType<typeof sourceFile>>
   packageVersion?: string
   loader?: "js"
-}
-
-function textImportEdges(
-  inputs: Record<string, { imports: readonly { path: string; kind?: string; original?: string; external?: boolean; with?: unknown }[] }>,
-  key: string,
-) {
-  const edges = Object.entries(inputs).flatMap(([source, input]) =>
-    input.imports.filter((edge) => edge.path === key).map((edge) => ({ source, edge })))
-  if (!edges.length || edges.some(({ edge }) => edge.external ||
-      typeof edge.with !== "object" || edge.with === null || !("type" in edge.with) || edge.with.type !== "text")) return undefined
-  return edges.map(({ source, edge }) => JSON.stringify([source, edge.kind, edge.original])).sort()
 }
 
 async function sourceFile(file: string) {
