@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 1,
+  "repository": "gustavomhss/Orchestra-SF",
+  "date": "2026-11-21",
+  "branch": "sf-design-polish",
+  "devBase": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
+  "productCommit": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff",
+  "browser": {
+    "run": 44886474787,
+    "job": 136792735083,
+    "snapshot": "c273ef9bee8ce9fe8761a5437bcb6dd3589bdd72",
+    "productParent": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff",
+    "result": "PASS",
+    "tests": 1,
+    "retries": 0,
+    "reportedDuration": "3.2m",
+    "images": 17,
+    "previewBytes": 1587090,
+    "artifact": 14700078712
+  },
+  "gates": {
+    "run": 44886478223,
+    "job": 136792746079,
+    "snapshot": "09c4e8cc74479ad9aaa116a1a7e6b1e095af5a22",
+    "productParent": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff",
+    "result": "PASS",
+    "tests": 4,
+    "appTypecheck": 0,
+    "e2eTypecheck": 0,
+    "guardBase": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
+    "guardRules": 78,
+    "guardFiles": 29,
+    "guardErrors": 0,
+    "guardWarnings": 2,
+    "guardApproved": [],
+    "paletteFilesUnchanged": 7,
+    "omniSpawns": 6,
+    "assertions": 11,
+    "durationSeconds": 17.84
+  },
+  "source": "Actual installed native Web/CLI with isolated canonical-producer test data",
+  "locale": "en-US",
+  "deviceScaleFactor": 1,
+  "reducedMotion": "reduce",
+  "trace": "off",
+  "video": "off",
+  "imageMethod": "Exact unmodified JPEG bytes emitted by Playwright page.screenshot(type=jpeg,quality=78,fullPage=true,animations=disabled) in bounded CI log chunks. Canonical PNGs attached to the same test.",
+  "artifact": {
+    "id": 14700078712,
+    "retentionExpiry": "2026-11-28T08:51:12Z",
+    "sha256": "2dedaec97502ae37f53e1c862e25e915fe54dc18ccc0c76d2f9b8c4228a495c4"
+  },
+  "review": {
+    "status": "READY_FOR_USER_VISUAL_REVIEW",
+    "reviewers": [
+      "root",
+      "polish_today",
+      "polish_cases",
+      "polish_executive"
+    ],
+    "basis": "All three agents reviewed their real Capture5 images; root inspected dark/light/narrow and inline reviews. UI29 narrow resume and CAP01 user-count review were then refined and inspected again from Capture6. UI33 and the other screen styles are unchanged between the successful captures.",
+    "actualBrowserZoom": "NOT_MEASURED",
+    "fullCompositeContrast": "NOT_MEASURED"
+  },
+  "images": [
+    {
+      "name": "UI33-dark-desktop-inline-review-test-data",
+      "file": "UI33-dark-desktop-inline-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI33-dark-desktop-inline-review-test-data.jpg",
+      "blobSha": "1af410969786593a14274657cf74c8f8a7fafc7d",
+      "bytes": 117200,
+      "screen": "UI33",
+      "scheme": "dark",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Criação de caso · revisão aberta"
+    },
+    {
+      "name": "UI33-dark-desktop-review-actions-test-data",
+      "file": "UI33-dark-desktop-review-actions-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI33-dark-desktop-review-actions-test-data.jpg",
+      "blobSha": "1af410969786593a14274657cf74c8f8a7fafc7d",
+      "bytes": 117200,
+      "screen": "UI33",
+      "scheme": "dark",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Criação de caso · painel e rodapé completos"
+    },
+    {
+      "name": "UI29-dark-desktop-test-data",
+      "file": "UI29-dark-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI29-dark-desktop-test-data.jpg",
+      "blobSha": "234c0c9616878d5fafea6d126478447bb0b05b18",
+      "bytes": 122642,
+      "screen": "UI29",
+      "scheme": "dark",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Hoje · topo e principais cartões"
+    },
+    {
+      "name": "UI29-dark-desktop-resume-test-data",
+      "file": "UI29-dark-desktop-resume-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI29-dark-desktop-resume-test-data.jpg",
+      "blobSha": "234c0c9616878d5fafea6d126478447bb0b05b18",
+      "bytes": 122642,
+      "screen": "UI29",
+      "scheme": "dark",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Hoje · retomada"
+    },
+    {
+      "name": "UI29-dark-desktop-source-availability-test-data",
+      "file": "UI29-dark-desktop-source-availability-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI29-dark-desktop-source-availability-test-data.jpg",
+      "blobSha": "3dd2028cd35e325693c1dd95209fc06afc2fc927",
+      "bytes": 128225,
+      "screen": "UI29",
+      "scheme": "dark",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Hoje · disponibilidade das fontes"
+    },
+    {
+      "name": "UI33-dark-desktop-test-data",
+      "file": "UI33-dark-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI33-dark-desktop-test-data.jpg",
+      "blobSha": "70621f24a0938ede08203922effe1b626ba10f28",
+      "bytes": 81980,
+      "screen": "UI33",
+      "scheme": "dark",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Casos · lista e filtro"
+    },
+    {
+      "name": "CAP01-dark-desktop-test-data",
+      "file": "CAP01-dark-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/CAP01-dark-desktop-test-data.jpg",
+      "blobSha": "37f60f987aa132330102448ba26e27187df3364b",
+      "bytes": 114885,
+      "screen": "CAP01",
+      "scheme": "dark",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Executivo · período e finanças"
+    },
+    {
+      "name": "CAP01-dark-desktop-signals-test-data",
+      "file": "CAP01-dark-desktop-signals-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/CAP01-dark-desktop-signals-test-data.jpg",
+      "blobSha": "b9572bcc7435e489d4c4f64ffb8867f4a2985993",
+      "bytes": 120058,
+      "screen": "CAP01",
+      "scheme": "dark",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Executivo · sinais de atenção"
+    },
+    {
+      "name": "UI29-light-desktop-test-data",
+      "file": "UI29-light-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI29-light-desktop-test-data.jpg",
+      "blobSha": "0b68454dec862dc7496cb48585e5e61d6be92743",
+      "bytes": 127035,
+      "screen": "UI29",
+      "scheme": "light",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Hoje · tema claro"
+    },
+    {
+      "name": "UI33-light-desktop-test-data",
+      "file": "UI33-light-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI33-light-desktop-test-data.jpg",
+      "blobSha": "aa82b2c6708fa0754aa4cc06af0e308453212b2b",
+      "bytes": 87064,
+      "screen": "UI33",
+      "scheme": "light",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Casos · tema claro"
+    },
+    {
+      "name": "CAP01-light-desktop-test-data",
+      "file": "CAP01-light-desktop-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/CAP01-light-desktop-test-data.jpg",
+      "blobSha": "601633e77e051e0ca72ea1b09e866b6ef5c341c6",
+      "bytes": 118525,
+      "screen": "CAP01",
+      "scheme": "light",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Executivo · tema claro"
+    },
+    {
+      "name": "UI33-light-320-test-data",
+      "file": "UI33-light-320-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI33-light-320-test-data.jpg",
+      "blobSha": "38db228d4b7a660118d0f8d8ea41624dbbe7f677",
+      "bytes": 32535,
+      "screen": "UI33",
+      "scheme": "light",
+      "viewportCss": {
+        "width": 320,
+        "height": 1100
+      },
+      "caption": "Casos · lista a 320 CSS px"
+    },
+    {
+      "name": "CAP01-light-320-test-data",
+      "file": "CAP01-light-320-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/CAP01-light-320-test-data.jpg",
+      "blobSha": "979a994a3e246a6220fb61e5e6bc975367c4d363",
+      "bytes": 41286,
+      "screen": "CAP01",
+      "scheme": "light",
+      "viewportCss": {
+        "width": 320,
+        "height": 1100
+      },
+      "caption": "Executivo · topo e período a 320 CSS px"
+    },
+    {
+      "name": "UI33-light-320-inline-review-test-data",
+      "file": "UI33-light-320-inline-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI33-light-320-inline-review-test-data.jpg",
+      "blobSha": "f1c7f1004addc52f8a01777a049abda629ea2d2b",
+      "bytes": 46828,
+      "screen": "UI33",
+      "scheme": "light",
+      "viewportCss": {
+        "width": 320,
+        "height": 1100
+      },
+      "caption": "Casos · rodapé de revisão a 320 CSS px"
+    },
+    {
+      "name": "UI29-dark-390-test-data",
+      "file": "UI29-dark-390-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI29-dark-390-test-data.jpg",
+      "blobSha": "ce009b25f57c1da9163b22c23c77b6542453305c",
+      "bytes": 54253,
+      "screen": "UI29",
+      "scheme": "dark",
+      "viewportCss": {
+        "width": 390,
+        "height": 1100
+      },
+      "caption": "Hoje · topo a 390 CSS px"
+    },
+    {
+      "name": "UI29-dark-390-resume-test-data",
+      "file": "UI29-dark-390-resume-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/UI29-dark-390-resume-test-data.jpg",
+      "blobSha": "ca800f7a98b1c626be60ef09900dcf326d28b64e",
+      "bytes": 42878,
+      "screen": "UI29",
+      "scheme": "dark",
+      "viewportCss": {
+        "width": 390,
+        "height": 1100
+      },
+      "caption": "Hoje · retomada e disponibilidade a 390 CSS px"
+    },
+    {
+      "name": "CAP01-dark-desktop-inline-review-test-data",
+      "file": "CAP01-dark-desktop-inline-review-test-data.jpg",
+      "path": "docs/qa/sucafina/design/evidence/CAP01-dark-desktop-inline-review-test-data.jpg",
+      "blobSha": "8b8843b45a8574872a94622698f191391a7ffa9a",
+      "bytes": 111854,
+      "screen": "CAP01",
+      "scheme": "dark",
+      "viewportCss": {
+        "width": 1440,
+        "height": 1100
+      },
+      "caption": "Executivo · revisão de 128 para 129 usuários"
+    }
+  ],
+  "limits": [
+    "320/390 CSS pixels are reflow coverage, not actual 200%/400% browser zoom",
+    "CAP01 320 image covers top/actions/period controls; no claim of narrow editor capture",
+    "UI33 narrow review captures lower review/actions; not all narrow fields in one frame",
+    "No full rendered palette/pt-BR/denied/stale/recovery/contrast matrix",
+    "CAP03 source-reviewed minimal shared-editor fix; no CAP03 browser journey",
+    "No user baseline approval, merge, deployment, or production-data claim"
+  ]
+}

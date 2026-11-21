@@ -1,51 +1,41 @@
-# Current native design integration
+# Native Sucafina design integration
 
-## Candidate
+## Branch and source
 
-Status: **APPLIED_TO_ISOLATED_BRANCH_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION**.
+The work branch `sf-design-polish` was created directly from `dev` at `948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1`. The inventory was committed before three real workers began the first three screens.
 
-The user confirmed `dev` as the source and asked to see the finished three screens. The existing branch `sf-design-polish` retains its direct origin at dev `948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1`.
+During implementation, native Web contracts [#572](https://github.com/gustavomhss/Orchestra-SF/pull/572) and native Web shell [#573](https://github.com/gustavomhss/Orchestra-SF/pull/573) merged upstream. The candidate now includes **dev `39355aa1988b33653151ddc8b76bc2dac55e55dd`** through integration commit `1359d9aebe1acd771e603ee821d1040d3f7432dd`. Dev is an ancestor, with zero behind at integration. The agent did not modify the shared dev branch or merge those upstream PRs.
 
-The current dependency chain is:
+The final upstream packages tree was byte-identical to the initially composed #573 dependency. Upstream apps/modules changes were adopted unchanged; the only upstream docs change was an unrelated Microsoft install guide. The candidate preserves that update and its own design documentation without overwriting either.
 
-| Dependency | Exact head | Base |
-| --- | --- | --- |
-| [#572 · native Web contracts and transport](https://github.com/gustavomhss/Orchestra-SF/pull/572) | `4aa86a2ce41c9689b218ec0ceb462cf39242be08` | dev `b5297b938735eab8ae37a686f01015f37c727724` |
-| [#573 · native Web shell](https://github.com/gustavomhss/Orchestra-SF/pull/573) | `a22e4296bfa802b70597fc73485d1833658cced4` | #572 |
+Product under review: **`41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff`**. Subsequent evidence/documentation commits do not change the tested application or E2E source files.
 
-Both PRs were open drafts at inspection. Their branches, PR metadata and dev have not been modified. The design candidate composes #573's exact tree, which includes #572 and current dev, with the existing design documents and the seven first-wave presentation files. Its ancestry records the original work branch and the current dependency head.
+## Actual product scope
 
-This supersedes the previous application blocker for this isolated candidate. It does not mean that the dependency PRs have merged or that the design has passed visual acceptance.
+Paths are relative to `packages/app-shell/src/orchestra/chapters/sucafina/`.
 
-## Applied design scope
-
-- UI29: `home/index.tsx` and new `home/today.css`.
-- UI33: `decisions/cases/index.tsx`, presentation markup in `create.tsx`, and new `cases.css`.
-- CAP01: `dashboard/executive/index.tsx` and new `executive.css`.
-- The shared design reference records the local source measurements. Actual rendered values and contrast remain to be checked.
-
-Paths above are relative to `packages/app-shell/src/orchestra/chapters/sucafina/`. Shared `n24.css`, `u02.css`, `edit.tsx` and the Budget page remain unchanged. No native HuGR screen or legacy console receives a design edit.
-
-All 70 inventory entrypoint blobs match the current #573 tree `76c9b3a151d9d8e1f4a8dbdc7e986fdfae93ae4a`. The route registry remains `6e1e711e2ff3a95e460026053cb91772693da572`. Each first-wave patch was replayed with exact hunk positions, context and removals against #573.
-
-## Rendering and verification route
-
-The real native app must be served from the installed local operator's public origin. A separate Vite origin cannot satisfy the transport's origin contract. The existing `apps/cli/test/sucafina-native-web.test.ts` builds the Web app into a temporary directory, serves its actual bytes through the installed CLI and verifies authenticated native discovery/context.
-
-The dependency's linked [run 44876426416](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44876426416) passed that smoke test on its own composed SHA. It did not launch a browser and is not evidence for this design candidate.
-
-The next check uses the same existing hosted workflow, scoped to the installed native Web test. Real browser capture will use a narrow Playwright spec and the existing authorized production config, with an actual local installation, enrollment and owner descriptor. Screenshots must contain the true rendered UI29/UI33/CAP01 state. No workflow allowlist, authentication gate or legacy route will be substituted.
-
-## Current results
-
-| Gate | Current status |
+| Surface | Presentation files |
 | --- | --- |
-| Current native source/branch ancestry | Verified through GitHub |
-| Unified patch replay against #573 | Exact for all seven product files |
-| Application to isolated candidate | Applied |
-| Current-candidate native Web build/context smoke | NOT_RUN |
-| Current-candidate package typecheck / guardrails | NOT_RUN |
-| Native browser interactions / screenshots | NOT_RUN |
-| Actual dark/light, narrow/zoom and contrast review | NOT_RUN |
-| Palette generator/parity | NOT_RUN |
-| Visual acceptance | NOT_RUN |
+| UI29 · Today | `home/index.tsx`, `home/today.css` |
+| UI33 · Cases / Decisions | `decisions/cases/index.tsx`, `create.tsx`, `cases.css` |
+| CAP01 · Executive | `dashboard/executive/index.tsx`, `executive.css` |
+
+The seven presentation files use native fonts, theme roles, radii and focus treatments. CAP01 source-navigation paint is additionally gated by the active CAP01 link in the existing navigation. Other dashboard tabs retain their source styles.
+
+The following necessary corrections also change **`dashboard/executive/edit.tsx`**, shared with CAP03: remote synchronization runs inside Solid `untrack`. Its effect still observes incoming version/value and the draft controller. The original `receiveRemote` call reads and publishes draft state; subscribing to that internal snapshot recursively triggered the effect when a populated monthly editor mounted. The real browser exposed this as CAP01 becoming unavailable after month selection. The fix does not change draft transitions, owner checks, CAS versions, command payloads or confirmation rules. A second display-only branch, restricted to CAP01 + save-users, presents the base/current count with the existing localized numeric formatter and field label instead of adding a currency warning to a headcount; other operations retain their exact original numeric display.
+
+This explicitly supersedes the initial plan to leave the shared editor file untouched. CAP03 markup/styles, `u02.css`, `n24.css`, global shell/frame/kit, palette sources, APIs, route registry and the legacy white/green interface are unchanged.
+
+## Real capture path
+
+The permanent Playwright spec is `packages/app-shell/e2e/sucafina/design-wave-one.spec.ts`. Its two `design-support/` helpers build the real Web app into private temporary files, serve it through a real installed CLI on its public origin, discover the genuine owner descriptor, and enroll once through the actual operator flow.
+
+Source data is declared **isolated canonical-producer test data**, never a production/customer data claim. The test creates one decision through the actual inline review and confirmation. The Executive editor reads 128 users, prepares 129, opens review, cancels and discards back to 128 without saving. Missing annual-risk and meeting/change projections remain visibly unavailable.
+
+The test retains authenticated/unauthorized controls, same-origin checks, source-authorized routes, keyboard clear/focus, whole-footer viewport assertions and page-error checks. Trace/video are off to avoid retaining the private enrollment URL. Failure diagnostics are bounded and redact credentials and URLs. Permanent E2E typecheck inclusion lists the exact spec, helpers and their transitive imports, with no compiler-option or exclusion change.
+
+## Evidence and acceptance
+
+See [VALIDATION.md](VALIDATION.md) for exact run verdicts and limits, and [evidence/README.md](evidence/README.md) for actual browser captures. Historical worker patches remain under `wave-one/` as the original delegation record; they are not full replacements for the refined product files.
+
+No image baseline is automatically approved. User design acceptance remains a review of the finished result. The other 67 native surfaces are inventoried only.

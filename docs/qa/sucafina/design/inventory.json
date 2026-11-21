@@ -7,13 +7,15 @@
     "createdFrom": "dev",
     "baseCommit": "948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1",
     "nativeFrontendPresent": true,
-    "latestDevInspected": "b5297b938735eab8ae37a686f01015f37c727724",
-    "latestDevNativeFrontendPresent": false,
-    "nativeFrontendPresentInDevBase": false
+    "latestDevInspected": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
+    "latestDevNativeFrontendPresent": true,
+    "nativeFrontendPresentInDevBase": false,
+    "synchronizedDevCommit": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
+    "reviewedProductCommit": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff"
   },
   "source": {
-    "branch": "sf-local-shell",
-    "commit": "a22e4296bfa802b70597fc73485d1833658cced4",
+    "branch": "dev",
+    "commit": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
     "readOnly": true,
     "routeRegistry": "packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts",
     "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
@@ -22,9 +24,11 @@
     "dependency": {
       "pullRequest": 572,
       "branch": "sf-web-contracts",
-      "commit": "4aa86a2ce41c9689b218ec0ceb462cf39242be08"
+      "commit": "4aa86a2ce41c9689b218ec0ceb462cf39242be08",
+      "merged": true
     },
-    "relationshipToDev": "Current explicit dev-descended frontend dependency; draft PRs unmerged at composition"
+    "relationshipToDev": "Native contracts and shell merged into dev through PRs 572 and 573; verified identical packages source tree to the initially composed dependency",
+    "merged": true
   },
   "counts": {
     "chapters": 15,
@@ -41,10 +45,24 @@
     "inventory": "Matched all route-registry surface IDs and existing component blobs; no runtime claim",
     "sourceTreeTruncated": false,
     "targetPackagesTreeTruncated": false,
-    "build": "NOT_RUN",
-    "typecheck": "NOT_RUN",
-    "tests": "NOT_RUN",
-    "screenshots": "NOT_RUN"
+    "build": "PASS: real native Web bundle in final installed Playwright run 44886474787",
+    "typecheck": "PASS: application and E2E, run 44886478223",
+    "tests": "PASS: required installed first-wave journey, run 44886474787",
+    "screenshots": "17 real browser JPEGs + canonical PNG artifacts",
+    "currentDevRouteInventory": "70 unique surfaces, 165 route patterns, 15 chapters; zero missing or extra entries on the current native registry",
+    "browserActualZoom": "NOT_MEASURED",
+    "guards": {
+      "run": 44886478223,
+      "errors": 0,
+      "warnings": 2,
+      "approved": 0
+    },
+    "palette": {
+      "run": 44886478223,
+      "generatedFilesUnchanged": 7
+    },
+    "visualReview": "Bounded peer review completed; see VALIDATION.md",
+    "userAcceptance": "PENDING_USER_REVIEW"
   },
   "surfaces": [
     {
@@ -64,13 +82,14 @@
           "blobSha": "81d4dd0c878f8b8a7a3a36a1eea8d668d714f69f"
         }
       ],
-      "presentInTargetDev": false,
-      "visualVerification": "NOT_RUN",
-      "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
+      "presentInTargetDev": true,
+      "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
       "designWork": {
-        "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
+        "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
         "workerCommit": "73b7e5bbd7b378fdfdd3a64d79442a2447ee0a60",
-        "patch": "wave-one/03-executive/candidate.patch"
+        "patch": "wave-one/03-executive/candidate.patch",
+        "productCommit": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff"
       },
       "presentInCandidate": true
     },
@@ -103,9 +122,9 @@
           "blobSha": "7103038361edb190390e948d1f8f1ac5fe45fa0b"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -128,9 +147,9 @@
           "blobSha": "e5986221a5b5fe2d94a395d794b9894846cafaa9"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -165,9 +184,9 @@
           "blobSha": "d7108f52118bebeb32010a4a3b0221c650f4bdce"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -202,9 +221,9 @@
           "blobSha": "87a847f859fc15c5473a0ba6f778700be5e0e470"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -227,9 +246,9 @@
           "blobSha": "0912fc52ea5423a1e6ef24863ff68c9007901dc1"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -272,9 +291,9 @@
           "blobSha": "c4b9cb76fb617b405c01069f84fb95b381122f64"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -313,9 +332,9 @@
           "blobSha": "fcdb83cfc20e0168fdf27479f8aa009b59821585"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -338,9 +357,9 @@
           "blobSha": "55e80ff7253bae9c8cf4b2d9db394251879d1b2b"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -379,9 +398,9 @@
           "blobSha": "373e2389aa6d1690c1bb5e9156bab67e5f147b24"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -416,9 +435,9 @@
           "blobSha": "6150473ed6f7bcc3d5234f68551ed9e4e5864bc2"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -457,9 +476,9 @@
           "blobSha": "bdc686c4efa75672991de61b215be0691fc54cd4"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -494,9 +513,9 @@
           "blobSha": "9f55c881506896e756a9a9f5ad4e1f23d05fde72"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -531,9 +550,9 @@
           "blobSha": "f1e8a88f37563a6276f56cc38b36f4821d5a741f"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -568,9 +587,9 @@
           "blobSha": "aebff25e95fb0014518b80ff8d85e0474833e856"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -601,9 +620,9 @@
           "blobSha": "e4cd8eb36184d210879fd1b535c0596b9649714f"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -626,9 +645,9 @@
           "blobSha": "eae3664b7e0db079259774446f0fa305da541de4"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -663,9 +682,9 @@
           "blobSha": "b6274f9f22ac3a5a5c85a7b0c3c19efeb4519143"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -704,9 +723,9 @@
           "blobSha": "771f8524a5972cbf19473b7b4173a0d97accfae1"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -749,9 +768,9 @@
           "blobSha": "45badcf55818ed04351fda974ef713da0a0ef523"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -782,9 +801,9 @@
           "blobSha": "06b02b7408b35b9e13442621ab45b35c23161d7f"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -807,9 +826,9 @@
           "blobSha": "01c837c2379a3be78e402e9e82de9d63009ebd22"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -848,9 +867,9 @@
           "blobSha": "c7332911b34925443dd65f2ee846ccb21f71eeea"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -873,9 +892,9 @@
           "blobSha": "a9107579d40e8a54741923831d487539c484c1da"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -934,9 +953,9 @@
           "blobSha": "34234bee605bc368538dee797b29f0e4b29b20ec"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -971,9 +990,9 @@
           "blobSha": "1948c63e1304d2fcc7e9923a2e29db3c7e57272d"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1008,9 +1027,9 @@
           "blobSha": "44803cde2bf10c35e91e4754ec56b7ae4243530a"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1033,9 +1052,9 @@
           "blobSha": "c7e6818389a6b12cd21ebb123e7b65c13afb39bf"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1058,13 +1077,14 @@
           "blobSha": "3f777bf0485a5e4d27b716d3e0d40291953f2021"
         }
       ],
-      "presentInTargetDev": false,
-      "visualVerification": "NOT_RUN",
-      "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
+      "presentInTargetDev": true,
+      "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
       "designWork": {
-        "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
+        "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
         "workerCommit": "1a317384bd0dcef67c924e5056dc059edfcf547b",
-        "patch": "wave-one/01-today/candidate.patch"
+        "patch": "wave-one/01-today/candidate.patch",
+        "productCommit": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff"
       },
       "presentInCandidate": true
     },
@@ -1085,9 +1105,9 @@
           "blobSha": "d012691ea65e0de4185f4942967c0d2ca9044161"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1110,9 +1130,9 @@
           "blobSha": "c64e321bf6212dc24494034ca29270285391e899"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1143,9 +1163,9 @@
           "blobSha": "16db968cbe6c5bfbaa40521aff74f2c83bb51be5"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1172,13 +1192,14 @@
           "blobSha": "a22b650d1388545a58f165fb0ca91c70d84071b2"
         }
       ],
-      "presentInTargetDev": false,
-      "visualVerification": "NOT_RUN",
-      "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
+      "presentInTargetDev": true,
+      "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
       "designWork": {
-        "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
+        "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
         "workerCommit": "2f87d4637b127056495a5ab46cca864f64d0b10c",
-        "patch": "wave-one/02-cases/candidate.patch"
+        "patch": "wave-one/02-cases/candidate.patch",
+        "productCommit": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff"
       },
       "presentInCandidate": true
     },
@@ -1199,9 +1220,9 @@
           "blobSha": "d64e5c7ca7126d0397afd323a780bbab5725f774"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1232,9 +1253,9 @@
           "blobSha": "2a4472606a1fe05c8d96044c4dc979322d048349"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1257,9 +1278,9 @@
           "blobSha": "80297cb0719c05aa0241fa8023322853561678de"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1282,9 +1303,9 @@
           "blobSha": "ca1a807d6d43bea5493b7d8545505988ee28dfd7"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1307,9 +1328,9 @@
           "blobSha": "c1a7d08fa1dffb7f0469dbb53dd9fc49d93aec29"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1336,9 +1357,9 @@
           "blobSha": "0e531465198c208e53eadae54f128bc664300ec9"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1365,9 +1386,9 @@
           "blobSha": "6571685621d4103c8da30dc769d1be61d43ab4bd"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1394,9 +1415,9 @@
           "blobSha": "52d194c16837a41d19d2d535321483585bbef801"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1423,9 +1444,9 @@
           "blobSha": "f06b8cf7dd0dc1862638c4f41a06567f404f47eb"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1448,9 +1469,9 @@
           "blobSha": "f06b8cf7dd0dc1862638c4f41a06567f404f47eb"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1477,9 +1498,9 @@
           "blobSha": "00b4e852abefc7d16e4ac3dc4905f84d1ab8b887"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1502,9 +1523,9 @@
           "blobSha": "1f161bf134525a2f0238dfae5a2d26440e14cd05"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1527,9 +1548,9 @@
           "blobSha": "1f161bf134525a2f0238dfae5a2d26440e14cd05"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1552,9 +1573,9 @@
           "blobSha": "cca0ff786798f3a2548e2d09482092fc6d418a74"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1585,9 +1606,9 @@
           "blobSha": "b1f69b529ee76a3fed764cdf6ff5c8e15f5596bc"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1610,9 +1631,9 @@
           "blobSha": "55b68800500157c4e349f00bf66abf3c78c4d5c2"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1639,9 +1660,9 @@
           "blobSha": "1afcc5432177c76bae5b2ff1fc9e3b91a4011277"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1672,9 +1693,9 @@
           "blobSha": "5a9041af6d2614ca9ec7c89a6d04b0ba243ad201"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1697,9 +1718,9 @@
           "blobSha": "00fa125b3293aab584500fa4e4032d76a7b95e10"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1722,9 +1743,9 @@
           "blobSha": "fd198d9ac14d91e6ceae77ebbccc458a5fa273dc"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1747,9 +1768,9 @@
           "blobSha": "b94e14891670febb2f7a2dba9b5a07ef191d6df1"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1772,9 +1793,9 @@
           "blobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1797,9 +1818,9 @@
           "blobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1830,9 +1851,9 @@
           "blobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1863,9 +1884,9 @@
           "blobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1888,9 +1909,9 @@
           "blobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1913,9 +1934,9 @@
           "blobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1942,9 +1963,9 @@
           "blobSha": "f1d3e117c39615a2f48934eb785fc06502b37b8a"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -1971,9 +1992,9 @@
           "blobSha": "cc6b59085d968b410423aee161bc925d961cbf7a"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -2000,9 +2021,9 @@
           "blobSha": "f1d3e117c39615a2f48934eb785fc06502b37b8a"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -2033,9 +2054,9 @@
           "blobSha": "4f32d9f5de6f35aea15f7875e075a5e2e8a67750"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -2062,9 +2083,9 @@
           "blobSha": "7e0575c9fb9300476b51bbdbdc85917fcac84cc2"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -2095,9 +2116,9 @@
           "blobSha": "a8ea8d4b045e595800921588952cd5206780fabd"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -2120,9 +2141,9 @@
           "blobSha": "4d85bef1c895c29701e9528b30be45b0fb424400"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -2145,9 +2166,9 @@
           "blobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -2170,9 +2191,9 @@
           "blobSha": "638a209f6cd0967c29a6e0f82c957d8fe3c69579"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -2195,9 +2216,9 @@
           "blobSha": "0957e6b67f2cc6169444782acfb5fbf2b5a601ac"
         }
       ],
-      "presentInTargetDev": false,
+      "presentInTargetDev": true,
       "visualVerification": "NOT_RUN",
-      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
+      "status": "INVENTORIED_NOT_REDESIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
       },
@@ -2205,7 +2226,7 @@
     }
   ],
   "firstWaveDelivery": {
-    "status": "APPLIED_TO_ISOLATED_CANDIDATE_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
+    "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
     "appliedToProduct": true,
     "summary": "WAVE-ONE.md",
     "workers": [
@@ -2235,7 +2256,16 @@
       }
     ],
     "appliedToBranch": "sf-design-polish",
-    "currentStatusDocument": "INTEGRATION.md"
+    "currentStatusDocument": "INTEGRATION.md",
+    "productCommit": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff",
+    "followups": [
+      "Equal desktop attention cards, CAP01 native navigation and accessible period labels",
+      "Cases filter/refresh alignment, readable source note and numbered review criteria",
+      "Untrack shared Executive editor remote synchronization to prevent a self-triggering effect; no draft or CAS semantics changed",
+      "Narrow Today resume uses full-width identity and action; CAP01 user-count review displays localized counts without a currency warning"
+    ],
+    "evidence": "evidence/manifest.json",
+    "gallery": "evidence/README.md"
   },
   "historicalSource": {
     "branch": "sf-join-four",
