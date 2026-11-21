@@ -5,7 +5,7 @@
 import { expect } from "@playwright/test"
 import { openReportsJourney, reportsTest } from "./reports-support/fixture.ts"
 import { changeForecast, expectCapturedBudget, exportReview, followBudgetSource, openAndReopenMeeting, prepareReview, preserveNewRevision, readSourceData } from "./reports-support/review-flow.ts"
-import { expectReusedReviewAnswer } from "./reports-support/confirmation.ts"
+import { expectReusedReviewValue } from "./reports-support/confirmation.ts"
 import { confirmSubmittedHumanAnswer, editHumanAnswer, expectConfirmedAnswerVisible, observed, submitHumanAnswer } from "./reports-support/human-answer-flow.ts"
 import { object, readReview, responseFor } from "./reports-support/model.ts"
 import { revokeReportsSession } from "./reports-support/revocation.ts"
@@ -85,7 +85,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
       await reportsTest.step("Reuse after reopening without writing a new confirmation", async () => {
         const observedRead = await observed(await answerRead, "collaboration-answer-read")
         expect(observedRead.payload).toEqual({ questionId: answer.questionId })
-        expect(observedRead.value).toEqual(await expectReusedReviewAnswer(api, answer))
+        expectReusedReviewValue(answer, observedRead.value)
         expect(await api.version()).toBe(beforeReload)
         await expectConfirmedAnswerVisible(page, answer)
       })

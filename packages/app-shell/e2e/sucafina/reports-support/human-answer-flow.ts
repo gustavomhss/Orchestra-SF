@@ -4,7 +4,7 @@ import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1
 import { object, projection, responseFor, text } from "./model.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
 import type { ReportsCorpus } from "./corpus.ts"
-import { expectConfirmedReviewAnswer, expectCreatedReviewQuestion, expectEditedReviewAnswer, expectPreparedReviewAnswer, expectRepliedReviewQuestion, reportsCollaboration } from "./confirmation.ts"
+import { expectCreatedReviewQuestion, expectEditedReviewAnswer, expectPreparedReviewAnswer, expectRepliedReviewQuestion, expectReusedReviewValue, reportsCollaboration } from "./confirmation.ts"
 import type { ReportsCollaboration, ReviewAnswer, ReviewBasis, ReviewPin } from "./confirmation.ts"
 import { expectCapturedBudget, observeReviewTransport } from "./review-flow.ts"
 import { recoverLostReplyResponse } from "./lost-reply-response.ts"
@@ -116,6 +116,7 @@ export async function confirmSubmittedHumanAnswer(page: Page, app: ReportsInstal
 
   // The button submits exactly the displayed observation. No re-prepare or mutation retry.
   const beforeConfirmation = await api.version()
+  const answerRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))
   const confirmed = await test.step("Confirm the displayed observation", () =>
     submit(page, app, confirmation.getByRole("button", { name: "Confirm this answer", exact: true }), "collaboration-answer-confirm"))
   expect(confirmed.payload).toMatchObject({
@@ -125,13 +126,18 @@ export async function confirmSubmittedHumanAnswer(page: Page, app: ReportsInstal
     },
   })
   expectMutation(confirmed.payload.mutation, beforeConfirmation)
-  const receipt = await test.step("Verify the confirmed answer and its read-only reuse", () =>
-    expectConfirmedReviewAnswer(api, answer, confirmed.value))
+  await test.step("Verify the confirmation receipt and the browser's independent answer read", async () => {
+    expect(confirmed.value).toEqual({ answerRef: answer.answerRef, observedVersion: answer.observedSourceVersion })
+    const reused = await observed(await answerRead, "collaboration-answer-read")
+    expect(reused.payload).toEqual({ questionId: answer.questionId })
+    expectReusedReviewValue(answer, reused.value)
+    expect(await api.version(), "The confirmation writes once and the browser's read adds no write").toBe(beforeConfirmation + 1)
+  })
   await expect(discussion.getByRole("status")).toHaveText("Answer confirmed against the inspected preserved source.")
   await expectConfirmedAnswerVisible(page, answer)
   await info.attach("human-answer-confirmation", { body: JSON.stringify({
     questionId: question.id, messageId: message.id, incarnation: message.incarnation, version: message.version,
-    reviewContext: pin, basis: question.basis, answerRef: answer.answerRef, receipt: receipt.receipt,
+    reviewContext: pin, basis: question.basis, answerRef: answer.answerRef, receipt: confirmed.value,
     route: "installed Review controls and authenticated collaboration producers",
     uiConfirmationButton: "executed against the exact displayed server observation",
     recipientScope: "the legitimately enrolled local operator",

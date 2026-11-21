@@ -152,20 +152,18 @@ export function expectPreparedReviewAnswer(question: { id: string; pin: ReviewPi
   }
 }
 
-export async function expectConfirmedReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer, receipt: unknown) {
-  expect(receipt).toEqual({ answerRef: answer.answerRef, observedVersion: answer.observedSourceVersion })
-  await expectReusedReviewAnswer(api, answer)
-  return { receipt }
+export function expectReusedReviewValue(answer: ReviewAnswer, reused: unknown) {
+  expect(reused).toEqual({
+    answerRef: answer.answerRef, answer: answer.message.body, authorRef: answer.message.authorRef,
+    observedVersion: answer.observedSourceVersion, reviewContext: answer.pin,
+  })
 }
 
 /** Calling this after page/context reopen verifies reuse without a new write. */
 export async function expectReusedReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer) {
   const before = await api.version()
   const reused = await api.ok("collaboration-answer-read", { questionId: answer.questionId })
-  expect(reused).toEqual({
-    answerRef: answer.answerRef, answer: answer.message.body, authorRef: answer.message.authorRef,
-    observedVersion: answer.observedSourceVersion, reviewContext: answer.pin,
-  })
+  expectReusedReviewValue(answer, reused)
   expect(await api.version()).toBe(before)
   return reused
 }
