@@ -18,7 +18,9 @@ export default function installation({ origin }: { origin: string }) {
         await reader?.cancel()
         return new Response(null, { status: 413 })
       }
-      if (url.pathname === "/sucafina/dashboard") return Response.json((await request.arrayBuffer()).byteLength)
+      if (url.pathname === "/sucafina/dashboard" || url.pathname === "/sucafina/teams/44444444-4444-4444-8444-444444444444/dashboard") {
+        return Response.json((await request.arrayBuffer()).byteLength)
+      }
       return Response.json({
         origin,
         path: url.pathname + url.search,
