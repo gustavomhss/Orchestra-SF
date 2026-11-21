@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test"
 import type { Page, Request, Route, TestInfo } from "@playwright/test"
+import { expectReusedReviewValue } from "./confirmation.ts"
 import type { ReportsCollaboration, ReviewAnswer } from "./confirmation.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
 import { object, responseFor } from "./model.ts"
@@ -76,19 +77,39 @@ export async function reconcilePrivateDraftsAfterReadLoss(page: Page, app: Repor
       .getByRole("button", { name: "Read original answer", exact: true }).click()
     await Promise.all([historyLoss.observed, historyLoss.failed])
     await retained()
+    const pendingAnswer = () => {
+      const pending = page.waitForRequest((request) => {
+        const url = new URL(request.url())
+        return request.method() === "POST" && url.origin === base.origin && url.pathname === base.pathname &&
+          url.searchParams.get("sf") === "collaboration-answer-read"
+      }).then((request) => request.response())
+      void pending.catch(() => undefined)
+      return pending
+    }
     const threadLoss = await lose("collaboration-thread-read")
+    const answerDuringLoss = pendingAnswer()
     await discussion.getByRole("button", { name: "Reconcile discussion", exact: true }).click()
-    await Promise.all([threadLoss.observed, threadLoss.failed])
+    await Promise.all([threadLoss.observed, threadLoss.failed, answerDuringLoss])
     await retained()
     const reread = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
+    const rereadAnswer = pendingAnswer()
+    void reread.catch(() => undefined)
     await discussion.getByRole("button", { name: "Reconcile discussion", exact: true }).click()
-    const response = await reread
+    const [response, answerResponse] = await Promise.all([reread, rereadAnswer])
+    if (!answerResponse) throw new Error("Installed discussion reconciliation did not receive its answer read")
+    expect(answerResponse.status()).toBe(200)
+    expect(answerResponse.headers()["cache-control"]).toContain("no-store")
+    expect(answerResponse.request().postDataJSON()).toEqual({ questionId: answer.questionId })
+    const answerBody = object(await answerResponse.json())
+    expect(answerBody.status).toBe("ok")
+    expectReusedReviewValue(answer, answerBody.value)
     expect(response.status()).toBe(200)
     expect(response.request().postDataJSON()).toEqual({ id: answer.questionId })
     expect(object(object(await response.json()).value).messages).toEqual(original.messages)
     await expect(question).toHaveValue(drafts.question)
     await expect(reply).toHaveValue(drafts.reply)
     await expect(edit).toHaveValue(drafts.edit)
+    await expect(discussion.getByRole("status")).toHaveText("Discussion reconciled. Your drafts are retained; send an action explicitly.")
     await expect(discussion.getByRole("button", { name: "Ask about this review", exact: true })).toBeEnabled()
     await expect(discussion.getByRole("button", { name: "Send reply", exact: true })).toBeEnabled()
     await expect(article.getByRole("button", { name: "Save answer edit", exact: true })).toBeEnabled()
