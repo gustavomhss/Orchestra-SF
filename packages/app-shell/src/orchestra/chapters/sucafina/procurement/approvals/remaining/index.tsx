@@ -507,6 +507,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
               [m("sf.u13.remaining.fxMissing")],knownCount:1,expectedCount:1}}
           blockingReasons={[]}
           confirmation={confirmation()}
+          busy={ui.phase==="checking"||ui.phase==="submitting"||ui.phase==="verifying"}
           state={ui.phase==="conflict"?"conflict":"ready"}
           onConfirm={(decision)=>void confirm(decision as Extract<ReturnType<typeof confirmation>,{kind:"admitted"}>)}
           onRevise={()=>{setUi("review",null);setUi("phase","idle")}}

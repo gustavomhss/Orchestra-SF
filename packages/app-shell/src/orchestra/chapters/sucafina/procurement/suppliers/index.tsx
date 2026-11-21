@@ -867,6 +867,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
           coverage={{state:"complete",summary:m("sf.u14.coverage"),reasons:[],knownCount:1,expectedCount:1}}
           blockingReasons={[]}
           confirmation={confirmation()}
+          busy={ui.phase === "checking" || ui.phase === "submitting" || ui.phase === "verifying"}
           state={ui.phase === "conflict" ? "conflict" : "ready"}
           onConfirm={(decision) => void confirm(decision as Extract<ReturnType<typeof confirmation>,{kind:"admitted"}>)}
           onRevise={()=>{setUi("review",null);setUi("phase","idle")}}

@@ -702,6 +702,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                       confirmation={canConfirm ? admitted : {
                         kind: "blocked", labelKey: key("sf.u13.review"), reasons: [label("sf.u13.reasonRequired")],
                       }}
+                      busy={ui.phase === "checking" || ui.phase === "submitting" || ui.phase === "verifying"}
                       state={ui.phase === "submitting" || ui.phase === "checking" ? "loading" : "ready"}
                       onConfirm={(decision) => { void confirm(decision) }}
                       onRevise={() => setUi("phase", "reviewing")}

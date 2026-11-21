@@ -643,6 +643,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         purpose, binding: { kind: "catalog-command", operationId,
           version: { kind: "record", expectedVersion: intent.version },
           confirmation: "presentation-only" } }}
+      busy={view.sending}
       state={view.sending ? "loading" : "ready"}
       onConfirm={() => { void confirm() }}
       onRevise={cancelReview} onCancel={cancelReview}
