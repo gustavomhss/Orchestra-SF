@@ -106,3 +106,158 @@ export const Binding = Schema.Struct({
   parseOptions: { onExcessProperty: "error" },
 })
 export interface Binding extends Schema.Schema.Type<typeof Binding> {}
+
+/**
+ * Selectors never carry a claimed principal, role, grant or authority revision.
+ * Administration is a separate route intent; it cannot stand in for a Team.
+ * Raw URL duplicate-key rejection belongs to the transport parser.
+ */
+export const Selector = Schema.Union([
+  Schema.Struct({
+    contractRevision: ContractRevision,
+    kind: Schema.Literal("team"),
+    profile: Ref,
+  }),
+  Schema.Struct({
+    contractRevision: ContractRevision,
+    kind: Schema.Literal("administration"),
+    installationId: InstallationId,
+    tenantId: TenantId,
+  }),
+]).annotate({
+  identifier: "Sucafina.TeamProfile.Selector",
+  parseOptions: { onExcessProperty: "error" },
+})
+export type Selector = Schema.Schema.Type<typeof Selector>
+
+export const Choice = Schema.Struct({
+  profile: Ref,
+  displayName: Schema.NonEmptyString.check(Schema.isMaxLength(256)),
+}).annotate({
+  identifier: "Sucafina.TeamProfile.Choice",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface Choice extends Schema.Schema.Type<typeof Choice> {}
+
+const Choices = Schema.Array(Choice).check(Schema.makeFilter(
+  (choices) => new Set(choices.map((choice) => JSON.stringify([
+    choice.profile.installationId,
+    choice.profile.tenantId,
+    choice.profile.teamObjectId,
+  ]))).size === choices.length,
+  { message: "A Team may occur only once in the eligible profile list" },
+))
+
+export const UnavailableReason = Schema.Literals([
+  "identity-unavailable",
+  "consent-required",
+  "forbidden",
+  "rate-limited",
+  "timeout",
+  "incomplete",
+  "invalid-response",
+  "provider-unavailable",
+]).annotate({ identifier: "Sucafina.TeamProfile.UnavailableReason" })
+export type UnavailableReason = typeof UnavailableReason.Type
+
+/**
+ * A complete eligible list is required for ready/selection-required/no-teams.
+ * Provider failure and partial data have no eligible-list field and cannot be
+ * represented as a successful empty result.
+ */
+export const TeamState = Schema.Union([
+  Schema.Struct({
+    status: Schema.Literal("ready"),
+    choices: Choices.check(Schema.isMinLength(1)),
+    selected: Ref,
+    configRevision: ConfigRevision,
+  }).check(Schema.makeFilter(
+    (state) => state.choices.some((choice) =>
+      choice.profile.installationId === state.selected.installationId &&
+      choice.profile.tenantId === state.selected.tenantId &&
+      choice.profile.teamObjectId === state.selected.teamObjectId),
+    { message: "The selected profile must occur in the complete eligible list" },
+  )),
+  Schema.Struct({
+    status: Schema.Literal("selection-required"),
+    choices: Choices.check(Schema.isMinLength(2)),
+  }),
+  Schema.Struct({ status: Schema.Literal("no-teams") }),
+  Schema.Struct({ status: Schema.Literal("denied") }),
+  Schema.Struct({ status: Schema.Literal("revoked") }),
+  Schema.Struct({
+    status: Schema.Literal("unavailable"),
+    reason: UnavailableReason,
+  }),
+]).annotate({
+  identifier: "Sucafina.TeamProfile.TeamState",
+  parseOptions: { onExcessProperty: "error" },
+})
+export type TeamState = Schema.Schema.Type<typeof TeamState>
+
+/**
+ * The server checks the configured corporate administration group separately
+ * from Teams enumeration. An available administrative destination grants no
+ * business access, Team membership or visibility into personal content.
+ */
+export const Administration = Schema.Union([
+  Schema.Struct({ status: Schema.Literal("available") }),
+  Schema.Struct({ status: Schema.Literal("denied") }),
+  Schema.Struct({
+    status: Schema.Literal("unavailable"),
+    reason: UnavailableReason,
+  }),
+]).annotate({
+  identifier: "Sucafina.TeamProfile.Administration",
+  parseOptions: { onExcessProperty: "error" },
+})
+export type Administration = Schema.Schema.Type<typeof Administration>
+
+export const Authenticated = Schema.Struct({
+  contractRevision: ContractRevision,
+  status: Schema.Literal("authenticated"),
+  installationId: InstallationId,
+  principal: Principal,
+  accessRevision: AccessRevision,
+  administration: Administration,
+  teams: TeamState,
+}).check(Schema.makeFilter(
+  (value) => {
+    if (value.teams.status !== "ready" && value.teams.status !== "selection-required") return true
+    return value.teams.choices.every((choice) =>
+      choice.profile.installationId === value.installationId &&
+      choice.profile.tenantId === value.principal.tenantId)
+  },
+  { message: "Every eligible profile must match the authenticated installation and resource tenant" },
+)).annotate({
+  identifier: "Sucafina.TeamProfile.Authenticated",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface Authenticated extends Schema.Schema.Type<typeof Authenticated> {}
+
+/**
+ * This is a projection of a server decision, not a transferable admission.
+ * Window/auth epochs and non-serializable admitted handles remain the runtime's
+ * responsibility. Historical repo-profile rows are decoded by their importer;
+ * they are never accepted here as a current profile or an authority fallback.
+ */
+export const Projection = Schema.Union([
+  Authenticated,
+  Schema.Struct({
+    contractRevision: ContractRevision,
+    status: Schema.Literal("unauthenticated"),
+  }),
+  Schema.Struct({
+    contractRevision: ContractRevision,
+    status: Schema.Literal("denied"),
+  }),
+  Schema.Struct({
+    contractRevision: ContractRevision,
+    status: Schema.Literal("unavailable"),
+    reason: UnavailableReason,
+  }),
+]).annotate({
+  identifier: "Sucafina.TeamProfile.Projection",
+  parseOptions: { onExcessProperty: "error" },
+})
+export type Projection = Schema.Schema.Type<typeof Projection>
