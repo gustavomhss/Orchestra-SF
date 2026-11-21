@@ -323,7 +323,7 @@ export function createSfTransport(options: Readonly<{
       }
       if (operation.operationId.startsWith("files.") && stamp &&
           !options.desktop &&
-          !await refreshSfFileAuthority(options, stamp, operation.operationId)) {
+          !await refreshSfFileAuthority(options, stamp, operation.operationId, call.signal)) {
         if (mutating) pending.delete(key!)
         return failure("contract-unavailable")
       }
@@ -442,7 +442,7 @@ export function createSfTransport(options: Readonly<{
             const bytes = sfAllowedByteMime(operation.operationId, result.headers.get("content-type")) && stamp
               ? await readSfBytesBounded(result, call.signal, async () =>
                   isCurrent() && webOrigin() && !!stamp &&
-                  await refreshSfFileAuthority(options, stamp, operation.operationId)) : undefined
+                  await refreshSfFileAuthority(options, stamp, operation.operationId, call.signal)) : undefined
             response = bytes
               ? { status: result.status, headers: extracted, body: bytes }
               : failure("invalid-response")
@@ -488,7 +488,7 @@ export function createSfTransport(options: Readonly<{
       const parsedOutput = Schema.decodeUnknownOption(Schema.toType(operation.output), { onExcessProperty: "error" })(wireDecoded.value)
       if (Option.isNone(parsedOutput)) return failure(uncertain ? "outcome-unknown" : "invalid-response")
       if (operation.operationId.startsWith("files.") && stamp && !options.desktop &&
-          !await refreshSfFileAuthority(options, stamp, operation.operationId))
+          !await refreshSfFileAuthority(options, stamp, operation.operationId, call.signal))
         return failure(mutating ? "outcome-unknown" : "contract-unavailable")
       if (operation.operationId === "ctx.context") {
         if (!validContextOutcome(parsedOutput.value, options.binding, response.status)) {
@@ -964,7 +964,8 @@ async function sha256Bytes(bytes: Uint8Array): Promise<string | undefined> {
 async function refreshSfFileAuthority(options: Readonly<{
   binding: SfInstallationDescriptor; fetch: SfTransportFetch;
   operations: SfOperationBindings;
-}>, expected: SfContextStamp, operationId: SfOperationId): Promise<boolean> {
+}>, expected: SfContextStamp, operationId: SfOperationId, signal: AbortSignal): Promise<boolean> {
+  if (signal.aborted) return false
   const meta = cataloguedRoute("ctx.context")
   const codec = options.operations["ctx.context"]
   if (!meta || !codec || meta.method !== "GET" || meta.responseMode !== "json") return false
@@ -975,11 +976,11 @@ async function refreshSfFileAuthority(options: Readonly<{
   try {
     const reply = await options.fetch(route, {
       method: "GET", credentials: "same-origin", cache: "no-store", redirect: "error",
-      headers: { Accept: "application/json" },
+      signal, headers: { Accept: "application/json" },
     })
     if (reply.status !== 200 || !isJsonContentType(reply.headers.get("content-type"))) return false
     const wire = await readJsonBounded(reply)
-    if (wire === undefined) return false
+    if (signal.aborted || wire === undefined) return false
     const context = codec.decodeOutput(wire)
     if (context.status !== "ok" || !validContextOutcome(context.value, options.binding, 200)) return false
     const value = context.value
