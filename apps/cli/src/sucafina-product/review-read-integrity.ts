@@ -67,7 +67,6 @@ export function protectSfReviewReads(input: {
   const sameCall = (scope: ReadScope, call: TrustedDomainContext, binding: string) => activeScope(scope, call) && localReaders() && reviews.read === protectedRead &&
     digestSfValue([call.kind, call.binding]) === binding
   const receiptDigest = (state: Pick<SfProductState, "reviews" | "transactions">, id: string, digest: string) => {
-    if (!state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return undefined
     const receipts = Object.values(state.transactions).filter((receipt) => {
       if (receipt.namespace !== "reviews" || !receipt.principalRef.trim() || receipt.targetRef !== authority.creationTarget.ref ||
         receipt.targetIncarnation !== authority.creationTarget.incarnation || !receipt.value || typeof receipt.value !== "object" || Array.isArray(receipt.value)) return false

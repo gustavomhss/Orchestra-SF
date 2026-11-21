@@ -132,6 +132,31 @@ test("large file bytes do not evict the bounded snapshot plan or alias its copie
   })
 })
 
+test("retains canonical byte identity when a valid snapshot exceeds the copy-plan node limit", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const entries = 201_000
+    await store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.records = Array.from({ length: entries }, (_, value) => value)
+      return { commit: true, value: undefined }
+    })
+    await store.dispose()
+
+    const reopened = await open()
+    if (!reopened.readSnapshotRoot) throw new Error("LocalStore must provide a read snapshot root")
+    const inspect = async () => {
+      const identity = reopened.currentSnapshotScope?.()?.bytesIdentity
+      const records = reopened.currentSnapshot?.("dashboard")?.data.records
+      if (!identity || !Array.isArray(records)) throw new Error("Observed local snapshot unavailable")
+      expect(records).toHaveLength(entries)
+      expect(records.at(-1)).toBe(entries - 1)
+      return identity
+    }
+    const first = await reopened.readSnapshotRoot(inspect)
+    expect(await reopened.readSnapshotRoot(inspect)).toBe(first)
+  })
+})
+
 test("codec preserves sentinel-shaped objects, tagged-looking arrays and nested undefined", async () => {
   await fixture(async (_directory, open) => {
     const store = await open()
