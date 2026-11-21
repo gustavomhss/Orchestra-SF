@@ -157,12 +157,18 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   const materializations = new Map<Surface, SnapshotMaterialization>()
   const emptySnapshotIdentity = {}
   const observeSnapshot = (surface: Surface, payload?: string): {
-    materialize: () => Snapshot; copy?: () => Snapshot; freshPlan?: SnapshotMaterialization; bytesIdentity?: object
+    materialize: () => Snapshot
+    copy?: () => Snapshot
+    freshPlan?: SnapshotMaterialization
+    copyAcl?: () => Snapshot["data"] | undefined
+    bytesIdentity?: object
   } => {
     const prior = materializations.get(surface)
     if (payload !== undefined && prior?.payload === payload) {
       const materialize = () => materializeSnapshot(prior)
-      return { materialize, copy: materialize, bytesIdentity: prior.identity }
+      const acl = prior.acl
+      return { materialize, copy: materialize, bytesIdentity: prior.identity,
+        ...(acl === undefined ? {} : { copyAcl: () => aclCodecCurrent() ? decodeSnapshot(acl).data : undefined }) }
     }
     materializations.delete(surface)
     if (payload === undefined) {
@@ -184,6 +190,8 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   }
   const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
 
+  type SnapshotCopies = Partial<Record<Surface, () => Snapshot>>
+  type AclCopies = Partial<Record<Surface, () => Snapshot["data"] | undefined>>
   const byteIdentities = new WeakMap<object, WeakMap<object, WeakMap<object, object>>>()
   const snapshotBytesIdentity = (keys: Partial<Record<Surface, object>>) => {
     const { dashboard, planner, procurement } = keys
@@ -196,14 +204,29 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     byteIdentities.set(dashboard, planners)
     return identity
   }
-
   type ReadScope = {
-    root: { identity: object; bytesIdentity?: object; db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: Partial<Record<Surface, () => Snapshot>>; poisoned: boolean; readers: number; readOnly?: true }
+    root: { identity: object; db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: SnapshotCopies; aclCopies?: AclCopies; bytesIdentity?: object; preimage?: { surface: Surface; current: () => boolean; snapshot: () => Snapshot }; poisoned: boolean; readers: number; readOnly?: true }
     parent?: ReadScope
     open: boolean
     signal?: AbortSignal
   }
   const context = new AsyncLocalStorage<ReadScope>()
+  const rootIdentities = new WeakMap<object, object>()
+  const preimages = new WeakSet<() => boolean>()
+  const requireDashboardSource = (scope: ReadScope, identity: object) => {
+    const preimage = Object.hasOwn(scope.root, "preimage") ? scope.root.preimage : undefined
+    if (scope.root.poisoned || rootIdentities.get(scope.root) !== identity ||
+      !(Object.hasOwn(scope.root, "readOnly") && scope.root.readOnly === true || preimage?.current() === true)) throw new Error("Local Dashboard source root changed")
+    return preimage?.surface === "dashboard" ? preimage.snapshot() : scope.root.snapshots.dashboard
+  }
+  const dashboardSourceSnapshot = (scope: ReadScope, identity: object) => {
+    const snapshot = requireDashboardSource(scope, identity)
+    if (!snapshot || Object.hasOwn(Object.prototype, "__sfProductV1")) throw new Error("Local Dashboard source view unavailable")
+    // Persisted v1 data has no getters or aliases. Private product state and
+    // audit are outside the installed Dashboard source projector's input.
+    return structuredClone({ data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1")),
+      versions: snapshot.versions, sfSources: snapshot.sfSources, sequences: {}, audit: [], notices: [] }) satisfies Snapshot
+  }
   const requireScope = (scope: ReadScope) => {
     let current: ReadScope | undefined = scope
     while (current) {
@@ -212,6 +235,16 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       current = current.parent
     }
     requireDatabaseFile()
+  }
+  const currentCopy = (scope: ReadScope, surface: Surface) =>
+    Object.hasOwn(scope.root, "preimage") && scope.root.preimage?.surface === surface && !scope.root.preimage.current()
+      ? undefined : scope.root.copies?.[surface]
+  const copyCurrentSnapshot = (scope: ReadScope, surface: Surface): Snapshot => {
+    const materialize = currentCopy(scope, surface)
+    if (materialize) return materialize()
+    const snapshot = scope.root.snapshots[surface]
+    if (!snapshot) throw new Error("Local transaction snapshots unavailable")
+    return cloneSnapshot(snapshot)
   }
   const lifecycle = { closed: false, disposing: undefined as Promise<void> | undefined }
   const active = new Set<Promise<unknown>>()
@@ -230,6 +263,23 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       return writer.db ??= connect()
     } catch (error) {
       closeWriter()
+      throw error
+    }
+  }
+  // Credential lookups use a separate autocommit connection and still execute
+  // SQL on every call, including authority checks inside a business snapshot.
+  const authReader: { db?: Database } = {}
+  const closeAuthReader = () => {
+    const db = authReader.db
+    delete authReader.db
+    db?.close()
+  }
+  const acquireAuthReader = () => {
+    try {
+      requireDatabaseFile()
+      return authReader.db ??= new Database(path, { readonly: true, strict: true })
+    } catch (error) {
+      closeAuthReader()
       throw error
     }
   }
@@ -255,8 +305,6 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         return Promise.reject(error)
       }
     }
-    // Secrets read the latest committed session state on a fresh connection,
-    // including when authority is checked inside an older business snapshot.
     const previous = write ? queue.tail : undefined
     const deadline = performance.now() + timeout
     const pending = (async () => {
@@ -265,8 +313,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       // remain independent because authentication awaits them inside that transaction.
       if (previous) await waitForAdmission(previous, Math.max(0, deadline - performance.now()), signal)
       signal?.throwIfAborted()
-      if (!write) requireDatabaseFile()
-      const db = write ? acquireWriter() : connect()
+      const db = write ? acquireWriter() : acquireAuthReader()
       const status = { completed: false }
       const failure: { failed: boolean; error?: unknown } = { failed: false }
       try {
@@ -276,6 +323,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         }
         signal?.throwIfAborted()
         const value = await work(db)
+        if (!write && db.inTransaction) throw new Error("Local authentication read opened a transaction")
         if (inherited) requireScope(inherited)
         requireDatabaseFile()
         status.completed = true
@@ -288,7 +336,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const rollback = { confirmed: false }
         try {
           try {
-            if (db.inTransaction) {
+            if (write && db.inTransaction) {
               db.exec("ROLLBACK")
               rollback.confirmed = true
             }
@@ -296,8 +344,8 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
             status.completed = false
             throw error
           } finally {
-            if (!write) db.close()
             if (write && !status.completed) closeWriter()
+            if (!write && !status.completed && authReader.db === db) closeAuthReader()
           }
           const transaction = abortRoots.get(db)
           // Serialization/COMMIT failures and errors thrown after the callback
@@ -322,18 +370,61 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     return pending
   }
 
-  const copyCurrentSnapshot = (scope: ReadScope, surface: Surface) => {
-    const materialize = scope.root.copies?.[surface]
-    if (materialize) return materialize()
-    const snapshot = scope.root.snapshots[surface]
-    if (!snapshot) throw new Error("Local transaction snapshots unavailable")
-    return cloneSnapshot(snapshot)
+  const hasCurrentSnapshots = () => {
+    const scope = context.getStore()
+    if (!scope) return false
+    requireScope(scope)
+    return true
   }
-
   const store: LocalStore = {
+    hasSnapshotRoot: hasCurrentSnapshots,
+    holdTargetPreimage: () => {
+      const state = { active: true }
+      const current = () => state.active
+      preimages.add(current)
+      return Object.freeze({ current, release: () => { state.active = false } })
+    },
+    observeAuthority: (surfaces) => {
+      const scope = context.getStore()
+      if (!scope) return undefined
+      const fields = snapshotAclFields
+      const absent = new Set<string>()
+      const sealed = () => Object.hasOwn(scope.root, "readOnly") && scope.root.readOnly === true ||
+        Object.hasOwn(scope.root, "preimage") && scope.root.preimage?.current() === true
+      const active = () => {
+        requireScope(scope)
+        return context.getStore() === scope && !scope.root.poisoned && sealed()
+      }
+      requireScope(scope)
+      if (!sealed()) return undefined
+      if (scope.root.poisoned) throw new Error("Local transaction is poisoned")
+      const entries = surfaces.map((surface) => {
+        const preimage = Object.hasOwn(scope.root, "preimage") ? scope.root.preimage : undefined
+        const copiedAcl = scope.root.aclCopies?.[surface]?.()
+        const data = copiedAcl ?? (preimage?.surface === surface ? preimage.snapshot() : scope.root.snapshots[surface])?.data
+        if (!data || Object.getPrototypeOf(data) !== Object.prototype) return undefined
+        const selected = fields.map((name) => [name, Object.getOwnPropertyDescriptor(data, name)] as const)
+        if (selected.some(([name, descriptor]) => descriptor ? !Object.hasOwn(descriptor, "value") : name in data)) return undefined
+        return [surface, { data: Object.fromEntries(selected.flatMap(([name, descriptor]) => {
+          if (descriptor) return [[name, copiedAcl ? descriptor.value : copyValue(descriptor.value)]]
+          absent.add(name)
+          return []
+        })) }] as const
+      })
+      if (entries.some((entry) => !entry)) return undefined
+      const snapshots = Object.fromEntries(entries.filter((entry) => entry !== undefined)) as Record<(typeof surfaces)[number], Pick<Snapshot, "data">>
+      const identity = rootIdentities.get(scope.root) ?? {}
+      rootIdentities.set(scope.root, identity)
+      const validity = { current: true }
+      return { snapshots, identity, bytesIdentity: scope.root.bytesIdentity, current: () => {
+        validity.current &&= active() && [...absent].every((name) => !Object.hasOwn(Object.prototype, name))
+        return validity.current
+      } }
+    },
     readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>
       operation(true, async (db) => {
-        const copies: Partial<Record<Surface, () => Snapshot>> = {}
+        const copies: SnapshotCopies = {}
+        const aclCopies: AclCopies = {}
         const byteKeys: Partial<Record<Surface, object>> = {}
         // Initial memo hits can outlive eviction in this root. Reserve their
         // budget before taking fresh plans for repeated reads of cold surfaces.
@@ -345,6 +436,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           const source = observeSnapshot(surface, row?.payload)
           byteKeys[surface] = source.bytesIdentity
           if (source.copy) copies[surface] = source.copy
+          if (source.copyAcl) aclCopies[surface] = source.copyAcl
           const plan = source.freshPlan
           if (plan && plan.units <= budget.remaining) {
             budget.remaining -= plan.units
@@ -364,7 +456,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
           get procurement() { return observed.procurement() },
         }
-        const scope: ReadScope = { root: { identity: {}, bytesIdentity: snapshotBytesIdentity(byteKeys), db, snapshots, copies, poisoned: false, readers: 0, readOnly: true }, open: true, signal: transactionOptions?.signal }
+        const scope: ReadScope = { root: { identity: {}, db, snapshots, copies, aclCopies, bytesIdentity: snapshotBytesIdentity(byteKeys), poisoned: false, readers: 0, readOnly: true }, open: true, signal: transactionOptions?.signal }
         try {
           const value = await context.run(scope, work)
           requireScope(scope)
@@ -379,6 +471,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           delete copies.dashboard
           delete copies.planner
           delete copies.procurement
+          delete aclCopies.dashboard
+          delete aclCopies.planner
+          delete aclCopies.procurement
         }
       }, transactionOptions?.signal),
     currentSnapshotScope: () => {
@@ -387,12 +482,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       requireScope(scope)
       return { identity: scope.root.identity, bytesIdentity: scope.root.bytesIdentity, readOnly: scope.root.readOnly === true, poisoned: scope.root.poisoned }
     },
-    hasCurrentSnapshots: () => {
-      const scope = context.getStore()
-      if (!scope) return false
-      requireScope(scope)
-      return true
-    },
+    hasCurrentSnapshots,
     currentSnapshots: () => {
       const scope = context.getStore()
       if (!scope) return undefined
@@ -418,11 +508,18 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         requireScope(parent)
         transactionOptions?.signal?.throwIfAborted()
         const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
-        const materialize = parent.root.copies?.[surface]
-        const staged = materialize ? undefined : parent.root.snapshots[surface]
-        const row = materialize || staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-        const snapshot = materialize ? materialize() : staged ? cloneSnapshot(staged) :
-          loadSnapshot(surface, row?.payload)
+        const sourceRoot = transactionOptions?.dashboardSourceRoot
+        const aclRoot = transactionOptions?.dashboardAclRoot
+        if ((sourceRoot || aclRoot) && surface !== "dashboard") throw new Error("Local Dashboard source surface changed")
+        const materialize = sourceRoot || aclRoot ? undefined : currentCopy(parent, surface)
+        const staged = sourceRoot || aclRoot || materialize ? undefined : parent.root.snapshots[surface]
+        const row = sourceRoot || aclRoot || materialize || staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+        if (aclRoot && (parent.root.poisoned || !parent.root.readOnly || rootIdentities.get(parent.root) !== aclRoot))
+          throw new Error("Local Dashboard ACL root changed")
+        // The callback obtains ACL fields separately via observeAuthority.
+        const snapshot: Snapshot = aclRoot ? { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+          : sourceRoot ? dashboardSourceSnapshot(parent, sourceRoot)
+          : materialize ? materialize() : staged ? cloneSnapshot(staged) : loadSnapshot(surface, row?.payload)
         const blobs: BlobTransaction = {
           get: async (key) => {
             requireScope(scope)
@@ -442,6 +539,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
             throw new Error("Nested local writes are forbidden")
           }
           if (scope.root.poisoned) throw new Error("Nested local write attempted")
+          if (sourceRoot) requireDashboardSource(scope, sourceRoot)
           return result.value
         } finally {
           scope.open = false
@@ -449,17 +547,34 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         }
       })()
       return operation(true, async (db) => {
-        const copies: Partial<Record<Surface, () => Snapshot>> = {}
+        const copies: SnapshotCopies = {}
+        const aclCopies: AclCopies = {}
+        const byteKeys: Partial<Record<Surface, object>> = {}
+        if (transactionOptions?.dashboardSourceRoot || transactionOptions?.dashboardAclRoot) throw new Error("Local Dashboard source read needs a held root")
+        const candidate = transactionOptions?.targetPreimageCurrent
+        const currentPreimage = candidate && preimages.delete(candidate) && candidate() ? candidate : undefined
         const read = (name: Surface) => {
           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
-          // Capture SQL once. An unrelated surface's new payload is decoded
-          // only when a nested reader asks for it.
+          // Ordinary single-surface transactions keep dev's lazy observation
+          // of unrelated surfaces. A preimage additionally needs a full seal.
           const prior = materializations.get(name)
-          if (name !== surface && prior && prior.payload === row?.payload) {
-            copies[name] = () => materializeSnapshot(prior)
+          if (!currentPreimage && name !== surface && (!prior || prior.payload !== row?.payload)) {
+            const observed: { value?: Snapshot } = {}
+            return () => observed.value ??= loadSnapshot(name, row?.payload)
           }
-          const observed: { value?: Snapshot } = {}
-          return () => observed.value ??= loadSnapshot(name, row?.payload)
+          const source = observeSnapshot(name, row?.payload)
+          byteKeys[name] = source.bytesIdentity
+          if (name !== surface || currentPreimage) {
+            if (source.copy) copies[name] = source.copy
+            if (source.copyAcl) aclCopies[name] = source.copyAcl
+          }
+          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
+          return () => {
+            if (observed.value) return observed.value
+            observed.value = observed.materialize!()
+            observed.materialize = undefined
+            return observed.value
+          }
         }
         const observed = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
         // Only the target escapes to the callback and stays mutable.
@@ -468,6 +583,18 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           get procurement() { return observed.procurement() },
         }
         const snapshot = snapshots[surface]
+        // A cold target has no memo plan; materialize one genuinely private
+        // preimage before handing the writable snapshot to its owner.
+        const preimage = currentPreimage && (() => {
+          const materialize = copies[surface]
+          if (materialize) {
+            const held: { snapshot?: Snapshot } = {}
+            return () => held.snapshot ??= materialize()
+          }
+          const held = cloneSnapshot(snapshot)
+          copies[surface] = () => cloneSnapshot(held)
+          return () => held
+        })()
         const generations = new Map(Object.entries(snapshot.sfBlobGenerations ?? {}))
         const checkGenerations = () => {
           if (!Bun.deepEquals(snapshot.sfBlobGenerations ?? {}, Object.fromEntries(generations))) throw new Error("Private blob generations changed outside storage")
@@ -481,13 +608,17 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           generations.set(key, generation)
           snapshot.sfBlobGenerations = Object.fromEntries(generations)
         }
-        const scope: ReadScope = { root: { identity: {}, db, snapshots, copies, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
+        const scope: ReadScope = { root: { identity: {}, db, snapshots, copies, aclCopies, bytesIdentity: snapshotBytesIdentity(byteKeys), ...(currentPreimage && preimage ? { preimage: { surface, current: currentPreimage, snapshot: preimage } } : {}), poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
         const requireOpen = () => {
           requireScope(scope)
           if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
         }
         const requireWritable = () => {
           requireScope(scope)
+          if (transactionOptions?.sealedRead) {
+            scope.root.poisoned = true
+            throw new Error("Blob writes are forbidden in a sealed read")
+          }
           if (context.getStore() !== scope || scope.root.readers > 0) {
             scope.root.poisoned = true
             throw new Error("Nested blob writes are forbidden")
@@ -527,6 +658,8 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
             scope.open = false
             scope.root.snapshots = {}
             delete scope.root.copies
+            delete scope.root.preimage
+            delete scope.root.aclCopies
           }
         })()
         transactionOptions?.signal?.throwIfAborted()
@@ -535,6 +668,8 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         checkGenerations()
         if (result.commit) {
           requireDatabaseFile()
+          if (transactionOptions?.sealedRead) throw new Error("Local sealed read attempted a write")
+          if (currentPreimage?.()) throw new Error("Local target preimage must be released before publication")
           const payload = encodeSnapshot(snapshot)
           decodeSnapshot(payload)
           requireDatabaseFile()
@@ -667,7 +802,11 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     dispose: () => {
       if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
       lifecycle.closed = true
-      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => { closeWriter(); materializations.clear() })
+      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => {
+        try { closeWriter() } finally {
+          try { closeAuthReader() } finally { materializations.clear() }
+        }
+      })
       return lifecycle.disposing
     },
   }
@@ -888,7 +1027,13 @@ export function encodeSnapshot(snapshot: Snapshot): string {
 // These are optimization limits only: larger/deeper valid v1 snapshots keep
 // using the original decoder. No new persisted format or acceptance limit.
 const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024
-type SnapshotMaterialization = Readonly<{ identity: object; payload: string; json: string; missing: string; units: number }>
+const snapshotAclFields = ["roleMap", "access"] as const
+const aclCodec = { stringify: JSON.stringify, parse: JSON.parse, map: Array.prototype.map }
+function aclCodecCurrent() {
+  return JSON.stringify === aclCodec.stringify && JSON.parse === aclCodec.parse && Array.prototype.map === aclCodec.map &&
+    !Object.getOwnPropertyDescriptor(Array.prototype, "toJSON") && !Object.getOwnPropertyDescriptor(Object.prototype, "toJSON")
+}
+type SnapshotMaterialization = Readonly<{ identity: object; payload: string; json: string; missing: string; acl?: string; units: number }>
 
 function planSnapshotMaterialization(snapshot: Snapshot, payload: string): SnapshotMaterialization | undefined {
   if (payload.length > SNAPSHOT_MATERIALIZATION_UNITS) return
@@ -937,7 +1082,14 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string): Snaps
   if (!visit(snapshot)) return
   const json = parts.join("")
   const absent = "[" + missing.join(",") + "]"
-  return Object.freeze({ identity: {}, payload, json, missing: absent, units: payload.length + json.length + absent.length })
+  const units = payload.length + json.length + absent.length
+  const acl = aclCodecCurrent() ? encodeSnapshot({
+    data: Object.fromEntries(snapshotAclFields.flatMap((name) => Object.hasOwn(snapshot.data, name) ? [[name, snapshot.data[name]]] : [])),
+    versions: {}, sequences: {}, audit: [], notices: [],
+  }) : undefined
+  return Object.freeze(acl && units + acl.length <= SNAPSHOT_MATERIALIZATION_UNITS
+    ? { identity: {}, payload, json, missing: absent, acl, units: units + acl.length }
+    : { identity: {}, payload, json, missing: absent, units })
 }
 
 function materializeSnapshot(plan: SnapshotMaterialization): Snapshot {

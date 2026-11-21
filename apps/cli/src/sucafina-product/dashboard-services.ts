@@ -27,6 +27,32 @@ export type DashboardAgendaSection = { id: string; title: string; selectionRef: 
 export type DashboardAgendaRequest = { sections: readonly DashboardAgendaSection[] }
 export type DashboardReviewRequest = { selectionRef: string; sectionRefs: readonly string[]; previousReviewRef?: string }
 
+type SfDashboardDiscoveryRequest = { page: string; period?: Period }
+type SfDashboardAgendaDiscovery = {
+  period: Period
+  agenda?: { section: DashboardAgendaSection; recordCount: number }
+  records: { label: string; sourceRef: string; draft?: { target: SourceRef; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }>; fields: { action: string; owner: string; due: string; priority: "critical" | "high" | "normal"; notes: string } } }[]
+  recordLimit: number
+  permissions: { preserve: boolean; capture: boolean }
+}
+type SfDashboardDiscovery = SfDashboardAgendaDiscovery & { history: { kind: "capture" | "review"; ref: string; label: string }[] }
+type SfDashboardDiscover = (request: SfDashboardDiscoveryRequest, context: TrustedDomainContext) => Promise<PortResult<SfDashboardDiscovery>>
+const agendaDiscoveries = new WeakMap<object, { discover: SfDashboardDiscover;
+  read: (request: SfDashboardDiscoveryRequest, context: TrustedDomainContext) => Promise<PortResult<SfDashboardAgendaDiscovery>> }>()
+
+/** Internal agenda consumers do not request the public workbench's historical catalog.
+ * Recognize only this factory's unchanged own method; custom services keep their full call. */
+export function discoverSfDashboardAgenda(service: { discover: SfDashboardDiscover }, request: SfDashboardDiscoveryRequest, context: TrustedDomainContext): Promise<PortResult<SfDashboardAgendaDiscovery>> {
+  const registered = registeredAgendaDiscovery(service)
+  return registered ? registered.read(request, context) : service.discover(request, context)
+}
+
+function registeredAgendaDiscovery(service: object) {
+  const registered = agendaDiscoveries.get(service)
+  const descriptor = registered ? Object.getOwnPropertyDescriptor(service, "discover") : undefined
+  return descriptor && "value" in descriptor && descriptor.value === registered?.discover ? registered : undefined
+}
+
 /** Private host composition: public arguments contain selectors, never persistence callbacks or receipts. */
 export function createSfDashboardServices(input: {
   authority: ReturnType<typeof createSfProductAuthority>
@@ -106,7 +132,10 @@ export function createSfDashboardServices(input: {
   const historicalSources = async (context: TrustedDomainContext, refs: readonly SourceRef[]) => {
     if (!reviewHistory || !await host.revalidate(context)) return false
     const sources = new Map(refs.map((ref) => [digestSfValue(ref), structuredClone(ref)]))
-    const checked = await Promise.all([...sources.values()].map((ref) => ref.surface === "dashboard" && reviewHistory.historicalSource(ref, context)))
+    const selected = [...sources.values()]
+    const batch = reviewHistory.historicalSources(context)
+    const checked = batch && selected.every((ref) => ref.surface === "dashboard") ? await batch(selected)
+      : await Promise.all(selected.map((ref) => ref.surface === "dashboard" && reviewHistory.historicalSource(ref, context)))
     return checked.every(Boolean) && await host.revalidate(context)
   }
   const historicalReviews = reviewHistory ? createReviewPort({ ...reviewHost,
@@ -148,98 +177,105 @@ export function createSfDashboardServices(input: {
     return { status: "ok", value: result.value }
   }
   const history = createDashboardHistoricalBindings({ host, observer, records: input.records, readProtectedCapture: readCapture })
-  return {
+  function discover(request: SfDashboardDiscoveryRequest, context: TrustedDomainContext, includeHistory: true): Promise<PortResult<SfDashboardDiscovery>>
+  function discover(request: SfDashboardDiscoveryRequest, context: TrustedDomainContext, includeHistory: false): Promise<PortResult<SfDashboardAgendaDiscovery>>
+  async function discover(request: SfDashboardDiscoveryRequest, context: TrustedDomainContext, includeHistory: boolean): Promise<PortResult<SfDashboardAgendaDiscovery | SfDashboardDiscovery>> {
+    const source = host.requestFor(context)
+    if (!source || !await host.revalidate(context)) return { status: "denied" as const, reason: "dashboard-discovery-unavailable" }
+    const environment = await host.environment(source)
+    const year = new Date(environment.at).getUTCFullYear()
+    const period = request.period ?? { start: `${year}-01-01`, end: `${year}-12-31` }
+    if (!isSfPeriod(period)) return { status: "needs-input" as const, reason: "invalid-dashboard-period" }
+    const definition = agendaDefinition(request.page, period)
+    const selected = definition ? await createDashboardSourceIssuer({ host, scopedSources: input.scopedSources })({ page: request.page, fields: definition.fields, period }, context) : undefined
+    if (selected && selected.status !== "ok") return selected
+    const agendaRequest = selected?.status === "ok" && definition ? { id: "dashboard", title: request.page, selectionRef: selected.value.selectionRef, topic: definition.topic, period } : undefined
+    const selectedAgenda = agendaRequest ? await agenda(agendaRequest, context) : undefined
+    if (selectedAgenda && selectedAgenda.status !== "ok") return selectedAgenda
+    const records: SfDashboardAgendaDiscovery["records"] = []
+    if (selectedAgenda?.status === "ok") for (const reference of selectedAgenda.value.recordRefs.slice(0, 100)) {
+      const resolved = await input.records.resolve(reference, context)
+      if (resolved.status !== "ok" || !resolved.value.target.period) continue
+      const target = resolved.value.target
+      const recordPeriod = resolved.value.target.period
+      const prefix = target.recordType === "itperf-item" ? `itperf.items[id:${encodeURIComponent(target.recordId)}].` : `${target.recordType}[id:${encodeURIComponent(target.recordId)}].`
+      const values = selectedAgenda.value.projection.values.filter((value) => value.id.startsWith(prefix) && /^[A-Za-z][A-Za-z0-9_]*$/.test(value.id.slice(prefix.length)))
+      let fields = [...new Set(values.map((value) => value.id.slice(prefix.length)).filter((field) => field !== "id"))].sort()
+      let periodLabel: string | undefined
+      if (target.recordType === "opsTickets") {
+        const identity = await input.records.issue({ page: "IT Operations", recordType: "opsTickets", recordId: target.recordId, fields: ["year", "month"], period: recordPeriod }, context)
+        const observed = identity.status === "ok" ? await input.records.read(identity.value.refId, context) : undefined
+        if (observed?.status !== "ok") continue
+        const year = observed.value.values.find((value) => value.id.endsWith(":year"))?.value
+        const month = observed.value.values.find((value) => value.id.endsWith(":month"))?.value
+        if (typeof year !== "number" || !Number.isInteger(year) || typeof month !== "number" || !Number.isInteger(month) || month < 1 || month > 12) continue
+        periodLabel = `${year}-${String(month).padStart(2, "0")}`
+        const ticketPrefix = `tickets:${periodLabel}:`
+        // Absent metrics remain visible in the agenda, but do not name physical fields that can be captured.
+        // The record issuer rechecks that every observed metric still exists on this authorized ticket row.
+        fields = ["year", "month", ...selectedAgenda.value.projection.values.filter((value) => value.id.startsWith(ticketPrefix) && value.evidenceState === "confirmed").map((value) => value.id.slice(ticketPrefix.length))]
+      }
+      const signal = request.page === "Executive Dashboard" ? selectedAgenda.value.projection.values.filter((value) => value.drilldown?.kind === "record" && value.drilldown.refId === reference) : []
+      if (signal.length) fields = target.fields.filter((field) => field !== "id")
+      if (!fields.length) continue
+      const record = signal.length ? resolved : await input.records.issue({ page: request.page, recordType: target.recordType, recordId: target.recordId, fields, period: recordPeriod }, context)
+      if (record.status !== "ok") continue
+      const material = await input.records.read(record.value.refId, context)
+      if (material.status !== "ok") continue
+      const labelValue = ["action", "name", "title", "vendor", "owner"].map((field) => values.find((value) => value.id === `${prefix}${field}`)?.value).find((value) => typeof value === "string" && value.trim())
+      const signalLabel = signal.find((value) => value.id.endsWith(".fact"))?.value
+      const label = typeof signalLabel === "string" ? signalLabel : typeof labelValue === "string" ? labelValue : periodLabel ? `Chamados · ${periodLabel}` : `${request.page} · ${records.length + 1}`
+      const entry: typeof records[number] = { label, sourceRef: record.value.refId }
+      if (target.recordType === "hotTopics") {
+        const draftSource = await issue({ recordType: "hotTopics", recordId: target.recordId, fields: ["action", "due", "notes", "owner", "priority"], period: recordPeriod }, context)
+        const projection = draftSource.status === "ok" ? await input.records.read(draftSource.value.refId, context) : undefined
+        if (draftSource.status === "ok" && projection?.status === "ok") {
+          const field = (name: string) => projection.value.values.find((value) => value.id === `hotTopics:${encodeURIComponent(target.recordId)}:${name}`)?.value
+          const action = field("action"), owner = field("owner"), due = field("due"), priority = field("priority"), notes = field("notes")
+          const identity = projection.value.context.sourceRefs[0]
+          if (identity && typeof action === "string" && typeof owner === "string" && typeof due === "string" && typeof notes === "string" && ["critical", "high", "normal"].some((value) => value === priority))
+            entry.draft = { target: identity, targetEvidence: draftSource.value, fields: { action, owner, due, notes, priority: priority === "critical" ? "critical" : priority === "high" ? "high" : "normal" } }
+        }
+      }
+      records.push(entry)
+    }
+    const preferences = await state.read(source, "preferences", (stored, authority) => sameAuthority(authority, context) ? Object.entries(stored.preferences)
+      .filter(([key, value]) => key.startsWith("sf:dashboard-host:capture:") && isCapture(value) && value.capturedBy === authority.principalRef)
+      .map(([, value]) => value).filter(isCapture).sort((a, b) => b.capturedAt.localeCompare(a.capturedAt)).slice(0, 100).map((capture) => capture.id) : [])
+    const historyOptions: SfDashboardDiscovery["history"] = []
+    if (!includeHistory && !registeredAgendaDiscovery(service)) return { status: "unavailable", reason: "dashboard-discovery-unavailable" }
+    if (includeHistory && preferences.status === "ok") for (const id of preferences.value) {
+      const reopened = await history.reopen(id, context)
+      if (reopened.status !== "ok") continue
+      const label = reopened.value.projection.values.find((value) => typeof value.value === "string" && value.value.trim())?.value
+      historyOptions.push({ kind: "capture", ref: id, label: `${typeof label === "string" ? label : "Retrato de registro"} · ${reopened.value.capturedAt.slice(0, 10)}` })
+    }
+    const savedReviews = await state.read(source, "reviews", (stored, authority) => sameAuthority(authority, context) ? Object.values(stored.reviews)
+      .filter((review) => review.sections.every((section) => object(object(section.content).context).principalRef === authority.principalRef))
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 100).map((review) => review.id) : [])
+    if (!includeHistory && !registeredAgendaDiscovery(service)) return { status: "unavailable", reason: "dashboard-discovery-unavailable" }
+    if (includeHistory && savedReviews.status === "ok") for (const id of savedReviews.value) {
+      const current = await historicalReviews.read(id, context)
+      if (current.status === "ok") historyOptions.push({ kind: "review", ref: id, label: `${current.value.sections.map((section) => section.title).join(", ")} · ${current.value.createdAt.slice(0, 10)}` })
+    }
+    const actions = await input.authority.humanActions(source)
+    if (selected?.status === "ok") {
+      const current = await input.sources.resolveDashboardSource(selected.value.selectionRef, context)
+      if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(selected.value.evidence))
+        return { status: "stale" as const, reason: "dashboard-discovery-source-changed" }
+    }
+    if (!await host.revalidate(context)) return { status: "denied" as const, reason: "dashboard-discovery-unavailable" }
+    // A replacement during any awaited producer/state/authority call retains its public semantics.
+    if (!includeHistory && !registeredAgendaDiscovery(service)) return { status: "unavailable", reason: "dashboard-discovery-unavailable" }
+    return { status: "ok" as const, value: { period, ...(agendaRequest && selectedAgenda?.status === "ok" ? { agenda: { section: agendaRequest, recordCount: selectedAgenda.value.recordCount } } : {}),
+      records, recordLimit: 100, ...(includeHistory ? { history: historyOptions } : {}), permissions: {
+        preserve: actions.includes("reviews.preserve") && (savedReviews.status === "ok" || savedReviews.status === "unavailable" && savedReviews.reason === "product-state-uninitialized"),
+        capture: actions.includes("reviews.preserve") && (preferences.status === "ok" || preferences.status === "unavailable" && preferences.reason === "product-state-uninitialized"),
+      } } }
+  }
+  const service = {
     issue, observer, select,
-    discover: async (request: { page: string; period?: Period }, context: TrustedDomainContext) => {
-      const source = host.requestFor(context)
-      if (!source || !await host.revalidate(context)) return { status: "denied" as const, reason: "dashboard-discovery-unavailable" }
-      const environment = await host.environment(source)
-      const year = new Date(environment.at).getUTCFullYear()
-      const period = request.period ?? { start: `${year}-01-01`, end: `${year}-12-31` }
-      if (!isSfPeriod(period)) return { status: "needs-input" as const, reason: "invalid-dashboard-period" }
-      const definition = agendaDefinition(request.page, period)
-      const selected = definition ? await createDashboardSourceIssuer({ host, scopedSources: input.scopedSources })({ page: request.page, fields: definition.fields, period }, context) : undefined
-      if (selected && selected.status !== "ok") return selected
-      const agendaRequest = selected?.status === "ok" && definition ? { id: "dashboard", title: request.page, selectionRef: selected.value.selectionRef, topic: definition.topic, period } : undefined
-      const selectedAgenda = agendaRequest ? await agenda(agendaRequest, context) : undefined
-      if (selectedAgenda && selectedAgenda.status !== "ok") return selectedAgenda
-      const records: { label: string; sourceRef: string; draft?: { target: SourceRef; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }>; fields: { action: string; owner: string; due: string; priority: "critical" | "high" | "normal"; notes: string } } }[] = []
-      if (selectedAgenda?.status === "ok") for (const reference of selectedAgenda.value.recordRefs.slice(0, 100)) {
-        const resolved = await input.records.resolve(reference, context)
-        if (resolved.status !== "ok" || !resolved.value.target.period) continue
-        const target = resolved.value.target
-        const recordPeriod = resolved.value.target.period
-        const prefix = target.recordType === "itperf-item" ? `itperf.items[id:${encodeURIComponent(target.recordId)}].` : `${target.recordType}[id:${encodeURIComponent(target.recordId)}].`
-        const values = selectedAgenda.value.projection.values.filter((value) => value.id.startsWith(prefix) && /^[A-Za-z][A-Za-z0-9_]*$/.test(value.id.slice(prefix.length)))
-        let fields = [...new Set(values.map((value) => value.id.slice(prefix.length)).filter((field) => field !== "id"))].sort()
-        let periodLabel: string | undefined
-        if (target.recordType === "opsTickets") {
-          const identity = await input.records.issue({ page: "IT Operations", recordType: "opsTickets", recordId: target.recordId, fields: ["year", "month"], period: recordPeriod }, context)
-          const observed = identity.status === "ok" ? await input.records.read(identity.value.refId, context) : undefined
-          if (observed?.status !== "ok") continue
-          const year = observed.value.values.find((value) => value.id.endsWith(":year"))?.value
-          const month = observed.value.values.find((value) => value.id.endsWith(":month"))?.value
-          if (typeof year !== "number" || !Number.isInteger(year) || typeof month !== "number" || !Number.isInteger(month) || month < 1 || month > 12) continue
-          periodLabel = `${year}-${String(month).padStart(2, "0")}`
-          const ticketPrefix = `tickets:${periodLabel}:`
-          // Absent metrics remain visible in the agenda, but do not name physical fields that can be captured.
-          // The record issuer rechecks that every observed metric still exists on this authorized ticket row.
-          fields = ["year", "month", ...selectedAgenda.value.projection.values.filter((value) => value.id.startsWith(ticketPrefix) && value.evidenceState === "confirmed").map((value) => value.id.slice(ticketPrefix.length))]
-        }
-        const signal = request.page === "Executive Dashboard" ? selectedAgenda.value.projection.values.filter((value) => value.drilldown?.kind === "record" && value.drilldown.refId === reference) : []
-        if (signal.length) fields = target.fields.filter((field) => field !== "id")
-        if (!fields.length) continue
-        const record = signal.length ? resolved : await input.records.issue({ page: request.page, recordType: target.recordType, recordId: target.recordId, fields, period: recordPeriod }, context)
-        if (record.status !== "ok") continue
-        const material = await input.records.read(record.value.refId, context)
-        if (material.status !== "ok") continue
-        const labelValue = ["action", "name", "title", "vendor", "owner"].map((field) => values.find((value) => value.id === `${prefix}${field}`)?.value).find((value) => typeof value === "string" && value.trim())
-        const signalLabel = signal.find((value) => value.id.endsWith(".fact"))?.value
-        const label = typeof signalLabel === "string" ? signalLabel : typeof labelValue === "string" ? labelValue : periodLabel ? `Chamados · ${periodLabel}` : `${request.page} · ${records.length + 1}`
-        const entry: typeof records[number] = { label, sourceRef: record.value.refId }
-        if (target.recordType === "hotTopics") {
-          const draftSource = await issue({ recordType: "hotTopics", recordId: target.recordId, fields: ["action", "due", "notes", "owner", "priority"], period: recordPeriod }, context)
-          const projection = draftSource.status === "ok" ? await input.records.read(draftSource.value.refId, context) : undefined
-          if (draftSource.status === "ok" && projection?.status === "ok") {
-            const field = (name: string) => projection.value.values.find((value) => value.id === `hotTopics:${encodeURIComponent(target.recordId)}:${name}`)?.value
-            const action = field("action"), owner = field("owner"), due = field("due"), priority = field("priority"), notes = field("notes")
-            const identity = projection.value.context.sourceRefs[0]
-            if (identity && typeof action === "string" && typeof owner === "string" && typeof due === "string" && typeof notes === "string" && ["critical", "high", "normal"].some((value) => value === priority))
-              entry.draft = { target: identity, targetEvidence: draftSource.value, fields: { action, owner, due, notes, priority: priority === "critical" ? "critical" : priority === "high" ? "high" : "normal" } }
-          }
-        }
-        records.push(entry)
-      }
-      const preferences = await state.read(source, "preferences", (stored, authority) => sameAuthority(authority, context) ? Object.entries(stored.preferences)
-        .filter(([key, value]) => key.startsWith("sf:dashboard-host:capture:") && isCapture(value) && value.capturedBy === authority.principalRef)
-        .map(([, value]) => value).filter(isCapture).sort((a, b) => b.capturedAt.localeCompare(a.capturedAt)).slice(0, 100).map((capture) => capture.id) : [])
-      const historyOptions: { kind: "capture" | "review"; ref: string; label: string }[] = []
-      if (preferences.status === "ok") for (const id of preferences.value) {
-        const reopened = await history.reopen(id, context)
-        if (reopened.status !== "ok") continue
-        const label = reopened.value.projection.values.find((value) => typeof value.value === "string" && value.value.trim())?.value
-        historyOptions.push({ kind: "capture", ref: id, label: `${typeof label === "string" ? label : "Retrato de registro"} · ${reopened.value.capturedAt.slice(0, 10)}` })
-      }
-      const savedReviews = await state.read(source, "reviews", (stored, authority) => sameAuthority(authority, context) ? Object.values(stored.reviews)
-        .filter((review) => review.sections.every((section) => object(object(section.content).context).principalRef === authority.principalRef))
-        .sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 100).map((review) => review.id) : [])
-      if (savedReviews.status === "ok") for (const id of savedReviews.value) {
-        const current = await historicalReviews.read(id, context)
-        if (current.status === "ok") historyOptions.push({ kind: "review", ref: id, label: `${current.value.sections.map((section) => section.title).join(", ")} · ${current.value.createdAt.slice(0, 10)}` })
-      }
-      const actions = await input.authority.humanActions(source)
-      if (selected?.status === "ok") {
-        const current = await input.sources.resolveDashboardSource(selected.value.selectionRef, context)
-        if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(selected.value.evidence))
-          return { status: "stale" as const, reason: "dashboard-discovery-source-changed" }
-      }
-      if (!await host.revalidate(context)) return { status: "denied" as const, reason: "dashboard-discovery-unavailable" }
-      return { status: "ok" as const, value: { period, ...(agendaRequest && selectedAgenda?.status === "ok" ? { agenda: { section: agendaRequest, recordCount: selectedAgenda.value.recordCount } } : {}),
-        records, recordLimit: 100, history: historyOptions, permissions: {
-          preserve: actions.includes("reviews.preserve") && (savedReviews.status === "ok" || savedReviews.status === "unavailable" && savedReviews.reason === "product-state-uninitialized"),
-          capture: actions.includes("reviews.preserve") && (preferences.status === "ok" || preferences.status === "unavailable" && preferences.reason === "product-state-uninitialized"),
-        } } }
-    },
+    discover: (request: SfDashboardDiscoveryRequest, context: TrustedDomainContext) => discover(request, context, true),
     agenda: async (request: DashboardAgendaRequest, context: TrustedDomainContext) => {
       if (!validAgenda(request) || !await host.revalidate(context)) return { status: "needs-input" as const, reason: "invalid-dashboard-agenda" }
       for (const [key, value] of selections) if (value.expiresAt <= Date.now()) selections.delete(key)
@@ -299,6 +335,8 @@ export function createSfDashboardServices(input: {
     reopen: history.reopen,
     dispose: () => selections.clear(),
   }
+  agendaDiscoveries.set(service, { discover: service.discover, read: (request, context) => discover(request, context, false) })
+  return service
 }
 
 export function dashboardSourceCurrent(snapshot: Snapshot, ref: SourceRef, context: { binding: SfStateAuthority }, at: string) {

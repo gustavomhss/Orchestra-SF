@@ -1,3 +1,4 @@
+import { pinReviewReadProperties } from "../../../../modules/sucafina/Sucafinav1/product/reviews/read-identity.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -17,6 +18,7 @@ import { createSfReviewHistory } from "./review-history.ts"
 import { createSfReviewHandoffs } from "./review-handoffs.ts"
 import { createSfReviewPortfolioHistory } from "./review-portfolio-history.ts"
 import { protectSfReviewReads } from "./review-read-integrity.ts"
+import { sfResidentReviewSnapshotReaders } from "./review-resident-readers.ts"
 import type { createSfReviewAgendaServices } from "./review-agenda-services.ts"
 
 type ApplicationInput = Parameters<typeof createReviewApplication>[0]
@@ -51,8 +53,19 @@ export function createSfReviewServices(input: {
   const sources = async (call: TrustedDomainContext, refs: readonly SourceRef[]) => {
     if (!await host.revalidate(call)) return false
     const unique = [...new Map(refs.map((ref) => [digestSfValue(ref), ref])).values()]
-    const result = await Promise.all(unique.map(async (ref) => await currentSource(ref, call) || await historical.historicalSource(ref, call) || !!input.readers?.historicalSource && await input.readers.historicalSource(ref, call)))
-    return result.every(Boolean) && await host.revalidate(call)
+    const batch = historical.historicalSources(call)
+    if (!batch) {
+      const result = await Promise.all(unique.map(async (ref) => await currentSource(ref, call) ||
+        await historical.historicalSource(ref, call) || !!input.readers?.historicalSource && await input.readers.historicalSource(ref, call)))
+      return result.every(Boolean) && await host.revalidate(call)
+    }
+    const current = await Promise.all(unique.map((ref) => currentSource(ref, call)))
+    const stale = unique.filter((_ref, index) => !current[index])
+    const result = await batch(stale)
+    const readers = input.readers
+    const delegated = readers?.historicalSource
+    return (await Promise.all(stale.map((ref, index) => result[index] || !!delegated && delegated.call(readers, ref, call)))).every(Boolean) &&
+      await host.revalidate(call)
   }
   const sensitivity = input.portfolio.product?.contribution.persistentSensitivity
   const sensitivityReader: Parameters<typeof createReviewDecisionAccess>[0]["sensitivity"] = {
@@ -98,9 +111,32 @@ export function createSfReviewServices(input: {
     handoffs,
     ...(input.readers?.contributions ? { contributions: input.readers.contributions } : {}),
   })
+  const readers = input.readers
+  const recognizedReaders = sfResidentReviewSnapshotReaders(readers, host)
+  const residentSnapshotReaders = recognizedReaders ? () => input.readers === readers && recognizedReaders() : undefined
+  const owners = pinReviewReadProperties(input, ["authority", "business", "persistence", "readers", "agenda"])
+  const businessReader = owners && pinReviewReadProperties(owners.values.business, ["context", "evidence"])
+  const context = businessReader && pinReviewReadProperties(businessReader.values.context, ["resolve"])
+  const sourcesPin = owners && pinReviewReadProperties(owners.values.persistence,
+    ["resolveScopedSource", "readScopedSource", "readScopedSourcePrepared", "checkScopedSource"])
+  const agenda = owners?.values.agenda && pinReviewReadProperties(owners.values.agenda, ["resolveEvidence"])
+  // The same functions may revoke through their closures, so validation invokes
+  // them again. Descriptor pins only prevent crossing a composition replacement.
+  const dependenciesCurrent = () => !owners || !businessReader || !context || !sourcesPin || owners.values.agenda && !agenda ? undefined :
+    owners.current() && businessReader.current() && context.current() && sourcesPin.current() &&
+    (!agenda || agenda.current()) && authority.host === host
+  // Atlas binds after the installed host creates Review. Pin its actual provider
+  // per read, not before that legitimate first bind, and retain the pin through
+  // the read's awaits/egress. It never replaces the provider's real resolve.
+  const captureDependencies = () => {
+    const evidence = businessReader && pinReviewReadProperties(businessReader.values.evidence, ["current"])
+    const provider = evidence?.values.current && pinReviewReadProperties(evidence.values.current, ["resolve"])
+    return evidence && provider ? () => evidence.current() && provider.current() : undefined
+  }
   const readScope = protectSfReviewReads({ authority, reviews: application.reviews,
-    localSnapshotReaders: !input.readers || Object.values(input.readers).every((reader) => reader === undefined) })
+    localSnapshotReaders: !input.readers || Object.values(input.readers).every((reader) => reader === undefined),
+    residentSnapshotReaders, dependenciesCurrent, captureDependencies })
   const protectedApplication: typeof application & { readScope?: typeof readScope } = { ...application, readScope,
     http: (request, surface) => readScope.run(request, () => application.http(request, surface)) }
-  return { application: protectedApplication, historical, portfolioHistory, handoffs, unavailable: input.readers?.outcome ? [] : ["review-historical-outcome-reader-unavailable"] }
+  return { application: protectedApplication, historical, portfolioHistory, handoffs, residentSnapshotReaders, unavailable: input.readers?.outcome ? [] : ["review-historical-outcome-reader-unavailable"] }
 }

@@ -32,6 +32,16 @@ const pageFields: Record<string, readonly string[]> = {
   "IT Risks": ["risks"], "Vendor Contracts": ["contracts"], "Stakeholder Management": ["stakeholders"], "IT Performance Contract": ["itperf"],
 }
 
+const dashboardDomains = [DashboardBudget, DashboardPeople, DashboardOperations, DashboardPortfolio] as const
+const registeredViews = dashboardDomains.map((owner) => ({ owner, domain: owner.domain, view: owner.domain.view, pages: owner.pages, names: [...owner.pages] }))
+
+export function dashboardPageViewsCurrent() {
+  return registeredViews.every(({ owner, domain, view, pages, names }) =>
+    Object.getOwnPropertyDescriptor(owner, "domain")?.value === domain && Object.getOwnPropertyDescriptor(domain, "view")?.value === view &&
+    Object.getOwnPropertyDescriptor(owner, "pages")?.value === pages && pages.length === names.length &&
+    names.every((name, index) => Object.getOwnPropertyDescriptor(pages, String(index))?.value === name))
+}
+
 export type DashboardSourceHost = {
   resolveDashboardSource: (selectionRef: string, binding: TrustedDomainContext, selection?: { fields: readonly string[]; period: Period }) => Promise<PortResult<{ page: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>>
   resolveDashboardMetric: (metricRef: string, binding: TrustedDomainContext) => Promise<PortResult<{ selectionRef: string; field: string; valuePrefix: string }>>
@@ -45,8 +55,7 @@ export function projectDashboardSource(snapshot: Snapshot, actor: Actor, environ
   const allowed = dashboardPages(actor, summaries)
   if (!Object.hasOwn(pageFields, page) || !allowed.includes(page)) return undefined
   if (page === "Hot Topics & Actions") return { hotTopics: hotTopicView(snapshot, actor) }
-  const domains = [DashboardBudget, DashboardPeople, DashboardOperations, DashboardPortfolio]
-  const selected = domains.find((domain) => (domain.pages as readonly string[]).includes(page))
+  const selected = dashboardDomains.find((domain) => (domain.pages as readonly string[]).includes(page))
   if (!selected) return undefined
   const view = selected.domain.view(snapshot, actor, utcEnvironment)
   const projection = Object.fromEntries(pageFields[page].filter((field) => Object.hasOwn(view.data, field)).map((field) => [field, view.data[field]]))

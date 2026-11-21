@@ -31,6 +31,7 @@ import type { PrepareReviewThreadFence } from "./review-source-fence.ts"
 export function createCollaborationComposition(input: {
   host: DomainPortHost
   state: SfProductStatePort
+  replayCurrent?: () => boolean
   creationTarget: { ref: string; incarnation: string }
   evidence: BusinessContextService
   recordEvidence: Pick<ReturnType<typeof createDashboardRecordEvidenceHost>, "issue">
@@ -73,7 +74,7 @@ export function createCollaborationComposition(input: {
     return input.recordEvidence.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: topic.id, fields: ["status"], period: { start: day, end: day } }, context)
   } }
   const relations = createRelationPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorizePair: authority.authorizePair, checkRecipientAtCommit: authority.checkRecipientAtCommit, creationTarget: input.creationTarget, human: input.human, mutationFence, reissue: input.reissue, projectHandoff: createHandoffRelationProjection({ host: input.host, authorizeSources: authority.sources, reissue: input.reissue, readTopic: hotTopics.read, issueTopic: topicSource.issue }), handoffPermit })
-  const threads = createThreadPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorize: authority.authorizeThread, checkRecipientAtCommit: authority.checkRecipientAtCommit, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, prepareReviewThreadFence: input.prepareReviewThreadFence, creationTarget: input.creationTarget, human: input.human, mutationFence })
+  const threads = createThreadPort({ state: input.state, host: input.host, replayCurrent: input.replayCurrent, createId: input.createId, now: input.now, authorize: authority.authorizeThread, authorizePreparedWrite: (thread, context) => authority.authorizeThread(thread, context, "prepared-write"), checkRecipientAtCommit: authority.checkRecipientAtCommit, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, prepareReviewThreadFence: input.prepareReviewThreadFence, creationTarget: input.creationTarget, human: input.human, mutationFence })
   const handoff = createHandoffPort({ hotTopics, relations, human: input.human, permit: handoffPermit, run: async (context, request, work) => {
     if (activeHandoffs.has(context)) return { status: "conflict", reason: "handoff-in-progress" }
     activeHandoffs.set(context, request)

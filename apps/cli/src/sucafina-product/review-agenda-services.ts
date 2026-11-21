@@ -1,3 +1,4 @@
+import { discoverSfDashboardAgenda } from "./dashboard-services.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { Period, ProductContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { BusinessContextService, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -5,6 +6,7 @@ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import type { ReviewAgendaCatalog, ReviewAgendaDiscoveryQuery } from "../../../../modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts"
+import { dashboardTopicPage } from "../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
 import type { ReviewAgendaPorts } from "../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { SfScopedSourcePort } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
@@ -164,28 +166,41 @@ export function createSfReviewAgendaServices(input: SfReviewAgendaServicesInput)
       accessRevision: call.binding.accessRevision, checkedAt }
   }
   const discover = async (incoming: ReviewAgendaDiscoveryQuery, call: TrustedDomainContext): Promise<PortResult<ReviewAgendaCatalog>> => {
-    if (!incoming || Object.keys(incoming).some((key) => !["period", "domain"].includes(key)) || !isSfPeriod(incoming.period) ||
-      incoming.domain !== undefined && !["dashboard", "planner", "procurement"].includes(incoming.domain)) return { status: "needs-input", reason: "invalid-agenda-discovery" }
+    if (!incoming || typeof incoming !== "object" || Array.isArray(incoming) || Object.keys(incoming).some((key) => !["period", "domain", "dashboardTopics"].includes(key)) ||
+      !isSfPeriod(incoming.period) || incoming.domain !== undefined && !["dashboard", "planner", "procurement"].includes(incoming.domain) ||
+      incoming.dashboardTopics !== undefined && (incoming.domain !== "dashboard" || !validDashboardTopics(incoming.dashboardTopics)))
+      return { status: "needs-input", reason: "invalid-agenda-discovery" }
+    // Capture the caller's explicit restriction before any authority callback.
+    const query = structuredClone(incoming)
+    const topicPages = query.dashboardTopics ? new Map(query.dashboardTopics.map((topic) => [topic, dashboardTopicPage(topic)!] as const)) : undefined
+    const pages = topicPages ? dashboardPages.filter((page) => [...topicPages.values()].includes(page)) : dashboardPages
+    const periodDigest = digestSfValue(query.period)
     if (call.kind !== "ui" || !await current(call)) return { status: "denied", reason: "agenda-authority-unavailable" }
-    const query = structuredClone(incoming), request = host.requestFor(call), binding = digestSfValue(call.binding)
+    const request = host.requestFor(call), binding = digestSfValue(call.binding)
     const live = async () => host.requestFor(call) === request && binding === digestSfValue(call.binding) && await current(call)
     const options: ReviewAgendaCatalog["options"][number][] = []
     const checks: (() => Promise<PortResult<never>["status"]>)[] = []
     const key = (domain: string, id: string) => `agenda:${digestSfValue({ domain, id, period: query.period })}`
     if (!query.domain || query.domain === "dashboard") {
-      for (const page of dashboardPages) {
-        const result = await input.business.dashboardServices.discover({ page, period: query.period }, call)
+      for (const page of pages) {
+        const result = await discoverSfDashboardAgenda(input.business.dashboardServices, { page, period: topicPages ? structuredClone(query.period) : query.period }, call)
         if (!await live()) return { status: "denied", reason: "agenda-authority-unavailable" }
         if (result.status !== "ok" || !result.value.agenda) continue
-        const section = result.value.agenda.section
+        const section = topicPages ? structuredClone(result.value.agenda.section) : result.value.agenda.section
+        if (topicPages && (topicPages.get(section.topic) !== page || digestSfValue(section.period) !== periodDigest))
+          return { status: "unavailable", reason: "agenda-topic-or-period-mismatch" }
         const source = await input.business.dashboardSources.resolveDashboardSource(section.selectionRef, call)
         if (source.status !== "ok") continue
+        const matchesPage = (value: typeof source.value) => value.page === page && value.evidence.target.surface === "dashboard" &&
+          value.evidence.target.recordType === "dashboard-page" && value.evidence.target.recordId === page &&
+          digestSfValue(value.evidence.target.period) === periodDigest
+        if (topicPages && !matchesPage(source.value)) return { status: "unavailable", reason: "agenda-source-scope-mismatch" }
         const digest = digestSfValue(source.value.evidence)
         options.push({ key: key("dashboard", page), label: page, domain: "dashboard", item: { kind: "dashboard", id: key("dashboard", page),
           topic: section.topic, period: section.period, selectionRef: section.selectionRef } })
         checks.push(async () => {
           const next = await input.business.dashboardSources.resolveDashboardSource(section.selectionRef, call)
-          return next.status === "ok" ? digestSfValue(next.value.evidence) === digest ? "ok" : "stale" : next.status
+          return next.status === "ok" ? digestSfValue(next.value.evidence) === digest && (!topicPages || matchesPage(next.value)) ? "ok" : "stale" : next.status
         })
       }
     }
@@ -255,7 +270,7 @@ export function createSfReviewAgendaServices(input: SfReviewAgendaServicesInput)
         }
       }
       // Contracts are owned by Dashboard; Procurement permission alone never grants their content.
-      const contracts = await input.business.dashboardServices.discover({ page: "Vendor Contracts", period: query.period }, call)
+      const contracts = await discoverSfDashboardAgenda(input.business.dashboardServices, { page: "Vendor Contracts", period: query.period }, call)
       const selectedContracts = contracts.status === "ok" && contracts.value.agenda
         ? await createDashboardAgendaSelector({ host, dashboard: input.business.dashboard, sources: input.business.dashboardSources, recordEvidence: input.business.dashboardRecords })(contracts.value.agenda.section, call) : undefined
       if (selectedContracts?.status === "ok") for (const reference of selectedContracts.value.recordRefs) {
@@ -301,26 +316,43 @@ export function createSfReviewAgendaHttp(input: {
     const json = (value: unknown, status = 200) => new Response(request.method === "HEAD" ? null : JSON.stringify(value), { status,
       headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
     if (surface !== "dashboard" || url.origin !== input.origin || request.signal.aborted) return json({ status: "denied", reason: "agenda-authority-unavailable" }, 403)
-    if ([...url.searchParams.keys()].some((key) => !["sf", "start", "end", "domain"].includes(key) || url.searchParams.getAll(key).length !== 1))
+    if ([...url.searchParams.keys()].some((key) => !["sf", "start", "end", "domain", "dashboardTopics"].includes(key) || url.searchParams.getAll(key).length !== 1))
       return json({ status: "needs-input", reason: "invalid-agenda-query" }, 400)
     const period = { start: url.searchParams.get("start"), end: url.searchParams.get("end") }
     const domain = url.searchParams.get("domain")
-    if (!isSfPeriod(period) || domain !== null && domain !== "dashboard" && domain !== "planner" && domain !== "procurement")
+    const encodedTopics = url.searchParams.get("dashboardTopics")
+    let dashboardTopics: unknown
+    if (encodedTopics !== null) {
+      try { dashboardTopics = JSON.parse(encodedTopics) } catch { return json({ status: "needs-input", reason: "invalid-agenda-query" }, 400) }
+    }
+    if (!isSfPeriod(period) || domain !== null && domain !== "dashboard" && domain !== "planner" && domain !== "procurement" ||
+      encodedTopics !== null && (domain !== "dashboard" || !validDashboardTopics(dashboardTopics)))
       return json({ status: "needs-input", reason: "invalid-agenda-query" }, 400)
-    const query: ReviewAgendaDiscoveryQuery = { period, ...(domain ? { domain } : {}) }
+    const query: ReviewAgendaDiscoveryQuery = { period, ...(domain ? { domain } : {}),
+      ...(encodedTopics !== null ? { dashboardTopics: dashboardTopics as readonly string[] } : {}) }
     const digest = digestSfValue(query)
     const admitted = await input.authority.ui.admit(request, "sf_review_prepare", digest)
     if (admitted.status !== "ok") return json({ status: "denied", reason: "agenda-authority-unavailable" }, 403)
+    const current = () => {
+      try {
+        return !request.signal.aborted && input.authority.ui.requestFor(admitted.value) === request && digestSfValue(query) === digest &&
+          input.authority.ui.matchesIntent(admitted.value, "sf_review_prepare", digest)
+      } catch { return false }
+    }
     try {
       if (!await input.authority.ui.validate(admitted.value, "sf_review_prepare", digest) || input.authority.ui.requestFor(admitted.value) !== request ||
         !await input.authority.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "agenda-authority-unavailable" }, 403)
       const result = await input.agenda.discover(query, admitted.value)
-      if (request.signal.aborted || input.authority.ui.requestFor(admitted.value) !== request || !input.authority.ui.matchesIntent(admitted.value, "sf_review_prepare", digest) ||
-        !await input.authority.ui.revalidate(admitted.value))
+      if (!current() || !await input.authority.ui.revalidate(admitted.value) || !current())
         return json({ status: "denied", reason: "agenda-authority-unavailable" }, 403)
       return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "unavailable" || result.status === "failed" ? 503 : 409)
     } finally { input.authority.ui.finish(admitted.value) }
   }
+}
+
+function validDashboardTopics(value: unknown): value is readonly string[] {
+  return Array.isArray(value) && value.length > 0 && value.length <= dashboardPages.length && new Set(value).size === value.length &&
+    value.every((topic) => typeof topic === "string" && dashboardTopicPage(topic) !== undefined)
 }
 
 function decodeURIComponentSafe(value: string) {
