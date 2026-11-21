@@ -468,7 +468,8 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
                 </Show>
               </dl>
               <div class="sf-u05-form-actions">
-                <button class="mx-btn primary" type="button" disabled={view.busy || view.uncertain} onClick={confirmReview}>
+                <button class="mx-btn" classList={{ primary: review().kind === "save-milestone", "sf-u05-danger": review().kind !== "save-milestone" }}
+                  type="button" disabled={view.busy || view.uncertain} onClick={confirmReview}>
                   {t(review().kind === "save-milestone" ? "sf.u05.projects.confirmSave" : "sf.u05.projects.confirmDelete")}
                 </button>
                 <button class="mx-btn" type="button" disabled={view.busy}
