@@ -128,10 +128,12 @@ export async function loadSfInstallation(
         if (Option.isNone(decoded) || decoded.value.includes("\\") || decoded.value.includes("\0") ||
           decoded.value.split("/").some((part) => part === "." || part === ".."))
           return HttpServerResponse.empty({ status: 400 })
-        const index = decoded.value === "/" || decoded.value.startsWith("/orchestra/")
-        const asset = decoded.value.startsWith("/assets/") || decoded.value.startsWith("/brand/sucafina/")
+        const orchestra = decoded.value.startsWith("/orchestra/")
+        const index = decoded.value === "/" || (orchestra && !path.posix.extname(decoded.value))
+        const asset = orchestra || decoded.value.startsWith("/assets/") || decoded.value.startsWith("/brand/sucafina/") ||
+          decoded.value === "/oc-theme-preload.js" || decoded.value === "/site.webmanifest"
         if (index || asset) return yield* Effect.promise(async () => {
-          const response = await WebUi.read(webRoot, index ? "/" : decoded.value, {
+          const response = await WebUi.read(webRoot, decoded.value, {
             index, head: incoming.method === "HEAD",
           })
           response.headers.set("Cache-Control", "no-store")
