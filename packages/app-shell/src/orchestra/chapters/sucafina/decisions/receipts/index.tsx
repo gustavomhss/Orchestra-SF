@@ -21,6 +21,7 @@ import {
   type SfCase, type SfCaseReceipt, type SfCaseChange,
 } from "../choice/model"
 import "../choice/u18.css"
+import "../intent/decision.css"
 
 type View = {
   state: SfUiState
@@ -191,20 +192,25 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
   }
 
   const displayReceipt = (receipt: SfCaseReceipt): JSX.Element => (
-    <article class="mx-card sf-u18-receipt" data-producer-receipt={receipt.id}>
-      <h3 class="sf-u18-ref">{receipt.id}</h3>
+    <article class="sf-u18-receipt" data-producer-receipt={receipt.id} aria-current={selected()?.id === receipt.id ? "true" : undefined}>
+      <header class="sf-decision-section-heading"><h3><bdi>{receipt.surface}</bdi></h3><span class="sf-decision-state">{receipt.status}</span></header>
       <dl>
         <dt>{t("sf.u18.receipts.outcome")}</dt><dd>{receipt.status}</dd>
         <dt>{t("sf.u18.receipts.surface")}</dt><dd>{receipt.surface}</dd>
-        <dt>{t("sf.u18.receipts.at")}</dt><dd>{receipt.at}</dd>
+        <dt>{t("sf.u18.receipts.at")}</dt><dd><time dateTime={receipt.at}>{receipt.at}</time></dd>
         <dt>{t("sf.u18.receipts.version")}</dt><dd>{receipt.version}</dd>
-        <dt>{t("sf.u18.receipts.operation")}</dt><dd class="sf-u18-ref">{receipt.idempotencyKey}</dd>
       </dl>
+      <details class="sf-decision-source-scope">
+        <summary>{t("sf.u18.changes.receipt")}</summary>
+        <dl><dt>{t("sf.u18.changes.receipt")}</dt><dd class="sf-u18-ref">{receipt.id}</dd>
+          <dt>{t("sf.u18.receipts.operation")}</dt><dd class="sf-u18-ref">{receipt.idempotencyKey}</dd></dl>
+      </details>
       <Show when={receipt.errors.length}>
         <h4>{t("sf.u18.receipts.errors")}</h4>
         <ul><For each={receipt.errors}>{(error) => <li>{error}</li>}</For></ul>
       </Show>
-      <button type="button" class="mx-btn" onClick={() => setView("selectedReceiptId", receipt.id)}>
+      <button type="button" class="mx-btn" disabled={view.busy} aria-pressed={selected()?.id === receipt.id}
+        onClick={() => setView("selectedReceiptId", receipt.id)}>
         {language.t("sf.common.showDetails")}
       </button>
     </article>
@@ -227,11 +233,12 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
     tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="reading"
     onLayoutMode={() => undefined}
   >
+    <div class="sf-decision-page sf-decision-receipts" data-sf-wave="four" data-sf-decision="UI40" data-sf-surface="UI40">
     <SfStatePanel state={currentState()} messageKey={u18ErrorKey(currentState())}
       onRetryRead={() => void read()}>
       <Show when={view.caseData}>
         {(data) => <>
-          <section aria-label={t("sf.u18.receipts.history")}>
+          <section class="mx-card sf-u18-section sf-decision-receipt-ledger" aria-label={t("sf.u18.receipts.history")}>
             <h2>{t("sf.u18.receipts.history")}</h2>
             <Show when={ledger().length} fallback={<p>{t("sf.u18.receipts.noHistory")}</p>}>
               <div class="sf-u18-receipt-list">
@@ -240,7 +247,7 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
             </Show>
           </section>
           <Show when={selected()}>
-            {(receipt) => <section class="sf-u18-section" aria-label={t("sf.u18.receipts.title")}>
+            {(receipt) => <section class="sf-u18-section sf-decision-review-stage" aria-label={t("sf.u18.receipts.title")}>
               <Show when={change()} fallback={displayReceipt(receipt())}>
                 {(prepared) => <SfReceiptView
                   operationRef={prepared().operationRef as SfOperationRef}
@@ -258,7 +265,8 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
               </Show>
               <Show when={change()}>
                 <button type="button" class="mx-btn" disabled={view.busy || !canRecover()}
-                  onClick={() => void recover()}>decisions.decision-recover</button>
+                  onClick={() => void recover()}>{t("sf.u18.changes.recover")}</button>
+                <details class="sf-decision-source-scope"><summary>{t("sf.u18.receipts.operation")}</summary><code>decisions.decision-recover</code></details>
               </Show>
               <Show when={view.recovery === "unknown"}>
                 <p role="alert">{t("sf.u18.receipts.pending")}</p>
@@ -268,6 +276,7 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
         </>}
       </Show>
     </SfStatePanel>
+    </div>
   </SfPageFrame>
 }
 

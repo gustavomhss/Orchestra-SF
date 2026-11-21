@@ -15,6 +15,7 @@ import { SfQuestionAnswer } from "./answer"
 import { SfQuestionCycles } from "./cycles"
 import { SfQuestionConsume } from "./consume"
 import "../cases/n24.css"
+import "../intent/decision.css"
 
 type RecipientsEnvelope = Schema.Schema.Type<(typeof SfCollaboration.operations)["collaboration.recipients"]["output"]>
 type Recipient = Extract<RecipientsEnvelope, { status: "ok" }>["value"][number]
@@ -172,7 +173,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
         disabled: caseData.read.state === "loading", busy: false, onInvoke: () => caseData.reload(),
       }]}
     >
-      <div class="sf-n24">
+      <div class="sf-n24 sf-decision-page sf-decision-questions" data-sf-wave="four" data-sf-decision="UI37" data-sf-surface="UI37">
         <Show when={route()}>
           {(current) => <A class="mx-btn" href={sfDecisionHref(current(), "case", caseRef())}>{t("sf.ui35.return")}</A>}
         </Show>
@@ -202,13 +203,14 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                 </ul>
               </Show>
             </section>
-            <section class="mx-card sf-n24-section" aria-labelledby="sf-n24-new-question">
-              <h2 id="sf-n24-new-question">{t("sf.ui37.prepare")}</h2>
+            <details class="mx-card sf-n24-section sf-decision-composer" data-sf-question-composer>
+              <summary id="sf-n24-new-question">{t("sf.ui37.prepare")}</summary>
               <form onSubmit={(event) => {
                 event.preventDefault()
                 if (ui.phase === "reviewing") void prepare()
                 else preview()
               }}>
+                <div class="sf-decision-edit-fields" hidden={ui.phase === "reviewing" || ui.phase === "preparing" || ui.phase === "prepared"}>
                 <div class="sf-n24-form-grid">
                   <label class="sf-n24-field sf-n24-span">
                     <span>{t("sf.ui37.text")}</span>
@@ -237,14 +239,16 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                     </select>
                   </label>
                 </div>
-                <section aria-labelledby="sf-n24-question-scope" class="sf-n24-review">
-                  <h3 id="sf-n24-question-scope">{t("sf.ui37.scope")}</h3>
+                <details class="sf-decision-source-scope">
+                  <summary id="sf-n24-question-scope">{t("sf.ui37.scope")}</summary>
                   <p><bdi>{current().id}</bdi> · {t("sf.ui35.version")}: {current().version}</p>
                   <ul class="sf-n24-list"><For each={current().sourceRefs}>{(source) =>
                     <li><bdi>{source.refId}</bdi></li>}</For></ul>
-                </section>
-                <Show when={ui.phase === "reviewing"}>
-                  <div class="sf-n24-review" role="group" aria-label={t("sf.ui37.confirm")}>
+                </details>
+                </div>
+                <Show when={ui.phase === "reviewing" || ui.phase === "preparing"}>
+                  <div class="sf-n24-review sf-decision-review-stage" role="group" aria-label={t("sf.ui37.confirm")}>
+                    <h3>{t("sf.ui37.confirm")}</h3>
                     <p><bdi>{ui.text}</bdi></p>
                     <p>{t("sf.ui37.criterion")}: <bdi>{
                       current().criteria.find((item) => item.id === ui.criterion)?.description || t("sf.ui37.noCriterion")
@@ -267,11 +271,18 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                     </Show>
                   </div>}
                 </Show>
-                <button type="submit" class="mx-btn primary" disabled={!canPrepare()}>
-                  {t(ui.phase === "reviewing" ? "sf.ui37.confirm" : "sf.ui37.prepare")}
-                </button>
+                <div class="sf-n24-actions">
+                  <Show when={ui.phase !== "prepared"}>
+                    <button type="submit" class="mx-btn primary" disabled={!canPrepare()}>
+                      {t(ui.phase === "reviewing" || ui.phase === "preparing" ? "sf.ui37.confirm" : "sf.ui37.prepare")}
+                    </button>
+                  </Show>
+                  <Show when={ui.phase === "reviewing"}>
+                    <button type="button" class="mx-btn" onClick={() => setUi({ phase: "editing", message: "" })}>{t("sf.ui33.cancel")}</button>
+                  </Show>
+                </div>
               </form>
-            </section>
+            </details>
             <Show when={selectedQuestion()}>
               {(question) => <div id="sf-n24-answer-zone" tabIndex={-1}>
                 <SfQuestionAnswer owner={caseData.owner} question={question()} onConfirmed={() => caseData.reload()} />
