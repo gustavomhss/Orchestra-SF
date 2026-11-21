@@ -28,6 +28,18 @@ export function supplierEdit(source: Supplier): SupplierEdit {
   ]) as SupplierEdit
 }
 
+/** Detach the reviewed edit from the store and omit absent properties before the JSON codec. */
+export function supplierCommandSnapshot(edit: SupplierEdit): SupplierEdit {
+  function copy(value: unknown): unknown {
+    if (Array.isArray(value)) return value.map(copy)
+    if (value === null || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) return value
+    return Object.fromEntries(Object.entries(value)
+      .filter(([, field]) => field !== undefined)
+      .map(([key, field]) => [key, copy(field)]))
+  }
+  return copy(edit) as SupplierEdit
+}
+
 export function supplierVersion(page: Cap27PageOk, ref: string): number | null {
   const version = page.value.versions["suppliers:" + ref]?.version
   return typeof version === "number" && Number.isSafeInteger(version) && version >= 0 ? version : null
