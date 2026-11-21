@@ -251,6 +251,15 @@ export function protectSfReviewReads(input: {
   reviews.read = protectedRead
   return {
     current: () => compositionCurrent() && reviews.read === protectedRead,
+    prepareColdRevalidation: (id: string, call: TrustedDomainContext) => {
+      const scope = execution.getStore()
+      if (!scope || !activeScope(scope, call) || !localReaders() || !validation ||
+        scope.calls.get(call)?.has(id) || scope.delegated.get(call)?.has(id)) return undefined
+      const dependencyPin = captureDependencies?.()
+      if (captureDependencies && !dependencyPin) return undefined
+      const binding = digestSfValue([call.kind, call.binding])
+      return () => sameCall(scope, call, binding) && (!dependencyPin || dependencyPin())
+    },
     prepareRevalidation: (id: string, digest: string, call: TrustedDomainContext) => {
       const scope = execution.getStore()
       if (!scope || !activeScope(scope, call) || !localReaders() || !validation || !scope.calls.get(call)?.has(id)) return undefined
