@@ -142,7 +142,7 @@ test("Apply resumes at the current case version with the original receipt and no
     expect(dispatches).toBe(0)
     expect(await state.read(request, "cases", (data) => digestSfValue(data))).toEqual(before)
   } finally {
-    await store.close()
+    await store.dispose()
     await rm(directory, { recursive: true, force: true })
   }
 })
