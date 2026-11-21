@@ -16,7 +16,32 @@ const fixture = fileURLToPath(new URL("./fixture/sucafina-installation.ts", impo
 const entry = fileURLToPath(new URL("../src/index.ts", import.meta.url))
 const it = testEffect(LayerNode.compile(AppProcess.node))
 
-it.live.skipIf(process.platform === "win32")("serve mounts the factory on the Node listener and disposes it on SIGTERM", () =>
+function unfinishedPost(hostname: string, port: number, route: string, headers: string[]) {
+  return new Promise<string>((resolve, reject) => {
+    const socket = connect(port, hostname)
+    socket.setTimeout(8_000, () => {
+      socket.destroy()
+      reject(new Error("Timed out waiting for the early upload rejection"))
+    })
+    socket.once("error", reject)
+    socket.once("close", () => reject(new Error("Upload socket closed before returning the status line")))
+    socket.once("connect", () => {
+      // Deliver a complete chunk but leave the request body open until the server answers.
+      socket.write([
+        `POST ${route} HTTP/1.1`, ...headers, "Transfer-Encoding: chunked", "", "b", "first chunk", "",
+      ].join("\r\n"))
+    })
+    let response = ""
+    socket.on("data", (bytes) => {
+      response += bytes.toString()
+      if (!response.includes("\r\n\r\n")) return
+      resolve(response)
+      socket.destroy()
+    })
+  })
+}
+
+const serveInstallation = (trusted: boolean) => () =>
   Effect.scoped(Effect.gen(function* () {
     const directory = yield* Effect.acquireRelease(
       Effect.promise(() => mkdtemp(path.join(tmpdir(), "sf-serve-"))),
@@ -39,6 +64,7 @@ it.live.skipIf(process.platform === "win32")("serve mounts the factory on the No
         ORCHESTRA_CONFIG_DIR: path.join(directory, "config"),
         ORCHESTRA_INHERIT_CREDENTIALS: "0",
         ORCHESTRA_SERVER_PASSWORD: "synthetic-daemon-password",
+        SF_TEST_TRUSTED_INGRESS: trusted ? "1" : "0",
         XDG_CACHE_HOME: directory,
         XDG_CONFIG_HOME: directory,
         XDG_DATA_HOME: directory,
@@ -59,6 +85,49 @@ it.live.skipIf(process.platform === "win32")("serve mounts the factory on the No
 
     yield* Effect.promise(async () => {
       const dispatch = (route: string, init?: RequestInit) => fetch(origin + route, { ...init, signal: AbortSignal.timeout(8_000) })
+      if (trusted) {
+        expect(await Bun.file(path.join(directory, "orchestra.db")).exists()).toBe(false)
+        const host = `teams-ingress.example.test:${port}`
+        const proof = "synthetic-sf-ingress-proof"
+        const rejected: Record<string, string>[] = [
+          { host },
+          { host, "x-sf-ingress-proof": "wrong" },
+          { host, "x-forwarded-for": hostname, "x-forwarded-host": host, "x-forwarded-proto": "http" },
+          { host: new URL(origin).host, "x-sf-ingress-proof": proof },
+        ]
+        // Check a route whose handler would return 503 to distinguish that from the ingress rejection.
+        for (const headers of rejected) expect((await dispatch("/sucafina/unavailable", { headers })).status).toBe(403)
+        expect((await dispatch("/openapi.json")).status).toBe(404)
+        expect((await dispatch("/openapi.json", { headers: { host, "x-sf-ingress-proof": proof } })).status).toBe(404)
+        for (const headers of [
+          [],
+          [`X-SF-Ingress-Proof: ${proof}`, `x-sf-ingress-proof: ${proof}`],
+          [`Host: ${host}`, `X-SF-Ingress-Proof: ${proof}`],
+        ]) {
+          const response = await unfinishedPost(hostname, port, "/sucafina/dashboard", [`Host: ${host}`, ...headers])
+          expect(response).toMatch(/^HTTP\/1\.1 403 /)
+        }
+        const approved = await dispatch("/sucafina/planner?year=2026", {
+          method: "POST",
+          headers: {
+            host,
+            "x-sf-ingress-proof": proof,
+            cookie: "installation=fixture",
+            forwarded: "for=192.0.2.11;host=untrusted.example.test;proto=https",
+            "x-forwarded-for": "192.0.2.11",
+            "x-forwarded-host": "untrusted.example.test",
+            "x-forwarded-proto": "https",
+            "x-forwarded-custom": "also stripped",
+          },
+          body: "original body",
+        })
+        expect(approved.status).toBe(200)
+        expect(await approved.json()).toEqual({
+          origin, requestOrigin: `http://${host}`, path: "/sucafina/planner?year=2026",
+          ingressProof: null, forwardingHeaders: [], method: "POST", cookie: "installation=fixture", body: "original body",
+        })
+        return
+      }
       const base = await dispatch("/sucafina")
       expect(base.status).toBe(200)
       expect(await base.json()).toMatchObject({ origin, path: "/sucafina", method: "GET" })
@@ -83,33 +152,23 @@ it.live.skipIf(process.platform === "win32")("serve mounts the factory on the No
       expect(contract.status).toBe(200)
       expect(await contract.json()).toBe(body.byteLength)
       expect((await dispatch("/sucafina/dashboard?upload=contract&upload=contract", { method: "POST", body })).status).toBe(413)
-      const rejected = await new Promise<string>((resolve, reject) => {
-        const socket = connect(port, hostname)
-        socket.setTimeout(8_000, () => {
-          socket.destroy()
-          reject(new Error("Timed out waiting for the early upload rejection"))
-        })
-        socket.once("error", reject)
-        socket.once("close", () => reject(new Error("Upload socket closed before returning the status line")))
-        socket.once("connect", () => {
-          // Deliver a complete chunk but leave the request body open until the server answers.
-          socket.write(`POST /sucafina/reject HTTP/1.1\r\nHost: ${hostname}:${port}\r\nTransfer-Encoding: chunked\r\n\r\nb\r\nfirst chunk\r\n`)
-        })
-        let response = ""
-        socket.on("data", (bytes) => {
-          response += bytes.toString()
-          if (!response.includes("\r\n\r\n")) return
-          resolve(response)
-          socket.destroy()
-        })
-      })
+      const rejected = await unfinishedPost(hostname, port, "/sucafina/reject", [`Host: ${hostname}:${port}`])
       expect(rejected).toMatch(/^HTTP\/1\.1 413 /)
       expect(rejected).toMatch(/\r\nConnection: close\r\n/i)
     })
     yield* child.kill({ killSignal: "SIGTERM" })
     yield* child.exitCode.pipe(Effect.timeout("8 seconds"))
     expect(yield* Effect.promise(() => Bun.file(path.join(directory, "installation-disposed")).text())).toBe("yes")
-  })), { timeout: 70_000 },
+  }))
+
+it.live.skipIf(process.platform === "win32")(
+  "serve mounts the factory on the Node listener and disposes it on SIGTERM",
+  serveInstallation(false), { timeout: 70_000 },
+)
+
+it.live.skipIf(process.platform === "win32")(
+  "serve admits trusted installation ingress on the Node listener and strips the proof",
+  serveInstallation(true), { timeout: 70_000 },
 )
 
 test("rejects a relative path and missing or ephemeral ports before loading the factory", async () => {

@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { isIP } from "node:net"
-import type { DirectoryPerson, EntraClient, EntraTeamsInput, EntraTeamsResult, EntraTeamsSessionResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
+import type { CorporateLocalSecrets, DirectoryPerson, EntraClient, EntraTeamsInput, EntraTeamsResult, EntraTeamsSessionResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
 
 type Session = {
   person: DirectoryPerson
@@ -32,7 +32,7 @@ export function createLocalIdentity(options: IdentityOptions): LocalIdentity {
 }
 
 /** Separate HTTPS identity for an owner-selected confidential Entra application. */
-export function createMicrosoftIdentity(options: IdentityOptions & { tenantId: string; clientId: string }): LocalIdentity {
+export function createMicrosoftIdentity(options: IdentityOptions & { tenantId: string; clientId: string; secrets: CorporateLocalSecrets }): LocalIdentity {
   const origin = new URL(options.origin)
   if (origin.origin !== options.origin || origin.protocol !== "https:" || origin.port || isIP(origin.hostname) ||
       origin.hostname.startsWith("[") || !origin.hostname.includes(".") || origin.hostname.endsWith(".local") ||
@@ -43,11 +43,16 @@ export function createMicrosoftIdentity(options: IdentityOptions & { tenantId: s
       options.client.profile !== "web-confidential")
     throw new Error("Fixed Microsoft tenant and confidential client required")
   const namespace = createHash("sha256").update(JSON.stringify(["microsoft", options.origin, options.mount, options.tenantId, options.clientId])).digest("hex")
-  return createIdentity(options, origin, namespace)
+  return createIdentity(options, origin, { namespace, secrets: options.secrets })
 }
 
 /** Browser cookies carry opaque handles while the private store holds encrypted credentials. */
-function createIdentity(options: IdentityOptions, origin: URL, namespace?: string): LocalIdentity {
+function createIdentity(
+  options: IdentityOptions,
+  origin: URL,
+  corporate?: { namespace: string; secrets: CorporateLocalSecrets },
+): LocalIdentity {
+  const namespace = corporate?.namespace
   if (!/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(options.mount) || options.key.byteLength !== 32)
     throw new Error("Invalid local identity configuration")
   const now = () => (options.now?.() ?? new Date()).getTime()
@@ -92,10 +97,15 @@ function createIdentity(options: IdentityOptions, origin: URL, namespace?: strin
   }
   const session = async (request: Request) => {
     const id = handle(request, "session")
-    if (!id || await options.secrets.get(slot("revoked", id), now())) return undefined
+    if (!id) return undefined
     const storageKey = slot("session", id)
-    const value = await readSession(storageKey, await options.secrets.get(storageKey, now()))
-    return value && { handle: id, value }
+    const revokedKey = slot("revoked", id)
+    if (!corporate && await options.secrets.get(revokedKey, now())) return undefined
+    const encrypted = corporate
+      ? await corporate.secrets.getActive(storageKey, revokedKey, now())
+      : await options.secrets.get(storageKey, now())
+    const value = await readSession(storageKey, encrypted)
+    return encrypted && value && { handle: id, value, encrypted }
   }
   const ready = async (request: Request) => {
     const current = await session(request)
@@ -118,6 +128,13 @@ function createIdentity(options: IdentityOptions, origin: URL, namespace?: strin
         refreshing.has(id)) return undefined
     return { handle: id, value, encrypted }
   }
+  const retireSession = async (id: string) => {
+    const storageKey = slot("session", id)
+    const revokedKey = slot("revoked", id)
+    if (corporate) return corporate.secrets.retireSession(storageKey, revokedKey, now())
+    await options.secrets.put(revokedKey, new Uint8Array([1]), now() + sessionSeconds * 1000)
+    await options.secrets.remove(storageKey)
+  }
   const headers = () => new Headers({ "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" })
   const error = (status: number) => new Response("Authentication unavailable", { status, headers: headers() })
   return {
@@ -130,10 +147,7 @@ function createIdentity(options: IdentityOptions, origin: URL, namespace?: strin
         if (request.method !== "POST") return error(405)
         if (request.headers.get("origin") !== options.origin || request.headers.get("sec-fetch-site") === "cross-site") return error(403)
         const id = handle(request, "session")
-        if (id) {
-          await options.secrets.put(slot("revoked", id), new Uint8Array([1]), now() + sessionSeconds * 1000)
-          await options.secrets.remove(slot("session", id))
-        }
+        if (id) await retireSession(id)
         const responseHeaders = headers()
         responseHeaders.append("set-cookie", cookie("session", "", 0))
         responseHeaders.append("set-cookie", cookie("login", "", 0))
@@ -143,10 +157,22 @@ function createIdentity(options: IdentityOptions, origin: URL, namespace?: strin
       if (path === "/auth/login") {
         const state = randomBytes(32).toString("hex")
         const verifier = randomBytes(32).toString("base64url")
-        const login: Login = { nonce: randomBytes(32).toString("hex"), verifier, returnTo: safeReturn(url.searchParams.get("returnTo"), options.mount) }
+        const returnTo = url.searchParams.get("returnTo")
+        const login: Login = {
+          nonce: randomBytes(32).toString("hex"), verifier,
+          returnTo: safeReturn(corporate && returnTo && returnTo.length > 2048 ? null : returnTo, options.mount),
+        }
+        const storageKey = slot("login", state)
+        const issuedAt = now()
+        const expiresAt = issuedAt + loginSeconds * 1000
+        if (corporate && !await corporate.secrets.issueLogin(corporate.namespace, storageKey, seal(storageKey, login), issuedAt, expiresAt))
+          return error(429)
         const destination = await options.client.authorization({ state, nonce: login.nonce, challenge: createHash("sha256").update(verifier).digest("base64url"), redirectUri: `${options.origin}${options.mount}/auth/callback` }).catch(() => undefined)
-        if (!destination) return error(503)
-        await options.secrets.put(slot("login", state), seal(slot("login", state), login), now() + loginSeconds * 1000)
+        if (!destination || (corporate && expiresAt <= now())) {
+          if (corporate) await corporate.secrets.remove(storageKey)
+          return error(503)
+        }
+        if (!corporate) await options.secrets.put(storageKey, seal(storageKey, login), now() + loginSeconds * 1000)
         const responseHeaders = headers()
         responseHeaders.set("location", destination)
         responseHeaders.append("set-cookie", cookie("login", state, loginSeconds))
@@ -165,10 +191,7 @@ function createIdentity(options: IdentityOptions, origin: URL, namespace?: strin
       const result = await options.client.exchange({ code: url.searchParams.get("code")!, verifier: login.verifier, nonce: login.nonce, redirectUri: `${options.origin}${options.mount}/auth/callback` }).catch(() => undefined)
       if (!result || !validPerson(result.person) || !validTokens(result.tokens) || result.tokens.expiresAt <= now()) return new Response("Authentication unavailable", { status: 403, headers: responseHeaders })
       const previous = handle(request, "session")
-      if (previous) {
-        await options.secrets.put(slot("revoked", previous), new Uint8Array([1]), now() + sessionSeconds * 1000)
-        await options.secrets.remove(slot("session", previous))
-      }
+      if (previous) await retireSession(previous)
       const id = randomBytes(32).toString("hex")
       const value: Session = {
         ...result,
@@ -193,10 +216,13 @@ function createIdentity(options: IdentityOptions, origin: URL, namespace?: strin
         if (!refreshed || !validTokens(refreshed) || refreshed.expiresAt <= now()) return
         const person = await options.client.person(refreshed.accessToken).catch(() => undefined)
         if (!validPerson(person) || person.id !== current.value.person.id) return
-        // A durable revocation marker also rejects a refresh that races with logout.
-        if (!await options.secrets.get(slot("session", current.handle), now())) return
+        const storageKey = slot("session", current.handle)
         const value: Session = { ...current.value, person, tokens: { ...refreshed, refreshToken: refreshed.refreshToken ?? current.value.tokens.refreshToken, idToken: refreshed.idToken ?? current.value.tokens.idToken } }
-        await options.secrets.put(slot("session", current.handle), seal(slot("session", current.handle), value), value.expiresAt)
+        if (corporate)
+          return corporate.secrets.refreshSession(storageKey, slot("revoked", current.handle), current.encrypted, seal(storageKey, value), now())
+        // A durable revocation marker also rejects a refresh that races with logout.
+        if (await options.secrets.get(storageKey, now()))
+          await options.secrets.put(storageKey, seal(storageKey, value), value.expiresAt)
       })().finally(() => refreshing.delete(current.handle))
       refreshing.set(current.handle, work)
       await work

@@ -219,6 +219,42 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         `).get(key, at, revokedKey, at)
         return row ? new Uint8Array(row.payload) : undefined
       }),
+      issueLogin: (namespace, key, bytes, at, expiresAt) => operation(true, async (db) => {
+        if (!Number.isFinite(at) || !Number.isFinite(expiresAt) || expiresAt <= at) throw new Error("Invalid authentication expiry")
+        const prefix = namespace + ":"
+        db.query("DELETE FROM authentication_payloads WHERE key GLOB ? AND expires_at <= ?").run(prefix + "*", at)
+        const result = db.query(`
+          INSERT INTO authentication_payloads (key, payload, expires_at)
+          SELECT ?, ?, ?
+          WHERE (SELECT count(*) FROM authentication_payloads WHERE key GLOB ?) < 100
+          ON CONFLICT (key) DO NOTHING
+        `).run(key, bytes, expiresAt, prefix + "login:*")
+        requireDatabaseFile()
+        db.exec("COMMIT")
+        return result.changes === 1
+      }),
+      retireSession: (key, revokedKey, at) => operation(true, async (db) => {
+        if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
+        const retired = db.query<{ expires_at: number }, [string, number]>(
+          "DELETE FROM authentication_payloads WHERE key = ? AND expires_at > ? RETURNING expires_at",
+        ).get(key, at)
+        if (retired) db.query(`
+          INSERT INTO authentication_payloads (key, payload, expires_at) VALUES (?, ?, ?)
+          ON CONFLICT (key) DO UPDATE SET expires_at = max(authentication_payloads.expires_at, excluded.expires_at)
+        `).run(revokedKey, new Uint8Array([1]), retired.expires_at)
+        requireDatabaseFile()
+        db.exec("COMMIT")
+      }),
+      refreshSession: (key, revokedKey, expected, bytes, at) => operation(true, async (db) => {
+        if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
+        db.query(`
+          UPDATE authentication_payloads SET payload = ?
+          WHERE key = ? AND payload = ? AND expires_at > ?
+            AND NOT EXISTS (SELECT 1 FROM authentication_payloads WHERE key = ? AND expires_at > ?)
+        `).run(bytes, key, expected, at, revokedKey, at)
+        requireDatabaseFile()
+        db.exec("COMMIT")
+      }),
       take: (key, at) => operation(true, async (db) => {
         if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
         const row = db.query<{ payload: Uint8Array }, [string, number]>("SELECT payload FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)

@@ -274,6 +274,49 @@ test("secrets get is read-only inside a business write; expiry, atomic take and 
   })
 })
 
+test("corporate login reservations are bounded across writers and prune expired installation state", async () => {
+  await fixture(async (_directory, open) => {
+    const first = (await open()).secrets
+    const second = (await open()).secrets
+    await first.put("corporate:session:expired", bytes, 100)
+    await first.put("separate:session:expired", bytes, 100)
+    const issued = await Promise.all(Array.from({ length: 101 }, (_, i) =>
+      (i % 2 === 0 ? first : second).issueLogin("corporate", `corporate:login:${i}`, bytes, 100, 200)))
+    expect(issued.filter(Boolean)).toHaveLength(100)
+    expect(await second.get("corporate:session:expired", 99)).toBeUndefined()
+    expect(await second.get("separate:session:expired", 99)).toEqual(bytes)
+    expect(await second.issueLogin("separate", "separate:login:new", bytes, 100, 200)).toBe(true)
+    expect(await second.issueLogin("corporate", "corporate:login:full", bytes, 199, 300)).toBe(false)
+    expect(await second.issueLogin("corporate", "corporate:login:available", bytes, 200, 300)).toBe(true)
+    expect(await first.get("corporate:login:available", 200)).toEqual(bytes)
+  })
+})
+
+test("corporate logout retires live sessions atomically and a stale refresh cannot restore them", async () => {
+  await fixture(async (_directory, open) => {
+    const first = (await open()).secrets
+    const second = (await open()).secrets
+    const refreshed = new Uint8Array([3, 0, 255, 8])
+    await first.retireSession("corporate:session:unknown", "corporate:revoked:unknown", 100)
+    expect(await second.get("corporate:revoked:unknown", 100)).toBeUndefined()
+    await first.put("corporate:session:expired", bytes, 100)
+    await first.retireSession("corporate:session:expired", "corporate:revoked:expired", 100)
+    expect(await second.get("corporate:revoked:expired", 99)).toBeUndefined()
+
+    const key = "corporate:session:live"
+    const revoked = "corporate:revoked:live"
+    await first.put(key, bytes, 200)
+    await second.refreshSession(key, revoked, bytes, refreshed, 100)
+    await first.refreshSession(key, revoked, bytes, new Uint8Array([4]), 100)
+    expect(await first.getActive(key, revoked, 100)).toEqual(refreshed)
+    await Promise.all([first.retireSession(key, revoked, 100), second.refreshSession(key, revoked, refreshed, bytes, 100)])
+    expect(await second.get(key, 100)).toBeUndefined()
+    expect(await second.get(revoked, 199)).toEqual(new Uint8Array([1]))
+    expect(await second.get(revoked, 200)).toBeUndefined()
+    expect(await second.getActive(key, revoked, 100)).toBeUndefined()
+  })
+})
+
 test("blob capabilities expire after callback and dispose drains work while prohibiting new operations", async () => {
   await fixture(async (_directory, open) => {
     const store = await open()

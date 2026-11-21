@@ -3,10 +3,10 @@ import { mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { exportJWK, generateKeyPair, SignJWT } from "jose"
+import { createMicrosoftInstallation } from "../local/microsoft-entry.ts"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
-import { openLocalStore } from "../runtime/local-store.ts"
 import { bindMicrosoftInstallation } from "../runtime/microsoft-configuration.ts"
-import { microsoftRequest, prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
+import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 
 const listenerOrigin = "http://127.0.0.1:4110"
 const ingressOrigin = "http://sf-ingress.example.test:4110"
@@ -20,6 +20,7 @@ const teamObjectId = "44444444-4444-4444-8444-444444444444"
 const authority = "https://login.microsoftonline.com/" + tenantId
 const graph = "https://graph.microsoft.com/v1.0"
 const secret = "synthetic-private-installation-secret"
+const ingressProof = "a".repeat(64)
 const accessToken = "synthetic-private-installation-access"
 const epoch = 1794398400
 
@@ -39,6 +40,7 @@ async function fixture(teams: "direct" | undefined, fetch: (request: Request) =>
       ...(teams ? { teams } : {}),
     }))
     await writeFile(join(directory, "client-secret.txt"), secret, { mode: 0o600 })
+    await writeFile(join(directory, "ingress-secret.txt"), ingressProof, { mode: 0o600 })
     const environment = {
       ORCHESTRA_DB: join(directory, "host-data", "orchestra.db"),
       ORCHESTRA_INHERIT_CREDENTIALS: "0",
@@ -59,19 +61,14 @@ async function fixture(teams: "direct" | undefined, fetch: (request: Request) =>
     expect(prepared.loaded.config.supremeAdminGroupId).toBe(grantPrincipal)
     await expect(bindMicrosoftInstallation(directory, { ...prepared.loaded.config, tenantId: oid })).rejects
       .toThrow("Microsoft installation identity cannot change")
-    const store = await openLocalStore(join(directory, "business-microsoft"))
-    try {
-      const identity = prepared.createIdentity(store.secrets)
-      return {
-        prepared, identity,
-        async close() {
-          try { await store.dispose() }
-          finally { await rm(root, { recursive: true, force: true }) }
-        },
-      }
-    } catch (error) {
-      await store.dispose()
-      throw error
+    const installation = await createMicrosoftInstallation({ origin: listenerOrigin }, file, environment,
+      { fetch, now: () => new Date(epoch * 1000) })
+    return {
+      installation,
+      async close() {
+        try { await installation.dispose() }
+        finally { await rm(root, { recursive: true, force: true }) }
+      },
     }
   } catch (error) {
     await rm(root, { recursive: true, force: true })
@@ -117,8 +114,16 @@ test("Corporate installation opts into direct Teams on the signed HTTPS session"
     throw new Error("Unexpected synthetic Microsoft request")
   })
   try {
-    const normalized = (request: Request) => microsoftRequest(request, f.prepared.transport)!
-    const begin = await f.identity.handle(normalized(ingress("/auth/login", { "x-forwarded-host": "foreign.example.test" })))
+    expect(f.installation.mount).toBe(mount)
+    expect(f.installation.trustedIngress.origin).toBe(ingressOrigin)
+    expect(f.installation.trustedIngress.authorize(ingressProof)).toBe(true)
+    expect(f.installation.trustedIngress.authorize(undefined)).toBe(false)
+    expect(f.installation.trustedIngress.authorize("b".repeat(64))).toBe(false)
+    expect(f.installation.trustedIngress.authorize(ingressProof + ", " + ingressProof)).toBe(false)
+    const anonymous = await f.installation.handler(ingress("/dashboard"))
+    expect(anonymous?.status).toBe(303)
+    expect(anonymous?.headers.get("location")).toBe(mount + "/auth/login")
+    const begin = await f.installation.handler(ingress("/auth/login", { "x-forwarded-host": "foreign.example.test" }))
     expect(begin?.status).toBe(303)
     const authorize = new URL(begin!.headers.get("location")!)
     expect(authorize.searchParams.get("redirect_uri")).toBe(origin + mount + "/auth/callback")
@@ -127,21 +132,22 @@ test("Corporate installation opts into direct Teams on the signed HTTPS session"
     login.nonce = authorize.searchParams.get("nonce")!
     const loginCookie = begin!.headers.getSetCookie().find((value) => value.includes("_login="))!
     expect(loginCookie).toContain("; Secure")
-    const finish = await f.identity.handle(normalized(ingress("/auth/callback?" + new URLSearchParams({
+    const finish = await f.installation.handler(ingress("/auth/callback?" + new URLSearchParams({
       code: "synthetic-code", state: authorize.searchParams.get("state")!,
-    }), { cookie: loginCookie.split(";")[0] })))
+    }), { cookie: loginCookie.split(";")[0] }))
     expect(finish?.status).toBe(303)
     const sessionCookie = finish!.headers.getSetCookie().find((value) => value.includes("_session="))!
     expect(sessionCookie).toContain("; Secure")
     expect(sessionCookie).not.toContain(accessToken)
     expect(graphCalls).toEqual(["/v1.0/me"])
-    expect(microsoftRequest(ingress("/dashboard", { host: "foreign.example.test" }), f.prepared.transport)).toBeUndefined()
-    expect(microsoftRequest(new Request(listenerOrigin + mount + "/dashboard", {
+    const headers = { cookie: sessionCookie.split(";")[0] }
+    expect((await f.installation.handler(ingress("/dashboard", headers)))?.status).toBe(204)
+    expect(await f.installation.handler(ingress("/teams", headers))).toBeUndefined()
+    expect((await f.installation.handler(ingress("/auth/login", { host: "foreign.example.test" })))?.status).toBe(403)
+    expect((await f.installation.handler(new Request(listenerOrigin + mount + "/auth/login", {
       headers: { host: new URL(ingressOrigin).host },
-    }), f.prepared.transport)).toBeUndefined()
-    const result = await f.identity.teamDirectory!(normalized(ingress("/dashboard?principalObjectId=caller", {
-      cookie: sessionCookie.split(";")[0],
-    })))
+    })))?.status).toBe(403)
+    const result = await f.installation.teamDirectory!(ingress("/dashboard?principalObjectId=caller", headers))
     expect(result).toEqual({
       state: "complete", tenantId, principalObjectId: oid, source: "joinedTeams", membership: "direct",
       teams: [{ teamObjectId, name: "Finance", archived: false }],
@@ -157,12 +163,30 @@ test("Corporate profile without Teams opt-in keeps minimum login scopes", async 
     return discovery()
   })
   try {
-    expect(f.identity.teamDirectory).toBeUndefined()
-    const request = microsoftRequest(ingress("/auth/login"), f.prepared.transport)
-    if (!request) throw new Error("Configured Microsoft ingress did not bind")
-    const begin = await f.identity.handle(request)
+    expect(f.installation.teamDirectory).toBeUndefined()
+    const begin = await f.installation.handler(ingress("/auth/login"))
     expect(begin?.status).toBe(303)
     const authorize = new URL(begin!.headers.get("location")!)
     expect(authorize.searchParams.get("scope")?.split(" ")).toEqual(["openid", "profile", "offline_access", "User.Read"])
+  } finally { await f.close() }
+})
+
+test("Corporate login reserves capacity before discovery and releases its slot on provider failure", async () => {
+  const provider = { calls: 0 }
+  const f = await fixture(undefined, async (request) => {
+    expect(request.url).toBe(authority + "/v2.0/.well-known/openid-configuration")
+    provider.calls++
+    if (provider.calls === 1) return new Response(null, { status: 503 })
+    return discovery()
+  })
+  try {
+    expect((await f.installation.handler(ingress("/auth/login")))?.status).toBe(503)
+    for (let i = 0; i < 100; i++) {
+      expect((await f.installation.handler(ingress("/auth/login")))?.status).toBe(303)
+    }
+    const blocked = await f.installation.handler(ingress("/auth/login"))
+    expect(blocked?.status).toBe(429)
+    expect(blocked?.headers.get("set-cookie")).toBeNull()
+    expect(provider.calls).toBe(101)
   } finally { await f.close() }
 })
