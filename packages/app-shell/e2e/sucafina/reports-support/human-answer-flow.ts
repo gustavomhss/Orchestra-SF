@@ -63,13 +63,16 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
   const replyBody = `Human answer: this review retains ${corpus.before} for ${corpus.annual.start} through ${corpus.annual.end}. REPORTS_HUMAN_ORIGINAL`
   await discussion.getByRole("textbox", { name: "Reply", exact: true }).fill(replyBody)
   const beforeReply = await api.version()
-  const replied = await test.step("Submit the human reply and observe its receipt", () => options.loseReplyResponse
-    ? recoverLostReplyResponse({ page, app, api, discussion, question, body: replyBody, expectedStorageVersion: beforeReply, info })
-    : submit(page, app, discussion.getByRole("button", { name: "Send reply", exact: true }), "collaboration-thread-reply"))
+  const replied = await test.step("Submit the human reply and observe its receipt", async () => {
+    if (options.loseReplyResponse)
+      return recoverLostReplyResponse({ page, app, api, discussion, question, body: replyBody, expectedStorageVersion: beforeReply, info })
+    const result = await submit(page, app, discussion.getByRole("button", { name: "Send reply", exact: true }), "collaboration-thread-reply")
+    return { ...result, persistedThread: undefined }
+  })
   expect(replied.payload).toMatchObject({ id: question.id, body: replyBody })
   expectMutation(replied.payload.mutation, beforeReply)
   const message = await test.step("Read the persisted reply and independently confirm the answer is unconfirmed", () =>
-    expectRepliedReviewQuestion(api, question, { principalRef: app.actorId, body: replyBody }, replied.value))
+    expectRepliedReviewQuestion(api, question, { principalRef: app.actorId, body: replyBody }, replied.value, replied.persistedThread))
   await expect(discussion.getByRole("status")).toHaveText("Reply saved in this preserved review.")
   const article = discussion.getByRole("article", { name: `Message ${message.id}`, exact: true })
   await expect(article).toContainText(message.body)

@@ -90,7 +90,7 @@ export async function expectCreatedReviewQuestion(api: ReportsCollaboration, inp
 export async function expectRepliedReviewQuestion(api: ReportsCollaboration, question: Awaited<ReturnType<typeof expectCreatedReviewQuestion>>, input: {
   principalRef: string
   body: string
-}, value: unknown) {
+}, value: unknown, persistedThread?: Awaited<ReturnType<ReportsCollaboration["thread"]>>) {
   const replied = object(value)
   expect(replied.id).toBe(question.id)
   // The C05 HTTP adapter selects threads.reply and returns its committed snapshot.
@@ -105,7 +105,7 @@ export async function expectRepliedReviewQuestion(api: ReportsCollaboration, que
   expect(answer).toMatchObject({ version: 1, authorRef: input.principalRef, body: input.body, sourceContext: { ...question.basis, reviewContext: question.pin } })
   expect(question.messages.some((prior) => prior.incarnation === answer.incarnation)).toBe(false)
   const [reopened, unconfirmed] = await Promise.all([
-    api.thread(question.id),
+    persistedThread ?? api.thread(question.id),
     api.post("collaboration-answer-read", { questionId: question.id }),
   ])
   expect(reopened.messages).toEqual(replied.messages)
@@ -159,14 +159,17 @@ export async function expectConfirmedReviewAnswer(api: ReportsCollaboration, ans
 }
 
 /** Calling this after page/context reopen verifies reuse without a new write. */
-export async function expectReusedReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer) {
+export async function expectReusedReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer, expectedStorageVersion?: number) {
   const before = await api.version()
   const reused = await api.ok("collaboration-answer-read", { questionId: answer.questionId })
   expect(reused).toEqual({
     answerRef: answer.answerRef, answer: answer.message.body, authorRef: answer.message.authorRef,
     observedVersion: answer.observedSourceVersion, reviewContext: answer.pin,
   })
-  expect(await api.version()).toBe(before)
+  const after = await api.version()
+  expect(after).toBe(before)
+  if (expectedStorageVersion !== undefined)
+    expect(after, "Logout and denied reconciliation must not submit either retained reply").toBe(expectedStorageVersion)
   return reused
 }
 

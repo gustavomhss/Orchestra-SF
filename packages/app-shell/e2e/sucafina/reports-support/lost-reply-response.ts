@@ -72,8 +72,9 @@ export async function recoverLostReplyResponse(input: {
     await expect(reconcile).toBeEnabled()
     await expect(feedback, "The recoverable failure must explain that the action needs attention").not.toHaveText(previousFeedback ?? "")
     expect(writes).toEqual([receipt.serialized])
-    expect(await api.version()).toBe(input.expectedStorageVersion + 1)
-    expect((await api.thread(question.id)).messages).toEqual(saved.messages)
+    const [committedVersion, committedThread] = await Promise.all([api.version(), api.thread(question.id)])
+    expect(committedVersion).toBe(input.expectedStorageVersion + 1)
+    expect(committedThread.messages).toEqual(saved.messages)
 
     const reread = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
     await reconcile.click()
@@ -101,8 +102,9 @@ export async function recoverLostReplyResponse(input: {
     await expect(discussion.getByRole("status")).toHaveText("Reply saved in this preserved review.")
     await expect(reply).toHaveValue("")
     expect(writes, "Only the original intent and the explicit retry may be sent").toEqual([receipt.serialized, receipt.serialized])
-    expect(await api.version(), "Recovering the original receipt must not commit a duplicate reply").toBe(input.expectedStorageVersion + 1)
-    expect((await api.thread(question.id)).messages).toEqual(saved.messages)
+    const [recoveredVersion, persistedThread] = await Promise.all([api.version(), api.thread(question.id)])
+    expect(recoveredVersion, "Recovering the original receipt must not commit a duplicate reply").toBe(input.expectedStorageVersion + 1)
+    expect(persistedThread.messages).toEqual(saved.messages)
     await infoReceipt(input.info, {
       questionId: question.id, originalStorageVersion: input.expectedStorageVersion,
       committedStorageVersion: input.expectedStorageVersion + 1, idempotencyKey: receipt.key,
@@ -111,7 +113,7 @@ export async function recoverLostReplyResponse(input: {
       reconciliation: "authorized thread reread before an explicit same-intent retry",
       responseLoss: "real server response discarded after route.fetch; no positive response fabricated",
     })
-    return { payload: receipt.payload, value: result.value }
+    return { payload: receipt.payload, value: result.value, persistedThread }
   } finally {
     page.off("request", record)
     await page.unroute(matches, drop)

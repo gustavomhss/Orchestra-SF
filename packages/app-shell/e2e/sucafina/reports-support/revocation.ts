@@ -38,18 +38,31 @@ export async function revokeReportsSession(input: {
     const meeting = retained.getByRole("region", { name: "Preserved review meeting", exact: true })
     await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
     await expectConfirmedAnswerVisible(retained, answer)
+    const cookieName = `sucafina_operator_${createHash("sha256").update(JSON.stringify([app.mount, app.actorId])).digest("hex").slice(0, 24)}`
+    const [localCookies, retainedCookies] = await Promise.all([
+      page.context().cookies(app.dashboardURL),
+      old.cookies(app.dashboardURL),
+    ])
+    const localSession = localCookies.filter((cookie) => cookie.name === cookieName && cookie.path === app.mount)
+    const retainedSession = retainedCookies.filter((cookie) => cookie.name === cookieName && cookie.path === app.mount)
+    // Assert the contexts share the installed operator session without printing credentials on failure.
+    expect(localSession.length === 1 && retainedSession.length === 1 && !!localSession[0]?.value &&
+      localSession[0].value === retainedSession[0]?.value, "Both browsers must share the same installed operator session").toBe(true)
+    const [storageVersion, beforeThread] = await Promise.all([retainedApi.version(), retainedApi.thread(answer.questionId)])
     const retain = async (target: Page, purpose: string) => {
-      const pending = await retainUnsentReply(target, app, answer, purpose)
+      const pending = await retainUnsentReply(target, app, answer, purpose, storageVersion)
       cleanup.push(pending.cleanup)
       return pending
     }
-    const [local, remote] = await test.step("Retain both unsent intents and verify they changed no stored data", () =>
-      Promise.allSettled([retain(page, "logout"), retain(retained, "retained")]))
-    if (local.status === "rejected") throw local.reason
-    if (remote.status === "rejected") throw remote.reason
-    const localPending = local.value
-    const retainedPending = remote.value
-    expect(retainedPending.storageVersion).toBe(localPending.storageVersion)
+    const { localPending, retainedPending } = await test.step("Retain both unsent intents and verify they changed no stored data", async () => {
+      const [local, remote] = await Promise.allSettled([retain(page, "logout"), retain(retained, "retained")])
+      if (local.status === "rejected") throw local.reason
+      if (remote.status === "rejected") throw remote.reason
+      const [currentVersion, currentThread] = await Promise.all([retainedApi.version(), retainedApi.thread(answer.questionId)])
+      expect(currentVersion).toBe(storageVersion)
+      expect(currentThread.messages).toEqual(beforeThread.messages)
+      return { localPending: local.value, retainedPending: remote.value }
+    })
     expect(retainedPending.key).not.toBe(localPending.key)
     const pendingLogout = page.waitForResponse((response) => response.url() === `${app.origin}${app.mount}/auth/logout` && response.request().method() === "POST")
     await page.getByRole("button", { name: "Sign out", exact: true }).click()
@@ -94,16 +107,15 @@ export async function revokeReportsSession(input: {
     const control = await fresh.newPage()
     await test.step("Enroll a fresh real local-operator session", () => app.signIn(control))
     const current = reportsCollaboration(control.request, app.dashboardURL)
-    const [freshReview, download] = await test.step("Read the same review, Office bytes and answer under fresh authority", () =>
+    const [freshReview, download, freshThread] = await test.step("Read the same review, Office bytes and answer under fresh authority", () =>
       Promise.all([
         readReview(control.request, app.dashboardURL, saved.id),
         control.request.get(artifact.href, { maxRedirects: 0 }),
-        expectReusedReviewAnswer(current, answer),
+        current.thread(answer.questionId),
+        expectReusedReviewAnswer(current, answer, storageVersion),
       ]))
     expect(freshReview).toEqual(saved)
-    const [freshVersion, freshThread] = await Promise.all([current.version(), current.thread(answer.questionId)])
-    expect(freshVersion, "Logout and denied reconciliation must not submit either retained reply").toBe(localPending.storageVersion)
-    expect(freshThread.messages).toEqual(localPending.messages)
+    expect(freshThread.messages).toEqual(beforeThread.messages)
     expect(localPending.writes).toEqual([localPending.serialized])
     expect(retainedPending.writes).toEqual([retainedPending.serialized])
     expect(download.status()).toBe(200)
@@ -132,7 +144,7 @@ export async function revokeReportsSession(input: {
   }
 }
 
-async function retainUnsentReply(page: Page, app: ReportsInstallation, answer: ReviewAnswer, scope: string) {
+async function retainUnsentReply(page: Page, app: ReportsInstallation, answer: ReviewAnswer, scope: string, storageVersion: number) {
   const discussion = page.getByRole("region", { name: "Review discussion", exact: true })
   const drafts = {
     question: `Private question before ${scope}. REPORTS_REVOKED_QUESTION_${scope}`,
@@ -143,8 +155,6 @@ async function retainUnsentReply(page: Page, app: ReportsInstallation, answer: R
   await discussion.getByRole("textbox", { name: "Reply", exact: true }).fill(drafts.reply)
   await discussion.getByRole("article", { name: `Message ${answer.message.id}`, exact: true })
     .getByRole("textbox", { name: "Edited answer", exact: true }).fill(drafts.edit)
-  const api = reportsCollaboration(page.request, app.dashboardURL)
-  const [storageVersion, before] = await Promise.all([api.version(), api.thread(answer.questionId)])
   const base = new URL(app.dashboardURL), mode = "collaboration-thread-reply"
   const matches = (url: URL) => url.origin === base.origin && url.pathname === base.pathname && url.searchParams.get("sf") === mode
   const writes: string[] = []
@@ -183,10 +193,7 @@ async function retainUnsentReply(page: Page, app: ReportsInstallation, answer: R
     await expect(discussion.getByRole("button", { name: "Reconcile action", exact: true })).toBeEnabled()
     await expect(discussion.getByRole("button", { name: "Retry same action", exact: true })).toHaveCount(0)
     expect(writes).toEqual([attempt.serialized])
-    const [currentVersion, currentThread] = await Promise.all([api.version(), api.thread(answer.questionId)])
-    expect(currentVersion).toBe(storageVersion)
-    expect(currentThread.messages).toEqual(before.messages)
-    return { ...attempt, drafts, storageVersion, messages: before.messages, writes, cleanup }
+    return { ...attempt, drafts, writes, cleanup }
   } catch (error) {
     await cleanup()
     throw error
