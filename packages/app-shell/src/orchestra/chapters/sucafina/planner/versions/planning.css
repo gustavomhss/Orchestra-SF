@@ -1,0 +1,83 @@
+/* Native wave-four planning surfaces. The shell owns the glass and page frame. */
+[data-sf-polish="planner"] {
+  --sf-plan-gap: 20px;
+  --sf-plan-control: 44px;
+  --sf-plan-editor: 760px;
+  color: var(--orchestra-body);
+  font-family: var(--mx-sans);
+  font-size: var(--orchestra-font-size-md);
+  line-height: 1.6;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+[data-sf-polish="planner"] :is(h2, h3, p, dl) { margin: 0; }
+[data-sf-polish="planner"] h2 {
+  color: var(--orchestra-text);
+  font-size: var(--orchestra-font-size-xl);
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+[data-sf-polish="planner"] h3 {
+  color: var(--orchestra-text);
+  font-size: var(--orchestra-font-size-lg);
+  font-weight: 600;
+  line-height: 1.5;
+}
+[data-sf-polish="planner"] :is(label, dt, summary) {
+  color: var(--orchestra-muted);
+  font-size: var(--orchestra-font-size-sm);
+}
+[data-sf-polish="planner"] :is(input, select, textarea) {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  box-sizing: border-box;
+  min-block-size: var(--sf-plan-control);
+  border: 1px solid var(--orchestra-border-muted);
+  border-radius: var(--orchestra-radius-sm);
+  background: var(--orchestra-surface);
+  color: var(--orchestra-text);
+  font: inherit;
+  padding: 10px 12px;
+}
+[data-sf-polish="planner"] input[type="checkbox"] {
+  inline-size: 18px;
+  min-block-size: 18px;
+  padding: 0;
+}
+[data-sf-polish="planner"] .mx-btn {
+  min-block-size: var(--sf-plan-control);
+  max-inline-size: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font: inherit;
+}
+[data-sf-polish="planner"] :is(button, input, select, textarea, a, summary, [tabindex="0"]):focus-visible {
+  outline: 2px solid var(--orchestra-accent);
+  outline-offset: 2px;
+}
+[data-sf-polish="planner"] summary { cursor: pointer; min-block-size: var(--sf-plan-control); align-content: center; }
+[data-sf-polish="planner"] details > :not(summary) { margin-block-start: 12px; }
+[data-sf-polish="planner"] :is(dd, bdi, td, li, p) { overflow-wrap: anywhere; }
+[data-sf-polish="planner"] .sf-s01-table-viewport {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+[data-sf-polish="planner"] .sf-s03-review {
+  inline-size: 100%;
+  max-inline-size: var(--sf-plan-editor);
+  min-inline-size: 0;
+  box-sizing: border-box;
+}
+[data-sf-polish="planner"][hidden],
+[data-sf-polish="planner"] [hidden] { display: none !important; }
+@media (max-width: 479px) {
+  [data-sf-polish="planner"] { --sf-plan-gap: 16px; }
+  [data-sf-polish="planner"] .sf-s03-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  [data-sf-polish="planner"] .sf-s03-actions > * { inline-size: 100%; }
+}

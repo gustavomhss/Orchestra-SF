@@ -1,21 +1,25 @@
-/* N18 / U46 comparison: no financial aggregation, responsive two-column selection. */
-.sf-u46-compare { display: grid; gap: 1rem; min-width: 0; }
-.sf-u46-compare-select { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1rem; }
-.sf-u46-compare-select label { display: grid; gap: .5rem; font-weight: 600; min-width: 0; }
-.sf-u46-compare-select select { box-sizing: border-box; width: 100%; min-width: 0; }
-.sf-u46-compare-content { display: grid; gap: 1rem; min-width: 0; }
-.sf-u46-compare-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
-.sf-u46-compare-scroll table { border-collapse: collapse; width: 100%; min-width: 32rem; font-variant-numeric: tabular-nums; }
-.sf-u46-compare-scroll caption { padding: .6rem .5rem; text-align: start; font-weight: 650; }
-.sf-u46-compare-scroll td, .sf-u46-compare-scroll th {
-  padding: .65rem .8rem; text-align: start; border-block-end: 1px solid var(--border, currentColor);
+@import "../versions/planning.css";
+
+/* Source values stay side by side; named local scrollers preserve readable columns. */
+.sf-u46-compare { display: grid; gap: var(--sf-plan-gap); min-inline-size: 0; }
+.sf-u46-compare-select { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; max-inline-size: var(--sf-plan-editor); }
+.sf-u46-compare-select label { display: grid; gap: 6px; min-inline-size: 0; }
+.sf-u46-compare-select select { inline-size: 100%; }
+.sf-u46-compare-content { display: grid; gap: 20px; min-inline-size: 0; }
+.sf-u46-compare-scroll {
+  max-inline-size: 100%; min-inline-size: 0; overflow-x: auto; overscroll-behavior-inline: contain;
+  padding: 8px 20px 12px; background: var(--mx-raised);
+  border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg);
 }
-.sf-u46-compare-scroll th { font-weight: 600; }
-.sf-u46-monthly th:not(:first-child), .sf-u46-monthly td:not(:first-child) { text-align: end; white-space: nowrap; }
-.sf-u46-compare-warnings { margin: .4rem 0; padding: .75rem 1.25rem; border-inline-start: .25rem solid currentColor; }
-@media (max-width: 680px) {
-  .sf-u46-compare-select { grid-template-columns: minmax(0,1fr); }
-  .sf-u46-compare-scroll table { min-width: 0; }
-  .sf-u46-compare-scroll table.sf-u46-monthly { min-width: 46rem; }
-  .sf-u46-compare-scroll { border-inline-end: 1px solid var(--border, currentColor); }
-}
+.sf-u46-compare-scroll table { border-collapse: collapse; inline-size: 100%; min-inline-size: 480px; font-variant-numeric: tabular-nums; }
+.sf-u46-compare-scroll table.sf-u46-monthly { min-inline-size: 860px; }
+.sf-u46-compare-scroll caption { padding: 12px 0; text-align: start; font-size: var(--orchestra-font-size-xl); font-weight: 600; color: var(--orchestra-text); }
+.sf-u46-compare-scroll :is(th, td) { padding: 14px 12px; border-block-end: 1px solid var(--mx-line); vertical-align: middle; }
+.sf-u46-compare-scroll th { text-align: start; font-weight: 500; color: var(--orchestra-muted); font-size: var(--orchestra-font-size-sm); }
+.sf-u46-compare-scroll td { text-align: end; white-space: nowrap; color: var(--orchestra-text); }
+.sf-u46-compare-scroll thead th:not(:first-child) { text-align: end; }
+.sf-u46-compare-scroll tbody th { min-inline-size: 150px; color: var(--orchestra-body); }
+.sf-u46-monthly tbody th { min-inline-size: 70px; }
+.sf-u46-compare-warnings { margin: 0; padding: 12px 20px; color: var(--orchestra-warm); background: var(--mx-soft); border-inline-start: 2px solid var(--orchestra-warm); }
+@media (max-width: 619px) { .sf-u46-compare-select { grid-template-columns: minmax(0, 1fr); gap: 12px; } }
+@media (max-width: 479px) { .sf-u46-compare-scroll { padding-inline: 16px; } }

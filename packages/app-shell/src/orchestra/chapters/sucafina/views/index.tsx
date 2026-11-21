@@ -13,6 +13,7 @@ import { SfPageFrame, type SfCopyKey, type SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { useSfPresentation } from "../shared/frame/presentation"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../shared/change-review"
+import "./views.css"
 
 type ListEntry = Extract<Schema.Schema.Type<typeof SfViewsList.Output>, { status: "ok" }>["value"][number]
 type RecordView = Extract<Schema.Schema.Type<typeof SfViewsOpen.Output>, { status: "ok" }>["value"]
@@ -338,7 +339,8 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
       layout="work"
       onLayoutMode={() => undefined}
     >
-      <section class="mx-card min-w-0" aria-labelledby="sf-u43-legacy">
+      <div class="sf-saved-views" data-sf-surface="UI32" data-sf-polish="planner" data-sf-wave="four" data-sf-views-stage={reviewKind() ? "review" : screen.detail ? "editor" : "list"}>
+      <section class="sf-saved-view-collection" aria-labelledby="sf-u43-legacy">
         <h2 id="sf-u43-legacy">{t(key("sf.ui32.legacy"))}</h2>
         <p>{t(key("sf.ui32.legacyDescription"))}</p>
         <Show when={props.route.kind === "list"}>
@@ -347,10 +349,10 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
             messageKey={key(screen.listState === "empty" ? "sf.common.empty" : screen.listState === "loading" ? "sf.common.loading" : screen.listState === "denied" ? "sf.common.noAccess" : "sf.common.unavailable")}
             onRetryRead={retryList}
           >
-            <ul class="list-none">
+            <ul class="sf-saved-view-list">
               <For each={screen.list}>
                 {(item) => (
-                  <li class="py-2">
+                  <li>
                     <Show when={"view" in item} fallback={<span>{t(key("sf.ui32.inaccessible"))}</span>}>
                       <button class="mx-btn" type="button" disabled={!operationReady("views.open")} onClick={() => {
                         if ("view" in item) open(item.view.id, item.view.surface)
@@ -371,7 +373,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
           >
             <Show when={screen.detail}>
               {(record) => (
-                <section aria-labelledby="sf-u43-editor" class="min-w-0">
+                <section aria-labelledby="sf-u43-editor" class="sf-saved-view-editor" hidden={!!reviewKind()}>
                   <h3 id="sf-u43-editor">{t(key("sf.ui32.legacyEditor"))}</h3>
                   <p>{t(key("sf.ui32.sourcePage"))}: <bdi>{record().view.page}</bdi></p>
                   <p>{t(key("sf.ui32.version"), { version: record().version })}</p>
@@ -380,7 +382,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
                   </Show>
                   <Show when={activeDraft()}>
                     {(state) => (
-                      <div class="flex flex-col gap-3">
+                      <div class="sf-saved-view-fields">
                         <label class="block">
                           <span class="block">{t(key("sf.ui32.name"))}</span>
                           <input
@@ -416,7 +418,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
                         <Show when={state().value.filters}>
                           <p>{t(key("sf.ui32.filtersPreserved"))}</p>
                         </Show>
-                        <div class="flex flex-wrap gap-2">
+                        <div class="sf-saved-view-actions">
                           <button type="button" class="mx-btn primary" disabled={!mayMutate("views.save") || !state().dirty || !!state().pendingOperation} onClick={reviewSave}>
                             {t(key("sf.ui32.reviewSave"))}
                           </button>
@@ -477,12 +479,13 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
           />
         </Show>
       </section>
-      <section class="mx-card min-w-0" aria-labelledby="sf-u43-native">
+      <section class="sf-saved-view-availability" aria-labelledby="sf-u43-native">
         <h2 id="sf-u43-native">{t(key("sf.ui32.native"))}</h2>
         <SfStatePanel state="unavailable" messageKey={key("sf.ui32.nativeUnavailable")} />
-        <p>{t(key("sf.ui32.noPseudoView"))}</p>
-        <p>{t(key("sf.ui32.entryUnavailable"))}</p>
+        <details><summary>{t(key("sf.ui32.sourcePage"))}</summary><p>{t(key("sf.ui32.noPseudoView"))}</p>
+        <p>{t(key("sf.ui32.entryUnavailable"))}</p></details>
       </section>
+      </div>
     </SfPageFrame>
   )
 }

@@ -430,7 +430,8 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       density="comfortable" layout="work" onLayoutMode={() => undefined}
     >
       <SfStatePanel state={state()} messageKey={key(message())} onRetryRead={refresh}>
-        <div class="sf-n20-fx" data-sf-surface="CAP22">
+        <div class="sf-n20-fx" data-sf-surface="CAP22" data-sf-polish="planner" data-sf-wave="four">
+          <div class="sf-n20-fx-reading" hidden={!!currentValue() || !!screen.intent}>
           <div class="sf-n20-fx-toolbar">
             <label>
               <span>{language.t("sf.cap22.version")}</span>
@@ -473,7 +474,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                 { id: "cur", labelKey: key("sf.cap22.field.code.label"), align: "start",
                   widthPolicy: { kind: "flex", minPx: 110, weight: 1 }, sortKey: "cur",
                   render: (row) => <bdi>{row.cur}</bdi> },
-                { id: "rate", labelKey: key("sf.cap22.field.rate.label"), align: "start",
+                { id: "rate", labelKey: key("sf.cap22.field.rate.label"), align: "end",
                   widthPolicy: { kind: "flex", minPx: 120, weight: 2 }, sortKey: "rate",
                   render: (row) => <span data-sf-rate-state={row.rate === null ? "missing" : "known"}><bdi>{rateText(row.rate)}</bdi></span> },
                 { id: "provider", labelKey: key("sf.cap22.field.provider.label"), align: "start",
@@ -522,6 +523,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
               </ul>
             </Show>
           </section>
+          </div>
           <Show when={(!screen.intent && !screen.lockedOutcome) ? currentValue() : undefined}>
             {(value) => (
               <form class="mx-card sf-n20-fx-editor" onSubmit={(event) => {
@@ -553,7 +555,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                 </label>
                 <label>
                   <span>{language.t("sf.cap22.field.observedAt.label")}</span>
-                  <input class="mx-input" type="text" placeholder="2026-11-17T12:00:00Z"
+                  <input class="mx-input" name="observedAt" type="text" placeholder="2026-11-17T12:00:00Z"
                     value={value().observedAt}
                     onInput={(event) => draft()?.edit({ ...value(), observedAt: event.currentTarget.value })} />
                 </label>

@@ -198,7 +198,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
         onRetryRead={model.refresh}>
         <Show when={model.view.page}>
           {(inventory) => (
-            <section class="sf-u46-compare" data-sf-surface="CAP23-compare">
+            <section class="sf-u46-compare" data-sf-surface="CAP23-compare" data-sf-polish="planner" data-sf-wave="four">
               <SfContextBar
                 state={model.view.state}
                 selection={[{ control: "year", optionId: year() === undefined ? null : String(year()) }]}
@@ -247,7 +247,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                 onRetryRead={() => setComparison("request", (n) => n + 1)}>
                 <Show when={left() && right()}>
                   <div class="sf-u46-compare-content">
-                    <div class="sf-u46-compare-scroll">
+                    <div class="sf-u46-compare-scroll" role="region" aria-label={copy.t(key("sf.u46.compare"))} tabIndex={0}>
                       <table>
                         <caption>{copy.t(key("sf.u46.compare"))}</caption>
                         <thead>
@@ -268,7 +268,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                         </tbody>
                       </table>
                     </div>
-                    <div class="sf-u46-compare-scroll">
+                    <div class="sf-u46-compare-scroll" role="region" aria-label={copy.t(key("sf.u06.monthly"))} tabIndex={0}>
                       <table class="sf-u46-monthly">
                         <caption>{copy.t(key("sf.u06.budget"))}</caption>
                         <thead>

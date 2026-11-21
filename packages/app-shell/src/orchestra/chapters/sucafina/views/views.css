@@ -1,0 +1,30 @@
+@import "../planner/versions/planning.css";
+
+/* UI32 keeps source capabilities explicit while an existing view is edited and reviewed. */
+.sf-saved-views { display: grid; gap: var(--sf-plan-gap); min-inline-size: 0; }
+.sf-saved-view-collection {
+  display: grid; gap: 16px; min-inline-size: 0; padding: 20px;
+  background: var(--mx-raised); border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg);
+}
+.sf-saved-view-collection > p { color: var(--orchestra-muted); max-inline-size: 88ch; }
+.sf-saved-view-list { display: grid; list-style: none; padding: 0; margin: 0; }
+.sf-saved-view-list > li { padding-block: 12px; border-block-end: 1px solid var(--mx-line); min-inline-size: 0; }
+.sf-saved-view-list > li:last-child { border-block-end: 0; }
+.sf-saved-view-list .mx-btn { justify-content: start; text-align: start; inline-size: 100%; background: transparent; }
+.sf-saved-view-editor { display: grid; gap: 12px; min-inline-size: 0; inline-size: 100%; max-inline-size: var(--sf-plan-editor); }
+.sf-saved-view-editor > p { color: var(--orchestra-muted); font-size: var(--orchestra-font-size-sm); }
+.sf-saved-view-editor > a { justify-self: start; }
+.sf-saved-view-fields { display: grid; gap: 16px; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.sf-saved-view-fields > label { display: grid; gap: 6px; min-inline-size: 0; }
+.sf-saved-view-fields :is(input, select) { inline-size: 100%; }
+.sf-saved-view-fields > :is(p, .sf-saved-view-actions) { grid-column: 1 / -1; }
+.sf-saved-view-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.sf-saved-view-availability { display: grid; gap: 12px; min-inline-size: 0; border-block-start: 1px solid var(--mx-line); padding-block-start: 20px; }
+.sf-saved-view-availability p { color: var(--orchestra-muted); max-inline-size: 88ch; font-size: var(--orchestra-font-size-sm); }
+.sf-saved-views[data-sf-views-stage="review"] .sf-saved-view-collection { max-inline-size: var(--sf-plan-editor); box-sizing: border-box; inline-size: 100%; }
+@media (max-width: 619px) { .sf-saved-view-fields { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 479px) {
+  .sf-saved-view-collection { padding: 16px; }
+  .sf-saved-view-actions { flex-direction: column; align-items: stretch; }
+  .sf-saved-view-actions > * { inline-size: 100%; }
+}
