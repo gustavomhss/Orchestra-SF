@@ -106,7 +106,7 @@ export function createOperatorIdentity(options: OperatorOptions): OperatorIdenti
       await secrets.put(sessionKey, seal(sessionKey, expiresAt), expiresAt)
       const responseHeaders = headers()
       responseHeaders.append("set-cookie", cookie(id, 28800))
-      responseHeaders.set("location", `${mount}/dashboard`)
+      responseHeaders.set("location", "/")
       return new Response(null, { status: 303, headers: responseHeaders })
     },
     async prepare() {},

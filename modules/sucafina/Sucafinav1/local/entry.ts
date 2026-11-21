@@ -1,8 +1,9 @@
+import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { SfReviewRoutes } from "@orchestra/schema/sucafina/reviews/routes"
 import path from "node:path"
 import { userInfo } from "node:os"
 import { randomUUID } from "node:crypto"
-import { createModule } from "../index.ts"
+import { createModule, contributions, type ModuleServices } from "../index.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { createEntraClient } from "../runtime/entra-client.ts"
 import { createOperatorIdentity } from "../runtime/operator-identity.ts"
@@ -21,6 +22,20 @@ import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
 import { mountSfFilesOriginalRoutes } from "../runtime/native-files/routing.ts"
+import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
+import { mountSfNativeProjections, type SfNativeHostDependencies, type SfProjectionHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
+import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
+import { observeSfDashboardPages } from "../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
+import { observeSfDomainHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
+import { observeSfAssetHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/asset-health.ts"
+import { createSfActionSource } from "../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
+import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
+import { createSfOperationsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
+import { createSfWorkProjectionHandlers, observeSfHome } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
+import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
+import { createSfProcurementProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
+import { createSfDecisionsProjectionHandlers, observeSfCases } from "../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
+import { createSfRoutinesHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/routines.ts"
 import { mountSfReviewProjection } from "../../../../apps/cli/src/sucafina-product/native-ui/review-routing"
 import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
 import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
@@ -28,6 +43,7 @@ import { createSfSourceScopeProjector } from "../product/integration/source-proj
 import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { initializeAbsentSfProductState } from "../product/host-binding/state-provider.ts"
+import { createSfWorkbenchHttp } from "../product/interface/http.ts"
 import { sfHumanActions } from "../product/integration/human-authority.ts"
 import freeze from "../product/contracts/freeze-v1.json" with { type: "json" }
 
@@ -125,11 +141,19 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
       signingKey: loaded.keys.assets, scannerConfiguration: config.scanner,
       scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner),
     } }
+    let nativeOperational: NonNullable<Parameters<CreateSfHostRuntime>[0]["operational"]> | undefined
+    let nativeActions: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeActions"]> | undefined
+    let nativeReadBinding: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]> | undefined
     if (operator && runtimeStore && currentChoiceFence && context.createHostRuntime) {
       runtime = await context.createHostRuntime({
         installationId: operator.installationId, directory: loaded.directory, origin: config.origin,
         sourceRoot: context.sourceRoot ?? path.resolve(import.meta.dir, "../product/ai"),
         mount: config.mount, authMode: "local-operator",
+        operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
+        nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),
+        nativeActions: (request, stamp, pages) => nativeActions
+          ? nativeActions(request, stamp, pages)
+          : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
         isAuthenticated: async (request) => Boolean(await identity.person(request)),
         persistence: runtimeStore, currentChoiceFence,
         authenticate: identity.authenticate, environment: environmentFor, assets,
@@ -142,8 +166,13 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
       })
     }
     const report = SfReviewRoutes["reviews.report.prepare"]
+    const workbench = createSfWorkbenchHttp({
+      origin: config.origin,
+      mount: config.mount,
+      runtime: () => runtime?.services?.(),
+    })
     const product = async (request: Request, surface: Surface) => {
-      const response = await runtime?.services?.()?.productHttp?.(request, surface)
+      const response = await runtime?.services?.()?.productHttp?.(request, surface) ?? await workbench(request, surface)
       if (response) return response
       const query = new URL(request.url).searchParams
       if (surface === "dashboard" && request.method === report.method &&
@@ -153,14 +182,15 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
         })
       }
     }
-    const business = createModule(config.mount, {
+    const applicationServices: ModuleServices = {
       persistence: store,
       authenticate: identity.authenticate,
       environment: environmentFor,
       ...(runtime ? { product } : {}),
       maxJsonBytes: 2 * 1024 * 1024,
       assets,
-    })
+    }
+    const business = createModule(config.mount, applicationServices)
     const files = operator ? mountSfFilesOriginalRoutes({
       origin: config.origin, mount: config.mount,
       sources: {
@@ -173,6 +203,73 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
       mount: config.mount,
       readProjection: () => runtime?.services?.()?.nativeReviewProjection,
     }) : undefined
+    let nativeProjections: ReturnType<typeof mountSfNativeProjections> | undefined
+    if (runtime) {
+      // Original authorized application, original Request and same runtime/identity.
+      // This registers only the F02 closed native paths; legacy domain dispatch is
+      // untouched. A missing producer context reader remains 503, never a fake grant.
+      const nativeApplication = { ...applicationServices, domains: contributions }
+      const nativeDependenciesBase = {
+        origin: config.origin,
+        mount: config.mount,
+        application: nativeApplication,
+        runtime: () => runtime?.services?.(),
+      }
+      const nativeContext = createSfContextHandler(nativeDependenciesBase)
+      const nativeDependencies: SfNativeHostDependencies = {
+        ...nativeDependenciesBase,
+        readContext: nativeContext.readContext,
+      }
+      // Resolve the real host producer per Request; it may not yet be live at route registration.
+      const nativeReviewHandler: SfProjectionHandler = {
+        operationId: "projection.review",
+        handle: async (request) => (await projection?.(request)) ?? new Response(null, { status: 503 }),
+      }
+      const nativeHandlers = [
+          ...createSfDomainProjectionHandlers(nativeDependencies),
+          ...createSfPeopleProjectionHandlers(nativeDependencies),
+          ...createSfOperationsProjectionHandlers(nativeDependencies),
+          ...createSfWorkProjectionHandlers(nativeDependencies),
+          ...createSfPlannerProjectionHandlers(nativeDependencies),
+          ...createSfProcurementProjectionHandlers(nativeDependencies),
+          ...createSfDecisionsProjectionHandlers(nativeDependencies),
+          ...createSfRoutinesHandlers(nativeDependencies),
+          nativeReviewHandler,
+        ]
+      nativeProjections = mountSfNativeProjections({
+        mount: config.mount,
+        context: nativeContext,
+        handlers: nativeHandlers.filter((handler) => handler !== nativeReviewHandler),
+      })
+      const productBinding = applicationServices.product
+      nativeReadBinding = (operationId, producer) => {
+        const current = runtime?.services?.()
+        if (!current) return undefined
+        if (operationId === "views.list" || operationId === "views.open" || operationId === "views.save" || operationId === "views.remove")
+          return current.personalViews === producer && applicationServices.product === productBinding ? workbench : undefined
+        if (operationId === "projection.review")
+          return current.nativeReviewProjection === producer && projection ? nativeReviewHandler : undefined
+        return current.productHttp === producer && applicationServices.product === productBinding ? productBinding : undefined
+      }
+      const actions = createSfActionSource(nativeDependencies, nativeHandlers)
+      nativeActions = actions.actions
+      // Router construction above proves these exact handlers were installed.
+      nativeOperational = async (request, stamp) => {
+        const observed = await Promise.allSettled([
+          observeSfPlannerPages(nativeApplication, request, stamp),
+          observeSfDashboardPages(nativeApplication, request, stamp),
+          observeSfDomainHealth(nativeDependencies, nativeHandlers, request, stamp),
+          observeSfAssetHealth({ source: () => {
+            const authority = runtime?.services?.()
+            return authority && nativeReadBinding && runtime?.identity() ? { application: nativeApplication, producer: business, authority } : undefined
+          } }, request, stamp),
+          observeSfHome(runtime?.services?.(), request, stamp),
+          observeSfCases(nativeDependencies, nativeHandlers, request, stamp),
+          actions.operational(request, stamp),
+        ])
+        return observed.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
+      }
+    }
     const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount, ...(recoveryDrill ? { recoveryDrill } : {}), ...(operator ? { operator: { id: `macos:${operator.installationId}:${operator.uid}`, name: operator.name } } : {}), schedule: !!operator })
     services.jobs = jobs
     const discovered = runtime ? {
@@ -269,13 +366,13 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
           if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
           if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
         }
-        const response = await projection?.(request) ?? await files?.(request) ?? await business(request)
+        const response = await projection?.(request) ?? await nativeProjections?.(request) ?? await files?.(request) ?? await business(request)
         if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
         if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
         return localChrome(response)
 
       },
-      async dispose() { await jobs.dispose(); await store.dispose() },
+      async dispose() { nativeReadBinding = undefined; await jobs.dispose(); await store.dispose() },
     }
 
     function localChrome(response: Response) {
