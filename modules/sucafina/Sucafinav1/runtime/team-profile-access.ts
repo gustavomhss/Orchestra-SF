@@ -1,7 +1,7 @@
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { Option, Schema } from "effect"
 import { digestSfValue } from "../product/contracts/canonical.ts"
-import type { EntraTeamsSessionResult } from "./local-contract.ts"
+import type { EntraTeamsObservation } from "./local-contract.ts"
 import { readTeamProfileIntent } from "./team-profile-selector.ts"
 
 export function createTeamProfileAccess(input: {
@@ -11,16 +11,18 @@ export function createTeamProfileAccess(input: {
   tenantId: string
   enabledTeamIds: readonly string[]
   prepare: (request: Request) => Promise<void>
-  readTeams: (request: Request) => Promise<EntraTeamsSessionResult>
+  observeTeams: (request: Request) => Promise<EntraTeamsObservation>
 }) {
   const installationId = digestSfValue({ origin: input.origin, mount: input.mount, directory: input.directory })
   const binding = { installationId, tenantId: input.tenantId, origin: input.origin, mount: input.mount }
   const enabled = new Set(input.enabledTeamIds)
-  return async (request: Request) => {
+  return async (request: Request, teamObjectId?: string) => {
     const intent = readTeamProfileIntent(request, binding)
-    if (!intent) return { status: "denied" } as const
+    if (!intent || (teamObjectId && intent.kind === "team" && teamObjectId !== intent.profile.teamObjectId))
+      return { status: "denied" } as const
     await input.prepare(request)
-    const observed = await input.readTeams(request)
+    const observation = await input.observeTeams(request)
+    const observed = observation.result
     if (request.signal.aborted) return { status: "denied" } as const
     if (observed.state === "unauthenticated") return { status: "unauthenticated" } as const
     if (observed.state !== "complete" || observed.tenantId !== input.tenantId ||
@@ -28,9 +30,17 @@ export function createTeamProfileAccess(input: {
 
     // The intersection is the only source of eligibility. A selector expresses intent.
     const eligible = observed.teams.filter((team) => !team.archived && enabled.has(team.teamObjectId))
-    if (intent.kind === "team") return eligible.some((team) => team.teamObjectId === intent.profile.teamObjectId)
-      ? { status: "allowed" } as const : { status: "denied" } as const
-    if (eligible.length <= 1) return { status: eligible.length === 1 ? "allowed" : "denied" } as const
+    const selectedId = teamObjectId ?? (intent.kind === "team" ? intent.profile.teamObjectId : undefined)
+    const selected = selectedId ? eligible.find((team) => team.teamObjectId === selectedId) :
+      eligible.length === 1 ? eligible[0] : undefined
+    if (selected && observation.verifyCurrent) return {
+      status: "allowed",
+      profile: { installationId, tenantId: input.tenantId, teamObjectId: selected.teamObjectId },
+      principalObjectId: observed.principalObjectId,
+      verifyCurrent: observation.verifyCurrent,
+    } as const
+    if (selectedId || eligible.length === 0) return { status: "denied" } as const
+    if (eligible.length === 1) return { status: "unavailable" } as const
 
     const choices = eligible.map((team) => ({
       profile: { installationId, tenantId: input.tenantId, teamObjectId: team.teamObjectId },

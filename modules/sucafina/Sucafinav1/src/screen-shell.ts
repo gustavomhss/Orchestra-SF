@@ -140,9 +140,9 @@ function attach() {
     button.addEventListener("click", async () => {
       button.disabled = true
       try {
-        const response = await fetch(new URL("./auth/logout", location.href), { method: "POST", credentials: "same-origin" })
+        const response = await fetch(new URL((button.dataset.logout || "./auth") + "/logout", location.href), { method: "POST", credentials: "same-origin" })
         if (!response.ok) { notice("Sign out failed. Please retry."); return }
-        location.assign(new URL("./auth/login", location.href).href)
+        location.assign(new URL(button.dataset.logout ? button.dataset.logout + "/signed-out" : "./auth/login", location.href).href)
       } catch { notice("Sign out failed. Please retry.") }
       finally { button.disabled = false }
     })
@@ -382,8 +382,9 @@ export function documentHtml(
   main: string,
   aside: string,
   sidebarControls = "",
+  authMount?: string,
 ): string {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><style>${STYLE}</style></head><body data-surface="${surface}"><a class="skip" href="#content">Skip to content</a><aside class="sidebar"><header><strong>Sucafina</strong><span>${esc(title)}</span></header><nav aria-label="${esc(title)}">${nav}</nav>${sidebarControls}</aside><div id="content" class="content"><header class="workspace-bar"><span>Sucafina workspace</span><div role="navigation" aria-label="Applications">${[["dashboard", "Dashboard"], ["planner", "Budget Planner"], ["procurement", "Procurement"]].map(([key, label]) => `<a href="./${key}"${surface === key ? ' aria-current="page"' : ""}>${label}</a>`).join("")}</div>${surface === "signed-out" ? "" : '<div class="workspace-tools"><!--local-tools--><button type="button" data-logout>Sign out</button></div>'}</header>${main}${aside}<p id="notice" role="status" aria-live="polite"></p></div><script>${SCRIPT}</script></body></html>`
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><style>${STYLE}</style></head><body data-surface="${surface}"><a class="skip" href="#content">Skip to content</a><aside class="sidebar"><header><strong>Sucafina</strong><span>${esc(title)}</span></header><nav aria-label="${esc(title)}">${nav}</nav>${sidebarControls}</aside><div id="content" class="content"><header class="workspace-bar"><span>Sucafina workspace</span><div role="navigation" aria-label="Applications">${[["dashboard", "Dashboard"], ["planner", "Budget Planner"], ["procurement", "Procurement"]].map(([key, label]) => `<a href="./${key}"${surface === key ? ' aria-current="page"' : ""}>${label}</a>`).join("")}</div>${surface === "signed-out" ? "" : `<div class="workspace-tools"><!--local-tools--><button type="button" data-logout${authMount ? `="${esc(authMount + "/auth")}"` : ""}>Sign out</button></div>`}</header>${main}${aside}<p id="notice" role="status" aria-live="polite"></p></div><script>${SCRIPT}</script></body></html>`
 }
 
 export function esc(value: string): string {

@@ -1,7 +1,7 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { isIP } from "node:net"
-import type { CorporateLocalSecrets, DirectoryPerson, EntraClient, EntraTeamsInput, EntraTeamsResult, EntraTeamsSessionResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
-import { isTeamLandingNavigation } from "./team-profile-selector.ts"
+import type { CorporateLocalSecrets, DirectoryPerson, EntraClient, EntraTeamsInput, EntraTeamsObservation, EntraTeamsResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
+import { isTeamLandingNavigation, teamBusinessRoute } from "./team-profile-selector.ts"
 
 type Session = {
   person: DirectoryPerson
@@ -117,7 +117,7 @@ function createIdentity(
     const url = new URL(request.url)
     if (request.signal.aborted || url.origin !== origin.origin ||
         !(url.pathname === options.mount || url.pathname.startsWith(options.mount + "/")) ||
-        (request.headers.get("sec-fetch-site") === "cross-site" && !isTeamLandingNavigation(request, url.pathname, options.mount)) ||
+        (request.headers.get("sec-fetch-site") === "cross-site" && !isTeamLandingNavigation(request, url, options.mount)) ||
         (request.headers.has("origin") && request.headers.get("origin") !== origin.origin)) return undefined
     const id = handle(request, "session")
     if (!id || !readActiveSession) return undefined
@@ -129,6 +129,29 @@ function createIdentity(
         refreshing.has(id)) return undefined
     return { handle: id, value, encrypted }
   }
+  const observeTeams = readTeams && teamTenant && readActiveSession
+    ? async (request: Request): Promise<EntraTeamsObservation> => {
+      const current = await teamReadCurrent(request)
+      const principal = current?.value.teamPrincipal
+      if (!current || !principal) return { result: { state: "unauthenticated" } }
+      const verifyCurrent = async () => {
+        const latest = await teamReadCurrent(request)
+        // A refresh always seals fresh ciphertext, even if Entra returns identical credential fields.
+        return !!latest && latest.handle === current.handle && latest.encrypted.byteLength === current.encrypted.byteLength &&
+          timingSafeEqual(latest.encrypted, current.encrypted)
+      }
+      const tokens = current.value.tokens
+      const result = await readTeams({
+        principal: { ...principal },
+        tokens: { accessToken: tokens.accessToken, expiresAt: tokens.expiresAt, grantedScopes: tokens.grantedScopes },
+      }).catch((): EntraTeamsResult => ({ state: "unavailable", reason: "provider_unavailable" }))
+      if (!await verifyCurrent()) return { result: { state: "unauthenticated" } }
+      if (result.state === "complete" &&
+          (result.tenantId !== principal.tenantId || result.principalObjectId !== principal.principalObjectId))
+        return { result: { state: "unavailable", reason: "identity_mismatch" } }
+      return { result, verifyCurrent }
+    }
+    : undefined
   const retireSession = async (id: string) => {
     const storageKey = slot("session", id)
     const revokedKey = slot("revoked", id)
@@ -161,7 +184,7 @@ function createIdentity(
         const returnTo = url.searchParams.get("returnTo")
         const login: Login = {
           nonce: randomBytes(32).toString("hex"), verifier,
-          returnTo: safeReturn(corporate && returnTo && returnTo.length > 2048 ? null : returnTo, options.mount),
+          returnTo: safeReturn(corporate && returnTo && returnTo.length > 2048 ? null : returnTo, options.mount, !!corporate && !!observeTeams),
         }
         const storageKey = slot("login", state)
         const issuedAt = now()
@@ -203,7 +226,7 @@ function createIdentity(
       }
       await options.secrets.put(slot("session", id), seal(slot("session", id), value), value.expiresAt)
       responseHeaders.append("set-cookie", cookie("session", id, sessionSeconds))
-      responseHeaders.set("location", safeReturn(login.returnTo, options.mount))
+      responseHeaders.set("location", safeReturn(login.returnTo, options.mount, !!corporate && !!observeTeams))
       return new Response(null, { status: 303, headers: responseHeaders })
     },
     async prepare(request) {
@@ -228,27 +251,9 @@ function createIdentity(
       refreshing.set(current.handle, work)
       await work
     },
-    ...(readTeams && teamTenant && readActiveSession ? {
-      async teamDirectory(request: Request): Promise<EntraTeamsSessionResult> {
-        const current = await teamReadCurrent(request)
-        const principal = current?.value.teamPrincipal
-        if (!current || !principal) return { state: "unauthenticated" }
-        const tokens = current.value.tokens
-        const observed = await readTeams({
-          principal: { ...principal },
-          tokens: { accessToken: tokens.accessToken, expiresAt: tokens.expiresAt, grantedScopes: tokens.grantedScopes },
-        }).catch((): EntraTeamsResult => ({ state: "unavailable", reason: "provider_unavailable" }))
-        const latest = await teamReadCurrent(request)
-        // Every write seals the credential with a fresh IV, including a refresh
-        // that receives the same plaintext fields from Entra.
-        if (!latest || latest.handle !== current.handle || latest.encrypted.byteLength !== current.encrypted.byteLength ||
-            !timingSafeEqual(latest.encrypted, current.encrypted))
-          return { state: "unauthenticated" }
-        if (observed.state === "complete" &&
-            (observed.tenantId !== principal.tenantId || observed.principalObjectId !== principal.principalObjectId))
-          return { state: "unavailable", reason: "identity_mismatch" }
-        return observed
-      },
+    ...(observeTeams ? {
+      observeTeams,
+      async teamDirectory(request: Request) { return (await observeTeams(request)).result },
     } : {}),
     async authenticate(request, context) {
       const current = await ready(request)
@@ -289,9 +294,11 @@ function validSession(value: unknown): value is Session {
 function validLogin(value: unknown): value is Login {
   return value !== null && typeof value === "object" && "nonce" in value && typeof value.nonce === "string" && /^[a-f0-9]{64}$/.test(value.nonce) && "verifier" in value && typeof value.verifier === "string" && /^[A-Za-z0-9_-]{43}$/.test(value.verifier) && "returnTo" in value && typeof value.returnTo === "string"
 }
-function safeReturn(value: string | null, mount: string) {
+function safeReturn(value: string | null, mount: string, teams: boolean) {
   const fallback = `${mount}/dashboard`
   if (!value || !value.startsWith(`${mount}/`) || /[\\\r\n]/.test(value)) return fallback
   const parsed = new URL(value, "http://localhost")
-  return ["dashboard", "planner", "procurement"].some((surface) => parsed.pathname === `${mount}/${surface}`) && parsed.origin === "http://localhost" ? `${parsed.pathname}${parsed.search}` : fallback
+  if (parsed.origin !== "http://localhost") return fallback
+  if (teams && teamBusinessRoute(parsed.pathname, mount)) return parsed.pathname
+  return ["dashboard", "planner", "procurement"].some((surface) => parsed.pathname === `${mount}/${surface}`) ? `${parsed.pathname}${parsed.search}` : fallback
 }

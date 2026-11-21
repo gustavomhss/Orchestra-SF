@@ -6,7 +6,9 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { exportJWK, generateKeyPair, SignJWT } from "jose"
 import { createMicrosoftInstallation } from "../local/microsoft-entry.ts"
+import { digestSfValue } from "../product/contracts/canonical.ts"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
+import type { LocalConfiguration } from "../runtime/local-configuration.ts"
 import { bindMicrosoftInstallation } from "../runtime/microsoft-configuration.ts"
 import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 
@@ -32,6 +34,7 @@ async function fixture(
   teams: "direct" | undefined,
   fetch: (request: Request) => Promise<Response>,
   enabledTeamIds?: unknown,
+  groups: LocalConfiguration["groups"] = { dashboard: {}, planner: {}, procurement: {} },
 ) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sf-microsoft-installation-"))
   const directory = join(root, "installation")
@@ -42,7 +45,7 @@ async function fixture(
     await writeFile(file, JSON.stringify({
       version: 1, deployment: "azure-https", authentication: "microsoft",
       origin, listenerOrigin, ingressOrigin, mount, tenantId, clientId, workspaceDirectory,
-      groups: { dashboard: {}, planner: {}, procurement: {} },
+      groups,
       grants: [{ principalRef: grantPrincipal.toUpperCase(), operations: ["sf_case_read"] }],
       supremeAdminGroupId: grantPrincipal.toUpperCase(), scanner: null,
       ...(teams ? { teams } : {}),
@@ -74,6 +77,7 @@ async function fixture(
       { fetch, now: () => new Date(epoch * 1000) })
     return {
       installation,
+      directory,
       async close() {
         try { await installation.dispose() }
         finally { await rm(root, { recursive: true, force: true }) }
@@ -91,7 +95,8 @@ const discovery = () => Response.json({
   token_endpoint: authority + "/oauth2/v2.0/token",
   jwks_uri: authority + "/discovery/v2.0/keys",
 })
-const ingress = (relative: string, headers?: Record<string, string>) => new Request(ingressOrigin + mount + relative, {
+const ingress = (relative: string, headers?: Record<string, string>, init?: Pick<RequestInit, "method" | "body">) => new Request(ingressOrigin + mount + relative, {
+  ...init,
   headers: { host: new URL(ingressOrigin).host, ...headers },
 })
 
@@ -103,7 +108,7 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
   const finance = { id: teamObjectId, tenantId, displayName: "Finance", isArchived: false }
   const planning = { ...finance, id: secondTeamId, displayName: "Planning" }
   const disabled = { ...finance, id: disabledTeamId, displayName: "Disabled" }
-  const membership = { teams: [finance, disabled], incomplete: false, down: false }
+  const membership = { teams: [finance, disabled], incomplete: false, down: false, group: true, revokeAfterRoleCheck: false }
   const f = await fixture("direct", async (request) => {
     const url = new URL(request.url)
     if (url.href === authority + "/v2.0/.well-known/openid-configuration") return discovery()
@@ -122,6 +127,12 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
       graphCalls.push(url.pathname)
       expect(request.headers.get("authorization")).toBe("Bearer " + accessToken)
       if (url.pathname === "/v1.0/me") return Response.json({ id: oid, displayName: "Verified person" })
+      if (url.href === graph + "/me/checkMemberGroups") {
+        expect(request.method).toBe("POST")
+        expect(await request.json()).toEqual({ groupIds: [grantPrincipal] })
+        if (membership.revokeAfterRoleCheck) membership.teams = [planning, disabled]
+        return Response.json({ value: membership.group ? [grantPrincipal] : [] })
+      }
       if (url.href === graph + "/me/joinedTeams") {
         if (membership.down) return new Response(null, { status: 503 })
         return Response.json({
@@ -131,7 +142,11 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
       }
     }
     throw new Error("Unexpected synthetic Microsoft request")
-  }, [teamObjectId.toUpperCase(), secondTeamId])
+  }, [teamObjectId.toUpperCase(), secondTeamId], {
+    dashboard: { admin: "group:" + grantPrincipal },
+    planner: { viewer: "group:" + grantPrincipal },
+    procurement: { buyer: "group:" + grantPrincipal },
+  })
   try {
     expect(f.installation.mount).toBe(mount)
     expect(f.installation.trustedIngress.origin).toBe(ingressOrigin)
@@ -162,9 +177,11 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     const headers = { cookie: sessionCookie.split(";")[0] }
     const callbackTarget = new URL(finish!.headers.get("location")!, origin)
     expect(callbackTarget.href).toBe(origin + mount + "/dashboard")
-    expect((await f.installation.handler(ingress(callbackTarget.pathname.slice(mount.length), {
-      ...headers, "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "document",
-    })))?.status).toBe(204)
+    const callbackHeaders = { ...headers, "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "document" }
+    const landing = await f.installation.handler(ingress(callbackTarget.pathname.slice(mount.length), callbackHeaders))
+    expect(landing?.status).toBe(303)
+    const teamPath = (id: string, surface: string) => "/teams/" + id + "/" + surface
+    expect(landing?.headers.get("location")).toBe(mount + teamPath(teamObjectId, "dashboard"))
     expect(await f.installation.handler(ingress("/teams", headers))).toBeUndefined()
     expect((await f.installation.handler(ingress("/auth/login", { host: "foreign.example.test" })))?.status).toBe(403)
     expect((await f.installation.handler(new Request(listenerOrigin + mount + "/auth/login", {
@@ -189,6 +206,16 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     expect((await f.installation.handler(ingress("/dashboard?teamObjectId=" + teamObjectId, headers)))?.status).toBe(403)
     expect(graphCalls).toEqual(["/v1.0/me", ...read, ...read])
 
+    expect((await f.installation.handler(ingress(teamPath(teamObjectId, "dashboard"), callbackHeaders)))?.status).toBe(200)
+    for (const surface of ["planner", "procurement"]) {
+      const redirect = await f.installation.handler(ingress("/" + surface, headers))
+      expect(redirect?.status).toBe(303)
+      expect(redirect?.headers.get("location")).toBe(mount + teamPath(teamObjectId, surface))
+    }
+    const head = await f.installation.handler(ingress(teamPath(teamObjectId, "planner"), headers, { method: "HEAD" }))
+    expect(head?.status).toBe(200)
+    expect(await head?.text()).toBe("")
+
     membership.teams = [finance, planning, disabled]
     const selection = await dashboard()
     expect(selection?.status).toBe(409)
@@ -200,14 +227,80 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     const selector = (target: unknown) => ({
       "x-sf-team-profile": JSON.stringify({ contractRevision: "sf-team-profile/1", kind: "team", profile: target }),
     })
-    expect((await dashboard(selector(profile)))?.status).toBe(204)
+    const selectedDashboard = await dashboard(selector(profile))
+    expect(selectedDashboard?.status).toBe(303)
+    expect(selectedDashboard?.headers.get("location")).toBe(mount + teamPath(secondTeamId, "dashboard"))
     expect((await dashboard({
       ...selector(profile), "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "document",
     }))?.status).toBe(403)
-    expect((await f.installation.handler(ingress("", { ...headers, ...selector(profile) })))?.status).toBe(204)
+    const selectedRoot = await f.installation.handler(ingress("", { ...headers, ...selector(profile) }))
+    expect(selectedRoot?.status).toBe(303)
+    expect(selectedRoot?.headers.get("location")).toBe(mount + teamPath(secondTeamId, "dashboard"))
     expect((await dashboard(selector({ ...profile, teamObjectId: disabledTeamId })))?.status).toBe(403)
     expect((await dashboard(selector({ ...profile, installationId: "other-installation" })))?.status).toBe(403)
     expect((await dashboard(selector({ ...profile, tenantId: clientId })))?.status).toBe(403)
+
+    const suppliers = (id: string, fields?: Record<string, string>) => f.installation.handler(
+      ingress(teamPath(id, "procurement") + "?page=Suppliers", { ...headers, ...fields }),
+    )
+    const createSupplier = (id: string, legalName: string, fields?: Record<string, string>) => f.installation.handler(
+      ingress(teamPath(id, "procurement"), { ...headers, "content-type": "application/json", ...fields }, {
+        method: "POST", body: JSON.stringify({ page: "Suppliers", action: "create", version: 0, values: { legalName } }),
+      }),
+    )
+    expect((await suppliers(teamObjectId, selector(profile)))?.status).toBe(403)
+    expect((await createSupplier(teamObjectId, "Missing origin"))?.status).toBe(403)
+    expect((await createSupplier(teamObjectId, "Wrong origin", { origin: ingressOrigin }))?.status).toBe(403)
+    expect((await createSupplier(teamObjectId, "Cross Team", { origin, ...selector(profile) }))?.status).toBe(403)
+    expect((await createSupplier(teamObjectId, "Finance supplier", { origin }))?.status).toBe(200)
+    expect((await createSupplier(secondTeamId, "Planning supplier", { origin }))?.status).toBe(200)
+    for (const [id, own, other] of [
+      [teamObjectId, "Finance supplier", "Planning supplier"],
+      [secondTeamId, "Planning supplier", "Finance supplier"],
+    ] as const) {
+      const read = await suppliers(id)
+      expect(read?.status).toBe(200)
+      const html = await read!.text()
+      expect(html).toContain(`data-logout="${mount}/auth"`)
+      expect(html).toContain(own)
+      expect(html).not.toContain(other)
+      const partition = digestSfValue({ installationId: profile.installationId, tenantId, teamObjectId: id })
+      expect(await Bun.file(join(f.directory, "business-teams", partition, "installation.sqlite")).exists()).toBe(true)
+    }
+
+    membership.group = false
+    expect((await suppliers(teamObjectId))?.status).toBe(403)
+    membership.group = true
+    membership.revokeAfterRoleCheck = true
+    expect((await createSupplier(teamObjectId, "Revoked before commit", { origin }))?.status).toBe(403)
+    membership.revokeAfterRoleCheck = false
+    expect((await suppliers(teamObjectId))?.status).toBe(403)
+    membership.teams = [finance, planning, disabled]
+    membership.revokeAfterRoleCheck = true
+    const revokedRead = await suppliers(teamObjectId)
+    expect(revokedRead?.status).toBe(403)
+    expect(await revokedRead?.text()).not.toContain("Finance supplier")
+    membership.revokeAfterRoleCheck = false
+    membership.teams = [finance, planning, disabled]
+    const staleImport = () => f.installation.handler(ingress(teamPath(teamObjectId, "dashboard"), {
+      ...headers, origin, "content-type": "application/json",
+    }, {
+      method: "POST", body: JSON.stringify({
+        page: "Executive Dashboard", action: "backup-import", version: 999, confirmed: true, values: { data: {} },
+      }),
+    }))
+    expect((await staleImport())?.status).toBe(409)
+    membership.revokeAfterRoleCheck = true
+    const revokedConflict = await staleImport()
+    expect(revokedConflict?.status).toBe(403)
+    expect(await revokedConflict?.text()).toBe("")
+    membership.revokeAfterRoleCheck = false
+    membership.teams = [finance, planning, disabled]
+    const restored = await suppliers(teamObjectId)
+    expect(restored?.status).toBe(200)
+    const restoredHtml = await restored!.text()
+    expect(restoredHtml).toContain("Finance supplier")
+    expect(restoredHtml).not.toContain("Revoked before commit")
 
     membership.teams = [finance, disabled, { ...planning, isArchived: true }]
     expect((await dashboard(selector(profile)))?.status).toBe(403)
@@ -221,6 +314,13 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     membership.down = false
     membership.teams = [disabled]
     expect((await f.installation.handler(ingress("", headers)))?.status).toBe(403)
+
+    const logout = await f.installation.handler(ingress("/auth/logout", { ...headers, origin }, { method: "POST" }))
+    expect(logout?.status).toBe(204)
+    const signedOut = await f.installation.handler(ingress("/auth/signed-out"))
+    expect(signedOut?.status).toBe(200)
+    expect(await signedOut?.text()).toContain(`href="${mount}/auth/login"`)
+    expect((await suppliers(teamObjectId))?.status).toBe(303)
   } finally { await f.close() }
 })
 
