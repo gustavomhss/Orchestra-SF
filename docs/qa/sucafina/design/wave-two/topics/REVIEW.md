@@ -22,7 +22,7 @@ The header primary action is shown only on the entry route, so editors and delet
 
 ## Preserved behavior
 
-The original `remove()` and `save()` function bodies are byte-identical. Reader, route codec, owner selection, admission, draft acquire identity, CAS expected version, payload digest, idempotency and unknown-outcome fences remain. Commands still require the existing explicit confirmation. The current source is never replaced by a synthetic result.
+The original `remove()` body is byte-identical. The save command, payload, digest, CAS, idempotency and unknown-outcome branches remain; the post-confirmation lifecycle repair below adds a presentation notification. Reader, route codec, owner selection, admission and draft acquire identity are unchanged. Commands still require the existing explicit confirmation. The current source is never replaced by a synthetic result.
 
 Presentation changes include focused return from review, 44px targets, secondary metadata disclosure, translated status/priority values in review, and explicit Not specified presentation for empty review fields. No amount, total, priority, history or receipt is invented. Back/discard are disabled while actively saving; pending operations keep the original discard fence and Back retains the existing reconciliation navigation.
 
@@ -50,4 +50,16 @@ Primary localization reference inspected: Mozilla Firefox's maintained pt-BR glo
 
 ## Validation and limits
 
-No local build, test, app execution or owner-app restart. Root owns the consolidated Actions run and actual dark/light, Portuguese and narrow captures. Static source comparison confirmed unchanged save/remove bodies and preservation of all existing catalog pairs. The new source has not yet been runtime validated, visually accepted or assigned a golden baseline. Narrow CSS is not evidence of browser zoom. Post-save source refresh and owner draft lifecycle retain the original implementation and must be exercised through the real installation.
+No local build, test, app execution or owner-app restart. Root owns the consolidated Actions run and actual dark/light, Portuguese and narrow captures. Static source comparison confirmed unchanged remove logic, preserved save dispatch/admission semantics and preservation of all existing catalog pairs. The new source has not yet been runtime validated, visually accepted or assigned a golden baseline. Narrow CSS is not evidence of browser zoom. Post-save source refresh and owner draft lifecycle retain the original implementation and must be exercised through the real installation.
+
+## Inherited confirmation lifecycle repair
+
+Source inspection during the first consolidated Actions run identified a concrete lifetime bug: the editor set its saved feedback, then immediately refreshed CAP02. The reader publishes loading and clears records; SfStatePanel removes children during loading. This destroyed the confirmed editor/notice and, on the new route, could create another blank draft immediately after the successful command.
+
+The page now retains only a confirmation marker consisting of the owner generation and editor route scope. The notification is accepted only from the exact transport that sent the successful command and only while the current owner still admits CAP02 read access. The marker clears on owner generation, read authority or editor route change; no field values, producer projection, receipt or permission are cached.
+
+The actual source refresh still runs immediately after the confirmed command. The stable success panel remains outside the read-loading boundary, so read failure can be shown separately without pretending that the command failed. The normal new/edit component cannot remount while confirmation is visible, preventing a replacement draft and accidental repeat. Back returns to the authorized list that is being reread. Clicking New topic from the list begins a new editor instance.
+
+The final action remains **Back to topics / Voltar aos tópicos**. Success is now `[data-sf-topic-confirmed] [data-topic-feedback="saved"]`, outside `[data-sf-topic-editor]`. The success panel contains no form, review button or send action. Transport capture occurs immediately before the existing client call; it changes no request parameters and lets a late response from an old owner be rejected by the presentation callback.
+
+Inspection of the owner registry showed Map-backed acquire and a draft constructor that does not read its snapshot. No reactive self-subscription was observed there, so no speculative untrack was added. Runtime proof of the repair remains the responsibility of the consolidated real-installation journey.

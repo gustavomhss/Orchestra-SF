@@ -49,6 +49,7 @@ export type HotTopicEditProps = Readonly<{
   drafts: SfDraftRegistry
   canSave: boolean
   onRefetch: () => void
+  onSaved?: (transport: SfTransport) => void
   scope: string
   readInput: SfJson
   onBack: () => void
@@ -128,7 +129,8 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
       draft().setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: props.record ? props.version ?? 0 : null })
       if (!active()?.pendingOperation) {setFeedback("conflict");return}
       draft().setPhase("submitting")
-      const result = await createSfPeopleClient(props.transport)["domain.command.CAP02.save"]({
+      const transport = props.transport
+      const result = await createSfPeopleClient(transport)["domain.command.CAP02.save"]({
         ...(props.record ? { id: props.record.id } : {}), version: props.version ?? 0,
         values: { action: proposed.action, owner: proposed.owner, due: proposed.due,
           status: proposed.status, priority: proposed.priority, notes: proposed.notes },
@@ -144,6 +146,7 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
       }
       draft().confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
       setFeedback("saved")
+      props.onSaved?.(transport)
       props.onRefetch()
     } catch {
       draft().setPhase("outcome-unknown");setFeedback("unknown")
