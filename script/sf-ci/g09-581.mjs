@@ -17,7 +17,7 @@ const optional = async (name) => {
 async function audit() {
   assert.deepEqual([env.GITHUB_ACTIONS, env.GITHUB_REPOSITORY, Number(env.GITHUB_REPOSITORY_ID), env.RUNNER_OS,
     env.RUNNER_ARCH, env.GITHUB_REF],
-  ["true", original.repository, original.repositoryId, "Linux", "X64", "refs/heads/g09-c17-ledger"])
+  ["true", original.repository, original.repositoryId, "Linux", "X64", "refs/heads/g09-bun-ledger"])
   const candidate = await realpath(candidateArg)
   const producer = await realpath(producerArg)
   const verified = verifyGitSource(await read("source.commit"), await read("source.tree"), original.sourceSHA)

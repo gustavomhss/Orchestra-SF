@@ -1,5 +1,5 @@
 name: G09 historical package proof
-run-name: "G09 C17 Linux · 44919211871"
+run-name: "G09 C17 Linux · 44924237467"
 
 on:
   workflow_dispatch:
@@ -14,14 +14,14 @@ permissions:
 
 jobs:
   g09:
-    if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/g09-c17-ledger'
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/g09-bun-ledger'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
-      PACKAGE_SHA: 761abac2f8ee4106db0347189ff304a4a79bf026
-      PRODUCER_SHA: 652fc3d2d251edbf843d9e219a3435248bf3dec5
-      ZIP_SHA: c3a31e10b25e81cc1b6e8234f77ed16ed6ea86c4d3c7e6026b67f5fc6187e8e7
-      TAR_SHA: 7a2ab7102528a7de1998b30635bb02e3907ea1afc033e07d71c12cc6906158e9
+      PACKAGE_SHA: aff245e1aaf79a38548e50da6c8e7763d2e1ae01
+      PRODUCER_SHA: a4c4ec4a20bef465505aba3671b1e9c90f43f9f5
+      ZIP_SHA: ec102a042d20e9145c6b7f917158859f193f62711f263fc45e76f216f80dc2e8
+      TAR_SHA: 1032007345eb3e8584063fc2999ce3c7eafbf5bc3e4e77649b7827c9cf1c63a0
     steps:
       - name: Check out G09 verifier
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
@@ -52,9 +52,9 @@ jobs:
           test "$(git -C auditor rev-parse HEAD)" = "$GITHUB_SHA"
           test "$(git -C candidate rev-parse HEAD)" = "$PACKAGE_SHA"
           test "$(git -C producer rev-parse HEAD)" = "$PRODUCER_SHA"
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs/44919211871" > "$out/producer-run.json"
-          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14713077730" > "$out/producer-artifact.json"
-          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14713077730/zip" > "$out/original.zip"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/44924237467" > "$out/producer-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14715072445" > "$out/producer-artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14715072445/zip" > "$out/original.zip"
           printf '%s  %s\n' "$ZIP_SHA" "$out/original.zip" | sha256sum --check
           for name in orchestra-sf-entra-linux-x64-baseline.tar.gz orchestra-sf-entra-package-receipt.json ci-validation.json compile-evidence.json compile-provenance.json web-build-manifest.json; do
             unzip -p "$out/original.zip" "$name" > "$out/$name"
@@ -73,7 +73,7 @@ jobs:
             git -C "$checkout" cat-file commit HEAD > "$out/$identity.commit"
             git -C "$checkout" ls-tree -r -z HEAD > "$out/$identity.tree"
           done
-      - name: Verify tar and run only the G09 controls
+      - name: Verify the exact tar and prepare the scanner
         working-directory: auditor
         shell: bash
         run: |
@@ -84,6 +84,13 @@ jobs:
             --receipt "$out/orchestra-sf-entra-package-receipt.json" --candidate "$PACKAGE_SHA" --sha256 "$TAR_SHA"
           npm install --ignore-scripts --no-package-lock --no-save --prefix "$out/dependencies" typescript@5.9.3
           ln -s "$out/dependencies/node_modules" node_modules
+      - name: Run the G09 controls for the signed qualification
+        if: inputs.evidence_artifact_id != ''
+        working-directory: auditor
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/g09"
           SF_PRODUCT_SOURCE_SHA="$GITHUB_SHA" SF_TEAMS_RESIDUE_COMMIT_FILE="$out/tool.commit" \
             SF_TEAMS_RESIDUE_TRACKED_FILE="$out/tool.tree" SF_TEAMS_RESIDUE_CONTROLS_FILE="$out/controls.json" \
             node --test script/sf-ci/team-profile-residue.test.mjs script/sf-ci/g09-581-package.test.mjs | tee "$out/controls.log"
@@ -96,7 +103,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: g09-c17-ledger-evidence
+          name: g09-bun-ledger-evidence
           path: |
             ${{ runner.temp }}/g09/report.json
             ${{ runner.temp }}/g09/controls.json

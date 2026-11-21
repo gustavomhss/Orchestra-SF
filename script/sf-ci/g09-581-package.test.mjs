@@ -5,7 +5,7 @@ import { original, verifyOriginalBytes, verifyProducer } from "./g09-581-package
 const run = {
   id: original.runId, run_attempt: original.runAttempt, workflow_id: original.workflowId,
   path: ".github/workflows/app-build.yml", status: "completed", conclusion: "success", event: "workflow_dispatch",
-  head_sha: original.workflowSHA, head_branch: "azure-package-proof",
+  head_sha: original.workflowSHA, head_branch: "c17-bun-proof",
   repository: { id: original.repositoryId, full_name: original.repository },
 }
 const artifact = {
