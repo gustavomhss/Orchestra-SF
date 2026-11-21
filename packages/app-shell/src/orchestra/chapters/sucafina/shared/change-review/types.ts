@@ -59,6 +59,7 @@ export type SfChangeReviewProps = Readonly<{
   blockingReasons: readonly SfMessage[]
   confirmation: SfReviewConfirmation
   state: SfUiState
+  busy?: boolean
   onConfirm: (review: Extract<SfReviewConfirmation, { kind: "admitted" }>) => void
   onRevise: () => void
   onCancel: () => void
