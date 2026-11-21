@@ -139,11 +139,13 @@ export function createThreadHistory(input: {
       const revised = { ...prior, messages: prior.messages.map((entry) => entry.id === message.id ? { ...entry, body: selected.body, version: entry.version + 1, sourceContext: basis } : entry), messageRevisions: [...(prior.messageRevisions ?? []), message] }
       const installedCurrent = () => ownReview && current() && input.replayCurrent === framework && framework?.() === true &&
         input.prepareEditReceipt === prepareEditReceipt && input.prepareReviewThreadFence === prepareReviewFence
+      let stagedEdit = false
       const work = async (state: SfProductState, authority: SfStateAuthority) => {
         if (ownReview && !installedCurrent()) return { commit: false, value: 0 }
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.edit", selected) || basis.reviewContext && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence || prior.recipientRef && (input.checkReviewRecipientAtCommit !== checkReviewRecipient || !checkReviewRecipient || !checkReviewRecipient(prior.recipientRef, basis, context) || input.checkReviewRecipientAtCommit !== checkReviewRecipient)) || !input.fence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || message.version !== selected.expectedVersion || prior.state !== "open") return { commit: false, value: 0 }
         if (ownReview && !installedCurrent()) return { commit: false, value: 0 }
         state.threads[id] = revised
+        stagedEdit = true
         return { commit: true, value: message.version + 1 }
       }
       if (ownReview) stageSfReviewThreadWrite(work)
@@ -155,12 +157,14 @@ export function createThreadHistory(input: {
       // A fresh installed self edit returns only its receipt. Reobserve its
       // entire committed row and its live source independently under a seal.
       const basisDigest = digestSfValue(basis)
-      if (ownReview && reviewFence && prepareEditReceipt && saved.value === selected.expectedVersion + 1 &&
+      if (stagedEdit && ownReview && reviewFence && prepareEditReceipt && saved.value === selected.expectedVersion + 1 &&
         [...prior.messages, ...(prior.messageRevisions ?? [])].every((entry) => digestSfValue(threadMessageContext(prior, entry)) === basisDigest)) {
         if (!installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
         const continuity = await prepareEditReceipt(prior, basis, context, installedCurrent)
-        if (!installedCurrent() || !await revalidate.call(host, context) || !installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
-        if (!continuity) return { status: "unavailable", reason: "thread-receipt-unavailable" }
+        if (!installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
+        if (!continuity) return await revalidate.call(host, context) && installedCurrent()
+          ? { status: "unavailable", reason: "thread-receipt-unavailable" }
+          : { status: "denied", reason: "thread-access-unavailable" }
         if (continuity !== "reissue") {
           const confirmed = await captureReceipt({ questionId: id, threadDigest: digestSfValue(revised) }, async () =>
             installedCurrent() && continuity() && await reviewFence() && continuity() &&
