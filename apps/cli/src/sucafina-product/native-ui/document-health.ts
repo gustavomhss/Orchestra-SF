@@ -36,7 +36,7 @@ export async function observeSfDocumentHealth(input: {
       digestSfValue(stamp) === digestSfValue(expectedStamp)
   }
   const grants = await authority.readDocumentGrants(request, expectedStamp)
-  if (!grants?.extract) return []
+  if (!grants) return []
   const [read, write] = await Promise.all([
     authority.state.read(request, "documents", selectSfNamespaceHealth("documents", expectedStamp)),
     authority.state.read(request, "documents", selectSfNamespaceHealth("documents", expectedStamp, "write")),
@@ -47,13 +47,13 @@ export async function observeSfDocumentHealth(input: {
 
   const service = source.service
   const candidates = [
-    ["files.document-requests", "GET", "read", service.discoverRequests, true],
-    ["files.document-sources", "GET", "read", service.discover, true],
-    ["files.document-admit", "POST", "mutation", service.admitSelection, canWrite],
-    ["files.document-candidates", "GET", "read", service.documents.list, true],
-    ["files.document-schemas", "GET", "read", service.schemas.list, true],
+    ["files.document-requests", "GET", "read", service.discoverRequests, grants.extract],
+    ["files.document-sources", "GET", "read", service.discover, grants.extract],
+    ["files.document-admit", "POST", "mutation", service.admitSelection, canWrite && grants.extract],
+    ["files.document-candidates", "GET", "read", service.documents.list, grants.extract],
+    ["files.document-schemas", "GET", "read", service.schemas.list, grants.extract],
     ["files.document-schema", "POST", "mutation", service.schemas.register, canWrite && grants.schema],
-    ["files.document-extract", "POST", "mutation", service.documents.extract, canWrite],
+    ["files.document-extract", "POST", "mutation", service.documents.extract, canWrite && grants.extract],
     ["files.document-confirm", "POST", "mutation", service.documents.confirm, canWrite && grants.confirm],
     ["files.document-open", "GET", "read", service.documents.resolvePresentation, grants.open],
     ["files.document-search", "POST", "read", service.documents.search, grants.search],
