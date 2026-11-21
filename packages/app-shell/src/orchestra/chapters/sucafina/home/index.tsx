@@ -364,6 +364,29 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
                   <Icon name="status" size="small" />
                   <h2 id="sf-u01-forecast">{t(key("sf.ui29.forecast"))}</h2>
                 </div>
+                <Show when={attention.totals && (
+                  attention.forecastState === "ready" || attention.forecastState === "empty" ||
+                  attention.forecastState === "partial" || attention.forecastState === "stale" ||
+                  attention.forecastState === "conflict" || attention.forecastState === "filtered-empty"
+                )}>
+                  <details class="sf-today-source">
+                    <summary>
+                      <Icon name="link" size="small" />
+                      <span>{t(key("sf.ui29.forecastSource"))}</span>
+                      <Icon name="chevron-down" size="small" />
+                    </summary>
+                    <dl class="sf-today-provenance">
+                      <div>
+                        <dt>{t(key("sf.ui29.forecastSource"))}</dt>
+                        <dd><code>CAP01</code></dd>
+                      </div>
+                      <div>
+                        <dt>{t(key("sf.ui29.owner"))} / {t(key("sf.ui29.deadline"))}</dt>
+                        <dd>{t(key("sf.ui29.notProjected"))}</dd>
+                      </div>
+                    </dl>
+                  </details>
+                </Show>
               </header>
               <SfStatePanel state={attention.forecastState} messageKey={key(attentionMessage(attention.forecastState))} onRetryRead={refresh}>
                 <Show when={attention.totals}>{(totals) => (
@@ -382,23 +405,6 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
                         <dd>{formatNumber(totals().capexForecast)}</dd>
                       </div>
                     </dl>
-                    <details class="sf-today-source">
-                      <summary>
-                        <Icon name="link" size="small" />
-                        <span>{t(key("sf.ui29.forecastSource"))}</span>
-                        <Icon name="chevron-down" size="small" />
-                      </summary>
-                      <dl class="sf-today-provenance">
-                        <div>
-                          <dt>{t(key("sf.ui29.forecastSource"))}</dt>
-                          <dd><code>CAP01</code></dd>
-                        </div>
-                        <div>
-                          <dt>{t(key("sf.ui29.owner"))} / {t(key("sf.ui29.deadline"))}</dt>
-                          <dd>{t(key("sf.ui29.notProjected"))}</dd>
-                        </div>
-                      </dl>
-                    </details>
                   </div>
                 )}</Show>
               </SfStatePanel>
