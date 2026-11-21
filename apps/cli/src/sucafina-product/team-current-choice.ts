@@ -8,6 +8,8 @@ import residentManifest from "../../../../modules/sucafina/Sucafinav1/product/ai
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { readRequestBody } from "../../../../modules/sucafina/Sucafinav1/runtime/request-body.ts"
+import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import type { SfProductState } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions, type CurrentChoiceFence } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
 import { probeSfAtlasScanner } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"
@@ -55,7 +57,7 @@ export function createSfTeamCurrentChoice() {
   return {
     sources: (persistence: LocalStore) => createSfSourcePersistence({
       persistence, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => new Date().toISOString()),
-      createId: randomUUID,
+      createId: randomUUID, bootstrapOnWrite: true,
     }),
     handles: (request: Request) => modes.has(new URL(request.url).searchParams.get("sf") ?? ""),
     async run(input: {
@@ -139,9 +141,19 @@ export function createSfTeamCurrentChoice() {
         authorizeDocument: async () => undefined,
       })
       if (!await input.current()) return denied()
-      // BI is the first admitted source selection in this flow. CurrentChoice
-      // itself never initializes business state on a read or a rejected prepare.
-      if (mode === "bi-options" && request.method === "GET" && allowed.operations.includes("sf_bi_view")) {
+      // Existing Teams may have decisions but no source catalog. Start it
+      // only on an authorized, canonical case page, never on a failed write.
+      if ((mode === "decision-controls" || mode === "current-choice") &&
+          (request.method === "GET" || request.method === "HEAD") &&
+          [...url.searchParams].every(([key, value]) => ["sf", "case", "format"].includes(key) &&
+            url.searchParams.getAll(key).length === 1 && (key !== "format" || value === "json"))) {
+        const wanted = url.searchParams.get("case")
+        const canOpen = !wanted || await driver.transaction("dashboard", async (snapshot) => {
+          const data = snapshot.data.__sfProductV1 as SfProductState | undefined
+          return { commit: false, value: Object.values(data?.cases ?? {}).some((decision) =>
+            decision.participants.includes(input.principalId) && encodeCaseRef(decision) === wanted) }
+        }, { signal: request.signal })
+        if (!canOpen || !await input.current()) return denied()
         for (const surface of ["dashboard", "planner", "procurement"] as const) await sources.initializeSources(surface)
         await initializeAbsentSfProductState(persistence, randomUUID)
       }
