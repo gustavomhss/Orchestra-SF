@@ -346,12 +346,15 @@ function applyRefresh() {
     pending.focus = null
   }
 }
+let backgroundRefresh
+document.addEventListener("sucafina:review-navigation-start", () => backgroundRefresh?.abort())
 async function refresh(silent = false) {
-  if (pending.closed) return
+  if (pending.closed || silent && document.querySelector("[data-sf-review-workspace][data-sf-review-navigating]")) return
   if (pending.loading) { if (!silent) pending.again = true; return }
   const generation = pending.generation
   pending.loading = true
   pending.controller = new AbortController()
+  if (silent) backgroundRefresh = pending.controller
   const deadline = setTimeout(() => pending.controller?.abort(), 10000)
   try {
     const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: pending.controller.signal })
@@ -371,7 +374,7 @@ async function refresh(silent = false) {
     if (!silent && document.querySelector("form[data-dirty]")) notice("Refresh received. Your unsaved edits are preserved; save or discard them before updating this view.")
     applyRefresh()
   } catch { if (!silent && !pending.closed) notice("Could not refresh. Your current view and unsaved edits are unchanged. Try again.") }
-  finally { clearTimeout(deadline); pending.loading = false; pending.controller = null; if (pending.again) { pending.again = false; void refresh() } }
+  finally { clearTimeout(deadline); backgroundRefresh = undefined; pending.loading = false; pending.controller = null; if (pending.again) { pending.again = false; void refresh() } }
 }
 const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); if (!outstandingCommand(form)) discardDashboardPreview(form) } }
 document.addEventListener("input", markDirty)

@@ -27,6 +27,7 @@ if (root && bootstrap) {
   const clearPrivate = () => {
     if (closed) return
     closed = true; generation += 1
+    root.removeAttribute("data-sf-review-navigating")
     for (const controller of pending) controller.abort()
     pending.clear(); dispose(); bootstrap.remove()
     const message = document.createElement("p"); message.setAttribute("role", "status"); message.textContent = "O acesso mudou. Reabra uma revisão autorizada."
@@ -177,7 +178,23 @@ if (root && bootstrap) {
         if (!closed) history.replaceState(history.state, "", previousReviewRef
           ? sfReviewNavigationUrl(location.href, { previousReviewRef }) : preparationUrl)
       },
-      openReview: (reference) => { if (!closed) location.assign(reviewUrl(reference)) } })
+      openReview: (reference) => {
+        if (closed || root.hasAttribute("data-sf-review-navigating")) return
+        const destination = reviewUrl(reference)
+        const navigation = (window as Window & { navigation?: {
+          navigate: (url: string) => { committed: Promise<unknown>; finished: Promise<unknown> }
+        } }).navigation
+        if (typeof navigation?.navigate !== "function") { location.assign(destination); return }
+        const resume = () => root.removeAttribute("data-sf-review-navigating")
+        root.setAttribute("data-sf-review-navigating", "")
+        root.dispatchEvent(new Event("sucafina:review-navigation-start", { bubbles: true }))
+        try {
+          // The outgoing document remains alive until the destination commits.
+          // Let this actual navigation settle before resuming its background poll.
+          const transition = navigation.navigate(destination.href)
+          void Promise.all([transition.committed, transition.finished]).then(resume, resume)
+        } catch { resume() }
+      } })
     const choices = document.createElement("fieldset"), legend = document.createElement("legend"), message = document.createElement("p")
     legend.textContent = "Seleção da revisão sucessora"; choices.append(legend); message.setAttribute("role", "status")
     const checks: HTMLInputElement[] = []
