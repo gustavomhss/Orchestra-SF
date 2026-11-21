@@ -418,8 +418,8 @@ export async function restoreBackup(
       who: actor.id,
       at,
       record: "dataset",
-      was: previous,
-      became: structuredClone(snapshot.data),
+      was: corporate ? { datasetVersion: expectedVersion } : previous,
+      became: corporate ? { datasetVersion: expectedVersion + 1 } : structuredClone(snapshot.data),
     })
     // Existing delivery history and pending notices are not replayed by restoring an older dataset.
     if (corporate && !await corporate.verifyCurrent())

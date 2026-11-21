@@ -146,6 +146,9 @@ test("external restore comparison rejects a stale effect frontier and restore ke
     expect(recovered.data[SF_PROCUREMENT_CREATE_RECEIPTS]).toEqual({ confirmed: true })
     expect(Object.hasOwn(publicSfData(recovered.data), SF_PROCUREMENT_CREATE_RECEIPTS)).toBe(false)
     expect(inspectSfProductRestoreFrontier(recovered)).toEqual(frontier)
+    expect(recovered.audit.at(-1)).toEqual({
+      who: actor.id, at, record: "dataset", was: { datasetVersion: 0 }, became: { datasetVersion: 1 },
+    })
     await store.dispose()
 
     const reopened = await open()
