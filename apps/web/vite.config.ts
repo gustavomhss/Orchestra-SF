@@ -35,6 +35,13 @@ const shellFixtures: Plugin = {
   },
 }
 
+// The selected Files browser lane shares one public origin with its private fixture.
+const filesUpstream = process.env.ORCHESTRA_SF_E2E_UPSTREAM
+if (filesUpstream && filesUpstream !== "http://127.0.0.1:4174")
+  throw new Error("The Files browser fixture must use its owned loopback listener")
+const filesProxy = filesUpstream ? Object.fromEntries(["/api", "/sucafina"].map((prefix) =>
+  [prefix, { target: filesUpstream, changeOrigin: false }])) : undefined
+
 export default defineConfig({
   publicDir: fileURLToPath(new URL("../../packages/app-shell/public", import.meta.url)),
   plugins: [desktopPlugin, shellFixtures, sentry] as any,
@@ -43,6 +50,7 @@ export default defineConfig({
     allowedHosts: true,
     port: 3000,
   },
+  preview: { proxy: filesProxy },
   build: {
     target: "esnext",
     sourcemap: true,

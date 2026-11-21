@@ -74,6 +74,10 @@ jobs:
             platform: process.platform, arch: process.arch, sha: process.env.GITHUB_SHA }))
           appendFileSync(process.env.GITHUB_OUTPUT,
             `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\n`)
+          const filesPair = request.package === 'app' && request.directory === 'packages/app-shell' &&
+            request.runner === 'playwright' && request.config === 'e2e/playwright.production.config.ts' &&
+            request.args.length === 1 && request.args[0] === 'e2e/sucafina/operations.spec.ts'
+          appendFileSync(process.env.GITHUB_OUTPUT, `sf_files_pair=${filesPair}\n`)
           NODE
 
       - name: Fetch source history for Script fixtures
@@ -166,6 +170,12 @@ jobs:
         if: steps.request.outputs.runner != 'pytest' && !(steps.request.outputs.runner == 'node' && steps.request.outputs.package == 'script')
         uses: ./.github/actions/omni-binaries
 
+      - name: Qualify real loopback ClamD for Files uploads
+        if: steps.request.outputs.sf_files_pair == 'true'
+        run: |
+          bash script/sf-ci/operations-clamd.sh
+          echo "SF_OPERATIONS_CLAMD_PORT=3310" >> "$GITHUB_ENV"
+
       # The CLI's native Windows artifact controls compile with `rustup run 1.98.0` (packages/core/src/
       # artifact-native-windows.ts). The omni artifact above skips cargo, so nothing else installs the toolchain
       # pinned by native/omni/rust-toolchain.toml.
@@ -207,7 +217,9 @@ jobs:
           const benchmark = benchmarkEnvironment(request.benchmarkRenderer, process.env.GITHUB_SHA)
           writeFileSync('test-ci-evidence/benchmark-runtime.json', JSON.stringify(benchmark))
           const env = { ...process.env, ...benchmark }
-          const args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', 'retain-on-failure']
+          const filesPair = request.config === 'e2e/playwright.production.config.ts' &&
+            request.args.length === 1 && request.args[0] === 'e2e/sucafina/operations.spec.ts'
+          const args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', filesPair ? 'off' : 'retain-on-failure']
           const listed = spawnSync('bun', [...args, '--list', '--reporter=json'], { cwd, env, encoding: 'utf8' })
           if (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)
           writeFileSync('test-ci-evidence/playwright-selection.json', listed.stdout)
