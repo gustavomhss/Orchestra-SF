@@ -923,13 +923,14 @@ export const createSfHostRuntimeWithRoutineNative = async (
           const winner = (yield* skills.list()).find((entry) => entry.name === SF_ROUTINE_PHASE_PLAYBOOK)
           const source = winner && skills.sourceOf?.(winner)
           if (!winner || !source?.reserved || !source.key.trim()) return false
+          const currentMaterial = `<skill_content name="${SF_ROUTINE_PHASE_PLAYBOOK}">\n# Skill: ${SF_ROUTINE_PHASE_PLAYBOOK}\n\n${winner.content.trim()}\n\n`
           const engine = yield* ExecutionHost.engineOf(resources.agents, resources.store)(session)
           if (!engine) {
             // The original Orchestra runner has no external ExecutionHost receipt: require its
             // durable synthetic load and the unchanged reserved winner, never a claimed held flag.
             const messages = yield* resources.store.context(session.id)
             return messages.some((entry) => entry.type === "synthetic" &&
-              entry.text.startsWith(`<skill_content name="${SF_ROUTINE_PHASE_PLAYBOOK}">\n# Skill: ${SF_ROUTINE_PHASE_PLAYBOOK}\n\n${winner.content.trim()}\n\n`))
+              entry.text.startsWith(currentMaterial))
           }
           const hosts = yield* Effect.map(locations.contextEffect(session.location), (context) =>
             Context.getOption(context, ExecutionHost.Service))
@@ -942,6 +943,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
             facts.source.location !== winner.location || !/^[a-f0-9]{64}$/.test(facts.source.contentDigest)) return false
           const delivered = yield* resources.store.message(facts.loadedMessageID)
           return delivered?.sessionID === session.id && delivered.message.type === "synthetic" &&
+            delivered.message.text.startsWith(currentMaterial) &&
             createHash("sha256").update(delivered.message.text, "utf8").digest("hex") === facts.source.contentDigest
         }).pipe(Effect.provide(locations.get(session.location)), Effect.provideService(LocationServiceMap.Service, locations), Effect.scoped)).catch(() => false)
       }

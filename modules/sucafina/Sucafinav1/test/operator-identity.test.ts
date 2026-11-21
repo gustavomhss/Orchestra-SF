@@ -256,7 +256,7 @@ test("private file enrollment allows cross-site GET but redirects without creden
     const code = await f.identity.enroll()
     const response = await f.identity.handle(request(`/auth/local?code=${code}`, "", { headers: { origin: "null", "sec-fetch-site": "cross-site" } }))
     expect(response?.status).toBe(303)
-    expect(response!.headers.get("location")).toBe("/")
+    expect(response!.headers.get("location")).toBe(`${mount}/dashboard`)
     const cookie = response!.headers.getSetCookie()[0]!.split(";")[0]!
     const handle = cookie.slice(cookie.indexOf("=") + 1)
     const body = await response!.text()
