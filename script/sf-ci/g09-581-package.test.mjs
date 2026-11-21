@@ -35,3 +35,13 @@ test("historical provenance rejects substituted ZIP and tar bytes before using t
     zip: Buffer.from("different zip"), compressed: Buffer.from("different tar"),
   }), /source or package bytes differ/)
 })
+
+test("the historical catalog requests a signed review without accepting built-in dispositions", async () => {
+  const { readFile } = await import("node:fs/promises")
+  const { parseCanonicalJson, validateManifest } = await import("./team-profile-residue.mjs")
+  const manifest = validateManifest(parseCanonicalJson(
+    await readFile(new URL("./g09-581-catalog.json", import.meta.url)), "historical catalog",
+  ))
+  assert.equal(manifest.review.status, "required")
+  assert.deepEqual(manifest.dispositions, [])
+})
