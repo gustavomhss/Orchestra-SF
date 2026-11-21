@@ -16,7 +16,13 @@ No diretório do descritor, com acesso exclusivo ao usuário do serviço, crie `
 
 Crie `ingress-secret.txt` no diretório privado da instalação, com modo `0600` e 32 bytes aleatórios codificados em 64 caracteres hexadecimais minúsculos. Configure o proxy para substituir qualquer `X-SF-Ingress-Proof` recebido do cliente pelo valor privado. O host exige uma conexão loopback e confere esse valor antes de encaminhar a requisição. O cabeçalho é removido antes de chegar à instalação.
 
-O listener corporativo é dedicado ao mount da instalação, com login e logout. Encaminhe apenas esse caminho e seus descendentes no proxy. Aplique limites de taxa por cliente e de concorrência a `/auth/login` e `/auth/callback` antes do encaminhamento ao listener. Use os caminhos do mount ou do dashboard ao iniciar o fluxo de login. A leitura de membresia fica disponível ao código do servidor.
+Com a Web nativa desabilitada, o listener corporativo é dedicado ao mount da instalação, com login e logout. Encaminhe apenas esse caminho e seus descendentes no proxy. Aplique limites de taxa por cliente e de concorrência a `/auth/login` e `/auth/callback` antes do encaminhamento ao listener. Use os caminhos do mount ou do dashboard ao iniciar o fluxo de login. A leitura de membresia fica disponível ao código do servidor.
+
+## Entrada Web nativa
+
+No pacote Linux com a Web Sucafina em `bin/web`, `SUCAFINA_NATIVE_TEAM_WEB=1` habilita a entrada em `/` na instalação Microsoft com `"teams": "direct"`. Mantenha o mesmo proxy HTTPS confiável para a entrada, `/assets/`, `/orchestra/`, `/brand/sucafina/`, `/oc-theme-preload.js`, `/api/sucafina/installations` e o mount. As requisições continuam sujeitas à prova de ingresso.
+
+O login Microsoft retorna à raiz. A página usa a sessão da instalação para consultar os Teams habilitados, seleciona a única opção ou permite escolher entre várias e oferece o link para o dashboard do Team confirmado. Cada escolha consulta novamente o servidor. Sem um Team autorizado, a página mostra a negativa e não oferece o dashboard.
 
 ## Fluxos por Team
 

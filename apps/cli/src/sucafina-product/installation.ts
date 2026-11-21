@@ -163,6 +163,8 @@ export async function loadSfInstallation(
         if (index || asset) return yield* Effect.promise(async () => {
           const response = await WebUi.read(webRoot, decoded.value, {
             index, head: incoming.method === "HEAD",
+            // The same branded build can also be served by the local Orchestra runtime.
+            transformHtml: index ? (html) => html.replace(/<html\b/i, '<html data-sf-team-web="1"') : undefined,
           })
           response.headers.set("Cache-Control", "no-store")
           response.headers.set("X-Content-Type-Options", "nosniff")

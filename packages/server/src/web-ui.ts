@@ -23,7 +23,11 @@ export async function resolveRoot(candidates: ReadonlyArray<string | undefined>)
   return undefined
 }
 
-export async function read(root: string, pathname: string, options: { index: boolean; head?: boolean }) {
+export async function read(root: string, pathname: string, options: {
+  index: boolean
+  head?: boolean
+  transformHtml?: (html: string) => string
+}) {
   const base = path.resolve(root)
   const requested = path.resolve(base, "." + pathname)
   const inside = requested === base || requested.startsWith(base + path.sep)
@@ -31,7 +35,11 @@ export async function read(root: string, pathname: string, options: { index: boo
   if (!file) return new Response(null, { status: 404 })
   const bytes = new Uint8Array(await Bun.file(file).arrayBuffer())
   const headers = new Headers({ "content-type": Bun.file(file).type })
-  if (file.endsWith(".html")) headers.set("content-security-policy", cspForHtml(new TextDecoder().decode(bytes)))
+  if (file.endsWith(".html")) {
+    const html = new TextDecoder().decode(bytes)
+    headers.set("content-security-policy", cspForHtml(html))
+    if (options.transformHtml) return new Response(options.head ? null : options.transformHtml(html), { headers })
+  }
   return new Response(options.head ? null : bytes, { headers })
 }
 
