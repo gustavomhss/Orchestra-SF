@@ -49,10 +49,11 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
     const before = posts.length
     const responsePending = page.waitForResponse((response) =>
       response.request().method() === "POST" &&
-      new URL(response.url()).pathname === installation.mount + "/procurement")
+      new URL(response.url()).pathname === installation.mount + "/procurement").catch(() => null)
     await review.getByRole("button", { name: label, exact: true }).click()
     await expect.poll(() => posts.length, { message: "one explicit confirmation sends one original producer command" }).toBe(before + 1)
     const response = await responsePending
+    if (!response) throw new Error("The original producer did not return a command response.")
     const body: unknown = await response.json().catch(() => null)
     const result = body && typeof body === "object" ? body as Record<string, unknown> : {}
     // Only bounded status/error enums are logged: never request values, headers,

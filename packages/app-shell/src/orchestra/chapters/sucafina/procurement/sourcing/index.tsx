@@ -668,11 +668,13 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       </div>
       <div class="sf-u12-weights">
         <label>{t("sf.u12.technicalWeight")}
-          <input type="number" step="any" value={asString(current.weights?.tech??page()?.value.data.formSettings.techWeight)}
+          <input type="number" step="any" value={asString(current.weights?.tech === undefined
+            ? page()?.value.data.formSettings.techWeight : current.weights?.tech)}
             onInput={(event)=>updateWeight("tech",event.currentTarget.value)} />
         </label>
         <label>{t("sf.u12.commercialWeight")}
-          <input type="number" step="any" value={asString(current.weights?.comm??page()?.value.data.formSettings.commWeight)}
+          <input type="number" step="any" value={asString(current.weights?.comm === undefined
+            ? page()?.value.data.formSettings.commWeight : current.weights?.comm)}
             onInput={(event)=>updateWeight("comm",event.currentTarget.value)} />
         </label>
       </div>
