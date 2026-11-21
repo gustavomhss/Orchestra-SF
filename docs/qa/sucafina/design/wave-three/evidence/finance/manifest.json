@@ -1,0 +1,1281 @@
+{
+  "schemaVersion": 1,
+  "group": "finance",
+  "status": "VERIFIED_PENDING_USER_REVIEW",
+  "areas": [
+    {
+      "id": "CAP05",
+      "label": "CAPEX — realizado e previsão",
+      "routes": 4
+    },
+    {
+      "id": "CAP14",
+      "label": "Contratos",
+      "routes": 4
+    },
+    {
+      "id": "CAP17",
+      "label": "Planner — visão geral",
+      "routes": 1
+    },
+    {
+      "id": "CAP18",
+      "label": "Planner OPEX",
+      "routes": 4
+    },
+    {
+      "id": "CAP19",
+      "label": "Planner CAPEX",
+      "routes": 5
+    }
+  ],
+  "businessStates": [
+    {
+      "area": "CAP05",
+      "id": "collection",
+      "label": "Lista de projetos",
+      "principal": "CAP05-dark-desktop-list-test-data",
+      "variants": [
+        "CAP05-light-desktop-list-test-data",
+        "CAP05-light-320-list-test-data",
+        "CAP05-pt-BR-dark-desktop-test-data"
+      ],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP05",
+      "id": "monthly-detail",
+      "label": "Detalhe com doze meses",
+      "principal": "CAP05-dark-desktop-twelve-months-test-data",
+      "variants": [
+        "CAP05-dark-320-monthly-records-test-data"
+      ],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP05",
+      "id": "annual-editor",
+      "label": "Editor anual",
+      "principal": null,
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP05",
+      "id": "annual-review",
+      "label": "Revisão anual",
+      "principal": "CAP05-dark-desktop-annual-review-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP05",
+      "id": "deviation-editor",
+      "label": "Editor de desvio",
+      "principal": null,
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP05",
+      "id": "deviation-review",
+      "label": "Revisão de desvio",
+      "principal": "CAP05-dark-desktop-deviation-review-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP05",
+      "id": "month-editor",
+      "label": "Editor mensal",
+      "principal": "CAP05-dark-desktop-month-editor-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP05",
+      "id": "month-review",
+      "label": "Revisão mensal",
+      "principal": "CAP05-dark-320-month-review-actions-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP05",
+      "id": "project-create",
+      "label": "Criação de projeto",
+      "principal": "CAP05-dark-desktop-create-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP05",
+      "id": "project-create-review",
+      "label": "Revisão da criação de projeto",
+      "principal": null,
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP14",
+      "id": "collection",
+      "label": "Lista de contratos",
+      "principal": "CAP14-dark-desktop-list-test-data",
+      "variants": [
+        "CAP14-light-desktop-list-test-data",
+        "CAP14-light-320-list-test-data",
+        "CAP14-pt-BR-dark-desktop-test-data"
+      ],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP14",
+      "id": "contract-detail",
+      "label": "Detalhe do contrato",
+      "principal": "CAP14-dark-desktop-contract-detail-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP14",
+      "id": "contract-editor",
+      "label": "Editor do contrato",
+      "principal": "CAP14-dark-desktop-fifteen-field-editor-test-data",
+      "variants": [
+        "CAP14-dark-320-editor-test-data"
+      ],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP14",
+      "id": "contract-review",
+      "label": "Revisão da edição",
+      "principal": "CAP14-dark-320-review-actions-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP14",
+      "id": "contract-delete",
+      "label": "Revisão da exclusão",
+      "principal": "CAP14-dark-desktop-delete-review-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP14",
+      "id": "contract-create",
+      "label": "Criação de contrato",
+      "principal": null,
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP14",
+      "id": "contract-create-review",
+      "label": "Revisão da criação",
+      "principal": "CAP14-dark-desktop-create-review-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP17",
+      "id": "overview",
+      "label": "Indicadores, séries mensais e comparação",
+      "principal": "CAP17-dark-desktop-summary-and-series-test-data",
+      "variants": [
+        "CAP17-light-desktop-summary-test-data",
+        "CAP17-light-320-summary-test-data",
+        "CAP17-light-320-version-comparison-test-data",
+        "CAP17-pt-BR-dark-desktop-test-data"
+      ],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP18",
+      "id": "monthly-grid",
+      "label": "Grade mensal",
+      "principal": "CAP18-dark-desktop-monthly-grid-start-test-data",
+      "variants": [
+        "CAP18-dark-desktop-monthly-grid-december-test-data",
+        "CAP18-light-desktop-grid-test-data",
+        "CAP18-dark-320-source-months-test-data",
+        "CAP18-pt-BR-dark-desktop-test-data"
+      ],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP18",
+      "id": "paste-preview",
+      "label": "Prévia do produtor para colagem",
+      "principal": "CAP18-dark-desktop-original-producer-paste-preview-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP18",
+      "id": "lines",
+      "label": "Lista de linhas",
+      "principal": null,
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP18",
+      "id": "line-editor",
+      "label": "Editor de linha",
+      "principal": "CAP18-dark-desktop-record-editor-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP18",
+      "id": "line-review",
+      "label": "Revisão de linha",
+      "principal": "CAP18-dark-320-record-review-actions-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP18",
+      "id": "line-create",
+      "label": "Criação de linha",
+      "principal": null,
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP18",
+      "id": "line-create-review",
+      "label": "Revisão da criação",
+      "principal": "CAP18-dark-desktop-create-review-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP18",
+      "id": "settings",
+      "label": "Configurações do plano",
+      "principal": null,
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP18",
+      "id": "closed-month-review",
+      "label": "Revisão do período fechado",
+      "principal": "CAP18-dark-desktop-closed-month-review-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP18",
+      "id": "split-review",
+      "label": "Revisão da divisão por elemento",
+      "principal": "CAP18-dark-desktop-split-review-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP19",
+      "id": "monthly-grid",
+      "label": "Grade mensal",
+      "principal": "CAP19-dark-desktop-monthly-grid-test-data",
+      "variants": [
+        "CAP19-light-desktop-monthly-grid-test-data",
+        "CAP19-pt-BR-dark-desktop-test-data"
+      ],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP19",
+      "id": "projects",
+      "label": "Lista de projetos",
+      "principal": "CAP19-dark-desktop-projects-test-data",
+      "variants": [
+        "CAP19-dark-320-projects-test-data"
+      ],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP19",
+      "id": "project-editor",
+      "label": "Editor de projeto",
+      "principal": "CAP19-dark-320-project-editor-test-data",
+      "variants": [
+        "CAP19-dark-desktop-confirmed-project-test-data",
+        "CAP19-pt-BR-dark-320-project-editor-test-data"
+      ],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP19",
+      "id": "project-review",
+      "label": "Revisão de projeto",
+      "principal": "CAP19-dark-320-project-review-actions-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP19",
+      "id": "lines",
+      "label": "Lista de linhas",
+      "principal": null,
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP19",
+      "id": "line-editor",
+      "label": "Editor de linha",
+      "principal": null,
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    },
+    {
+      "area": "CAP19",
+      "id": "spread-review",
+      "label": "Revisão de distribuição",
+      "principal": "CAP19-dark-desktop-spread-review-test-data",
+      "variants": [],
+      "status": "FUNCTIONALLY_VERIFIED"
+    }
+  ],
+  "photographedBusinessStates": 26,
+  "captureCount": 47,
+  "confirmedCommands": 3,
+  "previewCommandsWithoutApply": 1,
+  "source": {
+    "kind": "real native production Chromium",
+    "data": "isolated canonical producer fixtures",
+    "legacy": false,
+    "actualBrowserZoom": "NOT_MEASURED",
+    "locale": [
+      "en-US",
+      "pt-BR"
+    ],
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "widths": [
+      1440,
+      320
+    ]
+  },
+  "run": {
+    "key": "finance-seventh",
+    "run": 44947193512,
+    "branch": "ci-run-wave3finance7",
+    "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+    "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+    "jobs": [
+      {
+        "id": 136976981561,
+        "name": "test (ubuntu-24.04)",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_id": 44947193512,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 3
+          },
+          {
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 4
+          },
+          {
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 13
+          },
+          {
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 14
+          },
+          {
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          },
+          {
+            "name": "Qualify real loopback ClamD for Files uploads",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 18
+          },
+          {
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 19
+          },
+          {
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 20
+          },
+          {
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 21
+          },
+          {
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 22
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 23
+          },
+          {
+            "name": "Post Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 43
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "in_progress",
+            "conclusion": null,
+            "number": 44
+          },
+          {
+            "name": "Post Setup request validator Node",
+            "status": "pending",
+            "conclusion": null,
+            "number": 45
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "pending",
+            "conclusion": null,
+            "number": 46
+          }
+        ]
+      }
+    ],
+    "status": "completed",
+    "conclusion": "success",
+    "passed": 2,
+    "failed": 0,
+    "duration": "3.6m",
+    "job": 136976981561,
+    "consoleErrors": [],
+    "pageErrors": []
+  },
+  "artifact": {
+    "id": 14723703101,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 54080961,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14723703101",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14723703101/zip",
+    "expired": false,
+    "created_at": "2026-11-21T20:41:49Z",
+    "expires_at": "2026-11-28T20:41:46Z",
+    "updated_at": "2026-11-21T20:41:49Z",
+    "digest": "sha256:1e80328103808e2313eae8fa130771d495279db2044631152e753fdfc1482625",
+    "workflow_run": {
+      "id": 44947193512,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-wave3finance7",
+      "head_sha": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b"
+    }
+  },
+  "captures": [
+    {
+      "area": "CAP05",
+      "captureName": "CAP05-dark-desktop-list-test-data",
+      "file": "finance/CAP05-dark-desktop-list-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 100151,
+      "gitBlobSha": "a9690d42d3a0ee280fecefb7e5b572cdeba28a1a",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "collection",
+      "principal": true
+    },
+    {
+      "area": "CAP05",
+      "captureName": "CAP05-light-desktop-list-test-data",
+      "file": "finance/CAP05-light-desktop-list-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 104804,
+      "gitBlobSha": "682bbb4f1c7d43d6a79110acd09a50eb2197e2d7",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "collection",
+      "principal": false
+    },
+    {
+      "area": "CAP05",
+      "captureName": "CAP05-light-320-list-test-data",
+      "file": "finance/CAP05-light-320-list-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 33722,
+      "gitBlobSha": "82620e8ec4cff3c78ccfad98f941b5f059f5cf72",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "collection",
+      "principal": false
+    },
+    {
+      "area": "CAP05",
+      "captureName": "CAP05-dark-desktop-twelve-months-test-data",
+      "file": "finance/CAP05-dark-desktop-twelve-months-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 121534,
+      "gitBlobSha": "3c7035a2b1b3527a7144d9adf4ba390de0e0a7c4",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "monthly-detail",
+      "principal": true
+    },
+    {
+      "area": "CAP05",
+      "captureName": "CAP05-dark-320-monthly-records-test-data",
+      "file": "finance/CAP05-dark-320-monthly-records-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 32397,
+      "gitBlobSha": "a89573837338cc2b16d2d0b707b5a57416e1463c",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "monthly-detail",
+      "principal": false
+    },
+    {
+      "area": "CAP05",
+      "captureName": "CAP05-dark-desktop-annual-review-test-data",
+      "file": "finance/CAP05-dark-desktop-annual-review-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 86567,
+      "gitBlobSha": "e34422e160653d004eb13f2908225d9c6002b554",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "annual-review",
+      "principal": true
+    },
+    {
+      "area": "CAP05",
+      "captureName": "CAP05-dark-desktop-deviation-review-test-data",
+      "file": "finance/CAP05-dark-desktop-deviation-review-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 97889,
+      "gitBlobSha": "ee94db91ca16563fae9df5c0656a6b0b20b257bc",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "deviation-review",
+      "principal": true
+    },
+    {
+      "area": "CAP05",
+      "captureName": "CAP05-dark-desktop-month-editor-test-data",
+      "file": "finance/CAP05-dark-desktop-month-editor-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 86470,
+      "gitBlobSha": "3ff2a2e53e8c7507d8931fb3f642a827a678a6c5",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "month-editor",
+      "principal": true
+    },
+    {
+      "area": "CAP05",
+      "captureName": "CAP05-dark-320-month-review-actions-test-data",
+      "file": "finance/CAP05-dark-320-month-review-actions-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 21667,
+      "gitBlobSha": "1afbc1a35451f126fcd2e72cb910fdad00828134",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "month-review",
+      "principal": true
+    },
+    {
+      "area": "CAP05",
+      "captureName": "CAP05-dark-desktop-create-test-data",
+      "file": "finance/CAP05-dark-desktop-create-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 86969,
+      "gitBlobSha": "99942ba4a0bd9e6c484bb0d122464903f19033d6",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "project-create",
+      "principal": true
+    },
+    {
+      "area": "CAP14",
+      "captureName": "CAP14-dark-desktop-list-test-data",
+      "file": "finance/CAP14-dark-desktop-list-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 100837,
+      "gitBlobSha": "538adb01de1f8f5641d4c641437fae12b302af20",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "collection",
+      "principal": true
+    },
+    {
+      "area": "CAP14",
+      "captureName": "CAP14-light-desktop-list-test-data",
+      "file": "finance/CAP14-light-desktop-list-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 105800,
+      "gitBlobSha": "f28668c3886d0b4e4af0faacbe3a9ac8301dc274",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "collection",
+      "principal": false
+    },
+    {
+      "area": "CAP14",
+      "captureName": "CAP14-light-320-list-test-data",
+      "file": "finance/CAP14-light-320-list-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 35451,
+      "gitBlobSha": "ca1a8b89eefa4a361c4692505e90b41e906a52cb",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "collection",
+      "principal": false
+    },
+    {
+      "area": "CAP14",
+      "captureName": "CAP14-dark-desktop-contract-detail-test-data",
+      "file": "finance/CAP14-dark-desktop-contract-detail-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 98714,
+      "gitBlobSha": "2c6bf930d180203157012969f583e2a1b985519b",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "contract-detail",
+      "principal": true
+    },
+    {
+      "area": "CAP14",
+      "captureName": "CAP14-dark-desktop-fifteen-field-editor-test-data",
+      "file": "finance/CAP14-dark-desktop-fifteen-field-editor-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 96943,
+      "gitBlobSha": "6d4de5da1a430166273438f2aae6a9840beb8788",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "contract-editor",
+      "principal": true
+    },
+    {
+      "area": "CAP14",
+      "captureName": "CAP14-dark-320-editor-test-data",
+      "file": "finance/CAP14-dark-320-editor-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 32790,
+      "gitBlobSha": "cebe97ecd5ea4daae149bae3d333c0ca0d587979",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "contract-editor",
+      "principal": false
+    },
+    {
+      "area": "CAP14",
+      "captureName": "CAP14-dark-320-review-actions-test-data",
+      "file": "finance/CAP14-dark-320-review-actions-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 26267,
+      "gitBlobSha": "db4e9fa79c506fdea4942614ac955812510e6c0c",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "contract-review",
+      "principal": true
+    },
+    {
+      "area": "CAP14",
+      "captureName": "CAP14-dark-desktop-delete-review-test-data",
+      "file": "finance/CAP14-dark-desktop-delete-review-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 90244,
+      "gitBlobSha": "5b1c8170b3461a9c89e21be012a28e2e7b9d2b09",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "contract-delete",
+      "principal": true
+    },
+    {
+      "area": "CAP14",
+      "captureName": "CAP14-dark-desktop-create-review-test-data",
+      "file": "finance/CAP14-dark-desktop-create-review-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 85630,
+      "gitBlobSha": "162d4d0d8361384d8d496f15dde478eb63f24e0b",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "contract-create-review",
+      "principal": true
+    },
+    {
+      "area": "CAP05",
+      "captureName": "CAP05-pt-BR-dark-desktop-test-data",
+      "file": "finance/CAP05-pt-BR-dark-desktop-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 102983,
+      "gitBlobSha": "cde171e158a5c3558f9f301b17f01eeff5c339d2",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "collection",
+      "principal": false
+    },
+    {
+      "area": "CAP14",
+      "captureName": "CAP14-pt-BR-dark-desktop-test-data",
+      "file": "finance/CAP14-pt-BR-dark-desktop-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 108014,
+      "gitBlobSha": "2e96f78ef027058c8bdba7217961b68d8996f02b",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "collection",
+      "principal": false
+    },
+    {
+      "area": "CAP17",
+      "captureName": "CAP17-dark-desktop-summary-and-series-test-data",
+      "file": "finance/CAP17-dark-desktop-summary-and-series-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 109702,
+      "gitBlobSha": "fb41100dbb110791303223b90bdfcb17c72f9fe2",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "overview",
+      "principal": true
+    },
+    {
+      "area": "CAP17",
+      "captureName": "CAP17-light-desktop-summary-test-data",
+      "file": "finance/CAP17-light-desktop-summary-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 114483,
+      "gitBlobSha": "2c91048b2390b197d95d99fe2df7f41cbeeb19f3",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "overview",
+      "principal": false
+    },
+    {
+      "area": "CAP17",
+      "captureName": "CAP17-light-320-summary-test-data",
+      "file": "finance/CAP17-light-320-summary-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 26630,
+      "gitBlobSha": "ffb37fd37b2912d454a0fb140623e49931195da9",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "overview",
+      "principal": false
+    },
+    {
+      "area": "CAP17",
+      "captureName": "CAP17-light-320-version-comparison-test-data",
+      "file": "finance/CAP17-light-320-version-comparison-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 30661,
+      "gitBlobSha": "b96c9a74c7007fa1c005e0231f179135a73cd0c6",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "overview",
+      "principal": false
+    },
+    {
+      "area": "CAP18",
+      "captureName": "CAP18-dark-desktop-monthly-grid-start-test-data",
+      "file": "finance/CAP18-dark-desktop-monthly-grid-start-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 138605,
+      "gitBlobSha": "525ae2fac27fcc798425fe209c6089a65551e342",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "monthly-grid",
+      "principal": true
+    },
+    {
+      "area": "CAP18",
+      "captureName": "CAP18-dark-desktop-monthly-grid-december-test-data",
+      "file": "finance/CAP18-dark-desktop-monthly-grid-december-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 135303,
+      "gitBlobSha": "f52c32a7f0768ed4664df92c13d0cd281adfea42",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "monthly-grid",
+      "principal": false
+    },
+    {
+      "area": "CAP18",
+      "captureName": "CAP18-light-desktop-grid-test-data",
+      "file": "finance/CAP18-light-desktop-grid-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 142604,
+      "gitBlobSha": "cac136ade77a3a3098c0e0084070372924529e6a",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "monthly-grid",
+      "principal": false
+    },
+    {
+      "area": "CAP18",
+      "captureName": "CAP18-dark-desktop-original-producer-paste-preview-test-data",
+      "file": "finance/CAP18-dark-desktop-original-producer-paste-preview-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 115538,
+      "gitBlobSha": "419bc14ce032ef0d9bf1bb15957909b5904bd294",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "paste-preview",
+      "principal": true
+    },
+    {
+      "area": "CAP18",
+      "captureName": "CAP18-dark-320-source-months-test-data",
+      "file": "finance/CAP18-dark-320-source-months-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 30178,
+      "gitBlobSha": "af35c0680d458f153ac5f698029e32849df9e460",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "monthly-grid",
+      "principal": false
+    },
+    {
+      "area": "CAP18",
+      "captureName": "CAP18-dark-desktop-record-editor-test-data",
+      "file": "finance/CAP18-dark-desktop-record-editor-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 97866,
+      "gitBlobSha": "1984735060c29c12891f727223aa645dd7880bd1",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "line-editor",
+      "principal": true
+    },
+    {
+      "area": "CAP18",
+      "captureName": "CAP18-dark-320-record-review-actions-test-data",
+      "file": "finance/CAP18-dark-320-record-review-actions-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 32400,
+      "gitBlobSha": "8bee4b06ed6cbf2fab9f7f094ddf2b88abd9d3c4",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "line-review",
+      "principal": true
+    },
+    {
+      "area": "CAP18",
+      "captureName": "CAP18-dark-desktop-create-review-test-data",
+      "file": "finance/CAP18-dark-desktop-create-review-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 97256,
+      "gitBlobSha": "befb281e7d3f8c62f97bd544430d1fffa9806217",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "line-create-review",
+      "principal": true
+    },
+    {
+      "area": "CAP18",
+      "captureName": "CAP18-dark-desktop-closed-month-review-test-data",
+      "file": "finance/CAP18-dark-desktop-closed-month-review-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 89475,
+      "gitBlobSha": "7287979ff916fad728c65458c243ac84b64e789b",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "closed-month-review",
+      "principal": true
+    },
+    {
+      "area": "CAP18",
+      "captureName": "CAP18-dark-desktop-split-review-test-data",
+      "file": "finance/CAP18-dark-desktop-split-review-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 93436,
+      "gitBlobSha": "d34e78b1077e50fe2140c2e40abe0b349a7cf852",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "split-review",
+      "principal": true
+    },
+    {
+      "area": "CAP19",
+      "captureName": "CAP19-dark-desktop-monthly-grid-test-data",
+      "file": "finance/CAP19-dark-desktop-monthly-grid-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 138296,
+      "gitBlobSha": "82987f267ed6285d2941eafcc969ec4dbbbd56a4",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "monthly-grid",
+      "principal": true
+    },
+    {
+      "area": "CAP19",
+      "captureName": "CAP19-light-desktop-monthly-grid-test-data",
+      "file": "finance/CAP19-light-desktop-monthly-grid-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 142382,
+      "gitBlobSha": "f4c6a0c7ce9f8d604eb1bec757e2e8cca1f8736c",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "monthly-grid",
+      "principal": false
+    },
+    {
+      "area": "CAP19",
+      "captureName": "CAP19-dark-desktop-projects-test-data",
+      "file": "finance/CAP19-dark-desktop-projects-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 97767,
+      "gitBlobSha": "8823d9f3555de986dd466ba1169bd9ee2c184cf4",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "projects",
+      "principal": true
+    },
+    {
+      "area": "CAP19",
+      "captureName": "CAP19-dark-320-projects-test-data",
+      "file": "finance/CAP19-dark-320-projects-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 30613,
+      "gitBlobSha": "60505bd721513fde8f1a4dc5def81a1fb01a54c8",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "projects",
+      "principal": false
+    },
+    {
+      "area": "CAP19",
+      "captureName": "CAP19-dark-320-project-editor-test-data",
+      "file": "finance/CAP19-dark-320-project-editor-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 31192,
+      "gitBlobSha": "f9b011a5ce11e0a8758f1bfae2e96b15cd759d99",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "project-editor",
+      "principal": true
+    },
+    {
+      "area": "CAP19",
+      "captureName": "CAP19-dark-320-project-review-actions-test-data",
+      "file": "finance/CAP19-dark-320-project-review-actions-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 34069,
+      "gitBlobSha": "0fa71e35ceae0ac43f7c5dae9c79ad2357bd3f25",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "project-review",
+      "principal": true
+    },
+    {
+      "area": "CAP19",
+      "captureName": "CAP19-dark-desktop-confirmed-project-test-data",
+      "file": "finance/CAP19-dark-desktop-confirmed-project-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 98592,
+      "gitBlobSha": "b0ce3155740ae0fcbc3df3086d7146305c2683d3",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "project-editor",
+      "principal": false
+    },
+    {
+      "area": "CAP19",
+      "captureName": "CAP19-dark-desktop-spread-review-test-data",
+      "file": "finance/CAP19-dark-desktop-spread-review-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 107868,
+      "gitBlobSha": "9fbe8ed168ab4a88eeeef71705d5201be00c1776",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "spread-review",
+      "principal": true
+    },
+    {
+      "area": "CAP17",
+      "captureName": "CAP17-pt-BR-dark-desktop-test-data",
+      "file": "finance/CAP17-pt-BR-dark-desktop-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 115611,
+      "gitBlobSha": "eaa7fba45eafae558425b83f866512bdc38e037c",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "overview",
+      "principal": false
+    },
+    {
+      "area": "CAP18",
+      "captureName": "CAP18-pt-BR-dark-desktop-test-data",
+      "file": "finance/CAP18-pt-BR-dark-desktop-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 148022,
+      "gitBlobSha": "432db7e29c15754004fff8f31c8486cb162dd9da",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "monthly-grid",
+      "principal": false
+    },
+    {
+      "area": "CAP19",
+      "captureName": "CAP19-pt-BR-dark-desktop-test-data",
+      "file": "finance/CAP19-pt-BR-dark-desktop-test-data.jpg",
+      "height": 1100,
+      "width": 1440,
+      "bytes": 147318,
+      "gitBlobSha": "e0569684fd3fcb93b8a63d252cff921b45e0d3dd",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "monthly-grid",
+      "principal": false
+    },
+    {
+      "area": "CAP19",
+      "captureName": "CAP19-pt-BR-dark-320-project-editor-test-data",
+      "file": "finance/CAP19-pt-BR-dark-320-project-editor-test-data.jpg",
+      "height": 900,
+      "width": 320,
+      "bytes": 31322,
+      "gitBlobSha": "fc5156ecc7ca80cbf6d278b04ddb67f71e62d4b5",
+      "run": 44947193512,
+      "job": 136976981561,
+      "product": "68ad2eec9d92bcd0a81823646c04678944487e85",
+      "snapshot": "8d8d8f9d573ca386d29ed65304fe62bb2c8d445b",
+      "businessState": "project-editor",
+      "principal": false
+    }
+  ]
+}
