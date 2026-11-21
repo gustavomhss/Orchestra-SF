@@ -10,6 +10,7 @@ import { createSfProductState } from "../../../modules/sucafina/Sucafinav1/produ
 import { createSfSourcePersistence } from "../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { createSfUiAuthority } from "../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
 import { createCurrentChoiceFence } from "../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+import type { BlobTransaction } from "../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
 import { object, type Snapshot } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Surface } from "../../../modules/sucafina/Sucafinav1/src/identity.ts"
 import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
@@ -42,14 +43,17 @@ async function fixture() {
     controls.calls++
     throw new Error("Health must not invoke options, prepare, dispatch, receipts or blobs")
   }
+  const transactionAll = storage.transactionAll
+  if (typeof transactionAll !== "function" || typeof storage.currentSnapshots !== "function")
+    throw new Error("The original SQLite driver must provide snapshot transactions")
   const driver: Parameters<typeof createCurrentChoiceFence>[0]["persistence"] = {
     ...storage,
-    transaction: (surface, work, options) => storage.transaction(surface, async (snapshot, blobs) => {
+    transaction: (surface, work, options) => storage.transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
       await hooks.read?.(surface, snapshot)
       return work(snapshot, blobs)
     }, options),
   }
-  const snapshotDigest = () => storage.transactionAll(async (snapshots) => ({ commit: false, value: digestSfValue(snapshots) }))
+  const snapshotDigest = () => transactionAll(async (snapshots) => ({ commit: false, value: digestSfValue(snapshots) }))
   let ids = 0
   const identity = () => controls.allowed ? {
     installationId: stamp.installationId, projectId: stamp.projectId, principalRef: stamp.principalRef,
