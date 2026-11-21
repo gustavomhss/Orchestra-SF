@@ -1,0 +1,507 @@
+{
+  "schemaVersion": 1,
+  "updatedThrough": "2026-11-21",
+  "note": "Historical attempts include failures and incomplete journeys. Only a final passing run qualifies its stated coverage.",
+  "attempts": [
+    {
+      "group": "technical",
+      "attempt": 1,
+      "run": 44955486808,
+      "snapshot": "a4781e26b34c8f6bf7d99caefba1c985a6400ce3",
+      "status": "failed",
+      "cause": "E2E composite dependency includes and fixture override scope",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44955486808"
+    },
+    {
+      "group": "work",
+      "attempt": 1,
+      "run": 44955635203,
+      "snapshot": "36b1e0a35028159ea408a76a3f10f6e788275c05",
+      "status": "failed",
+      "cause": "Native fixture exited before browser admission; later instrumentation isolated shared Decisions comparison",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44955635203"
+    },
+    {
+      "group": "planner",
+      "attempt": 1,
+      "run": 44955638859,
+      "snapshot": "cd5b5516329a1214667cf0e6bd074669f241f999",
+      "status": "failed",
+      "cause": "Shared post-start Decisions seed, before browser admission",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44955638859"
+    },
+    {
+      "group": "decisions",
+      "attempt": 1,
+      "run": 44955796183,
+      "snapshot": "f574a00461b09319598fc6e98983952b828308ec",
+      "status": "failed",
+      "cause": "Post-start canonical seed, before browser admission",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44955796183"
+    },
+    {
+      "group": "procurement",
+      "attempt": 1,
+      "run": 44955971196,
+      "snapshot": "8bafb64942acd60963fc44b11839c86b5ac25297",
+      "status": "failed",
+      "cause": "Shared post-start Decisions seed, before browser admission",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44955971196"
+    },
+    {
+      "group": "technical",
+      "attempt": 2,
+      "run": 44955972653,
+      "snapshot": "71efd4bf101f534d2b76789fe019fec183abcccb",
+      "status": "failed",
+      "cause": "E2E imported app model and pulled unrelated UI declaration graph",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44955972653"
+    },
+    {
+      "group": "work",
+      "attempt": 2,
+      "run": 44956095156,
+      "snapshot": "9c818c967520953994335291693e123f6a847884",
+      "status": "failed",
+      "cause": "Milestones reached native-ready; failed during Decisions seed before browser admission",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44956095156"
+    },
+    {
+      "group": "technical",
+      "attempt": 3,
+      "run": 44956295629,
+      "snapshot": "662b73c54c7ab124a920a0ff51d0446ff6473fd7",
+      "status": "failed",
+      "cause": "TS7056 declaration serialization in the no-emit E2E project",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44956295629"
+    },
+    {
+      "group": "regression-first-six",
+      "attempt": 1,
+      "run": 44956345983,
+      "snapshot": "0ee72dc947743def9b01adf21d44f601e5899d16",
+      "status": "passed",
+      "passedTests": 2,
+      "captures": 67,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44956345983"
+    },
+    {
+      "group": "work",
+      "attempt": 3,
+      "run": 44956706365,
+      "snapshot": "4d6fc599a87d13162fcb1120017fde299a5b2d76",
+      "status": "failed",
+      "cause": "UI30 native route unavailable; no source health observation was published",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44956706365"
+    },
+    {
+      "group": "planner",
+      "attempt": 2,
+      "run": 44956708140,
+      "snapshot": "6d1a40be15ca1fb5ea2deddd3fe38e72266d68d8",
+      "status": "failed",
+      "cause": "Unlabeled select accessible names; FX provenance missing from native projection",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44956708140"
+    },
+    {
+      "group": "procurement",
+      "attempt": 2,
+      "run": 44956710354,
+      "snapshot": "7dc9978ecc51cad8a544be558b0d79d3fef88c8b",
+      "status": "failed",
+      "cause": "CAP24 rendered; CAP25 native admission refused because original productView was not forwarded",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44956710354"
+    },
+    {
+      "group": "decisions",
+      "attempt": 2,
+      "run": 44956714182,
+      "snapshot": "145ab21c3cdd14a95a21e658c432d85c8a0fa3c9",
+      "status": "failed",
+      "cause": "Original decision-compare exceeded 40-second request deadline with the broader Planner demonstration",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44956714182"
+    },
+    {
+      "group": "technical",
+      "attempt": 4,
+      "run": 44956908951,
+      "snapshot": "bae9250e22b9fd457000dc146600f72c79857dc6",
+      "status": "passed",
+      "passedChecks": 6,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44956908951"
+    },
+    {
+      "group": "decisions",
+      "attempt": 3,
+      "run": 44957467750,
+      "snapshot": "005d79b95537ca538fef909ce651de65471629cb",
+      "status": "failed",
+      "cause": "Minimal canonical seed reached browser; Solid store metadata rejected by closed UI34 source schema",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44957467750"
+    },
+    {
+      "group": "planner",
+      "attempt": 3,
+      "run": 44957612591,
+      "snapshot": "67b2e59bc1624681143890e1f201cc114c5d0a45",
+      "status": "failed",
+      "cause": "Six successful list captures; journey tried desktop theme control while viewport remained 320 px",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44957612591"
+    },
+    {
+      "group": "procurement",
+      "attempt": 3,
+      "run": 44957614385,
+      "snapshot": "a77e2d5c64ff68bed9374be7ca20cf268403afbb",
+      "status": "failed",
+      "cause": "CAP25 original draft confirmation did not reach HTTP because optional undefined fields/reactive values failed native JSON admission",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44957614385"
+    },
+    {
+      "group": "technical",
+      "attempt": 5,
+      "run": 44957864987,
+      "snapshot": "437a66d2af1a3c7b9c611afe99824041f0b347ac",
+      "status": "failed",
+      "passedChecks": 6,
+      "failedChecks": 1,
+      "cause": "Expanded CLI package typecheck returned seven diagnostics outside the edited lines; exact-dev baseline is being measured",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44957864987"
+    },
+    {
+      "group": "planner",
+      "attempt": 4,
+      "run": 44957998160,
+      "head": "fd8307c0fd4adc70c7c64b434fbf4da9ec6d3687",
+      "snapshot": "470c6099325758a6823f08df9aa624ef1ff144ba",
+      "branch": "ci-run-sf20planner4",
+      "status": "failed",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44957998160",
+      "cause": "CAP20/CAP22/version writes passed; CAP21 projection omitted original contract/distribution; copy test assumed a returned ID although mounted producer publishes only success"
+    },
+    {
+      "group": "cli-baseline",
+      "attempt": 1,
+      "run": 44958162297,
+      "head": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02",
+      "snapshot": "50ce8bc8546dd638df878393e7924ecf8a1a8434",
+      "branch": "ci-run-sf20clibase",
+      "status": "failed-baseline",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44958162297",
+      "cause": "Exact dev produced the same seven CLI diagnostics as the candidate; no type options or suppressions changed",
+      "diagnostics": 7
+    },
+    {
+      "group": "decisions",
+      "attempt": 4,
+      "run": 44958368425,
+      "head": "7f0fe687ad3bebf6fa4a7fbaaeb15fcf7764c330",
+      "snapshot": "8c4a2665fbb05d59f1a2e5d7364aa8e9d3f0f55c",
+      "branch": "ci-run-sf20decisions4",
+      "status": "failed",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44958368425",
+      "cause": "UI34 edit/review/cancel/retention/POST/readback passed; UI35 original current-choice source outlived old 10s readiness and UI34 cleanup accessed an unmounted Show. Corrected source cleanup and scoped wait."
+    },
+    {
+      "group": "procurement",
+      "attempt": 4,
+      "run": 44958556607,
+      "head": "bb8d77a5cf71d09bd6cb49b920fe2869422e929c",
+      "snapshot": "8740caccc1ec0f07114655daf0a99868715d4b5e",
+      "branch": "ci-run-sf20procurement4",
+      "status": "failed",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44958556607",
+      "cause": "save-pr and fresh readback passed. Create rejected numeric string by original act. Native numeric controls corrected to finite number or null, invalid text preserved."
+    },
+    {
+      "group": "technical",
+      "attempt": 6,
+      "run": 44958558854,
+      "head": "bb8d77a5cf71d09bd6cb49b920fe2869422e929c",
+      "snapshot": "5770851595a081fd0a2363a88975994a43a094a1",
+      "branch": "ci-run-sf20gates6",
+      "status": "passed",
+      "passedChecks": 8,
+      "additionalUnitTests": 12,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44958558854"
+    },
+    {
+      "group": "planner",
+      "attempt": 5,
+      "run": 44958727664,
+      "head": "7e5a7311ddf3c7e0e9e9bbc282e9b803fe1ea9c6",
+      "snapshot": "c5855f116a699df5deab2f0872502862bd20ed04",
+      "branch": "ci-run-sf20planner5",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-planner.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "status": "failed",
+      "cause": "CAP20/21 complete journey passed; CAP22 HTTP acknowledgement body was read after its CDP response expired. Test consumes body immediately now.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44958727664"
+    },
+    {
+      "group": "work",
+      "attempt": 4,
+      "run": 44959404694,
+      "head": "34ca344a529f3d93d9d2d61d06c06a82ff59d278",
+      "snapshot": "60cb3ef3586ba411006c4e85aad11f68af0987fd",
+      "branch": "ci-run-sf20work4",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-work.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "status": "failed",
+      "cause": "Host composition referenced services.dispatch before initialization; root corrected order at83540a70.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44959404694"
+    },
+    {
+      "group": "decisions",
+      "attempt": 5,
+      "run": 44959406789,
+      "head": "34ca344a529f3d93d9d2d61d06c06a82ff59d278",
+      "snapshot": "9123d25cad11bec7866983f581915b3c702f18dc",
+      "branch": "ci-run-sf20decisions5",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-decisions.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "status": "failed",
+      "cause": "Host composition TDZ before native readiness; no browser qualification.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44959406789"
+    },
+    {
+      "group": "technical",
+      "attempt": 7,
+      "run": 44959409056,
+      "head": "34ca344a529f3d93d9d2d61d06c06a82ff59d278",
+      "snapshot": "5557768fb530d9f2c464167d83bd036f3fdf24f7",
+      "branch": "ci-run-sf20gates7",
+      "request": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "300000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "status": "passed",
+      "cause": "9 checks passed;16 source-health negative tests. Did not exercise full host startup.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44959409056"
+    },
+    {
+      "group": "planner",
+      "attempt": 6,
+      "run": 44959630667,
+      "head": "474539cfc4d964caac88748c63176b0664b58852",
+      "snapshot": "db65e1b07f2a2a1ea4266c1c8ddffda9ca45ccd0",
+      "branch": "ci-run-sf20planner6",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-planner.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "status": "failed",
+      "cause": "Host composition TDZ before native readiness; no browser qualification.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44959630667"
+    },
+    {
+      "group": "procurement",
+      "attempt": 5,
+      "run": 44959634006,
+      "head": "474539cfc4d964caac88748c63176b0664b58852",
+      "snapshot": "9e922f2700d3300aab5dd6f5622dd5077cc3d0fd",
+      "branch": "ci-run-sf20procurement5",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-procurement.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "status": "failed",
+      "cause": "Host composition TDZ before native readiness; no browser qualification.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44959634006"
+    },
+    {
+      "group": "work",
+      "attempt": 5,
+      "run": 44960541317,
+      "head": "0f762e71a00ceb6985b614462a579ba81997afbf",
+      "snapshot": "3f280efafb641e38af65942a798d5167c1dd7636",
+      "branch": "ci-run-sf20work5",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-work.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "status": "running",
+      "cause": "Coordinated installed host correction",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44960541317"
+    },
+    {
+      "group": "decisions",
+      "attempt": 6,
+      "run": 44960543566,
+      "head": "0f762e71a00ceb6985b614462a579ba81997afbf",
+      "snapshot": "6e9530ff943875684866aaded18b1aa0e9f63165",
+      "branch": "ci-run-sf20decisions6",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-decisions.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "status": "running",
+      "cause": "Coordinated installed host correction",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44960543566"
+    },
+    {
+      "group": "planner",
+      "attempt": 7,
+      "run": 44960546108,
+      "head": "0f762e71a00ceb6985b614462a579ba81997afbf",
+      "snapshot": "5a982a2d8a5f60f2a73cf783911be5a672d17cfd",
+      "branch": "ci-run-sf20planner7",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-planner.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "status": "running",
+      "cause": "Coordinated installed host correction",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44960546108"
+    },
+    {
+      "group": "procurement",
+      "attempt": 6,
+      "run": 44960548413,
+      "head": "0f762e71a00ceb6985b614462a579ba81997afbf",
+      "snapshot": "80c81a310cfdc10665484f14ac48cbb9462a4245",
+      "branch": "ci-run-sf20procurement6",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-procurement.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "status": "running",
+      "cause": "Coordinated installed host correction",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44960548413"
+    },
+    {
+      "group": "technical",
+      "attempt": 8,
+      "run": 44960551065,
+      "head": "0f762e71a00ceb6985b614462a579ba81997afbf",
+      "snapshot": "197ace0be5a215669036a9c17b49a0c3026c9666",
+      "branch": "ci-run-sf20gates8",
+      "request": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "300000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "status": "passed",
+      "cause": "App/E2E types, exact dev guardrails, palette parity, CAS3, Vendor4, Decisions5, Procurement9, source health18 and original installed host1 all passed.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44960551065",
+      "passedChecks": 10,
+      "regressionTests": 40
+    },
+    {
+      "group": "cli-audit",
+      "attempt": 2,
+      "run": 44960509895,
+      "head": "83540a70ab345ed80cbe8096bc58e326616659b7",
+      "snapshot": "3a9fd70871972c406aba8f3c3553b352dc85d851",
+      "branch": "ci-run-sf20cliaudit2",
+      "status": "failed",
+      "cause": "Seven unchanged baseline diagnostics plus one new TS2322 in mutable health fixture revision; corrected by explicit string annotation at8b7cb1fc."
+    }
+  ]
+}

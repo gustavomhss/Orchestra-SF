@@ -559,9 +559,18 @@
   "verification": {
     "runtime": "IN_PROGRESS",
     "visual": "IN_PROGRESS",
-    "technical": "SIX_GATES_PASSED_AT_22708F89",
+    "technical": "TEN_GATES_PASSED_AT_0F762E71",
     "regression": "FIRST_SIX_PASSED_AT_4B224618",
     "userAcceptance": "PENDING",
     "merge": "NOT_MERGED"
+  },
+  "technicalEvidence": {
+    "run": 44960551065,
+    "snapshot": "197ace0be5a215669036a9c17b49a0c3026c9666",
+    "productHead": "0f762e71a00ceb6985b614462a579ba81997afbf",
+    "checks": 10,
+    "regressionTests": 40,
+    "includesOriginalInstalledHost": true,
+    "fullCli": "Baseline has seven existing diagnostics; audit3 pending after fixing one new test-only type error."
   }
 }
