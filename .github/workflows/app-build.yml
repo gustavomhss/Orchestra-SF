@@ -1,152 +1,104 @@
-name: app-build
+name: G09 historical package proof
+run-name: "G09 #581 · 44911103813"
 
 on:
   workflow_dispatch:
     inputs:
-      revision:
-        description: Full 40-character source revision
+      evidence_artifact_id:
+        description: Optional artifact containing separately signed review.json and proofs.json
         type: string
-        required: false
-        default: ""
-
-concurrency:
-  group: app-build
-  cancel-in-progress: false
 
 permissions:
   contents: read
-
-defaults:
-  run:
-    shell: bash
+  actions: read
 
 jobs:
-  build:
-    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/dev'"
+  g09:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/g09-581-proof'
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 15
+    env:
+      PACKAGE_SHA: 0869f0467d7f89ae752c3cc2aa44c5f77c40d3e6
+      PRODUCER_SHA: a1109e8f42d0f15088679a4e2d48338e8a37186d
+      ZIP_SHA: 9d02f7b2147dead61cb3a1fec6e161b8cbf39b7515f8b2a6c7377ea8582a8f68
+      TAR_SHA: f6973ae1f18749aa93e776bec47eed36aca5e0144e51f4e033622bc094dd3c7e
     steps:
-      - name: Select revision
-        id: source
-        env:
-          REQUESTED_REVISION: ${{ inputs.revision || github.sha }}
-        run: |
-          set -euo pipefail
-          if [[ ! "$REQUESTED_REVISION" =~ ^[0-9a-f]{40}$ ]]; then
-            printf '%s\n' "revision rejected" >&2
-            exit 1
-          fi
-          printf 'sha=%s\n' "$REQUESTED_REVISION" >> "$GITHUB_OUTPUT"
-
-      - name: Checkout
-        id: checkout
+      - name: Check out G09 verifier
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: ${{ steps.source.outputs.sha }}
+          path: auditor
           persist-credentials: false
-
-      - name: Setup Node
-        id: node
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      - name: Check out exact package source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          node-version: "24.15"
-
-      - name: Setup Bun
-        id: bun
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+          ref: ${{ env.PACKAGE_SHA }}
+          path: candidate
+          persist-credentials: false
+      - name: Check out original CI harness
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
-          no-cache: true
-
-      - name: Install dependencies
-        id: install
-        run: bun install --frozen-lockfile
-
-      - name: Build native omni
-        id: native
-        working-directory: native/omni
-        run: |
-          set -euo pipefail
-          if [[ "$(uname -m)" != "x86_64" ]]; then
-            printf '%s\n' "runner rejected" >&2
-            exit 1
-          fi
-          rustup show active-toolchain || rustup toolchain install
-          cargo build --locked --release -p hugr-omni-node -p omni-supervisor
-
-      - name: Qualify web native distribution
-        id: qualify
-        working-directory: apps/cli
+          ref: ${{ env.PRODUCER_SHA }}
+          path: producer
+          persist-credentials: false
+      - name: Collect original artifact by immutable ID
         env:
-          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
-          ORCHESTRA_OMNI_CONTROL: suite
-          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+          GH_TOKEN: ${{ github.token }}
+          SIDE_CAR_ARTIFACT_ID: ${{ inputs.evidence_artifact_id }}
+        shell: bash
         run: |
           set -euo pipefail
-          observed="$(git rev-parse HEAD)"
-          if [[ "$observed" != "$SOURCE_REVISION" ]]; then
-            printf '%s\n' "HEAD is not the selected revision" >&2
-            exit 1
+          out="$RUNNER_TEMP/g09"
+          install -d -m 0700 "$out"
+          test "$(git -C auditor rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git -C candidate rev-parse HEAD)" = "$PACKAGE_SHA"
+          test "$(git -C producer rev-parse HEAD)" = "$PRODUCER_SHA"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/44911103813" > "$out/producer-run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14709069818" > "$out/producer-artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14709069818/zip" > "$out/original.zip"
+          printf '%s  %s\n' "$ZIP_SHA" "$out/original.zip" | sha256sum --check
+          for name in orchestra-sf-entra-linux-x64-baseline.tar.gz orchestra-sf-entra-package-receipt.json ci-validation.json; do
+            unzip -p "$out/original.zip" "$name" > "$out/$name"
+          done
+          printf '%s  %s\n' "$TAR_SHA" "$out/orchestra-sf-entra-linux-x64-baseline.tar.gz" | sha256sum --check
+          if [[ -n "$SIDE_CAR_ARTIFACT_ID" ]]; then
+            [[ "$SIDE_CAR_ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$SIDE_CAR_ARTIFACT_ID/zip" > "$out/evidence.zip"
+            for name in review.json proofs.json; do
+              unzip -p "$out/evidence.zip" "$name" > "$out/$name"
+              test "$(wc -c < "$out/$name")" -le 25000000
+            done
           fi
-          if [[ ! -f ./test/distribution-web-native.test.ts ]]; then
-            printf '%s\n' "qualifier missing" >&2
-            exit 1
-          fi
-          nonce="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
-          export ORCHESTRA_OMNI_CONTROL_NONCE="$nonce"
-          bun test ./test/distribution-web-native.test.ts --timeout 1800000
-
-      - name: Check build receipt
-        id: receipt
+          for identity in tool source producer; do
+            case "$identity" in tool) checkout=auditor ;; source) checkout=candidate ;; producer) checkout=producer ;; esac
+            git -C "$checkout" cat-file commit HEAD > "$out/$identity.commit"
+            git -C "$checkout" ls-tree -r -z HEAD > "$out/$identity.tree"
+          done
+      - name: Verify tar and run only the G09 controls
+        working-directory: auditor
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/g09"
+          python3 -B ../candidate/sf/azure/vm/install-factory-distribution.py verify \
+            --artifact "$out/orchestra-sf-entra-linux-x64-baseline.tar.gz" \
+            --receipt "$out/orchestra-sf-entra-package-receipt.json" --candidate "$PACKAGE_SHA" --sha256 "$TAR_SHA"
+          npm install --ignore-scripts --no-package-lock --no-save --prefix "$out/dependencies" typescript@5.9.3
+          ln -s "$out/dependencies/node_modules" node_modules
+          SF_PRODUCT_SOURCE_SHA="$GITHUB_SHA" SF_TEAMS_RESIDUE_COMMIT_FILE="$out/tool.commit" \
+            SF_TEAMS_RESIDUE_TRACKED_FILE="$out/tool.tree" SF_TEAMS_RESIDUE_CONTROLS_FILE="$out/controls.json" \
+            node --test script/sf-ci/team-profile-residue.test.mjs script/sf-ci/g09-581-package.test.mjs | tee "$out/controls.log"
+      - name: Audit the unmodified #581 bytes
         env:
-          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
-          WORKFLOW_SHA: ${{ github.sha }}
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import { createHash } from "node:crypto"
-          import { readFileSync } from "node:fs"
-          const die = (label) => { process.stderr.write(label + "\n"); process.exit(1) }
-          const hex = (value, size) => typeof value === "string" && new RegExp(`^[0-9a-f]{${size}}$`).test(value)
-          const receipt = JSON.parse(readFileSync("distribution-logs/build-receipt.json", "utf8"))
-          const version = JSON.parse(readFileSync("apps/cli/package.json", "utf8")).version
-          const selected = process.env.SOURCE_REVISION ?? ""
-          const workflow = process.env.WORKFLOW_SHA ?? ""
-          if (receipt.schema !== "orchestra-web-build-proof-v1") die("schema")
-          if (receipt.repository !== "gustavomhss/Orchestra-SF") die("repository")
-          if (!hex(selected, 40) || receipt.sourceSHA !== selected) die("sourceSHA")
-          if (!hex(workflow, 40) || receipt.workflowSHA !== workflow) die("workflowSHA")
-          if (receipt.target !== "linux-x64-baseline" || receipt.manifest?.target !== "linux-x64-baseline") die("target")
-          if (receipt.version !== version || receipt.manifest?.version !== version) die("version")
-          if (!hex(receipt.modelsSha256, 64)) die("modelsSha256")
-          if (receipt.inspected !== true) die("inspected")
-          if (receipt.providerProof !== false) die("providerProof")
-          if (receipt.archive?.file !== "orchestra-sf-linux-x64-baseline.tar.gz") die("archive.file")
-          const digest = createHash("sha256").update(readFileSync("distribution-logs/orchestra-sf-linux-x64-baseline.tar.gz")).digest("hex")
-          if (digest !== receipt.archive.sha256) die("archive.sha256")
-          if (receipt.manifest?.schema !== "orchestra-distribution-v1") die("manifest.schema")
-          const files = receipt.manifest.files
-          const entry = (file) => !!file && typeof file === "object" && !Array.isArray(file) && typeof file.path === "string" && hex(file.sha256, 64) && typeof file.executable === "boolean" && !file.path.startsWith("/") && !file.path.includes("\\") && !file.path.split("/").includes("..") && !file.path.split("/").includes("")
-          if (!Array.isArray(files) || files.length < 3 || !files.every(entry)) die("files")
-          const at = (name) => files.find((file) => file.path === name)
-          const binary = at("bin/orchestra")
-          const index = at("bin/web/index.html")
-          if (!binary || binary.executable !== true) die("bin/orchestra")
-          if (!index || index.executable !== false) die("bin/web/index.html")
-          const rel = receipt.web?.asset
-          if (typeof rel !== "string" || rel === "" || rel.startsWith("/") || rel.includes("\\") || rel.split("/").includes("..") || rel.split("/").includes("")) die("web.asset")
-          const assetPath = "bin/web/" + rel
-          const asset = at(assetPath)
-          if (!asset || asset.executable !== false || !assetPath.endsWith(".js") || assetPath === "bin/web/index.html") die("web.asset")
-          if (!hex(receipt.web.indexSha256, 64) || receipt.web.indexSha256 !== index.sha256 || receipt.web.assetSha256 !== asset.sha256) die("web.sha256")
-          NODE
-
-      - name: Upload distribution logs
-        id: upload
-        if: success()
+          G09_TRUST_JSON: ${{ vars.G09_TRUST_JSON }}
+        shell: bash
+        run: node --max-old-space-size=5120 auditor/script/sf-ci/g09-581.mjs candidate producer "$RUNNER_TEMP/g09"
+      - name: Preserve diagnostic or signed G09 report
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: orchestra-sf-linux-${{ steps.source.outputs.sha }}
-          path: distribution-logs
+          name: g09-581-evidence
+          path: |
+            ${{ runner.temp }}/g09/report.json
+            ${{ runner.temp }}/g09/controls.json
+            ${{ runner.temp }}/g09/controls.log
           if-no-files-found: error
-          retention-days: 7

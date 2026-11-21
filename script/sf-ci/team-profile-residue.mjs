@@ -764,7 +764,7 @@ function authenticateSidecar(sidecar, anchor, role) {
 }
 
 export function auditResidues(input) {
-  const { source, records, sourceGaps = [], artifact, catalogBytes, review, controls, proofs, trust, env } = input
+  const { source, records, sourceGaps = [], artifact, catalogBytes, review, controls, proofs, trust, env, historical } = input
   const anchors = trust === undefined ? undefined : trustAnchors(trust)
   const catalog = validateManifest(parseCanonicalJson(catalogBytes, "residue catalog"))
   const sourceGraph = buildReachability(records, catalog.entrypoints, "source")
@@ -791,9 +791,15 @@ export function auditResidues(input) {
   const binding = { sourceSHA: source.sha, sourceTreeSHA: source.tree,
     catalogSha256: hash(catalogBytes), inventorySha256: digest(inventory),
     occurrencesSha256: digest(occurrences), graphSha256: digest(graph), gapsSha256: digest(gaps) }
-  const evidenceBinding = { ...binding, workflowSHA: env.GITHUB_SHA, runId: env.GITHUB_RUN_ID,
-    runAttempt: env.GITHUB_RUN_ATTEMPT, archiveSha256: artifact?.archiveSha256,
-    artifactId: artifact?.artifact?.id, artifactDigest: artifact?.artifact?.digest }
+  const evidenceExecution = historical ? {
+    GITHUB_SHA: artifact.workflowSHA, GITHUB_RUN_ID: artifact.runId, GITHUB_RUN_ATTEMPT: artifact.runAttempt,
+  } : env
+  const evidenceBinding = { ...binding, workflowSHA: evidenceExecution.GITHUB_SHA, runId: evidenceExecution.GITHUB_RUN_ID,
+    runAttempt: evidenceExecution.GITHUB_RUN_ATTEMPT, archiveSha256: artifact?.archiveSha256,
+    artifactId: artifact?.artifact?.id, artifactDigest: artifact?.artifact?.digest,
+    ...(historical ? {
+      producerReceiptSha256: artifact.receiptSha256, validatorSha256: historical.validatorSha256,
+    } : {}) }
   const blockers = [], inline = catalog.dispositions.map((item) => { reviewDisposition(item); return item })
   let reviewAuthentication
   if (review !== undefined) {
@@ -860,14 +866,14 @@ export function auditResidues(input) {
   if (gaps.some((gap) => gap.kind === "gitlink-contents-unavailable" || gap.kind === "missing-entrypoint" ||
       gap.kind === "invalid-distribution-member-list")) blockers.push("incomplete-required-inventory")
   let controlEvidence
-  if (controls !== undefined) controlEvidence = verifyControls(controls, source, records, env)
+  if (controls !== undefined) controlEvidence = verifyControls(controls, historical?.toolSource ?? source, historical?.toolRecords ?? records, env)
   else blockers.push("executed-negative-controls-missing")
   const obligations = [...new Map([...(review?.testObligations ?? []), ...allDispositions.flatMap((item) => item.testObligations)]
     .map((item) => [JSON.stringify([item.path, item.fileSha256, item.caseName]), item])).values()]
   let proofEvidence
   if (proofs !== undefined) {
     exactKeys(proofs, ["schema", ...Object.keys(evidenceBinding), "reviewSha256", "cases", "authentication"])
-    if (proofs.schema !== "teams-profile-residue-proofs-v1" || !currentExecution(proofs, source, env) ||
+    if (proofs.schema !== "teams-profile-residue-proofs-v1" || !currentExecution(proofs, source, evidenceExecution) ||
         artifact?.status !== "BOUND" || Object.entries(evidenceBinding).some(([key, value]) => proofs[key] !== value) ||
         !sha256(proofs.reviewSha256) || !Array.isArray(proofs.cases))
       fail("executed proof inventory is not from the current source/run and exact audit")
@@ -884,7 +890,7 @@ export function auditResidues(input) {
       seen.add(key)
     }
     for (const obligation of obligations) {
-      const file = byFile.get(fileKey("source", obligation.path))
+      const file = byFile.get(fileKey("source", obligation.path)) ?? historical?.evidenceFiles.get(obligation.path)
       if (!file || file.sha256 !== obligation.fileSha256 ||
           !seen.has(JSON.stringify([obligation.path, obligation.fileSha256, obligation.caseName])))
         blockers.push("test-obligation-not-executed:" + obligation.path + ":" + obligation.caseName)
@@ -896,6 +902,7 @@ export function auditResidues(input) {
     status: blockers.length === 0 ? "PASS" : "DIAGNOSTIC_UNQUALIFIED",
     binding, execution: { workflowSHA: env.GITHUB_SHA, runId: env.GITHUB_RUN_ID, runAttempt: env.GITHUB_RUN_ATTEMPT },
     readOnly: true, counts, blockers: [...new Set(blockers)],
+    ...(historical ? { evidenceBinding } : {}),
     source: { sha: source.sha, tree: source.tree, trackedCount: source.trackedCount ?? records.filter((file) => file.domain === "source").length },
     artifact: artifact ?? { status: "MISSING" }, inventory,
     occurrences: classified, reachability: { ...graph, findings: classifiedGaps },
