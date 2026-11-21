@@ -1,4 +1,4 @@
-import { createSfTeamPurchaseMcp } from "../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts"
+import { createSfTeamPurchaseMcp, createSfTeamSupplierMcp } from "../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { AppProcess } from "@orchestra/core/process"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
@@ -50,7 +50,7 @@ async function fixture(
   enabledTeamIds?: unknown,
   groups: LocalConfiguration["groups"] = { dashboard: {}, planner: {}, procurement: {} },
   teamDirectory?: "members",
-  options: { nativeDecisions?: boolean; nativeRecovery?: boolean; nativeWeb?: boolean; purchasePrincipals?: readonly string[] } = {},
+  options: { nativeDecisions?: boolean; nativeRecovery?: boolean; nativeWeb?: boolean; purchasePrincipals?: readonly string[]; supplierReview?: boolean } = {},
 ) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sf-microsoft-installation-"))
   const directory = join(root, "installation")
@@ -61,7 +61,9 @@ async function fixture(
     await mkdir(workspaceDirectory, { mode: 0o700 })
     const grants = options.nativeDecisions
       ? [{ principalRef: oid, namespaces: ["cases"], operations: ["sf_case_draft"], ...(options.nativeRecovery ? { migrationActions: ["recover"] } : {}) }]
-      : options.purchasePrincipals?.map((principalRef) => ({ principalRef, operations: ["sf_request_read", "sf_sourcing_compare"] })) ??
+      : options.purchasePrincipals?.map((principalRef) => ({ principalRef, operations: [
+        "sf_request_read", "sf_sourcing_compare", ...(options.supplierReview ? ["sf_supplier_read"] : []),
+      ] })) ??
         [{ principalRef: grantPrincipal, operations: ["sf_case_read"] }]
     await writeFile(file, JSON.stringify({
       version: 1, deployment: "azure-https", authentication: "microsoft",
@@ -71,6 +73,7 @@ async function fixture(
       supremeAdminGroupId: grantPrincipal.toUpperCase(), scanner: null,
       ...(teams ? { teams } : {}),
       ...(options.purchasePrincipals ? { clawPurchasePeriod: { start: "2026-01-01", end: "2026-12-31" } } : {}),
+      ...(options.supplierReview ? { clawSupplierReview: true } : {}),
       teamDirectory,
       enabledTeamIds,
     }))
@@ -110,6 +113,7 @@ async function fixture(
       .toThrow("Microsoft installation identity cannot change")
     const open = () => createMicrosoftInstallation({ origin: listenerOrigin,
       ...(options.purchasePrincipals ? { loadTeamPurchaseMcp: async () => createSfTeamPurchaseMcp } : {}),
+      ...(options.supplierReview ? { loadTeamSupplierMcp: async () => createSfTeamSupplierMcp } : {}),
     }, file, environment, {
       fetch, now: () => new Date(epoch * 1000),
       openRecoveryRegister: (file, directory) => openCorporateRecoveryRegister(file, directory, process.getuid?.()),
@@ -145,11 +149,12 @@ const ingress = (relative: string, headers?: Record<string, string>, init?: Pick
   headers: { host: new URL(ingressOrigin).host, ...headers },
 })
 
-test("Installed purchase MCP keeps paired A/B procurement in its admitted Team", async () => {
+test("Installed purchase MCP and supplier review keep paired A/B procurement in its admitted Team", async () => {
   const keys = await generateKeyPair("RS256", { extractable: true })
   const jwk = await exportJWK(keys.publicKey)
   const nonces = new Map<string, string>()
   const principals = [oid, grantPrincipal]
+  const ungranted = "77777777-7777-4777-8777-777777777777"
   const membership = { revokeOnRoleCheck: false, teamRemoved: false }
   const teams = [teamObjectId, secondTeamId].map((id) => ({ id, tenantId, displayName: id, isArchived: false }))
   const fetch = async (request: Request) => {
@@ -168,7 +173,7 @@ test("Installed purchase MCP keeps paired A/B procurement in its admitted Team",
         token_type: "Bearer", expires_in: 3600, scope: "User.Read Team.ReadBasic.All" })
     }
     if (url.origin === "https://graph.microsoft.com") {
-      const principal = principals.find((id) => request.headers.get("authorization") === "Bearer synthetic-" + id)
+      const principal = [...principals, ungranted].find((id) => request.headers.get("authorization") === "Bearer synthetic-" + id)
       if (!principal) throw new Error("Unexpected test Microsoft session")
       if (url.pathname === "/v1.0/me") return Response.json({ id: principal, displayName: "Test purchaser" })
       if (url.href === graph + "/me/checkMemberGroups") {
@@ -182,7 +187,7 @@ test("Installed purchase MCP keeps paired A/B procurement in its admitted Team",
   }
   const f = await fixture("direct", fetch, [teamObjectId, secondTeamId], {
     dashboard: {}, planner: {}, procurement: { requester: "group:" + grantPrincipal, buyer: "group:" + grantPrincipal },
-  }, undefined, { purchasePrincipals: principals })
+  }, undefined, { purchasePrincipals: principals, supplierReview: true })
   try {
     const signIn = async (principal: string) => {
       const begin = await f.installation.handler(ingress("/auth/login"))
@@ -198,17 +203,22 @@ test("Installed purchase MCP keeps paired A/B procurement in its admitted Team",
     const installationId = teamProfileInstallationId({ origin, mount, directory: f.directory })
     const select = (id: string) => JSON.stringify({ contractRevision: "sf-team-profile/1",
       kind: "team", profile: { installationId, tenantId, teamObjectId: id } })
-    const pair = async (cookie: string, id: string) => {
-      const response = await f.installation.handler(ingress("/api/claw/connect", {
-        cookie, origin, "x-sf-claw-purpose": "purchases", "x-sf-team-profile": select(id),
+    const vendorPath = "/api/claw/vendor-review"
+    const ungrantedCookie = await signIn(ungranted)
+    expect((await f.installation.handler(ingress(vendorPath + "/connect", {
+      cookie: ungrantedCookie, origin, "x-sf-claw-purpose": "vendor-review", "x-sf-team-profile": select(teamObjectId),
+    }, { method: "POST" })))?.status).toBe(403)
+    const pair = async (cookie: string, id: string, purpose: "purchases" | "vendor-review" = "purchases") => {
+      const response = await f.installation.handler(ingress((purpose === "purchases" ? "/api/claw" : vendorPath) + "/connect", {
+        cookie, origin, "x-sf-claw-purpose": purpose, "x-sf-team-profile": select(id),
       }, { method: "POST" }))
       expect(response?.status).toBe(200)
       return ((await response!.json()) as { token: string }).token
     }
     const cases = await Promise.all([
-      [oid, teamObjectId, "PR-2026-0901", "A"],
-      [grantPrincipal, secondTeamId, "PR-2026-0902", "B"],
-    ].map(async ([principal, team, ref, label]) => {
+      [oid, teamObjectId, "PR-2026-0901", "A", "SUP-09001", "active"],
+      [grantPrincipal, secondTeamId, "PR-2026-0902", "B", "SUP-09002", "pending"],
+    ].map(async ([principal, team, ref, label, number, status]) => {
       const cookie = await signIn(principal!)
       const partition = digestSfValue({ installationId, tenantId, teamObjectId: team })
       const storePath = join(f.directory, "business-teams", partition)
@@ -225,20 +235,39 @@ test("Installed purchase MCP keeps paired A/B procurement in its admitted Team",
               currency: "USD", techPass: true, scores: [5, 4, 3, 4, 5], cscores: [0, 4, 5],
             })) },
           } }
-          snapshot.data.store = { settings: initialProcurementSettings(), requests: { [ref!]: entry } }
+          snapshot.data.store = { settings: initialProcurementSettings(), requests: { [ref!]: entry }, suppliers: [{
+            id: "supplier-" + label, number, status, legalName: "Fornecedor Sintético " + label,
+            account: "synthetic-private-account", contacts: [{ email: "private@example.test" }],
+          }] }
           changed(snapshot, "requests:" + ref, { id: "fixture", roles: [], canWrite: false }, at, undefined, entry)
           return { commit: true, value: undefined }
         })
       } finally { await store.dispose() }
-      return { cookie, team: team!, ref: ref!, label, storePath, token: await pair(cookie, team!) }
+      return { cookie, team: team!, ref: ref!, label, number, storePath, token: await pair(cookie, team!),
+        vendorToken: await pair(cookie, team!, "vendor-review") }
     }))
-    const rpc = (token: string, method: string, params?: Record<string, unknown>, extra?: Record<string, string>) =>
-      f.installation.handler(ingress("/api/claw/mcp", {
+    const rpc = (token: string, method: string, params?: Record<string, unknown>, extra?: Record<string, string>, path = "/api/claw/mcp") =>
+      f.installation.handler(ingress(path, {
         authorization: "Bearer " + token, "content-type": "application/json", accept: "application/json, text/event-stream", ...extra,
       }, { method: "POST", body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) }))
     const call = (token: string, requestRef: string, extra?: Record<string, string>) =>
       rpc(token, "tools/call", { name: "sf_comparar_compra", arguments: { requestRef } }, extra)
     for (const actor of cases) {
+      const { result: supplierTools } = await (await rpc(actor.vendorToken, "tools/list", undefined, undefined, vendorPath + "/mcp"))!.json()
+      expect(supplierTools.tools).toHaveLength(1)
+      expect(supplierTools.tools[0]).toMatchObject({ name: "sf_read_vendor_review", annotations: { readOnlyHint: true } })
+      expect((await rpc(actor.token, "tools/list", undefined, undefined, vendorPath + "/mcp"))?.status).toBe(403)
+      expect((await rpc(actor.vendorToken, "tools/list"))?.status).toBe(403)
+      const other = cases.find((item) => item !== actor)!
+      for (const recordRef of [other.number, "SUP-09999"]) {
+        const response = await rpc(actor.vendorToken, "tools/call", { name: "sf_read_vendor_review", arguments: { recordRef } },
+          undefined, vendorPath + "/mcp")
+        expect(response?.status).toBe(200)
+        expect((await response!.json()).result).toEqual({ isError: true, content: [{ type: "text", text: '{"status":"denied"}' }] })
+      }
+      const mutation = await rpc(actor.vendorToken, "tools/call", { name: "sf_supplier_block", arguments: { recordRef: actor.number } },
+        undefined, vendorPath + "/mcp")
+      expect((await mutation!.json()).result).toEqual({ isError: true, content: [{ type: "text", text: '{"status":"invalid"}' }] })
       const tools = await (await rpc(actor.token, "tools/list"))!.json()
       expect(tools.result.tools.map((tool: { name: string }) => tool.name)).toEqual(["sf_comparar_compra"])
       for (const target of cases) {
@@ -268,9 +297,9 @@ test("Installed purchase MCP keeps paired A/B procurement in its admitted Team",
       const proxy = Bun.serve({ hostname: "127.0.0.1", port: 0, async fetch(request) {
         const pathname = new URL(request.url).pathname
         if (request.method !== "POST") return new Response(null, { status: 405 })
-        if (pathname === mount + "/api/claw/mcp") {
+        if (pathname === mount + "/api/claw/mcp" || pathname === mount + vendorPath + "/mcp") {
           const headers = Object.fromEntries(Array.from(request.headers).filter(([name]) => name !== "host"))
-          return await f.installation.handler(ingress("/api/claw/mcp", headers, {
+          return await f.installation.handler(ingress(pathname.slice(mount.length), headers, {
             method: "POST", body: await request.text(),
           })) ?? new Response(null, { status: 404 })
         }
@@ -305,15 +334,28 @@ test("Installed purchase MCP keeps paired A/B procurement in its admitted Team",
         return new Response(null, { status: 204 })
       } })
       try {
-        const script = fileURLToPath(new URL("../../../../packages/script/test/sf-purchase-invoke.node-smoke.mjs", import.meta.url))
-        const run = await Effect.runPromise(Effect.gen(function* () {
+        const runGateway = (file: string, tokens: { A: string; B: string }, confirmation?: string) => Effect.runPromise(Effect.gen(function* () {
+          const script = fileURLToPath(new URL("../../../../packages/script/test/" + file, import.meta.url))
           const processService = yield* AppProcess.Service
           const result = yield* processService.run(ChildProcess.make("node", [script, "--installed-fixture"]), {
-            stdin: JSON.stringify({ url: proxy.url.origin, control, tokens: { A: a.token, B: cases[1]!.token } }),
+            stdin: JSON.stringify({ url: proxy.url.origin, control: confirmation, tokens }),
             timeout: "10 minutes", maxErrorBytes: 16_384, maxOutputBytes: 16_384,
           })
           return yield* AppProcess.requireSuccess(result)
         }).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
+        const b = cases[1]!
+        const fingerprint = (path: string) => openLocalStore(path).then(async (store) => {
+          try {
+            return await store.transaction("procurement", async (state) => ({ commit: false, value: digestSfValue(state) }))
+          } finally { await store.dispose() }
+        })
+        const before = await Promise.all(cases.map((item) => fingerprint(item.storePath)))
+        const vendor = await runGateway("sf-vendor-review.node-smoke.mjs", { A: a.vendorToken, B: b.vendorToken })
+        const vendorReceipt = vendor.stdout.toString().split("\n").find((line) => line.startsWith("SF supplier review "))
+        expect(vendorReceipt).toBe("SF supplier review SUP-09001/SUP-09002: two own reads, two crossed denials.")
+        expect(await Promise.all(cases.map((item) => fingerprint(item.storePath)))).toEqual(before)
+        console.log(vendorReceipt)
+        const run = await runGateway("sf-purchase-invoke.node-smoke.mjs", { A: a.token, B: b.token }, control)
         const receipt = run.stdout.toString().split("\n").find((line) => line.startsWith("SF synthetic purchase "))
         expect(receipt).toBe("SF synthetic purchase PR-2026-0901: A/B 4/4, confirmed A1, version 1 -> 2, one quotation selection in history.")
         console.log(receipt)

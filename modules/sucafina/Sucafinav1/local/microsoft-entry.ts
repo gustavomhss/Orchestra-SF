@@ -18,6 +18,7 @@ type InstallationContext = {
   origin: string
   teamCurrentChoice?: SfTeamCurrentChoice
   loadTeamPurchaseMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamPurchaseMcp>
+  loadTeamSupplierMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamSupplierMcp>
 }
 
 export default function installation(context: InstallationContext) {
@@ -66,6 +67,11 @@ export async function createMicrosoftInstallation(
       const createPurchaseMcp = await context.loadTeamPurchaseMcp()
       return createPurchaseMcp({ config, directory, identity, authorizeTeam: teamAccess, period: purchasePeriod, now })
     })() : undefined
+    const supplierMcp = config.clawSupplierReview ? await (async () => {
+      if (!teamAccess || !context.loadTeamSupplierMcp) throw new Error("Supplier MCP requires the Microsoft Team host")
+      const createSupplierMcp = await context.loadTeamSupplierMcp()
+      return createSupplierMcp({ config, directory, identity, authorizeTeam: teamAccess, now })
+    })() : undefined
     const headers = { "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" }
     const htmlHeaders = { ...headers, "Content-Type": "text/html; charset=utf-8",
       "Content-Security-Policy": "default-src 'none'; frame-ancestors 'self'; base-uri 'none'" }
@@ -106,8 +112,8 @@ export async function createMicrosoftInstallation(
         const auth = await identity.handle(request)
         if (auth) return auth
         if (web && url.pathname === config.mount + "/api/ui/context") return web.context.handle(request)
-        const purchase = await purchaseMcp?.(request)
-        if (purchase) return purchase
+        const mcp = await purchaseMcp?.(request) ?? await supplierMcp?.(request)
+        if (mcp) return mcp
         const recovered = await recovery?.(request)
         if (recovered) return recovered
         const route = teamAccess ? teamBusinessRoute(url.pathname, config.mount) : undefined
