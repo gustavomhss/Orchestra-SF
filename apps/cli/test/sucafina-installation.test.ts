@@ -16,7 +16,7 @@ const fixture = fileURLToPath(new URL("./fixture/sucafina-installation.ts", impo
 const entry = fileURLToPath(new URL("../src/index.ts", import.meta.url))
 const it = testEffect(LayerNode.compile(AppProcess.node))
 
-function unfinishedPost(hostname: string, port: number, route: string, headers: string[]) {
+function unfinishedPost(hostname: string, port: number, route: string, headers: string[], chunks = ["first chunk"]) {
   return new Promise<string>((resolve, reject) => {
     const socket = connect(port, hostname)
     socket.setTimeout(8_000, () => {
@@ -28,7 +28,8 @@ function unfinishedPost(hostname: string, port: number, route: string, headers: 
     socket.once("connect", () => {
       // Deliver a complete chunk but leave the request body open until the server answers.
       socket.write([
-        `POST ${route} HTTP/1.1`, ...headers, "Transfer-Encoding: chunked", "", "b", "first chunk", "",
+        `POST ${route} HTTP/1.1`, ...headers, "Transfer-Encoding: chunked", "",
+        ...chunks.flatMap((chunk) => [Buffer.byteLength(chunk).toString(16), chunk]), "",
       ].join("\r\n"))
     })
     let response = ""
@@ -107,6 +108,19 @@ const serveInstallation = (trusted: boolean) => () =>
           const response = await unfinishedPost(hostname, port, "/sucafina/dashboard", [`Host: ${host}`, ...headers])
           expect(response).toMatch(/^HTTP\/1\.1 403 /)
         }
+        const report = "/sucafina/dashboard?sf=review-report"
+        const ingressHeaders = { host, "x-sf-ingress-proof": proof }
+        const atLimit = await dispatch(report, { method: "POST", headers: ingressHeaders, body: new Uint8Array(65_536) })
+        expect(atLimit.status).toBe(200)
+        expect(await atLimit.json()).toBe(65_536)
+        const tooLarge = await dispatch(report, { method: "POST", headers: ingressHeaders, body: new Uint8Array(65_537) })
+        expect(tooLarge.status).toBe(413)
+        expect(await tooLarge.json()).toEqual({ status: "needs-input", reason: "request-too-large" })
+        const chunked = await unfinishedPost(hostname, port, report, [`Host: ${host}`, `X-SF-Ingress-Proof: ${proof}`], [
+          "a".repeat(32_768), "b".repeat(32_769),
+        ])
+        expect(chunked).toMatch(/^HTTP\/1\.1 413 /)
+
         const approved = await dispatch("/sucafina/planner?year=2026", {
           method: "POST",
           headers: {

@@ -4,6 +4,7 @@ import { isIP } from "node:net"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { NodeHttpServerRequest, NodeStream } from "@effect/platform-node"
+import { SfReviewRoutes } from "@orchestra/schema/sucafina/reviews/routes"
 import { Effect, Option, Stream } from "effect"
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 
@@ -57,6 +58,8 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
       return 25 * 1024 * 1024
     }
   }
+  const report = SfReviewRoutes["reviews.report.prepare"]
+  const reportPath = report.pathTemplate.replace("{mount}", installation.mount)
   const route = Effect.gen(function* () {
     const incoming = yield* HttpServerRequest.HttpServerRequest
     if (!ingress) {
@@ -76,9 +79,40 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
       return HttpServerResponse.empty({ status: 404 })
     }
     const max = Number((yield* HttpServerRequest.MaxBodySize) ?? 16 * 1024 * 1024)
+    const reportLimit = incoming.method === report.method && url.pathname === reportPath &&
+      url.searchParams.size === 1 && url.searchParams.get("sf") === report.fixedQuery.sf ? Math.min(max, report.maxRequestBytes) : undefined
+    const oversized = () => reportLimit === undefined
+      ? HttpServerResponse.empty({ status: 413, headers: { connection: "close" } })
+      : HttpServerResponse.jsonUnsafe({ status: "needs-input", reason: "request-too-large" }, {
+        status: 413, headers: { connection: "close", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
+      })
+    if (reportLimit !== undefined && Number(incoming.headers["content-length"]) > reportLimit) return oversized()
     return yield* Effect.tryPromise(async (signal) => {
+      let bytes = 0
+      let exceeded = false
+      const withinLimit = (chunk: Uint8Array) => {
+        bytes += chunk.byteLength
+        if (bytes <= (reportLimit ?? max)) return true
+        exceeded = true
+        return false
+      }
       if (source) {
-        const response = await installation.handler(new Request(source, { signal: AbortSignal.any([source.signal, signal]) }))
+        const requestSignal = AbortSignal.any([source.signal, signal])
+        if (!source.body || reportLimit === undefined) {
+          const response = await installation.handler(new Request(source, { signal: requestSignal }))
+          return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
+        }
+        const body = source.body.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({
+          transform(chunk, controller) {
+            if (withinLimit(chunk)) controller.enqueue(chunk)
+            else controller.error(new Error("Installation request body exceeds the limit"))
+          },
+        }))
+        const response = await installation.handler(new Request(source, {
+          body, signal: requestSignal, duplex: "half",
+        })).catch(() => new Response(null, { status: 503 }))
+        if (!body.locked) void body.cancel().catch(() => undefined)
+        if (exceeded) return oversized()
         return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
       }
       const node = NodeHttpServerRequest.toIncomingMessage(incoming)
@@ -86,15 +120,11 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
       if (carriesBody && (incoming.method === "GET" || incoming.method === "HEAD")) {
         return HttpServerResponse.empty({ status: 400, headers: { connection: "close" } })
       }
-      let bytes = 0
-      let exceeded = false
       // Cancellation after an early rejection must leave the socket open long enough to write the response.
       const body = carriesBody ? Stream.toReadableStream(
         NodeStream.fromReadable<Uint8Array>({ evaluate: () => node, closeOnDone: false }).pipe(
           Stream.mapEffect((chunk) => {
-            bytes += chunk.byteLength
-            if (bytes <= max) return Effect.succeed(chunk)
-            exceeded = true
+            if (withinLimit(chunk)) return Effect.succeed(chunk)
             return Effect.fail(new Error("Installation request body exceeds the limit"))
           }),
         ),
@@ -111,7 +141,7 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
         method: incoming.method, headers, signal, ...(body ? { body, duplex: "half" } : {}),
       })).catch(() => new Response(null, { status: 503 }))
       if (body && !body.locked) void body.cancel().catch(() => undefined)
-      if (exceeded) return HttpServerResponse.empty({ status: 413, headers: { connection: "close" } })
+      if (exceeded) return oversized()
       const result = response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
       return body && !node.readableEnded ? HttpServerResponse.setHeader(result, "connection", "close") : result
     })
