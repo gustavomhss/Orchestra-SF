@@ -16,6 +16,7 @@ const projectId = "wp12-delivery-project"
 const otherProjectId = "wp12-homonymous-project"
 const capexId = "wp12-capex-plan"
 const milestoneId = `milestone:${encodeURIComponent(projectId)}:release`
+const observedAt = "2027-01-15T12:00:00.000Z"
 
 async function initializeDependencies(persistence: Wp12NativeMissionContext["persistence"]) {
   await initializeWp12PortfolioSources(persistence)
@@ -40,24 +41,38 @@ async function collaboration(context: Wp12NativeMissionContext, mode: string, pa
 }
 
 test("dependency review uses a confirmed relation, actual choice and dated milestone while homonyms and FTE declarations confer no authority", async () => {
-  await withWp12NativeMissionHost({ label: "portfolio-dependencies", operations: [...WP12_PORTFOLIO_OPERATIONS, "sf_relation_read", "sf_dashboard_read", "sf_work_list"],
+  // These declared 2027 records and their current milestone status share the
+  // same trusted observation clock across initial issuance and host reopening.
+  await withWp12NativeMissionHost({ label: "portfolio-dependencies", observedAt, operations: [...WP12_PORTFOLIO_OPERATIONS, "sf_relation_read", "sf_dashboard_read", "sf_work_list"],
     humanActions: [...WP12_PORTFOLIO_HUMAN_ACTIONS, "collaboration.relation.confirm", "collaboration.storage.version"],
     namespaces: ["cases", "preferences", "documents", "contributions", "receipts", "outbox", "atlas", "threads", "relations", "confirmations"],
     initialize: initializeDependencies }, async (harness) => {
     const initial = await harness.open("initial", async (context) => {
+      expect(context.at).toBe(observedAt)
       const sources = await context.ui("sf_context_get", { purpose: "native-dependency-sources" }, async (call) => {
-        // One page projection carries dates; records are issued separately for
-        // the actual C06 relation. Names never act as join keys.
+        // The original page projection owns dates and current status. C06 uses
+        // scalar record projections; names never act as join keys.
         const page = await createDashboardSourceIssuer({ host: context.business.host, scopedSources: context.persistence })({
           page: "Portfolio Dashboard", fields: ["milestoneDates"], period: WP12_PORTFOLIO_PERIOD }, call)
         const project = await context.business.dashboardRecords.issue({ page: "Portfolio Dashboard", recordType: "projects", recordId: projectId,
-          fields: ["name", "milestones"], period: WP12_PORTFOLIO_PERIOD }, call)
+          fields: ["name"], period: WP12_PORTFOLIO_PERIOD }, call)
         const other = await context.business.dashboardRecords.issue({ page: "Portfolio Dashboard", recordType: "projects", recordId: otherProjectId,
-          fields: ["name", "milestones"], period: WP12_PORTFOLIO_PERIOD }, call)
+          fields: ["name"], period: WP12_PORTFOLIO_PERIOD }, call)
         const capex = await context.business.dashboardRecords.issue({ page: "CAPEX Projects", recordType: "capexProjects", recordId: capexId,
           fields: ["name"], period: WP12_PORTFOLIO_PERIOD }, call)
         if (page.status !== "ok" || project.status !== "ok" || other.status !== "ok" || capex.status !== "ok")
-          throw new Error("The real dashboard issuers did not authorize the selected dependency sources")
+          throw new Error(`The real dashboard issuers did not authorize the selected dependency sources (page/project/other/capex): ${[page, project, other, capex].map((result) => result.status === "ok" ? "ok" : `${result.status}:${result.reason}`).join(", ")}`)
+        expect(page.value.evidence).toMatchObject({ evidenceLevel: "observed", target: {
+          surface: "dashboard", recordType: "dashboard-page", recordId: "Portfolio Dashboard",
+          fields: ["milestoneDates"], period: WP12_PORTFOLIO_PERIOD } })
+        expect([project.value, other.value, capex.value].map((ref) => ({ kind: ref.kind, evidenceLevel: ref.evidenceLevel,
+          surface: ref.target.surface, recordType: ref.target.recordType, recordId: ref.target.recordId,
+          fields: ref.target.fields, period: ref.target.period }))).toEqual([
+          { kind: "record", evidenceLevel: "observed", surface: "dashboard", recordType: "projects", recordId: projectId, fields: ["name"], period: WP12_PORTFOLIO_PERIOD },
+          { kind: "record", evidenceLevel: "observed", surface: "dashboard", recordType: "projects", recordId: otherProjectId, fields: ["name"], period: WP12_PORTFOLIO_PERIOD },
+          { kind: "record", evidenceLevel: "observed", surface: "dashboard", recordType: "capexProjects", recordId: capexId, fields: ["name"], period: WP12_PORTFOLIO_PERIOD },
+        ])
+        expect(new Set([project.value.refId, other.value.refId, capex.value.refId]).size).toBe(3)
         return { page: page.value.evidence, project: project.value, other: other.value, capex: capex.value }
       })
       const storageVersion = await collaboration(context, "storage-version", { namespace: "relations" })
@@ -138,6 +153,7 @@ test("dependency review uses a confirmed relation, actual choice and dated miles
         sourceRefs: [sources.project.refId, sources.capex.refId], completed, conflict }
     })
     await harness.open("reopened", async (context) => {
+      expect(context.at).toBe(observedAt)
       const prepared = await prepareWp12PortfolioMission(context, initial.incoming)
       expect(prepared.response.status).toBe(200)
       expect(digestSfValue(prepared.body.value)).toBe(initial.inputDigest)

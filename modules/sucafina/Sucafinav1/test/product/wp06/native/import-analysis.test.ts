@@ -1,6 +1,9 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { launchBrowserDriver } from "../../wp02/browser-driver-fixture.ts"
+import { createNativeBrowserAssets } from "../../native-ui-browser/browser-assets.ts"
 import { Workbook } from "exceljs"
-import { Effect } from "effect"
+import { Effect, Schema } from "effect"
 import { rows } from "../../../../runtime/contract.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { decodeSfOperationOutput, decodeSfSkillInput } from "../../../../product/contracts/schema-admission.ts"
@@ -14,7 +17,11 @@ import { sfPlannerSourceSelector } from "../../../../product/integration/planner
 import { createSfImportForecastAnalysis } from "../../../../../../../apps/cli/src/sucafina-product/import-analysis.ts"
 import { createSfImportIntentAnalysis } from "../../../../../../../apps/cli/src/sucafina-product/import-intent.ts"
 import { sfAnalysisPrompt } from "../../../../../../../apps/cli/src/sucafina-product/analysis-verifier.ts"
-import { contribution } from "../../../../product/ui/components.ts"
+import { presentSfAnalysisOutput } from "../../../../product/interface/analysis-output.ts"
+import { SfIntelligenceAnalysisOutput } from "../../../../../../../packages/schema/src/sucafina/analyses.ts"
+import type { SfOwnerSelection, SfRef, SfServerKey } from "../../../../../../../packages/schema/src/sucafina/context.ts"
+import { sfAnalysisImportPreviewDestination } from "../../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/import-preview.ts"
+import { matchSfNativeRoutePath } from "../../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts"
 import { readNativeResponse, withNativeWp06 } from "./fixture.ts"
 
 test("real Session and MCP import previews preserve C04 parity across four admissions and reject unadmitted files", async () => {
@@ -56,7 +63,9 @@ test("real Session and MCP import previews preserve C04 parity across four admis
 }, 120_000)
 
 test("recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change", async () => {
-  await withNativeWp06(async (fixture) => {
+  expectSpawn(import.meta.path)
+  const browser = createImportOutputWitness()
+  try { await withNativeWp06(async (fixture) => {
     const { app } = fixture
     // Timed delegates still invoke the real producers with the same arguments and grants.
     const imports = { ...fixture.imports.imports,
@@ -153,14 +162,11 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     const assistant = await Effect.runPromise(fixture.sessionStore.message(complete.assistantMessageID))
     expect(assistant?.message.type).toBe("assistant")
     expect(JSON.stringify(assistant)).toContain(chosen.id)
-    const forecastLink = renderedPreviewUrl(contribution, app.origin)
+    const forecastLink = await nativePreviewReferenceUrl(contribution, fixture, browser)
     expect(forecastLink.pathname).toBe("/sucafina/planner")
     expect(forecastLink.searchParams.get("importPreviewRef")).toBe(chosen.id)
-    const page = await fixture.importHttp(new Request(forecastLink, { headers: { cookie: app.cookie } }), "planner")
-    expect(page?.status).toBe(200)
-    expect(await page?.text()).toContain("Analysis refers to this simulation")
-    forecastLink.searchParams.set("sf", "import-reference")
     const forecastReference = await fixture.importHttp(new Request(forecastLink, { headers: { cookie: app.cookie } }), "planner")
+    expect(forecastReference?.status).toBe(200)
     if (!forecastReference) throw new Error("Rendered import reference unavailable")
     const reference = await readNativeResponse<{ manifest: ImportManifest; detail: ImportDetail }>(forecastReference)
     expect((forecastProof.value.promptContext && "importPreview" in forecastProof.value.promptContext ? forecastProof.value.promptContext.importPreview : undefined)).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
@@ -233,12 +239,10 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     if (persistedIntent.status !== "ok") throw new Error(`Intent contribution persistence: ${"reason" in persistedIntent ? persistedIntent.reason : persistedIntent.status}`)
     expect(persistedIntent.status).toBe("ok")
     expect(persistedIntent.value).toEqual(intentOutput)
-    const intentLink = renderedPreviewUrl(intentOutput, app.origin)
+    const intentLink = await nativePreviewReferenceUrl(intentOutput, fixture, browser)
     expect(intentLink.searchParams.get("importPreviewRef")).toBe(chosen.id)
-    const intentPage = await fixture.importHttp(new Request(intentLink, { headers: { cookie: app.cookie } }), "planner")
-    expect(intentPage?.status).toBe(200)
-    intentLink.searchParams.set("sf", "import-reference")
     const intentReference = await fixture.importHttp(new Request(intentLink, { headers: { cookie: app.cookie } }), "planner")
+    expect(intentReference?.status).toBe(200)
     if (!intentReference) throw new Error("Intent preview consumer missing")
     expect(await readNativeResponse<{ manifest: ImportManifest; detail: ImportDetail }>(intentReference)).toMatchObject(reference)
     await fixture.human("analysis.read", { runRef: intentNative.record.runRef }, async (call) => {
@@ -289,6 +293,7 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     }
     expect(await app.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))).toBe(beforeLogout)
   }, { traceOperations: true, deadlineMs: 300_000 })
+  } finally { await browser.close() }
 }, 360_000)
 
 async function prepareImportWorkbook(fixture: Parameters<Parameters<typeof withNativeWp06>[0]>[0]) {
@@ -320,14 +325,84 @@ async function prepareImportWorkbook(fixture: Parameters<Parameters<typeof withN
   return { domainBefore, form, request }
 }
 
-function renderedPreviewUrl(output: ContributionEnvelope, origin: string) {
-  const html = contribution(output)
-  const href = /<a href="([^"]+)" data-import-preview-link>/.exec(html)?.[1]
-  if (!href) throw new Error("Persisted contribution has no preview link")
-  const url = new URL(href.replaceAll("&amp;", "&"), origin)
-  expect(url.origin).toBe(origin)
-  expect(url.searchParams.get("sf")).toBe("imports")
-  return url
+async function nativePreviewReferenceUrl(output: ContributionEnvelope, fixture: Parameters<Parameters<typeof withNativeWp06>[0]>[0], browser: ReturnType<typeof createImportOutputWitness>) {
+  if (output.state !== "ready" || (output.kind !== "FinancialAnalysis" && output.kind !== "IntentFrame") ||
+      output.payload.analysisBasis !== "import-preview") throw new Error("Import contribution unavailable")
+  // Exercise the projection used by the real analysis HTTP producer and the
+  // route builder consumed by the native Analysis chapter, with the persisted output.
+  const envelope = Schema.decodeUnknownSync(SfIntelligenceAnalysisOutput)({
+    status: "ok", value: presentSfAnalysisOutput(output),
+  }, { onExcessProperty: "error" })
+  if (envelope.status !== "ok") throw new Error("Native analysis output rejected")
+  expect(envelope.value.outputRef).toBe(output.id)
+  expect(envelope.value.importPreviewRef).toBe(output.payload.importPreviewRef)
+  expect(envelope.value.html).toContain("Import preview; not applied.")
+  const owner: SfOwnerSelection = { serverKey: fixture.app.origin as SfServerKey,
+    projectId: fixture.installation.projectId as SfRef, installationId: fixture.installation.installationId as SfRef }
+  const href = sfAnalysisImportPreviewDestination(envelope.value, owner)
+  if (!href) throw new Error("Persisted contribution has no native preview destination")
+  await browser.render(envelope, owner, href)
+  const nativeUrl = new URL(href, fixture.app.origin)
+  expect(nativeUrl.origin).toBe(fixture.app.origin)
+  expect(Object.fromEntries(nativeUrl.searchParams)).toEqual({
+    server: owner.serverKey, project: owner.projectId, installation: owner.installationId,
+  })
+  const candidate = matchSfNativeRoutePath(nativeUrl.pathname)
+  expect(candidate).toEqual({ surfaceId: "UI56", chapterId: "sf-imports", kind: "entry",
+    parameters: { manifestId: output.payload.importPreviewRef } })
+  if (!candidate?.parameters.manifestId) throw new Error("Native import route lost its original manifest")
+  const { payload: _payload, ...unavailable } = output
+  expect(presentSfAnalysisOutput({ ...unavailable, state: "stale", reason: "source-changed" })).not.toHaveProperty("importPreviewRef")
+  expect(sfAnalysisImportPreviewDestination({}, owner)).toBeUndefined()
+  // The native Imports chapter reads files.import-reference after the user
+  // chooses the real source. This Planner case follows the same exact manifest.
+  const reference = new URL("/sucafina/planner", fixture.app.origin)
+  reference.searchParams.set("sf", "import-reference")
+  reference.searchParams.set("importPreviewRef", candidate.parameters.manifestId)
+  return reference
+}
+
+/** Render the exact native analysis output component with the real persisted
+ * contribution projection. The ephemeral 127.0.0.1 host has no business routes
+ * or session grants. Authoritative reference reads below remain on the original
+ * admitted in-memory producer; Chromium never navigates to its :4110 test URL.
+ */
+function createImportOutputWitness() {
+  let assets: Awaited<ReturnType<typeof createNativeBrowserAssets>> | undefined
+  let server: ReturnType<typeof Bun.serve> | undefined
+  let driver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
+  let value: Readonly<{ output: typeof SfIntelligenceAnalysisOutput.Type; owner: SfOwnerSelection }> | undefined
+  return {
+    render: async (output: typeof SfIntelligenceAnalysisOutput.Type, owner: SfOwnerSelection, href: string) => {
+      if (output.status !== "ok") throw new Error("Original output is unavailable")
+      assets ??= await createNativeBrowserAssets(new URL("./import-output-entry.tsx", import.meta.url))
+      value = { output, owner }
+      server ??= Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: (request) =>
+        assets?.handle(request, { mode: "component", value }) ?? new Response(null, { status: 404 }) })
+      driver ??= await launchBrowserDriver("import-analysis-output")
+      const context = await driver.browser.newContext({ viewport: { width: 1440, height: 1000 } })
+      context.setDefaultTimeout(5000)
+      context.setDefaultNavigationTimeout(5000)
+      try {
+        const page = await context.newPage(), errors: string[] = []
+        page.on("pageerror", (error) => errors.push(error.message))
+        await page.goto(server.url.origin + "/orchestra/sf-decisions/fixture/analyses", { waitUntil: "domcontentloaded" })
+        const { expect: browserExpect } = await import("@playwright/test")
+        const section = page.locator("[data-sf-analysis-output]")
+        await browserExpect(section.getByRole("link", { name: "Open original import preview", exact: true })).toHaveAttribute("href", href)
+        // Producer HTML remains literal text; it cannot create an alternative link.
+        await browserExpect(section.locator("pre")).toHaveText(output.value.html)
+        await browserExpect(section.locator("pre a")).toHaveCount(0)
+        await browserExpect(section.getByRole("link")).toHaveCount(1)
+        expect(new URL(page.url()).port).not.toBe("4110")
+        expect(errors).toEqual([])
+      } finally { await context.close() }
+    },
+    close: async () => {
+      try { if (driver) { await driver.close(); driver.report() } }
+      finally { await server?.stop(true) }
+    },
+  }
 }
 
 /** planner-preview derives these identifiers from each actual operationIdentity; store.view

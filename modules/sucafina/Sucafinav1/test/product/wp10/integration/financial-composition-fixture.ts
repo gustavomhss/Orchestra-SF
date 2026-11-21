@@ -33,7 +33,7 @@ export async function financialCompositionFixture(options: { clock?: { at: strin
     return { commit: true, value: undefined }
   })
   const guards = { proposalCoverageWrites: new WeakSet<object>(), dashboardHostWrites: new WeakSet<object>(), procurementEvidenceWrites: new WeakSet<object>(),
-    caseSelectionWrites: new WeakSet<object>(), threadHistoryWrites: new WeakSet<object>(), analysisSelectionWrites: new WeakSet<object>() }
+    caseSelectionWrites: new WeakSet<object>(), threadHistoryWrites: new WeakSet<object>(), analysisSelectionWrites: new WeakSet<object>(), signalRegistryWrites: new WeakSet<object>() }
   const identity = Object.freeze({ installationId: "installation", hostId: "host", projectId: "project",
     location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) })
   const authority = createSfProductAuthority({ installationId: "installation", origin: "https://example.test", policyVersion: "policy", ...guards,

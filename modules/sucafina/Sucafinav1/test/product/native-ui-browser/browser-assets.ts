@@ -52,6 +52,7 @@ function browserPackage(specifier: string): Promise<string> {
 const entrypoints = new Map([
   [fileURLToPath(new URL("./client.tsx", import.meta.url)), "client.js"],
   [fileURLToPath(new URL("../wp01/http-entry.tsx", import.meta.url)), "http-entry.js"],
+  [fileURLToPath(new URL("../wp06/native/import-output-entry.tsx", import.meta.url)), "import-output-entry.js"],
 ])
 let compiled: ReturnType<typeof compileNativeBrowserAssets> | undefined
 

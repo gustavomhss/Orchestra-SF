@@ -12,6 +12,7 @@ import { KNOWN_SCANNERS } from "@orchestra/atlas-boundary/native-memory"
 import { Effect } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 import { expectSpawn } from "../../../../../../../packages/core/test/fixture/omni-expect.ts"
+import { Omni } from "../../../../../../../packages/core/src/omni.ts"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { createSfAnalysisRunContext } from "../../../../../../../apps/cli/src/sucafina-product/analysis-run-context.ts"
 import { createSfStaleAnalysisAccess } from "../../../../../../../apps/cli/src/sucafina-product/analysis-stale-commit.ts"
@@ -22,7 +23,7 @@ import { createSfSourceScopeProjector } from "../../../../product/integration/so
 import { digestSfContribution, digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessMemoryEnvelope } from "../../../../product/contracts/business-context.ts"
 import type { CaseLedgerEvent } from "../../../../product/contracts/decisions.ts"
-import type { SfProductState, SfNativeRunRecord } from "../../../../product/contracts/state.ts"
+import type { SfProductState, SfNativeRunRecord, SfStateResult } from "../../../../product/contracts/state.ts"
 import type { ContributionEnvelope } from "../../../../product/contracts/resident-ai.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import { createSfRunStore } from "../../../../product/ai/run-store.ts"
@@ -48,9 +49,10 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
   const clock = { at }
   const period = { start: "2027-01-01", end: "2027-12-31" }
   const caseRef = { id: "calculation-case", incarnation: "calculation-inc", version: 1 }
-  const control = { active: true, coverageReads: 0, calculationResolves: 0, calculationResolved: 0, calculationStoreReads: 0,
+  const control = { active: true, coverageReads: 0, caseReads: 0, calculationResolves: 0, calculationResolved: 0, calculationStoreReads: 0,
     calculationStoreReadsCompleted: 0, coverageIssue: "fixture-training-unresolved" }
-  const interleave: { environment?: () => Promise<void>; coverage?: () => Promise<void>; evidence?: () => Promise<void>; outbox?: () => Promise<void> } = {}
+  const interleave: { environment?: () => Promise<void>; coverage?: () => Promise<void>; evidence?: () => Promise<void>; outbox?: () => Promise<void>;
+    caseRead?: () => Promise<void>; recallSnapshot?: (result: SfStateResult<unknown>) => Promise<void> } = {}
   let store = await openLocalStore(storeDirectory)
   deadline.own(() => store.dispose())
   const services: { current?: ReturnType<typeof createSfBusinessServices> } = {}
@@ -99,10 +101,21 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
     authority.state.read = async (request, namespace, read) => {
       const result = await readState(request, namespace, read)
       if (namespace === "outbox" && result.status === "ok") await interleave.outbox?.()
+      if (namespace === "atlas" && result.status === "ok" &&
+        digestSfValue(Object.keys(object(result.value)).sort()) ===
+        digestSfValue(["case", "outboxVersion", "partition", "sourceFence", "sourceState"]))
+        await interleave.recallSnapshot?.(result)
       return result
     }
     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
     services.current = business
+    const readCase = business.cases.read
+    business.cases.read = async (...args) => {
+      control.caseReads++
+      const result = await readCase(...args)
+      if (result.status === "ok") await interleave.caseRead?.()
+      return result
+    }
     const readCalculation = business.results.readForCalculation
     business.results.readForCalculation = async (input, call) => {
       control.calculationStoreReads++
@@ -614,10 +627,85 @@ test("Planner calculation recalls the actual reopened Atlas record and does not 
       if (recalled.status === "ok") expect(recalled.records).toHaveLength(1)
       expect(control.calculationResolves - beforeRecall).toBe(1)
       phase("real-atlas-recall-authorized")
+      const protectedBefore = await reopened.authority.state.read(reopened.request(), "atlas", (state) => state)
+      expect(protectedBefore.status).toBe("ok")
+      if (protectedBefore.status !== "ok" || !reopened.persistence.transactionAll) throw new Error("Actual protected recovery store unavailable")
+      const snapshotsBefore = await reopened.persistence.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
+      const beforeRecovery = control.calculationResolves, beforeCases = control.caseReads, beforeSpawns = Omni.snapshot().spawns
+      phase("starting-settled-receipt-recovery")
       expect((await reopened.business.context.emitFromLedger(eventRef, call)).status).toBe("already-committed")
+      expect(control.calculationResolves - beforeRecovery).toBe(1)
+      expect(control.calculationResolved).toBe(control.calculationResolves)
+      expect(control.caseReads - beforeCases).toBe(4)
+      expect(Omni.snapshot().spawns).toBe(beforeSpawns)
+      expect(await reopened.authority.state.read(reopened.request(), "atlas", (state) => state)).toEqual(protectedBefore)
+      expect(await reopened.persistence.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))).toEqual(snapshotsBefore)
+      phase("settled-receipt-recovered-without-append-or-scanner")
     })
   })
 }, 120_000)
+
+
+for (const mutation of ["receipt", "source", "lease"] as const) {
+  test(`Settled Atlas recovery rejects ${mutation} drift after its completed calculation without appending or rescanning`, async () => {
+    expectSpawn(import.meta.path)
+    await withCalculation(`settled-recovery-${mutation}`, async ({ calculation, caseRef, reopen, control, change, interleave, phase }) => {
+      const { reopened, eventRef } = await reopen()
+      if (!reopened.persistence.transactionAll) throw new Error("Actual recovery snapshot producer unavailable")
+      const snapshot = () => reopened.persistence.transactionAll!(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
+      await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
+        const before = control.calculationResolves, beforeSpawns = Omni.snapshot().spawns
+        let applied = 0, completedCases = 0
+        let mutationState: Awaited<ReturnType<typeof snapshot>> | undefined
+        let hookFailure: unknown
+        interleave.caseRead = async () => {
+          try {
+            delete interleave.caseRead
+            completedCases++
+            expect(control.calculationResolved).toBe(control.calculationResolves)
+            expect(control.calculationResolves - before).toBe(1)
+            // This is the original first complete cases.read in the settled
+            // recovery branch. Its later canonical record reader must observe
+            // changes even though the financial proof has already completed.
+            interleave.evidence = async () => {
+              try {
+                expect(control.calculationResolved).toBe(control.calculationResolves)
+                expect(control.calculationResolves - before).toBe(1)
+                applied++
+                if (mutation === "receipt") await change((state) => {
+                  const key = JSON.stringify([caseRef.id, caseRef.incarnation, eventRef.target.eventId])
+                  const item = state.outbox[key]
+                  if (!item || item.state !== "settled" || !["committed", "already-committed"].includes(item.receipt.status))
+                    throw new Error("Actual settled receipt unavailable")
+                  item.receipt = { ...item.receipt, sourceEventId: "different-event" }
+                })
+                if (mutation === "source") await reopened.persistence.transaction("planner", async (snapshot) => {
+                  snapshot.data.entities = [{ id: "changed-after-recovery-proof", name: "Changed recovery source" }]
+                  return { commit: true, value: undefined }
+                })
+                if (mutation === "lease") reopened.authority.ui.finish(call)
+                mutationState = await snapshot()
+                phase(`mutated-settled-recovery-${mutation}`)
+              } catch (error) { hookFailure = error; throw error }
+            }
+          } catch (error) { hookFailure = error; throw error }
+        }
+        const receipt = await reopened.business.context.emitFromLedger(eventRef, call)
+        if (hookFailure) throw hookFailure
+        expect(completedCases).toBe(1)
+        expect(applied).toBe(1)
+        expect(receipt.status).toBe("unavailable")
+        expect("recordDigest" in receipt).toBe(false)
+        expect(control.calculationResolves - before).toBe(1)
+        expect(control.calculationResolved).toBe(control.calculationResolves)
+        expect(Omni.snapshot().spawns).toBe(beforeSpawns)
+        expect(mutationState).toBeDefined()
+        expect(await snapshot()).toEqual(mutationState)
+        phase(`rejected-settled-recovery-${mutation}-without-publication`)
+      })
+    })
+  }, 120_000)
+}
 
 test("Planner calculation rejects foreign case routing and all six corrupted durable Atlas capture fields", async () => {
   expectSpawn(import.meta.path)
@@ -741,7 +829,7 @@ for (const mutation of ["source", "membership", "capture", "coverage", "selector
       const { reopened } = await reopen()
       await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
         const selected = { ...caseRef }, before = control.calculationResolves
-        let applied = 0, outboxReads = 0, finalEnvironmentReads = 0
+        let applied = 0, outboxReads = 0, protectedSnapshots = 0, finalEnvironmentReads = 0
         let hookFailure: unknown
         const mutate = async () => {
           try {
@@ -775,20 +863,37 @@ for (const mutation of ["source", "membership", "capture", "coverage", "selector
           // its calculation proof is complete, where assertions are caught.
           interleave.evidence = mutate
         }
-        if (final) interleave.outbox = async () => {
-          if (++outboxReads !== 2) return
-          delete interleave.outbox
-          // The second actual outbox read is the canonical memory reader's
-          // final snapshot. Its subsequent authorization and the private case
-          // egress must complete before the new final fence reads environment.
-          const observeFinalEnvironment = async () => {
-            finalEnvironmentReads++
-            // Two clocks in the first C08 proof, one in the real record reader,
-            // then two in the final C08 proof. Mutate at that last clock await.
-            if (finalEnvironmentReads === 5) await mutate()
-            else interleave.environment = observeFinalEnvironment
+        if (final) {
+          // Observe the producer's complete C08 witness, including namespace
+          // version/revision/incarnation. Current readRecords fences through
+          // atlas; outbox is read only once to establish publication readiness.
+          const expectedSnapshot = await reopened.authority.state.read(reopened.request(), "atlas", (state) => {
+            const partitions = Object.values(state.atlas).filter((partition) => object(object(partition).originals)[calculation.refDigest])
+            if (partitions.length !== 1) throw new Error("Actual recall partition unavailable")
+            const fences = reopened.business.lockedSourceFences()
+            if (!fences) throw new Error("Actual recall source fence unavailable")
+            return { partition: partitions[0], outboxVersion: state.versions.outbox, case: state.cases[caseRef.id],
+              sourceState: digestSfValue(state), sourceFence: digestSfValue(fences) }
+          })
+          expect(expectedSnapshot.status).toBe("ok")
+          interleave.outbox = async () => { outboxReads++ }
+          interleave.recallSnapshot = async (observed) => {
+            try {
+              expect(observed).toEqual(expectedSnapshot)
+              if (++protectedSnapshots !== 2) return
+              delete interleave.recallSnapshot
+              delete interleave.outbox
+              // Both canonical Atlas witnesses returned. The retained private
+              // case egress now reads two clocks in its first C08 proof, one in
+              // the real Planner reader, and two in the final C08 proof.
+              const observeFinalEnvironment = async () => {
+                finalEnvironmentReads++
+                if (finalEnvironmentReads === 5) await mutate()
+                else interleave.environment = observeFinalEnvironment
+              }
+              interleave.environment = observeFinalEnvironment
+            } catch (error) { hookFailure = error; throw error }
           }
-          interleave.environment = observeFinalEnvironment
         }
         phase(`starting-recall-proof-${mutation}`)
         const result = await reopened.atlas.memory.recall(selected, call)
@@ -798,7 +903,8 @@ for (const mutation of ["source", "membership", "capture", "coverage", "selector
         expect("records" in result).toBe(false)
         expect(control.calculationResolves - before).toBe(1)
         if (final) {
-          expect(outboxReads).toBe(2)
+          expect(outboxReads).toBe(1)
+          expect(protectedSnapshots).toBe(2)
           expect(finalEnvironmentReads).toBe(5)
         } else expect(outboxReads).toBe(1)
         phase(`rejected-recall-proof-${mutation}`)

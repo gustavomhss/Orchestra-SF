@@ -10,11 +10,20 @@ import type { Wp12NativeMissionContext } from "./native-mission-harness.ts"
 import { initializeWp12PortfolioSources, prepareWp12PortfolioCase, prepareWp12PortfolioMission, wp12PortfolioMissionRequest,
   WP12_PORTFOLIO_HUMAN_ACTIONS, WP12_PORTFOLIO_OPERATIONS, WP12_PORTFOLIO_PERIOD } from "./native-portfolio-preparation.ts"
 
+async function observeReevaluationPhase<Value>(phase: string, work: () => Promise<Value>): Promise<Value> {
+  const started = performance.now()
+  console.log("SF_WP12_REEVALUATION_PHASE:" + JSON.stringify({ phase, state: "started" }))
+  try { return await work() } finally {
+    console.log("SF_WP12_REEVALUATION_PHASE:" + JSON.stringify({ phase, state: "returned", elapsedMs: Math.round(performance.now() - started) }))
+  }
+}
+
 async function readMemory(context: Wp12NativeMissionContext, route: "memory-conditions" | "memory-materiality",
   caseRef: { id: string; incarnation: string; version: number }, conditionId?: string) {
   const query = new URLSearchParams({ sf: route, caseId: caseRef.id, incarnation: caseRef.incarnation, version: String(caseRef.version),
     ...(conditionId ? { conditionId } : {}) })
-  const response = await context.services.productHttp?.(context.request(undefined, `/sucafina/dashboard?${query}`, "GET"), "dashboard")
+  const response = await observeReevaluationPhase(route, async () =>
+    context.services.productHttp?.(context.request(undefined, `/sucafina/dashboard?${query}`, "GET"), "dashboard"))
   if (!response) throw new Error(`The real ${route} route is missing`)
   const body = object(await response.json())
   if (response.status !== 200 || body.status !== "ok") throw new Error(`Real ${route} failed: ${String(body.reason)}`)
@@ -46,9 +55,11 @@ test("reevaluation reopens a real human choice and Planner condition without pro
         scenarioRefs: [preparedCase.baseline.resultRef, preparedCase.combined.resultRef], source, evidence: preparedCase.source,
         fields, period: WP12_PORTFOLIO_PERIOD, criterionId, recipientRef: context.principalRef,
         destination: "/sucafina/planner", label: "Review the current comparison for the selected human criterion" }
-      const registration = await context.services.productHttp?.(context.request(condition, "/sucafina/dashboard?sf=memory-condition"), "dashboard")
+      const registration = await observeReevaluationPhase("condition.register", async () =>
+        context.services.productHttp?.(context.request(condition, "/sucafina/dashboard?sf=memory-condition"), "dashboard"))
       if (!registration) throw new Error("The real material condition registration route is missing")
       const registered = object(await registration.json())
+      if (registration.status !== 200) console.error("wp12 memory-condition response", { status: registration.status, body: registered })
       expect(registration.status).toBe(200)
       expect(registered.status).toBe("ok")
       const listed = await readMemory(context, "memory-conditions", chosen.caseRef)
@@ -70,7 +81,7 @@ test("reevaluation reopens a real human choice and Planner condition without pro
       const objective = "Reavalie a escolha original somente com a condição e as comparações reais. Use sf_freshness_check, sf_context_get e sf_scenario_compare. Distinga evidência confirmada de proposta hipotética e preserve a razão original. Retorne ReconsiderationProposal verificável, sem alterar a escolha humana. Nenhuma rotina, receita ou autorização de watch foi selecionada pelo humano; não invente uma admissão nem afirme que um watch foi criado."
       const incoming = { request: wp12PortfolioMissionRequest(context, "sf_portfolio", "sf-reavaliar-compromissos", chosen.caseRef, objective),
         selection: { choiceId: chosen.choice.id, materialChangeIds: [conditionId], confirmedDependencyRefIds: [] } }
-      const prepared = await prepareWp12PortfolioMission(context, incoming)
+      const prepared = await observeReevaluationPhase("prepare.initial", () => prepareWp12PortfolioMission(context, incoming))
       expect(prepared.response.status).toBe(200)
       const input = decodeSfSkillInput("CommitmentReevaluationInput", prepared.body.value)
       if (!input.ok) throw new Error("The real reevaluation producer did not return CommitmentReevaluationInput")
@@ -81,16 +92,19 @@ test("reevaluation reopens a real human choice and Planner condition without pro
       expect(input.value.currentComparison.alternativeResultRef).toBe(preparedCase.combined.resultRef)
       expect(input.value.currentComparison.knownDifference).toBe(0)
       expect(input.value.confirmedDependencyRefs).toEqual([])
-      const unknownCondition = await prepareWp12PortfolioMission(context, { ...incoming,
-        selection: { ...incoming.selection, materialChangeIds: ["never-registered-condition"] } })
+      const unknownCondition = await observeReevaluationPhase("prepare.unknown-condition", () =>
+        prepareWp12PortfolioMission(context, { ...incoming,
+          selection: { ...incoming.selection, materialChangeIds: ["never-registered-condition"] } }))
       expect(unknownCondition.response.status).toBe(503)
       expect(unknownCondition.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
-      const absentCondition = await prepareWp12PortfolioMission(context, { ...incoming,
-        selection: { ...incoming.selection, materialChangeIds: [] } })
+      const absentCondition = await observeReevaluationPhase("prepare.absent-condition", () =>
+        prepareWp12PortfolioMission(context, { ...incoming,
+          selection: { ...incoming.selection, materialChangeIds: [] } }))
       expect(absentCondition.response.status).toBe(400)
       expect(absentCondition.body).toMatchObject({ status: "needs-input", reason: "materiality-selection-required" })
-      const unconfirmedDependency = await prepareWp12PortfolioMission(context, { ...incoming,
-        selection: { ...incoming.selection, confirmedDependencyRefIds: [preparedCase.source.refId] } })
+      const unconfirmedDependency = await observeReevaluationPhase("prepare.unconfirmed-dependency", () =>
+        prepareWp12PortfolioMission(context, { ...incoming,
+          selection: { ...incoming.selection, confirmedDependencyRefIds: [preparedCase.source.refId] } }))
       expect(unconfirmedDependency.response.status).toBe(503)
       expect(unconfirmedDependency.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
 
@@ -105,7 +119,7 @@ test("reevaluation reopens a real human choice and Planner condition without pro
         recipeSelectedByHuman: false,
         publishedSourceFinding: "createSfMemoryServices.prepareWatch returns native-watch-admission-port-unavailable after materiality validation",
         sourceFindingWasExecuted: false, requiredOperationAccepted: false }
-      const current = await prepareWp12PortfolioMission(context, incoming)
+      const current = await observeReevaluationPhase("prepare.current", () => prepareWp12PortfolioMission(context, incoming))
       expect(current.response.status).toBe(200)
       expect(digestSfValue(current.body.value)).toBe(digestSfValue(input.value))
       console.log("SF_WP12_NATIVE_REEVALUATION_INPUT:" + JSON.stringify({ scope: "real-choice-condition-materiality-and-input",
@@ -136,7 +150,7 @@ test("reevaluation reopens a real human choice and Planner condition without pro
     await harness.open("reopened", async (context) => {
       const materiality = await readMemory(context, "memory-materiality", initial.incoming.request.caseRef, initial.conditionId)
       expect(digestSfValue(materiality)).toBe(initial.materialityDigest)
-      const prepared = await prepareWp12PortfolioMission(context, initial.incoming)
+      const prepared = await observeReevaluationPhase("prepare.reopened", () => prepareWp12PortfolioMission(context, initial.incoming))
       expect(prepared.response.status).toBe(200)
       expect(digestSfValue(prepared.body.value)).toBe(initial.inputDigest)
       const current = await readCaseAnalysisProjection(context.request(), context.services, initial.incoming.request.caseRef)

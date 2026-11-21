@@ -21,10 +21,13 @@ for (const expected of [
     const scenarios = fixture.business.plannerProduct.scenarios
     const units = fixture.portfolio.units
     if (!scenarios || !units) throw new Error("Installed Planner sensitivity producers unavailable")
-    const preview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (request, context) => comparePlannerPreview({
-      host: fixture.authority.host, sources: fixture.business.plannerSources, scenarios, planner: fixture.portfolio.planner,
-    }, request, context)
-    const exact = createPlannerExactThreshold({ units, preview })
+    const preview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (request, context) =>
+      fixture.business.withPlannerObservation(request, context, () => comparePlannerPreview({
+        host: fixture.authority.host, sources: fixture.business.plannerSources, scenarios, planner: fixture.portfolio.planner,
+      }, request, context))
+    const canonicalExact = createPlannerExactThreshold({ units, preview })
+    const exact: ReturnType<typeof createPlannerExactThreshold> = (request, baselineRef, context) =>
+      fixture.business.withPlannerObservation({ request, baselineRef }, context, () => canonicalExact(request, baselineRef, context))
     const request: SensitivityRequest = { scenarioRef: fixture.candidate.resultRef,
       parameterBounds: { parameterRef: "implementation:11", minimum: 10000, maximum: 70000, steps: 2 },
       criterion: { id: "minimum-known-advantage", operator: "lte", value: -20000 } }
