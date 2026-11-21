@@ -1,11 +1,20 @@
 import { createLocalJWKSet, jwtVerify } from "jose"
-import type { EntraClient, EntraOptions, EntraTeamsInput, EntraTeamsResult, EntraTokens } from "./local-contract.ts"
+import type { DirectoryPerson, EntraClient, EntraOptions, EntraTeamsInput, EntraTeamsResult, EntraTokens } from "./local-contract.ts"
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const graph = "https://graph.microsoft.com/v1.0"
 const localScopes = "openid profile offline_access User.Read User.ReadBasic.All GroupMember.Read.All"
 const bodyLimit = 2 * 1024 * 1024
 const requestTimeout = 10000
+const teamMemberScope = "TeamMember.Read.All"
+const teamMemberSelect = "userId,displayName,tenantId"
+const otherConversationMemberTypes = new Set([
+  "#microsoft.graph.anonymousGuestConversationMember",
+  "#microsoft.graph.azureCommunicationServicesUserConversationMember",
+  "#microsoft.graph.microsoftAccountUserConversationMember",
+  "#microsoft.graph.skypeForBusinessUserConversationMember",
+  "#microsoft.graph.skypeUserConversationMember",
+])
 
 export function createEntraClient(options: EntraOptions): EntraClient {
   if (!uuid.test(options.tenantId) || !uuid.test(options.clientId)) throw new Error("Invalid Entra configuration")
@@ -19,8 +28,11 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   const clientId = confidential ? options.clientId.toLowerCase() : options.clientId
   const teams = options.teams
   if (teams !== undefined && teams !== "direct") throw new Error("Invalid Teams capability")
+  const teamDirectory = options.teamDirectory
+  if (teamDirectory !== undefined && (teamDirectory !== "members" || !confidential || teams !== "direct"))
+    throw new Error("Invalid Team member directory capability")
   const baseScopes = confidential ? "openid profile offline_access User.Read" : localScopes
-  const scopes = teams === "direct" ? `${baseScopes} Team.ReadBasic.All` : baseScopes
+  const scopes = [baseScopes, ...(teams === "direct" ? ["Team.ReadBasic.All"] : []), ...(teamDirectory === "members" ? [teamMemberScope] : [])].join(" ")
   const authority = `https://login.microsoftonline.com/${tenant}`
   const issuer = `${authority}/v2.0`
   const now = options.now ?? (() => new Date())
@@ -90,11 +102,15 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   }
 
   async function graphRequest(accessToken: string, url: string, body?: { groupIds: string[] }, deadline?: AbortSignal, budget?: { bytes: number }) {
-    if (!accessToken || /[\x00-\x20\x7f]/.test(accessToken)) throw new Error("Invalid access token")
     if (!URL.canParse(url)) throw new Error("Invalid Graph endpoint")
     const target = new URL(url)
     if (target.origin !== "https://graph.microsoft.com" || !["/v1.0/me", "/v1.0/users", "/v1.0/me/checkMemberGroups", ...(confidential ? [] : ["/v1.0/groups"]), ...(teams === "direct" ? ["/v1.0/me/joinedTeams"] : [])].includes(target.pathname) || target.username || target.password || target.hash) throw new Error("Invalid Graph endpoint")
     if (body && target.pathname !== "/v1.0/me/checkMemberGroups") throw new Error("Invalid Graph method")
+    return sendGraph(accessToken, url, body, deadline, budget)
+  }
+
+  function sendGraph(accessToken: string, url: string, body?: { groupIds: string[] }, deadline?: AbortSignal, budget?: { bytes: number }) {
+    if (!accessToken || /[\x00-\x20\x7f]/.test(accessToken)) throw new Error("Invalid access token")
     return request(url, {
       method: body ? "POST" : "GET",
       headers: { Authorization: `Bearer ${accessToken}`, ...(body ? { "Content-Type": "application/json" } : {}) },
@@ -104,6 +120,70 @@ export function createEntraClient(options: EntraOptions): EntraClient {
 
   async function person(accessToken: string, deadline?: AbortSignal, budget?: { bytes: number }) {
     return directoryPerson(await graphRequest(accessToken, `${graph}/me?$select=id,displayName`, undefined, deadline, budget))
+  }
+
+  async function teamMembers(input: EntraTeamsInput & { teamObjectId: string }): Promise<DirectoryPerson[]> {
+    const principalObjectId = input.principal.principalObjectId.toLowerCase()
+    const teamObjectId = input.teamObjectId.toLowerCase()
+    const accessToken = input.tokens.accessToken
+    const expiresAt = input.tokens.expiresAt
+    if (input.principal.tenantId.toLowerCase() !== tenant || !uuid.test(principalObjectId) || !uuid.test(teamObjectId))
+      throw new EntraProviderFailure("identity_mismatch", "Invalid Team member directory identity")
+    if (!Number.isSafeInteger(expiresAt) || expiresAt <= now().getTime())
+      throw new EntraProviderFailure("token_expired", "Team member directory token expired")
+    if (!hasGraphScope(input.tokens.grantedScopes ?? [], teamMemberScope))
+      throw new EntraProviderFailure("consent_required", "Team member directory consent required")
+
+    const endpoint = `${graph}/teams/${teamObjectId}/members`
+    const controller = new AbortController()
+    const deadline = controller.signal
+    const timeout = setTimeout(() => controller.abort(), requestTimeout)
+    const budget = { bytes: 0 }
+    const people = new Map<string, DirectoryPerson>()
+    const cursors = new Set<string>()
+    const page = { url: `${endpoint}?$select=${teamMemberSelect}`, rows: 0, count: undefined as number | undefined }
+    try {
+      if ((await person(accessToken, deadline, budget)).id !== principalObjectId)
+        throw new EntraProviderFailure("identity_mismatch", "Team member directory identity mismatch")
+      while (true) {
+        if (expiresAt <= now().getTime()) throw new EntraProviderFailure("token_expired", "Team member directory token expired")
+        const data = await sendGraph(accessToken, page.url, undefined, deadline, budget)
+        if (!Array.isArray(data.value)) throw new EntraProviderFailure("invalid_response", "Invalid Team member directory response")
+        page.rows += data.value.length
+        if (page.rows > limit) throw new EntraProviderFailure("limit_exceeded", "Team member directory count limit exceeded")
+        for (const entry of data.value) {
+          const member = record(entry)
+          const type = member["@odata.type"]
+          if (typeof type === "string" && otherConversationMemberTypes.has(type)) continue
+          if (type !== "#microsoft.graph.aadUserConversationMember" || typeof member.tenantId !== "string" || !uuid.test(member.tenantId))
+            throw new EntraProviderFailure("invalid_response", "Invalid Team member identity")
+          const row = directoryPerson({ id: member.userId, displayName: member.displayName })
+          if (member.tenantId.toLowerCase() !== tenant) continue
+          if (people.has(row.id)) throw new EntraProviderFailure("invalid_response", "Duplicate Team member identity")
+          people.set(row.id, row)
+        }
+        if (data["@odata.count"] !== undefined) {
+          const count = data["@odata.count"]
+          if (typeof count !== "number" || !Number.isSafeInteger(count) || count < page.rows || count > limit || (page.count !== undefined && page.count !== count))
+            throw new EntraProviderFailure("invalid_response", "Invalid Team member directory count")
+          page.count = count
+        }
+        const next = data["@odata.nextLink"]
+        if (next === undefined) break
+        if (page.rows >= limit || cursors.size >= 99) throw new EntraProviderFailure("limit_exceeded", "Incomplete Team member directory within configured limits")
+        const cursor = teamMemberCursor(next, endpoint)
+        if (cursors.has(cursor.key)) throw new EntraProviderFailure("invalid_response", "Cyclic Team member directory pagination")
+        cursors.add(cursor.key)
+        page.url = cursor.url
+      }
+      if (page.count !== undefined && page.count !== page.rows) throw new EntraProviderFailure("incomplete", "Incomplete Team member directory")
+      if (!people.has(principalObjectId) || (await person(accessToken, deadline, budget)).id !== principalObjectId)
+        throw new EntraProviderFailure("identity_mismatch", "Team member directory identity mismatch")
+      if (expiresAt <= now().getTime()) throw new EntraProviderFailure("token_expired", "Team member directory token expired")
+      return [...people.values()]
+    } finally {
+      clearTimeout(timeout)
+    }
   }
 
   async function joinedTeams(input: EntraTeamsInput): Promise<EntraTeamsResult> {
@@ -208,6 +288,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     clientId: clientId.toLowerCase(),
     profile,
     ...(teams === "direct" ? { joinedTeams } : {}),
+    ...(teamDirectory === "members" ? { teamMembers } : {}),
     async authorization(input) {
       const metadata = await discovery()
       const url = new URL(metadata.authorize)
@@ -320,6 +401,18 @@ function directoryPerson(value: unknown) {
   const person = record(value)
   if (typeof person.id !== "string" || !uuid.test(person.id) || typeof person.displayName !== "string" || !person.displayName.trim()) throw new Error("Invalid directory person")
   return { id: person.id.toLowerCase(), name: person.displayName }
+}
+
+function teamMemberCursor(value: unknown, endpoint: string) {
+  // The literal prefix also rules out alternate path spellings normalized by URL.
+  if (typeof value !== "string" || value.length > 16384 || !value.startsWith(`${endpoint}?`) || /[#\\\x00-\x20\x7f]/.test(value))
+    throw new EntraProviderFailure("invalid_response", "Invalid Team member directory pagination")
+  const parameters = [...new URL(value).searchParams]
+  const cursor = parameters.find(([key]) => key === "$skiptoken" || key === "$skip")
+  if (!cursor || !cursor[1] || (cursor[0] === "$skip" && !/^[1-9]\d*$/.test(cursor[1])) ||
+      parameters.length > 2 || parameters.some((parameter) => parameter !== cursor && (parameter[0] !== "$select" || parameter[1] !== teamMemberSelect)))
+    throw new EntraProviderFailure("invalid_response", "Invalid Team member directory pagination")
+  return { url: value, key: cursor.join("=") }
 }
 
 function endpoint(value: unknown, paths: string[]) {

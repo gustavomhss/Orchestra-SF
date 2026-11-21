@@ -400,6 +400,8 @@ test("S6-15 an imported owner name matches the directory; no match does not crea
     owner: { id: "dir-1", name: "José Silva" },
     warning: null,
   })
+  expect(assignOwner(null, "jose silva", [...directory, { id: "other", name: "Jose Silva" }]).owner).toBeNull()
+  expect(assignOwner(null, directory[0]!.id, [{ id: "other", name: directory[0]!.id }, ...directory]).owner).toEqual(directory[0])
   expect(assignOwner({ id: "kept", name: "Kept" }, "Nobody", directory)).toEqual({
     owner: { id: "kept", name: "Kept" },
     warning: "Nobody",
