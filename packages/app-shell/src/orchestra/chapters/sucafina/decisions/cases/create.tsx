@@ -1,6 +1,6 @@
 import { A } from "@solidjs/router"
 import { Icon } from "@orchestra/ui/icon"
-import { createEffect, onCleanup, onMount, Show } from "solid-js"
+import { createEffect, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -42,9 +42,11 @@ function pendingKeys(prefix: string): string[] | null {
 
 export function SfCreateCase(props: Readonly<{
   route: SfResolvedRoute<"UI33">
+  open: boolean
   context: () => SfContext | undefined
   transport: () => SfTransport | undefined
   onCreated: () => void
+  onClose: (confirmed: boolean) => void
 }>) {
   const language = useLanguage()
   const t = (key: string) => language.t(key as Parameters<typeof language.t>[0])
@@ -191,20 +193,37 @@ export function SfCreateCase(props: Readonly<{
       if (commandAbort === abort) commandAbort = undefined
     }
   }
-  let objectiveInput: HTMLInputElement | undefined
+  let objectiveInput: HTMLTextAreaElement | undefined
   let reviewHeading: HTMLHeadingElement | undefined
-  onMount(() => objectiveInput?.focus())
-  createEffect(() => {
-    if (form.phase === "reviewing") queueMicrotask(() => reviewHeading?.focus())
-  })
+  let createHeading: HTMLHeadingElement | undefined
+  let createdLink: HTMLAnchorElement | undefined
   const reviewing = () => form.phase === "reviewing" || form.phase === "submitting"
     || form.phase === "confirmed" || (form.hasPending && !!form.objective.trim())
+  // Hiding an unfinished editor keeps its store and recovery fences alive.
+  // Focus runs after the visible stage mounts, including draft re-opening.
+  createEffect(() => {
+    if (!props.open) return
+    queueMicrotask(() => {
+      if (!props.open) return
+      if (reviewing()) reviewHeading?.focus()
+      else if (form.hasPending) createHeading?.focus()
+      else objectiveInput?.focus()
+    })
+  })
+  createEffect(() => {
+    const phase = form.phase
+    if (phase !== "reviewing" && phase !== "confirmed") return
+    queueMicrotask(() => {
+      if (!props.open || form.phase !== phase) return
+      if (phase === "reviewing") reviewHeading?.focus()
+      else createdLink?.focus()
+    })
+  })
   const busy = () => form.phase === "submitting"
   const field = (label: string, value: string, onInput: (value: string) => void, type = "text") => (
     <label class="sf-n24-field">
       <span>{t(label)}</span>
-      <input ref={(element) => { if (label === "sf.ui33.objective") objectiveInput = element }}
-        type={type} value={value} disabled={busy() || form.hasPending}
+      <input type={type} value={value} disabled={busy() || form.hasPending}
         onInput={(event) => { onInput(event.currentTarget.value); setForm({ phase: "editing", message: "" }) }} required />
     </label>
   )
@@ -212,8 +231,10 @@ export function SfCreateCase(props: Readonly<{
     <section class="mx-card sf-n24-create" aria-labelledby="sf-create-case-title">
       <header class="sf-cases-create-head">
         <div class="sf-cases-create-intro">
-          <h2 id="sf-create-case-title">{t("sf.ui33.new")}</h2>
-          <p>{t(reviewing() ? "sf.ui33.reviewHint" : "sf.ui33.createHint")}</p>
+          <h2 id="sf-create-case-title" ref={createHeading} tabindex="-1">{t("sf.ui33.new")}</h2>
+          <Show when={form.phase !== "confirmed" && form.phase !== "unknown"}>
+            <p>{t(reviewing() ? "sf.ui33.reviewHint" : "sf.ui33.createHint")}</p>
+          </Show>
         </div>
         <ol class="sf-cases-steps" aria-label={t("sf.ui33.new")}>
           <li aria-current={!reviewing() ? "step" : undefined} data-complete={reviewing() ? "true" : undefined}>
@@ -234,9 +255,11 @@ export function SfCreateCase(props: Readonly<{
       <form class="sf-cases-form" onSubmit={(event) => { event.preventDefault(); if (form.phase === "reviewing") void submit(); else review() }}>
         <Show when={!reviewing()}>
           <div class="sf-n24-form-grid">
-            <div class="sf-cases-objective">
-              {field("sf.ui33.objective", form.objective, (value) => setForm("objective", value))}
-            </div>
+            <label class="sf-n24-field sf-cases-objective">
+              <span>{t("sf.ui33.objective")}</span>
+              <textarea ref={objectiveInput} value={form.objective} disabled={busy() || form.hasPending}
+                onInput={(event) => { setForm({ objective: event.currentTarget.value, phase: "editing", message: "" }) }} required rows={2} />
+            </label>
             {field("sf.ui33.start", form.start, (value) => setForm("start", value), "date")}
             {field("sf.ui33.end", form.end, (value) => setForm("end", value), "date")}
             {field("sf.ui33.currency", form.currency, (value) => setForm("currency", value.toUpperCase()))}
@@ -282,6 +305,13 @@ export function SfCreateCase(props: Readonly<{
           </div>
         </Show>
         <div class="sf-n24-actions">
+          <Show when={form.phase !== "reviewing" && !busy() && !form.hasPending}>
+            <button class="mx-btn sf-cases-cancel" type="button"
+              onClick={() => { if (!busy() && !form.hasPending) props.onClose(form.phase === "confirmed") }}>
+              <Icon name="arrow-left" size="small" />
+              {t("sf.ui33.return")}
+            </button>
+          </Show>
           <Show when={form.phase === "reviewing"}>
             <button class="mx-btn sf-cases-cancel" type="button"
               onClick={() => { setForm("phase", "editing"); queueMicrotask(() => objectiveInput?.focus()) }}>
@@ -298,7 +328,7 @@ export function SfCreateCase(props: Readonly<{
             </button>
           </Show>
           <Show when={form.phase === "confirmed" && form.createdRef}>
-            <A class="mx-btn primary" href={sfDecisionHref(props.route, "case", form.createdRef)}>
+            <A ref={createdLink} class="mx-btn primary" href={sfDecisionHref(props.route, "case", form.createdRef)}>
               {t("sf.ui33.caseOpen")}<Icon name="arrow-right" size="small" />
             </A>
           </Show>

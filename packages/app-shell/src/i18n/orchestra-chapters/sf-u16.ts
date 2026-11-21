@@ -5,6 +5,7 @@
 export const SF_U16_COPY = {
   "sf.ui33.title": "Decisions",
   "sf.ui33.workspaceTitle": "Decision cases",
+  "sf.ui33.resumeDraft": "Resume draft",
   "sf.ui33.reference": "Case reference",
   "sf.ui33.detailsStep": "Details",
   "sf.ui33.reviewStep": "Review",
@@ -92,6 +93,7 @@ export const SF_U16_COPY = {
 export const SF_U16_COPY_BR: Record<keyof typeof SF_U16_COPY, string> = {
   "sf.ui33.title": "Decisões",
   "sf.ui33.workspaceTitle": "Casos de decisão",
+  "sf.ui33.resumeDraft": "Retomar rascunho",
   "sf.ui33.reference": "Referência do caso",
   "sf.ui33.detailsStep": "Detalhes",
   "sf.ui33.reviewStep": "Revisão",

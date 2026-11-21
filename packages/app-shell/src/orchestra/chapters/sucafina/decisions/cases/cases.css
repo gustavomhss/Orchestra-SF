@@ -17,8 +17,8 @@
   --sf-cases-editor-max: 760px;
   --sf-cases-search-max: 360px;
   --sf-cases-search-inset: 40px;
-  --sf-cases-panel: color-mix(in srgb, var(--mx-modal) 90%, transparent);
-  --sf-cases-field: color-mix(in srgb, var(--mx-soft) 70%, var(--mx-raised));
+  --sf-cases-panel: var(--mx-raised);
+  --sf-cases-field: var(--mx-soft);
   display: grid;
   gap: var(--sf-cases-space-3xl);
   min-inline-size: 0;
@@ -262,6 +262,12 @@
 
 /* The editor has a readable measure. Review replaces the inputs in this same
    surface; the owner-scoped draft and command state remain in the existing store. */
+.sf-cases .sf-cases-create-slot {
+  min-inline-size: 0;
+}
+.sf-cases .sf-cases-create-slot[hidden] {
+  display: none;
+}
 .sf-cases .sf-n24-create {
   inline-size: 100%;
   max-inline-size: var(--sf-cases-editor-max);
@@ -490,17 +496,6 @@
 .sf-cases .sf-state-title {
   font-size: var(--orchestra-font-size-md);
   line-height: 1.6;
-}
-
-/* The header remains reachable while the current step owns the primary action. */
-.sf-page-frame:has(.sf-cases[data-sf-creating="true"]) [data-sf-action="new-case"] .sf-action-button.primary {
-  background: transparent;
-  color: var(--mx-strong);
-  border-color: var(--mx-line);
-}
-.sf-page-frame:has(.sf-cases[data-sf-creating="true"]) [data-sf-action="new-case"] .sf-action-button.primary:hover:not(:disabled) {
-  background: var(--mx-soft);
-  border-color: var(--mx-rim);
 }
 
 @container sf-frame (max-width: 767px) {

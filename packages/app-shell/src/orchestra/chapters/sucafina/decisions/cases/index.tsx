@@ -20,7 +20,9 @@ export function SfCasesView(props: SfSurfaceProps): JSX.Element {
   const language = useLanguage()
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const cases = useSfCases()
-  const [ui, setUi] = createStore({ filter: "", create: props.surfaceId === "UI33" && props.route.kind === "new" })
+  const initiallyCreating = props.surfaceId === "UI33" && props.route.kind === "new"
+  const [ui, setUi] = createStore({ filter: "", create: initiallyCreating, createMounted: initiallyCreating })
+  let listHeading: HTMLHeadingElement | undefined
   const isPage = () => props.surfaceId === "UI33"
   const route = () => isPage() ? props.route as SfSurfaceProps<"UI33">["route"] : undefined
   const visible = createMemo(() => {
@@ -46,28 +48,36 @@ export function SfCasesView(props: SfSurfaceProps): JSX.Element {
       density="comfortable"
       layout="work"
       onLayoutMode={() => undefined}
-      primaryAction={{
-        id: "new-case", labelKey: key("sf.ui33.primary"), tone: "primary",
+      primaryAction={ui.create ? undefined : {
+        id: "new-case", labelKey: key(ui.createMounted ? "sf.ui33.resumeDraft" : "sf.ui33.primary"), tone: "primary",
         disabled: !isPage() || !canCreate(), busy: false,
-        onInvoke: () => setUi("create", true),
+        onInvoke: () => setUi({ create: true, createMounted: true }),
       }}
       secondaryActions={[]}
     >
       <div class="sf-n24 sf-cases" data-sf-wave="cases" data-sf-creating={ui.create ? "true" : "false"}>
         <Show when={isPage()} fallback={<SfStatePanel state="invalid" messageKey={key("sf.ui33.unavailable")} />}>
-          <Show when={ui.create && route()}>
+          <Show when={ui.createMounted && route()}>
             {(activeRoute) =>
-              <SfCreateCase
-                route={activeRoute()}
-                context={() => cases.owner.ready()?.context}
-                transport={() => cases.owner.ready()?.transport}
-                onCreated={() => cases.reload()}
-              />}
+              <div class="sf-cases-create-slot" hidden={!ui.create}>
+                <SfCreateCase
+                  route={activeRoute()}
+                  open={ui.create}
+                  context={() => cases.owner.ready()?.context}
+                  transport={() => cases.owner.ready()?.transport}
+                  onCreated={() => cases.reload()}
+                  onClose={(confirmed) => {
+                    setUi("create", false)
+                    if (confirmed) setUi("createMounted", false)
+                    queueMicrotask(() => listHeading?.focus())
+                  }}
+                />
+              </div>}
           </Show>
           <section class="sf-cases-list" aria-label={t("sf.ui33.caseList")}>
             <div class="sf-cases-list-head">
               <div class="sf-cases-list-title">
-                <h2>{t("sf.ui33.workspaceTitle")}</h2>
+                <h2 ref={listHeading} tabindex="-1">{t("sf.ui33.workspaceTitle")}</h2>
                 <Show when={cases.read.state === "ready"}>
                   <span class="sf-cases-count">{visible().length}</span>
                 </Show>
