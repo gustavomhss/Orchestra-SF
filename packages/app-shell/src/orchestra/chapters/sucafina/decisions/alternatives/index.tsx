@@ -286,7 +286,8 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
               <h2>{t("sf.ui35.choice")}</h2>
               <Show when={choicesForRoute()} fallback={
                 <SfStatePanel state={choicePanelState()}
-                  messageKey={k(choicePanelState() === "empty" ? "sf.ui35.noChoices" :
+                  messageKey={k(choicePanelState() === "loading" ? "sf.common.loading" :
+                    choicePanelState() === "empty" ? "sf.ui35.noChoices" :
                     choicePanelState() === "denied" ? "sf.common.noAccess" :
                     choicePanelState() === "session-expired" ? "sf.common.loginAgain" :
                     "sf.ui35.unavailable")} />
