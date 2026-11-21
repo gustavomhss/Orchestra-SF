@@ -60,10 +60,15 @@
 
 /* The forecast is a compact reading band, not another boxed section. */
 .sf-today .sf-today-forecast {
-  padding-block: var(--sf-today-small-gap) var(--sf-today-row-gap);
+  padding-block: 0 var(--sf-today-small-gap);
   border-block-end: var(--sf-today-hairline) solid var(--mx-line);
 }
-.sf-today .sf-today-forecast .sf-today-section-head { margin-block-end: var(--sf-today-small-gap); }
+.sf-today .sf-today-forecast .sf-today-section-head {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-block-end: 0;
+}
+.sf-today .sf-today-forecast .sf-today-section-title { min-block-size: var(--sf-row-height); }
 .sf-today .sf-today-forecast h2 { font-size: var(--orchestra-font-size-lg); }
 .sf-today .sf-today-metrics {
   display: grid;
@@ -93,7 +98,10 @@
   letter-spacing: var(--sf-today-value-tracking);
   overflow-wrap: anywhere;
 }
-.sf-today .sf-today-source { margin-block-start: var(--sf-today-small-gap); }
+.sf-today .sf-today-source {
+  max-inline-size: 100%;
+  margin-block-start: 0;
+}
 .sf-today :is(.sf-today-source, .sf-today-context) > summary {
   display: flex;
   align-items: center;

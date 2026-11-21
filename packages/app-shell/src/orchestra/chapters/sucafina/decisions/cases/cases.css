@@ -155,6 +155,9 @@
   inline-size: var(--sf-cases-control);
   padding: 0;
 }
+.sf-cases .sf-cases-refresh {
+  flex: none;
+}
 .sf-cases .sf-cases-records {
   gap: 0;
   margin: 0;
@@ -527,6 +530,9 @@
   .sf-cases {
     gap: var(--sf-cases-space-2xl);
   }
+  .sf-cases .sf-cases-tools { flex-wrap: wrap; }
+  .sf-cases .sf-cases-search { flex-basis: 100%; }
+  .sf-cases .sf-cases-refresh { margin-inline-start: auto; }
   .sf-cases .sf-cases-list-head,
   .sf-cases .sf-cases-row,
   .sf-cases .sf-cases-create-head,

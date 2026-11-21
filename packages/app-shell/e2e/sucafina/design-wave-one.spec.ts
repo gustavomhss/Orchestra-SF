@@ -326,7 +326,13 @@ designTest("installed native first-wave design · real operator, source data, re
   // the separately supplied current risk count into a selected-year value.
   const annualRisks = page.locator('[data-sf-metric="risks"]')
   await expect(annualRisks).toHaveAttribute("data-sf-value", "missing")
-  await expect(annualRisks.locator("dd")).toHaveAccessibleName("Not available from this source")
+  // Native definition elements expose their content, not an author-supplied name.
+  // Require exactly the absence message in the actual accessibility tree.
+  await expect(annualRisks.locator("dd")).toMatchAriaSnapshot(`
+    - definition:
+      - /children: equal
+      - text: Not available from this source
+  `)
   await expect(annualRisks.locator('dd [aria-hidden="true"]')).toHaveText("—")
   await expect(page.locator(".sf-u02-missing-legend")).toBeVisible()
   await expect(page.locator(".sf-u02-missing-legend")).toContainText("Not available from this source")

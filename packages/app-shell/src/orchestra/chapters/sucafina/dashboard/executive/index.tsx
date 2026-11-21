@@ -90,9 +90,9 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
   </span>
   const stat = (id: string, label: Key, value: number | null | undefined) =>
     <div class="sf-u02-stat" data-sf-metric={id}
-      data-sf-value={knownNumber(value) === undefined ? "missing" : "number"}><dt>{t(key(label))}</dt><dd aria-label={knownNumber(value) === undefined ? missing() : undefined}>{knownNumber(value) === undefined ? missingMetric() : numeric(value)}</dd></div>
+      data-sf-value={knownNumber(value) === undefined ? "missing" : "number"}><dt>{t(key(label))}</dt><dd>{knownNumber(value) === undefined ? missingMetric() : numeric(value)}</dd></div>
   const unscopedStat = (id: string, label: Key) =>
-    <div class="sf-u02-stat" data-sf-metric={id} data-sf-scope="unscoped" data-sf-value="missing"><dt>{t(key(label))}</dt><dd aria-label={missing()} aria-describedby="sf-u02-financial-scope">{missingMetric()}</dd></div>
+    <div class="sf-u02-stat" data-sf-metric={id} data-sf-scope="unscoped" data-sf-value="missing"><dt>{t(key(label))}</dt><dd aria-describedby="sf-u02-financial-scope">{missingMetric()}</dd></div>
   const metricTable = () => {
     if (year() !== undefined) return <p role="status">{t(key("sf.u02.sourceMissing"))}</p>
     const totals = periodTotals()
@@ -214,7 +214,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
               {stat("departures", "sf.u02.departures", executive()?.departures)}
               <div class="sf-u02-stat" data-sf-metric="attrition"
                 data-sf-value={knownNumber(people()?.attritionYtd) === undefined ? "missing" : "number"}><dt>{t(key("sf.u02.attrition"))}</dt>
-                <dd aria-label={knownNumber(people()?.attritionYtd) === undefined ? missing() : undefined}>{knownNumber(people()?.attritionYtd) === undefined ? missingMetric() :
+                <dd>{knownNumber(people()?.attritionYtd) === undefined ? missingMetric() :
                   <SfDisplayValueText value={{ kind: "number", value: people()!.attritionYtd!, fractionDigits: 2, unit: { kind: "percent" } }} />}</dd>
               </div>
               {stat("cost-per-user-opex", "sf.u02.costPerUserOpex", people()?.opexCostPerUser)}

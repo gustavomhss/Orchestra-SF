@@ -99,11 +99,11 @@ export function SfCasesView(props: SfSurfaceProps): JSX.Element {
                     <Icon name="close-small" size="small" />
                   </button>
                 </Show>
-                <button class="mx-btn sf-cases-icon-button" type="button"
+                <button class="mx-btn sf-cases-refresh" type="button"
                   data-sf-action="refresh-case-list"
                   aria-label={t("sf.ui33.check")} title={t("sf.ui33.check")}
                   disabled={cases.read.state === "loading"} onClick={() => cases.reload()}>
-                  <Icon name="reset" size="small" />
+                  {t("sf.ui33.check")}
                 </button>
               </div>
             </div>
