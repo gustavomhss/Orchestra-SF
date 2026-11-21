@@ -25,7 +25,7 @@ export function acquirePrDecisionDraft(registry: SfDraftRegistry, source: PrProj
     value: EMPTY,
     revalidation: {
       operationId: "domain.page.CAP26",
-      input: { request: source.requestRef },
+      input: {},
       fieldPaths: ["status", "createdBy", "prApproval"],
       actionIds: source.actions,
     },
