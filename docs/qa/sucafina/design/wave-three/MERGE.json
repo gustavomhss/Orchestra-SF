@@ -1,0 +1,472 @@
+{
+  "schemaVersion": 1,
+  "status": "VALIDATED_FOR_INTEGRATION",
+  "pullRequest": 587,
+  "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587",
+  "authorization": {
+    "status": "ACCEPTED_FOR_INTEGRATION",
+    "userStatement": "Vai pro merge, se tiver tudo verde",
+    "condition": "All scoped integration checks must pass",
+    "conditionSatisfied": true,
+    "recordedAt": "2026-11-21T22:10:44Z",
+    "timezone": "America/Sao_Paulo",
+    "scope": [
+      "CAP05",
+      "CAP06",
+      "CAP07",
+      "CAP08",
+      "CAP09",
+      "CAP10",
+      "CAP11",
+      "CAP12",
+      "CAP13",
+      "CAP14",
+      "CAP15",
+      "CAP16",
+      "CAP17",
+      "CAP18",
+      "CAP19"
+    ],
+    "pullRequest": 587,
+    "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587",
+    "goldenBaseline": null
+  },
+  "branch": "sf-design-fifteen",
+  "originalBranchBase": "acc0181508ceda7416bce57284b2307a9b20385b",
+  "reviewedHead": "4a796bba4af7e0d3ee4e7d3945d3841419832903",
+  "integrationBase": "2a68bcb676ed0c159c5c48130c2413e0e5637a00",
+  "integratedProduct": "f6da3aaf613053309ea205786eabae11eb394c6c",
+  "testedCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23",
+  "testedTree": "9c168f02d61c0de337753aa37d76717f5b56d99f",
+  "nativeTree": "3213aecbbd258b9c00bd22f7f7dc19c046786e61",
+  "composition": {
+    "candidate": "f6da3aaf613053309ea205786eabae11eb394c6c",
+    "tree": "3d55944ab6a53f5857a402f2e08062a8783b70ba",
+    "base": "2a68bcb676ed0c159c5c48130c2413e0e5637a00",
+    "reviewedHead": "4a796bba4af7e0d3ee4e7d3945d3841419832903",
+    "upstreamPaths": 35,
+    "featurePaths": 261,
+    "overlap": 0,
+    "renames": 0,
+    "blobsAndModesPreserved": true,
+    "upstreamCommits": [
+      {
+        "sha": "2f44b902ef0eb28fc73c3b9a31876866d850bc1a",
+        "title": "feat(sf): enable CurrentChoice for Microsoft Teams (#585)"
+      },
+      {
+        "sha": "4a90fa9a4457d722370d124c547e2209d64fa816",
+        "title": "fix(sf): expose purchase comparison through Gateway tools invoke (#584)"
+      },
+      {
+        "sha": "e7022f80ccd3937a80754e45517f3218513579e1",
+        "title": "feat(sf): add read-only procurement MCP pack (#580)"
+      },
+      {
+        "sha": "abb7f0d110f8afc69541f5331a396c2e1ddc9f4d",
+        "title": "feat(sf): mount purchase MCP in the Microsoft Team host (#586)"
+      },
+      {
+        "sha": "782c706a63cc99e4389de4f5ce538e334e4f476a",
+        "title": "fix(sf): isolate procurement quote preflight (#577)"
+      },
+      {
+        "sha": "2a68bcb676ed0c159c5c48130c2413e0e5637a00",
+        "title": "fix(sf): retain quote review through confirmation (#578)"
+      }
+    ],
+    "laterTestOnlyPatch": {
+      "worker": "8a111fe67dd30221d27315bdb65229ce665e4482",
+      "integrated": "141336f8b17fe661cb0370ef99a7ff528737ef23",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-three-finance.spec.ts",
+      "blob": "b6874bf7d569b231fe2e809f2e24e0f071526001",
+      "failedRun": 44954163996,
+      "failedJob": 136998462498,
+      "cause": "Response body observation started after click completion; CDP no-data failure. Assertions moved to response promise before click.",
+      "productCodeChanged": false,
+      "assertionsPreserved": true
+    },
+    "sourceCodeUnchangedAfterIntegratedProduct": true,
+    "upstreamModePreservation": "Includes apps/cli/script/build.ts mode 100755"
+  },
+  "counts": {
+    "areasInThisIntegration": 15,
+    "previouslyMergedAreas": 6,
+    "acceptedForIntegrationAreas": 21,
+    "implementedAreas": 21,
+    "remainingAreas": 49,
+    "registeredRoutePatterns": 56,
+    "functionalStates": 88,
+    "photographedStates": 79,
+    "persistentJPEGs": 177,
+    "confirmedWrites": 11,
+    "integrationBrowserTests": 10,
+    "previousSixRegressionTests": 2,
+    "integrationPreviewCount": 177,
+    "previousSixRegressionPreviewCount": 67
+  },
+  "browserRuns": [
+    {
+      "key": "people",
+      "branch": "ci-run-merge15people",
+      "product": "f6da3aaf613053309ea205786eabae11eb394c6c",
+      "snapshot": "d18a42c43755a440da1cb83af90fefdf0580f6d3",
+      "run": 44954159569,
+      "job": 136998449085,
+      "status": "completed",
+      "conclusion": "success",
+      "passed": 2,
+      "failed": 0,
+      "duration": "3.9m",
+      "previewCount": 58,
+      "previewSkips": 0,
+      "incompletePreviews": [],
+      "diagnostics": [
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14727311451,
+          "name": "playwright-ubuntu-24.04-1",
+          "size_in_bytes": 72333002,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14727311451",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14727311451/zip",
+          "expired": false,
+          "created_at": "2026-11-21T22:02:18Z",
+          "expires_at": "2026-11-28T22:02:16Z",
+          "updated_at": "2026-11-21T22:02:18Z",
+          "digest": "sha256:4667cd6e4a6b6923114aeb174870fabdbc24ef9e9b2a073b8eeb4f00c6d173eb",
+          "workflow_run": {
+            "id": 44954159569,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "ci-run-merge15people",
+            "head_sha": "d18a42c43755a440da1cb83af90fefdf0580f6d3"
+          }
+        }
+      ]
+    },
+    {
+      "key": "finance",
+      "branch": "ci-run-merge15finance2",
+      "product": "141336f8b17fe661cb0370ef99a7ff528737ef23",
+      "snapshot": "1ab3f0c3d369f4e393498573522b54d8609bca1c",
+      "run": 44954850512,
+      "job": 137000572408,
+      "status": "completed",
+      "conclusion": "success",
+      "passed": 2,
+      "failed": 0,
+      "duration": "4.0m",
+      "previewCount": 47,
+      "previewSkips": 0,
+      "incompletePreviews": [],
+      "diagnostics": [
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14726729952,
+          "name": "playwright-ubuntu-24.04-1",
+          "size_in_bytes": 54066734,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14726729952",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14726729952/zip",
+          "expired": false,
+          "created_at": "2026-11-21T22:10:06Z",
+          "expires_at": "2026-11-28T22:10:04Z",
+          "updated_at": "2026-11-21T22:10:06Z",
+          "digest": "sha256:44a89df8bb7cbb5e071fe164e0a1bbf9809ab57e8408b328d91ff37a238e9f14",
+          "workflow_run": {
+            "id": 44954850512,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "ci-run-merge15finance2",
+            "head_sha": "1ab3f0c3d369f4e393498573522b54d8609bca1c"
+          }
+        }
+      ]
+    },
+    {
+      "key": "service",
+      "branch": "ci-run-merge15service",
+      "product": "f6da3aaf613053309ea205786eabae11eb394c6c",
+      "snapshot": "585c28948ac18edc7377448922fe732165c0e9fd",
+      "run": 44954168895,
+      "job": 136998478939,
+      "status": "completed",
+      "conclusion": "success",
+      "passed": 2,
+      "failed": 0,
+      "duration": "2.7m",
+      "previewCount": 23,
+      "previewSkips": 0,
+      "incompletePreviews": [],
+      "diagnostics": [
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14726957492,
+          "name": "playwright-ubuntu-24.04-1",
+          "size_in_bytes": 34921818,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14726957492",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14726957492/zip",
+          "expired": false,
+          "created_at": "2026-11-21T22:01:07Z",
+          "expires_at": "2026-11-28T22:01:06Z",
+          "updated_at": "2026-11-21T22:01:07Z",
+          "digest": "sha256:7504e5a3ed3a640bdb83f8eb3106de0cac5c7efffc7e0b91d62e1cb8943e1a40",
+          "workflow_run": {
+            "id": 44954168895,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "ci-run-merge15service",
+            "head_sha": "585c28948ac18edc7377448922fe732165c0e9fd"
+          }
+        }
+      ]
+    },
+    {
+      "key": "records",
+      "branch": "ci-run-merge15records",
+      "product": "f6da3aaf613053309ea205786eabae11eb394c6c",
+      "snapshot": "f8c53a450d792556c92861d3a0a7ac8e458a0ddf",
+      "run": 44954172715,
+      "job": 136998490590,
+      "status": "completed",
+      "conclusion": "success",
+      "passed": 3,
+      "failed": 0,
+      "duration": "4.1m",
+      "previewCount": 24,
+      "previewSkips": 0,
+      "incompletePreviews": [],
+      "diagnostics": [
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14726738554,
+          "name": "playwright-ubuntu-24.04-1",
+          "size_in_bytes": 36893430,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14726738554",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14726738554/zip",
+          "expired": false,
+          "created_at": "2026-11-21T22:02:48Z",
+          "expires_at": "2026-11-28T22:02:45Z",
+          "updated_at": "2026-11-21T22:02:48Z",
+          "digest": "sha256:a66969f91428c82dcecbc52530e7d28164d12c8818251ab4c8a01fdcd64252b0",
+          "workflow_run": {
+            "id": 44954172715,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "ci-run-merge15records",
+            "head_sha": "f8c53a450d792556c92861d3a0a7ac8e458a0ddf"
+          }
+        }
+      ]
+    },
+    {
+      "key": "br",
+      "branch": "ci-run-merge15br",
+      "product": "f6da3aaf613053309ea205786eabae11eb394c6c",
+      "snapshot": "78c1ada49b54295b25c8fa286d24a06339bc6af7",
+      "run": 44954176866,
+      "job": 136998504532,
+      "status": "completed",
+      "conclusion": "success",
+      "passed": 1,
+      "failed": 0,
+      "duration": "1.8m",
+      "previewCount": 25,
+      "previewSkips": 0,
+      "incompletePreviews": [],
+      "diagnostics": [
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14726698366,
+          "name": "playwright-ubuntu-24.04-1",
+          "size_in_bytes": 11996047,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14726698366",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14726698366/zip",
+          "expired": false,
+          "created_at": "2026-11-21T22:00:30Z",
+          "expires_at": "2026-11-28T22:00:28Z",
+          "updated_at": "2026-11-21T22:00:30Z",
+          "digest": "sha256:e455ad48f5299a9adb9ccf655a38fec34c019c1db7c1eacd00d1c638c7711b5c",
+          "workflow_run": {
+            "id": 44954176866,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "ci-run-merge15br",
+            "head_sha": "78c1ada49b54295b25c8fa286d24a06339bc6af7"
+          }
+        }
+      ]
+    },
+    {
+      "key": "regression",
+      "branch": "ci-run-merge15regression",
+      "product": "f6da3aaf613053309ea205786eabae11eb394c6c",
+      "snapshot": "b9cf7d9047ed6455e264df2620338574e9444a40",
+      "run": 44954180769,
+      "job": 136998517207,
+      "status": "completed",
+      "conclusion": "success",
+      "passed": 2,
+      "failed": 0,
+      "duration": "6.5m",
+      "previewCount": 67,
+      "previewSkips": 0,
+      "incompletePreviews": [],
+      "diagnostics": [],
+      "artifacts": [
+        {
+          "id": 14727441274,
+          "name": "playwright-ubuntu-24.04-1",
+          "size_in_bytes": 84801932,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14727441274",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14727441274/zip",
+          "expired": false,
+          "created_at": "2026-11-21T22:04:54Z",
+          "expires_at": "2026-11-28T22:04:50Z",
+          "updated_at": "2026-11-21T22:04:54Z",
+          "digest": "sha256:13891f6bbbf4a2e61752fe773613bafd02e53154d772b4f2f7e0f0e4f137ed62",
+          "workflow_run": {
+            "id": 44954180769,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "ci-run-merge15regression",
+            "head_sha": "b9cf7d9047ed6455e264df2620338574e9444a40"
+          }
+        }
+      ]
+    }
+  ],
+  "gates": {
+    "run": 44954855228,
+    "job": 137000586437,
+    "product": "141336f8b17fe661cb0370ef99a7ff528737ef23",
+    "snapshot": "16ba1fbbd7fa3369cc051b3bb37d7cd90cbc16e7",
+    "result": "success",
+    "wrapperChecks": 6,
+    "guards": {
+      "base": "2a68bcb676ed0c159c5c48130c2413e0e5637a00",
+      "rules": 78,
+      "errors": 0,
+      "approvals": 0,
+      "warnings": 24,
+      "warningsByRule": {
+        "test-timeout-raised": 24
+      },
+      "touchesGuards": false
+    },
+    "paletteFilesUnchanged": 7,
+    "unitCases": {
+      "CAS": 3,
+      "vendorBrowserDTO": 4
+    }
+  },
+  "initialFinanceFailure": {
+    "run": 44954163996,
+    "job": 136998462498,
+    "failed": 1,
+    "passed": 1,
+    "reason": "Playwright response.json raised Network.getResponseBody: No data found for resource with given identifier after the click completed.",
+    "resolution": "Start HTTP/body assertions in the response promise before awaiting the single confirmation click; preserve exact POST count, review closure and source readback assertions.",
+    "productCodeChanged": false,
+    "diagnosticLimit": "The exact internal CDP event that discarded body access was not established. No command abort is claimed.",
+    "replacementRun": 44954850512
+  },
+  "sourceParity": {
+    "unchangedAfterIntegration": [
+      "All native product modules and catalogs",
+      "Source producers, schemas, grants, owner/CAS/recovery semantics",
+      "All browser specs except the documented Finance observation patch",
+      "All seven generated palette files"
+    ],
+    "scopeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
+    "entrypointChangesFromReviewedSnapshot": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
+        "sha": "ff5f04a77bd25f3ffe0019d5f7350fc24a33d272",
+        "origin": "dev PR #578",
+        "redesignedByThisWave": false
+      }
+    ]
+  },
+  "coverageLimits": {
+    "actualBrowserZoom": "NOT_MEASURED",
+    "crossBrowserMatrix": false,
+    "nineFinanceStatesWithoutDedicatedImage": true,
+    "destructiveCommandsConfirmed": false,
+    "fullFaultInjectionMatrix": false
+  }
+}

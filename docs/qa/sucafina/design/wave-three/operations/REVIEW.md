@@ -1,5 +1,8 @@
 # Wave three — Operations design review
 
+> Subsequent integration authorization: the user said “Vai pro merge, se tiver tudo verde”. The composed candidate passed the scoped verification recorded in [MERGE.md](../MERGE.md); PR #587 records merge status and commit. The report below preserves the original implementation evidence and historical iteration notes.
+
+
 ## Verified group outcome
 
 Five native Sucafina areas are complete for this group: CAP11, CAP12, CAP13, CAP15 and CAP16. The final browser evidence contains **25 distinct states, 72 complete normal captures and five real reviewed writes with same-view projection and fresh source readback**. All six journeys passed across the three bounded execution groups below, with zero console or page errors. No preview was skipped. User acceptance remains separate from these verification results.

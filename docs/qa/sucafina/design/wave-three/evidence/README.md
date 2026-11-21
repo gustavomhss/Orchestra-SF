@@ -2,7 +2,7 @@
 
 **15 áreas retrabalhadas · 88 estados funcionais exercitados · 79 estados fotografados · 177 capturas reais.**
 
-Produto: `e378923d7619c168b2d7b2c82b1232449eca2c45`, branch [sf-design-fifteen](https://github.com/gustavomhss/Orchestra-SF/tree/sf-design-fifteen), originada diretamente de `dev acc0181508ceda7416bce57284b2307a9b20385b`. [PR #587](https://github.com/gustavomhss/Orchestra-SF/pull/587). A revisão visual do usuário está pendente; estas quinze áreas ainda não foram mescladas.
+Produto: `e378923d7619c168b2d7b2c82b1232449eca2c45`, branch [sf-design-fifteen](https://github.com/gustavomhss/Orchestra-SF/tree/sf-design-fifteen), originada diretamente de `dev acc0181508ceda7416bce57284b2307a9b20385b`. [PR #587](https://github.com/gustavomhss/Orchestra-SF/pull/587). O usuário autorizou a integração, condicionada aos checks verdes. A composição passou; [a verificação do merge](../MERGE.md) registra os resultados, e o PR #587 registra o estado e o commit da incorporação em dev.
 
 As imagens mostram a aplicação nativa do Orchestra com dados identificados de teste, criados por produtores reais em instalações isoladas. Tema, idioma, largura e posição de rolagem são variantes da mesma área. Nove estados de Finanças foram exercitados sem captura própria; estão identificados no [mapa](../scope.json) e na [validação](../VALIDATION.md).
 
@@ -58,4 +58,4 @@ Serviço/SLA, Segurança, Riscos, Stakeholders e Performance receberam listas, i
 - Importação/exportação de talentos indisponíveis na instalação são mostradas como indisponíveis. Valores ausentes continuam distintos de zero.
 - Os JPEGs desta galeria são permanentes no repositório. Artefatos completos do Playwright, respectivos prazos e digests estão nos manifestos de cada grupo.
 
-O [manifesto consolidado](manifest.json) liga cada grupo ao seu mapa de estados, runs e arquivos. Os [relatórios dos agentes](../VALIDATION.md) registram os testes, os reparos encontrados e os limites. A aprovação de design pertence à revisão do usuário.
+O [manifesto consolidado](manifest.json) liga cada grupo ao seu mapa de estados, runs e arquivos. Os [relatórios dos agentes](../VALIDATION.md) registram os testes, os reparos encontrados e os limites. A autorização recebida e a verificação da integração estão registradas em [MERGE.md](../MERGE.md).

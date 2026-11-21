@@ -2,7 +2,7 @@
 
 Status: **IN_PROGRESS**. User instruction: “a outra sessao esta mergeando o que ja tinha feito. Preciso que voce pegue o proximo bloco de 20 pra fazer”.
 
-Branch `sf-design-twenty` starts from `dev@2a68bcb676ed0c159c5c48130c2413e0e5637a00`. The separate session owns the merge of PR #587. Its fifteen areas are outside this implementation's ownership. The isolated candidate composes the exact prior-wave dependency `f6da3aaf613053309ea205786eabae11eb394c6c` while that merge is owned by the other session. Root will reconcile the completed merge from dev before final verification; this dependency composition is not an upstream merge claim.
+Branch `sf-design-twenty` starts from `dev@2a68bcb676ed0c159c5c48130c2413e0e5637a00`. The separate session owns the merge of PR #587. Its fifteen areas are outside this implementation's ownership. The isolated candidate composes the exact prior-wave dependency `f6da3aaf613053309ea205786eabae11eb394c6c` while that merge is owned by the other session. PR #587 subsequently merged as `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`. This candidate now incorporates that real dev merge, preserving its final documentation and Finance response-observation fix. No changes were made to the other session’s branch.
 
 ## Exact scope
 

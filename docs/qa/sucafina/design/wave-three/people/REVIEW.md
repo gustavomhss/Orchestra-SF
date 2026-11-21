@@ -1,5 +1,8 @@
 # Wave three — People and portfolio review
 
+> Subsequent integration authorization: the user said “Vai pro merge, se tiver tudo verde”. The composed candidate passed the scoped verification recorded in [MERGE.md](../MERGE.md); PR #587 records merge status and commit. The report below preserves the original implementation evidence and historical iteration notes.
+
+
 ## Final result
 
 The five assigned native areas are implemented and visually reviewed. Product head `a255f23fd86a083a0295acd0a08f1be3519da7d0` is included in the final People5 snapshot `579e1d4bd85221d0dd2a527f8f09a3ceb37e1408`. [People5](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44942301625) passed both real browser journeys: **2 passed, 0 failed, 3.9 minutes; 58 complete captures covering 28 business states in five areas; three confirmed browser writes with source rereads**. All four browser-context diagnostics reported no page or console errors. This final report changes documentation only.

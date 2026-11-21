@@ -1,5 +1,14 @@
 # Wave three — integration record
 
+## Current integration
+
+Status: **VALIDATED_FOR_INTEGRATION**. The user authorized integration conditional on green checks. Candidate `141336f8b17fe661cb0370ef99a7ff528737ef23` incorporates dev `2a68bcb676ed0c159c5c48130c2413e0e5637a00`; the native tree is `3213aecbbd258b9c00bd22f7f7dc19c046786e61`. All scoped browser journeys and technical gates passed. [MERGE.md](MERGE.md) and [MERGE.json](MERGE.json) contain the current runs, source-composition audit, one E2E observation correction and acceptance. [PR #587](https://github.com/gustavomhss/Orchestra-SF/pull/587) is authoritative for merge state and commit.
+
+## Historical review-stage record
+
+The following record describes the earlier review candidate and its then-current dev inspection. Its pending status and proposed next integration steps are historical; the current integration is recorded above.
+
+
 Status: **REVIEW_READY_NOT_MERGED**. Branch `sf-design-fifteen`; base branch `dev`. Final product `e378923d7619c168b2d7b2c82b1232449eca2c45`; native Sucafina tree `bbbacbfc2cc344df42d367477622636ba8e4c193`. [PR #587](https://github.com/gustavomhss/Orchestra-SF/pull/587).
 
 ## Base and three workers

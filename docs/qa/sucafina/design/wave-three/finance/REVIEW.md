@@ -1,5 +1,8 @@
 # Wave three — finance design review
 
+> Subsequent integration authorization: the user said “Vai pro merge, se tiver tudo verde”. The composed candidate passed the scoped verification recorded in [MERGE.md](../MERGE.md); PR #587 records merge status and commit. The report below preserves the original implementation evidence and historical iteration notes.
+
+
 Status: VERIFIED for the five scoped native areas. The final real-installation Actions journey passed. Thirty-five functional states were exercised; 26 have dedicated imagery and nine were exercised without their own capture. The final evidence and limitations below supersede the pending notes in the historical execution log.
 
 Branch: `sf-polish-finance`.

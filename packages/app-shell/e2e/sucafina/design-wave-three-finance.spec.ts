@@ -457,16 +457,20 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await desktop()
     await detail.getByRole("button", { name: "Review changes", exact: true }).click()
     const before = posts.length
+    // Read the command body as its response arrives; a successful save immediately reloads the plan.
     const saved = page.waitForResponse((response) => {
       const request = response.request()
       if (request.method() !== "POST" || new URL(response.url()).pathname !== installation.mount + "/planner") return false
       const input = request.postDataJSON()
       return input?.page === "CAPEX" && input.action === "save" && input.values?.collection === "projects"
+    }).then(async (response) => {
+      expect(response.ok()).toBe(true)
+      expect(await response.json()).toMatchObject({ ok: true })
     })
-    await review.getByRole("button", { name: "Confirm", exact: true }).click()
-    const response = await saved
-    expect(response.ok()).toBe(true)
-    expect(await response.json()).toMatchObject({ ok: true })
+    await Promise.all([
+      saved,
+      review.getByRole("button", { name: "Confirm", exact: true }).click(),
+    ])
     await expect(review).toHaveCount(0)
     await ready(page, "CAPEX")
     expect(posts).toHaveLength(before + 1)
