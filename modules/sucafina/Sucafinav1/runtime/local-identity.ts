@@ -164,6 +164,30 @@ function createIdentity(
       }
     }
     : undefined
+  const observeCorporateRecoveryActor: LocalIdentity["observeCorporateRecoveryActor"] = corporate && observeTeams
+    ? async (request, groupId) => {
+      if (request.method !== "POST" || request.headers.get("origin") !== origin.origin ||
+          request.headers.get("sec-fetch-site") === "cross-site" || !entraObjectId.test(groupId)) return undefined
+      const current = await teamReadCurrent(request).catch(() => undefined)
+      const principalId = current?.value.teamPrincipal?.principalObjectId
+      if (!current || !principalId) return undefined
+      const sameSession = async () => {
+        const latest = await teamReadCurrent(request).catch(() => undefined)
+        return !!latest && latest.handle === current.handle && latest.encrypted.byteLength === current.encrypted.byteLength &&
+          timingSafeEqual(latest.encrypted, current.encrypted)
+      }
+      const verifyCurrent = async () => {
+        if (request.method !== "POST" || request.headers.get("origin") !== origin.origin ||
+            request.headers.get("sec-fetch-site") === "cross-site" || !await sameSession()) return false
+        const actor = await options.client.resolve(current.value.tokens.accessToken, [
+          { surface: "dashboard", role: "admin", entra: "group:" + groupId.toLowerCase() },
+        ]).catch(() => undefined)
+        return !!actor?.canWrite && actor.id === principalId &&
+          actor.roles.some((row) => row.surface === "dashboard" && row.role === "admin") && await sameSession()
+      }
+      return await verifyCurrent() ? Object.freeze({ principalId, verifyCurrent }) : undefined
+    }
+    : undefined
   const retireSession = async (id: string) => {
     const storageKey = slot("session", id)
     const revokedKey = slot("revoked", id)
@@ -174,6 +198,7 @@ function createIdentity(
   const headers = () => new Headers({ "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" })
   const error = (status: number) => new Response("Authentication unavailable", { status, headers: headers() })
   return {
+    ...(observeCorporateRecoveryActor ? { observeCorporateRecoveryActor } : {}),
     async handle(request) {
       const url = new URL(request.url)
       const path = url.pathname.slice(options.mount.length)

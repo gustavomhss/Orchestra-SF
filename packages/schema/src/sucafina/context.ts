@@ -8,6 +8,7 @@
  */
 // Documentary type provenance only. Product Schema/context REEXPORTS the
 // closed catalog operation union from F02 Schema/common; it owns no new brand.
+import { TeamProfile } from "./team-profile"
 export type { SfOperationId } from "./common"
 declare const sfOpaque: unique symbol
 export type SfOpaque<Tag extends string> = string & { readonly [sfOpaque]: Tag }
@@ -340,7 +341,7 @@ export const SurfaceIdSchema = Schema.Literals(["CAP01", "CAP02", "CAP03", "CAP0
 const NonEmpty = Schema.NonEmptyString
 const AuthMode = Schema.Literals(["microsoft", "local-operator"])
 
-export const SfInstallationDescriptor = Schema.Struct({
+const SfLocalInstallationDescriptor = Schema.Struct({
   installationId: NonEmpty,
   projectId: NonEmpty,
   hostId: NonEmpty,
@@ -348,13 +349,31 @@ export const SfInstallationDescriptor = Schema.Struct({
   mount: NonEmpty,
   contractRevision: Schema.Literal("sf-native-ui/1"),
   authMode: AuthMode,
-}).annotate({ identifier: "Sucafina.InstallationDescriptor" })
-export interface SfInstallationDescriptor extends Schema.Schema.Type<typeof SfInstallationDescriptor> {}
+})
+/** Technical placement is reported separately from the corporate profile identity. */
+export const SfTeamInstallationDescriptor = Schema.Struct({
+  installationId: TeamProfile.InstallationId,
+  tenantId: TeamProfile.TenantId,
+  projectId: NonEmpty,
+  hostId: NonEmpty,
+  publicOrigin: NonEmpty,
+  mount: NonEmpty,
+  contractRevision: TeamProfile.ContractRevision,
+  authMode: Schema.Literal("microsoft"),
+}).annotate({ identifier: "Sucafina.TeamInstallationDescriptor", parseOptions: { onExcessProperty: "error" } })
+export interface SfTeamInstallationDescriptor extends Schema.Schema.Type<typeof SfTeamInstallationDescriptor> {}
+export const SfInstallationDescriptor = Schema.Union([
+  SfLocalInstallationDescriptor, SfTeamInstallationDescriptor,
+]).annotate({ identifier: "Sucafina.InstallationDescriptor" })
+export type SfInstallationDescriptor = Schema.Schema.Type<typeof SfInstallationDescriptor>
 export const SfInstallationList = Schema.Struct({
   installations: Schema.Array(SfInstallationDescriptor),
 }).annotate({ identifier: "Sucafina.InstallationList" })
 export interface SfInstallationList extends Schema.Schema.Type<typeof SfInstallationList> {}
 export const SfInstallationSelector = Schema.Union([
+  Schema.Struct({ select: Schema.Literal("current"), contractRevision: TeamProfile.ContractRevision }),
+  Schema.Struct({ select: Schema.Literal("installation"), contractRevision: TeamProfile.ContractRevision,
+    installationId: TeamProfile.InstallationId, tenantId: TeamProfile.TenantId }),
   Schema.Struct({ select: Schema.Literal("ids"), installationId: NonEmpty, projectId: NonEmpty }),
   Schema.Struct({ select: Schema.Literal("location"), location: Schema.Struct({ directory: NonEmpty, workspace: Schema.optional(NonEmpty) }) }),
 ]).annotate({ identifier: "Sucafina.InstallationSelector" })
@@ -368,7 +387,9 @@ export type SfInstallationSelector = Schema.Schema.Type<typeof SfInstallationSel
  * Do not infer authority from an SDK-decoded query.
  */
 export const SfInstallationQuery = Schema.Struct({
-  select: Schema.Literals(["ids", "location"]),
+  select: Schema.Literals(["ids", "location", "installation", "current"]),
+  contractRevision: Schema.optional(TeamProfile.ContractRevision),
+  tenantId: Schema.optional(TeamProfile.TenantId),
   installationId: Schema.optional(NonEmpty),
   projectId: Schema.optional(NonEmpty),
   location: Schema.optional(Schema.Struct({

@@ -80,6 +80,11 @@ export type LocalIdentity = {
   teamDirectory?: (request: Request) => Promise<EntraTeamsSessionResult>
   /** Keeps the exact encrypted session generation server-side across business awaits. */
   observeTeams?: (request: Request) => Promise<EntraTeamsObservation>
+  /** System administration uses a current Entra group grant independent of Team membership. */
+  observeCorporateRecoveryActor?: (
+    request: Request,
+    groupId: string,
+  ) => Promise<{ principalId: string; verifyCurrent(): Promise<boolean> } | undefined>
   handle: (request: Request) => Promise<Response | undefined>
   /** Refreshes credentials before entering the business transaction. */
   prepare: (request: Request) => Promise<void>

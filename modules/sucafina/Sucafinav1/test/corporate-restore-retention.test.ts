@@ -1,6 +1,6 @@
 import { Database } from "bun:sqlite"
 import { expect, test } from "bun:test"
-import { mkdtemp, realpath, rm } from "node:fs/promises"
+import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { digestSfValue } from "../product/contracts/canonical.ts"
@@ -10,17 +10,29 @@ import {
   inspectSfProductRestoreFrontier,
 } from "../product/host-binding/state-provider.ts"
 import { publicSfData, SF_PROCUREMENT_CREATE_RECEIPTS } from "../product/integration/public-state.ts"
+import { createCorporateRecoveryHttp } from "../runtime/corporate-recovery-http.ts"
+import { openCorporateRecoveryRegister } from "../runtime/corporate-recovery-register.ts"
 import { createLocalBackups } from "../runtime/local-backups.ts"
 import type { LocalStore } from "../runtime/local-contract.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { restoreBackup } from "../runtime/operations.ts"
 import { captureSfCorporateRestoreRetention } from "../runtime/restore-effect-frontier.ts"
+import { teamProfileInstallationId } from "../runtime/team-profile-access.ts"
 
 const at = "2026-11-21T00:00:00.000Z"
 const authority = { principalRef: "operator", accessRevision: "access-v2", policyVersion: "policy-v2" }
 const actor = { id: authority.principalRef, roles: ["admin"], canWrite: true }
 const policy = { access: { operator: { assigned: ["Operations"] } }, roleMap: [], budgetLineIds: {} }
-const installationDigest = digestSfValue("corporate-installation")
+const teamObjectId = "10000000-0000-4000-8000-000000000001"
+const config = {
+  origin: "https://sf.example.test",
+  mount: "/sucafina",
+  tenantId: "10000000-0000-4000-8000-000000000002",
+  clientId: "10000000-0000-4000-8000-000000000003",
+  enabledTeamIds: [teamObjectId],
+  supremeAdminGroupId: "10000000-0000-4000-8000-000000000004",
+  grants: [{ principalRef: actor.id, migrationActions: ["recover"] }],
+}
 const assetKey = "checkpoint-only-asset"
 const asset = new Uint8Array([0, 9, 10, 255])
 
@@ -30,16 +42,22 @@ async function read(store: LocalStore) {
 
 test("external restore comparison rejects a stale effect frontier and restore keeps the durable response across restart", async () => {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sucafina-restore-frontier-"))
+  const directory = join(root, "installation")
+  await mkdir(directory, { mode: 0o700 })
+  const installationId = teamProfileInstallationId({ ...config, directory })
+  const installationDigest = digestSfValue({ installationId, tenantId: config.tenantId, clientId: config.clientId })
+  const partition = digestSfValue({ installationId, tenantId: config.tenantId, teamObjectId })
   const stores: LocalStore[] = []
   const open = async () => {
-    const store = await openLocalStore(join(root, "business"))
+    const store = await openLocalStore(join(directory, "business-teams", partition))
     stores.push(store)
     return store
   }
-  const control = new Database(join(root, "independent-control.sqlite"), { strict: true })
+  const registerFile = join(root, "independent-control.sqlite")
+  const control = new Database(registerFile, { strict: true })
   try {
     const store = await open()
-    const backups = await createLocalBackups(join(root, "archives"))
+    const backups = await createLocalBackups(join(directory, "backups-teams", partition))
     await initializeAbsentSfProductState(store, () => "product-incarnation")
     await store.transaction("dashboard", async (snapshot, blobs) => {
       snapshot.data.restoreMarker = "checkpoint"
@@ -92,14 +110,19 @@ test("external restore comparison rejects a stale effect frontier and restore ke
     expect(checkpointFrontier.transactions).toHaveLength(0)
     expect(frontier.transactions).toHaveLength(1)
 
-    // The separate test DB models a trusted latest read. It is not a production pin issuer.
-    control.exec("CREATE TABLE pin (generation INTEGER PRIMARY KEY, installationDigest TEXT, checkpointDigest TEXT, frontierDigest TEXT)")
-    const insert = control.query("INSERT INTO pin VALUES (?, ?, ?, ?)")
-    insert.run(1, installationDigest, digestSfValue(checkpoint), digestSfValue(checkpointFrontier))
-    insert.run(2, installationDigest, digestSfValue(checkpoint), digestSfValue(frontier))
+    // The controlled observer publishes evidence outside the installation under the fixture owner.
+    control.exec(`CREATE TABLE recovery_pins (
+      installation_digest TEXT, partition_digest TEXT, generation INTEGER,
+      checkpoint_digest TEXT, frontier_digest TEXT, archive_digest TEXT
+    ) STRICT`)
+    const archiveDigest = digestSfValue({ checkpointId: archive.id, manifest: archive.manifest })
+    const insert = control.query("INSERT INTO recovery_pins VALUES (?, ?, ?, ?, ?, ?)")
+    insert.run(installationDigest, partition, 1, digestSfValue(checkpoint), digestSfValue(checkpointFrontier), archiveDigest)
+    insert.run(installationDigest, partition, 2, digestSfValue(checkpoint), digestSfValue(frontier), digestSfValue("unapproved-archive"))
     const pin = control.query<{
       generation: number; installationDigest: string; checkpointDigest: string; frontierDigest: string
-    }, []>("SELECT * FROM pin ORDER BY generation DESC LIMIT 1").get()
+    }, []>(`SELECT generation, installation_digest AS installationDigest, checkpoint_digest AS checkpointDigest,
+      frontier_digest AS frontierDigest FROM recovery_pins ORDER BY generation DESC LIMIT 1`).get()
     if (!pin) throw new Error("Expected the independently retained pin")
     const admission = { installationDigest, generation: pin.generation, pin }
     expect(() => captureSfCorporateRestoreRetention(current, checkpoint, frontier, undefined))
@@ -137,7 +160,38 @@ test("external restore comparison rejects a stale effect frontier and restore ke
     expect(verification.calls).toBe(2)
     expect(await read(store)).toEqual(current)
     expect(await readAsset()).toBeUndefined()
-    expect(await restore(async () => true)).toEqual({ ok: true })
+    const cancelled = new Error("cancelled by caller")
+    await expect(restoreBackup(store, backups.source, "dashboard", "not-an-archive-id", actor, true, 0, at, {
+      retain: () => { throw new Error("An aborted request cannot enter recovery") },
+      verifyCurrent: async () => true,
+      signal: AbortSignal.abort(cancelled),
+    })).rejects.toThrow(cancelled)
+    const register = await openCorporateRecoveryRegister(registerFile, directory, process.getuid?.())
+    const recovery = createCorporateRecoveryHttp({
+      config, directory, register, now: () => new Date(at),
+      identity: {
+        prepare: async () => {},
+        observeCorporateRecoveryActor: async (request, group) =>
+          group === config.supremeAdminGroupId && request.headers.get("cookie") === "verified-fixture"
+            ? { principalId: actor.id, verifyCurrent: async () => true } : undefined,
+      },
+    })
+    const post = (command: Record<string, unknown>, cookie = "verified-fixture") => recovery(
+      new Request(config.origin + config.mount + "/api/ui/team-profile-migration/recover", {
+        method: "POST",
+        headers: { origin: config.origin, "content-type": "application/json", cookie },
+        body: JSON.stringify(command),
+      }),
+    )
+    const restoreCommand = { teamObjectId, checkpointId: archive.id, expectedVersion: 0, confirm: true }
+    expect((await post(restoreCommand, ""))?.status).toBe(403)
+    expect((await post({ ...restoreCommand, teamObjectId: config.tenantId }))?.status).toBe(403)
+    expect((await post({ ...restoreCommand, pin }))?.status).toBe(400)
+    expect((await post(restoreCommand))?.status).toBe(503)
+    expect(await read(store)).toEqual(current)
+    insert.run(installationDigest, partition, 3, digestSfValue(checkpoint), digestSfValue(frontier), archiveDigest)
+    expect((await post(restoreCommand))?.status).toBe(204)
+    expect((await post(restoreCommand))?.status).toBe(409)
     expect(await readAsset()).toEqual(asset)
     const recovered = await read(store)
     expect(recovered.data).toMatchObject({ ...policy, restoreMarker: "checkpoint" })

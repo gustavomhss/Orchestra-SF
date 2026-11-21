@@ -307,9 +307,9 @@ function requireBackupManifest(
 
 export type RestoreTransport = {
   // Load an immutable archive; preserve the snapshot JSON representation used for snapshotSha256.
-  load: (surface: Surface, id: string) => Promise<{ snapshot: Snapshot; manifest: BackupManifest } | undefined>
+  load: (surface: Surface, id: string, signal?: AbortSignal) => Promise<{ snapshot: Snapshot; manifest: BackupManifest } | undefined>
   // Return PRIVATE bytes from this retained archive, never a live/public object fallback.
-  readBlob: (surface: Surface, id: string, key: string) => Promise<Uint8Array | undefined>
+  readBlob: (surface: Surface, id: string, key: string, signal?: AbortSignal) => Promise<Uint8Array | undefined>
 }
 
 function objectMap(value: unknown): Record<string, string> {
@@ -334,17 +334,19 @@ export async function restoreBackup(
   expectedVersion: number,
   at: string,
   corporate?: {
-    retain: (current: Snapshot, checkpoint: Snapshot) => {
+    retain: (current: Snapshot, checkpoint: Snapshot, manifest: BackupManifest) => {
       verifyBlobReplacement: (existing: Uint8Array | undefined, restored: Uint8Array) => void
       apply: (data: Snapshot["data"]) => void
     }
     verifyCurrent: () => Promise<boolean>
+    signal?: AbortSignal
   },
 ) {
   if (!actor.canWrite || !actor.roles.includes("admin") || corporate && !await corporate.verifyCurrent())
     return { ok: false as const, status: 403 }
   if (!confirmed) return { ok: false as const, status: 422 }
-  const archive = await source.load(surface, id)
+  corporate?.signal?.throwIfAborted()
+  const archive = await source.load(surface, id, corporate?.signal)
   if (!archive) return { ok: false as const, status: 404 }
   const recovered = structuredClone(archive.snapshot)
   const manifest = structuredClone(archive.manifest)
@@ -359,10 +361,11 @@ export async function restoreBackup(
           ...(corporate ? {} : { stored: structuredClone(snapshot.data), by: snapshot.versions.dataset?.by }),
         },
       }
-    const retention = corporate?.retain(snapshot, recovered)
+    const retention = corporate?.retain(snapshot, recovered, manifest)
     // Verify every retained blob's actual size and SHA; the adapter keeps all puts private until commit.
     for (const blob of manifest.blobs) {
-      const bytes = await source.readBlob(surface, id, blob.key)
+      corporate?.signal?.throwIfAborted()
+      const bytes = await source.readBlob(surface, id, blob.key, corporate?.signal)
       if (!bytes || bytes.byteLength !== blob.bytes || createHash("sha256").update(bytes).digest("hex") !== blob.sha256)
         throw new Error("Missing or corrupt private backup blob")
       if (retention) retention.verifyBlobReplacement(await blobs.get(blob.key), bytes)
@@ -425,7 +428,7 @@ export async function restoreBackup(
     if (corporate && !await corporate.verifyCurrent())
       return { commit: false, value: { ok: false as const, status: 403 as const } }
     return { commit: true, value: { ok: true as const } }
-  })
+  }, corporate?.signal ? { signal: corporate.signal } : undefined)
 }
 
 function record(value: unknown): Record<string, unknown> {
