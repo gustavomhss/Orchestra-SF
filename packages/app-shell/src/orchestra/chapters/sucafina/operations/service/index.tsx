@@ -357,8 +357,6 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
           setState("operationState", "conflict")
         }
       }
-      setState("page", value)
-      setState("state", serviceReadState(value))
       if (submitted && submitted.owner === ownerState.ownerKey &&
         submitted.year === value.selection.year && submitted.month === value.selection.month) {
         if (draft) {
@@ -383,6 +381,9 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
         setState("editor", null)
         setState("operationState", "saved")
       }
+      // Reconcile and release the completed draft before ready remounts review subscriptions.
+      setState("page", value)
+      setState("state", serviceReadState(value))
       if (state.editor === null && routeEntryConsumed !== String(props.route.href)) {
         routeEntryConsumed = String(props.route.href)
         const kind = props.route.kind

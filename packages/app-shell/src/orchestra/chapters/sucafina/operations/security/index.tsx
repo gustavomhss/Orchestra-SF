@@ -428,8 +428,6 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
           setState("operationState", "conflict")
         }
       }
-      setState("page", value)
-      setState("state", securityReadState(value))
       if (submitted && submitted.owner === latest.ownerKey &&
         submitted.year === value.selection.year && submitted.month === value.selection.month) {
         const wasDelete = submitted.command.startsWith("delete-")
@@ -458,6 +456,9 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
           setState("operationState", "conflict")
         }
       }
+      // Reconcile and release the completed draft before ready remounts review subscriptions.
+      setState("page", value)
+      setState("state", securityReadState(value))
       if (state.editor === null && routeEntryConsumed !== String(props.route.href)) {
         routeEntryConsumed = String(props.route.href)
         if (props.route.kind === "edit-kpi" && value.allowedActionIds.includes("save-kpi"))
