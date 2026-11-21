@@ -1,5 +1,5 @@
 name: app-build
-run-name: Azure Entra native Web package proof
+run-name: Azure Entra C17 package proof with Bun 1.4.1
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
         required: true
 
 concurrency:
-  group: azure-entra-package-proof
+  group: c17-bun-proof
   cancel-in-progress: false
 
 permissions:
@@ -22,9 +22,11 @@ defaults:
 
 jobs:
   build:
-    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/azure-package-proof'"
+    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/c17-bun-proof'"
     runs-on: ubuntu-24.04
     timeout-minutes: 45
+    env:
+      BUN_BASELINE_SHA256: a8c9c6738202e2fced555dd860a953c56c0cd059f75041e7010ae81a32802646
     steps:
       - name: Select revision
         id: source
@@ -51,12 +53,18 @@ jobs:
         with:
           node-version: "24.15"
 
-      - name: Setup Bun
-        id: bun
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
-        with:
-          bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
-          no-cache: true
+      - name: Verify and set up Bun Linux x64 baseline
+        run: |
+          set -euo pipefail
+          zip="$RUNNER_TEMP/bun-linux-x64-baseline.zip"
+          curl --fail --silent --show-error --location --retry 2 --max-time 120 \
+            https://github.com/oven-sh/bun/releases/download/bun-v1.4.1/bun-linux-x64-baseline.zip --output "$zip"
+          printf '%s  %s\n' "$BUN_BASELINE_SHA256" "$zip" | sha256sum --check
+          unzip -q "$zip" -d "$RUNNER_TEMP"
+          bin="$RUNNER_TEMP/bun-linux-x64-baseline"
+          test "$("$bin/bun" --version)" = "1.4.1"
+          "$bin/bun" --revision
+          printf '%s\n' "$bin" >> "$GITHUB_PATH"
 
       - name: Install dependencies
         id: install
@@ -64,7 +72,7 @@ jobs:
 
       - name: Install Chromium for the installed-package proof
         working-directory: packages/app-shell
-        run: bunx playwright install --with-deps chromium
+        run: bun x playwright install --with-deps chromium
 
       - name: Build native omni
         id: native
@@ -172,7 +180,8 @@ jobs:
           jq -e --arg source "$SOURCE_REVISION" --arg tree "$(git rev-parse 'HEAD^{tree}')" \
             --arg workflow "$GITHUB_SHA" --arg run "$GITHUB_RUN_ID" --arg attempt "$GITHUB_RUN_ATTEMPT" \
             --arg job "$GITHUB_JOB" --arg checkRun "$CHECK_RUN_ID" \
-            --arg bun "$compiler" --arg binary "$binary_sha" \
+            --arg bun "$compiler" --arg bunRevision "$(bun --revision)" --arg bunArchive "$BUN_BASELINE_SHA256" \
+            --arg binary "$binary_sha" \
             --arg ledger "$(sha256sum "$archive_dir/compile-evidence.json" | cut -d' ' -f1)" \
             --arg web "$(sha256sum "$archive_dir/web-build-manifest.json" | cut -d' ' -f1)" '
               select(.sourceSHA == $source and .checkoutSHA == $source and .runID == $run and
@@ -181,7 +190,8 @@ jobs:
                 schema: "sf-linux-compile-provenance-v1",
                 sourceSHA: $source, sourceTreeSHA: $tree, workflowSHA: $workflow,
                 runId: $run, runAttempt: $attempt, job: $job, checkRunId: $checkRun,
-                target, bun: $bun, archiveSha256, manifestSha256,
+                target, bun: $bun, bunRevision: $bunRevision, bunArchiveSha256: $bunArchive,
+                archiveSha256, manifestSha256,
                 binary: {path: "bin/orchestra", sha256: $binary},
                 ledger: {file: "compile-evidence.json", sha256: $ledger},
                 webManifest: {file: "web-build-manifest.json", sha256: $web}
