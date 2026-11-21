@@ -33,7 +33,6 @@ import { createResidentAiBundle } from "../../../modules/sucafina/Sucafinav1/pro
 import type { TrustedUiContext } from "../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { encodeCaseRef } from "../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { probeSfAtlasScanner } from "../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"
-import { createDashboardSourceIssuer } from "../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts"
 import type { SfHumanAction } from "../../../modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
 import { enqueueSfLedgerEvent } from "../../../modules/sucafina/Sucafinav1/product/integration/ledger-outbox.ts"
 import { enumerateSfSources } from "../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
@@ -41,6 +40,7 @@ import { createSfSourcePersistence } from "../../../modules/sucafina/Sucafinav1/
 import { createSfSourceScopeProjector } from "../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
 import { object } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
+import { initialProcurementSettings } from "../../../modules/sucafina/Sucafinav1/src/initial-settings.ts"
 
 const origin = "https://reviewer.example.test"
 const providerID = ProviderV2.ID.make("reviewer-fixture")
@@ -76,7 +76,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
   const actors = new WeakMap<Request, string>()
   const revoked = new Set<string>()
   const request = (principal = "reviewer", signal?: AbortSignal) => {
-    const incoming = new Request(origin + "/sucafina/dashboard", { method: "POST", signal, headers: { origin, "idempotency-key": randomUUID() } })
+    const incoming = new Request(origin + "/sucafina/procurement", { method: "POST", signal, headers: { origin, "idempotency-key": randomUUID() } })
     actors.set(incoming, principal)
     return incoming
   }
@@ -129,23 +129,26 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
   try {
     const persistence = { ...store, ...createSfSourcePersistence({ persistence: store, createId: randomUUID,
       enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) }) }
-    await store.transaction("dashboard", async (snapshot) => {
-      snapshot.data.opexOwners = [{ id: "owner", budget: 1200 }]
-      snapshot.data.opexEntries = [{ id: "january", ownerId: "owner", year: Number(year), month: 1, budget: 200, actual: 0 }]
-      snapshot.data.capexProjects = []
-      snapshot.data.capexEntries = []
+    for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
+    const purchasers = [{ principal: "reviewer", number: "PR-1" }, { principal: "other", number: "PR-2" }]
+    await persistence.transaction("procurement", async (snapshot) => {
+      snapshot.data.store = { requests: Object.fromEntries(purchasers.map(({ principal, number }) => [number, {
+        request: { number, createdBy: principal, status: "draft", pr: { title: `Requisition ${number}`, justification: "Recorded need", estAmount: 100 },
+          history: [], attachments: [] }, version: 0, by: principal,
+      }])), suppliers: [], settings: initialProcurementSettings(), issued: { pr: purchasers.map((buyer) => buyer.number), po: [] } }
+      for (const buyer of purchasers) snapshot.versions[`requests:${buyer.number}`] = { version: 0, by: buyer.principal }
       return { commit: true, value: undefined }
     })
-    for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     const runtime = await createSfHostRuntime({
       installationId: "reviewer-recall", directory: root, sourceRoot, origin, mount: "/sucafina", authMode: "local-operator", persistence,
       authenticate: async (incoming, scope) => {
         const principal = actors.get(incoming)
-        return principal && scope && !revoked.has(principal) ? { id: principal, canWrite: true, roles: [{ surface: scope.surface, role: "admin" }] } : null
+        return principal && scope && !revoked.has(principal) ? { id: principal, canWrite: true,
+          roles: [{ surface: scope.surface, role: scope.surface === "procurement" ? "requester" : "admin" }] } : null
       },
-      environment: async () => ({ at, id: randomUUID, directory: [] }),
+      environment: async () => ({ at, id: randomUUID, directory: purchasers.map((buyer) => ({ id: buyer.principal, name: buyer.principal })) }),
       grants: ["reviewer", "other"].map((principalRef) => ({ principalRef, namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
-        operations: ["sf_dashboard_read", "sf_case_draft", "sf_case_read", operation], humanActions: ["analysis.prepare", "analysis.start", "analysis.read"] })),
+        operations: ["sf_work_list", "sf_request_read", "sf_case_draft", "sf_case_read", operation], humanActions: ["analysis.prepare", "analysis.start", "analysis.read"] })),
     })
     const merged = Host.merge([...ProductHost.contributions(), ...runtime.contributions])
     const layer = AppNodeBuilder.build(LayerNode.group([...merged.nodes, AppProcess.node, SessionV2.node, SessionExecution.node, LocationServiceMap.node]),
@@ -193,12 +196,21 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
             const call = value(await services.human.admit(request(principal, signal), action, payload), action)
             try { return await work(call) } finally { services.human.finish(call) }
           }
-          const issue = createDashboardSourceIssuer({ host: business.host, scopedSources: persistence })
-          const dashboard = { page: "Budget Overview", fields: ["budgetSeries"], period }
-          const source = value(await ui("sf_dashboard_read", dashboard, (call) => issue(dashboard, call)), "budget source").evidence
+          const issueSource = async (buyer: typeof purchasers[number]) => {
+            await ui("sf_work_list", { purpose: "work-selection", period }, async (call) => {
+              value(await services.procurementSelections!.create(call, period), "select period in the host")
+              value(await business.procurementSelections.create(call, period), "select period for fixture seeding")
+            }, buyer.principal)
+            return ui("sf_request_read", { request: buyer.number }, async (call) => {
+              const issued = value(await business.individual.issue("procurement-request", buyer.number, call), "issue request source")
+              return value(await business.individual.resolve(issued, call), "read request source").evidence
+            }, buyer.principal)
+          }
+          const source = await issueSource(purchasers[0]!)
+          const otherSource = await issueSource(purchasers[1]!)
           const draft = async (objective: string, principal = "reviewer") => {
-            const evidence = principal === "reviewer" ? source : value(await ui("sf_dashboard_read", dashboard, (call) => issue(dashboard, call), principal), "other source").evidence
-            const payload = { objective, horizon: period, currency: "USD", criteria: ["Review budget"], sourceRefs: [evidence] }
+            const evidence = principal === "reviewer" ? source : otherSource
+            const payload = { objective, horizon: period, currency: "USD", criteria: ["Review the requisition"], sourceRefs: [evidence] }
             return value(await ui("sf_case_draft", payload, (call) => business.cases.draft(payload, call), principal), objective)
           }
           const ref = (entry: DecisionCase) => ({ id: entry.id, incarnation: entry.incarnation, version: entry.version })
@@ -208,7 +220,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           const other = ref(await draft("Another principal's review", "other"))
           const precedent = { ...ref(previous), version: previous.version + 1 }
           const ledger: CaseLedgerEvent = { id: randomUUID(), caseRef: precedent, kind: "reconsideration-accepted", principalRef: "reviewer", at,
-            consideredActions: ["Review budget"], factualGaps: [], lifecycleState: "investigating", rationale: "Preserve the observed budget",
+            consideredActions: ["Review the requisition"], factualGaps: [], lifecycleState: "investigating", rationale: "Preserve the recorded estimate",
             evidenceRefs: [source], outputDigest: digestSfValue(source) }
           const sourceRequest = request()
           const before = value(await services.state.read(sourceRequest, "cases", (state) => ({ cases: state.versions.cases, outbox: state.versions.outbox })), "ledger revisions")
@@ -234,8 +246,13 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           expect((await prepare(other)).status).not.toBe("ok")
           expect((await prepare(precedent, "other")).status).not.toBe("ok")
           const skillInput = value(await step("prepare authorized precedent", 25_000, (signal) => prepare(precedent, "reviewer", signal)), "prepare authorized precedent")
-          const businessDigest = async () => digestSfValue(value(await services.state.read(request(), "cases", (state) =>
-            ({ cases: state.cases, atlas: state.atlas, outbox: state.outbox })), "business snapshot"))
+          const businessDigest = async () => {
+            const product = value(await services.state.read(request(), "cases", (state) =>
+              ({ cases: state.cases, atlas: state.atlas, outbox: state.outbox })), "business snapshot")
+            const surfaces = await store.transactionAll!(async (snapshots) => ({ commit: false,
+              value: Object.values(snapshots).map((snapshot) => Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1"))) }))
+            return digestSfValue({ product, surfaces })
+          }
           const initial = await step("snapshot business state", 10_000, businessDigest)
           toolInputs.selected = encodeCaseRef(precedent)
           toolInputs.outside = encodeCaseRef(outside)
