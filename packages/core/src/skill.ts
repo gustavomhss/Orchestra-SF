@@ -90,6 +90,8 @@ export interface Interface extends State.Transformable<Draft> {
   readonly list: () => Effect.Effect<Info[]>
   readonly catalog: () => Effect.Effect<Skill.Metadata[]>
   readonly get: (name: string) => Effect.Effect<Info | undefined>
+  /** Private runtime provenance for the exact current winning object, never a wire representation. */
+  readonly sourceOf?: (info: Info) => Readonly<{ key: string; reserved: boolean }> | undefined
   /** Writes a skill file for the catalog (see SkillFile.save) and reloads cached skill files. */
   readonly save: (directory: string, input: SkillFile.SaveInput) => Effect.Effect<Info, SkillFile.WriteError>
   readonly remove: (directory: string, location: string) => Effect.Effect<void, SkillFile.WriteError>
@@ -163,6 +165,11 @@ const layer = Layer.effect(
     const caches = new WeakMap<Data, Map<string, Info[]>>()
     // A write bumps the generation, so a list() that started loading before it cannot refill the cache.
     const generation = { current: 0 }
+    // Capture before an Info leaves list(), not when it is later presented to sourceOf. A cached
+    // or embedded object must never acquire fresh provenance for fields changed by its holder.
+    const originals = new WeakMap<Info, Readonly<{ name: string; location: string; content: string }>>()
+    const provenance = new WeakMap<Info, { data: Data; generation: number; source: Readonly<{ key: string; reserved: boolean }> }>()
+    let current: { data: Data; generation: number; sources: { key: string; skills: Info[] }[]; winners: Map<string, Info> } | undefined
     const invalidate = () => {
       generation.current++
       caches.delete(state.get())
@@ -177,7 +184,12 @@ const layer = Layer.effect(
       const sources: { key: string; skills: Info[] }[] = []
       for (const source of data.sources) {
         const key = Source.key(source)
-        const loaded = cache.get(key) ?? (yield* load(source))
+        // Info's schema contains only primitive fields. Own the immutable DTO, especially for embedded
+        // sources whose supplied object remains owned by the caller; the cache keeps this clone stable.
+        const loaded = cache.get(key) ?? (yield* load(source)).map((skill) => Object.freeze({ ...skill }))
+        for (const skill of loaded) {
+          if (!originals.has(skill)) originals.set(skill, Object.freeze({ name: skill.name, location: skill.location, content: skill.content }))
+        }
         if (generation.current === started) cache.set(key, loaded)
         sources.push({ key, skills: loaded })
       }
@@ -187,16 +199,27 @@ const layer = Layer.effect(
           .flatMap((source) => source.skills.map((skill) => [skill.name, source.key] as const)),
       )
       const skills = new Map<string, Info>()
+      const winningSources = new Map<string, string>()
       for (const source of sources) {
         for (const skill of source.skills) {
           const owner = owners.get(skill.name)
           if (owner === undefined || owner === source.key) {
             skills.set(skill.name, skill)
+            winningSources.set(skill.name, source.key)
             continue
           }
           if (!shadowed.has(skill.location))
             yield* Effect.logWarning(`Ignoring skill ${skill.location}: the name ${skill.name} is reserved by a bundled skill`)
           shadowed.add(skill.location)
+        }
+      }
+      if (state.get() === data && generation.current === started && sources.every((source) => cache.get(source.key) === source.skills)) {
+        current = { data, generation: started, sources, winners: skills }
+        for (const [name, skill] of skills) {
+          const key = winningSources.get(name)!
+          const previous = provenance.get(skill)
+          if (previous?.data === data && previous.generation === started && previous.source.key === key) continue
+          provenance.set(skill, { data, generation: started, source: Object.freeze({ key, reserved: data.reserved.includes(key) }) })
         }
       }
       return Array.from(skills.values())
@@ -229,6 +252,24 @@ const layer = Layer.effect(
         return metadata
       }))),
       get: (name) => list().pipe(Effect.map((skills) => skills.find((skill) => skill.name === name))),
+      sourceOf: (info) => {
+        const source = provenance.get(info)
+        if (!source || source.data !== state.get() || source.generation !== generation.current) return undefined
+        const catalog = current
+        const cache = caches.get(source.data)
+        if (!catalog || catalog.data !== source.data || catalog.generation !== generation.current ||
+          catalog.sources.length !== source.data.sources.length || catalog.winners.get(info.name) !== info ||
+          !catalog.sources.every((item, index) => cache?.get(item.key) === item.skills && Source.key(source.data.sources[index]!) === item.key)) return undefined
+        const original = originals.get(info)
+        const name = Object.getOwnPropertyDescriptor(info, "name")
+        const location = Object.getOwnPropertyDescriptor(info, "location")
+        const content = Object.getOwnPropertyDescriptor(info, "content")
+        // Accessors can return the original during validation and different bytes during loading.
+        if (!original || !name || !("value" in name) || name.value !== original.name ||
+          !location || !("value" in location) || location.value !== original.location ||
+          !content || !("value" in content) || content.value !== original.content) return undefined
+        return source.source
+      },
       save,
       remove,
     })
