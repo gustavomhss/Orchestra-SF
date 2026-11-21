@@ -1,9 +1,13 @@
+import type { createReviewAnswerSource } from "../reviews/review-answer-source.ts"
 import { roleMap } from "../../runtime/admin.ts"
-import { object } from "../../runtime/contract.ts"
-import { digestSfValue } from "../contracts/canonical.ts"
+import { hasActiveSfSnapshot, hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
+import type { Snapshot } from "../../runtime/contract.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { PreservedReview } from "../contracts/context.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { sfScopedSourceIdentity } from "../integration/source-lifecycle.ts"
 import type { HotTopicIntent } from "../dashboard/hot-topics.ts"
 import type { CollaborationThread } from "./threads.ts"
 import { validThreadSourceContext } from "./thread-context.ts"
@@ -13,6 +17,46 @@ import { createRecipientCommitCheck, createRecipientSourceAuthorizer } from "./r
 import type { CollaborationRecipientAuthority, ReviewThreadRecipientAuthority } from "./recipient-authority.ts"
 
 /** Current source access and explicitly selected directory IDs are checked separately. */
+type ReviewAnswerSource = ReturnType<typeof createReviewAnswerSource>
+// Undefined means the scoped producer was ineligible before acquiring its root.
+export type ReviewThreadReadLeg = (pin: NonNullable<ThreadSourceContext["reviewContext"]>, basis: ThreadSourceContext,
+  context: TrustedDomainContext, complete: () => Promise<boolean>, before?: () => Promise<boolean>) => Promise<boolean | undefined>
+
+const reviewEvidenceBatches = new WeakMap<BusinessContextService, {
+  context: BusinessContextService["context"]; answerSource: ReviewAnswerSource; authorizeThread: ReviewThreadContextAuthorizer
+  recipient: ReviewThreadRecipientAuthority; providersCurrent: () => boolean; readLeg: ReviewThreadReadLeg; localReview: () => ((review: PreservedReview) => boolean) | undefined
+}>()
+
+/** The resident binding resolves and authorizes each input independently. */
+export function registerReviewEvidenceBatch(evidence: BusinessContextService, answerSource: ReviewAnswerSource, authorizeThread: ReviewThreadContextAuthorizer, recipient: ReviewThreadRecipientAuthority, readLeg: ReviewThreadReadLeg, localReview: () => ((review: PreservedReview) => boolean) | undefined) {
+  const resolveEvidence = evidence.resolve
+  const resolve = answerSource.resolve
+  const observe = answerSource.observe
+  const fence = answerSource.fence
+  const prepare = answerSource.prepareThreadFence
+  const authorizeRecipient = recipient.authorize
+  const checkRecipient = recipient.checkAtCommit
+  const providersCurrent = () => evidence.resolve === resolveEvidence && answerSource.resolve === resolve && answerSource.observe === observe && answerSource.fence === fence &&
+    answerSource.prepareThreadFence === prepare && recipient.authorize === authorizeRecipient && recipient.checkAtCommit === checkRecipient
+  reviewEvidenceBatches.set(evidence, { context: evidence.context, answerSource, authorizeThread, recipient, providersCurrent, readLeg, localReview })
+}
+
+export function registeredLocalReview(evidence: BusinessContextService) {
+  const installed = reviewEvidenceBatches.get(evidence)
+  return installed && installed.context === evidence.context && installed.providersCurrent() ? installed.localReview() : undefined
+}
+
+export function isRegisteredReviewMutationSource(evidence: BusinessContextService, answerSource: object, authorizeThread?: ReviewThreadContextAuthorizer, recipient?: ReviewThreadRecipientAuthority) {
+  const installed = reviewEvidenceBatches.get(evidence)
+  return !!installed && installed.context === evidence.context && installed.answerSource === answerSource &&
+    installed.authorizeThread === authorizeThread && installed.recipient === recipient && installed.providersCurrent()
+}
+
+export function isRegisteredAnswerSource(evidence: BusinessContextService, answerSource: object) {
+  const installed = reviewEvidenceBatches.get(evidence)
+  return installed?.context === evidence.context && installed.answerSource === answerSource && installed.providersCurrent()
+}
+
 export function createCollaborationAuthority(input: { host: DomainPortHost; evidence: BusinessContextService; recipientAuthority?: CollaborationRecipientAuthority; reviewRecipientAuthority?: ReviewThreadRecipientAuthority; authorizeReviewThreadContext?: ReviewThreadContextAuthorizer }) {
   type ReviewRecipientLease = { proof: ReviewThreadRecipientAuthority; authorize: ReviewThreadRecipientAuthority["authorize"]; check: ReviewThreadRecipientAuthority["checkAtCommit"] }
   const reviewRecipientLeases = new WeakMap<TrustedDomainContext, Map<string, ReviewRecipientLease>>()
@@ -59,7 +103,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     const selected = structuredClone(basis)
     if (!validThreadSourceContext(selected) || !await input.host.revalidate(context)) return false
     if (!authorize) throw new Error("COLLABORATION_REVIEW_AUTHORITY_UNAVAILABLE")
-    return await authorize(selected.reviewContext!, selected, context) && input.authorizeReviewThreadContext === authorize && await input.host.revalidate(context)
+    return await authorize(selected.reviewContext!, selected, context, "read") && input.authorizeReviewThreadContext === authorize && await input.host.revalidate(context)
   }
   const reviewRecipientSources = async (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext, requireSelfLease = false) => {
     const selected = structuredClone(basis)
@@ -69,7 +113,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     if (recipientRef === context.binding.principalRef && !requireSelfLease) return await input.host.revalidate(context)
     // C08 already owns all source snapshots. Reuse only the privately prepared
     // authority here; preparing a new recipient lease could open a nested write.
-    if (input.host.persistence.currentSnapshots?.()) return checkReviewRecipient(recipientRef, selected, context, requireSelfLease)
+    if (hasActiveSfSnapshot(input.host.persistence)) return checkReviewRecipient(recipientRef, selected, context, requireSelfLease)
     const proof = input.reviewRecipientAuthority
     const authorize = proof?.authorize
     const checkAtCommit = proof?.checkAtCommit
@@ -89,7 +133,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     return true
   }
   const recipientSources = createRecipientSourceAuthorizer({ sources, revalidate: input.host.revalidate, recipientAuthority: input.recipientAuthority })
-  const recipient = async (id: string, context: TrustedDomainContext, strictRead = false) => {
+  const recipient = async (id: string, context: TrustedDomainContext, strictRead = false, sealedRead = false) => {
     const request = input.host.requestFor(context)
     if (!request || !id.trim() || !await input.host.revalidate(context)) return undefined
     const environment = await input.host.environment(request)
@@ -99,10 +143,126 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
       const actor = await input.host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
       const access = object(snapshot.data.access)
       return { commit: false, value: !!actor && actor.id === context.binding.principalRef && !actor.id.startsWith("local:") && Object.hasOwn(access, id) && !!access[id] && typeof access[id] === "object" && !Array.isArray(access[id]) }
-    }, { signal: request.signal }).catch((error: unknown) => { if (strictRead) throw error; return false })
+    }, { signal: request.signal, ...(sealedRead ? { sealedRead: true } : {}) }).catch((error: unknown) => { if (strictRead) throw error; return false })
     if (!allowed || !await input.host.revalidate(context)) return undefined
     return { id: person.id, name: person.name }
   }
+  const prepareReviewReplyContinuity = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext, routeCurrent: () => boolean) => {
+    const host = input.host
+    const request = host.requestFor(context)
+    const persistence = host.persistence
+    const atomic = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
+    const observe = atomic?.readSealed, read = atomic?.currentSnapshot
+    const evidence = input.evidence
+    const resolve = evidence.context
+    const current = () => routeCurrent() && !!request && !request.signal.aborted && host.requestFor(context) === request &&
+      input.host === host && host.persistence === persistence && persistence.dashboardSourceFence === atomic &&
+      hasSfDashboardSourceFence(persistence) && atomic?.readSealed === observe && atomic?.currentSnapshot === read &&
+      input.evidence === evidence && evidence.context === resolve
+    if (!request || !atomic || !observe || !read || !refs.length || !current()) return undefined
+    // The resident resolver issues the live actor-scoped reference from the
+    // retained record, verifies its ACL, and independently verifies freshness.
+    const resolved = await resolve.call(evidence, { refs: structuredClone(refs) }, context)
+    if (!current() || resolved.length !== refs.length) return undefined
+    let requiresReissue = false
+    const liveRefs = resolved.flatMap((item, index) => {
+      const original = refs[index]!
+      const live = item.state === "fresh" ? item.ref : item.state === "historical" && item.authorizedProjection && item.differences ? item.currentRef : undefined
+      if (original.kind !== "record" || original.target.surface !== "dashboard" || live?.kind !== "record" ||
+        item.accessRevision !== context.binding.accessRevision || digestSfValue(item.ref) !== digestSfValue(original) ||
+        live.installationId !== original.installationId || live.projectId !== original.projectId || live.evidenceLevel !== original.evidenceLevel ||
+        live.refDigest !== digestSfEvidenceRef(live) || live.target.surface !== "dashboard" ||
+        live.target.recordType !== original.target.recordType || live.target.recordId !== original.target.recordId ||
+        digestSfValue(live.target.fields) !== digestSfValue(original.target.fields)) return []
+      // The recipient reader already understands legitimate scope rollovers.
+      // Leave those to its full reissue path before selecting this writer.
+      if (live.target.incarnation !== original.target.incarnation ||
+        digestSfValue(live.target.period) !== digestSfValue(original.target.period)) {
+        if (item.state !== "historical") return []
+        requiresReissue = true
+      } else if (live.target.version < original.target.version) return []
+      return [live]
+    })
+    if (liveRefs.length !== refs.length) return undefined
+    if (requiresReissue) return "reissue" as const
+    // Retain the physical and current scoped continuity of the discarded
+    // recipient projection. The staged writer checks this same proof again.
+    const fingerprint = (snapshot: Snapshot | undefined) => {
+      if (!snapshot) return undefined
+      const scopes = Object.values(snapshot.sfSources?.scopes ?? {})
+      const matched = liveRefs.flatMap((ref) => {
+        const target = ref.target
+        const matches = scopes.filter((entry) => entry.incarnation === target.incarnation && entry.scope.recordType === target.recordType && entry.scope.recordId === target.recordId)
+        const entry = matches.length === 1 ? matches[0] : undefined
+        if (!entry || entry.scope.principalRef !== context.binding.principalRef || entry.scope.accessRevision !== context.binding.accessRevision ||
+          entry.scope.policyVersion !== context.binding.policyVersion) return []
+        const selector = object(entry.scope.selector)
+        if (!Array.isArray(selector.fields) || digestSfValue(selector.fields) !== digestSfValue(target.fields) ||
+          digestSfValue(selector.period) !== digestSfValue(target.period)) return []
+        const live = sfScopedSourceIdentity(snapshot, entry.scope)
+        return live?.incarnation === target.incarnation && live.version === target.version && live.inputDigest === target.projectionDigest ? [entry.sourceIncarnation] : []
+      })
+      return matched.length === liveRefs.length ? digestSfValue(matched) : undefined
+    }
+    const initial = await atomic.transaction("dashboard", async (snapshot) => {
+      const seal = current() ? observe.call(atomic) : undefined
+      const value = seal?.current() && fingerprint(snapshot)
+      return { commit: false, value: value && seal?.current() && current() ? { value, bytes: seal.bytesIdentity } : undefined }
+    }, { signal: request.signal, targetPreimageCurrent: atomic.holdTargetPreimage().current, sealedRead: true })
+    if (!initial || !current() || !await host.revalidate(context) || !current()) return undefined
+    return () => {
+      const seal = current() ? observe.call(atomic) : undefined
+      if (!seal?.current()) return false
+      const actual = initial.bytes && initial.bytes === seal.bytesIdentity ? initial.value : fingerprint(read.call(atomic, "dashboard"))
+      return actual === initial.value && seal.current() && current()
+    }
+  }
+
+  // The two C08 reads remain independent. Only this leg's installed C05
+  // pair and canonical source authorization can share its held root.
+  const readScopedThreadLeg = async (thread: Pick<CollaborationThread, "recipientRef"> & { messages?: CollaborationThread["messages"] },
+    basis: ThreadSourceContext, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext,
+    complete: () => Promise<boolean>, before?: () => Promise<boolean>) => {
+    const pin = basis.reviewContext
+    if (!pin || context.kind !== "ui" || thread.recipientRef !== context.binding.principalRef ||
+      !thread.messages?.length || !thread.messages.every((message) => message.authorRef === thread.recipientRef) ||
+      !refs.every((ref) => ref?.kind === "record" && ref.target?.surface === "dashboard")) return undefined
+    const evidence = input.evidence
+    const registered = reviewEvidenceBatches.get(evidence)
+    const host = input.host
+    const persistence = host.persistence
+    const atomic = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
+    const authorize = input.authorizeReviewThreadContext
+    if (!registered || !atomic || registered.authorizeThread !== authorize || input.reviewRecipientAuthority !== registered.recipient ||
+      hasActiveSfSnapshot(persistence)) return undefined
+    const requestFor = host.requestFor, revalidate = host.revalidate, authenticate = host.authenticate, environment = host.environment
+    const request = requestFor.call(host, context)
+    const transaction = persistence.transaction
+    const current = () => reviewEvidenceBatches.get(evidence) === registered && registered.providersCurrent() &&
+      input.evidence === evidence && evidence.context === registered.context && input.authorizeReviewThreadContext === authorize &&
+      input.reviewRecipientAuthority === registered.recipient && input.host === host && host.persistence === persistence &&
+      persistence.dashboardSourceFence === atomic && hasSfDashboardSourceFence(persistence) && persistence.transaction === transaction &&
+      host.requestFor === requestFor && host.revalidate === revalidate && host.authenticate === authenticate && host.environment === environment &&
+      !!request && !request.signal.aborted && requestFor.call(host, context) === request
+    if (!validThreadSourceContext(basis) || !current() || !await revalidate.call(host, context) || !current()) return false
+    const leg = { open: true, started: false, finished: false, began: false, heldBefore: false, authorized: !before }
+    const result = await registered.readLeg(pin, basis, context, async () => {
+      if (!leg.open || leg.started || !leg.authorized || !current() || !hasActiveSfSnapshot(persistence)) return false
+      leg.started = true
+      leg.finished = await complete() && leg.open && current()
+      return leg.finished
+    }, before && (async () => {
+      if (!leg.open || leg.began || !current()) return false
+      leg.began = true
+      leg.heldBefore = hasActiveSfSnapshot(persistence)
+      leg.authorized = await before() && leg.open && current()
+      return leg.authorized
+    })).finally(() => { leg.open = false })
+    if (!current() || result === false) return false
+    if (result === true) return leg.finished
+    return leg.started || leg.heldBefore || leg.began && !leg.authorized ? false : undefined
+  }
+
   return {
     sources,
     historicalSources,
@@ -110,6 +270,9 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     readSources,
     readHistoricalSources,
     readReviewThreadBasis,
+    prepareReviewReplyContinuity,
+    readRecipientReviewLeg: (thread: CollaborationThread, basis: ThreadSourceContext, refs: readonly BusinessEvidenceRef[],
+      context: TrustedDomainContext, historical: () => Promise<boolean>) => readScopedThreadLeg(thread, basis, refs, context, async () => true, historical),
     recipient,
     readRecipient: (id: string, context: TrustedDomainContext) => recipient(id, context, true),
     recipientSources,
@@ -124,17 +287,39 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
       if (pair.recipientRef && (!await recipient(pair.recipientRef, context) || !await recipientSources(pair.recipientRef, pair.evidenceRefs, context))) return false
       return sources(pair.evidenceRefs, context)
     },
-    authorizeThread: async (thread: { sourceRef: string; recipientRef?: string; evidenceRefs: readonly BusinessEvidenceRef[]; messages?: CollaborationThread["messages"] } & Partial<ThreadSourceContext>, context: TrustedDomainContext, mode: "read" | "write") => {
+    authorizeThread: async (thread: { sourceRef: string; recipientRef?: string; evidenceRefs: readonly BusinessEvidenceRef[]; messages?: CollaborationThread["messages"] } & Partial<ThreadSourceContext>, context: TrustedDomainContext, mode: "read" | "write" | "prepared-write") => {
       if (!Array.isArray(thread.evidenceRefs) || thread.evidenceRefs.some((ref) => !ref || typeof ref !== "object")) return false
       const pin = thread.messages ? thread.messages[0]?.sourceContext?.reviewContext : thread.reviewContext
       const basis = pin ? { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: thread.evidenceRefs, reviewContext: pin } : undefined
-      if (basis && (!validThreadSourceContext(basis) || !await (mode === "read" ? readReviewThreadBasis : reviewThreadBasis)(basis, context) || mode === "write" && thread.recipientRef && !await reviewRecipientSources(thread.recipientRef, basis, context))) return false
+      if (mode === "prepared-write" && (!basis || thread.recipientRef !== context.binding.principalRef)) return false
       const authorizeSources = mode === "read" ? pin ? readHistoricalSources : readSources : pin ? historicalSources : sources
-      if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef) || !await authorizeSources(thread.evidenceRefs, context)) return false
-      const messageRefs = [...new Map((thread.messages ?? []).flatMap((message) => message.sourceContext?.evidenceRefs ?? []).map((ref) => [ref.refDigest, ref])).values()]
-      if (messageRefs.length && !await authorizeSources(messageRefs, context)) return false
-      if (thread.recipientRef && (!await recipient(thread.recipientRef, context, mode === "read") || mode === "write" && !pin && !await recipientSources(thread.recipientRef, thread.evidenceRefs, context))) return false
-      if (!thread.messages) return mode === "write"
+      const messageRefs = (thread.messages ?? []).flatMap((message) => message.sourceContext?.evidenceRefs ?? [])
+      const evidence = input.evidence
+      const registered = reviewEvidenceBatches.get(evidence)
+      const batch = registered?.context
+      const complete = async (sealedRead = false) => {
+        if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef)) return false
+        if (pin && messageRefs.length && batch && evidence.context === batch && hasSfDashboardSourceFence(input.host.persistence)) {
+          // Authorize each distinct reference independently inside this observation.
+          const request = input.host.requestFor(context)
+          const refs = [...new Map([...thread.evidenceRefs, ...messageRefs].map((ref) => [digestSfValue(ref), ref])).values()]
+          if (!request || request.signal.aborted || !await authorizeSources(refs, context) ||
+            input.evidence !== evidence || evidence.context !== batch || request.signal.aborted || input.host.requestFor(context) !== request) return false
+        } else {
+          if (!await authorizeSources(thread.evidenceRefs, context)) return false
+          const selected = [...new Map(messageRefs.map((ref) => [ref.refDigest, ref])).values()]
+          if (selected.length && !await authorizeSources(selected, context)) return false
+        }
+        return !thread.recipientRef || !!await recipient(thread.recipientRef, context, mode === "read", sealedRead) &&
+          (mode !== "write" || !!pin || await recipientSources(thread.recipientRef, thread.evidenceRefs, context))
+      }
+      if (basis && mode === "read" && validThreadSourceContext(basis)) {
+        const scoped = await readScopedThreadLeg(thread, basis, [...thread.evidenceRefs, ...messageRefs], context, () => complete(true))
+        if (scoped !== undefined) return scoped
+      }
+      if (basis && (!validThreadSourceContext(basis) || !await (mode === "write" ? reviewThreadBasis : readReviewThreadBasis)(basis, context) || mode === "write" && thread.recipientRef && !await reviewRecipientSources(thread.recipientRef, basis, context))) return false
+      if (!await complete()) return false
+      if (!thread.messages) return mode !== "read"
       return thread.recipientRef === context.binding.principalRef || thread.messages.some((message) => message.authorRef === context.binding.principalRef)
     },
     authorizeIntent: async (intent: HotTopicIntent, recipientRef: string | undefined, context: TrustedDomainContext) => {

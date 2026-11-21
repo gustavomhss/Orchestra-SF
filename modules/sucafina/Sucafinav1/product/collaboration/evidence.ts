@@ -2,29 +2,50 @@ import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainProjection, ProductContext } from "../contracts/context.ts"
 import { decodeProductContext } from "../contracts/validation.ts"
-import type { PortResult } from "../contracts/ports.ts"
+import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import type { ReviewAnswerObservation } from "./recipient-thread.ts"
 import type { createThreadPort } from "./threads.ts"
 
 type AnswerEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 
 /** A human answer is a claim, backed by its immutable message and current source access. */
-export function createThreadAnswerEvidence(threads: Pick<ReturnType<typeof createThreadPort>, "read">) {
-  const issue = async (threadId: string, messageId: string, context: TrustedDomainContext): Promise<PortResult<AnswerEvidence>> => {
-    const first = await threads.read(threadId, context)
+export function createThreadAnswerEvidence(threads: Pick<ReturnType<typeof createThreadPort>, "read">, host?: Pick<DomainPortHost, "requestFor">, preparation?: {
+  read: (id: string, context: TrustedDomainContext, observe: (value: ReviewAnswerObservation) => void) => ReturnType<typeof threads.read>
+  installed: () => boolean
+}) {
+  const issued = new WeakMap<AnswerEvidence, { context: TrustedDomainContext; digest: string; current: () => boolean; combined: boolean }>()
+  const issue = async (threadId: string, messageId: string, context: TrustedDomainContext, usePreparation = false): Promise<PortResult<AnswerEvidence>> => {
+    const requestFor = host?.requestFor
+    const request = requestFor && host ? requestFor.call(host, context) : undefined
+    const binding = request ? digestSfValue([context.kind, context.binding]) : undefined
+    const read = threads.read
+    const currentProof = () => !!request && !request.signal.aborted && !!host && threads.read === read &&
+      host.requestFor === requestFor && host.requestFor(context) === request && digestSfValue([context.kind, context.binding]) === binding
+    const prepared = usePreparation && preparation?.installed() ? preparation : undefined
+    const observation: { final?: ReviewAnswerObservation } = {}
+    const first = prepared ? await prepared.read(threadId, context, (latest) => { observation.final = latest }) : await threads.read(threadId, context)
     if (first.status !== "ok") return first
+    if (prepared && (!prepared.installed() || !currentProof())) return { status: "denied", reason: "answer-unavailable" }
     const thread = first.value
     const message = thread.messages.find((item, index) => index > 0 && item.id === messageId && item.authorRef === thread.recipientRef)
     if (thread.kind === "comment" || !thread.recipientRef || !message || !thread.evidenceRefs.length) return { status: "unavailable", reason: "answer-unavailable" }
     const basis = message.sourceContext ?? thread
     const refId = `sf-thread-answer:${encodeURIComponent(thread.id)}:${encodeURIComponent(message.id)}:${encodeURIComponent(message.incarnation)}:${message.version}`
     const value: AnswerEvidence = { schema: "sf-evidence-v1", kind: "record", refId, installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "claim", target: { surface: "dashboard", recordType: "sf-thread-answer", recordId: message.id, incarnation: message.incarnation, version: message.version, fields: ["body", "authorRef", "createdAt"], period: basis.period, projectionDigest: digestSfValue({ threadId: thread.id, message, period: basis.period, sourceRefs: basis.evidenceRefs }) } }
-    const again = await threads.read(threadId, context)
+    const observedFinal = observation.final
+    const preparationCurrent = () => currentProof() && prepared?.installed() === true && observedFinal?.current() === true
+    if (observedFinal && !preparationCurrent()) return { status: "denied", reason: "answer-unavailable" }
+    const again = observedFinal ? { status: "ok" as const, value: observedFinal.thread } : await threads.read(threadId, context)
     if (again.status !== "ok") return again
     const current = again.value.messages.find((item) => item.id === message.id && item.incarnation === message.incarnation && item.version === message.version)
     const currentBasis = current?.sourceContext ?? again.value
     if (!current || again.value.recipientRef !== message.authorRef || digestSfValue({ threadId: again.value.id, message: current, period: currentBasis.period, sourceRefs: currentBasis.evidenceRefs }) !== value.target.projectionDigest) return { status: "stale", reason: "answer-changed" }
-    return { status: "ok", value: { ...value, refDigest: digestSfEvidenceRef(value) } }
+    const evidence = { ...value, refDigest: digestSfEvidenceRef(value) }
+    const currentAuthority = observedFinal ? preparationCurrent : currentProof
+    if (observedFinal && !currentAuthority()) return { status: "denied", reason: "answer-unavailable" }
+    if (currentAuthority()) issued.set(evidence, { context, digest: evidence.refDigest, current: currentAuthority, combined: observedFinal !== undefined })
+    return { status: "ok", value: evidence }
   }
   const resolve = async (refId: string, context: TrustedDomainContext): Promise<PortResult<AnswerEvidence>> => {
       const parts = /^sf-thread-answer:([^:]+):([^:]+):([^:]+):([1-9]\d*)$/.exec(refId)
@@ -37,7 +58,13 @@ export function createThreadAnswerEvidence(threads: Pick<ReturnType<typeof creat
       return result
   }
   return {
-    issue,
+    issue: (threadId: string, messageId: string, context: TrustedDomainContext) => issue(threadId, messageId, context),
+    issueForPreparation: (threadId: string, messageId: string, context: TrustedDomainContext) => issue(threadId, messageId, context, true),
+    issuedForPreparation: (evidence: AnswerEvidence) => issued.get(evidence)?.combined === true,
+    issuedTo: (evidence: AnswerEvidence, context: TrustedDomainContext) => {
+      const observed = issued.get(evidence)
+      return observed?.context === context && observed.digest === evidence.refDigest && evidence.refDigest === digestSfEvidenceRef(evidence) && observed.current()
+    },
     resolve,
     belongsToQuestion: async (questionId: string, answerRef: string, context: TrustedDomainContext): Promise<boolean> => {
       const parts = /^sf-thread-answer:([^:]+):([^:]+):([^:]+):([1-9]\d*)$/.exec(answerRef)

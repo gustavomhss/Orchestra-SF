@@ -18,6 +18,8 @@ export type RecipientThread = Pick<CollaborationThread, "id" | "kind" | "recipie
   continuity: "unchanged" | "historical"
 }
 
+export type ReviewAnswerObservation = { thread: CollaborationThread; current: () => boolean }
+
 /** Current refs are issued for the reader; original refs require an explicit historical source grant. */
 export function createRecipientThreadReader(input: {
   state: SfProductStatePort
@@ -27,10 +29,20 @@ export function createRecipientThreadReader(input: {
   authorize: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
   authorizeHistorical?: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
   authorizeContext?: (basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
+  authorizeReviewLeg?: (thread: CollaborationThread, basis: ThreadSourceContext, refs: readonly BusinessEvidenceRef[],
+    context: TrustedDomainContext, historical: () => Promise<boolean>) => Promise<boolean | undefined>
 }) {
-  return async (id: string, context: TrustedDomainContext): Promise<PortResult<RecipientThread>> => {
+  return async (id: string, context: TrustedDomainContext, observeAnswer?: (latest: ReviewAnswerObservation) => void): Promise<PortResult<RecipientThread>> => {
     if (typeof id !== "string" || !id.trim()) return { status: "needs-input", reason: "invalid-thread-reference" }
     const request = input.host.requestFor(context)
+    const stateRead = input.state.read
+    const requestFor = input.host.requestFor
+    const revalidate = input.host.revalidate
+    const reissue = input.reissue
+    const refresh = input.refresh
+    const authorize = input.authorize
+    const lease = context.lease
+    const binding = observeAnswer && digestSfValue([context.kind, context.binding])
     const currentAccess = async () => !!request && input.host.requestFor(context) === request && await input.host.revalidate(context) && input.host.requestFor(context) === request
     try {
       if (!request || !await currentAccess()) return { status: "denied", reason: "thread-access-unavailable" }
@@ -53,13 +65,36 @@ export function createRecipientThreadReader(input: {
       const messageContexts = thread.messages.map((message) => threadMessageContext(thread, message))
       if (messageContexts.some((basis) => !basis)) return { status: "unavailable", reason: "thread-source-unavailable" }
       const historyRefs = [...new Map([...originals, ...messageContexts.flatMap((basis) => basis!.evidenceRefs)].map((ref) => [ref.refDigest, ref])).values()]
+      const reviewBasis = messageContexts[0]?.reviewContext ? messageContexts[0] : undefined
+      const basisDigest = observeAnswer && reviewBasis ? digestSfValue(reviewBasis) : undefined
+      const pairEligible = basisDigest !== undefined && messageContexts.every((basis) => digestSfValue(basis) === basisDigest)
+      const authorizeHistorical = input.authorizeHistorical
+      const authorizeContext = input.authorizeContext
+      const authorizeReviewLeg = input.authorizeReviewLeg
+      const observeReviewLeg = async (selected: CollaborationThread, historical: () => Promise<boolean>) => {
+        if (!reviewBasis || !authorizeContext || !authorizeHistorical || !authorizeReviewLeg) return undefined
+        const current = () => input.authorizeHistorical === authorizeHistorical && input.authorizeContext === authorizeContext &&
+          input.authorizeReviewLeg === authorizeReviewLeg
+        const result = await authorizeReviewLeg(selected, reviewBasis, historyRefs, context, async () => current() && await historical() && current())
+        return current() ? result : false
+      }
       // Historical access is optional for ordinary threads: an inconclusive
       // probe may still be followed by independent current-ref issuance below.
-      const historical = input.authorizeHistorical ? await input.authorizeHistorical(historyRefs, context).catch(() => undefined) : undefined
+      let historical: boolean | undefined
+      let checkedHistory = false
+      const observeHistorical = async () => {
+        if (!checkedHistory) {
+          checkedHistory = true
+          historical = await input.authorizeHistorical?.(historyRefs, context).catch(() => undefined)
+        }
+        return historical === true
+      }
+      const initial = await observeReviewLeg(thread, observeHistorical)
+      if (initial === false && !checkedHistory) return { status: "denied", reason: "review-thread-context-unavailable" }
+      if (initial === undefined) await observeHistorical()
       const preserved = historical === true
-      const reviewBasis = messageContexts[0]?.reviewContext ? messageContexts[0] : undefined
       if (reviewBasis && (historical === undefined || !input.authorizeContext)) return { status: "unavailable", reason: "thread-read-unavailable" }
-      if (reviewBasis && (!preserved || !await input.authorizeContext!(reviewBasis, context))) return { status: "denied", reason: "review-thread-context-unavailable" }
+      if (reviewBasis && (!preserved || !(initial ?? await input.authorizeContext!(reviewBasis, context)))) return { status: "denied", reason: "review-thread-context-unavailable" }
       const records = historyRefs.filter((ref): ref is RecordEvidence => ref.kind === "record")
       const supplements = historyRefs.filter((ref) => ref.kind !== "record")
       const contextScopes = await Promise.all(records.map((ref) => input.reissue(ref, context)))
@@ -92,8 +127,26 @@ export function createRecipientThreadReader(input: {
       const finalScopes = await renew()
       if (!await currentAccess() || finalScopes.some((result) => result.status === "denied")) return { status: "denied", reason: "thread-access-unavailable" }
       if (finalScopes.some((result) => result.status !== "ok")) return { status: "unavailable", reason: "thread-read-unavailable" }
-      if (!await authorizeCurrent() || preserved && !await input.authorizeHistorical!(historyRefs, context) || reviewBasis && !await input.authorizeContext!(reviewBasis, context) || !await currentAccess()) return { status: "denied", reason: "thread-access-unavailable" }
+      if (!await authorizeCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
+      let finalHistory: boolean | undefined
+      const observeFinalHistory = async () => finalHistory ??= !preserved || await input.authorizeHistorical!(historyRefs, context)
+      const final = await observeReviewLeg(again.value.thread, observeFinalHistory)
+      if (pairEligible && initial === true && final === undefined) return { status: "denied", reason: "thread-access-unavailable" }
+      if (!(final ?? (await observeFinalHistory() && (!reviewBasis || await input.authorizeContext!(reviewBasis, context)))) ||
+        !await currentAccess()) return { status: "denied", reason: "thread-access-unavailable" }
       if (digestSfValue(again.value.thread) !== digestSfValue(thread) || digestSfValue(finalScopes) !== digestSfValue(issued)) return { status: "stale", reason: "thread-content-changed" }
+      // Both independent C08 observations completed under the installed review
+      // reader. Only the private answer selector may observe the final raw row.
+      if (observeAnswer && pairEligible && initial === true && final === true && preserved) {
+        const current = () => !request.signal.aborted && input.host.requestFor === requestFor &&
+          input.host.revalidate === revalidate && requestFor.call(input.host, context) === request &&
+          input.state.read === stateRead && input.reissue === reissue && input.refresh === refresh &&
+          input.authorize === authorize && input.authorizeHistorical === authorizeHistorical &&
+          input.authorizeContext === authorizeContext && input.authorizeReviewLeg === authorizeReviewLeg &&
+          context.lease === lease && digestSfValue([context.kind, context.binding]) === binding
+        if (!current()) return { status: "denied", reason: "thread-access-unavailable" }
+        observeAnswer({ thread: again.value.thread, current })
+      }
       return { status: "ok", value: { id: thread.id, kind: thread.kind, ...(thread.recipientRef ? { recipientRef: thread.recipientRef } : {}), state: thread.state, messages: thread.messages, observed: { version: thread.observedVersion, period: thread.period }, current: { sourceRef, evidenceRefs: current }, ...(preserved ? { historical: { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: originals } } : {}), continuity: changed ? "historical" : "unchanged" } }
     } catch {
       const authorized = await currentAccess().catch(() => undefined)
