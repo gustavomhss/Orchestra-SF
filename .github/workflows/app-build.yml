@@ -267,8 +267,13 @@ jobs:
             cat "$CI_RUNTIME/auth-server.log"
             exit 1
           fi
-          SF_PROOF_PORT="$CI_PORT" SF_PROOF_KEY="$CI_PROOF" SF_PROOF_WEB="$installed/web" \
-            bun "$RUNNER_TEMP/azure-entra-proof/entra-native-http.mjs"
+          if ! SF_PROOF_PORT="$CI_PORT" SF_PROOF_KEY="$CI_PROOF" SF_PROOF_WEB="$installed/web" \
+            bun "$RUNNER_TEMP/azure-entra-proof/entra-native-http.mjs"; then
+            # Report runtime exception classes and stack frames without request data.
+            grep -E '^((Type|Reference|Syntax|Range|Aggregate)Error|[[:space:]]+at )' "$CI_RUNTIME/auth-server.log" \
+              | sed -E 's/[?].*$//' | tail -30 || true
+            exit 1
+          fi
           printf '{"sourceSHA":"%s","temporaryInstall":true,"nativeWeb":true,"chromium":true,"noTeam":403,"directTeam":403,"syntheticProvider":true}\n' \
             "$SOURCE_REVISION" > "$RUNNER_TEMP/azure-entra-package/ci-validation.json"
 
