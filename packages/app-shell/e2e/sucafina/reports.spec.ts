@@ -5,7 +5,7 @@
 import { expect } from "@playwright/test"
 import { openReportsJourney, reportsTest } from "./reports-support/fixture.ts"
 import { changeForecast, expectCapturedBudget, exportReview, followBudgetSource, observeReviewTransport, openAndReopenMeeting, prepareReview, preserveNewRevision, readSourceData } from "./reports-support/review-flow.ts"
-import { expectReusedReviewValue } from "./reports-support/confirmation.ts"
+import { expectReusedReviewValue, watchEditRefresh } from "./reports-support/confirmation.ts"
 import { confirmSubmittedHumanAnswer, editHumanAnswer, expectConfirmedAnswerVisible, observed, submitHumanAnswer } from "./reports-support/human-answer-flow.ts"
 import { object, readReview, responseFor } from "./reports-support/model.ts"
 import { revokeReportsSession } from "./reports-support/revocation.ts"
@@ -144,8 +144,9 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
       const beforeReopen = await api.version()
       const threadRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
       const reviewRead = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+      const readAnswer = watchEditRefresh(page, app.dashboardURL, answer.questionId)
       await page.reload()
-      const [threadResponse, reviewResponse] = await Promise.all([threadRead, reviewRead])
+      const [threadResponse, reviewResponse] = await Promise.all([threadRead, reviewRead, readAnswer()])
       expect(threadResponse.status()).toBe(200)
       expect(reviewResponse.status()).toBe(200)
       expect(object(await reviewResponse.json()).value).toEqual(saved)
