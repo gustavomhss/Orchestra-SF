@@ -17,6 +17,7 @@ import { usePlatform } from "@/context/platform"
 import { ServerConnection, serverName, useServer } from "@/context/server"
 import { tabKey, type SessionTab, type Tab, useTabs } from "@/context/tabs"
 import { HugrBrand } from "@/orchestra/brand"
+import { isSucafinaBrand } from "@/orchestra/brand-identity"
 import { chapterPages } from "@/orchestra/chapter-route"
 import { FlightNavChip } from "@/orchestra/chapters/flight-engineer/entry"
 import { createAdvancedNavigation } from "@/orchestra/compact-navigation"
@@ -673,7 +674,7 @@ export function OrchestraSidebar(props: {
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu>
-        <p class="orchestra-sidebar-footer">{language.t("orchestra.sidebar.footer")}</p>
+        <Show when={!isSucafinaBrand()}><p class="orchestra-sidebar-footer">{language.t("orchestra.sidebar.footer")}</p></Show>
       </div>
     </aside>
   )
