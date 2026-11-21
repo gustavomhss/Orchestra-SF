@@ -396,7 +396,13 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       }
     }).catch((error) => {
       if (request.signal.aborted) return
-      console.error("Sucafina CAP11 read failure", error instanceof Error ? error.name : "unknown")
+      const stack = error instanceof Error ? error.stack?.replace(
+        /https?:\/\/[^\s)]+/g, (url) => "[consumer]" + (/:[0-9]+:[0-9]+$/.exec(url)?.[0] ?? ""),
+      ).replace(/[a-f0-9]{64}/gi, "[redacted]")
+        .replace(/\b(?:Bearer|Basic)\s+[A-Za-z0-9._~+/-]+=*/gi, "[credential]")
+        .replace(/\b(code|token|password|secret|authorization)\s*[:=]\s*("[^"]*"|'[^']*'|[^\s&,]+)/gi, "$1=[redacted]")
+        .slice(0, 2400) : undefined
+      console.error("Sucafina CAP11 read failure", error instanceof Error ? error.name : "unknown", stack ?? "")
       setState("page", undefined)
       setState("state", "unavailable")
     }).finally(() => { pendingRequests.delete(request) })
