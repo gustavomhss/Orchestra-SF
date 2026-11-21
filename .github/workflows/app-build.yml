@@ -347,6 +347,25 @@ jobs:
           printf '{"sourceSHA":"%s","temporaryInstall":true,"nativeWeb":true,"chromium":true,"noTeam":403,"directTeam":403,"syntheticProvider":true}\n' \
             "$SOURCE_REVISION" > "$RUNNER_TEMP/azure-entra-package/ci-validation.json"
 
+      - name: Verify the shipped palette stylesheets
+        working-directory: packages/app-shell
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          set -euo pipefail
+          path=src/orchestra/palette/palette.test.ts
+          case_name="the shipped stylesheets are exactly the generator's output"
+          expected=3b57409992b6bbc9e9dcdd07f54df6c042b67c853617f3d00e228ab0932a4af0
+          printf '%s  %s\n' "$expected" "$path" | sha256sum --check
+          proof_dir="$RUNNER_TEMP/azure-entra-package"
+          NO_COLOR=1 bun test "./$path" -t "$case_name" 2>&1 | tee "$proof_dir/palette-proof.log"
+          grep -F '(pass)' "$proof_dir/palette-proof.log" | grep -F "$case_name" > /dev/null
+          jq -n --arg path "packages/app-shell/$path" --arg file "$expected" \
+            --arg case "$case_name" --arg job "$CHECK_RUN_ID" \
+            --arg log "$(sha256sum "$proof_dir/palette-proof.log" | cut -d' ' -f1)" \
+            '{path: $path, fileSha256: $file, caseName: $case, status: "pass", jobId: $job, evidenceSha256: $log}' \
+            > "$proof_dir/palette-proof.json"
+
       - name: Upload the validated package and receipt
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
