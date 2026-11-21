@@ -85,7 +85,7 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
         const installation = installationFile === undefined ? undefined : yield* Effect.acquireRelease(
           Effect.tryPromise(async () => {
             const { loadSfInstallation } = await import("../../sucafina-product/installation")
-            return loadSfInstallation(installationFile, input.hostname, Option.getOrUndefined(input.port))
+            return loadSfInstallation(installationFile, input.hostname, Option.getOrUndefined(input.port), webRoot)
           }),
           (loaded) => Effect.promise(async () => { await loaded.dispose() }),
         )
