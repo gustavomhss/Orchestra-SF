@@ -106,6 +106,8 @@ def main(archive, maps):
         if module["status"] == "no-compiler-map":
             continue
         map_name = module["map"]
+        require(map_name == name.removeprefix("/$bunfs/root/") + ".map",
+                f"Published map name differs from its physical module: {name}")
         require(module["status"] == "matched-compiler-map" and isinstance(module["coordinates"], int)
                 and module["coordinates"] >= 0 and map_name not in mapped
                 and re.fullmatch(r"[A-Za-z0-9_.-]+\.map", map_name), "Invalid compiler map record")
