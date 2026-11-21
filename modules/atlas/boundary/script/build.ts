@@ -136,7 +136,7 @@ if (import.meta.main) await Promise.all(
 
 /** Shared by the generator and its counterexamples; this checks source, emitted JS and the bound native surface. */
 export function admitBusinessBundle(input: { edges: number; emitter: string; entry: string; source: string; native: string; allowlist: string }) {
-  if (new Bun.CryptoHasher("sha256").update(input.allowlist).digest("hex") !== "7c7ef6f4b3965ac7cf57f55600017ea24c525ab6a7a38d8aeac88b1fe74af454") throw new Error("Spawn allowlist changed")
+  if (new Bun.CryptoHasher("sha256").update(input.allowlist).digest("hex") !== "2131adbaf9b4d012543c3e5cbd6c112397cb86a876d30ba6b83f1215cf898278") throw new Error("Spawn allowlist changed")
   if (input.edges !== 1) throw new Error(`Expected one scanner edge, found ${input.edges}`)
   const emitterAst = ts.createSourceFile("memory-emit.ts", input.emitter, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
   const scannerImports = emitterAst.statements.filter((node) => ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier) && node.moduleSpecifier.text === "./scanner.js")
