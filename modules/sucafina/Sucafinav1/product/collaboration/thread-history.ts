@@ -157,20 +157,26 @@ export function createThreadHistory(input: {
       // A fresh installed self edit returns only its receipt. Reobserve its
       // entire committed row and its live source independently under a seal.
       const basisDigest = digestSfValue(basis)
+      const classifyUnreleased = async () => {
+        // The canonical reader may establish revocation. A failed fast
+        // observation never releases a receipt, even if the reread succeeds.
+        const latest = await load(id, context)
+        if (!installedCurrent() || !await revalidate.call(host, context) || !installedCurrent())
+          return { status: "denied" as const, reason: "thread-access-unavailable" }
+        return latest.status === "ok" ? { status: "unavailable" as const, reason: "thread-receipt-unavailable" } : latest
+      }
       if (stagedEdit && ownReview && reviewFence && prepareEditReceipt && saved.value === selected.expectedVersion + 1 &&
         [...prior.messages, ...(prior.messageRevisions ?? [])].every((entry) => digestSfValue(threadMessageContext(prior, entry)) === basisDigest)) {
         if (!installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
         const continuity = await prepareEditReceipt(prior, basis, context, installedCurrent)
         if (!installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
-        if (!continuity) return await revalidate.call(host, context) && installedCurrent()
-          ? { status: "unavailable", reason: "thread-receipt-unavailable" }
-          : { status: "denied", reason: "thread-access-unavailable" }
+        if (!continuity) return classifyUnreleased()
         if (continuity !== "reissue") {
           const confirmed = await captureReceipt({ questionId: id, threadDigest: digestSfValue(revised) }, async () =>
             installedCurrent() && continuity() && await reviewFence() && continuity() &&
             await revalidate.call(host, context) && installedCurrent(), request.signal)
           if (!await revalidate.call(host, context) || !installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
-          if (!confirmed) return { status: "unavailable", reason: "thread-receipt-unavailable" }
+          if (!confirmed) return classifyUnreleased()
           return { status: "ok", value: { id, messageId, version: saved.value } }
         }
       }
