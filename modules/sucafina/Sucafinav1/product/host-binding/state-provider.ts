@@ -431,3 +431,20 @@ function readSfState(snapshot: Snapshot): SfProductState | undefined {
   if (!legacy && (!state.biArtifacts || typeof state.biArtifacts !== "object" || Array.isArray(state.biArtifacts))) return undefined
   return (legacy ? { ...state, versions: { ...versions, "bi-artifacts": 0 }, biArtifacts: {} } : state) as SfProductState
 }
+
+/**
+ * Private recovery comparison only. This contains digests and monotone metadata,
+ * never an access grant or a receipt that can authorize replay.
+ */
+export function inspectSfProductRestoreFrontier(snapshot: Snapshot) {
+  if (snapshot.data.__sfProductV1 === undefined) return undefined
+  const state = readSfState(snapshot)
+  if (!state) throw new Error("SF_RESTORE_CURRENT_PRODUCT_FRONTIER_INVALID")
+  return Object.freeze({
+    incarnation: state.incarnation, revision: state.revision,
+    versions: Object.freeze({ ...state.versions }),
+    transactions: Object.freeze(Object.entries(state.transactions)
+      .map(([key, value]) => Object.freeze({ key: digestSfValue(key), value: digestSfValue(value) }))
+      .sort((a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : 0)),
+  })
+}
