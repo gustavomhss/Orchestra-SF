@@ -14,6 +14,8 @@ The reader now declares its existing result explicitly using the original `SfTea
 
 - CAP03 can select the source period again through the existing owner-bound period port, using its already supported empty period. Admission, draft fences and route validation remain in that port.
 - Closing a CAP03 editor disclosure during review restores the two annual readouts. The review and draft remain mounted and resume when reopened. Only the page-scoped visibility selectors changed.
+- CAP02 status/priority selects use explicit existing localized accessible names; the first real journey exposed ambiguous implicit labels containing option text.
+- The approved compact navigation rules moved unchanged from the Executive stylesheet to the Sucafina source-navigation stylesheet and now also match active CAP02–04. A local scroll reveals the active destination when the strip becomes narrow. Link admission and navigation handlers are untouched.
 - CAP04 review translates known flag/field display values through the existing catalog. Raw draft and command values are untouched; CAP05 retains its original presentation.
 
 The final validation document will identify the exact verified product commit and the successful gate runs. Initial failures remain diagnostic history, not passing evidence.

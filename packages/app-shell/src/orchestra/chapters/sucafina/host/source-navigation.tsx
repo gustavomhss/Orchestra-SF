@@ -59,6 +59,28 @@ export function SfSourceNavigation(props: Readonly<{
     setView("busy", undefined)
     setView("failure", undefined)
   })
+  let navigation: HTMLElement | undefined
+  createEffect(() => {
+    const surface = props.route()?.surfaceId
+    void links()
+    if (surface !== "CAP01" && surface !== "CAP02" && surface !== "CAP03" && surface !== "CAP04") return
+    const reveal = () => {
+      const strip = navigation
+      const active = strip?.querySelector<HTMLElement>('a[aria-current="page"]')
+      if (!strip || !active || strip.scrollWidth <= strip.clientWidth) return
+      const viewport = strip.getBoundingClientRect(), item = active.getBoundingClientRect()
+      if (item.left >= viewport.left && item.right <= viewport.right - 12) return
+      strip.scrollTo({ left: strip.scrollLeft + item.left - viewport.left - (strip.clientWidth - item.width) / 2, behavior: "instant" })
+    }
+    const observer = new ResizeObserver(reveal)
+    let canceled = false
+    queueMicrotask(() => {
+      if (canceled) return
+      reveal()
+      if (navigation) observer.observe(navigation)
+    })
+    onCleanup(() => { canceled = true; observer.disconnect() })
+  })
   const invoke = async (href: string) => {
     const current = owner(), link = links().find((item) => item.href === href)
     if (!current || !link || view.busy) return
@@ -83,7 +105,7 @@ export function SfSourceNavigation(props: Readonly<{
     }
   }
   return <Show when={links().length}>
-    <nav class="sf-source-navigation" aria-label={t(sfCommonKey("sf.common.moreViews"))}
+    <nav ref={navigation} class="sf-source-navigation" aria-label={t(sfCommonKey("sf.common.moreViews"))}
       data-sf-source-navigation={owner()?.chapter}>
       <For each={links()}>{(link) => <a href={link.href}
         data-sf-capability={link.surfaceId}

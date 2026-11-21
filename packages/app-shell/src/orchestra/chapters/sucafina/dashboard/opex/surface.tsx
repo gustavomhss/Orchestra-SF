@@ -1045,7 +1045,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         }>
           <div class="sf-opex-toolbar">
             <label class="sf-opex-year">{t(key("year"))}
-              <select value={year()} disabled={view.busy || Boolean(editing())} onChange={(event) => {
+              <select aria-label={t(key("year"))} value={year()} disabled={view.busy || Boolean(editing())} onChange={(event) => {
                 const selectedYear = Number(event.currentTarget.value)
                 if ([2024, 2025, 2026, 2027].includes(selectedYear)) navigate(listHref("entry", undefined, selectedYear))
               }}>
