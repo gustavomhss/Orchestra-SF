@@ -344,7 +344,11 @@ export function createSfReviewCollaboration(input: {
     },
   }
   return { evidence: input.evidence, authorizeReviewThreadContext, reviewRecipientAuthority, readLeg,
-    reviewAnswerSource: createReviewAnswerSource({ reviews, host, prepareAccess, readContext: observePinnedContext }) }
+    reviewAnswerSource: createReviewAnswerSource({
+      reviews, host, prepareAccess, readContext: observePinnedContext,
+      reuseResolvedMaterial: ({ pin, review }, call) => sameProducer() && !!readScope && !!readerCurrent && localRecordReview(review) &&
+        !!prepareRevalidation?.call(readScope, pin.reviewRef, pin.reviewDigest, call),
+    }) }
 }
 
 /** Scope boundary, not an authorization substitute: actual reviews.read above

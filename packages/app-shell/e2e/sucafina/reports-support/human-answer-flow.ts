@@ -196,7 +196,7 @@ async function submit(page: Page, app: ReportsInstallation, button: Locator, mod
   void pending.catch(() => undefined)
   try {
     await button.click()
-    return observed(await (transport ? Promise.race([pending, transport.failed]) : pending), mode)
+    return await observed(await (transport ? Promise.race([pending, transport.failed]) : pending), mode)
   } finally {
     if (transport && info) await transport.finish(info)
   }
