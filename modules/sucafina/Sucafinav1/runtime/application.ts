@@ -24,6 +24,8 @@ export type Application = {
     request: Request,
     context?: { surface: Surface; roleMap: readonly RoleRow[] },
   ) => Promise<ResolvedActor | null>
+  rolePolicy?: (surface: Surface) => RoleRow[]
+  authMount?: string
   persistence: Persistence
   environment: (request: Request) => Promise<Environment>
   domains: Record<Surface, readonly Contribution[]>
@@ -67,7 +69,7 @@ export function createApplication(mount: string, application: Application) {
     if (preparedUpload instanceof Response) return preparedUpload
     const response = await transaction(async (snapshot, blobs) => {
       // Resolve current roles INSIDE the same transaction that rereads records and locks.
-      const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+      const principal = await application.authenticate(request, { surface, roleMap: application.rolePolicy?.(surface) ?? roleMap(snapshot, surface) })
       if (!principal || !principal.id || principal.id.startsWith("local:"))
         return { commit: false, value: reply("Authentication required", 401) }
       const access = object(object(snapshot.data.access)[principal.id])
@@ -101,6 +103,8 @@ export function createApplication(mount: string, application: Application) {
           commit: false,
           value: reply("Page implementation unavailable", 503),
         }
+      if (parsed?.action === "configure-group" && application.rolePolicy)
+        return { commit: false, value: json({ ok: false, status: 403 }, 403) }
       if (request.method === "POST" && !actor.canWrite)
         return { commit: false, value: json({ ok: false, status: 403 }, 403) }
       if (
@@ -461,7 +465,7 @@ export function createApplication(mount: string, application: Application) {
         pageMain(
           { drawn: true, key: page, index: allowed.indexOf(page) },
           content +
-            controls(snapshot, surface, page, actor, environment) +
+            controls(snapshot, surface, page, actor, environment, !application.rolePolicy) +
             privateFileControls(surface, page, actor, snapshot, environment, application.assets?.services) +
             auditControls(actor, snapshot, url.searchParams),
         ),
@@ -469,6 +473,7 @@ export function createApplication(mount: string, application: Application) {
         surface === "dashboard"
           ? `<label>FY<select data-year="sidebar" data-query="year">${[2024, 2025, 2026, 2027].map((year) => `<option value="${year}"${year === sidebar ? " selected" : ""}>${year}</option>`).join("")}</select></label>`
           : "",
+        application.authMount,
       )
       return {
         commit: snapshot.audit.length !== auditBefore,
@@ -736,7 +741,7 @@ async function serveDownload(
   const query = new URL(request.url).searchParams
   const kind = query.get("download") ?? ""
   const prepared = await transaction<Response | { snapshot: Snapshot; actor: Actor }>(async (snapshot) => {
-    const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+    const principal = await application.authenticate(request, { surface, roleMap: application.rolePolicy?.(surface) ?? roleMap(snapshot, surface) })
     if (!principal || !principal.id || principal.id.startsWith("local:"))
       return { commit: false, value: reply("Authentication required", 401) }
     const roles = principal.roles.filter((row) => row.surface === surface).map((row) => row.role)
@@ -836,7 +841,7 @@ async function prepareUpload(
   )
     return reply("Invalid attachment", 400)
   const cap = await transaction<number | Response>(async (snapshot) => {
-    const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+    const principal = await application.authenticate(request, { surface, roleMap: application.rolePolicy?.(surface) ?? roleMap(snapshot, surface) })
     if (
       !principal ||
       !principal.canWrite ||
