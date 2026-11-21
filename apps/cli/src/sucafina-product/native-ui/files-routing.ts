@@ -41,6 +41,7 @@ export function mountSfFilesOriginalRoutes(input: Readonly<{
     if (!operation) return undefined
 
     const metadata = SfFileRoutes[operation]
+    if (metadata.pathTemplate !== "{mount}/{surface}") return fail(503)
     if (metadata.method !== request.method) return fail(405, { Allow: metadata.method })
     // Original producers keep ownership of access, redaction, streamed byte caps and revalidation.
     return bound[operation](request, surface)
