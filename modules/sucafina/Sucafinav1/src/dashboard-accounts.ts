@@ -98,6 +98,22 @@ export function budgetChartSeries(totalBudget: number): number[] {
   return Array.from({ length: 12 }, () => flat)
 }
 
+/** Effective monthly distribution, using the same overrides as the annual totals. */
+export function effectiveBudgetSeries(data: BudgetData, year: number): number[] {
+  return Array.from({ length: 12 }, (_, index) => {
+    const month = index + 1
+    const opex = (data.opexOwners ?? []).reduce((sum, owner) => {
+      const entry = (data.opexEntries ?? []).find((row) => row.year === year && row.month === month && row.ownerId == owner.id)
+      return sum + effectiveMonthlyBudget(entry?.budget, owner.budget)
+    }, 0)
+    const capex = (data.capexProjects ?? []).reduce((sum, project) => {
+      const entry = (data.capexEntries ?? []).find((row) => row.year === year && row.month === month && (row.projId == project.id || row.projectId == project.id))
+      return sum + effectiveMonthlyBudget(entry?.budget, project.budget)
+    }, 0)
+    return opex + capex
+  })
+}
+
 export function cents(amount: number): number {
   return Math.round(amount * 100) / 100
 }

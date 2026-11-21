@@ -39,3 +39,6 @@ export type {
   ResumeUnit,
   TaskMemoryEntry,
 } from "@atlas/memory"
+
+export { detectAvailableScanner, runScanner, KNOWN_SCANNERS, NO_SCANNER_NAME } from "./scanner.js"
+export type { ScannerBinarySpec, ScanVerdict } from "./scanner.js"

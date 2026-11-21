@@ -3,7 +3,14 @@ import type { Position, RateCard, HrAf } from "../src/planner-accounts.ts"
 import { finite, object, rows, text } from "./contract.ts"
 import type { Actor, Environment, Snapshot } from "./contract.ts"
 import type { ArtifactResult } from "./artifact.ts"
-import type { Cell, CellValue, Worksheet } from "exceljs"
+import type { Cell, CellValue, PaperSize, Worksheet } from "exceljs"
+
+// ExcelJS 4.4.0 writes A3 (8) but omits it from its public PaperSize const enum.
+declare module "exceljs" {
+  export const enum PaperSize {
+    A3 = 8,
+  }
+}
 
 const type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -326,11 +333,37 @@ export async function exportPlanner(
     sheet.columns.forEach((column) => {
       column.width = 20
     })
+    if (sheet.name === "Info") {
+      // Keep A22:A28 labels wholly inside column A; values in B have their own wrapped space.
+      sheet.getColumn(1).width = 44
+      sheet.getColumn(2).width = 94
+      for (const column of [1, 2])
+        sheet.getColumn(column).alignment = { vertical: "top", wrapText: true }
+      fitWrappedPrintRows(sheet, [1, 2])
+    }
+    if (sheet.name === "OPEX" || sheet.name === "CAPEX") {
+      // Compact, legible identification columns leave room for amounts on both A3 halves.
+      const widths = sheet.name === "OPEX"
+        ? [15, 17, 34, 30, 16, 15, 15, 12, 14, ...Array(12).fill(13), 16]
+        : [15, 13, 23, 16, 17, 34, 30, 16, 16, 12, 14, ...Array(12).fill(13), 16]
+      widths.forEach((width, index) => { sheet.getColumn(index + 1).width = width })
+      const textColumns = sheet.name === "OPEX" ? [3, 4] : [6, 7]
+      textColumns.forEach((column) => {
+        sheet.getColumn(column).alignment = { vertical: "top", wrapText: true }
+      })
+      fitWrappedPrintRows(sheet, textColumns)
+    }
     if (sheet.name !== "Info")
       sheet.autoFilter = {
         from: { row: 1, column: 1 },
         to: { row: sheet.rowCount, column: sheet.columnCount },
       }
+    configureXlsxPrint(sheet,
+      sheet.name === "OPEX" || sheet.name === "CAPEX" ? 2 : 1,
+      ["Info", "Rate cards", "FX rates"].includes(sheet.name) ? 9 : 8,
+      sheet.name !== "FX rates",
+      sheet.name !== "Info",
+      sheet.name === "OPEX" ? "A:I" : sheet.name === "CAPEX" ? "A:K" : undefined)
   })
   return {
     ok: true,
@@ -338,6 +371,50 @@ export async function exportPlanner(
     type,
     bytes: new Uint8Array(await workbook.xlsx.writeBuffer()),
   }
+}
+
+/**
+ * Limit printed content to populated rows/columns. Wide financial ledgers retain
+ * two landscape A3 page-widths instead of shrinking 22–24 columns into tiny type.
+ * Repeat line identity, measure and currency on each horizontal continuation;
+ * height remains unbounded so later records are never omitted.
+ */
+function configureXlsxPrint(
+  sheet: Worksheet,
+  pagesWide: number,
+  paperSize: PaperSize,
+  landscape: boolean,
+  repeatHeader: boolean,
+  repeatColumns?: string,
+) {
+  const setup = sheet.pageSetup
+  setup.paperSize = paperSize
+  setup.orientation = landscape ? "landscape" : "portrait"
+  setup.fitToPage = true
+  setup.fitToWidth = pagesWide
+  setup.fitToHeight = 0
+  setup.pageOrder = pagesWide > 1 ? "overThenDown" : "downThenOver"
+  setup.margins = { left: 0.25, right: 0.25, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 }
+  setup.printArea = `A1:${sheet.getColumn(sheet.columnCount).letter}${sheet.rowCount}`
+  if (repeatHeader) setup.printTitlesRow = "1:1"
+  if (repeatColumns) setup.printTitlesColumn = repeatColumns
+}
+
+/** Printing needs an explicit measured row height for LibreOffice PDF, not just wrapText. */
+function fitWrappedPrintRows(sheet: Worksheet, columns: number[]) {
+  sheet.eachRow((row, number) => {
+    if (number === 1) return
+    const wrappedLines = Math.max(1, ...columns.map((index) => {
+      const value = row.getCell(index).value
+      if (typeof value !== "string") return 1
+      const width = Math.max(8, (sheet.getColumn(index).width ?? 20) - 3)
+      return value.split(/\r?\n/).reduce(
+        (count, part) => count + Math.max(1, Math.ceil(part.length / width)), 0,
+      )
+    }))
+    // Excel limits row height to 409 pt; leave source text untouched for all cases.
+    row.height = Math.min(408, Math.max(18, wrappedLines * 17))
+  })
 }
 
 function scalar(value: unknown): string | number | boolean | null {
@@ -476,6 +553,7 @@ export async function exportMembers(
       column.width = 22
     })
     sheet.views = [{ state: "frozen", ySplit: 1 }]
+    configureXlsxPrint(sheet, 1, 8, true, true)
   })
   return {
     ok: true,
