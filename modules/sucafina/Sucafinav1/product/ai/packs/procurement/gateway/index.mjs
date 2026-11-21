@@ -15,7 +15,7 @@ export default definePluginEntry({
   name: "SF Purchase Gateway",
   description: "Makes the SF purchase comparison MCP tool available through the Gateway.",
   register(api) {
-    api.registerTool({
+    api.registerTool((context) => ({
       name: gatewayTool,
       label: "Compare SF purchase quotations",
       description: "Compare quotations on an SF purchase visible to this profile. This read-only tool does not select or approve a quotation.",
@@ -29,10 +29,12 @@ export default definePluginEntry({
         if (!args || Object.keys(args).length !== 1 || typeof args.requestRef !== "string" ||
           !args.requestRef.trim() || args.requestRef.length > 512) return purchaseStatus("invalid")
 
-        const server = api.config.mcp?.servers?.sfcompras
+        const config = context.getRuntimeConfig?.() ?? context.runtimeConfig ?? context.config
+        const server = config?.mcp?.servers?.sfcompras
         const token = process.env.SF_CLAW_PURCHASE_TOKEN
         if (server?.enabled !== true || server.transport !== "streamable-http" ||
           server.toolFilter?.include?.length !== 1 || server.toolFilter.include[0] !== purchaseTool ||
+          server.toolFilter.exclude?.length ||
           !token || !/^[a-f0-9]{64}$/.test(token) || !URL.canParse(server.url)) return purchaseStatus("unavailable")
 
         const endpoint = new URL(server.url)
@@ -55,6 +57,6 @@ export default definePluginEntry({
           await client.close().catch(() => undefined)
         }
       },
-    }, { optional: true })
+    }), { names: [gatewayTool], optional: true })
   },
 })
