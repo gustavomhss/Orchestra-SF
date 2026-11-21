@@ -4,6 +4,10 @@ import { digestSfValue } from "../product/contracts/canonical.ts"
 import type { EntraTeamsObservation } from "./local-contract.ts"
 import { readTeamProfileIntent } from "./team-profile-selector.ts"
 
+export function teamProfileInstallationId(input: { origin: string; mount: string; directory: string }) {
+  return digestSfValue({ origin: input.origin, mount: input.mount, directory: input.directory })
+}
+
 export function createTeamProfileAccess(input: {
   origin: string
   mount: string
@@ -13,7 +17,7 @@ export function createTeamProfileAccess(input: {
   prepare: (request: Request) => Promise<void>
   observeTeams: (request: Request) => Promise<EntraTeamsObservation>
 }) {
-  const installationId = digestSfValue({ origin: input.origin, mount: input.mount, directory: input.directory })
+  const installationId = teamProfileInstallationId(input)
   const binding = { installationId, tenantId: input.tenantId, origin: input.origin, mount: input.mount }
   const enabled = new Set(input.enabledTeamIds)
   return async (request: Request, teamObjectId?: string) => {
