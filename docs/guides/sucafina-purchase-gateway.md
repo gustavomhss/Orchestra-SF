@@ -18,6 +18,14 @@ O Gateway encaminha a consulta de leitura ao SF com a credencial do perfil. Para
 
 A [prova do piloto](../qa/sucafina/procurement/gateway-tools-invoke.json) registra os quatro casos com duas contas Microsoft e pedidos de teste distintos. O SHA-256 é calculado sobre a concatenação do conteúdo dos três arquivos do plugin, em ordem alfabética de nome.
 
+## Reproduzir o cenário sintético
+
+```sh
+bun run test:ci sucafina Sucafinav1/test/microsoft-installation.test.ts -t 'Installed purchase MCP' --os linux --timeout 620000
+```
+
+O teste executa o Gateway e o MCP instalado com duas sessões Microsoft simuladas e um banco temporário. Ele compara os dois pedidos pelos perfis A e B, envia o comando de confirmação de Compras pela sessão de A e relê a seleção pelo Gateway. O log registra o avanço da versão 1 para 2 e a leitura de uma única seleção no histórico persistido.
+
 ## Parear a instalação Microsoft por Team
 
 A instalação Microsoft aceita `clawPurchasePeriod` no descritor privado, por exemplo

@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import { spawn, spawnSync } from "node:child_process"
 import { randomBytes } from "node:crypto"
 import { once } from "node:events"
+import { readFileSync } from "node:fs"
 import { cp, mkdtemp, mkdir, readFile, rename, rm, writeFile } from "node:fs/promises"
 import { createServer as httpsServer } from "node:https"
 import { createServer as netServer } from "node:net"
@@ -16,8 +17,9 @@ const tool = "sfcompras__sf_comparar_compra"
 const upstreamTool = "sf_comparar_compra"
 const refs = { A: "PR-2026-0901", B: "PR-2026-0902" }
 const actors = Object.keys(refs)
-const secrets = actors.map(() => randomBytes(32).toString("hex"))
-const profileTokens = Object.fromEntries(actors.map((actor, index) => [actor, secrets[index]]))
+const installed = process.argv.includes("--installed-fixture") ? JSON.parse(readFileSync(0, "utf8")) : undefined
+const profileTokens = installed?.tokens ?? Object.fromEntries(actors.map((actor) => [actor, randomBytes(32).toString("hex")]))
+const secrets = [...Object.values(profileTokens), ...(installed ? [installed.control] : [])]
 const excludedToken = randomBytes(32).toString("hex")
 secrets.push(excludedToken)
 let excludedRequests = 0
@@ -68,6 +70,19 @@ try {
       response.writeHead(403).end()
       return
     }
+    if (installed) {
+      const body = Buffer.concat(await Array.fromAsync(request))
+      const rpc = JSON.parse(body.toString())
+      if (rpc.method === "tools/call") calls.push([actor, rpc.params.arguments.requestRef])
+      const forwarded = await fetch(installed.url + request.url, {
+        method: "POST", body, signal: AbortSignal.timeout(30_000),
+        headers: { authorization: request.headers.authorization, accept: request.headers.accept,
+          "content-type": request.headers["content-type"] },
+      })
+      response.writeHead(forwarded.status, { "content-type": forwarded.headers.get("content-type") ?? "text/plain" })
+        .end(Buffer.from(await forwarded.arrayBuffer()))
+      return
+    }
     const server = new Server({ name: "sf-purchase-fixture", version: "1" }, { capabilities: { tools: {} } })
     const transport = new StreamableHTTPServerTransport({ enableJsonResponse: true })
     server.setRequestHandler(CallToolRequestSchema, async ({ params }) => {
@@ -87,6 +102,8 @@ try {
   })
   const upstreamUrl = `https://127.0.0.1:${await listen(upstream)}/sucafina/api/claw/mcp`
 
+  let invokeA
+  let initial
   const profiles = [...actors.map((actor) => ({ actor, excluded: false })), { actor: "B", excluded: true }]
   for (const { actor, excluded } of profiles) {
     const reservation = netServer()
@@ -173,10 +190,17 @@ try {
       if (actor === target) {
         assert.equal(payload.status, "ok")
         assert.equal(payload.comparison.proposals.length, 3)
+        if (installed) {
+          assert.equal(payload.comparison.requestVersion, 1)
+          assert.equal(payload.comparison.selection.proposalRef, null)
+          assert.equal(payload.comparison.ranking[0], `${actor}1`)
+          if (actor === "A") initial = payload
+        }
       } else {
         assert.deepEqual(payload, { status: "denied" })
       }
     }
+    if (installed && actor === "A") invokeA = invoke
     if (actor === "B") {
       profileConfig.mcp.servers.sfcompras.enabled = false
       const nextConfig = config + ".next"
@@ -196,7 +220,28 @@ try {
     }
   }
   assert.equal(excludedRequests, 0)
-  assert.deepEqual(calls, actors.flatMap((actor) => actors.map((target) => [actor, refs[target]])))
+  const expectedCalls = actors.flatMap((actor) => actors.map((target) => [actor, refs[target]]))
+  if (installed) {
+    assert.ok(initial && invokeA)
+    const quoteId = initial.comparison.ranking[0]
+    const confirmation = await fetch(installed.url + "/confirm", {
+      method: "POST", headers: { authorization: `Bearer ${installed.control}`, "content-type": "application/json" },
+      body: JSON.stringify({ reviewUrl: initial.reviewUrl, version: initial.comparison.requestVersion, quoteId }),
+      signal: AbortSignal.timeout(30_000),
+    })
+    assert.equal(confirmation.status, 204, await confirmation.text())
+    const reread = await invokeA(refs.A)
+    assert.equal(reread.status, 200)
+    const { result } = await reread.json()
+    assert.notEqual(result.isError, true)
+    const payload = JSON.parse(result.content[0].text)
+    assert.equal(payload.status, "ok")
+    assert.equal(payload.comparison.requestVersion, 2)
+    assert.equal(payload.comparison.selection.proposalRef, quoteId)
+    expectedCalls.push(["A", refs.A])
+    console.log(`SF synthetic purchase ${refs.A}: A/B 4/4, confirmed ${quoteId}, version 1 -> 2, one quotation selection in history.`)
+  }
+  assert.deepEqual(calls, expectedCalls)
   console.log("Gateway /tools/invoke: 4/4 MCP cases passed; invalid credentials, excluded tool and live disable rejected.")
 } catch (error) {
   const diagnostics = gateways.map(({ gateway }) => gateway.output).join("\n")
