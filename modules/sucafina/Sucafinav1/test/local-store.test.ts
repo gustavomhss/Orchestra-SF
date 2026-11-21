@@ -231,7 +231,10 @@ test("surface namespaces isolate identical blob keys and snapshots", async () =>
       snapshot.data.other = true
       return { commit: true, value: null }
     })
-    expect(await read(store)).toEqual({ snapshot: { ...empty, data: { private: true } }, blob: bytes })
+    expect(await read(store)).toEqual({
+      snapshot: { ...empty, data: { private: true }, sfBlobGenerations: { document: 1 } },
+      blob: bytes,
+    })
   })
 })
 
