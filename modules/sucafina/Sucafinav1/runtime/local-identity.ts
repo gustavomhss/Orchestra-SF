@@ -1,8 +1,14 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
-import type { DirectoryPerson, EntraClient, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
+import type { DirectoryPerson, EntraClient, EntraTeamsInput, EntraTeamsResult, EntraTeamsSessionResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
 
-type Session = { person: DirectoryPerson; tokens: EntraTokens; expiresAt: number }
+type Session = {
+  person: DirectoryPerson
+  tokens: EntraTokens
+  expiresAt: number
+  teamPrincipal?: EntraTeamsInput["principal"]
+}
 type Login = { nonce: string; verifier: string; returnTo: string }
+const entraObjectId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 /** Browser cookies contain opaque handles. Tokens and PKCE material are encrypted only in the private store. */
 export function createLocalIdentity(options: {
@@ -27,6 +33,9 @@ export function createLocalIdentity(options: {
   if (![sessionSeconds, loginSeconds].every((value) => Number.isSafeInteger(value) && value > 0)) throw new Error("Invalid session lifetime")
   const cookiePrefix = `sucafina_${createHash("sha256").update(options.mount).digest("hex").slice(0, 12)}`
   const refreshing = new Map<string, Promise<void>>()
+  const configuredTenant = options.client.tenantId
+  const teamTenant = configuredTenant && entraObjectId.test(configuredTenant) ? configuredTenant.toLowerCase() : undefined
+  const readTeams = options.client.joinedTeams?.bind(options.client)
   const slot = (kind: string, handle: string) => `${kind}:${createHash("sha256").update(handle).digest("hex")}`
   const cookie = (kind: string, value: string, seconds: number) => `${cookiePrefix}_${kind}=${value}; Path=${options.mount}; HttpOnly; SameSite=Lax; Max-Age=${seconds}${origin.protocol === "https:" ? "; Secure" : ""}`
   const handle = (request: Request, kind: string) => {
@@ -62,6 +71,18 @@ export function createLocalIdentity(options: {
   const ready = async (request: Request) => {
     const current = await session(request)
     if (!current || current.value.tokens.expiresAt <= now()) return undefined
+    return current
+  }
+  const teamReadCurrent = async (request: Request) => {
+    const url = new URL(request.url)
+    if (request.signal.aborted || url.origin !== origin.origin ||
+        !(url.pathname === options.mount || url.pathname.startsWith(options.mount + "/")) ||
+        request.headers.get("sec-fetch-site") === "cross-site" ||
+        (request.headers.has("origin") && request.headers.get("origin") !== origin.origin)) return undefined
+    const current = await ready(request)
+    const principal = current?.value.teamPrincipal
+    if (request.signal.aborted || !current || !principal || principal.tenantId !== teamTenant ||
+        refreshing.has(current.handle)) return undefined
     return current
   }
   const headers = () => new Headers({ "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" })
@@ -116,7 +137,13 @@ export function createLocalIdentity(options: {
         await options.secrets.remove(slot("session", previous))
       }
       const id = randomBytes(32).toString("hex")
-      const value: Session = { ...result, expiresAt: now() + sessionSeconds * 1000 }
+      const value: Session = {
+        ...result,
+        expiresAt: now() + sessionSeconds * 1000,
+        ...(readTeams && teamTenant ? { teamPrincipal: {
+          tenantId: teamTenant, principalObjectId: result.person.id.toLowerCase(),
+        } } : {}),
+      }
       await options.secrets.put(slot("session", id), seal(slot("session", id), value), value.expiresAt)
       responseHeaders.append("set-cookie", cookie("session", id, sessionSeconds))
       responseHeaders.set("location", safeReturn(login.returnTo, options.mount))
@@ -141,6 +168,27 @@ export function createLocalIdentity(options: {
       refreshing.set(current.handle, work)
       await work
     },
+    ...(readTeams && teamTenant ? {
+      async teamDirectory(request: Request): Promise<EntraTeamsSessionResult> {
+        const current = await teamReadCurrent(request)
+        const principal = current?.value.teamPrincipal
+        if (!current || !principal) return { state: "unauthenticated" }
+        const tokens = current.value.tokens
+        const observed = await readTeams({
+          principal,
+          tokens: { accessToken: tokens.accessToken, expiresAt: tokens.expiresAt, grantedScopes: tokens.grantedScopes },
+        }).catch((): EntraTeamsResult => ({ state: "unavailable", reason: "provider_unavailable" }))
+        const latest = await teamReadCurrent(request)
+        if (!latest || latest.handle !== current.handle || latest.value.person.id !== current.value.person.id ||
+            latest.value.tokens.accessToken !== tokens.accessToken || latest.value.tokens.expiresAt !== tokens.expiresAt ||
+            JSON.stringify(latest.value.tokens.grantedScopes) !== JSON.stringify(tokens.grantedScopes))
+          return { state: "unauthenticated" }
+        if (observed.state === "complete" &&
+            (observed.tenantId !== principal.tenantId || observed.principalObjectId !== principal.principalObjectId))
+          return { state: "unavailable", reason: "identity_mismatch" }
+        return observed
+      },
+    } : {}),
     async authenticate(request, context) {
       const current = await ready(request)
       if (!current || !context) return null
@@ -157,13 +205,25 @@ export function createLocalIdentity(options: {
 }
 
 function validPerson(value: unknown): value is DirectoryPerson {
-  return value !== null && typeof value === "object" && "id" in value && typeof value.id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.id) && "name" in value && typeof value.name === "string" && Boolean(value.name.trim())
+  return value !== null && typeof value === "object" && "id" in value && typeof value.id === "string" && entraObjectId.test(value.id) && "name" in value && typeof value.name === "string" && Boolean(value.name.trim())
 }
 function validTokens(value: unknown): value is EntraTokens {
-  return value !== null && typeof value === "object" && "accessToken" in value && typeof value.accessToken === "string" && Boolean(value.accessToken) && "expiresAt" in value && typeof value.expiresAt === "number" && Number.isFinite(value.expiresAt) && (!("refreshToken" in value) || value.refreshToken === undefined || typeof value.refreshToken === "string") && (!("idToken" in value) || value.idToken === undefined || typeof value.idToken === "string")
+  return value !== null && typeof value === "object" && "accessToken" in value && typeof value.accessToken === "string" && Boolean(value.accessToken) && "expiresAt" in value && typeof value.expiresAt === "number" && Number.isFinite(value.expiresAt) && (!("refreshToken" in value) || value.refreshToken === undefined || typeof value.refreshToken === "string") && (!("idToken" in value) || value.idToken === undefined || typeof value.idToken === "string") &&
+    (!("grantedScopes" in value) || value.grantedScopes === undefined ||
+      (Array.isArray(value.grantedScopes) && value.grantedScopes.length <= 100 &&
+        value.grantedScopes.every((scope: unknown) => typeof scope === "string" && scope.length > 0 &&
+          scope.length <= 256 && !/[\x00-\x20\x7f]/.test(scope)) &&
+        new Set(value.grantedScopes).size === value.grantedScopes.length))
 }
 function validSession(value: unknown): value is Session {
-  return value !== null && typeof value === "object" && "person" in value && validPerson(value.person) && "tokens" in value && validTokens(value.tokens) && "expiresAt" in value && typeof value.expiresAt === "number" && Number.isFinite(value.expiresAt)
+  if (!value || typeof value !== "object" || !("person" in value) || !validPerson(value.person) ||
+      !("tokens" in value) || !validTokens(value.tokens) || !("expiresAt" in value) ||
+      typeof value.expiresAt !== "number" || !Number.isFinite(value.expiresAt)) return false
+  if (!("teamPrincipal" in value)) return true
+  const principal = value.teamPrincipal
+  return !!principal && typeof principal === "object" && "tenantId" in principal &&
+    typeof principal.tenantId === "string" && entraObjectId.test(principal.tenantId) &&
+    "principalObjectId" in principal && principal.principalObjectId === value.person.id.toLowerCase()
 }
 function validLogin(value: unknown): value is Login {
   return value !== null && typeof value === "object" && "nonce" in value && typeof value.nonce === "string" && /^[a-f0-9]{64}$/.test(value.nonce) && "verifier" in value && typeof value.verifier === "string" && /^[A-Za-z0-9_-]{43}$/.test(value.verifier) && "returnTo" in value && typeof value.returnTo === "string"

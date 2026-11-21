@@ -1,7 +1,13 @@
 import { expect, test } from "bun:test"
+import { randomBytes } from "node:crypto"
+import { mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
 import { exportJWK, generateKeyPair, SignJWT } from "jose"
 import { createEntraClient } from "../runtime/entra-client.ts"
-import type { EntraOptions } from "../runtime/local-contract.ts"
+import { createLocalIdentity } from "../runtime/local-identity.ts"
+import { openLocalStore } from "../runtime/local-store.ts"
+import type { EntraOptions, EntraTokens } from "../runtime/local-contract.ts"
 import type { RoleRow } from "../src/identity.ts"
 
 const tenant = "11111111-1111-4111-8111-111111111111"
@@ -38,6 +44,8 @@ async function fixture(options: {
   discovery?: Partial<typeof metadata>
   route?: (request: Request) => Response | Promise<Response | undefined> | undefined
   directoryLimit?: number
+  teams?: EntraOptions["teams"]
+  grantedScopes?: string
 } = {}) {
   const fixtureTenant = options.tenantId ?? tenant
   const fixtureAuthority = `https://login.microsoftonline.com/${fixtureTenant.toLowerCase()}`
@@ -55,14 +63,14 @@ async function fixture(options: {
     if (response) return response
     if (request.url === `${fixtureAuthority}/v2.0/.well-known/openid-configuration`) return Response.json({ ...fixtureMetadata, ...options.discovery })
     if (request.url === metadata.jwks_uri) return Response.json({ keys: [{ ...publicKey, kid: "synthetic-key", alg: "RS256", use: "sig" }] })
-    if (request.url === fixtureMetadata.token_endpoint) return Response.json({ access_token: "synthetic-access", refresh_token: "synthetic-refresh", id_token: signed, expires_in: 3600, token_type: "Bearer" })
+    if (request.url === fixtureMetadata.token_endpoint) return Response.json({ access_token: "synthetic-access", refresh_token: "synthetic-refresh", id_token: signed, expires_in: 3600, token_type: "Bearer", scope: options.grantedScopes })
     if (url.origin === "https://graph.microsoft.com" && url.pathname === "/v1.0/me") {
       expect(url.searchParams.get("$select")).toBe("id,displayName")
       return Response.json({ id: oid, displayName: "Actual directory person" })
     }
     throw new Error(`Unexpected fixture request: ${url.origin}${url.pathname}`)
   }
-  const client = createEntraClient({ tenantId: fixtureTenant, clientId, now: () => new Date(epoch * 1000), fetch, directoryLimit: options.directoryLimit })
+  const client = createEntraClient({ tenantId: fixtureTenant, clientId, now: () => new Date(epoch * 1000), fetch, directoryLimit: options.directoryLimit, teams: options.teams })
   return { client, requests, signed }
 }
 
@@ -379,4 +387,127 @@ for (const continuation of [null, "", 42]) {
 test("directory rejects a terminal page that contradicts the declared total", async () => {
   const f = await fixture({ route: (request) => request.url.startsWith(graph) ? Response.json({ value: [{ id: oid, displayName: "First" }], "@odata.count": 2 }) : undefined })
   await failure(() => f.client.directory("synthetic-access"))
+})
+
+const teamScope = "Team.ReadBasic.All"
+const joinedPath = "/v1.0/me/joinedTeams"
+const joinedUrl = `${graph}/me/joinedTeams`
+const teamA = "77777777-7777-4777-8777-777777777777"
+const teamB = "88888888-8888-4888-8888-888888888888"
+const teamRow = (id = teamA) => ({ id, tenantId: tenant, displayName: "Shared display name", isArchived: false })
+const teamsInput = (tokens: EntraTokens) =>
+  ({ tokens, principal: { tenantId: tenant, principalObjectId: oid } })
+
+test("Teams opt-in adds only the delegated scope and uses the signed principal across pages", async () => {
+  expect((await fixture()).client.joinedTeams).toBeUndefined()
+  const f = await fixture({ teams: "direct", grantedScopes: "User.Read " + teamScope, route: (request) => {
+    if (request.url === joinedUrl) return Response.json({ value: [teamRow()], "@odata.nextLink": joinedUrl + "?$skiptoken=2" })
+    if (request.url === joinedUrl + "?$skiptoken=2") return Response.json({ value: [teamRow(teamB)] })
+  } })
+  const authorize = new URL(await f.client.authorization({ state: "state", nonce: input.nonce, challenge: "challenge", redirectUri }))
+  expect(authorize.searchParams.get("scope")?.split(" ")).toEqual([...scopes, teamScope])
+  const signed = await f.client.exchange(input)
+  expect(signed.tokens.grantedScopes).toEqual(["User.Read", teamScope])
+  expect(await f.client.joinedTeams!(teamsInput(signed.tokens))).toEqual({
+    state: "complete", tenantId: tenant, principalObjectId: oid, source: "joinedTeams", membership: "direct",
+    teams: [
+      { teamObjectId: teamA, name: "Shared display name", archived: false },
+      { teamObjectId: teamB, name: "Shared display name", archived: false },
+    ],
+  })
+  expect(f.requests.filter((request) => request.url.startsWith(graph)).map((request) => new URL(request.url).pathname))
+    .toEqual(["/v1.0/me", "/v1.0/me", joinedPath, joinedPath, "/v1.0/me"])
+})
+
+test("Teams consent must be observed on both initial and refreshed credentials", async () => {
+  const missing = await fixture({ teams: "direct" })
+  const initial = await missing.client.exchange(input)
+  const initialCount = missing.requests.length
+  expect(await missing.client.joinedTeams!(teamsInput(initial.tokens))).toEqual({ state: "unavailable", reason: "consent_required" })
+  expect(missing.requests).toHaveLength(initialCount)
+
+  const granted = await fixture({ teams: "direct", grantedScopes: teamScope, route: async (request) => {
+    if (request.url !== metadata.token_endpoint || new URLSearchParams(await request.clone().text()).get("grant_type") !== "refresh_token") return
+    return Response.json({ access_token: "synthetic-access", expires_in: 3600, token_type: "Bearer" })
+  } })
+  expect((await granted.client.exchange(input)).tokens.grantedScopes).toEqual([teamScope])
+  const refreshed = await granted.client.refresh("synthetic-refresh")
+  const refreshedCount = granted.requests.length
+  expect(await granted.client.joinedTeams!(teamsInput(refreshed))).toEqual({ state: "unavailable", reason: "consent_required" })
+  expect(granted.requests).toHaveLength(refreshedCount)
+})
+
+test("Teams rejects an expired credential or a foreign tenant before Graph and fences changed /me", async () => {
+  const seen = { me: 0 }
+  const f = await fixture({ teams: "direct", grantedScopes: teamScope, route: (request) => {
+    const url = new URL(request.url)
+    if (url.pathname === "/v1.0/me" && ++seen.me === 3) return Response.json({ id: other, displayName: "Changed person" })
+    if (url.pathname === joinedPath) return Response.json({ value: [teamRow()] })
+  } })
+  const signed = await f.client.exchange(input)
+  const count = f.requests.length
+  expect(await f.client.joinedTeams!(teamsInput({ ...signed.tokens, expiresAt: epoch * 1000 })))
+    .toEqual({ state: "unavailable", reason: "token_expired" })
+  expect(await f.client.joinedTeams!({ tokens: signed.tokens, principal: { tenantId: other, principalObjectId: oid } }))
+    .toEqual({ state: "unavailable", reason: "identity_mismatch" })
+  expect(f.requests).toHaveLength(count)
+  expect(await f.client.joinedTeams!(teamsInput(signed.tokens))).toEqual({ state: "unavailable", reason: "identity_mismatch" })
+})
+
+for (const scenario of [
+  { name: "nextLink origin", data: { value: [teamRow()], "@odata.nextLink": "https://foreign.example/v1.0/me/joinedTeams?$skiptoken=2" }, reason: "invalid_response" },
+  { name: "duplicate pagination keys", data: { value: [teamRow()], "@odata.nextLink": joinedUrl + "?$skiptoken=2&%24skiptoken=3" }, reason: "invalid_response" },
+  { name: "foreign team tenant", data: { value: [teamRow(), { ...teamRow(teamB), tenantId: other }] }, reason: "invalid_response" },
+  { name: "duplicate team identity", data: { value: [teamRow(), teamRow(teamA.toUpperCase())] }, reason: "invalid_response" },
+  { name: "incomplete total", data: { value: [teamRow()], "@odata.count": 2 }, reason: "incomplete" },
+]) {
+  test(`Teams rejects ${scenario.name} without returning partial membership`, async () => {
+    const f = await fixture({ teams: "direct", grantedScopes: teamScope, route: (request) =>
+      request.url === joinedUrl ? Response.json(scenario.data) : undefined })
+    const result = await f.client.joinedTeams!(teamsInput((await f.client.exchange(input)).tokens))
+    expect(result).toEqual({ state: "unavailable", reason: scenario.reason })
+    expect(f.requests.filter((request) => new URL(request.url).pathname === joinedPath)).toHaveLength(1)
+  })
+}
+
+test("a signed Microsoft callback binds the private session to direct Graph memberships", async () => {
+  const sessionOrigin = "http://localhost:4321"
+  const mount = "/sucafina"
+  const callback = { nonce: "" }
+  const f = await fixture({ teams: "direct", route: async (request) => {
+    if (request.url === metadata.token_endpoint) return Response.json({
+      access_token: "synthetic-access", id_token: await token({ nonce: callback.nonce }),
+      expires_in: 3600, token_type: "Bearer", scope: teamScope,
+    })
+    if (request.url === joinedUrl) return Response.json({ value: [teamRow()] })
+  } })
+  const root = await mkdtemp(join(await realpath(tmpdir()), "sf-entra-teams-"))
+  const store = await openLocalStore(root)
+  try {
+    const identity = createLocalIdentity({
+      origin: sessionOrigin, mount, client: f.client, secrets: store.secrets,
+      key: randomBytes(32), now: () => new Date(epoch * 1000),
+    })
+    const begin = await identity.handle(new Request(sessionOrigin + mount + "/auth/login"))
+    expect(begin?.status).toBe(303)
+    const authorize = new URL(begin!.headers.get("location")!)
+    callback.nonce = authorize.searchParams.get("nonce")!
+    const loginCookie = begin!.headers.getSetCookie()[0].split(";")[0]
+    const finish = await identity.handle(new Request(sessionOrigin + mount + "/auth/callback?" + new URLSearchParams({
+      state: authorize.searchParams.get("state")!, code: "synthetic-code",
+    }), { headers: { cookie: loginCookie } }))
+    expect(finish?.status).toBe(303)
+    const cookie = finish!.headers.getSetCookie().find((value) => value.includes("_session="))!.split(";")[0]
+    const observed = await identity.teamDirectory!(new Request(sessionOrigin + mount + "/dashboard?principalObjectId=" + other, {
+      headers: { cookie },
+    }))
+    expect(observed).toMatchObject({
+      state: "complete", tenantId: tenant, principalObjectId: oid,
+      teams: [{ teamObjectId: teamA, name: "Shared display name", archived: false }],
+    })
+    expect(JSON.stringify(observed)).not.toContain("synthetic-access")
+  } finally {
+    await store.dispose()
+    await rm(root, { recursive: true, force: true })
+  }
 })

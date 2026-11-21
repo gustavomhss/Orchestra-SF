@@ -1,13 +1,15 @@
 import { expect, test } from "bun:test"
 import { randomBytes } from "node:crypto"
 import { createLocalIdentity } from "../runtime/local-identity.ts"
-import type { EntraClient, LocalSecrets } from "../runtime/local-contract.ts"
+import type { EntraClient, EntraTeamsInput, EntraTeamsResult, LocalSecrets } from "../runtime/local-contract.ts"
 
 const origin = "http://localhost:4110"
 const mount = "/sucafina"
+const tenantId = "11111111-2222-4333-8444-555555555555"
+const teamId = "77777777-7777-4777-8777-777777777777"
 const person = { id: "0fe3ac10-c944-4eb6-8812-c67f5202a32f", name: "Directory Person" }
 
-function fixture() {
+function fixture(joinedTeams?: EntraClient["joinedTeams"]) {
   const records = new Map<string, { value: Uint8Array; expires: number }>()
   const reads: string[] = []
   const writes: string[] = []
@@ -19,8 +21,12 @@ function fixture() {
     async take(key, at) { const value = await secrets.get(key, at); records.delete(key); return value },
     async remove(key) { writes.push(key); records.delete(key) },
   }
-  const tokens = () => ({ accessToken: "PRIVATE_ACCESS_TOKEN", refreshToken: "PRIVATE_REFRESH_TOKEN", expiresAt: clock.value + 120000 })
+  const tokens = () => ({
+    accessToken: "PRIVATE_ACCESS_TOKEN", refreshToken: "PRIVATE_REFRESH_TOKEN", expiresAt: clock.value + 120000,
+    ...(joinedTeams ? { grantedScopes: ["Team.ReadBasic.All"] } : {}),
+  })
   const client: EntraClient = {
+    ...(joinedTeams ? { tenantId, joinedTeams } : {}),
     async authorization(input) { calls.state = input.state; calls.nonce = input.nonce; calls.challenge = input.challenge; return `https://login.microsoftonline.com/authorize?state=${input.state}` },
     async exchange(input) { calls.exchange++; calls.verifier = input.verifier; expect(input.nonce).toBe(calls.nonce); return { person, tokens: tokens() } },
     async refresh() { calls.refresh++; return tokens() },
@@ -124,3 +130,84 @@ test("logout requires same-origin POST and revokes copied browser cookie", async
   expect(response!.headers.getSetCookie().join(";")).toContain("Max-Age=0")
   expect(await f.identity.person(f.request("/planner", cookie))).toBeNull()
 })
+
+const directMembership = (principalObjectId = person.id): Extract<EntraTeamsResult, { state: "complete" }> => ({
+  state: "complete", tenantId, principalObjectId, source: "joinedTeams", membership: "direct",
+  teams: [{ teamObjectId: teamId, name: "Finance", archived: false }],
+})
+
+test("Team membership reads only the Microsoft principal stored with the opaque session", async () => {
+  const observed: EntraTeamsInput[] = []
+  const f = fixture(async (input) => { observed.push(input); return directMembership() })
+  const read = f.identity.teamDirectory
+  if (!read) throw new Error("Team observation must be available for the configured client")
+  const { cookie } = await f.login()
+  const headers = { "x-sf-team-profile": JSON.stringify({ tenantId: teamId, principalObjectId: teamId }) }
+  const result = await read(f.request("/planner?tenantId=" + teamId + "&principalObjectId=" + teamId, cookie, { headers }))
+  expect(result).toEqual(directMembership())
+  expect(observed).toEqual([{
+    principal: { tenantId, principalObjectId: person.id },
+    tokens: expect.objectContaining({ accessToken: "PRIVATE_ACCESS_TOKEN", grantedScopes: ["Team.ReadBasic.All"] }),
+  }])
+  expect(JSON.stringify(result)).not.toContain("PRIVATE")
+  expect(f.calls.resolve).toBe(0)
+})
+
+test("Team membership requires a current session on the original installation request", async () => {
+  const observed: EntraTeamsInput[] = []
+  const f = fixture(async (input) => { observed.push(input); return directMembership() })
+  const read = f.identity.teamDirectory
+  if (!read) throw new Error("Team observation must be available for the configured client")
+  const { cookie } = await f.login()
+  const aborted = new AbortController()
+  aborted.abort()
+  for (const request of [
+    f.request("/planner"),
+    new Request("https://foreign.example/sucafina/planner", { headers: { cookie } }),
+    new Request(origin + "/different-installation/planner", { headers: { cookie } }),
+    f.request("/planner", cookie, { headers: { origin: "https://foreign.example" } }),
+    f.request("/planner", cookie, { signal: aborted.signal }),
+  ]) expect((await read(request)).state).not.toBe("complete")
+  expect(observed).toHaveLength(0)
+  expect(fixture().identity.teamDirectory).toBeUndefined()
+})
+
+test("Team membership discards another principal returned by the provider", async () => {
+  const f = fixture(async () => directMembership(teamId))
+  const read = f.identity.teamDirectory
+  if (!read) throw new Error("Team observation must be available for the configured client")
+  const { cookie } = await f.login()
+  expect(await read(f.request("/planner", cookie))).toEqual({ state: "unavailable", reason: "identity_mismatch" })
+})
+
+for (const action of ["logout", "refresh"] as const) {
+  test(`Team membership discards Graph results when ${action} changes the session in flight`, async () => {
+    const entered = Promise.withResolvers<void>()
+    const release = Promise.withResolvers<void>()
+    const f = fixture(async () => {
+      entered.resolve()
+      await release.promise
+      return directMembership()
+    })
+    const read = f.identity.teamDirectory
+    if (!read) throw new Error("Team observation must be available for the configured client")
+    const { cookie } = await f.login()
+    const request = f.request("/planner", cookie)
+    const pending = read(request)
+    await Promise.race([entered.promise, pending.then(() => { throw new Error("Team observation settled before Graph") })])
+    try {
+      if (action === "logout") {
+        const response = await f.identity.handle(f.request("/auth/logout", cookie, { method: "POST", headers: { origin } }))
+        expect(response?.status).toBe(204)
+      } else {
+        f.clock.value += 61000
+        await f.identity.prepare(request)
+        expect(f.calls.refresh).toBe(1)
+        expect(await f.identity.person(request)).toEqual(person)
+      }
+    } finally {
+      release.resolve()
+    }
+    expect(await pending).toEqual({ state: "unauthenticated" })
+  })
+}
