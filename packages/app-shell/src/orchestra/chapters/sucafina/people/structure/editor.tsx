@@ -61,7 +61,7 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
   const { t } = useSfPresentation()
   // Present authorized option labels; retain the original values in the draft
   // and command. Missing fields still preserve the source's unknown state.
-  const detail = (value: PeopleFormValues, fields: readonly PeopleField[]) =>
+  const detail = (value: PeopleFormValues, fields: readonly PeopleField[], newDraft = false) =>
     fields.map((field) => {
       const raw = value[field.name] ?? ""
       const option = field.options?.find((entry) => entry.value === raw)
@@ -72,7 +72,7 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
         label: { key: field.labelKey },
         value: Object.hasOwn(value, field.name)
           ? { kind: "text" as const, text: { kind: "data" as const, text } }
-          : { kind: "missing" as const, reason: { key: sfCommonKey("sf.common.unknown") } },
+          : { kind: "missing" as const, reason: { key: newDraft ? designKey("sf.u03.design.notRecorded") : sfCommonKey("sf.common.unknown") } },
       }
     })
   const groups = () => [
@@ -187,7 +187,7 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
   const phase = () => active()?.phase
   const proposal = () => ({ kind: "draft" as const,
     intentRef, sourceRef: props.recordRef ?? null,
-    sourceVersion: props.version as SfVersion, fields: detail(active()?.value ?? {}, props.fields),
+    sourceVersion: props.version as SfVersion, fields: detail(active()?.value ?? {}, props.fields, !props.recordRef),
   })
   const base = () => props.original && props.recordRef
     ? { kind: "persisted" as const, ref: props.recordRef,

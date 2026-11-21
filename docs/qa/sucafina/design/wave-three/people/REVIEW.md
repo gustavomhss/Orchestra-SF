@@ -88,3 +88,5 @@ The CAP10 collection screenshot also revealed broken Budget, Spent and Progress 
 The same explicit label association is applied to portfolio Status/Show filters and project/milestone enum selects. The portfolio journey checks those exact accessible names and exercises the canonical Planning filter before resetting it.
 
 The project import action is aligned with the collection introduction to remove the isolated secondary-action strip. New project remains the frame's primary action, and the import action retains its exact admission, busy/uncertain and dirty-draft guards.
+
+New-member review now describes an untouched optional draft field as not specified, using existing localized copy. Persisted source fields that were not supplied remain unknown, and the actual draft/command still omits the untouched key.
