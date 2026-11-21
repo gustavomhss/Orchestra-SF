@@ -14,6 +14,7 @@ import { sfReadProjects, sfAdmitted, sfOwnerMatches } from "../projects/producer
 import { sfProjectHref } from "../projects/paths"
 import { PROJECT_STATUS, sfSourceDate, type SfProjectRecord, type SfProjectPage } from "../projects/model"
 import { createSfPortfolioViewState } from "../view-state"
+import { sfProjectStatusKey, sfProjectRiskKey, sfMilestoneStatusKey } from "../projects/presentation"
 import "./overview.css"
 
 const k = (value: keyof typeof SF_U05_COPY) => value as SfCopyKey
@@ -109,9 +110,9 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
     { id: "name", labelKey: kt("sf.u05.projects.project"), align: "start", widthPolicy: { kind: "flex", weight: 2, minPx: 170 },
       render: (row) => <bdi>{row.name}</bdi> },
     { id: "status", labelKey: kt("sf.u05.projects.status"), align: "start", widthPolicy: { kind: "content", minPx: 100, maxPx: 180 },
-      render: (row) => <span>{row.status ?? t("sf.u05.projects.notRecorded")}</span> },
+      render: (row) => <span class="sf-u05-status">{t(sfProjectStatusKey(row.status))}</span> },
     { id: "risk", labelKey: kt("sf.u05.projects.risk"), align: "start", widthPolicy: { kind: "content", minPx: 90, maxPx: 140 },
-      render: (row) => <span>{row.risk ?? t("sf.u05.projects.notRecorded")}</span> },
+      render: (row) => <span class="sf-u05-status" data-risk={row.risk}>{t(sfProjectRiskKey(row.risk))}</span> },
     { id: "end", labelKey: kt("sf.u05.projects.target"), align: "start", widthPolicy: { kind: "content", minPx: 130, maxPx: 180 },
       render: (row) => recordedDate(row.end, t("sf.u05.projects.notRecorded")) },
     { id: "watchList", labelKey: kt("sf.u05.projects.watch"), align: "center", widthPolicy: { kind: "content", minPx: 90, maxPx: 150 },
@@ -135,7 +136,7 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
       }}
       secondaryActions={[]}
     >
-      <section class="sf-u05-overview" data-sf-portfolio-overview data-sf-source="CAP09">
+      <section class="sf-u05-overview" data-sf-portfolio-overview data-sf-source="CAP09" data-sf-wave="three" data-sf-surface="CAP09">
         <SfStatePanel
           state={view.state}
           messageKey={k("sf.u05.projects.notAvailable")}
@@ -143,10 +144,20 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
         >
           <Show when={view.page}>
             <div class="sf-u05-overview-intro">
-              <h2>{t("sf.u05.overview.summary")}</h2>
-              <p>{t("sf.u05.overview.context")}</p>
-              <p>{t("sf.u05.overview.order")}</p>
-              <Show when={view.page?.capturedAt}><time>{view.page!.capturedAt}</time></Show>
+              <div>
+                <h2>{t("sf.u05.overview.summary")}</h2>
+                <p>{t("sf.u05.design.overviewLead")}</p>
+              </div>
+              <details class="sf-u05-source-note">
+                <summary>{t("sf.u05.design.source")}</summary>
+                <p>{t("sf.u05.overview.context")}</p>
+                <p>{t("sf.u05.overview.order")}</p>
+                <Show when={view.page?.capturedAt}>
+                  <p>{t("sf.u05.design.recorded")} <SfDisplayValueText value={{
+                    kind: "timestamp", isoTimestamp: view.page!.capturedAt!, timezone: "UTC",
+                  }} /></p>
+                </Show>
+              </details>
             </div>
             <form class="sf-u05-overview-filters" aria-label={t("sf.u05.projects.filters")}
               onSubmit={(event) => event.preventDefault()}>
@@ -157,7 +168,7 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
               <label>{t("sf.u05.projects.status")}
                 <select value={filters.value.status} onChange={(event) => filters.change({ status: event.currentTarget.value })}>
                   <option value="">{t("sf.u05.projects.all")}</option>
-                  <For each={PROJECT_STATUS}>{(status) => <option value={status}>{status}</option>}</For>
+                  <For each={PROJECT_STATUS}>{(status) => <option value={status}>{t(sfProjectStatusKey(status))}</option>}</For>
                 </select>
               </label>
               <label>{t("sf.u05.projects.show")}
@@ -174,7 +185,7 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
               <div><dt>{t("sf.u05.overview.watch")}</dt><dd>{projects().filter((project) => project.watchList === true).length}</dd></div>
               <div><dt>{t("sf.u05.overview.risk")}</dt><dd>{projects().filter((project) => project.risk === "Medium" || project.risk === "High").length}</dd></div>
             </dl>
-            <section aria-label={t("sf.u05.overview.projects")}>
+            <section class="sf-u05-overview-section" aria-label={t("sf.u05.overview.projects")}>
               <h2>{t("sf.u05.overview.projects")}</h2>
               <SfDataTable
                 rows={projects()}
@@ -196,10 +207,10 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
                 state={projects().length === 0 ? "filtered-empty" : "ready"}
               />
             </section>
-            <section aria-label={t("sf.u05.overview.milestones")}>
+            <section class="sf-u05-overview-section" aria-label={t("sf.u05.overview.milestones")}>
               <h2>{t("sf.u05.overview.milestones")}</h2>
               <Show when={milestoneCoverage()} fallback={<p role="status">{t("sf.u05.projects.milestonesUnavailable")}</p>}>
-                <div class="sf-u05-overview-scroll">
+                <div class="sf-u05-overview-scroll" role="region" tabindex="0" aria-label={t("sf.u05.overview.milestones")}>
                   <table>
                     <thead><tr>
                       <th scope="col">{t("sf.u05.projects.project")}</th>
@@ -211,7 +222,7 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
                       <For each={milestoneRows()}>{(row) => (
                         <tr><th scope="row"><bdi>{row.project.name}</bdi></th><td><bdi>{row.milestone.name}</bdi></td>
                           <td>{recordedDate(row.milestone.date, t("sf.u05.projects.notRecorded"))}</td>
-                          <td>{row.milestone.status ?? t("sf.u05.projects.notRecorded")}</td></tr>
+                          <td>{t(sfMilestoneStatusKey(row.milestone.status))}</td></tr>
                       )}</For>
                     </tbody>
                   </table>
@@ -219,9 +230,6 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
                 </div>
               </Show>
             </section>
-            <Show when={canOpenProjects()}>
-              <button class="mx-btn" type="button" onClick={goProjects}>{t("sf.u05.overview.maintain")}</button>
-            </Show>
           </Show>
         </SfStatePanel>
       </section>

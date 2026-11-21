@@ -8,6 +8,9 @@ import { SfChangeReview } from "../../shared/change-review"
 import { SfStatePanel } from "../../shared/states"
 import { SfActionButton, sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
 import type { SfAction, SfCopyKey, SfMessage } from "../../shared/frame"
+import { SF_U03_COPY } from "@/i18n/orchestra-chapters/sf-u03"
+
+const designKey = (value: keyof typeof SF_U03_COPY) => value as SfCopyKey
 
 export type PeopleField = Readonly<{
   name: string
@@ -65,6 +68,11 @@ function initialValues(props: PeopleEditorProps): PeopleFormValues {
 export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
   const id = createUniqueId()
   const { t } = useSfPresentation()
+  const groups = () => [
+    { label: designKey("sf.u03.design.identity"), fields: props.fields.filter((field) => ["name", "title", "domain", "location"].includes(field.name)) },
+    { label: designKey("sf.u03.design.employment"), fields: props.fields.filter((field) => ["type", "leaderId", "start", "end", "status"].includes(field.name)) },
+    { label: designKey("sf.u03.design.assessment"), fields: props.fields.filter((field) => ["cls", "outlook", "notes"].includes(field.name)) },
+  ].filter((group) => group.fields.length > 0)
   const [local, setLocal] = createStore({
     message: "" as string,
     busy: false,
@@ -189,8 +197,12 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
       reasons: [{ key: sfCommonKey("sf.common.readOnly") }] as SfMessage[] }
 
   return (
-    <section class="mx-card sf-people-editor" aria-labelledby={id} data-sf-editor={props.entity}>
-      <h2 id={id}>{t(props.action.labelKey)}</h2>
+    <section class="sf-people-editor" aria-labelledby={id} data-sf-editor={props.entity}
+      data-sf-stage={phase() === "reviewing" ? "review" : "form"}>
+      <header class="sf-people-editor-heading">
+        <h2 id={id}>{t(phase() === "reviewing" ? sfCommonKey("sf.common.review") : props.action.labelKey)}</h2>
+        <p>{t(designKey(phase() === "reviewing" ? "sf.u03.design.reviewHint" : "sf.u03.design.editorHint"))}</p>
+      </header>
       <Show when={state().availability === "active"} fallback={
         <SfStatePanel
           state={state().availability === "quarantined" ? "session-expired" : "denied"}
@@ -199,11 +211,13 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
       }>
         <Show when={phase() === "reviewing"} fallback={
           <form onSubmit={(event) => { event.preventDefault(); review() }}>
-            <div class="sf-people-form-grid">
-              <For each={props.fields}>
+            <For each={groups()}>{(group) => <fieldset class="sf-people-fieldset">
+              <legend>{t(group.label)}</legend>
+              <div class="sf-people-form-grid">
+              <For each={group.fields}>
                 {(field) => (
-                  <div class="sf-people-input">
-                    <label for={id + "-" + field.name}>{t(field.labelKey)}</label>
+                  <div class="sf-people-input" data-sf-field={field.name} classList={{ "sf-people-field-wide": field.input === "textarea" }}>
+                    <label for={id + "-" + field.name}>{t(field.labelKey)}<Show when={field.required}><span aria-hidden="true"> *</span></Show></label>
                     <Show when={field.input === "select" && field.options} fallback={
                       <Show when={field.input === "textarea"} fallback={
                         <input id={id + "-" + field.name}
@@ -231,7 +245,8 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
                   </div>
                 )}
               </For>
-            </div>
+              </div>
+            </fieldset>}</For>
             <Show when={local.message}>
               <p role="alert" class="sf-people-error">{local.message}</p>
             </Show>
@@ -250,7 +265,7 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
             operation={{
               ref: local.reviewRef ?? (id as SfOperationRef),
               label: { key: props.action.labelKey },
-              scope: { kind: "data", text: props.recordRef ?? props.entity },
+              scope: { kind: "data", text: active()?.value.name || props.original?.name || t(props.action.labelKey) },
             }}
             base={base()} current={null} proposed={proposal()} effects={[]}
             coverage={{ state: "complete", summary: { key: sfCommonKey("sf.common.currentSource") },

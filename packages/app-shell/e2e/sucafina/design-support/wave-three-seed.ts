@@ -19,8 +19,9 @@ function executor(snapshot: Snapshot, actor: Actor, environment: Environment) {
 function revision(snapshot: Snapshot, key: string) { return snapshot.versions[key]?.version ?? 0 }
 function named(records: Record<string, unknown>[], name: string) {
   const found = records.filter((record) => record.name === name)
-  if (found.length !== 1 || typeof found[0].id !== "string") throw new Error("Canonical seed record missing: " + name)
-  return found[0].id
+  const first = found[0]
+  if (found.length !== 1 || !first || typeof first.id !== "string") throw new Error("Canonical seed record missing: " + name)
+  return first.id
 }
 
 export function seedWaveThreeDashboard(snapshot: Snapshot, actor: Actor, environment: Environment, year: number, month: number) {
