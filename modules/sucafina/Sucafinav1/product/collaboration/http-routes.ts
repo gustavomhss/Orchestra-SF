@@ -31,7 +31,7 @@ export function createCollaborationHttpRoutes(host: Host) {
   const threadChange = async (payload: Payload, context: TrustedUiContext, kind: "reply" | "resolve"): Promise<PortResult<unknown>> => {
     const mutation = payload.mutation as Parameters<Host["threads"]["resolve"]>[1]
     if (kind === "reply") {
-      const selected = await host.replyInstalledReview(payload.id as string, payload.body as string, mutation, context)
+      const selected = await host.replyInstalledReview?.(payload.id as string, payload.body as string, mutation, context)
       if (selected !== undefined) return selected
     }
     const found = await threadRead(payload.id as string, context)
