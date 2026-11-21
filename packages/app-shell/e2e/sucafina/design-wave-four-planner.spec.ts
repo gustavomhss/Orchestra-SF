@@ -34,7 +34,11 @@ async function views(page: Page, info: TestInfo, id: string) {
   await capture(page, info, id + "-light-desktop-test-data")
   await width(page, 320)
   await capture(page, info, id + "-light-320-test-data")
+  // The shell exposes its theme control at desktop width. Use that real
+  // control, then return to the narrow viewport for the editor journey.
+  await width(page, 1440)
   await scheme(page, "dark")
+  await width(page, 320)
 }
 async function confirm(page: Page, installation: DesignInstallation, sourcePage: string, action: string, label: string, collection?: string) {
   const saved = page.waitForResponse((response) => {
