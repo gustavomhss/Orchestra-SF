@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises"
 import { expect } from "@playwright/test"
 import { Schema } from "effect"
 import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
-import type { APIResponse, Locator, Page, Response, Route, TestInfo } from "@playwright/test"
+import type { APIResponse, Locator, Page, Request, Response, Route, TestInfo } from "@playwright/test"
 import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
@@ -192,26 +192,75 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const assetEndpoint = new URL(account.baseURL + "/procurement")
   const linkURL = new URL(assetEndpoint)
   linkURL.searchParams.set("asset-link", asset)
-  const linkCapture = await forwardOnce(page, linkURL.href, "GET")
+  const contextEndpoint = new URL(account.baseURL + "/api/ui/context")
+  const started = performance.now()
+  const elapsedMs = () => Math.round(performance.now() - started)
+  const phases: Partial<Record<"linkRequested" | "linkIssued" | "linkDelivered" | "linkBrowserResponse" |
+    "signedBytesRequested" | "signedBytesResponse" | "signedBytesFailed" | "chromiumDownload",
+    { elapsedMs: number; status?: number }>> = {}
+  const contextCounts = { request: 0, response: 0, failed: 0 }
+  const contextEvents: { phase: keyof typeof contextCounts; elapsedMs: number; status?: number }[] = []
+  const recordContext = (phase: keyof typeof contextCounts, request: Request, status?: number) => {
+    if (request.method() !== "GET") return
+    const url = new URL(request.url())
+    if (url.origin !== contextEndpoint.origin || url.pathname !== contextEndpoint.pathname) return
+    contextCounts[phase]++
+    if (contextEvents.length < 48) contextEvents.push({ phase, elapsedMs: elapsedMs(), status })
+  }
+  const signedAssetRequest = (request: Request, observedURL = request.url()) => {
+    const url = new URL(observedURL)
+    return request.method() === "GET" && url.origin === assetEndpoint.origin &&
+      url.pathname === assetEndpoint.pathname && url.searchParams.get("asset") === asset &&
+      url.searchParams.has("expires") && url.searchParams.has("signature")
+  }
+  const requestObserved = (request: Request) => {
+    if (request.method() === "GET" && request.url() === linkURL.href)
+      phases.linkRequested = { elapsedMs: elapsedMs() }
+    if (signedAssetRequest(request)) phases.signedBytesRequested = { elapsedMs: elapsedMs() }
+    recordContext("request", request)
+  }
+  const requestFailed = (request: Request) => {
+    if (signedAssetRequest(request)) phases.signedBytesFailed = { elapsedMs: elapsedMs() }
+    recordContext("failed", request)
+  }
+  const responseObserved = (response: Response) => {
+    if (response.request().method() === "GET" && response.url() === linkURL.href)
+      phases.linkBrowserResponse = { elapsedMs: elapsedMs(), status: response.status() }
+    recordContext("response", response.request(), response.status())
+  }
+  const linkCapture = await forwardOnce(page, linkURL.href, "GET", async (response) => {
+    phases.linkIssued = { elapsedMs: elapsedMs(), status: response.status() }
+  })
+  page.on("request", requestObserved)
+  page.on("requestfailed", requestFailed)
+  page.on("response", responseObserved)
   const issuedLink = linkCapture.completed.then(async ({ response }) => {
+    phases.linkDelivered = { elapsedMs: elapsedMs(), status: response.status() }
     expect(response.status()).toBe(200)
     const link = await response.json() as { ok?: boolean; query?: string }
     expect(link.ok).toBe(true)
     return link.query
   })
-  const linkedAsset = page.waitForResponse((response) => {
-    const url = new URL(response.url())
-    return response.request().method() === "GET" && url.origin === assetEndpoint.origin &&
-      url.pathname === assetEndpoint.pathname && url.searchParams.get("asset") === asset &&
-      url.searchParams.has("expires") && url.searchParams.has("signature")
-  }).then((response) => {
+  const linkedAsset = page.waitForResponse((response) => signedAssetRequest(response.request(), response.url())).then((response) => {
+    phases.signedBytesResponse = { elapsedMs: elapsedMs(), status: response.status() }
     expect(response.status()).toBe(200)
     return new URL(response.url())
   })
-  const downloaded = page.waitForEvent("download")
+  const downloaded = page.waitForEvent("download").then((download) => {
+    phases.chromiumDownload = { elapsedMs: elapsedMs() }
+    return download
+  })
   const [signedQuery, assetURL, download] = await Promise.all([
     issuedLink, linkedAsset, downloaded, file.getByRole("button", { name: "Download (verify access)", exact: true }).click(),
-  ]).finally(() => linkCapture.close())
+  ]).finally(async () => {
+    page.off("request", requestObserved)
+    page.off("requestfailed", requestFailed)
+    page.off("response", responseObserved)
+    const evidence = JSON.stringify({ elapsedMs: elapsedMs(), phases, contextCounts, contextEvents })
+    if (!phases.chromiumDownload) console.info("SF_FILES_DOCUMENT_DOWNLOAD_PHASES", evidence)
+    await info.attach("operations-document-download-phases.json", { body: evidence, contentType: "application/json" }).catch(() => undefined)
+    await linkCapture.close()
+  })
   expect(assetURL.search.slice(1) === signedQuery, "download uses the producer's exact signed query").toBe(true)
   expect(assetURL.searchParams.get("asset")).toBe(asset)
   expect(assetURL.searchParams.get("expires")).toMatch(/^[1-9]\d*$/)
