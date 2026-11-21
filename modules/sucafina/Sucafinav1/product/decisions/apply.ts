@@ -46,17 +46,19 @@ export function createPreparedExecution(input: {
     if (mode === "recover" && lookup.value.state !== "found") return { status: "unavailable", reason: "original-receipt-unavailable" }
     const reviewDigest = input.reviewDigestFor(context, request, change)
     if (!isReviewDigest(reviewDigest)) return { status: "needs-input", reason: "review-proof-required" }
+    const resumeAtVersion = mode === "apply" && change.receipt ? value.version : undefined
     const retainReceipt = async (expectedCase: DecisionCase, receipt: CommandReceipt) => {
       if (expectedCase.preparedChanges.filter((item) => item.receipt?.id === receipt.id).length !== 1 || expectedCase.preparedChanges.find((item) => item.receipt?.id === receipt.id)?.id !== change.id || expectedCase.receipts.filter((item) => item.id === receipt.id).length !== 1 || digestSfValue(expectedCase.receipts.find((item) => item.id === receipt.id)) !== digestSfValue(receipt)) return false
       // This is a consistency fence for a receipt already authorized by its
       // canonical reader, never a substitute for that reader's authority.
-      const retained = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision && !!state.cases[expectedCase.id] && digestSfValue(state.cases[expectedCase.id]) === digestSfValue(expectedCase) && receiptSnapshotMatches(state, request, change, receipt, reviewDigest, context)).catch(() => undefined)
+      const retained = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision && !!state.cases[expectedCase.id] && digestSfValue(state.cases[expectedCase.id]) === digestSfValue(expectedCase) && receiptSnapshotMatches(state, request, change, receipt, reviewDigest, context, resumeAtVersion)).catch(() => undefined)
       return input.host.requestFor(context) === source && !source.signal.aborted && retained?.status === "ok" && retained.value
     }
     if (lookup.value.state === "found") {
       const bound = await input.state.read(source, "receipts", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? {
         proof: state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)],
-        intent: preparedOriginalIntentState(state, request, change, state.cases[request.caseRef.id]?.choices.filter((choice) => choice.id === request.choiceId) ?? [], reviewDigest, context, applicationAttempts(state, request)),
+        intent: preparedOriginalIntentState(state, request, change, state.cases[request.caseRef.id]?.choices.filter((choice) => choice.id === request.choiceId) ?? [], reviewDigest, context, applicationAttempts(state, request),
+          state.cases[request.caseRef.id]?.version === resumeAtVersion ? resumeAtVersion : undefined),
       } : undefined).catch(() => undefined)
       if (!bound || bound.status !== "ok" || !bound.value?.proof) return { status: "unavailable", reason: "review-proof-unbound" }
       if (bound.value.proof.commandDigest !== receiptReviewBinding(change, reviewDigest) || digestSfValue(bound.value.proof.value) !== digestSfValue(lookup.value.receipt)) return { status: "conflict", reason: "review-proof-mismatch" }
@@ -196,11 +198,11 @@ export function createPreparedExecution(input: {
   }
 }
 
-function receiptSnapshotMatches(state: SfProductState, request: PreparedApplyRequest, change: PreparedChange, receipt: CommandReceipt, reviewDigest: string, context: TrustedDomainContext) {
+function receiptSnapshotMatches(state: SfProductState, request: PreparedApplyRequest, change: PreparedChange, receipt: CommandReceipt, reviewDigest: string, context: TrustedDomainContext, resumeAtVersion?: number) {
   const proof = state.transactions[receiptProofTransactionKey(context.binding.principalRef, change.target.id, change.idempotencyKey)]
   const choices = state.cases[request.caseRef.id]?.choices.filter((choice) => choice.id === request.choiceId) ?? []
   return receiptProofMatches(state, change.target, receipt, context.binding.principalRef) && proof?.commandDigest === receiptReviewBinding(change, reviewDigest) &&
-    preparedOriginalIntentState(state, request, change, choices, reviewDigest, context, applicationAttempts(state, request)) === "matched"
+    preparedOriginalIntentState(state, request, change, choices, reviewDigest, context, applicationAttempts(state, request), resumeAtVersion) === "matched"
 }
 
 async function callDomain<T>(work: () => Promise<PortResult<T>>): Promise<PortResult<T>> {

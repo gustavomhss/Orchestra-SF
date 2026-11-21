@@ -68,16 +68,32 @@ export function preparedOriginalIntent(request: PreparedApplyRequest, change: Pr
   }
 }
 
-export function preparedOriginalIntentState(state: Readonly<SfProductState>, request: PreparedApplyRequest, change: PreparedChange, choices: readonly DecisionCase["choices"][number][], reviewDigest: string, context: TrustedDomainContext, entries: readonly SfProductState["transactions"][string][]) {
+export function preparedOriginalIntentState(state: Readonly<SfProductState>, request: PreparedApplyRequest, change: PreparedChange, choices: readonly DecisionCase["choices"][number][], reviewDigest: string, context: TrustedDomainContext, entries: readonly SfProductState["transactions"][string][], resumeAtVersion?: number) {
   if (!entries.length) return "missing"
   if (entries.length !== 1 || choices.length !== 1) return "mismatch"
   const proof = entries[0]!
   const attempt = proof.value
   if (!attempt || typeof attempt !== "object" || Array.isArray(attempt) || !("originalIntent" in attempt)) return "missing"
-  const expected = preparedOriginalIntent(request, change, choices[0]!, reviewDigest, context)
+  const originalRequest = change.receipt && resumeAtVersion === request.caseRef.version
+    ? requestAtDispatchVersion(request, attempt.originalIntent)
+    : request
+  const expected = preparedOriginalIntent(originalRequest, change, choices[0]!, reviewDigest, context)
   return proof.namespace === "cases" && proof.scopeDigest === digestSfValue(["cases"]) && proof.incarnation === state.incarnation &&
     proof.principalRef === context.binding.principalRef && proof.targetRef === request.caseRef.id && proof.targetIncarnation === request.caseRef.incarnation &&
     proof.commandDigest === digestSfValue(attempt) && digestSfValue(attempt.originalIntent) === digestSfValue(expected) ? "matched" : "mismatch"
+}
+
+function requestAtDispatchVersion(request: PreparedApplyRequest, intent: unknown): PreparedApplyRequest {
+  if (!intent || typeof intent !== "object" || !("request" in intent)) return request
+  const stored = intent.request
+  if (!stored || typeof stored !== "object" || !("caseRef" in stored)) return request
+  const caseRef = stored.caseRef
+  if (!caseRef || typeof caseRef !== "object" || !("version" in caseRef)) return request
+  const version = caseRef.version
+  if (typeof version !== "number" || !Number.isSafeInteger(version) || version < 0 || version > request.caseRef.version) return request
+  // Only the version comes from storage. The full intent comparison still binds
+  // the requested case incarnation, change, choice, review and authority.
+  return { ...request, caseRef: { ...request.caseRef, version } }
 }
 
 /** Shared raw-receipt fence. The domain reader must still revalidate current access. */
