@@ -77,10 +77,11 @@ waveFourTest("native work, private search and existing saved views use their adm
     const query = "Design test data · source without an uploaded document"
     await surface.getByLabel("Words to search", { exact: true }).fill(query)
     const reply = page.waitForResponse((response) => new URL(response.url()).pathname === installation.mount + "/api/ui/projections/search")
+      .then(async (response) => ({ status: response.status(), body: await response.json() as unknown }))
     await surface.getByRole("button", { name: "Search", exact: true }).click()
     const response = await reply
-    expect(response.status()).toBe(200)
-    expect(await response.json()).toMatchObject({ status: "ok", value: { matches: [] } })
+    expect(response.status).toBe(200)
+    expect(response.body).toMatchObject({ status: "ok", value: { matches: [] } })
     await expect(surface.locator('[data-sf-state="empty"]')).toBeVisible()
     expect(searchRequests).toHaveLength(1)
     expect(searchRequests[0]?.method).toBe("POST")
@@ -126,6 +127,11 @@ waveFourTest("native work, private search and existing saved views use their adm
     const revised = "Design test data · Regional OPEX review"
     await editor.getByLabel("Name", { exact: true }).fill(revised)
     await editor.getByLabel("Density", { exact: true }).selectOption("compact")
+    await editor.getByRole("button", { name: "Return to list", exact: true }).click()
+    await expect(editor).toBeHidden()
+    await surface.getByRole("button", { name: view.title, exact: true }).click()
+    await expect(editor.getByLabel("Name", { exact: true })).toHaveValue(revised)
+    await expect(editor.getByLabel("Density", { exact: true })).toHaveValue("compact")
     await capture(page, info, "UI32-dark-desktop-existing-view-editor")
     await editor.getByRole("button", { name: "Review view changes", exact: true }).click()
     const review = surface.locator('[data-component="sf-change-review"]')
