@@ -672,8 +672,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   }]))
   const removeDepartment = (index: number) =>
     edit("departments", JSON.stringify(departmentRows().filter((_row, i) => i !== index)))
-  const reviewSnapshot = (value: FormValues, original: boolean, version: SfVersion = state.editor!.version): SfReviewSnapshot => {
-    const editor = state.editor!
+  const reviewSnapshot = (editor: SecurityEditor, value: FormValues, original: boolean, version: SfVersion = editor.version): SfReviewSnapshot => {
     if (original && editor.identity.kind === "new")
       return { kind: "not-provided", reason: msg(common("empty")) }
     return original
@@ -1006,163 +1005,169 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
             <p role="alert">{state.errorText ?? t(common("failed"))}</p>
           </Show>
 
-          <Show when={state.editor && activeDraft()}>
-            <section class="sf-security-editor" data-sf-editor aria-labelledby="sf-cap12-editor" aria-busy={state.submitting}
-              onKeyDown={(event) => {
-                if (event.key === "Escape" && !state.editor?.review && !state.submitting) {
-                  event.stopPropagation()
-                  closeEditor()
-                }
-              }}>
-              <header class="sf-security-editor-head"><p class="sf-security-caption">{state.page!.selection.year} · {state.page!.selection.month}</p>
-                <h2 id="sf-cap12-editor">{t(editTitle())}</h2>
-                <p class="sf-security-caption">{t(key(state.editor!.review ? "design.reviewHint" : "design.editHint"))}</p>
-              </header>
-              <Show when={!state.editor!.review} fallback={
-                <SfChangeReview
-                  operation={{
-                    ref: state.editor!.operationRef,
-                    label: msg(key("action." + state.editor!.command)),
-                    scope: { kind: "data", text:
-                      state.editor!.id ?? String(state.page!.selection.year) + "-" + String(state.page!.selection.month) },
-                  }}
-                  base={reviewSnapshot(activeDraft()!.base ?? {}, true)}
-                  current={reviewSnapshot(
-                     activeDraft()!.conflict?.current ?? activeDraft()!.base ?? {}, true,
-                     activeDraft()!.conflict?.currentVersion ?? state.editor!.version,
-                   )}
-                  proposed={reviewSnapshot(values(), false)}
-                  effects={[{
-                    id: state.editor!.command, domain: "dashboard",
-                    title: { kind: "message", message: msg(key("action." + state.editor!.command)) },
-                    state: "proposed", details: reviewFieldsFor(state.editor!, values()),
-                    ...(state.editor!.command.startsWith("delete-") ?
-                      { reason: msg(common("deleteConfirmation")) } : {}),
-                  }]}
-                  coverage={{
-                    state: "complete", summary: msg(common("currentSource")),
-                    reasons: [], knownCount: null, expectedCount: null,
-                  }}
-                  blockingReasons={!validForm(state.editor!, values(), state.page!) ?
-                    [msg(common("fieldErrorSummary"))] : []}
-                  confirmation={{
-                    kind: "admitted",
-                    labelKey: key("action." + state.editor!.command),
-                    purpose: state.editor!.command.startsWith("delete-") ? "delete" : "save",
-                    binding: {
-                      kind: "catalog-command",
-                      operationId: SECURITY_OPERATION_IDS[state.editor!.command],
-                      version: { kind: "record", expectedVersion: state.editor!.version },
-                      confirmation: "presentation-only",
-                    },
-                  }}
-                  state={reviewerState()}
-                  onConfirm={() => { void submitReviewed() }}
-                  onRevise={() => {
-                    if (state.editor!.command.startsWith("delete-") && state.operationState !== "conflict")
-                      setState("editor", null)
-                    else { setEditorReview(false); draft?.setPhase("dirty") }
-                  }}
-                  onCancel={() => {
-                    if (state.operationState === "conflict") setEditorReview(false)
-                    else setState("editor", null)
-                  }}
-                  onReconcile={refresh}
-                />
-              }>
-                <form onSubmit={(event) => { event.preventDefault(); review() }}>
-                  <Show when={state.editor!.entity === "kpi"}>
-                    <For each={[
-                      { title: "prevention", fields: SECURITY_KPI_FIELDS.filter((field) => ["training", "assessment", "scan"].includes(field)) },
-                      { title: "patching", fields: SECURITY_KPI_FIELDS.filter((field) => field.startsWith("patch")) },
-                      { title: "monitoring", fields: SECURITY_KPI_FIELDS.filter((field) => field.startsWith("soc")) },
-                    ]}>{(group) => <fieldset class="sf-security-field-group">
-                      <legend>{t(key("design.group." + group.title))}</legend>
-                      <div class="sf-security-grid"><For each={group.fields}>{(name) => textInput(name, "number")}</For></div>
-                    </fieldset>}</For>
-                    {textInput("notes", "textarea")}
-                  </Show>
-                  <Show when={state.editor!.entity === "action"}>
-                    {textInput("text", "textarea")}
-                    {boolInput("done")}
-                  </Show>
-                  <Show when={state.editor!.entity === "incident"}>
-                    <div class="sf-security-grid">
-                      {textInput("title")}
-                      {textInput("date", "date")}
-                      {textInput("impact", "textarea")}
-                      {textInput("notes", "textarea")}
-                    </div>
-                    <div class="sf-security-checks">
-                      <For each={SECURITY_INCIDENT_FLAGS}>{(name) => boolInput(name)}</For>
-                    </div>
-                    <fieldset>
-                      <legend>{t(key("field.consequences.label"))}</legend>
-                      <For each={SECURITY_CONSEQUENCES}>{(choice) => (
-                        <label class="sf-security-check">
-                          <input type="checkbox"
-                            checked={incidentConsequencesOf(values().consequences).includes(choice)}
-                            onChange={(event) => {
-                              const previous = incidentConsequencesOf(values().consequences)
-                              edit("consequences", JSON.stringify(event.currentTarget.checked
-                                ? [...previous, choice] : previous.filter((value) => value !== choice)))
-                            }} />
-                          <span>{t(key("option.consequences." + (choice === "Data exfiltration" ? "dataExfiltration"
-                            : choice === "Data loss" ? "dataLoss" : "serviceUnavailability")))}</span>
-                        </label>
-                      )}</For>
-                    </fieldset>
-                  </Show>
-                  <Show when={state.editor!.entity === "campaign"}>
-                    <div class="sf-security-grid">
-                      {textInput("name")}
-                      {textInput("start", "date")}
-                      {textInput("end", "date")}
-                      {textInput("notes", "textarea")}
-                      <For each={SECURITY_CAMPAIGN_FIELDS}>{(name) => textInput(name, "number")}</For>
-                    </div>
-                    <fieldset class="sf-security-field-group">
-                      <legend>{t(key("design.departments"))}</legend>
-                      <div class="sf-security-departments">
-                        <For each={departmentRows()}>{(department, index) => (
-                          <section class="sf-security-department" aria-label={t(key("field.departments.label")) + " " + String(index() + 1)}>
-                            <header class="sf-security-record-head">
-                              <h3>{t(key("field.departments.label"))} {index() + 1}</h3>
-                              <button class="mx-btn" type="button" onClick={() => removeDepartment(index())}>
-                                {t(key("design.removeDepartment"))}</button>
-                            </header>
-                            <div class="sf-security-grid">
-                              <For each={SECURITY_DEPARTMENT_FIELDS}>{(name) => (
-                                <label class="sf-security-field" data-field-name={name}>
-                                  <span>{t(key("design.department." + name))}</span>
-                                  <input name={"department." + index() + "." + name}
-                                    aria-label={t(key("field.departments.label")) + " " + String(index() + 1) + " · " + t(key("design.department." + name))}
-                                    type={name === "name" ? "text" : "number"}
-                                    min={name === "name" ? undefined : 0} step={name === "name" ? undefined : "any"}
-                                    value={securityString(department[name])}
-                                    onInput={(event) => setDepartment(index(), name, event.currentTarget.value)} />
-                                </label>
-                              )}</For>
-                            </div>
-                          </section>
-                        )}</For>
+          <Show when={state.editor && activeDraft() ? state.editor : null} keyed>
+            {(editor) => {
+              const editorPage = state.page
+              if (!editorPage) return null
+              return (
+                <section class="sf-security-editor" data-sf-editor aria-labelledby="sf-cap12-editor" aria-busy={state.submitting}
+                  onKeyDown={(event) => {
+                    if (event.key === "Escape" && !editor.review && !state.submitting) {
+                      event.stopPropagation()
+                      closeEditor()
+                    }
+                  }}>
+                  <header class="sf-security-editor-head"><p class="sf-security-caption">{editorPage.selection.year} · {editorPage.selection.month}</p>
+                    <h2 id="sf-cap12-editor">{t(editTitle())}</h2>
+                    <p class="sf-security-caption">{t(key(editor.review ? "design.reviewHint" : "design.editHint"))}</p>
+                  </header>
+                  <Show when={!editor.review} fallback={
+                    <Show when={activeDraft()} keyed>{(snapshot) => <SfChangeReview
+                      operation={{
+                        ref: editor.operationRef,
+                        label: msg(key("action." + editor.command)),
+                        scope: { kind: "data", text:
+                          editor.id ?? String(editorPage.selection.year) + "-" + String(editorPage.selection.month) },
+                      }}
+                      base={reviewSnapshot(editor, snapshot.base ?? {}, true)}
+                      current={reviewSnapshot(editor,
+                         snapshot.conflict?.current ?? snapshot.base ?? {}, true,
+                         snapshot.conflict?.currentVersion ?? editor.version,
+                       )}
+                      proposed={reviewSnapshot(editor, snapshot.value, false)}
+                      effects={[{
+                        id: editor.command, domain: "dashboard",
+                        title: { kind: "message", message: msg(key("action." + editor.command)) },
+                        state: "proposed", details: reviewFieldsFor(editor, snapshot.value),
+                        ...(editor.command.startsWith("delete-") ?
+                          { reason: msg(common("deleteConfirmation")) } : {}),
+                      }]}
+                      coverage={{
+                        state: "complete", summary: msg(common("currentSource")),
+                        reasons: [], knownCount: null, expectedCount: null,
+                      }}
+                      blockingReasons={!validForm(editor, snapshot.value, editorPage) ?
+                        [msg(common("fieldErrorSummary"))] : []}
+                      confirmation={{
+                        kind: "admitted",
+                        labelKey: key("action." + editor.command),
+                        purpose: editor.command.startsWith("delete-") ? "delete" : "save",
+                        binding: {
+                          kind: "catalog-command",
+                          operationId: SECURITY_OPERATION_IDS[editor.command],
+                          version: { kind: "record", expectedVersion: editor.version },
+                          confirmation: "presentation-only",
+                        },
+                      }}
+                      state={reviewerState()}
+                      onConfirm={() => { void submitReviewed() }}
+                      onRevise={() => {
+                        if (editor.command.startsWith("delete-") && state.operationState !== "conflict")
+                          setState("editor", null)
+                        else { setEditorReview(false); draft?.setPhase("dirty") }
+                      }}
+                      onCancel={() => {
+                        if (state.operationState === "conflict") setEditorReview(false)
+                        else setState("editor", null)
+                      }}
+                      onReconcile={refresh}
+                    />}</Show>
+                  }>
+                    <form onSubmit={(event) => { event.preventDefault(); review() }}>
+                      <Show when={editor.entity === "kpi"}>
+                        <For each={[
+                          { title: "prevention", fields: SECURITY_KPI_FIELDS.filter((field) => ["training", "assessment", "scan"].includes(field)) },
+                          { title: "patching", fields: SECURITY_KPI_FIELDS.filter((field) => field.startsWith("patch")) },
+                          { title: "monitoring", fields: SECURITY_KPI_FIELDS.filter((field) => field.startsWith("soc")) },
+                        ]}>{(group) => <fieldset class="sf-security-field-group">
+                          <legend>{t(key("design.group." + group.title))}</legend>
+                          <div class="sf-security-grid"><For each={group.fields}>{(name) => textInput(name, "number")}</For></div>
+                        </fieldset>}</For>
+                        {textInput("notes", "textarea")}
+                      </Show>
+                      <Show when={editor.entity === "action"}>
+                        {textInput("text", "textarea")}
+                        {boolInput("done")}
+                      </Show>
+                      <Show when={editor.entity === "incident"}>
+                        <div class="sf-security-grid">
+                          {textInput("title")}
+                          {textInput("date", "date")}
+                          {textInput("impact", "textarea")}
+                          {textInput("notes", "textarea")}
+                        </div>
+                        <div class="sf-security-checks">
+                          <For each={SECURITY_INCIDENT_FLAGS}>{(name) => boolInput(name)}</For>
+                        </div>
+                        <fieldset>
+                          <legend>{t(key("field.consequences.label"))}</legend>
+                          <For each={SECURITY_CONSEQUENCES}>{(choice) => (
+                            <label class="sf-security-check">
+                              <input type="checkbox"
+                                checked={incidentConsequencesOf(values().consequences).includes(choice)}
+                                onChange={(event) => {
+                                  const previous = incidentConsequencesOf(values().consequences)
+                                  edit("consequences", JSON.stringify(event.currentTarget.checked
+                                    ? [...previous, choice] : previous.filter((value) => value !== choice)))
+                                }} />
+                              <span>{t(key("option.consequences." + (choice === "Data exfiltration" ? "dataExfiltration"
+                                : choice === "Data loss" ? "dataLoss" : "serviceUnavailability")))}</span>
+                            </label>
+                          )}</For>
+                        </fieldset>
+                      </Show>
+                      <Show when={editor.entity === "campaign"}>
+                        <div class="sf-security-grid">
+                          {textInput("name")}
+                          {textInput("start", "date")}
+                          {textInput("end", "date")}
+                          {textInput("notes", "textarea")}
+                          <For each={SECURITY_CAMPAIGN_FIELDS}>{(name) => textInput(name, "number")}</For>
+                        </div>
+                        <fieldset class="sf-security-field-group">
+                          <legend>{t(key("design.departments"))}</legend>
+                          <div class="sf-security-departments">
+                            <For each={departmentRows()}>{(department, index) => (
+                              <section class="sf-security-department" aria-label={t(key("field.departments.label")) + " " + String(index() + 1)}>
+                                <header class="sf-security-record-head">
+                                  <h3>{t(key("field.departments.label"))} {index() + 1}</h3>
+                                  <button class="mx-btn" type="button" onClick={() => removeDepartment(index())}>
+                                    {t(key("design.removeDepartment"))}</button>
+                                </header>
+                                <div class="sf-security-grid">
+                                  <For each={SECURITY_DEPARTMENT_FIELDS}>{(name) => (
+                                    <label class="sf-security-field" data-field-name={name}>
+                                      <span>{t(key("design.department." + name))}</span>
+                                      <input name={"department." + index() + "." + name}
+                                        aria-label={t(key("field.departments.label")) + " " + String(index() + 1) + " · " + t(key("design.department." + name))}
+                                        type={name === "name" ? "text" : "number"}
+                                        min={name === "name" ? undefined : 0} step={name === "name" ? undefined : "any"}
+                                        value={securityString(department[name])}
+                                        onInput={(event) => setDepartment(index(), name, event.currentTarget.value)} />
+                                    </label>
+                                  )}</For>
+                                </div>
+                              </section>
+                            )}</For>
+                          </div>
+                          <button class="mx-btn" type="button" onClick={addDepartment}>{t(key("design.addDepartment"))}</button>
+                        </fieldset>
+                      </Show>
+                      <div class="sf-security-actions">
+                        <button class="mx-btn primary" type="submit" disabled={state.submitting || !validForm(editor, values(), editorPage)}>
+                          {t(common("review"))}
+                        </button>
+                        <button type="button" onClick={closeEditor}>
+                          {t(common("close"))}
+                        </button>
+                        <button type="button" disabled={state.submitting || state.operationState === "unknown"}
+                          onClick={discardCurrent}>{t(common("discard"))}</button>
                       </div>
-                      <button class="mx-btn" type="button" onClick={addDepartment}>{t(key("design.addDepartment"))}</button>
-                    </fieldset>
+                    </form>
                   </Show>
-                  <div class="sf-security-actions">
-                    <button class="mx-btn primary" type="submit" disabled={state.submitting || !validForm(state.editor!, values(), state.page!)}>
-                      {t(common("review"))}
-                    </button>
-                    <button type="button" onClick={closeEditor}>
-                      {t(common("close"))}
-                    </button>
-                    <button type="button" disabled={state.submitting || state.operationState === "unknown"}
-                      onClick={discardCurrent}>{t(common("discard"))}</button>
-                  </div>
-                </form>
-              </Show>
-            </section>
+                </section>
+              )
+            }}
           </Show>
         </Show>
       </div>
