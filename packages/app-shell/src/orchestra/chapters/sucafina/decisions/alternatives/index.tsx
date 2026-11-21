@@ -1,6 +1,7 @@
 import { A } from "@solidjs/router"
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
+import { snapshotDecisionRequest } from "../intent/request"
 import type { Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -144,7 +145,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
     const abort = new AbortController()
     try {
       const result = await createSfDecisionsClient(active.transport)["decisions.current-choice-prepare"](
-        current.request, { signal: abort.signal, idempotencyKey: crypto.randomUUID() },
+        snapshotDecisionRequest(current.request), { signal: abort.signal, idempotencyKey: crypto.randomUUID() },
       )
       if (sourceRef() !== requestedCase) return
       if (result.kind === "response" && result.body.status !== "ok") {
