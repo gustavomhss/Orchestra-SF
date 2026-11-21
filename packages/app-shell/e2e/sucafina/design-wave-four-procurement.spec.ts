@@ -196,6 +196,8 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
       url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
     const surface = page.locator(".sf-u12-root")
     await expect(surface.locator(".sf-u12-comparison tr[data-sf-row]")).toHaveCount(3)
+    const selectedQuote = await surface.getByLabel("Selected quotation", { exact: true }).inputValue()
+    expect(selectedQuote, "the original source has an explicit winning quotation").not.toBe("")
     const comparisonOverview = async () => {
       const comparison = surface.locator(".sf-u12-comparison")
       await comparison.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest", behavior: "instant" }))
@@ -223,6 +225,7 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
     await editor.getByRole("button", { name: "Save sourcing", exact: true }).click()
     await expect(editor).toHaveCount(0)
     await expect(review).toContainText(evaluator)
+    await expect(review.getByRole("region", { name: "Proposed values", exact: true })).toContainText(selectedQuote)
     const beforeCancel = posts.length
     await review.getByRole("button", { name: "Cancel review", exact: true }).click()
     expect(posts).toHaveLength(beforeCancel)
@@ -240,6 +243,8 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
     await expect(editor.locator(".sf-u12-quote").first().getByLabel("Description", { exact: true })).toHaveValue(data.description)
     await expect(editor.locator(".sf-u12-quote").first().getByLabel("Notes", { exact: true }))
       .toHaveValue("Design test data · Recorded quotation and supporting evaluation.")
+    await surface.locator(".sf-u12-switch").getByRole("button", { name: "Compare quotations", exact: true }).click()
+    await expect(surface.getByLabel("Selected quotation", { exact: true })).toHaveValue(selectedQuote)
   })
 
   await waveFourTest.step("CAP26 · submitted PR decision, cancel and retain comment, then source readback", async () => {
