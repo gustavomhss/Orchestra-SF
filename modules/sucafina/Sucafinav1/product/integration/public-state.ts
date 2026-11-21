@@ -1,6 +1,8 @@
+export const SF_PROCUREMENT_CREATE_RECEIPTS = "__sfProcurementCreateReceiptsV1"
+
 /** Legacy views and backups never carry the private product authority or receipts. */
 export function publicSfData(data: Record<string, unknown>): Record<string, unknown> {
-  return Object.fromEntries(Object.entries(data).filter(([key]) => key !== "__sfProductV1").map(([key, value]) => [key, publicSfValue(value)]))
+  return Object.fromEntries(Object.entries(data).filter(([key]) => key !== "__sfProductV1" && key !== SF_PROCUREMENT_CREATE_RECEIPTS).map(([key, value]) => [key, publicSfValue(value)]))
 }
 
 function publicSfValue(value: unknown): unknown {

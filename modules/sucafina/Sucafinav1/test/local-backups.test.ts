@@ -242,20 +242,28 @@ test("pruning leaves unknown, incomplete and aliased paths untouched and never c
 })
 
 
-test("capture enters the real store exactly once and never nests a SQL transaction", async () => {
+test("capture reads the snapshot and checks the blob generation without nesting transactions", async () => {
   await fixture(async (root, store) => {
     await seed(store)
     const calls: Surface[] = []
+    const active = { transaction: false }
     const observed: LocalStore = {
       ...store,
-      transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
+      transaction: async <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
+        expect(active.transaction).toBe(false)
+        active.transaction = true
         calls.push(surface)
-        return store.transaction<T>(surface, work, options)
+        try {
+          return await store.transaction<T>(surface, work, options)
+        } finally {
+          active.transaction = false
+        }
       },
     }
     const backups = await createLocalBackups(join(root, "archives"))
     await backups.capture(observed, "dashboard", at)
-    expect(calls).toEqual(["dashboard"])
+    // One snapshot, one retained blob and one generation verification before publication.
+    expect(calls).toEqual(["dashboard", "dashboard", "dashboard"])
   })
 })
 
