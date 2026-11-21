@@ -300,12 +300,12 @@
 }
 
 /* A review takes the full annual band. Sibling and input DOM remain mounted. */
-.sf-budget-overview[data-sf-surface="CAP03"] .sf-budget-input:has([data-component="sf-change-review"]) { grid-column: 1 / -1; }
-.sf-budget-overview[data-sf-surface="CAP03"] .sf-budget-annual:has([data-component="sf-change-review"]) > .sf-budget-input:not(:has([data-component="sf-change-review"])),
-.sf-budget-overview[data-sf-surface="CAP03"] .sf-budget-input:has([data-component="sf-change-review"]) > .sf-budget-input-head,
+.sf-budget-overview[data-sf-surface="CAP03"] .sf-budget-input:has(> .sf-budget-edit[open] [data-component="sf-change-review"]) { grid-column: 1 / -1; }
+.sf-budget-overview[data-sf-surface="CAP03"] .sf-budget-annual:has(.sf-budget-edit[open] [data-component="sf-change-review"]) > .sf-budget-input:not(:has(> .sf-budget-edit[open] [data-component="sf-change-review"])),
+.sf-budget-overview[data-sf-surface="CAP03"] .sf-budget-input:has(> .sf-budget-edit[open] [data-component="sf-change-review"]) > .sf-budget-input-head,
 .sf-budget-overview[data-sf-surface="CAP03"] [data-sf-u02-edit]:has([data-component="sf-change-review"]) > :is(label, button, p:not([role="alert"])),
 .sf-budget-overview[data-sf-surface="CAP03"] .sf-budget-edit:has([data-component="sf-change-review"]) > .sf-budget-revenue-hint { display: none; }
-.sf-budget-overview[data-sf-surface="CAP03"] .sf-budget-input:has([data-component="sf-change-review"]) > .sf-budget-edit { margin-block-start: 0; }
+.sf-budget-overview[data-sf-surface="CAP03"] .sf-budget-input:has(> .sf-budget-edit[open] [data-component="sf-change-review"]) > .sf-budget-edit { margin-block-start: 0; }
 .sf-budget-overview[data-sf-surface="CAP03"] .sf-s03-review { gap: var(--sf-budget-space-lg); }
 .sf-budget-overview[data-sf-surface="CAP03"] .sf-s03-head {
   display: grid;

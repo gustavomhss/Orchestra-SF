@@ -65,3 +65,11 @@ Terminology cross-checks:
 - Closing a disclosure is presentation-only and does not discard its mounted draft.
 
 No local tests, builds or product runtime were executed. Root owns the real isolated installation, scoped Actions, dark/light/Portuguese/narrow captures, type checks, palette generator parity, repository guards and final visual review. The 320 CSS-pixel check is reflow, not actual browser zoom.
+
+## Post-integration static review
+
+The candidate `8acf02ec07c6e2d88af27a81190b2496f60c14d3` was checked for CAP01 isolation and review visibility. Every budget stylesheet selector remains rooted at `.sf-budget-overview[data-sf-surface="CAP03"]`.
+
+A concrete disclosure edge was corrected: a closed native details element keeps its review DOM mounted. Composition selectors now require an **open** editor disclosure before expanding its panel or hiding the other annual panel/readout. Closing the disclosure therefore restores both annual values without unmounting either draft or review. Reopening returns to the same pending review. This is a CSS-only visibility correction; the root's CAP03 source-period reset remains untouched.
+
+Real browser evidence remains pending; this finding is based on the DOM and CSS interaction, not a claimed visual run.
