@@ -44,11 +44,13 @@ const spec: CollectionSpec<"CAP15", Stakeholder, Values> = {
   readOperation:"domain.page.CAP15",saveOperation:"domain.command.CAP15.save",
   deleteOperation:"domain.command.CAP15.delete",
   fields,
+  groups: [
+    { label: "sf.u30.design.relationship", fields: ["name","position","title","company","department","role","email"] },
+    { label: "sf.u30.design.assessment", fields: ["biz","iti","perc","priority"] },
+    { label: "sf.u30.design.engagement", fields: ["owner","action","actions","notes"] },
+  ],
   columns:[
-    {name:"name",label:"sf.u30.stakeholder.name"},
-    {name:"position",label:"sf.u30.stakeholder.position"},
-    {name:"company",label:"sf.u30.stakeholder.company"},
-    {name:"department",label:"sf.u30.stakeholder.department"},
+    {name:"name",label:"sf.u30.stakeholder.name",secondary:["position","company","department"]},
     {name:"biz",label:"sf.u30.stakeholder.biz"},
     {name:"iti",label:"sf.u30.stakeholder.iti"},
     {name:"perc",label:"sf.u30.stakeholder.perc"},

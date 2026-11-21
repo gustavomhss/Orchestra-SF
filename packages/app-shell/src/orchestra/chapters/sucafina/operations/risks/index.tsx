@@ -13,7 +13,7 @@ const riskStatus = (value: unknown): RiskValues["status"] =>
   value === "open" || value === "mitigating" || value === "monitoring" || value === "closed" ? value : undefined
 const fields: readonly Field<Risk, RiskValues>[] = [
   {name:"title",label:"sf.u30.risk.title",kind:"text"},
-  {name:"name",label:"sf.u30.risk.name",kind:"text",required:true},
+  {name:"name",label:"sf.u30.risk.name",kind:"textarea",required:true},
   {name:"action",label:"sf.u30.risk.action",kind:"textarea"},
   {name:"responsible",label:"sf.u30.risk.responsible",kind:"text"},
   {name:"desc",label:"sf.u30.risk.desc",kind:"textarea"},
@@ -50,8 +50,14 @@ const spec: CollectionSpec<"CAP13", Risk, RiskValues> = {
   readOperation:"domain.page.CAP13",saveOperation:"domain.command.CAP13.save",
   deleteOperation:"domain.command.CAP13.delete",
   fields,
+  groups: [
+    { label: "sf.u30.design.riskProfile", fields: ["title","name","desc","category"] },
+    { label: "sf.u30.design.assessment", fields: ["impact","probability","status","due"] },
+    { label: "sf.u30.design.response", fields: ["responsible","owner","action","mitigation","notes"] },
+    { label: "sf.u30.design.references", fields: ["ownerId","leaderId"] },
+  ],
   columns:[
-    {name:"title",label:"sf.u30.risk.title"}, {name:"name",label:"sf.u30.risk.name"},
+    {name:"title",label:"sf.u30.risk.title",secondary:["name"]},
     {name:"responsible",label:"sf.u30.risk.responsible"},
     {name:"status",label:"sf.u30.risk.status"}, {name:"impact",label:"sf.u30.risk.impact"},
     {name:"probability",label:"sf.u30.risk.probability"},
