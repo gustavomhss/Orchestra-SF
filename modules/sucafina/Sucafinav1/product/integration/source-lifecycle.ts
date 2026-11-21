@@ -523,17 +523,6 @@ export function createSfSourcePersistence(input: {
       const method = surface === "planner" && !types.isProxy(driver) && Object.getOwnPropertyDescriptor(driver, "transaction")
       return driver.transaction(surface, async (snapshot) => {
         if (checking) requireSourceChecks(checking)
-        // A Team can predate the source catalog. Regular business reads remain
-        // read-only; its first authorized write enrolls the sources atomically.
-        if (snapshot.sfSources === undefined && input.bootstrapOnWrite) {
-          const result = await work(snapshot, blobs)
-          checkReadCommit(checking, result.commit)
-          if (result.commit) {
-            snapshot.sfSources = { schemaVersion: 1, records: {} }
-            synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, false)
-          }
-          return result
-        }
         requireSourceIdentities(snapshot)
         const active = method && Object.getOwnPropertyDescriptor(driver, "transaction")
         const provider = !types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype &&
@@ -604,6 +593,17 @@ export function createSfSourcePersistence(input: {
           }
           checkReadCommit(checking, false)
           if (!seal.current() || !authorityCurrent() || identity && !sealedDigestsCurrent()) throw new Error("SF_SEALED_READ_CHANGED")
+          return result
+        }
+        // A Team can predate the source catalog. Regular business reads remain
+        // read-only; its first authorized write enrolls the sources atomically.
+        if (snapshot.sfSources === undefined && input.bootstrapOnWrite) {
+          const result = await work(snapshot, blobs)
+          checkReadCommit(checking, result.commit)
+          if (result.commit) {
+            snapshot.sfSources = { schemaVersion: 1, records: {} }
+            synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, false)
+          }
           return result
         }
         requireSourceIdentities(snapshot)
