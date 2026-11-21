@@ -135,7 +135,7 @@
   min-inline-size: 0;
 }
 .sf-people-workspace .sf-people-talent-filters { padding-block-start: var(--sf-people-gap); }
-.sf-people-workspace .sf-people-toolbar > label {
+.sf-people-workspace .sf-people-toolbar > :is(label,.sf-people-filter) {
   display: grid;
   gap: var(--sf-people-field-gap);
   flex: 1 1 var(--sf-people-metric-min);
@@ -234,7 +234,7 @@
 @container sf-frame (max-width: 600px) {
   .sf-people-workspace .sf-people-section-heading,
   .sf-people-workspace .sf-people-toolbar { flex-direction: column; align-items: stretch; }
-  .sf-people-workspace .sf-people-toolbar > label { flex-basis: auto; }
+  .sf-people-workspace .sf-people-toolbar > :is(label,.sf-people-filter) { flex-basis: auto; }
   .sf-people-workspace :is(.sf-people-form-grid,.sf-people-detail dl,.sf-people-workbook-options,.sf-s03-snapshots) { grid-template-columns: minmax(0,1fr); }
   .sf-people-workspace .sf-people-actions { flex-direction: column; align-items: stretch; }
   .sf-people-workspace .sf-people-actions > :last-child { margin-inline-start: 0; }

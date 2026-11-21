@@ -53,12 +53,20 @@
 .sf-u05-projects .sf-s01-table-scroll { background: transparent; border: 0; border-radius: 0; }
 .sf-u05-projects .sf-s01-table :is(th,td) { padding-inline: var(--sf-u05-gap); }
 .sf-u05-projects .sf-s01-table td { padding-block: var(--sf-u05-small-gap); }
+/* Keep native sorting and the bounded table scroller, with intact header words. */
+.sf-u05-projects .sf-s01-table thead th { overflow-wrap: normal; }
+.sf-u05-projects .sf-s01-sort, .sf-u05-projects .sf-s01-sort > span { white-space: nowrap; overflow-wrap: normal; }
+.sf-u05-projects .sf-s01-sort > span { flex-shrink: 0; }
+.sf-u05-projects .sf-s01-table :is(th,td).sf-s01-align-end { min-inline-size: 128px; box-sizing: border-box; }
+.sf-u05-projects .sf-s01-table :is(th,td):nth-child(6) { min-inline-size: 160px; }
+
+.sf-u05-projects .sf-s01-primary-cell { display: grid; justify-items: start; gap: var(--sf-u05-field-gap); }
 .sf-u05-projects .sf-s01-row-open { font-size: var(--orchestra-font-size-md); font-weight: 600; }
 .sf-u05-projects .sf-s01-pagination { padding-inline: var(--sf-u05-gap); }
 .sf-u05-projects .sf-u05-status { display: inline-block; padding: var(--sf-u05-field-gap) var(--sf-u05-small-gap); border-radius: var(--orchestra-radius-sm); background: var(--mx-soft); font-size: var(--orchestra-font-size-sm); color: var(--mx-strong); }
 .sf-u05-projects .sf-u05-status { white-space: nowrap; overflow-wrap: normal; }
 .sf-u05-projects .sf-u05-status[data-risk="High"] { color: var(--orchestra-warm); }
-.sf-u05-projects .sf-u05-num { font-variant-numeric: tabular-nums; }
+.sf-u05-projects .sf-u05-num { font-variant-numeric: tabular-nums; white-space: nowrap; overflow-wrap: normal; }
 .sf-u05-projects .sf-s01-record-detail { padding: var(--sf-u05-gap); border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg); background: var(--mx-raised); }
 .sf-u05-projects .sf-s01-detail-header { display: flex; flex-direction: row; align-items: start; justify-content: space-between; gap: var(--sf-u05-gap); padding-block-end: var(--sf-u05-gap); }
 .sf-u05-projects .sf-s01-detail-heading { min-inline-size: 0; flex: 1 1 60%; gap: var(--sf-u05-small-gap); }

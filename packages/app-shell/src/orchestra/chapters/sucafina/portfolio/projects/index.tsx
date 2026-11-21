@@ -190,15 +190,15 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
       widthPolicy: { kind: "content", minPx: 75, maxPx: 130 }, sortKey: "risk",
       render: (row) => <span class="sf-u05-status" data-risk={row.risk}>{t(sfProjectRiskKey(row.risk))}</span> },
     { id: "budget", labelKey: kt("sf.u05.projects.budget"), align: "end",
-      widthPolicy: { kind: "content", minPx: 90, maxPx: 180 }, sortKey: "budget",
+      widthPolicy: { kind: "fixed", px: 128 }, sortKey: "budget",
       render: (row) => <span class="sf-u05-num">{row.budget === null || row.budget === undefined ?
         t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.budget)}</span> },
     { id: "spent", labelKey: kt("sf.u05.projects.spent"), align: "end",
-      widthPolicy: { kind: "content", minPx: 90, maxPx: 180 }, sortKey: "spent",
+      widthPolicy: { kind: "fixed", px: 128 }, sortKey: "spent",
       render: (row) => <span class="sf-u05-num">{row.spent === null || row.spent === undefined ?
         t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.spent)}</span> },
     { id: "pct", labelKey: kt("sf.u05.projects.progress"), align: "end",
-      widthPolicy: { kind: "content", minPx: 90, maxPx: 170 }, sortKey: "pct",
+      widthPolicy: { kind: "fixed", px: 160 }, sortKey: "pct",
       render: (row) => <span class="sf-u05-num">{row.pct === null || row.pct === undefined ?
         t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.pct) + "%"}</span> },
     { id: "watchList", labelKey: kt("sf.u05.projects.watch"), align: "center",

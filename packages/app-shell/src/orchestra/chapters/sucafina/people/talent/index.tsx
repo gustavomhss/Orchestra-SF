@@ -223,12 +223,13 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
                       <input type="search" value={local.search}
                         onInput={(event) => setLocal("search", event.currentTarget.value)} />
                     </label>
-                    <label>{t(key("sf.u47.design.status"))}
+                    <div class="sf-people-filter">
+                      <label for="sf-talent-status">{t(key("sf.u47.design.status"))}</label>
                       <select id="sf-talent-status" value={filter()}
                         onChange={(event) => setLocal("filter", event.currentTarget.value)}>
                         <For each={allowedStatuses}>{(status) => <option value={status}>{statusLabel(status)}</option>}</For>
                       </select>
-                    </label>
+                    </div>
                     <Show when={session.can("save")}>
                       <button type="button" class="mx-btn primary"
                         onClick={() => setLocal("selection", { newMember: true, edit: true })}>{t(key("sf.u47.addMember"))}</button>

@@ -65,3 +65,22 @@ Run [44938725714](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44938
 The viewed CAP06 metric band and CAP07 leadership surface show the intended native typography, hairline separation, aligned actions and quiet materials. CAP09 exposed a concrete defect: the shared table allowed status/risk words to break inside narrow chips. Both CAP09/CAP10 now keep these short labels unbroken; CAP09 also omits the empty row-command column because it never supplies row commands. Record opening remains available. A follow-up capture must verify this correction.
 
 Integration gates reported by the owner: [44938736472](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44938736472), job 136951027408, passed application types, E2E types, guards and palette parity. These gates are not visual approval.
+
+
+## Second real browser critique
+
+Run [44939804395](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44939804395), job 136954292594, reached 30 normal captures across 15 distinct business views, plus two failure diagnostics. Themes, languages, widths and lower-panel captures are variants of a business view, not extra screens. The member title update was confirmed by the original producer and reread by the browser. Page and console error lists remained empty.
+
+Direct image review covered CAP09 desktop, CAP07 member editor/review and narrow review actions, CAP07 narrow members, CAP08 desktop/narrow collection, and CAP10 record detail. The CAP09 status/risk correction is visible: In Progress and Medium now remain intact and the unused row-command column is gone. CAP07 shows the intended 760px editor, clear field groups and readable comparison; all three review actions are fully visible at 320px. CAP07/CAP08 narrow ledgers retain record labels and readable action buttons.
+
+The next refinement makes the record-opening action occupy a consistent line beneath each project name. People review now displays the authorized option label (including the known CAP07 leader name) while retaining the untouched canonical value in its draft and command; an explicitly empty value is described as not recorded. A missing source field remains unknown.
+
+The CAP08 status select had an implicit enclosing label whose accessible name also absorbed option text; the control now has a separate, explicit label association.
+
+The integration owner's source audit identified the CAP10 edit blocker precisely: the UI parser expected a nested { version } object, while the canonical A01 SfDomainVersionNumbers contract and original projectSfDomainVersions projection provide the CAS integer directly. New project was correctly admitted in the frame; an earlier diagnostic incorrectly inferred its absence from the inner content marker. Only existing-record commands were withheld because their parsed version was missing.
+
+The consumer now preserves a safe, nonnegative integer verbatim, including legitimate zero. Missing, string, nested, fractional, negative or unsafe values remain unavailable for editing. Grants, producers, operation availability and command bindings are unchanged. The targeted model regression covers exact CAS preservation, legitimate zero and absence/malformed fail-closed behavior; the real browser journey must still prove the project and milestone writes and source rereads. The temporary context diagnostic is removed now that the concrete cause is established.
+
+The five existing Portuguese import strings in the CAP10 catalog have also been completed without altering their English values.
+
+The CAP10 collection screenshot also revealed broken Budget, Spent and Progress header words. The local table now reserves 128px for each amount and 160px for progress, keeps sortable labels and numeric values intact, and retains the existing bounded horizontal scroller. A fresh desktop/BR/narrow capture must confirm the resulting geometry with admitted row actions present.

@@ -44,15 +44,6 @@ export type PeopleEditorProps = Readonly<{
   onClose: () => void
 }>
 
-const detail = (value: PeopleFormValues, fields: readonly PeopleField[]) =>
-  fields.map((field) => ({
-    path: field.name,
-    label: { key: field.labelKey },
-    value: Object.hasOwn(value, field.name)
-      ? { kind: "text" as const, text: { kind: "data" as const, text: value[field.name] ?? "" } }
-      : { kind: "missing" as const, reason: { key: sfCommonKey("sf.common.unknown") } },
-  }))
-
 function initialValues(props: PeopleEditorProps): PeopleFormValues {
   if (props.original) return props.original
   if (props.entity === "member") return { name: "", type: "Employee", status: "Active" }
@@ -68,6 +59,22 @@ function initialValues(props: PeopleEditorProps): PeopleFormValues {
 export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
   const id = createUniqueId()
   const { t } = useSfPresentation()
+  // Present authorized option labels; retain the original values in the draft
+  // and command. Missing fields still preserve the source's unknown state.
+  const detail = (value: PeopleFormValues, fields: readonly PeopleField[]) =>
+    fields.map((field) => {
+      const raw = value[field.name] ?? ""
+      const option = field.options?.find((entry) => entry.value === raw)
+      const text = option?.label ?? (option?.labelKey ? t(option.labelKey) :
+        raw || t(designKey("sf.u03.design.notRecorded")))
+      return {
+        path: field.name,
+        label: { key: field.labelKey },
+        value: Object.hasOwn(value, field.name)
+          ? { kind: "text" as const, text: { kind: "data" as const, text } }
+          : { kind: "missing" as const, reason: { key: sfCommonKey("sf.common.unknown") } },
+      }
+    })
   const groups = () => [
     { label: designKey("sf.u03.design.identity"), fields: props.fields.filter((field) => ["name", "title", "domain", "location"].includes(field.name)) },
     { label: designKey("sf.u03.design.employment"), fields: props.fields.filter((field) => ["type", "leaderId", "start", "end", "status"].includes(field.name)) },
