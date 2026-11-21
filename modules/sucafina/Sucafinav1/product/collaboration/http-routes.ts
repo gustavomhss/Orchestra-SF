@@ -29,11 +29,15 @@ export function createCollaborationHttpRoutes(host: Host) {
   }
   const threadRead = (id: string, context: TrustedUiContext) => createRecipientAwareThreadReads(host.threads, host.recipientThread).read(id, context)
   const threadChange = async (payload: Payload, context: TrustedUiContext, kind: "reply" | "resolve"): Promise<PortResult<unknown>> => {
+    const mutation = payload.mutation as Parameters<Host["threads"]["resolve"]>[1]
+    if (kind === "reply") {
+      const selected = await host.replyInstalledReview(payload.id as string, payload.body as string, mutation, context)
+      if (selected !== undefined) return selected
+    }
     const found = await threadRead(payload.id as string, context)
     if (found.status !== "ok") return found
     const port = host.recipientActions && "current" in found.value ? host.recipientActions : host.threads
     if (!port) return unavailable()
-    const mutation = payload.mutation as Parameters<Host["threads"]["resolve"]>[1]
     return kind === "reply" ? port.reply(payload.id as string, payload.body as string, mutation, context) : port.resolve(payload.id as string, mutation, context)
   }
   const routes = new Map<string, Route>([

@@ -1,3 +1,4 @@
+import { localRecordReview } from "./review-collaboration.ts"
 import { registerReviewEvidenceBatch } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/authority.ts"
 import type { ReviewThreadReadLeg } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/authority.ts"
 import type { BusinessContextService, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -89,9 +90,12 @@ export function createSfReviewCollaborationBinding(original: BusinessContextServ
   return { evidence, authorizeReviewThreadContext, reviewRecipientAuthority, reviewAnswerSource,
     bind: (binding: SfReviewCollaborationBinding) => {
       if (holder.current || holder.closed) throw new Error("SF_REVIEW_COLLABORATION_ALREADY_BOUND")
-      holder.current = Object.freeze({ ...binding })
-      holder.resolve = binding.evidence.resolve
-      registerReviewEvidenceBatch(evidence, reviewAnswerSource, authorizeReviewThreadContext, reviewRecipientAuthority, readLeg)
+      const bound = Object.freeze({ ...binding })
+      const resolve = bound.evidence.resolve
+      holder.current = bound
+      holder.resolve = resolve
+      registerReviewEvidenceBatch(evidence, reviewAnswerSource, authorizeReviewThreadContext, reviewRecipientAuthority, readLeg,
+        () => !holder.closed && holder.current === bound && bound.evidence.resolve === resolve ? localRecordReview : undefined)
     },
     dispose: () => { holder.closed = true; holder.current = undefined; holder.resolve = undefined },
   }

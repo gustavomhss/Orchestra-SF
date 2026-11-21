@@ -83,6 +83,10 @@ export function isInstalledSfStateRead(read: SfProductStatePort["read"]) {
   return installedStateReads.has(read)
 }
 
+export function isInstalledSfStateTransaction(read: SfProductStatePort["read"], transaction: SfProductStatePort["transaction"]) {
+  return installedStateTransactions.get(read) === transaction
+}
+
 /** The existing transaction validator returns a receipt; this probe cannot commit. */
 export async function probeSfReviewMutationReceipt<T>(
   state: SfProductStatePort,

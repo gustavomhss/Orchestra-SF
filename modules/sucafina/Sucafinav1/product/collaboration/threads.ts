@@ -31,6 +31,14 @@ export type CollaborationThread = {
 type Draft = Pick<CollaborationThread, "kind" | "sourceRef" | "sourceIncarnation" | "observedVersion" | "period" | "recipientRef" | "evidenceRefs"> & { body: string; reviewContext?: ReviewThreadContext }
 type Mutation = { expectedStorageVersion: number; idempotencyKey: string }
 
+type RoutedReply = {
+  request: Request
+  threadDigest: string
+  current: () => boolean
+  sameScope: (thread: CollaborationThread) => boolean
+  prepareContinuity: () => Promise<(() => boolean) | undefined>
+}
+
 /** The host authorizes the source and recipient by identity without granting either new access. */
 export function createThreadPort(input: {
   state: SfProductStatePort
@@ -137,7 +145,7 @@ export function createThreadPort(input: {
       if (!saved.value) return { status: "unavailable", reason: "thread-read-unavailable" }
       return readReceipt(saved.value, request, context)
     },
-    reply: (id: string, body: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "reply", body }, mutation, context),
+    reply: (id: string, body: string, mutation: Mutation, context: TrustedDomainContext, route?: RoutedReply) => change(id, { kind: "reply", body }, mutation, context, route),
     resolve: (id: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "resolve" }, mutation, context),
     read: async (id: string, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {
       if (typeof id !== "string" || !id.trim()) return { status: "needs-input", reason: "invalid-thread-reference" }
@@ -176,19 +184,26 @@ export function createThreadPort(input: {
     },
   }
 
-  async function change(id: string, action: { kind: "reply"; body: string } | { kind: "resolve" }, mutation: Mutation, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> {
+  async function change(id: string, action: { kind: "reply"; body: string } | { kind: "resolve" }, mutation: Mutation, context: TrustedDomainContext, route?: RoutedReply): Promise<PortResult<CollaborationThread>> {
     if (context.kind !== "ui") return { status: "denied", reason: "human-action-required" }
     if (typeof id !== "string" || !id.trim() || !validMutation(mutation) || (action.kind === "reply" && (typeof action.body !== "string" || !action.body.trim()))) return { status: "needs-input", reason: "invalid-thread-action" }
     const selected = structuredClone({ action, mutation })
     const humanAction = selected.action.kind === "reply" ? "collaboration.thread.reply" : "collaboration.thread.resolve"
     const payload = selected.action.kind === "reply" ? { id, body: selected.action.body, mutation: selected.mutation } : { id, mutation: selected.mutation }
     const request = input.host.requestFor(context)
-    if (!request || !await input.human.authorize(context, humanAction, payload) || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
+    const routeCurrent = () => !route || route.request === request && !!input.replayCurrent?.() && route.current()
+    if (!request || !routeCurrent() || !await input.human.authorize(context, humanAction, payload) || !await input.host.revalidate(context) || !routeCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
     const read = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
     if (read.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
     if ("reason" in read) return read
     if (!isThread(read.value) || read.value.id !== id) return { status: "unavailable", reason: "thread-access-unavailable" }
     const prior = read.value
+    if (!routeCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
+    const routedRow = !route || digestSfValue(prior) === route.threadDigest
+    if (!routedRow && !route?.sameScope(prior)) return { status: "conflict", reason: "thread-changed" }
+    const continuity = route && await route.prepareContinuity()
+    if (!routeCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
+    if (route && !continuity) return { status: "unavailable", reason: "thread-source-unavailable" }
     const review = prior.messages[0]?.sourceContext?.reviewContext ? await input.state.read(request, "reviews", selectSfReviewAuthority((authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion)) : undefined
     if (review && (input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request)) return { status: "denied", reason: "review-thread-context-unavailable" }
     if (review && "reason" in review) return review
@@ -204,8 +219,12 @@ export function createThreadPort(input: {
         return !!reply && thread.messages.length > 1 && reply.authorRef === context.binding.principalRef && reply.body === selected.action.body &&
           digestSfValue(threadMessageContext(thread, reply)) === digestSfValue(reviewBasis)
       })
-      if (recovered) return recovered
+      if (recovered) return routeCurrent() ? recovered : { status: "denied", reason: "thread-access-unavailable" }
     }
+    // A concurrent identical reply can recover its receipt. A changed
+    // routing row cannot admit a new write.
+    if (!routedRow) return { status: "conflict", reason: "thread-changed" }
+    if (!routeCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
     const prepareReviewFence = input.prepareReviewThreadFence
     const checkReviewRecipient = input.checkReviewRecipientAtCommit
     const reviewFence = reviewBasis && prepareReviewFence ? await prepareReviewFence(reviewBasis, context) : undefined
@@ -216,7 +235,8 @@ export function createThreadPort(input: {
     const incarnation = selected.action.kind === "reply" ? input.createId() : undefined
     if (selected.action.kind === "reply" && (!messageId?.trim() || !incarnation?.trim() || prior.messages.some((message) => message.id === messageId || message.incarnation === incarnation))) return { status: "unavailable", reason: "identity-unavailable" }
     const saved = await input.state.transaction(request, command, stageSfReviewThreadWrite<CollaborationThread | null>(async (state, authority) => {
-      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || reviewBasis && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence) || !input.mutationFence.check(fence) || prior.recipientRef && !checkThreadRecipient(prior.recipientRef, prior.evidenceRefs, context, reviewBasis, checkReviewRecipient) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open") return { commit: false, value: null }
+      if (!routeCurrent() || authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || reviewBasis && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence) || !input.mutationFence.check(fence) || prior.recipientRef && !checkThreadRecipient(prior.recipientRef, prior.evidenceRefs, context, reviewBasis, checkReviewRecipient) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open" ||
+        route && (!routeCurrent() || !continuity?.())) return { commit: false, value: null }
       const next: CollaborationThread = selected.action.kind === "reply" ? { ...prior, messages: [...prior.messages, { id: messageId!, incarnation: incarnation!, version: 1, authorRef: context.binding.principalRef, body: selected.action.body, createdAt: input.now(), ...(prior.messages[0]?.sourceContext?.reviewContext ? { sourceContext: structuredClone(prior.messages[0].sourceContext) } : {}) }] } : { ...prior, state: "resolved" }
       if (!isThread(next)) return { commit: false, value: null }
       state.threads[id] = next
@@ -225,7 +245,8 @@ export function createThreadPort(input: {
     if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
     if ("reason" in saved) return saved
     if (!saved.value) return { status: "unavailable", reason: "thread-read-unavailable" }
-    return readReceipt(saved.value, request, context)
+    const receipt = await readReceipt(saved.value, request, context)
+    return routeCurrent() ? receipt : { status: "denied", reason: "thread-access-unavailable" }
   }
 }
 

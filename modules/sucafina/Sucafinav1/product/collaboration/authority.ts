@@ -1,10 +1,13 @@
 import type { createReviewAnswerSource } from "../reviews/review-answer-source.ts"
 import { roleMap } from "../../runtime/admin.ts"
 import { hasActiveSfSnapshot, hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
-import { digestSfValue } from "../contracts/canonical.ts"
+import type { Snapshot } from "../../runtime/contract.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { PreservedReview } from "../contracts/context.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { sfScopedSourceIdentity } from "../integration/source-lifecycle.ts"
 import type { HotTopicIntent } from "../dashboard/hot-topics.ts"
 import type { CollaborationThread } from "./threads.ts"
 import { validThreadSourceContext } from "./thread-context.ts"
@@ -21,11 +24,11 @@ export type ReviewThreadReadLeg = (pin: NonNullable<ThreadSourceContext["reviewC
 
 const reviewEvidenceBatches = new WeakMap<BusinessContextService, {
   context: BusinessContextService["context"]; answerSource: ReviewAnswerSource; authorizeThread: ReviewThreadContextAuthorizer
-  recipient: ReviewThreadRecipientAuthority; providersCurrent: () => boolean; readLeg: ReviewThreadReadLeg
+  recipient: ReviewThreadRecipientAuthority; providersCurrent: () => boolean; readLeg: ReviewThreadReadLeg; localReview: () => ((review: PreservedReview) => boolean) | undefined
 }>()
 
 /** The resident binding resolves and authorizes each input independently. */
-export function registerReviewEvidenceBatch(evidence: BusinessContextService, answerSource: ReviewAnswerSource, authorizeThread: ReviewThreadContextAuthorizer, recipient: ReviewThreadRecipientAuthority, readLeg: ReviewThreadReadLeg) {
+export function registerReviewEvidenceBatch(evidence: BusinessContextService, answerSource: ReviewAnswerSource, authorizeThread: ReviewThreadContextAuthorizer, recipient: ReviewThreadRecipientAuthority, readLeg: ReviewThreadReadLeg, localReview: () => ((review: PreservedReview) => boolean) | undefined) {
   const resolveEvidence = evidence.resolve
   const resolve = answerSource.resolve
   const observe = answerSource.observe
@@ -35,7 +38,12 @@ export function registerReviewEvidenceBatch(evidence: BusinessContextService, an
   const checkRecipient = recipient.checkAtCommit
   const providersCurrent = () => evidence.resolve === resolveEvidence && answerSource.resolve === resolve && answerSource.observe === observe && answerSource.fence === fence &&
     answerSource.prepareThreadFence === prepare && recipient.authorize === authorizeRecipient && recipient.checkAtCommit === checkRecipient
-  reviewEvidenceBatches.set(evidence, { context: evidence.context, answerSource, authorizeThread, recipient, providersCurrent, readLeg })
+  reviewEvidenceBatches.set(evidence, { context: evidence.context, answerSource, authorizeThread, recipient, providersCurrent, readLeg, localReview })
+}
+
+export function registeredLocalReview(evidence: BusinessContextService) {
+  const installed = reviewEvidenceBatches.get(evidence)
+  return installed && installed.context === evidence.context && installed.providersCurrent() ? installed.localReview() : undefined
 }
 
 export function isRegisteredReviewMutationSource(evidence: BusinessContextService, answerSource: object, authorizeThread?: ReviewThreadContextAuthorizer, recipient?: ReviewThreadRecipientAuthority) {
@@ -139,6 +147,69 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     if (!allowed || !await input.host.revalidate(context)) return undefined
     return { id: person.id, name: person.name }
   }
+  const prepareReviewReplyContinuity = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext, routeCurrent: () => boolean) => {
+    const host = input.host
+    const request = host.requestFor(context)
+    const persistence = host.persistence
+    const atomic = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
+    const observe = atomic?.readSealed, read = atomic?.currentSnapshot
+    const evidence = input.evidence
+    const resolve = evidence.context
+    const current = () => routeCurrent() && !!request && !request.signal.aborted && host.requestFor(context) === request &&
+      input.host === host && host.persistence === persistence && persistence.dashboardSourceFence === atomic &&
+      hasSfDashboardSourceFence(persistence) && atomic?.readSealed === observe && atomic?.currentSnapshot === read &&
+      input.evidence === evidence && evidence.context === resolve
+    if (!request || !atomic || !observe || !read || !refs.length || !current()) return undefined
+    // The resident resolver issues the live actor-scoped reference from the
+    // retained record, verifies its ACL, and independently verifies freshness.
+    const resolved = await resolve.call(evidence, { refs: structuredClone(refs) }, context)
+    if (!current() || resolved.length !== refs.length) return undefined
+    const liveRefs = resolved.flatMap((item, index) => {
+      const original = refs[index]!
+      const live = item.state === "fresh" ? item.ref : item.state === "historical" && item.authorizedProjection && item.differences ? item.currentRef : undefined
+      if (original.kind !== "record" || original.target.surface !== "dashboard" || live?.kind !== "record" ||
+        item.accessRevision !== context.binding.accessRevision || digestSfValue(item.ref) !== digestSfValue(original) ||
+        live.installationId !== original.installationId || live.projectId !== original.projectId || live.evidenceLevel !== original.evidenceLevel ||
+        live.refDigest !== digestSfEvidenceRef(live) || live.target.surface !== "dashboard" ||
+        live.target.recordType !== original.target.recordType || live.target.recordId !== original.target.recordId ||
+        live.target.incarnation !== original.target.incarnation || live.target.version < original.target.version ||
+        digestSfValue(live.target.fields) !== digestSfValue(original.target.fields) || digestSfValue(live.target.period) !== digestSfValue(original.target.period)) return []
+      return [live]
+    })
+    if (liveRefs.length !== refs.length) return undefined
+    // Retain the physical and current scoped continuity of the discarded
+    // recipient projection. The staged writer checks this same proof again.
+    const fingerprint = (snapshot: Snapshot | undefined) => {
+      if (!snapshot) return undefined
+      const scopes = Object.values(snapshot.sfSources?.scopes ?? {})
+      const matched = liveRefs.flatMap((ref) => {
+        const target = ref.target
+        const matches = scopes.filter((entry) => entry.incarnation === target.incarnation && entry.scope.recordType === target.recordType && entry.scope.recordId === target.recordId)
+        const entry = matches.length === 1 ? matches[0] : undefined
+        if (!entry || entry.scope.principalRef !== context.binding.principalRef || entry.scope.accessRevision !== context.binding.accessRevision ||
+          entry.scope.policyVersion !== context.binding.policyVersion) return []
+        const selector = object(entry.scope.selector)
+        if (!Array.isArray(selector.fields) || digestSfValue(selector.fields) !== digestSfValue(target.fields) ||
+          digestSfValue(selector.period) !== digestSfValue(target.period)) return []
+        const live = sfScopedSourceIdentity(snapshot, entry.scope)
+        return live?.incarnation === target.incarnation && live.version === target.version && live.inputDigest === target.projectionDigest ? [entry.sourceIncarnation] : []
+      })
+      return matched.length === liveRefs.length ? digestSfValue(matched) : undefined
+    }
+    const initial = await atomic.transaction("dashboard", async (snapshot) => {
+      const seal = current() ? observe.call(atomic) : undefined
+      const value = seal?.current() && fingerprint(snapshot)
+      return { commit: false, value: value && seal?.current() && current() ? { value, bytes: seal.bytesIdentity } : undefined }
+    }, { signal: request.signal, targetPreimageCurrent: atomic.holdTargetPreimage().current, sealedRead: true })
+    if (!initial || !current() || !await host.revalidate(context) || !current()) return undefined
+    return () => {
+      const seal = current() ? observe.call(atomic) : undefined
+      if (!seal?.current()) return false
+      const actual = initial.bytes && initial.bytes === seal.bytesIdentity ? initial.value : fingerprint(read.call(atomic, "dashboard"))
+      return actual === initial.value && seal.current() && current()
+    }
+  }
+
   // The two C08 reads remain independent. Only this leg's installed C05
   // pair and canonical source authorization can share its held root.
   const readScopedThreadLeg = async (thread: Pick<CollaborationThread, "recipientRef"> & { messages?: CollaborationThread["messages"] },
@@ -191,6 +262,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     readSources,
     readHistoricalSources,
     readReviewThreadBasis,
+    prepareReviewReplyContinuity,
     readRecipientReviewLeg: (thread: CollaborationThread, basis: ThreadSourceContext, refs: readonly BusinessEvidenceRef[],
       context: TrustedDomainContext, historical: () => Promise<boolean>) => readScopedThreadLeg(thread, basis, refs, context, async () => true, historical),
     recipient,

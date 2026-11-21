@@ -1,5 +1,5 @@
 import { hasSfDashboardSourceFence } from "../../runtime/contract.ts"
-import { isInstalledSfStateRead } from "../host-binding/state-provider.ts"
+import { isInstalledSfStateRead, isInstalledSfStateTransaction, selectSfReviewReceipts } from "../host-binding/state-provider.ts"
 import { createDashboardRecordEvidenceHost } from "../dashboard/sources.ts"
 import { createDashboardRecordSourceIssuer } from "../integration/dashboard-sources.ts"
 import type { SfScopedSourcePort } from "../integration/source-lifecycle.ts"
@@ -19,7 +19,7 @@ import type { ConfirmationWork } from "./work-port.ts"
 import type { WorkReviewContexts } from "./work-review-context.ts"
 import { createCollaborationCapabilities } from "./capabilities.ts"
 import type { CollaborationCapabilityHost } from "./capabilities.ts"
-import { createCollaborationAuthority, isRegisteredAnswerSource, isRegisteredReviewMutationSource } from "./authority.ts"
+import { createCollaborationAuthority, isRegisteredAnswerSource, isRegisteredReviewMutationSource, registeredLocalReview } from "./authority.ts"
 import type { CollaborationRecipientAuthority, ReviewThreadRecipientAuthority } from "./recipient-authority.ts"
 import { createCollaborationComposition } from "./composition.ts"
 import { createCollaborationDispatch } from "./dispatch.ts"
@@ -51,7 +51,7 @@ import { createHistoricalThreadSourceRefresh } from "./thread-source-refresh.ts"
 import { createAnswerReusePort } from "./answer-reuse.ts"
 import { createAnswerWorkPort } from "./answer-work.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
-import { isThread } from "./threads.ts"
+import { isThread, sameThreadReadScope } from "./threads.ts"
 import { createReviewThreadSourceFence } from "./review-source-fence.ts"
 import type { PrepareReviewThreadFence } from "./review-source-fence.ts"
 export type { WorkSelection, WorkSelectionPort } from "./selection.ts"
@@ -176,6 +176,59 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   })()
   const answerWork = input.confirmationSource ? createAnswerWorkPort({ host: input.host, state: input.state, source: input.confirmationSource, reviewSource: input.reviewAnswerSource, authorizeSources: authority.sources, authorizeHistoricalSources: authority.historicalSources }) : undefined
   const collaboration = createCollaborationComposition({ host: input.host, state: input.state, replayCurrent, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, signals: input.workSignals, reviewContexts: input.reviewContexts, prepareReviewThreadFence, authorizeReviewThreadContext: input.authorizeReviewThreadContext, recordEvidence, human: input.human, recipientAuthority: input.recipientAuthority, reviewRecipientAuthority: input.reviewRecipientAuthority, recipientThread, reissue, refreshWorkSource, captureWorkSource: input.captureWorkSource, confirmationWork: confirmation?.work, answerWork: answerWork?.project, createId: input.createId, now: input.now })
+  const replyState = input.state
+  const readReplyState = replyState.read
+  const replyTransaction = replyState.transaction
+  const replyThread = collaboration.threads.reply
+  const prepareReplyContinuity = authority.prepareReviewReplyContinuity
+  const replyInstalledReview = async (id: string, body: string, mutation: Parameters<typeof replyThread>[2], context: TrustedDomainContext) => {
+    const localReview = registeredLocalReview(replayEvidence)
+    if (context.kind !== "ui" || !recipientThread || !replayCurrent() || !localReview ||
+      !isInstalledSfStateTransaction(readReplyState, replyTransaction)) return undefined
+    if (typeof id !== "string" || !id.trim()) return undefined
+    const host = input.host
+    const requestFor = host.requestFor, revalidate = host.revalidate
+    const request = requestFor.call(host, context)
+    const lease = context.lease
+    const binding = digestSfValue(context.binding)
+    const target = input.creationTarget
+    const targetIdentity = digestSfValue(target)
+    const current = () => !!request && !request.signal.aborted && replayCurrent() && registeredLocalReview(replayEvidence) === localReview && input.host === host &&
+      host.requestFor === requestFor && host.revalidate === revalidate && requestFor.call(host, context) === request &&
+      input.state === replyState && replyState.read === readReplyState && replyState.transaction === replyTransaction &&
+      collaboration.threads.reply === replyThread && authority.prepareReviewReplyContinuity === prepareReplyContinuity &&
+      input.creationTarget === target && digestSfValue(target) === targetIdentity &&
+      context.lease === lease && digestSfValue(context.binding) === binding
+    const denied = { status: "denied" as const, reason: "thread-access-unavailable" }
+    if (!request || !current() || !await revalidate.call(host, context) || !current()) return denied
+    const bound = (actor: Pick<TrustedDomainContext["binding"], "principalRef" | "accessRevision" | "policyVersion">) =>
+      actor.principalRef === context.binding.principalRef && actor.accessRevision === context.binding.accessRevision && actor.policyVersion === context.binding.policyVersion
+    const stored = await replyState.read(request, "threads", (state, actor) => ({ bound: bound(actor), thread: bound(actor) ? state.threads[id] : undefined }))
+    if (!current()) return denied
+    if ("reason" in stored) return stored
+    if (stored.status !== "ok") return { status: "unavailable" as const, reason: "thread-read-unavailable" }
+    if (!stored.value.bound) return denied
+    const thread = stored.value.thread
+    if (!isThread(thread) || thread.id !== id || thread.kind === "comment" || thread.recipientRef !== context.binding.principalRef ||
+      !thread.messages.every((message) => message.authorRef === thread.recipientRef)) return undefined
+    const basis = thread.messages[0]?.sourceContext
+    const pin = basis?.reviewContext
+    if (!pin || basis.evidenceRefs.some((ref) => ref.kind !== "record" || ref.target.surface !== "dashboard" ||
+      ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref))) return undefined
+    const review = await replyState.read(request, "reviews", selectSfReviewReceipts((state, actor) => {
+      if (!bound(actor)) return { bound: false, local: false }
+      const review = state.reviews[pin.reviewRef]
+      return { bound: true, local: !!review && digestSfValue(review) === pin.reviewDigest && localReview(review) }
+    }))
+    if (!current()) return denied
+    if ("reason" in review) return review
+    if (review.status !== "ok") return { status: "unavailable" as const, reason: "thread-read-unavailable" }
+    if (!review.value.bound) return denied
+    if (!review.value.local) return undefined
+    return replyThread(id, body, mutation, context, Object.freeze({ request, current, threadDigest: digestSfValue(thread),
+      sameScope: (prior: typeof thread) => sameThreadReadScope(thread, prior) && prior.messages.every((message) => message.authorRef === thread.recipientRef),
+      prepareContinuity: () => prepareReplyContinuity(basis.evidenceRefs, context, current) }))
+  }
   const threadReads = createRecipientAwareThreadReads(collaboration.threads, recipientThread)
   const resolveWorkDestination = input.workDestination ? createWorkDestinationResolver({ ...input.workDestination, host: input.host, work: collaboration.work }) : undefined
   const captureWorkSource = async (memberRef: string, context: TrustedDomainContext): Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> => {
@@ -373,5 +426,5 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   } })
 
   const cycle = createCollaborationCycleView({ cases: input.cases, work: collaboration.work, host: input.host, resolveCase: caseSelection?.resolveCase })
-  return { ...collaboration, questions, cycle, caseSelection, confirmation, answerReuse, threadHistory, threadReads, authorizeThreadSourceContinuity, listRecipients, storageVersion, recipientThread, recipientActions, captureWorkSource, resolveWorkDestination, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
+  return { ...collaboration, questions, cycle, caseSelection, confirmation, answerReuse, threadHistory, threadReads, authorizeThreadSourceContinuity, listRecipients, storageVersion, recipientThread, recipientActions, replyInstalledReview, captureWorkSource, resolveWorkDestination, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
 }
