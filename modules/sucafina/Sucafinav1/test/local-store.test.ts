@@ -85,6 +85,7 @@ test("a cold sealed preimage keeps independent reads detached from the writable 
     await store.dispose()
 
     const reopened = await open()
+    if (!reopened.holdTargetPreimage) throw new Error("LocalStore must provide its preimage guard")
     const retained = reopened.holdTargetPreimage()
     await reopened.transaction("dashboard", async (snapshot) => {
       snapshot.data.record = { name: "staged" }
