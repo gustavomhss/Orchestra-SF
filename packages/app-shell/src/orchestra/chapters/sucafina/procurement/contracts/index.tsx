@@ -399,6 +399,18 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     }
   }
 
+  // Temporary bounded evidence for the installed source journey: names and types only.
+  const reviewInputShape = () => {
+    const review = view.reviewing
+    if (!review) return undefined
+    const input = review.action === "save"
+      ? vendorCommandInput("save", review.ref, review.version, review.values)
+      : vendorCommandInput("delete", review.ref!, review.version, review.values)
+    const types = (value: object) => Object.fromEntries(Object.entries(value).map(([field, item]) =>
+      [field, item === null ? "null" : Array.isArray(item) ? "array" : typeof item]))
+    return JSON.stringify({ fields: types(input), values: types(input.values) })
+  }
+
   const renderField = (field: Field) => {
     const current = activeDraft()
     const value = current?.value[field]
@@ -465,7 +477,8 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     />
   }
 
-  return <section data-component="sf-vendor-contracts" data-sf-surface="CAP14" aria-busy={view.sending}>
+  return <section data-component="sf-vendor-contracts" data-sf-surface="CAP14" aria-busy={view.sending}
+    data-sf-contract-input-shape={reviewInputShape()}>
     <SfPageFrame
       titleKey={key("sf.cap14.title")}
       context={[]} tabs={[]} activeTab={null}

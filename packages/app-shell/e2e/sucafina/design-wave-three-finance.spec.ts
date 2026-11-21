@@ -10,7 +10,7 @@ const screens = [
   { id: "CAP19", path: "/orchestra/sf-planner/capex", title: "CAPEX", br: "CAPEX" },
 ] as const
 
-waveThreeTest("installed native finance wave · five areas and original financial commands", async ({ page, browser, installation, owner }, info) => {
+waveThreeTest("installed native finance wave · CAP05 and CAP14 original financial commands", async ({ page, browser, installation, owner }, info) => {
   waveThreeTest.setTimeout(300_000)
   page.setDefaultTimeout(15_000)
   expect(info.project.metadata.bundle, "maintained production browser runner").toBe("production")
@@ -30,6 +30,25 @@ waveThreeTest("installed native finance wave · five areas and original financia
   }
   const desktop = async () => { await page.setViewportSize({ width: 1440, height: 1100 }); await reflow(page) }
   const narrow = async () => { await page.setViewportSize({ width: 320, height: 900 }); await reflow(page) }
+
+
+  page.on("response", async (response) => {
+    const request = response.request()
+    if (request.method() !== "POST" || new URL(response.url()).pathname !== installation.mount + "/dashboard" ||
+        !request.headers()["content-type"]?.includes("application/json")) return
+    const input = request.postDataJSON()
+    if (input?.page !== "Vendor Contracts") return
+    const output = await response.json().catch(() => undefined)
+    const sourceMessages = ["Vendor is required.", "Amount must be a number.", "Choose valid contract terms."]
+    console.info("SF_FINANCE_COMMAND_DIAGNOSTICS " + JSON.stringify({
+      command: "CAP14." + String(input.action), status: response.status(), ok: output?.ok,
+      producerStatus: output?.status,
+      fieldTypes: Object.fromEntries(Object.entries(input.values ?? {}).map(([field, value]) =>
+        [field, value === null ? "null" : Array.isArray(value) ? "array" : typeof value])),
+      validation: Array.isArray(output?.errors) ? output.errors.map((value: unknown) =>
+        typeof value === "string" && sourceMessages.includes(value) ? value : "redacted source message") : [],
+    }))
+  })
 
   await waveThreeTest.step("CAP05 · list, twelve source months, annual settings, deviation and a confirmed month", async () => {
     await go(screens[0])
@@ -189,8 +208,15 @@ waveThreeTest("installed native finance wave · five areas and original financia
     await expect(editor.getByLabel("Notice period", { exact: true })).toHaveValue("120 days")
     await desktop()
     await editor.getByRole("button", { name: "Review contract change", exact: true }).click()
+    console.info("SF_FINANCE_COMMAND_DIAGNOSTICS " + JSON.stringify({ command: "CAP14.save",
+      inputShape: JSON.parse(await surface.getAttribute("data-sf-contract-input-shape") ?? "null") }))
     await review.getByRole("button", { name: "Confirm", exact: true }).click()
-    await expect(surface.locator(".sf-u15-notice")).toContainText("Current record verified after saving.")
+    try {
+      await expect(surface.locator(".sf-u15-notice")).toContainText("Current record verified after saving.")
+    } finally {
+      console.info("SF_FINANCE_COMMAND_DIAGNOSTICS " + JSON.stringify({ command: "CAP14.save",
+        observedPostDelta: posts.length - before }))
+    }
     expect(posts).toHaveLength(before + 1)
     await surface.getByRole("button", { name: "Discard changes", exact: true }).click()
     await expect(stage).toHaveAttribute("data-sf-contract-stage", "detail")
@@ -217,8 +243,63 @@ waveThreeTest("installed native finance wave · five areas and original financia
     await expect(list.locator("tr[data-sf-row]")).toHaveCount(3)
   })
 
+  const cookies = await page.context().cookies(installation.origin + installation.mount)
+  expect(cookies.filter((cookie) => /^sucafina_operator_[a-f0-9]{24}$/.test(cookie.name))).toHaveLength(1)
+  const portuguese = await browser.newContext({
+    locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1, reducedMotion: "reduce", colorScheme: "dark",
+    httpCredentials: { username: "orchestra", password: installation.serverPassword },
+    storageState: { cookies, origins: [{ origin: installation.origin,
+      localStorage: [{ name: "orchestra.global.dat:language", value: JSON.stringify({ locale: "br" }) }] }] },
+  })
+  try {
+    const localized = await portuguese.newPage()
+    localized.setDefaultTimeout(15_000)
+    const localizedMessages = observePage(localized)
+    for (const screen of screens.slice(0, 2)) {
+      await go(screen, localized, true)
+      await scheme(localized, "dark")
+      await expect(localized.locator('[data-sf-frame="page"]')).not.toContainText(/sf\.u(?:06|07|15|40)\./)
+      await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
+    }
+    expect(localizedMessages.pageErrors).toEqual([])
+    await info.attach("finance-dashboard-pt-BR-diagnostics", { body: JSON.stringify(localizedMessages, null, 2), contentType: "application/json" })
+  } finally {
+    await portuguese.close()
+  }
+  expect([...origins]).toEqual([installation.origin])
+  expect(messages.pageErrors).toEqual([])
+  await info.attach("native-finance-dashboard-wave-three-evidence", {
+    body: JSON.stringify({ source: "isolated original producers; no mocked requests, grants, projections or receipts",
+      areas: screens.slice(0, 2).map((screen) => screen.id), widths: [1440, 320], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
+      actualBrowserZoom: "not measured", confirmedCommands: ["CAP05.save-entry", "CAP14.save"],
+      sourcePostPaths: posts, ...messages }, null, 2), contentType: "application/json",
+  })
+})
+
+waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original planner commands", async ({ page, browser, installation, owner }, info) => {
+  waveThreeTest.setTimeout(300_000)
+  page.setDefaultTimeout(15_000)
+  expect(info.project.metadata.bundle, "maintained production browser runner").toBe("production")
+  const messages = observePage(page)
+  const posts: string[] = []
+  const origins = new Set<string>()
+  page.on("request", (request) => {
+    const url = new URL(request.url())
+    if (!url.pathname.startsWith(installation.mount + "/")) return
+    origins.add(url.origin)
+    if (request.method() === "POST") posts.push(url.pathname)
+  })
+  const go = async (screen: typeof screens[number], target = page, portuguese = false) => {
+    const url = new URL(screen.path, installation.origin)
+    if (screen.id !== "CAP14") url.searchParams.set("year", String(installation.year))
+    await enter(target, owner, url.href, portuguese ? screen.br : screen.title)
+  }
+  const desktop = async () => { await page.setViewportSize({ width: 1440, height: 1100 }); await reflow(page) }
+  const narrow = async () => { await page.setViewportSize({ width: 320, height: 900 }); await reflow(page) }
+
   await waveThreeTest.step("CAP17 · original metrics, series and version comparison", async () => {
     await go(screens[2])
+    await scheme(page, "dark")
     const overview = page.locator('[data-sf-surface="CAP17"]')
     await overview.getByLabel("Version", { exact: true }).selectOption({ label: waveThreeData.planner.version })
     await ready(page, "Overview")
@@ -378,7 +459,7 @@ waveThreeTest("installed native finance wave · five areas and original financia
     await desktop()
     await detail.getByRole("button", { name: "Review changes", exact: true }).click()
     const before = posts.length
-    await review.getByRole("button", { name: "Review changes", exact: true }).click()
+    await review.getByRole("button", { name: "Confirm", exact: true }).click()
     await expect(surface.locator(".sf-u07-error")).toContainText("The producer accepted the change.")
     await expect(detail.getByLabel("Description", { exact: true })).toHaveValue("Design test data · Revised infrastructure resilience investment and source review.")
     expect(posts).toHaveLength(before + 1)
@@ -408,7 +489,7 @@ waveThreeTest("installed native finance wave · five areas and original financia
     const localized = await portuguese.newPage()
     localized.setDefaultTimeout(15_000)
     const localizedMessages = observePage(localized)
-    for (const screen of screens) {
+    for (const screen of screens.slice(2)) {
       await go(screen, localized, true)
       await scheme(localized, "dark")
       await expect(localized.locator('[data-sf-frame="page"]')).not.toContainText(/sf\.u(?:06|07|15|40)\./)
@@ -423,16 +504,16 @@ waveThreeTest("installed native finance wave · five areas and original financia
     await scrollPageTop(localized)
     await capture(localized, info, "CAP19-pt-BR-dark-320-project-editor-test-data")
     expect(localizedMessages.pageErrors).toEqual([])
-    await info.attach("finance-pt-BR-diagnostics", { body: JSON.stringify(localizedMessages, null, 2), contentType: "application/json" })
+    await info.attach("finance-planner-pt-BR-diagnostics", { body: JSON.stringify(localizedMessages, null, 2), contentType: "application/json" })
   } finally {
     await portuguese.close()
   }
   expect([...origins]).toEqual([installation.origin])
   expect(messages.pageErrors).toEqual([])
-  await info.attach("native-finance-wave-three-evidence", {
+  await info.attach("native-finance-planner-wave-three-evidence", {
     body: JSON.stringify({ source: "isolated original producers; no mocked requests, grants, projections or receipts",
-      areas: screens.map((screen) => screen.id), widths: [1440, 320], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
-      actualBrowserZoom: "not measured", confirmedCommands: ["CAP05.save-entry", "CAP14.save", "CAP19.save"],
+      areas: screens.slice(2).map((screen) => screen.id), widths: [1440, 320], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
+      actualBrowserZoom: "not measured", confirmedCommands: ["CAP19.save"],
       sourcePostPaths: posts, ...messages }, null, 2), contentType: "application/json",
   })
 })

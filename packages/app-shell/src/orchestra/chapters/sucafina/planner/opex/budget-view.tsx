@@ -1145,11 +1145,11 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
             coverage={fullCoverage()}
             blockingReasons={allowed(reviewAction())?[]:[msg("sf.u07.readDenied")]}
             confirmation={allowed(reviewAction())?{kind:"admitted",
-              labelKey:key(r().kind==="line-create"||r().kind==="line-save"?"sf.u07.confirm":isOpex()?"sf.cap18.primary":"sf.cap19.primary"),
+              labelKey:key("sf.u07.confirm"),
               purpose:r().kind==="line-create"?"create":reviewAction(),
               binding:{kind:"catalog-command",operationId:reviewOperationId(),
                 version:{kind:"record",expectedVersion:r().revision},confirmation:"presentation-only"}}:
-              {kind:"blocked",labelKey:key(r().kind==="line-create"||r().kind==="line-save"?"sf.u07.confirm":isOpex()?"sf.cap18.primary":"sf.cap19.primary"),
+              {kind:"blocked",labelKey:key("sf.u07.confirm"),
                 reasons:[msg("sf.u07.readDenied")]}}
             state={reviewState()}
             onConfirm={()=>void submitReview()}

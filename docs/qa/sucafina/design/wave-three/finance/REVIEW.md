@@ -87,3 +87,28 @@ The contract content stage explicitly reapplies the campaign's 13px body typogra
 Static review additionally identified a small-screen chart risk: scaling the entire CAP17 SVG to the narrow container could shrink axis labels below a useful reading size. Its plot now retains a 640px minimum in a named, focusable local scroller while the existing accessible source table stays intact. This adjustment remains awaiting its first real capture. The shared chart, S01, native frame and controllers are not modified by these corrections.
 
 Re-execution and remaining CAP17–19 visual critique are pending. The first browser run is a recorded failure with a concrete correction, not a five-area PASS claim.
+
+
+## Second real Actions critique
+
+Maintained gates [44940199079](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44940199079) passed. Production-browser run [44940189566](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44940189566), job 136955469566, emitted 18 captures. The CAP14 320px image now shows the long contract name above a separate, intact end date; the new geometry assertion passed. The full editor, native scroller and narrow review actions also passed and were inspected directly. The input rhythm is now consistent with the 13px campaign body and the review's three 44px actions remain visible and ordered.
+
+CAP14 confirmation still failed: the consumer displayed the original unavailable-source message rather than a verified-save notice. Both page and console diagnostics were empty. No success, receipt or write is inferred from this state. Its original command schema, codec and producer normalization are under investigation; no source contract or permission has been relaxed.
+
+The journey is now split into two isolated native installations: CAP05/CAP14 and CAP17–19. This preserves every assertion and confirmation while allowing independent Planner evidence to execute. A temporary bounded diagnostic records only the CAP14 command's field names and types (including explicit undefined), plus observed POST status and public validation categories. It does not log field values, credentials, tokens, owner headers, stored records or fabricated results. The diagnostic attribute will be removed after the failure is explained.
+
+The Planner's final confirmation now reuses the existing Confirm/Confirmar catalog entry for every admitted review action. Previously some project and settings confirmations displayed the entry action's Review changes text even though clicking submitted the command. The original English catalog values and all command handlers remain intact.
+
+### Functional-state accounting
+
+These are five campaign areas. The conservative journey covers 35 functional work states; themes, locale, viewport, repeated source variants, search emptiness and save notices do not count as additional screens.
+
+| Area | Work states in the journey | Count |
+| --- | --- | ---: |
+| CAP05 | List; monthly detail; annual editor and review; deviation editor and review; monthly editor and review; project creation and review. | 10 |
+| CAP14 | List; source detail; editing; edit review; deletion review; creation; creation review. | 7 |
+| CAP17 | Overview, including source metrics/series and version comparison in one work state. | 1 |
+| CAP18 | Monthly grid; producer paste preview; lines; line editor and review; line creation and review; settings; closed-month review; split review. | 10 |
+| CAP19 | Monthly grid; projects; project editor and review; lines; line editor; spread review. | 7 |
+
+The count describes the retained journey, not 35 newly created pages, and does not claim the as-yet-unreached Planner states have passed.
