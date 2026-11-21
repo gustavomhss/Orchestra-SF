@@ -800,7 +800,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
             <Show when={state.restored}>{(saved) => <p role="status">{t("sf.ui32.restored", { title: saved().title })}</p>}</Show>
             <section class="sf-u07-toolbar" hidden={Boolean(record() || presentation.creating)}>
               <label>{t("sf.u07.version")}
-                <select value={page().data.selectedVersion?.id ?? ""} disabled={state.busy || state.uncertainty}
+                <select aria-label={t("sf.u07.version")} value={page().data.selectedVersion?.id ?? ""} disabled={state.busy || state.uncertainty}
                   onChange={(event) => setState({ chosenVersion: event.currentTarget.value,
                     selected: "", review: null, paste: { phase: "idle" }, pasteInput: null, create: blankLine() })}>
                   <For each={page().data.versions}>{(entry) =>
@@ -949,7 +949,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                 <div class="sf-u07-closed">
               <Show when={isOpex()}>
                 <label>{t("sf.u07.period")}
-                  <select disabled={!allowed("save")} value={state.closedChoice}
+                  <select aria-label={t("sf.u07.period")} disabled={!allowed("save")} value={state.closedChoice}
                     onChange={(e)=>setState("closedChoice",Number(e.currentTarget.value))}>
                     <For each={Array.from({length:13},(_,i)=>i)}>{(n)=><option value={n}>{n === 0 ? t("sf.u07.openMonths") : t("sf.u07.month." + n)}</option>}</For>
                   </select>
@@ -1084,7 +1084,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                               if(snapshot?.availability==="active")ctrl?.edit({...snapshot.value,[field]:event.currentTarget.value})
                             }}/>
                         }>
-                          <select value={draft().value.approvalState} disabled={!allowed("save")}
+                          <select aria-label={t("sf.u07.approvalState")} value={draft().value.approvalState} disabled={!allowed("save")}
                             onChange={(event)=>{
                               const ctrl=getEditor(rec())
                               const snapshot=ctrl?.snapshot()

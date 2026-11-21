@@ -5,7 +5,7 @@ import { Option, Schema } from "effect"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
-import { vendorCommandInput, vendorEditFromRecord, type SfVendorEdit, type SfVendorSave } from "./model"
+import { vendorCommandInput, vendorEditFromRecord, type SfVendorEdit, type SfVendorSave } from "../src/orchestra/chapters/sucafina/procurement/contracts/model"
 
 const ref = "design-test-contract" as SfRef
 const operation = SfDomain.operations["domain.command.CAP14.save"]
@@ -42,16 +42,11 @@ describe("CAP14 values cross the unchanged native schema and JSON codec", () => 
         setState("review", "values", "notes", "Design test changed note")
         expect(unwrap(state.review.values)).not.toBe(state.review.values)
         const input = vendorCommandInput("save", ref, 1, state.review.values)
-        const typed = Schema.decodeUnknownOption(Schema.toType(operation.input), { onExcessProperty: "error" })(input)
-        const spread = { ...input, values: { ...input.values } }
-        const wire = JSON.parse(JSON.stringify(input))
-        console.info("SF_CAP14_CODEC_PROBE " + JSON.stringify({
-          typed: Option.isSome(typed), codec: codec.decodeInput(input).status,
-          shallow: codec.decodeInput(spread).status, wire: codec.decodeInput(wire).status,
-          valueOwnKeyTypes: Reflect.ownKeys(input.values).map((field) => typeof field),
-          fieldTypes: Object.fromEntries(Object.entries(input.values).map(([field, value]) =>
-            [field, value === null ? "null" : typeof value])),
-        }))
+        const serialized = JSON.stringify(input)
+        setState("review", "values", "notes", "Design test later edit")
+        expect(input.values).not.toBe(state.review.values)
+        expect(JSON.stringify(input)).toBe(serialized)
+        expect(Reflect.ownKeys(input.values).every((field) => typeof field === "string")).toBe(true)
         expect(admitted(input)).toEqual({ id: ref, version: 1,
           values: { ...complete(), notes: "Design test changed note" } })
       } finally {
