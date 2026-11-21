@@ -4,7 +4,6 @@ import { mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { Catalog } from "@orchestra/core/catalog"
-import { Database } from "@orchestra/core/database/database"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { LayerNodePlatform } from "@orchestra/core/effect/app-node-platform"
@@ -120,8 +119,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
     })
     const merged = Host.merge([...ProductHost.contributions(), ...runtime.contributions])
     const layer = AppNodeBuilder.build(LayerNode.group([...merged.nodes, AppProcess.node, SessionV2.node, SessionExecution.node, LocationServiceMap.node]),
-      [[SessionExecution.node, SessionExecutionLocal.node], ...merged.replacements, [Database.node, Database.layerFromPath(":memory:")],
-        [LayerNodePlatform.llmClient, llm]], merged.locationNodes)
+      [[SessionExecution.node, SessionExecutionLocal.node], ...merged.replacements, [LayerNodePlatform.llmClient, llm]], merged.locationNodes)
     await Effect.gen(function* () {
       const sessions = yield* SessionV2.Service
       const locations = yield* LocationServiceMap.Service
