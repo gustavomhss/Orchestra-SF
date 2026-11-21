@@ -12,4 +12,4 @@ Aponte `SUCAFINA_MICROSOFT_CONFIG` para o perfil proprietário da instalação. 
 
 O perfil de login usa o diretório do próprio titular. Operações que selecionam outros usuários dependem de uma fonte de diretório corporativa autorizada.
 
-A projeção nativa de Meu trabalho e a conexão Claw entram após a integração da autoridade de produto que aplica `sf_work_list`.
+O piloto Claw usa a projeção nativa de Meu trabalho e a autoridade de produto que aplica `sf_work_list`. A [configuração privada do piloto](../specs/sucafina/claw-pilot/README.md) controla quais contas podem abrir uma conexão.

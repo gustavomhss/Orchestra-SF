@@ -500,6 +500,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         if (scope.root.readers) throw new Error("Nested local read still active")
         checkGenerations()
         if (result.commit) {
+          requireDatabaseFile()
           const payload = encodeSnapshot(snapshot)
           decodeSnapshot(payload)
           requireDatabaseFile()
@@ -543,6 +544,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         if (scope.root.readers) throw new Error("Nested local read still active")
         if (surfaces.some((surface) => !Bun.deepEquals(snapshots[surface].sfBlobGenerations ?? {}, generations[surface]))) throw new Error("Private blob generations changed outside storage")
         if (result.commit) {
+          requireDatabaseFile()
           surfaces.forEach((surface) => {
             const payload = encodeSnapshot(snapshots[surface])
             decodeSnapshot(payload)

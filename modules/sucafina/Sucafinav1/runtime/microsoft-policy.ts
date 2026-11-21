@@ -25,6 +25,9 @@ export function microsoftPolicy(value: Record<string, unknown>) {
   if (!Array.isArray(value.grants) || value.grants.length > 1000) throw new Error("Explicit Microsoft product grants required")
   const grants: SfProductGrant[] = value.grants.map((entry: unknown) => {
     if (!record(entry) || Object.keys(entry).some((key) => !["principalRef", "namespaces", "operations", "humanActions"].includes(key)) || typeof entry.principalRef !== "string" || !microsoftUuid.test(entry.principalRef)) throw new Error("Resource-tenant object ID required for product grant")
+    // Older installation profiles can carry an identity without product grants.
+    if (entry.namespaces === undefined && entry.operations === undefined && entry.humanActions === undefined)
+      return { principalRef: entry.principalRef.toLowerCase(), namespaces: [], operations: [], humanActions: [] }
     const grantedNamespaces = strings(entry.namespaces, namespaces, "namespaces") as SfStateNamespace[]
     const operations = strings(entry.operations, freeze.operations.map((operation) => operation.operation), "operations")
     const humanActions = strings(entry.humanActions ?? [], sfHumanActions, "human actions") as typeof sfHumanActions[number][]
