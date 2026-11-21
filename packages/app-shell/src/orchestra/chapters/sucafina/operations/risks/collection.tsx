@@ -322,7 +322,6 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
     const callKey = crypto.randomUUID()
     const abort = new AbortController()
     setStore({ busy: true, error: null })
-    let commitStage = "prepare-pending"
     try {
       if (action === "save" && snap?.availability === "active") {
         const bytes = new TextEncoder().encode(JSON.stringify(
@@ -331,10 +330,8 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
           .map((n) => n.toString(16).padStart(2, "0")).join("")
         currentDraft!.controller.setPending({ operationRef, idempotencyKey: callKey,
           payloadDigest: digest, expectedVersion: row ? version(row)! : null })
-        commitStage = "publish-submitting"
         currentDraft!.controller.setPhase("submitting")
       }
-      commitStage = "send-command"
       const result: WriteResult = action === "save" && snap?.availability === "active"
         ? await spec.save(r.ready.transport, { id: row ? String(row.id) : undefined,
           version: row ? version(row)! : 0, values: snap.value }, abort.signal, callKey)
@@ -342,16 +339,12 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
           ? await spec.delete(r.ready.transport, { id: String(row.id), version: version(row)! },
             abort.signal, callKey)
           : { kind: "error", state: "invalid", errors: [] }
-      commitStage = "present-result"
       if (nowReady()?.identity !== r.identity) return
       if (result.kind === "ok") {
-        commitStage = "publish-confirmed"
         setStore({ error: null, warnings: result.warnings, mode: action === "delete" ? "list" : "detail",
           selected: action === "delete" ? null : store.selected })
-        commitStage = "track-confirmed"
         if (action === "save") setConfirmed({ draft: currentDraft!.controller, operationRef,
           id: row ? idOf(row.id) : null })
-        commitStage = "reload-source"
         refresh()
       } else if (result.kind === "outcome-unknown") {
         currentDraft?.controller.setPhase("outcome-unknown")
@@ -364,12 +357,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
           setStore({ status: result.state, ownerId: "", rows: undefined, actions: [] })
       }
     } catch (error: unknown) {
-      const stack = error instanceof Error ? error.stack?.split("\n").slice(1, 7).join("\n")
-        .replace(/https?:\/\/[^/\s)]+/g, "[origin]")
-        .replace(/[?#][^\s)]*/g, "")
-        .slice(0, 2048) : undefined
-      console.error("N16 mutation result unknown", commitStage,
-        error instanceof Error ? error.name : "unknown", stack ?? "")
+      console.error("N16 mutation result unknown")
       currentDraft?.controller.setPhase("outcome-unknown")
       setStore({ unknown: true, error: t("sf.common.operationUnknown") })
     } finally {
@@ -592,26 +580,26 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                         </div>
                       </form>}
                     </Show>
-                    <Show when={store.mode === "review-save" && activeState()?.availability === "active" ? draft() : null}>
+                    <Show when={store.mode === "review-save" && activeState()?.availability === "active" ? draft() : null} keyed>
                       {(active) => {
-                        const current = () => active().controller.snapshot()
+                        const current = () => active.controller.snapshot()
                         const sourceVersion = () => { const state = current(); return state.availability === "active" ? state.baseVersion : null }
                         const proposedFields = () => { const state = current(); return state.availability === "active"
-                          ? reviewFields(active().entity, state.value) : [] }
+                          ? reviewFields(active.entity, state.value) : [] }
                         const intentRef = () => {
-                          const identity = active().identity
+                          const identity = active.identity
                           return identity.kind === "new" ? identity.newIntentRef
-                            : ("n16-review:" + String(active()!.entity!.id)) as SfIntentRef
+                            : ("n16-review:" + String(active.entity!.id)) as SfIntentRef
                         }
                         return <SfChangeReview
-                          operation={{ ref: active().operationRef,
-                            label: message(active().entity ? "sf.common.edit" : spec.primary),
+                          operation={{ ref: active.operationRef,
+                            label: message(active.entity ? "sf.common.edit" : spec.primary),
                             scope: { kind: "message", message: message(spec.title) } }}
-                          base={originalSnapshot(active().entity)}
-                          current={originalSnapshot(active().entity)}
+                          base={originalSnapshot(active.entity)}
+                          current={originalSnapshot(active.entity)}
                           proposed={{ kind: "draft",
                             intentRef: intentRef(),
-                            sourceRef: active().entity ? idOf(active().entity!.id) : null,
+                            sourceRef: active.entity ? idOf(active.entity!.id) : null,
                             sourceVersion: sourceVersion(), fields: proposedFields() }}
                           effects={[{ id: "domain-save", domain: "dashboard", state: "proposed",
                             title: { kind: "message", message: message(spec.title) },
@@ -619,11 +607,11 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                           coverage={complete()}
                           blockingReasons={store.unknown ? [message("sf.common.operationUnknown")] : []}
                           confirmation={!store.unknown && admitted("save") &&
-                            (!active().entity || version(active().entity!) !== undefined)
+                            (!active.entity || version(active.entity!) !== undefined)
                             ? { kind: "admitted", labelKey: k("sf.common.save"), purpose: "save",
                               binding: { kind: "catalog-command", operationId: spec.saveOperation,
-                                version: active().entity
-                                  ? { kind: "record", expectedVersion: version(active().entity!)! }
+                                version: active.entity
+                                  ? { kind: "record", expectedVersion: version(active.entity!)! }
                                   : { kind: "none" }, confirmation: "presentation-only" } }
                             : { kind: "blocked", labelKey: k("sf.common.unavailable"),
                               reasons: [message("sf.common.unavailable")] }}

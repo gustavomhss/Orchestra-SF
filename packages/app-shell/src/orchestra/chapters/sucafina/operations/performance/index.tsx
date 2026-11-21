@@ -439,6 +439,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
     const signal = new AbortController()
     const confirmedWeights = store.confirmedWeights
     setStore({ busy: true, error: null })
+    let performStage = "prepare-pending"
     try {
       if (!isDelete && currentDraft?.availability === "active") {
         const payload = new TextEncoder().encode(JSON.stringify([
@@ -447,8 +448,10 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
           .map((byte) => byte.toString(16).padStart(2, "0")).join("")
         editing!.controller.setPending({ operationRef: commandRef,
           idempotencyKey, payloadDigest: digest, expectedVersion: store.cas })
+        performStage = "publish-submitting"
         editing!.controller.setPhase("submitting")
       }
+      performStage = "send-command"
       const client = createSfDomainClient(r.value.transport)
       // Exactly five frozen A01 operations, never a free action/path dispatcher.
       const response = isDelete && deleting!.kind === "delete-item"
@@ -474,15 +477,19 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
             values: subValues(currentDraft.value, editing?.sourceSub),
           }, { signal: signal.signal, idempotencyKey })
         : null
+      performStage = "present-result"
       if (ready()?.key !== r.key) return
       if (response?.kind === "response" && response.status >= 200 &&
           response.status < 300 && response.body.ok) {
+        performStage = "publish-confirmed"
         setStore({ warnings: response.body.warnings || [], error: null,
           mode: "overview", confirmedWeights: false })
+        performStage = "track-confirmed"
         if (!isDelete && editing && currentDraft?.availability === "active")
           setConfirmed({ controller: editing.controller, operationRef: commandRef,
             kind: currentDraft.value.kind, itemId: editing.itemId,
             subId: currentDraft.value.subId || null })
+        performStage = "reload-source"
         refresh()
       } else if (response?.kind === "transport-error" &&
           response.reason === "outcome-unknown" || response === null) {
@@ -499,7 +506,12 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
         setStore({ error: t("sf.common.unavailable"), mode: isDelete ? "overview" : "edit" })
       }
     } catch (error: unknown) {
-      console.error("N16 CAP16 mutation result unknown")
+      const stack = error instanceof Error ? error.stack?.split("\n").slice(1, 7).join("\n")
+        .replace(/https?:\/\/[^/\s)]+/g, "[origin]")
+        .replace(/[?#][^\s)]*/g, "")
+        .slice(0, 2048) : undefined
+      console.error("N16 CAP16 mutation result unknown", performStage,
+        error instanceof Error ? error.name : "unknown", stack ?? "")
       editing?.controller.setPhase("outcome-unknown")
       setStore({ uncertain: true, error: t("sf.common.operationUnknown") })
     } finally {
@@ -781,22 +793,22 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                 </form>
               }}
             </Show>
-            <Show when={store.mode === "review-edit" && snapshot()?.availability === "active" ? active() : null}>
+            <Show when={store.mode === "review-edit" && snapshot()?.availability === "active" ? active() : null} keyed>
               {(editing) => {
-                const currentDraft = () => editing().controller.snapshot()
+                const currentDraft = () => editing.controller.snapshot()
                 const proposed = () => { const state = currentDraft(); return state.availability === "active" ? state.value : undefined }
                 return <section class="sf-u31-panel sf-u31-review" aria-label={t("sf.common.review")}>
                   <label class="sf-u31-confirm"><input type="checkbox" checked={store.confirmedWeights}
                     onChange={(event) => setStore("confirmedWeights", event.currentTarget.checked)} />
                     {t("sf.u31.confirmWeights")}</label>
                   <SfChangeReview
-                    operation={{ ref: editing().operationRef,
-                      label: labelMessage(editing().command === "save" ? "sf.u31.saveContract"
-                        : editing().command === "save-item" ? "sf.u31.saveItem" : "sf.u31.saveSub"),
+                    operation={{ ref: editing.operationRef,
+                      label: labelMessage(editing.command === "save" ? "sf.u31.saveContract"
+                        : editing.command === "save-item" ? "sf.u31.saveItem" : "sf.u31.saveSub"),
                       scope: { kind: "message", message: labelMessage("sf.cap16.title") } }}
                     base={sourceReview()} current={sourceReview()}
                     proposed={(() => {
-                      const identity = editing().identity
+                      const identity = editing.identity
                       const state = currentDraft()
                       const value = state.availability === "active" ? state.value : undefined
                       return { kind: "draft" as const, intentRef: identity.kind === "new"
@@ -811,9 +823,9 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                     coverage={{ state: "complete", summary: labelMessage("sf.common.currentSource"),
                       reasons: [], knownCount: null, expectedCount: null }}
                     blockingReasons={store.uncertain ? [labelMessage("sf.common.operationUnknown")] : []}
-                    confirmation={!store.uncertain && allowed(editing().command)
+                    confirmation={!store.uncertain && allowed(editing.command)
                       ? { kind: "admitted", labelKey: key("sf.common.save"), purpose: "save",
-                        binding: { kind: "catalog-command", operationId: opId[editing().command],
+                        binding: { kind: "catalog-command", operationId: opId[editing.command],
                           version: { kind: "record", expectedVersion: store.cas! },
                           confirmation: store.confirmedWeights ? "producer-confirmed-field" : "presentation-only" } }
                       : { kind: "blocked", labelKey: key("sf.common.unavailable"),
