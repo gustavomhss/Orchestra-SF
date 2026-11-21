@@ -36,6 +36,7 @@ export type Field<Row, Value> = Readonly<{
 export type Column<Row> = Readonly<{
   name: Extract<keyof Row, string>
   label: string
+  secondary?: readonly Extract<keyof Row, string>[]
 }>
 export type CollectionSpec<Id extends Cap, Row extends Entity, Values extends object> = Readonly<{
   id: Id
@@ -44,6 +45,10 @@ export type CollectionSpec<Id extends Cap, Row extends Entity, Values extends ob
   primary: string
   fields: readonly Field<Row, Values>[]
   columns: readonly Column<Row>[]
+  groups: readonly Readonly<{
+    label: string
+    fields: readonly Extract<keyof Row & keyof Values, string>[]
+  }>[]
   name: (record: Row) => string
   initial: (record?: Row) => Values
   deepRef: (route: SfSurfaceProps<Id>["route"]) => string | null
@@ -356,11 +361,28 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
   const sortRows = createMemo(() => store.order === "none" ? rows() : [...rows()].sort(
     (a, b) => scalar(a[spec.columns[0]!.name]).localeCompare(scalar(b[spec.columns[0]!.name])) *
       (store.order === "asc" ? 1 : -1)))
-  const columns: readonly SfColumn<Row>[] = spec.columns.map((field) => ({
-    id: field.name, labelKey: k(field.label), align: "start",
-    widthPolicy: { kind: "content", minPx: 96, maxPx: 260 },
-    sortKey: field.name,
-    render: (row) => <bdi>{scalar(row[field.name]) || t("sf.common.unknown")}</bdi>,
+  const displayValue = (name: Extract<keyof Row, string>, value: unknown) => {
+    const raw = scalar(value)
+    const option = spec.fields.find((field) => field.name === name)?.options?.find((choice) => choice.value === raw)
+    return raw ? option ? t(option.label) : raw : t("sf.u30.fieldMissing")
+  }
+  const fieldGroups = (entity: Row | undefined) => spec.groups.map((group) => ({
+    label: group.label, fields: fieldList(entity).filter((field) => group.fields.includes(field.name)),
+  })).filter((group) => group.fields.length > 0)
+  const columns: readonly SfColumn<Row>[] = spec.columns.map((field, index) => ({
+    id: field.name, labelKey: k(field.label),
+    align: ["impact", "probability", "biz", "iti", "perc"].includes(field.name) ? "end" : "start",
+    widthPolicy: { kind: "content", minPx: index === 0 ? 240 : 80, maxPx: index === 0 ? 360 : 200 },
+    sortKey: index === 0 ? field.name : undefined,
+    render: (row) => <span class="sf-u30-cell" data-field={field.name}>
+      <span class="sf-u30-cell-label">{t(field.label)}</span>
+      <bdi>{index === 0 ? spec.name(row) || t("sf.u30.fieldMissing") : displayValue(field.name, row[field.name])}</bdi>
+      <Show when={field.secondary?.length}>
+        <span class="sf-u30-cell-secondary">
+          <For each={field.secondary?.filter((name) => scalar(row[name]) && scalar(row[name]) !== spec.name(row))}>{(name) => <bdi>{scalar(row[name])}</bdi>}</For>
+        </span>
+      </Show>
+    </span>,
   }))
   const statusCopy = () => store.status === "loading" ? "sf.common.loading"
     : store.status === "empty" ? "sf.common.empty"
@@ -373,17 +395,17 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
     reasons: [], knownCount: null, expectedCount: null } as const)
 
   return (
-    <div data-sf-surface={spec.id} data-sf-authorized={isCurrent()}>
+    <div data-sf-authorized={isCurrent()}>
       <SfPageFrame titleKey={k(spec.title)} context={[]} tabs={[]} activeTab={null}
         density="comfortable" layout="work" onLayoutMode={() => undefined}
-        primaryAction={admitted("save") ? { id: "new", labelKey: k(spec.primary), tone: "primary",
+        primaryAction={store.mode === "list" && admitted("save") ? { id: "new", labelKey: k(spec.primary), tone: "primary",
           disabled: store.busy || store.unknown, busy: store.busy,
           onInvoke: () => beginEdit(undefined) } : undefined}
         secondaryActions={[]}>
         <SfStatePanel state={store.status === "empty" || store.status === "filtered-empty" ? "ready" : store.status} messageKey={k(statusCopy())} onRetryRead={refresh}
           onBack={() => setStore({ mode: "list", selected: null })}>
           <Show when={isCurrent()}>
-            <div class="sf-u30-root">
+            <div class="sf-u30-root" data-sf-surface={spec.id} data-sf-wave="three" data-sf-view={store.mode}>
               <Show when={store.status === "empty" || store.status === "filtered-empty"}>
                 <p role="status">{t(statusCopy())}</p>
               </Show>
@@ -395,7 +417,14 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                 <SfStatePanel state="outcome-unknown" messageKey={k("sf.common.operationUnknown")}
                   onRetryRead={refresh} />
               </Show>
-              <section class="sf-u30-filters" aria-label={t("sf.u30.filters")}>
+              <div class="sf-u30-panels">
+                <section class="sf-u30-list" hidden={store.mode !== "list"}>
+                  <header class="sf-u30-list-head">
+                    <div><h2>{t(spec.id === "CAP13" ? "sf.u30.design.riskRegister" : "sf.u30.design.relationships")}</h2>
+                      <p>{t(spec.id === "CAP13" ? "sf.u30.design.riskIntro" : "sf.u30.design.stakeholderIntro")}</p></div>
+                    <p class="sf-u30-count"><strong>{rows().length}</strong> {t("sf.u30.design.recordsShown")}</p>
+                  </header>
+              <form class="sf-u30-filters" onSubmit={(event) => { event.preventDefault(); setStore("filters", { ...store.filtersEdit }) }} aria-label={t("sf.u30.filters")}>
                 <label>{t("sf.u30.search")}<input value={store.filtersEdit.q || ""}
                   onInput={(event) => setStore("filtersEdit", "q", event.currentTarget.value)} /></label>
                 <Show when={spec.id === "CAP13"}>
@@ -408,11 +437,10 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                     </select>
                   </label>
                 </Show>
-                <button class="mx-btn" type="button"
-                  onClick={() => setStore("filters", { ...store.filtersEdit })}>{t("sf.u30.apply")}</button>
-              </section>
-              <div class="sf-u30-panels">
-                <section class="sf-u30-list">
+                <button class="mx-btn" type="submit">{t("sf.u30.apply")}</button>
+              </form>
+
+                  <div class="sf-u30-ledger" role="region" aria-label={t(spec.title)} tabindex="0">
                   <SfDataTable<Row> rows={sortRows()} getRowKey={(row) => idOf(row.id)}
                     columns={columns} selectedKey={store.selected || undefined}
                     sort={store.order === "none" ? { kind: "none" }
@@ -434,28 +462,47 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                       if (actionId === "delete") beginDeleteReview(candidates[0]!)
                     }}
                     captionKey={k(spec.title)} density="comfortable" state="ready" />
+                  </div>
                 </section>
                 <Show when={store.mode !== "list"}>
-                  <section class="sf-u30-detail">
-                    <button type="button" class="mx-btn" onClick={() => setStore({ mode: "list", selected: null })}>
+                  <section class="sf-u30-detail" data-mode={store.mode}>
+                    <button type="button" class="mx-btn sf-u30-back" onClick={() => setStore({ mode: "list", selected: null })}>
                       {t("sf.common.back")}
                     </button>
                     <Show when={store.mode === "detail" && selected()}>
-                      {(row) => <article>
-                        <h2><bdi>{spec.name(row())}</bdi></h2>
-                        <dl class="sf-u30-definition">
-                          <For each={fieldList(row())}>{(field) => <>
-                            <dt>{t(field.label)}</dt>
-                            <dd><bdi>{scalar(row()[field.name as keyof Row])}</bdi></dd>
-                          </>}</For>
-                        </dl>
-                        <div class="sf-u30-actions">
-                          <Show when={admitted("save")}><button type="button" class="mx-btn"
-                            onClick={() => beginEdit(row())}>{t("sf.common.edit")}</button></Show>
-                          <Show when={admitted("delete")}><button type="button" class="mx-btn danger"
-                            onClick={() => beginDeleteReview(row())}>{t("sf.u30.delete")}</button></Show>
+                      {(row) => <article class="sf-u30-record" data-sf-record-detail>
+                        <header class="sf-u30-record-head">
+                          <div><p class="sf-u30-caption">{t(spec.title)}</p><h2><bdi>{spec.name(row())}</bdi></h2></div>
+                          <div class="sf-u30-actions">
+                            <Show when={admitted("save")}><button type="button" class="mx-btn primary"
+                              onClick={() => beginEdit(row())}>{t("sf.common.edit")}</button></Show>
+                            <Show when={admitted("delete")}><button type="button" class="mx-btn danger"
+                              onClick={() => beginDeleteReview(row())}>{t("sf.u30.delete")}</button></Show>
+                          </div>
+                        </header>
+                        <div class="sf-u30-detail-groups">
+                          <For each={fieldGroups(row())}>{(group) => (
+                            <section class="sf-u30-detail-group" aria-label={t(group.label)}>
+                              <h3>{t(group.label)}</h3>
+                              <dl class="sf-u30-definition">
+                                <For each={group.fields}>{(field) => <div data-field-kind={field.kind}>
+                                  <dt>{t(field.label)}</dt>
+                                  <dd data-sf-missing={!scalar(row()[field.name as keyof Row])}>
+                                    <bdi>{displayValue(field.name, row()[field.name as keyof Row])}</bdi>
+                                  </dd>
+                                </div>}</For>
+                              </dl>
+                            </section>
+                          )}</For>
                         </div>
-                        <div class="flex flex-wrap gap-2 mt-3" data-sf-executive-handoff>
+                        <details class="sf-u30-source">
+                          <summary>{t("sf.u30.design.source")}</summary>
+                          <dl class="sf-u30-definition">
+                            <div><dt>{t("sf.u30.design.reference")}</dt><dd><bdi>{String(row().id)}</bdi></dd></div>
+                            <div><dt>{t("sf.u30.design.version")}</dt><dd>{version(row()) ?? t("sf.u30.fieldMissing")}</dd></div>
+                          </dl>
+                        </details>
+                        <div class="sf-u30-actions sf-u30-related" data-sf-executive-handoff>
                           <SfExecutiveAction from={props.route} target={{ kind: "new-topic" }}
                             label={{ pt: "Criar ação em Hot Topics", en: "Create Hot Topic action" }} />
                           <SfExecutiveAction from={props.route}
@@ -469,11 +516,18 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                       </article>}
                     </Show>
                     <Show when={store.mode === "edit" && activeState()?.availability === "active" ? draft() : null}>
-                      {(active) => <form class="sf-u30-editor" onSubmit={(event) => {
+                      {(active) => <form class="sf-u30-editor" data-sf-editor onSubmit={(event) => {
                         event.preventDefault(); beginSaveReview()
                       }}>
-                        <h2>{t(active().entity ? "sf.common.edit" : spec.primary)}</h2>
-                        <For each={fieldList(active().entity)}>{(field) => {
+                        <header class="sf-u30-editor-head">
+                          <h2>{t(active().entity ? "sf.common.edit" : spec.primary)}</h2>
+                          <p>{t("sf.u30.design.editHint")}</p>
+                        </header>
+                        <For each={fieldGroups(active().entity)}>{(group) => (
+                          <fieldset class="sf-u30-field-group">
+                            <legend>{t(group.label)}</legend>
+                            <div class="sf-u30-fields">
+                        <For each={group.fields}>{(field) => {
                           const getValue = () => {
                             const snapshot = active().controller.snapshot()
                             return snapshot.availability === "active" ? scalar(snapshot.value[field.name]) : ""
@@ -483,26 +537,29 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                             if (snapshot.availability === "active")
                               active().controller.edit({ ...snapshot.value, [field.name]: next } as Values)
                           }
-                          return <label>{t(field.label)}
+                          return <label data-field-kind={field.kind} data-field-name={field.name}>{t(field.label)}
                             <Show when={field.kind === "textarea"} fallback={
                               <Show when={field.kind === "select"} fallback={
-                                <input type={field.kind === "email" ? "email"
+                                <input name={field.name} aria-label={t(field.label)} type={field.kind === "email" ? "email"
                                   : field.kind === "date" ? "date" : "text"}
                                   required={field.required} value={getValue()}
                                   onInput={(event) => change(event.currentTarget.value)} />
                               }>
-                                <select aria-label={t(field.label)} required={field.required} value={getValue()}
+                                <select name={field.name} aria-label={t(field.label)} required={field.required} value={getValue()}
                                   onChange={(event) => change(event.currentTarget.value)}>
                                   <For each={field.options || []}>{(option) =>
                                     <option value={option.value}>{t(option.label)}</option>}</For>
                                 </select>
                               </Show>
                             }>
-                              <textarea value={getValue()}
+                              <textarea name={field.name} aria-label={t(field.label)} required={field.required} value={getValue()}
                                 onInput={(event) => change(event.currentTarget.value)} />
                             </Show>
                           </label>
                         }}</For>
+                            </div>
+                          </fieldset>
+                        )}</For>
                         <div class="sf-u30-actions">
                           <button type="submit" class="mx-btn primary" disabled={store.busy || store.unknown}>
                             {t("sf.common.review")}

@@ -11,7 +11,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewField, SfReviewSnapshot } from "../../shared/change-review"
 import {
-  SERVICE_HEAT_FIELDS, SERVICE_MONTHS, SERVICE_SLA_FIELDS, SERVICE_YEARS,
+  SERVICE_HEAT_FIELDS, SERVICE_MONTHS, SERVICE_SLA_FIELDS, SERVICE_TICKET_MEASURES, SERVICE_TICKET_TYPES, SERVICE_YEARS,
   SOURCE_OPERATION_IDS, serviceCategories, serviceCurrentHeatmap, serviceCurrentMonthHeatmap,
   serviceCurrentSla, serviceCurrentTickets, serviceItems, serviceListVersion,
   serviceMonthVersion, serviceRecordId, serviceString, serviceTicketKeys,
@@ -127,13 +127,10 @@ function serviceReadState(page: SfServicePage): "ready" | "empty" | "filtered-em
   return period.length ? "ready" : "filtered-empty"
 }
 
-function reviewFields(action: SfServiceAction, values: DraftValues): SfReviewField[] {
+function reviewFields(action: SfServiceAction, values: DraftValues, label: (field: string) => string): SfReviewField[] {
   return sourceFields(action, values).map((field) => ({
     path: field,
-    label: message(field.startsWith("ticket.") ? sourceKey("section.tickets") :
-      field.startsWith("sla.") ? sourceKey("section.sla") :
-      field.startsWith("heatmap.") ? sourceKey("section.heatmap") :
-      sourceKey("field." + field + ".label")),
+    label: { key: sourceKey("design.fieldLabel"), params: { label: label(field) } },
     value: { kind: "text" as const, text: { kind: "data" as const, text: values[field] ?? "" } },
   }))
 }
@@ -579,20 +576,55 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
     if (action === "import-month") return sourceKey("section.import")
     return sourceKey("section.settings")
   }
-  const sourceDataField = (name: string, type: "number" | "text" | "textarea" = "number") => (
-    <label class="sf-ops-field">
-      <span>{name.startsWith("ticket.") ? name.slice(7) :
-        name.startsWith("sla.") ? t(sourceKey("field." + name.slice(4) + ".label")) :
-        name.startsWith("heatmap.") ? name.slice(8).replace(/.(p1|p2|tickets|comments)$/, " / $1") :
-        name.includes("|") ? name : t(sourceKey("field." + name + ".label"))}</span>
+  const ticketTypeLabel = (kind: string) =>
+    t(sourceKey(kind === "Incidents" ? "table.incidents" : "table.serviceRequests"))
+  const ticketMeasureLabel = (measure: string) =>
+    t(sourceKey(measure === "Initial Balance" ? "table.initialBalance" : measure === "Open" ? "table.opened" : "table.closed"))
+  const serviceFieldLabel = (name: string) => {
+    const ticket = name.startsWith("ticket.") ? name.slice(7) : name
+    if (ticket.includes("|")) {
+      const [category, kind, measure] = ticket.split("|")
+      return [category, ticketTypeLabel(kind ?? ""), ticketMeasureLabel(measure ?? "")].join(" · ")
+    }
+    if (name.startsWith("heatmap.")) {
+      const match = /^heatmap\.(.*)\.(p1|p2|tickets|comments)$/.exec(name)
+      if (match) return match[1] + " · " + t(sourceKey("design.field." + match[2]))
+    }
+    const field = name.startsWith("sla.") ? name.slice(4) : name
+    return t(sourceKey("design.field." + field))
+  }
+  const sourceDataField = (name: string, type: "number" | "text" | "textarea" = "number", label?: string) => (
+    <label class="sf-ops-field" data-field-kind={type}>
+      <span>{label ?? serviceFieldLabel(name)}</span>
       <Show when={type !== "textarea"} fallback={
-        <textarea value={currentFields()[name] ?? ""} onInput={(event) => edit(name, event.currentTarget.value)} />
+        <textarea name={name} aria-label={serviceFieldLabel(name)} value={currentFields()[name] ?? ""}
+          onInput={(event) => edit(name, event.currentTarget.value)} />
       }>
-        <input type={type} min={type === "number" ? 0 : undefined} step={type === "number" ? "any" : undefined}
+        <input name={name} aria-label={serviceFieldLabel(name)} type={type}
+          min={type === "number" ? 0 : undefined} step={type === "number" ? "any" : undefined}
           value={currentFields()[name] ?? ""}
           onInput={(event) => edit(name, event.currentTarget.value)} />
       </Show>
     </label>
+  )
+  const ticketFields = (prefix = "") => (
+    <div class="sf-ops-ticket-fields">
+      <For each={serviceCategories(state.page!)}>{(category) => (
+        <section class="sf-ops-ticket-category" aria-label={category}>
+          <h3>{category}</h3>
+          <For each={SERVICE_TICKET_TYPES}>{(kind) => (
+            <fieldset>
+              <legend>{ticketTypeLabel(kind)}</legend>
+              <div class="sf-ops-grid sf-ops-grid-three">
+                <For each={SERVICE_TICKET_MEASURES}>{(measure) =>
+                  sourceDataField(prefix + category + "|" + kind + "|" + measure, "number", ticketMeasureLabel(measure))
+                }</For>
+              </div>
+            </fieldset>
+          )}</For>
+        </section>
+      )}</For>
+    </div>
   )
   const reviewState = () => state.operationState === "conflict" ? "conflict" :
     state.operationState === "unknown" ? "outcome-unknown" :
@@ -603,11 +635,11 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       return { kind: "not-provided", reason: message(commonKey("empty")) }
     return original
       ? { kind: "persisted", ref: editor.identity.kind === "record" ? editor.identity.recordRef : asRef(""),
-        version, fields: reviewFields(editor.action, values) }
+        version, fields: reviewFields(editor.action, values, serviceFieldLabel) }
       : { kind: "draft",
         intentRef: editor.identity.kind === "new" ? editor.identity.newIntentRef : asIntent("u04:" + editor.scope),
         sourceRef: editor.identity.kind === "record" ? editor.identity.recordRef : null,
-        sourceVersion: editor.version, fields: reviewFields(editor.action, values) }
+        sourceVersion: editor.version, fields: reviewFields(editor.action, values, serviceFieldLabel) }
   }
   const displayedYear = () => state.page?.selection.year ?? state.year
   const displayedMonth = () => state.page?.selection.month ?? state.month
@@ -615,15 +647,10 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
   return (
     <SfPageFrame
       titleKey={sourceKey("title")}
-      context={state.page ? [
-        { id: "year", label: message(sourceKey("field.year.label")),
-          value: { kind: "data", text: String(state.page.selection.year) } },
-        { id: "month", label: message(sourceKey("field.month.label")),
-          value: { kind: "data", text: String(state.page.selection.month) } },
-      ] : []}
+      context={[]}
       tabs={[]}
       activeTab={null}
-      primaryAction={{
+      primaryAction={state.editor ? undefined : {
         id: "update-month", labelKey: sourceKey("primary"), tone: "primary",
         disabled: !can("save-tickets") || state.submitting, busy: state.submitting,
         onInvoke: () => openEditor("save-tickets"),
@@ -633,7 +660,8 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       layout="work"
       onLayoutMode={() => undefined}
     >
-      <section class="sf-ops-service" data-sf-surface="CAP11" data-sf-read-state={state.state}>
+      <section class="sf-ops-service" data-sf-surface="CAP11" data-sf-wave="three"
+        data-sf-view={state.editor ? state.editor.review ? "review" : "edit" : "overview"} data-sf-read-state={state.state}>
         <Show when={state.page && ["ready", "empty", "filtered-empty", "partial"].includes(state.state)} fallback={
           <SfStatePanel
             state={state.state}
@@ -655,184 +683,169 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
           <Show when={state.state === "empty" || state.state === "filtered-empty"}>
             <p role="status">{t(state.state === "empty" ? commonKey("empty") : commonKey("filterEmpty"))}</p>
           </Show>
-          <div class="sf-ops-period" role="group" aria-label={t(sourceKey("section.month"))}>
-            <label>{t(sourceKey("field.year.label"))}
-              <select value={displayedYear()} onChange={(event) => changeSelection("year", Number(event.currentTarget.value))}>
-                <For each={SERVICE_YEARS}>{(year) => <option value={year}>{year}</option>}</For>
-              </select>
-            </label>
-            <label>{t(sourceKey("field.month.label"))}
-              <select value={displayedMonth()} onChange={(event) => changeSelection("month", Number(event.currentTarget.value))}>
-                <For each={SERVICE_MONTHS}>{(month) => <option value={month}>{month}</option>}</For>
-              </select>
-            </label>
-            <Show when={!state.page!.allowedActionIds.length}>
-              <span>{t(commonKey("readOnly"))}</span>
-            </Show>
-          </div>
+          <div class="sf-ops-overview" hidden={!!state.editor}>
+            <div class="sf-ops-period" role="group" aria-label={t(sourceKey("design.period"))}>
+              <p class="sf-ops-intro">{t(sourceKey("design.overview"))}</p>
+              <label>{t(sourceKey("field.year.label"))}
+                <select aria-label={t(sourceKey("field.year.label"))} value={displayedYear()}
+                  onChange={(event) => changeSelection("year", Number(event.currentTarget.value))}>
+                  <For each={SERVICE_YEARS}>{(year) => <option value={year}>{year}</option>}</For>
+                </select>
+              </label>
+              <label>{t(sourceKey("field.month.label"))}
+                <select aria-label={t(sourceKey("field.month.label"))} value={displayedMonth()}
+                  onChange={(event) => changeSelection("month", Number(event.currentTarget.value))}>
+                  <For each={SERVICE_MONTHS}>{(month) => <option value={month}>{month}</option>}</For>
+                </select>
+              </label>
+              <Show when={!state.page!.allowedActionIds.length}>
+                <span class="sf-ops-caption">{t(commonKey("readOnly"))}</span>
+              </Show>
+            </div>
 
-          <section aria-labelledby="sf-cap11-tickets-title">
-            <h2 id="sf-cap11-tickets-title">{t(sourceKey("section.tickets"))}</h2>
-            <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.tickets"))} tabindex="0">
-              <table>
-                <thead>
-                  <tr><th scope="col">{t(sourceKey("field.month.label"))}</th>
-                    <For each={serviceTicketKeys(state.page!)}>{(key) => <th scope="col">{key}</th>}</For>
-                  </tr>
-                </thead>
-                <tbody>
-                  <For each={(state.page!.data.opsTickets ?? []).filter(
-                    (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
-                  )}>
-                    {(row) => (
-                      <tr><th scope="row">{serviceString(row.month)}</th>
-                        <For each={serviceTicketKeys(state.page!)}>{(key) => (
-                          <td>{row[key] == null ? t(sourceKey("table.noData")) : String(row[key])}</td>
-                        )}</For>
-                      </tr>
-                    )}
-                  </For>
-                </tbody>
-              </table>
-            </div>
-            <Show when={(state.page!.data.opsTickets ?? []).filter(
-              (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
-            ).length === 0}>
-              <p>{t((state.page!.data.opsTickets ?? []).length === 0 ? commonKey("empty") : commonKey("filterEmpty"))}</p>
-            </Show>
-            <h3>{t(sourceKey("section.openedClosed"))}</h3>
-            <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.openedClosed"))} tabindex="0">
-              <table>
-                <thead><tr>
-                  <th scope="col">{t(sourceKey("table.month"))}</th>
-                  <th scope="col">{t(sourceKey("table.opened"))}</th>
-                  <th scope="col">{t(sourceKey("table.closed"))}</th>
-                </tr></thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">{state.page!.selection.month}</th>
-                    <td>{state.page!.data.display?.opened[state.page!.selection.month - 1] == null
-                      ? t(sourceKey("table.noData")) : String(state.page!.data.display!.opened[state.page!.selection.month - 1])}</td>
-                    <td>{state.page!.data.display?.closed[state.page!.selection.month - 1] == null
-                      ? t(sourceKey("table.noData")) : String(state.page!.data.display!.closed[state.page!.selection.month - 1])}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <button type="button" disabled={!can("save-tickets")} onClick={() => openEditor("save-tickets")}>
-              {t(sourceKey("action.save-tickets"))}
-            </button>
-          </section>
-
-          <section aria-labelledby="sf-cap11-sla-title">
-            <h2 id="sf-cap11-sla-title">{t(sourceKey("section.sla"))}</h2>
-            <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.sla"))} tabindex="0">
-              <table>
-                <thead><tr><th>{t(sourceKey("table.month"))}</th>
-                  <th>{t(sourceKey("table.incidentSla"))}</th>
-                  <th>{t(sourceKey("table.serviceSla"))}</th>
-                  <th>{t(sourceKey("table.availability"))}</th>
-                </tr></thead>
-                <tbody>
-                  <For each={(state.page!.data.opsSLA ?? []).filter(
-                    (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
-                  )}>
-                    {(row) => <tr><th scope="row">{serviceString(row.month)}</th>
-                      <For each={SERVICE_SLA_FIELDS}>{(key) =>
-                        <td>{row[key] == null ? t(sourceKey("table.noData")) : String(row[key])}</td>}
-                      </For>
-                    </tr>}
-                  </For>
-                </tbody>
-              </table>
-            </div>
-            <h3>{t(sourceKey("section.slaTrend"))}</h3>
-            <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.slaTrend"))} tabindex="0">
-              <table>
-                <thead><tr>
-                  <th scope="col">{t(sourceKey("table.month"))}</th>
-                  <th scope="col">{t(sourceKey("table.incidentSla"))}</th>
-                  <th scope="col">{t(sourceKey("table.serviceSla"))}</th>
-                  <th scope="col">{t(sourceKey("table.availability"))}</th>
-                </tr></thead>
-                <tbody>
-                  <For each={[state.page!.selection.month]}>{(month) => {
-                    const row = (state.page!.data.opsSLA ?? []).find((source) =>
-                      source.year === state.page!.selection.year && source.month === month)
-                    return <tr>
-                      <th scope="row">{month}</th>
-                      <For each={SERVICE_SLA_FIELDS}>{(name) =>
-                        <td>{row?.[name] == null ? t(sourceKey("table.noData")) : String(row[name])}</td>}
-                      </For>
-                    </tr>
-                  }}</For>
-                </tbody>
-              </table>
-            </div>
-            <Show when={!serviceCurrentSla(state.page!)}>
-              <p>{t((state.page!.data.opsSLA ?? []).length === 0 ? commonKey("empty") : commonKey("filterEmpty"))}</p>
-            </Show>
-            <button type="button" disabled={!can("save-sla")} onClick={() => openEditor("save-sla")}>
-              {t(sourceKey("action.save-sla"))}
-            </button>
-          </section>
-
-          <section aria-labelledby="sf-cap11-heat-title">
-            <h2 id="sf-cap11-heat-title">{t(sourceKey("section.heatmap"))}</h2>
-            <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.heatmap"))} tabindex="0">
-              <table>
-                <thead><tr><th>{t(sourceKey("table.item"))}</th>
-                  <th scope="col">{state.page!.selection.month}</th>
-                </tr></thead>
-                <tbody>
-                  <For each={serviceItems(state.page!)}>{(item) => (
-                    <tr><th scope="row">{item}</th>
-                      <td>{(() => {
-                        const row = serviceCurrentHeatmap(state.page!, item)
-                        if (!row) return t(sourceKey("table.noData"))
-                        const comments = serviceString(row.comments)
-                        const figures = [row.p1 ?? "", row.p2 ?? "", row.tickets ?? ""].join("/")
-                        return comments ? <span title={comments}>{figures}</span> : <span>{figures}</span>
-                      })()}</td>
-                    </tr>
-                  )}</For>
-                </tbody>
-              </table>
-            </div>
-            <Show when={serviceCurrentMonthHeatmap(state.page!).length === 0}>
-              <p>{t((state.page!.data.opsHeatmap ?? []).length === 0 ? commonKey("empty") : commonKey("filterEmpty"))}</p>
-            </Show>
-            <div class="sf-ops-actions">
-              <For each={serviceItems(state.page!)}>{(item) => (
-                <button type="button" disabled={!can("save-heatmap")} onClick={() => openEditor("save-heatmap", item)}>
-                  {t(sourceKey("action.save-heatmap"))} — {item}
+            <section class="sf-ops-panel" aria-labelledby="sf-cap11-sla-title">
+              <header class="sf-ops-section-head">
+                <div><h2 id="sf-cap11-sla-title">{t(sourceKey("section.sla"))}</h2>
+                  <p>{t(sourceKey("design.slaHint"))}</p></div>
+                <button class="mx-btn" type="button" disabled={!can("save-sla")} onClick={() => openEditor("save-sla")}>
+                  {t(sourceKey("design.editSla"))}
                 </button>
-              )}</For>
-            </div>
-          </section>
+              </header>
+              <dl class="sf-ops-metrics">
+                <For each={SERVICE_SLA_FIELDS}>{(field) => (
+                  <div>
+                    <dt>{t(sourceKey("design.field." + field))}</dt>
+                    <dd data-sf-missing={serviceCurrentSla(state.page!)?.[field] == null}>
+                      {serviceCurrentSla(state.page!)?.[field] == null
+                        ? t(sourceKey("table.noData")) : String(serviceCurrentSla(state.page!)![field])}
+                    </dd>
+                  </div>
+                )}</For>
+              </dl>
+              <details class="sf-ops-disclosure">
+                <summary>{t(sourceKey("section.slaTrend"))}</summary>
+                <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.slaTrend"))} tabindex="0">
+                  <table>
+                    <thead><tr><th scope="col">{t(sourceKey("table.month"))}</th>
+                      <For each={SERVICE_SLA_FIELDS}>{(field) => <th scope="col" class="sf-ops-number">
+                        {t(sourceKey("design.field." + field))}</th>}</For>
+                    </tr></thead>
+                    <tbody><For each={(state.page!.data.opsSLA ?? [])
+                      .filter((row) => row.year === state.page!.selection.year)
+                      .slice().sort((left, right) => Number(left.month) - Number(right.month))}>{(row) => (
+                      <tr><th scope="row">{serviceString(row.month)}</th>
+                        <For each={SERVICE_SLA_FIELDS}>{(field) => <td class="sf-ops-number">
+                          {row[field] == null ? t(sourceKey("table.noData")) : String(row[field])}</td>}</For>
+                      </tr>
+                    )}</For></tbody>
+                  </table>
+                </div>
+                <Show when={!(state.page!.data.opsSLA ?? []).some((row) => row.year === state.page!.selection.year)}>
+                  <p class="sf-ops-empty">{t(commonKey("filterEmpty"))}</p>
+                </Show>
+              </details>
+            </section>
 
-          <section aria-labelledby="sf-cap11-config-title">
-            <h2 id="sf-cap11-config-title">{t(sourceKey("section.settings"))}</h2>
-            <dl><dt>{t(sourceKey("field.opsCats.label"))}</dt>
-              <dd>{serviceCategories(state.page!).join(", ")}</dd>
-              <dt>{t(sourceKey("field.opsHmItems.label"))}</dt>
-              <dd>{serviceItems(state.page!).join(", ")}</dd></dl>
-            <div class="sf-ops-actions">
-              <button type="button" disabled={!can("save-categories")} onClick={() => openEditor("save-categories")}>
-                {t(sourceKey("action.save-categories"))} — {t(sourceKey("field.opsCats.label"))}
-              </button>
-              <button type="button" disabled={!can("save-items")} onClick={() => openEditor("save-items")}>
-                {t(sourceKey("action.save-items"))} — {t(sourceKey("field.opsHmItems.label"))}
-              </button>
-            </div>
-          </section>
+            <section class="sf-ops-panel" aria-labelledby="sf-cap11-tickets-title">
+              <header class="sf-ops-section-head">
+                <div><h2 id="sf-cap11-tickets-title">{t(sourceKey("section.tickets"))}</h2>
+                  <p>{t(sourceKey("design.ticketHint"))}</p></div>
+                <button class="mx-btn" type="button" disabled={!can("save-tickets")} onClick={() => openEditor("save-tickets")}>
+                  {t(sourceKey("design.editTickets"))}
+                </button>
+              </header>
+              <dl class="sf-ops-volumes" aria-label={t(sourceKey("section.openedClosed"))}>
+                <div><dt>{t(sourceKey("table.opened"))}</dt>
+                  <dd>{state.page!.data.display?.opened[state.page!.selection.month - 1] == null
+                    ? t(sourceKey("table.noData")) : String(state.page!.data.display!.opened[state.page!.selection.month - 1])}</dd></div>
+                <div><dt>{t(sourceKey("table.closed"))}</dt>
+                  <dd>{state.page!.data.display?.closed[state.page!.selection.month - 1] == null
+                    ? t(sourceKey("table.noData")) : String(state.page!.data.display!.closed[state.page!.selection.month - 1])}</dd></div>
+              </dl>
+              <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.tickets"))} tabindex="0">
+                <table class="sf-ops-ticket-table">
+                  <thead><tr><th scope="col">{t(sourceKey("design.category"))}</th>
+                    <th scope="col">{t(sourceKey("design.requestType"))}</th>
+                    <For each={SERVICE_TICKET_MEASURES}>{(measure) => <th scope="col" class="sf-ops-number">
+                      {ticketMeasureLabel(measure)}</th>}</For>
+                  </tr></thead>
+                  <tbody>
+                    <For each={(state.page!.data.opsTickets ?? []).filter(
+                      (row) => row.year === state.page!.selection.year && row.month === state.page!.selection.month,
+                    )}>{(row) => <For each={serviceCategories(state.page!)}>{(category) =>
+                      <For each={SERVICE_TICKET_TYPES}>{(kind, index) => (
+                        <tr classList={{ "sf-ops-category-start": index() === 0 }}>
+                          <Show when={index() === 0}><th scope="rowgroup" rowspan={2}>{category}</th></Show>
+                          <th scope="row" class="sf-ops-ticket-type">{ticketTypeLabel(kind)}</th>
+                          <For each={SERVICE_TICKET_MEASURES}>{(measure) => <td class="sf-ops-number">
+                            {row[category + "|" + kind + "|" + measure] == null ? t(sourceKey("table.noData"))
+                              : String(row[category + "|" + kind + "|" + measure])}
+                          </td>}</For>
+                        </tr>
+                      )}</For>
+                    }</For>}</For>
+                  </tbody>
+                </table>
+              </div>
+              <Show when={!serviceCurrentTickets(state.page!)}>
+                <p class="sf-ops-empty">{t((state.page!.data.opsTickets ?? []).length === 0 ? commonKey("empty") : commonKey("filterEmpty"))}</p>
+              </Show>
+            </section>
 
-          <section aria-labelledby="sf-cap11-import-title">
-            <h2 id="sf-cap11-import-title">{t(sourceKey("section.import"))}</h2>
-            <button type="button" disabled={!can("import-month")} onClick={() => openEditor("import-month")}>
-              {t(sourceKey("action.import-month"))}
-            </button>
-          </section>
+            <section class="sf-ops-panel" aria-labelledby="sf-cap11-heat-title">
+              <header class="sf-ops-section-head">
+                <div><h2 id="sf-cap11-heat-title">{t(sourceKey("section.heatmap"))}</h2>
+                  <p>{t(sourceKey("design.heatHint"))}</p></div>
+              </header>
+              <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.heatmap"))} tabindex="0">
+                <table class="sf-ops-heat-table">
+                  <thead><tr><th scope="col">{t(sourceKey("table.item"))}</th>
+                    <For each={SERVICE_HEAT_FIELDS}>{(field) => <th scope="col" class="sf-ops-number">
+                      {t(sourceKey("design.field." + field))}</th>}</For>
+                    <th scope="col">{t(sourceKey("design.field.comments"))}</th>
+                    <th scope="col">{t(commonKey("edit"))}</th>
+                  </tr></thead>
+                  <tbody><For each={serviceItems(state.page!)}>{(item) => (
+                    <tr><th scope="row">{item}</th>
+                      <For each={SERVICE_HEAT_FIELDS}>{(field) => <td class="sf-ops-number">
+                        {serviceCurrentHeatmap(state.page!, item)?.[field] == null ? t(sourceKey("table.noData"))
+                          : String(serviceCurrentHeatmap(state.page!, item)![field])}
+                      </td>}</For>
+                      <td class="sf-ops-note">{serviceString(serviceCurrentHeatmap(state.page!, item)?.comments) || t(sourceKey("table.noData"))}</td>
+                      <td><button class="mx-btn" type="button" disabled={!can("save-heatmap")}
+                        aria-label={t(commonKey("edit")) + " · " + item} onClick={() => openEditor("save-heatmap", item)}>
+                        {t(commonKey("edit"))}</button></td>
+                    </tr>
+                  )}</For></tbody>
+                </table>
+              </div>
+              <Show when={serviceCurrentMonthHeatmap(state.page!).length === 0}>
+                <p class="sf-ops-empty">{t((state.page!.data.opsHeatmap ?? []).length === 0 ? commonKey("empty") : commonKey("filterEmpty"))}</p>
+              </Show>
+            </section>
+
+            <div class="sf-ops-support">
+              <details class="sf-ops-panel sf-ops-settings">
+                <summary id="sf-cap11-config-title">{t(sourceKey("section.settings"))}</summary>
+                <dl class="sf-ops-definition">
+                  <div><dt>{t(sourceKey("design.categories"))}</dt><dd>{serviceCategories(state.page!).join(", ")}</dd></div>
+                  <div><dt>{t(sourceKey("design.items"))}</dt><dd>{serviceItems(state.page!).join(", ")}</dd></div>
+                </dl>
+                <div class="sf-ops-actions">
+                  <button class="mx-btn" type="button" disabled={!can("save-categories")} onClick={() => openEditor("save-categories")}>
+                    {t(sourceKey("design.editCategories"))}</button>
+                  <button class="mx-btn" type="button" disabled={!can("save-items")} onClick={() => openEditor("save-items")}>
+                    {t(sourceKey("design.editItems"))}</button>
+                </div>
+              </details>
+              <section class="sf-ops-panel" aria-labelledby="sf-cap11-import-title">
+                <h2 id="sf-cap11-import-title">{t(sourceKey("section.import"))}</h2>
+                <p class="sf-ops-caption">{t(sourceKey("design.importHint"))}</p>
+                <button class="mx-btn" type="button" disabled={!can("import-month")} onClick={() => openEditor("import-month")}>
+                  {t(sourceKey("design.prepareImport"))}</button>
+              </section>
+            </div>
+          </div>
 
           <Show when={state.operationState === "conflict"}>
             <p role="alert">{t(commonKey("conflict"))}</p>
@@ -854,14 +867,17 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
           </Show>
 
           <Show when={state.editor && activeDraft()}>
-            <section class="sf-ops-editor" aria-labelledby="sf-cap11-editor-title" aria-busy={state.submitting}
+            <section class="sf-ops-editor" data-sf-editor aria-labelledby="sf-cap11-editor-title" aria-busy={state.submitting}
               onKeyDown={(event) => {
                 if (event.key === "Escape" && !state.editor?.review && !state.submitting) {
                   event.stopPropagation()
                   closeEditor()
                 }
               }}>
-              <h2 id="sf-cap11-editor-title">{t(heading())}</h2>
+              <header class="sf-ops-editor-head"><p class="sf-ops-caption">{state.page!.selection.year} · {state.page!.selection.month}</p>
+                <h2 id="sf-cap11-editor-title">{t(heading())}</h2>
+                <p class="sf-ops-caption">{t(sourceKey(state.editor!.review ? "design.reviewHint" : "design.editHint"))}</p>
+              </header>
               <Show when={!state.editor!.review} fallback={
                 <SfChangeReview
                   operation={{
@@ -878,7 +894,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                   effects={[{
                     id: state.editor!.action,
                     domain: "dashboard", title: { kind: "message", message: message(sourceKey("action." + state.editor!.action)) },
-                    state: "proposed", details: reviewFields(state.editor!.action, currentFields()),
+                    state: "proposed", details: reviewFields(state.editor!.action, currentFields(), serviceFieldLabel),
                   }]}
                   coverage={{
                     state: "complete", summary: message(commonKey("currentSource")),
@@ -907,9 +923,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
               }>
                 <form onSubmit={(event) => { event.preventDefault(); showReview() }}>
                   <Show when={state.editor!.action === "save-tickets"}>
-                    <div class="sf-ops-grid">
-                      <For each={serviceTicketKeys(state.page!)}>{(name) => sourceDataField(name)}</For>
-                    </div>
+                    {ticketFields()}
                   </Show>
                   <Show when={state.editor!.action === "save-sla"}>
                     <div class="sf-ops-grid">
@@ -918,7 +932,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                   </Show>
                   <Show when={state.editor!.action === "save-heatmap"}>
                     <label class="sf-ops-field">{t(sourceKey("field.item.label"))}
-                      <select value={currentFields().item ?? ""}
+                      <select aria-label={t(sourceKey("field.item.label"))} value={currentFields().item ?? ""}
                         onChange={(event) => edit("item", event.currentTarget.value)}>
                         <For each={serviceItems(state.page!)}>{(item) => <option value={item}>{item}</option>}</For>
                       </select>
@@ -929,15 +943,13 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                     </div>
                   </Show>
                   <Show when={state.editor!.action === "save-categories" || state.editor!.action === "save-items"}>
+                    <p class="sf-ops-caption">{t(sourceKey("design.namesHint"))}</p>
                     {sourceDataField("names", "textarea")}
                   </Show>
                   <Show when={state.editor!.action === "import-month"}>
                     <section>
                       <h3>{t(sourceKey("section.tickets"))}</h3>
-                      <div class="sf-ops-grid">
-                        <For each={serviceTicketKeys(state.page!)}>{(name) =>
-                          sourceDataField("ticket." + name)}</For>
-                      </div>
+                      {ticketFields("ticket.")}
                     </section>
                     <section>
                       <h3>{t(sourceKey("section.sla"))}</h3>
@@ -948,18 +960,19 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                     </section>
                     <section>
                       <h3>{t(sourceKey("section.heatmap"))}</h3>
-                      <div class="sf-ops-grid">
-                        <For each={serviceItems(state.page!)}>{(item) =>
+                      <For each={serviceItems(state.page!)}>{(item) => <fieldset class="sf-ops-import-item">
+                        <legend>{item}</legend>
+                        <div class="sf-ops-grid sf-ops-grid-three">
                           <For each={[...SERVICE_HEAT_FIELDS, "comments"]}>{(name) =>
                             sourceDataField("heatmap." + item + "." + name,
-                              name === "comments" ? "textarea" : "number")}</For>
-                        }</For>
-                      </div>
+                              name === "comments" ? "textarea" : "number", t(sourceKey("design.field." + name)))}</For>
+                        </div>
+                      </fieldset>}</For>
                     </section>
                     <p>{t(commonKey("reviewImport"))}</p>
                   </Show>
                   <div class="sf-ops-actions">
-                    <button type="submit" disabled={state.submitting || !isValid(state.editor!.action, currentFields(), state.page!)}>
+                    <button class="mx-btn primary" type="submit" disabled={state.submitting || !isValid(state.editor!.action, currentFields(), state.page!)}>
                       {t(commonKey("review"))}
                     </button>
                     <button type="button" onClick={closeEditor}>
