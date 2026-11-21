@@ -31,3 +31,7 @@ The preexisting V2 saved-view gap, absent roster-impact preview and producer-own
 ## Pending-operation controls
 
 A separate follow-up passes the existing busy contract to CAP21/CAP22/CAP23 change reviews during the original command and its source readback. Cancel and Revise stay available again in editable phases. Unknown outcomes retain the existing reconciliation behavior. UI32 edit fields and discard are disabled as soon as its mutation enters digest/submitting, before the pending-operation fingerprint is attached. This closes the brief opportunity to type into a draft already being submitted without changing any command, idempotency key, CAS rule or producer response.
+
+## Work filter status
+
+The work list delegates filtered-empty presentation to SfDataTable and its original SfStatePanel. The redundant leaf status paragraph was removed after source inspection confirmed both rendered the same sf.common.filterEmpty message. Filtering behavior, source reads and the table status announcement are unchanged.

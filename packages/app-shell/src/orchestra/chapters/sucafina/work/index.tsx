@@ -423,9 +423,6 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                   <label class="sf-work-search">{t("sf.u41.filter")}
                     <input type="search" data-sf-work-filter value={filter()} onInput={(event) => setFilter(event.currentTarget.value)} />
                   </label>
-                  <Show when={tableState() === "filtered-empty"}>
-                    <p role="status">{t("sf.common.filterEmpty")}</p>
-                  </Show>
                   <SfDataTable<WorkItem>
                     rows={visible()}
                     getRowKey={(row) => row.actionRef as SfRef}
