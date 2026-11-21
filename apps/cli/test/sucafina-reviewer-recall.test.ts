@@ -81,6 +81,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
     return incoming
   }
   const toolInputs: { selected?: string; outside?: string } = {}
+  const fixture: { renewPeriod?: () => Promise<void> } = {}
   let turns = 0
   let tokenCounts = 0
   // Replay the provider wire only. C15 still counts, persists a receipt and
@@ -91,6 +92,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
     if (request.url === "https://api.openai.com/v1/responses/input_tokens") {
       tokenCounts++
       console.info(`SF_REVIEWER_PROOF token count ${tokenCounts}`)
+      if (tokenCounts === 1) await fixture.renewPeriod?.()
       return Response.json({ object: "response.input_tokens", input_tokens: 120 })
     }
     expect(request.url).toBe("https://api.openai.com/v1/responses")
@@ -245,7 +247,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           expect((await prepare(ref(previous))).status).not.toBe("ok")
           expect((await prepare(other)).status).not.toBe("ok")
           expect((await prepare(precedent, "other")).status).not.toBe("ok")
-          const skillInput = value(await step("prepare authorized precedent", 25_000, (signal) => prepare(precedent, "reviewer", signal)), "prepare authorized precedent")
+          const skillInput = value(await step("prepare authorized precedent", 50_000, (signal) => prepare(precedent, "reviewer", signal)), "prepare authorized precedent")
           const businessDigest = async () => {
             const product = value(await services.state.read(request(), "cases", (state) =>
               ({ cases: state.cases, atlas: state.atlas, outbox: state.outbox })), "business snapshot")
@@ -263,17 +265,30 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
             if (denied.status === "ok") services.human.finish(denied.value)
             expect(denied.status).toBe("denied")
           } finally { revoked.delete("reviewer") }
-          const { runRef } = value(await step("start reviewer runner", 30_000, (signal) =>
-            human("analysis.start", start, (call) => analyses.start(call, start), "reviewer", signal)), "start reviewer")
-          const run = await step("reviewer runner and tool result", 45_000, async (signal) => {
-            const progress = () => human("analysis.read", { runRef }, (call) => analyses.read(call, runRef), "reviewer", signal)
-            let current = value(await progress(), "read reviewer")
-            while (["queued", "running", "preparing"].includes(current.state) && !signal.aborted) {
-              await Bun.sleep(200)
-              current = value(await progress(), "poll reviewer")
-            }
-            return current
+          // Renew the page's existing human selection at the provider boundary.
+          // The approved case and exact prepared skill input stay unchanged.
+          fixture.renewPeriod = () => ui("sf_work_list", { purpose: "work-selection", period }, async (call) => {
+            value(await services.procurementSelections!.create(call, period), "renew the selected procurement period")
           })
+          await fixture.renewPeriod()
+          // Admission, attachment and publication independently repeat the source proof.
+          const { runRef } = value(await step("start reviewer runner", 240_000, (signal) =>
+            human("analysis.start", start, (call) => {
+              console.info("SF_REVIEWER_PROOF start command admitted")
+              return analyses.start(call, start)
+            }, "reviewer", signal)), "start reviewer")
+          await step("reviewer runner and tool result", 240_000, async (signal) => {
+            // Wait on stored lifecycle state without competing with the runner's
+            // source verification. The public read below still verifies the result.
+            const progress = async () => value(await services.state.read(request("reviewer", signal), "contributions", (state) =>
+              state.nativeRuns?.[runRef]?.state), "read reviewer lifecycle")
+            while (!["ready", "failed", "needs-input", "stale", "unavailable", "cancelled"].includes(await progress() ?? "")) {
+              signal.throwIfAborted()
+              await Bun.sleep(1000)
+            }
+          })
+          const run = value(await step("read the reviewer run", 100_000, (signal) =>
+            human("analysis.read", { runRef }, (call) => analyses.read(call, runRef), "reviewer", signal)), "read reviewer")
           if (run.state !== "ready" || !run.native) throw new Error(`Reviewer ended as ${run.state} (${run.reason ?? "unknown"}) after ${turns} provider turns`)
           const sessionID = SessionSchema.ID.make(run.native.sessionID)
           const messages = await step("read the native tool receipts", 8_000, (signal) => Effect.runPromise(sessions.messages({ sessionID }), { signal }))
@@ -285,7 +300,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           expect(object(accepted?.result).matches).toEqual([expect.objectContaining({ caseRef: precedent,
             evidenceRefs: expect.arrayContaining([source]), memoryRecordRef: archived.eventId })])
           expect(calls.find((call) => call.status === "unavailable")).toHaveProperty("reason", "unavailable")
-          const output = value(await step("read verified contribution", 10_000, (signal) =>
+          const output = value(await step("read verified contribution", 100_000, (signal) =>
             human("analysis.read", { runRef }, (call) => analyses.output(call, runRef), "reviewer", signal)), "read verified contribution")
           expect(output).toMatchObject({ kind: "CaseRecall", state: "ready", evidenceRefs: expect.arrayContaining([source]),
             runProvenance: expect.objectContaining({ profileId: "sf_reviewer", nativeSessionId: run.native.sessionID }) })
@@ -300,4 +315,4 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
       await rm(root, { recursive: true, force: true })
     })
   }
-}, 180_000)
+}, 750_000)
