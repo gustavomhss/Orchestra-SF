@@ -39,6 +39,7 @@ export type EntraTeamsSessionResult = EntraTeamsResult | Readonly<{ state: "unau
 export type EntraTeamsObservation = Readonly<{
   result: EntraTeamsSessionResult
   verifyCurrent?: () => Promise<boolean>
+  readMembers?: (teamObjectId: string) => Promise<DirectoryPerson[]>
 }>
 export type EntraTeamsInput = Readonly<{
   tokens: Pick<EntraTokens, "accessToken" | "expiresAt" | "grantedScopes">
@@ -49,6 +50,7 @@ export type EntraClient = {
   readonly clientId?: string
   readonly profile?: "local-public" | "web-confidential"
   joinedTeams?: (input: EntraTeamsInput) => Promise<EntraTeamsResult>
+  teamMembers?: (input: EntraTeamsInput & { teamObjectId: string }) => Promise<DirectoryPerson[]>
   authorization: (input: { state: string; nonce: string; challenge: string; redirectUri: string }) => Promise<string>
   exchange: (input: { code: string; verifier: string; redirectUri: string; nonce: string }) => Promise<{ tokens: EntraTokens; person: DirectoryPerson }>
   refresh: (refreshToken: string) => Promise<EntraTokens>
@@ -60,6 +62,7 @@ export type EntraOptions = {
   profile?: "local-public" | "web-confidential"
   clientSecret?: () => Promise<string>
   teams?: "direct"
+  teamDirectory?: "members"
   tenantId: string
   clientId: string
   fetch?: (request: Request) => Promise<Response>

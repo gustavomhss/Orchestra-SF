@@ -713,6 +713,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     const person = environment.directory.find((person) => person.id === requested)
     if (person) next.owner = { id: person.id, name: person.name }
     else if (!requested) next.owner = ""
+    else if (environment.directoryScope === "team") return invalid("Owner must belong to the Team")
     else {
       const result = assignOwner(
         stored?.owner && typeof stored.owner === "object"
@@ -1917,10 +1918,8 @@ function workbookOwner(value: unknown, current: unknown, environment: Environmen
   }
   const token = typeof value === "number" ? idOf(value) : text(value).trim()
   if (!token) return ""
-  const owner = environment.directory.find(
-    (person) => idOf(person.id) === token || normName(person.name) === normName(token),
-  )
-  if (owner) return { id: idOf(owner.id), name: owner.name }
+  const { owner } = assignOwner(null, token, environment.directory)
+  if (owner) return owner
   issue.warnings.push(`Unknown owner: ${token}`)
   return current
 }

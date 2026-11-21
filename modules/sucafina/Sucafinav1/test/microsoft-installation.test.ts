@@ -35,6 +35,7 @@ async function fixture(
   fetch: (request: Request) => Promise<Response>,
   enabledTeamIds?: unknown,
   groups: LocalConfiguration["groups"] = { dashboard: {}, planner: {}, procurement: {} },
+  teamDirectory?: "members",
 ) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sf-microsoft-installation-"))
   const directory = join(root, "installation")
@@ -49,6 +50,7 @@ async function fixture(
       grants: [{ principalRef: grantPrincipal.toUpperCase(), operations: ["sf_case_read"] }],
       supremeAdminGroupId: grantPrincipal.toUpperCase(), scanner: null,
       ...(teams ? { teams } : {}),
+      teamDirectory,
       enabledTeamIds,
     }))
     await writeFile(join(directory, "client-secret.txt"), secret, { mode: 0o600 })
@@ -162,6 +164,7 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     const authorize = new URL(begin!.headers.get("location")!)
     expect(authorize.searchParams.get("redirect_uri")).toBe(origin + mount + "/auth/callback")
     expect(authorize.searchParams.get("scope")?.split(" ")).toContain("Team.ReadBasic.All")
+    expect(authorize.searchParams.get("scope")?.split(" ")).not.toContain("TeamMember.Read.All")
     expect(authorize.searchParams.has("client_secret")).toBe(false)
     login.nonce = authorize.searchParams.get("nonce")!
     const loginCookie = begin!.headers.getSetCookie().find((value) => value.includes("_login="))!
@@ -206,7 +209,9 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     expect((await f.installation.handler(ingress("/dashboard?teamObjectId=" + teamObjectId, headers)))?.status).toBe(403)
     expect(graphCalls).toEqual(["/v1.0/me", ...read, ...read])
 
-    expect((await f.installation.handler(ingress(teamPath(teamObjectId, "dashboard"), callbackHeaders)))?.status).toBe(200)
+    const teamDashboard = await f.installation.handler(ingress(teamPath(teamObjectId, "dashboard"), callbackHeaders))
+    expect(teamDashboard?.status).toBe(200)
+    expect(await teamDashboard?.text()).toContain(`name="person" value="${oid}"`)
     for (const surface of ["planner", "procurement"]) {
       const redirect = await f.installation.handler(ingress("/" + surface, headers))
       expect(redirect?.status).toBe(303)
@@ -321,6 +326,134 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     expect(signedOut?.status).toBe(200)
     expect(await signedOut?.text()).toContain(`href="${mount}/auth/login"`)
     expect((await suppliers(teamObjectId))?.status).toBe(303)
+  } finally { await f.close() }
+})
+
+test("Corporate Team directory scopes assignment choices to the mounted Team", async () => {
+  const keys = await generateKeyPair("RS256", { extractable: true })
+  const jwk = await exportJWK(keys.publicKey)
+  const login = { nonce: "" }
+  const finance = { id: teamObjectId, tenantId, displayName: "Finance", isArchived: false }
+  const planning = { ...finance, id: secondTeamId, displayName: "Planning" }
+  const financePerson = "77777777-7777-4777-8777-777777777777"
+  const planningPerson = "88888888-8888-4888-8888-888888888888"
+  const provider = { joined: [finance, planning], roster: "complete", commitRosterReads: 0 }
+  const member = (id: string, userId: string, displayName: string) => ({
+    "@odata.type": "#microsoft.graph.aadUserConversationMember", id, userId, tenantId, displayName,
+  })
+  const f = await fixture("direct", async (request) => {
+    const url = new URL(request.url)
+    if (url.href === authority + "/v2.0/.well-known/openid-configuration") return discovery()
+    if (url.href === authority + "/discovery/v2.0/keys") return Response.json({ keys: [{ ...jwk, kid: "installation-test" }] })
+    if (url.href === authority + "/oauth2/v2.0/token") {
+      const idToken = await new SignJWT({ tid: tenantId, oid, nonce: login.nonce })
+        .setSubject("synthetic-subject").setIssuer(authority + "/v2.0").setAudience(clientId)
+        .setIssuedAt(epoch).setExpirationTime(epoch + 3600)
+        .setProtectedHeader({ alg: "RS256", kid: "installation-test" }).sign(keys.privateKey)
+      return Response.json({
+        access_token: accessToken, id_token: idToken, token_type: "Bearer", expires_in: 3600,
+        scope: "User.Read Team.ReadBasic.All TeamMember.Read.All",
+      })
+    }
+    if (url.origin === "https://graph.microsoft.com") {
+      expect(request.headers.get("authorization")).toBe("Bearer " + accessToken)
+      if (url.pathname === "/v1.0/me") return Response.json({ id: oid, displayName: "Verified person" })
+      if (url.href === graph + "/me/checkMemberGroups") {
+        expect(await request.json()).toEqual({ groupIds: [grantPrincipal] })
+        return Response.json({ value: [grantPrincipal] })
+      }
+      if (url.href === graph + "/me/joinedTeams") return Response.json({ value: provider.joined })
+      const team = [teamObjectId, secondTeamId].find((id) => url.pathname === `/v1.0/teams/${id}/members`)
+      if (team) {
+        expect(request.method).toBe("GET")
+        if (provider.roster === "down") return new Response(null, { status: 503 })
+        if (provider.roster === "revoke") provider.joined = [planning]
+        if (provider.roster === "archive" && ++provider.commitRosterReads === 2)
+          provider.joined = [{ ...finance, isArchived: true }, planning]
+        const value = [member("caller-opaque", oid, "Verified person")]
+        if (team === secondTeamId) value.push(member("planning-opaque", planningPerson, "Planning colleague"))
+        if (team === teamObjectId && (provider.roster !== "depart" || ++provider.commitRosterReads === 1))
+          value.push(member("finance-opaque", financePerson, "Finance colleague"))
+        return Response.json({ value, ...(provider.roster === "incomplete" ? { "@odata.count": value.length + 1 } : {}) })
+      }
+    }
+    throw new Error("Unexpected synthetic Microsoft request")
+  }, [teamObjectId, secondTeamId], {
+    dashboard: { admin: "group:" + grantPrincipal }, planner: {}, procurement: { admin: "group:" + grantPrincipal },
+  }, "members")
+  try {
+    const begin = await f.installation.handler(ingress("/auth/login"))
+    expect(begin?.status).toBe(303)
+    const authorize = new URL(begin!.headers.get("location")!)
+    expect(authorize.searchParams.get("scope")?.split(" ")).toContain("TeamMember.Read.All")
+    login.nonce = authorize.searchParams.get("nonce")!
+    const loginCookie = begin!.headers.getSetCookie().find((value) => value.includes("_login="))!
+    const finish = await f.installation.handler(ingress("/auth/callback?" + new URLSearchParams({
+      code: "synthetic-code", state: authorize.searchParams.get("state")!,
+    }), { cookie: loginCookie.split(";")[0] }))
+    expect(finish?.status).toBe(303)
+    const cookie = finish!.headers.getSetCookie().find((value) => value.includes("_session="))!.split(";")[0]
+    const dashboardPath = (id: string) => `/teams/${id}/dashboard`
+    const dashboard = (id: string) => f.installation.handler(ingress(dashboardPath(id), { cookie }))
+    const assign = (id: string, person: string, version = 0, assigned = ["Operations"]) => f.installation.handler(
+      ingress(dashboardPath(id), { cookie, origin, "content-type": "application/json" }, {
+        method: "POST", body: JSON.stringify({ page: "Executive Dashboard", action: "configure-assignment", version, values: { person, assigned } }),
+      }),
+    )
+    for (const [id, person, name, other, otherName] of [
+      [teamObjectId, financePerson, "Finance colleague", planningPerson, "Planning colleague"],
+      [secondTeamId, planningPerson, "Planning colleague", financePerson, "Finance colleague"],
+    ]) {
+      const response = await dashboard(id)
+      expect(response?.status).toBe(200)
+      const html = await response!.text()
+      expect(html).toContain(`name="person" value="${person}"`)
+      expect(html).toContain(name)
+      expect(html).not.toContain(other)
+      expect(html).not.toContain(otherName)
+      expect(html).not.toContain("-opaque")
+      expect((await assign(id, other))?.status).toBe(422)
+    }
+    expect((await assign(teamObjectId, financePerson))?.status).toBe(200)
+    expect(await (await dashboard(teamObjectId))?.text()).toContain('value="Operations" checked')
+    expect(await (await dashboard(secondTeamId))?.text()).not.toContain('value="Operations" checked')
+
+    const settings = (holderId?: string) => f.installation.handler(
+      ingress(`/teams/${teamObjectId}/procurement`, { cookie, origin, "content-type": "application/json" }, {
+        method: "POST", body: JSON.stringify(holderId === undefined
+          ? { page: "Settings", action: "reset", version: 0, values: {} }
+          : { page: "Settings", action: "save", version: 1, values: { levels: [{ id: "L1", name: "Reviewer", threshold: 0, holderId }] } }),
+      }),
+    )
+    expect((await settings())?.status).toBe(200)
+    expect((await settings(planningPerson))?.status).toBe(422)
+    expect((await settings(financePerson))?.status).toBe(200)
+
+    for (const state of ["incomplete", "down"]) {
+      provider.roster = state
+      const unavailable = await dashboard(teamObjectId)
+      expect(unavailable?.status).toBe(503)
+      expect(await unavailable?.text()).not.toContain("Finance colleague")
+      expect((await assign(teamObjectId, financePerson, 1, ["risks"]))?.status).toBe(503)
+    }
+
+    provider.roster = "depart"
+    expect((await assign(teamObjectId, financePerson, 1, ["risks"]))?.status).toBe(403)
+    expect(provider.commitRosterReads).toBe(2)
+    provider.roster = "archive"
+    provider.commitRosterReads = 0
+    expect((await assign(teamObjectId, financePerson, 1, ["risks"]))?.status).toBe(403)
+    expect(provider.commitRosterReads).toBe(2)
+    provider.joined = [finance, planning]
+    provider.roster = "revoke"
+    const revoked = await assign(teamObjectId, financePerson, 1, ["risks"])
+    expect(revoked?.status).toBe(403)
+    expect(await revoked?.text()).not.toContain("Finance colleague")
+    provider.roster = "complete"
+    provider.joined = [finance, planning]
+    const restored = await (await dashboard(teamObjectId))?.text()
+    expect(restored).toContain('value="Operations" checked')
+    expect(restored).not.toContain('value="risks" checked')
   } finally { await f.close() }
 })
 

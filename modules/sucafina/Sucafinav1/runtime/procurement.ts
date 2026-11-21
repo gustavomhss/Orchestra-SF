@@ -581,7 +581,9 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     if (step && text(saved.request.status).endsWith("_pending"))
       queueNotice(snapshot, {
         kind: "pending",
-        to: typeof step.holderId === "string" ? [step.holderId] : [],
+        to: typeof step.holderId === "string" &&
+          (environment.directoryScope !== "team" || environment.directory.some((person) => person.id === step.holderId))
+          ? [step.holderId] : [],
         record: actualId,
         at: environment.at,
       })
@@ -645,6 +647,16 @@ function settings(snapshot: Snapshot, store: Store, actor: Actor, command: Comma
     new Set(fx.map((rate) => rate.code)).size !== fx.length
   )
     return { ok: false, status: 422, errors: ["Invalid matrix or currencies"] }
+  if (environment.directoryScope === "team") {
+    const currentHolders = new Map(rows(store.settings.levels).map((level) => [text(level.id), text(level.holderId)]))
+    if (new Set(levels.map((level) => text(level.id))).size !== levels.length)
+      return { ok: false, status: 422, errors: ["Duplicate approval level"] }
+    if (levels.some((level) => {
+      const holderId = text(level.holderId)
+      return holderId && holderId !== currentHolders.get(text(level.id)) &&
+        !environment.directory.some((person) => person.id === holderId)
+    })) return { ok: false, status: 422, errors: ["Approval holder must belong to the Team"] }
+  }
   if (next.uploadCap != null && !(finite(next.uploadCap) > 0))
     return { ok: false, status: 422, errors: ["Upload cap must be positive"] }
   if (

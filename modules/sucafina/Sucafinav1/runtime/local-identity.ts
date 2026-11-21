@@ -129,6 +129,7 @@ function createIdentity(
         refreshing.has(id)) return undefined
     return { handle: id, value, encrypted }
   }
+  const readTeamMembers = options.client.teamMembers?.bind(options.client)
   const observeTeams = readTeams && teamTenant && readActiveSession
     ? async (request: Request): Promise<EntraTeamsObservation> => {
       const current = await teamReadCurrent(request)
@@ -149,7 +150,18 @@ function createIdentity(
       if (result.state === "complete" &&
           (result.tenantId !== principal.tenantId || result.principalObjectId !== principal.principalObjectId))
         return { result: { state: "unavailable", reason: "identity_mismatch" } }
-      return { result, verifyCurrent }
+      return {
+        result, verifyCurrent,
+        ...(result.state === "complete" && readTeamMembers ? {
+          async readMembers(teamObjectId: string) {
+            if (!result.teams.some((team) => team.teamObjectId === teamObjectId && !team.archived) || !await verifyCurrent())
+              throw new Error("Microsoft Team directory session unavailable")
+            const members = await readTeamMembers({ principal: { ...principal }, tokens, teamObjectId })
+            if (!await verifyCurrent()) throw new Error("Microsoft Team directory session unavailable")
+            return members
+          },
+        } : {}),
+      }
     }
     : undefined
   const retireSession = async (id: string) => {

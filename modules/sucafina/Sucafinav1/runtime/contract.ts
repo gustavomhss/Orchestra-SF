@@ -35,6 +35,7 @@ export type Environment = {
   at: string
   id: () => string
   directory: { id: string; name: string }[]
+  directoryScope?: "team"
   bankKey?: Uint8Array
 }
 export type Result =

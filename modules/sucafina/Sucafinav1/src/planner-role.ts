@@ -15,7 +15,9 @@ export function presentSalary<T extends { rates?: unknown; rateOverride?: unknow
 
 export function assignOwner(current: { id: string; name: string } | null, importedName: string, directory: DirectoryPerson[]) {
   const wanted = normName(importedName)
-  const found = directory.find((person) => normName(person.name) === wanted)
+  const exact = directory.find((person) => person.id === importedName)
+  const matches = wanted ? directory.filter((person) => normName(person.name) === wanted) : []
+  const found = exact ?? (matches.length === 1 ? matches[0] : undefined)
   if (!found) return { owner: current, warning: importedName }
   return { owner: { id: found.id, name: found.name }, warning: null }
 }
