@@ -1,6 +1,6 @@
 # Wave three — validation
 
-Status: **IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW**. This report covers native CAP05–CAP19 on `sf-design-fifteen`, created directly from dev `acc0181508ceda7416bce57284b2307a9b20385b`. Final product: `e378923d7619c168b2d7b2c82b1232449eca2c45`. The fifteen areas have not been merged or visually approved by the user. Earlier approval applies to the six areas already merged through [PR #583](https://github.com/gustavomhss/Orchestra-SF/pull/583).
+Status: **ACCEPTED_FOR_INTEGRATION**. This report covers native CAP05–CAP19 on `sf-design-fifteen`, created directly from dev `acc0181508ceda7416bce57284b2307a9b20385b`. Reviewed product: `e378923d7619c168b2d7b2c82b1232449eca2c45`. The user subsequently authorized integration conditional on green checks; the complete composed-candidate verification is in [MERGE.md](MERGE.md). The evidence below preserves the original review runs. Earlier approval applies to the six areas already merged through [PR #583](https://github.com/gustavomhss/Orchestra-SF/pull/583).
 
 ## What the numbers mean
 
@@ -16,7 +16,7 @@ Status: **IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW**. This report covers native 
 
 A registered route is scope, not a claim that every URL pattern was exercised independently. A business state is a list, detail, form, review or special workflow; locale, theme, width, scroll position, disclosure and repeated capture do not create another area or state. The [scope](scope.json) maps all states, and the [gallery manifest](evidence/manifest.json) maps captures to states and source runs.
 
-The full inventory remains 70 areas and 165 route patterns. Six previously accepted areas plus this fifteen-area candidate make **21 implemented areas** and **49 still awaiting redesign**. The corresponding registered route scope is 69 implemented-area patterns and 96 remaining patterns. Only six areas are already merged; the other fifteen await this review.
+The full inventory remains 70 areas and 165 route patterns. Six previously accepted areas plus this fifteen-area candidate make **21 implemented areas** and **49 still awaiting redesign**. The corresponding registered route scope is 69 implemented-area patterns and 96 remaining patterns. Six areas were merged before this PR; the other fifteen are now accepted for integration. PR #587 records the merge outcome.
 
 ## Real installed browser verification
 
@@ -41,9 +41,9 @@ People verified a member-title update, a project budget/description update and a
 
 The CAP18 paste path verifies its canonical preview and cancels before applying; it is not counted as a write. Destructive confirmation screens are inspected and canceled; no deletion success is claimed.
 
-## Final technical checks
+## Technical checks of the reviewed product
 
-Final gates: [44950683716](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44950683716), job 136987709812, product `e378923d7619c168b2d7b2c82b1232449eca2c45`, snapshot `9096c069ca9ab84252a2e1368dbebc69b8b3d9ff`.
+Reviewed-product gates: [44950683716](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44950683716), job 136987709812, product `e378923d7619c168b2d7b2c82b1232449eca2c45`, snapshot `9096c069ca9ab84252a2e1368dbebc69b8b3d9ff`.
 
 - Application and E2E TypeScript checks pass. E2E configuration explicitly includes all three maintained Operations specs.
 - Repository guards: **78 rules, zero errors, 24 E2E timeout warnings and zero approvals**. No guard or approval mechanism is changed.
@@ -68,7 +68,7 @@ The first record failures were real product failures. CAP13/CAP15 diagnostics pr
 
 ## Visual inspection and limits
 
-The workers inspected the actual native captures and performed cross-group reviews; root inspected the consolidated composition and targeted final corrections. Observed clipping, column collision, wrapped labels, absent review values and post-save failures were repaired before the final runs. “Passing” here records the tested result; user acceptance remains pending.
+The workers inspected the actual native captures and performed cross-group reviews; root inspected the consolidated composition and targeted final corrections. Observed clipping, column collision, wrapped labels, absent review values and post-save failures were repaired before the final runs. “Passing” here records the tested result. The subsequent user authorization and green integration checks are recorded in [MERGE.md](MERGE.md).
 
 The matrix covers Chromium, 1440px desktop, 320px reflow in People/Finance, 390px reflow in Operations, English dark/light and Brazilian Portuguese dark. **Actual browser zoom and a cross-browser matrix were not measured.** Reflow screenshots are not claimed as zoom tests.
 

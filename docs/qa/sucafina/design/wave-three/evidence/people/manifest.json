@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "group": "people",
-  "status": "VERIFIED_PENDING_USER_REVIEW",
+  "status": "ACCEPTED_FOR_INTEGRATION",
   "areas": [
     "CAP06",
     "CAP07",
@@ -1157,5 +1157,12 @@
       "businessState": "project-review",
       "principal": false
     }
-  ]
+  ],
+  "acceptance": {
+    "status": "ACCEPTED_FOR_INTEGRATION",
+    "userStatement": "Vai pro merge, se tiver tudo verde",
+    "pullRequest": 587,
+    "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587",
+    "integrationReport": "../../MERGE.md"
+  }
 }

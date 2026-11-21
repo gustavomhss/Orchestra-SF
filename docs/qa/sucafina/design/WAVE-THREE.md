@@ -1,10 +1,10 @@
 # Wave three — fifteen native Sucafina areas
 
-Status: **IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW**. User instruction: “Otimo. Pga maos um bloco grqnde 15 ai e manda bala com seus agents”.
+Status: **ACCEPTED_FOR_INTEGRATION**. User instruction: “Otimo. Pga maos um bloco grqnde 15 ai e manda bala com seus agents”.
 
-The requested fifteen-area candidate is implemented on `sf-design-fifteen`. Final product: `e378923d7619c168b2d7b2c82b1232449eca2c45`. Review: [PR #587](https://github.com/gustavomhss/Orchestra-SF/pull/587). The branch starts directly from dev `acc0181508ceda7416bce57284b2307a9b20385b`.
+The requested fifteen-area candidate is implemented on `sf-design-fifteen`. Reviewed product: `e378923d7619c168b2d7b2c82b1232449eca2c45`. Validated integration candidate: `141336f8b17fe661cb0370ef99a7ff528737ef23`. Review: [PR #587](https://github.com/gustavomhss/Orchestra-SF/pull/587). The branch starts directly from dev `acc0181508ceda7416bce57284b2307a9b20385b`.
 
-**Review the [177-image gallery](wave-three/evidence/README.md), [verification](wave-three/VALIDATION.md), [integration record](wave-three/INTEGRATION.md) and [exact state map](wave-three/scope.json).** These are actual native application captures from isolated canonical test data. New visual acceptance remains pending; this wave has not been merged.
+**Review the [177-image gallery](wave-three/evidence/README.md), [verification](wave-three/VALIDATION.md), [integration record](wave-three/INTEGRATION.md) and [exact state map](wave-three/scope.json).** These are actual native application captures from isolated canonical test data. The user authorized integration conditional on green checks. The composed candidate passed; see [merge validation](wave-three/MERGE.md) and PR #587 for the merge state and commit.
 
 | Group | Areas | Route patterns | Functional states | Pictured states | Captures |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -13,7 +13,7 @@ The requested fifteen-area candidate is implemented on `sf-design-fifteen`. Fina
 | Operations | 5 | 20 | 25 | 25 | 72 |
 | **Total** | **15** | **56** | **88** | **79** | **177** |
 
-The campaign now has six accepted/merged areas, fifteen implemented areas awaiting this review and 49 inventoried areas remaining. That is **21 of 70 implemented**, with acceptance and merge tracked separately. Screenshots, locale, theme and viewport variants do not increase the area count.
+The campaign has six areas merged before this PR, fifteen further areas accepted for integration and 49 inventoried areas remaining. That is **21 of 70 implemented**, with acceptance and merge tracked separately. Screenshots, locale, theme and viewport variants do not increase the area count.
 
 ## Pinned start and scope
 

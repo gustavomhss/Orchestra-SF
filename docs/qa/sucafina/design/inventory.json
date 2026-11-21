@@ -8,12 +8,14 @@
     "baseCommit": "acc0181508ceda7416bce57284b2307a9b20385b",
     "nativeFrontendPresent": true,
     "nativeFrontendPresentInDevBase": true,
-    "latestDevInspected": "abb7f0d110f8afc69541f5331a396c2e1ddc9f4d",
+    "latestDevInspected": "2a68bcb676ed0c159c5c48130c2413e0e5637a00",
     "latestDevNativeFrontendPresent": true,
     "reviewedProductCommit": "e378923d7619c168b2d7b2c82b1232449eca2c45",
-    "userAcceptance": "PENDING_USER_REVIEW",
+    "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
     "pullRequest": 587,
-    "latestDevInspectionScope": "Four commits / 29 paths since base; zero path overlap, renames or file/directory conflicts; not runtime-integrated."
+    "latestDevInspectionScope": "Six dev commits / 35 paths composed with the reviewed candidate; all integration journeys and technical gates passed.",
+    "integrationBase": "2a68bcb676ed0c159c5c48130c2413e0e5637a00",
+    "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
   },
   "source": {
     "branch": "dev",
@@ -38,12 +40,13 @@
     "routePatterns": 165,
     "componentReferences": 75,
     "uniqueComponentFiles": 66,
-    "acceptedMergedAreas": 6,
     "implementedAreas": 21,
-    "currentReviewAreas": 15,
     "remainingAreas": 49,
     "implementedAreaRouteScope": 69,
-    "remainingAreaRouteScope": 96
+    "remainingAreaRouteScope": 96,
+    "previouslyMergedAreas": 6,
+    "areasInThisIntegration": 15,
+    "acceptedForIntegrationAreas": 21
   },
   "scope": "Only native Sucafina pages. HuGR Orchestra core and legacy HTML console excluded.",
   "firstWave": [
@@ -54,13 +57,13 @@
   "verification": {
     "inventory": "70 areas, 165 registered route patterns, 15 chapters; 75 component references to 66 present files; registry unchanged.",
     "sourceTreeTruncated": false,
-    "typecheck": "PASS: application and all E2E specs, final gate run 44950683716",
+    "typecheck": "PASS: application and E2E, integration gate run 44954855228",
     "browser": {
-      "people": 44942301625,
-      "finance": 44947193512,
-      "operationsService": 44947197315,
-      "operationsRecords": 44949738285,
-      "operationsPortuguese": 44949742205,
+      "people": 44954159569,
+      "finance": 44954850512,
+      "operationsService": 44954168895,
+      "operationsRecords": 44954172715,
+      "operationsPortuguese": 44954176866,
       "totalTestsPassed": 10,
       "failed": 0
     },
@@ -74,14 +77,14 @@
     "browserActualZoom": "NOT_MEASURED",
     "localeScope": "Chromium; English dark/light and Brazilian Portuguese dark; 1440 desktop, 320 People/Finance, 390 Operations; not all routes or fault states independently qualified.",
     "guards": {
-      "run": 44950683716,
+      "run": 44954855228,
       "rules": 78,
       "errors": 0,
       "warnings": 24,
       "approved": 0
     },
     "palette": {
-      "run": 44950683716,
+      "run": 44954855228,
       "generatedFilesUnchanged": 7
     },
     "targetedTests": {
@@ -95,14 +98,16 @@
       "catalogs": 11
     },
     "previousSixRegression": {
-      "run": 44946402767,
+      "run": 44954180769,
       "passed": 2,
       "failed": 0,
       "captures": 67,
       "includedInThisWaveCount": false
     },
     "visualReview": "Worker, peer and root review of real captures with state-level limits in each group report; nine finance states have no dedicated photograph.",
-    "userAcceptance": "PENDING_USER_REVIEW"
+    "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+    "integration": "PASS: full native design journeys against incorporated dev 2a68bcb676ed0c159c5c48130c2413e0e5637a00",
+    "integrationReport": "wave-three/MERGE.md"
   },
   "surfaces": [
     {
@@ -301,9 +306,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_finance_five",
         "branch": "sf-polish-finance",
         "commit": "b02b9a268cffefd53385e90e89cb3dbef9fed32d",
@@ -312,11 +317,17 @@
         "group": "finance",
         "distinctFunctionalStates": 10,
         "photographedStates": 7,
-        "captureCount": 11
+        "captureCount": 11,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 1,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP06",
@@ -338,9 +349,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_people_five",
         "branch": "sf-polish-people",
         "commit": "19213217280ba59ada452585446e1a3d9d407250",
@@ -349,11 +360,17 @@
         "group": "people",
         "distinctFunctionalStates": 1,
         "photographedStates": 1,
-        "captureCount": 5
+        "captureCount": 5,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 2,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP07",
@@ -395,9 +412,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_people_five",
         "branch": "sf-polish-people",
         "commit": "19213217280ba59ada452585446e1a3d9d407250",
@@ -406,11 +423,17 @@
         "group": "people",
         "distinctFunctionalStates": 10,
         "photographedStates": 10,
-        "captureCount": 16
+        "captureCount": 16,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 3,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP08",
@@ -448,9 +471,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_people_five",
         "branch": "sf-polish-people",
         "commit": "19213217280ba59ada452585446e1a3d9d407250",
@@ -459,11 +482,17 @@
         "group": "people",
         "distinctFunctionalStates": 6,
         "photographedStates": 6,
-        "captureCount": 15
+        "captureCount": 15,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 4,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP09",
@@ -485,9 +514,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_people_five",
         "branch": "sf-polish-people",
         "commit": "19213217280ba59ada452585446e1a3d9d407250",
@@ -496,11 +525,17 @@
         "group": "people",
         "distinctFunctionalStates": 1,
         "photographedStates": 1,
-        "captureCount": 5
+        "captureCount": 5,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 5,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP10",
@@ -538,9 +573,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_people_five",
         "branch": "sf-polish-people",
         "commit": "19213217280ba59ada452585446e1a3d9d407250",
@@ -549,11 +584,17 @@
         "group": "people",
         "distinctFunctionalStates": 10,
         "photographedStates": 10,
-        "captureCount": 17
+        "captureCount": 17,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 6,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP11",
@@ -587,9 +628,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_operations_five",
         "branch": "sf-polish-ops",
         "commit": "05afd18d1ceee381c418b588f26186db1ad3b9b4",
@@ -598,11 +639,17 @@
         "group": "operations",
         "distinctFunctionalStates": 7,
         "photographedStates": 7,
-        "captureCount": 16
+        "captureCount": 16,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 7,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP12",
@@ -640,9 +687,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_operations_five",
         "branch": "sf-polish-ops",
         "commit": "05afd18d1ceee381c418b588f26186db1ad3b9b4",
@@ -651,11 +698,17 @@
         "group": "operations",
         "distinctFunctionalStates": 4,
         "photographedStates": 4,
-        "captureCount": 16
+        "captureCount": 16,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 8,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP13",
@@ -689,9 +742,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_operations_five",
         "branch": "sf-polish-ops",
         "commit": "05afd18d1ceee381c418b588f26186db1ad3b9b4",
@@ -700,11 +753,17 @@
         "group": "operations",
         "distinctFunctionalStates": 5,
         "photographedStates": 5,
-        "captureCount": 13
+        "captureCount": 13,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 9,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP14",
@@ -738,9 +797,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_finance_five",
         "branch": "sf-polish-finance",
         "commit": "b02b9a268cffefd53385e90e89cb3dbef9fed32d",
@@ -749,11 +808,17 @@
         "group": "finance",
         "distinctFunctionalStates": 7,
         "photographedStates": 6,
-        "captureCount": 10
+        "captureCount": 10,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 10,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP15",
@@ -787,9 +852,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_operations_five",
         "branch": "sf-polish-ops",
         "commit": "05afd18d1ceee381c418b588f26186db1ad3b9b4",
@@ -798,11 +863,17 @@
         "group": "operations",
         "distinctFunctionalStates": 4,
         "photographedStates": 4,
-        "captureCount": 11
+        "captureCount": 11,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 11,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP16",
@@ -832,9 +903,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_operations_five",
         "branch": "sf-polish-ops",
         "commit": "05afd18d1ceee381c418b588f26186db1ad3b9b4",
@@ -843,11 +914,17 @@
         "group": "operations",
         "distinctFunctionalStates": 5,
         "photographedStates": 5,
-        "captureCount": 16
+        "captureCount": 16,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 12,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP17",
@@ -869,9 +946,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_finance_five",
         "branch": "sf-polish-finance",
         "commit": "b02b9a268cffefd53385e90e89cb3dbef9fed32d",
@@ -880,11 +957,17 @@
         "group": "finance",
         "distinctFunctionalStates": 1,
         "photographedStates": 1,
-        "captureCount": 5
+        "captureCount": 5,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 13,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP18",
@@ -917,9 +1000,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_finance_five",
         "branch": "sf-polish-finance",
         "commit": "b02b9a268cffefd53385e90e89cb3dbef9fed32d",
@@ -928,11 +1011,17 @@
         "group": "finance",
         "distinctFunctionalStates": 10,
         "photographedStates": 7,
-        "captureCount": 11
+        "captureCount": 11,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 14,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP19",
@@ -969,9 +1058,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "worker": "redesign_finance_five",
         "branch": "sf-polish-finance",
         "commit": "b02b9a268cffefd53385e90e89cb3dbef9fed32d",
@@ -980,11 +1069,17 @@
         "group": "finance",
         "distinctFunctionalStates": 7,
         "photographedStates": 5,
-        "captureCount": 10
+        "captureCount": 10,
+        "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23"
       },
       "presentInCandidate": true,
       "thirdWaveOrder": 15,
-      "userAcceptance": "PENDING_USER_REVIEW"
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+      "integration": {
+        "status": "VALIDATED_FOR_INTEGRATION",
+        "pullRequest": 587,
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587"
+      }
     },
     {
       "id": "CAP20",
@@ -1205,7 +1300,8 @@
         },
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
-          "blobSha": "34234bee605bc368538dee797b29f0e4b29b20ec"
+          "blobSha": "ff5f04a77bd25f3ffe0019d5f7350fc24a33d272",
+          "previousBlobSha": "34234bee605bc368538dee797b29f0e4b29b20ec"
         }
       ],
       "presentInTargetDev": true,
@@ -2627,8 +2723,8 @@
     }
   },
   "candidateSource": {
-    "commit": "e378923d7619c168b2d7b2c82b1232449eca2c45",
-    "nativeTree": "bbbacbfc2cc344df42d367477622636ba8e4c193",
+    "commit": "141336f8b17fe661cb0370ef99a7ff528737ef23",
+    "nativeTree": "3213aecbbd258b9c00bd22f7f7dc19c046786e61",
     "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
     "routeRegistryUnchanged": true
   },
@@ -2744,17 +2840,21 @@
     "portugueseCaptureCount": 11
   },
   "integration": {
-    "status": "REVIEW_READY_NOT_MERGED",
+    "status": "VALIDATED_FOR_INTEGRATION",
     "targetBranch": "dev",
-    "base": "acc0181508ceda7416bce57284b2307a9b20385b",
-    "productCommit": "e378923d7619c168b2d7b2c82b1232449eca2c45",
+    "base": "2a68bcb676ed0c159c5c48130c2413e0e5637a00",
+    "originalBranchBase": "acc0181508ceda7416bce57284b2307a9b20385b",
+    "productCommit": "141336f8b17fe661cb0370ef99a7ff528737ef23",
+    "productTree": "9c168f02d61c0de337753aa37d76717f5b56d99f",
     "pullRequest": 587,
-    "latestDevInspected": "abb7f0d110f8afc69541f5331a396c2e1ddc9f4d",
-    "upstreamCommits": 4,
-    "upstreamPaths": 29,
+    "latestDevInspected": "2a68bcb676ed0c159c5c48130c2413e0e5637a00",
+    "upstreamCommits": 6,
+    "upstreamPaths": 35,
     "overlappingPaths": 0,
-    "sourceAudit": "wave-three/source-audit.json",
-    "report": "wave-three/INTEGRATION.md",
+    "featurePathsPreservedAtComposition": 261,
+    "sourceAudit": "wave-three/MERGE.json",
+    "report": "wave-three/MERGE.md",
+    "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587",
     "priorWaves": {
       "pullRequest": 583,
       "status": "MERGED",
@@ -2898,7 +2998,7 @@
     "CAP19"
   ],
   "thirdWaveDelivery": {
-    "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+    "status": "ACCEPTED_FOR_INTEGRATION",
     "appliedToProduct": true,
     "appliedToBranch": "sf-design-fifteen",
     "productCommit": "e378923d7619c168b2d7b2c82b1232449eca2c45",
@@ -2948,13 +3048,37 @@
       }
     ],
     "summary": "WAVE-THREE.md",
-    "currentStatusDocument": "wave-three/VALIDATION.md",
+    "currentStatusDocument": "wave-three/MERGE.md",
     "evidence": "wave-three/evidence/manifest.json",
     "gallery": "wave-three/evidence/README.md",
     "scope": "wave-three/scope.json",
     "acceptance": {
-      "status": "PENDING_USER_REVIEW",
-      "priorApprovalDoesNotApply": true
+      "status": "ACCEPTED_FOR_INTEGRATION",
+      "userStatement": "Vai pro merge, se tiver tudo verde",
+      "condition": "All scoped integration checks must pass",
+      "conditionSatisfied": true,
+      "recordedAt": "2026-11-21T22:10:44Z",
+      "timezone": "America/Sao_Paulo",
+      "scope": [
+        "CAP05",
+        "CAP06",
+        "CAP07",
+        "CAP08",
+        "CAP09",
+        "CAP10",
+        "CAP11",
+        "CAP12",
+        "CAP13",
+        "CAP14",
+        "CAP15",
+        "CAP16",
+        "CAP17",
+        "CAP18",
+        "CAP19"
+      ],
+      "pullRequest": 587,
+      "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587",
+      "goldenBaseline": null
     },
     "areas": 15,
     "routePatterns": 56,
@@ -2964,10 +3088,189 @@
     "captureVariants": 98,
     "confirmedCommands": 11,
     "implementedCampaignAreas": 21,
-    "acceptedMergedAreas": 6,
     "remainingAreas": 49,
     "implementedAreaRouteScope": 69,
     "remainingRouteScope": 96,
-    "pullRequest": 587
+    "pullRequest": 587,
+    "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23",
+    "integrationBase": "2a68bcb676ed0c159c5c48130c2413e0e5637a00",
+    "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587",
+    "previouslyMergedAreas": 6,
+    "areasInThisIntegration": 15,
+    "acceptedForIntegrationAreas": 21,
+    "implementedAreas": 21
+  },
+  "thirdWaveReviewedSnapshot": {
+    "target": {
+      "branch": "sf-design-fifteen",
+      "createdFrom": "dev",
+      "baseCommit": "acc0181508ceda7416bce57284b2307a9b20385b",
+      "nativeFrontendPresent": true,
+      "nativeFrontendPresentInDevBase": true,
+      "latestDevInspected": "abb7f0d110f8afc69541f5331a396c2e1ddc9f4d",
+      "latestDevNativeFrontendPresent": true,
+      "reviewedProductCommit": "e378923d7619c168b2d7b2c82b1232449eca2c45",
+      "userAcceptance": "PENDING_USER_REVIEW",
+      "pullRequest": 587,
+      "latestDevInspectionScope": "Four commits / 29 paths since base; zero path overlap, renames or file/directory conflicts; not runtime-integrated."
+    },
+    "verification": {
+      "inventory": "70 areas, 165 registered route patterns, 15 chapters; 75 component references to 66 present files; registry unchanged.",
+      "sourceTreeTruncated": false,
+      "typecheck": "PASS: application and all E2E specs, final gate run 44950683716",
+      "browser": {
+        "people": 44942301625,
+        "finance": 44947193512,
+        "operationsService": 44947197315,
+        "operationsRecords": 44949738285,
+        "operationsPortuguese": 44949742205,
+        "totalTestsPassed": 10,
+        "failed": 0
+      },
+      "confirmedWritesWithReadback": 11,
+      "distinctFunctionalStates": 88,
+      "photographedStates": 79,
+      "captureCount": 177,
+      "previewSkips": 0,
+      "consoleErrors": 0,
+      "pageErrors": 0,
+      "browserActualZoom": "NOT_MEASURED",
+      "localeScope": "Chromium; English dark/light and Brazilian Portuguese dark; 1440 desktop, 320 People/Finance, 390 Operations; not all routes or fault states independently qualified.",
+      "guards": {
+        "run": 44950683716,
+        "rules": 78,
+        "errors": 0,
+        "warnings": 24,
+        "approved": 0
+      },
+      "palette": {
+        "run": 44950683716,
+        "generatedFilesUnchanged": 7
+      },
+      "targetedTests": {
+        "CAS": 3,
+        "vendorBrowserDTO": 4,
+        "failed": 0
+      },
+      "catalog": {
+        "existingEnglishUnchanged": 649,
+        "newEnglishWithExplicitPortuguese": 256,
+        "catalogs": 11
+      },
+      "previousSixRegression": {
+        "run": 44946402767,
+        "passed": 2,
+        "failed": 0,
+        "captures": 67,
+        "includedInThisWaveCount": false
+      },
+      "visualReview": "Worker, peer and root review of real captures with state-level limits in each group report; nine finance states have no dedicated photograph.",
+      "userAcceptance": "PENDING_USER_REVIEW"
+    },
+    "candidateSource": {
+      "commit": "e378923d7619c168b2d7b2c82b1232449eca2c45",
+      "nativeTree": "bbbacbfc2cc344df42d367477622636ba8e4c193",
+      "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
+      "routeRegistryUnchanged": true
+    },
+    "integration": {
+      "status": "REVIEW_READY_NOT_MERGED",
+      "targetBranch": "dev",
+      "base": "acc0181508ceda7416bce57284b2307a9b20385b",
+      "productCommit": "e378923d7619c168b2d7b2c82b1232449eca2c45",
+      "pullRequest": 587,
+      "latestDevInspected": "abb7f0d110f8afc69541f5331a396c2e1ddc9f4d",
+      "upstreamCommits": 4,
+      "upstreamPaths": 29,
+      "overlappingPaths": 0,
+      "sourceAudit": "wave-three/source-audit.json",
+      "report": "wave-three/INTEGRATION.md",
+      "priorWaves": {
+        "pullRequest": 583,
+        "status": "MERGED",
+        "mergeCommit": "acc0181508ceda7416bce57284b2307a9b20385b",
+        "areas": [
+          "UI29",
+          "UI33",
+          "CAP01",
+          "CAP02",
+          "CAP03",
+          "CAP04"
+        ]
+      }
+    },
+    "delivery": {
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "appliedToProduct": true,
+      "appliedToBranch": "sf-design-fifteen",
+      "productCommit": "e378923d7619c168b2d7b2c82b1232449eca2c45",
+      "baseCommit": "acc0181508ceda7416bce57284b2307a9b20385b",
+      "workers": [
+        {
+          "group": "people",
+          "agent": "redesign_people_five",
+          "branch": "sf-polish-people",
+          "commit": "19213217280ba59ada452585446e1a3d9d407250",
+          "areas": [
+            "CAP06",
+            "CAP07",
+            "CAP08",
+            "CAP09",
+            "CAP10"
+          ],
+          "report": "wave-three/people/REVIEW.md"
+        },
+        {
+          "group": "finance",
+          "agent": "redesign_finance_five",
+          "branch": "sf-polish-finance",
+          "commit": "b02b9a268cffefd53385e90e89cb3dbef9fed32d",
+          "areas": [
+            "CAP05",
+            "CAP14",
+            "CAP17",
+            "CAP18",
+            "CAP19"
+          ],
+          "report": "wave-three/finance/REVIEW.md"
+        },
+        {
+          "group": "operations",
+          "agent": "redesign_operations_five",
+          "branch": "sf-polish-ops",
+          "commit": "05afd18d1ceee381c418b588f26186db1ad3b9b4",
+          "areas": [
+            "CAP11",
+            "CAP12",
+            "CAP13",
+            "CAP15",
+            "CAP16"
+          ],
+          "report": "wave-three/operations/REVIEW.md"
+        }
+      ],
+      "summary": "WAVE-THREE.md",
+      "currentStatusDocument": "wave-three/VALIDATION.md",
+      "evidence": "wave-three/evidence/manifest.json",
+      "gallery": "wave-three/evidence/README.md",
+      "scope": "wave-three/scope.json",
+      "acceptance": {
+        "status": "PENDING_USER_REVIEW",
+        "priorApprovalDoesNotApply": true
+      },
+      "areas": 15,
+      "routePatterns": 56,
+      "functionalStates": 88,
+      "photographedStates": 79,
+      "captures": 177,
+      "captureVariants": 98,
+      "confirmedCommands": 11,
+      "implementedCampaignAreas": 21,
+      "acceptedMergedAreas": 6,
+      "remainingAreas": 49,
+      "implementedAreaRouteScope": 69,
+      "remainingRouteScope": 96,
+      "pullRequest": 587
+    }
   }
 }

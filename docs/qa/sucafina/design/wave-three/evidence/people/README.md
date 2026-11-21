@@ -73,4 +73,4 @@ Os JPEGs abaixo ficam versionados no repositório. Os PNGs originais estão no a
 
 ## Limites relevantes
 
-CAP08 mostra honestamente a indisponibilidade de importação e exportação; não há transferência simulada. Sua projeção também não fornece nomes de líderes, portanto conserva o identificador autorizado. As capturas de 320 CSS px comprovam reflow; zoom real de 200% não foi medido. A revisão visual do usuário continua pendente.
+CAP08 mostra honestamente a indisponibilidade de importação e exportação; não há transferência simulada. Sua projeção também não fornece nomes de líderes, portanto conserva o identificador autorizado. As capturas de 320 CSS px comprovam reflow; zoom real de 200% não foi medido. O usuário autorizou a integração condicionada aos checks verdes; a composição passou. Consulte [a verificação do merge](../../MERGE.md) e o PR #587.

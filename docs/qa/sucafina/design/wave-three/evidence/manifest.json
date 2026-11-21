@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "repository": "gustavomhss/Orchestra-SF",
-  "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+  "status": "ACCEPTED_FOR_INTEGRATION",
   "branch": "sf-design-fifteen",
   "base": "acc0181508ceda7416bce57284b2307a9b20385b",
   "product": "e378923d7619c168b2d7b2c82b1232449eca2c45",
   "pullRequest": 587,
-  "userAcceptance": "PENDING_USER_REVIEW",
+  "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
   "counts": {
     "areas": 15,
     "routePatterns": 56,
@@ -16,11 +16,14 @@
     "captureVariants": 98,
     "confirmedCommands": 11,
     "implementedCampaignAreas": 21,
-    "acceptedMergedAreas": 6,
     "remainingAreas": 49,
     "implementedAreaRouteScope": 69,
     "remainingRouteScope": 96,
-    "totalJPEGBytes": 14971535
+    "totalJPEGBytes": 14971535,
+    "previouslyMergedAreas": 6,
+    "areasInThisIntegration": 15,
+    "acceptedForIntegrationAreas": 21,
+    "implementedAreas": 21
   },
   "definitions": {
     "area": "One stable native inventory ID; no locale/theme/viewport multiplication",
@@ -3938,5 +3941,35 @@
       "principal": true,
       "group": "operations"
     }
-  ]
+  ],
+  "acceptance": {
+    "status": "ACCEPTED_FOR_INTEGRATION",
+    "userStatement": "Vai pro merge, se tiver tudo verde",
+    "condition": "All scoped integration checks must pass",
+    "conditionSatisfied": true,
+    "recordedAt": "2026-11-21T22:10:44Z",
+    "timezone": "America/Sao_Paulo",
+    "scope": [
+      "CAP05",
+      "CAP06",
+      "CAP07",
+      "CAP08",
+      "CAP09",
+      "CAP10",
+      "CAP11",
+      "CAP12",
+      "CAP13",
+      "CAP14",
+      "CAP15",
+      "CAP16",
+      "CAP17",
+      "CAP18",
+      "CAP19"
+    ],
+    "pullRequest": 587,
+    "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/587",
+    "goldenBaseline": null
+  },
+  "integrationCandidate": "141336f8b17fe661cb0370ef99a7ff528737ef23",
+  "integrationReport": "../MERGE.md"
 }

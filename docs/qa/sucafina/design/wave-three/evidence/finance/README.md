@@ -1,6 +1,6 @@
 # Financeiro e Planner — galeria da terceira rodada
 
-**5 áreas · 35 estados funcionais exercitados · 26 estados com imagem própria · 47 capturas reais.** As outras 21 imagens são variantes dos mesmos estados. Nove estados foram exercitados sem captura dedicada; não são apresentados como revisão visual. A aprovação visual do usuário permanece pendente.
+**5 áreas · 35 estados funcionais exercitados · 26 estados com imagem própria · 47 capturas reais.** As outras 21 imagens são variantes dos mesmos estados. Nove estados foram exercitados sem captura dedicada; não são apresentados como revisão visual. O usuário autorizou a integração condicionada aos checks verdes; a composição passou. Consulte [a verificação do merge](../../MERGE.md) e o PR #587.
 
 As imagens mostram a aplicação nativa, instalada de forma isolada e preenchida pelos produtores canônicos com dados de teste. [Jornada aprovada: 2 testes, 3,6 minutos](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44947193512). Os quatro contextos encerraram sem erros de console ou de página. Foram confirmadas três gravações: CAP05 forecast mensal, CAP14 prazo/notas e CAP19 descrição com nova entrada e releitura. A prévia de colagem CAP18 foi cancelada sem aplicar.
 

@@ -1,6 +1,6 @@
 # Operações — galeria da terceira rodada
 
-**5 áreas · 25 estados funcionais com imagem própria · 72 capturas reais.** As outras 47 imagens são variantes dos mesmos estados. A aprovação visual do usuário permanece pendente.
+**5 áreas · 25 estados funcionais com imagem própria · 72 capturas reais.** As outras 47 imagens são variantes dos mesmos estados. O usuário autorizou a integração condicionada aos checks verdes; a composição passou. Consulte [a verificação do merge](../../MERGE.md) e o PR #587.
 
 As imagens mostram a aplicação nativa, instalada de forma isolada e preenchida pelos produtores canônicos com dados de teste. As três execuções finais passaram: [Serviço/Segurança — 2 testes](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44947197315), [Riscos/Stakeholders/Performance — 3 testes](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44949738285) e [português — 1 teste](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44949742205). Os seis contextos encerraram com consoleErrors[] e pageErrors[]. Nenhuma captura ficou incompleta ou foi pulada.
 
