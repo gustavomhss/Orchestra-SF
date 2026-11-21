@@ -284,9 +284,12 @@ const SuppliersData = Schema.Struct({
   requests: Schema.Array(SfProcurementRequest),
   formSettings: PublicSettings,
   bankVerificationAvailable: Schema.Boolean,
+  canUploadAttachment: optional(Schema.Boolean),
 })
 const SettingsData = Schema.Struct({
   settings: SfProcurementSettings, directory: Schema.Array(DirectoryEntry),
+  resetSettings: optional(SfProcurementSettings),
+  settingsInitialization: optional(Schema.Struct({ state: Schema.Literal("absent"), expectedVersion: Schema.Literal(0) })),
 })
 function pageOutput<Capability extends "CAP24" | "CAP25" | "CAP26" | "CAP27" | "CAP28", Data>(
   capabilityId: Capability, data: Schema.Codec<Data>,
