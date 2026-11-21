@@ -262,6 +262,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       if (!replayCurrent()) return authorizeHistoricalBasis(basis, context)
       const batched = await authority.readRecipientReviewLeg(thread, basis, basis.evidenceRefs, context,
         () => authority.readHistoricalSources(basis.evidenceRefs, context))
+      if (!replayCurrent()) return false
       return batched ?? authorizeHistoricalBasis(basis, context)
     }, human: input.human, fence: createCollaborationMutationFence(input.host), target: input.creationTarget, threadHistoryWrites: input.threadHistoryWrites }) : undefined
   const storageVersion = async (namespace: "threads" | "relations" | "confirmations", context: TrustedDomainContext): Promise<PortResult<number>> => {
