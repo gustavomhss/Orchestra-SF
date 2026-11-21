@@ -6,7 +6,7 @@ import { expect } from "@playwright/test"
 import { openReportsJourney, reportsTest } from "./reports-support/fixture.ts"
 import { changeForecast, expectCapturedBudget, exportReview, followBudgetSource, openAndReopenMeeting, prepareReview, preserveNewRevision, readSourceData } from "./reports-support/review-flow.ts"
 import { expectReusedReviewAnswer } from "./reports-support/confirmation.ts"
-import { confirmHumanAnswer, confirmSubmittedHumanAnswer, editHumanAnswer, expectConfirmedAnswerVisible, observed, submitHumanAnswer } from "./reports-support/human-answer-flow.ts"
+import { confirmSubmittedHumanAnswer, editHumanAnswer, expectConfirmedAnswerVisible, observed, submitHumanAnswer } from "./reports-support/human-answer-flow.ts"
 import { object, readReview, responseFor } from "./reports-support/model.ts"
 import { revokeReportsSession } from "./reports-support/revocation.ts"
 import { reconcilePrivateDraftsAfterReadLoss } from "./reports-support/read-reconciliation.ts"
@@ -163,7 +163,8 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
     let journey: Awaited<ReturnType<typeof openReportsJourney>["ready"]>
     let saved: Awaited<ReturnType<typeof prepareReview>>["saved"]
     let artifact: Awaited<ReturnType<typeof exportReview>>
-    let answer: Awaited<ReturnType<typeof confirmHumanAnswer>>["answer"]
+    let submitted: Awaited<ReturnType<typeof submitHumanAnswer>>
+    let answer: Awaited<ReturnType<typeof confirmSubmittedHumanAnswer>>["answer"]
 
     reportsTest.beforeAll(async ({ browser }, info) => {
       info.setTimeout(180_000)
@@ -175,16 +176,21 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
       await installation?.close()
     })
 
-    reportsTest("RPT-04a confirms the preserved answer and obtains the protected Office artifact", async ({}, info) => {
+    reportsTest("RPT-04a obtains the protected Office artifact and submits the real reply", async ({}, info) => {
       info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — falta prova nativa de revogacao real e invalidacao dos caches de meeting, Office e resposta C05 para principal anterior, mais controle positivo com novo owner." })
       const { app, corpus, page } = journey
       saved = (await prepareReview(page, app, corpus, info)).saved
       artifact = await exportReview(page, app, saved, corpus, "docx", info)
       await openAndReopenMeeting(page, app, saved, info)
-      answer = (await confirmHumanAnswer(page, app, saved, corpus, info)).answer
+      submitted = await submitHumanAnswer(page, app, saved, corpus, info)
     })
 
-    reportsTest("RPT-04b revokes the same session and verifies the fresh positive control", async ({ browser }, info) => {
+    reportsTest("RPT-04b confirms and reuses the preserved answer from the same session", async ({}, info) => {
+      const { app, corpus, page } = journey
+      answer = (await confirmSubmittedHumanAnswer(page, app, saved, corpus, info, submitted)).answer
+    })
+
+    reportsTest("RPT-04c revokes the same session and verifies the fresh positive control", async ({ browser }, info) => {
       const { app, page } = journey
       await reportsTest.step("Revoke, deny retained old credentials, and verify a fresh positive control", () =>
         revokeReportsSession({ browser, page, app, saved, answer, artifact, info }))

@@ -140,11 +140,6 @@ export async function confirmSubmittedHumanAnswer(page: Page, app: ReportsInstal
   return { api, answer }
 }
 
-export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo) {
-  const submitted = await submitHumanAnswer(page, app, saved, corpus, info)
-  return confirmSubmittedHumanAnswer(page, app, saved, corpus, info, submitted)
-}
-
 export async function expectConfirmedAnswerVisible(page: Page, answer: ReviewAnswer) {
   const confirmed = page.getByRole("region", { name: "Review discussion", exact: true })
     .getByRole("region", { name: "Confirmed answer", exact: true })
