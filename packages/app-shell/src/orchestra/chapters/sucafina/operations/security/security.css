@@ -105,6 +105,7 @@
   .sf-security-panel,.sf-security-editor { padding: 16px; }
   .sf-security-reference .sf-security-intro { flex-basis: 100%; }
   .sf-security-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .sf-security-metric > span:first-child { min-block-size: 3.2em; }
   .sf-security-metric { border-block-start: 0; border-inline-start: 0; border-block-end: 1px solid var(--mx-line); padding: 16px 0; }
   .sf-security-metric:nth-child(n + 5) { border-block-start: 0; }
   .sf-security-metric:nth-child(even) { padding-inline-start: 16px; }
