@@ -21,6 +21,7 @@ import {
   type SourcingEdit, type SourcingRequest,
 } from "./model"
 import "./sourcing.css"
+import "../overview/presentation.css"
 
 type PageRead =
   | Readonly<{kind:"ok";page:Cap25PageOk}>
@@ -681,9 +682,11 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         <For each={current.quotes??[]}>{(quote,index)=>quoteEditor(quote,index())}</For>
         <button class="mx-btn" type="button" onClick={addQuote}>{t("sf.u12.addQuote")}</button>
       </section>
-      <p>{t("sf.u12.noBrowserCalculation")}</p>
+      <details class="sf-procurement-source"><summary>{t("sf.u12.coverage")}</summary>
+        <p>{t("sf.u12.noBrowserCalculation")}</p>
+      </details>
       <div class="sf-u12-actions">
-        <button class="mx-btn-primary" type="button" disabled={!state.dirty||!!state.conflict||active(ui.phase)||!can("save")}
+        <button class="mx-btn primary" type="button" disabled={!state.dirty||!!state.conflict||active(ui.phase)||!can("save")}
           onClick={()=>begin("save")}>{t("sf.u12.save")}</button>
         <button class="mx-btn" type="button" disabled={!!state.conflict||active(ui.phase)||!can("submit_sourcing")}
           onClick={()=>begin("submit_sourcing")}>{t("sf.u12.submit")}</button>
@@ -781,7 +784,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           }</For>
         </select>
       </label>
-      <button class="mx-btn-primary" type="button"
+      <button class="mx-btn primary" type="button"
         disabled={!can("select_quote")||!ui.quoteChoice||!quoteIsPersisted(row,ui.quoteChoice)||active(ui.phase)}
         onClick={()=>begin("select_quote")}>{t("sf.u12.select")}</button>
     </section>
@@ -790,12 +793,12 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     titleKey={k("sf.cap25.title")}
     subtitleKey={k("sf.u12.title")}
     context={[]} tabs={[]} activeTab={null}
-    density="comfortable" layout={ui.layoutMode==="single"?"reading":"split"}
+    density="comfortable" layout="work"
     onLayoutMode={(layout)=>setUi("layoutMode",layout)}
     secondaryActions={[{id:"refresh",labelKey:k("sf.u12.refresh"),tone:"secondary",disabled:active(ui.phase),busy:false,
       onInvoke:()=>{const token=authority();if(token)void refresh(token,ref()??undefined)}}]}
   >
-    <div class="sf-u12-root" data-confirmation-phase={ui.phase}>
+    <div class="sf-u12-root sf-procurement-wave" data-sf-surface="CAP25" data-sf-wave="four" data-confirmation-phase={ui.phase} data-view={ui.review ? "review" : ui.stage}>
       <For each={ui.sourceWarnings}>{(message)=><p role="alert">{message}</p>}</For>
       <Show when={state()==="ready"||state()==="empty"||state()==="filtered-empty"||state()==="outcome-unknown"}
         fallback={<SfStatePanel state={state()} messageKey={k(message())}
@@ -813,7 +816,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         <Show when={ui.phase==="failed"}><p role="alert">{t("sf.u12.failed")}</p></Show>
         <Show when={!outcomeUnknown()}>
         <Show when={!ref()}>
-          <section><h3>{t("sf.u12.request")}</h3>
+          <section class="sf-u12-requests"><h3>{t("sf.u12.request")}</h3>
             <ul><For each={requestRows()}>{(row)=>
               <li><button type="button" class="mx-btn" onClick={()=>setUi("selected",row.number??null)}>
                 {row.number??t("sf.u12.missing")} · {row.pr?.title??""} · {row.status}
@@ -824,7 +827,10 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         <Show when={request()}>
           <header class="sf-u12-heading">
             <h2>{request()?.pr?.title??t("sf.u12.requestTitle")}</h2>
-            <p>{t("sf.u12.stage")}: {request()?.status} · {t("sf.u12.version")}: {sourceVersion()??t("sf.u12.missing")}</p>
+            <p class="sf-u12-stage">{t("sf.u12.stage")}: {request()?.status}</p>
+            <details class="sf-procurement-source"><summary>{t("sf.u12.sourceOnly")}</summary>
+              <p>{t("sf.u12.version")}: {sourceVersion()??t("sf.u12.missing")}</p>
+            </details>
             <Show when={request()?.requestSummary}>
               <p data-request-summary={request()?.number}>{request()?.requestSummary}</p>
             </Show>
@@ -833,7 +839,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
             </Show>
           </header>
           <Show when={request()?.status==="sourcing"||request()?.po}>
-            <section>
+            <section class="sf-u12-order" hidden={!!ui.review}>
               <Show when={request()?.po}>
                 <fieldset disabled>
                   <label>{t("sf.u12.quoteSupplier")}
@@ -854,7 +860,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
               </Show>
             </section>
           </Show>
-          <div class="sf-u12-switch">
+          <div class="sf-u12-switch" hidden={!!ui.review}>
             <button type="button" aria-pressed={ui.stage==="sourcing"} class="mx-btn"
               onClick={()=>setUi("stage","sourcing")}>{t("sf.u12.sourcing")}</button>
             <button type="button" aria-pressed={ui.stage==="quotes"} class="mx-btn"

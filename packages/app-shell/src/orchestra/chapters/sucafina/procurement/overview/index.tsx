@@ -10,6 +10,7 @@ import { sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import "./overview.css"
+import "./presentation.css"
 
 type Projection = Extract<typeof SfProcurement.operations["domain.page.CAP24"]["output"]["Type"], { status: "ok" }>
 type Request = Projection["value"]["data"]["requests"][number]
@@ -135,7 +136,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
           minimumFractionDigits: 2, maximumFractionDigits: 2,
         }).format(value)} <bdi>{currency()}</bdi></span>
   const metric = (label: string, value: number | null, unavailable = false): JSX.Element => (
-    <div class="mx-card sf-n21-metric">
+    <div class="sf-n21-metric">
       <dt>{t(key(label))}</dt>
       <dd>{money(value)}</dd>
       <Show when={unavailable}>
@@ -157,7 +158,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
       layout="work"
       onLayoutMode={() => undefined}
     >
-      <div class="sf-n21-overview" data-sf-surface="CAP24">
+      <div class="sf-n21-overview sf-procurement-wave" data-sf-surface="CAP24" data-sf-wave="four">
         <SfStatePanel
           state={state()}
           messageKey={sfCommonKey(
@@ -192,8 +193,8 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
                     </button>
                   </Show>
                 </section>
-                <dl class="sf-n21-metrics">
-                  <div class="mx-card sf-n21-metric">
+                <dl class="mx-card sf-n21-metrics" aria-label={t(key("sf.n21.sourceTotals"))}>
+                  <div class="sf-n21-metric">
                     <dt>{t(key("sf.n21.open"))}</dt>
                     <dd>{count(filtered().length)}</dd>
                   </div>
@@ -208,7 +209,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
                 </dl>
                 <section class="mx-card sf-n21-list">
                   <h2>{t(key("sf.n21.stock"))}</h2>
-                  <div class="sf-n21-table-scroll">
+                  <div class="sf-n21-table-scroll" role="region" tabIndex={0} aria-label={t(key("sf.cap24.title"))}>
                     <table>
                       <caption>{t(key("sf.cap24.title"))}</caption>
                       <thead><tr>
@@ -230,16 +231,19 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
                     </table>
                   </div>
                 </section>
-                <div class="sf-n21-unsupported">
-                  <section class="mx-card">
+                <details class="sf-n21-unsupported">
+                  <summary>{t(key("sf.n21.sourceCoverage"))}</summary>
+                  <div class="sf-n21-coverage">
+                  <section>
                     <h2>{t(key("sf.n21.holder"))}</h2>
                     <p role="status">{t(sfCommonKey("sf.common.unavailable"))}</p>
                   </section>
-                  <section class="mx-card">
+                  <section>
                     <h2>{t(key("sf.n21.aging"))}</h2>
                     <p role="status">{t(sfCommonKey("sf.common.unavailable"))}</p>
                   </section>
-                </div>
+                  </div>
+                </details>
               </>
             )}
           </Show>

@@ -1,5 +1,6 @@
 import { createMemo, For, Show } from "solid-js"
 import "./queue.css"
+import "../overview/presentation.css"
 import type { JSX } from "solid-js"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
 import { SfPageFrame } from "../../shared/frame"
@@ -284,6 +285,7 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
       layout="work"
       onLayoutMode={props.onLayoutMode}
     >
+      <div class="sf-procurement-queue sf-procurement-wave" data-sf-wave="four" data-sf-surface="CAP25">
       <Show when={authorized()}>
         <fieldset class="sf-procurement-queue-filters" aria-label={props.translate("sf.u10.queue.filters")}>
           <legend>{props.translate("sf.u10.queue.filters")}</legend>
@@ -361,6 +363,7 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
           }
         </Show>
       </SfStatePanel>
+      </div>
     </SfPageFrame>
   )
 }
