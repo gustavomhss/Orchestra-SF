@@ -33,6 +33,12 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
   const desktop = async () => { await page.setViewportSize({ width: 1440, height: 1100 }); await reflow(page) }
   const narrow = async () => { await page.setViewportSize({ width: 320, height: 900 }); await reflow(page) }
   const review = page.locator('[data-component="sf-change-review"]')
+  const reviewOverview = async () => {
+    await expect(review).toBeVisible()
+    await scrollPageTop(page)
+    await review.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest", behavior: "instant" }))
+    await expect(review.getByRole("heading", { level: 2 })).toBeInViewport()
+  }
   const references = new Map<string, string>()
   const requestRef = (name: string) => {
     const ref = references.get(name)
@@ -41,10 +47,29 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
   }
   const confirm = async (label: string) => {
     const before = posts.length
+    const responsePending = page.waitForResponse((response) =>
+      response.request().method() === "POST" &&
+      new URL(response.url()).pathname === installation.mount + "/procurement")
     await review.getByRole("button", { name: label, exact: true }).click()
     await expect.poll(() => posts.length, { message: "one explicit confirmation sends one original producer command" }).toBe(before + 1)
+    const response = await responsePending
+    const body: unknown = await response.json().catch(() => null)
+    const result = body && typeof body === "object" ? body as Record<string, unknown> : {}
+    // Only bounded status/error enums are logged: never request values, headers,
+    // source records, actor identity or opaque owner/intent credentials.
+    const codes = Array.isArray(result.errors) ? result.errors.filter((value): value is string =>
+      typeof value === "string" && /^[a-z][a-z0-9_-]{0,63}$/.test(value)).slice(0,8) : []
+    console.info("SF_DESIGN_COMMAND " + JSON.stringify({
+      ordinal: before + 1, status: response.status(), confirmed: result.ok === true, codes,
+    }))
+    expect(response.status(), "the original producer explicitly accepted this confirmation").toBe(200)
+    expect(result.ok === true, "a successful HTTP status must include the original acknowledgement").toBe(true)
     await expect(review).toHaveCount(0)
-    await expect(page.locator('[data-sf-frame="page"] [aria-busy="true"]')).toHaveCount(0)
+    const host = page.locator('[data-sf-host="owner-runtime231"]')
+    await expect(host).toHaveAttribute("data-sf-provider-state", "ready")
+    await expect(host).toHaveAttribute("data-sf-view-state", "ready")
+    await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(1)
+    await expect(host.locator('[aria-busy="true"]')).toHaveCount(0)
   }
   const assertRowStatus = async (name: string, status: string) => {
     await go(screens[1])
@@ -99,7 +124,7 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
     expect(posts).toHaveLength(beforeCancel)
     await expect(detail.locator('textarea[name="pr.description"]')).toHaveValue(data.revisedDescription)
     await detail.getByRole("button", { name: "Save requisition draft", exact: true }).click()
-    await scrollPageTop(page)
+    await reviewOverview()
     await capture(page, info, "CAP25-dark-desktop-requisition-review-overview-test-data")
     await reviewActions(page)
     await capture(page, info, "CAP25-dark-desktop-requisition-review-actions-test-data")
@@ -190,7 +215,7 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
     await expect(editor.getByLabel("Evaluator", { exact: true })).toHaveValue(evaluator)
     await expect(editor.locator(".sf-u12-quote").first().getByLabel("Description", { exact: true })).toHaveValue(data.description)
     await editor.getByRole("button", { name: "Save sourcing", exact: true }).click()
-    await scrollPageTop(page)
+    await reviewOverview()
     await capture(page, info, "CAP25-dark-desktop-sourcing-review-overview-test-data")
     await reviewActions(page)
     await capture(page, info, "CAP25-dark-desktop-sourcing-review-actions-test-data")
@@ -252,7 +277,7 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
     await detail.getByLabel("Rejection reason", { exact: true })
       .fill("Design test data · Clarify delivery conditions before resubmission.")
     await detail.getByRole("button", { name: "Reject current step", exact: true }).click()
-    await scrollPageTop(page)
+    await reviewOverview()
     await capture(page, info, "CAP26-dark-desktop-po-decision-review-overview-test-data")
     await reviewActions(page)
     await capture(page, info, "CAP26-dark-desktop-po-decision-review-actions-test-data")
@@ -309,7 +334,7 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
     expect(posts).toHaveLength(beforeCancel)
     await expect(editor.locator('[name="notes"]')).toHaveValue(data.supplierNote)
     await editor.getByRole("button", { name: "Create supplier", exact: true }).click()
-    await scrollPageTop(page)
+    await reviewOverview()
     await capture(page, info, "CAP27-dark-desktop-supplier-review-overview-test-data")
     await narrow()
     await reviewActions(page)
@@ -361,7 +386,7 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
     expect(posts).toHaveLength(beforeCancel)
     await expect(form.locator("#sf-u36-field-reminderDays")).toHaveValue("9")
     await form.getByRole("button", { name: "Review changes", exact: true }).click()
-    await scrollPageTop(page)
+    await reviewOverview()
     await capture(page, info, "CAP28-dark-desktop-settings-review-overview-test-data")
     await narrow()
     await reviewActions(page)

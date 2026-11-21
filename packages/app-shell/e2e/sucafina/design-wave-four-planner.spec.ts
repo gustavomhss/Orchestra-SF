@@ -46,11 +46,11 @@ async function confirm(page: Page, installation: DesignInstallation, sourcePage:
     if (request.method() !== "POST" || new URL(response.url()).pathname !== installation.mount + "/planner") return false
     const input = request.postDataJSON()
     return input?.page === sourcePage && input.action === action && (collection === undefined || input.values?.collection === collection)
-  })
+  }).then(async (response) => ({ ok: response.ok(), body: await response.json() as unknown }))
   await review(page).getByRole("button", { name: label, exact: true }).click()
   const response = await saved
-  expect(response.ok()).toBe(true)
-  expect(await response.json()).toMatchObject({ ok: true })
+  expect(response.ok).toBe(true)
+  expect(response.body).toMatchObject({ ok: true })
   await expect(review(page)).toHaveCount(0)
 }
 async function discard(page: Page, editor: Locator) {

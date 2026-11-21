@@ -266,3 +266,34 @@ test("work health does not infer source readiness from callable methods", async 
   expect(context.admitted.length).toBe(3)
   context.terminal()
 })
+
+test("search health rejects a transaction callback replaced during an awaited read", async () => {
+  const context = await fixture()
+  const original = context.persistence.transaction
+  let replaced = false
+  context.hooks.read = async (surface) => {
+    if (surface !== "dashboard" || replaced) return
+    await Promise.resolve()
+    replaced = true
+    context.persistence.transaction = (surface, work, options) => original(surface, work, options)
+  }
+  expect(await context.observe("search")).toEqual([])
+  expect(replaced).toBe(true)
+  expect(context.admitted.length).toBe(1)
+  context.terminal()
+})
+
+test("work health rechecks the installed binding after all operation leases finish", async () => {
+  const context = await fixture()
+  const source = context.sources.work!
+  const finish = source.runtime.ui.finish
+  let finished = 0
+  source.runtime.ui.finish = (call) => {
+    finish(call)
+    if (++finished === 3)
+      context.sources.work = { ...source, projectionBinding: async () => undefined }
+  }
+  expect(await context.observe("work")).toEqual([])
+  expect(finished).toBe(3)
+  context.terminal()
+})

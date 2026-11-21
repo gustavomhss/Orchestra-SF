@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test"
+import { act } from "../../../modules/sucafina/porta/act"
 import { createRenderEffect, createRoot } from "solid-js"
 import { createStore, unwrap } from "solid-js/store"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
@@ -6,6 +7,7 @@ import { poFromRecord, prFromRecord, type SfRequest } from "../src/orchestra/cha
 import { editableSourcing } from "../src/orchestra/chapters/sucafina/procurement/sourcing/model"
 
 import { procurementCommandSnapshot } from "../src/orchestra/chapters/sucafina/procurement/command-snapshot"
+import { procurementNumberInput } from "../src/orchestra/chapters/sucafina/procurement/number-input"
 
 const source: SfRequest = {
   number: "PR-2026-0001", status: "draft", createdBy: "test-operator",
@@ -13,6 +15,35 @@ const source: SfRequest = {
 }
 
 describe("procurement drafts at the original JSON command boundary", () => {
+  test("numeric controls retain zero and decimals, distinguish empty input, and keep invalid text", () => {
+    expect(procurementNumberInput("0")).toBe(0)
+    expect(procurementNumberInput("7500.25")).toBe(7500.25)
+    expect(procurementNumberInput("")).toBeNull()
+    expect(procurementNumberInput(" ")).toBeNull()
+    expect(procurementNumberInput("not a number")).toBe("not a number")
+    expect(procurementNumberInput("Infinity")).toBe("Infinity")
+  })
+
+  test("the numeric create DTO satisfies both the native JSON codec and the original transition gate", () => {
+    const original = (pr: unknown) => act(null, { type: "create", pr },
+      { id: "test-operator", canWrite: true, roles: ["requester"] },
+      { currency: "USD", levels: [{ id: "L1", name: "Level 1", threshold: 10000, holderId: "test-approver" }],
+        prApprovalMode: "matrix", blockSelfApproval: false, fxRates: [{ code: "USD", rate: 1 }] },
+      "2026-11-21T00:00:00.000Z", { pr: [], po: [] }, null)
+    const base = { title: "Native request", recurring: false, expenseType: "OPEX" }
+    // F02 also accepts legacy text inputs, but nested JSON is not a dotted form.
+    expect(original({ ...base, estAmount: "7500" })).toEqual({ ok: false, code: "action_invalid" })
+    for (const raw of ["7500", "0", ""]) {
+      const pr = procurementCommandSnapshot({ ...base, estAmount: procurementNumberInput(raw) })
+      expect(SfNativeOperationBindings["domain.command.CAP25.create"]!.decodeInput({
+        page: "Requests", action: "create", version: 0, values: { pr },
+      }).status).toBe("ok")
+      const result = original(pr)
+      expect(result.ok).toBe(true)
+      if (result.ok) expect(result.request.pr.estAmount).toBe(pr.estAmount)
+    }
+  })
+
   test("an incomplete PR omits absent fields and keeps null, false and the W19 title boundary", () => {
     const pr = prFromRecord(source)
     expect(Object.hasOwn(pr, "frequency")).toBe(false)
