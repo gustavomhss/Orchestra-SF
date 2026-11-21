@@ -4,6 +4,7 @@ import { Option, Schema } from "effect"
 import { SF_U32_COPY } from "@/i18n/orchestra-chapters/sf-u32"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
+import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
 import { useSfContext } from "../../context"
 import { bindReviewLocation, preservedRecordSources, preservedSourceBasis, reviewLocationBinding, type PreservedReview } from "./model"
@@ -393,6 +394,21 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     await submitIntent()
   }
 
+  const recheckDeniedOwner = async (active: NonNullable<ReturnType<typeof owner.ready>>, signal: AbortSignal) => {
+    const generation = owner.generation()
+    const { installationId, projectId, hostId } = active.context.stamp
+    const context = await createSfContextClient(active.transport)["ctx.context"]({ installationId, projectId, hostId }, { signal })
+    if (signal.aborted || owner.generation() !== generation || owner.ready()?.transport !== active.transport) return false
+    if (context.kind !== "response") return false
+    const reason = context.status === 401 && context.body.status === "unauthenticated" ? "session-expired"
+      : context.status === 403 && context.body.status === "denied" ? "revoked"
+      : undefined
+    if (!reason) return false
+    bindReviewLocation({})
+    owner.invalidate(reason)
+    return true
+  }
+
   const reconcileAction = async () => {
     const current = intent
     const active = owner.ready()
@@ -403,6 +419,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     if (current.threadId) {
       const read = await client["collaboration.thread-read"]({ id: current.threadId }, { signal: abort.signal })
       if (abort.signal.aborted) return
+      if (read.kind === "response" && (read.status === 401 || read.status === 403) &&
+        await recheckDeniedOwner(active, abort.signal)) return
       if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
       const thread = asThread(read.body.value)
       if (!thread || thread.id !== current.threadId) throw new Error("Review discussion unavailable")
@@ -421,6 +439,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     operation = abort
     const read = await createSfCollaborationClient(active.transport)["collaboration.thread-read"]({ id }, { signal: abort.signal })
     if (abort.signal.aborted) return
+    if (read.kind === "response" && (read.status === 401 || read.status === 403) &&
+      await recheckDeniedOwner(active, abort.signal)) return
     if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
     const thread = asThread(read.body.value)
     if (!thread || thread.id !== id) throw new Error("Review discussion unavailable")

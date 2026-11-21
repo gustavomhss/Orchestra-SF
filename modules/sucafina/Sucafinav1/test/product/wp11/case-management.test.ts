@@ -17,8 +17,8 @@ test("case listing and editing recheck access, actor intent, CAS and exact retry
     const state = createSfProductState({ persistence: store, createId: () => "state", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
     const decision = { id: "case", incarnation: "inc", version: 1, state: "draft", objective: "Initial", criteria: [{ id: "cost", description: "Cost", required: true }], participants: ["principal"], sourceRefs: [], horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", assumptions: [], alternatives: [], choices: [], preparedChanges: [], ledger: [] } as unknown as DecisionCase
     await state.transaction(new Request("https://example.test"), { namespace: "cases", expectedStorageVersion: 0, targetRef: "case", targetIncarnation: "inc", idempotencyKey: "seed", commandDigest: "a".repeat(64) }, async (staged) => { staged.cases.case = decision; return { commit: true, value: true } })
-    const gate = { allowed: true, intent: false, sources: true }
-    const management = createDecisionCaseManagement({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, authorizeCase: async () => gate.allowed, authorizeEdit: async () => true, verifyEvidence: async () => gate.sources, verifyEdit: () => gate.intent, operationIdentity: () => "intent" })
+    const gate = { allowed: true, intent: false, sources: true, retained: true, operation: "intent" }
+    const management = createDecisionCaseManagement({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, authorizeCase: async () => gate.allowed, authorizeEdit: async () => true, verifyEvidence: async () => gate.sources, verifyRetainedEvidence: async () => gate.retained, verifyEdit: () => gate.intent, operationIdentity: () => gate.operation })
     expect(await management.list(context)).toMatchObject({ status: "ok", value: [{ caseRef: { id: "case", incarnation: "inc", version: 1 }, objective: "Initial" }] })
     const request = { caseRef: { id: "case", incarnation: "inc", version: 1 }, objective: "Revised", criteria: [{ id: "cost", description: "Cost", required: true }], sourceRefs: [] }
     expect((await management.edit(request, context)).status).toBe("conflict")
@@ -29,6 +29,14 @@ test("case listing and editing recheck access, actor intent, CAS and exact retry
     expect((await management.edit({ ...request, objective: "Different" }, context)).status).toBe("conflict")
     gate.sources = false
     expect(await management.list(context)).toEqual({ status: "ok", value: [] })
+    gate.operation = "retained-objective"
+    const note = { ...request, objective: "Preserve the existing evidence", caseRef: { ...request.caseRef, version: 2 } }
+    expect(await management.edit({ ...note, criteria: [{ ...note.criteria[0]!, description: "A changed criterion" }] }, context))
+      .toEqual({ status: "denied", reason: "case-access-unavailable" })
+    gate.retained = false
+    expect(await management.edit(note, context)).toEqual({ status: "denied", reason: "case-access-unavailable" })
+    gate.retained = true
+    expect(await management.edit(note, context)).toEqual({ status: "ok", value: { caseRef: { ...note.caseRef, version: 3 } } })
     gate.sources = true
     gate.allowed = false
     expect(await management.list(context)).toEqual({ status: "ok", value: [] })

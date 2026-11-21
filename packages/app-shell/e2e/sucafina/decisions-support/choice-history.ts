@@ -28,7 +28,7 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
   }
   page.on("request", capture)
   try {
-    const source = await observeDecisionReply(page, (request) => request.method() === "GET" &&
+    const source = await observeDecisionReply(page, origin, (request) => request.method() === "GET" &&
       request.url() === `${origin}/sucafina/api/ui/projections/case?${new URLSearchParams({ caseRef: reference })}`,
       () => openCase(page, origin, selection))
     const projection = await readReply(source, observations)
@@ -76,7 +76,7 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
     const comparisonResult = page.getByRole("region", { name: "Comparison", exact: true })
     const compareExactPair = async () => {
       // The native comparison must return the exact ordered C10 request.
-      const observed = await observeDecisionReply(page, (request) => request.url() === `${origin}/sucafina/dashboard?sf=decision-compare` &&
+      const observed = await observeDecisionReply(page, origin, (request) => request.url() === `${origin}/sucafina/dashboard?sf=decision-compare` &&
         isCommand(request, "decision-compare"), () => compare.click())
       const request = observed.request()
       const reply = await readReply(observed, observations)
@@ -233,7 +233,7 @@ async function currentCase(page: Page, selection: Selection, version: number, st
 
 async function openChoice(page: Page, origin: string, selection: Selection, version: number, observations: Record<string, unknown>[]) {
   const pathname = casePath(selection.reference) + "/choice"
-  const observed = await observeDecisionReply(page, (request) => isCaseJsonRead(request, origin, "current-choice", selection.reference), async () => {
+  const observed = await observeDecisionReply(page, origin, (request) => isCaseJsonRead(request, origin, "current-choice", selection.reference), async () => {
     await page.goto(origin + pathname)
     await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === pathname)
     await expect(page.getByRole("heading", { name: "Current choice", exact: true, level: 1 }),
@@ -298,7 +298,7 @@ async function registerRule(page: Page, origin: string, current: Awaited<ReturnT
   const rule = page.getByRole("group", { name: "Numeric comparison rule", exact: true })
   const criterion = rule.getByRole("combobox", { name: "Criterion for numeric comparison", exact: true })
   await criterion.selectOption(criterionId)
-  const observed = await observeDecisionReply(page, (request) => isCaseJsonRead(request, origin, "decision-controls", reference),
+  const observed = await observeDecisionReply(page, origin, (request) => isCaseJsonRead(request, origin, "decision-controls", reference),
     () => rule.getByRole("button", { name: "Load comparison rule", exact: true }).click())
   const reply = await readReply(observed, observations)
   const selected = asRecord(asRecord(reply.value).selected)

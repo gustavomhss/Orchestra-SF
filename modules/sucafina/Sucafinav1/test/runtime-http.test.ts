@@ -10,6 +10,8 @@ import { empty, testPersistence } from "./fixture/persistence.ts"
 import { join } from "node:path"
 import { mkdir } from "node:fs/promises"
 
+const browserStageTimeout = 45_000
+
 function fixture() {
   const storage = testPersistence()
   const identity: { principal: ResolvedActor | null } = {
@@ -150,8 +152,19 @@ test("HTTP request boundaries retain host routes and retire console HTML GET/HEA
 test("Chrome submits a real form and preserves unsaved edits after blur until reload", async () => {
   expectSpawn(import.meta.path)
   const started = performance.now()
+  const riskDeadline = started + browserStageTimeout
   const phase = (stage: string) => console.info("SF_NATIVE_RUNTIME_STAGE",
     JSON.stringify({ stage, elapsedMs: Math.round(performance.now() - started) }))
+  const runStage = async (name: string, deadline: number, work: () => Promise<void>) => {
+    const limit = Promise.withResolvers<never>()
+    const timer = setTimeout(() => limit.reject(new Error(name + " exceeded its 45 second stage budget")),
+      Math.max(0, deadline - performance.now()))
+    try {
+      await Promise.race([work(), limit.promise])
+    } finally {
+      clearTimeout(timer)
+    }
+  }
   phase("build native fixture")
   const [{ createNativeDashboardFixture }, { launchBrowserDriver }, { forwardOnce }] = await Promise.all([
     import("./product/wp02/native-browser-fixture.ts"),
@@ -203,177 +216,194 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
         "/sucafina/api/ui/context", "/sucafina/api/ui/pages/CAP13"].includes(url.pathname)) return
       console.info("SF_NATIVE_RUNTIME_READ", JSON.stringify({ path: url.pathname, status: response.status() }))
     })
-    const riskPage = native.origin + "/orchestra/sf-operations/risks"
-    phase("open real risk page")
-    expect((await page.goto(riskPage))?.ok()).toBe(true)
-    phase("open new risk editor")
-    await page.getByRole("button", { name: "New risk", exact: true }).click({
-      timeout: Math.max(1, 43_000 - (performance.now() - started)),
-    }).catch(async (error) => {
-      const owner = await page.evaluate(() => {
-        const host = document.querySelector<HTMLElement>('[data-sf-host="owner-runtime231"]')
-        const chapter = host?.querySelector<HTMLElement>('[data-sf-surface="CAP13"]')
-        return { discovery: host?.dataset.sfDiscoveryState, provider: host?.dataset.sfProviderState,
-          reason: host?.dataset.sfProviderReason, view: host?.dataset.sfViewState, authorized: chapter?.dataset.sfAuthorized }
-      }).catch(() => undefined)
-      console.info("SF_NATIVE_RUNTIME_ADMISSION", JSON.stringify({ owner, pageErrors: errors.length }))
-      throw error
-    })
-    const editor = page.locator("form.sf-u30-editor")
-    const cell = editor.getByLabel("Risk description", { exact: true })
-    phase("fill risk description")
-    await cell.fill("Browser risk")
-    phase("choose risk impact")
-    await editor.getByLabel("Impact", { exact: true }).selectOption("3")
-    phase("choose risk probability")
-    await editor.getByLabel("Probability", { exact: true }).selectOption("2")
-    phase("choose risk status")
-    await editor.getByLabel("Status", { exact: true }).selectOption("open")
-    phase("review the new risk")
-    await editor.getByRole("button", { name: "Review changes", exact: true }).click()
-    phase("submit reviewed risk")
-    const created = page.waitForResponse((response) => response.request().method() === "POST" &&
-      new URL(response.url()).pathname === "/sucafina/dashboard")
-    // Save must refresh the current CAP13 source without navigation or retrying the command.
-    const createdPage = await captureRiskRead(riskSource, async () => {
-      await page.getByRole("button", { name: "Save", exact: true }).click()
-      expect((await created).status()).toBe(200)
-    })
-    const stored = await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
-      value: { rows: rows(snapshot.data.risks), versions: { ...snapshot.versions } } }))
-    expect(stored.rows).toMatchObject([{ name: "Browser risk", impact: 3, probability: 2 }])
-    const riskId = stored.rows[0]?.id
-    if (typeof riskId !== "string" || !riskId) throw new Error("The original risk command did not return a stored record")
-    expect(stored.versions["risks:" + riskId]?.version).toBe(1)
-    phase("observe the automatically refreshed risk")
-    expect(createdPage.status).toBe(200)
-    expect(createdPage.value).toMatchObject({ data: { risks: [{ id: riskId }] }, versions: { ["risks:" + riskId]: 1 } })
-    const edit = page.locator('tr[data-sf-row="' + riskId + '"] button[data-sf-action="edit"]')
-    phase("edit persisted risk")
-    await edit.click()
-    const filters = page.locator(".sf-u30-filters")
-    await filters.getByLabel("Status", { exact: true }).selectOption("open")
-    await cell.fill("Unsaved typing")
-    await cell.focus()
-    // A competing command uses the same actual encrypted session and HTTP
-    // producer, outside the browser editor's retained draft and CAS.
-    const remote = await context.request.post(native.origin + "/sucafina/dashboard?page=IT%20Risks", {
-      headers: { origin: native.origin },
-      data: { page: "IT Risks", action: "save", id: riskId, version: 1,
-        values: { name: "Remote edit", impact: 4, probability: 2, status: "open" } },
-    })
-    expect(remote.status()).toBe(200)
-    phase("observe remote edit while focused")
-    // Dispatch the existing public control without moving focus out of the
-    // editor. No private window hook or fabricated producer response is used.
-    const focused = await captureRiskRead(riskSource + "?status=open",
-      () => filters.getByRole("button", { name: "Apply filters", exact: true }).dispatchEvent("click"))
-    expect(focused.status).toBe(200)
-    expect(focused.value.versions).toMatchObject({ ["risks:" + riskId]: 2 })
-    expect(await cell.inputValue()).toBe("Unsaved typing")
-    phase("observe remote edit after blur")
-    await cell.blur()
-    await filters.getByLabel("Status", { exact: true }).selectOption("")
-    const blurredRead = page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP13" &&
-      new URL(response.url()).searchParams.get("status") !== "open")
-    await filters.getByRole("button", { name: "Apply filters", exact: true }).click()
-    expect((await blurredRead).status()).toBe(200)
-    expect(await cell.inputValue()).toBe("Unsaved typing")
-    phase("reject stale review")
-    // The native controller retains CAS 1 despite seeing source version 2.
-    // The stale edit must stay open and refuse review without a second POST.
-    await editor.getByRole("button", { name: "Review changes", exact: true }).click()
-    await page.getByRole("alert").getByText("Review the current source before continuing.", { exact: true }).waitFor()
-    expect(await cell.inputValue()).toBe("Unsaved typing")
-    expect(writes).toHaveLength(1)
-    expect(await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
-      value: snapshot.versions["risks:" + riskId]?.version }))).toBe(2)
-    phase("reload and confirm current CAS")
-    const reloaded = await captureRiskRead(riskSource, () => page.reload())
-    expect(reloaded.status).toBe(200)
-    expect(reloaded.value.versions).toMatchObject({ ["risks:" + riskId]: 2 })
-    await edit.click()
-    expect(await cell.inputValue()).toBe("Remote edit")
-    // Verify that the fresh editor really binds the restored source's CAS 2.
-    await editor.getByRole("button", { name: "Review changes", exact: true }).click()
-    phase("submit fresh reviewed CAS")
-    const freshSave = page.waitForResponse((response) => response.request().method() === "POST" &&
-      new URL(response.url()).pathname === "/sucafina/dashboard")
-    const confirmed = await captureRiskRead(riskSource, async () => {
-      await page.getByRole("button", { name: "Save", exact: true }).click()
-      const fresh = await freshSave
+    await runStage("Risk editing and reload", riskDeadline, async () => {
+      const riskPage = native.origin + "/orchestra/sf-operations/risks"
+      phase("open real risk page")
+      expect((await page.goto(riskPage))?.ok()).toBe(true)
+      phase("open new risk editor")
+      await page.getByRole("button", { name: "New risk", exact: true }).click({
+        timeout: Math.max(1, 43_000 - (performance.now() - started)),
+      }).catch(async (error) => {
+        const owner = await page.evaluate(() => {
+          const host = document.querySelector<HTMLElement>('[data-sf-host="owner-runtime231"]')
+          const chapter = host?.querySelector<HTMLElement>('[data-sf-surface="CAP13"]')
+          return { discovery: host?.dataset.sfDiscoveryState, provider: host?.dataset.sfProviderState,
+            reason: host?.dataset.sfProviderReason, view: host?.dataset.sfViewState, authorized: chapter?.dataset.sfAuthorized }
+        }).catch(() => undefined)
+        console.info("SF_NATIVE_RUNTIME_ADMISSION", JSON.stringify({ owner, pageErrors: errors.length }))
+        throw error
+      })
+      const editor = page.locator("form.sf-u30-editor")
+      const cell = editor.getByLabel("Risk description", { exact: true })
+      phase("fill risk description")
+      await cell.fill("Browser risk")
+      phase("choose risk impact")
+      await editor.getByLabel("Impact", { exact: true }).selectOption("3")
+      phase("choose risk probability")
+      await editor.getByLabel("Probability", { exact: true }).selectOption("2")
+      phase("choose risk status")
+      await editor.getByLabel("Status", { exact: true }).selectOption("open")
+      phase("review the new risk")
+      await editor.getByRole("button", { name: "Review changes", exact: true }).click()
+      phase("submit reviewed risk")
+      const created = page.waitForResponse((response) => response.request().method() === "POST" &&
+        new URL(response.url()).pathname === "/sucafina/dashboard")
+      // Save must refresh the current CAP13 source without navigation or retrying the command.
+      const createdPage = await captureRiskRead(riskSource, async () => {
+        await page.getByRole("button", { name: "Save", exact: true }).click()
+        expect((await created).status()).toBe(200)
+      })
+      const stored = await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
+        value: { rows: rows(snapshot.data.risks), versions: { ...snapshot.versions } } }))
+      expect(stored.rows).toMatchObject([{ name: "Browser risk", impact: 3, probability: 2 }])
+      const riskId = stored.rows[0]?.id
+      if (typeof riskId !== "string" || !riskId) throw new Error("The original risk command did not return a stored record")
+      expect(stored.versions["risks:" + riskId]?.version).toBe(1)
+      phase("observe the automatically refreshed risk")
+      expect(createdPage.status).toBe(200)
+      expect(createdPage.value).toMatchObject({ data: { risks: [{ id: riskId }] }, versions: { ["risks:" + riskId]: 1 } })
+      const edit = page.locator('tr[data-sf-row="' + riskId + '"] button[data-sf-action="edit"]')
+      phase("edit persisted risk")
+      await edit.click()
+      const filters = page.locator(".sf-u30-filters")
+      await filters.getByLabel("Status", { exact: true }).selectOption("open")
+      await cell.fill("Unsaved typing")
+      await cell.focus()
+      // A competing command uses the same actual encrypted session and HTTP
+      // producer, outside the browser editor's retained draft and CAS.
+      const remote = await context.request.post(native.origin + "/sucafina/dashboard?page=IT%20Risks", {
+        headers: { origin: native.origin },
+        data: { page: "IT Risks", action: "save", id: riskId, version: 1,
+          values: { name: "Remote edit", impact: 4, probability: 2, status: "open" } },
+      })
+      expect(remote.status()).toBe(200)
+      phase("observe remote edit while focused")
+      // Dispatch the existing public control without moving focus out of the
+      // editor. No private window hook or fabricated producer response is used.
+      const focused = await captureRiskRead(riskSource + "?status=open",
+        () => filters.getByRole("button", { name: "Apply filters", exact: true }).dispatchEvent("click"))
+      expect(focused.status).toBe(200)
+      expect(focused.value.versions).toMatchObject({ ["risks:" + riskId]: 2 })
+      expect(await cell.inputValue()).toBe("Unsaved typing")
+      phase("observe remote edit after blur")
+      await cell.blur()
+      await filters.getByLabel("Status", { exact: true }).selectOption("")
+      const blurredRead = page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP13" &&
+        new URL(response.url()).searchParams.get("status") !== "open")
+      await filters.getByRole("button", { name: "Apply filters", exact: true }).click()
+      expect((await blurredRead).status()).toBe(200)
+      expect(await cell.inputValue()).toBe("Unsaved typing")
+      phase("reject stale review")
+      // The native controller retains CAS 1 despite seeing source version 2.
+      // The stale edit must stay open and refuse review without a second POST.
+      await editor.getByRole("button", { name: "Review changes", exact: true }).click()
+      await page.getByRole("alert").getByText("Review the current source before continuing.", { exact: true }).waitFor()
+      expect(await cell.inputValue()).toBe("Unsaved typing")
+      expect(writes).toHaveLength(1)
+      expect(await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
+        value: snapshot.versions["risks:" + riskId]?.version }))).toBe(2)
+      phase("reload and confirm current CAS")
+      const reloaded = await captureRiskRead(riskSource, () => page.reload())
+      expect(reloaded.status).toBe(200)
+      expect(reloaded.value.versions).toMatchObject({ ["risks:" + riskId]: 2 })
+      await page.locator('tr[data-sf-row="' + riskId + '"]').getByText("Remote edit", { exact: true }).waitFor()
+      await edit.click()
+      expect(await cell.inputValue()).toBe("Remote edit")
+      await mkdir(join(process.cwd(), "../../test-ci-evidence"), { recursive: true })
+      await page.screenshot({ path: join(process.cwd(), "../../test-ci-evidence/sucafina-risks.png"), fullPage: true })
+      // Verify that the fresh editor really binds the restored source's CAS 2.
+      const freshActionBudget = () => Math.max(1, 43_000 - (performance.now() - started))
+      expect(await editor.evaluate((form) => [...form.querySelectorAll("input:invalid, textarea:invalid, select:invalid")]
+        .map((field) => field.getAttribute("aria-label") ?? field.tagName))).toEqual([])
+      phase("open fresh review")
+      await editor.getByRole("button", { name: "Review changes", exact: true }).click({ timeout: freshActionBudget() })
+      const freshReview = page.locator('[data-component="sf-change-review"]')
+      await freshReview.waitFor({ timeout: freshActionBudget() })
+      await editor.waitFor({ state: "hidden", timeout: freshActionBudget() })
+      phase("submit fresh reviewed CAS")
+      const [fresh] = await Promise.all([
+        page.waitForResponse((response) => {
+          const url = new URL(response.url())
+          return response.request().method() === "POST" && url.origin === native.origin &&
+            url.pathname === "/sucafina/dashboard" && url.searchParams.get("page") === "IT Risks"
+        }, { timeout: freshActionBudget() }),
+        freshReview.getByRole("button", { name: "Save", exact: true }).click({ timeout: freshActionBudget() }),
+      ])
       expect(fresh.status()).toBe(200)
       expect(fresh.request().postDataJSON()).toMatchObject({ page: "IT Risks", action: "save", id: riskId, version: 2,
         values: { name: "Remote edit", impact: "4", probability: "2" } })
+      phase("fresh reviewed CAS acknowledged")
+      const updated = await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
+        value: { version: snapshot.versions["risks:" + riskId]?.version,
+          record: rows(snapshot.data.risks).find((row) => row.id === riskId) } }))
+      expect(updated).toMatchObject({ version: 3,
+        record: { id: riskId, name: "Remote edit", impact: 4, probability: 2, status: "open" } })
+      expect(writes).toHaveLength(2)
     })
-    expect(confirmed.status).toBe(200)
-    expect(confirmed.value.versions).toMatchObject({ ["risks:" + riskId]: 3 })
-    await editor.waitFor({ state: "hidden" })
-    await page.locator('tr[data-sf-row="' + riskId + '"]').getByText("Remote edit", { exact: true }).waitFor()
-    await mkdir(join(process.cwd(), "../../test-ci-evidence"), { recursive: true })
-    await page.screenshot({ path: join(process.cwd(), "../../test-ci-evidence/sucafina-risks.png"), fullPage: true })
 
-    // Preserve the original checkbox → submit → refreshed configuration UI
-    // guarantee on its admitted native administration surface.
-    phase("configure summaries")
-    expect((await page.goto(native.origin + "/orchestra/sf-home/administration"))?.ok()).toBe(true)
-    const configuration = page.locator("form[data-sf-summary-form]")
-    await configuration.getByLabel("IT Risks", { exact: true }).check()
-    await configuration.getByRole("button", { name: "Review changes", exact: true }).click()
-    const savedConfiguration = page.waitForResponse((response) => response.request().method() === "POST" &&
-      new URL(response.url()).pathname === "/sucafina/api/ui/local-admin/configure-summaries")
-    await page.getByRole("button", { name: "Save summaries", exact: true }).click()
-    expect((await savedConfiguration).status()).toBe(200)
-    await page.waitForFunction(() => document.querySelector<HTMLElement>("form[data-sf-summary-form]")?.dataset.version === "1")
-    expect(await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
-      value: snapshot.data.summaries }))).toEqual(["IT Risks"])
+    await runStage("Summary configuration and period navigation", performance.now() + browserStageTimeout, async () => {
+      // Preserve the original checkbox → submit → refreshed configuration UI
+      // guarantee on its admitted native administration surface.
+      phase("configure summaries")
+      expect((await page.goto(native.origin + "/orchestra/sf-home/administration"))?.ok()).toBe(true)
+      const configuration = page.locator("form[data-sf-summary-form]")
+      await configuration.getByLabel("IT Risks", { exact: true }).check()
+      await configuration.getByRole("button", { name: "Review changes", exact: true }).click()
+      const savedConfiguration = page.waitForResponse((response) => response.request().method() === "POST" &&
+        new URL(response.url()).pathname === "/sucafina/api/ui/local-admin/configure-summaries")
+      await page.getByRole("button", { name: "Save summaries", exact: true }).click()
+      expect((await savedConfiguration).status()).toBe(200)
+      await page.waitForFunction(() => document.querySelector<HTMLElement>("form[data-sf-summary-form]")?.dataset.version === "1")
+      expect(await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
+        value: snapshot.data.summaries }))).toEqual(["IT Risks"])
 
-    // Native F01 gives each surface its own canonical year. Exercise the
-    // producer's execYear/opsYear mappings and browser history, rather than
-    // forwarding the decommissioned console's global selectors to CAP03.
-    const yearField = page.getByRole("combobox", { name: "Year", exact: true })
-    const period = async (path: string, capability: "CAP01" | "CAP03" | "CAP11",
-      query: "execYear" | "year" | "opsYear", year: number, action?: "back" | "reload") => {
-      phase("verify period " + capability + " " + year + " " + (action ?? "navigate"))
-      const result = page.waitForResponse((response) => {
+      // Native F01 gives each surface its own canonical year. Exercise the
+      // producer's execYear/opsYear mappings and browser history, rather than
+      // forwarding the decommissioned console's global selectors to CAP03.
+      const yearField = page.getByRole("combobox", { name: "Year", exact: true })
+      const period = async (path: string, capability: "CAP01" | "CAP03" | "CAP11",
+        query: "execYear" | "year" | "opsYear", year: number, action?: "back" | "reload") => {
+        phase("verify period " + capability + " " + year + " " + (action ?? "navigate"))
+        const result = page.waitForResponse((response) => {
+          const url = new URL(response.url())
+          return url.pathname === "/sucafina/api/ui/pages/" + capability && url.searchParams.get(query) === String(year)
+        })
+        if (action === "back") await page.goBack()
+        else if (action === "reload") await page.reload()
+        else expect((await page.goto(native.origin + path))?.ok()).toBe(true)
+        const response = await result
+        expect(response.status()).toBe(200)
+        expect(object(object(await response.json()).value).selection).toMatchObject({ year })
+        await yearField.waitFor()
+        expect(await yearField.inputValue()).toBe(String(year))
+        const url = new URL(page.url())
+        expect(url.pathname).toBe(path.split("?")[0]!)
+        expect(url.searchParams.get("year")).toBe(String(year))
+        expect(url.searchParams.has("opsYear")).toBe(false)
+        expect(url.searchParams.has("execYear")).toBe(false)
+      }
+      await period("/orchestra/sf-dashboard/executive?year=2027", "CAP01", "execYear", 2027)
+      await period("/orchestra/sf-operations/service?year=2024", "CAP11", "opsYear", 2024)
+      await period("/orchestra/sf-dashboard/budget?year=2026", "CAP03", "year", 2026)
+      phase("change budget year")
+      const changedPeriod = page.waitForResponse((response) => {
         const url = new URL(response.url())
-        return url.pathname === "/sucafina/api/ui/pages/" + capability && url.searchParams.get(query) === String(year)
+        return url.pathname === "/sucafina/api/ui/pages/CAP03" && url.searchParams.get("year") === "2025"
       })
-      if (action === "back") await page.goBack()
-      else if (action === "reload") await page.reload()
-      else expect((await page.goto(native.origin + path))?.ok()).toBe(true)
-      const response = await result
-      expect(response.status()).toBe(200)
-      expect(object(object(await response.json()).value).selection).toMatchObject({ year })
-      await yearField.waitFor()
-      expect(await yearField.inputValue()).toBe(String(year))
-      const url = new URL(page.url())
-      expect(url.pathname).toBe(path.split("?")[0]!)
-      expect(url.searchParams.get("year")).toBe(String(year))
-      expect(url.searchParams.has("opsYear")).toBe(false)
-      expect(url.searchParams.has("execYear")).toBe(false)
-    }
-    await period("/orchestra/sf-dashboard/executive?year=2027", "CAP01", "execYear", 2027)
-    await period("/orchestra/sf-operations/service?year=2024", "CAP11", "opsYear", 2024)
-    await period("/orchestra/sf-dashboard/budget?year=2026", "CAP03", "year", 2026)
-    phase("change budget year")
-    const changedPeriod = page.waitForResponse((response) => {
-      const url = new URL(response.url())
-      return url.pathname === "/sucafina/api/ui/pages/CAP03" && url.searchParams.get("year") === "2025"
+      await yearField.selectOption("2025")
+      await page.waitForURL((url) => url.pathname === "/orchestra/sf-dashboard/budget" && url.searchParams.get("year") === "2025")
+      const changed = await changedPeriod
+      expect(changed.status()).toBe(200)
+      expect(object(object(await changed.json()).value).selection).toMatchObject({ year: 2025 })
+      expect(await yearField.inputValue()).toBe("2025")
+      await period("/orchestra/sf-dashboard/budget?year=2025", "CAP03", "year", 2025, "reload")
+      await period("/orchestra/sf-dashboard/budget?year=2026", "CAP03", "year", 2026, "back")
+      await period("/orchestra/sf-operations/service?year=2024", "CAP11", "opsYear", 2024, "back")
+      await period("/orchestra/sf-dashboard/executive?year=2027", "CAP01", "execYear", 2027, "back")
     })
-    await yearField.selectOption("2025")
-    await page.waitForURL((url) => url.pathname === "/orchestra/sf-dashboard/budget" && url.searchParams.get("year") === "2025")
-    const changed = await changedPeriod
-    expect(changed.status()).toBe(200)
-    expect(object(object(await changed.json()).value).selection).toMatchObject({ year: 2025 })
-    expect(await yearField.inputValue()).toBe("2025")
-    await period("/orchestra/sf-dashboard/budget?year=2025", "CAP03", "year", 2025, "reload")
-    await period("/orchestra/sf-dashboard/budget?year=2026", "CAP03", "year", 2026, "back")
-    await period("/orchestra/sf-operations/service?year=2024", "CAP11", "opsYear", 2024, "back")
-    await period("/orchestra/sf-dashboard/executive?year=2027", "CAP01", "execYear", 2027, "back")
     expect(errors).toEqual([])
   } finally {
     phase("close owned browser")
     try { await browserDriver.close() } finally { await native.close() }
   }
-}, 45000)
+}, 2 * browserStageTimeout + 5_000)

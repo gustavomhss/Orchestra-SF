@@ -66,18 +66,21 @@ export function createSfDecisionDomainServices(input: {
   const intent = createDecisionIntentFences({ human: input.authority.human, ui: input.authority.ui, readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences })
   type EditRequest = Parameters<ReturnType<typeof createDecisionCaseManagement>["edit"]>[0]
   const edits = new WeakMap<TrustedDomainContext, EditRequest>()
-  const freshCaseEvidence = async (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext) => {
+  const verifyCaseEvidence = async (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext, retainHistorical = false) => {
     if (!await host.revalidate(call)) return false
     const selected = await business.context.context({ refs }, call)
-    return selected.length === refs.length && selected.every((entry, index) =>
-      entry.state === "fresh" && entry.accessRevision === call.binding.accessRevision &&
-      !!entry.authorizedProjection && !!entry.currentRef &&
-      digestSfValue(entry.ref) === digestSfValue(refs[index]) &&
-      digestSfValue(entry.currentRef) === digestSfValue(refs[index])) && await host.revalidate(call)
+    return selected.length === refs.length && selected.every((entry, index) => {
+      const ref = digestSfValue(refs[index])
+      if (entry.accessRevision !== call.binding.accessRevision || !entry.authorizedProjection || !entry.currentRef ||
+        digestSfValue(entry.ref) !== ref) return false
+      if (entry.state === "fresh") return digestSfValue(entry.currentRef) === ref
+      return retainHistorical && entry.state === "historical" && entry.differences !== undefined
+    }) && await host.revalidate(call)
   }
   const management = createDecisionCaseManagement({
     state: input.authority.state, host, authorizeCase: business.authorizeCase,
-    operationIdentity: business.operationIdentity, verifyEvidence: freshCaseEvidence,
+    operationIdentity: business.operationIdentity, verifyEvidence: verifyCaseEvidence,
+    verifyRetainedEvidence: (refs, call) => verifyCaseEvidence(refs, call, true),
     authorizeEdit: async (request, call) => {
       if (!await intent.authorize(call, "decisions.edit", request)) return false
       edits.set(call, structuredClone(request))

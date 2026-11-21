@@ -59,8 +59,7 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
   let serial = 0
   let boundCase = ""
   const requested = () => props.route.kind === "entry" ? props.route.params.receiptRef : null
-  const ledger = () => (view.caseData?.receipts ?? []).filter((receipt) =>
-    receipt.targetIncarnation === view.caseData?.incarnation)
+  const ledger = () => view.caseData ? visibleReceipts(view.caseData) : []
   const selected = () => ledger().find((receipt) => receipt.id === (view.selectedReceiptId ?? requested()))
   const canRecover = () => {
     const ready = owner.ready()
@@ -68,7 +67,7 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
   }
   const change = (): SfCaseChange | undefined => {
     const receipt = selected()
-    return receipt && view.caseData?.preparedChanges.find((entry) => entry.receiptRef === receipt.id)
+    return receipt && view.caseData ? receiptChange(view.caseData, receipt) : undefined
   }
   const currentState = () => {
     const status = owner.state().status
@@ -104,10 +103,9 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
           return
         }
         const receiptRef = requested()
-        const kept = view.selectedReceiptId && data.receipts.some((entry) =>
-          entry.id === view.selectedReceiptId && entry.targetIncarnation === data.incarnation)
+        const visible = visibleReceipts(data)
+        const kept = view.selectedReceiptId && visible.some((entry) => entry.id === view.selectedReceiptId)
           ? view.selectedReceiptId : null
-        const visible = data.receipts.filter((entry) => entry.targetIncarnation === data.incarnation)
         setView({
           caseData: data, selectedReceiptId: kept, outcome: kept ? view.outcome : null,
           state: receiptRef && !visible.some((entry) => entry.id === receiptRef)
@@ -269,6 +267,28 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
       </Show>
     </SfStatePanel>
   </SfPageFrame>
+}
+
+function visibleReceipts(data: SfCase) {
+  return data.receipts.filter((receipt) => data.preparedChanges.some((entry) => entry.receiptRef === receipt.id)
+    ? receiptChange(data, receipt) !== undefined
+    : receipt.targetIncarnation === data.incarnation)
+}
+
+function receiptChange(data: SfCase, receipt: SfCaseReceipt): SfCaseChange | undefined {
+  const links = data.preparedChanges.filter((entry) => entry.receiptRef === receipt.id)
+  if (links.length !== 1) return undefined
+  const change = links[0]!
+  if (change.caseId !== data.id || change.target.surface !== receipt.surface || change.target.incarnation !== receipt.targetIncarnation ||
+    change.idempotencyKey !== receipt.idempotencyKey || change.state !== receipt.status || !data.choices.some((choice) => choice.id === change.choiceId))
+    return undefined
+  // The receipt belongs to the requisition incarnation, while the prepared
+  // change and the producer-issued receipt evidence bind it to this case.
+  const attested = data.sourceRefs.some((ref) => ref.kind === "receipt" && ref.target.receiptId === receipt.id &&
+    ref.target.surface === receipt.surface && ref.target.targetIncarnation === receipt.targetIncarnation &&
+    ref.target.idempotencyKey === receipt.idempotencyKey && ref.target.commandDigest === receipt.commandDigest &&
+    ref.target.version === receipt.version)
+  return attested ? change : undefined
 }
 
 function sameRouteCase(routeRef: string, id: string, incarnation: string) {

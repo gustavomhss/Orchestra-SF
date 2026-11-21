@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test"
-import { asRecord, caseIdentity, clickCommand, draft, isCommand, observeDecisionReply, readCase, readReply, reopenCase } from "./journey"
+import { asRecord, caseIdentity, clickCommand, draft, isCommand, observeDecisionReply, readCase, readReply } from "./journey"
 import { initialAlternativesJourney, knownIncreaseCriterion } from "./initial-alternatives"
 import { approveExactRequisition, createRequisition, openRequisition } from "./procurement-source"
 import type { startPlannerInstallation } from "../wp03/installation-fixture"
@@ -8,8 +8,7 @@ import { applyRecoveryJourney } from "./apply-recovery"
 /** Nominal selection: every unmet public producer is a failure at its first required action. */
 export async function procurementClosureJourney(page: Page, installation: Awaited<ReturnType<typeof startPlannerInstallation>>, observations: Record<string, unknown>[]) {
   const requestId = await test.step("create the real requisition through its human form", () => createRequisition(page, installation.origin, observations))
-  const selection = await initialAlternativesJourney(page, installation, observations)
-  await reopenCase(page, selection.reference, selection.objective)
+  const selection = await initialAlternativesJourney(page, installation, observations, { setupOnly: true })
   const source = await attachRequisition(page, installation.origin, selection.reference, requestId, observations)
   const titles = { baseline: "Requisition proposal for 120 USD", candidate: "Requisition proposal for 140 USD" }
   const baseline = await typedAlternative(page, installation.origin, selection.reference, selection.sources.baseline, source, titles.baseline, 120, observations)
@@ -36,7 +35,7 @@ export async function procurementClosureJourney(page: Page, installation: Awaite
     const justification = eligibility.getByRole("textbox", { name: "Justificativa para registrar a escolha", exact: true })
     const criteria = before.criteria.map((criterion) => criterion.id)
     const compare = async () => {
-      const response = await observeDecisionReply(page, (request) => request.url() === `${origin}/sucafina/dashboard?sf=decision-compare` &&
+      const response = await observeDecisionReply(page, origin, (request) => request.url() === `${origin}/sucafina/dashboard?sf=decision-compare` &&
         isCommand(request, "decision-compare"), () => page.getByRole("button", { name: "Compare alternatives", exact: true }).click())
       expect(response.request().postDataJSON()).toEqual({ caseRef, baselineAlternativeId: baseline.saved.id, alternativeId: candidate.saved.id, criteria })
       const compared = asRecord((await readReply(response, observations)).value)
@@ -174,7 +173,7 @@ async function attachRequisition(page: Page, origin: string, reference: string, 
     await expect(editor.locator("[data-procurement-preview]")).toContainText(requestId)
     await expect(editor.locator("[data-procurement-preview]")).toContainText("USD")
     await editor.getByRole("button", { name: "Attach procurement source to draft", exact: true }).click()
-    await expect(editor.locator("[data-decision-sources] > li")).toHaveCount(3)
+    await expect(editor.locator("[data-sf-decision-sources] > li")).toHaveCount(3)
     await expect(editor.getByRole("button", { name: "Save decision", exact: true })).toHaveCount(0)
     await editor.getByRole("button", { name: "Review source attachments", exact: true }).click()
     const review = editor.getByRole("group", { name: "Review source attachments", exact: true })
@@ -209,7 +208,7 @@ async function attachRequisition(page: Page, origin: string, reference: string, 
 }
 
 async function readControls(page: Page, origin: string, reference: string, button: Locator, observations: Record<string, unknown>[], source?: string) {
-  const observed = await observeDecisionReply(page, (request) => {
+  const observed = await observeDecisionReply(page, origin, (request) => {
     const url = new URL(request.url())
     return url.origin === origin && isCommand(request, "decision-controls", "GET") &&
       url.searchParams.get("format") === "json" && url.searchParams.get("case") === reference &&

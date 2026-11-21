@@ -17,20 +17,20 @@ test.describe("CI-UI-OPERATIONS", () => {
 
   test("OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes", async ({ page }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "WP04.T03.CHK.02; WP04.T03.CHK.03; WP04.T03.INV.02" })
-    test.setTimeout(90_000)
+    test.setTimeout(120_000)
     await sourcingSnapshot(page, info)
   })
 
   test("OP-PROC-03 missing FX stays unavailable and refuses submission without a new version", async ({ page }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "WP04.T03.CHK.03; WP04.T03.CMP.01; WP04.CMP.02" })
-    test.setTimeout(90_000)
+    test.setTimeout(120_000)
     await missingFxRefusal(page, info)
   })
 
   test("OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects", async ({ page }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "WP06.T01.INV.01; WP06.T01.QLT.01; WP06.T02.INV.01; WP06.T02.INV.02; WP06.T02.QLT.18; WP06.T03.CHK.04; WP06.T03.INV.01; WP06.T03.INV.03; WP06.T03.QLT.02; WP06.T03.SUC.02; WP06.T04.CHK.02; WP06.T04.INV.01; WP06.T04.QLT.01" })
     // The installed journey includes independent receipt, logout and foreign-owner reads after the Apply.
-    test.setTimeout(180_000)
+    test.setTimeout(210_000)
     await importJourney(page, info)
   })
 

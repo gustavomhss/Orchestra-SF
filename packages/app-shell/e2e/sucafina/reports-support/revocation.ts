@@ -1,12 +1,13 @@
 import { createHash } from "node:crypto"
 import { expect } from "@playwright/test"
-import type { APIRequestContext, Browser, Page, Request, Route, TestInfo } from "@playwright/test"
+import type { APIRequestContext, Browser, Page, Request, Response, Route, TestInfo } from "@playwright/test"
 import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ReviewAnswer } from "./confirmation.ts"
 import { expectReusedReviewAnswer, reportsCollaboration } from "./confirmation.ts"
 import { expectConfirmedAnswerVisible } from "./human-answer-flow.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
 import { object, productURL, readReview, responseFor, text } from "./model.ts"
+import { observePreservedReview } from "./review-flow.ts"
 
 export async function revokeReportsSession(input: {
   browser: Browser; page: Page; app: ReportsInstallation; saved: PreservedReview; answer: ReviewAnswer
@@ -22,7 +23,21 @@ export async function revokeReportsSession(input: {
     expect(await readReview(old.request, app.dashboardURL, saved.id)).toEqual(saved)
     await expectReusedReviewAnswer(reportsCollaboration(old.request, app.dashboardURL), answer)
     const retained = await old.newPage()
-    await retained.goto(page.url())
+    const isContext = (response: Response) => {
+      const url = new URL(response.url())
+      return response.request().method() === "GET" && url.origin === app.origin && url.pathname === `${app.mount}/api/ui/context`
+    }
+    const [admitted] = await Promise.all([
+      retained.waitForResponse((response) => isContext(response) && response.status() === 200),
+      observePreservedReview(retained, app, saved, () => retained.goto(page.url())),
+    ])
+    const binding = new URL(admitted.url()).searchParams
+    expect([...binding.keys()].sort()).toEqual(["hostId", "installationId", "projectId"])
+    const sameContext = (response: Response) => {
+      if (!isContext(response)) return false
+      const query = new URL(response.url()).searchParams
+      return query.size === binding.size && [...binding].every(([key, value]) => query.get(key) === value)
+    }
     const meeting = retained.getByRole("region", { name: "Preserved review meeting", exact: true })
     const heading = meeting.getByRole("heading", { level: 2 })
     await expect(heading).toHaveText(saved.sections[0]!.title)
@@ -35,41 +50,48 @@ export async function revokeReportsSession(input: {
     cleanup.push(retainedPending.cleanup)
     expect(retainedPending.storageVersion).toBe(localPending.storageVersion)
     expect(retainedPending.key).not.toBe(localPending.key)
-    const pendingLogout = page.waitForResponse((response) => response.url() === `${app.origin}${app.mount}/auth/logout` && response.request().method() === "POST")
-    await page.getByRole("button", { name: "Sign out", exact: true }).click()
-    const logout = await pendingLogout
+    const [logout, loggedOutContext] = await Promise.all([
+      page.waitForResponse((response) => response.url() === `${app.origin}${app.mount}/auth/logout` && response.request().method() === "POST"),
+      page.waitForResponse(sameContext),
+      page.getByRole("button", { name: "Sign out", exact: true }).click(),
+    ])
     expect(logout.status()).toBe(204)
     expect(logout.headers()["cache-control"]).toContain("no-store")
-    await expect(page).toHaveURL((url) => url.origin === app.origin && url.pathname === `${app.mount}/auth/login`)
+    expect(loggedOutContext.status()).toBe(401)
+    expect(loggedOutContext.headers()["cache-control"]).toContain("no-store")
+    await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-provider-state", "unauthenticated")
+    await expect(page.locator('[data-sf-surface="UI48"]')).toHaveCount(0)
     await expect(page.getByRole("region", { name: "Preserved review meeting", exact: true })).toHaveCount(0)
     await expect(page.getByRole("region", { name: "Review discussion", exact: true })).toHaveCount(0)
     await expectPrivateAttemptCleared(page, localPending.drafts)
-    const deniedRead = retained.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
-    await retained.getByRole("region", { name: "Review discussion", exact: true })
-      .getByRole("button", { name: "Reconcile action", exact: true }).click()
-    const forbidden = await deniedRead
+    const [forbidden, revokedContext] = await Promise.all([
+      retained.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST")),
+      retained.waitForResponse(sameContext),
+      retained.getByRole("region", { name: "Review discussion", exact: true })
+        .getByRole("button", { name: "Reconcile action", exact: true }).click(),
+    ])
     expect(forbidden.status()).toBe(403)
     expect(forbidden.request().postDataJSON()).toEqual({ id: answer.questionId })
     expect(forbidden.headers()["cache-control"]).toContain("no-store")
     const deniedBody = await forbidden.text()
     for (const secret of [answer.message.body, answer.pin.reviewDigest, ...Object.values(retainedPending.drafts)])
       expect(deniedBody, "The real denied read must not return protected content or drafts").not.toContain(secret)
-    const cleared = retained.locator("[data-sf-review-workspace]")
-    await expect(cleared.getByRole("status")).toHaveText("O acesso mudou. Reabra uma revisão autorizada.")
+    expect(revokedContext.status()).toBe(401)
+    expect(revokedContext.headers()["cache-control"]).toContain("no-store")
+    const retainedOwner = retained.locator('[data-sf-host="owner-runtime231"]')
+    await expect(retainedOwner).toHaveAttribute("data-sf-provider-state", "unavailable")
+    await expect(retainedOwner).toHaveAttribute("data-sf-provider-reason", "connection-auth-unavailable")
+    const cleared = retained.locator('[data-sf-surface="UI48"]')
     // The installed host now disposes all protected views on denied access.
     // Removing navigation entirely is stronger than retaining a disabled button.
     await expect(meeting).toHaveCount(0)
-    await expect(meeting.getByRole("heading")).toHaveCount(0)
-    await expect(meeting.getByRole("listitem")).toHaveCount(0)
-    await expect(cleared.getByRole("heading")).toHaveCount(0)
-    await expect(cleared.getByRole("listitem")).toHaveCount(0)
-    await expect(cleared.getByRole("button")).toHaveCount(0)
+    await expect(cleared).toHaveCount(0)
     await expect(retained.getByRole("region", { name: "Review discussion", exact: true })).toHaveCount(0)
     await expect(retained.getByRole("region", { name: "Confirmed answer", exact: true })).toHaveCount(0)
     await expect(retained.getByRole("button", { name: "Next topic", exact: true })).toHaveCount(0)
     await expectPrivateAttemptCleared(retained, retainedPending.drafts)
     for (const secret of [answer.message.body, answer.pin.reviewDigest, "REPORTS_LONG_NOTE_END", "reports-project-01", "totalForecast", "1320"])
-      await expect(cleared, "Revocation must remove cached review and answer content").not.toContainText(secret)
+      await expect(retainedOwner, "Revocation must remove cached review and answer content").not.toContainText(secret)
     await denied(old.request, app, saved, answer, artifact.href, true)
 
     // Positive controls distinguish actual credential revocation from an absent
@@ -95,8 +117,9 @@ export async function revokeReportsSession(input: {
     await info.attach("session-revocation", { body: JSON.stringify({
       reviewRef: saved.id, answerRef: answer.answerRef, oldSession: "denied before and after fresh enrollment",
       cachedMeeting: "cleared", freshSession: "same review, answer and artifact digest",
+      contextBinding: Object.fromEntries(binding), logoutContextStatus: loggedOutContext.status(), retainedContextStatus: revokedContext.status(),
       logoutRoute: "installed Sign out control", clearedViews: ["meeting", "discussion", "confirmed answer", "topic navigation"],
-      clearedDrafts: ["question", "reply", "edit"], clearedPendingAttempts: ["logout", "retained real403"],
+      clearedDraftFields: ["question", "reply", "edit"], clearedPendingAttempts: ["logout", "retained unauthenticated"],
       attempts: [localPending, retainedPending].map((attempt) => ({
         idempotencyKey: attempt.key, originalPayload: attempt.payload, requests: attempt.writes.length,
         outcome: "aborted before sending; no retry on logout, denied read or fresh enrollment",

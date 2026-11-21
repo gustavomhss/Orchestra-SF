@@ -1,4 +1,5 @@
-import { readFile, writeFile } from "node:fs/promises"
+import { createHash } from "node:crypto"
+import { readFile } from "node:fs/promises"
 import { expect } from "@playwright/test"
 import type { APIRequestContext, APIResponse, Page, TestInfo, Request, Response, ConsoleMessage, Route } from "@playwright/test"
 import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -362,6 +363,7 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const button = form.getByRole("button", { name: "Generate Report", exact: true })
   await expect(button).toBeEnabled()
   const intent = { reviewRef: saved.id, sectionRefs, format }
+  const browserFile = page.waitForEvent("download").catch(() => undefined)
   const { response: download, actionResult: { response, body } } = await observeOriginalResponse(page, endpoint, "GET",
     (url) => url.searchParams.get("sf") === "review-download",
     () => observeOriginalJson(page, endpoint, "POST", (url) => url.searchParams.get("sf") === "review-report",
@@ -390,10 +392,16 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
   expect(Object.fromEntries(href.searchParams)).toEqual({ sf: "review-download", artifactRef: artifact })
   const file = info.outputPath(`preserved-${format}.${format}`)
-  await writeFile(file, await download.body())
+  const downloaded = await browserFile
+  if (!downloaded) throw new Error("The installed browser did not download the authorized report")
+  expect(downloaded.suggestedFilename()).toBe(`review.${format}`)
+  await downloaded.saveAs(file)
+  expect(await downloaded.failure()).toBeNull()
+  const bytes = await readFile(file)
+  expect(createHash("sha256").update(bytes).digest("hex")).toBe(createHash("sha256").update(await download.body()).digest("hex"))
   await info.attach(`preserved-${format}`, { path: file, contentType: mime })
   const semantics = await inspectReport(file, format, saved, corpus, info)
-  const packaged = officePackageText(await readFile(file), format)
+  const packaged = officePackageText(bytes, format)
   expect(packaged).toContain(saved.id)
   for (const comment of saved.comments) expect(packaged).toContain(comment.content.replace(/\s+/g, " ").trim())
   return { artifact, href: href.href, ...semantics }
@@ -525,7 +533,7 @@ async function observeBudgetPage(page: Page, app: ReportsInstallation, year: num
   return projection
 }
 
-async function observePreservedReview(page: Page, app: ReportsInstallation, saved: PreservedReview, action: () => Promise<unknown>) {
+export async function observePreservedReview(page: Page, app: ReportsInstallation, saved: PreservedReview, action: () => Promise<unknown>) {
   const { response, body } = await observeOriginalJson(page, new URL(app.dashboardURL), "GET",
     (url) => url.searchParams.size === 2 && url.searchParams.get("sf") === "dashboard-review" &&
       url.searchParams.get("id") === saved.id, action)

@@ -15,9 +15,10 @@ export async function inspectReport(file: string, format: "docx" | "pptx", saved
   if (format === "docx") expect(entries.map((entry) => entry.name)).toEqual(["word/document.xml"])
   if (format === "pptx") expect(entries.length, "More than one slide must carry the complete selected corpus").toBeGreaterThan(1)
   const physicalRows = entries.flatMap((entry) => xmlTableRows(entry.xml, format, entry.name))
-  const expectedRows = saved.sections.flatMap((section) => projection(section.content).values.map((value) => ({
+  const expectedRows = saved.sections.flatMap((section) => projection(section.content).values.map((value, index) => ({
     sectionRef: section.id,
     valueId: value.id,
+    sectionRow: index + 1,
     cells: [
       `${value.id}: ${value.value === null ? "unavailable" : String(value.value)}${value.unit ? ` ${value.unit}` : ""}${value.currency ? ` ${value.currency}` : ""}`,
       `${value.period.start} – ${value.period.end}`,
@@ -72,8 +73,8 @@ function normalize(value: string) { return value.replace(/\s+/g, " ").trim() }
 function displayText(value: string) { return normalize(value.replace(/\r\n|\r|\n/g, " ↵ ")) }
 
 type Cells = [string, string, string]
-type PhysicalRow = { part: string; row: number; cells: Cells }
-type ExpectedRow = { sectionRef: string; valueId: string; cells: Cells }
+type PhysicalRow = { part: string; row: number; cells: Cells; continuation?: Cells }
+type ExpectedRow = { sectionRef: string; valueId: string; sectionRow: number; cells: Cells }
 
 /** Tables retain cell boundaries; a source found elsewhere cannot satisfy a row. */
 function xmlTableRows(xml: string, format: "docx" | "pptx", part: string): PhysicalRow[] {
@@ -82,8 +83,19 @@ function xmlTableRows(xml: string, format: "docx" | "pptx", part: string): Physi
   const rows = new RegExp(`<${namespace}:tr(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${namespace}:tr>`, "g")
   return [...xml.matchAll(rows)].flatMap((row, index) => {
     const cells = new RegExp(`<${namespace}:tc(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${namespace}:tc>`, "g")
-    const values = [...row[1]!.matchAll(cells)].map((cell) => xmlParagraphs(cell[1]!, format).join(""))
-    expect(values, `${format}: ${part} table row ${index + 1} must have value, period and sources cells`).toHaveLength(3)
+    const contents = [...row[1]!.matchAll(cells)].map((cell) => cell[1]!)
+    expect(contents, `${format}: ${part} table row ${index + 1} must have value, period and sources cells`).toHaveLength(3)
+    const paragraphs = contents.map((cell) => xmlParagraphs(cell, format))
+    const labels = paragraphs.map((cell) => normalize(cell[0] ?? "")) as Cells
+    if (format === "docx" && /^Record [1-9]\d* · .+ \(continued\)$/.test(labels[0])) {
+      expect(row[1], `DOCX continuation row ${index + 1} must stay together`).toContain("<w:cantSplit")
+      for (const cell of contents) {
+        const first = /<w:p(?:\s[^>]*)?>[\s\S]*?<\/w:p>/.exec(cell)?.[0]
+        expect(first, `DOCX continuation row ${index + 1} must lead with a bold label`).toMatch(/<w:b\s*\/>/)
+      }
+      return [{ part, row: index + 1, cells: paragraphs.map((cell) => cell.slice(1).join("")) as Cells, continuation: labels }]
+    }
+    const values = paragraphs.map((cell) => cell.join(""))
     if (values.map(normalize).join("\u0000") === ["Captured value", "Period", "Sources"].join("\u0000")) return []
     return [{ part, row: index + 1, cells: values as Cells }]
   })
@@ -98,6 +110,14 @@ function reassembleValueRows(actual: PhysicalRow[], expected: ExpectedRow[], for
     do {
       expect(cursor, `${format}: missing captured value row ${wanted.valueId}`).toBeLessThan(actual.length)
       const fragment = actual[cursor++]!
+      if (format === "docx") {
+        const continuation = fragments.length ? [
+          `Record ${wanted.sectionRow} · ${wanted.valueId} (continued)`,
+          `Period: ${wanted.cells[1]} (continued)`,
+          "Sources (continued from the same captured record)",
+        ] : undefined
+        expect(fragment.continuation, `DOCX continuation label for ${wanted.valueId} at row ${fragment.row}`).toEqual(continuation)
+      }
       expect(fragment.cells.some((cell) => normalize(cell).length > 0), `${format}: empty continuation for ${wanted.valueId}`).toBe(true)
       fragments.push({ part: fragment.part, row: fragment.row })
       for (const column of [0, 1, 2] as const) {

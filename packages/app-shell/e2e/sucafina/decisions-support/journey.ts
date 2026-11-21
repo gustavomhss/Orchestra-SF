@@ -1,7 +1,7 @@
 import { expect, test, type Locator, type Page, type Request, type Response, type Route, type TestInfo } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
 import { Schema } from "effect"
-import { SfDecisionsPortfolioCatalog, SfProjectionCase } from "@orchestra/schema/sucafina/decisions"
+import { SfDecisionsPortfolioCatalog, SfProjectionCase, SfProjectionCases } from "@orchestra/schema/sucafina/decisions"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 
 export const draft = {
@@ -169,9 +169,9 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
 }
 
 /** Read the one original producer reply outside Chromium's evictable response cache. */
-export async function observeDecisionReply(page: Page, matches: (request: Request) => boolean, action: () => Promise<unknown>) {
+export async function observeDecisionReply(page: Page, origin: string, matches: (request: Request) => boolean, action: () => Promise<unknown>) {
   const completed = Promise.withResolvers<Pick<Response, "request" | "url" | "status" | "headers" | "json">>()
-  const routePattern = `${new URL(page.url()).origin}/sucafina/**`
+  const routePattern = `${origin}/sucafina/**`
   let sent = false
   const forward = async (route: Route) => {
     const request = route.request()
@@ -244,7 +244,7 @@ export async function assertPortfolioCatalog(page: Page, origin: string, referen
   }
   page.on("request", observe)
   try {
-    const listed = await observeDecisionReply(page,
+    const listed = await observeDecisionReply(page, origin,
       (request) => request.url() === `${origin}/sucafina/api/ui/projections/cases` && request.method() === "GET",
       () => page.goto(`${origin}/orchestra/sf-portfolio/scenarios`))
     const list = await readReply(listed, observations)
@@ -253,7 +253,7 @@ export async function assertPortfolioCatalog(page: Page, origin: string, referen
     const select = portfolio.getByRole("button", { name: `${saved.objective} Case version ${version}`, exact: true })
     await expect(select).toBeEnabled()
     expect(catalogRequests).toHaveLength(0)
-    const reply = await observeDecisionReply(page, (request) => request.url() === catalogUrl && request.method() === "POST",
+    const reply = await observeDecisionReply(page, origin, (request) => request.url() === catalogUrl && request.method() === "POST",
       () => select.click())
     expect(reply.request().postDataJSON()).toEqual({ purpose: "catalog", caseRefs: [caseRef] })
     const catalog = Schema.decodeUnknownSync(Schema.toType(SfDecisionsPortfolioCatalog.output), { onExcessProperty: "error" })(await readReply(reply, observations))
@@ -324,9 +324,19 @@ export async function assertCase(page: Page, reference: string, objective: strin
 }
 
 export async function reopenCase(page: Page, reference: string, objective: string) {
-  if (new URL(page.url()).pathname === "/orchestra/sf-decisions")
-    await page.getByRole("button", { name: "Refresh case list", exact: true }).click()
-  else await page.getByRole("link", { name: "Back to decisions", exact: true }).click()
+  const current = new URL(page.url())
+  const refresh = current.pathname === "/orchestra/sf-decisions"
+    ? page.getByRole("button", { name: "Refresh case list", exact: true })
+    : page.getByRole("link", { name: "Back to decisions", exact: true })
+  await expect(refresh).toBeEnabled()
+  const reply = await observeDecisionReply(page, current.origin, (request) =>
+    request.method() === "GET" && request.url() === `${current.origin}/sucafina/api/ui/projections/cases`, () => refresh.click())
+  expect(reply.status(), "The authorized case collector must answer the reopen action").toBe(200)
+  expect(reply.headers()["content-type"]).toContain("application/json")
+  const projected = Schema.decodeUnknownSync(Schema.toType(SfProjectionCases.output), { onExcessProperty: "error" })(await reply.json())
+  if (projected.status !== "ok") throw new Error(`Authorized cases unavailable: ${projected.status}`)
+  expect(projected.value.cases.filter((candidate) => candidate.caseRef === reference))
+    .toEqual([expect.objectContaining({ caseRef: reference, title: objective })])
   const list = page.getByRole("region", { name: "Authorized decision cases", exact: true })
   const row = list.getByRole("listitem").filter({ has: page.getByText(reference, { exact: true }) })
   await expect(row, "The persisted case must be discoverable under the current operator authority").toHaveCount(1)

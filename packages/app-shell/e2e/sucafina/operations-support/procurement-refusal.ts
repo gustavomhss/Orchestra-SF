@@ -1,7 +1,9 @@
 import { randomUUID } from "node:crypto"
 import { expect, type Locator, type Page, type TestInfo } from "@playwright/test"
+import { Schema } from "effect"
+import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { captureProcurementCommand, login, observation, readManifest } from "./runtime"
+import { captureProcurementCommand, forwardOnce, login, observation, readManifest } from "./runtime"
 import type { Account } from "./runtime"
 
 export async function missingFxRefusal(page: Page, info: TestInfo) {
@@ -63,10 +65,35 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(comparison.getByRole("status").filter({ hasText: /^Comparison is limited: fewer than two proposals are eligible\.$/ })).toBeVisible()
   const winning = comparison.getByRole("combobox", { name: "Selected quotation", exact: true })
   await winning.selectOption({ label: "Journey registered supplier · JPY 28000" })
-  const selected = await confirmCommand(page, account, "select_quote", id, comparison.getByRole("button", { name: "Select winning quote", exact: true }), "Confirm once")
-  expect(selected.command).toMatchObject({ values: { quoteId } })
+  const selectionVersion = Number(await sourceVersion(page))
+  const confirmSelection = await openCommandReview(page, comparison.getByRole("button", { name: "Select winning quote", exact: true }), "Confirm once")
+  let selectionReadback: Awaited<ReturnType<typeof forwardOnce>> | undefined
+  const selected = await captureProcurementCommand(page, account, confirmSelection, {
+    page: "Requests", action: "select_quote", id, version: selectionVersion, values: { quoteId },
+  }, async (response) => {
+    if (response.status() !== 200) return
+    // Register after the command was sent so the mandatory pre-submit read stays independent.
+    selectionReadback = await forwardOnce(page, account.baseURL + "/api/ui/pages/CAP25?" + new URLSearchParams({ request: id }), "GET")
+  })
+  expect(selected.status).toBe(200)
+  expect(selected.body).toMatchObject({ ok: true })
+  if (!selectionReadback) throw new Error("No selected-quotation readback was installed")
+  const { response: selectedProjection } = await selectionReadback.completed.finally(selectionReadback.close)
+  expect(selectedProjection.status()).toBe(200)
+  expect(Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP25"].output)(await selectedProjection.json())).toMatchObject({
+    status: "ok",
+    context: { principalRef: account.principal, installationId: account.installationId, projectId: account.projectId },
+    value: {
+      selection: { request: id },
+      versions: { ["requests:" + id]: { version: selectionVersion + 1 } },
+      data: { requests: expect.arrayContaining([expect.objectContaining({
+        number: id, status: "sourcing", sourcing: expect.objectContaining({ selectedId: quoteId }),
+      })]) },
+    },
+  })
   await page.getByRole("button", { name: "Sourcing", exact: true }).click()
   const version = await sourceVersion(page)
+  expect(Number(version)).toBe(selectionVersion + 1)
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}/history`)
   const history = page.locator(`article[data-sf-request-ref="${id}"] [data-stage="history"]`).getByRole("listitem")
   await expect(history.first()).toBeVisible()

@@ -119,7 +119,7 @@ export async function observation(info: TestInfo, name: string, value: Record<st
 
 export async function captureProcurementCommand(page: Page, account: Account, confirm: Locator, expected: {
   page: "Requests" | "My approvals" | "Settings"; action: string; id?: string; version?: number; values?: Record<string, unknown>
-}) {
+}, beforeDelivery?: (response: APIResponse) => Promise<void>) {
   const endpoint = new URL(account.baseURL + "/procurement")
   const match = (url: URL) => url.origin === endpoint.origin && url.pathname === endpoint.pathname &&
     url.searchParams.size === 1 && url.searchParams.get("page") === expected.page
@@ -135,7 +135,11 @@ export async function captureProcurementCommand(page: Page, account: Account, co
       expect(command).toMatchObject(expected)
       // Retain the real response before Chromium can discard its copy during readback.
       const response = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
-      await route.fulfill({ response })
+      try {
+        await beforeDelivery?.(response)
+      } finally {
+        await route.fulfill({ response })
+      }
       producer.resolve({ response, command })
     } catch (error) {
       producer.reject(error)
@@ -149,7 +153,7 @@ export async function captureProcurementCommand(page: Page, account: Account, co
     expect(posts).toBe(1)
     return { status: response.status(), body, command }
   } finally {
-    await page.unroute(match, forward)
+    await unrouteLivePage(page, match, forward)
   }
 }
 
@@ -179,5 +183,12 @@ export async function forwardOnce(page: Page, endpoint: string | ((url: URL) => 
     }
   }
   await page.route(match, forward, { times: 1 })
-  return { completed: producer.promise, close: () => page.unroute(match, forward) }
+  return { completed: producer.promise, close: () => unrouteLivePage(page, match, forward) }
+}
+
+async function unrouteLivePage(page: Page, match: (url: URL) => boolean, handle: (route: Route) => Promise<void>) {
+  if (page.isClosed()) return
+  await page.unroute(match, handle).catch((error: unknown) => {
+    if (!page.isClosed()) throw error
+  })
 }

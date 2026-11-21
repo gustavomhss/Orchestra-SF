@@ -65,7 +65,7 @@ export function preservedSourceBasis(section: PreservedSection, sourceRef: strin
     sourceRef: source.refId,
     sourceIncarnation: source.target.incarnation,
     observedVersion: source.target.version,
-    period: section.period,
+    period: { start: section.period.start, end: section.period.end },
     evidenceRefs: value.sourceRefs,
   }
 }
@@ -93,7 +93,7 @@ export function preservedAnswerBasis(section: PreservedSection) {
     sourceRef: source.refId,
     sourceIncarnation: source.target.incarnation,
     observedVersion: source.target.version,
-    period: section.period,
+    period: { start: section.period.start, end: section.period.end },
     evidenceRefs: value.sourceRefs,
   }
 }

@@ -1,6 +1,8 @@
 import { createHash, randomUUID } from "node:crypto"
 import { readFile } from "node:fs/promises"
 import { expect } from "@playwright/test"
+import { Schema } from "effect"
+import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
 import type { APIResponse, Locator, Page, Response, Route, TestInfo } from "@playwright/test"
 import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
@@ -8,7 +10,7 @@ import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navig
 import type { Account } from "./runtime.ts"
 
 type Source = { selectionRef: string; label: string; surface: string }
-type Schema = { id: string; version: number; ref: string; fields: { id: string; type: string; unit?: string }[] }
+type DocumentSchema = { id: string; version: number; ref: string; fields: { id: string; type: string; unit?: string }[] }
 type Presentation = { title: string; excerpt: string; location: string; href?: string }
 
 async function captureCommandResponse(page: Page, account: Account, expected: { action: "create" } | { action: "delete"; id: string }, button: Locator) {
@@ -138,6 +140,8 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(upload).toHaveCount(1)
   await upload.getByLabel("Attach a source document (server scan required)", { exact: true })
     .setInputFiles({ name: filename, mimeType: "text/plain", buffer: bytes })
+  const supplierPage = account.baseURL + "/api/ui/pages/CAP27?" + new URLSearchParams({ supplier })
+  const reconciled = await observe(page, supplierPage)
   const uploaded = page.waitForResponse((response) => {
     const url = new URL(response.url())
     return url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" && url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier && response.request().method() === "POST"
@@ -165,6 +169,17 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(uploadResponse.status()).toBe(200)
   expect(new URL(uploadResponse.url()).searchParams.get("recordVersion")).toBe(String(beforeVersion))
   expect(uploadResult).toMatchObject({ ok: true })
+  const { response: supplierRead } = await reconciled.completed
+  expect(supplierRead.status()).toBe(200)
+  const projectionAfterUpload = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await supplierRead.json())
+  expect(projectionAfterUpload).toMatchObject({
+    status: "ok",
+    context: { principalRef: account.principal, installationId: account.installationId, projectId: account.projectId },
+    value: { selection: { supplier }, versions: { ["suppliers:" + supplier]: { version: beforeVersion + 1 } } },
+  })
+  if (projectionAfterUpload.status !== "ok") throw new Error("The uploaded supplier could not be read back")
+  const projectedFiles = projectionAfterUpload.value.data.suppliers.find((row) => row.id === supplier)?.attachments?.filter((item) => item.name === filename)
+  expect(projectedFiles).toHaveLength(1)
   await expect(supplierDetail).toHaveAttribute("data-source-version", String(beforeVersion + 1))
   const file = upload.getByRole("listitem").filter({ has: page.getByText(filename, { exact: true }) })
   await expect(file).toHaveCount(1)
@@ -172,6 +187,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
     .map((text) => text.match(/^ · ref: ([A-Za-z0-9_-]+)$/)?.[1])
     .find((ref) => ref !== undefined)
   expect(asset).toMatch(/^[A-Za-z0-9_-]+$/)
+  expect(asset).toBe(projectedFiles?.[0]?.id)
   if (!asset) throw new Error("The reconciled supplier asset did not expose its reference")
   const assetEndpoint = new URL(account.baseURL + "/procurement")
   const linkURL = new URL(assetEndpoint)
@@ -242,7 +258,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const evidenceURL = chapterURL(account, documentRoute + "/evidence")
   const scenarioURL = chapterURL(account, documentRoute + "/scenario")
   const observeCandidates = () => observe(page, endpoint("document-candidates", { documentRef }))
-  const readSchemas = () => page.request.get(endpoint("document-schemas", { documentRef }), { maxRetries: 0 }).then((response) => valueOf<Schema[]>(response))
+  const readSchemas = () => page.request.get(endpoint("document-schemas", { documentRef }), { maxRetries: 0 }).then((response) => valueOf<DocumentSchema[]>(response))
   const readCandidates = () => page.request.get(endpoint("document-candidates", { documentRef }), { maxRetries: 0 }).then((response) => valueOf<DocumentEvidence[]>(response))
   expect(await readSchemas()).toEqual([])
   const invalid = await page.request.post(endpoint("document-schema"), { maxRetries: 0, headers: { Origin: account.origin, "Idempotency-Key": randomUUID() }, data: { documentRef, fields: [{ id: "Price", type: "currency" }] } })
@@ -261,7 +277,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await root.getByRole("button", { name: "Extract candidate", exact: true }).click()
   const schemaTransport = await schemaResponse.completed
   expect(schemaTransport.request.postDataJSON()).toEqual({ documentRef, fields: [{ id: "Price", type: "number", unit: "USD" }] })
-  const schema = await valueOf<Schema>(schemaTransport.response)
+  const schema = await valueOf<DocumentSchema>(schemaTransport.response)
   expect(schema).toMatchObject({ version: 1, fields: [{ id: "Price", type: "number", unit: "USD" }] })
   expect(schema.ref).toBe(`schema:${schema.id}:1`)
   expect(schema.id).toMatch(/^schema_[a-f0-9]{40}$/)

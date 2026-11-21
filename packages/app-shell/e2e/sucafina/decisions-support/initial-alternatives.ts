@@ -8,7 +8,7 @@ const titles = { baseline: "Keep the baseline service", candidate: "Consider the
 const pendingReason = "Cost categories still need evidence; a known service amount does not establish complete coverage."
 export const knownIncreaseCriterion = "Keep the increase in known annual subtotal at or below 2000 USD; unresolved cost categories remain pending."
 
-export async function initialAlternativesJourney(page: Page, installation: { origin: string; actorId: string }, observations: Record<string, unknown>[]) {
+export async function initialAlternativesJourney(page: Page, installation: { origin: string; actorId: string }, observations: Record<string, unknown>[], options?: { setupOnly: true }) {
   const sources = await test.step("create two actual Planner versions through human controls", () => createPlannerSources(page, installation.origin, installation.actorId, observations))
   await enterWorkbench(page, installation.origin)
   const objective = `${draft.objective} — initial alternatives`
@@ -34,7 +34,7 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
       await select.selectOption({ label })
       const selected = await select.inputValue()
       const inspect = editor.getByRole("button", { name: "Inspect selected source", exact: true })
-      const response = await observeDecisionReply(page, (request) => {
+      const response = await observeDecisionReply(page, installation.origin, (request) => {
         const url = new URL(request.url())
         return url.origin === installation.origin && isCommand(request, "bi-data", "GET") &&
           url.searchParams.get("baseRef") === selected && url.searchParams.get("candidateRef") === selected
@@ -74,8 +74,8 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
       expect(typeof ref.refDigest).toBe("string")
     }
     expect(saved.value).toEqual({ caseRef: { ...identity, version: 2 } })
-    await currentCase(page, reference, objective, 2, "draft")
-    expect((await readCase(page, reference)).sourceRefs).toEqual(payload.sourceRefs)
+    const persisted = await currentCase(page, reference, objective, 2, "draft")
+    expect(persisted.sourceRefs).toEqual(payload.sourceRefs)
     const persistedSources = page.getByRole("region", { name: "Source references", exact: true }).getByRole("listitem")
     await expect(persistedSources).toHaveText(refs.map((ref) => `${ref.refId} · ${ref.evidenceLevel}`))
     observations.push({ stage: "authorized-sources-attached", caseRef: { ...identity, version: 2 }, sources: refs })
@@ -97,17 +97,16 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
         installation.origin, reference, draftCase, sources.baseline, titles.baseline, 100, "first", observations)
       expect(registrations).toEqual([registration])
       expect(basis.sourceRefs).toEqual([source])
-      await currentCase(page, reference, objective, 2, "draft")
-      expect((await readCase(page, reference)).alternatives).toEqual([])
+      const awaitingPromotion = await currentCase(page, reference, objective, 2, "draft")
+      expect(awaitingPromotion.alternatives).toEqual([])
       expect(promotions).toHaveLength(0)
       const saved = await clickCommand(page, confirm, "decision-promote", observations)
       const receipt = asRecord(saved.value)
       expect(receipt.resultRef).toMatch(/^decision-result:/)
       expect(receipt).toEqual({ caseRef: { ...identity, version: 3 }, resultRef: receipt.resultRef })
-      await currentCase(page, reference, objective, 3, "comparing")
+      const persisted = await currentCase(page, reference, objective, 3, "comparing")
       expect(promotions).toHaveLength(1)
       expect(promotions[0]!.payload).toEqual(payload)
-      const persisted = await readCase(page, reference)
       expect(persisted.alternatives).toHaveLength(1)
       const baseline = persisted.alternatives[0]!
       assertAlternative(baseline, payload, source, basis, 1200)
@@ -129,8 +128,8 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
       expect(basis).toEqual(first.basis)
       expect(coverage.coverageRef).not.toBe(first.coverage.coverageRef)
       expect(registrations).toEqual([first.registration, registration])
-      await currentCase(page, reference, objective, 3, "comparing")
-      expect((await readCase(page, reference)).alternatives).toEqual([first.baseline])
+      const awaitingPromotion = await currentCase(page, reference, objective, 3, "comparing")
+      expect(awaitingPromotion.alternatives).toEqual([first.baseline])
       expect(promotions).toHaveLength(1)
       const lost = await (async () => {
         const interruption = await loseAlternativeResponse(page, installation.origin)
@@ -159,7 +158,7 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
       expect(lost.payload).toEqual(payload)
       expect(original.key).toMatch(/^[a-f0-9-]{36}$/)
       expect(original.key).not.toBe(promotions[0]!.key)
-      const read = await observeDecisionReply(page, attachedRead(installation.origin, reference, source.refDigest),
+      const read = await observeDecisionReply(page, installation.origin, attachedRead(installation.origin, reference, source.refDigest),
         () => editor.getByRole("button", { name: "Check saved outcome", exact: true }).click())
       const recovered = asRecord(asRecord((await readReply(read, observations)).value).selected)
       expect(recovered.caseRef).toEqual(receipt.caseRef)
@@ -170,8 +169,7 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
       expect(asRecord(forecast.coverage)).toMatchObject({ coverageRef: coverage.coverageRef, basis })
       await expect(editor.getByText(`Alternative save verified: v4 · ${receipt.resultRef}`, { exact: true })).toBeVisible()
       await editor.getByRole("button", { name: "Reload recovered case", exact: true }).click()
-      await currentCase(page, reference, objective, 4, "comparing")
-      const persisted = await readCase(page, reference)
+      const persisted = await currentCase(page, reference, objective, 4, "comparing")
       expect(persisted.alternatives).toHaveLength(2)
       expect(persisted.alternatives).toContainEqual(first.baseline)
       const candidate = persisted.alternatives.find((alternative) => alternative.title === titles.candidate)!
@@ -189,13 +187,17 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
       return candidate
     })
 
+    // C12 starts from the same confirmed, reopened version 4 above. The
+    // history journey separately verifies comparison and catalog browsing.
+    if (options?.setupOnly) return { reference, objective, sources, titles }
+
     await test.step("reopen the exact two alternatives in native comparison and the positive portfolio catalog", async () => {
       await page.reload()
       await currentCase(page, reference, objective, 4, "comparing")
       await reopenCase(page, reference, objective)
-      await currentCase(page, reference, objective, 4, "comparing")
+      const reopened = await currentCase(page, reference, objective, 4, "comparing")
       const alternatives = [first.baseline, second]
-      expect(await readCase(page, reference)).toMatchObject({ alternatives, choices: [], preparedChanges: [], receipts: [] })
+      expect(reopened).toMatchObject({ alternatives, choices: [], preparedChanges: [], receipts: [] })
       await page.locator('[data-sf-surface="UI34"]').getByRole("link", { name: "Alternatives", exact: true }).click()
       await expect(page).toHaveURL((url) => url.pathname === `/orchestra/sf-decisions/${encodeSfRouteRef(reference)}/alternatives`)
       const compare = page.getByRole("button", { name: "Compare alternatives", exact: true })
@@ -205,7 +207,14 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
         await card.getByRole("button", { name: "Select for comparison", exact: true }).click()
         await expect(card).toHaveAttribute("aria-current", "true")
       }
-      await compare.click()
+      const response = await observeDecisionReply(page, installation.origin, (request) =>
+        request.url() === `${installation.origin}/sucafina/dashboard?sf=decision-compare` && isCommand(request, "decision-compare"),
+        () => compare.click())
+      expect(asRecord(response.request().postDataJSON())).toMatchObject({
+        caseRef: { ...identity, version: 4 }, baselineAlternativeId: alternatives[0]!.id, alternativeId: alternatives[1]!.id,
+      })
+      const compared = asRecord((await readReply(response, observations)).value)
+      expect(compared.comparison).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
       await expect(page.locator('.sf-n24-compare-card[aria-current="true"]')).toHaveCount(2)
       await expect(page.locator(".sf-n24-compare-card")).toHaveCount(2)
       await expect(page.getByText("A complete numerical comparison is not authorized for these bases, periods or currencies.", { exact: true })).toBeVisible()
@@ -242,8 +251,9 @@ async function currentCase(page: Page, reference: string, objective: string, ver
     `Current version: ${version}`, `State: ${state}`,
     `Period: ${draft.horizon.start} – ${draft.horizon.end}`, "USD",
   ])
-  expect(await readCase(page, reference)).toMatchObject({ ...caseIdentity(reference), version, objective, state,
-    horizon: draft.horizon, currency: "USD" })
+  const current = await readCase(page, reference)
+  expect(current).toMatchObject({ ...caseIdentity(reference), version, objective, state, horizon: draft.horizon, currency: "USD" })
+  return current
 }
 
 type SavedCase = Awaited<ReturnType<typeof readCase>>
@@ -280,7 +290,7 @@ async function prepareAlternative(page: Page, origin: string, reference: string,
   const caseRef = { id: before.id, incarnation: before.incarnation, version: before.version }
   const editor = page.getByRole("region", { name: `Create ${ordinal} alternative`, exact: true })
   await editor.getByRole("combobox", { name: "Attached Planner source", exact: true }).selectOption(source.refDigest)
-  const read = await observeDecisionReply(page, attachedRead(origin, reference, source.refDigest),
+  const read = await observeDecisionReply(page, origin, attachedRead(origin, reference, source.refDigest),
     () => editor.getByRole("button", { name: "Inspect attached forecast", exact: true }).click())
   const inspection = asRecord(asRecord((await readReply(read, observations)).value).selected)
   expect(inspection.caseRef).toEqual(caseRef)

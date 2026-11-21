@@ -342,7 +342,9 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
         batch(() => {
           const id = action === "save" && row ? idOf(row.id) : null
           if (action === "save") setConfirmed({ draft: currentDraft!.controller, operationRef, id })
-          setStore({ error: null, warnings: result.warnings, mode: id ? "detail" : "list", selected: id })
+          // Detail starts dependent source reads. Keep it hidden until this authorized projection returns.
+          setStore({ status: "loading", error: null, warnings: result.warnings,
+            mode: id ? "detail" : "list", selected: id })
           refresh()
         })
       } else if (result.kind === "outcome-unknown") {

@@ -16,7 +16,9 @@ export function createDecisionCaseManagement(input: {
   authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
   authorizeEdit: (request: Edit, context: TrustedDomainContext) => Promise<boolean>
   verifyEvidence: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
-  /** Read-only history admission; edits continue using current evidence. */
+  /** An objective-only edit can retain already-authorized historical evidence. */
+  verifyRetainedEvidence?: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
+  /** Read-only history admission, separate from evidence admission for edits. */
   verifyReadEvidence?: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
   verifyEdit: (snapshot: import("../../runtime/contract.ts").Snapshot, before: DecisionCase, after: DecisionCase, context: TrustedDomainContext) => boolean
   operationIdentity: (context: TrustedDomainContext) => string | undefined
@@ -57,18 +59,26 @@ export function createDecisionCaseManagement(input: {
       if (current.version !== request.caseRef.version) return { status: "stale", reason: "case-changed" }
       if ((request.currency !== undefined && request.currency !== current.currency || request.horizon !== undefined && digestSfValue(request.horizon) !== digestSfValue(current.horizon)) && (current.alternatives.length > 0 || current.choices.length > 0 || current.preparedChanges.length > 0)) return { status: "conflict", reason: "case-basis-in-use" }
       const next = { ...current, version: current.version + 1, objective: request.objective, criteria: request.criteria, sourceRefs: request.sourceRefs, horizon: request.horizon ?? current.horizon, currency: request.currency ?? current.currency, assumptions: request.assumptions ?? current.assumptions }
-      if (!await input.verifyEvidence([...next.sourceRefs, ...next.assumptions.flatMap((item) => item.evidenceRefs)], context).catch(() => false) || !await input.authorizeCase(next, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
+      const retainsEvidence = next.objective !== current.objective && sameEvidenceContext(current, next)
+      const verify = retainsEvidence ? input.verifyRetainedEvidence ?? input.verifyEvidence : input.verifyEvidence
+      if (!await verify([...next.sourceRefs, ...next.assumptions.flatMap((item) => item.evidenceRefs)], context).catch(() => false) || !await input.authorizeCase(next, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
       const saved = await input.state.transaction(source, { namespace: "cases", domainSurface: "planner", expectedStorageVersion: loaded.storageVersion, targetRef: current.id, targetIncarnation: current.incarnation, idempotencyKey: `${identity}:edit`, commandDigest: digestSfValue(request) }, async (state, authority, snapshot) => {
         const actual = state.cases[current.id]
-        if (!sameAuthority(authority, context) || !actual || actual.incarnation !== current.incarnation || actual.version !== current.version || !actual.participants.includes(context.binding.principalRef) || !input.verifyEdit(snapshot, actual, next, context)) return { commit: false, value: null }
+        if (!sameAuthority(authority, context) || !actual || actual.incarnation !== current.incarnation || actual.version !== current.version || !actual.participants.includes(context.binding.principalRef) ||
+          retainsEvidence && !sameEvidenceContext(actual, next) || !input.verifyEdit(snapshot, actual, next, context)) return { commit: false, value: null }
         state.cases[current.id] = next
         return { commit: true, value: next }
       }).catch(() => undefined)
       if (!saved || saved.status !== "ok" || !saved.value) return { status: saved?.status === "conflict" || saved?.status === "preview" ? "conflict" : "unavailable", reason: "case-edit-unavailable" }
-      if (!await input.authorizeCase(saved.value, context).catch(() => false) || !await input.verifyEvidence([...saved.value.sourceRefs, ...saved.value.assumptions.flatMap((item) => item.evidenceRefs)], context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
+      if (!await input.authorizeCase(saved.value, context).catch(() => false) || !await verify([...saved.value.sourceRefs, ...saved.value.assumptions.flatMap((item) => item.evidenceRefs)], context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
       return { status: "ok", value: { caseRef: { id: saved.value.id, incarnation: saved.value.incarnation, version: saved.value.version } } }
     },
   }
+}
+
+function sameEvidenceContext(before: DecisionCase, after: DecisionCase) {
+  return digestSfValue([before.sourceRefs, before.criteria, before.horizon, before.currency, before.assumptions]) ===
+    digestSfValue([after.sourceRefs, after.criteria, after.horizon, after.currency, after.assumptions])
 }
 
 function sameAuthority(authority: { principalRef: string; policyVersion: string; accessRevision: string }, context: TrustedDomainContext) {

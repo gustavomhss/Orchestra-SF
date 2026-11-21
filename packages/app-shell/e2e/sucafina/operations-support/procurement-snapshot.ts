@@ -3,7 +3,7 @@ import { expect, type Locator, type Page, type TestInfo } from "@playwright/test
 import { Schema } from "effect"
 import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { captureProcurementCommand, login, observation, readManifest } from "./runtime"
+import { captureProcurementCommand, forwardOnce, login, observation, readManifest } from "./runtime"
 import type { Account } from "./runtime"
 
 export async function sourcingSnapshot(page: Page, info: TestInfo) {
@@ -175,19 +175,20 @@ async function setEurRate(page: Page, account: Account, expectedRate: string, va
   await settings.getByRole("button", { name: "Review changes", exact: true }).click()
   const review = page.locator('[data-component="sf-change-review"]')
   await expect(review).toHaveCount(1)
+  let settingsReadback: Awaited<ReturnType<typeof forwardOnce>> | undefined
   const saved = await captureProcurementCommand(page, account, review.getByRole("button", { name: "Save", exact: true }), {
     page: "Settings", action: "save", version,
     values: { settings: { fxRates: expect.arrayContaining([{ code: "EUR", rate: Number(value) }]) } },
+  }, async (response) => {
+    if (response.status() !== 200) return
+    expect(await response.json()).toMatchObject({ ok: true })
+    onSaved?.()
+    settingsReadback = await forwardOnce(page, account.baseURL + "/api/ui/pages/CAP28", "GET")
   })
   expect(saved.status).toBe(200)
   expect(saved.body).toMatchObject({ ok: true })
-  onSaved?.()
-  await expect(settings).toHaveAttribute("data-version", String(version + 1))
-  await expect(code).toHaveValue("EUR")
-  await expect(rate).toHaveValue(value)
-  // Independently re-read the committed settings with the original session.
-  // Booting the complete shell again adds no persistence proof.
-  const projection = await page.request.get(account.baseURL + "/api/ui/pages/CAP28", { maxRetries: 0 })
+  if (!settingsReadback) throw new Error("No committed Settings readback was installed")
+  const { response: projection } = await settingsReadback.completed.finally(settingsReadback.close)
   expect(projection.status()).toBe(200)
   expect(Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP28"].output)(await projection.json())).toMatchObject({
     status: "ok",
@@ -197,4 +198,7 @@ async function setEurRate(page: Page, account: Account, expectedRate: string, va
       data: { settings: { fxRates: expect.arrayContaining([{ code: "EUR", rate: Number(value) }]) } },
     },
   })
+  await expect(settings).toHaveAttribute("data-version", String(version + 1))
+  await expect(code).toHaveValue("EUR")
+  await expect(rate).toHaveValue(value)
 }

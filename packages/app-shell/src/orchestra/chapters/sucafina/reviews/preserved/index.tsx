@@ -171,7 +171,9 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
       const prior = review.sections[index]!
       return item.id === prior.id && samePeriod(item.period, prior.period) && item.agendaNote === undefined &&
         item.recordRefs?.length === prior.count && new Set(item.recordRefs).size === prior.count
-        ? [{ id: item.id, title: prior.title, topic: item.topic, period: item.period, selectionRef: item.selectionRef, recordRefs: item.recordRefs }]
+        ? [{ id: item.id, title: prior.title, topic: item.topic,
+            period: { start: item.period.start, end: item.period.end },
+            selectionRef: item.selectionRef, recordRefs: [...item.recordRefs] }]
         : []
     })
     return sections.length === review.sections.length ? sections : undefined

@@ -68,7 +68,7 @@ export async function approveExactRequisition(page: Page, installation: Awaited<
       amount: operation.amount, currency, domainApplied: false }
     const panel = (surface: Page) => surface.getByRole("region", { name: "Procurement proposal", exact: true })
     const command = async (surface: Page, kind: "submit" | "approve", button: Locator) => {
-      const response = await observeDecisionReply(surface, (request) =>
+      const response = await observeDecisionReply(surface, installation.origin, (request) =>
         request.url() === `${installation.origin}/sucafina/procurement?sf=decision-proposal-advance` && request.method() === "POST",
         () => button.click())
       expect(response.status()).toBe(200)
@@ -156,7 +156,7 @@ async function domainCommand(page: Page, origin: string, command: Command, openR
     const confirm = review.getByRole("button", { name: confirmName, exact: true })
     await expect(confirm).toBeEnabled()
     expect(posted, "The command is sent only after the review is confirmed").toHaveLength(0)
-    const response = await observeDecisionReply(page, matches, () => confirm.click())
+    const response = await observeDecisionReply(page, origin, matches, () => confirm.click())
     expect(response.status()).toBe(200)
     expect(response.headers()["content-type"]).toContain("application/json")
     expect(asRecord(await response.json()).ok).toBe(true)
