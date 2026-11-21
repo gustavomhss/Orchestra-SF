@@ -14,6 +14,7 @@ import type { SfCopyKey, SfMessage, SfText, SfUiState } from "../../shared/frame
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
 import { procurementCommandSnapshot } from "../command-snapshot"
+import { procurementNumberInput } from "../number-input"
 import type { SfU12CopyKey } from "@/i18n/orchestra-chapters/sf-u12"
 import { isPoWritable } from "../requests/model"
 import {
@@ -260,21 +261,22 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       position===index?{...item,[field]:next}:item)}))
   }
   const score=(index:number,kind:"scores"|"cscores",criterion:number,raw:string)=>{
+    const numeric=procurementNumberInput(raw)
     update((old)=>({...old,quotes:(old.quotes??[]).map((item,position)=>{
       if(position!==index)return item
       const scores=item[kind]
       if(scores==null){
         const created:Record<string,string|number|null>={}
-        created[String(criterion)]=raw
+        created[String(criterion)]=numeric
         return {...item,[kind]:created}
       }
       if(Array.isArray(scores)){
         const values=[...scores]
-        values[criterion]=raw
+        values[criterion]=numeric
         return {...item,[kind]:values}
       }
       const values={...scores} as Record<string,string|number|null>
-      values[String(criterion)]=raw
+      values[String(criterion)]=numeric
       return {...item,[kind]:values}
     })}))
   }
@@ -284,8 +286,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
   }]}))
   const removeQuote=(index:number)=>update((old)=>({...old,quotes:(old.quotes??[]).filter((_,i)=>i!==index)}))
   const updateWeight=(field:"tech"|"comm",raw:string)=>
-    update((old)=>({...old,weights:{...old.weights,[field]:raw}}))
-  const updateCriterion=(kind:"criteria"|"commCriteria",index:number,field:"name"|"weight"|"auto",next:string|boolean)=>
+    update((old)=>({...old,weights:{...old.weights,[field]:procurementNumberInput(raw)}}))
+  const updateCriterion=(kind:"criteria"|"commCriteria",index:number,field:"name"|"weight"|"auto",next:string|number|boolean|null)=>
     update((old)=>({...old,weights:{...old.weights,[kind]:(old.weights?.[kind]??[]).map((entry,i)=>
       i===index?{...entry,[field]:next}:entry)}}))
   const addCriterion=(kind:"criteria"|"commCriteria")=>
@@ -553,7 +555,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       <label>{t("sf.u12.criteriaName")}<input value={criterion.name??""}
         onInput={(event)=>updateCriterion(kind,index,"name",event.currentTarget.value)}/></label>
       <label>{t("sf.u12.criteriaWeight")}<input type="number" step="any" value={asString(criterion.weight)}
-        onInput={(event)=>updateCriterion(kind,index,"weight",event.currentTarget.value)}/></label>
+        onInput={(event)=>updateCriterion(kind,index,"weight",procurementNumberInput(event.currentTarget.value))}/></label>
       <label>{t("sf.u12.criteriaAutomatic")}<input type="checkbox" checked={truth(criterion.auto)}
         onChange={(event)=>updateCriterion(kind,index,"auto",event.currentTarget.checked)}/></label>
       <button class="mx-btn" type="button" onClick={()=>removeCriterion(kind,index)}>{t("sf.u12.removeCriterion")}</button>
@@ -584,7 +586,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
                 value={asString(quote[name])}
                 aria-invalid={refusal?"true":undefined}
                 aria-describedby={described}
-                onInput={(event)=>updateQuote(index,name,event.currentTarget.value)}/>
+                onInput={(event)=>updateQuote(index,name,["total","qty","unitPrice"].includes(name)
+                  ? procurementNumberInput(event.currentTarget.value) : event.currentTarget.value)}/>
             </label>
             <Show when={refusal}>
               <span id={described}>{refusal?.message}</span>
