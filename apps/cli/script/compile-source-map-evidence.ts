@@ -56,7 +56,7 @@ export async function detachCompileSourceMaps(
     files.set(mapName, bound.json)
     const embeddedOffset = layout.graphOffset + map.start
     modules.push({ ...code, status: "matched-compiler-map" as const, map: mapName,
-      coordinates: bound.coordinates, sources: bound.sourceHashes, mapSha256: digest(Buffer.from(bound.json)),
+      coordinates: bound.coordinates, sources: bound.sourceHashes, debugId: bound.debugId, mapSha256: digest(Buffer.from(bound.json)),
       emittedMapSha256: digest(emitted),
       embeddedMap: { offset: embeddedOffset, byteLength: embedded.length, sha256: digest(embedded) },
     })
@@ -139,7 +139,7 @@ function protectedGraphRanges(layout: Layout) {
 }
 
 function verifyEmbeddedMap(embedded: Buffer, emitted: Buffer) {
-  const map: { version?: unknown; sources?: unknown; sourcesContent?: unknown; names?: unknown; mappings?: unknown } =
+  const map: { version?: unknown; sources?: unknown; sourcesContent?: unknown; names?: unknown; mappings?: unknown; debugId?: unknown } =
     JSON.parse(utf8.decode(emitted))
   requireMap(map.version === 3 && stringArray(map.sources) && stringArray(map.sourcesContent) &&
     stringArray(map.names) && typeof map.mappings === "string")
@@ -165,7 +165,8 @@ function verifyEmbeddedMap(embedded: Buffer, emitted: Buffer) {
     return { source, sha256: digest(content) }
   })
   const coordinates = matchCompileMapCoordinates(embedded.subarray(mappingStart, mappingEnd), map.mappings, sources)
-  return { coordinates, sourceHashes,
+  const debugId = typeof map.debugId === "string" && /^[A-F0-9]{32}$/.test(map.debugId) ? map.debugId : undefined
+  return { coordinates, sourceHashes, debugId,
     json: JSON.stringify({ version: 3, sources: map.sources, names: map.names, mappings: map.mappings }) + "\n",
   }
 }

@@ -178,11 +178,15 @@ for (const { item, name, omni, omniFiles, treeSitter } of prepared) {
     process.exit(1)
   }
 
+  const compileDebugIds = new Map<string, string>()
   if (scratch) {
     try {
       const { detachCompileSourceMaps } = await import("./compile-source-map-evidence")
       const raw = Buffer.from(await Bun.file(path.join(scratch, binary)).arrayBuffer())
       const detached = await detachCompileSourceMaps(raw, result.outputs.filter((file) => file.kind === "sourcemap"))
+      for (const module of detached.index.modules) {
+        if ("debugId" in module && module.debugId) compileDebugIds.set(module.name, module.debugId)
+      }
       const evidence = path.join(dir, "dist", "compile-source-maps-" + item.target)
       await mkdir(path.dirname(executable), { recursive: true })
       await mkdir(evidence, { mode: 0o700 })
@@ -204,7 +208,7 @@ for (const { item, name, omni, omniFiles, treeSitter } of prepared) {
     const textEvidence = Bun.version === "1.4.1" && item.target === "linux-x64-baseline"
       ? await import("./compile-text-evidence")
       : undefined
-    const proveText = textEvidence?.linuxBunTextWitness(binaryBytes)
+    const proveText = textEvidence?.linuxBunTextWitness(binaryBytes, scratch ? compileDebugIds : undefined)
     const checked = await Promise.allSettled(Object.keys(metafile.inputs).filter(onDisk).map(async (key) => {
       const canonical = await realpath(path.resolve(dir, key)).catch((cause: unknown) => {
         throw new Error(`CLI_COMPILER_INPUT_NOT_OBSERVED: ${key}`, { cause })

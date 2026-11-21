@@ -6,7 +6,7 @@ import { readLinuxBunGraph } from "./compile-bun-linux-graph"
 const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true })
 const utf16 = new TextDecoder("utf-16le", { fatal: true, ignoreBOM: true })
 
-export function linuxBunTextWitness(binary: Buffer) {
+export function linuxBunTextWitness(binary: Buffer, debugIds?: ReadonlyMap<string, string>) {
   const fail = () => new Error("CLI_COMPILER_TEXT_GRAPH_INVALID")
   const { graph, graphOffset, tableOffset, modules } = readLinuxBunGraph(binary)
   const uniqueRow = (name: string) => {
@@ -47,7 +47,11 @@ export function linuxBunTextWitness(binary: Buffer) {
       if (graph[chunkRow + 49] !== 1 || graph[chunkRow + 50] !== 1) throw fail()
       const chunkText = readBody(chunkRow)
       const code = (chunkText.encoding === "ascii" ? decoder : utf16).decode(chunkText.body)
-      const binding = textDefaultBinding(code, name)
+      // Exclude the exact terminal metadata authenticated by this module's
+      // compiler map from the stub grammar, while hashing the entire raw body.
+      const debugId = debugIds?.get(module)
+      const footer = debugId ? `\n//# debugId=${debugId}\n` : undefined
+      const binding = textDefaultBinding(footer && code.endsWith(footer) ? code.slice(0, -footer.length) : code, name)
       if (!binding) throw fail()
       if (binding.helperModule) {
         const key = JSON.stringify([binding.helperModule, binding.exported])
