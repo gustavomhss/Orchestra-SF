@@ -11,7 +11,7 @@ const archiveFile = `orchestra-sf-entra-${target}.tar.gz`
 const receiptFile = "orchestra-sf-entra-package-receipt.json"
 const entry = "modules/sucafina/Sucafinav1/local/microsoft-entry.ts"
 const bundlePath = "bin/local/entry.mjs"
-const usage = "Usage: bun apps/cli/script/azure-entra-package.ts --dist <raw CLI dist> --out <new directory> --source-sha <40-hex SHA> [--web <built Sucafina Web directory>]"
+const usage = "Usage: bun apps/cli/script/azure-entra-package.ts --dist <raw CLI dist> --out <new directory> --source-sha <40-hex SHA> [--web <built Sucafina Web directory>] [--factory-source-map]"
 
 if (import.meta.main) {
   const { values } = parseArgs({
@@ -19,6 +19,7 @@ if (import.meta.main) {
       dist: { type: "string" },
       out: { type: "string" },
       web: { type: "string" },
+      "factory-source-map": { type: "boolean" },
       "source-sha": { type: "string" },
       help: { type: "boolean" },
     },
@@ -30,10 +31,10 @@ if (import.meta.main) {
   const expectedSourceSHA = values["source-sha"]
   if (!values.dist || !values.out || !expectedSourceSHA || !/^[a-f0-9]{40}$/.test(expectedSourceSHA))
     throw new Error(usage)
-  console.log(JSON.stringify(await packageEntra({ dist: values.dist, out: values.out, web: values.web, expectedSourceSHA })))
+  console.log(JSON.stringify(await packageEntra({ dist: values.dist, out: values.out, web: values.web, factorySourceMap: values["factory-source-map"] ?? false, expectedSourceSHA })))
 }
 
-async function packageEntra(input: { dist: string; out: string; web?: string; expectedSourceSHA: string }) {
+async function packageEntra(input: { dist: string; out: string; web?: string; factorySourceMap: boolean; expectedSourceSHA: string }) {
   const workspace = await realpath(resolve(import.meta.dir, "../../.."))
   const checkoutSHA = await requireCheckout(workspace, input.expectedSourceSHA)
   const runID = process.env.GITHUB_RUN_ID
@@ -72,7 +73,8 @@ async function packageEntra(input: { dist: string; out: string; web?: string; ex
     await mkdir(stagingTarget, { recursive: true })
     await rename(join(native, "bin"), join(stagingTarget, "bin"))
     await rename(join(native, "package.json"), join(stagingTarget, "package.json"))
-    const bundleSha256 = await stageFactory(workspace, stagingTarget)
+    const factory = await stageFactory(workspace, stagingTarget, input.factorySourceMap)
+    const bundleSha256 = factory.sha256
     const payload = join(scratch, "payload")
     const manifest = await prepareDistribution({ dist: stagingDist, out: payload, target, version: raw.version, web: input.web })
     if (input.web !== undefined) {
@@ -111,6 +113,13 @@ async function packageEntra(input: { dist: string; out: string; web?: string; ex
       await writeFile(receiptPath, JSON.stringify(receipt, null, 2) + "\n", { flag: "wx", mode: 0o644 })
       const verifier = join(workspace, "sf/azure/vm/install-factory-distribution.py")
       await $`python3 -B ${verifier} verify --artifact ${join(output, archiveFile)} --receipt ${receiptPath} --candidate ${checkoutSHA} --sha256 ${archive.sha256}`.quiet()
+      if (factory.map) {
+        await writeFile(join(output, "factory-source-map.json"), factory.map, { flag: "wx", mode: 0o644 })
+        await writeFile(join(output, "factory-source-map-receipt.json"), JSON.stringify({
+          sourceSHA: checkoutSHA, archiveSha256: archive.sha256,
+          outputPath: bundlePath, outputSha256: bundleSha256, mapSha256: digest(factory.map),
+        }) + "\n", { flag: "wx", mode: 0o644 })
+      }
       return receipt
     } catch (error) {
       await rm(output, { recursive: true, force: true })
@@ -121,19 +130,22 @@ async function packageEntra(input: { dist: string; out: string; web?: string; ex
   }
 }
 
-async function stageFactory(workspace: string, destination: string) {
+async function stageFactory(workspace: string, destination: string, sourceMap: boolean) {
   const built = await Bun.build({
     entrypoints: [join(workspace, entry)],
     target: "bun",
     format: "esm",
     splitting: false,
     minify: true,
-    sourcemap: "none",
+    sourcemap: sourceMap ? "external" : "none",
     metafile: true,
     loader: { ".txt": "text", ".json": "json" },
   })
-  if (!built.success || built.outputs.length !== 1 || built.outputs[0]?.kind !== "entry-point" || !built.metafile)
-    throw new Error("Entra factory must build as one ESM entry point")
+  const mapped = built.outputs.filter((output) => output.kind === "sourcemap")
+  const entryPoint = built.outputs.find((output) => output.kind === "entry-point")
+  if (!built.success || !entryPoint || !built.metafile || built.outputs.length !== (sourceMap ? 2 : 1) ||
+      mapped.length !== (sourceMap ? 1 : 0) || (mapped[0] && mapped[0].path !== entryPoint.path + ".map"))
+    throw new Error("Entra factory must build as one ESM entry point and the requested external map")
   const inputs = await Promise.all(Object.keys(built.metafile.inputs).map(async (key) => {
     const file = await realpath(resolve(key))
     if (!file.startsWith(workspace + sep)) throw new Error(`Entra factory input outside checkout: ${key}`)
@@ -143,7 +155,7 @@ async function stageFactory(workspace: string, destination: string) {
   if (!inputs.some((input) => input.path === entry) || new Set(inputs.map((input) => input.path)).size !== inputs.length)
     throw new Error("Entra factory source closure is missing the entry or contains duplicate inputs")
 
-  const bundle = new Uint8Array(await built.outputs[0].arrayBuffer())
+  const bundle = new Uint8Array(await entryPoint.arrayBuffer())
   if (!bundle.length) throw new Error("Empty Entra factory bundle")
   // Input metadata includes imports that were eliminated from the emitted program.
   const imports = new Bun.Transpiler({ loader: "js" }).scanImports(bundle)
@@ -159,7 +171,7 @@ async function stageFactory(workspace: string, destination: string) {
     flag: "wx",
     mode: 0o644,
   })
-  return sha256
+  return { sha256, map: mapped[0] ? new Uint8Array(await mapped[0].arrayBuffer()) : undefined }
 }
 
 async function requireCheckout(workspace: string, expected: string) {

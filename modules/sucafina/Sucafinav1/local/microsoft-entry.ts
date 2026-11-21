@@ -1,6 +1,7 @@
 import path from "node:path"
 import { randomUUID } from "node:crypto"
 import type { SfTeamContextQuery } from "@orchestra/schema/sucafina/context"
+import type { SfTeamCurrentChoice } from "../../../../apps/cli/src/sucafina-product/team-current-choice.ts"
 import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
 import type { openCorporateRecoveryRegister } from "../runtime/corporate-recovery-register.ts"
 import { loadMicrosoftIngressAuthorizer } from "../runtime/microsoft-configuration.ts"
@@ -12,13 +13,16 @@ import { teamBusinessRoute } from "../runtime/team-profile-selector.ts"
 import { esc } from "../src/screen-shell.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 
-export default function installation(context: { origin: string }) {
+export const nativeSfTeamInstallation = true
+type InstallationContext = { origin: string; teamCurrentChoice?: SfTeamCurrentChoice }
+
+export default function installation(context: InstallationContext) {
   return createMicrosoftInstallation(context, process.env.SUCAFINA_MICROSOFT_CONFIG)
 }
 
 /** Mount Microsoft authentication and make the Teams reader available to the server. */
 export async function createMicrosoftInstallation(
-  context: { origin: string },
+  context: InstallationContext,
   file: string | undefined,
   environment: Readonly<Record<string, string | undefined>> = process.env,
   overrides: Pick<EntraOptions, "fetch" | "now"> & {
@@ -123,6 +127,7 @@ export async function createMicrosoftInstallation(
           if (route) return runTeamBusiness({
             request, route, admission: access, authorizeTeam: teamAccess, identity, config, directory,
             keys: prepared.loaded.keys, now,
+            teamCurrentChoice: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? context.teamCurrentChoice : undefined,
             decisionIntentions: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? store : undefined,
           })
           return new Response(null, { status: 303, headers: {
@@ -141,7 +146,10 @@ export async function createMicrosoftInstallation(
             status: 409, headers: htmlHeaders,
           })
         }
-        if (access.status === "unauthenticated") return read ? signIn() : new Response(null, { status: 401, headers })
+        if (access.status === "unauthenticated") {
+          const teamChoice = context.teamCurrentChoice && route?.surface === "dashboard" && context.teamCurrentChoice.handles(request)
+          return read ? signIn() : new Response(null, { status: teamChoice ? 403 : 401, headers })
+        }
         return new Response(null, { status: access.status === "denied" ? 403 : 503, headers })
       },
       ...(readTeams ? { async teamDirectory(incoming: Request): Promise<EntraTeamsSessionResult> {

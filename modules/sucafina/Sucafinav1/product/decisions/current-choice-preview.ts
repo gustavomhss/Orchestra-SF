@@ -254,6 +254,7 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
   host: () => Pick<DomainPortHost, "requestFor" | "revalidate">
   operationIdentity: (context: TrustedDomainContext) => string | undefined
   identity: () => { installationId: string; projectId: string } | undefined
+  authorizeCommit?: () => Promise<boolean>
 }): CurrentChoiceFence & { persistence: P } {
   type Scope = {
     context: TrustedDomainContext
@@ -344,28 +345,34 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
       options?: TransactionOptions,
     ) => {
       const scope = scopes.getStore()
-      if (!scope) return input.persistence.transaction(surface, work, options)
-      return track(scope, () => input.persistence.transaction(surface, async (snapshot, blobs) => {
-        if (!currentScope(scope)) throw denied()
+      if (!scope && !input.authorizeCommit) return input.persistence.transaction(surface, work, options)
+      const run = () => input.persistence.transaction(surface, async (snapshot, blobs) => {
+        if (scope && !currentScope(scope)) throw denied()
         const result = await work(snapshot, blobs)
+        if (result.commit && input.authorizeCommit && !await input.authorizeCommit()) throw denied()
+        if (!scope) return result
         // The shipped SQLite driver holds one serialized transaction and exposes
         // all three current snapshots, including this callback's staged writes.
         const authorized = await authorizeSnapshot(scope)
         if (!publication(scope, authorized)) throw denied()
         return result
-      }, options))
+      }, options)
+      return scope ? track(scope, run) : run()
     },
     ...(input.persistence.transactionAll ? {
       transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
         const scope = scopes.getStore()
-        if (!scope) return input.persistence.transactionAll!(work, options)
-        return track(scope, () => input.persistence.transactionAll!(async (snapshots) => {
-          if (!currentScope(scope)) throw denied()
+        if (!scope && !input.authorizeCommit) return input.persistence.transactionAll!(work, options)
+        const run = () => input.persistence.transactionAll!(async (snapshots) => {
+          if (scope && !currentScope(scope)) throw denied()
           const result = await work(snapshots)
+          if (result.commit && input.authorizeCommit && !await input.authorizeCommit()) throw denied()
+          if (!scope) return result
           const authorized = await authorizeSnapshot(scope)
           if (!publication(scope, authorized)) throw denied()
           return result
-        }, options))
+        }, options)
+        return scope ? track(scope, run) : run()
       },
     } : {}),
   }

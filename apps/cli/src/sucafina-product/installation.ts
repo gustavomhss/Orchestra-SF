@@ -47,8 +47,11 @@ export async function loadSfInstallation(
   const factory: unknown = module.default
   if (typeof factory !== "function") throw new Error("Installation factory must be the default export")
   const runtime = module.nativeSfLocalInstallation === true ? await import("./host-context") : undefined
+  const teamCurrentChoice = module.nativeSfTeamInstallation === true && process.env.SUCAFINA_NATIVE_TEAM_DECISIONS === "1"
+    ? (await import("./team-current-choice")).createSfTeamCurrentChoice() : undefined
   const value: unknown = await factory({
     origin: origin.origin,
+    ...(teamCurrentChoice ? { teamCurrentChoice } : {}),
     ...(runtime ? {
       createHostRuntime: runtime.createSfHostRuntime,
       createCurrentChoiceFence: runtime.createCurrentChoiceFence,
