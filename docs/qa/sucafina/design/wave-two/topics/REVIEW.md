@@ -63,3 +63,11 @@ The actual source refresh still runs immediately after the confirmed command. Th
 The final action remains **Back to topics / Voltar aos tópicos**. Success is now `[data-sf-topic-confirmed] [data-topic-feedback="saved"]`, outside `[data-sf-topic-editor]`. The success panel contains no form, review button or send action. Transport capture occurs immediately before the existing client call; it changes no request parameters and lets a late response from an old owner be rejected by the presentation callback.
 
 Inspection of the owner registry showed Map-backed acquire and a draft constructor that does not read its snapshot. No reactive self-subscription was observed there, so no speculative untrack was added. Runtime proof of the repair remains the responsibility of the consolidated real-installation journey.
+
+### First Actions result and marker hardening
+
+Run `44918211856`, job `136888297405`, captured the initial twelve desktop/light/narrow views with no reported page errors, then stopped at the exact accessible-name lookup for the CAP02 status filter. The implicit label included option text, so the intended control name was not exact. The filter and editor Status/Priority selects now have explicit localized aria-label values matching their existing labels. The test locator and timeout are unchanged.
+
+The completion callback also receives the editor scope captured before the first await and checks it against the current route, in addition to checking the sending transport and owner generation. A late response from another editor route on the same transport cannot mark the current editor complete.
+
+Actual initial CAP02 captures inspected: dark desktop and light 320px. The list alignment and record reflow are intact. The inherited source navigation's oversized outlined buttons were the main visual inconsistency; root is applying the approved compact navigation to the three wave-two surfaces. Editor/review captures remain pending because this run stopped before creation.

@@ -112,9 +112,9 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
   })
   // Only the transport that sent the successful command may publish this notice.
   // No record values survive the source refresh, owner change or route change.
-  const onSaved = (transport: SfTransport) => {
-    if (!editorScope() || confirmationOwner()?.transport !== transport) return
-    setCompletion({ generation: source.context.generation(), route: editorScope() })
+  const onSaved = (transport: SfTransport, sentScope: string) => {
+    if (!sentScope || sentScope !== editorScope() || confirmationOwner()?.transport !== transport) return
+    setCompletion({ generation: source.context.generation(), route: sentScope })
     queueMicrotask(() => confirmedMessage?.focus())
   }
 
@@ -176,7 +176,7 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
               <div class="sf-topics-tools">
                 <label class="sf-topics-filter">
                   <span class="sf-topics-sr-only">{t(key("sf.u38.filter"))}</span>
-                  <select value={source.filter()} onChange={(event) => source.setFilter(event.currentTarget.value as TopicStatus)}>
+                  <select aria-label={t(key("sf.u38.filter"))} value={source.filter()} onChange={(event) => source.setFilter(event.currentTarget.value as TopicStatus)}>
                     <For each={statuses}>{(option) =>
                       <option value={option}>{option ? t(key(labelForStatus(option)!)) : t(key("sf.u38.all"))}</option>
                     }</For>
