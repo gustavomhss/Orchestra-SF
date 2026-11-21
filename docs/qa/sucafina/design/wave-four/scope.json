@@ -1,0 +1,562 @@
+{
+  "schemaVersion": 1,
+  "status": "IN_PROGRESS",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-design-twenty",
+  "base": {
+    "ref": "dev",
+    "sha": "2a68bcb676ed0c159c5c48130c2413e0e5637a00"
+  },
+  "previousWave": {
+    "branch": "sf-design-fifteen",
+    "pr": 587,
+    "owner": "other session",
+    "status": "MERGE_IN_PROGRESS_REPORTED_BY_USER"
+  },
+  "counts": {
+    "areas": 20,
+    "registeredRoutePatterns": 49,
+    "previousImplementedAreas": 21,
+    "remainingAfterImplementation": 29
+  },
+  "areas": [
+    {
+      "id": "CAP20",
+      "label": "Headcount",
+      "owner": "planner",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-planner/headcount"
+        },
+        {
+          "kind": "rates",
+          "pattern": "/orchestra/sf-planner/headcount/rates"
+        },
+        {
+          "kind": "roster-review",
+          "pattern": "/orchestra/sf-planner/headcount/roster-review"
+        },
+        {
+          "kind": "settings",
+          "pattern": "/orchestra/sf-planner/headcount/settings"
+        },
+        {
+          "kind": "position",
+          "pattern": "/orchestra/sf-planner/headcount/positions/:positionRef"
+        },
+        {
+          "kind": "position-edit",
+          "pattern": "/orchestra/sf-planner/headcount/positions/:positionRef/edit"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+          "referenceBlob": "45badcf55818ed04351fda974ef713da0a0ef523"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "CAP21",
+      "label": "Alocações",
+      "owner": "planner",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-planner/allocations"
+        },
+        {
+          "kind": "entity",
+          "pattern": "/orchestra/sf-planner/allocations/entities/:entityRef"
+        },
+        {
+          "kind": "allocation",
+          "pattern": "/orchestra/sf-planner/allocations/entries/:allocationRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
+          "referenceBlob": "06b02b7408b35b9e13442621ab45b35c23161d7f"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "CAP22",
+      "label": "Câmbio / FX",
+      "owner": "planner",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-planner/fx"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/fx/index.tsx",
+          "referenceBlob": "01c837c2379a3be78e402e9e82de9d63009ebd22"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "CAP23",
+      "label": "Versões e comparação",
+      "owner": "planner",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-planner/versions"
+        },
+        {
+          "kind": "compare",
+          "pattern": "/orchestra/sf-planner/versions/compare"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-planner/versions/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-planner/versions/:versionRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx",
+          "referenceBlob": "da4e99a66b686aa263de0ecfae76ee7cd189271e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/index.tsx",
+          "referenceBlob": "c7332911b34925443dd65f2ee846ccb21f71eeea"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "CAP24",
+      "label": "Compras — visão geral",
+      "owner": "procurement",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-procurement/overview"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+          "referenceBlob": "a9107579d40e8a54741923831d487539c484c1da"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "CAP25",
+      "label": "Requisições, fila e sourcing",
+      "owner": "procurement",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-procurement/requests"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-procurement/requests/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef"
+        },
+        {
+          "kind": "history",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef/history"
+        },
+        {
+          "kind": "po",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef/po"
+        },
+        {
+          "kind": "requisition",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef/requisition"
+        },
+        {
+          "kind": "sourcing",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef/sourcing"
+        },
+        {
+          "kind": "quotes",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef/sourcing/compare"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx",
+          "referenceBlob": "ff532b5a275d01299bf8fccead910c1b7a4e1e5b"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/index.tsx",
+          "referenceBlob": "98a04c2608414744f44b2afa0326799a1023aa32"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
+          "referenceBlob": "34234bee605bc368538dee797b29f0e4b29b20ec"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "CAP26",
+      "label": "Aprovações",
+      "owner": "procurement",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-procurement/approvals"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-procurement/approvals/:requestRef"
+        },
+        {
+          "kind": "review",
+          "pattern": "/orchestra/sf-procurement/approvals/:requestRef/review"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx",
+          "referenceBlob": "9b2f7a159eca70a5c4d8cb46309ceee9f15c05ff"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/remaining/index.tsx",
+          "referenceBlob": "1948c63e1304d2fcc7e9923a2e29db3c7e57272d"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "CAP27",
+      "label": "Fornecedores",
+      "owner": "procurement",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-procurement/suppliers"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-procurement/suppliers/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-procurement/suppliers/:supplierRef"
+        },
+        {
+          "kind": "edit",
+          "pattern": "/orchestra/sf-procurement/suppliers/:supplierRef/edit"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+          "referenceBlob": "881c8d4ec6c2f20cc7d19ea57ba1efbe8566fd90"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "CAP28",
+      "label": "Configurações de compras",
+      "owner": "procurement",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-procurement/settings"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/index.tsx",
+          "referenceBlob": "c7e6818389a6b12cd21ebb123e7b65c13afb39bf"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "UI30",
+      "label": "Meu trabalho",
+      "owner": "planner",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-work"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "referenceBlob": "d012691ea65e0de4185f4942967c0d2ca9044161"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "UI31",
+      "label": "Busca Sucafina",
+      "owner": "planner",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-home/search"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
+          "referenceBlob": "c64e321bf6212dc24494034ca29270285391e899"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "UI32",
+      "label": "Visões salvas",
+      "owner": "planner",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-work/views"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-work/views/new"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-work/views/:viewId"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/views/index.tsx",
+          "referenceBlob": "16db968cbe6c5bfbaa40521aff74f2c83bb51be5"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "UI34",
+      "label": "Intenção do caso",
+      "owner": "decisions",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/index.tsx",
+          "referenceBlob": "d64e5c7ca7126d0397afd323a780bbab5725f774"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "UI35",
+      "label": "Alternativas",
+      "owner": "decisions",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/alternatives"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-decisions/:caseRef/alternatives/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-decisions/:caseRef/alternatives/:alternativeRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
+          "referenceBlob": "2a4472606a1fe05c8d96044c4dc979322d048349"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "UI36",
+      "label": "Premissas e divergências",
+      "owner": "decisions",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/assumptions"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/assumptions/index.tsx",
+          "referenceBlob": "80297cb0719c05aa0241fa8023322853561678de"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "UI37",
+      "label": "Perguntas e respostas",
+      "owner": "decisions",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/questions"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/index.tsx",
+          "referenceBlob": "ca1a807d6d43bea5493b7d8545505988ee28dfd7"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "UI38",
+      "label": "Escolha da decisão",
+      "owner": "decisions",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/choice"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/index.tsx",
+          "referenceBlob": "c1a7d08fa1dffb7f0469dbb53dd9fc49d93aec29"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "UI39",
+      "label": "Alterações preparadas",
+      "owner": "decisions",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-decisions/:caseRef/changes"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/changes/:changeRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+          "referenceBlob": "0e531465198c208e53eadae54f128bc664300ec9"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "UI40",
+      "label": "Histórico e recibos",
+      "owner": "decisions",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "history",
+          "pattern": "/orchestra/sf-decisions/:caseRef/history"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/receipts/:receiptRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/receipts/index.tsx",
+          "referenceBlob": "6571685621d4103c8da30dc769d1be61d43ab4bd"
+        }
+      ],
+      "states": [],
+      "captures": []
+    },
+    {
+      "id": "UI41",
+      "label": "Análises",
+      "owner": "decisions",
+      "status": "IN_PROGRESS",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-decisions/:caseRef/analyses"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/analyses/:analysisRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/index.tsx",
+          "referenceBlob": "52d194c16837a41d19d2d535321483585bbef801"
+        }
+      ],
+      "states": [],
+      "captures": []
+    }
+  ],
+  "verification": {
+    "runtime": "NOT_RUN",
+    "visual": "NOT_RUN",
+    "userAcceptance": "PENDING",
+    "merge": "NOT_MERGED"
+  }
+}
