@@ -137,6 +137,7 @@ test("Finance observes the exact candidate and baseline with fewer physical read
       const call = ok(await authority.ui.admit(request(), "sf_scenario_simulate", admissionDigest))
       selected = call
       try {
+        expect(await authority.ui.validate(call, "sf_scenario_simulate", admissionDigest)).toBe(true)
         const result = await business.withCase(call, ref, {}, async () => {
           control.counts = counts
           control.afterRoot = afterRoot
