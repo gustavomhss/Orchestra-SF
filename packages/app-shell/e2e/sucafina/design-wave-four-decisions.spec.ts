@@ -182,6 +182,20 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await page.setViewportSize({ width: 1440, height: 1100 })
   })
 
+  await waveFourTest.step("UI35 reports an authorized case with no historical choice", async () => {
+    const empty = new URL(editable.href)
+    empty.pathname += "/alternatives"
+    await openScreen(page, owner, { ...screens[1]!, href: empty.href })
+    const current = await readCase(page, installation.origin, installation.mount, editableRef)
+    expect(current.alternatives).toHaveLength(0)
+    expect(current.choices).toHaveLength(0)
+    await expect(page.getByText("No alternatives are recorded in this case.", { exact: true })).toBeVisible()
+    const recorded = page.getByRole("region", { name: "Recorded choice", exact: true })
+    await expect(recorded.getByText("No authorized historical choices are available for this selection.", { exact: true })).toBeVisible()
+    await expect(recorded.getByRole("button", { name: "Recalculate current choice", exact: true })).toHaveCount(0)
+    await capture(page, info, "UI35-dark-desktop-empty-choice-test-data")
+  })
+
   await waveFourTest.step("UI35 keeps the recorded choice on its opaque case route and compares source values", async () => {
     await openScreen(page, owner, screens[1]!)
     const board = page.locator(".sf-decision-compare-board")

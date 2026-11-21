@@ -294,7 +294,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
               }>
                 {(selection) => <div class="sf-n24">
                   <p><bdi>{selection().title}</bdi></p>
-                  <For each={selection().choices}>
+                  <For each={selection().choices} fallback={<SfStatePanel state="empty" messageKey={k("sf.ui35.noChoices")} />}>
                     {(choice) => <article class="sf-n24-review">
                       <h3><bdi>{choice.title}</bdi></h3>
                       <p><bdi>{choice.reason}</bdi></p>

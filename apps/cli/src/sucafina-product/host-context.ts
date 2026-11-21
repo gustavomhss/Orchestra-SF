@@ -986,7 +986,6 @@ export const createSfHostRuntimeWithRoutineNative = async (
     runtime: () => identity() ? { ui: authority.ui, recoverCreation: business.cases.recoverCreation } : undefined })
   // 162-only composition. A live source must re-admit the same original Request;
   // missing operation probes remain explicitly unavailable (never catalog-ready).
-  const nativeSearchDispatch = services.dispatch
   const nativeUiContext = createSfLiveContext({
     origin: input.origin, mount: input.mount, currentBinding: identity,
     operational: async (request, stamp) => {
@@ -1130,6 +1129,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
       ? extended.reviews.readScope.run(request, () => handler(request)) : handler(request)
   }
   const productHttp: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationRequest(request, surface) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface)
+  const nativeSearchDispatch = createSfProductDispatch({ descriptors, authority: authority.authority })
   const services: SfHostServices & { nativeUiProducts: typeof nativeUiProducts;
     routineEvidence: Pick<typeof nativePhases.services, "readExecution" | "openResult"> } = { ...authority, nativeUiProducts,
     ...(nativeReviewProjection ? { nativeReviewProjection } : {}),
@@ -1139,7 +1139,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
     routineRuns: nativePhases.services.routineRuns,
     routineEvidence: { readExecution: nativePhases.services.readExecution, openResult: nativePhases.services.openResult },
     productHttp,
-    selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+    selected, dispatch: nativeSearchDispatch, models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
       if (requests.has(request.runId)) return { status: "conflict", reason: "native-run-already-admitted" }
