@@ -57,7 +57,7 @@ designTest.afterEach(async ({ page }, info) => {
   }
 })
 
-designTest("installed native first-wave design · real operator, source data, review and captures", async ({ page, installation, owner }, info) => {
+designTest("installed native first-wave design · real operator, source data, review and captures", async ({ page, browser, installation, owner }, info) => {
   designTest.setTimeout(240_000)
   expect(info.project.metadata.bundle, "use the existing production runner").toBe("production")
   previewBytes = 0
@@ -139,6 +139,19 @@ designTest("installed native first-wave design · real operator, source data, re
   await page.goto(href("/orchestra/sf-decisions"))
   await ready(page, "Decisions")
   await scheme(page, "dark")
+  // The first-wave account actions use the native menu, with keyboard return
+  // to the same trigger and the original admitted actions still reachable.
+  const access = page.getByRole("button", { name: "Context and access", exact: true })
+  await expect(access).toBeEnabled()
+  await access.focus()
+  await page.keyboard.press("Enter")
+  const accessMenu = page.getByRole("menu", { name: "Context and access", exact: true })
+  await expect(accessMenu.getByRole("menuitem", { name: "Refresh access", exact: true })).toBeEnabled()
+  await expect(accessMenu.getByRole("menuitem", { name: "Sign out", exact: true })).toBeEnabled()
+  await capture(page, info, "UI33-dark-desktop-access-menu-test-data", true)
+  await page.keyboard.press("Escape")
+  await expect(accessMenu).toBeHidden()
+  await expect(access).toBeFocused()
   const start = page.getByRole("button", { name: "New case", exact: true })
   await expect(start).toBeEnabled()
   await start.focus()
@@ -146,10 +159,35 @@ designTest("installed native first-wave design · real operator, source data, re
   const form = page.locator("section.sf-n24-create form")
   await expect(form).toHaveCount(1)
   await fillCase(form, installation.year, objective)
+  await expect(start).toHaveCount(0)
+  await form.getByRole("button", { name: "Back to decisions", exact: true }).click()
+  await expect(form).toBeHidden()
+  const resumeDraft = page.getByRole("button", { name: "Resume draft", exact: true })
+  await expect(resumeDraft).toBeEnabled()
+  await resumeDraft.focus()
+  await page.keyboard.press("Enter")
+  await expect(form).toBeVisible()
+  await expect(form.getByLabel("Decision objective", { exact: true })).toHaveValue(objective)
+  await expect(form.getByLabel("Decision objective", { exact: true })).toBeFocused()
+  await expect(form.getByLabel("Criteria, one per line", { exact: true })).toHaveValue(criteria.join("\n"))
+  await reflow(page)
+  await capture(page, info, "UI33-dark-desktop-editor-test-data", true)
   await expect(form.getByRole("button", { name: "Confirm this decision creation", exact: true })).toHaveCount(0)
   await form.getByRole("button", { name: "Review creation", exact: true }).click()
   const review = form.getByRole("group", { name: "Review creation", exact: true })
   await expect(review).toContainText(objective)
+  await expect(review.getByRole("listitem")).toHaveText(criteria)
+  await expect(form.getByLabel("Decision objective", { exact: true })).toHaveCount(0)
+  await expect(review.getByRole("heading", { name: "Review creation", exact: true })).toBeFocused()
+  // Returning from review must restore the original draft after inputs unmount.
+  await form.getByRole("button", { name: "Cancel", exact: true }).click()
+  await expect(form.getByLabel("Decision objective", { exact: true })).toHaveValue(objective)
+  await expect(form.getByLabel("Decision objective", { exact: true })).toBeFocused()
+  await expect(form.getByLabel("Start", { exact: true })).toHaveValue(installation.year + "-01-01")
+  await expect(form.getByLabel("End", { exact: true })).toHaveValue(installation.year + "-12-31")
+  await expect(form.getByLabel("Currency", { exact: true })).toHaveValue("USD")
+  await expect(form.getByLabel("Criteria, one per line", { exact: true })).toHaveValue(criteria.join("\n"))
+  await form.getByRole("button", { name: "Review creation", exact: true }).click()
   await expect(review.getByRole("listitem")).toHaveText(criteria)
   expect(creationRequests).toHaveLength(0)
   const confirm = form.getByRole("button", { name: "Confirm this decision creation", exact: true })
@@ -172,6 +210,14 @@ designTest("installed native first-wave design · real operator, source data, re
   const list = page.getByRole("region", { name: "Authorized decision cases", exact: true })
   await expect(list.getByRole("listitem").filter({ hasText: objective }).getByRole("link", { name: "Open decision", exact: true }))
     .toHaveAttribute("href", createdHref!)
+  await form.getByRole("button", { name: "Back to decisions", exact: true }).click()
+  await expect(form).toHaveCount(0)
+  await expect(start).toBeEnabled()
+  await start.click()
+  await expect(form.getByLabel("Decision objective", { exact: true })).toBeEditable()
+  await expect(form.getByLabel("Decision objective", { exact: true })).toHaveValue("")
+  await expect(form.getByLabel("Criteria, one per line", { exact: true })).toHaveValue("")
+  expect(creationRequests).toHaveLength(1)
   await enter(screens[1])
 
   // A real filter, keyboard clear and visible focus ring; no synthetic row click.
@@ -264,7 +310,10 @@ designTest("installed native first-wave design · real operator, source data, re
   // the separately supplied current risk count into a selected-year value.
   const annualRisks = page.locator('[data-sf-metric="risks"]')
   await expect(annualRisks).toHaveAttribute("data-sf-value", "missing")
-  await expect(annualRisks.locator("dd")).toHaveText("Not available from this source")
+  await expect(annualRisks.locator("dd")).toHaveAccessibleName("Not available from this source")
+  await expect(annualRisks.locator('dd [aria-hidden="true"]')).toHaveText("—")
+  await expect(page.locator(".sf-u02-missing-legend")).toBeVisible()
+  await expect(page.locator(".sf-u02-missing-legend")).toContainText("Not available from this source")
   const monthControl = page.getByLabel("Month", { exact: true })
   await expect(monthControl).toBeVisible()
   await expect(monthControl).toBeEnabled()
@@ -284,9 +333,43 @@ designTest("installed native first-wave design · real operator, source data, re
   await editor.getByRole("button", { name: "Discard draft", exact: true }).click()
   await expect(editor.getByLabel("Total IT users", { exact: true })).toHaveValue("128")
   expect([...sourceOrigins]).toEqual([installation.origin])
+  // A fresh Portuguese browser context reuses only the actual issued session
+  // cookies and the app's documented persisted language preference (br).
+  // No producer data, response or authorization is fabricated.
+  const portuguese = await browser.newContext({
+    locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
+    reducedMotion: "reduce", colorScheme: "dark",
+    httpCredentials: { username: "orchestra", password: installation.serverPassword },
+    storageState: {
+      cookies: await page.context().cookies(installation.origin),
+      origins: [{
+        origin: installation.origin,
+        localStorage: [{ name: "orchestra.global.dat:language", value: JSON.stringify({ locale: "br" }) }],
+      }],
+    },
+  })
+  try {
+    const localized = await portuguese.newPage()
+    localized.on("pageerror", (error) => recordMessage(errors, error.stack ?? error.name + ": " + error.message))
+    const localizedScreens = [
+      { id: "UI29", path: "/orchestra/sf-home", title: "Hoje" },
+      { id: "UI33", path: "/orchestra/sf-decisions", title: "Decisões" },
+      { id: "CAP01", path: "/orchestra/sf-dashboard/executive", title: "Visão executiva" },
+    ] as const
+    for (const screen of localizedScreens) {
+      await localized.goto(href(screen.path))
+      await ready(localized, screen.title)
+      await scheme(localized, "dark")
+      await reflow(localized)
+      await scrollPageTop(localized)
+      await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data", true)
+    }
+  } finally {
+    await portuguese.close()
+  }
   await info.attach("native-wave-one-evidence", {
     body: JSON.stringify({ source: "isolated canonical producer test data", casesCreated: creationRequests.length,
-      views: ["UI29", "UI33", "CAP01"], widths: [1440, 320, 390], schemes: ["dark", "light"],
+      views: ["UI29", "UI33", "CAP01"], widths: [1440, 320, 390], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
       actualBrowserZoom: "not measured", consoleErrors, pageErrors: errors, cap01Reads: diagnostics.cap01Reads }, null, 2),
     contentType: "application/json",
   })

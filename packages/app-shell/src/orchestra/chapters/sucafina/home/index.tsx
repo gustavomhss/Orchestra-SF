@@ -1,5 +1,6 @@
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { useNavigate } from "@solidjs/router"
+import { Icon } from "@orchestra/ui/icon"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfPeopleTopic } from "@orchestra/schema/sucafina/people"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
@@ -15,6 +16,7 @@ import { useSfContext } from "../context"
 import { SfPageFrame, type SfCopyKey, type SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { useSfPresentation } from "../shared/frame/presentation"
+import "../shared/wave-one.css"
 import "./today.css"
 
 type Home = Extract<Schema.Schema.Type<typeof SfProjectionHome.Output>, { status: "ok" }>["value"]
@@ -340,6 +342,7 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
     <SfPageFrame
       titleKey={key("sf.ui29.title")}
       subtitleKey={key("sf.ui29.subtitle")}
+      eyebrow={{ kind: "message", message: { key: key("sf.design.eyebrow") } }}
       context={[]}
       tabs={[]}
       activeTab={null}
@@ -348,198 +351,288 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
       layout="reading"
       onLayoutMode={() => undefined}
     >
-      <SfStatePanel
-        state={screen.status}
-        messageKey={key(screen.status === "ready" ? "sf.ui29.title" : screen.status === "denied" ? "sf.common.noAccess" : screen.status === "session-expired" ? "sf.common.loginAgain" : screen.status === "loading" ? "sf.common.loading" : "sf.common.unavailable")}
-        onRetryRead={refresh}
-      >
-        <div class="sf-today" data-sf-home="authorized">
-          <section class="mx-card sf-today-section" aria-labelledby="sf-u01-attention">
-            <h2 id="sf-u01-attention">{t(key("sf.ui29.attention"))}</h2>
-            <p class="sf-today-description">{t(key("sf.ui29.hotTopics"))}</p>
-            <SfStatePanel state={attention.topicState} messageKey={key(attentionMessage(attention.topicState))} onRetryRead={refresh}>
-              <ul class="sf-today-list" role="list" data-sf-home-priorities>
-                <For each={orderedTopics()}>{(topic) => (
-                  <li class="sf-today-record" data-sf-home-topic={topic.id}>
-                    <button type="button" class="sf-today-title" onClick={() => openSource(
-                      "/orchestra/sf-dashboard/hot-topics/" + encodeSfRouteRef(topic.id),
-                    )}>{topic.action || topic.id}</button>
-                    <span class="sf-today-meta">{t(key("sf.ui29.priority"))}: {topic.priority ?? t(key("sf.ui29.notProjected"))} · {topic.status ?? t(key("sf.ui29.notProjected"))}</span>
-                    <span class="sf-today-meta">{t(key("sf.ui29.owner"))}: <bdi>{topic.owner || t(key("sf.ui29.notProjected"))}</bdi></span>
-                    <span class="sf-today-meta">{t(key("sf.ui29.deadline"))}: {formatDeadline(topic.due)}</span>
-                  </li>
-                )}</For>
-              </ul>
-              <p class="sf-today-note">{t(key("sf.ui29.authorshipUnavailable"))}</p>
-            </SfStatePanel>
-            <p class="sf-today-note">{t(key("sf.ui29.workRequiresSelection"))}</p>
-          </section>
-          <section class="mx-card sf-today-section" aria-labelledby="sf-u01-risks" data-sf-home-risks>
-            <h2 id="sf-u01-risks">{t(key("sf.ui29.risks"))}</h2>
-            <SfStatePanel state={attention.riskState} messageKey={key(attentionMessage(attention.riskState))} onRetryRead={refresh}>
-              <ul class="sf-today-list" role="list">
-                <For each={attention.risks}>{(risk) => (
-                  <li class="sf-today-record" data-sf-home-risk={String(risk.id)}>
-                    <button type="button" class="sf-today-title" onClick={() => openSource(
-                      "/orchestra/sf-operations/risks/" + encodeSfRouteRef(String(risk.id)),
-                    )}>{scalar(risk.title) || scalar(risk.name) || String(risk.id)}</button>
-                    <span class="sf-today-meta">{t(key("sf.ui29.owner"))}: <bdi>{scalar(risk.owner) || scalar(risk.responsible) || t(key("sf.ui29.notProjected"))}</bdi></span>
-                    <span class="sf-today-meta">{t(key("sf.ui29.deadline"))}: {formatDeadline(risk.due)}</span>
-                    <span class="sf-today-meta">{t(key("sf.ui29.riskStatus"))}: {scalar(risk.status) || t(key("sf.ui29.notProjected"))}</span>
-                  </li>
-                )}</For>
-              </ul>
-            </SfStatePanel>
-          </section>
-          <section class="mx-card sf-today-section sf-today-forecast" aria-labelledby="sf-u01-forecast" data-sf-home-forecast>
-            <h2 id="sf-u01-forecast">{t(key("sf.ui29.forecast"))}</h2>
-            <SfStatePanel state={attention.forecastState} messageKey={key(attentionMessage(attention.forecastState))} onRetryRead={refresh}>
-              <Show when={attention.totals}>{(totals) => (
-                <div class="sf-today-forecast-content">
-                  <dl class="sf-today-metrics">
-                    <div>
-                      <dt>{t(key("sf.ui29.forecastTotal"))}</dt>
-                      <dd>{formatNumber(totals().totalForecast)}</dd>
-                    </div>
-                    <div>
-                      <dt>{t(key("sf.ui29.forecastOpex"))}</dt>
-                      <dd>{formatNumber(totals().opexForecast)}</dd>
-                    </div>
-                    <div>
-                      <dt>{t(key("sf.ui29.forecastCapex"))}</dt>
-                      <dd>{formatNumber(totals().capexForecast)}</dd>
-                    </div>
-                  </dl>
-                  <dl class="sf-today-provenance">
-                    <div>
-                      <dt>{t(key("sf.ui29.forecastSource"))}</dt>
-                      <dd><code>CAP01</code></dd>
-                    </div>
-                    <div>
-                      <dt>{t(key("sf.ui29.owner"))} / {t(key("sf.ui29.deadline"))}</dt>
-                      <dd>{t(key("sf.ui29.notProjected"))}</dd>
-                    </div>
-                  </dl>
+      <div class="sf-today" data-sf-wave="today">
+        <SfStatePanel
+          state={screen.status}
+          messageKey={key(screen.status === "ready" ? "sf.ui29.title" : screen.status === "denied" ? "sf.common.noAccess" : screen.status === "session-expired" ? "sf.common.loginAgain" : screen.status === "loading" ? "sf.common.loading" : "sf.common.unavailable")}
+          onRetryRead={refresh}
+        >
+          <div class="sf-today-layout" data-sf-home="authorized">
+            <section class="sf-today-forecast" aria-labelledby="sf-u01-forecast" data-sf-home-forecast>
+              <header class="sf-today-section-head">
+                <div class="sf-today-section-title">
+                  <Icon name="status" size="small" />
+                  <h2 id="sf-u01-forecast">{t(key("sf.ui29.forecast"))}</h2>
                 </div>
-              )}</Show>
-            </SfStatePanel>
-          </section>
-          <section class="mx-card sf-today-section sf-today-resume" aria-labelledby="sf-u01-resume">
-            <h2 id="sf-u01-resume">{t(key("sf.ui29.resume"))}</h2>
-            <div class="sf-today-resume-grid">
-              <div class="sf-today-resume-cases">
-                <h3>{t(key("sf.ui29.cases"))}</h3>
-                <SfStatePanel
-                  state={caseState()}
-                  messageKey={key(
-                    caseState() === "denied" ? "sf.common.noAccess"
-                    : caseState() === "not-found" ? "sf.common.removed"
-                    : caseState() === "invalid" ? "sf.common.invalidLink"
-                    : caseState() === "stale" ? "sf.common.stale"
-                    : data()?.cases.status === "ok" && !caseItems().length ? "sf.common.empty"
-                    : "sf.ui29.casesUnavailable"
-                  )}
-                  onRetryRead={refresh}
-                  onBack={() => { setResume({ caseRef: null, status: "idle" }); void owner.reload() }}
-                >
-                  <Show when={caseItems().length > 0}>
-                    <Show when={!canResume()}>
-                      <p role="status" data-sf-case-resume="blocked">{t(key("sf.ui29.resumeUnavailable"))}</p>
-                    </Show>
-                    <ul class="sf-today-list" role="list">
-                      <For each={caseItems()}>
-                        {(item) => (
-                          <li class="sf-today-case" data-sf-case-row="authorized">
-                            <div class="sf-today-case-copy">
-                              <strong><bdi>{item.title}</bdi></strong>
-                              <span class="sf-today-meta">{t(key("sf.ui29.caseVersion"), { version: item.version })}</span>
+              </header>
+              <SfStatePanel state={attention.forecastState} messageKey={key(attentionMessage(attention.forecastState))} onRetryRead={refresh}>
+                <Show when={attention.totals}>{(totals) => (
+                  <div class="sf-today-forecast-content">
+                    <dl class="sf-today-metrics">
+                      <div>
+                        <dt>{t(key("sf.ui29.forecastTotal"))}</dt>
+                        <dd>{formatNumber(totals().totalForecast)}</dd>
+                      </div>
+                      <div>
+                        <dt>{t(key("sf.ui29.forecastOpex"))}</dt>
+                        <dd>{formatNumber(totals().opexForecast)}</dd>
+                      </div>
+                      <div>
+                        <dt>{t(key("sf.ui29.forecastCapex"))}</dt>
+                        <dd>{formatNumber(totals().capexForecast)}</dd>
+                      </div>
+                    </dl>
+                    <details class="sf-today-source">
+                      <summary>
+                        <Icon name="link" size="small" />
+                        <span>{t(key("sf.ui29.forecastSource"))}</span>
+                        <Icon name="chevron-down" size="small" />
+                      </summary>
+                      <dl class="sf-today-provenance">
+                        <div>
+                          <dt>{t(key("sf.ui29.forecastSource"))}</dt>
+                          <dd><code>CAP01</code></dd>
+                        </div>
+                        <div>
+                          <dt>{t(key("sf.ui29.owner"))} / {t(key("sf.ui29.deadline"))}</dt>
+                          <dd>{t(key("sf.ui29.notProjected"))}</dd>
+                        </div>
+                      </dl>
+                    </details>
+                  </div>
+                )}</Show>
+              </SfStatePanel>
+            </section>
+
+            <div class="sf-today-workspace">
+              <div class="sf-today-main">
+                <section class="sf-today-panel sf-today-attention" aria-labelledby="sf-u01-attention">
+                  <header class="sf-today-section-head">
+                    <div class="sf-today-section-title">
+                      <Icon name="checklist" />
+                      <div>
+                        <h2 id="sf-u01-attention">{t(key("sf.ui29.attention"))}</h2>
+                        <p class="sf-today-description">{t(key("sf.ui29.hotTopics"))}</p>
+                      </div>
+                    </div>
+                  </header>
+                  <SfStatePanel state={attention.topicState} messageKey={key(attentionMessage(attention.topicState))} onRetryRead={refresh}>
+                    <ul class="sf-today-list" role="list" data-sf-home-priorities>
+                      <For each={orderedTopics()}>{(topic) => (
+                        <li class="sf-today-record" data-sf-home-topic={topic.id}>
+                          <div class="sf-today-record-status">
+                            <span class="sf-today-priority" data-priority={topic.priority}>
+                              {t(key("sf.ui29.priority"))}: {topic.priority ?? t(key("sf.ui29.notProjected"))}
+                            </span>
+                            <span>{topic.status ?? t(key("sf.ui29.notProjected"))}</span>
+                          </div>
+                          <button type="button" class="sf-today-title" onClick={() => openSource(
+                            "/orchestra/sf-dashboard/hot-topics/" + encodeSfRouteRef(topic.id),
+                          )}>
+                            <span>{topic.action || topic.id}</span>
+                            <Icon name="chevron-right" size="small" />
+                          </button>
+                          <dl class="sf-today-record-meta">
+                            <div>
+                              <dt>{t(key("sf.ui29.owner"))}</dt>
+                              <dd><bdi>{topic.owner || t(key("sf.ui29.notProjected"))}</bdi></dd>
                             </div>
-                            <Show when={canResume()}>
-                              <button
-                                type="button"
-                                class="mx-btn sf-today-resume-action"
-                                data-sf-resume-case="authorized"
-                                aria-label={t(key("sf.ui29.resumeCaseLabel"), { title: item.title })}
-                                ref={(button) => {
-                                  const state = owner.state()
-                                  const ready = owner.ready()
-                                  const generation = owner.generation()
-                                  if (state.status !== "ready" || !ready ||
-                                      !owner.claimResumeFocus?.({
-                                        caseRef: item.caseRef,
-                                        sourceVersion: item.version,
-                                        ownerKey: state.ownerKey,
-                                        accessRevision: ready.context.stamp.accessRevision,
-                                        returnRoute: props.route,
-                                      })) return
-                                  queueMicrotask(() => {
-                                    const latest = owner.state()
-                                    if (button.isConnected && owner.generation() === generation &&
-                                        latest.status === "ready" && latest.ownerKey === state.ownerKey)
-                                      button.focus()
-                                  })
-                                }}
-                                disabled={resume.status === "loading"}
-                                onClick={() => beginResume(item)}
-                              >
-                                {t(key("sf.ui29.resumeCase"))}
-                              </button>
-                            </Show>
-                            <Show when={resume.caseRef === item.caseRef && (
-                              resume.status === "loading" || resume.status === "stale" ||
-                              resume.status === "unavailable"
-                            )}>
-                              <SfStatePanel
-                                state={resume.status === "idle" ? "unavailable" : resume.status}
-                                messageKey={key(
-                                  resume.status === "loading" ? "sf.common.loading"
-                                  : resume.status === "stale" ? "sf.common.stale"
-                                  : "sf.common.unavailable"
-                                )}
-                                onRetryRead={() => { setResume({ caseRef: null, status: "idle" }); void owner.reload() }}
-                              />
-                            </Show>
-                          </li>
-                        )}
-                      </For>
+                            <div>
+                              <dt>{t(key("sf.ui29.deadline"))}</dt>
+                              <dd>{formatDeadline(topic.due)}</dd>
+                            </div>
+                          </dl>
+                        </li>
+                      )}</For>
                     </ul>
-                  </Show>
-                </SfStatePanel>
+                  </SfStatePanel>
+                  <details class="sf-today-context">
+                    <summary>
+                      <Icon name="help" size="small" />
+                      <span>{t(key("sf.common.showDetails"))}</span>
+                      <Icon name="chevron-down" size="small" />
+                    </summary>
+                    <div>
+                      <Show when={attention.topicState === "ready" || attention.topicState === "empty" ||
+                        attention.topicState === "partial" || attention.topicState === "stale" || attention.topicState === "conflict" ||
+                        attention.topicState === "filtered-empty"}>
+                        <p>{t(key("sf.ui29.authorshipUnavailable"))}</p>
+                      </Show>
+                      <p>{t(key("sf.ui29.workRequiresSelection"))}</p>
+                    </div>
+                  </details>
+                </section>
+
+                <section class="sf-today-panel sf-today-resume" aria-labelledby="sf-u01-resume">
+                  <header class="sf-today-section-head">
+                    <div class="sf-today-section-title">
+                      <Icon name="folder" />
+                      <h2 id="sf-u01-resume">{t(key("sf.ui29.resume"))}</h2>
+                    </div>
+                    <span class="sf-today-section-label">{t(key("sf.ui29.cases"))}</span>
+                  </header>
+                  <SfStatePanel
+                    state={caseState()}
+                    messageKey={key(
+                      caseState() === "denied" ? "sf.common.noAccess"
+                      : caseState() === "not-found" ? "sf.common.removed"
+                      : caseState() === "invalid" ? "sf.common.invalidLink"
+                      : caseState() === "stale" ? "sf.common.stale"
+                      : data()?.cases.status === "ok" && !caseItems().length ? "sf.common.empty"
+                      : "sf.ui29.casesUnavailable"
+                    )}
+                    onRetryRead={refresh}
+                    onBack={() => { setResume({ caseRef: null, status: "idle" }); void owner.reload() }}
+                  >
+                    <Show when={caseItems().length > 0}>
+                      <Show when={!canResume()}>
+                        <p role="status" data-sf-case-resume="blocked">{t(key("sf.ui29.resumeUnavailable"))}</p>
+                      </Show>
+                      <ul class="sf-today-list" role="list">
+                        <For each={caseItems()}>
+                          {(item) => (
+                            <li class="sf-today-case" data-sf-case-row="authorized">
+                              <div class="sf-today-case-copy">
+                                <strong><bdi>{item.title}</bdi></strong>
+                                <span class="sf-today-meta">{t(key("sf.ui29.caseVersion"), { version: item.version })}</span>
+                              </div>
+                              <Show when={canResume()}>
+                                <button
+                                  type="button"
+                                  class="mx-btn sf-today-resume-action"
+                                  data-sf-resume-case="authorized"
+                                  aria-label={t(key("sf.ui29.resumeCaseLabel"), { title: item.title })}
+                                  ref={(button) => {
+                                    const state = owner.state()
+                                    const ready = owner.ready()
+                                    const generation = owner.generation()
+                                    if (state.status !== "ready" || !ready ||
+                                        !owner.claimResumeFocus?.({
+                                          caseRef: item.caseRef,
+                                          sourceVersion: item.version,
+                                          ownerKey: state.ownerKey,
+                                          accessRevision: ready.context.stamp.accessRevision,
+                                          returnRoute: props.route,
+                                        })) return
+                                    queueMicrotask(() => {
+                                      const latest = owner.state()
+                                      if (button.isConnected && owner.generation() === generation &&
+                                          latest.status === "ready" && latest.ownerKey === state.ownerKey)
+                                        button.focus()
+                                    })
+                                  }}
+                                  disabled={resume.status === "loading"}
+                                  onClick={() => beginResume(item)}
+                                >
+                                  <span>{t(key("sf.ui29.resumeCase"))}</span>
+                                  <Icon name="arrow-right" size="small" />
+                                </button>
+                              </Show>
+                              <Show when={resume.caseRef === item.caseRef && (
+                                resume.status === "loading" || resume.status === "stale" ||
+                                resume.status === "unavailable"
+                              )}>
+                                <SfStatePanel
+                                  state={resume.status === "idle" ? "unavailable" : resume.status}
+                                  messageKey={key(
+                                    resume.status === "loading" ? "sf.common.loading"
+                                    : resume.status === "stale" ? "sf.common.stale"
+                                    : "sf.common.unavailable"
+                                  )}
+                                  onRetryRead={() => { setResume({ caseRef: null, status: "idle" }); void owner.reload() }}
+                                />
+                              </Show>
+                            </li>
+                          )}
+                        </For>
+                      </ul>
+                    </Show>
+                  </SfStatePanel>
+
+                </section>
               </div>
-              <div class="sf-today-resume-routines">
-                <h3>{t(key("sf.ui29.routines"))}</h3>
-                <SfStatePanel
-                  state={routineState()}
-                  messageKey={key(data()?.routines.status === "ok" && !routineItems().length ? "sf.common.empty" : "sf.ui29.routinesUnavailable")}
-                  onRetryRead={refresh}
-                >
-                  <Show when={routineItems().length > 0}>
+
+              <aside class="sf-today-aside">
+                <section class="sf-today-panel sf-today-risks" aria-labelledby="sf-u01-risks" data-sf-home-risks>
+                  <header class="sf-today-section-head">
+                    <div class="sf-today-section-title">
+                      <Icon name="shield" />
+                      <h2 id="sf-u01-risks">{t(key("sf.ui29.risks"))}</h2>
+                    </div>
+                  </header>
+                  <SfStatePanel state={attention.riskState} messageKey={key(attentionMessage(attention.riskState))} onRetryRead={refresh}>
                     <ul class="sf-today-list" role="list">
-                      <For each={routineItems()}>
-                        {(item) => (
-                          <li class="sf-today-record">
-                            <span>{t(key("sf.ui29.admission"))}: </span>
-                            <bdi>{item.admission}</bdi>
-                            <Show when={item.runRef}><code class="sf-today-run-ref"><bdi>{item.runRef}</bdi></code></Show>
-                          </li>
-                        )}
-                      </For>
+                      <For each={attention.risks}>{(risk) => (
+                        <li class="sf-today-record" data-sf-home-risk={String(risk.id)}>
+                          <button type="button" class="sf-today-title" onClick={() => openSource(
+                            "/orchestra/sf-operations/risks/" + encodeSfRouteRef(String(risk.id)),
+                          )}>
+                            <span>{scalar(risk.title) || scalar(risk.name) || String(risk.id)}</span>
+                            <Icon name="chevron-right" size="small" />
+                          </button>
+                          <dl class="sf-today-record-meta">
+                            <div>
+                              <dt>{t(key("sf.ui29.owner"))}</dt>
+                              <dd><bdi>{scalar(risk.owner) || scalar(risk.responsible) || t(key("sf.ui29.notProjected"))}</bdi></dd>
+                            </div>
+                            <div>
+                              <dt>{t(key("sf.ui29.deadline"))}</dt>
+                              <dd>{formatDeadline(risk.due)}</dd>
+                            </div>
+                          </dl>
+                          <p class="sf-today-risk-state">
+                            <span>{t(key("sf.ui29.riskStatus"))}</span>
+                            <bdi>{scalar(risk.status) || t(key("sf.ui29.notProjected"))}</bdi>
+                          </p>
+                        </li>
+                      )}</For>
                     </ul>
-                  </Show>
-                </SfStatePanel>
-              </div>
+                  </SfStatePanel>
+                </section>
+
+                <section class="sf-today-panel sf-today-routines" aria-labelledby="sf-u01-routines">
+                  <header class="sf-today-section-head">
+                    <div class="sf-today-section-title">
+                      <Icon name="reset" />
+                      <h2 id="sf-u01-routines">{t(key("sf.ui29.routines"))}</h2>
+                    </div>
+                  </header>
+                  <SfStatePanel
+                    state={routineState()}
+                    messageKey={key(data()?.routines.status === "ok" && !routineItems().length ? "sf.common.empty" : "sf.ui29.routinesUnavailable")}
+                    onRetryRead={refresh}
+                  >
+                    <Show when={routineItems().length > 0}>
+                      <ul class="sf-today-list" role="list">
+                        <For each={routineItems()}>
+                          {(item) => (
+                            <li class="sf-today-record">
+                              <span>{t(key("sf.ui29.admission"))}: </span>
+                              <bdi>{item.admission}</bdi>
+                              <Show when={item.runRef}><code class="sf-today-run-ref"><bdi>{item.runRef}</bdi></code></Show>
+                            </li>
+                          )}
+                        </For>
+                      </ul>
+                    </Show>
+                  </SfStatePanel>
+                </section>
+              </aside>
             </div>
-          </section>
-          <section class="sf-today-availability" aria-labelledby="sf-u01-meetings">
-            <h2 id="sf-u01-meetings">{t(key("sf.ui29.meetings"))}</h2>
-            <SfStatePanel state="unavailable" messageKey={key("sf.ui29.meetingsNotProjected")} />
-          </section>
-          <section class="sf-today-availability" aria-labelledby="sf-u01-changes">
-            <h2 id="sf-u01-changes">{t(key("sf.ui29.materialChanges"))}</h2>
-            <SfStatePanel state="unavailable" messageKey={key("sf.ui29.changesNotProjected")} />
-          </section>
-        </div>
-      </SfStatePanel>
+
+            <footer class="sf-today-foot">
+              <section class="sf-today-availability" aria-labelledby="sf-u01-meetings">
+                <h2 id="sf-u01-meetings">{t(key("sf.ui29.meetings"))}</h2>
+                <SfStatePanel state="unavailable" messageKey={key("sf.ui29.meetingsNotProjected")} />
+              </section>
+              <section class="sf-today-availability" aria-labelledby="sf-u01-changes">
+                <h2 id="sf-u01-changes">{t(key("sf.ui29.materialChanges"))}</h2>
+                <SfStatePanel state="unavailable" messageKey={key("sf.ui29.changesNotProjected")} />
+              </section>
+            </footer>
+          </div>
+        </SfStatePanel>
+      </div>
     </SfPageFrame>
   )
 }
