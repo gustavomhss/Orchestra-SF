@@ -374,7 +374,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
       render: (row) => <span>{row.kind}</span> },
     { id: "state", labelKey: tableKey("sf.u41.state"), align: "start",
       widthPolicy: { kind: "content", minPx: 90, maxPx: 165 }, sortKey: "state",
-      render: (row) => <span>{row.state}</span> },
+      render: (row) => <span class="sf-work-state">{row.state}</span> },
     { id: "owner", labelKey: tableKey("sf.u41.owner"), align: "start",
       widthPolicy: { kind: "flex", minPx: 130, weight: 2 },
       render: (row) => <span>{row.ownerLabel ?? row.ownerRef}</span> },

@@ -11,6 +11,8 @@
   border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg);
 }
 .sf-work-list { display: grid; gap: 16px; }
+.sf-work-list[hidden] { display: none; }
+.sf-work-state { white-space: nowrap; }
 .sf-work-search { display: grid; gap: 6px; inline-size: min(100%, 360px); }
 .sf-work-detail { display: grid; gap: 20px; inline-size: 100%; max-inline-size: var(--sf-plan-editor); box-sizing: border-box; }
 .sf-work-back { justify-self: start; }

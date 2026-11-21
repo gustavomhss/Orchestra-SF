@@ -376,7 +376,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         {path:"sourcing.quotes." + index + ".currency",label:m("sf.u12.quoteCurrency"),value:toView(quote.currency)},
         {path:"sourcing.quotes." + index + ".total",label:m("sf.u12.quoteTotal"),value:toView(quoteAmount(quote))},
       ]),
-      {path:"quoteId",label:m("sf.u12.selectId"),value:toView(intent.quoteId)},
+      {path:"sourcing.selectedId",label:m("sf.u12.selectId"),value:toView(intent.sourcing.selectedId)},
     ]
   }
   const reviewSnapshot=(intent:Intent):SfReviewSnapshot=>({
