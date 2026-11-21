@@ -129,12 +129,10 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     const current = page(), selected = ref()
     return current && selected ? supplierVersion(current, selected) : null
   }
-  const can = (action: SupplierAction) => {
+  const actionAvailable = (action: SupplierAction) => {
     const current = page()
     const context = host.ready()?.context
-    const selected = ref()
     return !!current && !!context &&
-      (action === "create" || !!selected && current.value.selection.supplier === selected) &&
       current.value.allowedActionIds.includes(action) &&
       context.availability.some((resource) =>
         resource.family === "procurement" && resource.resource === "CAP27" &&
@@ -143,6 +141,10 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
           operation.state === "ready" && operation.operational,
         ),
       )
+  }
+  const can = (action: SupplierAction) => {
+    const selected = ref()
+    return (action === "create" || !!selected && page()?.value.selection.supplier === selected) && actionAvailable(action)
   }
   const read = async (token: string, source: string | undefined, signal: AbortSignal): Promise<Read> => {
     const ready = host.ready()
@@ -894,10 +896,15 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
                 const token = authority()
                 if (token && ref() === selection) void refresh(token, selection)
               }}
-              rowActions={(row) => can("save") && row.id ? [{
+              rowActions={(row) => actionAvailable("save") && row.id ? [{
                 id:"edit",labelKey:k("sf.u14.save"),tone:"secondary",disabled:active(ui.phase),busy:false,
               }] : []}
-              onRowAction={(entry) => {setUi("selected",entry.recordRef);setUi("mode","edit")}}
+              onRowAction={(entry) => {
+                setUi("selected", entry.recordRef)
+                setUi("mode", "edit")
+                const token = authority()
+                if (token && ref() === entry.recordRef) void refresh(token, entry.recordRef)
+              }}
               captionKey={k("sf.cap27.title")} density="comfortable"
               state={rows().length===0 ? page()?.value.data.suppliers.length===0 ? "empty" : "filtered-empty" : "ready"}
             />
