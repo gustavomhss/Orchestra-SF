@@ -186,7 +186,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const authority = createSfProductAuthority({ ...input, identity, proposalCoverageWrites, nativePublicationGuards, signalRegistryWrites, caseSelectionWrites, threadHistoryWrites, dashboardHostWrites, procurementEvidenceWrites, analysisSelectionWrites, policyVersion: "sf-product-v1", grants: input.grants ?? [], createId: randomUUID, now: Date.now,
     commandIdentity: async (request, operation) => {
       // MCP transports even read tools over POST. The snapshot has no write receipt to bind.
-      if (request.method === "POST" && operation === "sf_work_list" &&
+      if (request.method === "POST" && (operation === "sf_work_list" || operation === "sf_sourcing_compare") &&
         new URL(request.url).pathname === `${input.mount}/api/claw/mcp`) return randomUUID()
       return sfUiCommandIdentity(request, operation, {
         origin: input.origin, mount: input.mount, readOperations: commandReadOperations, createId: randomUUID,
