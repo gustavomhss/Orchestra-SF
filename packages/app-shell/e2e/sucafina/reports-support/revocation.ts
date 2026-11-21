@@ -84,14 +84,19 @@ export async function revokeReportsSession(input: {
     // route/artifact or a broken server. A new legitimate enrollment cannot revive it.
     const control = await fresh.newPage()
     await app.signIn(control)
-    expect(await readReview(control.request, app.dashboardURL, saved.id)).toEqual(saved)
-    await expectReusedReviewAnswer(reportsCollaboration(control.request, app.dashboardURL), answer)
     const current = reportsCollaboration(control.request, app.dashboardURL)
-    expect(await current.version(), "Logout and denied reconciliation must not submit either retained reply").toBe(localPending.storageVersion)
-    expect((await current.thread(answer.questionId)).messages).toEqual(localPending.messages)
+    const [freshReview, freshVersion, freshThread, download] = await Promise.all([
+      readReview(control.request, app.dashboardURL, saved.id),
+      current.version(),
+      current.thread(answer.questionId),
+      control.request.get(artifact.href, { maxRedirects: 0 }),
+      expectReusedReviewAnswer(current, answer),
+    ])
+    expect(freshReview).toEqual(saved)
+    expect(freshVersion, "Logout and denied reconciliation must not submit either retained reply").toBe(localPending.storageVersion)
+    expect(freshThread.messages).toEqual(localPending.messages)
     expect(localPending.writes).toEqual([localPending.serialized])
     expect(retainedPending.writes).toEqual([retainedPending.serialized])
-    const download = await control.request.get(artifact.href, { maxRedirects: 0 })
     expect(download.status()).toBe(200)
     expect(download.headers()["content-type"]).toContain("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     expect(createHash("sha256").update(await download.body()).digest("hex")).toBe(artifact.sha256)
@@ -129,7 +134,7 @@ async function retainUnsentReply(page: Page, app: ReportsInstallation, answer: R
   await discussion.getByRole("article", { name: `Message ${answer.message.id}`, exact: true })
     .getByRole("textbox", { name: "Edited answer", exact: true }).fill(drafts.edit)
   const api = reportsCollaboration(page.request, app.dashboardURL)
-  const storageVersion = await api.version(), before = await api.thread(answer.questionId)
+  const [storageVersion, before] = await Promise.all([api.version(), api.thread(answer.questionId)])
   const base = new URL(app.dashboardURL), mode = "collaboration-thread-reply"
   const matches = (url: URL) => url.origin === base.origin && url.pathname === base.pathname && url.searchParams.get("sf") === mode
   const writes: string[] = []
@@ -168,8 +173,9 @@ async function retainUnsentReply(page: Page, app: ReportsInstallation, answer: R
     await expect(discussion.getByRole("button", { name: "Reconcile action", exact: true })).toBeEnabled()
     await expect(discussion.getByRole("button", { name: "Retry same action", exact: true })).toHaveCount(0)
     expect(writes).toEqual([attempt.serialized])
-    expect(await api.version()).toBe(storageVersion)
-    expect((await api.thread(answer.questionId)).messages).toEqual(before.messages)
+    const [currentVersion, currentThread] = await Promise.all([api.version(), api.thread(answer.questionId)])
+    expect(currentVersion).toBe(storageVersion)
+    expect(currentThread.messages).toEqual(before.messages)
     return { ...attempt, drafts, storageVersion, messages: before.messages, writes, cleanup }
   } catch (error) {
     await cleanup()

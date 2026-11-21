@@ -29,7 +29,7 @@ export function createReviewDiscussionClient(accessLost: () => void, transport: 
   fetch: (...args) => fetch(...args),
   url: () => location.href,
   binding: () => document.querySelector<HTMLMetaElement>('meta[name="sf-access-revision"]')?.content,
-}) {
+}, foreground: <T>(work: () => Promise<T>) => Promise<T> = (work) => work()) {
   const pending = new Set<AbortController>()
   const binding = transport.binding()
   const endpoint = new URL(transport.url())
@@ -51,7 +51,7 @@ export function createReviewDiscussionClient(accessLost: () => void, transport: 
     const current = new URL(transport.url())
     if (current.origin !== endpoint.origin || current.pathname !== endpoint.pathname || current.searchParams.get("reviewRef") !== endpoint.searchParams.get("reviewRef")) throw lost()
   }
-  const post = async (mode: string, payload: unknown, key?: string) => {
+  const post = (mode: string, payload: unknown, key?: string) => foreground(async () => {
     checkBinding()
     const url = new URL(transport.url())
     url.search = new URLSearchParams({ sf: mode }).toString()
@@ -101,7 +101,7 @@ export function createReviewDiscussionClient(accessLost: () => void, transport: 
       clearTimeout(deadline)
       pending.delete(controller)
     }
-  }
+  })
   const mutation = async () => ({ expectedStorageVersion: discussionVersion(await post("collaboration-storage-version", { namespace: "threads" }), 0), idempotencyKey: crypto.randomUUID() })
   return {
     post,

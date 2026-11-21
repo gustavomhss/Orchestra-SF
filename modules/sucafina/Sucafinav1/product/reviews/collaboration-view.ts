@@ -6,7 +6,7 @@ import type { ReviewDiscussionBasis, ReviewDiscussionMessage, ReviewDiscussionPi
 /** Human actions against a preserved C05. All access and replay decisions remain
  * in the installed host. A displayed principal, draft or URL grants no access.
  */
-export function createReviewCollaborationView(input: { review: PreservedReview; principalRef: string; transport?: ReviewDiscussionTransport }) {
+export function createReviewCollaborationView(input: { review: PreservedReview; principalRef: string; transport?: ReviewDiscussionTransport; foreground?: <T>(work: () => Promise<T>) => Promise<T> }) {
   const root = region("Review discussion")
   const status = document.createElement("p")
   status.setAttribute("role", "status")
@@ -37,7 +37,7 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
   const client = createReviewDiscussionClient(() => {
     dispose()
     window.dispatchEvent(new Event("sf-access-revoked"))
-  }, input.transport)
+  }, input.transport, input.foreground)
   const section = document.createElement("select"), source = document.createElement("select"), recipient = document.createElement("select")
   section.setAttribute("aria-label", "Review section"); source.setAttribute("aria-label", "Review source"); recipient.setAttribute("aria-label", "Recipient")
   input.review.sections.forEach((entry) => section.append(option(entry.title, entry.id)))

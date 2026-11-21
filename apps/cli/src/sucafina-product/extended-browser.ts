@@ -43,8 +43,8 @@ if (root && bootstrap) {
     focusProbe?.abort()
   }
   navigation?.addEventListener("navigate", (event) => {
-    if (closed || !("navigationType" in event) || event.navigationType !== "reload" ||
-      !("signal" in event) || !(event.signal instanceof AbortSignal) || event.signal.aborted) return
+    if (closed || !("destination" in event) || typeof event.destination !== "object" || !event.destination ||
+      !("sameDocument" in event.destination) || event.destination.sameDocument || !("signal" in event) || !(event.signal instanceof AbortSignal) || event.signal.aborted) return
     beginNavigation()
     event.signal.addEventListener("abort", resumeNavigation, { once: true })
   })
@@ -126,7 +126,7 @@ if (root && bootstrap) {
         if (!found?.response.ok || body?.status !== "ok" || body.value?.id !== reference || !Array.isArray(body.value?.sections) || !Array.isArray(body.value?.comments))
           return { status: closed ? "denied" : "unavailable", reason: "review-unavailable" }
         if (reference === value.reviewRef && !discussion && typeof value.principalRef === "string" && value.principalRef.trim()) {
-          discussion = createReviewCollaborationView({ review: body.value, principalRef: value.principalRef })
+          discussion = createReviewCollaborationView({ review: body.value, principalRef: value.principalRef, foreground })
           root.append(discussion.element)
         }
         return { status: "ok", value: body.value }
