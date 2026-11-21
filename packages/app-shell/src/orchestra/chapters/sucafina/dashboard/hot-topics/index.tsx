@@ -13,6 +13,7 @@ import { SF_STATE_FALLBACK_KEY, sfCommonKey, useSfPresentation } from "../../sha
 import type { SfCopyKey } from "../../shared/frame/types"
 import { SF_U38_COPY } from "@/i18n/orchestra-chapters/sf-u38"
 import { SfHotTopicEditor } from "./edit"
+import { SfHotTopicCapture } from "./capture"
 import { useHotTopicsSource } from "./reader"
 import type { Topic, TopicStatus } from "./reader"
 import "./u38.css"
@@ -83,6 +84,17 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
   const edit = () => selected() ? open(selected()!, "edit") : undefined
   const current = () => source.owner()
 
+  const canPropose = () => current()?.context.availability.some((resource) =>
+    resource.family === "domain-read" && resource.resource === "hot-topic-proposal" &&
+    resource.operations.some((operation) => operation.operationId === "dashboard.dashboard-hot-topic-draft" &&
+      operation.state === "ready" && operation.operational)) === true
+  const newProposal = () => {
+    if (!canPropose()) return
+    const query = new URLSearchParams({ server: props.route.ownerSelection.serverKey, project: props.route.ownerSelection.projectId })
+    if (props.route.ownerSelection.installationId) query.set("installation", props.route.ownerSelection.installationId)
+    navigate("/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef("new") + "?" + query.toString())
+  }
+
   async function remove() {
     const record = selected(), originalVersion = version()
     const ready = current()
@@ -120,6 +132,7 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
         <Show when={props.route.kind === "entry"}>
           <section class="sf-u38-section" aria-labelledby="sf-topics-list">
             <h2 id="sf-topics-list">{t(key("sf.u38.topicList"))}</h2>
+            <button type="button" class="mx-btn" disabled={!canPropose()} onClick={newProposal}>{t(key("sf.u38.newProposal"))}</button>
             <label class="sf-u38-filter">{t(key("sf.u38.filter"))}
               <select value={source.filter()} onChange={(event) => source.setFilter(event.currentTarget.value as TopicStatus)}>
                 <For each={statuses}>{(option) =>
@@ -179,6 +192,7 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
                   label={{ pt: "Relacionar ação por referência", en: "Relate action by reference" }} />
               </div>
               <SfExecutiveRelatedLinks from={props.route} omit="topic" />
+              <SfHotTopicCapture topicId={topic().id} version={version()} year={props.route.query.year} />
               <div class="sf-u38-actions">
                 <button type="button" class="mx-btn primary" disabled={!source.allowed("save") || version() === undefined}
                   onClick={edit}>{t(key("sf.u38.editTopic"))}</button>
