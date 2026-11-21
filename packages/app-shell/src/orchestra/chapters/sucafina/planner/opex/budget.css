@@ -4,6 +4,7 @@
   --sf-plan-xs: 4px; --sf-plan-sm: 8px; --sf-plan-md: 12px; --sf-plan-lg: 16px;
   --sf-plan-xl: 20px; --sf-plan-2xl: 24px; --sf-plan-3xl: 32px;
   --sf-plan-editor: 760px; --sf-plan-version: 520px; --sf-plan-table: 800px; --sf-plan-textarea: 120px;
+  display: flex; flex: 1 1 auto; inline-size: 100%; min-block-size: 0;
   min-inline-size: 0; color: var(--mx-strong); font: var(--orchestra-font-size-md)/1.6 var(--mx-sans);
 }
 .sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) [hidden] { display: none; }

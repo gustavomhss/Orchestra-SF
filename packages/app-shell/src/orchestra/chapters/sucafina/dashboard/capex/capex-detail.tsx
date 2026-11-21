@@ -8,6 +8,19 @@ import type { BudgetOwner } from "../opex/model"
 
 const key = (value: keyof typeof SF_U40_COPY): SfCopyKey => value as SfCopyKey
 
+/** Source values stay literal when outside the known presentation catalog. */
+export function capexStatusKey(value: string | null | undefined): SfCopyKey | undefined {
+  switch (value) {
+    case "In Progress": return key("sf.u40.statusInProgress")
+    case "Planned": return key("sf.u40.statusPlanned")
+    case "Completed": return key("sf.u40.statusCompleted")
+    case "On Hold": return key("sf.u40.statusOnHold")
+    case "Cancelled": return key("sf.u40.statusCancelled")
+    case "Active": return key("sf.u40.statusActive")
+    default: return undefined
+  }
+}
+
 /** CAP05 presentation only. All source selection and command admission stay in the shared controller. */
 export function SfCapexDetail(props: Readonly<{
   owner: BudgetOwner
@@ -42,7 +55,7 @@ export function SfCapexDetail(props: Readonly<{
           <dl>
             <div><dt>{t(key("sf.u40.source"))}</dt><dd><code>capexProjects:{props.owner.id}</code></dd></div>
             <div><dt>{t(key("sf.u40.sourceVersion"))}</dt><dd>{props.version ?? t(key("sf.u40.missing"))}</dd></div>
-            <Show when={props.owner.status}><div><dt>{t(key("sf.u40.status"))}</dt><dd><bdi>{props.owner.status}</bdi></dd></div></Show>
+            <Show when={props.owner.status}><div><dt>{t(key("sf.u40.status"))}</dt><dd><bdi><Show when={capexStatusKey(props.owner.status)} fallback={props.owner.status}>{(label) => t(label())}</Show></bdi></dd></div></Show>
           </dl>
         </details>
       </div>

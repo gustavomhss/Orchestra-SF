@@ -94,6 +94,10 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
   let stage: HTMLDivElement | undefined
   let inFlight: AbortController | undefined
   const t = (value: Key) => language.t(value as Parameters<typeof language.t>[0])
+  const optionText = (value: string) => value === "total" ? t("sf.u15.option.total") :
+    value === "monthly" ? t("sf.u15.option.monthly") : value === "annual" ? t("sf.u15.option.annual") :
+    value === "fixed" ? t("sf.u15.option.fixed") : value === "na" ? t("sf.u15.option.na") :
+    value === "auto" ? t("sf.u15.option.auto") : value
   const routeRef = () =>
     (props.route.kind === "detail" || props.route.kind === "edit") ? props.route.params.contractRef : undefined
   const selectedRef = () => routeRef() ?? view.selected
@@ -120,7 +124,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
   createEffect(() => {
     const selected = selectedRef()
     const mode = view.reviewing ? "review" : editing() ? "edit" : "detail"
-    if (!selected && !creating()) return
+    if (!sourceAvailable() || (!selected && !creating())) return
     queueMicrotask(() => {
       if (mode !== (view.reviewing ? "review" : editing() ? "edit" : "detail")) return
       stage?.querySelector<HTMLElement>(".sf-u15-detail-head h2")?.focus()
@@ -558,7 +562,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
                           <dd><Show when={safeField(selectedRow()!, field) !== ""} fallback={
                             <span class="sf-u15-missing" data-sf-value="missing"><span aria-hidden="true">—</span><span class="sf-u15-sr">{t("sf.u15.missing")}</span></span>
                           }><bdi>{field === "amtType" || field === "renewType"
-                            ? t(("sf.u15.option." + safeField(selectedRow()!, field)) as Key)
+                            ? optionText(safeField(selectedRow()!, field))
                             : safeField(selectedRow()!, field)}</bdi></Show></dd>
                         </div>
                       }</For></dl>

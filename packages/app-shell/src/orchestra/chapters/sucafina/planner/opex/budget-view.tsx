@@ -578,7 +578,14 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   }
   const fields = (values: object) =>
     Object.entries(values).map(([path,value]):SfReviewField => ({
-      path, label: msg("sf.u07." + path), value: textual(String(value)),
+      path, label: msg("sf.u07." + (path === "desc" ? "description" : path === "cur" ? "currency" :
+        path === "alloc" ? "allocation" : path === "cls" ? "classification" : path === "el" ? "element" :
+        path === "proj" ? "project" : path)),
+      value: value === "" || value === null || value === undefined
+        ? { kind: "missing", reason: msg("sf.u07.missing") }
+        : path === "split" && typeof value === "boolean"
+          ? { kind: "boolean", value, trueLabel: msg("sf.u07.splitEnabled"), falseLabel: msg("sf.u07.splitDisabled") }
+          : textual(path === "approvalState" && typeof value === "string" ? approvalLabel(value) : String(value)),
     }))
   const reviewFields = () => {
     const r=state.review

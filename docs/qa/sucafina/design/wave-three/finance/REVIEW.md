@@ -60,3 +60,15 @@ Repository work used GitHub MCP only. No local command, build, test, runtime, se
 Initial inspection verified JSX tag balance, local catalog key completeness, frozen English values and scoped style ownership. This is not a typecheck or visual acceptance. The integration owner will run the maintained Actions gates and the real-installation Playwright journey. Capture-based critique is pending and will be appended here before design acceptance.
 
 CAP17 is read-only; no creation flow is claimed. CAP19 retains the original project/line edit flows; this wave does not invent an unsupported project-creation dispatcher. Error, denied, revoked and outcome-unknown states retain their real controllers and receive scoped styling; they will not be claimed as visually exercised unless the real Actions journey reaches them without mocks.
+
+## Prepared real-browser journey
+
+`packages/app-shell/e2e/sucafina/design-wave-three-finance.spec.ts` now uses the integration owner's `waveThreeTest` fixture without an import alias. The five-area journey exercises real CAP05 month confirmation, CAP14 contract confirmation and CAP19 project confirmation, plus non-dispatched annual/deviation/create/delete/spread reviews, original Planner paste preview, closed-month and element-split reviews. It verifies desktop and320px geometry, the12month grid including keyboard navigation to December, review action visibility and preserved drafts after Revise. A separate pt-BR browser context reuses only the genuine scoped session and sets the locale preference.
+
+The newly added Planner wrapper and the existing contract wrapper explicitly fill their native flex host with `display:flex; flex:1 1 auto; inline-size:100%; min-block-size:0`. The journey also verifies a positive native scroller client height and actual scrolling in the long contract editor and monthly plan; horizontal reflow alone would not detect a clipped flex frame.
+
+Known CAP05 status enums now use explicit local EN/BR presentation keys. Unrecognized source status text remains literal. Planner review field labels map canonical short paths (`desc`, `cur`, `alloc`, `cls`, `el`, `proj`) to their registered existing labels; empty values remain missing and boolean split states receive localized labels without changing payloads.
+
+Official Playwright guides read before authoring: [best practices](https://playwright.dev/docs/best-practices), [auto-waiting](https://playwright.dev/docs/actionability), [assertions](https://playwright.dev/docs/test-assertions), [locators](https://playwright.dev/docs/locators), [network](https://playwright.dev/docs/network) and [test isolation](https://playwright.dev/docs/browser-contexts). Assertions use observable original UI outcomes, not wall-clock sleeps or mocked success.
+
+The prepared journey is not a PASS claim. Integration execution and capture critique remain pending.

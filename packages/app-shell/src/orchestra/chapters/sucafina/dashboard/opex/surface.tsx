@@ -29,7 +29,7 @@ import {
   type BudgetEntry, type BudgetForm, type BudgetOwner, type BudgetPage,
 } from "./model"
 import { SfOpexDetail } from "./opex-detail"
-import { SfCapexDetail } from "../capex/capex-detail"
+import { SfCapexDetail, capexStatusKey } from "../capex/capex-detail"
 import "../../shared/wave-one.css"
 import "./surface.css"
 import "./opex.css"
@@ -748,7 +748,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     { id: "budget", labelKey: key("annualBudget"), align: "end", sortKey: "budget", widthPolicy: { kind: "content", minPx: 140, maxPx: 220 }, render: (owner) => <Show when={props.capability === "CAP04"} fallback={<><span class="sf-opex-cell-label" aria-hidden="true">{t(key("annualBudget"))}</span>{opexAmount(owner.budget)}</>}><span class="sf-opex-cell-label" aria-hidden="true">{t(key("annualBudget"))}</span>{opexAmount(owner.budget)}</Show> },
     ...(props.capability === "CAP05" ? [{
       id: "status", labelKey: key("status"), align: "start" as const, widthPolicy: { kind: "content" as const, minPx: 120, maxPx: 180 },
-      render: (owner: BudgetOwner) => <><span class="sf-opex-cell-label" aria-hidden="true">{t(key("status"))}</span><bdi>{owner.status ?? opexAmount(undefined)}</bdi></>,
+      render: (owner: BudgetOwner) => <><span class="sf-opex-cell-label" aria-hidden="true">{t(key("status"))}</span><bdi><Show when={capexStatusKey(owner.status)} fallback={owner.status ?? opexAmount(undefined)}>{(label) => t(label())}</Show></bdi></>,
     }] : []),
   ]
   const pageAction = (): SfAction | undefined => !allowed("save") ||
