@@ -12,6 +12,7 @@ const topicNotes = "Conferir os registros de origem e registrar a decisão antes
 
 waveTwoTest("installed native second-wave design · topics, budget and OPEX with real source writes", async ({ page, browser, installation, owner }, info) => {
   waveTwoTest.setTimeout(240_000)
+  page.setDefaultTimeout(15_000)
   expect(info.project.metadata.bundle, "use the existing production runner").toBe("production")
   const messages = observePage(page)
   const mutations: string[] = []
@@ -64,6 +65,7 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
       await capture(page, info, screen.id + "-light-desktop-test-data")
       await page.setViewportSize({ width: 320, height: 900 })
       await reflow(page)
+      await expect(page.locator('[data-sf-source-navigation="sf-dashboard"] a[aria-current="page"]')).toBeInViewport({ ratio: 1 })
       await scrollPageTop(page)
       await capture(page, info, screen.id + "-light-320-test-data")
     }
@@ -81,8 +83,15 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
   await expect(accessMenu).toBeHidden()
   await expect(access).toBeFocused()
 
-  await waveTwoTest.step("topic filter, create review, cancellation and one genuine save", async () => {
+  await waveTwoTest.step("topic filter, create and update confirmation, cancellation and fresh edit", async () => {
     const filter = page.getByLabel("Filter by status", { exact: true })
+    await filter.selectOption("done")
+    await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(0)
+    await expect(filter).toBeVisible()
+    await expect(page.locator("[data-sf-topic-list] .sf-topics-empty")).toBeVisible()
+    await expect(page.getByRole("button", { name: "New topic", exact: true })).toBeEnabled()
+    await filter.selectOption("")
+    await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(3)
     await filter.selectOption("blocked")
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(1)
     await expect(page.locator("[data-sf-topic-list]")).toContainText("Dados de teste · Validar plano de continuidade do fornecedor")
@@ -115,9 +124,11 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await capture(page, info, "CAP02-dark-320-review-test-data")
     await page.setViewportSize({ width: 1440, height: 1100 })
     await review.getByRole("button", { name: "Confirm save", exact: true }).click()
-    await expect(editor.locator('[data-topic-feedback="saved"]')).toBeVisible()
+    const saved = page.locator("[data-sf-topic-confirmed]")
+    await expect(saved.locator('[data-topic-feedback="saved"]')).toBeVisible()
+    await expect(editor).toHaveCount(0)
     expect(mutations).toHaveLength(1)
-    await editor.getByRole("button", { name: "Back to topics", exact: true }).click()
+    await saved.getByRole("button", { name: "Back to topics", exact: true }).click()
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(4)
     const created = page.locator("[data-sf-topic-list] [data-sf-topic]").filter({ hasText: newTopic })
     await created.getByRole("button", { name: "View details", exact: true }).click()
@@ -144,6 +155,23 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await existing.getByRole("button", { name: "Discard draft", exact: true }).click()
     await expect(existing.getByLabel("Notes", { exact: true })).toHaveValue(topicNotes)
     expect(mutations).toHaveLength(1)
+    const updatedNotes = topicNotes + " Revisão confirmada na instalação de teste."
+    await existing.getByLabel("Notes", { exact: true }).fill(updatedNotes)
+    await existing.getByRole("button", { name: "Review save", exact: true }).click()
+    await existing.getByRole("button", { name: "Confirm save", exact: true }).click()
+    await expect(saved.locator('[data-topic-feedback="saved"]')).toBeVisible()
+    await expect(existing).toHaveCount(0)
+    expect(mutations).toHaveLength(2)
+    await scrollPageTop(page)
+    await capture(page, info, "CAP02-dark-desktop-saved-test-data")
+    await saved.getByRole("button", { name: "Back to topics", exact: true }).click()
+    await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(4)
+    await page.locator("[data-sf-topic-list] [data-sf-topic]").filter({ hasText: newTopic })
+      .getByRole("button", { name: "View details", exact: true }).click()
+    await expect(detail).toContainText(updatedNotes)
+    await detail.getByRole("button", { name: "Edit topic", exact: true }).click()
+    await expect(existing.getByLabel("Notes", { exact: true })).toHaveValue(updatedNotes)
+    await expect(existing.getByRole("button", { name: "Review save", exact: true })).toBeEnabled()
   })
 
   await waveTwoTest.step("budget source scope and annual editor review preserve the source", async () => {
@@ -197,7 +225,7 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await expect(page.locator('[data-sf-metric="budget"]')).toHaveAttribute("data-sf-value", "number")
     await expect(page.getByLabel("Year", { exact: true })).toHaveValue("")
     await expect(page).toHaveURL((url) => !url.searchParams.has("year") && url.searchParams.get("installation") === owner.installationId)
-    expect(mutations).toHaveLength(1)
+    expect(mutations).toHaveLength(2)
   })
 
   await waveTwoTest.step("OPEX detail, preserved monthly draft and one genuine confirmed write", async () => {
@@ -260,11 +288,11 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await reviewActions(page)
     await capture(page, info, "CAP04-dark-320-review-test-data")
     await page.setViewportSize({ width: 1440, height: 1100 })
-    expect(mutations).toHaveLength(1)
+    expect(mutations).toHaveLength(2)
     await review.getByRole("button", { name: "Save", exact: true }).click()
     await expect(editor).toHaveCount(0)
     await expect(january).toContainText("14,600")
-    expect(mutations).toHaveLength(2)
+    expect(mutations).toHaveLength(3)
   })
 
   const localizedCookies = await page.context().cookies(installation.origin + installation.mount)
@@ -278,6 +306,7 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
   })
   try {
     const localized = await portuguese.newPage()
+    localized.setDefaultTimeout(15_000)
     const localizedMessages = observePage(localized)
     for (const screen of screens) {
       await enter(screen, localized, true, 4)
@@ -331,10 +360,10 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await portuguese.close()
   }
   expect([...sourceOrigins]).toEqual([installation.origin])
-  expect(mutations).toHaveLength(2)
+  expect(mutations).toHaveLength(3)
   expect(messages.pageErrors).toEqual([])
   await info.attach("native-wave-two-evidence", {
-    body: JSON.stringify({ source: "isolated canonical producer data and two real browser-confirmed commands",
+    body: JSON.stringify({ source: "isolated canonical producer data and three real browser-confirmed commands",
       views: ["CAP02", "CAP03", "CAP04"], widths: [1440, 320], heights: [1100, 800, 900],
       schemes: ["dark", "light"], locales: ["en-US", "pt-BR"], actualBrowserZoom: "not measured",
       writes: mutations.length, ...messages }, null, 2),

@@ -12,6 +12,7 @@ The reader now declares its existing result explicitly using the original `SfTea
 
 ## Scoped usability repairs
 
+- CAP02 retains a real confirmed-save notice across the immediate authorized reread. It stores only the owner generation and submitted route scope, not record data. The notice clears on owner/read-authority/route change. A success-only registry cleanup accepts the exact confirmed operation reference and refuses unresolved or active/pending/unknown drafts; reopening the saved topic can acquire a fresh version. Ordinary discard semantics remain unchanged. Six focused registry cases and the real create/update/reopen journey verify this boundary.
 - CAP03 can select the source period again through the existing owner-bound period port, using its already supported empty period. Admission, draft fences and route validation remain in that port.
 - Closing a CAP03 editor disclosure during review restores the two annual readouts. The review and draft remain mounted and resume when reopened. Only the page-scoped visibility selectors changed.
 - CAP02 status/priority selects use explicit existing localized accessible names; the first real journey exposed ambiguous implicit labels containing option text.
@@ -19,3 +20,7 @@ The reader now declares its existing result explicitly using the original `SfTea
 - CAP04 review translates known flag/field display values through the existing catalog. Raw draft and command values are untouched; CAP05 retains its original presentation.
 
 The final validation document will identify the exact verified product commit and the successful gate runs. Initial failures remain diagnostic history, not passing evidence.
+
+## First visual run
+
+Run [44918211856](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44918211856) built the real bundle and captured twelve starting views with zero page errors. It stopped at the exact accessible name of the CAP02 filter. The name was corrected in the product. The next journey bounds individual UI actions at 15 seconds so a missing control cannot consume the full 240-second genuine installation journey budget. No timeout was raised or assertion removed.

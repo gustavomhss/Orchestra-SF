@@ -1,8 +1,10 @@
-import { For, Show, createMemo, createSignal } from "solid-js"
+import { For, Show, createEffect, createMemo, createSignal } from "solid-js"
+import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
 import { useNavigate } from "@solidjs/router"
 import { Icon } from "@orchestra/ui/icon"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
+import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { encodeSfRouteRef } from "../../navigation-state"
@@ -60,12 +62,14 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
   }
   const navigate = useNavigate()
   const source = useHotTopicsSource(props.route)
+  const [completion, setCompletion] = createStore({ generation: -1, route: "" })
   const [deleteRequested, setDeleteRequested] = createSignal(false)
   const [deleteBusy, setDeleteBusy] = createSignal(false)
   const [deleteState, setDeleteState] = createSignal<"none" | "saved" | "unknown" | "rejected">("none")
   const [inlineRef, setInlineRef] = createSignal<string | null>(null)
   let deleteButton: HTMLButtonElement | undefined
   let detailHeading: HTMLHeadingElement | undefined
+  let confirmedMessage: HTMLParagraphElement | undefined
   const cancelDelete = () => {
     setDeleteRequested(false)
     queueMicrotask(() => deleteButton?.focus())
@@ -88,9 +92,31 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
     setInlineRef(topic.id)
     navigate(topicPath(props, mode, topic.id))
   }
-  const back = () => { setInlineRef(null);setDeleteRequested(false);navigate(topicPath(props, "list")) }
+  const back = () => {
+    setCompletion({ generation: -1, route: "" })
+    setInlineRef(null);setDeleteRequested(false);navigate(topicPath(props, "list"))
+  }
   const edit = () => selected() ? open(selected()!, "edit") : undefined
   const current = () => source.owner()
+  const editorScope = () => props.route.kind === "new" ? "new" :
+    props.route.kind === "edit" ? "edit:" + props.route.params.topicRef : ""
+  const confirmationOwner = () => {
+    const ready = current()
+    return ready?.context.destinations.some((item) => item.capabilityId === "CAP02" && item.canRead) ? ready : undefined
+  }
+  const confirmed = () => completion.route !== "" && completion.route === editorScope() &&
+    completion.generation === source.context.generation() && !!confirmationOwner()
+  createEffect(() => {
+    if (completion.route && (!confirmationOwner() || completion.generation !== source.context.generation() ||
+        completion.route !== editorScope())) setCompletion({ generation: -1, route: "" })
+  })
+  // Only the transport that sent the successful command may publish this notice.
+  // No record values survive the source refresh, owner change or route change.
+  const onSaved = (transport: SfTransport, sentScope: string) => {
+    if (!sentScope || sentScope !== editorScope() || confirmationOwner()?.transport !== transport) return
+    setCompletion({ generation: source.context.generation(), route: sentScope })
+    queueMicrotask(() => confirmedMessage?.focus())
+  }
 
   async function remove() {
     const record = selected(), originalVersion = version()
@@ -127,6 +153,14 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
       density="comfortable" layout="work" onLayoutMode={() => {}}
       primaryAction={props.route.kind === "entry" ? primaryAction() : undefined}>
     <div class="sf-u38-page sf-topics" data-sf-surface="CAP02" data-sf-wave="two" data-sf-view={props.route.kind}>
+      <Show when={confirmed()}>
+        <section class="sf-topics-editor sf-topics-confirmed" data-sf-topic-confirmed aria-labelledby="sf-topic-saved">
+          <p ref={confirmedMessage} tabindex="-1" id="sf-topic-saved" role="status" data-topic-feedback="saved">
+            {t(key("sf.u38.savedRefetch"))}
+          </p>
+          <button type="button" class="mx-btn primary" onClick={back}>{t(key("sf.u38.back"))}</button>
+        </section>
+      </Show>
       <SfStatePanel state={state()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[state()])}
         onRetryRead={source.refresh} onBack={back}>
         <Show when={props.route.kind === "entry"}>
@@ -142,7 +176,7 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
               <div class="sf-topics-tools">
                 <label class="sf-topics-filter">
                   <span class="sf-topics-sr-only">{t(key("sf.u38.filter"))}</span>
-                  <select value={source.filter()} onChange={(event) => source.setFilter(event.currentTarget.value as TopicStatus)}>
+                  <select aria-label={t(key("sf.u38.filter"))} value={source.filter()} onChange={(event) => source.setFilter(event.currentTarget.value as TopicStatus)}>
                     <For each={statuses}>{(option) =>
                       <option value={option}>{option ? t(key(labelForStatus(option)!)) : t(key("sf.u38.all"))}</option>
                     }</For>
@@ -199,11 +233,11 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
             </Show>
           </section>
         </Show>
-        <Show when={props.route.kind === "new" ? current() : undefined}>
+        <Show when={!confirmed() && props.route.kind === "new" ? current() : undefined}>
           {(ready) => <SfHotTopicEditor transport={ready().transport} drafts={ready().drafts}
             readInput={{ topicStatus: source.filter(), ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
               ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }) }}
-            canSave={source.allowed("save")} scope="new" version={0} onBack={back} onRefetch={source.refresh} />}
+            canSave={source.allowed("save")} scope="new" version={0} onBack={back} onRefetch={source.refresh} onSaved={onSaved} />}
         </Show>
         <Show when={props.route.kind === "edit" || props.route.kind === "detail" ? selected() : undefined}>
           {(topic) => <>
@@ -287,12 +321,12 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
                 </p></Show>
               </section>
             </Show>
-            <Show when={props.route.kind === "edit" ? current() : undefined}>
+            <Show when={!confirmed() && props.route.kind === "edit" ? current() : undefined}>
               {(ready) => <SfHotTopicEditor record={topic()} version={version()} transport={ready().transport}
                 readInput={{ topicStatus: source.filter(), ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
                   ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }) }}
                 drafts={ready().drafts} canSave={source.allowed("save")}
-                scope={topic().id} onBack={back} onRefetch={source.refresh} />}
+                scope={topic().id} onBack={back} onRefetch={source.refresh} onSaved={onSaved} />}
             </Show>
           </>}
         </Show>

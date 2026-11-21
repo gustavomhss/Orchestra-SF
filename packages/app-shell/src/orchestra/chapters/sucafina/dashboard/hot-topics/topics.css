@@ -603,3 +603,23 @@
   .sf-topics .sf-s03-actions > .primary { margin-inline-start: 0; }
   .sf-topics .sf-topics-meta { gap: var(--sf-topics-lg); }
 }
+
+/* A confirmed command is a stable result while the authorized read refreshes. */
+.sf-topics .sf-topics-confirmed {
+  display: grid;
+  justify-items: start;
+  gap: var(--sf-topics-lg);
+}
+.sf-topics .sf-topics-confirmed [data-topic-feedback="saved"] {
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: var(--mx-strong);
+  font-size: var(--orchestra-font-size-lg);
+  line-height: 1.6;
+}
+@media (max-width: 479px) {
+  .sf-topics .sf-topics-confirmed > .mx-btn {
+    inline-size: 100%;
+  }
+}

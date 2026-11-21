@@ -49,6 +49,7 @@ export type HotTopicEditProps = Readonly<{
   drafts: SfDraftRegistry
   canSave: boolean
   onRefetch: () => void
+  onSaved?: (transport: SfTransport, scope: string) => void
   scope: string
   readInput: SfJson
   onBack: () => void
@@ -116,6 +117,13 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
     if (!admitted() || !current || current.baseVersion !== (props.record ? props.version ?? 0 : null)) {
       setFeedback("conflict");setStage("edit");return
     }
+    const sentScope = props.record ? "edit:" + props.record.id : "new"
+    const submittedDraft = {
+      surfaceId: "CAP02" as const,
+      identity: props.record ? { kind: "record" as const, recordRef: props.record.id as SfRef } :
+        { kind: "new" as const, newIntentRef: newIntent },
+      editScopeKey: scope,
+    }
     setBusy(true);setStage("edit")
     const operationRef = ("domain.command.CAP02.save:" + crypto.randomUUID()) as SfOperationRef
     const idempotencyKey = crypto.randomUUID()
@@ -128,7 +136,8 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
       draft().setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: props.record ? props.version ?? 0 : null })
       if (!active()?.pendingOperation) {setFeedback("conflict");return}
       draft().setPhase("submitting")
-      const result = await createSfPeopleClient(props.transport)["domain.command.CAP02.save"]({
+      const transport = props.transport
+      const result = await createSfPeopleClient(transport)["domain.command.CAP02.save"]({
         ...(props.record ? { id: props.record.id } : {}), version: props.version ?? 0,
         values: { action: proposed.action, owner: proposed.owner, due: proposed.due,
           status: proposed.status, priority: proposed.priority, notes: proposed.notes },
@@ -143,7 +152,9 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
         return
       }
       draft().confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
+      props.drafts.discard(submittedDraft, operationRef)
       setFeedback("saved")
+      props.onSaved?.(transport, sentScope)
       props.onRefetch()
     } catch {
       draft().setPhase("outcome-unknown");setFeedback("unknown")
@@ -176,13 +187,13 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
               <input value={value().due} disabled={busy() || !!active()?.pendingOperation}
                 onInput={(event) => edit("due", event.currentTarget.value)} /></label>
             <label>{t(key("sf.u38.status"))}
-              <select value={value().status} disabled={busy() || !!active()?.pendingOperation}
+              <select aria-label={t(key("sf.u38.status"))} value={value().status} disabled={busy() || !!active()?.pendingOperation}
                 onChange={(event) => edit("status", event.currentTarget.value as TopicFields["status"])}>
                 <For each={statusOptions}>{(status) =>
                   <option value={status}>{t(key(("sf.u38." + status) as Key))}</option>}</For>
               </select></label>
             <label>{t(key("sf.u38.priority"))}
-              <select value={value().priority} disabled={busy() || !!active()?.pendingOperation}
+              <select aria-label={t(key("sf.u38.priority"))} value={value().priority} disabled={busy() || !!active()?.pendingOperation}
                 onChange={(event) => edit("priority", event.currentTarget.value as TopicFields["priority"])}>
                 <For each={priorityOptions}>{(priority) =>
                   <option value={priority}>{t(key(("sf.u38." + priority) as Key))}</option>}</For>

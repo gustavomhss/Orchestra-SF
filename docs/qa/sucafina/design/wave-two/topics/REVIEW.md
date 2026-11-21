@@ -22,7 +22,7 @@ The header primary action is shown only on the entry route, so editors and delet
 
 ## Preserved behavior
 
-The original `remove()` and `save()` function bodies are byte-identical. Reader, route codec, owner selection, admission, draft acquire identity, CAS expected version, payload digest, idempotency and unknown-outcome fences remain. Commands still require the existing explicit confirmation. The current source is never replaced by a synthetic result.
+The original `remove()` body is byte-identical. The save command, payload, digest, CAS, idempotency and unknown-outcome branches remain; the post-confirmation lifecycle repair below adds a presentation notification. Reader, route codec, owner selection, admission and draft acquire identity are unchanged. Commands still require the existing explicit confirmation. The current source is never replaced by a synthetic result.
 
 Presentation changes include focused return from review, 44px targets, secondary metadata disclosure, translated status/priority values in review, and explicit Not specified presentation for empty review fields. No amount, total, priority, history or receipt is invented. Back/discard are disabled while actively saving; pending operations keep the original discard fence and Back retains the existing reconciliation navigation.
 
@@ -50,4 +50,36 @@ Primary localization reference inspected: Mozilla Firefox's maintained pt-BR glo
 
 ## Validation and limits
 
-No local build, test, app execution or owner-app restart. Root owns the consolidated Actions run and actual dark/light, Portuguese and narrow captures. Static source comparison confirmed unchanged save/remove bodies and preservation of all existing catalog pairs. The new source has not yet been runtime validated, visually accepted or assigned a golden baseline. Narrow CSS is not evidence of browser zoom. Post-save source refresh and owner draft lifecycle retain the original implementation and must be exercised through the real installation.
+No local build, test, app execution or owner-app restart. Root owns the consolidated Actions run and actual dark/light, Portuguese and narrow captures. Static source comparison confirmed unchanged remove logic, preserved save dispatch/admission semantics and preservation of all existing catalog pairs. The new source has not yet been runtime validated, visually accepted or assigned a golden baseline. Narrow CSS is not evidence of browser zoom. Post-save source refresh and owner draft lifecycle retain the original implementation and must be exercised through the real installation.
+
+## Inherited confirmation lifecycle repair
+
+Source inspection during the first consolidated Actions run identified a concrete lifetime bug: the editor set its saved feedback, then immediately refreshed CAP02. The reader publishes loading and clears records; SfStatePanel removes children during loading. This destroyed the confirmed editor/notice and, on the new route, could create another blank draft immediately after the successful command.
+
+The page now retains only a confirmation marker consisting of the owner generation and editor route scope. The notification is accepted only from the exact transport that sent the successful command and only while the current owner still admits CAP02 read access. The marker clears on owner generation, read authority or editor route change; no field values, producer projection, receipt or permission are cached.
+
+The actual source refresh still runs immediately after the confirmed command. The stable success panel remains outside the read-loading boundary, so read failure can be shown separately without pretending that the command failed. The normal new/edit component cannot remount while confirmation is visible, preventing a replacement draft and accidental repeat. Back returns to the authorized list that is being reread. Clicking New topic from the list begins a new editor instance.
+
+The final action remains **Back to topics / Voltar aos tópicos**. Success is now `[data-sf-topic-confirmed] [data-topic-feedback="saved"]`, outside `[data-sf-topic-editor]`. The success panel contains no form, review button or send action. Transport capture occurs immediately before the existing client call; it changes no request parameters and lets a late response from an old owner be rejected by the presentation callback.
+
+Inspection of the owner registry showed Map-backed acquire and a draft constructor that does not read its snapshot. No reactive self-subscription was observed there, so no speculative untrack was added. Runtime proof of the repair remains the responsibility of the consolidated real-installation journey.
+
+### First Actions result and marker hardening
+
+Run `44918211856`, job `136888297405`, captured the initial twelve desktop/light/narrow views with no reported page errors, then stopped at the exact accessible-name lookup for the CAP02 status filter. The implicit label included option text, so the intended control name was not exact. The filter and editor Status/Priority selects now have explicit localized aria-label values matching their existing labels. The test locator and timeout are unchanged.
+
+The completion callback also receives the editor scope captured before the first await and checks it against the current route, in addition to checking the sending transport and owner generation. A late response from another editor route on the same transport cannot mark the current editor complete.
+
+Actual initial CAP02 captures inspected: dark desktop, dark 1440×800, light desktop and light 320px. The list alignment and record reflow are intact. The inherited source navigation's oversized outlined buttons were the main visual inconsistency; root is applying the approved compact navigation to the three wave-two surfaces. Editor/review captures remain pending because this run stopped before creation.
+
+## Reopening a confirmed existing topic
+
+The owner registry retained the confirmed controller under the same record identity. A later acquire returned that completed controller, while receiveRemote, discard and confirmSave on the controller only operate on active snapshots. The approved Cases flow uses its own local creation state, so its completed-instance cleanup could not be copied to this registry.
+
+With root's explicit shared-file assignment, registry.discard now accepts an optional confirmedOperationRef. This mode only deletes an entry whose availability is confirmed-without-projection, whose stored operation reference exactly matches, and which has no unresolved marker. It returns without touching any other snapshot. Without the optional argument, the original discard path is unchanged; discardAll, quarantine, revalidation and revocation are unchanged.
+
+CAP02 captures the submitted draft identity before awaiting, confirms the actual successful producer result, then releases precisely that confirmed registry entry with the same operationRef. The stable page confirmation still prevents an immediate new editor. The source reread remains immediate, and reentering the record creates an active editor from its fresh projection/version. No pending, unknown, conflict or unsent edit is released by the confirmation option.
+
+A focused regression file was added to the existing Bun browser test suite:
+`packages/app-shell/test-browser/sucafina-draft-confirmation.test.ts`.
+It uses the real owner registry and draft controller; unrelated external dependencies throw if called. Cases cover omitted/wrong confirmation references, unresolved-marker protection, exact confirmed release, acquisition of a fresh version/value, pending/submitting/outcome-unknown protection, and unchanged ordinary discard behavior for clean/dirty/conflict drafts. Run through the existing Actions app test runner with browser conditions. No local test or additional CI was launched by this worker.
