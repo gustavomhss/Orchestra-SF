@@ -349,6 +349,12 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     await source.getByRole("button", { name: "copy", exact: true }).click()
     await confirm(page, installation, "Versions", "copy", "Confirm")
     await ready(page, "Versions")
+    // The mounted producer confirms the command without returning a record ID.
+    // Open the copy from the newly authorized list, as the native page requires.
+    const copied = list.locator("tr[data-sf-row]").filter({ has: page.getByText(copyName, { exact: true }) })
+    await expect(copied).toHaveCount(1)
+    await copied.getByRole("button", { name: "Open record", exact: true }).click()
+    await ready(page, "Versions")
     await expect(detail.getByRole("heading", { name: copyName, exact: true })).toBeVisible()
     await detail.getByRole("button", { name: "Back", exact: true }).click()
     await expect(list).toContainText(copyName)

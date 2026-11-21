@@ -118,6 +118,16 @@ function cas(view: View, cap: Cap, current: Record<string, unknown> | undefined,
   }
   return Object.fromEntries([...keys].map((key) => [key, { version: view.versions[key]!.version }]))
 }
+function allocationSplits(value: unknown): readonly { entityRef: string; percent: number }[] {
+  if (!Array.isArray(value)) throw new Error("SF_PLANNER_ALLOCATION_SPLITS_INVALID")
+  return value.map((candidate) => {
+    const split = object(candidate)
+    if (typeof split.entityRef !== "string" || !split.entityRef ||
+        typeof split.percent !== "number" || !Number.isFinite(split.percent))
+      throw new Error("SF_PLANNER_ALLOCATION_SPLITS_INVALID")
+    return { entityRef: split.entityRef, percent: split.percent }
+  })
+}
 function project(view: View, actor: Actor, cap: Cap, selection: Selection, current: Record<string, unknown> | undefined): object {
   const versions = planVersions(view)
   const selectedVersion = current ? versions.find((v) => v.id === id(current.id)) : undefined
@@ -127,6 +137,8 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
       id: id(v.id), name: text(v.name), revision: revision(view, key + ":" + id(v.id)),
       ...(string(v.code) !== undefined ? { code: v.code } : {}),
       ...(string(v.desc) !== undefined ? { desc: v.desc } : {}),
+      ...(key === "allocations" && v.contractRef !== undefined ? { contractRef: v.contractRef } : {}),
+      ...(key === "allocations" && v.splits !== undefined ? { splits: allocationSplits(v.splits) } : {}),
     })).filter((v) => v.id !== "")
     return { entities: list("entities"), allocations: list("allocations") }
   }
