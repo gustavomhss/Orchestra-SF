@@ -133,7 +133,7 @@ test("an installed loopback operator requires valid host credentials for technic
   const f = fixture(local)
   const location = "/api/sucafina/installations?select=location&location[directory]=%2Fwork"
   for (const authorization of [undefined, "Basic " + btoa("orchestra:wrong")]) {
-    const headers = authorization ? { authorization } : {}
+    const headers = authorization ? { authorization } : undefined
     expect((await f.handler(webRequest(location, { headers }, local.publicOrigin))).status).toBe(401)
   }
   expect(f.observations.current).toBe(0)
