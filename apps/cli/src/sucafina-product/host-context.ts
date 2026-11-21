@@ -108,6 +108,7 @@ import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
 import { observeSfPersonalViewsHealth } from "./native-ui/personal-views-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
 import { observeSfDecisionReadingHealth } from "./native-ui/decision-reading-health.ts"
+import { observeSfAnalysisReadingHealth } from "./native-ui/analysis-reading-health.ts"
 import { observeSfDecisionApplicationHealth } from "./native-ui/decision-application-health.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
@@ -1093,6 +1094,23 @@ export const createSfHostRuntimeWithRoutineNative = async (
               dependencies: [services.dispatch, business.collaboration, business.collaboration.authority,
                 business.collaboration.authority.sources, business.cases, business.cases.read, input.persistence],
               question: { catalog: descriptors, capabilities: business.collaboration.capabilities, dispatch: nativeSearchDispatch } }
+          },
+        }, request, stamp),
+        observeSfAnalysisReadingHealth({
+          ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+          binding: input.nativeReadBinding,
+          source: (operationId) => {
+            if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch ||
+              services.analyses !== analyses || services.selected !== selected) return undefined
+            if (operationId === "intelligence.analysis.choices") return {
+              producer: productHttp,
+              dependencies: [analysisHttp, readSfImportAnalysisChoices, services.models,
+                ...(state.models ? [state.models] : []), selected, nativeSearchDispatch, business.cases, business.cases.read,
+                authority.human, authority.human.admit, input.persistence],
+            }
+            return { producer: productHttp,
+              dependencies: [analyses, analyses.list, business.cases, business.cases.read,
+                authority.human, authority.human.admit, authority.human.authorize, input.persistence] }
           },
         }, request, stamp),
         observeSfDecisionApplicationHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
