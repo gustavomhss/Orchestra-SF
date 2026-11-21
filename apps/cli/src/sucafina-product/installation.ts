@@ -4,6 +4,7 @@ import { isIP } from "node:net"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { NodeHttpServerRequest, NodeStream } from "@effect/platform-node"
+import { SfReviewRoutes } from "@orchestra/schema/sucafina/reviews/routes"
 import { Effect, Option, Stream } from "effect"
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 
@@ -49,13 +50,14 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     await installation.dispose()
     throw new Error("Trusted installation ingress requires a loopback listener, canonical HTTP origin and authorizer")
   }
+  const report = SfReviewRoutes["reviews.report.prepare"]
+  const dashboard = report.pathTemplate.replace("{mount}", installation.mount)
+  const isDashboard = (pathname: string) => pathname === dashboard ||
+    (!!ingress && /^\/teams\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/dashboard$/.test(pathname.slice(installation.mount.length)) &&
+      pathname.startsWith(installation.mount + "/"))
   const contractLimit = (method: string, url: URL) => {
-    if (method !== "POST" || url.searchParams.getAll("upload").length !== 1 || url.searchParams.get("upload") !== "contract") return undefined
-    if (url.pathname === `${installation.mount}/dashboard`) return 25 * 1024 * 1024
-    if (ingress && url.pathname.startsWith(`${installation.mount}/`)) {
-      const relative = url.pathname.slice(installation.mount.length)
-      if (/^\/teams\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/dashboard$/.test(relative)) return 25 * 1024 * 1024
-    }
+    if (method === "POST" && isDashboard(url.pathname) &&
+      url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract") return 25 * 1024 * 1024
   }
   const bodyLimit = (incoming: HttpServerRequest.HttpServerRequest) => {
     if (ingress || incoming.method !== "POST") return undefined
@@ -82,12 +84,40 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     }
     const configured = yield* HttpServerRequest.MaxBodySize
     const max = Number(configured ?? (ingress ? contractLimit(incoming.method, url) : undefined) ?? 16 * 1024 * 1024)
-    if (ingress && Number(incoming.headers["content-length"]) > max) {
-      return HttpServerResponse.empty({ status: 413, headers: { connection: "close" } })
-    }
+    const reportLimit = incoming.method === report.method && isDashboard(url.pathname) &&
+      url.searchParams.size === 1 && url.searchParams.get("sf") === report.fixedQuery.sf ? Math.min(max, report.maxRequestBytes) : undefined
+    const oversized = () => reportLimit === undefined
+      ? HttpServerResponse.empty({ status: 413, headers: { connection: "close" } })
+      : HttpServerResponse.jsonUnsafe({ status: "needs-input", reason: "request-too-large" }, {
+        status: 413, headers: { connection: "close", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
+      })
+    if ((ingress || reportLimit !== undefined) && Number(incoming.headers["content-length"]) > (reportLimit ?? max))
+      return oversized()
     return yield* Effect.tryPromise(async (signal) => {
+      let bytes = 0
+      let exceeded = false
+      const withinLimit = (chunk: Uint8Array) => {
+        bytes += chunk.byteLength
+        if (bytes <= (reportLimit ?? max)) return true
+        exceeded = true
+        return false
+      }
       if (source) {
-        const response = await installation.handler(new Request(source, { signal: AbortSignal.any([source.signal, signal]) }))
+        const requestSignal = AbortSignal.any([source.signal, signal])
+        if (!source.body || reportLimit === undefined) {
+          const response = await installation.handler(new Request(source, { signal: requestSignal }))
+          return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
+        }
+        const body = source.body.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({
+          transform(chunk, controller) {
+            if (withinLimit(chunk)) controller.enqueue(chunk)
+            else controller.error(new Error("Installation request body exceeds the limit"))
+          },
+        }))
+        const init = { body, signal: requestSignal, duplex: "half" as const }
+        const response = await installation.handler(new Request(source, init)).catch(() => new Response(null, { status: 503 }))
+        if (!body.locked) void body.cancel().catch(() => undefined)
+        if (exceeded) return oversized()
         return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
       }
       const node = NodeHttpServerRequest.toIncomingMessage(incoming)
@@ -95,15 +125,11 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
       if (carriesBody && (incoming.method === "GET" || incoming.method === "HEAD")) {
         return HttpServerResponse.empty({ status: 400, headers: { connection: "close" } })
       }
-      let bytes = 0
-      let exceeded = false
       // Cancellation after an early rejection must leave the socket open long enough to write the response.
       const body = carriesBody ? Stream.toReadableStream(
         NodeStream.fromReadable<Uint8Array>({ evaluate: () => node, closeOnDone: false }).pipe(
           Stream.mapEffect((chunk) => {
-            bytes += chunk.byteLength
-            if (bytes <= max) return Effect.succeed(chunk)
-            exceeded = true
+            if (withinLimit(chunk)) return Effect.succeed(chunk)
             return Effect.fail(new Error("Installation request body exceeds the limit"))
           }),
         ),
@@ -120,7 +146,7 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
         method: incoming.method, headers, signal, ...(body ? { body, duplex: "half" } : {}),
       })).catch(() => new Response(null, { status: 503 }))
       if (body && !body.locked) void body.cancel().catch(() => undefined)
-      if (exceeded) return HttpServerResponse.empty({ status: 413, headers: { connection: "close" } })
+      if (exceeded) return oversized()
       const result = response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
       return body && !node.readableEnded ? HttpServerResponse.setHeader(result, "connection", "close") : result
     })
