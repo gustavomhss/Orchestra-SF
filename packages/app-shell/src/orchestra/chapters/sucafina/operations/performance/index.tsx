@@ -179,8 +179,10 @@ const finiteEdit = (v: FormData): boolean => {
       Number.isFinite(Number(raw)) && (key !== "year" || Number.isInteger(Number(raw)))
   })
 }
+const groupFields = (kind: EditKind, names: readonly FieldName[]): readonly Field[] =>
+  names.flatMap((name) => EDIT_FIELDS[kind].filter((field) => field.name === name))
 function fields(value: FormData): readonly SfReviewField[] {
-  return EDIT_FIELDS[value.kind].map((field) => ({
+  return EDIT_GROUPS[value.kind].flatMap((group) => groupFields(value.kind, group.fields)).map((field) => ({
     path: field.name, label: labelMessage(field.label),
     value: value[field.name] === undefined
       ? { kind: "missing", reason: labelMessage("sf.common.unknown") }
@@ -736,7 +738,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                     <fieldset class="sf-u31-field-group">
                       <legend>{t(group.label)}</legend>
                       <div class="sf-u31-fieldset">
-                    <For each={EDIT_FIELDS[draft()?.kind || "item"].filter((field) => group.fields.includes(field.name))}>
+                    <For each={groupFields(draft()?.kind || "item", group.fields)}>
                       {(field) => <label data-field-kind={field.kind} data-field-name={field.name}>{t(field.label)}
                         <Show when={field.kind === "textarea"} fallback={
                           <Show when={field.kind === "select"} fallback={

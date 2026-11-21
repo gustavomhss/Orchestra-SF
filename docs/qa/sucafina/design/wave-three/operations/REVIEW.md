@@ -59,7 +59,7 @@ The second reuses the genuine scoped operator cookie in a BR context, captures a
 - Desktop dark/light overview and active editor/review for all five areas.
 - BR localization and 390 px reflow, including visible review actions.
 - CAP11 settings/import and heatmap editor; CAP12 campaign departments and explicitly unscoped actions.
-- CAP13/CAP15 detail, edit and delete review cancellation.
+- CAP13/CAP15 detail, edit and save review cancellation; CAP13 delete review cancellation.
 - CAP16 item, sub-item detail, editor and review; preserved draft after review cancellation.
 - Real writes, readback, browser errors and the unchanged producer command families.
 
@@ -76,6 +76,23 @@ The integration run [44938732155](https://github.com/gustavomhss/Orchestra-SF/ac
 - The inspected 390 px CAP11 editor and CAP13/CAP15 registers retained readable labels, 44 px controls and contained horizontal geometry.
 
 The corrected state is not yet a final visual PASS. Remaining evidence is the rerun, CAP15/CAP16 English write/readback and final captures of the corrected layouts.
+
+## Second real browser evidence and final corrections
+
+Integration run [44940193534](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44940193534), browser job 136955482163, emitted 41 complete previews. The BR journey passed again with empty console and page-error arrays.
+
+Direct image review confirms the four-by-two security KPI band, the rounded 4.17% campaign display, unbroken Probability/Perception headings and source dates/statuses, and restored bounded frame geometry for the long CAP13/CAP15/CAP16 editors. Their top captures now include the native context, tabs and chapter heading.
+
+The stronger English post-save wait exposed a real CAP11 reconciliation presentation failure: a successful source write was followed by a TypeError during same-view refetch. CAP11/CAP12 previously published page/ready before confirming and releasing the completed draft, briefly remounting review props that read that controller. The corrective source change performs the existing receipt reconciliation while the view is still loading, then publishes the ready page. It does not change the request, owner/per-period fence, confirmation rules or stored values. Both journeys now require empty console-error arrays.
+
+Additional scoped corrections from the real BR captures:
+
+- CAP13/CAP15 review fields use the same known option labels as list/detail/editor; unrecognized text remains raw. Risk status is a closed command enum; stakeholder priority is source text with an existing native option map. No submitted value is localized.
+- CAP16 form and review respect the declared quarterly order: value, then status for each quarter. The status strings remain source text. A BR capture targets the quarterly form group.
+- The CAP16 English save locator now matches the actual existing review button label, Save.
+- All three long BR wrapped editors explicitly assert nonzero bounded client height, content overflow and actual movement inside the native page scroller.
+
+This commit awaits the next integration execution. No additional successful English write or final visual approval is claimed yet.
 
 ## User guide notes for integration
 

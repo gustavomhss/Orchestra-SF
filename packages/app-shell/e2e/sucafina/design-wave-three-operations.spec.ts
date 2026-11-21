@@ -275,7 +275,7 @@ waveThreeTest("installed native operations · five areas, source values and real
     await expect(editor.getByLabel("Score", { exact: true })).toHaveValue("3")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     expect(mutations).toHaveLength(4)
-    await review.getByRole("button", { name: "Save sub-item", exact: true }).click()
+    await review.getByRole("button", { name: "Save", exact: true }).click()
     await expect(review).toHaveCount(0)
     await expect(surface.locator("[data-sf-performance-detail]")).toContainText(performanceNotes)
     await visit(screens[4])
@@ -286,6 +286,7 @@ waveThreeTest("installed native operations · five areas, source values and real
 
   expect([...sourceOrigins]).toEqual([installation.origin])
   expect(messages.pageErrors).toEqual([])
+  expect(messages.consoleErrors).toEqual([])
   await info.attach("native-operations-source-evidence", {
     body: JSON.stringify({ areas: screens.map((screen) => screen.id), data: "isolated canonical source producers",
       writes: mutations.length, mutationPaths: mutations, widths: [1440], themes: ["dark", "light"],
@@ -349,6 +350,7 @@ waveThreeTest("installed native operations · Portuguese desktop and 390px edito
         await surface.getByLabel("Observações", { exact: true }).fill("Dados de teste · Evidência trimestral.")
       }
       const editor = surface.locator("[data-sf-editor]")
+      if (screen.id === "CAP13" || screen.id === "CAP15" || screen.id === "CAP16") await scrollableEditor(page)
       await editorGeometry(editor)
       await reflow(page)
       await scrollPageTop(page)
@@ -357,11 +359,19 @@ waveThreeTest("installed native operations · Portuguese desktop and 390px edito
         await panelCapture(page, info, "CAP12-departments-pt-BR-dark-390-test-data", editor.locator(".sf-security-departments"))
         await expect(editor.locator('input[name="department.0.users"]')).toHaveValue("70")
       }
+      if (screen.id === "CAP16") {
+        const quarters = editor.getByRole("group", { name: "Progresso por trimestre", exact: true })
+        await expect(quarters.getByLabel("Q1", { exact: true })).toHaveValue("3")
+        await expect(quarters.getByLabel("Status do 1º trimestre", { exact: true })).toHaveValue("on")
+        await panelCapture(page, info, "CAP16-quarter-editor-pt-BR-dark-390-test-data", quarters)
+      }
       await editor.getByRole("button", { name: "Revisar alterações", exact: true }).click()
       await reflow(page)
       await reviewActions(page)
       await capture(page, info, screen.id + "-review-pt-BR-dark-390-test-data")
       const review = surface.locator('[data-component="sf-change-review"]')
+      if (screen.id === "CAP13") await expect(review).toContainText("Em acompanhamento")
+      if (screen.id === "CAP15") await expect(review).toContainText("Requer plano de ação")
       await review.getByRole("button", { name: "Revisar", exact: true }).click()
       await expect(editor).toBeVisible()
       if (screen.id === "CAP11")
@@ -405,7 +415,7 @@ async function scrollableEditor(page: Page) {
   const scroller = page.locator('[data-sf-frame="page"] .mx-page')
   const sizes = await scroller.evaluate((element) => ({ client: element.clientHeight, content: element.scrollHeight }))
   expect(sizes.client, "the frame receives bounded height through the native view wrapper").toBeGreaterThan(0)
-  expect(sizes.content, "the long sub-item editor stays inside the native scroll region").toBeGreaterThan(sizes.client)
+  expect(sizes.content, "the long editor stays inside the native scroll region").toBeGreaterThan(sizes.client)
   await scroller.evaluate((element) => element.scrollTo({ top: element.scrollHeight, behavior: "instant" }))
   await expect.poll(() => scroller.evaluate((element) => element.scrollTop)).toBeGreaterThan(0)
   await scrollPageTop(page)

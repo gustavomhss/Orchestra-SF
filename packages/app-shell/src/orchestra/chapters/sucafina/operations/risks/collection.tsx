@@ -74,11 +74,17 @@ const idOf = (value: string | number) => String(value) as SfRef
 const scalar = (value: unknown) => value === undefined || value === null ? "" :
   typeof value === "string" || typeof value === "number" || typeof value === "boolean" ? String(value) : ""
 const message = (label: string) => ({ key: k(label) })
-const reviewField = (path: string, label: string, value: unknown): SfReviewField => ({
-  path, label: message(label), value: value === undefined || value === null
-    ? { kind: "missing", reason: message("sf.common.unknown") }
-    : { kind: "text", text: { kind: "data", text: scalar(value) } },
-})
+const reviewField = (path: string, label: string, value: unknown,
+  options?: readonly Readonly<{ value: string; label: string }>[]): SfReviewField => {
+  const option = scalar(value) ? options?.find((choice) => choice.value === scalar(value)) : undefined
+  return {
+    path, label: message(label), value: value === undefined || value === null
+      ? { kind: "missing", reason: message("sf.common.unknown") }
+      : { kind: "text", text: option
+        ? { kind: "message", message: message(option.label) }
+        : { kind: "data", text: scalar(value) } },
+  }
+}
 const initialError = (status: string): SfUiState =>
   status === "denied" ? "denied" : status === "unauthenticated" ? "session-expired" :
   status === "stale" ? "stale" : status === "needs-input" ? "invalid" : "unavailable"
@@ -277,7 +283,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
     spec.fields.filter((field) => !entity || Object.hasOwn(entity, field.name))
   const reviewFields = (entity: Row | undefined, value: Values | Row | undefined): SfReviewField[] =>
     value ? fieldList(entity).map((field) =>
-      reviewField(field.name, field.label, value[field.name as keyof typeof value])) : []
+      reviewField(field.name, field.label, value[field.name as keyof typeof value], field.options)) : []
   const originalSnapshot = (row: Row | undefined): SfReviewSnapshot | null =>
     row && version(row) !== undefined ? { kind: "persisted", ref: idOf(row.id),
       version: version(row)!, fields: reviewFields(row, row) } : null
