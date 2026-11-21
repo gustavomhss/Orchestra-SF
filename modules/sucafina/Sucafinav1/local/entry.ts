@@ -29,6 +29,7 @@ import { createSfSourcePersistence } from "../product/integration/source-lifecyc
 import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { initializeAbsentSfProductState } from "../product/host-binding/state-provider.ts"
 import { sfHumanActions } from "../product/integration/human-authority.ts"
+import { createSfWorkbenchHttp } from "../product/interface/http.ts"
 import freeze from "../product/contracts/freeze-v1.json" with { type: "json" }
 
 export const nativeSfLocalInstallation = true
@@ -159,8 +160,13 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
       })
     }
     const report = SfReviewRoutes["reviews.report.prepare"]
+    const workbench = createSfWorkbenchHttp({
+      origin: config.origin,
+      mount: config.mount,
+      runtime: () => runtime?.services?.(),
+    })
     const product = async (request: Request, surface: Surface) => {
-      const response = await runtime?.services?.()?.productHttp?.(request, surface)
+      const response = await runtime?.services?.()?.productHttp?.(request, surface) ?? await workbench(request, surface)
       if (response) return response
       const query = new URL(request.url).searchParams
       if (surface === "dashboard" && request.method === report.method &&
