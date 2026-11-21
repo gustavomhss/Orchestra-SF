@@ -540,40 +540,40 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                   </button>
                 </div>
               </Show>
-              <Show when={visibleReview() && screen.review}>
+              <Show when={visibleReview() && screen.review} keyed>
                 {(request) => (
                   <SfChangeReview
-                    operation={{ ref: request().ref, label: msg("sf.u46.reviewScope"), scope: data(request().versionId || copy.t(key("sf.u46.createFirst"))) }}
-                    base={reviewBase(request())}
-                    current={reviewBase(request())}
-                    proposed={reviewProposed(request())}
+                    operation={{ ref: request.ref, label: msg("sf.u46.reviewScope"), scope: data(request.versionId || copy.t(key("sf.u46.createFirst"))) }}
+                    base={reviewBase(request)}
+                    current={reviewBase(request)}
+                    proposed={reviewProposed(request)}
                     effects={[{
-                      id: request().ref, domain: "planner", title: data(copy.t(key("sf.u46." + request().action as keyof typeof SF_U46_COPY))),
+                      id: request.ref, domain: "planner", title: data(copy.t(key("sf.u46." + request.action as keyof typeof SF_U46_COPY))),
                       state: "proposed", details: [{
                         path: "action", label: msg("sf.u46.actions"),
-                        value: textValue(copy.t(key(("sf.u46." + request().action) as keyof typeof SF_U46_COPY))),
+                        value: textValue(copy.t(key(("sf.u46." + request.action) as keyof typeof SF_U46_COPY))),
                       }],
                     }]}
                     coverage={{ state: "complete", summary: msg("sf.u46.reviewScope"), reasons: [],
                       knownCount: 1, expectedCount: 1 }}
-                    blockingReasons={model.can(request().action) ? [] : [msg("sf.u46.reviewScope")]}
-                    confirmation={model.can(request().action) && screen.outcome === "idle" && !screen.busy && !screen.verified
-                      ? { kind: "admitted", labelKey: key("sf.u46.confirm"), purpose: reviewAction(request()),
-                          binding: { kind: "catalog-command", operationId: op[request().action],
-                            version: { kind: "record", expectedVersion: request().expected }, confirmation: "presentation-only" } }
+                    blockingReasons={model.can(request.action) ? [] : [msg("sf.u46.reviewScope")]}
+                    confirmation={model.can(request.action) && screen.outcome === "idle" && !screen.busy && !screen.verified
+                      ? { kind: "admitted", labelKey: key("sf.u46.confirm"), purpose: reviewAction(request),
+                          binding: { kind: "catalog-command", operationId: op[request.action],
+                            version: { kind: "record", expectedVersion: request.expected }, confirmation: "presentation-only" } }
                       : { kind: "blocked", labelKey: key("sf.u46.confirm"), reasons: [msg("sf.u46.reviewScope")] }}
                     state={screen.outcome === "unknown" ? "outcome-unknown" :
                       screen.outcome === "conflict" ? "conflict" : "ready"}
-                    onConfirm={() => { void submit(request()) }}
+                    onConfirm={() => { void submit(request) }}
                     onCancel={() => {
-                      if (request().action === "save") {
+                      if (request.action === "save") {
                         const snapshot = screen.draft?.snapshot()
                         if (snapshot?.availability === "active") screen.draft?.setPhase(snapshot.dirty ? "dirty" : "clean")
                       }
                       setScreen({ review: undefined, error: undefined })
                     }}
                     onRevise={() => {
-                      if (request().action === "save") {
+                      if (request.action === "save") {
                         const snapshot = screen.draft?.snapshot()
                         if (snapshot?.availability === "active") screen.draft?.setPhase(snapshot.dirty ? "dirty" : "clean")
                       }

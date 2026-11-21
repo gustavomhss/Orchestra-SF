@@ -244,7 +244,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
   }
   const fields = (values: object): SfReviewField[] =>
     Object.entries(values).map(([path, value]) => ({
-      path, label: msg("sf.u08." + path),
+      path, label: msg("sf.u08." + (path === "locs" ? "locations" : path === "cur" ? "currency" : path)),
       value: display(String(value)),
     }))
   const baseFields = createMemo<SfReviewField[]>(() => {
@@ -564,7 +564,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                         e.preventDefault(); openReview("rate-save", state.recordId, rate()?.revision)
                       }}>
                         <For each={["name","locs","cur","annual"] as const}>{(field) =>
-                          <label>{t("sf.u08." + (field === "locs" ? "locations" : field))}
+                          <label>{t("sf.u08." + (field === "locs" ? "locations" : field === "cur" ? "currency" : field))}
                             <input value={state.rateForm?.[field] ?? ""} disabled={readOnly()}
                               onInput={(event) => setState("rateForm",(old) =>
                                 old ? { ...old, [field]: event.currentTarget.value } : old)} />
@@ -626,29 +626,29 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
         </Show>
       </SfStatePanel>
       <Show when={state.error}><p role="status" class="sf-u08-message">{state.error}</p></Show>
-      <Show when={currentReview()}>
+      <Show when={currentReview()} keyed>
         {(current) => <div class="sf-u08-review" data-sf-polish="planner" data-sf-wave="four">
           <p>{t("sf.u08.reviewChange")}</p>
-          <Show when={current().kind === "sync"}><p>{t("sf.u08.noRoster")}</p></Show>
+          <Show when={current.kind === "sync"}><p>{t("sf.u08.noRoster")}</p></Show>
           <SfChangeReview
-            operation={{ ref: current().operationRef, label: msg("sf.cap20.primary"),
+            operation={{ ref: current.operationRef, label: msg("sf.cap20.primary"),
               scope: { kind: "data", text: currentVersion() } }}
-            base={{ kind: "persisted", ref: ("id" in current() ? (current() as {id: string}).id : currentVersion()) as SfRef,
-              version: current().version, fields: reviewFields() }}
-            current={{ kind: "persisted", ref: ("id" in current() ? (current() as {id: string}).id : currentVersion()) as SfRef,
-              version: current().version, fields: reviewFields() }}
-            proposed={{ kind: "draft", intentRef: current().operationRef as unknown as SfIntentRef,
-              sourceRef: ("id" in current() ? (current() as {id: string}).id : currentVersion()) as SfRef,
-              sourceVersion: current().version, fields: proposedFields() }}
+            base={{ kind: "persisted", ref: ("id" in current ? (current as {id: string}).id : currentVersion()) as SfRef,
+              version: current.version, fields: reviewFields() }}
+            current={{ kind: "persisted", ref: ("id" in current ? (current as {id: string}).id : currentVersion()) as SfRef,
+              version: current.version, fields: reviewFields() }}
+            proposed={{ kind: "draft", intentRef: current.operationRef as unknown as SfIntentRef,
+              sourceRef: ("id" in current ? (current as {id: string}).id : currentVersion()) as SfRef,
+              sourceVersion: current.version, fields: proposedFields() }}
             effects={[]}
-            coverage={current().kind === "sync"
+            coverage={current.kind === "sync"
               ? { state: "partial", summary: msg("sf.u08.scope"), reasons: [msg("sf.u08.noRoster")], knownCount: 1, expectedCount: null }
               : { state: "complete", summary: msg("sf.u08.scope"), reasons: [], knownCount: 1, expectedCount: 1 }}
             blockingReasons={canReview() ? [] : [msg("sf.u08.unavailableAction")]}
             confirmation={canReview()
               ? { kind: "admitted", labelKey: key("sf.cap20.primary"), purpose: reviewPurpose(),
                 binding: { kind: "catalog-command", operationId: operationId(),
-                  version: { kind: "record", expectedVersion: current().version }, confirmation: "presentation-only" } }
+                  version: { kind: "record", expectedVersion: current.version }, confirmation: "presentation-only" } }
               : { kind: "blocked", labelKey: key("sf.cap20.primary"), reasons: [msg("sf.u08.unavailableAction")] }}
             state={state.phase}
             onConfirm={() => void submit()}

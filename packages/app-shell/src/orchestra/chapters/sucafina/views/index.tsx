@@ -319,7 +319,13 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
     }
   }
   const retryList = () => loadList()
-  const reviewLabel = () => reviewKind() === "remove" ? "sf.ui32.confirmRemove" : "sf.ui32.confirmSave"
+  const reviewLabel = (kind: "save" | "remove") => kind === "remove" ? "sf.ui32.confirmRemove" : "sf.ui32.confirmSave"
+  const reviewContext = () => {
+    const kind = reviewKind()
+    const record = source()
+    const draft = activeDraft()
+    return kind && record && draft ? { kind, record, draft } : undefined
+  }
   const reviewState = () => screen.mutation === "outcome-unknown" ? "outcome-unknown" as const
     : screen.mutation === "conflict" ? "conflict" as const : "ready" as const
   const closeReview = () => {
@@ -344,6 +350,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
         <h2 id="sf-u43-legacy">{t(key("sf.ui32.legacy"))}</h2>
         <p>{t(key("sf.ui32.legacyDescription"))}</p>
         <Show when={props.route.kind === "list"}>
+          <div hidden={!!screen.detail || screen.detailState === "loading"}>
           <SfStatePanel
             state={screen.listState}
             messageKey={key(screen.listState === "empty" ? "sf.common.empty" : screen.listState === "loading" ? "sf.common.loading" : screen.listState === "denied" ? "sf.common.noAccess" : "sf.common.unavailable")}
@@ -365,19 +372,26 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
               </For>
             </ul>
           </SfStatePanel>
+          </div>
         </Show>
         <Show when={props.route.kind === "entry" || screen.detailState === "ready" || screen.detailState === "loading"}>
           <SfStatePanel
             state={screen.detailState}
             messageKey={key(screen.detailState === "loading" ? "sf.common.loading" : screen.detailState === "denied" ? "sf.common.noAccess" : screen.detailState === "invalid" ? "sf.common.invalidLink" : "sf.common.unavailable")}
           >
-            <Show when={screen.detail}>
+            <Show when={screen.detail} keyed>
               {(record) => (
                 <section aria-labelledby="sf-u43-editor" class="sf-saved-view-editor" hidden={!!reviewKind()}>
-                  <h3 id="sf-u43-editor">{t(key("sf.ui32.legacyEditor"))}</h3>
-                  <p>{t(key("sf.ui32.sourcePage"))}: <bdi>{record().view.page}</bdi></p>
-                  <p>{t(key("sf.ui32.version"), { version: record().version })}</p>
-                  <Show when={restoreHref(record().view)}>
+                  <div class="sf-saved-view-heading">
+                    <h3 id="sf-u43-editor">{t(key("sf.ui32.legacyEditor"))}</h3>
+                    <Show when={props.route.kind === "list"}>
+                      <button type="button" class="mx-btn" disabled={screen.mutation !== "idle" || !!activeDraft()?.pendingOperation}
+                        onClick={() => setScreen({ detail: null, detailState: "empty" })}>{t(key("sf.common.returnToList"))}</button>
+                    </Show>
+                  </div>
+                  <p>{t(key("sf.ui32.sourcePage"))}: <bdi>{record.view.page}</bdi></p>
+                  <p>{t(key("sf.ui32.version"), { version: record.version })}</p>
+                  <Show when={restoreHref(record.view)}>
                     {(href) => <A class="mx-btn" href={href()}>{t(key("sf.ui32.openSource"))}</A>}
                   </Show>
                   <Show when={activeDraft()}>
@@ -448,35 +462,37 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
         <Show when={screen.mutation === "submitting"}>
           <SfStatePanel state="loading" messageKey={key("sf.common.pending")} />
         </Show>
-        <Show when={reviewKind() && screen.detail && activeDraft()}>
+        <Show when={reviewContext()} keyed>
+          {(context) => (
           <SfChangeReview
             operation={{
-              ref: `ui32:${screen.detail!.view.id}` as SfOperationRef,
-              label: message(reviewLabel()),
-              scope: { kind: "data", text: screen.detail!.view.page },
+              ref: `ui32:${context.record.view.id}` as SfOperationRef,
+              label: message(reviewLabel(context.kind)),
+              scope: { kind: "data", text: context.record.view.page },
             }}
-            base={snapshot(screen.detail!, screen.detail!.view)}
-            current={snapshot(screen.detail!, screen.detail!.view)}
-            proposed={snapshot(screen.detail!, activeDraft()!.value)}
+            base={snapshot(context.record, context.record.view)}
+            current={snapshot(context.record, context.record.view)}
+            proposed={snapshot(context.record, context.draft.value)}
             effects={[]}
             coverage={{ state: "complete", summary: message("sf.ui32.legacyReviewScope"), reasons: [], knownCount: null, expectedCount: null }}
             blockingReasons={[]}
             confirmation={{
               kind: "admitted",
-              purpose: reviewKind() === "remove" ? "delete" : "save",
-              labelKey: key(reviewLabel()),
+              purpose: context.kind === "remove" ? "delete" : "save",
+              labelKey: key(reviewLabel(context.kind)),
               binding: {
                 kind: "catalog-command",
-                operationId: reviewKind() === "remove" ? "views.remove" : "views.save",
-                version: { kind: "record", expectedVersion: screen.detail!.version },
+                operationId: context.kind === "remove" ? "views.remove" : "views.save",
+                version: { kind: "record", expectedVersion: context.record.version },
                 confirmation: "presentation-only",
               },
             }}
             state={reviewState()}
-            onConfirm={() => { const kind = reviewKind(); if (kind) void submit(kind) }}
+            onConfirm={() => { void submit(context.kind) }}
             onRevise={closeReview}
             onCancel={closeReview}
           />
+          )}
         </Show>
       </section>
       <section class="sf-saved-view-availability" aria-labelledby="sf-u43-native">

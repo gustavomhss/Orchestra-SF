@@ -1,4 +1,4 @@
-// N20/U45 — CAP22. Legacy field/action labels retain their pinned English form.
+// N20/U45 — CAP22. Original English labels and the Brazilian Portuguese catalog.
 export const SF_U45_COPY = {
   "sf.cap22.title": "FX rates",
   "sf.cap22.primary": "Add currency",

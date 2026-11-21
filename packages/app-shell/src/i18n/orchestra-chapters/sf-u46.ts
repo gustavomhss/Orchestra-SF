@@ -1,5 +1,4 @@
-// N18 / U46: literal, source-locked Planner version copy. I00 registers these leaves.
-// Existing producer English copy has not been independently translated; it is preserved.
+// N18/U46 — Planner version copy. English remains source-locked; I00 registers both locales.
 export const SF_U46_COPY = {
   "sf.cap23.title": "Versions",
   "sf.cap23.primary": "Create version",

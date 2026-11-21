@@ -1,5 +1,4 @@
-// N20/U09 — CAP21. Existing source labels are preserved byte-for-byte in both locales.
-// Legacy English equality is intentional under SURFACE-SPECS COPY-01.
+// N20/U09 — CAP21. Original English labels and the Brazilian Portuguese catalog.
 export const SF_U09_COPY = {
   "sf.cap21.title": "Entities & allocations",
   "sf.cap21.primary": "Add record",
