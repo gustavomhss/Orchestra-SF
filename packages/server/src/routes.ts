@@ -27,7 +27,7 @@ import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { ToolOutputStore } from "@orchestra/core/tool-output-store"
 import { ResearchArtifacts } from "@orchestra/core/research/artifacts"
-import { HttpRouter, HttpServer } from "effect/unstable/http"
+import { HttpRouter, HttpServer, HttpServerRequest } from "effect/unstable/http"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
 import { Layer, Option } from "effect"
 import { Api } from "./api"
@@ -91,6 +91,8 @@ export interface Options {
   readonly cors?: ReadonlyArray<string>
   /** Allowed HTTP hostnames; omitted leaves host admission to the embedding application. */
   readonly allowedHosts?: ReadonlyArray<string>
+  /** A trusted host can raise the body limit on its own upload routes. */
+  readonly requestBodyLimit?: (request: HttpServerRequest.HttpServerRequest) => number | undefined
   /** Replaces the capability operator; tests and sdk-next embed their own. */
   readonly operator?: CapabilityOperatorContract.Interface
   /** Replaces the capability setup verifier; tests avoid vendor calls with it. */
@@ -141,7 +143,7 @@ function makeRoutes<AuthError, AuthServices>(
     Layer.provide(serviceLayer),
     // The desktop renderer (`oc://renderer`) calls a desktop-owned server cross-origin, as the earlier runtime did.
     Layer.provide(corsLayer({ cors: options.cors })),
-    Layer.provide(BodyLimit.layer),
+    Layer.provide(options.requestBodyLimit ? BodyLimit.withLimit(options.requestBodyLimit) : BodyLimit.layer),
   )
   return Layer.merge(api, options.webRoot ? WebUi.layer(options.webRoot) : Layer.empty).pipe(
     Layer.provide(hostPolicyLayer(options.allowedHosts)),

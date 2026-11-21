@@ -104,7 +104,7 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
           Effect.catchCause((cause) => Effect.logError("legacy session import failed", cause)),
         )
         const allowedHosts = listenerHosts(input.hostname, input.allowedHosts)
-        const listening = yield* listen(input, password, root, allowedHosts, installation?.layer)
+        const listening = yield* listen(input, password, root, allowedHosts, installation)
         const address = listening.address
         // Closing the server waits for every open connection, and the event stream never ends on its own. Scope
         // finalizers run in reverse, so this drops the connections before the server closes.
@@ -129,10 +129,12 @@ function listen(
   password: string,
   root: string | undefined,
   allowedHosts: ReadonlyArray<string>,
-  installation?: Layer.Layer<never, never, HttpRouter.HttpRouter>,
+  installation?: Awaited<ReturnType<typeof import("../../sucafina-product/installation").loadSfInstallation>>,
 ) {
-  const routes = Layer.merge(createRoutes({ password, host: hosts(), webRoot: root, allowedHosts, cors: input.cors }),
-    installation ?? Layer.empty)
+  const routes = Layer.merge(
+    createRoutes({ password, host: hosts(), webRoot: root, allowedHosts, cors: input.cors, requestBodyLimit: installation?.bodyLimit }),
+    installation?.layer ?? Layer.empty,
+  )
   if (Option.isSome(input.port)) return bind(input.hostname, input.port.value, routes)
   const next = (port: number): ReturnType<typeof bind> =>
     bind(input.hostname, port, routes).pipe(

@@ -27,11 +27,11 @@ export function limitFor(pathname: string) {
  * with no length (chunked) is cut off once it passes the limit through `HttpServerRequest.MaxBodySize`, which the Node
  * server enforces while it reads, so memory stays bounded either way.
  */
-export const layer = HttpRouter.middleware(
+export const withLimit = (override?: (request: HttpServerRequest.HttpServerRequest) => number | undefined) => HttpRouter.middleware(
   (effect) =>
     Effect.gen(function* () {
       const request = yield* HttpServerRequest.HttpServerRequest
-      const limit = limitFor(request.url.split("?", 1)[0])
+      const limit = override?.(request) ?? limitFor(request.url.split("?", 1)[0])
       const declared = Number(request.headers["content-length"])
       if (declared > limit) return tooLarge(limit)
       return yield* effect.pipe(
@@ -42,6 +42,8 @@ export const layer = HttpRouter.middleware(
     }),
   { global: true },
 )
+
+export const layer = withLimit()
 
 function exceeded(defect: unknown) {
   return (

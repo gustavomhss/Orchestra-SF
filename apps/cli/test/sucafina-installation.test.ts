@@ -1,49 +1,95 @@
 import { expect, test } from "bun:test"
+import { mkdtemp, rm } from "node:fs/promises"
+import { request } from "node:http"
+import { tmpdir } from "node:os"
+import path from "node:path"
 import { fileURLToPath } from "node:url"
-import { createRoutes } from "@orchestra/server/routes"
-import { Context, Layer } from "effect"
-import { HttpRouter, HttpServer } from "effect/unstable/http"
+import { LayerNode } from "@orchestra/core/effect/layer-node"
+import { AppProcess } from "@orchestra/core/process"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { testEffect } from "@orchestra/core/test/lib/effect"
+import { Effect, Option, Stream } from "effect"
+import { ChildProcess } from "effect/unstable/process"
 import { loadSfInstallation } from "../src/sucafina-product/installation"
 
-const origin = "http://localhost:4110"
-const host = "localhost:4110"
 const fixture = fileURLToPath(new URL("./fixture/sucafina-installation.ts", import.meta.url))
+const entry = fileURLToPath(new URL("../src/index.ts", import.meta.url))
+const it = testEffect(LayerNode.compile(AppProcess.node))
 
-test("installs the factory on the base and subtree and keeps daemon Basic authentication", async () => {
-  const installation = await loadSfInstallation(fixture, "localhost", 4110)
-  const router = HttpRouter.toWebHandler(
-    Layer.merge(createRoutes({ password: "synthetic-daemon-password", allowedHosts: ["localhost"] }), installation.layer)
-      .pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true },
-  )
-  const dispatch = (path: string, init: RequestInit = { headers: { host } }, requestOrigin = origin) =>
-    router.handler(new Request(requestOrigin + path, init), Context.makeUnsafe<unknown>(new Map()))
-  try {
-    const base = await dispatch("/sucafina")
-    expect(base.status).toBe(200)
-    expect(await base.json()).toMatchObject({ origin, path: "/sucafina", method: "GET" })
-    const nested = await dispatch("/sucafina/planner?year=2026", {
-      method: "POST",
-      headers: { host, cookie: "installation=fixture" },
-      body: "original body",
+it.live("serve mounts the factory on the Node listener and disposes it on shutdown", () =>
+  Effect.scoped(Effect.gen(function* () {
+    const directory = yield* Effect.acquireRelease(
+      Effect.promise(() => mkdtemp(path.join(tmpdir(), "sf-serve-"))),
+      (directory) => Effect.promise(() => rm(directory, { recursive: true, force: true })),
+    )
+    const hostname = "127.0.0.1"
+    const reservation = Bun.serve({ hostname, port: 0, fetch: () => new Response() })
+    const port = reservation.port!
+    yield* Effect.promise(async () => { await reservation.stop(true) })
+    const origin = `http://${hostname}:${port}`
+    const app = yield* AppProcess.Service
+    expectSpawn(import.meta.path)
+    const child = yield* app.spawn(ChildProcess.make(process.execPath, [
+      entry, "serve", "--hostname", hostname, "--port", `${port}`, "--installation", fixture,
+    ], {
+      cwd: directory,
+      env: {
+        ...process.env,
+        ORCHESTRA_DB: path.join(directory, "orchestra.db"),
+        ORCHESTRA_CONFIG_DIR: path.join(directory, "config"),
+        ORCHESTRA_INHERIT_CREDENTIALS: "0",
+        ORCHESTRA_SERVER_PASSWORD: "synthetic-daemon-password",
+        XDG_CACHE_HOME: directory,
+        XDG_CONFIG_HOME: directory,
+        XDG_DATA_HOME: directory,
+        XDG_STATE_HOME: directory,
+      },
+      stderr: "inherit",
+    }))
+    const ready = yield* child.stdout.pipe(Stream.decodeText, Stream.splitLines,
+      Stream.filter((line) => line.includes(`server listening on ${origin}`)), Stream.runHead, Effect.timeout("45 seconds"))
+    expect(Option.isSome(ready)).toBe(true)
+
+    yield* Effect.promise(async () => {
+      const dispatch = (route: string, init?: RequestInit) => fetch(origin + route, { ...init, signal: AbortSignal.timeout(8_000) })
+      const base = await dispatch("/sucafina")
+      expect(base.status).toBe(200)
+      expect(await base.json()).toMatchObject({ origin, path: "/sucafina", method: "GET" })
+      const nested = await dispatch("/sucafina/planner?year=2026", {
+        method: "POST", headers: { cookie: "installation=fixture" }, body: "original body",
+      })
+      expect(await nested.json()).toEqual({
+        origin, path: "/sucafina/planner?year=2026", method: "POST", cookie: "installation=fixture", body: "original body",
+      })
+      expect((await dispatch("/sucafina/", { method: "HEAD" })).status).toBe(200)
+      expect((await dispatch("/sucafina-extra")).status).toBe(404)
+      expect((await dispatch("/sucafina/missing")).status).toBe(404)
+      expect((await dispatch("/sucafina/unavailable")).status).toBe(503)
+      expect((await dispatch("/sucafina", { headers: { host: `${hostname}:${port === 65_535 ? port - 1 : port + 1}` } })).status).toBe(403)
+      expect((await dispatch("/sucafina", { headers: { "x-forwarded-proto": "https" } })).status).toBe(403)
+      const api = await dispatch("/api/session")
+      expect(api.status).toBe(401)
+      expect(api.headers.get("www-authenticate")).toBe('Basic realm="Secure Area"')
+
+      const body = new Uint8Array(17 * 1024 * 1024)
+      const contract = await dispatch("/sucafina/dashboard?upload=contract", { method: "POST", body })
+      expect(contract.status).toBe(200)
+      expect(await contract.json()).toBe(body.byteLength)
+      expect((await dispatch("/sucafina/dashboard?upload=contract&upload=contract", { method: "POST", body })).status).toBe(413)
+      expect(await new Promise<number | undefined>((resolve, reject) => {
+        const upload = request(`${origin}/sucafina/reject`, { method: "POST", signal: AbortSignal.timeout(8_000) }, (response) => {
+          response.resume()
+          response.once("end", () => { resolve(response.statusCode); upload.destroy() })
+        })
+        upload.once("error", reject)
+        upload.write("first chunk")
+      })).toBe(413)
     })
-    expect(nested.status).toBe(200)
-    expect(await nested.json()).toEqual({
-      origin, path: "/sucafina/planner?year=2026", method: "POST", cookie: "installation=fixture", body: "original body",
-    })
-    expect((await dispatch("/sucafina/", { method: "HEAD", headers: { host } })).status).toBe(200)
-    expect((await dispatch("/sucafina-extra")).status).toBe(404)
-    expect((await dispatch("/sucafina/missing")).status).toBe(404)
-    expect((await dispatch("/sucafina/unavailable")).status).toBe(503)
-    expect((await dispatch("/sucafina", { headers: { host: "localhost:4111" } })).status).toBe(403)
-    expect((await dispatch("/sucafina", { headers: { host } }, "https://localhost:4110")).status).toBe(403)
-    const api = await dispatch("/api/session")
-    expect(api.status).toBe(401)
-    expect(api.headers.get("www-authenticate")).toBe('Basic realm="Secure Area"')
-  } finally {
-    await router.dispose()
-    await installation.dispose()
-  }
-})
+    yield* child.kill({ killSignal: "SIGTERM" })
+    yield* child.exitCode.pipe(Effect.timeout("8 seconds"))
+    expect(yield* Effect.promise(() => Bun.file(path.join(directory, "installation-disposed")).text())).toBe("yes")
+  })), { timeout: 70_000 },
+)
 
 test("rejects a relative path and missing or ephemeral ports before loading the factory", async () => {
   expect(await loadSfInstallation("relative.ts", "localhost", 4110).catch((error: Error) => error.message))
