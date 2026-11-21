@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { generateKeyPairSync, sign } from "node:crypto"
 import { after, test } from "node:test"
 import { chmod, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -25,6 +26,23 @@ const env = {
 }
 const execution = { sourceSHA: source.sha, sourceTreeSHA: source.tree, workflowSHA: env.GITHUB_SHA,
   runId: env.GITHUB_RUN_ID, runAttempt: env.GITHUB_RUN_ATTEMPT }
+const reviewer = { id: "synthetic-unit-reviewer", ...generateKeyPairSync("ed25519") }
+const obligationProducer = { id: "synthetic-unit-producer", ...generateKeyPairSync("ed25519") }
+const publicAnchor = (signer) => ({ id: signer.id, publicKey: signer.publicKey.export({ format: "der", type: "spki" }).toString("base64") })
+const trust = { schema: "teams-profile-residue-trust-v1", reviewer: publicAnchor(reviewer),
+  obligationProducer: publicAnchor(obligationProducer) }
+function signFixture(value, role, signer) {
+  const { authentication: _previous, ...payload } = value
+  const message = JSON.stringify(["teams-profile-residue-signature-v1", role, signer.id, hash(JSON.stringify(payload))])
+  return { ...payload, authentication: {
+    signerId: signer.id, signature: sign(null, Buffer.from(message), signer.privateKey).toString("base64"),
+  } }
+}
+function signFixtureEvidence(review, proofs) {
+  const { authentication: _previous, ...payload } = review
+  return { review: signFixture(payload, "review", reviewer),
+    proofs: signFixture({ ...proofs, reviewSha256: hash(JSON.stringify(payload)) }, "executed-obligations", obligationProducer) }
+}
 function catalog(qualify = false) {
   return { schema: "teams-profile-residue-catalog-v1",
     status: qualify ? "QUALIFICATION_REQUESTED" : "DIAGNOSTIC_UNQUALIFIED",
@@ -107,7 +125,7 @@ function complete(fixture) {
     runAttempt: env.GITHUB_RUN_ATTEMPT, archiveSha256: fixture.artifact.archiveSha256,
     artifactId: fixture.artifact.artifact.id, artifactDigest: fixture.artifact.artifact.digest }
   const review = { schema: "teams-profile-residue-review-v1", status: "reviewed", ...evidenceBinding,
-    reviewSource: source.sha, reviewer: "synthetic-unit-control", reason: "Exercises qualification conditions; never real product acceptance.",
+    reviewSource: source.sha, reviewer: reviewer.id, reason: "Exercises qualification conditions; never real product acceptance.",
     surfaces: [...surfaces], dispositions: report.occurrences.map((item) => disposition(fixture, item)),
     gaps: report.reachability.findings.map((item) => ({ findingId: item.id, classification: "different-meaning",
       producer: item.path ?? "synthetic graph", consumer: "synthetic unit-control", entrypoints: [], action: "retain synthetic control",
@@ -118,7 +136,7 @@ function complete(fixture) {
     testSha256: proof.fileSha256, complete: true, cases: controlCases.map((name) => ({ name, status: "pass" })) }
   const proofs = { schema: "teams-profile-residue-proofs-v1", ...evidenceBinding,
     cases: [{ ...proof, status: "pass", jobId: "1234", evidenceSha256: hash("synthetic evidence fixture") }] }
-  return { ...fixture, review, controls, proofs }
+  return { ...fixture, trust, controls, ...signFixtureEvidence(review, proofs) }
 }
 
 control(controlCases[0], () => {
@@ -341,7 +359,10 @@ control(controlCases[12], () => {
 
 control(controlCases[13], () => {
   const fixture = complete(auditFixture(true))
-  assert.equal(auditResidues(fixture).status, "PASS")
+  const qualified = auditResidues(fixture)
+  assert.equal(qualified.status, "PASS")
+  assert.equal(qualified.review.authentication.signerId, reviewer.id)
+  assert.equal(qualified.proofs.authentication.signerId, obligationProducer.id)
   const missingReview = auditResidues({ ...fixture, review: undefined })
   assert.equal(missingReview.status, "DIAGNOSTIC_UNQUALIFIED")
   assert(missingReview.blockers.includes("independent-current-source-review-missing"))
@@ -351,8 +372,10 @@ control(controlCases[13], () => {
   assert.equal(missingProofs.status, "DIAGNOSTIC_UNQUALIFIED")
   assert(missingProofs.blockers.includes("executed-test-obligations-missing"))
   assert(!missingProofs.blockers.includes("independent-current-source-review-missing"))
-  assert.equal(auditResidues({ ...fixture, review: { ...fixture.review, gaps: [] } }).status, "DIAGNOSTIC_UNQUALIFIED")
-  assert.equal(auditResidues({ ...fixture, proofs: { ...fixture.proofs, cases: [] } }).status, "DIAGNOSTIC_UNQUALIFIED")
+  assert.equal(auditResidues({ ...fixture, ...signFixtureEvidence({ ...fixture.review, gaps: [] }, fixture.proofs) }).status,
+    "DIAGNOSTIC_UNQUALIFIED")
+  assert.equal(auditResidues({ ...fixture, proofs: signFixture({ ...fixture.proofs, cases: [] },
+    "executed-obligations", obligationProducer) }).status, "DIAGNOSTIC_UNQUALIFIED")
   assert.throws(() => auditResidues({ ...fixture, review: { ...fixture.review, graphSha256: "9".repeat(64) } }), /complete exact current audit/)
   for (const field of ["runAttempt", "archiveSha256", "artifactId", "artifactDigest", "occurrencesSha256", "gapsSha256"]) {
     assert.throws(() => auditResidues({ ...fixture, review: { ...fixture.review, [field]: "wrong" } }), /complete exact current audit/)
@@ -360,12 +383,28 @@ control(controlCases[13], () => {
   }
   const active = structuredClone(fixture.review)
   active.dispositions[0].classification = "active-legacy"
-  const denied = auditResidues({ ...fixture, review: active })
+  const denied = auditResidues({ ...fixture, ...signFixtureEvidence(active, fixture.proofs) })
   assert.equal(denied.status, "DIAGNOSTIC_UNQUALIFIED"); assert.equal(denied.counts.activeLegacy, 1)
   active.dispositions[0].classification = "orphan"
-  assert.equal(auditResidues({ ...fixture, review: active }).counts.orphan, 1)
-  assert.throws(() => auditResidues({ ...fixture, proofs: { ...fixture.proofs,
-    cases: fixture.proofs.cases.map((item) => ({ ...item, status: "skipped" })) } }), /skipped failed/)
+  assert.equal(auditResidues({ ...fixture, ...signFixtureEvidence(active, fixture.proofs) }).counts.orphan, 1)
+  assert.throws(() => auditResidues({ ...fixture, proofs: signFixture({ ...fixture.proofs,
+    cases: fixture.proofs.cases.map((item) => ({ ...item, status: "skipped" })) },
+  "executed-obligations", obligationProducer) }), /skipped failed/)
+
+  assert.throws(() => auditResidues({ ...fixture, trust: undefined }), /trust anchor is required/)
+  assert.throws(() => auditResidues({ ...fixture, trust: { ...trust, obligationProducer: trust.reviewer } }), /independent residue trust/)
+  assert.throws(() => auditResidues({ ...fixture, trust: { ...trust,
+    obligationProducer: { ...trust.obligationProducer, publicKey: trust.reviewer.publicKey } } }), /independent residue trust/)
+  assert.throws(() => auditResidues({ ...fixture, review: { ...fixture.review, authentication: undefined } }), /fields/)
+  assert.throws(() => auditResidues({ ...fixture, review: { ...fixture.review, reason: "tampered reason" } }), /signature did not verify/)
+  assert.throws(() => auditResidues({ ...fixture, review: signFixture({ ...fixture.review, reviewer: "unknown" },
+    "review", reviewer) }), /signer is not trusted/)
+  assert.throws(() => auditResidues({ ...fixture, proofs: signFixture(fixture.proofs, "review", obligationProducer) }),
+    /signature did not verify/)
+  assert.throws(() => auditResidues({ ...fixture, proofs: signFixture(fixture.proofs, "executed-obligations",
+    { ...reviewer, id: obligationProducer.id }) }), /signature did not verify/)
+  assert.throws(() => auditResidues({ ...fixture, review: signFixture({ ...fixture.review, reason: "separate signed review" },
+    "review", reviewer) }), /does not bind the authenticated review/)
 })
 
 control(controlCases[14], () => {

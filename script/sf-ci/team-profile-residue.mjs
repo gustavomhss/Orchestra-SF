@@ -1,7 +1,7 @@
 // G09 inventories every tracked byte and actual packed member. The shipped
 // catalog is diagnostic; qualification additionally requires exact independent
 // review and executed controls/obligations from the current hosted source/run.
-import { createHash } from "node:crypto"
+import { createHash, createPublicKey, verify } from "node:crypto"
 import { lstat, readFile, readlink, realpath, writeFile } from "node:fs/promises"
 import { builtinModules } from "node:module"
 import path from "node:path"
@@ -722,8 +722,50 @@ function reviewGap(value) {
   value.testObligations.forEach(testObligation)
 }
 
+function canonicalBase64(value, label) {
+  if (typeof value !== "string" || !value.length) fail(label + " must be canonical Base64")
+  const bytes = Buffer.from(value, "base64")
+  if (bytes.toString("base64") !== value) fail(label + " must be canonical Base64")
+  return bytes
+}
+
+function trustAnchors(value) {
+  exactKeys(value, ["schema", "reviewer", "obligationProducer"])
+  if (value.schema !== "teams-profile-residue-trust-v1") fail("invalid residue trust schema")
+  const anchors = [value.reviewer, value.obligationProducer].map((anchor) => {
+    exactKeys(anchor, ["id", "publicKey"])
+    if (typeof anchor.id !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,127}$/.test(anchor.id))
+      fail("invalid residue trust signer ID")
+    const bytes = canonicalBase64(anchor.publicKey, "trust public key")
+    const key = createPublicKey({ key: bytes, format: "der", type: "spki" })
+    if (key.asymmetricKeyType !== "ed25519" || !key.export({ format: "der", type: "spki" }).equals(bytes))
+      fail("trust public key must be canonical Ed25519 SPKI")
+    return { id: anchor.id, key, publicKeySha256: hash(bytes) }
+  })
+  if (anchors[0].id === anchors[1].id || anchors[0].publicKeySha256 === anchors[1].publicKeySha256)
+    fail("independent residue trust signers and keys are required")
+  return { reviewer: anchors[0], obligationProducer: anchors[1] }
+}
+
+function authenticateSidecar(sidecar, anchor, role) {
+  if (!anchor) fail(role + " trust anchor is required")
+  const { authentication, ...payload } = sidecar
+  exactKeys(authentication, ["signerId", "signature"])
+  if (authentication.signerId !== anchor.id || role === "review" && payload.reviewer !== anchor.id)
+    fail(role + " signer is not trusted")
+  const signature = canonicalBase64(authentication.signature, role + " signature")
+  // Sign the compact JSON payload in the same property order as the sidecar.
+  // The signed role prevents a review signature from attesting test execution.
+  const payloadSha256 = digest(payload)
+  const signed = Buffer.from(JSON.stringify(["teams-profile-residue-signature-v1", role, anchor.id, payloadSha256]))
+  if (signature.length !== 64 || !verify(null, signed, anchor.key, signature))
+    fail(role + " signature did not verify")
+  return { signerId: anchor.id, publicKeySha256: anchor.publicKeySha256, payloadSha256 }
+}
+
 export function auditResidues(input) {
-  const { source, records, sourceGaps = [], artifact, catalogBytes, review, controls, proofs, env } = input
+  const { source, records, sourceGaps = [], artifact, catalogBytes, review, controls, proofs, trust, env } = input
+  const anchors = trust === undefined ? undefined : trustAnchors(trust)
   const catalog = validateManifest(parseCanonicalJson(catalogBytes, "residue catalog"))
   const sourceGraph = buildReachability(records, catalog.entrypoints, "source")
   const archiveGraph = buildReachability(records, catalog.entrypoints, "archive")
@@ -753,10 +795,10 @@ export function auditResidues(input) {
     runAttempt: env.GITHUB_RUN_ATTEMPT, archiveSha256: artifact?.archiveSha256,
     artifactId: artifact?.artifact?.id, artifactDigest: artifact?.artifact?.digest }
   const blockers = [], inline = catalog.dispositions.map((item) => { reviewDisposition(item); return item })
-  let reviewBound = false
+  let reviewAuthentication
   if (review !== undefined) {
     exactKeys(review, ["schema", "status", ...Object.keys(evidenceBinding), "reviewSource", "reviewer", "reason",
-      "surfaces", "dispositions", "gaps", "testObligations"])
+      "surfaces", "dispositions", "gaps", "testObligations", "authentication"])
     if (review.schema !== "teams-profile-residue-review-v1" || review.status !== "reviewed" ||
         artifact?.status !== "BOUND" || Object.entries(evidenceBinding).some(([key, value]) => review[key] !== value) ||
         !sha(review.reviewSource) || typeof review.reviewer !== "string" || !review.reviewer.trim() ||
@@ -766,9 +808,9 @@ export function auditResidues(input) {
         !Array.isArray(review.dispositions) || !Array.isArray(review.gaps) ||
         !Array.isArray(review.testObligations) || !review.testObligations.length)
       fail("review is not bound to the complete exact current audit")
+    reviewAuthentication = authenticateSidecar(review, anchors?.reviewer, "review")
     review.dispositions.forEach(reviewDisposition); review.gaps.forEach(reviewGap)
     review.testObligations.forEach(testObligation)
-    reviewBound = true
   } else blockers.push("independent-current-source-review-missing")
   const occurrenceIds = new Set(occurrences.map((item) => item.id)), gapIds = new Set(gaps.map((item) => item.id))
   const dispositions = [...inline, ...(review?.dispositions ?? [])], byOccurrence = new Map()
@@ -824,10 +866,14 @@ export function auditResidues(input) {
     .map((item) => [JSON.stringify([item.path, item.fileSha256, item.caseName]), item])).values()]
   let proofEvidence
   if (proofs !== undefined) {
-    exactKeys(proofs, ["schema", ...Object.keys(evidenceBinding), "cases"])
+    exactKeys(proofs, ["schema", ...Object.keys(evidenceBinding), "reviewSha256", "cases", "authentication"])
     if (proofs.schema !== "teams-profile-residue-proofs-v1" || !currentExecution(proofs, source, env) ||
         artifact?.status !== "BOUND" || Object.entries(evidenceBinding).some(([key, value]) => proofs[key] !== value) ||
-        !Array.isArray(proofs.cases)) fail("executed proof inventory is not from the current source/run and exact audit")
+        !sha256(proofs.reviewSha256) || !Array.isArray(proofs.cases))
+      fail("executed proof inventory is not from the current source/run and exact audit")
+    const authentication = authenticateSidecar(proofs, anchors?.obligationProducer, "executed-obligations")
+    if (reviewAuthentication && proofs.reviewSha256 !== reviewAuthentication.payloadSha256)
+      fail("executed proof inventory does not bind the authenticated review")
     const seen = new Set()
     for (const item of proofs.cases) {
       exactKeys(item, ["path", "fileSha256", "caseName", "status", "jobId", "evidenceSha256"])
@@ -843,7 +889,7 @@ export function auditResidues(input) {
           !seen.has(JSON.stringify([obligation.path, obligation.fileSha256, obligation.caseName])))
         blockers.push("test-obligation-not-executed:" + obligation.path + ":" + obligation.caseName)
     }
-    proofEvidence = { receiptSha256: digest(proofs), cases: proofs.cases.length, obligations: obligations.length }
+    proofEvidence = { receiptSha256: digest(proofs), authentication, cases: proofs.cases.length, obligations: obligations.length }
   } else blockers.push("executed-test-obligations-missing")
   return {
     schema: "teams-profile-residue-report-v1",
@@ -853,13 +899,13 @@ export function auditResidues(input) {
     source: { sha: source.sha, tree: source.tree, trackedCount: source.trackedCount ?? records.filter((file) => file.domain === "source").length },
     artifact: artifact ?? { status: "MISSING" }, inventory,
     occurrences: classified, reachability: { ...graph, findings: classifiedGaps },
-    review: reviewBound ? { status: "BOUND", reviewer: review.reviewer, reviewSource: review.reviewSource,
-      receiptSha256: digest(review) } : { status: "MISSING" },
+    review: reviewAuthentication ? { status: "BOUND", reviewer: review.reviewer, reviewSource: review.reviewSource,
+      receiptSha256: digest(review), authentication: reviewAuthentication } : { status: "MISSING" },
     controls: controlEvidence ?? { status: "MISSING" }, proofs: proofEvidence ?? { status: "MISSING" },
     limitations: [
       "File imports and lexical callsites are conservative evidence; runtime meaning requires the precise independent dispositions and executed obligations.",
       "A G09 PASS is residue qualification only. Native journeys, Microsoft operations, migration, recovery and other mandatory gates remain separate.",
-      "Sidecar binding is structural only; independent reviewer and execution provenance require an authenticated workflow collector, which is not wired here.",
+      "The host must provision trust anchors independently of the candidate and sidecars, and must isolate signing keys from audited code.",
     ],
   }
 }
@@ -942,11 +988,14 @@ export async function runAudit(options, env = process.env) {
     }
   }
   const records = [...loaded.records, ...archiveFiles]
+  // Provision this file through the trusted host, independently of the audit
+  // inputs. Outside-checkout placement alone does not establish trust.
+  const trust = await optionalJson(env.SF_TEAMS_RESIDUE_TRUST_FILE, root, "independent residue trust anchors")
   const review = await optionalJson(env.SF_TEAMS_RESIDUE_REVIEW_FILE, root, "current-source independent review")
   const controls = await optionalJson(env.SF_TEAMS_RESIDUE_CONTROLS_FILE, root, "executed residue controls")
   const proofs = await optionalJson(env.SF_TEAMS_RESIDUE_PROOFS_FILE, root, "executed test obligations")
   const report = auditResidues({ source, records, sourceGaps: loaded.gaps, artifact,
-    catalogBytes: catalogRecord.data, review, controls, proofs, env })
+    catalogBytes: catalogRecord.data, review, controls, proofs, trust, env })
   // Bind again after graph traversal. Root CI separately proves the clean index
   // before/after; this catches concurrent changes to any byte actually audited.
   const after = await readSource(root, verified)
