@@ -105,10 +105,13 @@ export function createReviewAnswerSource(input: {
         const transactionAll = persistence.transactionAll
         const currentSnapshots = persistence.currentSnapshots
         const atomic = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
+        const readSealed = atomic?.readSealed
+        const readDashboard = atomic?.currentSnapshot
         const prepareAccess = input.prepareAccess
         const request = requestFor.call(host, context)
         const current = () => input.reviews === reviews && reviews.read === readReview && input.host === host && host.revalidate === revalidate && host.requestFor === requestFor && host.persistence === persistence && persistence.transactionAll === transactionAll && persistence.currentSnapshots === currentSnapshots && input.prepareAccess === prepareAccess && requestFor.call(host, context) === request && !request?.signal.aborted &&
-          (!atomic || persistence.dashboardSourceFence === atomic && hasSfDashboardSourceFence(persistence))
+          (!atomic || persistence.dashboardSourceFence === atomic && hasSfDashboardSourceFence(persistence) &&
+            atomic.readSealed === readSealed && atomic.currentSnapshot === readDashboard)
         if (!request || !transactionAll || !currentSnapshots || typeof prepareAccess !== "function" || hasActiveSfSnapshot(persistence) || !current()) return undefined
         const found = await read(selected, context)
         if (!current() || found.status !== "ok") return undefined
@@ -120,20 +123,25 @@ export function createReviewAnswerSource(input: {
         const threadFence = async () => {
           try {
             if (!current()) return false
-            const admitted = atomic?.readSealed?.()
+            const read = () => atomic && readSealed?.call(atomic)
+            const admitted = read()
             const observation = { first: admitted }
             const storedDigest = () => {
               if (admitted && !admitted.current()) return undefined
-              const sealed = admitted && (observation.first ?? atomic?.readSealed?.())
+              const sealed = admitted && (observation.first ?? read())
               observation.first = undefined
-              if (admitted && (!sealed || sealed.identity !== admitted.identity || !sealed.current())) return undefined
-              const cached = sealed && digests.get(sealed.identity)
+              if (admitted && (!sealed || sealed.identity !== admitted.identity ||
+                sealed.bytesIdentity !== admitted.bytesIdentity || !sealed.current())) return undefined
+              // Only the pure body digest follows identical SQL bytes across roots.
+              const identity = sealed?.bytesIdentity ?? sealed?.identity
+              const cached = identity && digests.get(identity)
               if (cached) return cached
-              const snapshot = (sealed ? sealed.read() : currentSnapshots.call(persistence))?.dashboard
+              const snapshot = sealed && readDashboard ? readDashboard.call(persistence, "dashboard") :
+                (sealed ? sealed.read() : currentSnapshots.call(persistence))?.dashboard
               const digest = digestSfValue(snapshot && object(object(snapshot.data.__sfProductV1).reviews)[selected.reviewContext.reviewRef])
-              if (sealed) {
+              if (sealed && identity) {
                 if (!sealed.current()) return undefined
-                digests.set(sealed.identity, digest)
+                digests.set(identity, digest)
               }
               return digest
             }
