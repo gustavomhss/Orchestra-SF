@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "node:crypto"
 import type { BrowserWindow, IpcMainInvokeEvent, Session, WebContents } from "electron"
 import type { SfInstallationDescriptor, SfContext, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfOperationBindings } from "@orchestra/schema/sucafina/common"
+import { SF_FILE_BYTE_LIMIT, SF_SUPPLIER_CSV_LIMIT, sfAllowedByteMime } from "@orchestra/client/sucafina/transport"
 import type {
   SfConnectionCandidate, SfDesktopInvocation, SfDesktopInvocationResult,
   SfDesktopInvalidation, SfDesktopLoginResult, SfDesktopOwnerRequest,
@@ -31,6 +32,8 @@ type Pending = {
   responseHandle?: string
   sequence: number
   pulling: boolean
+  bytesRead: number
+  byteLimit: number
 }
 type Binding = {
   active: boolean
@@ -247,6 +250,9 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
 
   async function invoke(event: IpcMainInvokeEvent, raw: unknown): Promise<SfDesktopInvocationResult> {
     const binding = use(event, raw)
+    const unavailable = { kind: "request-not-dispatched", reason: "contract-unavailable" } as const
+    if (!binding && isRecord(raw) && raw.kind === "request" &&
+      typeof raw.operationId === "string" && raw.operationId.startsWith("files.")) return unavailable
     if (!binding || !isRecord(raw)) return failure("contract-unavailable")
     if (raw.kind === "response-chunk") {
       if (!closed(raw, ["kind", "bindingHandle", "generation", "requestId", "responseHandle", "sequence"])
@@ -265,6 +271,12 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
           binding.requests.delete(pending.requestId)
           return { kind: "byte-chunk", sequence: pending.sequence++, bytes: new Uint8Array(), done: true }
         }
+        pending.bytesRead += chunk.byteLength
+        if (pending.bytesRead > pending.byteLimit) {
+          pending.source.cancel()
+          binding.requests.delete(pending.requestId)
+          return failure("invalid-response")
+        }
         return { kind: "byte-chunk", sequence: pending.sequence++, bytes: chunk, done: false }
       } catch { binding.requests.delete(pending.requestId); return failure("network") }
       finally { pending.pulling = false }
@@ -276,28 +288,36 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
       return failure("invalid-response")
     const request = raw as Extract<SfDesktopInvocation, { kind: "request" }>
     const originalContext = binding.context
+    const fileOperation = request.operationId.startsWith("files.")
+    if (fileOperation && !originalContext) return unavailable
     const plan = planSfOperation({ request, descriptor: binding.descriptor,
       operations: deps.operations, principalRef: originalContext?.stamp.principalRef })
-    if (plan.status !== "ok") return failure(plan.status === "contract-unavailable" ? "contract-unavailable" : "invalid-response")
+    if (plan.status !== "ok") return { kind: "request-not-dispatched", reason: plan.status }
     const pending: Pending = { requestId: request.requestId, controller: new AbortController(), effect: plan.value.effect,
-      sequence: 0, pulling: false }
+      sequence: 0, pulling: false, bytesRead: 0,
+      byteLimit: request.operationId === "files.export.suppliers" ? SF_SUPPLIER_CSV_LIMIT : SF_FILE_BYTE_LIMIT }
     const onRetired = () => pending.controller.abort()
     binding.controller.signal.addEventListener("abort", onRetired, { once: true })
     binding.requests.set(request.requestId, pending)
     try {
-      if (request.operationId.startsWith("files.")) {
-        if (!originalContext) return failure("contract-unavailable")
+      if (fileOperation && originalContext) {
         const fresh = await loadSfDesktopContext({ net: deps.electron.net, session: binding.session,
           descriptor: binding.descriptor, operations: deps.operations, signal: pending.controller.signal })
         if (!binding.active || !validOwner(binding.owner) || pending.controller.signal.aborted
-          || binding.requests.get(request.requestId) !== pending) return failure("aborted")
-        if (fresh.status !== "ok" || binding.context !== originalContext ||
+          || binding.requests.get(request.requestId) !== pending)
+          return { kind: "request-not-dispatched", reason: "aborted" }
+        if (binding.context !== originalContext) return unavailable
+        if (fresh.status === "unauthenticated" || fresh.status === "denied") {
+          await retire(binding, fresh.status === "unauthenticated" ? "session-expired" : "access-revoked").catch(() => undefined)
+          return unavailable
+        }
+        if (fresh.status !== "ok" ||
           fresh.context.stamp.principalRef !== originalContext.stamp.principalRef ||
           fresh.context.stamp.policyVersion !== originalContext.stamp.policyVersion ||
           fresh.context.stamp.accessRevision !== originalContext.stamp.accessRevision ||
           !fresh.context.availability.some((resource) => resource.operations.some((operation) =>
             operation.operationId === request.operationId && operation.state === "ready" && operation.operational)))
-          return failure("contract-unavailable")
+          return unavailable
       }
       const reply = await requestSfHttp({
         net: deps.electron.net, session: binding.session, origin: binding.descriptor.publicOrigin,
@@ -311,6 +331,11 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
         return failure("contract-unavailable")
       }
       if (reply.kind === "stream") {
+        if (fileOperation &&
+          (reply.status !== 200 || !sfAllowedByteMime(request.operationId, reply.headers["content-type"]))) {
+          reply.source.cancel()
+          return failure("invalid-response")
+        }
         pending.source = reply.source
         pending.responseHandle = randomUUID()
         return { kind: "byte-response", status: reply.status, headers: reply.headers, responseHandle: pending.responseHandle }

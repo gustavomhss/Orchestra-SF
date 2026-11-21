@@ -1,3 +1,4 @@
+import { A } from "@solidjs/router"
 import { For, Show, createEffect, createUniqueId, onCleanup, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
@@ -7,6 +8,7 @@ import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
+import { encodeSfRouteRef } from "../../navigation-state"
 import { SfReviewUpdate } from "@orchestra/schema/sucafina/reviews"
 import type { Schema } from "effect"
 import { operationGranted, PeriodText } from "../labels"
@@ -15,7 +17,9 @@ import "./agenda.css"
 type Section = Schema.Schema.Type<typeof SfReviewUpdate>["items"][number]
 type Preview = Readonly<{
   selectionRef: string
-  sections: readonly Readonly<{ id: string; title: string; period: { start: string; end: string }; recordCount: number }>[]
+  sections: readonly Readonly<{
+    id: string; title: string; period: { start: string; end: string }; recordCount: number; recordRefs: readonly string[]
+  }>[]
 }>
 type Preserved = Readonly<{ id: string; version: number; createdAt: string }>
 type Phase = "selecting" | "previewing" | "reviewing" | "submitting" | "outcome-unknown" | "confirmed"
@@ -50,6 +54,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   })
   let sourceAbort: AbortController | undefined
   let commandAbort: AbortController | undefined
+  let previewHeading: HTMLHeadingElement | undefined
   const ready = () => owner.ready()
   const authorized = (operationId: string) => operationGranted(ready()?.context, operationId, { family: "reviews", resource: "agenda" })
   const mayPreview = () => authorized("dashboard.dashboard-agenda")
@@ -67,6 +72,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     ? "filtered-empty" : store.status
   const invalidatePreview = () => {
     if (store.phase === "outcome-unknown" || store.phase === "submitting") return
+    commandAbort?.abort()
     setStore({ preview: undefined, preserved: undefined, phase: "selecting" })
   }
   const discover = async (page: string) => {
@@ -156,7 +162,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     setStore("selected", items)
     invalidatePreview()
   }
-  const preview = async () => {
+  const preview = async (recordRemoved = false) => {
     const access = ready(), state = owner.state()
     if (!access || state.status !== "ready" || !mayPreview() || store.selected.length === 0 || store.selected.length > 30 ||
       store.phase === "submitting" || store.phase === "outcome-unknown") return
@@ -176,21 +182,27 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       )
       if (!current(generation, ownerKey) || controller.signal.aborted) return
       if (result.kind === "response" && result.body.status === "ok") {
-        const expected = sections.map((section) => section.id)
-        const actual = result.body.value.sections.map((section) => section.id)
-        if (expected.length !== actual.length || actual.some((id, index) => id !== expected[index])) {
+        const returned = result.body.value.sections
+        if (sections.length !== returned.length || returned.some((section, index) => {
+          const expected = sections[index]!
+          return section.id !== expected.id || section.recordCount !== section.recordRefs.length ||
+            new Set(section.recordRefs).size !== section.recordCount ||
+            (expected.recordRefs !== undefined && (expected.recordRefs.length !== section.recordRefs.length ||
+              expected.recordRefs.some((ref, recordIndex) => ref !== section.recordRefs[recordIndex])))
+        })) {
           setStore({ phase: "selecting", status: "stale", message: "sf.u25.changed" })
           return
         }
         setStore({
-          phase: "reviewing", status: "ready", message: "",
+          phase: "reviewing", status: "ready", message: recordRemoved ? "sf.u25.recordsRefreshed" : "",
           preview: {
             selectionRef: result.body.value.selectionRef,
-            sections: result.body.value.sections.map((section) => ({
-              id: section.id, title: section.title, period: section.period, recordCount: section.recordCount,
+            sections: returned.map((section) => ({
+              id: section.id, title: section.title, period: section.period, recordCount: section.recordCount, recordRefs: section.recordRefs,
             })),
           },
         })
+        if (recordRemoved) previewHeading?.focus()
         return
       }
       setStore("phase", "selecting")
@@ -201,6 +213,15 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       setStore("phase", "selecting")
       issue("unavailable", "sf.u25.error")
     }
+  }
+  const removeRecord = (sectionId: string, recordRef: string) => {
+    if (store.phase !== "reviewing" || store.status !== "ready" || !mayPreview()) return
+    const section = store.preview?.sections.find((entry) => entry.id === sectionId)
+    if (!section?.recordRefs.includes(recordRef)) return
+    const remaining = section.recordRefs.filter((ref) => ref !== recordRef)
+    if (remaining.length > 512) return // Same explicit-selector bound as the typed client.
+    setStore("selected", (items) => items.map((item) => item.id === sectionId ? { ...item, recordRefs: remaining } : item))
+    void preview(true)
   }
   const confirm = async () => {
     const access = ready(), state = owner.state(), prepared = store.preview
@@ -238,6 +259,17 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       console.error("Sucafina agenda preservation outcome uncertain", error instanceof Error ? error.name : "unknown")
       setStore({ phase: "outcome-unknown", status: "outcome-unknown", message: "sf.u25.pending" })
     }
+  }
+  const preservedHref = () => {
+    const state = owner.state()
+    if (store.phase !== "confirmed" || !store.preserved || !ready() ||
+      state.status !== "ready" || state.ownerKey !== store.ownerKey) return
+    const { serverKey, projectId, installationId } = props.route.ownerSelection
+    if (!serverKey || !projectId || !installationId || state.selection.serverKey !== serverKey ||
+      state.selection.projectId !== projectId || state.selection.installationId !== installationId) return
+    // A same-installation continuation still goes through F01 route admission.
+    return `/orchestra/sf-reviews/reviews/${encodeSfRouteRef(store.preserved.id)}?` +
+      new URLSearchParams({ server: serverKey, project: projectId, installation: installationId }).toString()
   }
   return (
     <SfPageFrame
@@ -315,13 +347,27 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
         </Show>
         <Show when={store.phase === "reviewing" && store.preview && store.status === "ready"}>
           <section class="sf-n28-section" data-sf-agenda-preview>
-            <h2>{t("sf.u25.previewTitle")}</h2>
+            <h2 ref={previewHeading} tabIndex={-1}>{t("sf.u25.previewTitle")}</h2>
             <p>{t("sf.u25.selection")}: {store.preview?.selectionRef}</p>
             <ol>
-              <For each={store.preview?.sections}>{(section) => <li>
+              <For each={store.preview?.sections}>{(section) => <li data-section-id={section.id}>
                 <strong>{section.title}</strong>
                 <span> {t("sf.u25.count")}: {section.recordCount}</span>
                 <span> {t("sf.u25.period")}: <PeriodText start={section.period.start} end={section.period.end} /></span>
+                <Show when={mayPreview() && section.recordRefs.length > 0 && section.recordRefs.length <= 513}>
+                  <details>
+                    <summary>{t("sf.u25.recordSelection")}: {section.title}</summary>
+                    <ul class="sf-n28-items">
+                      <For each={section.recordRefs}>{(ref) => <li>
+                        <code>{ref}</code>
+                        <div class="sf-n28-actions">
+                          <button class="mx-btn" type="button" onClick={() => removeRecord(section.id, ref)}
+                            aria-label={`${t("sf.u25.removeRecord")} ${ref}`}>{t("sf.u25.removeRecord")}</button>
+                        </div>
+                      </li>}</For>
+                    </ul>
+                  </details>
+                </Show>
               </li>}</For>
             </ol>
             <p>{t("sf.u25.coverage")}</p>
@@ -339,6 +385,9 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
               <dt>{t("sf.u25.result")}</dt><dd>{store.preserved?.id}</dd>
               <dt>{t("sf.u25.version")}</dt><dd>{store.preserved?.version}</dd>
             </dl>
+            <Show when={preservedHref()}>
+              {(href) => <A class="mx-btn" href={href()}>{t("sf.u25.openPreserved")}</A>}
+            </Show>
           </section>
         </Show>
         <Show when={store.phase === "outcome-unknown"}>

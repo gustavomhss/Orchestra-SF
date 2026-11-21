@@ -2,7 +2,7 @@
  * N25/U18 UI39 — prepared changes and exact producer review/apply/recovery.
  * A04 owns all CAS, domain effects, receipts and authorizations.
  */
-import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
+import { createEffect, createMemo, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import type { SfSurfaceProps } from "../../context/contracts"
@@ -24,6 +24,7 @@ import {
   u18Coverage, u18ErrorKey, u18Key, u18Message, u18PortState, u18Ref,
   u18Text, u18TransportState, type SfCase, type SfCaseChange, type SfDecisionReview,
 } from "../choice/model"
+import { procurementProposalHref, SfProcurementProposal } from "./procurement-proposal"
 import "../choice/u18.css"
 
 type ApplyOutcome = Readonly<{ receiptId: string; surface: string; version: number; outcome: "applied" | "conflict" | "failed" }>
@@ -47,6 +48,12 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     state: "loading", caseData: null, selectedChangeId: null,
     review: null, reviewIntent: null, busy: false, applyOutcome: null,
     outcomeUnknown: false, operationRef: null,
+  })
+  const [proposalApproved, setProposalApproved] = createSignal(false)
+  const proposalSelection = createMemo(() => {
+    const r = view.review, data = view.caseData
+    if (!r?.requiresProcurementApproval || !data) return undefined
+    return { caseRef: { id: data.id, incarnation: data.incarnation, version: data.version }, choiceId: r.choiceId, changeId: r.changeId }
   })
   let readAbort: AbortController | undefined
   let writeAbort: AbortController | undefined
@@ -160,6 +167,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     const controller = new AbortController()
     writeAbort = controller
     const intent = crypto.randomUUID()
+    setProposalApproved(false)
     setView({ busy: true, review: null, reviewIntent: intent })
     try {
       const result = await createSfDecisionsClient(ready.transport)["decisions.decision-review"](
@@ -227,7 +235,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
       change.caseVersion + 1 === data.version &&
       review.expectedVersion === change.expectedVersion &&
       review.changeId === change.id && review.choiceId === change.choiceId &&
-      !review.receipt && !view.busy && !view.outcomeUnknown && active() === "ready")
+      !review.receipt && (!review.requiresProcurementApproval || proposalApproved()) && !view.busy && !view.outcomeUnknown && active() === "ready")
   }
   const coverage = (): SfCoverage => selected() ? u18Coverage(selected()!.preview.costCoverage) :
     { state: "unavailable", summary: u18Message("sf.u18.choice.coverage"), reasons: [], knownCount: null, expectedCount: null }
@@ -420,6 +428,10 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
                   </button>
                 </Show>
               </section>
+              <Show when={!privateState() && !view.outcomeUnknown && proposalSelection()}>
+                {(selection) => <SfProcurementProposal selection={selection()} expectedVersion={change().expectedVersion}
+                  onReview={setProposalApproved} approvalHref={procurementProposalHref(props.route.params.caseRef, selection(), props.route.ownerSelection)} />}
+              </Show>
               <Show when={privateState() ? undefined : view.review}>
                 {(review) => <SfChangeReview
                   operation={{
@@ -435,7 +447,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
                     sourceRef: u18Ref(change().target.id),
                     sourceVersion: review().expectedVersion, fields: [...commandFields(), ...producerFields("after")] }}
                   effects={effects()} coverage={coverage()}
-                  blockingReasons={reviewAllowed() ? [] : [u18Message("sf.u18.changes.stale")]}
+                  blockingReasons={reviewAllowed() ? [] : [u18Message(review().requiresProcurementApproval && !proposalApproved() ? "sf.u18.proposal.pending" : "sf.u18.changes.stale")]}
                   confirmation={confirmation()} state={active()}
                   onConfirm={() => void apply()}
                   onRevise={() => setView("review", null)}

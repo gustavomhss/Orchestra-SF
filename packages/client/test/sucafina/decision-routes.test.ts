@@ -11,12 +11,14 @@ import { createSfTransport, type SfCallOptions, type SfTransport, type SfTranspo
 const dashboard = [
   "decisions.decision-promote",
   "decisions.decision-choose",
+  "decisions.decision-compare",
   "decisions.decision-edit",
   "decisions.choice.read",
   "decisions.command.sf_case_draft",
   "decisions.command.sf_change_prepare",
   "decisions.command.sf_question_prepare",
   "decisions.controls.read",
+  "decisions.portfolio.catalog",
   "decisions.current-choice-prepare",
   "decisions.current-choice-promote",
   "decisions.decision-add-question",
@@ -34,8 +36,8 @@ const procurement = [
 ] as const
 test("published Decisions envelopes retain their explicit original adapter", () => {
   const ids = [...dashboard, ...procurement]
-  expect(ids).toHaveLength(20)
-  expect(new Set(ids).size).toBe(20)
+  expect(ids).toHaveLength(22)
+  expect(new Set(ids).size).toBe(22)
   expect(Object.keys(SfDecisions.operations).filter((id) => id.startsWith("decisions.")).sort()).toEqual([...ids].sort())
   for (const id of dashboard) expect(SfOperationRegistry[id].pathTemplate).toBe("{mount}/dashboard")
   for (const id of procurement) expect(SfOperationRegistry[id].pathTemplate).toBe("{mount}/procurement")
@@ -61,6 +63,8 @@ const reviewed = { ...selected, reviewDigest: "a".repeat(64) }
 const prepare = { caseRef, choiceId: "choice", operations: [] }
 const recover = { ...selected, purpose: "recover" as const }
 const choice = { caseRef, choiceId: "choice", alternativeRef: { id: "alternative", version: 1 }, coverageRef: "coverage" }
+const catalog = { purpose: "catalog" as const, caseRefs: [caseRef] }
+const compare = { caseRef, baselineAlternativeId: "baseline", alternativeId: "candidate", criteria: ["cost"] }
 
 const probes: ReadonlyArray<{
   url: string; method: "GET" | "POST"; mutating: boolean; payload?: Record<string, unknown>
@@ -76,6 +80,10 @@ const probes: ReadonlyArray<{
     invoke: (t, o) => createSfDecisionsClient(t)["decisions.decision-edit"](edit, o) },
   { url: "/sucafina/dashboard?sf=decision-controls&format=json&case=case%3Acase%3Aincarnation", method: "GET", mutating: false,
     invoke: (t, o) => createSfDecisionsClient(t)["decisions.controls.read"]({ case: reference }, o) },
+  { url: "/sucafina/dashboard?sf=decision-portfolio-catalog", method: "POST", mutating: false, payload: catalog,
+    invoke: (t, o) => createSfDecisionsClient(t)["decisions.portfolio.catalog"](catalog, o) },
+  { url: "/sucafina/dashboard?sf=decision-compare", method: "POST", mutating: false, payload: compare,
+    invoke: (t, o) => createSfDecisionsClient(t)["decisions.decision-compare"](compare, o) },
   { url: "/sucafina/dashboard?sf=current-choice&format=json&case=case%3Acase%3Aincarnation", method: "GET", mutating: false,
     invoke: (t, o) => createSfDecisionsClient(t)["decisions.choice.read"]({ case: reference }, o) },
   { url: "/sucafina/dashboard?sf=current-choice-prepare", method: "POST", mutating: true, payload: choice,

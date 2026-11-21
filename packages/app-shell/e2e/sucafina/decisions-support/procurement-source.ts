@@ -1,5 +1,8 @@
-import { expect, test, type Locator, type Page } from "@playwright/test"
+import { expect, test, type Locator, type Page, type Request } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
+import { Schema } from "effect"
+import { SfDecisionsProposalAdvance, SfDecisionsProposalReview } from "@orchestra/schema/sucafina/decisions"
+import type { startPlannerInstallation } from "../wp03/installation-fixture"
 import { asRecord } from "./journey"
 
 const requestPattern = /^PR-\d{4}-\d+$/
@@ -48,54 +51,65 @@ export async function createRequisition(page: Page, origin: string, observations
   return id
 }
 
-/** Approval uses Procurement's actual transition, never the Decisions choice or Apply checkbox. */
-export async function approveExactRequisition(page: Page, origin: string, review: Record<string, unknown>, operation: Record<string, unknown>, observations: Record<string, unknown>[]) {
-  return test.step("require a compatible explicit Procurement approval for the exact reviewed amount before Apply", async () => {
+/** Canonical approvals bind the proposal while the live requisition remains a draft. */
+export async function approveExactRequisition(page: Page, installation: Awaited<ReturnType<typeof startPlannerInstallation>>,
+  selection: typeof SfDecisionsProposalReview.input.Type, review: Record<string, unknown>, operation: Record<string, unknown>,
+  observations: Record<string, unknown>[]) {
+  return test.step("submit and approve the exact Procurement proposal with two separate operator sessions", async () => {
     const requestId = String(asRecord(review.target).id)
     expect(requestId).toMatch(requestPattern)
-    const fields = (review.fields as unknown[]).map(asRecord).filter((field) => field.after === operation.amount)
-    expect(fields, "The domain preview must identify the same finite amount selected by the human").toHaveLength(1)
-    expect(operation.currency).toBe("USD")
-    const encoded = encodeSfRouteRef(requestId)
-    await page.goto(`/orchestra/sf-procurement/approvals/${encoded}`)
-    await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === `/orchestra/sf-procurement/approvals/${encoded}`)
-    const approval = page.locator("section.sf-u13-remaining-detail")
-    await expect(approval).toHaveCount(1)
-    await expect(approval).toContainText(requestId)
-    const facts = approval.locator("dl.sf-u13-remaining-facts")
-    const fact = (label: string) => facts.locator("div").filter({ has: page.locator(`dt:text-is("${label}")`) }).locator("dd")
-    await expect(fact("Request ID")).toHaveText(requestId)
-    const submitted = fact("Submitted amount")
-    await expect(submitted, "Never approve a different amount from the reviewed proposal").toContainText("USD")
-    const shown = Number((await submitted.innerText()).replace(/[^\d.]/g, ""))
-    expect(shown, "Never approve a different amount from the reviewed proposal").toBe(operation.amount)
-    const header = approval.locator("p").first()
-    const versionText = await header.innerText()
-    const versionMatch = /Persisted version:\s*(\d+)/.exec(versionText)
-    expect(versionMatch, "The approval must show the persisted source version").not.toBeNull()
-    const version = Number(versionMatch![1])
-    expect(version).toBeGreaterThan(0)
-    observations.push({ stage: "financial-approval-gate-entered", requestId, proposedAmount: operation.amount,
-      currentEstimatedAmount: shown, currentSummary: versionText,
-      dependency: "The domain must provide an approvable proposal compatible with the prepared change. C3 only prepares draft requisition saves, which cannot run after formal approval." })
-    // A draft amount change is not a submitted financial proposal. Do not submit or
-    // approve the old amount just to manufacture an approval unrelated to the preview.
-    const comment = `I explicitly approve this requisition for ${operation.amount} USD after reviewing the recorded choice and proposal.`
-    const response = await domainCommand(page, origin, { action: "approve", id: requestId, version },
-      approval.getByRole("button", { name: "Approve current step", exact: true }), "Confirm once", observations, async () => {
-        await approval.getByLabel("Approval comment", { exact: true }).fill(comment)
+    const fields = (review.fields as unknown[]).map(asRecord).filter((field) => field.field === "originalAmount" && field.after === operation.amount)
+    expect(fields).toHaveLength(1)
+    const currentAmount = fields[0]!.before
+    expect(typeof currentAmount).toBe("number")
+    const currency = String(operation.currency)
+    expect(currency).toBe("USD")
+    const expected = { targetId: requestId, domainVersion: Number(review.expectedVersion), currentAmount,
+      amount: operation.amount, currency, domainApplied: false }
+    const panel = (surface: Page) => surface.getByRole("region", { name: "Procurement proposal", exact: true })
+    const command = (surface: Page, kind: "submit" | "approve") =>
+      surface.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return url.origin === installation.origin && url.pathname === "/sucafina/procurement" &&
+          url.search === "?sf=decision-proposal-advance" && response.request().method() === "POST"
+      }).then(async (response) => {
+        expect(response.status()).toBe(200)
+        expect(response.headers()["content-type"]).toContain("application/json")
+        expect(response.request().postDataJSON()).toEqual({ ...selection, action: { kind, reviewDigest: expect.stringMatching(/^[a-f0-9]{64}$/) } })
+        const result = Schema.decodeUnknownSync(SfDecisionsProposalAdvance.output)(await response.json())
+        if (result.status !== "ok") throw new Error(`Proposal ${kind} failed with ${result.status}`)
+        expect(result.value).toMatchObject(expected)
+        return result.value
       })
-    expect(response.request().postDataJSON()).toMatchObject({ action: "approve", id: requestId, values: { comment } })
-    const detail = await openRequisition(page, origin, requestId)
-    expect(await sourceVersion(detail)).toBe(version + 1)
-    await expect(labeledLine(detail, "Status"), "A completed requisition approval must move the request into sourcing").toHaveText("Status: sourcing")
-    await expect(labeledLine(detail, "Stage")).toHaveText("Stage: sourcing")
-    const receipt = detail.locator('[data-stage="history"]').getByRole("listitem").filter({ hasText: comment })
-    await expect(receipt).toHaveCount(1)
-    await expect(receipt).toContainText(/Requisition approved by /)
-    const proof = { requestId, amount: operation.amount, currency: "USD", version: version + 1, action: "approve", comment }
-    observations.push({ stage: "explicit-financial-approval", ...proof })
-    return proof
+    const [submitted] = await Promise.all([command(page, "submit"), panel(page).getByRole("button", { name: "Submit exact proposal for approval", exact: true }).click()])
+    expect(submitted).toMatchObject({ state: "pending", step: { index: 0 }, allowedActions: [] })
+    await expect(panel(page).getByRole("button", { name: "Approve exact proposal", exact: true })).toHaveCount(0)
+    const href = await panel(page).getByRole("link", { name: "Open approver view", exact: true }).getAttribute("href")
+    expect(href).toBeTruthy()
+    const browser = page.context().browser()
+    if (!browser || !installation.approvers) throw new Error("The approval journey requires two separately enrolled operators")
+    const distinct = new Set([installation.actorId, ...installation.approvers.map((approver) => approver.actorId)])
+    expect(distinct.size).toBe(3)
+    const destination = new URL(href!, installation.origin)
+    expect(destination.origin).toBe(installation.origin)
+    for (const [index, approver] of installation.approvers.entries()) {
+      const context = await browser.newContext({ baseURL: installation.origin })
+      try {
+        const approvalPage = await context.newPage()
+        await approver.signIn(approvalPage)
+        await approvalPage.goto(destination.href)
+        await expect(panel(approvalPage).getByText(`${currentAmount} ${currency}`, { exact: true })).toBeVisible()
+        await expect(panel(approvalPage).getByText(`${operation.amount} ${currency}`, { exact: true })).toBeVisible()
+        await expect(panel(approvalPage).getByRole("status")).toHaveText("Pending approval")
+        const [approved] = await Promise.all([command(approvalPage, "approve"), panel(approvalPage).getByRole("button", { name: "Approve exact proposal", exact: true }).click()])
+        expect(approved.proposalDigest).toBe(submitted.proposalDigest)
+        expect(approved.state).toBe(index === 0 ? "pending" : "approved")
+        if (index === 0) expect(approved.step?.index).toBe(1)
+        else expect(approved.step).toBeNull()
+        observations.push({ stage: "explicit-procurement-proposal-approval", requestId, approver: approver.actorId, index, ...approved })
+      } finally { await context.close() }
+    }
+    return { requestId, amount: operation.amount, currency, version: expected.domainVersion, currentAmount: Number(currentAmount), action: "approve" }
   })
 }
 
@@ -121,37 +135,49 @@ export async function openRequisition(page: Page, origin: string, id: string) {
   return detail
 }
 
-type Command = Readonly<{ page?: "Requests"; action: string; id?: string; version?: number }>
+type Command = Readonly<{ page: "Requests" | "My approvals"; action: string; id?: string; version?: number }>
 
 // The chapter admits the command from the review confirm, never from the field editor.
 async function domainCommand(page: Page, origin: string, command: Command, openReview: Locator, confirmName: string, observations: Record<string, unknown>[], prepare?: () => Promise<void>) {
-  const seen = { posted: false }
-  const pending = page.waitForResponse((response) => {
-    const request = response.request()
-    const url = new URL(request.url())
-    if (request.method() !== "POST" || url.origin !== origin || url.pathname !== "/sucafina/procurement" || url.searchParams.has("sf")) return false
-    const body = request.postDataJSON()
-    const matched = body.action === command.action && (!command.page || body.page === command.page) && (!command.id || body.id === command.id)
-    if (matched) seen.posted = true
-    return matched
-  })
-  await expect(openReview).toBeEnabled()
-  await openReview.click()
-  const review = page.locator('[data-component="sf-change-review"]')
-  await expect(review).toHaveCount(1)
-  await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
-  expect(seen.posted, "The command is sent only after the review is confirmed").toBe(false)
-  if (prepare) await prepare()
-  const confirm = review.getByRole("button", { name: confirmName, exact: true })
-  await expect(confirm).toBeEnabled()
-  await confirm.click()
-  const response = await pending
-  expect(response.request().postDataJSON()).toMatchObject({ ...(command.page ? { page: command.page } : {}), action: command.action, ...(command.id ? { id: command.id, version: command.version } : {}) })
-  expect(response.status()).toBe(200)
-  expect(response.headers()["content-type"]).toContain("application/json")
-  expect(asRecord(await response.json()).ok).toBe(true)
-  observations.push({ stage: "procurement-human-command", action: command.action, httpStatus: response.status(), body: response.request().postDataJSON() })
-  return response
+  const endpoint = `${origin}/sucafina/procurement?${new URLSearchParams({ page: command.page })}`
+  function matches(request: Request) {
+    if (request.method() !== "POST" || request.url() !== endpoint) return false
+    const body = request.postDataJSON() as { action?: unknown; page?: unknown; id?: unknown } | null
+    return body?.action === command.action && body.page === command.page && (!command.id || body.id === command.id)
+  }
+  const posted: Request[] = []
+  const observe = (request: Request) => { if (matches(request)) posted.push(request) }
+  const onFailure = (request: Request) => { if (matches(request)) rejectFailure(new Error(`Procurement ${command.action} transport failed; reconcile before any retry`)) }
+  let rejectFailure!: (error: Error) => void
+  page.on("request", observe)
+  try {
+    await expect(openReview).toBeEnabled()
+    await openReview.click()
+    const review = page.locator('[data-component="sf-change-review"]')
+    await expect(review).toHaveCount(1)
+    await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+    if (prepare) await prepare()
+    const confirm = review.getByRole("button", { name: confirmName, exact: true })
+    await expect(confirm).toBeEnabled()
+    expect(posted, "The command is sent only after the review is confirmed").toHaveLength(0)
+    const failed = new Promise<never>((_, reject) => { rejectFailure = reject })
+    page.on("requestfailed", onFailure)
+    const receipt = page.waitForResponse((item) => matches(item.request())).then(async (response) => {
+      expect(response.status()).toBe(200)
+      expect(response.headers()["content-type"]).toContain("application/json")
+      expect(asRecord(await response.json()).ok).toBe(true)
+      return response
+    })
+    const [response] = await Promise.all([Promise.race([receipt, failed]), confirm.click()])
+    expect(posted).toHaveLength(1)
+    expect(posted[0]).toBe(response.request())
+    expect(response.request().postDataJSON()).toMatchObject({ page: command.page, action: command.action, ...(command.id ? { id: command.id, version: command.version } : {}) })
+    observations.push({ stage: "procurement-human-command", action: command.action, httpStatus: response.status(), body: response.request().postDataJSON() })
+    return response
+  } finally {
+    page.off("request", observe)
+    page.off("requestfailed", onFailure)
+  }
 }
 
 function labeledLine(detail: Locator, label: string) {

@@ -106,7 +106,9 @@ const AgendaSection = Schema.Struct({
 export const SfDashboardDashboardAgenda = {
   operationId: "dashboard.dashboard-agenda" as const,
   input: Schema.Struct({ sections: Schema.Array(AgendaSection) }).annotate({ parseOptions: { onExcessProperty: "error" } }),
-  output: Result(Schema.Struct({ selectionRef: Text, sections: Schema.Array(ReviewSection) })),
+  output: Result(Schema.Struct({ selectionRef: Text,
+    sections: Schema.Array(Schema.Struct({ ...ReviewSection.fields, recordRefs: RefList })),
+  })),
 }
 export const SfDashboardDashboardCapture = {
   operationId: "dashboard.dashboard-capture" as const,

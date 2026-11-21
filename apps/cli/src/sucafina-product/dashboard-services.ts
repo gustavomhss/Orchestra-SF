@@ -26,6 +26,7 @@ import { protectSfReviewReads } from "./review-read-integrity.ts"
 export type DashboardAgendaSection = { id: string; title: string; selectionRef: string; topic: string; period: Period; recordRefs?: readonly string[] }
 export type DashboardAgendaRequest = { sections: readonly DashboardAgendaSection[] }
 export type DashboardReviewRequest = { selectionRef: string; sectionRefs: readonly string[]; previousReviewRef?: string }
+type DashboardPreviewSection = ReviewSection & { recordRefs: readonly string[] }
 
 /** Private host composition: public arguments contain selectors, never persistence callbacks or receipts. */
 export function createSfDashboardServices(input: {
@@ -63,7 +64,9 @@ export function createSfDashboardServices(input: {
       value: refs.every((ref) => dashboardSourceCurrent(snapshots.dashboard, ref, context, environment.at)) && await host.revalidate(context),
     }), { signal: request.signal })
   }
-  const select: ReviewHost["select"] = async (selectionRef, sectionRefs, context, period) => {
+  const select = async (...[selectionRef, sectionRefs, context, period, previewRefs]: [
+    ...Parameters<ReviewHost["select"]>, Map<string, readonly string[]>?,
+  ]): Promise<PortResult<readonly ReviewSection[]>> => {
     const selection = selections.get(selectionRef)
     if (!selection || selection.expiresAt <= Date.now() || selection.owner !== owner(context) || new Set(sectionRefs).size !== sectionRefs.length || !await host.revalidate(context))
       return { status: "unavailable", reason: "dashboard-agenda-unavailable" }
@@ -73,6 +76,7 @@ export function createSfDashboardServices(input: {
       if (!selected || (period && digestSfValue(selected.period) !== digestSfValue(period))) return { status: "denied", reason: "dashboard-section-outside-selection" }
       const result = await agenda(selected, context)
       if (result.status !== "ok") return result
+      previewRefs?.set(id, result.value.recordRefs)
       sections.push({ id, title: selected.title, period: selected.period, recordCount: result.value.recordCount, projection: result.value.projection })
     }
     return { status: "ok", value: sections }
@@ -246,9 +250,22 @@ export function createSfDashboardServices(input: {
       if (selections.size >= 512) return { status: "unavailable" as const, reason: "dashboard-agenda-registry-full" }
       const selectionRef = `dashboard-agenda:${randomUUID()}`
       selections.set(selectionRef, { owner: owner(context), expiresAt: Date.now() + 5 * 60_000, sections: structuredClone(request.sections) })
-      const result = await reviews.preview(selectionRef, request.sections.map((section) => section.id), context)
+      // Keep selector refs local to this read; the C04 section contract is unchanged.
+      const previewRefs = new Map<string, readonly string[]>()
+      const preview = createReviewPort({ ...reviewHost, select: (ref, sections, binding, period) =>
+        select(ref, sections, binding, period, previewRefs) })
+      const result = await preview.preview(selectionRef, request.sections.map((section) => section.id), context)
       if (result.status !== "ok") { selections.delete(selectionRef); return result }
-      return { status: "ok" as const, value: { selectionRef, sections: result.value } }
+      const sections = result.value.flatMap((section): DashboardPreviewSection[] => {
+        const recordRefs = previewRefs.get(section.id)
+        return recordRefs && recordRefs.length === section.recordCount && new Set(recordRefs).size === section.recordCount
+          ? [{ ...section, recordRefs }] : []
+      })
+      if (sections.length !== result.value.length) {
+        selections.delete(selectionRef)
+        return { status: "unavailable" as const, reason: "dashboard-agenda-records-unavailable" }
+      }
+      return { status: "ok" as const, value: { selectionRef, sections } }
     },
     preserveReview: async (request: DashboardReviewRequest, context: TrustedDomainContext) => {
       if (context.kind !== "ui" || !await human.authorize(context, "reviews.preserve", request)) return { status: "denied" as const, reason: "human-review-authority-required" }
@@ -335,4 +352,3 @@ function agendaDefinition(page: string, period: Period) {
   }
   return pages[page]
 }
-

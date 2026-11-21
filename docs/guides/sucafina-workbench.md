@@ -63,6 +63,8 @@ Com pelo menos duas alternativas, use **Compare and choose**. Para pedir uma an�
 
 Comparar não registra uma escolha. Registrar a escolha guarda seu motivo no caso, mas não altera por si só o Planner nem aprova um pedido. Quando houver uma mudança preparada, use **Review current changes** para conferir destino, versão e valores anteriores e propostos. Somente depois marque a confirmação e selecione **Apply reviewed change**. Se a revisão estiver indisponível ou desatualizada, atualize o caso; consulte o recibo e o estado retornado para saber o que foi efetivamente aplicado.
 
+Para uma proposta de estimativa em Procurement, confira a requisição, a moeda, o valor proposto e a versão em **Procurement proposal**. Envie a proposta e compartilhe **Open approver view** com os responsáveis pelas etapas indicadas. Cada responsável abre o link na sua própria sessão e confirma o valor exato. Selecione **Read proposal status** para consultar as aprovações. Quando o painel indicar **Proposal approved**, use **Apply reviewed change** para salvar o valor e obter o recibo. Se a requisição, o caso ou a política de aprovação mudar, revise a proposta atual antes de continuar.
+
 Se a resposta de uma escolha ou aplicação não chegar, a comparação, o motivo e a solicitação permanecem bloqueados para repetição exata. Use **Retry the same choice** ou **Retry same application**, conforme a ação. Uma aplicação pode retornar conflito depois de o domínio observar um recibo; confira o recibo e o caso atual antes de iniciar outra mudança. A interface não interpreta esse conflito como prova de que nada foi gravado.
 
 Em **Explore a portfolio**, você pode selecionar decisões e alternativas autorizadas, definir qual decisão guardará a avaliação, período, moeda e limite de combinações e selecionar **Preview portfolio**. Leia elegibilidade, estados de comparação, restrições e limitações antes de selecionar **Save this evaluation**. A avaliação salva fica no histórico do caso. Um resultado parcial ou condicionado continua assim no histórico.
@@ -122,7 +124,7 @@ A gravação usa o mesmo comando de salvamento do pedido, com a versão que voc�
 
 ## Baixar relatórios em Word e PowerPoint
 
-Em **Generate Report**, escolha o relatório preservado, marque as seções que quer incluir e selecione o formato DOCX ou PPTX. A preparação usa as seções imutáveis do relatório e o seu acesso atual; depois o arquivo é baixado da instalação.
+Na revisão preservada, selecione **Abrir exportação do relatório** quando essa opção estiver disponível. Na tela de exportação, marque as seções que quer incluir, selecione DOCX ou PPTX e acione **Generate Report**. A preparação usa as seções imutáveis da revisão e confere seu acesso atual. Depois o arquivo é baixado da mesma instalação.
 
 Se a preparação ou o download não puderem ser confirmados, a tela informa a indisponibilidade e não converte uma resposta JSON em arquivo. Nesse caso, use **Try again** para repetir a mesma operação: a instalação mantém os primeiros bytes gerados e a repetição não cria um segundo relatório. Não inicie uma nova exportação enquanto o resultado da primeira estiver inconclusivo.
 

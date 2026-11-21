@@ -1,5 +1,5 @@
 import { A } from "@solidjs/router"
-import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
+import { createEffect, createMemo, createSignal, For, on, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { Schema } from "effect"
 import { useLanguage } from "@/context/language"
@@ -11,14 +11,19 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfCase, sfContextUiState, sfFailureUiState, sfOperationReady } from "../cases/model"
 import { sfDecisionHref } from "../cases/route"
 import "../cases/n24.css"
+import { SfNumericRule } from "./numeric-rule"
+import { SfRecordChoice } from "./record-choice"
 
 type ChoiceEnvelope = Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.choice.read"]["output"]>
 type ChoiceValue = Extract<ChoiceEnvelope, { status: "ok" }>["value"]
 type ReviewEnvelope = Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.current-choice-prepare"]["output"]>
 type ReviewValue = Extract<ReviewEnvelope, { status: "ok" }>["value"]
+const comparisonOperation = "decisions.decision-compare"
+type ComparisonEnvelope = Schema.Schema.Type<(typeof SfDecisions.operations)[typeof comparisonOperation]["output"]>
+type ComparisonValue = Extract<ComparisonEnvelope, { status: "ok" }>["value"]
 const k = (value: string) => value as SfCopyKey
 
-/** UI35: strictly source-backed comparison. Never changes recorded choices. */
+/** UI35: source-backed comparison and explicit human choice recording. */
 export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
   const language = useLanguage()
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
@@ -36,10 +41,84 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
     choicesState: SfUiState
     choiceReview?: ReviewValue
     reviewState: SfUiState
-    compare: boolean
     readSequence: number
-  }>({ selection: [], choicesState: "loading", reviewState: "empty", compare: false, readSequence: 0 })
+  }>({ selection: [], choicesState: "loading", reviewState: "empty", readSequence: 0 })
   const caseRecord = () => caseData.read.projection?.case
+  const selectedPair = createMemo(() => {
+    const record = caseRecord()
+    if (caseData.read.state !== "ready" || !record || !sameRouteCase(sourceRef(), record.id, record.incarnation) ||
+        route()?.kind === "detail" || ui.selection.length !== 2) return
+    const [baseline, alternative] = ui.selection.map((id) => record.alternatives.filter((item) => item.id === id))
+    if (baseline?.length !== 1 || alternative?.length !== 1 || baseline[0]!.id === alternative[0]!.id) return
+    return [baseline[0]!, alternative[0]!] as const
+  })
+  const comparisonTarget = createMemo(() => {
+    const active = caseData.owner.ready()
+    const generation = caseData.owner.generation()
+    const refresh = caseData.read.refresh
+    const pair = selectedPair()
+    const record = caseRecord()
+    if (!active || !pair || !record?.criteria.length || !sfOperationReady(active.context, comparisonOperation)) return
+    return { active, generation, refresh, input: {
+      caseRef: { id: record.id, incarnation: record.incarnation, version: record.version },
+      baselineAlternativeId: pair[0].id,
+      alternativeId: pair[1].id,
+      criteria: record.criteria.map((item) => item.id),
+    } }
+  })
+  const [comparison, setComparison] = createSignal<{
+    target: NonNullable<ReturnType<typeof comparisonTarget>>
+    abort: AbortController
+    state: SfUiState
+    value?: ComparisonValue
+  }>()
+  const currentComparison = () => {
+    const run = comparison()
+    return run?.target === comparisonTarget() ? run : undefined
+  }
+  createEffect(on([sourceRef, caseData.owner.generation, () => route()?.kind], () => setUi("selection", [])))
+  createEffect(on(comparisonTarget, (target) => {
+    const run = comparison()
+    if (run && run.target !== target) {
+      run.abort.abort()
+      setComparison(undefined)
+    }
+  }))
+  onCleanup(() => comparison()?.abort.abort())
+
+  const compare = async () => {
+    const target = comparisonTarget()
+    if (!target || currentComparison()?.state === "loading") return
+    const abort = new AbortController()
+    setComparison({ target, abort, state: "loading" })
+    const stillCurrent = () => !abort.signal.aborted && currentComparison()?.abort === abort
+    try {
+      const result = await createSfDecisionsClient(target.active.transport)[comparisonOperation](target.input, { signal: abort.signal })
+      if (!stillCurrent()) return
+      if (result.kind === "transport-error") {
+        setComparison({ target, abort, state: "unavailable" })
+        return
+      }
+      if (result.body.status !== "ok") {
+        setComparison({ target, abort, state: sfFailureUiState(result.body.status, result.status) })
+        return
+      }
+      const value = result.body.value
+      if (result.status !== 200 || value.request.scenarioRefs.length !== 2 ||
+          value.request.scenarioRefs[0] === value.request.scenarioRefs[1] ||
+          value.request.scenarioRefs[0] !== value.comparison.baselineResultRef ||
+          value.request.scenarioRefs[1] !== value.comparison.alternativeResultRef ||
+          value.request.criteria.length !== target.input.criteria.length ||
+          value.request.criteria.some((id, index) => id !== target.input.criteria[index])) {
+        setComparison({ target, abort, state: "stale" })
+        return
+      }
+      setComparison({ target, abort, state: "ready", value })
+    } catch {
+      if (stillCurrent()) setComparison({ target, abort, state: "unavailable" })
+    }
+  }
+
   const displayed = () => {
     const alternatives = caseRecord()?.alternatives ?? []
     const currentRoute = route()
@@ -47,33 +126,26 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
       const focus = String(currentRoute.params.alternativeRef)
       return alternatives.filter((item) => item.id === focus)
     }
-    if (!ui.compare || ui.selection.length === 0) return alternatives
-    return alternatives.filter((item) => ui.selection.includes(item.id))
-  }
-  const sameBasis = () => {
-    const items = displayed()
-    if (!ui.compare || items.length !== 2) return false
-    const first = items[0]!.result
-    const second = items[1]!.result
-    return first.comparisonStatus === "complete" && second.comparisonStatus === "complete"
-      && first.currency === second.currency
-      && first.horizon.start === second.horizon.start && first.horizon.end === second.horizon.end
-      && first.costCoverage.basisId === second.costCoverage.basisId
-      && first.costCoverage.basisVersion === second.costCoverage.basisVersion
+    return currentComparison() ? selectedPair() ?? alternatives : alternatives
   }
 
   const routeCase = () => sourceRef()
+  const matchesCurrentCase = (ref: NonNullable<ChoiceValue["selected"]>["caseRef"]) => {
+    const record = caseRecord()
+    return caseData.read.state === "ready" && !!record && sameRouteCase(routeCase(), ref.id, ref.incarnation) &&
+      ref.id === record.id && ref.incarnation === record.incarnation && ref.version === record.version
+  }
   const choicesForRoute = () => {
     if (ui.choicesState !== "ready" || ui.choicesCase !== routeCase()) return undefined
     const selected = ui.choices?.selected
-    if (!selected || selected.caseRef.id !== routeCase()) return undefined
+    if (!selected || !matchesCurrentCase(selected.caseRef)) return undefined
     return selected
   }
   const choicePanelState = (): SfUiState => {
     if (ui.choicesState !== "ready") return ui.choicesState
     if (ui.choicesCase !== routeCase()) return "stale"
     const selected = ui.choices?.selected
-    if (selected && selected.caseRef.id !== routeCase()) return "stale"
+    if (selected && !matchesCurrentCase(selected.caseRef)) return "stale"
     return selected ? "ready" : "empty"
   }
   createEffect(() => {
@@ -126,16 +198,13 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
   const select = (ref: string) => {
     const present = ui.selection.includes(ref)
     setUi({ selection: present ? ui.selection.filter((item) => item !== ref) :
-      [...ui.selection.slice(-1), ref], compare: false, choiceReview: undefined })
+      [...ui.selection.slice(-1), ref], choiceReview: undefined })
   }
   const prepare = async (choiceId: string) => {
     const requestedCase = routeCase()
-    const selected = ui.choicesCase === requestedCase ? ui.choices?.selected : undefined
-    const current = selected?.caseRef.id === requestedCase
-      ? selected.choices.find((item) => item.id === choiceId)
-      : undefined
+    const current = choicesForRoute()?.choices.find((item) => item.id === choiceId)
     const active = caseData.owner.ready()
-    if (!current?.request || current.request.caseRef.id !== requestedCase || !active ||
+    if (!current?.request || !matchesCurrentCase(current.request.caseRef) || !active ||
       !sfOperationReady(active.context, "decisions.current-choice-prepare") ||
       ui.reviewState === "loading" || ui.reviewState === "outcome-unknown") return
     const ticket = caseData.owner.generation()
@@ -166,7 +235,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
         return
       }
       const review = result.body.value
-      if (!sameRouteCase(requestedCase, review.promotion.caseRef.id, review.promotion.caseRef.incarnation) || review.promotion.choiceId !== choiceId) {
+      if (!matchesCurrentCase(review.promotion.caseRef) || review.promotion.choiceId !== choiceId) {
         setUi({ reviewState: "stale", choiceReview: undefined })
         return
       }
@@ -178,10 +247,11 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
     }
   }
   const amount = (value: number | null) => value === null ? t("sf.ui35.missing") : String(value)
+  const difference = (value: number | null) => value === null ? amount(value) : `${amount(value)} ${selectedPair()?.[0].result.currency ?? ""}`
   const canReview = () => {
     const active = caseData.owner.ready()
     const selected = choicesForRoute()
-    return !!active && !!selected?.choices.some((choice) => choice.request?.caseRef.id === routeCase()) &&
+    return !!active && !!selected?.choices.some((choice) => choice.request && matchesCurrentCase(choice.request.caseRef)) &&
       sfOperationReady(active.context, "decisions.current-choice-prepare")
   }
   return (
@@ -195,8 +265,8 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
       onLayoutMode={() => undefined}
       primaryAction={{
         id: "compare-alternatives", labelKey: k("sf.ui35.primary"), tone: "primary",
-        disabled: caseData.read.state !== "ready" || ui.selection.length !== 2,
-        busy: false, onInvoke: () => setUi("compare", true),
+        disabled: !comparisonTarget() || currentComparison()?.state === "loading",
+        busy: currentComparison()?.state === "loading", onInvoke: () => void compare(),
       }}
       secondaryActions={[{
         id: "refresh-alternatives", labelKey: k("sf.ui35.reload"), tone: "secondary",
@@ -229,6 +299,9 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                     return <article class="sf-n24-compare-card" aria-current={chosen() ? "true" : undefined}>
                       <h2><bdi>{alternative.title}</bdi></h2>
                       <p>{t("sf.ui35.version")}: {alternative.version}</p>
+                      <Show when={selectedPair()?.[0].id === alternative.id}>
+                        <p>{t("sf.u19.sensitivity.baseline")}</p>
+                      </Show>
                       <button class="mx-btn" type="button" aria-pressed={chosen()}
                         onClick={() => select(alternative.id)}>{t("sf.ui35.choose")}</button>
                       <section aria-label={t("sf.ui35.result")}>
@@ -271,9 +344,55 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                   }}
                 </For>
               </div>
-              <Show when={ui.compare && ui.selection.length === 2 && !sameBasis()}>
-                <p role="status">{t("sf.ui35.incompatible")}</p>
+              <Show when={selectedPair() && !comparisonTarget()}>
+                <p role="status">{t("sf.ui35.error")}</p>
               </Show>
+              <Show when={currentComparison()}>
+                {(run) => <section class="mx-card sf-n24-section" aria-label={t("sf.u22.chart.comparison")} aria-live="polite">
+                  <h2>{t("sf.u22.chart.comparison")}</h2>
+                  <SfStatePanel state={run().state} messageKey={k(
+                    run().state === "loading" ? "sf.ui35.prepareBusy" :
+                    run().state === "denied" ? "sf.common.noAccess" :
+                    run().state === "session-expired" ? "sf.common.loginAgain" : "sf.ui35.error"
+                  )}>
+                    <Show when={run().value?.comparison}>
+                      {(result) => <>
+                        <dl>
+                          <dt>{t("sf.ui35.status")}</dt><dd><bdi>{result().comparisonStatus}</bdi></dd>
+                          <dt>{t("sf.u26.delta")} ({t("sf.ui35.knownSubtotal")})</dt>
+                          <dd><bdi>{difference(result().knownDifference)}</bdi></dd>
+                          <dt>{t("sf.u26.delta")} ({t("sf.ui35.total")})</dt>
+                          <dd><bdi>{difference(result().completeDifference)}</bdi></dd>
+                        </dl>
+                        <Show when={result().comparisonStatus !== "complete"}>
+                          <p role="status">{t("sf.ui35.incompatible")}</p>
+                        </Show>
+                        <Show when={result().criterionResults.length}>
+                          <h3>{t("sf.ui35.criterion")}</h3>
+                          <ul class="sf-n24-list"><For each={result().criterionResults}>{(criterion) =>
+                            <li><bdi>{caseRecord()?.criteria.find((item) => item.id === criterion.criterionId)?.description ?? criterion.criterionId}</bdi>
+                              : <bdi>{criterion.state}</bdi> · <bdi>{criterion.reason}</bdi></li>
+                          }</For></ul>
+                        </Show>
+                        <Show when={result().unresolvedConditions.length}>
+                          <h3>{t("sf.ui35.conditions")}</h3>
+                          <ul class="sf-n24-list"><For each={result().unresolvedConditions}>{(condition) => <li><bdi>{condition}</bdi></li>}</For></ul>
+                        </Show>
+                        <details>
+                          <summary>{t("sf.u19.results.resultRef")}</summary>
+                          <ol class="sf-n24-list"><For each={run().value?.request.scenarioRefs}>{(ref) => <li><bdi>{ref}</bdi></li>}</For></ol>
+                        </details>
+                      </>}
+                    </Show>
+                  </SfStatePanel>
+                </section>}
+              </Show>
+              <Show when={selectedPair()}>
+                {(pair) => <SfNumericRule owner={caseData.owner} caseSelector={sourceRef()} record={record()} pair={pair()}
+                  onSaved={() => setComparison(undefined)} />}
+              </Show>
+              <SfRecordChoice owner={caseData.owner} caseSelector={sourceRef()} record={record()}
+                pair={selectedPair()} comparison={currentComparison()} />
             </Show>
             </Show>
             <section class="mx-card sf-n24-section" aria-label={t("sf.ui35.choice")}>
@@ -297,7 +416,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                   </For>
                 </div>}
               </Show>
-              <Show when={ui.reviewState === "ready" && ui.choiceReview?.promotion.caseRef.id === routeCase() ? ui.choiceReview : undefined}>
+              <Show when={ui.reviewState === "ready" && ui.choiceReview && matchesCurrentCase(ui.choiceReview.promotion.caseRef) ? ui.choiceReview : undefined}>
                 {(review) => <section class="sf-n24-review" aria-live="polite">
                   <h3>{t("sf.ui35.prepareReview")}</h3>
                   <p>{t("sf.ui35.prepared")}</p>

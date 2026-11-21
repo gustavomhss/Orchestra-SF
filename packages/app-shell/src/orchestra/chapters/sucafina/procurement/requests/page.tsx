@@ -18,7 +18,7 @@ import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
 import { SF_U11_REMAINING_COPY } from "./copy"
 import {
   decodeRequestsPage, displayScalar, isPoWritable, isPrWritable, poFromRecord, postedPoLine, prFromRecord,
-  requestRef, requestVersion, uiCommandAction, validatePo, validatePr,
+  requestRef, requestVersion, reviewedPr, uiCommandAction, validatePo, validatePr,
   type SfPoEdit, type SfPrEdit, type SfRequest, type SfRequestCommand, type SfRequestsRead,
 } from "./model"
 import "./requests.css"
@@ -321,7 +321,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       ref: action === "create" ? undefined : selectedRef(),
       version: action === "create" ? 0 : version()!,
       status: currentRow?.status ?? "draft",
-      pr: pr ? { ...pr } : undefined,
+      // Capture the reviewed JSON shape, omitting absent scalar fields without clearing explicit nulls.
+      pr: pr ? reviewedPr(pr) : undefined,
       po: po ? { ...po, ...(po.lines ? { lines: po.lines.map(postedPoLine) } : {}) } : undefined,
       reason,
       operationRef: crypto.randomUUID() as SfOperationRef,
@@ -362,7 +363,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         !stageAllowed(review.action) || !sourceAvailable() || view.sending) return
     if (review.action !== "create" && (!review.ref || version() !== review.version ||
         row()?.status !== review.status)) return
-    const pr = review.pr
+    // Snapshot the reviewed scalar fields off the reactive store before hashing and sending.
+    const pr = review.pr ? { ...review.pr } : undefined
     const po = review.po
     if (pr && (!activePr() || JSON.stringify(activePr()?.value) !== JSON.stringify(pr) ||
         (review.ref && activePr()?.baseVersion !== review.version))) return
@@ -383,10 +385,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       ...(review.ref ? { id: review.ref } : {}) }
     const input = (() => {
       switch (review.action) {
-        case "create": return { ...base, action: "create" as const, values: { pr: review.pr! } }
-        case "save-pr": return { ...base, action: "save" as const, values: { pr: review.pr! } }
+        case "create": return { ...base, action: "create" as const, values: { pr: pr! } }
+        case "save-pr": return { ...base, action: "save" as const, values: { pr: pr! } }
         case "save-po": return { ...base, action: "save" as const, values: { po: review.po! } }
-        case "submit_pr": return { ...base, action: "submit_pr" as const, values: { pr: review.pr! } }
+        case "submit_pr": return { ...base, action: "submit_pr" as const, values: { pr: pr! } }
         case "submit_po": return { ...base, action: "submit_po" as const, values: { po: review.po! } }
         case "issue": return { ...base, action: "issue" as const, values: {} }
         case "cancel": return { ...base, action: "cancel" as const, values: { reason: review.reason } }
@@ -467,13 +469,13 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       const result = await (async () => {
         switch (review.action) {
           case "create": return client["domain.command.CAP25.create"](
-            { ...base, action: "create", values: { pr: review.pr! } }, options)
+            { ...base, action: "create", values: { pr: pr! } }, options)
           case "save-pr": return client["domain.command.CAP25.save"](
-            { ...base, action: "save", values: { pr: review.pr! } }, options)
+            { ...base, action: "save", values: { pr: pr! } }, options)
           case "save-po": return client["domain.command.CAP25.save"](
             { ...base, action: "save", values: { po: review.po! } }, options)
           case "submit_pr": return client["domain.command.CAP25.submit_pr"](
-            { ...base, action: "submit_pr", values: { pr: review.pr! } }, options)
+            { ...base, action: "submit_pr", values: { pr: pr! } }, options)
           case "submit_po": return client["domain.command.CAP25.submit_po"](
             { ...base, action: "submit_po", values: { po: review.po! } }, options)
           case "issue": return client["domain.command.CAP25.issue"](

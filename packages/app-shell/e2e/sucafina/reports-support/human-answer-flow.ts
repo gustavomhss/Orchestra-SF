@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test"
-import type { Locator, Page, Response, TestInfo } from "@playwright/test"
+import type { Locator, Page, Request, Response, TestInfo } from "@playwright/test"
 import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import { object, projection, responseFor, text } from "./model.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
@@ -17,10 +17,7 @@ import { recoverCreatedQuestionAfterReadLoss } from "./lost-created-thread-read.
  * The real local operator is the recipient; distinct-person authority is not
  * asserted without a genuinely admitted second identity.
  */
-export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo, options: { loseReplyResponse?: boolean; loseCreatedThreadRead?: boolean } = {}) {
-  const sections = saved.sections.filter((section) => section.title === "Budget")
-  expect(sections).toHaveLength(1)
-  const section = sections[0]!
+export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, section: PreservedReview["sections"][number], info: TestInfo, options: { loseReplyResponse?: boolean; loseCreatedThreadRead?: boolean } = {}) {
   const captured = projection(section.content)
   const values = captured.values.filter((value) => value.id === corpus.forecastField)
   expect(values).toHaveLength(1)
@@ -49,16 +46,62 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
   const questionBody = `Confirm the preserved ${corpus.year} forecast of ${corpus.before}; distinguish it from the current source.`
   await discussion.getByRole("textbox", { name: "Question", exact: true }).fill(questionBody)
   const beforeQuestion = await api.version()
-  const created = options.loseCreatedThreadRead
-    ? await recoverCreatedQuestionAfterReadLoss({ page, app, api, discussion, body: questionBody, expectedStorageVersion: beforeQuestion, info })
-    : await submit(page, app, discussion.getByRole("button", { name: "Ask about this review", exact: true }), "collaboration-thread-create")
-  expect(created.payload.draft).toEqual({
-    kind: "clarification", ...basis, reviewContext: pin, recipientRef: app.actorId, body: questionBody,
+  const started = performance.now()
+  const events: { operation: string; phase: string; elapsedMs: number; status?: number; failure?: string }[] = []
+  let attachments = Promise.resolve()
+  const snapshot = () => {
+    const body = JSON.stringify({ events })
+    attachments = attachments.then(() => info.attach("reports-question-transport", { body, contentType: "application/json" }))
+  }
+  const expected = new URL(app.dashboardURL)
+  const operation = (request: Request) => {
+    const url = new URL(request.url())
+    if (url.origin !== expected.origin || url.pathname !== expected.pathname || request.method() !== "POST") return
+    const mode = url.searchParams.get("sf")
+    if (mode === "review-thread-context") return "pin"
+    if (mode === "collaboration-storage-version") return "storage-version"
+    if (mode === "collaboration-thread-create") return "create"
+    if (mode === "collaboration-thread-read") return "read"
+  }
+  const record = (request: Request, phase: string, result: { status?: number; failure?: string } = {}) => {
+    const name = operation(request)
+    if (name && events.length < 20) {
+      events.push({ operation: name, phase, elapsedMs: Math.round(performance.now() - started), ...result })
+      snapshot()
+    }
+  }
+  const onRequest = (request: Request) => record(request, "request")
+  const onResponse = (response: Response) => record(response.request(), "response", { status: response.status() })
+  const onFinished = (request: Request) => record(request, "requestfinished")
+  const onFailure = (request: Request) => record(request, "requestfailed", {
+    failure: /^net::ERR_(?:ABORTED|CONNECTION_REFUSED|CONNECTION_RESET|FAILED|TIMED_OUT)$/.exec(request.failure()?.errorText ?? "")?.[0] ?? "other",
   })
-  expectMutation(created.payload.mutation, beforeQuestion)
-  const question = await expectCreatedReviewQuestion(api, { pin, basis, principalRef: app.actorId, question: questionBody }, created.value)
-  await expect(page).toHaveURL((url) => url.searchParams.get("reviewThread") === question.id)
-  await expect(discussion.getByRole("status")).toHaveText("Question saved against the preserved review.")
+  page.on("request", onRequest)
+  page.on("response", onResponse)
+  page.on("requestfinished", onFinished)
+  page.on("requestfailed", onFailure)
+  snapshot()
+  const question = await (async () => {
+    try {
+      const created = options.loseCreatedThreadRead
+        ? await recoverCreatedQuestionAfterReadLoss({ page, app, api, discussion, body: questionBody, expectedStorageVersion: beforeQuestion, info })
+        : await submit(page, app, discussion.getByRole("button", { name: "Ask about this review", exact: true }), "collaboration-thread-create")
+      expect(created.payload.draft).toEqual({
+        kind: "clarification", ...basis, reviewContext: pin, recipientRef: app.actorId, body: questionBody,
+      })
+      expectMutation(created.payload.mutation, beforeQuestion)
+      const question = await expectCreatedReviewQuestion(api, { pin, basis, principalRef: app.actorId, question: questionBody }, created.value)
+      await expect(page).toHaveURL((url) => url.searchParams.get("reviewThread") === question.id)
+      await expect(discussion.getByRole("status")).toHaveText("Question saved against the preserved review.")
+      return question
+    } finally {
+      page.off("request", onRequest)
+      page.off("response", onResponse)
+      page.off("requestfinished", onFinished)
+      page.off("requestfailed", onFailure)
+      await attachments
+    }
+  })()
 
   const replyBody = `Human answer: this review retains ${corpus.before} for ${corpus.annual.start} through ${corpus.annual.end}. REPORTS_HUMAN_ORIGINAL`
   await discussion.getByRole("textbox", { name: "Reply", exact: true }).fill(replyBody)
@@ -78,7 +121,7 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
   expect(answer.projection).toEqual(captured)
   expect(projection(answer.projection).values.filter((value) => value.id === corpus.forecastField))
     .toMatchObject([{ value: corpus.before, period: corpus.annual, currency: "unspecified" }])
-  await expectCapturedBudget(page, corpus)
+  await expectCapturedBudget(page, corpus, section)
 
   const confirmation = discussion.getByRole("region", { name: "Answer confirmation", exact: true })
   await expect(confirmation).toBeVisible()
@@ -167,10 +210,11 @@ export async function editHumanAnswer(page: Page, app: ReportsInstallation, api:
 }
 
 async function submit(page: Page, app: ReportsInstallation, button: Locator, mode: string) {
-  const pending = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
-  await button.click()
-  const response = await pending
-  return observed(response, mode)
+  const [result] = await Promise.all([
+    page.waitForResponse(responseFor(app.dashboardURL, mode, "POST")).then((response) => observed(response, mode)),
+    button.click(),
+  ])
+  return result
 }
 
 export async function observed(response: Response, mode: string) {

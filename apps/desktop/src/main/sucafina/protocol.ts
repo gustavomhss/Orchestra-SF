@@ -142,13 +142,12 @@ export function planSfOperation(input: Readonly<{
       if (upload.bytes.byteLength > limit || value[isImport ? "fileName" : "name"] !== upload.fileName
         || value.mediaType !== upload.mediaType) return { status: "invalid-response" }
       if (operationId === "files.import-admit") {
-        const ext = upload.fileName.split(".").pop()?.toLowerCase()
         if (Object.keys(value).some((key) => !["selectionRef", "options", "fileName", "mediaType"].includes(key)))
           return { status: "invalid-response" }
         const formFields: Record<string, unknown> = {
           surface: source?.surface, selectionRef: value.selectionRef, options: value.options,
         }
-        if (!ext || !["xlsx", "xls", "json"].includes(ext)
+        if (!/\.(xlsx|xls|json)$/i.test(upload.fileName)
           || typeof formFields.surface !== "string" || !SURFACES.has(formFields.surface)
           || typeof formFields.selectionRef !== "string" || !("options" in value))
           return { status: "invalid-response" }

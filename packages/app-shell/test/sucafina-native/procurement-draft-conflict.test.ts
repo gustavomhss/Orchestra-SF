@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { Schema } from "effect"
 import { SfContext, type SfEditScopeKey, type SfOwnerKey, type SfRef } from "@orchestra/schema/sucafina/context"
 import { SfProcurementRequest } from "@orchestra/schema/sucafina/procurement"
+import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContextDependencies, SfOwnerIdentity } from "../../src/orchestra/chapters/sucafina/context/contracts"
 import { createSfOwnerDrafts } from "../../src/orchestra/chapters/sucafina/context/drafts"
@@ -9,7 +10,7 @@ import { createSfDraft } from "../../src/orchestra/chapters/sucafina/shared/draf
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../../src/orchestra/chapters/sucafina/procurement/draft-conflict"
 import { isPrWritable, poFromRecord } from "../../src/orchestra/chapters/sucafina/procurement/requests/model"
 import { editableStages } from "../../src/orchestra/chapters/sucafina/procurement/sourcing/model"
-import { generalDraftFields, supplierEdit } from "../../src/orchestra/chapters/sucafina/procurement/suppliers/model"
+import { generalDraftFields, supplierCommandSnapshot, supplierEdit } from "../../src/orchestra/chapters/sucafina/procurement/suppliers/model"
 import { revalidateSfNativeDraft } from "../../src/orchestra/chapters/sucafina/host/draft-revalidation"
 
 // Source-contract fixtures, not an installed identity or UI journey.
@@ -50,6 +51,24 @@ test("supplier optional fields stay in one stable edit contract across source ch
   expect(Object.keys(updated)).toEqual(Object.keys(initial))
   expect(drafts.registry.acquire({ ...selection, baseVersion: 6, base: updated, value: updated, revalidation: read })).toBe(draft)
   expect(draft.snapshot()).toMatchObject({ availability: "active", phase: "conflict", value: { taxId: "local edit" } })
+})
+
+test("supplier review snapshots omit unset nested fields before native JSON admission", () => {
+  const draft = supplierEdit({ legalName: "Supplier", dueDiligence: false, contacts: [{ name: "Buyer", phone: undefined }],
+    commercial: { notes: undefined }, compliance: { notes: "" } })
+  const supplier = supplierCommandSnapshot(draft)
+  expect(Object.hasOwn(draft, "taxId")).toBe(true)
+  expect(supplier.contacts?.[0]).not.toBe(draft.contacts?.[0])
+  expect(supplier).toStrictEqual({ legalName: "Supplier", dueDiligence: false,
+    contacts: [{ name: "Buyer" }], commercial: {}, compliance: { notes: "" } })
+  for (const command of [
+    { page: "Suppliers", action: "create", version: 0, values: { supplier } },
+    { page: "Suppliers", action: "save", id: "s1", version: 5, values: { supplier } },
+  ] as const) {
+    const codec = SfNativeOperationBindings[`domain.command.CAP27.${command.action}`]!
+    expect(codec.decodeInput({ ...command, values: { supplier: draft } })).toEqual({ status: "invalid" })
+    expect(codec.decodeInput(command)).toEqual({ status: "ok", value: command })
+  }
 })
 
 test("editable stage changes retain drafts but block review and deleted PO lines", async () => {

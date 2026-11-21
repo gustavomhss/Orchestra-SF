@@ -821,6 +821,9 @@ export const SfSourceChangePrepare = Output_PreparedChangeSet_108
 export const SfSourceQuestionPrepare = Output_QuestionProposal_55
 
 export const SfSourceScenarioResult = Output_ScenarioResult_28
+export const SfSourceScenarioRequest = Output_ScenarioRequest_3
+export const SfSourceDecisionCriteria = Output_Shape_148.fields.criteria
+export const SfSourceCostCoverageAssessment = Output_CostCoverageAssessment_40
 
 export const SfSourceScenarioComparison = Output_ScenarioComparison_62
 

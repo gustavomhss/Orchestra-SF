@@ -1,5 +1,6 @@
-import { expect, test, type Locator, type Page, type Request } from "@playwright/test"
-import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reopenCase } from "./journey"
+import { expect, test, type Page, type Request } from "@playwright/test"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
+import { asRecord, assertPortfolioCatalog, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, readCase, readReply, reopenCase } from "./journey"
 import { createPlannerSources, sourceNames } from "./planner-sources"
 import { loseAlternativeResponse } from "./alternative-response"
 
@@ -11,32 +12,51 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
   const sources = await test.step("create two actual Planner versions through human controls", () => createPlannerSources(page, installation.origin, installation.actorId, observations))
   await enterWorkbench(page, installation.origin)
   const objective = `${draft.objective} — initial alternatives`
-  const form = await fillDecision(page, objective)
-  await form.getByLabel("Criteria, one per line", { exact: true }).fill(knownIncreaseCriterion)
-  const created = await clickCommand(page, form.getByRole("button", { name: "Create decision", exact: true }), "workbench-command", observations)
+  const form = await fillDecision(page, objective, [knownIncreaseCriterion])
+  const created = await clickCommand(page, form.getByRole("button", { name: "Confirm this decision creation", exact: true }), "workbench-command", observations)
   expect(typeof created.outputRef).toBe("string")
   const reference = created.outputRef as string
   const identity = caseIdentity(reference)
+  await form.getByRole("link", { name: "Open decision", exact: true }).click()
   await currentCase(page, reference, objective, 1, "draft")
 
   await test.step("discover and inspect authorized sources before attaching them to the saved case", async () => {
-    await page.getByText("Edit decision", { exact: true }).click()
-    const editor = page.locator("form[data-decision-edit]")
-    await expect(editor).toHaveAttribute("data-sf-edit-ready", "true")
+    await page.getByRole("button", { name: "Edit decision", exact: true }).click()
+    const editor = page.locator("[data-sf-decision-editor]")
+    await expect(editor).toBeVisible()
     await editor.getByRole("button", { name: "Find Planner sources", exact: true }).click()
-    const select = editor.locator('select[name="source-option"]')
+    const select = editor.getByRole("combobox", { name: "Planner source", exact: true })
     for (const entry of [{ name: sourceNames.baseline, id: sources.baseline, monthlyAmount: 100, count: 1 }, { name: sourceNames.candidate, id: sources.candidate, monthlyAmount: 200, count: 2 }]) {
-      await selectSource(select, entry.name, entry.id)
-      await editor.getByRole("button", { name: "Inspect selected source", exact: true }).click()
-      const preview = editor.locator("[data-source-preview]")
+      await expect(select).toBeEnabled()
+      const option = select.getByRole("option", { name: new RegExp(`^${entry.name} \\(${entry.id}\\) · 2027 · draft · r[1-9]\\d*$`) })
+      await expect(option).toHaveCount(1)
+      const label = (await option.textContent())!.trim()
+      await select.selectOption({ label })
+      const selected = await select.inputValue()
+      const inspect = editor.getByRole("button", { name: "Inspect selected source", exact: true })
+      const [inspection] = await Promise.all([page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return url.origin === installation.origin && isCommand(response.request(), "bi-data", "GET") &&
+          url.searchParams.get("baseRef") === selected && url.searchParams.get("candidateRef") === selected
+      }).then(async (response) => {
+        expect(response.status()).toBe(200)
+        expect(response.headers()["content-type"]).toContain("application/json")
+        return asRecord(await response.json())
+      }), inspect.click()])
+      expect(asRecord(inspection.projection).components).toEqual(expect.arrayContaining([
+        expect.objectContaining({ amount: entry.monthlyAmount, currency: "USD",
+          period: { start: "2027-01-01", end: "2027-01-31" } }),
+      ]))
+      const preview = editor.locator("[data-sf-source-preview]")
       await expect(preview).toHaveAttribute("data-state", "ready")
+      await expect(preview.getByRole("heading", { name: label, exact: true })).toBeVisible()
       await expect(preview).toContainText("USD")
       await expect(preview).toContainText("2027-01-01")
       await expect(preview).toContainText("2027-12-31")
-      await expect(preview).toContainText(`Component: ${entry.monthlyAmount} USD · 2027-01-01 – 2027-01-31`)
       await editor.getByRole("button", { name: "Attach source to draft", exact: true }).click()
-      await expect(editor.locator("[data-decision-sources] > li")).toHaveCount(entry.count)
+      await expect(editor.locator("[data-sf-decision-sources] > li")).toHaveCount(entry.count)
     }
+    await editor.getByRole("button", { name: "Review source attachments", exact: true }).click()
     const sent = page.waitForRequest((request) => isCommand(request, "decision-edit"))
     const saved = await clickCommand(page, editor.getByRole("button", { name: "Save decision", exact: true }), "decision-edit", observations)
     const payload = asRecord((await sent).postDataJSON())
@@ -56,45 +76,69 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
     }
     expect(saved.value).toEqual({ caseRef: { ...identity, version: 2 } })
     await currentCase(page, reference, objective, 2, "draft")
-    const context = asRecord(JSON.parse((await page.locator("form[data-decision-edit]").getAttribute("data-context"))!))
-    expect(context.sourceRefs).toEqual(payload.sourceRefs)
+    expect((await readCase(page, reference)).sourceRefs).toEqual(payload.sourceRefs)
+    const persistedSources = page.getByRole("region", { name: "Source references", exact: true }).getByRole("listitem")
+    await expect(persistedSources).toHaveText(refs.map((ref) => `${ref.refId} · ${ref.evidenceLevel}`))
     observations.push({ stage: "authorized-sources-attached", caseRef: { ...identity, version: 2 }, sources: refs })
   })
 
-  const promotions: { payload: unknown; body: string | null; key: string | undefined }[] = []
+  const promotions: { payload: unknown; key: string | undefined }[] = []
+  const registrations: unknown[] = []
   const listener = (request: Request) => {
-    if (isCommand(request, "decision-promote")) promotions.push({ payload: request.postDataJSON(), body: request.postData(), key: request.headers()["idempotency-key"] })
+    if (new URL(request.url()).origin !== installation.origin) return
+    if (isCommand(request, "decision-promote")) promotions.push({ payload: request.postDataJSON(), key: request.headers()["idempotency-key"] })
+    if (isCommand(request, "decision-coverage")) registrations.push(request.postDataJSON())
   }
   page.on("request", listener)
-  let firstCoverageBasis: unknown
   try {
-    await test.step("save the first alternative with an explicit pending cost inventory", async () => {
-      const registration = await prepareAlternative(page, sourceNames.baseline, sources.baseline, titles.baseline, 100, observations)
-      expect(registration.caseRef).toEqual({ ...identity, version: 2 })
-      firstCoverageBasis = registration.basis
+    const first = await test.step("save the first alternative with an explicit pending cost inventory", async () => {
+      const draftCase = await readCase(page, reference)
+      expect(draftCase.alternatives).toEqual([])
+      const { source, basis, coverage, registration, payload, confirm } = await prepareAlternative(page,
+        installation.origin, reference, draftCase, sources.baseline, titles.baseline, 100, "first", observations)
+      expect(registrations).toEqual([registration])
+      expect(basis.sourceRefs).toEqual([source])
       await currentCase(page, reference, objective, 2, "draft")
-      const saved = await clickCommand(page, page.locator("form[data-decision-alternatives]").getByRole("button", { name: "Create alternative", exact: true }), "decision-promote", observations)
+      expect((await readCase(page, reference)).alternatives).toEqual([])
+      expect(promotions).toHaveLength(0)
+      const saved = await clickCommand(page, confirm, "decision-promote", observations)
       const receipt = asRecord(saved.value)
       expect(receipt.resultRef).toMatch(/^decision-result:/)
       expect(receipt).toEqual({ caseRef: { ...identity, version: 3 }, resultRef: receipt.resultRef })
       await currentCase(page, reference, objective, 3, "comparing")
-      await expect(alternativeArticles(page)).toHaveCount(1)
-      await assertAlternative(page, titles.baseline, 1200)
       expect(promotions).toHaveLength(1)
+      expect(promotions[0]!.payload).toEqual(payload)
+      const persisted = await readCase(page, reference)
+      expect(persisted.alternatives).toHaveLength(1)
+      const baseline = persisted.alternatives[0]!
+      assertAlternative(baseline, payload, source, basis, 1200)
+      await page.locator('[data-sf-surface="UI34"]').getByRole("link", { name: "Alternatives", exact: true }).click()
+      await assertComparisonCard(page, baseline)
+      await expect(page.locator(".sf-n24-compare-card")).toHaveCount(1)
+      await page.getByRole("link", { name: "Back to case", exact: true }).click()
+      await currentCase(page, reference, objective, 3, "comparing")
+      observations.push({ stage: "first-alternative-saved", caseRef: receipt.caseRef, resultRef: receipt.resultRef, registration, coverage })
+      return { baseline, basis, registration, coverage, resultRef: receipt.resultRef }
     })
 
-    await test.step("lose the second creation response and explicitly recover the identical request", async () => {
-      const registration = await prepareAlternative(page, sourceNames.candidate, sources.candidate, titles.candidate, 200, observations)
+    const second = await test.step("lose the second creation response and read back its exact saved outcome without replay", async () => {
+      const before = await readCase(page, reference)
+      expect(before.alternatives).toEqual([first.baseline])
+      const { source, basis, coverage, registration, payload, editor, confirm } = await prepareAlternative(page,
+        installation.origin, reference, before, sources.candidate, titles.candidate, 200, "second", observations, first.basis)
       expect(registration.caseRef).toEqual({ ...identity, version: 3 })
-      expect(registration.basis).toEqual(firstCoverageBasis)
+      expect(basis).toEqual(first.basis)
+      expect(coverage.coverageRef).not.toBe(first.coverage.coverageRef)
+      expect(registrations).toEqual([first.registration, registration])
       await currentCase(page, reference, objective, 3, "comparing")
-      const editor = page.locator("form[data-decision-alternatives]")
+      expect((await readCase(page, reference)).alternatives).toEqual([first.baseline])
+      expect(promotions).toHaveLength(1)
       const lost = await (async () => {
         const interruption = await loseAlternativeResponse(page, installation.origin)
         try {
           const failed = page.waitForEvent("requestfailed", { predicate: (request) => isCommand(request, "decision-promote") })
           const observed = Promise.all([interruption.completed, failed])
-          await editor.getByRole("button", { name: "Create alternative", exact: true }).click()
+          await confirm.click()
           const [result] = await observed
           return result
         } finally { await interruption.close() }
@@ -103,84 +147,85 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
       expect(lost.contentType).toContain("application/json")
       const receipt = asRecord(asRecord(lost.body).value)
       expect(receipt.resultRef).toMatch(/^decision-result:/)
+      expect(receipt.resultRef).not.toBe(first.resultRef)
       expect(lost.body).toEqual({ status: "ok", value: { caseRef: { ...identity, version: 4 }, resultRef: receipt.resultRef } })
+      await expect(editor.getByRole("alert")).toContainText("Save outcome unknown.")
       await expect(editor.getByLabel("Alternative title", { exact: true })).toHaveValue(titles.candidate)
       await expect(editor.getByLabel("Alternative title", { exact: true })).toBeDisabled()
-      await expect(editor.locator('select[name="source"]')).toBeDisabled()
-      await expect(editor.getByRole("button", { name: "Retry same request", exact: true })).toBeEnabled()
+      await expect(editor.getByRole("combobox", { name: "Attached Planner source", exact: true })).toBeDisabled()
+      await expect(confirm).toBeDisabled()
       expect(promotions).toHaveLength(2)
       const original = promotions[1]!
-      expect(original.payload).toEqual(lost.payload)
+      expect(original.payload).toEqual(payload)
+      expect(lost.payload).toEqual(payload)
       expect(original.key).toMatch(/^[a-f0-9-]{36}$/)
-      expect(asRecord(original.payload).caseRef).toEqual({ ...identity, version: 3 })
-      const recovered = await clickCommand(page, editor.getByRole("button", { name: "Retry same request", exact: true }), "decision-promote", observations)
-      expect(recovered).toEqual(lost.body)
-      expect(promotions).toHaveLength(3)
-      expect(promotions[2]).toEqual(original)
+      expect(original.key).not.toBe(promotions[0]!.key)
+      const [read] = await Promise.all([waitForAttachedRead(page, installation.origin, reference, source.refDigest),
+        editor.getByRole("button", { name: "Check saved outcome", exact: true }).click()])
+      const recovered = asRecord(asRecord((await readReply(read, observations)).value).selected)
+      expect(recovered.caseRef).toEqual(receipt.caseRef)
+      const forecast = asRecord(recovered.forecast)
+      expect(forecast.source).toEqual(source)
+      expect(forecast.expectedVersion).toBe(coverage.version)
+      expect(asRecord(forecast.classification).version).toBe(coverage.version)
+      expect(asRecord(forecast.coverage)).toMatchObject({ coverageRef: coverage.coverageRef, basis })
+      await expect(editor.getByText(`Alternative save verified: v4 · ${receipt.resultRef}`, { exact: true })).toBeVisible()
+      await editor.getByRole("button", { name: "Reload recovered case", exact: true }).click()
       await currentCase(page, reference, objective, 4, "comparing")
-      await expect(alternativeArticles(page)).toHaveCount(2)
-      observations.push({ stage: "alternative-response-reconciled", caseRef: { ...identity, version: 4 },
-        originalMutationKey: original.key, mutationRequests: 3, distinctIntentions: 2, financialApplication: false })
+      const persisted = await readCase(page, reference)
+      expect(persisted.alternatives).toHaveLength(2)
+      expect(persisted.alternatives).toContainEqual(first.baseline)
+      const candidate = persisted.alternatives.find((alternative) => alternative.title === titles.candidate)!
+      assertAlternative(candidate, payload, source, basis, 2400)
+      expect(candidate.id).not.toBe(first.baseline.id)
+      expect(asRecord(recovered.decision).alternatives).toEqual(persisted.alternatives)
+      expect(recovered.scenarios).toEqual(expect.arrayContaining([
+        expect.objectContaining({ ref: first.resultRef, alternativeId: first.baseline.id, caseRef: { ...identity, version: 3 } }),
+        expect.objectContaining({ ref: receipt.resultRef, alternativeId: candidate.id, caseRef: { ...identity, version: 4 } }),
+      ]))
+      expect(promotions).toHaveLength(2)
+      expect(registrations).toHaveLength(2)
+      observations.push({ stage: "alternative-response-reconciled", caseRef: receipt.caseRef, resultRef: receipt.resultRef,
+        alternativeId: candidate.id, originalMutationKey: original.key, mutationRequests: 2, distinctIntentions: 2, financialApplication: false })
+      return candidate
     })
 
-    await test.step("reopen the exact alternatives and consume them in the current comparison", async () => {
+    await test.step("reopen the exact two alternatives in native comparison and the positive portfolio catalog", async () => {
       await page.reload()
       await currentCase(page, reference, objective, 4, "comparing")
       await reopenCase(page, reference, objective)
       await currentCase(page, reference, objective, 4, "comparing")
-      await expect(alternativeArticles(page)).toHaveCount(2)
-      await assertAlternative(page, titles.baseline, 1200)
-      await assertAlternative(page, titles.candidate, 2400)
-      const choice = page.locator("form[data-decision-choice]")
-      await expect(choice).toHaveAttribute("data-sf-choice-ready", "true")
-      const context = asRecord(JSON.parse((await choice.getAttribute("data-context"))!))
-      expect(context.caseRef).toEqual({ ...identity, version: 4 })
-      const alternatives = (context.alternatives as unknown[]).map(asRecord)
-      expect(alternatives).toHaveLength(2)
-      expect(new Set(alternatives.map((item) => item.id)).size).toBe(2)
-      expect(alternatives.map((item) => item.title).sort()).toEqual(Object.values(titles).sort())
-      for (const alternative of alternatives) expect(alternative).toMatchObject({ version: 1, currency: "USD", horizon: draft.horizon })
-      await choice.locator('select[name="baseline"]').selectOption({ label: titles.baseline })
-      await choice.locator('select[name="alternative"]').selectOption({ label: titles.candidate })
-      const compared = await clickCommand(page, choice.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)
-      const value = asRecord(compared.value)
-      // C10 compares cost as alternative minus baseline; savings has the opposite orientation.
-      expect(asRecord(value.comparison)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
-      expect(asRecord(value.request).criteria).toEqual((context.criteria as { id: string }[]).map((criterion) => criterion.id))
-      expect(asRecord(value.comparison).criterionResults).toEqual((context.criteria as { id: string }[]).map((criterion) => ({
-        criterionId: criterion.id, state: "unknown", reason: "criterion-rule-unavailable",
-      })))
-      expect(asRecord(value.comparison).unresolvedConditions).toContain("criterion-rules-unavailable")
-      await expect(choice.locator("[data-comparison]")).toContainText("Comparison: conditioned · Known difference: 1200")
-      await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeDisabled()
-      await expect(page.getByText("No changes prepared.", { exact: true })).toBeVisible()
+      const alternatives = [first.baseline, second]
+      expect(await readCase(page, reference)).toMatchObject({ alternatives, choices: [], preparedChanges: [], receipts: [] })
+      await page.locator('[data-sf-surface="UI34"]').getByRole("link", { name: "Alternatives", exact: true }).click()
+      await expect(page).toHaveURL((url) => url.pathname === `/orchestra/sf-decisions/${encodeSfRouteRef(reference)}/alternatives`)
+      const compare = page.getByRole("button", { name: "Compare alternatives", exact: true })
+      await expect(compare).toBeDisabled()
+      for (const alternative of alternatives) {
+        const card = await assertComparisonCard(page, alternative)
+        await card.getByRole("button", { name: "Select for comparison", exact: true }).click()
+        await expect(card).toHaveAttribute("aria-current", "true")
+      }
+      await compare.click()
+      await expect(page.locator('.sf-n24-compare-card[aria-current="true"]')).toHaveCount(2)
+      await expect(page.locator(".sf-n24-compare-card")).toHaveCount(2)
+      await expect(page.getByText("A complete numerical comparison is not authorized for these bases, periods or currencies.", { exact: true })).toBeVisible()
       await expect(page.getByRole("button", { name: "Apply reviewed change", exact: true })).toHaveCount(0)
-      expect(promotions).toHaveLength(3)
-      observations.push({ stage: "persisted-alternatives-compared", caseRef: { ...identity, version: 4 }, alternatives,
-        comparison: value.comparison, choiceRecorded: false, financialApplication: false })
+      observations.push({ stage: "persisted-alternatives-compared", caseRef: { ...identity, version: 4 },
+        alternativeIds: alternatives.map((alternative) => alternative.id), knownSubtotals: [1200, 2400],
+        completeComparison: false, choiceRecorded: false, financialApplication: false })
 
-      // Leaving a read comparison can warn about the unsaved human choice. No choice is submitted.
-      page.once("dialog", (dialog) => dialog.accept())
-      await page.getByRole("link", { name: "Workbench", exact: true }).click()
-      await page.getByText("Explore a portfolio", { exact: true }).click()
-      const portfolio = page.locator("section[data-portfolio]")
-      await expect(portfolio).toHaveAttribute("data-sf-portfolio-ready", "true")
-      await clickCommand(page, portfolio.getByRole("button", { name: "Find decisions", exact: true }), "decision-list", observations, "GET")
-      await portfolio.getByRole("checkbox", { name: objective, exact: true }).check()
-      const catalogReply = await clickCommand(page, portfolio.getByRole("button", { name: "Find alternatives", exact: true }), "decision-portfolio-catalog", observations)
-      const catalog = asRecord(catalogReply.value)
-      expect(catalog.cases).toHaveLength(1)
-      const item = asRecord((catalog.cases as unknown[])[0])
-      expect(item.caseRef).toEqual({ ...identity, version: 4 })
-      const candidates = (item.alternatives as unknown[]).map(asRecord)
+      const item = await assertPortfolioCatalog(page, installation.origin, reference, 4, observations)
+      const candidates = item.alternatives
       expect(candidates).toHaveLength(2)
       expect(candidates.map((candidate) => candidate.alternativeId).sort()).toEqual(alternatives.map((alternative) => alternative.id).sort())
       for (const candidate of candidates) {
         expect(candidate.alternativeVersion).toBe(1)
         expect(candidate.comparisonStatus).toBe("conditioned")
-        expect(asRecord(candidate.costCoverage).coverageState).toBe("pending")
-        await expect(portfolio.locator("[data-portfolio-candidates]").getByRole("checkbox", { name: `${objective} · ${candidate.title} · conditioned`, exact: true })).toBeVisible()
+        expect(candidate.costCoverage.coverageState).toBe("pending")
       }
+      expect(promotions).toHaveLength(2)
+      expect(registrations).toHaveLength(2)
       observations.push({ stage: "portfolio-consumed-identical-alternatives", caseRef: item.caseRef,
         alternativeIds: candidates.map((candidate) => candidate.alternativeId), portfolioEvaluated: false })
     })
@@ -188,77 +233,100 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
   return { reference, objective, sources, titles }
 }
 
-async function selectSource(select: Locator, name: string, id: string) {
-  await expect(select).toBeEnabled()
-  const option = select.getByRole("option", { name: new RegExp(`${name}|${id}`) })
-  await expect(option).toHaveCount(1)
-  await select.selectOption({ label: (await option.textContent())!.trim() })
-}
-
 async function currentCase(page: Page, reference: string, objective: string, version: number, state: "draft" | "comparing") {
-  await expect(page).toHaveURL((url) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
-  const decision = page.getByRole("region", { name: "Decision", exact: true })
-  await expect(decision.getByRole("heading", { name: objective, exact: true })).toBeVisible()
-  await expect(decision.locator("header > p")).toHaveText(`${state} · Version ${version} · ${draft.horizon.start} – ${draft.horizon.end} · USD`)
-  const context = asRecord(JSON.parse((await page.locator("form[data-decision-edit]").getAttribute("data-context"))!))
-  expect(context.caseRef).toEqual({ ...caseIdentity(reference), version })
+  await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-decisions/" + encodeSfRouteRef(reference))
+  const decision = page.locator('[data-sf-surface="UI34"]')
+  await expect(decision).toHaveAttribute("data-sf-case-ref", reference)
+  await expect(decision).toHaveAttribute("data-sf-case-version", String(version))
+  await expect(decision.getByRole("region", { name: "Question", exact: true }).getByText(objective, { exact: true })).toBeVisible()
+  await expect(decision.locator(".sf-n24-metadata > span")).toHaveText([
+    `Current version: ${version}`, `State: ${state}`,
+    `Period: ${draft.horizon.start} – ${draft.horizon.end}`, "USD",
+  ])
+  expect(await readCase(page, reference)).toMatchObject({ ...caseIdentity(reference), version, objective, state,
+    horizon: draft.horizon, currency: "USD" })
 }
 
-function alternativeArticles(page: Page) {
-  return page.getByRole("region", { name: "Decision", exact: true }).locator(":scope > section")
-    .filter({ has: page.getByRole("heading", { name: "Alternatives", exact: true }) }).locator(":scope > article")
-}
+type SavedCase = Awaited<ReturnType<typeof readCase>>
+type SavedAlternative = SavedCase["alternatives"][number]
 
-async function assertAlternative(page: Page, title: string, subtotal: number) {
-  const article = alternativeArticles(page).filter({ has: page.getByRole("heading", { name: title, exact: true }) })
+async function assertComparisonCard(page: Page, alternative: SavedAlternative) {
+  const article = page.locator(".sf-n24-compare-card").filter({ has: page.getByRole("heading", { name: alternative.title, exact: true }) })
   await expect(article).toHaveCount(1)
-  await expect(article.getByRole("heading", { name: "Comparison conditioned", exact: true })).toBeVisible()
-  await expect(article.getByText(`Known subtotal: ${subtotal} USD`, { exact: true })).toBeVisible()
-  await expect(article.getByText(/^Total:/)).toHaveCount(0)
+  await expect(article.getByText(`Version: ${alternative.version}`, { exact: true })).toBeVisible()
+  await expect(article.getByText("Known subtotal", { exact: true })).toBeVisible()
+  await expect(article.getByText(`${alternative.result.knownSubtotal} USD`, { exact: true })).toBeVisible()
+  await expect(article.getByText("conditioned", { exact: true })).toBeVisible()
+  await expect(article.getByText("pending", { exact: true })).toBeVisible()
+  await expect(article.getByText("Total", { exact: true })).toHaveCount(0)
+  await expect(article).toContainText(`${alternative.result.costCoverage.basisId} · ${alternative.result.costCoverage.basisVersion}`)
   await expect(article).toContainText(`${draft.horizon.start} – ${draft.horizon.end}`)
+  return article
 }
 
-async function prepareAlternative(page: Page, sourceName: string, versionId: string, title: string, monthlyAmount: number, observations: Record<string, unknown>[]) {
-  const editor = page.locator("form[data-decision-alternatives]")
-  await expect(editor).toHaveAttribute("data-sf-alternatives-ready", "true")
-  await editor.getByRole("button", { name: "Load attached scenarios", exact: true }).click()
-  const source = editor.locator('select[name="source"]')
-  await selectSource(source, sourceName, versionId)
-  const sourceDigest = await source.inputValue()
-  const inspected = page.waitForResponse((response) => isCommand(response.request(), "decision-controls", "GET") && new URL(response.url()).searchParams.get("source") === sourceDigest)
-  await editor.getByRole("button", { name: "Inspect scenario", exact: true }).click()
-  const inspectedResponse = await inspected
-  expect(inspectedResponse.status()).toBe(200)
-  expect(inspectedResponse.headers()["content-type"]).toContain("application/json")
-  const inspectedReply = asRecord(await inspectedResponse.json())
-  const controls = inspectedReply.status === "ok" ? asRecord(inspectedReply.value) : inspectedReply
-  const observedSource = asRecord(asRecord(asRecord(controls.selected).forecast).source)
-  expect(observedSource.refDigest).toBe(sourceDigest)
-  expect(asRecord(observedSource.target)).toMatchObject({ surface: "planner", recordType: "planner-version", recordId: versionId })
-  const preview = editor.locator("[data-alternative-preview]")
-  await expect(preview).toHaveAttribute("data-state", "ready")
-  await expect(preview).toContainText("USD")
-  await expect(preview).toContainText(`Component: ${monthlyAmount} USD · 2027-01-01 – 2027-01-31`)
-  await editor.getByLabel("Alternative title", { exact: true }).fill(title)
-  const inventory = editor.locator('select[name="basis"]')
-  const offered = inventory.getByRole("option", { name: /renewal|transition/i })
-  await expect(offered).toHaveCount(1)
-  await inventory.selectOption({ label: (await offered.textContent())!.trim() })
-  await editor.getByLabel("Reason for pending cost review", { exact: true }).fill(pendingReason)
+function assertAlternative(alternative: SavedAlternative, payload: { title: string; scenario: unknown }, source: SavedCase["sourceRefs"][number],
+  basis: Record<string, unknown>, subtotal: number) {
+  expect(alternative).toMatchObject({ id: expect.any(String), title: payload.title, version: 1, scenario: payload.scenario,
+    result: { comparisonStatus: "conditioned", knownSubtotal: subtotal, total: null, currency: "USD", horizon: draft.horizon,
+      costCoverage: { coverageState: "pending", alternativeId: alternative.id, alternativeVersion: 1, basisId: basis.id, basisVersion: basis.version } } })
+  expect(alternative.result.sourceRefs).toContainEqual(source)
+}
+
+async function prepareAlternative(page: Page, origin: string, reference: string, before: SavedCase, versionId: string, title: string,
+  monthlyAmount: number, ordinal: "first" | "second", observations: Record<string, unknown>[], existingBasis?: Record<string, unknown>) {
+  const matches = before.sourceRefs.filter((ref) => ref.kind === "record" && ref.target.surface === "planner" &&
+    ref.target.recordType === "planner-version" && ref.target.recordId === versionId)
+  expect(matches).toHaveLength(1)
+  const source = matches[0]!
+  const caseRef = { id: before.id, incarnation: before.incarnation, version: before.version }
+  const editor = page.getByRole("region", { name: `Create ${ordinal} alternative`, exact: true })
+  await editor.getByRole("combobox", { name: "Attached Planner source", exact: true }).selectOption(source.refDigest)
+  const [read] = await Promise.all([waitForAttachedRead(page, origin, reference, source.refDigest),
+    editor.getByRole("button", { name: "Inspect attached forecast", exact: true }).click()])
+  const inspection = asRecord(asRecord((await readReply(read, observations)).value).selected)
+  expect(inspection.caseRef).toEqual(caseRef)
+  const forecast = asRecord(inspection.forecast)
+  expect(forecast.source).toEqual(source)
+  expect(forecast.expectedVersion).toBe(0)
+  const preview = editor.getByRole("region", { name: "Inspected forecast", exact: true })
+  await expect(preview).toContainText("USD · 2027-01-01 – 2027-12-31")
+  await expect(preview.getByText(`${monthlyAmount} USD · 2027-01-01 – 2027-01-31`, { exact: true })).toBeVisible()
+  await editor.getByRole("checkbox", { name: "Use renewal or transition cost inventory", exact: true }).check()
+  await editor.getByRole("textbox", { name: "Reason for pending cost review", exact: true }).fill(pendingReason)
+  await editor.getByRole("button", { name: "Review pending coverage", exact: true }).click()
+  const coverageReview = editor.getByRole("group", { name: "Review pending coverage", exact: true })
+  await expect(coverageReview.getByRole("listitem")).toHaveCount(9)
+  await expect(coverageReview.getByRole("listitem").filter({ hasText: pendingReason })).toHaveCount(9)
   const sent = page.waitForRequest((request) => isCommand(request, "decision-coverage"))
-  const coverage = await clickCommand(page, editor.getByRole("button", { name: "Save pending coverage", exact: true }), "decision-coverage", observations)
+  const registered = await clickCommand(page, coverageReview.getByRole("button", { name: "Confirm pending coverage", exact: true }), "decision-coverage", observations)
   const registration = asRecord((await sent).postDataJSON())
-  expect(registration.expectedVersion).toBe(0)
   const basis = asRecord(registration.basis)
-  expect(basis.decisionType).toBe("renewal-transition-v1")
-  expect(basis.version).toBe(1)
+  expect(basis).toEqual(existingBasis ?? inspection.initialCoverageBasis)
+  if (existingBasis) expect(asRecord(inspection.decision).costCoverageBases).toEqual([existingBasis])
+  expect(basis).toMatchObject({ decisionType: "renewal-transition-v1", version: 1, additionalCategoryIds: [] })
   expect(basis.categoryIds).toHaveLength(9)
-  expect(basis.additionalCategoryIds).toEqual([])
-  expect(registration.entries).toEqual((basis.categoryIds as string[]).map((categoryId) => ({ categoryId, status: "pending", reason: pendingReason })))
-  expect(registration.source).toEqual(observedSource)
-  expect(typeof asRecord(coverage.value).coverageRef).toBe("string")
-  expect(asRecord(coverage.value).version).toBe(1)
-  await expect(editor.getByRole("button", { name: "Create alternative", exact: true })).toBeEnabled()
-  observations.push({ stage: "human-pending-coverage-saved", sourceName, title, coverage: coverage.value, registration, pendingReason })
-  return registration
+  expect(registration).toEqual({ caseRef, expectedVersion: 0, source, basis,
+    entries: (basis.categoryIds as string[]).map((categoryId) => ({ categoryId, status: "pending", reason: pendingReason })) })
+  const coverage = asRecord(registered.value)
+  expect(coverage.coverageRef).toMatch(/^baseline-coverage:/)
+  expect(coverage.version).toBe(1)
+  await editor.getByRole("textbox", { name: "Alternative title", exact: true }).fill(title)
+  const reviewLabel = `Review ${ordinal} alternative`
+  await editor.getByRole("button", { name: reviewLabel, exact: true }).click()
+  const promotionReview = editor.getByRole("group", { name: reviewLabel, exact: true })
+  await expect(promotionReview).toContainText(title)
+  await expect(promotionReview).toContainText(source.refId)
+  await expect(promotionReview).toContainText(`${coverage.coverageRef} · v1`)
+  return { editor, source, basis, coverage, registration,
+    payload: { caseRef, title, scenario: { baseRef: source.refId, operations: [], assumptions: [] }, coverageRef: coverage.coverageRef },
+    confirm: promotionReview.getByRole("button", { name: `Confirm ${ordinal} alternative`, exact: true }) }
+}
+
+function waitForAttachedRead(page: Page, origin: string, reference: string, sourceDigest: string) {
+  return page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return url.origin === origin && isCommand(response.request(), "decision-controls", "GET") &&
+      url.searchParams.get("case") === reference && url.searchParams.get("source") === sourceDigest &&
+      url.searchParams.get("procurement") === "attached" && url.searchParams.get("format") === "json"
+  })
 }

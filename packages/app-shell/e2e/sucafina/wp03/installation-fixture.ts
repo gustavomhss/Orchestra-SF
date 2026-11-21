@@ -1,6 +1,6 @@
 import { expect, type Page, type TestInfo } from "@playwright/test"
 import { spawn, execFile } from "node:child_process"
-import { chmod, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
+import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { createServer } from "node:net"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -15,7 +15,7 @@ const repository = path.resolve(here, "../../../../..")
 const origin = installedShellOrigin()
 
 /** Launch the distributed CLI and installation factory; no alternate application or route handler. */
-export async function startPlannerInstallation(info: TestInfo) {
+export async function startPlannerInstallation(info: TestInfo, options?: { procurementApproval?: boolean }) {
   // The fixture owns this private upstream listener. Refuse to borrow an
   // existing service, and never terminate a process the fixture did not create.
   const reservation = createServer()
@@ -44,15 +44,20 @@ export async function startPlannerInstallation(info: TestInfo) {
     XDG_STATE_HOME: path.join(directory, "host-state"),
   }
   try {
-    await run("bun", ["run", path.join(here, "installation-setup.ts"), directory, origin], {
+    if (options?.procurementApproval) {
+      await Promise.all(["host-data", "host-config", "host-cache", "host-state", "host-tmp"].map((name) => mkdir(path.join(directory, name), { mode: 0o700 })))
+    } else await run("bun", ["run", path.join(here, "installation-setup.ts"), directory, origin], {
       cwd: repository, env: environment, timeout: 30_000, encoding: "utf8",
     })
   } catch (error) {
     await rm(directory, { recursive: true, force: true })
     throw new Error(redactDiagnostics(error instanceof Error ? error.message : String(error)))
   }
-  const child = spawn("bun", ["run", path.join(repository, "apps/cli/src/index.ts"), "serve", "--hostname", "127.0.0.1", "--port", "4174",
-    "--public-origin", origin, "--installation", path.join(repository, "modules/sucafina/Sucafinav1/local/entry.ts")], {
+  const args = options?.procurementApproval
+    ? ["run", path.join(here, "../wp04/host.ts"), "--decision-approval", directory]
+    : ["run", path.join(repository, "apps/cli/src/index.ts"), "serve", "--hostname", "127.0.0.1", "--port", "4174",
+      "--public-origin", origin, "--installation", path.join(repository, "modules/sucafina/Sucafinav1/local/entry.ts")]
+  const child = spawn("bun", args, {
     cwd: directory, env: environment, stdio: ["ignore", "pipe", "pipe"],
   })
   const state = { log: "", error: undefined as Error | undefined, stopped: false, secrets: [] as string[] }
@@ -82,6 +87,40 @@ export async function startPlannerInstallation(info: TestInfo) {
     }
   }
   try {
+    const acceptEnrollment = async (enrollment: URL) => {
+      if (enrollment.origin !== origin || enrollment.pathname !== "/sucafina/auth/local" || !enrollment.searchParams.has("code"))
+        throw new Error("Production enrollment destination is unexpected")
+      state.secrets.push(enrollment.searchParams.get("code")!)
+      const admitted = await fetch(enrollment, { redirect: "manual", signal: AbortSignal.timeout(10_000) })
+      if (admitted.status !== 303 || admitted.headers.get("location") !== "/")
+        throw new Error(`Production local enrollment failed with HTTP ${admitted.status}`)
+      const cookie = readOperatorSessionCookie(admitted.headers, origin)
+      state.secrets.push(cookie.value)
+      return cookie
+    }
+    const actorPage = (cookie: Awaited<ReturnType<typeof acceptEnrollment>>, actorId: string) => async (page: Page) => {
+      await page.context().addCookies([cookie])
+      return connectInstalledShell(page, { root: directory, origin, mount: "/sucafina", actorId, embedded: options?.procurementApproval })
+    }
+    if (options?.procurementApproval) {
+      await expect.poll(async () => {
+        if (exited()) return false
+        const ready = await fetch("http://127.0.0.1:4174/__wp04_ready", { signal: AbortSignal.timeout(1_000) }).catch(() => undefined)
+        return ready?.status === 200
+      }, { message: "the isolated native product host is ready for distinct approval identities", timeout: 75_000 }).toBe(true)
+      const manifest = JSON.parse(await readFile(path.join(directory, "decision-approval-manifest.json"), "utf8")) as {
+        accounts: Record<"first" | "second" | "viewer", { principal: string; enrollments: Record<string, string> }>
+      }
+      const enroll = async (key: "first" | "second" | "viewer") => {
+        const account = manifest.accounts[key]
+        const cookie = await acceptEnrollment(new URL(account.enrollments["decision-approval"]!))
+        return { actorId: account.principal, cookie, signIn: actorPage(cookie, account.principal) }
+      }
+      const owner = await enroll("first")
+      const peer = await enroll("second")
+      const finance = await enroll("viewer")
+      return { origin, ...owner, approvers: [peer, finance] as const, stop }
+    }
     await expect.poll(async () => {
       if (exited()) return `CLI exited: ${state.error?.message ?? child.exitCode ?? child.signalCode}`
       try {
@@ -98,24 +137,10 @@ export async function startPlannerInstallation(info: TestInfo) {
     const handoff = (await readFile(path.join(directory, "open-local.html"), "utf8")).match(/location\.replace\(("[^"\r\n]*")\)/)?.[1]
     if (!handoff) throw new Error("Production enrollment artifact is malformed")
     const enrollment = new URL(JSON.parse(handoff) as string)
-    if (enrollment.origin !== origin || enrollment.pathname !== "/sucafina/auth/local" || !enrollment.searchParams.has("code"))
-      throw new Error("Production enrollment destination is unexpected")
-    state.secrets.push(enrollment.searchParams.get("code")!)
-    // Consume the real one-use code through Node's HTTP client so its private URL
-    // never appears in a Playwright action, trace or assertion failure. The browser
-    // receives only the session actually issued by the production identity handler.
-    const admitted = await fetch(enrollment, { redirect: "manual", signal: AbortSignal.timeout(10_000) })
-    if (admitted.status !== 303 || admitted.headers.get("location") !== "/")
-      throw new Error(`Production local enrollment failed with HTTP ${admitted.status}`)
-    const cookie = readOperatorSessionCookie(admitted.headers, origin)
-    state.secrets.push(cookie.value)
+    // Consume the one-use code over HTTP before handing the issued cookie to Chromium.
+    const cookie = await acceptEnrollment(enrollment)
     const actorId = `macos:${config.localOperator.installationId}:${config.localOperator.uid}`
-    return { origin, cookie, actorId, stop,
-      signIn: async (page: Page) => {
-        await page.context().addCookies([cookie])
-        return connectInstalledShell(page, { root: directory, origin, mount: "/sucafina", actorId })
-      },
-    }
+    return { origin, cookie, actorId, stop, signIn: actorPage(cookie, actorId), approvers: undefined }
   } catch (error) {
     await stop()
     throw error

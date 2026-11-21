@@ -62,8 +62,10 @@ export async function recoverCreatedQuestionAfterReadLoss(input: {
   await page.route(matchesRead, loseRead, { times: 1 })
   try {
     const failed = page.waitForEvent("requestfailed", { predicate: (request) => request.method() === "POST" && matchesRead(new URL(request.url())) })
-    await discussion.getByRole("button", { name: "Ask about this review", exact: true }).click()
-    const [created] = await Promise.all([receipt, droppedRead, failed])
+    const [created] = await Promise.all([
+      receipt, droppedRead, failed,
+      discussion.getByRole("button", { name: "Ask about this review", exact: true }).click(),
+    ])
     const questionId = text(created.value.id), question = discussion.getByRole("textbox", { name: "Question", exact: true })
     const saved = await api.thread(questionId)
     expect(saved.messages).toHaveLength(1)
@@ -75,12 +77,16 @@ export async function recoverCreatedQuestionAfterReadLoss(input: {
     expect(writes).toEqual([created.serialized])
     expect(await api.version()).toBe(input.expectedStorageVersion + 1)
 
-    const reconciliation = page.waitForResponse(responseFor(app.dashboardURL, readMode, "POST"))
-    await discussion.getByRole("button", { name: "Reconcile action", exact: true }).click()
-    const authorized = await reconciliation
-    expect(authorized.status()).toBe(200)
-    expect(authorized.request().postDataJSON()).toEqual({ id: questionId })
-    expect(object(object(await authorized.json()).value).messages).toEqual(saved.messages)
+    const matchesReconciliation = responseFor(app.dashboardURL, readMode, "POST")
+    await Promise.all([
+      page.waitForResponse((response) => matchesReconciliation(response) &&
+        object(response.request().postDataJSON()).id === questionId).then(async (authorized) => {
+        expect(authorized.status()).toBe(200)
+        expect(authorized.request().postDataJSON()).toEqual({ id: questionId })
+        expect(object(object(await authorized.json()).value).messages).toEqual(saved.messages)
+      }),
+      discussion.getByRole("button", { name: "Reconcile action", exact: true }).click(),
+    ])
     await expect(page).toHaveURL((url) => url.searchParams.get("reviewThread") === questionId)
     await expect(discussion.getByRole("status")).toHaveText("Action reconciled. Retry the same action explicitly to recover its receipt.")
     await expect(question).toHaveValue(input.body)
@@ -139,6 +145,8 @@ export async function recoverCreatedQuestionAfterReadLoss(input: {
     return { payload: created.payload, value: result.value }
   } finally {
     page.off("request", record)
-    await page.unroute(matchesRead, loseRead)
+    if (!page.isClosed()) await page.unroute(matchesRead, loseRead).catch((error: unknown) => {
+      if (!page.isClosed()) throw error
+    })
   }
 }

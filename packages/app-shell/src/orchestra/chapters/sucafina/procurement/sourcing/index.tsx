@@ -1,5 +1,5 @@
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { useSfContext } from "../../context"
 import type { SfContext, SfEditScopeKey, SfSurfaceProps } from "../../context/contracts"
@@ -267,6 +267,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       }
       if(Array.isArray(scores)){
         const values=[...scores]
+        // Automatic criteria have no manual score; keep those positions as JSON null.
+        while(values.length<=criterion)values.push(null)
         values[criterion]=raw
         return {...item,[kind]:values}
       }
@@ -425,12 +427,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       if(draft()===controllerDraft)controllerDraft.setPhase("conflict")
       setUi("review",null);setUi("phase","conflict");release();return
     }
+    // Hash and dispatch the same plain, reviewed payload rather than the Solid store proxy.
+    const sourcing=structuredClone(unwrap(intent.sourcing))
     const intentRef=crypto.randomUUID() as SfOperationRef
     const idempotencyKey=crypto.randomUUID()
     const payload=intent.action==="select_quote"?{page:"Requests",action:"select_quote",
       id:intent.requestRef,version:intent.version,values:{quoteId:intent.quoteId}}:
       {page:"Requests",action:intent.action,id:intent.requestRef,
-       version:intent.version,values:{sourcing:intent.sourcing}}
+       version:intent.version,values:{sourcing}}
     const payloadJson=JSON.stringify(payload)
     let digest:string
     try{
@@ -442,6 +446,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     if(ui.review!==intent||phaseNow()!=="checking"||!ui.sending||ui.state!=="ready"||ui.token!==token||ref()!==intent.requestRef||
        !current||!row||row.number!==intent.requestRef||sourceVersion()!==intent.version||
        requestRevision(current,intent.requestRef)!==intent.sourceRevision||!can(intent.action)||JSON.stringify(payload)!==payloadJson||
+       (intent.action!=="select_quote"&&JSON.stringify(sourcing)!==JSON.stringify(intent.sourcing))||
        draftConflict()||draftPending()||currentDraft!==controllerDraft||
        !sourcingDraftDispatchable(controllerDraft.snapshot(),intent.version,intent.action,intent.sourcing)||
        (intent.action==="select_quote"&&(ui.quoteChoice!==intent.quoteId||!quoteIsPersisted(row,intent.quoteId??"")||
@@ -474,9 +479,9 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           values:{quoteId:intent.quoteId!}},options)
         : intent.action==="submit_sourcing"
           ? await client["domain.command.CAP25.submit_sourcing"]({...requestBody,action:"submit_sourcing",
-            values:{sourcing:intent.sourcing}},options)
+             values:{sourcing}},options)
           : await client["domain.command.CAP25.save"]({...requestBody,action:"save",
-            values:{sourcing:intent.sourcing}},options)
+             values:{sourcing}},options)
       if(controller.signal.aborted||authority()!==token)return
       if(response.kind==="transport-error"){
         controllerDraft.setPhase("outcome-unknown")
@@ -568,7 +573,9 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
                 value={asString(quote[name])}
                 aria-invalid={refusal?"true":undefined}
                 aria-describedby={described}
-                onInput={(event)=>updateQuote(index,name,event.currentTarget.value)}/>
+                onInput={(event)=>updateQuote(index,name,name==="total"
+                  ? event.currentTarget.value === "" ? null : event.currentTarget.valueAsNumber
+                  : event.currentTarget.value)}/>
             </label>
             <Show when={refusal}>
               <span id={described}>{refusal?.message}</span>
@@ -808,7 +815,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         <Show when={request()}>
           <header class="sf-u12-heading">
             <h2>{request()?.pr?.title??t("sf.u12.requestTitle")}</h2>
-            <p>{t("sf.u12.stage")}: {request()?.status} · {t("sf.u12.version")}: {sourceVersion()??t("sf.u12.missing")}</p>
+            <p data-sf-sourcing-stage>{t("sf.u12.stage")}: {request()?.status} · {t("sf.u12.version")}: {sourceVersion()??t("sf.u12.missing")}</p>
             <Show when={request()?.requestSummary}>
               <p data-request-summary={request()?.number}>{request()?.requestSummary}</p>
             </Show>
@@ -862,7 +869,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
             onCancel={()=>{setUi("review",null);setUi("phase","idle")}}
           />}>
             <Show when={ui.stage==="quotes"} fallback={editor()}>{comparison()}</Show>
-            <Show when={!can("save")}><p role="status">{t("sf.u12.notEditable")}</p></Show>
+             <Show when={!can("save")}><p role="status" aria-label={t("sf.u12.notEditable")}>{t("sf.u12.notEditable")}</p></Show>
           </Show>
         </Show>
         </Show>

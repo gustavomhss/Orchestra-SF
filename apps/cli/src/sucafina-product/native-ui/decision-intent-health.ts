@@ -6,7 +6,9 @@ import { selectSfNamespaceHealth } from "../../../../../modules/sucafina/Sucafin
 import { sfHasOperationalResource } from "./live-context.ts"
 
 type Operation = "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read" |
-  "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision"
+  "decisions.choice.read" | "decisions.decision-compare" |
+  "decisions.decision-coverage" | "decisions.decision-criteria" | "decisions.decision-promote" | "decisions.decision-choose" |
+  "decisions.portfolio.catalog" | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision"
 
 /** Only installed infrastructure and current admission. Case/source access stays in each original producer. */
 export async function observeSfDecisionIntentHealth(input: {
@@ -22,6 +24,14 @@ export async function observeSfDecisionIntentHealth(input: {
     { id: "decisions.command.sf_case_draft", operation: "sf_case_draft", method: "POST", query: "workbench-command", path: "{mount}/dashboard", write: true, human: null },
     { id: "decisions.decision-edit", operation: "sf_case_read", method: "POST", query: "decision-edit", path: "{mount}/dashboard", write: true, human: "decisions.edit" },
     { id: "decisions.controls.read", operation: "sf_case_read", method: "GET", query: "decision-controls", path: "{mount}/dashboard", write: false, human: null },
+    { id: "decisions.choice.read", operation: "sf_case_read", method: "GET", query: "current-choice", path: "{mount}/dashboard", write: false, human: null, preferences: "read" },
+    { id: "decisions.decision-compare", operation: "sf-human:decisions.portfolio.read", method: "POST", query: "decision-compare", path: "{mount}/dashboard", write: false, human: null, preferences: "read" },
+    { id: "decisions.decision-coverage", operation: "sf_case_read", method: "POST", query: "decision-coverage", path: "{mount}/dashboard", write: true, human: "decisions.coverage", preferences: "write" },
+    { id: "decisions.decision-criteria", operation: "sf_case_read", method: "POST", query: "decision-criteria", path: "{mount}/dashboard", write: true, human: "decisions.criteria", preferences: "write" },
+    { id: "decisions.decision-choose", operation: "sf_case_read", method: "POST", query: "decision-choose", path: "{mount}/dashboard", write: true, human: "decisions.choose", preferences: "read" },
+    { id: "decisions.decision-promote", operation: "sf_case_read", method: "POST", query: "decision-promote", path: "{mount}/dashboard", write: true, human: "decisions.promote-alternative", preferences: "read" },
+    // Observe the exact human read grant without issuing a catalog request or requiring write authority.
+    { id: "decisions.portfolio.catalog", operation: "sf-human:decisions.portfolio.read", method: "POST", query: "decision-portfolio-catalog", path: "{mount}/dashboard", write: false, human: null },
     { id: "bi.bi-options", operation: "sf_dashboard_read", method: "GET", query: "bi-options", path: "{mount}/dashboard", write: false, human: null },
     { id: "bi.bi-data", operation: "sf_bi_view", method: "GET", query: "bi-data", path: "{mount}/dashboard", write: false, human: null },
     { id: "bi.bi-source", operation: "sf_bi_view", method: "GET", query: "bi-source", path: "{mount}/dashboard", write: false, human: null },
@@ -31,8 +41,16 @@ export async function observeSfDecisionIntentHealth(input: {
     const metadata = SfOperationRegistry[candidate.id]
     if (!sfHasOperationalResource(candidate.id) || metadata.method !== candidate.method ||
       metadata.pathTemplate !== candidate.path || metadata.fixedQuery.sf !== candidate.query || metadata.responseMode !== "json") return []
+    if (candidate.id === "decisions.choice.read" && (metadata.effect !== "read" ||
+      !("format" in metadata.fixedQuery) || metadata.fixedQuery.format !== "json" || Object.keys(metadata.fixedQuery).length !== 2)) return []
+    if (candidate.id === "decisions.decision-compare" && (metadata.effect !== "read" || Object.keys(metadata.fixedQuery).length !== 1)) return []
+    if ((candidate.id === "decisions.decision-criteria" || candidate.id === "decisions.decision-choose") &&
+      (metadata.effect !== "mutation" || Object.keys(metadata.fixedQuery).length !== 1)) return []
     if (candidate.id === "decisions.command.sf_case_draft" && (!("fixedBodyDiscriminator" in metadata) ||
-      metadata.fixedBodyDiscriminator.operation !== "sf_case_draft")) return []
+      !("operation" in metadata.fixedBodyDiscriminator) || metadata.fixedBodyDiscriminator.operation !== "sf_case_draft")) return []
+    if (candidate.id === "decisions.portfolio.catalog" && (metadata.effect !== "read" ||
+      !("fixedBodyDiscriminator" in metadata) || !("purpose" in metadata.fixedBodyDiscriminator) ||
+      metadata.fixedBodyDiscriminator.purpose !== "catalog")) return []
     const source = sourceFor(candidate.id)
     if (!source || !source.dependencies.length) return []
     const installed = bindingFor(candidate.id, source.producer)
@@ -54,15 +72,19 @@ export async function observeSfDecisionIntentHealth(input: {
         actor.accessRevision !== stamp.accessRevision || !await ui.validate(admitted.value, candidate.operation, digest) ||
         ui.requestFor(admitted.value) !== request || !current()) return []
       if (candidate.human && !(await input.humanActions(request)).includes(candidate.human)) return []
-      const read = () => state.read(request, "cases", selectSfNamespaceHealth("cases", stamp, candidate.write ? "write" : "read"))
-      const first = await read(), second = await read()
-      if (first.status !== "ok" || second.status !== "ok" || !first.value || !second.value ||
-        first.storageVersion !== first.value.storageVersion || first.aggregateRevision !== first.value.aggregateRevision ||
-        first.incarnation !== first.value.incarnation || second.storageVersion !== second.value.storageVersion ||
-        second.aggregateRevision !== second.value.aggregateRevision || second.incarnation !== second.value.incarnation ||
-        first.storageVersion !== second.storageVersion || first.aggregateRevision !== second.aggregateRevision ||
-        first.incarnation !== second.incarnation || !await ui.revalidate(admitted.value) ||
-        ui.requestFor(admitted.value) !== request || !current()) return []
+      const namespaces = ["cases", ...("preferences" in candidate ? ["preferences" as const] : [])] as const
+      for (const namespace of namespaces) {
+        const mode = namespace === "preferences" && "preferences" in candidate ? candidate.preferences : candidate.write ? "write" : "read"
+        const read = () => state.read(request, namespace, selectSfNamespaceHealth(namespace, stamp, mode))
+        const first = await read(), second = await read()
+        if (first.status !== "ok" || second.status !== "ok" || !first.value || !second.value ||
+          first.storageVersion !== first.value.storageVersion || first.aggregateRevision !== first.value.aggregateRevision ||
+          first.incarnation !== first.value.incarnation || second.storageVersion !== second.value.storageVersion ||
+          second.aggregateRevision !== second.value.aggregateRevision || second.incarnation !== second.value.incarnation ||
+          first.storageVersion !== second.storageVersion || first.aggregateRevision !== second.aggregateRevision ||
+          first.incarnation !== second.incarnation || !await ui.revalidate(admitted.value) ||
+          ui.requestFor(admitted.value) !== request || !current()) return []
+      }
       if (candidate.human && !(await input.humanActions(request)).includes(candidate.human)) return []
       if (!await ui.revalidate(admitted.value) || !current()) return []
       return [{ operationId: candidate.id, state: "ready" as const, reason: null, operational: true as const }]

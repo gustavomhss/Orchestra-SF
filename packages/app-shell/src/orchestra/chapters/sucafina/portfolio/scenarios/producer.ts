@@ -5,9 +5,10 @@ import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import { createSfPortfolioClient } from "@orchestra/client/sucafina/portfolio"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext } from "@orchestra/schema/sucafina/context"
+import { sfFailureUiState } from "../../decisions/cases/model"
 import type { SfUiState } from "../../shared/frame"
 import { sfReadControls, sfReadPortfolioHistory, sfReadPortfolioResult, sfReadSensitivityResult,
-  sfUnwrapPort, type SfCaseControls, type SfCaseVersionRef, type SfPortfolioHistory,
+  sfCaseRef, sfUnwrapPort, type SfCaseChoice, type SfCaseControls, type SfCaseVersionRef, type SfPortfolioHistory,
   type SfPortfolioResultView, type SfSensitivityResultView } from "./model"
 
 type OpResult<T> = Readonly<{ status: "ok"; value: T }> |
@@ -100,6 +101,53 @@ export function sfCandidateRef(caseRef: string, caseVersion: number, alternative
   return "portfolio-candidate:" + encodeURIComponent(caseRef) + ":" + caseVersion + ":" +
     encodeURIComponent(alternativeId) + ":" + alternativeVersion
 }
+const catalogId = "decisions.portfolio.catalog"
+type CatalogResponse = Schema.Schema.Type<(typeof SfDecisions.operations)[typeof catalogId]["output"]>
+export type SfCatalogCase = Extract<CatalogResponse, { status: "ok" }>["value"]["cases"][number]
+
+export async function sfCatalogCases(transport: SfTransport, context: SfContext, signal: AbortSignal): Promise<OpResult<readonly SfCaseChoice[]>> {
+  if (!sfPortfolioReady(context, catalogId, "decisions") || !context.availability.some((resource) =>
+    resource.family === "decisions" && resource.resource === "cases" &&
+    resource.operations.some((op) => op.operationId === "projection.cases" && op.state === "ready" && op.operational)))
+    return fail("catalog-projection-not-admitted", "denied")
+  const result = await createSfDecisionsClient(transport)["projection.cases"]({}, { signal })
+  if (result.kind === "transport-error") return fail(result.reason)
+  if (result.body.status !== "ok") return fail("catalog-projection-refused", sfFailureUiState(result.body.status, result.status))
+  const stamp = result.body.context
+  if (result.status !== 200 || stamp.installationId !== context.stamp.installationId || stamp.projectId !== context.stamp.projectId ||
+    stamp.hostId !== context.stamp.hostId || stamp.principalRef !== context.stamp.principalRef ||
+    stamp.policyVersion !== context.stamp.policyVersion || stamp.accessRevision !== context.stamp.accessRevision)
+    return fail("catalog-projection-owner-changed", "stale")
+  return { status: "ok", value: result.body.value.cases.map((entry) => ({ ref: entry.caseRef, title: entry.title, version: entry.version })) }
+}
+
+export function sfSameCaseRef(a: SfCaseVersionRef, b: SfCaseVersionRef) {
+  return a.id === b.id && a.incarnation === b.incarnation && a.version === b.version
+}
+
+export async function sfDecisionCatalog(transport: SfTransport, context: SfContext, selected: SfCaseChoice, signal: AbortSignal): Promise<OpResult<SfCatalogCase>> {
+  if (!sfPortfolioReady(context, catalogId, "decisions")) return fail("catalog-not-admitted", "denied")
+  const parts = /^case:([^:]+):([^:]+)$/.exec(selected.ref)
+  if (!parts) return fail("catalog-case-reference-invalid", "invalid")
+  const id = decodeURIComponent(parts[1]!), incarnation = decodeURIComponent(parts[2]!)
+  const caseRef = sfCaseRef({ id, incarnation, version: selected.version })
+  if (!caseRef || `case:${encodeURIComponent(id)}:${encodeURIComponent(incarnation)}` !== selected.ref)
+    return fail("catalog-case-reference-invalid", "invalid")
+  const result = await createSfDecisionsClient(transport)[catalogId]({ purpose: "catalog", caseRefs: [caseRef] }, { signal })
+  if (result.kind === "transport-error") return fail(result.reason)
+  if (result.body.status !== "ok") return fail("catalog-refused", sfFailureUiState(result.body.status, result.status))
+  const entry = result.body.value.cases[0]
+  if (result.status !== 200 || result.body.value.cases.length !== 1 || !entry || !sfSameCaseRef(caseRef, entry.caseRef) ||
+    entry.caseVersion !== caseRef.version || new Set(entry.alternatives.map((item) => item.candidateRef)).size !== entry.alternatives.length ||
+    entry.alternatives.some((item) => item.candidateRef !== sfCandidateRef(selected.ref, caseRef.version, item.alternativeId, item.alternativeVersion)))
+    return fail("catalog-identity-mismatch", "stale")
+  // The catalog has no public stamp. Recheck the same authorized projection before publishing its data.
+  const current = await sfCatalogCases(transport, context, signal)
+  if (current.status !== "ok") return current
+  const same = current.value.filter((item) => item.ref === selected.ref)
+  return same.length === 1 && same[0]?.version === caseRef.version ? { status: "ok", value: entry } : fail("catalog-case-changed", "stale")
+}
+
 export async function sfDecisionControls(
   transport: SfTransport, context: SfContext, caseRef: string | undefined, signal: AbortSignal,
 ): Promise<OpResult<SfCaseControls>> {

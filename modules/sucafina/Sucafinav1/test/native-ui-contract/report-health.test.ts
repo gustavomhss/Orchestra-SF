@@ -144,6 +144,40 @@ test("F01 review reads require each real source, binding, lease and current C08 
   } finally { extended.dispose(); await f.dispose() }
 })
 
+test("native agenda discovery distinguishes topics and periods but keeps identity on reread", async () => {
+  const f = await financialCompositionFixture()
+  const extended = createSfExtendedBusinessServices({ authority: f.authority, business: f.business,
+    persistence: f.persistence, ...f.guards, origin: "https://example.test" })
+  try {
+    if (!extended.reviews) throw new Error("real review source unavailable")
+    const projection = createSfReviewsProjectionHandlers({ origin: "https://example.test", mount: "/sucafina",
+      authority: f.authority, business: f.business, reviews: extended.reviews, persistence: f.persistence })
+    const period = { start: "2026-01-01", end: "2026-12-31" }
+    const discover = async (page: string, scope = period) => {
+      const query = new URLSearchParams({ page, ...scope })
+      const response = await projection.handle(new Request(`https://example.test/sucafina/api/ui/projections/review?${query}`))
+      expect(response.status).toBe(200)
+      const body = await response.json()
+      expect(body).toMatchObject({ status: "ok", value: { period: scope } })
+      expect(body.value.items).toHaveLength(1)
+      const item = body.value.items[0]
+      expect(item.selectionRef).toEqual(expect.any(String))
+      return item
+    }
+    const budget = await discover("Budget Overview")
+    const opex = await discover("OPEX Detail")
+    const reread = await discover("Budget Overview")
+    const quarter = { start: "2026-01-01", end: "2026-03-31" }
+    const quarterly = await discover("Budget Overview", quarter)
+    expect(budget).toMatchObject({ kind: "dashboard", topic: "budget", period })
+    expect(opex).toMatchObject({ kind: "dashboard", topic: "opex-detail", period })
+    expect(opex.id).not.toBe(budget.id)
+    expect(reread).toMatchObject({ id: budget.id, kind: "dashboard", topic: "budget", period })
+    expect(quarterly).toMatchObject({ kind: "dashboard", topic: "budget", period: quarter })
+    expect(quarterly.id).not.toBe(budget.id)
+  } finally { extended.dispose(); await f.dispose() }
+})
+
 test("local installation supplies only its actual registered review bindings", async () => {
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "sf-review-binding-"))
   try {

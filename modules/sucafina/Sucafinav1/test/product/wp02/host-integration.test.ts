@@ -124,10 +124,18 @@ test("ReviewHost.select consumes real Performance item lifecycle and preserves a
       item: await f.records.issue({ page: "IT Performance Contract", recordType: "itperf-item", recordId: "delivery", fields: ["id"], period }, context) }))
     if (issued.page.status !== "ok" || issued.item.status !== "ok") throw new Error("performance lifecycle unavailable")
     const agendaRequest = { sections: [{ id: "performance", title: "Performance", selectionRef: issued.page.value.selectionRef, topic: "it-performance", period, recordRefs: [issued.item.value.refId] }] }
+    const fullRequest = { sections: agendaRequest.sections.map(({ recordRefs, ...section }) => section) }
+    const full = await f.read(fullRequest, (context) => f.dashboard.agenda(fullRequest, context))
+    expect(full.status).toBe("ok")
+    if (full.status !== "ok") throw new Error("full performance agenda unavailable")
+    expect(full.value.sections[0]!.recordCount).toBe(2)
+    expect(new Set(full.value.sections[0]!.recordRefs).size).toBe(2)
+    expect(full.value.sections[0]!.recordRefs).toContain(issued.item.value.refId)
     const agenda = await f.read(agendaRequest, (context) => f.dashboard.agenda(agendaRequest, context))
     expect(agenda.status).toBe("ok")
     if (agenda.status !== "ok") return
     expect(agenda.value.sections[0]!.recordCount).toBe(1)
+    expect(agenda.value.sections[0]!.recordRefs).toEqual([issued.item.value.refId])
     expect(agenda.value.sections[0]!.projection.values.every((value) => value.id.startsWith("itperf.items[id:delivery]."))).toBe(true)
     expect(JSON.stringify(agenda)).not.toContain("never-public")
     expect(JSON.stringify(agenda)).not.toContain("Availability")
@@ -136,6 +144,7 @@ test("ReviewHost.select consumes real Performance item lifecycle and preserves a
     expect(saved.status).toBe("ok")
     if (saved.status !== "ok") return
     expect(saved.value?.sections[0]?.count).toBe(1)
+    expect(saved.value?.sections[0]).not.toHaveProperty("recordRefs")
     const outside = await f.read({}, (context) => f.dashboard.select(agenda.value.selectionRef, ["not-selected"], context))
     expect(outside.status).toBe("denied")
     const itemCaptureRequest = { sourceRef: issued.item.value.refId }

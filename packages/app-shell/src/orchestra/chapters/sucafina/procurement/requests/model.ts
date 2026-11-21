@@ -70,6 +70,9 @@ export function prFromRecord(row?: SfRequest): SfPrEdit {
     expenseType: pr?.expenseType, category: pr?.category,
   }
 }
+export function reviewedPr(values: SfPrEdit): SfPrEdit {
+  return Object.fromEntries(Object.entries(values).filter(([, value]) => value !== undefined))
+}
 export function postedPoLine(line: SfPoLine): SfPoLine {
   return {
     ...(line.id !== undefined ? { id: line.id } : {}),

@@ -5,6 +5,24 @@ import type { createSfProductAuthority } from "../../../../modules/sucafina/Suca
 import type { createSfBusinessServices } from "./business-services.ts"
 import type { SfReviewReaders } from "./review-services.ts"
 import { createSfAnalysisAuthorReader } from "./analysis-author.ts"
+import { isSfLocalReviewOutcome } from "./memory-services.ts"
+
+type ReviewHost = ReturnType<typeof createSfProductAuthority>["host"]
+const localReaders = new WeakMap<SfReviewReaders, { host: ReviewHost; current: () => boolean }>()
+
+/** The returned check is private factory identity, not a caller-supplied grant. */
+export function sfResidentReviewSnapshotReaders(readers: SfReviewReaders | undefined, host: ReviewHost) {
+  const known = readers && localReaders.get(readers)
+  return known?.host === host ? known.current : undefined
+}
+
+function own(value: object, fields: Readonly<Record<string, unknown>>) {
+  return Object.getPrototypeOf(value) === Object.prototype && Reflect.ownKeys(value).length === Object.keys(fields).length &&
+    Object.entries(fields).every(([key, entry]) => {
+      const descriptor = Object.getOwnPropertyDescriptor(value, key)
+      return !!descriptor && Object.hasOwn(descriptor, "value") && descriptor.value === entry
+    })
+}
 
 /** Shared resident composition; native contributions and outcomes keep their live readers. */
 export function createSfResidentReviewReaders(input: {
@@ -33,12 +51,22 @@ export function createSfResidentReviewReaders(input: {
   }
   // Memory needs the composed Portfolio Planner, so the host binds its real
   // provider after creating Review. Until then every outcome request refuses.
-  const outcome: { current?: NonNullable<SfReviewReaders["outcome"]> } = {}
+  const outcome: { current?: NonNullable<SfReviewReaders["outcome"]>; first?: NonNullable<SfReviewReaders["outcome"]> } = {}
   const readers: SfReviewReaders = { contributions: { contributions: readContribution, results: business.results }, outcome: {
     read: (request, call) => outcome.current?.read(request, call) ?? Promise.resolve({ status: "unavailable" }),
     authorize: (call, observations) => outcome.current?.authorize(call, observations) ?? Promise.resolve(false),
   } }
+  const host = authority.host, contributions = readers.contributions!, wrapper = readers.outcome!
+  const fields = { contributions, outcome: wrapper }
+  const contributionFields = { contributions: contributions.contributions, results: contributions.results }
+  const outcomeFields = { read: wrapper.read, authorize: wrapper.authorize }
+  localReaders.set(readers, { host, current: () => input.authority === authority && authority.host === host &&
+    input.business === business && own(readers, fields) && own(contributions, contributionFields) && own(wrapper, outcomeFields) &&
+    !!outcome.first && outcome.current === outcome.first && isSfLocalReviewOutcome(outcome.first, host) })
   return { readers, readContribution,
-    bindOutcome: (provider: NonNullable<SfReviewReaders["outcome"]>) => { outcome.current = provider },
+    bindOutcome: (provider: NonNullable<SfReviewReaders["outcome"]>) => {
+      outcome.first ??= provider
+      outcome.current = provider
+    },
   }
 }

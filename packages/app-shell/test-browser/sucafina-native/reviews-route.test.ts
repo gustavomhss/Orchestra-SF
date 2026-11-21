@@ -1,8 +1,10 @@
 import { describe, expect, test } from "bun:test"
+import { createStore } from "solid-js/store"
 import type { SfContext } from "@orchestra/schema/sucafina/context"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 import { matchSfNativeRoutePath } from "../../src/orchestra/chapters/sucafina/route-registry"
 import { parseReviewsRouteQuery, reviewsRouteAvailable } from "../../src/orchestra/chapters/sucafina/host/reviews-route"
+import { readPreservedProjection } from "../../src/orchestra/chapters/sucafina/reviews/preserved/model"
 import { sourceDestinations } from "../../test/sucafina-native/source-context-fixture"
 
 describe("review routes", () => {
@@ -38,4 +40,28 @@ describe("review routes", () => {
     expect(reviewsRouteAvailable({ ...context, availability: [context.availability[0]!, context.availability[2]!] }, candidate)).toBe(false)
     expect(reviewsRouteAvailable({ ...context, availability: [context.availability[1]!, context.availability[2]!] }, candidate)).toBe(false)
   })
+})
+
+test("Reports and Preserved Review decode C04 projection content from a Solid store", () => {
+  const period = { start: "2026-01-01", end: "2026-12-31" }
+  const owner = { installationId: "installation", projectId: "global", principalRef: "operator",
+    accessRevision: "revision", policyVersion: "sf-product-v1" }
+  const source = { surface: "dashboard", type: "dashboard-page", id: "Budget Overview", incarnation: "budget-1",
+    version: 1, fields: ["budgetMetrics"], period, observedAt: "2026-11-20T22:14:54.433Z" }
+  const evidence = { schema: "sf-evidence-v1", kind: "record", refId: "sf-source:budget-1:1", refDigest: "digest", evidenceLevel: "observed",
+    installationId: owner.installationId, projectId: owner.projectId, target: { surface: source.surface, recordType: source.type,
+      recordId: source.id, incarnation: source.incarnation, version: source.version, fields: source.fields, period, projectionDigest: "projection-digest" } }
+  const content = { context: { ...owner, surface: "dashboard", period, currency: "unspecified", sourceRefs: [source], capabilities: ["sf_dashboard_read"] },
+    version: 1, engineVersion: "dashboard-runtime-v1", components: [], missing: [],
+    values: [{ id: "budgetMetrics.2026.totalForecast", value: 1320, currency: "unspecified", period, granularity: "year",
+      sourceRefs: [evidence], drilldown: evidence, evidenceState: "confirmed" }] }
+  expect(readPreservedProjection(content)).toEqual(content)
+
+  const stored = structuredClone(content)
+  const [review] = createStore({ sections: [{ content: stored }] })
+  expect(review.sections[0]!.content).not.toBe(stored)
+  expect(readPreservedProjection(review.sections[0]!.content)).toEqual(content)
+
+  const [invalid] = createStore({ content: { ...content, context: { ...content.context, period: { ...period, extra: true } } } })
+  expect(readPreservedProjection(invalid.content)).toBeUndefined()
 })

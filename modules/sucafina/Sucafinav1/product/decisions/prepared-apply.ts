@@ -20,6 +20,7 @@ export function createSfPreparedApply(input: {
   resolveActor: (snapshot: Snapshot, context: TrustedDomainContext) => Actor | undefined
   resolveMutation: (snapshot: Snapshot, change: PreparedChange, actor: Actor, context: TrustedDomainContext) => PreparedDomainMutation | undefined
   verifyGrant: (snapshot: Snapshot, request: Parameters<PreparedApplyPort["executePrepared"]>[0], change: PreparedChange, actor: Actor, context: TrustedDomainContext) => boolean
+  verifyPreparation?: (snapshot: Snapshot, decision: DecisionCase, request: Parameters<PreparedApplyPort["executePrepared"]>[0], change: PreparedChange, actor: Actor, context: TrustedDomainContext) => boolean
   receiptVersion: (snapshot: Snapshot, change: PreparedChange, actor: Actor) => number | undefined
   environment: (context: TrustedDomainContext) => Environment
   createId: () => string
@@ -115,6 +116,7 @@ export function createSfPreparedApply(input: {
         const prior = Object.values(state.receipts).filter((item) => item.surface === selected.target.surface && item.idempotencyKey === selected.idempotencyKey && item.targetIncarnation === selected.target.incarnation && item.principalRef === actor.id)
         if (prior.length > 1) return { commit: false, value: { failure: "unavailable" as const } }
         if (prior[0]) return prior[0].commandDigest === selected.operation.commandDigest ? { commit: false, value: { existing: prior[0] } } : { commit: false, value: { failure: "conflict" as const } }
+        if (input.verifyPreparation && !input.verifyPreparation(snapshot, actual, request, selected, actor, context)) return { commit: false, value: null }
         const mutation = input.resolveMutation(snapshot, selected, actor, context)
         if (!mutation || mutation.surface !== selected.target.surface || mutation.targetIncarnation !== selected.target.incarnation || mutation.idempotencyKey !== selected.idempotencyKey || mutation.commandDigest !== selected.operation.commandDigest || mutation.expectedVersion !== selected.expectedVersion || selected.operation.expectedVersion !== selected.expectedVersion || selected.operation.command.version !== selected.expectedVersion || selected.operation.idempotencyKey !== selected.idempotencyKey || digestSfValue(selected.operation.target) !== digestSfValue(selected.target) || state.receipts[id]) return { commit: false, value: null }
         const staged = structuredClone(snapshot)

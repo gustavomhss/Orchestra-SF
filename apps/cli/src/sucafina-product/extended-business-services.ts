@@ -53,7 +53,8 @@ export function createSfExtendedBusinessServices(input: {
   const reviewServices = createSfReviewServices({ ...input, portfolio: portfolioServices, bi, readers: input.reviewReaders, agenda: reviewAgenda })
   const reviews = reviewServices.application
   if (reviews && reviewServices.historical) input.business.bindReviewCollaboration(createSfReviewCollaboration({ authority: input.authority,
-    application: reviews, evidence: reviewServices.historical.evidence, recipientAuthority: input.reviewRecipientAuthority }))
+    application: reviews, evidence: reviewServices.historical.evidence, recipientAuthority: input.reviewRecipientAuthority,
+    readerCurrent: reviewServices.residentSnapshotReaders }))
   const ownAssets = input.assets ? undefined : createSfExtendedAssets()
   const assets = input.assets ?? ownAssets!
   const descriptors: readonly CapabilityDescriptor[] = [bi.descriptor, ...portfolioServices.descriptors, ...(reviews?.descriptors ?? [])]

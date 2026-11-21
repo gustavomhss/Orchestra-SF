@@ -7,6 +7,7 @@ import { SfStatePanel } from "../../shared/states"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfCase, sfOperationReady } from "../cases/model"
 import { SfCaseSourcesEditor } from "./sources"
+import { SfInitialAlternativeEditor } from "./first-alternative"
 import { sfDecisionHref } from "../cases/route"
 import "../cases/n24.css"
 
@@ -16,7 +17,7 @@ const k = (value: string) => value as SfCopyKey
 export function SfIntentView(props: SfSurfaceProps): JSX.Element {
   const language = useLanguage()
   const t = (value: string, params?: Record<string, string | number>) => language.t(value as Parameters<typeof language.t>[0], params)
-  const [ui, setUi] = createStore({ reviewing: false, editing: false })
+  const [ui, setUi] = createStore({ reviewing: false, editing: false, authoringLocked: false })
   const valid = () => props.surfaceId === "UI34"
   const source = () => {
     if (props.surfaceId !== "UI34") return undefined
@@ -42,11 +43,12 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
       }}
       secondaryActions={[{
         id: "refresh-intent", labelKey: k("sf.ui34.reload"), tone: "secondary",
-        disabled: caseData.read.state === "loading", busy: false, onInvoke: () => { setUi("editing", false); caseData.reload() },
+        disabled: ui.authoringLocked || caseData.read.state === "loading", busy: false,
+        onInvoke: () => { if (!ui.authoringLocked) { setUi("editing", false); caseData.reload() } },
       }, {
         id: "edit-case-sources", labelKey: k("sf.ui34.edit"), tone: "secondary",
-        disabled: !data() || !caseData.owner.ready() || !sfOperationReady(caseData.owner.ready()!.context, "decisions.decision-edit"),
-        busy: false, onInvoke: () => setUi("editing", true),
+        disabled: ui.authoringLocked || !data() || !caseData.owner.ready() || !sfOperationReady(caseData.owner.ready()!.context, "decisions.decision-edit"),
+        busy: false, onInvoke: () => { if (!ui.authoringLocked) setUi("editing", true) },
       }]}
     >
       <div class="sf-n24" data-sf-surface="UI34" data-sf-case-ref={source()} data-sf-case-version={data()?.version}>
@@ -118,6 +120,17 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
                   </Show>
                 </section>
               </div>
+               <Show when={!ui.editing && ((record().state === "draft" && record().alternatives.length === 0) ||
+                 (record().state === "comparing" && record().alternatives.length === 1 && !record().choices.length))}>
+                <SfInitialAlternativeEditor owner={caseData.owner} record={record()} caseSelector={String(source() ?? "")}
+                  onSaved={caseData.reload} onLocked={(locked) => setUi("authoringLocked", locked)} />
+               </Show>
+               <Show when={!ui.editing && record().state === "comparing" && record().alternatives.length >= 2 &&
+                 !record().choices.length && record().sourceRefs.some((ref) => ref.kind === "record" &&
+                   ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.target.fields.includes("originalAmount"))}>
+                 <SfInitialAlternativeEditor procurement owner={caseData.owner} record={record()} caseSelector={String(source() ?? "")}
+                   onSaved={caseData.reload} onLocked={(locked) => setUi("authoringLocked", locked)} />
+               </Show>
               <Show when={route()}>
                 {(current) => <nav class="sf-n24-actions" aria-label={t("sf.ui34.title")}>
                   <A class="mx-btn" href={sfDecisionHref(current(), "alternatives", String(source()))}>{t("sf.ui34.openAlternatives")}</A>

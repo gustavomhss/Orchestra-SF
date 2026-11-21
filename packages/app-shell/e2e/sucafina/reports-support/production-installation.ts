@@ -23,6 +23,7 @@ export type ReportsInstallation = {
   signIn: (page: Page) => Promise<void>
   /** Bounded, allowlisted CLI transport errors; contains no raw stdout/stderr. */
   diagnostics?: () => string
+  lifecycle?: () => { exitCode: number | null; exited: boolean }
 }
 
 type InstallationInput = {
@@ -131,6 +132,7 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
 
       const ready = yield* Deferred.make<void, Error>()
       const tail = { value: "" }
+      const lifecycle: { exitCode: number | null; exited: boolean } = { exitCode: null, exited: false }
       const child = yield* launcher.spawn(command([
         "run", path.join(repository, "apps/cli/src/index.ts"), "serve",
         "--hostname", "127.0.0.1", "--port", "4174", "--public-origin", profile.origin, "--installation", path.join(local, "entry.ts"),
@@ -150,7 +152,11 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
         Effect.catch(() => Deferred.fail(ready, new Error(`Reports CLI output failed: ${tail.value}`))),
       ))
       yield* Effect.forkScoped(child.exitCode.pipe(
-        Effect.flatMap((code) => Deferred.fail(ready, new Error(`Reports CLI exited ${code} before readiness: ${tail.value}`))),
+        Effect.flatMap((code) => {
+          lifecycle.exited = true
+          lifecycle.exitCode = code
+          return Deferred.fail(ready, new Error(`Reports CLI exited ${code} before readiness: ${tail.value}`))
+        }),
         Effect.catch(() => Deferred.fail(ready, new Error(`Reports CLI stopped before readiness: ${tail.value}`))),
       ))
       yield* Deferred.await(ready)
@@ -159,6 +165,7 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
       const authenticated = {
         ...installation,
         diagnostics: () => diagnosticTail(tail.value),
+        lifecycle: () => ({ ...lifecycle }),
         signIn: (page: Page) => track(async () => {
           if (!enrollment.prepared) await run(["run", path.join(local, "enroll.ts"), config])
           await redeemOperatorEnrollment(page, installation,

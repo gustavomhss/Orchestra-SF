@@ -59,12 +59,14 @@ export const SfOperationExtensions = Object.freeze({
   // Original Workbench/current-choice/domain/portfolio adapters admit the closed Decisions envelopes.
   "decisions.decision-promote": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-promote"}},
   "decisions.decision-choose": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-choose"}},
+  "decisions.decision-compare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"decision-compare"},"maxRequestBytes":262144},
   "decisions.decision-edit": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-edit"},"maxRequestBytes":262144},
   "decisions.choice.read": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"current-choice","format":"json"}},
   "decisions.command.sf_case_draft": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"workbench-command"},"fixedBodyDiscriminator":{"operation":"sf_case_draft"},"maxRequestBytes":65536},
   "decisions.command.sf_change_prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"workbench-command"},"fixedBodyDiscriminator":{"operation":"sf_change_prepare"},"maxRequestBytes":65536},
   "decisions.command.sf_question_prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"workbench-command"},"fixedBodyDiscriminator":{"operation":"sf_question_prepare"},"maxRequestBytes":65536},
   "decisions.controls.read": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"decision-controls","format":"json"}},
+  "decisions.portfolio.catalog": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"decision-portfolio-catalog"},"fixedBodyDiscriminator":{"purpose":"catalog"},"maxRequestBytes":262144},
   "decisions.current-choice-prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"current-choice-prepare"}},
   "decisions.current-choice-promote": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"current-choice-promote"}},
   "decisions.decision-add-question": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-add-question"}},
@@ -76,6 +78,8 @@ export const SfOperationExtensions = Object.freeze({
   // C12 stays on the original procurement adapter; no surface or purpose is invented in a payload.
   "decisions.decision-prepare-changes": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"decision-prepare-changes"}},
   "decisions.decision-review": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"read","responseMode":"json","fixedQuery":{"sf":"decision-review"}},
+  "decisions.procurement-proposal-review": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"read","responseMode":"json","fixedQuery":{"sf":"decision-proposal-review"}},
+  "decisions.procurement-proposal-advance": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-proposal-advance"}},
   "decisions.decision-apply": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-apply"}},
   "decisions.decision-recover": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-recover"}},
   // Original review read accepts all preserved domain sources under current C08/ACL fences.

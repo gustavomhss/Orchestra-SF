@@ -157,7 +157,11 @@ export function createSfReviewsProjectionHandlers(input: Input) {
           return fail(discovered.status, discovered.reason, codeFor(discovered.status))
         if (!discovered.value.agenda)
           return fail("unavailable", "review-source-selection-unavailable", 503)
-        const item = sfDashboardReviewAgendaItem(discovered.value.agenda.section)
+        const section = discovered.value.agenda.section
+        // Discovery uses a single-section ID. The native agenda combines
+        // discoveries, so key sections by topic and period, not by receipt.
+        const item = sfDashboardReviewAgendaItem({ ...section,
+          id: `dashboard:${section.topic}:${section.period.start}:${section.period.end}` })
         data = { items: [item], period }
         // Preserve the same live scoped source. A new discovery would mint a
         // different selectionRef, so validate the original issued reference.

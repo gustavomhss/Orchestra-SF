@@ -52,7 +52,7 @@ afterEach(async () => {
   await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })))
 })
 
-function brokerFixture(files?: { state: "ready" | "unavailable"; accessRevision: string }) {
+function brokerFixture(files?: { state: "ready" | "unavailable"; accessRevision: string; contextStatus?: 401 | 403 }) {
   const ipc = new Map<string, (event: unknown, arg: unknown) => Promise<unknown>>()
   const sessionNames: string[] = []
   const invalidations: unknown[] = []
@@ -123,7 +123,7 @@ function brokerFixture(files?: { state: "ready" | "unavailable"; accessRevision:
             : undefined
           const response = Object.assign(new EventEmitter(), {
             headers: body ? { "content-type": "application/json" } : {},
-            statusCode: body ? 200 : 204,
+            statusCode: (url.pathname === "/sucafina/api/ui/context" ? files?.contextStatus : undefined) ?? (body ? 200 : 204),
             pause: () => undefined, resume: () => undefined,
           })
           req.emit("response", response)
@@ -236,7 +236,7 @@ test("logout fences the old handle first and clears only that SF jar if offline"
 })
 
 test("Files dispatch requires the same authorized context and current producer readiness", async () => {
-  const files = { state: "ready" as "ready" | "unavailable", accessRevision: "revision-1" }
+  const files: NonNullable<Parameters<typeof brokerFixture>[0]> = { state: "ready", accessRevision: "revision-1" }
   const fixture = brokerFixture(files)
   try {
     const owner = fakeOwner(30)
@@ -257,12 +257,15 @@ test("Files dispatch requires the same authorized context and current producer r
     expect(fixture.queries.filter((query) => query.url === destination)).toHaveLength(1)
 
     files.state = "unavailable"
-    expect(await readAsset()).toEqual({ kind: "transport-error", reason: "contract-unavailable" })
+    expect(await readAsset()).toEqual({ kind: "request-not-dispatched", reason: "contract-unavailable" })
     files.state = "ready"
     files.accessRevision = "revision-2"
-    expect(await readAsset()).toEqual({ kind: "transport-error", reason: "contract-unavailable" })
+    expect(await readAsset()).toEqual({ kind: "request-not-dispatched", reason: "contract-unavailable" })
+    files.contextStatus = 401
+    expect(await readAsset()).toEqual({ kind: "request-not-dispatched", reason: "contract-unavailable" })
+    expect(await readAsset()).toEqual({ kind: "request-not-dispatched", reason: "contract-unavailable" })
     expect(fixture.queries.filter((query) => query.url === destination)).toHaveLength(1)
-    expect(fixture.queries.filter((query) => new URL(query.url).pathname === "/sucafina/api/ui/context")).toHaveLength(4)
+    expect(fixture.queries.filter((query) => new URL(query.url).pathname === "/sucafina/api/ui/context")).toHaveLength(5)
   } finally { await fixture.broker.dispose() }
 })
 

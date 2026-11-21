@@ -19,6 +19,8 @@ import { createSfPreparedApply } from "../decisions/prepared-apply.ts"
 import { createPreparedExecution } from "../decisions/apply.ts"
 import { isReviewDigest, type AdmittedApply, type ReviewDigestFor } from "../decisions/receipt-review-binding.ts"
 import { createProcurementC12Bridge } from "./c12.ts"
+import { c12ProposalKey, createC12ProcurementProposal, requiresC12ProcurementProposal, verifyC12ProcurementProposal } from "./c12-proposal.ts"
+import type { C12ProposalRecord, C12ProposalReview } from "./c12-proposal.ts"
 import { projectProcurementSource } from "./port.ts"
 
 type ApplyRequest = Parameters<PreparedApplyPort["executePrepared"]>[0]
@@ -48,6 +50,32 @@ export function createProcurementDecisionHost(input: BridgeInput & {
   const bridge = createProcurementC12Bridge(input)
   const host = input.host
   const state = input.authority.state
+  const proposal = createC12ProcurementProposal({
+    ...host,
+    authorizeHuman: (context, selector, action) => input.authority.human.authorize(context, "decisions.procurement-proposal.advance", { ...selector, action }),
+    transaction: (selector, context, source, work) => host.persistence.transaction<PortResult<C12ProposalReview>>("procurement", async (procurement) => {
+      const loaded = await state.read(source, "cases", (stored, authority) =>
+        sameApplicationAuthority(authority, context) && Object.hasOwn(stored.cases, selector.caseRef.id) ? stored.cases[selector.caseRef.id] : undefined)
+      if (loaded.status !== "ok" || !loaded.value) return { commit: false, value: { status: "denied", reason: "current-authority-unavailable" } }
+      const key = c12ProposalKey(selector, context)
+      return work({
+        procurement,
+        decision: loaded.value,
+        record: procurement.sfProcurementProposals?.[key] as C12ProposalRecord | undefined,
+        persist: (record) => {
+          const records = procurement.sfProcurementProposals ??= {}
+          records[key] = record
+          return true
+        },
+      })
+    }, { signal: source.signal }),
+  })
+  const verifyProposal = (snapshot: Snapshot, decision: DecisionCase, request: ApplyRequest, change: PreparedChange, actor: Actor, context: TrustedDomainContext) => {
+    if (!requiresC12ProcurementProposal(change)) return true
+    if (context.kind !== "ui") return false
+    const record = snapshot.sfProcurementProposals?.[c12ProposalKey(request, context)] as C12ProposalRecord | undefined
+    return verifyC12ProcurementProposal({ procurement: snapshot, decision, record, selector: request, context, actor }).status === "ok"
+  }
   const active = new WeakMap<Request, ActiveApply>()
   const current = (context: TrustedDomainContext) => {
     const source = host.requestFor(context)
@@ -156,7 +184,9 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     if (!isReviewDigest(review.value.reviewDigest)) return { status: "unavailable", reason: "prepared-review-proof-unavailable" } as const
     reviews.set(reviewKey(request, context), { changeDigest: digestSfValue(before.value.change), reviewDigest: review.value.reviewDigest, expiresAt })
     if (reviews.size > 512) reviews.delete(reviews.keys().next().value!)
-    return review
+    return requiresC12ProcurementProposal(before.value.change)
+      ? { ...review, value: { ...review.value, requiresProcurementApproval: true as const } }
+      : review
   }
   // Only the active human intent supplies the producer proof to WP11. Initial
   // application also checks the observed review; receipt replay checks its durable binding.
@@ -193,6 +223,7 @@ export function createProcurementDecisionHost(input: BridgeInput & {
       const held = current(context)
       return !!held && held.mode === "apply" && context.kind === "ui" && digestSfValue(actor) === digestSfValue(held.actor) && reviewDigestFor(context, request, change) === held.admitted.reviewDigest && validTarget(snapshot, held)
     },
+    verifyPreparation: verifyProposal,
     receiptVersion: bridge.receiptVersion,
     environment: (context) => { const held = current(context); if (!held) throw new Error("Prepared execution unavailable"); return held.environment },
     createId: input.createId, now: input.now,
@@ -278,6 +309,14 @@ export function createProcurementDecisionHost(input: BridgeInput & {
       if (!loaded.value.change.receipt) {
         if (receipt.value.state === "not-found" && (!reviewed || reviewed.expiresAt <= checkedAt || reviewed.changeDigest !== digestSfValue(loaded.value.change))) return { status: "denied", reason: "prepared-review-required" }
         if (receipt.value.state === "not-found" && reviewed?.reviewDigest !== admitted.reviewDigest) return { status: "conflict", reason: "prepared-review-proof-mismatch" }
+      }
+      if (mode === "apply" && receipt.value.state === "not-found" && requiresC12ProcurementProposal(held.change)) {
+        // Reject premature attempts before reserving the single durable Apply.
+        // The receipt transaction independently rechecks the same approval proof.
+        const approved = await host.persistence.transaction("procurement", async (snapshot) => ({
+          commit: false, value: verifyProposal(snapshot, held.decision, request, held.change, held.actor, context),
+        }), { signal: source.signal })
+        if (!approved) return { status: "denied", reason: "proposal-approval-required" }
       }
       return await execute(request, context, mode)
     } finally { active.delete(source) }
@@ -400,7 +439,7 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     // which compares the canonical material digest and revision as well as identity.
     return await physicalContinuity(archived, currentRef, context) && await host.revalidate(context)
   }
-  return { prepareChanges: mutations.prepareChanges, prepareDomainCommands, reviewChange, apply, recover, authorizeReceiptTarget, resolveEvidence, proveContinuity, dispose: () => reviews.clear() }
+  return { prepareChanges: mutations.prepareChanges, prepareDomainCommands, reviewChange, proposal, apply, recover, authorizeReceiptTarget, resolveEvidence, proveContinuity, dispose: () => reviews.clear() }
 }
 
 function sameApplicationAuthority(authority: SfStateAuthority, context: TrustedDomainContext) {

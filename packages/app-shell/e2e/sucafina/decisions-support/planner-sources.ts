@@ -11,22 +11,31 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
     return `${path}?${new URLSearchParams({ version })}`
   }
   const versionRow = (id: string) => page.locator(`tr[data-sf-row="${id}"]`)
+  const versionRows = page.locator('[data-sf-surface="CAP23"] tr[data-sf-row]')
   const detail = page.locator("[data-sf-record-detail]")
   const installed = await page.goto("/orchestra/sf-planner/versions/new")
   expect(installed?.status(), "Original Planner Versions route must be installed").toBe(200)
   await expect(page.getByRole("heading", { name: "Versions", exact: true })).toBeVisible()
-  await confirmVersion(page, page.locator('[data-sf-surface="CAP23"]').getByRole("button", { name: "Create first version", exact: true }), "save", observations)
+  await confirmVersion(page, origin, page.locator('[data-sf-surface="CAP23"]').getByRole("button", { name: "Create first version", exact: true }), "save", observations)
+  // This journey starts with a private, empty installation. The command
+  // acknowledges creation; the fresh authorized list supplies the identity.
+  await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === "/orchestra/sf-planner/versions")
+  await expect(versionRows).toHaveCount(1)
+  await expect(versionRows).toHaveAttribute("data-sf-row", /\S+/)
+  const createdBaseline = (await versionRows.getAttribute("data-sf-row"))!
+  await versionRows.getByRole("button", { name: "Open record", exact: true }).click()
   await expect(detail).toHaveCount(1)
   const baseline = await versionIdentity(detail)
+  expect(baseline).toBe(createdBaseline)
   const versionName = detail.locator("#sf-u46-name")
   const year = detail.locator("#sf-u46-year")
   await expect(versionName).toBeEnabled()
   await versionName.fill(sourceNames.baseline)
   await expect(year).toBeEnabled()
   await year.fill("2027")
-  await confirmVersion(page, detail.getByRole("button", { name: "Save", exact: true }), "save", observations)
+  await confirmVersion(page, origin, detail.getByRole("button", { name: "Save", exact: true }), "save", observations)
   await expect(detail.getByRole("heading", { name: sourceNames.baseline, exact: true })).toBeVisible()
-  await expect(detail.locator('[data-sf-field="year"]')).toContainText("2027")
+  await expect(detail.locator('[data-sf-field="year"] dd')).toHaveText(/^2,?027 Year$/)
   await detail.getByRole("button", { name: "Back", exact: true }).click()
   await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-planner/versions" && url.searchParams.get("year") === "2027")
   await expect(versionRow(baseline)).toHaveCount(1)
@@ -63,17 +72,28 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   await expect(created.locator('[data-sf-field="annual"]')).toHaveText("1200")
 
   expect((await page.goto("/orchestra/sf-planner/versions?year=2027"))?.status(), "Original Planner Versions route must remain admitted").toBe(200)
+  await expect(versionRows).toHaveCount(1)
   await versionRow(baseline).getByRole("button", { name: "Open record", exact: true }).click()
   await expect(detail).toHaveCount(1)
-  await confirmVersion(page, detail.getByRole("button", { name: "copy", exact: true }), "copy", observations)
+  await confirmVersion(page, origin, detail.getByRole("button", { name: "copy", exact: true }), "copy", observations, baseline)
   const copiedName = `${sourceNames.baseline} — Copy`
+  await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === "/orchestra/sf-planner/versions" && url.searchParams.get("year") === "2027")
+  await expect(versionRows).toHaveCount(2)
+  await expect(versionRow(baseline).locator(".sf-s01-cell-value")).toHaveText(sourceNames.baseline)
+  const copyRow = versionRows.filter({ has: page.getByText(copiedName, { exact: true }) })
+  await expect(copyRow).toHaveCount(1)
+  await expect(copyRow.locator(".sf-s01-cell-value")).toHaveText(copiedName)
+  await expect(copyRow).toHaveAttribute("data-sf-row", /\S+/)
+  const createdCandidate = (await copyRow.getAttribute("data-sf-row"))!
+  await copyRow.getByRole("button", { name: "Open record", exact: true }).click()
   await expect(detail.getByRole("heading", { name: copiedName, exact: true })).toBeVisible()
   const candidate = await versionIdentity(detail)
+  expect(candidate).toBe(createdCandidate)
   expect(candidate).not.toBe(baseline)
-  await expect(detail.locator('[data-sf-field="year"]')).toContainText("2027")
+  await expect(detail.locator('[data-sf-field="year"] dd')).toHaveText(/^2,?027 Year$/)
   await expect(detail.locator("#sf-u46-name")).toBeEnabled()
   await detail.locator("#sf-u46-name").fill(sourceNames.candidate)
-  await confirmVersion(page, detail.getByRole("button", { name: "Save", exact: true }), "save", observations)
+  await confirmVersion(page, origin, detail.getByRole("button", { name: "Save", exact: true }), "save", observations)
   await expect(detail.getByRole("heading", { name: sourceNames.candidate, exact: true })).toBeVisible()
   expect(await versionIdentity(detail)).toBe(candidate)
   await detail.getByRole("button", { name: "Back", exact: true }).click()
@@ -141,7 +161,7 @@ export async function changePlannerSource(page: Page, origin: string, versionId:
   observations.push({ stage: "planner-source-revised-through-ui", versionId, previousAnnualInput: 2400, annualInput: annualBudget, currency: "USD", previousRevision, revision })
 }
 
-async function confirmVersion(page: Page, opener: Locator, action: string, observations: Record<string, unknown>[]) {
+async function confirmVersion(page: Page, origin: string, opener: Locator, action: string, observations: Record<string, unknown>[], sourceId?: string) {
   await expect(opener).toBeEnabled()
   await opener.click()
   const review = page.locator('[data-component="sf-change-review"]')
@@ -149,14 +169,19 @@ async function confirmVersion(page: Page, opener: Locator, action: string, obser
   await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
   const confirm = review.getByRole("button", { name: "Confirm", exact: true })
   await expect(confirm).toBeEnabled()
-  const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
-  await confirm.click()
-  const response = await pending
-  expect(response.status()).toBe(200)
-  expect(response.headers()["content-type"]).toContain("application/json")
-  const result = asRecord(await response.json())
+  const [{ result, command, httpStatus }] = await Promise.all([page.waitForResponse((response) => {
+    if (response.request().method() !== "POST" || response.url() !== `${origin}/sucafina/planner?page=Versions`) return false
+    const body = response.request().postDataJSON()
+    return body?.page === "Versions" && body.action === action
+  }).then(async (response) => {
+    expect(response.status()).toBe(200)
+    expect(response.headers()["content-type"]).toContain("application/json")
+    return { result: asRecord(await response.json()), command: asRecord(response.request().postDataJSON()), httpStatus: response.status() }
+  }), confirm.click()])
+  expect(command.confirmed).toBe(true)
+  if (sourceId !== undefined) expect(command.id).toBe(sourceId)
   expect(result.ok).toBe(true)
-  observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok })
+  observations.push({ stage: "planner-human-command", action, httpStatus, ok: result.ok })
   return result
 }
 
@@ -190,23 +215,22 @@ async function confirmLine(page: Page, opener: Locator, expected: { version: num
   await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
   const confirm = review.getByRole("button", { name: "Confirm", exact: true })
   await expect(confirm).toBeEnabled()
-  const pending = page.waitForResponse((response) => {
-    if (response.request().method() !== "POST" || new URL(response.url()).pathname !== "/sucafina/planner") return false
+  const origin = new URL(page.url()).origin
+  const [{ result, body, httpStatus }] = await Promise.all([page.waitForResponse((response) => {
+    if (response.request().method() !== "POST" || response.url() !== `${origin}/sucafina/planner?page=OPEX`) return false
     const body = response.request().postDataJSON()
     return body?.page === "OPEX" && body?.action === "save"
-  })
-  await confirm.click()
-  const response = await pending
-  expect(response.status()).toBe(200)
-  expect(response.headers()["content-type"]).toContain("application/json")
-  const result = asRecord(await response.json())
+  }).then(async (response) => {
+    expect(response.status()).toBe(200)
+    expect(response.headers()["content-type"]).toContain("application/json")
+    return { result: asRecord(await response.json()), body: asRecord(response.request().postDataJSON()), httpStatus: response.status() }
+  }), confirm.click()])
   expect(result.ok).toBe(true)
-  const body = asRecord(response.request().postDataJSON())
   expect(body.page).toBe("OPEX")
   expect(body.action).toBe("save")
   expect(body.confirmed).toBe(true)
   expect(body.version).toBe(expected.version)
   expect(asRecord(body.values)).toMatchObject(expected.values)
-  observations.push({ stage: "planner-human-command", action: "save", httpStatus: response.status(), ok: result.ok, version: body.version })
+  observations.push({ stage: "planner-human-command", action: "save", httpStatus, ok: result.ok, version: body.version })
   return result
 }

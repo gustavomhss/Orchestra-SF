@@ -14,16 +14,20 @@ import type { Command } from "../../../../../modules/sucafina/Sucafinav1/runtime
 import { createSfSourcePersistence } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+import { sfHumanActions } from "../../../../../modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
+import freeze from "../../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 import { initializeAbsentSfProductState } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 
 // Playwright starts this composition in Bun because the production adapter uses bun:sqlite.
 // One real embedded host serves the native producers through the production shell proxy.
 // The three isolated local-operator sessions exercise distinct actors, not Entra identities.
-const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp04-browser-"))
+const approvalDirectory = process.argv[2] === "--decision-approval" ? process.argv[3] : undefined
+if (process.argv[2] === "--decision-approval" && (!approvalDirectory || !path.isAbsolute(approvalDirectory))) throw new Error("Decisions fixture requires a private absolute directory")
+const directory = approvalDirectory ?? await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp04-browser-"))
 await chmod(directory, 0o700)
 // Core and product storage belong to the same disposable Actions installation.
 const hostDirectories = ["host-data", "host-config", "host-cache", "host-state", "host-tmp"]
-await Promise.all(hostDirectories.map((name) => mkdir(path.join(directory, name), { mode: 0o700 })))
+if (!approvalDirectory) await Promise.all(hostDirectories.map((name) => mkdir(path.join(directory, name), { mode: 0o700 })))
 Object.assign(process.env, {
   ORCHESTRA_DB: path.join(directory, "host-data", "orchestra.db"),
   ORCHESTRA_INHERIT_CREDENTIALS: "0",
@@ -50,13 +54,13 @@ const driver = await openLocalStore(directory)
 const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID }) }
 for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
 await initializeAbsentSfProductState(store, randomUUID)
-const manifest = path.join(import.meta.dirname, ".host-manifest.json")
+const manifest = approvalDirectory ? path.join(directory, "decision-approval-manifest.json") : path.join(import.meta.dirname, ".host-manifest.json")
 const installationId = randomUUID()
 const mount = "/sucafina"
 const configurations = [
   { key: "first", uid: 1001, name: "First procurement operator" },
   { key: "second", uid: 1002, name: "Second procurement operator" },
-  { key: "viewer", uid: 1003, name: "Read-only procurement observer" },
+  { key: "viewer", uid: 1003, name: approvalDirectory ? "Finance procurement operator" : "Read-only procurement observer" },
 ] as const
 const people = configurations.map((entry) => ({ id: "macos:" + installationId + ":" + entry.uid, name: entry.name }))
 const active: { ready: boolean; handle?: (request: Request) => Promise<Response> } = { ready: false }
@@ -80,7 +84,7 @@ const accounts = configurations.map((configuration) => ({
   ...configuration,
   identity: createOperatorIdentity({
     origin, mount,
-    operator: { installationId, uid: configuration.uid, name: configuration.name, buyer: configuration.key !== "viewer" },
+    operator: { installationId, uid: configuration.uid, name: configuration.name, buyer: !!approvalDirectory || configuration.key !== "viewer" },
     secrets: store.secrets,
     key: randomBytes(32),
   }),
@@ -97,7 +101,7 @@ const authenticate: Application["authenticate"] = async (request, context) => {
   const account = await sessionAccount(request)
   if (!account) return null
   const authenticated = await account.identity.authenticate(request, context)
-  return authenticated && account.key === "viewer"
+  return authenticated && !approvalDirectory && account.key === "viewer"
     ? { ...authenticated, canWrite: false, roles: [{ surface: context.surface, role: "viewer" }] }
     : authenticated
 }
@@ -105,8 +109,14 @@ const installation = await createOperationsInstallation({
   installationId, directory, origin, mount,
   operators: accounts.map((account) => ({
     principalRef: "macos:" + installationId + ":" + account.uid,
-    readOnly: account.key === "viewer",
+    readOnly: !approvalDirectory && account.key === "viewer",
   })),
+  ...(approvalDirectory ? { grants: people.map((person, index) => ({
+    principalRef: person.id,
+    namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"] as const,
+    operations: freeze.operations.map((operation) => operation.operation),
+    humanActions: index === 0 ? sfHumanActions : ["decisions.procurement-proposal.review", "decisions.procurement-proposal.advance"] as const,
+  })) } : {}),
   persistence: store, authenticate,
   isAuthenticated: async (request) => Boolean(await sessionAccount(request)),
   environment, signingKey, scanner,
@@ -131,12 +141,17 @@ const records = await store.transaction("procurement", async (snapshot) => {
   const holders = ProcurementModule.domain.execute(snapshot, actor, {
     page: "Settings", action: "save", version: snapshot.versions.settings!.version,
     values: {
-      levels: initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })),
+      levels: approvalDirectory ? [
+        { id: "peer", name: "Peer", threshold: 0, holderId: people[1]!.id },
+        { id: "finance", name: "Finance", threshold: 120, holderId: people[2]!.id },
+      ] : initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })),
+      ...(approvalDirectory ? { prApprovalMode: "matrix", blockSelfApproval: true } : {}),
       // The real private upload path requires a configured limit in bytes before scanning.
       uploadCap: 16 * 1024 * 1024,
     },
   }, context)
   if (!holders.ok) throw new Error("Synthetic approval holder and attachment limit could not be configured")
+  if (approvalDirectory) return { commit: true, value: null }
   const execute = (command: Command) => {
     const result = ProcurementModule.domain.execute(snapshot, actor, command, context)
     if (!result.ok) throw new Error(`Fixture command ${command.page}/${command.action} was refused (${result.status})`)
@@ -192,7 +207,7 @@ active.handle = async (request) => {
 const enrolled: Record<string, { baseURL: string; principal: string; enrollments: Record<string, string> }> = {}
 for (const [index, account] of accounts.entries()) {
   const enrollments: Record<string, string> = {}
-  for (const scenario of ["validation", "conflict", "comment", "late-edit", "journey", "comparison", "suppliers", "settings"]) {
+  for (const scenario of approvalDirectory ? ["decision-approval"] : ["validation", "conflict", "comment", "late-edit", "journey", "comparison", "suppliers", "settings"]) {
     const code = await account.identity.enroll()
     enrollmentOwners.set(code, account)
     enrollments[scenario] = origin + mount + "/auth/local?code=" + code
@@ -211,7 +226,7 @@ async function close() {
   await embedded.dispose()
   await store.dispose()
   await rm(manifest, { force: true })
-  await rm(directory, { recursive: true, force: true })
+  if (!approvalDirectory) await rm(directory, { recursive: true, force: true })
   process.exit(0)
 }
 process.once("SIGTERM", () => { void close() })

@@ -1,5 +1,7 @@
 # Using documents in Sucafina
 
+On a supplier detail page, administrators with upload access can attach a source document. The server scans the file and checks the supplier revision before linking it. If the upload result is uncertain, refresh the supplier record to check the link instead of submitting the file again.
+
 Choose a document from the accessible source list to add it to search. The list shows the file names you are allowed to open. Access is checked again when you search, inspect a result, or open its source; a changed or revoked document may no longer be available.
 
 Open **Documents** from the existing Sucafina page. The Request selector narrows the source list to attachments of that Request. Selecting a file captures the current Request and attachment revisions. If either changes before opening it, refresh the list and review the current file. A selection belongs to the authenticated person who obtained it and expires after five minutes.

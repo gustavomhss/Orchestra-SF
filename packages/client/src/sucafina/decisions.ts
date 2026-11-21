@@ -8,7 +8,7 @@ import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import type { SfCallOptions, SfTransport } from "./transport.ts"
 
 /**
- * 21 operation-specific methods: no operation:string or generic dispatcher,
+ * Operation-specific methods: no operation:string or generic dispatcher,
  * no inferred authority from a caller-supplied principal or caseRef.
  * Result is the transport tagged union, preserving denial/stale/conflict,
  * optional financial values, and uncertain effects after network loss.
@@ -45,6 +45,12 @@ export function createSfDecisionsClient(transport: SfTransport) {
     "decisions.controls.read": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.controls.read"]["input"]>, options: SfCallOptions) =>
       transport.execute(SfDecisions.operations["decisions.controls.read"], input, options),
 
+    "decisions.portfolio.catalog": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.portfolio.catalog"]["input"]>, options: SfCallOptions) =>
+      transport.execute(SfDecisions.operations["decisions.portfolio.catalog"], input, options),
+
+    "decisions.decision-compare": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.decision-compare"]["input"]>, options: SfCallOptions) =>
+      transport.execute(SfDecisions.operations["decisions.decision-compare"], input, options),
+
     "decisions.decision-coverage": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.decision-coverage"]["input"]>, options: SfCallOptions) =>
       transport.execute(SfDecisions.operations["decisions.decision-coverage"], input, options),
 
@@ -75,6 +81,10 @@ export function createSfDecisionsClient(transport: SfTransport) {
     "decisions.decision-review": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.decision-review"]["input"]>, options: SfCallOptions) =>
       transport.execute(SfDecisions.operations["decisions.decision-review"], input, options),
 
+    "decisions.procurement-proposal-review": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.procurement-proposal-review"]["input"]>, options: SfCallOptions) =>
+      transport.execute(SfDecisions.operations["decisions.procurement-proposal-review"], input, options),
+    "decisions.procurement-proposal-advance": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.procurement-proposal-advance"]["input"]>, options: SfCallOptions) =>
+      transport.execute(SfDecisions.operations["decisions.procurement-proposal-advance"], input, options),
     "decisions.decision-apply": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.decision-apply"]["input"]>, options: SfCallOptions) =>
       transport.execute(SfDecisions.operations["decisions.decision-apply"], input, options),
 

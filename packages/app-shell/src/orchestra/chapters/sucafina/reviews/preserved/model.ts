@@ -1,4 +1,6 @@
 import { Option, Schema } from "effect"
+import { $PROXY } from "solid-js"
+import { unwrap } from "solid-js/store"
 import { SfReviewDomainProjection, SfReviewPreserved } from "@orchestra/schema/sucafina/reviews"
 import type { SfUiState } from "../../shared/frame"
 
@@ -102,7 +104,10 @@ function covers(period: { start: string; end: string } | undefined, section: { s
 
 /** Public review content is a producer-owned JSON value, not an editable or numeric model. */
 export function readPreservedProjection(content: unknown): ReviewProjection | undefined {
-  const decoded = Schema.decodeUnknownOption(SfReviewDomainProjection)(content)
+  // Closed Period structs reject Solid's own symbols, even on unwrapped store targets.
+  const snapshot = content !== null && typeof content === "object" && $PROXY in content
+    ? structuredClone(unwrap(content)) : content
+  const decoded = Schema.decodeUnknownOption(SfReviewDomainProjection)(snapshot)
   return Option.isSome(decoded) ? decoded.value : undefined
 }
 

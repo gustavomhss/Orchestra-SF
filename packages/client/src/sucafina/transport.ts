@@ -98,7 +98,9 @@ export type SfDesktopInvocationResult =
   | Readonly<{ kind: "byte-response"; status: number; headers: SfPublicHeaders; responseHandle: string }>
   | Readonly<{ kind: "byte-chunk"; sequence: number; bytes: Uint8Array; done: boolean }>
   | Readonly<{ kind: "empty-response"; status: number; headers: SfPublicHeaders }>
+  | Readonly<{ kind: "request-not-dispatched"; reason: "aborted" | "contract-unavailable" | "invalid-response" }>
   | SfTransportFailure
+export const SF_SUPPLIER_CSV_LIMIT = 64 * 1024 * 1024
 export type SfDesktopLoginResult =
   | Readonly<{ status: "authenticated"; context: SfContext }>
   | Readonly<{ status: "cancelled" }>
@@ -374,6 +376,10 @@ export function createSfTransport(options: Readonly<{
             input: wireInput, ...(key ? { idempotencyKey: key } : {}),
             ...(upload ? { upload } : {}),
           })
+          if (result.kind === "request-not-dispatched") {
+            if (mutating) pending.delete(key!)
+            return failure(result.reason)
+          }
           if ("status" in result && (result.status === 401 || result.status === 403)) clear()
           if (result.kind === "transport-error") response = result
           else if (result.kind === "byte-response" && isBytes && result.status === 200 &&
@@ -545,7 +551,7 @@ export function createSfTransport(options: Readonly<{
       if (!route) return { status: "invalid" }
       const isOwned = () => isCurrent() && !call.signal.aborted &&
         stamp !== undefined && equalContextStamp(stamp, original)
-      const limit = 64 * 1024 * 1024
+      const limit = SF_SUPPLIER_CSV_LIMIT
       const chunks: Uint8Array[] = []
       let total = 0
       const add = (chunk: Uint8Array) => {
@@ -571,7 +577,8 @@ export function createSfTransport(options: Readonly<{
             })
             if (!isOwned()) return { status: "aborted" }
             if ("status" in first && first.status !== 200) return failure(first.status)
-            if (first.kind === "transport-error") return { status: "unavailable" }
+            if (first.kind === "transport-error" || first.kind === "request-not-dispatched")
+              return { status: first.reason === "aborted" ? "aborted" : "unavailable" }
             if (first.kind !== "byte-response" || first.status !== 200 ||
                 !validSupplierCsvHeaders(first.headers["content-type"], first.headers["content-disposition"]))
               return { status: "invalid" }

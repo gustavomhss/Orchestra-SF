@@ -52,11 +52,12 @@ test("request fields survive creation, save, submission and actual holder decisi
   const created = domain.execute(
     state,
     requester,
-    { page: "Requests", action: "create", version: 0, values: { pr } },
+    { page: "Requests", action: "create", version: 0, values: { pr: { ...pr, estAmount: "100", estAnnual: "" } } },
     environment,
   )
   expect(created.ok).toBe(true)
   const requests = domain.view(state, requester, environment).data.requests as Record<string, unknown>[]
+  expect(requests[0]!.pr).toMatchObject({ estAmount: 100, estAnnual: null })
   const id = String(requests[0]!.number)
   expect(
     domain.execute(
@@ -265,7 +266,12 @@ test("complete procurement field roundtrip and frozen approvals survive settings
       commCriteria: [{ name: "Recorded price", weight: 1, auto: true }],
     },
   }
-  expect(run(buyer, "save", { sourcing }, id).ok).toBe(true)
+  const nativeSourcing = { ...sourcing, quotes: sourcing.quotes.map((quote) => ({
+    ...quote, qty: String(quote.qty), unitPrice: String(quote.unitPrice),
+  })) }
+  expect(run(buyer, "save", { sourcing: nativeSourcing }, id).ok).toBe(true)
+  expect(rows(domain.view(state, buyer, environment).data.requests).find((request) => request.number === id)?.sourcing)
+    .toMatchObject({ quotes: sourcing.quotes })
   expect(run(buyer, "select_quote", { quoteId: "q1" }, id).ok).toBe(true)
   expect(run(buyer, "submit_sourcing", { sourcing }, id).ok).toBe(true)
   const newHolder = { ...holder, id: "different" }
@@ -1049,4 +1055,27 @@ test("actual browser-shaped nested arrays omit untouched repeat placeholders and
   expect(after.criteria).toEqual(before.criteria)
   expect(after.commCriteria).toEqual(before.commCriteria)
   expect((after.levels as Record<string, unknown>[])[0]!.threshold).toBe(0)
+})
+
+test("nested CAP28 accepts a retained numeric FX rate without accepting a blank or nonpositive rate", () => {
+  const state = snapshot()
+  const env = { at, id: () => "browser-row", directory: [] }
+  expect(domain.execute(state, actor, { page: "Settings", action: "reset", version: 0, values: {} }, env)).toMatchObject({ ok: true })
+  const before = domain.view(state, actor, env).data.settings as Record<string, unknown>
+  const rates = before.fxRates as Record<string, unknown>[]
+  const settings = (rate: string) => ({ settings: { fxRates: rates.map((row) => row.code === "EUR" ? { ...row, rate } : row) } })
+  const version = state.versions.settings!.version
+  expect(rates.find((row) => row.code === "EUR")).toMatchObject({ rate: 1.08 })
+  expect(domain.execute(state, actor, { page: "Settings", action: "save", version, values: settings("2") }, env)).toMatchObject({ ok: true })
+  expect(state.versions.settings?.version).toBe(version + 1)
+  expect(domain.view(state, actor, env).data.settings).toMatchObject({
+    fxRates: expect.arrayContaining([{ code: "EUR", rate: 2 }]),
+  })
+  const saved = structuredClone(state)
+  for (const rate of ["", " ", "0", "-1", "Infinity"]) {
+    expect(domain.execute(state, actor, {
+      page: "Settings", action: "save", version: version + 1, values: settings(rate),
+    }, env)).toMatchObject({ ok: false, status: 422 })
+    expect(state).toEqual(saved)
+  }
 })

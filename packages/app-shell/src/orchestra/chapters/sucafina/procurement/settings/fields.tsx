@@ -202,7 +202,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
                 <input id={id("fx", "rate", index())} type="number" step="any"
                   value={numberText(rate.rate)} disabled={props.disabled}
                   onInput={(event) => changeRate(index(), {
-                    rate: event.currentTarget.value === "" ? null : event.currentTarget.value,
+                    rate: numericInput(event.currentTarget.value),
                   })} />
               </div>
               {removeButton("fxRates", index())}

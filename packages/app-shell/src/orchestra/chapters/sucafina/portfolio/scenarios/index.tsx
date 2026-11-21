@@ -1,4 +1,4 @@
-import { useNavigate } from "@solidjs/router"
+import { useLocation, useNavigate } from "@solidjs/router"
 import { createEffect, createMemo, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
@@ -10,11 +10,11 @@ import { SfPageFrame, type SfCopyKey, type SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableKey } from "../../shared/table"
 import { sfDecisionHref, sfCaseIsListed } from "./paths"
-import { sfCandidateRef, sfDecisionControls, sfPortfolioEvaluate, sfPortfolioHistory,
+import { sfCatalogCases, sfDecisionCatalog, sfDecisionControls, sfPortfolioEvaluate, sfPortfolioHistory, sfSameCaseRef,
   sfPortfolioPreviewRequest, sfPortfolioReady, sfPortfolioRecorded,
-  type SfPortfolioPreview, type SfPortfolioRequest } from "./producer"
-import type { SfCaseControls, SfPortfolioCombination, SfPortfolioHistory,
-  SfPortfolioResultView, SfRecordedPortfolio } from "./model"
+  type SfCatalogCase, type SfPortfolioPreview, type SfPortfolioRequest } from "./producer"
+import type { SfCaseChoice, SfCaseControls, SfPortfolioCombination, SfPortfolioHistory,
+  SfPortfolioResultView } from "./model"
 import "./scenarios.css"
 
 const k = (key: keyof typeof SF_U19_COPY) => key as SfCopyKey
@@ -33,6 +33,8 @@ type Result = Readonly<{ resultRef: string; result: SfPortfolioResultView }>
 type View = {
   status: SfUiState
   controls: SfCaseControls | null
+  catalog: (SfCatalogCase & { ref: string }) | null
+  catalogCases: readonly SfCaseChoice[]
   caseState: SfUiState
   history: SfPortfolioHistory
   recorded: Result | null
@@ -53,11 +55,12 @@ type View = {
 export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">): JSX.Element {
   const owner = useSfContext()
   const navigate = useNavigate()
+  const location = useLocation<{ catalogSelection?: { ref: string; version: number } }>()
   const language = useLanguage()
   const t = (key: keyof typeof SF_U19_COPY) => language.t(key as Parameters<typeof language.t>[0])
   const [refresh, setRefresh] = createSignal(0)
   const [store, set] = createStore<View>({
-    status: "loading", controls: null, caseState: "loading", history: [], recorded: null,
+    status: "loading", controls: null, catalog: null, catalogCases: [], caseState: "loading", history: [], recorded: null,
     preview: null, previewRequestKey: null, previewState: "empty",
     selected: [], constraints: [], priorities: [], explorationLimit: "32",
     review: false, busy: false, outcomeUnknown: false, message: null,
@@ -65,15 +68,16 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
   const active = () => owner.state().status === "ready" ? owner.ready() : undefined
   const routedCase = () => "caseRef" in props.route.params ? props.route.params.caseRef as string : undefined
   const routedResult = () => "resultRef" in props.route.params ? props.route.params.resultRef as string : undefined
-  const listed = () => store.controls?.cases ?? []
-  const selectedCase = () => store.controls?.selected ?? null
+  const selectedCase = () => props.surfaceId === "UI42" ? store.catalog : store.controls?.selected
   const can = (id: string) => {
     const context = active()?.context
     return !!context && sfPortfolioReady(context, id, id.startsWith("decisions.") ? "decisions" : "portfolio")
   }
-  const routeTo = (destination: "list" | "scenarios" | "portfolio-result" | "sensitivity-selection", source?: { caseRef?: string; resultRef?: string }) => {
+  const routeTo = (destination: "list" | "scenarios" | "portfolio-result" | "sensitivity-selection", source?: { caseRef?: string; resultRef?: string; selectedVersion?: number }) => {
     const href = sfDecisionHref(props.route, destination, source)
-    if (href) navigate(href)
+    if (href) navigate(href, source?.caseRef && source.selectedVersion !== undefined ? {
+      state: { catalogSelection: { ref: source.caseRef, version: source.selectedVersion } },
+    } : undefined)
   }
   // Source reads restart on owner epoch, route identity and explicit retry.
   createEffect(() => {
@@ -83,11 +87,12 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
     const current = active()
     const wanted = routedCase()
     const resultRef = routedResult()
+    const pin = location.state?.catalogSelection
     const controller = new AbortController()
     onCleanup(() => controller.abort())
     set({ status: status === "ready" ? "loading" : status === "denied" ? "denied" :
       status === "unauthenticated" ? "session-expired" : "unavailable",
-      controls: null, caseState: "loading", history: [], recorded: null,
+      controls: null, catalog: null, catalogCases: [], caseState: "loading", history: [], recorded: null,
       preview: null, previewRequestKey: null, previewState: "empty", selected: [],
       constraints: [], priorities: [], review: false, busy: false, outcomeUnknown: false, message: null })
     if (!current || status !== "ready") return
@@ -96,16 +101,46 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
        current.context.stamp.installationId !== props.route.ownerSelection.installationId)) {
       set("status", "denied"); return
     }
-    const live = () => !controller.signal.aborted && owner.generation() === epoch
+    const live = () => !controller.signal.aborted && owner.generation() === epoch &&
+      routedCase() === wanted && routedResult() === resultRef
     void (async () => {
+      if (props.surfaceId === "UI42") {
+        const list = await sfCatalogCases(current.transport, current.context, controller.signal)
+        if (!live()) return
+        if (list.status !== "ok") { set("status", list.state); return }
+        set({ catalogCases: list.value, status: list.value.length || wanted ? "ready" : "empty" })
+        if (!wanted) return
+        const matches = list.value.filter((item) => item.ref === wanted)
+        const selected = matches[0]
+        if (!selected || matches.length !== 1) { set("caseState", "denied"); return }
+        if (pin && (pin.ref !== selected.ref || pin.version !== selected.version)) { set("caseState", "stale"); return }
+        const result = await sfDecisionCatalog(current.transport, current.context, selected, controller.signal)
+        if (!live()) return
+        if (result.status !== "ok") { set("caseState", result.state); return }
+        if (result.value.alternatives.length && can("portfolio.decision-portfolio-preview") && can("decisions.controls.read")) {
+          const controls = await sfDecisionControls(current.transport, current.context, selected.ref, controller.signal)
+          if (!live()) return
+          if (controls.status !== "ok" || !controls.value.selected || controls.value.accessRevision !== current.context.stamp.accessRevision ||
+            !sfSameCaseRef(controls.value.selected.caseRef, result.value.caseRef)) {
+            set("caseState", controls.status === "ok" ? "stale" : controls.state); return
+          }
+          set("controls", controls.value)
+        }
+        set({ catalog: { ...result.value, ref: selected.ref }, caseState: "ready" })
+        if (!can("portfolio.decision-portfolio-results")) return
+        const history = await sfPortfolioHistory(current.transport, current.context, result.value.caseRef, controller.signal)
+        if (!live()) return
+        if (history.status === "ok") set("history", history.value)
+        else if (history.state === "denied" || history.state === "session-expired" || history.state === "stale")
+          set({ catalog: null, controls: null, caseState: history.state })
+        else set("message", "sf.u19.action.stale")
+        return
+      }
       const list = await sfDecisionControls(current.transport, current.context, undefined, controller.signal)
       if (!live()) return
       if (list.status !== "ok") { set("status", list.state); return }
       set({ controls: list.value, status: list.value.cases.length === 0 ? "empty" : "ready" })
-      if (!wanted) {
-        if (props.surfaceId === "UI43") set("caseState", "invalid")
-        return
-      }
+      if (!wanted) { set("caseState", "invalid"); return }
       if (!sfCaseIsListed(list.value.cases, wanted)) {
         set({ caseState: "denied", status: "denied" }); return
       }
@@ -116,37 +151,23 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
       }
       set({ controls: caseResult.value, caseState: "ready" })
       const caseRef = caseResult.value.selected.caseRef
-      if (props.surfaceId === "UI43") {
-        if (!resultRef) { set("caseState", "invalid"); return }
-        const result = await sfPortfolioRecorded(current.transport, current.context, caseRef, resultRef, controller.signal)
-        if (!live()) return
-        if (result.status !== "ok") { set("caseState", result.state); return }
-        set("recorded", { resultRef, result: result.value.result })
-        return
-      }
-      const history = await sfPortfolioHistory(current.transport, current.context, caseRef, controller.signal)
+      if (!resultRef) { set("caseState", "invalid"); return }
+      const result = await sfPortfolioRecorded(current.transport, current.context, caseRef, resultRef, controller.signal)
       if (!live()) return
-      if (history.status === "ok") set("history", history.value)
-      else set("message", "sf.u19.action.stale")
+      if (result.status !== "ok") { set("caseState", result.state); return }
+      set("recorded", { resultRef, result: result.value.result })
     })().catch(() => { if (live()) set("status", "unavailable") })
   })
 
-  const candidates = createMemo(() => {
-    const source = selectedCase()
-    if (!source) return []
-    return source.alternatives.flatMap((entry) => {
-      const ref = sfCandidateRef(source.ref, source.caseRef.version, entry.id, entry.version)
-      return ref ? [{ ref, title: entry.title, alternativeId: entry.id, version: entry.version }] : []
-    })
-  })
+  const candidates = () => store.catalog?.alternatives ?? []
   const preparedRequest = createMemo<SfPortfolioRequest | null>(() => {
-    const current = selectedCase()
+    const current = store.catalog, controls = store.controls?.selected
     const limit = Number(store.explorationLimit)
-    if (!current || !store.selected.length || store.selected.length > 64 ||
+    if (!current || !controls || !store.selected.length || store.selected.length > 64 ||
       !Number.isSafeInteger(limit) || limit < 1 || limit > 1024 ||
-      store.selected.some((ref) => !candidates().some((candidate) => candidate.ref === ref)) ||
-      store.constraints.some((ref) => !current.rules.some((rule) => rule.id === ref)) ||
-      store.priorities.some((ref) => !current.priorities.some((item) => item.id === ref))) return null
+      store.selected.some((ref) => !candidates().some((candidate) => candidate.candidateRef === ref)) ||
+      store.constraints.some((ref) => !controls.rules.some((rule) => rule.id === ref)) ||
+      store.priorities.some((ref) => !current.criteria.some((item) => item.id === ref))) return null
     return { scope: { currency: current.currency, horizon: current.horizon },
       candidateRefs: store.selected, operations: [], constraints: store.constraints,
       priorities: store.priorities, explorationLimit: limit }
@@ -164,21 +185,22 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
       !can("portfolio.decision-portfolio-preview")) return
     const epoch = owner.generation()
     const scope = currentCase.caseRef
+    const live = () => owner.generation() === epoch && !!store.catalog && sfSameCaseRef(scope, store.catalog.caseRef)
     const key = JSON.stringify(request)
     const controller = new AbortController()
     set({ preview: null, previewState: "loading", busy: true, message: null, review: false })
     void sfPortfolioPreviewRequest(current.transport, current.context, scope, request, controller.signal)
       .then((result) => {
-        if (owner.generation() !== epoch || selectedCase()?.caseRef.version !== scope.version) return
+        if (!live()) return
         if (result.status !== "ok") {
           set({ preview: null, previewState: result.state, message: "sf.u19.action.stale" }); return
         }
         set({ preview: result.value, previewRequestKey: key, previewState: "ready" })
       }).catch(() => {
-        if (owner.generation() === epoch) set({ previewState: "unavailable", message: "sf.u19.action.stale" })
+        if (live()) set({ previewState: "unavailable", message: "sf.u19.action.stale" })
       }).finally(() => {
         controller.abort()
-        if (owner.generation() === epoch) set("busy", false)
+        if (live()) set("busy", false)
       })
   }
   const evaluate = () => {
@@ -187,12 +209,13 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
       !store.review || store.previewRequestKey !== JSON.stringify(request) || !store.preview ||
       !can("portfolio.decision-portfolio-evaluate")) return
     const epoch = owner.generation(), caseRef = currentCase.caseRef
+    const live = () => owner.generation() === epoch && !!store.catalog && sfSameCaseRef(caseRef, store.catalog.caseRef)
     set({ busy: true, message: null })
     const controller = new AbortController()
     const identity = crypto.randomUUID()
     void sfPortfolioEvaluate(current.transport, current.context, caseRef, request, identity, controller.signal)
       .then((result) => {
-        if (owner.generation() !== epoch || selectedCase()?.caseRef.version !== caseRef.version) return
+        if (!live()) return
         if (result.status !== "ok") {
           set({ previewState: result.state, outcomeUnknown: result.state === "outcome-unknown",
             review: false, message: result.state === "outcome-unknown" ?
@@ -201,12 +224,12 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
         set({ review: false, preview: null, previewRequestKey: null, message: "sf.u19.action.saveAccepted" })
         setRefresh((value) => value + 1)
       }).catch(() => {
-        if (owner.generation() === epoch) set({
+        if (live()) set({
           outcomeUnknown: true, previewState: "outcome-unknown", review: false, message: "sf.u19.action.unknown",
         })
       }).finally(() => {
         controller.abort()
-        if (owner.generation() === epoch) set("busy", false)
+        if (live()) set("busy", false)
       })
   }
   const tableCols: readonly SfColumn<SfPortfolioCombination>[] = [
@@ -257,9 +280,9 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
     <SfPageFrame titleKey={k(props.surfaceId === "UI42" ? "sf.ui42.title" : "sf.ui43.title")}
       context={[]} tabs={[]} activeTab={null} density="comfortable" layout="split"
       onLayoutMode={() => undefined}
-      primaryAction={props.surfaceId === "UI42" && routedCase() && can("portfolio.decision-portfolio-preview") ? {
+      primaryAction={props.surfaceId === "UI42" && routedCase() ? {
         id: "preview", labelKey: k("sf.u19.scenarios.preview"), tone: "primary",
-        disabled: !preparedRequest() || store.busy || store.outcomeUnknown,
+        disabled: !can("portfolio.decision-portfolio-preview") || !preparedRequest() || store.busy || store.outcomeUnknown,
         busy: store.busy, onInvoke: preview,
       } : undefined}
       secondaryActions={[]}
@@ -272,8 +295,8 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
             <section>
               <h2>{t("sf.u19.case.list")}</h2>
               <ul class="sf-u19-case-list">
-                <For each={listed()}>{(item) =>
-                  <li><button class="mx-btn" type="button" onClick={() => routeTo("scenarios", { caseRef: item.ref })}>
+                <For each={store.catalogCases}>{(item) =>
+                  <li><button class="mx-btn" type="button" onClick={() => routeTo("scenarios", { caseRef: item.ref, selectedVersion: item.version })}>
                     <span>{item.title}</span> <small>{t("sf.u19.case.version")} {item.version}</small>
                   </button></li>
                 }</For>
@@ -281,6 +304,9 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
             </section>
           </Show>
           <Show when={routedCase()}>
+            <Show when={props.surfaceId === "UI42" && store.caseState !== "ready" && store.caseState !== "loading"}>
+              <button class="mx-btn" type="button" onClick={() => routeTo("list")}>{t("sf.u19.case.choose")}</button>
+            </Show>
             <SfStatePanel state={store.caseState} messageKey={k("sf.u19.case.missing")}
               onRetryRead={() => setRefresh((n) => n + 1)}>
               <Show when={selectedCase()}>
@@ -300,23 +326,23 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
                       </button>
                     </>}</Show>
                   }>
-                    <section class="sf-u19-picker">
+                    <section class="sf-u19-picker" data-sf-catalog-case={store.catalog?.ref} data-sf-catalog-version={store.catalog?.caseVersion}>
                       <h3>{t("sf.u19.scenarios.universe")}</h3>
                       <p>{t("sf.u19.scenarios.notCalculated")}</p>
                       <fieldset disabled={store.busy || store.outcomeUnknown}>
                         <legend>{t("sf.u19.scenarios.candidates")}</legend>
                         <For each={candidates()}>{(item) =>
                           <label class="sf-u19-check">
-                            <input type="checkbox" checked={store.selected.includes(item.ref)}
-                              onChange={(event) => updateSelection("selected", item.ref, event.currentTarget.checked)} />
-                            <span>{item.title} · v{item.version}</span>
+                            <input type="checkbox" value={item.candidateRef} checked={store.selected.includes(item.candidateRef)}
+                              onChange={(event) => updateSelection("selected", item.candidateRef, event.currentTarget.checked)} />
+                            <span>{item.title} · v{item.alternativeVersion}</span>
                           </label>
                         }</For>
                         <Show when={candidates().length === 0}><p>{t("sf.u19.scenarios.empty")}</p></Show>
                       </fieldset>
                       <fieldset disabled={store.busy || store.outcomeUnknown}>
                         <legend>{t("sf.u19.scenarios.constraints")}</legend>
-                        <For each={source().rules}>{(rule) =>
+                        <For each={store.controls?.selected?.rules}>{(rule) =>
                           <label class="sf-u19-check"><input type="checkbox" checked={store.constraints.includes(rule.id)}
                             onChange={(event) => updateSelection("constraints", rule.id, event.currentTarget.checked)} />
                             <span>{rule.id} · v{rule.expectedVersion ?? t("sf.u19.results.sourceUnknown")}</span></label>
@@ -324,7 +350,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
                       </fieldset>
                       <fieldset disabled={store.busy || store.outcomeUnknown}>
                         <legend>{t("sf.u19.scenarios.priorities")}</legend>
-                        <For each={source().priorities}>{(priority) =>
+                        <For each={store.catalog?.criteria}>{(priority) =>
                           <label class="sf-u19-check"><input type="checkbox" checked={store.priorities.includes(priority.id)}
                             onChange={(event) => updateSelection("priorities", priority.id, event.currentTarget.checked)} />
                             <span>{priority.description}</span></label>

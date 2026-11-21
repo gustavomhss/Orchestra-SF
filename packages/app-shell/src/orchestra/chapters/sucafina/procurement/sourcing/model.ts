@@ -61,15 +61,16 @@ export function editableSourcing(request: SourcingRequest): SourcingEdit {
   const source = request.sourcing
   return {
     quotes: source?.quotes?.map((quote) => ({ ...quote })) ?? [],
-    evaluator: source?.evaluator,
-    selectedId: source?.selectedId,
-    fewQuotesJustification: source?.fewQuotesJustification,
-    selectionJustification: source?.selectionJustification,
-    contractStrategy: source?.contractStrategy,
-    weights: source?.weights
-      ? { ...source.weights,criteria:source.weights.criteria?.map((entry)=>({...entry})),
-          commCriteria:source.weights.commCriteria?.map((entry)=>({...entry})) }
-      : undefined,
+    ...(source?.evaluator !== undefined ? { evaluator: source.evaluator } : {}),
+    ...(source?.selectedId !== undefined ? { selectedId: source.selectedId } : {}),
+    ...(source?.fewQuotesJustification !== undefined ? { fewQuotesJustification: source.fewQuotesJustification } : {}),
+    ...(source?.selectionJustification !== undefined ? { selectionJustification: source.selectionJustification } : {}),
+    ...(source?.contractStrategy !== undefined ? { contractStrategy: source.contractStrategy } : {}),
+    ...(source?.weights ? { weights: {
+      ...source.weights,
+      ...(source.weights.criteria ? { criteria: source.weights.criteria.map((entry) => ({ ...entry })) } : {}),
+      ...(source.weights.commCriteria ? { commCriteria: source.weights.commCriteria.map((entry) => ({ ...entry })) } : {}),
+    } } : {}),
   }
 }
 export function uniqueRequest(page: Cap25PageOk, requestRef: string): SourcingRequest | null {
@@ -83,7 +84,11 @@ export function requestVersion(page: Cap25PageOk,requestRef:string): number | nu
 export function requestRevision(page:Cap25PageOk,requestRef:string): string | null {
   const record=uniqueRequest(page,requestRef), version=requestVersion(page,requestRef)
   if (!record || version === null) return null
-  return JSON.stringify({record,version,stamp:page.context,selection:page.value.selection,
+  // Only verified C02 rows carry a material witness separate from the rotating receipt.
+  const {sourceRef,sourceDigest,...material}=record
+  const comparable=record.queueSourceRevision&&typeof sourceRef==="string"&&
+    typeof sourceDigest==="string"&&typeof record.sourceVersion==="number"?material:record
+  return JSON.stringify({record:comparable,version,stamp:page.context,selection:page.value.selection,
     admitted:page.value.allowedActionIds,settings:page.value.data.formSettings})
 }
 export function quoteIsPersisted(request:SourcingRequest, quoteId:string):boolean {

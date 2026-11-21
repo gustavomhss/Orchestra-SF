@@ -170,6 +170,10 @@ export const SfProcurementRequest = Schema.Struct({
   sourceRef: Schema.optional(Schema.NullOr(Schema.String)),
   sourceDigest: Schema.optional(Schema.NullOr(Schema.String)),
   sourceVersion: Schema.optional(Schema.NullOr(PositiveInteger)),
+  queueSourceRevision: Schema.optional(Schema.Struct({
+    incarnation: NonEmpty,
+    projectionDigest: Schema.String.check(Schema.isPattern(/^[a-f0-9]{64}$/)),
+  }).annotate({ parseOptions: { onExcessProperty: "error" } })),
   moneySentence: Schema.optional(Schema.NullOr(Schema.String)),
   poEstimate: Schema.optional(Schema.NullOr(Schema.String)),
   orderDifference: Schema.optional(Schema.NullOr(Schema.String)),

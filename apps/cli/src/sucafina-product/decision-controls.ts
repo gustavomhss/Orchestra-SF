@@ -1,6 +1,7 @@
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+import { RENEWAL_TRANSITION_CATEGORIES, type CostCoverageBasis } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedUiContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { StoredDecisionResult } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
@@ -16,10 +17,11 @@ import type { SfDecisionCoverageRead } from "./decision-coverage-read.ts"
 type CaseRef = { id: string; incarnation: string; version: number }
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Forecast = { source: RecordEvidence; projection: DomainProjection; expectedVersion?: number; classification?: CoverageClassification; coverage?: SfDecisionCoverageRead["coverage"] }
-type Scenario = { ref: string; title: string; alternativeId: string; parameters: readonly { ref: string; label: string }[] }
+type Scenario = { ref: string; title: string; alternativeId: string; caseRef?: CaseRef; parameters: readonly { ref: string; label: string }[] }
 type Evidence = { evidence: RecordEvidence; source: SourceRef; fields: readonly string[]; label: string }
 type ControlsBody = { cases: readonly { ref: string; title: string; version: number }[]; actions: readonly string[]; accessRevision: string; selected?: {
   ref: string; caseRef: CaseRef; decision: AuthorizedCaseProjection["case"]; forecasts: readonly { source: RecordEvidence; label: string }[]; forecast?: Forecast;
+  initialCoverageBasis?: CostCoverageBasis;
   scenarios: readonly Scenario[]; rules: readonly { id: string; expectedVersion?: number }[]; units?: PlannerSensitivityUnits; unitSelection?: { scenarioRef: string; baselineRef: string; parameterRef: string };
   procurementEvidence?: ProcurementEvidence; evidence: readonly Evidence[]; recipients: readonly { ref: string; label: string }[]; conditions: readonly { label: string; revision: number }[];
 } }
@@ -111,6 +113,7 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
         ? Object.values((state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults ?? {}).filter((value) => value.kind === "scenario" && value.caseRef.id === caseRef.id && value.caseRef.incarnation === caseRef.incarnation).map((value) => value.resultRef) : undefined)
       if (identities.status !== "ok" || !identities.value || identities.value.length > 100) return { status: "unavailable", reason: "decision-controls-scenarios-unavailable" }
       const scenarios: Scenario[] = []
+      const attachedOnly = url.searchParams.get("procurement") === "attached"
       for (const ref of identities.value) {
         const stored = await runtime.business.results.readHistoricalScenario({ resultRef: ref }, call)
         if (stored.status !== "ok" || stored.value.kind !== "scenario") continue
@@ -119,7 +122,8 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
         const alternative = alternatives[0]!
         const parameters = alternative.scenario.operations.flatMap((operation, index) => operation.kind === "replace" && operation.replacementRef === undefined && typeof operation.amount === "number" && Number.isFinite(operation.amount) && operation.currency
           ? [{ ref: operation.targetRef, label: `Substituição ${index + 1} · ${operation.amount} ${operation.currency}${operation.period ? ` · ${operation.period.start} a ${operation.period.end}` : ""}` }] : [])
-        scenarios.push({ ref, title: `${alternative.title} · revisão ${alternative.version}`, alternativeId: alternative.id, parameters })
+        scenarios.push({ ref, title: `${alternative.title} · revisão ${alternative.version}`, alternativeId: alternative.id,
+          ...(attachedOnly ? { caseRef: stored.value.caseRef } : {}), parameters })
       }
       const rules: { id: string; expectedVersion?: number }[] = []
       for (const criterion of decision.criteria) {
@@ -140,13 +144,23 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
         return person ? [{ ref, label: person.name }] : []
       })
       const conditions = decision.choices.length ? await runtime.domain.materiality.registry.list(caseRef, call) : undefined
-      const procurementEvidence = await (url.searchParams.get("procurement") === "attached"
+      const procurementEvidence = await (attachedOnly
         ? readAttachedProcurementEvidence(runtime, decision, call)
         : readProcurementEvidence(runtime, request, caseRef, call)).catch(() => ({ status: "unavailable" as const, reason: "decision-procurement-evidence-unavailable" }))
       const again = await runtime.business.cases.read({ caseRef: wanted }, call)
       if (again.status !== "ok" || !same(again.value.case, decision) || !await currentList() || !await runtime.authority.host.revalidate(call)) return { status: "denied", reason: "decision-controls-authority-changed" }
+      const initialSource = forecast?.status === "ok" && forecast.value.expectedVersion === 0 ? forecast.value.source : undefined
+      // Offer an inventory, not a coverage receipt. The human must still select it
+      // and register all category decisions through the regular coverage CAS.
+      const initialCoverageBasis: CostCoverageBasis | undefined = attachedOnly &&
+        decision.state === "draft" && !decision.alternatives.length && !decision.costCoverageBases.length &&
+        initialSource && decision.sourceRefs.some((ref) => same(ref, initialSource)) ? {
+          id: `human-cost-inventory:${digestSfValue({ caseRef, source: initialSource.refDigest })}`, version: 1,
+          decisionType: "renewal-transition-v1", categoryIds: RENEWAL_TRANSITION_CATEGORIES,
+          additionalCategoryIds: [], sourceRefs: [initialSource],
+        } : undefined
       return { status: "ok", value: withFingerprint({ ...base, selected: { ref: wanted, caseRef, decision, forecasts,
-        ...(forecast?.status === "ok" ? { forecast: forecast.value } : {}), scenarios, rules,
+        ...(forecast?.status === "ok" ? { forecast: forecast.value } : {}), ...(initialCoverageBasis ? { initialCoverageBasis } : {}), scenarios, rules,
         ...(procurementEvidence.status === "ok" ? { procurementEvidence: procurementEvidence.value } : {}),
         ...(units?.status === "ok" && unitSelection ? { units: units.value.units, unitSelection } : {}), evidence, recipients,
         conditions: conditions?.status === "ok" ? conditions.records.map((record) => ({ label: record.selection.label, revision: record.revision })) : [] } }) }

@@ -1,204 +1,346 @@
-import { expect, test, type Locator, type Page, type Request } from "@playwright/test"
+import { expect, test, type Locator, type Page, type Request, type Response } from "@playwright/test"
+import { Schema } from "effect"
+import {
+  SfDecisionsChoiceRead, SfDecisionsCurrentChoicePrepare, SfDecisionsDecisionApply,
+  SfDecisionsDecisionRecover, SfDecisionsDecisionReview,
+} from "@orchestra/schema/sucafina/decisions"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { asRecord, caseIdentity, clickCommand, enterWorkbench, isCommand, readReply } from "./journey"
+import { asRecord, caseIdentity, enterWorkbench, isCommand, readCase, reopenCase } from "./journey"
 import { loseClosureResponse } from "./closure-response"
+import { openRequisition } from "./procurement-source"
+
+type CaseRecord = Awaited<ReturnType<typeof readCase>>
+type Change = CaseRecord["preparedChanges"][number]
+type CaseRef = typeof SfDecisionsDecisionReview.input.Type["caseRef"]
+const casePath = (reference: string) => `/orchestra/sf-decisions/${encodeSfRouteRef(reference)}`
+const reviewPanel = (page: Page) => page.locator('[data-component="sf-change-review"]')
+const applyButton = (page: Page) => reviewPanel(page).getByRole("button", { name: "Apply reviewed change", exact: true })
+const retryButton = (page: Page) => page.getByRole("button", { name: "Retry same application", exact: true })
+const digest = /^[a-f0-9]{64}$/
+const commandKey = /^[a-f0-9-]{36}$/
 
 /** Consume the published C12 path only after the caller proves a compatible domain approval. */
-export async function applyRecoveryJourney(page: Page, origin: string, selection: { reference: string; objective: string; choiceId: string }, observations: Record<string, unknown>[], approveBeforeApply: (page: Page, review: Record<string, unknown>, operation: Record<string, unknown>) => Promise<{ requestId: string; amount: unknown; currency: string; version: number; action: string }>) {
-  const identity = caseIdentity(selection.reference)
-  const context = asRecord(JSON.parse((await page.locator("form[data-decision-choice]").getAttribute("data-context"))!))
-  const selected = (context.choices as unknown[]).map(asRecord).filter((choice) => choice.id === selection.choiceId)
-  expect(selected, "The public human journey must have produced the exact persisted Procurement choice").toHaveLength(1)
-  const operations = asRecord(selected[0]!.scenario).operations as unknown[]
-  expect(operations, "An empty Planner scenario cannot prove Procurement Apply or receipt recovery").toHaveLength(1)
-  const operation = asRecord(operations[0])
-  expect(operation).toMatchObject({ kind: "replace" })
-  expect(typeof operation.amount).toBe("number")
-  expect(Number.isFinite(operation.amount)).toBe(true)
-  const commands: { mode: string; body: unknown; key: string | undefined }[] = []
+export async function applyRecoveryJourney(page: Page, origin: string, selection: { reference: string; objective: string; choiceId: string }, observations: Record<string, unknown>[], approveBeforeApply: (page: Page, selection: typeof SfDecisionsDecisionReview.input.Type, review: Record<string, unknown>, operation: Record<string, unknown>) => Promise<{ requestId: string; amount: unknown; currency: string; version: number; currentAmount: number; action: string }>) {
+  const { reference, objective, choiceId } = selection
+  const identity = caseIdentity(reference)
+  const original = await readCase(page, reference)
+  const chosenRef = { ...identity, version: original.version }
+  expect(original).toMatchObject({ objective, state: "chosen", preparedChanges: [], receipts: [] })
+  const choices = original.choices.filter((choice) => choice.id === choiceId)
+  expect(choices, "The public journey must have persisted the exact human Procurement choice").toHaveLength(1)
+  const choice = choices[0]!
+  expect(choice.scenario.operations, "C12 requires exactly one recorded Procurement operation").toHaveLength(1)
+  const operation = choice.scenario.operations[0]!
+  expect(operation).toMatchObject({ kind: "replace", currency: original.currency, period: original.horizon })
+  expect(operation.replacementRef).toBeUndefined()
+  expect(typeof operation.amount === "number" && Number.isFinite(operation.amount) && operation.amount >= 0).toBe(true)
+  const sources = choice.result.sourceRefs.flatMap((ref) => ref.kind === "record" && ref.refId === operation.targetRef &&
+    ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" ? [ref] : [])
+  expect(sources).toHaveLength(1)
+  const source = sources[0]!
+  expect(source.target).toMatchObject({ period: operation.period, fields: expect.arrayContaining(["originalAmount"]) })
+  expect(original.sourceRefs).toContainEqual(source)
+  const requestId = source.target.recordId
+
+  const commands: Request[] = []
   const record = (request: Request) => {
     const url = new URL(request.url())
     if (url.origin === origin && request.method() === "POST" && ["decision-apply", "decision-recover"].includes(url.searchParams.get("sf") ?? ""))
-      commands.push({ mode: url.searchParams.get("sf")!, body: request.postDataJSON(), key: request.headers()["idempotency-key"] })
+      commands.push(request)
   }
-  page.context().on("request", record)
-  const audit = await page.context().newPage()
-  const fresh = await page.context().newPage()
+  const context = page.context()
+  const audit = await context.newPage()
+  context.on("request", record)
   try {
-    await test.step("prepare only the operation held in the recorded human choice", async () => {
-      const prepare = page.locator("[data-decision-prepare]")
-      await expect(prepare.locator("[data-choice-prepare-select]")).toBeEnabled()
-      await prepare.locator("[data-choice-prepare-select]").selectOption(selection.choiceId)
-      const sent = page.waitForRequest((request) => isCommand(request, "decision-prepare-changes"))
-      const loaded = page.waitForEvent("domcontentloaded")
-      const receipt = await clickCommand(page, prepare.getByRole("button", { name: "Prepare changes from this choice", exact: true }), "decision-prepare-changes", observations)
-      expect((await sent).postDataJSON()).toEqual({ caseRef: context.caseRef, choiceId: selection.choiceId, operations })
-      expect(asRecord(asRecord(receipt.value).caseRef)).toMatchObject(identity)
-      await loaded
+    await test.step("review current sources for the exact authorized Procurement choice in UI38", async () => {
+      const pathname = `${casePath(reference)}/choice`
+      const [response] = await Promise.all([
+        page.waitForResponse((reply) => {
+          const url = new URL(reply.url())
+          return url.origin === origin && isCommand(reply.request(), "current-choice", "GET") && url.searchParams.size === 3 &&
+            url.searchParams.get("format") === "json" && url.searchParams.get("case") === reference
+        }),
+        page.goto(origin + pathname),
+      ])
+      await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === pathname)
+      await expect(page.getByRole("heading", { name: "Current choice", exact: true, level: 1 })).toBeVisible()
+      const options = Schema.decodeUnknownSync(Schema.toType(SfDecisionsChoiceRead.output), { onExcessProperty: "error" })(
+        await producerReply(response, observations, "UI38 current-choice read"),
+      )
+      if (options.status !== "ok" || !options.value.selected) throw new Error("UI38 did not return the exact authorized choice scope")
+      const selected = options.value.selected
+      expect(selected.caseRef).toEqual(chosenRef)
+      expect(selected.title).toBe(objective)
+      expect(options.value.cases.filter((item) => item.ref === reference)).toEqual([{ ref: reference, title: objective, version: original.version }])
+      const matches = selected.choices.filter((item) => item.id === choiceId)
+      expect(matches).toHaveLength(1)
+      const option = matches[0]!
+      const card = page.getByRole("region", { name: "Current choice", exact: true })
+        .locator(`article[data-choice-id=${JSON.stringify(choiceId)}]`)
+      await expect(card.getByRole("heading", { name: option.title, exact: true })).toBeVisible()
+      await expect(card.getByRole("region", { name: "Registered result", exact: true }).getByText(choice.reason, { exact: true })).toBeVisible()
+      const prepare = card.getByRole("button", { name: "Review current sources", exact: true })
+      if (!option.request) {
+        await expect(prepare).toBeDisabled()
+        throw new Error(`UI38 current-choice returned no preparation request for ${choiceId}: ${option.reason}`)
+      }
+      expect(option.request).toEqual({ caseRef: chosenRef, choiceId,
+        alternativeRef: { id: choice.alternativeId, version: choice.alternativeVersion }, coverageRef: expect.stringMatching(/\S/) })
+      await expect(prepare, "UI38 requires live decisions.current-choice-prepare availability for the admitted choice request").toBeEnabled()
+      const [prepared] = await Promise.all([
+        page.waitForResponse((reply) => reply.url() === `${origin}/sucafina/dashboard?sf=current-choice-prepare` && isCommand(reply.request(), "current-choice-prepare")),
+        prepare.click(),
+      ])
+      expect(prepared.request().postDataJSON()).toEqual(option.request)
+      expect(prepared.request().headers()["idempotency-key"]).toMatch(commandKey)
+      const result = Schema.decodeUnknownSync(Schema.toType(SfDecisionsCurrentChoicePrepare.output), { onExcessProperty: "error" })(
+        await producerReply(prepared, observations, "UI38 current-choice preparation"),
+      )
+      if (result.status !== "ok") throw new Error("UI38 did not return a current-choice review")
+      const { promotion, historical, current } = result.value
+      expect(historical).toEqual(choice.result)
+      expect(promotion).toMatchObject({ caseRef: chosenRef, choiceId, alternativeRef: option.request.alternativeRef,
+        scenario: { operations: [operation], assumptions: choice.scenario.assumptions } })
+      await expect(prepare).toHaveAttribute("aria-pressed", "true")
+      await expect(reviewPanel(page).getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+      expect(commands).toEqual([])
+      if (current.comparisonStatus !== "complete" || current.costCoverage.coverageState !== "complete" ||
+        current.unresolvedConditions.length || current.restrictions.length)
+        await expect(reviewPanel(page).getByRole("button", { name: "Promote reviewed choice", exact: true })).toBeDisabled()
+      expect({ comparisonStatus: current.comparisonStatus, costCoverage: { coverageState: current.costCoverage.coverageState },
+        unresolvedConditions: current.unresolvedConditions, restrictions: current.restrictions },
+      "UI38 cannot advance a conditioned or incomplete Procurement result").toEqual({
+        comparisonStatus: "complete", costCoverage: { coverageState: "complete" }, unresolvedConditions: [], restrictions: [],
+      })
     })
-    const entry = page.locator("[data-decision-apply]")
-    await expect(entry).toHaveCount(1)
-    await expect(entry).toHaveAttribute("data-sf-apply-ready", "true")
-    const change = asRecord(JSON.parse((await entry.getAttribute("data-context"))!))
-    expect(change.choiceId).toBe(selection.choiceId)
-    expect(change.surface).toBe("procurement")
-    let reviewed = await test.step("read the exact domain preview and require explicit confirmation before Apply", async () => {
-      const confirmation = entry.getByRole("checkbox", { name: "I reviewed these changes and want to apply them", exact: true })
-      const apply = entry.getByRole("button", { name: "Apply reviewed change", exact: true })
-      await expect(confirmation).not.toBeChecked()
-      await expect(confirmation).toBeDisabled()
-      await expect(apply).toBeDisabled()
-      const response = page.waitForResponse((response) => procurementCommand(response.request(), origin, "decision-review"))
-      await entry.getByRole("button", { name: "Review current changes", exact: true }).click()
-      const review = asRecord((await readReply(await response, observations)).value)
-      expect(review).toMatchObject({ choiceId: selection.choiceId, changeId: change.changeId, surface: "procurement", state: "planned", expectedVersion: change.expectedVersion })
-      expect(review.reviewDigest).toMatch(/^[a-f0-9]{64}$/)
-      expect(asRecord(review.target).type).toBe("procurement-request")
-      expect(typeof asRecord(review.target).id).toBe("string")
-      expect((review.fields as unknown[]).length).toBeGreaterThan(0)
+
+    const { change, preparedRef } = await test.step("require the exact producer-persisted Procurement preparation in UI39", async () => {
+      const pathname = `${casePath(reference)}/changes`
+      await page.goto(origin + pathname)
+      await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === pathname)
+      await expect(page.getByRole("heading", { name: "Prepared changes", exact: true, level: 1 })).toBeVisible()
+      const prepared = await readCase(page, reference)
+      expect(prepared).toMatchObject({ objective, choices: original.choices, receipts: [] })
+      // UI38's recalculation (and alternative promotion) does not persist a C12 command.
+      const changes = prepared.preparedChanges.filter((item) => item.choiceId === choiceId && item.target.surface === "procurement" &&
+        item.target.type === "procurement-request" && item.target.id === requestId && item.target.incarnation === source.target.incarnation)
+      expect(changes, "UI39 requires a real C12 prepared change for this choice and requisition; UI38 review is not decision-prepare-changes").toHaveLength(1)
+      const change = changes[0]!
+      expect(change).toMatchObject({ caseId: identity.id, caseVersion: original.version, state: "planned" })
+      expect(change.receiptRef).toBeUndefined()
+      expect(prepared.version).toBe(change.caseVersion + 1)
+      const row = changeButton(page, change)
+      await expect(row).toHaveCount(1)
+      await row.click()
+      await expect(row).toHaveAttribute("aria-current", "true")
+      return { change, preparedRef: { ...identity, version: prepared.version } }
+    })
+    const reviewInput = { caseRef: preparedRef, choiceId, changeId: change.id }
+
+    const preview = await test.step("read the exact Procurement preview without applying it", async () => {
+      await expect(applyButton(page)).toHaveCount(0)
+      const review = await readChangeReview(page, origin, reviewInput, observations, "pre-approval Procurement review")
+      expect(review).toMatchObject({ choiceId, changeId: change.id, surface: "procurement", state: "planned",
+        target: { type: "procurement-request", id: requestId }, expectedVersion: change.expectedVersion })
       expect(review.receipt).toBeUndefined()
-      await expect(confirmation).toBeEnabled()
-      await expect(confirmation).not.toBeChecked()
-      await expect(apply).toBeDisabled()
+      expect(review.requiresProcurementApproval).toBe(true)
+      expect(review.fields.filter((field) => field.field === "originalAmount")).toEqual([
+        expect.objectContaining({ before: expect.any(Number), beforeCurrency: operation.currency, after: operation.amount, afterCurrency: operation.currency }),
+      ])
       expect(commands).toEqual([])
       return review
     })
-    const requestId = String(asRecord(reviewed.target).id)
-    const approval = await approveBeforeApply(audit, reviewed, operation)
+
+    const approval = await approveBeforeApply(page, reviewInput, asRecord(preview), asRecord(operation))
     expect(approval).toMatchObject({ requestId, amount: operation.amount, currency: operation.currency, action: "approve" })
-    // Formal approval cannot silently authorize a stale draft-edit preparation. The
-    // existing domain review must still prove this same change after that transition.
-    const reviewedAgain = page.waitForResponse((response) => procurementCommand(response.request(), origin, "decision-review"))
-    await entry.getByRole("button", { name: "Review current changes", exact: true }).click()
-    const afterApproval = asRecord((await readReply(await reviewedAgain, observations)).value)
-    expect(afterApproval).toMatchObject({ target: reviewed.target, choiceId: selection.choiceId, changeId: change.changeId,
-      surface: "procurement", state: "planned", expectedVersion: change.expectedVersion, fields: reviewed.fields })
-    expect(afterApproval.reviewDigest).toMatch(/^[a-f0-9]{64}$/)
-    expect(afterApproval.receipt).toBeUndefined()
-    reviewed = afterApproval
     expect(commands).toEqual([])
-    const domain = await openRequest(audit, origin, requestId)
+
+    const reviewed = await test.step("require a new producer review after explicit Procurement approval", async () => {
+      await reviewPanel(page).getByRole("button", { name: "Revise", exact: true }).click()
+      await expect(applyButton(page)).toHaveCount(0)
+      const review = await readChangeReview(page, origin, reviewInput, observations, "post-approval review of the original prepared Procurement CAS")
+      expect(review).toEqual({ ...preview, reviewDigest: expect.stringMatching(digest) })
+      await expect(applyButton(page)).toBeEnabled()
+      return review
+    })
+    const domain = await openRequisition(audit, origin, requestId)
     const domainVersion = await sourceVersion(domain)
-    expect(Number.isSafeInteger(domainVersion) && domainVersion > 0).toBe(true)
-    const lost = await test.step("confirm one financial change and lose the response after the domain commit", async () => {
-      await entry.getByRole("checkbox", { name: "I reviewed these changes and want to apply them", exact: true }).check()
+    expect(domainVersion, "Approval must leave a compatible, freshly reviewed domain CAS").toBe(approval.version)
+    expect(reviewed.expectedVersion).toBe(domainVersion)
+    await expect(domain.getByLabel("Estimated amount", { exact: true })).toHaveValue(String(approval.currentAmount))
+    await expect(domain.locator("p").filter({ hasText: /^Status:/ })).toHaveText("Status: draft")
+    expect(commands).toEqual([])
+
+    const lost = await test.step("confirm one Apply and drop its original response after the producer completes", async () => {
       const interruption = await loseClosureResponse(page, origin, "procurement", "decision-apply")
       try {
-        const failed = page.waitForEvent("requestfailed", { predicate: (request) => procurementCommand(request, origin, "decision-apply") })
-        const observed = Promise.all([interruption.completed, failed])
-        await entry.getByRole("button", { name: "Apply reviewed change", exact: true }).click()
-        const result = (await observed)[0]
-        expect(result.httpStatus).toBe(200)
+        const [result, failed] = await Promise.all([
+          interruption.completed,
+          page.waitForEvent("requestfailed", { predicate: (request) => procurementCommand(request, origin, "decision-apply") }),
+          applyButton(page).click(),
+        ])
+        expect(commands).toEqual([failed])
+        const applyKey = failed.headers()["idempotency-key"]
+        expect(applyKey).toMatch(commandKey)
+        const payload = { ...reviewInput, reviewDigest: reviewed.reviewDigest }
+        expect(failed.postDataJSON()).toEqual(payload)
+        expect(result.payload).toEqual(payload)
         expect(result.contentType).toContain("application/json")
-        const receipt = asRecord(asRecord(result.body).value)
-        expect(asRecord(result.body).status).toBe("ok")
-        expect(receipt).toMatchObject({ surface: "procurement", outcome: "applied", version: domainVersion + 1 })
-        expect(typeof receipt.receiptId).toBe("string")
-        expect(result.payload).toEqual({ caseRef: change.caseRef, choiceId: selection.choiceId, changeId: change.changeId, reviewDigest: reviewed.reviewDigest })
-        expect(commands).toHaveLength(1)
-        await expect(entry.getByRole("button", { name: "Retry same application", exact: true })).toBeEnabled()
-        await expect(entry.getByRole("checkbox", { name: "I reviewed these changes and want to apply them", exact: true })).toBeDisabled()
-        observations.push({ stage: "apply-response-lost", caseRef: change.caseRef, choiceId: selection.choiceId, changeId: change.changeId,
-          preview: reviewed, receipt, approval, applyRequests: 1, explicitApplyConfirmation: true, separateFinancialApproval: true,
+        expect(result.httpStatus, `Original Apply response: ${JSON.stringify(result.body)}`).toBe(200)
+        const committed = Schema.decodeUnknownSync(Schema.toType(SfDecisionsDecisionApply.output), { onExcessProperty: "error" })(result.body)
+        if (committed.status !== "ok") throw new Error(`Apply did not commit: ${committed.status} ${committed.reason ?? ""}`)
+        expect(committed.value).toEqual({ receiptId: expect.stringMatching(/\S/), surface: "procurement", outcome: "applied", version: domainVersion + 1 })
+        await expect(page.locator('.sf-state-panel[data-sf-state="outcome-unknown"]')).toBeVisible()
+        await expect(applyButton(page)).toHaveCount(0)
+        await expect(retryButton(page)).toBeEnabled() // Observe uncertainty; never retry.
+        observations.push({ stage: "apply-response-lost", ...reviewInput, preview: reviewed, receipt: committed.value, approval,
+          applyRequests: 1, explicitApplyConfirmation: true, separateFinancialApproval: true,
           interruptionPoint: "Original HTTP response after the real handler returned; this does not isolate the domain-commit/case-reconciliation gap." })
-        return result
+        return { committed, failed, applyKey }
       } finally { await interruption.close() }
     })
-    const revisedObjective = `${selection.objective} — concurrent note after application`
-    const editedRef = await test.step("edit the same case in another page while the original Apply remains uncertain", async () => {
-      await openCase(audit, origin, selection.reference, selection.objective)
-      await audit.getByText("Edit decision", { exact: true }).click()
-      const editor = audit.locator("form[data-decision-edit]")
-      await expect(editor).toHaveAttribute("data-sf-edit-ready", "true")
-      const before = asRecord(JSON.parse((await editor.getAttribute("data-context"))!))
-      expect(asRecord(before.caseRef)).toMatchObject(identity)
-      await editor.getByLabel("Decision objective", { exact: true }).fill(revisedObjective)
-      const loaded = audit.waitForEvent("domcontentloaded")
-      const result = await clickCommand(audit, editor.getByRole("button", { name: "Save decision", exact: true }), "decision-edit", observations)
-      await loaded
-      const ref = asRecord(asRecord(result.value).caseRef)
-      expect(ref).toEqual({ ...identity, version: Number(asRecord(before.caseRef).version) + 1 })
-      await expect(audit.getByRole("heading", { name: revisedObjective, exact: true })).toBeVisible()
-      expect(commands).toHaveLength(1)
-      return ref
+
+    const revisedObjective = `${objective} — concurrent note after application`
+    const edited = await test.step("edit only the intent of the same case in a second page while Apply remains uncertain", async () => {
+      const appliedDomain = await openRequisition(audit, origin, requestId)
+      expect(await sourceVersion(appliedDomain)).toBe(domainVersion + 1)
+      await expect(appliedDomain.getByLabel("Estimated amount", { exact: true })).toHaveValue(String(operation.amount))
+      await enterWorkbench(audit, origin)
+      await reopenCase(audit, reference, objective)
+      const before = await readCase(audit, reference)
+      const beforeRef = { ...identity, version: preparedRef.version + 1 }
+      expect(before).toMatchObject({ ...beforeRef, objective, choices: original.choices })
+      const appliedChange = { ...change, state: "applied", receiptRef: lost.committed.value.receiptId } as const
+      expect(before.preparedChanges.filter((item) => item.id === change.id)).toEqual([appliedChange])
+      expect(before.receipts).toHaveLength(1)
+      const persisted = before.receipts[0]!
+      expect(persisted).toMatchObject({ id: lost.committed.value.receiptId, surface: "procurement", status: "applied",
+        version: lost.committed.value.version, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey,
+        principalRef: choice.principalRef, commandDigest: expect.stringMatching(digest), errors: [] })
+      const receiptEvidence = before.sourceRefs.flatMap((ref) => ref.kind === "receipt" && ref.target.receiptId === persisted.id ? [ref.target] : [])
+      expect(receiptEvidence).toEqual([{ receiptId: persisted.id, surface: persisted.surface, version: persisted.version,
+        targetIncarnation: persisted.targetIncarnation, idempotencyKey: persisted.idempotencyKey, commandDigest: persisted.commandDigest }])
+
+      const decision = audit.locator('[data-sf-surface="UI34"]')
+      await expect(decision).toHaveAttribute("data-sf-case-ref", reference)
+      await expect(decision).toHaveAttribute("data-sf-case-version", String(beforeRef.version))
+      await audit.getByRole("button", { name: "Edit decision", exact: true }).click()
+      const editor = decision.locator("[data-sf-decision-editor]")
+      const objectiveEdit = editor.getByLabel("Decision objective", { exact: true })
+      await expect(objectiveEdit).toHaveValue(objective)
+      await objectiveEdit.fill(revisedObjective)
+      await editor.getByRole("button", { name: "Review source attachments", exact: true }).click()
+      const editReview = editor.getByRole("group", { name: "Review source attachments", exact: true })
+      await expect(editReview.getByText(`Current version: ${beforeRef.version}`, { exact: true })).toBeVisible()
+      await expect(editReview.getByText(revisedObjective, { exact: true })).toBeVisible()
+      const [reply] = await Promise.all([
+        audit.waitForResponse((response) => response.url() === `${origin}/sucafina/dashboard?sf=decision-edit` && isCommand(response.request(), "decision-edit")),
+        editReview.getByRole("button", { name: "Save decision", exact: true }).click(),
+      ])
+      expect(reply.request().postDataJSON()).toEqual({ caseRef: beforeRef, objective: revisedObjective, criteria: before.criteria,
+        horizon: before.horizon, currency: before.currency, sourceRefs: before.sourceRefs })
+      expect(reply.request().headers()["idempotency-key"]).toMatch(commandKey)
+      const ref = { ...identity, version: beforeRef.version + 1 }
+      expect(await producerReply(reply, observations, "UI34 objective-only edit after Apply")).toEqual({ status: "ok", value: { caseRef: ref } })
+      await expect(decision).toHaveAttribute("data-sf-case-version", String(ref.version))
+      await expect(decision.getByRole("region", { name: "Question", exact: true }).getByText(revisedObjective, { exact: true })).toBeVisible()
+      const record = await readCase(audit, reference)
+      expect(record).toEqual({ ...before, ...ref, objective: revisedObjective })
+      expect(commands).toEqual([lost.failed])
+      return { ref, record, change: appliedChange }
     })
-    await test.step("recover the original receipt under a fresh admission without sending another Apply", async () => {
-      // A new page never held the first Apply's body, key or review token.
-      await openCase(fresh, origin, selection.reference, revisedObjective)
-      const recoveredEntry = fresh.locator("[data-decision-apply]")
-      await expect(recoveredEntry).toHaveCount(1)
-      await expect(recoveredEntry).toHaveAttribute("data-sf-apply-ready", "true")
-      const current = asRecord(JSON.parse((await recoveredEntry.getAttribute("data-context"))!))
-      expect(current.caseRef).toEqual(editedRef)
-      expect(current.choiceId).toBe(selection.choiceId)
-      expect(current.changeId).toBe(change.changeId)
-      const sent = fresh.waitForRequest((request) => procurementCommand(request, origin, "decision-recover"))
-      const reply = fresh.waitForResponse((response) => procurementCommand(response.request(), origin, "decision-recover"))
-      const loaded = fresh.waitForEvent("domcontentloaded")
-      await recoveredEntry.getByRole("button", { name: "Recover recorded receipt", exact: true }).click()
-      const request = await sent
-      expect(request.postDataJSON()).toEqual({ purpose: "recover", caseRef: editedRef, choiceId: selection.choiceId, changeId: change.changeId })
-      expect(request.headers()["idempotency-key"]).not.toBe(commands[0]!.key)
-      const recovered = await readReply(await reply, observations)
-      expect(recovered).toEqual(lost.body)
-      await loaded
-      expect(commands.filter((command) => command.mode === "decision-apply")).toHaveLength(1)
-      expect(commands.filter((command) => command.mode === "decision-recover")).toHaveLength(1)
-      const currentCase = asRecord(JSON.parse((await fresh.locator("form[data-decision-choice]").getAttribute("data-context"))!))
-      expect(asRecord(currentCase.caseRef)).toMatchObject(identity)
-      expect(currentCase.choices).toEqual(context.choices)
-      const decision = fresh.getByRole("region", { name: "Decision", exact: true })
-      const history = decision.locator(":scope > details").filter({ has: fresh.getByText("History and sources", { exact: true }) })
-      await history.getByText("History and sources", { exact: true }).click()
-      await expect(history.locator(":scope > p")).toHaveText(/^\d+ source references · 1 receipts$/)
-      const unchangedDomain = await openRequest(audit, origin, requestId)
-      expect(await sourceVersion(unchangedDomain)).toBe(domainVersion + 1)
-      await expect(unchangedDomain.getByLabel("Estimated amount", { exact: true })).toHaveValue(String(operation.amount))
-      observations.push({ stage: "c12-fresh-admission-recovered", originalCaseRef: change.caseRef, editedCaseRef: editedRef,
-        currentCaseRef: currentCase.caseRef, choiceId: selection.choiceId, changeId: change.changeId, receipt: recovered.value,
-        applyRequests: 1, recoverRequests: 1, domainVersionBefore: domainVersion, domainVersionAfter: domainVersion + 1,
-        originalChoiceUnchanged: true, nativeRestartProved: false })
+
+    await test.step("recover the exact persisted receipt once in a fresh authorized UI39 page", async () => {
+      const fresh = await context.newPage()
+      try {
+        const pathname = `${casePath(reference)}/changes/${encodeSfRouteRef(change.id)}`
+        await fresh.goto(origin + pathname)
+        await expect(fresh).toHaveURL((url) => url.origin === origin && url.pathname === pathname)
+        await expect(fresh.getByRole("heading", { name: "Prepared changes", exact: true, level: 1 })).toBeVisible()
+        expect(await readCase(fresh, reference)).toEqual(edited.record)
+        await expect(changeButton(fresh, edited.change)).toHaveAttribute("aria-current", "true")
+        await expect(retryButton(fresh)).toHaveCount(0)
+        await expect(applyButton(fresh)).toHaveCount(0)
+        const recover = fresh.getByRole("button", { name: "Recover recorded receipt", exact: true })
+        await expect(recover, "The fresh page must be authorized for decisions.decision-recover").toBeEnabled()
+        expect(commands).toEqual([lost.failed])
+        const [reply] = await Promise.all([
+          fresh.waitForResponse((response) => procurementCommand(response.request(), origin, "decision-recover")),
+          recover.click(),
+        ])
+        const request = reply.request()
+        expect(request.postDataJSON()).toEqual({ purpose: "recover", caseRef: edited.ref, choiceId, changeId: change.id })
+        expect(request.headers()["idempotency-key"]).toMatch(commandKey)
+        expect(request.headers()["idempotency-key"]).not.toBe(lost.applyKey)
+        const recovered = Schema.decodeUnknownSync(Schema.toType(SfDecisionsDecisionRecover.output), { onExcessProperty: "error" })(
+          await producerReply(reply, observations, "UI39 fresh receipt recovery"),
+        )
+        expect(recovered).toEqual(lost.committed)
+        const receipt = lost.committed.value
+        const outcome = fresh.getByRole("status").filter({ has: fresh.getByRole("heading", { name: "Producer receipt reference", exact: true }) })
+        await expect(outcome.locator("dd")).toHaveText([receipt.outcome, receipt.receiptId, String(receipt.version)])
+        const persisted = fresh.locator('[data-component="sf-receipt-view"] [data-receipt="producer"]')
+        await expect(persisted).toHaveCount(1)
+        await expect(persisted.getByText(receipt.receiptId, { exact: true })).toBeVisible()
+        await expect(persisted.getByText(`Source version ${receipt.version}`, { exact: true })).toBeVisible()
+        expect(await readCase(fresh, reference)).toEqual(edited.record)
+        const unchangedDomain = await openRequisition(audit, origin, requestId)
+        expect(await sourceVersion(unchangedDomain)).toBe(domainVersion + 1)
+        await expect(unchangedDomain.getByLabel("Estimated amount", { exact: true })).toHaveValue(String(operation.amount))
+        expect(commands).toEqual([lost.failed, request])
+        observations.push({ stage: "c12-fresh-admission-recovered", originalCaseRef: preparedRef, editedCaseRef: edited.ref,
+          currentCaseRef: edited.ref, choiceId, changeId: change.id, receipt, applyRequests: 1, recoverRequests: 1,
+          domainVersionBefore: domainVersion, domainVersionAfter: domainVersion + 1, originalChoiceUnchanged: true, nativeRestartProved: false })
+      } finally { await fresh.close() }
     })
   } finally {
-    page.context().off("request", record)
-    await fresh.close()
+    context.off("request", record)
     await audit.close()
   }
 }
 
 function procurementCommand(request: Request, origin: string, action: string) {
-  const url = new URL(request.url())
-  return request.method() === "POST" && url.origin === origin && url.pathname === "/sucafina/procurement" && url.searchParams.get("sf") === action
+  return request.method() === "POST" && request.url() === `${origin}/sucafina/procurement?sf=${action}`
 }
 
-async function openCase(page: Page, origin: string, reference: string, objective: string) {
-  await enterWorkbench(page, origin)
-  const link = page.getByRole("link", { name: objective, exact: true })
-  await expect(link).toHaveCount(1)
-  expect(new URL((await link.getAttribute("href"))!, page.url()).searchParams.get("caseRef")).toBe(reference)
-  await link.click()
-  await expect(page.getByRole("heading", { name: objective, exact: true })).toBeVisible()
+function changeButton(page: Page, change: Pick<Change, "target" | "state" | "expectedVersion">) {
+  return page.getByRole("button", { name: `${change.target.id} · ${change.state} · v${change.expectedVersion}`, exact: true })
 }
 
-async function openRequest(page: Page, origin: string, id: string) {
-  expect(id).toMatch(/^PR-\d{4}-\d+$/)
-  const encoded = encodeSfRouteRef(id)
-  await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
-  await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === `/orchestra/sf-procurement/requests/${encoded}`)
-  const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
-  await expect(detail).toHaveCount(1)
-  await expect(detail.locator("p").filter({ hasText: /^Request identity:/ })).toHaveText(`Request identity: ${id}`)
-  await expect(versionLine(detail)).toHaveText(/^Current source version: [1-9]\d*$/)
-  await expect(detail.getByLabel("Estimated amount", { exact: true })).toHaveCount(1)
-  return detail
+async function readChangeReview(page: Page, origin: string, input: { caseRef: CaseRef; choiceId: string; changeId: string },
+  observations: Record<string, unknown>[], stage: string) {
+  const button = page.getByRole("button", { name: "Read producer review", exact: true })
+  await expect(button, stage).toBeEnabled()
+  const [response] = await Promise.all([
+    page.waitForResponse((reply) => procurementCommand(reply.request(), origin, "decision-review")),
+    button.click(),
+  ])
+  expect(response.request().postDataJSON()).toEqual(input)
+  const result = Schema.decodeUnknownSync(Schema.toType(SfDecisionsDecisionReview.output), { onExcessProperty: "error" })(
+    await producerReply(response, observations, stage),
+  )
+  if (result.status !== "ok") throw new Error(`${stage}: ${result.status} ${result.reason ?? ""}`)
+  const proposed = reviewPanel(page).getByRole("region", { name: "Proposed values", exact: true })
+  await expect(proposed.locator("dd")).toHaveText([
+    input.caseRef.id, input.caseRef.incarnation, String(input.caseRef.version), input.choiceId, input.changeId, result.value.reviewDigest,
+    ...result.value.fields.map((field) => field.after === null ? "Unavailable" : String(field.after) + (field.afterCurrency ? ` ${field.afterCurrency}` : "")),
+  ])
+  return result.value
 }
 
-function versionLine(detail: Locator) {
-  return detail.locator("p").filter({ hasText: /^Current source version:/ })
+async function producerReply(response: Response, observations: Record<string, unknown>[], stage: string) {
+  const url = new URL(response.url())
+  const path = url.pathname + url.search
+  expect(response.headers()["content-type"], `${stage}: expected JSON from ${path}`).toContain("application/json")
+  const result = asRecord(await response.json())
+  const diagnostic = { stage, path, httpStatus: response.status(), status: result.status, reason: result.reason }
+  observations.push(diagnostic)
+  expect({ httpStatus: diagnostic.httpStatus, status: diagnostic.status }, JSON.stringify(diagnostic)).toEqual({ httpStatus: 200, status: "ok" })
+  return result
 }
 
 async function sourceVersion(detail: Locator) {
-  const line = versionLine(detail)
+  const line = detail.locator("p").filter({ hasText: /^Current source version:/ })
   await expect(line).toHaveText(/^Current source version: [1-9]\d*$/)
   return Number((await line.innerText()).replace("Current source version: ", ""))
 }

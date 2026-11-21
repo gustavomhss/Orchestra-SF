@@ -32,6 +32,8 @@ test.describe("CI-UI-OPERATIONS", () => {
 
   test("OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation", async ({ page }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "WP06.T05.CHK.02; WP06.T05.CHK.19; WP06.T05.INV.01; WP06.T05.QLT.18; WP06.T05.QLT.19; WP06.T05.CMP.19; WP06.T05.SUC.19" })
+    // Download follows a fresh signed access check and the installed scanner can use most of the default budget.
+    test.setTimeout(180_000)
     await documentJourney(page, info)
   })
 })

@@ -1,6 +1,7 @@
-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
-import type { DomainProjection, PreservedReview } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+import type { DomainProjection, PreservedReview, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+import { createDashboardAgendaSelector } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/agenda.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { ReviewAgendaItem } from "../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
@@ -23,24 +24,97 @@ export function sfDashboardReviewAgendaItem(section: DashboardAgendaSection): Ex
     ...(section.recordRefs === undefined ? {} : { recordRefs: section.recordRefs }) }
 }
 
+const reportsTopics = {
+  "Budget Overview": { topic: "budget", collections: ["opexOwners", "capexProjects"] },
+  "Portfolio Dashboard": { topic: "projects", collections: ["projects"] },
+  "Hot Topics & Actions": { topic: "hot-topics", collections: ["hotTopics"] },
+} as const
+const reportTopic = (source: SourceRef) => source.surface === "dashboard" && source.type === "dashboard-page" && Object.hasOwn(reportsTopics, source.id)
+  ? reportsTopics[source.id as keyof typeof reportsTopics] : undefined
+const selectionUnavailable = { status: "unavailable", reason: "review-record-selection-unavailable" } as const
+
+/** Invert only the dashboard producer's confirmed, page-backed row-ID cells. */
+function preservedRecordKeys(projection: DomainProjection, source: SourceRef, collections: readonly string[], count: number) {
+  if (!Number.isSafeInteger(count) || count < 0 || count > 512) return undefined
+  const sourceDigest = digestSfValue(source)
+  const sameSource = (refs: readonly SourceRef[]) => refs.length === 1 && digestSfValue(refs[0]) === sourceDigest
+  if (projection.engineVersion !== "dashboard-runtime-v1" || projection.version !== source.version ||
+      !sameSource(projection.context.sourceRefs) || projection.components.some((component) => !sameSource(component.sourceRefs))) return undefined
+  const page = projection.values[0]?.drilldown
+  if (projection.values.length && (page?.kind !== "record" || page.refDigest !== digestSfEvidenceRef(page) ||
+      page.target.surface !== source.surface || page.target.recordType !== source.type || page.target.recordId !== source.id ||
+      page.target.incarnation !== source.incarnation || page.target.version !== source.version ||
+      digestSfValue(page.target.fields) !== digestSfValue(source.fields) || digestSfValue(page.target.period) !== digestSfValue(source.period))) return undefined
+  const pageDigest = digestSfValue(page ?? null)
+  const keys: string[] = []
+  for (const cell of projection.values) {
+    if (cell.sourceRefs.length !== 1 || digestSfValue(cell.sourceRefs[0]) !== pageDigest || digestSfValue(cell.drilldown) !== pageDigest) return undefined
+    const row = /^([A-Za-z]+)\[id:([^\]]+)\]\.id$/.exec(cell.id)
+    if (!row || !collections.includes(row[1]!)) continue
+    if ((typeof cell.value !== "string" && typeof cell.value !== "number") || !String(cell.value) ||
+        encodeURIComponent(String(cell.value)) !== row[2] || cell.evidenceState !== "confirmed") return undefined
+    keys.push(JSON.stringify([row[1], String(cell.value)]))
+  }
+  return keys.length === count && new Set(keys).size === count ? keys : undefined
+}
+
 /** Preserved review order/period/notes survive. Ambiguous original record selections require a new explicit human choice. */
 export function createSfExtendedReviewCycle(input: { authority: ReturnType<typeof createSfProductAuthority>; business: ReturnType<typeof createSfBusinessServices>; reviews: ReturnType<typeof createSfReviewServices>["application"]; persistence: SfScopedSourcePort }) {
   const { authority, business } = input
   const issue = createDashboardSourceIssuer({ host: authority.host, scopedSources: input.persistence })
+  const select = createDashboardAgendaSelector({ host: authority.host, dashboard: business.dashboard, sources: business.dashboardSources, recordEvidence: business.dashboardRecords })
   const update = async (reviewRef: string, call: TrustedDomainContext): Promise<PortResult<SfReviewUpdate>> => {
     if (!input.reviews) return { status: "unavailable", reason: "review-producers-unavailable" }
     try {
       const prior = await input.reviews.reviews.read(reviewRef, call)
       if (prior.status !== "ok") return prior
+      const exactReports = prior.value.id.startsWith("dashboard-review:") &&
+        prior.value.sections.some((section) => section.sourceRefs.some(reportTopic))
+      if (exactReports && prior.value.comments.length) return selectionUnavailable
       const value: SfReviewUpdate = { available: false, previousReviewRef: prior.value.id, items: [], confirmations: [], unavailableSections: [] }
       for (const section of prior.value.sections) {
         const projection = section.content as DomainProjection & { reviewAgendaNote?: string; reviewChart?: unknown; reviewOutcome?: unknown }
         const refs = section.sourceRefs.filter((ref) => ref.surface === "dashboard" && ref.type === "dashboard-page")
         if (refs.length !== 1 || section.sourceRefs.length !== 1 || projection.reviewChart || projection.reviewOutcome || prior.value.comments.some((comment) => comment.sourceRefs.some((ref) => section.sourceRefs.some((source) => digestSfValue(source) === digestSfValue(ref))))) {
+          if (exactReports) return selectionUnavailable
           value.unavailableSections.push({ sectionId: section.id, title: section.title, reason: "A seleção de gráfico, outcome, thread ou produtor deste tópico não foi preservada como agenda editável. Escolha novamente essa fonte no produto antes de incluí-la na sucessora." })
           continue
         }
         const source = refs[0]!
+        if (exactReports) {
+          const exact = reportTopic(source)
+          if (!exact || source.period.start !== section.period.start || source.period.end !== section.period.end ||
+              projection.decision || projection.comparison || projection.reviewAgendaNote !== undefined) return selectionUnavailable
+          const keys = preservedRecordKeys(projection, source, exact.collections, section.count)
+          if (!keys) return selectionUnavailable
+          const current = await issue({ page: source.id, fields: source.fields, period: section.period }, call)
+          if (current.status !== "ok") return current
+          const target = current.value.evidence.target
+          // These live rows have page evidence, not historical record incarnations.
+          const liveRows = keys.length > 0 && exact.topic !== "budget"
+          if (target.incarnation !== source.incarnation || liveRows && target.version !== source.version) {
+            return { status: "stale", reason: "review-record-selection-changed" }
+          }
+          const item = { id: section.id, title: section.title, topic: exact.topic, period: section.period, selectionRef: current.value.selectionRef }
+          const selected = await select({ ...item, ...(keys.length === 0 ? { recordRefs: [] } : {}) }, call)
+          if (selected.status !== "ok") return selected
+          const currentRefs = new Map<string, string>()
+          const records = await Promise.all(selected.value.recordRefs.map((ref) => business.dashboardRecords.resolve(ref, call)))
+          for (const record of records) {
+            if (record.status !== "ok") return record
+            const { recordType, recordId } = record.value.target
+            currentRefs.set(JSON.stringify([recordType, recordId]), record.value.refId)
+          }
+          const recordRefs = keys.map((key) => currentRefs.get(key)).filter((ref): ref is string => ref !== undefined)
+          const budgetAggregates = projection.values.some((cell) => /^(budget:|budgetMetrics\.)/.test(cell.id))
+          if (currentRefs.size !== selected.value.recordCount || recordRefs.length !== keys.length ||
+              (exact.topic === "budget" && budgetAggregates !== (keys.length > 0 && keys.length === currentRefs.size))) {
+            return { status: "stale", reason: "review-record-selection-changed" }
+          }
+          value.available ||= target.version !== source.version
+          value.items.push(sfDashboardReviewAgendaItem({ ...item, recordRefs }))
+          continue
+        }
         const current = await issue({ page: source.id, fields: source.fields, period: section.period }, call)
         if (current.status !== "ok") return current
         const resolved = await business.dashboardSources.resolveDashboardSource(current.value.selectionRef, call)
@@ -51,14 +125,18 @@ export function createSfExtendedReviewCycle(input: { authority: ReturnType<typeo
         value.available ||= resolved.value.evidence.target.incarnation !== source.incarnation || resolved.value.evidence.target.version !== source.version
         const item: ReviewAgendaItem = { ...sfDashboardReviewAgendaItem(discovered.value.agenda.section), id: section.id,
           ...(projection.reviewAgendaNote !== undefined ? { agendaNote: projection.reviewAgendaNote } : {}) }
-        // C04 keeps the exact projection but does not persist its original C17 recordRefs. Do not infer "all" from a count.
+        // Other topics have no successor mapping here. Do not infer "all" from a count.
         value.confirmations.push({ sectionId: section.id, label: `Selecionar explicitamente os registros atuais autorizados de ${source.id}, ${section.period.start} – ${section.period.end}; revisar a lista e remover registros antes de preservar.` })
         value.items.push(item)
       }
       const again = await input.reviews.reviews.read(reviewRef, call)
-      if (again.status === "denied") return again
-      if (!await authority.host.revalidate(call)) return { status: "denied", reason: "review-access-changed" }
       if (again.status !== "ok") return again
+      if (exactReports) for (const item of value.items) {
+        if (item.kind !== "dashboard") return selectionUnavailable
+        const current = await business.dashboardSources.resolveDashboardSource(item.selectionRef, call)
+        if (current.status !== "ok") return current
+      }
+      if (!await authority.host.revalidate(call)) return { status: "denied", reason: "review-access-changed" }
       return digestSfValue(again.value) === digestSfValue(prior.value)
         ? { status: "ok", value } : { status: "stale", reason: "review-update-changed" }
     } catch {

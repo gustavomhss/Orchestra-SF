@@ -1,5 +1,5 @@
 /**
- * W16/A04: 21 explicit Decision operation schemas. Every input uses the exact
+ * W16/A04: explicit Decision operation schemas. Every input uses the exact
  * existing producer discriminator and preserves case version/CAS. Fields are
  * public references and never carry authority or a fabricated receipt.
  * Source pins: choice 369c71b, decision-domain 5cb8e4e, portfolio 6cbfc37,
@@ -15,8 +15,9 @@ import {
   SfSourceInput_sf_scenario_simulate,
   SfSourceInput_sf_scenario_compare,
   SfSourceCaseRead, SfSourceCaseDraft, SfSourceChangePrepare,
-  SfSourceQuestionPrepare, SfSourceScenarioResult, SfSourceDomainProjection,
+   SfSourceQuestionPrepare, SfSourceScenarioResult, SfSourceScenarioComparison, SfSourceDomainProjection,
   SfSourceRecordSource, SfSourceCostCoverageBasis, SfSourceEvidenceInput,
+  SfSourceScenarioRequest, SfSourceDecisionCriteria, SfSourceCostCoverageAssessment,
 } from "./decisions/source-contracts"
 
 const text = Schema.String.pipe(Schema.check(Schema.isMinLength(1)), Schema.check(Schema.isMaxLength(16384)))
@@ -58,6 +59,24 @@ const classification = Schema.Struct({
 const sensitivity = Schema.Struct({baselineRef:text,parameterRef:text,parameterUnit:text,resultUnit:text,engineVersion:text,sourceRefs:Schema.Array(SfSourceEvidenceInput)})
 const criterionRequest = Schema.Struct({caseRef:SfDecisionCaseRef,criterionId:text,metricRef:text,operator:Schema.Literals(["lte","gte","eq"]),value:Schema.Number,unit:text,period,evidenceRefs:Schema.Array(SfSourceEvidenceInput),expectedRuleVersion:nonnegative,sensitivity:Schema.optional(sensitivity)})
 const selectionInput = Schema.Struct({caseRef:SfDecisionCaseRef,baselineAlternativeId:text,alternativeId:text,criteria:Schema.Array(text),expectedVersion:nonnegative})
+const compareText = text.check(Schema.makeFilter((value) => value.trim().length > 0))
+const comparisonInput = Schema.Struct({
+  caseRef: Schema.Struct({ id: compareText, incarnation: compareText, version }),
+  baselineAlternativeId: compareText,
+  alternativeId: compareText,
+  criteria: Schema.Array(compareText).check(Schema.isMinLength(1), Schema.isMaxLength(512),
+    Schema.makeFilter((ids) => new Set(ids).size === ids.length)),
+}).check(Schema.makeFilter((value) => value.baselineAlternativeId !== value.alternativeId))
+const comparisonValue = Schema.Struct({
+  request: SfSourceInput_sf_scenario_compare,
+  comparison: SfSourceScenarioComparison,
+}).check(Schema.makeFilter(({ request, comparison }) =>
+  request.scenarioRefs.length === 2 && request.scenarioRefs[0] !== request.scenarioRefs[1] &&
+  request.scenarioRefs[0] === comparison.baselineResultRef && request.scenarioRefs[1] === comparison.alternativeResultRef &&
+  (comparison.comparisonStatus === "unavailable" || comparison.comparisonStatus === "incompatible"
+    ? comparison.knownDifference === null && comparison.criterionResults.length === 0
+    : comparison.criterionResults.length === request.criteria.length &&
+      comparison.criterionResults.every((result, index) => result.criterionId === request.criteria[index]))))
 const selectionValue = Schema.Struct({
  schema:Schema.Literal("sf-portfolio-selection-v1"),selectionRef:text,caseRef:SfDecisionCaseRef,
  baselineAlternativeId:text,alternativeId:text,baselineRef:text,alternativeRef:text,criteria:Schema.Array(text),
@@ -72,7 +91,7 @@ const receiptView = Schema.Struct({
 })
 const reviewValue = Schema.Struct({reviewDigest:digest,changeId:text,choiceId:text,surface,
  target:Schema.Struct({type:text,id:text,label:Schema.optional(text)}),
- expectedVersion:nonnegative,state:Schema.Literals(["planned","applied","awaiting-approval","conflict","failed","cancelled"]),fields:Schema.Array(reviewField),receipt:Schema.optional(receiptView)})
+ expectedVersion:nonnegative,requiresProcurementApproval:Schema.optional(Schema.Literal(true)),state:Schema.Literals(["planned","applied","awaiting-approval","conflict","failed","cancelled"]),fields:Schema.Array(reviewField),receipt:Schema.optional(receiptView)})
 const resultFailure = Schema.Struct({
  status:Schema.Literals(["unauthenticated","needs-input","stale","denied","unavailable","conflict","provider-conflict","failed","invalid"]),
  reason:Schema.optional(Schema.String),
@@ -94,8 +113,9 @@ const controlsValue = Schema.Struct({
  selected:Schema.optional(Schema.Struct({
    ref:text,caseRef:SfDecisionCaseRef,decision:SfSourceCaseRead.fields.case,
    forecasts:Schema.Array(Schema.Struct({source:recordEvidence,label:text})),
-   forecast:Schema.optional(Schema.Struct({source:recordEvidence,projection:SfSourceDomainProjection,expectedVersion:Schema.optional(nonnegative),classification:Schema.optional(classification),coverage:Schema.optional(Schema.Struct({coverageRef:text,basis:SfSourceCostCoverageBasis,assessment:coverageAssessment}))})),
-   scenarios:Schema.Array(Schema.Struct({ref:text,title:text,alternativeId:text,parameters:Schema.Array(Schema.Struct({ref:text,label:text}))})),
+    forecast:Schema.optional(Schema.Struct({source:recordEvidence,projection:SfSourceDomainProjection,expectedVersion:Schema.optional(nonnegative),classification:Schema.optional(classification),coverage:Schema.optional(Schema.Struct({coverageRef:text,basis:SfSourceCostCoverageBasis,assessment:coverageAssessment}))})),
+    initialCoverageBasis:Schema.optional(SfSourceCostCoverageBasis),
+    scenarios:Schema.Array(Schema.Struct({ref:text,title:text,alternativeId:text,caseRef:Schema.optional(SfDecisionCaseRef),parameters:Schema.Array(Schema.Struct({ref:text,label:text}))})),
    rules:Schema.Array(Schema.Struct({id:text,expectedVersion:Schema.optional(nonnegative)})),
    units:Schema.optional(sensitivity),unitSelection:Schema.optional(Schema.Struct({scenarioRef:text,baselineRef:text,parameterRef:text})),
    procurementEvidence:Schema.optional(Schema.Struct({sources:Schema.Array(Schema.Struct({source:recordEvidence,projection:SfSourceDomainProjection,label:text}))})),
@@ -131,7 +151,26 @@ const caseQuery = Schema.Struct({caseRef:text,returnTo:Schema.optional(text)})
 // Effect 4's empty Struct accepts excess properties after toType; an empty Record
 // whose values are Never admits only {} under the same public decoder.
 const casesQuery = Schema.Record(Schema.String, Schema.Never)
-const controlsQuery = Schema.Struct({case:Schema.optional(text),source:Schema.optional(text),scenario:Schema.optional(text),baseline:Schema.optional(text),parameter:Schema.optional(text)})
+const controlsQuery = Schema.Struct({case:Schema.optional(text),source:Schema.optional(text),scenario:Schema.optional(text),baseline:Schema.optional(text),parameter:Schema.optional(text),procurement:Schema.optional(Schema.Literal("attached"))})
+const catalogInput = Schema.Struct({
+  purpose: Schema.Literal("catalog"),
+  caseRefs: Schema.Array(SfDecisionCaseRef).check(Schema.isMinLength(1), Schema.isMaxLength(50),
+    Schema.makeFilter((refs) => new Set(refs.map((ref) => JSON.stringify([ref.id, ref.incarnation]))).size === refs.length)),
+})
+const catalogValue = Schema.Struct({
+  cases: Schema.Array(Schema.Struct({
+    caseRef: SfDecisionCaseRef, caseVersion: version, objective: text, horizon: period, currency: text,
+    criteria: SfSourceDecisionCriteria,
+    alternatives: Schema.Array(Schema.Struct({
+      candidateRef: text, alternativeId: text, alternativeVersion: version, title: text,
+      operations: SfSourceScenarioRequest.fields.operations, assumptions: SfSourceScenarioRequest.fields.assumptions,
+      comparisonStatus: Schema.Literals(["complete", "conditioned", "incompatible", "unavailable"]),
+      costCoverage: SfSourceCostCoverageAssessment,
+    })),
+  })),
+  explorationLimit: Schema.Struct({ minimum: Schema.Literal(1), maximum: Schema.Literal(1024) }),
+  parameterBounds: Schema.Struct({ state: Schema.Literal("unavailable"), reason: Schema.Literal("domain-bounds-not-declared") }),
+})
 const choiceQuery = Schema.Struct({case:Schema.optional(text)})
 const committedReceipt = Schema.Struct({receiptId:text,surface,version:nonnegative,outcome:Schema.Literals(["applied","conflict","failed"])})
 
@@ -161,6 +200,12 @@ export const SfDecisionsCurrentChoicePromote = {operationId:"decisions.current-c
 
 /** format=json; case/source/scenario/baseline/parameter query; catalog decision-controls */
 export const SfDecisionsControlsRead = {operationId:"decisions.controls.read",input:controlsQuery,output:portResult(controlsValue),method:"GET",pathTemplate:"{mount}/{surface}",effect:"read",responseMode:"json",fixedQuery:{"sf":"decision-controls","format":"json"}} as const
+
+/** The original decision-domain catalog is a POST read, not an evaluation. */
+export const SfDecisionsPortfolioCatalog = {operationId:"decisions.portfolio.catalog",input:catalogInput,output:portResult(catalogValue),method:"POST",pathTemplate:"{mount}/dashboard",effect:"read",responseMode:"json",fixedQuery:{"sf":"decision-portfolio-catalog"},fixedBodyDiscriminator:{"purpose":"catalog"},maxRequestBytes:262144} as const
+
+/** Existing C10 POST read: the producer resolves stored scenario refs from the exact case and alternative IDs. */
+export const SfDecisionsDecisionCompare = {operationId:"decisions.decision-compare",input:comparisonInput,output:portResult(comparisonValue),method:"POST",pathTemplate:"{mount}/dashboard",effect:"read",responseMode:"json",fixedQuery:{"sf":"decision-compare"},maxRequestBytes:262144} as const
 
 /** Original decision-domain-http validEdit and case-management.edit; returns the committed case CAS. */
 export const SfDecisionsDecisionEdit = {operationId:"decisions.decision-edit",input:decisionEdit,output:portResult(Schema.Struct({caseRef:SfDecisionCaseRef})),method:"POST",pathTemplate:"{mount}/{surface}",effect:"mutation",responseMode:"json",fixedQuery:{"sf":"decision-edit"},maxRequestBytes:262144} as const
@@ -195,6 +240,17 @@ export const SfDecisionsDecisionPrepareChanges = {operationId:"decisions.decisio
 /** actions[decision-review];valid(mode,payload);withCase;producer dispatch; catalog portfolio */
 export const SfDecisionsDecisionReview = {operationId:"decisions.decision-review",input:decisionReview,output:portResult(reviewValue),method:"POST",pathTemplate:"{mount}/{surface}",effect:"read",responseMode:"json",fixedQuery:{"sf":"decision-review"}} as const
 
+const proposalSelector = { caseRef: SfDecisionCaseRef, choiceId: text, changeId: text }
+const proposalAction = Schema.Literals(["submit", "approve"])
+const proposalValue = Schema.Struct({
+  proposalDigest: digest, reviewDigest: digest, state: Schema.Literals(["unsubmitted", "pending", "approved"]),
+  targetId: text, domainVersion: version, currentAmount: Schema.NullOr(Schema.Number), amount: Schema.Number, currency: text,
+  step: Schema.NullOr(Schema.Struct({ index: nonnegative, levelId: text, holderId: Schema.NullOr(text) })),
+  allowedActions: Schema.Array(proposalAction), domainApplied: Schema.Literal(false),
+})
+export const SfDecisionsProposalReview = { operationId: "decisions.procurement-proposal-review", input: Schema.Struct(proposalSelector), output: portResult(proposalValue), method: "POST", pathTemplate: "{mount}/procurement", effect: "read", responseMode: "json", fixedQuery: { sf: "decision-proposal-review" } } as const
+export const SfDecisionsProposalAdvance = { operationId: "decisions.procurement-proposal-advance", input: Schema.Struct({ ...proposalSelector, action: Schema.Struct({ kind: proposalAction, reviewDigest: digest }) }), output: portResult(proposalValue), method: "POST", pathTemplate: "{mount}/procurement", effect: "mutation", responseMode: "json", fixedQuery: { sf: "decision-proposal-advance" } } as const
+
 /** createProcurementDecisionHttp branch decision-apply; catalog decision-apply */
 export const SfDecisionsDecisionApply = {operationId:"decisions.decision-apply",input:Schema.Struct({caseRef:SfDecisionCaseRef,choiceId:text,changeId:text,reviewDigest:digest}),output:portResult(committedReceipt),method:"POST",pathTemplate:"{mount}/{surface}",effect:"mutation",responseMode:"json",fixedQuery:{"sf":"decision-apply"}} as const
 
@@ -211,6 +267,8 @@ export const SfDecisions = {operations:{
   "decisions.current-choice-prepare":SfDecisionsCurrentChoicePrepare,
   "decisions.current-choice-promote":SfDecisionsCurrentChoicePromote,
   "decisions.controls.read":SfDecisionsControlsRead,
+  "decisions.portfolio.catalog":SfDecisionsPortfolioCatalog,
+  "decisions.decision-compare":SfDecisionsDecisionCompare,
   "decisions.decision-edit":SfDecisionsDecisionEdit,
   "decisions.decision-coverage":SfDecisionsDecisionCoverage,
   "decisions.decision-criteria":SfDecisionsDecisionCriteria,
@@ -222,6 +280,8 @@ export const SfDecisions = {operations:{
   "decisions.decision-promote":SfDecisionsDecisionPromote,
   "decisions.decision-prepare-changes":SfDecisionsDecisionPrepareChanges,
   "decisions.decision-review":SfDecisionsDecisionReview,
+  "decisions.procurement-proposal-review": SfDecisionsProposalReview,
+  "decisions.procurement-proposal-advance": SfDecisionsProposalAdvance,
   "decisions.decision-apply":SfDecisionsDecisionApply,
   "decisions.decision-recover":SfDecisionsDecisionRecover,
 }} as const

@@ -43,6 +43,7 @@ export type SfOwnerSelection = Readonly<{
  * returnTo must already be a same-owner internal href validated by F01.
  */
 export type SfResolvedQuery = Readonly<{
+  procurementProposal?: Readonly<{ choiceId: string; caseVersion: number }>
   /** Prefills only the native agenda source; discovery remains an explicit action. */
   sourcePage?: string
   /** Original personal view identity only; private filters are reread after admission. */
@@ -433,6 +434,7 @@ export const SfResourceKey = Schema.Union([
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("cases") }),
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("case-intent") }),
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("alternatives") }),
+  Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("portfolio-catalog") }),
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("assumptions") }),
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("choice") }),
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("prepared-changes") }),
@@ -513,6 +515,7 @@ export const SfResourceAvailability = Schema.Union([
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("cases"), state: ResourceStatus, operations: ResourceOperations }),
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("case-intent"), state: ResourceStatus, operations: ResourceOperations }),
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("alternatives"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("portfolio-catalog"), state: ResourceStatus, operations: ResourceOperations }),
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("assumptions"), state: ResourceStatus, operations: ResourceOperations }),
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("choice"), state: ResourceStatus, operations: ResourceOperations }),
   Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("prepared-changes"), state: ResourceStatus, operations: ResourceOperations }),

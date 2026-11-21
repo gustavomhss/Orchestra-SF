@@ -456,6 +456,23 @@ function inputs(values: Record<string, unknown>, previous?: FormRowContext, erro
   return errors.length ? undefined : normalized
 }
 function structuredInput(value: unknown, path: string[] = [], previous?: FormRowContext, errors: FormRowError[] = []): unknown {
+  // Match the dotted form's numeric decoding for nested CAP28 FX rates.
+  if (path.length === 4 && path[0] === "settings" && path[1] === "fxRates" && /^\d+$/.test(path[2]!) &&
+      path[3] === "rate" && typeof value === "string" && value.trim() !== "") {
+    const rate = Number(value)
+    if (Number.isFinite(rate)) return rate
+  }
+  if (path.length === 2 && path[0] === "pr" && (path[1] === "estAmount" || path[1] === "estAnnual") && typeof value === "string") {
+    if (value === "") return null
+    const amount = Number(value)
+    if (value.trim() !== "" && Number.isFinite(amount)) return amount
+  }
+  // Native sourcing sends nested quote fields instead of dotted form keys.
+  if (path.length === 4 && path[0] === "sourcing" && path[1] === "quotes" && /^\d+$/.test(path[2]!) &&
+      (path[3] === "qty" || path[3] === "unitPrice") && typeof value === "string" && value.trim() !== "") {
+    const number = Number(value)
+    if (Number.isFinite(number)) return number
+  }
   if (value === null || typeof value !== "object") return value
   const record = object(value)
   const keys = Object.keys(record)

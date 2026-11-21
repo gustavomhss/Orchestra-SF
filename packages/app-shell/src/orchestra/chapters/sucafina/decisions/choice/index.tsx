@@ -14,7 +14,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot, type SfEffect, type SfReviewConfirmation } from "../../shared/change-review"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import type { SF_U18_COPY } from "@/i18n/orchestra-chapters/sf-u18"
-import { sfOperationReady } from "../cases/model"
+import { sfOperationReady, useSfCase } from "../cases/model"
 import {
   u18Coverage, u18ErrorKey, u18Key, u18Message, u18PortState,
   u18Ref, u18TransportState, type SfChoiceOptions, type SfChoiceReview,
@@ -47,6 +47,15 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
   let shownCase = ""
 
   const selected = () => view.options?.selected
+  // The current-choice options carry an eligibility note, not the human's reason or historical values.
+  const history = useSfCase(() => view.state === "ready" && selected()?.choices.length ? props.route.params.caseRef : "")
+  const recordedChoice = (id: string) => {
+    const current = selected()?.caseRef
+    const record = history.read.projection?.case
+    if (history.read.state !== "ready" || !current || !record || record.version !== current.version ||
+      !sameRouteCase(props.route.params.caseRef, record.id, record.incarnation)) return undefined
+    return record.choices.find((entry) => entry.id === id)
+  }
   const chosen = () => selected()?.choices.find((entry) => entry.id === view.selectedChoiceId)
   const privacy = () => view.state === "denied" || view.state === "session-expired"
   const currentState = () => {
@@ -86,7 +95,10 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
         generation !== owner.generation() || ref !== props.route.params.caseRef) return
       if (result.kind === "response" && result.body.status === "ok") {
         const data = result.body.value
-        // The producer answers only the case selected in this authorized query.
+        if (data.selected && !sameRouteCase(ref, data.selected.caseRef.id, data.selected.caseRef.incarnation)) {
+          clearPrivate("stale")
+          return
+        }
         setView({ state: data.selected ? "ready" : "not-found", options: data })
       } else if (result.kind === "response") {
         const state = u18PortState(result)
@@ -138,7 +150,9 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     const ready = owner.ready()
     if (!current || !choice?.request || !ready || !canPrepare() || view.busy ||
       currentState() !== "ready" || view.outcome === "unknown" ||
-      !sameRouteCase(props.route.params.caseRef, current.caseRef.id, current.caseRef.incarnation)) return
+      !sameRouteCase(props.route.params.caseRef, current.caseRef.id, current.caseRef.incarnation) ||
+      choice.request.caseRef.id !== current.caseRef.id || choice.request.caseRef.incarnation !== current.caseRef.incarnation ||
+      choice.request.caseRef.version !== current.caseRef.version) return
     const generation = owner.generation()
     const fence = ++mutationFence
     mutationAbort?.abort()
@@ -286,6 +300,32 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
                       <article class="mx-card sf-u18-choice" data-choice-id={choice.id}>
                         <h3>{choice.title}</h3>
                         <p>{choice.reason}</p>
+                        <Show when={recordedChoice(choice.id)}>
+                          {(saved) => <section aria-label={t("sf.u18.choice.historical")}>
+                            <h4>{t("sf.u18.choice.historical")}</h4>
+                            <p>{saved().reason}</p>
+                            <dl>
+                              <dt>{t("sf.u18.choice.status")}</dt><dd>{saved().comparisonStatus}</dd>
+                              <Show when={saved().result.knownSubtotal !== null}>
+                                <dt>{t("sf.u18.choice.knownSubtotal")}</dt>
+                                <dd>{saved().result.knownSubtotal} {saved().result.currency}</dd>
+                              </Show>
+                              <Show when={saved().comparison.knownDifference !== null}>
+                                <dt>{language.t("sf.u26.delta")}</dt>
+                                <dd>{saved().comparison.knownDifference} {saved().result.currency}</dd>
+                              </Show>
+                              <Show when={saved().result.total !== null}>
+                                <dt>{t("sf.u18.choice.total")}</dt>
+                                <dd>{saved().result.total} {saved().result.currency}</dd>
+                              </Show>
+                            </dl>
+                            <ul aria-label={t("sf.u18.choice.coverage")}>
+                              <For each={saved().costCoverage.entries}>
+                                {(entry) => <li>{entry.categoryId} · {entry.status}</li>}
+                              </For>
+                            </ul>
+                          </section>}
+                        </Show>
                         <button
                           type="button" class="mx-btn"
                           disabled={!choice.request || !canPrepare() || view.busy || view.outcome !== "idle"}

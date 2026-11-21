@@ -1,4 +1,5 @@
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
+import type { SfContext } from "@orchestra/schema/sucafina/context"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { requestDraftActions } from "../../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { object, rows, text } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -26,7 +27,7 @@ const pages: Readonly<Record<Capability, Page>> = {
 const selectors: Readonly<Record<Capability, readonly string[]>> = {
   CAP24: ["year", "month"],
   CAP25: ["year", "month", "filter", "q", "request"],
-  CAP26: ["year", "month"],
+  CAP26: ["year", "month", "request"],
   CAP27: ["year", "month", "status", "q", "supplier"],
   CAP28: ["year", "month"],
 }
@@ -51,7 +52,7 @@ const orderKeys = [
   "fxRate", "approvalBaseCurrency", "approval",
 ] as const
 const quoteKeys = [
-  "id", "supplierId", "supplier", "currency", "total", "description", "notes",
+  "id", "supplierId", "supplier", "currency", "total", "qty", "unitPrice", "description", "notes",
   "attachments", "scores", "cscores", "techPass",
 ] as const
 const supplierKeys = [
@@ -163,7 +164,7 @@ function selectRequest(source: Record<string, unknown>, detail: boolean, actor: 
     request.history = rows(source.history).map((entry) => pick(entry, ["at", "by", "action", "note"]))
   return { ...request, allowedDraftActions: requestDraftActions(source, actor) }
 }
-function selectSupplier(source: Record<string, unknown>, includeBank: boolean) {
+function selectSupplier(source: Record<string, unknown>, includeBank: boolean, includeAssets = false) {
   const safe = pick(source, includeBank ? [...supplierKeys, ...bankKeys] : supplierKeys)
   if (Object.hasOwn(source, "history"))
     safe.history = rows(source.history).map((entry) => pick(entry, ["field"]))
@@ -173,6 +174,8 @@ function selectSupplier(source: Record<string, unknown>, includeBank: boolean) {
     safe.commercial = pick(source.commercial, ["notes"])
   if (Object.hasOwn(source, "compliance"))
     safe.compliance = pick(source.compliance, ["notes"])
+  if (includeAssets)
+    safe.attachments = rows(source.attachments).map((entry) => pick(entry, ["id", "name", "type", "bytes", "size"]))
   return safe
 }
 function versionsFor(view: View, keys: readonly string[]) {
@@ -218,16 +221,25 @@ function approvalGroups(
     unassigned: groups.unassigned.map((row) => selectRequest(row, true, actor, formSettings)),
   }
 }
-function publishedRequestBasis(row: Record<string, unknown>, snapshot: Snapshot, formSettings: unknown, version: number) {
+function publishedRequestBasis(row: Record<string, unknown>, snapshot: Snapshot, formSettings: unknown, version: number, queue: ProcurementQueueView | undefined) {
   const baseCurrency = text(object(formSettings).currency)
   const facts = procurementMonetaryFacts(row, baseCurrency, formSettings)
   const order = procurementOrderPresentation(row, baseCurrency, formSettings)
-  const identity = typeof row.number === "string" ? procurementRowSourceIdentity(snapshot, row.number) : undefined
+  const source = queue?.rows.find((entry) => entry.id === row.number)
+  const identity = source ? {
+    sourceRef: source.evidence.refId,
+    sourceDigest: source.evidence.refDigest,
+    sourceVersion: source.version,
+  } : typeof row.number === "string" ? procurementRowSourceIdentity(snapshot, row.number) : undefined
   return {
     monetaryState: facts.monetaryState,
     sourceRef: identity?.sourceRef ?? null,
     sourceDigest: identity?.sourceDigest ?? null,
     sourceVersion: identity?.sourceVersion ?? null,
+    ...(source ? { queueSourceRevision: {
+      incarnation: source.evidence.target.incarnation,
+      projectionDigest: source.evidence.target.projectionDigest,
+    } } : {}),
     moneySentence: procurementMoneySentence(facts, baseCurrency),
     poEstimate: order.estimate,
     orderDifference: order.difference,
@@ -236,6 +248,7 @@ function publishedRequestBasis(row: Record<string, unknown>, snapshot: Snapshot,
 }
 function pageData(
   capability: Capability, view: View, actor: Actor, prepared: Record<string, unknown>, snapshot: Snapshot,
+  assetSupplier?: string,
 ) {
   const data = view.data
   const requests = rows(data.requests)
@@ -262,7 +275,7 @@ function pageData(
     data: {
       requests: requests.map((row) => ({
         ...selectRequest(row, true, actor, data.formSettings),
-        ...publishedRequestBasis(row, snapshot, data.formSettings, typeof row.number === "string" ? view.versions["requests:" + row.number]?.version ?? 0 : 0),
+        ...publishedRequestBasis(row, snapshot, data.formSettings, typeof row.number === "string" ? view.versions["requests:" + row.number]?.version ?? 0 : 0, queue),
       })),
       suppliers: suppliers.map((row) => selectSupplier(row, false)),
       directory, formSettings, bankVerificationAvailable: data.bankVerificationAvailable === true,
@@ -275,7 +288,9 @@ function pageData(
   }
   if (capability === "CAP27") return {
     data: {
-      suppliers: suppliers.map((row) => selectSupplier(row, actor.roles.some((role) => role === "admin" || role === "supplier admin"))),
+      suppliers: suppliers.map((row) => selectSupplier(row,
+        actor.roles.some((role) => role === "admin" || role === "supplier admin"),
+        assetSupplier !== undefined && row.id === assetSupplier)),
       requests: requestsSummary, formSettings,
       bankVerificationAvailable: data.bankVerificationAvailable === true,
     },
@@ -342,6 +357,11 @@ function sameStamp(
     a.hostId === b.hostId && a.principalRef === b.principalRef &&
     a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision
 }
+function supplierAssetReadReady(context: SfContext) {
+  return context.availability.some((resource) => resource.family === "files" &&
+    ["files.asset.link", "files.asset.download"].every((id) => resource.operations.some((operation) =>
+      operation.operationId === id && operation.state === "ready" && operation.operational)))
+}
 function makePageHandler(deps: SfNativeHostDependencies, capability: Capability) {
   const page = pages[capability]
   return async (request: Request): Promise<Response> => {
@@ -361,6 +381,7 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
       item.capabilityId === capability && item.surface === "procurement" &&
       item.page === page && item.canRead)
     if (!destination) return refusal("denied")
+    const assetSupplier = capability === "CAP27" && supplierAssetReadReady(bound.value) ? selection.supplier : undefined
     // Source controls/actor are checked again under the original producer's lock.
     let prepared: Exclude<Awaited<ReturnType<NonNullable<typeof deps.application.productView>>>, Response> | undefined
     try {
@@ -398,7 +419,7 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
           { ...snapshot, data: publicSfData(snapshot.data) }, actor,
           environment,
         )
-        const projection = pageData(capability, view, actor, prepared?.data ?? {}, snapshot)
+        const projection = pageData(capability, view, actor, prepared?.data ?? {}, snapshot, assetSupplier)
         if (!projection)
           return { commit: false, value: { status: "unavailable" as const, reason: "procurement-projection-unavailable" } }
         return {
@@ -422,6 +443,8 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
       const currentDestination = current.value.destinations.find((item) =>
         item.capabilityId === capability && item.surface === "procurement" && item.page === page && item.canRead)
       if (!currentDestination) return refusal("denied")
+      if (assetSupplier !== undefined && !supplierAssetReadReady(current.value))
+        return refusal("stale", "procurement-context-changed")
       if (JSON.stringify(currentDestination.allowedActionIds) !== JSON.stringify(destination.allowedActionIds))
         return refusal("stale", "procurement-actions-changed")
       return response(result, 200)

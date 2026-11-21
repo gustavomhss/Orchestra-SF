@@ -3,12 +3,14 @@ import { Schema } from "effect"
 import { SfContext, type SfEditScopeKey, type SfIntentRef, type SfOperationRef, type SfOwnerKey, type SfRef } from "@orchestra/schema/sucafina/context"
 import { SfProcurementRequest } from "@orchestra/schema/sucafina/procurement"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
+import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContextDependencies, SfOwnerIdentity } from "../../src/orchestra/chapters/sucafina/context/contracts"
 import { createSfOwnerDrafts } from "../../src/orchestra/chapters/sucafina/context/drafts"
 import { createSfDraft } from "../../src/orchestra/chapters/sucafina/shared/draft"
 import { revalidateSfNativeDraft } from "../../src/orchestra/chapters/sucafina/host/draft-revalidation"
 import { sameRequestsDispatchFence, type RequestsDispatchFence } from "../../src/orchestra/chapters/sucafina/procurement/requests/page"
+import { prFromRecord, reviewedPr } from "../../src/orchestra/chapters/sucafina/procurement/requests/model"
 import {
   sourcingDraftReadAuthorized, sourcingDraftDispatchable, sourcingPendingMatches,
 } from "../../src/orchestra/chapters/sucafina/procurement/sourcing"
@@ -61,6 +63,17 @@ const retained = (drafts: ReturnType<typeof registry>) => {
       fieldPaths: sourcingSourceFields(row) ?? ["sourcing.unidentified-item"], actionIds: ["save"] },
   })
 }
+
+test("CAP25 creation accepts the reviewed PR without erasing explicit scalar values", () => {
+  const codec = SfNativeOperationBindings["domain.command.CAP25.create"]!
+  const draft = { ...prFromRecord(), title: "New request", estAmount: 0, estAnnual: null, recurring: false }
+  const input = { page: "Requests", action: "create", version: 0, values: { pr: draft } }
+  expect(codec.decodeInput(input).status).toBe("invalid")
+  const reviewed = { ...input, values: { pr: reviewedPr(draft) } }
+  expect(codec.decodeInput(reviewed)).toEqual({
+    status: "ok", value: { ...input, values: { pr: { title: "New request", estAmount: 0, estAnnual: null, recurring: false } } },
+  })
+})
 
 test("troca de linha durante o digest invalida o fence e não anexa pending à outra linha", async () => {
   const reviewed = { action: "save-pr" }

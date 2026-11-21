@@ -87,6 +87,8 @@ import { createSfDashboardHttp } from "./dashboard-http.ts"
 import { createSfSourcingInputs } from "./sourcing-inputs.ts"
 import { createProcurementDecisionHttp } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
 import { createCollaborationHttp } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/http.ts"
+import { createCollaborationHttpRoutes } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts"
+import { sfUiCommandIdentity } from "./command-identity.ts"
 import { createCollaborationHumanAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/human.ts"
 import { sfHumanReadActions } from "../../../../modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
 import { createSfProductContribution, createSfProductDispatch } from "./contribution.ts"
@@ -171,17 +173,16 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const procurementEvidenceWrites = new WeakSet<object>()
   const analysisSelectionWrites = new WeakSet<object>()
   const preparedAuthority: { business?: ReturnType<typeof createSfBusinessServices> } = {}
+  const commandReadOperations = new Map<string, string>()
   const identity = () => state.identity
   const selectionMatches = (value: SfSelectedRuntime) => validSfSelection(value) && selected.some((parent) =>
     parent.manifestDigest === value.manifestDigest && digestSfValue(parent.profile) === digestSfValue(value.profile) &&
     value.skills.every((skill) => parent.skills.some((allowed) => digestSfValue(allowed) === digestSfValue(skill))) &&
     value.operationIds.every((operation) => parent.operationIds.includes(operation)))
   const authority = createSfProductAuthority({ ...input, identity, proposalCoverageWrites, nativePublicationGuards, signalRegistryWrites, caseSelectionWrites, threadHistoryWrites, dashboardHostWrites, procurementEvidenceWrites, analysisSelectionWrites, policyVersion: "sf-product-v1", grants: input.grants ?? [], createId: randomUUID, now: Date.now,
-    commandIdentity: async (request, operation, digest) => {
-      if (request.method === "GET" || request.method === "HEAD") return randomUUID()
-      const key = request.headers.get("Idempotency-Key")
-      return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined
-    },
+    commandIdentity: async (request, operation) => sfUiCommandIdentity(request, operation, {
+      origin: input.origin, mount: input.mount, readOperations: commandReadOperations, createId: randomUUID,
+    }),
     inspectSession: async (id) => state.store ? Effect.runPromise(state.store.get(id)) : undefined,
     verifySelection: async (value) => selectionMatches(value),
     verifySkillReceipt: async (admission) => {
@@ -275,6 +276,10 @@ export const createSfHostRuntimeWithRoutineNative = async (
     readQuestionContribution: (request, call) => questionContributions.read?.(request, call) ?? Promise.resolve({ status: "unavailable", reason: "contribution-reader-unavailable" }),
     documentRead: documents?.documents.reader, documentEvidenceList: documents?.documents.list,
     extraDescriptors: [...imports?.descriptors ?? [], ...documents?.descriptors ?? []] })
+  for (const [mode, route] of createCollaborationHttpRoutes(business.collaboration)) {
+    if (!route.action && route.read && sfHumanReadActions.some((action) => action === route.read))
+      commandReadOperations.set(`collaboration-${mode}`, `sf-human:${route.read}`)
+  }
   preparedAuthority.business = business
   const captureCurrent = (record: AlternativeCapabilityProvenance) => {
     const binding = alternativeBindings.get(record.receipt.runId)
@@ -315,8 +320,9 @@ export const createSfHostRuntimeWithRoutineNative = async (
     hasAdmittedInputContext: nativeInputs.hasAdmittedInputContext, readAlternativeCapture: nativeInputs.readAlternativeCapture })
   business.bindDecisionDomain(decisionDomain)
   const decisionDomainHttp = createSfDecisionDomainHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { authority, business, domain: decisionDomain } : undefined })
-  const currentChoice = input.currentChoiceFence ? createSfCurrentChoiceServices({ authority, business,
-    fence: input.currentChoiceFence, proposalCoverageWrites }) : undefined
+  const currentChoiceFence = input.currentChoiceFence
+  const currentChoice = currentChoiceFence ? createSfCurrentChoiceServices({ authority, business,
+    fence: currentChoiceFence, proposalCoverageWrites }) : undefined
   const currentChoiceHttp = createSfCurrentChoiceHttp({ origin: input.origin, mount: input.mount,
     runtime: () => identity() && currentChoice ? { authority, currentChoice } : undefined })
   const procurementScenarioHttp = createSfProcurementScenarioHttp({ origin: input.origin, mount: input.mount, host: authority.host, ui: authority.ui, services: business.procurementScenarios })
@@ -968,7 +974,10 @@ export const createSfHostRuntimeWithRoutineNative = async (
     origin: input.origin, mount: input.mount, currentBinding: identity,
     operational: async (request, stamp) => {
       const observations = await Promise.allSettled([
-        input.operational?.(request, stamp) ?? Promise.resolve([]),
+        // Only the mounted Current Choice producer can attest this operation.
+        input.operational?.(request, stamp).then((items) => items.filter((item) =>
+          item.operationId !== "decisions.choice.read" && item.operationId !== "decisions.decision-compare" &&
+           item.operationId !== "decisions.decision-criteria" && item.operationId !== "decisions.decision-choose")) ?? Promise.resolve([]),
         observeSfPersonalViewsHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
           source: () => identity() && services.personalViews === personalViews ? personalViews : undefined }, request, stamp),
         observeSfImportHealth({ authority, binding: input.nativeReadBinding, source: () => {
@@ -1029,7 +1038,15 @@ export const createSfHostRuntimeWithRoutineNative = async (
           } }, request, stamp),
         observeSfDecisionIntentHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
           humanActions: authority.humanActions, source: (operationId) => {
-            if (services.productHttp !== productHttp || !identity()) return undefined
+            const owner = identity()
+            if (services.productHttp !== productHttp || !owner) return undefined
+            if (operationId === "decisions.choice.read") {
+              if (owner.installationId !== stamp.installationId || owner.projectId !== stamp.projectId || owner.hostId !== stamp.hostId ||
+                !currentChoice || !currentChoiceFence?.persistence.transactionAll || !currentChoiceFence.persistence.currentSnapshots) return undefined
+              return { producer: productHttp, dependencies: [owner, currentChoiceHttp, currentChoice, currentChoice.options,
+                currentChoiceFence, currentChoiceFence.persistence.transactionAll, currentChoiceFence.persistence.currentSnapshots,
+                authority.host.requestFor, authority.host.revalidate, authority.ui.operationIdentity, business.cases.read, input.persistence] }
+            }
             if (operationId === "decisions.command.sf_case_draft") {
               const draft = descriptors.filter((entry) => entry.id === "sf_case_draft")
               if (draft.length !== 1 || draft[0]?.handlerExport !== "draftCase") return undefined
@@ -1038,6 +1055,30 @@ export const createSfHostRuntimeWithRoutineNative = async (
             if (operationId === "decisions.decision-edit" || operationId === "decisions.controls.read")
               return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain, decisionDomain.management,
                 decisionDomain.management.edit, business.withCase, business.cases, input.persistence] }
+            if (operationId === "decisions.decision-coverage")
+              return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain.baselineCoverage,
+                decisionDomain.baselineCoverage.register, business.withCase, authority.human.admit, input.persistence] }
+            if (operationId === "decisions.decision-criteria") {
+              if (owner.installationId !== stamp.installationId || owner.projectId !== stamp.projectId || owner.hostId !== stamp.hostId) return undefined
+              return { producer: productHttp, dependencies: [owner, decisionDomainHttp, decisionDomain, decisionDomain.criteria,
+                decisionDomain.criteria.register, business.withCase, business.cases.read, authority.human.admit,
+                authority.human.authorize, authority.host.revalidate, authority.state.transaction, input.persistence] }
+            }
+             if (operationId === "decisions.decision-promote")
+               return { producer: productHttp, dependencies: [portfolioHttp, extended.portfolioServices.mutations.addAlternative,
+                 business.plannerSources, business.withCase, authority.human.admit, input.persistence] }
+             if (operationId === "decisions.decision-choose") {
+               if (owner.installationId !== stamp.installationId || owner.projectId !== stamp.projectId || owner.hostId !== stamp.hostId) return undefined
+               return { producer: productHttp, dependencies: [owner, portfolioHttp, extended.portfolioServices.mutations.recordChoice,
+                 business.withCase, business.cases.read, authority.human.admit, authority.human.authorize,
+                 authority.host.revalidate, authority.state.transaction, input.persistence] }
+             }
+            if (operationId === "decisions.portfolio.catalog")
+              return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain.portfolio.http.catalog,
+                authority.human.admit, authority.host.revalidate, business.cases.read, input.persistence] }
+            if (operationId === "decisions.decision-compare")
+              return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain.compare,
+                authority.human.admit, authority.host.revalidate, business.withCase, business.cases.read, input.persistence] }
             return { producer: productHttp, dependencies: [extended.productHttp, extended.bi, extended.bi.descriptor,
               extended.bi.source, extended.bi.source.read, extended.bi.source.revalidate, business.plannerProduct,
               business.plannerProduct.versions, business.plannerProduct.issueSource, input.persistence] }
@@ -1047,14 +1088,18 @@ export const createSfHostRuntimeWithRoutineNative = async (
             if (services.productHttp !== productHttp || !identity()) return undefined
             const producer = business.procurementDecisions
             const operation = operationId === "decisions.decision-review" ? producer.reviewChange :
-              operationId === "decisions.decision-apply" ? producer.apply : producer.recover
+              operationId === "decisions.decision-apply" ? producer.apply : operationId === "decisions.decision-recover" ? producer.recover :
+              operationId === "decisions.procurement-proposal-review" ? producer.proposal.review : producer.proposal.advance
             return { producer: productHttp, dependencies: [authority, authority.ui, authority.state,
               operationId === "decisions.decision-review" ? portfolioHttp : procurementDecisionHttp,
               producer, operation, business.withCase, business.cases, input.persistence] }
           } }, request, stamp),
         observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
       ])
-      return observations.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
+      const current = observations.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
+      // UI42 needs an installed and authorized selector as well as the catalog producer.
+      return current.some((op) => op.operationId === "projection.cases" && op.state === "ready" && op.operational)
+        ? current : current.filter((op) => op.operationId !== "decisions.portfolio.catalog")
     },
     admit: async (request) => {
       const admitted = await authority.readContextAdmission(request)
@@ -1088,7 +1133,15 @@ export const createSfHostRuntimeWithRoutineNative = async (
     ? createSfReviewsProjectionHandlers({ origin: input.origin, mount: input.mount,
         authority, business, reviews: extended.reviews, persistence: input.persistence })
     : undefined
-  const productHttp: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface)
+  const collaborationRequest: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => {
+    const handler = collaborationHttp.get(surface)
+    if (!handler) return undefined
+    // C05 preparation and its final C08 fence share this original HTTP Request.
+    // Other native/analysis routes retain their own request lifetimes.
+    return extended.reviews?.readScope
+      ? extended.reviews.readScope.run(request, () => handler(request)) : handler(request)
+  }
+  const productHttp: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationRequest(request, surface) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface)
   const services: SfHostServices & { nativeUiProducts: typeof nativeUiProducts;
     routineEvidence: Pick<typeof nativePhases.services, "readExecution" | "openResult"> } = { ...authority, nativeUiProducts,
     ...(nativeReviewProjection ? { nativeReviewProjection } : {}),

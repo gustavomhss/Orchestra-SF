@@ -1,11 +1,14 @@
 import { For, Show, createEffect, onCleanup, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
+import { A } from "@solidjs/router"
 import { useLanguage } from "@/context/language"
 import { createSfFilesClient } from "@orchestra/client/sucafina/files"
 import type { SfFilesOperationOutput } from "@orchestra/schema/sucafina/files"
 import type { SfTransportResult } from "@orchestra/schema/sucafina/common"
 import type { SfSurfaceProps } from "../context/contracts"
 import { useSfContext } from "../context"
+import { sfReadyOwnerSelection } from "../host/native-chapter-entry"
+import { encodeSfRouteRef } from "../navigation-state"
 import { SfPageFrame } from "../shared/frame"
 import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
@@ -150,14 +153,14 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   }
   const clearSelection = () => {
     mutationUnknown = false
-    setState({ candidates: [], selectedCandidateId: "", opened: undefined,
+    setState({ documentRef: "", candidates: [], selectedCandidateId: "", opened: undefined,
       targets: [], selectedTarget: "", preview: undefined, matches: undefined,
       rejectionReason: "", rejectionPage: "1", linkedRef: "", phase: "catalog" })
   }
   const clearOnSourceChange = () => {
     fence()
     clearSelection()
-    setState({ documentRef: "", status: "ready" })
+    setState({ status: "ready" })
   }
   const loadSources = async () => {
     const api = client()
@@ -537,6 +540,18 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   const evidence = () => props.surfaceId === "UI59"
   const scenarioView = () => props.surfaceId === "UI60"
   const showCandidates = () => evidence() || scenarioView() || (catalog() && props.route.kind === "detail")
+  const documentHref = (destination: "evidence" | "scenario") => {
+    if (state.status !== "ready" || state.busy || !state.documentRef || !permitted("files.document-candidates")) return
+    const currentOwner = auth.state()
+    if (currentOwner.status !== "ready" || !auth.ready()) return
+    const selected = sfReadyOwnerSelection(currentOwner), requested = props.route.ownerSelection
+    if (!selected?.serverKey || !selected.projectId || !selected.installationId ||
+      selected.serverKey !== requested.serverKey || selected.projectId !== requested.projectId ||
+      selected.installationId !== requested.installationId) return
+    return `/orchestra/sf-documents/${encodeSfRouteRef(state.documentRef)}/${destination}?` + new URLSearchParams({
+      server: selected.serverKey, project: selected.projectId, installation: selected.installationId,
+    })
+  }
   const preview = () => state.preview
   const canSelect = (item: Evidence) => item.ref.target.documentId === state.documentRef && !state.busy
   return (
@@ -666,6 +681,9 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
           <Show when={showCandidates() || (catalog() && state.documentRef)}>
             <section class="sf-files-section">
               <h2>{t("sf.u24.candidates")}</h2>
+              <Show when={catalog() ? documentHref("evidence") : undefined}>
+                {(href) => <A class="mx-btn" href={href()}>{t("sf.ui59.title")}</A>}
+              </Show>
               <Show when={!state.candidates.length}><p>{t("sf.u24.noCandidates")}</p></Show>
               <ul class="sf-files-candidates">
                 <For each={state.candidates}>{(candidate) =>
@@ -691,6 +709,9 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                     <Show when={scenarioView() && validCurrency(candidate)}>
                       <button type="button" class="mx-btn" disabled={state.busy}
                         onClick={() => { void readScenarioTargets(candidate) }}>{t("sf.u24.useScenario")}</button>
+                    </Show>
+                    <Show when={evidence() && validCurrency(candidate) ? documentHref("scenario") : undefined}>
+                      {(href) => <A class="mx-btn" href={href()}>{t("sf.u24.useScenario")}</A>}
                     </Show>
                   </li>
                 }</For>

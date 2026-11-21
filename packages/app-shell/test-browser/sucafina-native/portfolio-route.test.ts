@@ -24,11 +24,17 @@ describe("portfolio route composition", () => {
   })
   test("scenario reads use exact live operations despite a partial aggregate and CAP-only destinations", () => {
     const candidate = matchSfNativeRoutePath("/orchestra/sf-portfolio/scenarios")!
-    const context = { destinations: sourceDestinations, availability: [{ family: "decisions", resource: "cases", state: "partial", operations: [
-      { operationId: "decisions.controls.read", state: "ready", operational: true },
-      { operationId: "decisions.command.sf_case_draft", state: "unavailable", operational: false },
-    ] }] } as unknown as SfContext
+    const context = { destinations: sourceDestinations, availability: [
+      { family: "decisions", resource: "cases", state: "partial", operations: [
+        { operationId: "projection.cases", state: "ready", operational: true },
+        { operationId: "decisions.command.sf_case_draft", state: "unavailable", operational: false },
+      ] },
+      { family: "decisions", resource: "portfolio-catalog", state: "ready", operations: [
+        { operationId: "decisions.portfolio.catalog", state: "ready", operational: true },
+      ] },
+    ] } as unknown as SfContext
     expect(portfolioRouteAvailable(context, candidate)).toBe(true)
-    expect(portfolioRouteAvailable({ ...context, availability: [{ ...context.availability[0]!, operations: [{ ...context.availability[0]!.operations[0]!, operational: false }] }] }, candidate)).toBe(false)
+    for (const resource of context.availability)
+      expect(portfolioRouteAvailable({ ...context, availability: [resource] }, candidate)).toBe(false)
   })
 })

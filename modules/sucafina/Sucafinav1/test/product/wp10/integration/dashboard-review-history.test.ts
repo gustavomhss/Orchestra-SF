@@ -1,9 +1,13 @@
 import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
+import { Schema } from "effect"
+import { SfDashboardDashboardAgenda, SfDashboardDashboardReview, SfDashboardDashboardReviewPreserve, SfProjectionReview, SfReviewDomainProjection, SfReviewsReviewUpdate } from "@orchestra/schema/sucafina/reviews"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { SfProductState } from "../../../../product/contracts/state.ts"
 import { object } from "../../../../runtime/contract.ts"
 import { createSfDashboardHttp } from "../../../../../../../apps/cli/src/sucafina-product/dashboard-http.ts"
+import { createSfExtendedBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/extended-business-services.ts"
+import { createSfReviewsProjectionHandlers } from "../../../../../../../apps/cli/src/sucafina-product/native-ui/reviews.ts"
 import type { DashboardReviewRequest } from "../../../../../../../apps/cli/src/sucafina-product/dashboard-services.ts"
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
@@ -106,6 +110,126 @@ test("Dashboard C05 history retains its captured number after an edit and denies
     expect(object(denied.body).value).toBeUndefined()
     const stored = await fixture.authority.state.read(fixture.request(), "reviews", (state) => state.reviews[original.id])
     expect(stored.status === "ok" && stored.value).toEqual(original)
+  } finally { await deadline.close() }
+}, 120_000)
+
+test("RPT-03 producer reissues the exact C04 subset and refuses stale, revoked or mixed selections", async () => {
+  const deadline = compositionTestDeadline("reports-successor-producer")
+  try {
+    const f = await deadline.phase("fixture.initialize", () => financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() }))
+    deadline.own(() => f.dispose())
+    const origin = "https://example.test", mount = "/sucafina"
+    const extended = createSfExtendedBusinessServices({ authority: f.authority, business: f.business, persistence: f.persistence, ...f.guards, origin })
+    deadline.own(() => extended.dispose())
+    if (!extended.reviews) throw new Error("Real review producer unavailable")
+    const dashboard = f.business.dashboardServices
+    const dashboardHttp = createSfDashboardHttp({ origin, mount, runtime: () => ({ authority: f.authority, dashboard, decisions: f.business.dashboardDecisions }) })
+    const native = createSfReviewsProjectionHandlers({ origin, mount, authority: f.authority, business: f.business, reviews: extended.reviews, persistence: f.persistence })
+    const exchange = async <S extends Schema.Top>(schema: S, query: Record<string, string>, payload?: unknown) => {
+      const operation = randomUUID()
+      const request = new Request(`${origin}${mount}/dashboard?${new URLSearchParams(query)}`, payload === undefined ? { signal: deadline.signal } : {
+        method: "POST", signal: deadline.signal, body: JSON.stringify(payload),
+        headers: { origin, "content-type": "application/json", "idempotency-key": operation, "x-operation": operation },
+      })
+      const response = await extended.productHttp(request, "dashboard") ?? await dashboardHttp(request, "dashboard")
+      if (!response) throw new Error(`Installed ${query.sf} route unavailable`)
+      expect(response.headers.get("cache-control")).toContain("no-store")
+      return { status: response.status, body: Schema.decodeUnknownSync(Schema.toType(schema))(await response.json(), { onExcessProperty: "error" }) }
+    }
+    const discover = async (page: string) => {
+      const response = await native.handle(new Request(`${origin}${mount}/api/ui/projections/review?${new URLSearchParams({ page, ...period })}`, { signal: deadline.signal }), "dashboard")
+      if (!response) throw new Error(`Installed review projection route unavailable for ${page}`)
+      expect(response.status).toBe(200)
+      const result = Schema.decodeUnknownSync(Schema.toType(SfProjectionReview.output))(await response.json())
+      if (result.status !== "ok" || !("period" in result.value) || result.value.items.length !== 1) throw new Error(`No agenda for ${page}`)
+      const { id, topic, selectionRef, period: sectionPeriod } = result.value.items[0]!
+      return { id, title: topic, topic, selectionRef, period: sectionPeriod }
+    }
+    const preview = async (request: Schema.Schema.Type<typeof SfDashboardDashboardAgenda.input>) => {
+      const result = await exchange(SfDashboardDashboardAgenda.output, { sf: "dashboard-agenda" }, request)
+      if (result.body.status !== "ok" || result.status !== 200) throw new Error(`Dashboard agenda refused: ${JSON.stringify(result)}`)
+      return result.body.value
+    }
+    const preserve = async (agenda: Awaited<ReturnType<typeof preview>>, previousReviewRef?: string) => {
+      const result = await exchange(SfDashboardDashboardReviewPreserve.output, { sf: "dashboard-review-preserve" }, {
+        selectionRef: agenda.selectionRef, sectionRefs: agenda.sections.map((section) => section.id), ...(previousReviewRef ? { previousReviewRef } : {}),
+      })
+      if (result.body.status !== "ok" || result.status !== 200) throw new Error(`Dashboard preservation refused: ${JSON.stringify(result)}`)
+      return result.body.value
+    }
+    const projectRows = ["retained:west", "excluded-middle", "retained-east"].map((id) => ({ id, name: id, milestones: [] }))
+    const entries = Array.from({ length: 12 }, (_, index) => ({ id: `entry-${index}`, ownerId: "owner", year: 2026, month: index + 1, budget: 100, actual: 100, forecast: 110 }))
+    await f.persistence.transaction("dashboard", async (snapshot) => {
+      Object.assign(snapshot.data, { projects: projectRows, opexEntries: entries, hotTopics: [] })
+      return { commit: true, value: undefined }
+    })
+    const budget = await discover("Budget Overview"), portfolio = await discover("Portfolio Dashboard"), hotTopics = await discover("Hot Topics & Actions")
+    const forecast = "budgetMetrics.2026.totalForecast"
+    const projectIds = (projection: Schema.Schema.Type<typeof SfReviewDomainProjection>) => projection.values
+      .filter((value) => /^projects\[id:[^\]]+\]\.id$/.test(value.id)).map((value) => value.value)
+    const readProjection = Schema.decodeUnknownSync(Schema.toType(SfReviewDomainProjection))
+    const full = await deadline.phase("dashboard.full-preview", () => preview({ sections: [budget, portfolio, hotTopics] }))
+    expect(projectIds(full.sections[1]!.projection)).toEqual(projectRows.map((row) => row.id))
+    const references = full.sections[1]!.recordRefs
+    expect(references).toHaveLength(3)
+    const kept = [references[0]!, references[2]!]
+    const expectedIds = ["retained:west", "retained-east"]
+    const exactSections = [budget, { ...portfolio, recordRefs: kept }, { ...hotTopics, recordRefs: [] }]
+    const original = await deadline.phase("dashboard.preserve-predecessor", async () => preserve(await preview({ sections: exactSections })))
+    expect(original.id).toStartWith("dashboard-review:")
+    expect(original.sections.map((section) => section.count)).toEqual([1, 2, 0])
+    expect(projectIds(readProjection(original.sections[1]!.content))).toEqual(expectedIds)
+    expect(readProjection(original.sections[0]!.content).values.find((value) => value.id === forecast)?.value).toBe(1320)
+    const outside = await discover("OPEX Detail")
+    const mixed = await deadline.phase("dashboard.preserve-mixed", async () => preserve(await preview({ sections: [...exactSections, outside] })))
+    // A successor must derive membership from the stored C04 body, not the original preview registry.
+    dashboard.dispose()
+    const update = (reviewRef: string) => exchange(SfReviewsReviewUpdate.output, { sf: "review-update", reviewRef })
+    expect(await update(original.id)).toMatchObject({ status: 200, body: { status: "ok", value: { available: false, previousReviewRef: original.id } } })
+    const editedEntries = entries.map((entry) => entry.month === 1 ? { ...entry, forecast: 190 } : entry)
+    await f.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.opexEntries = editedEntries
+      return { commit: true, value: undefined }
+    })
+    const result = await deadline.phase("dashboard.review-update", () => update(original.id))
+    if (result.body.status !== "ok" || result.status !== 200) throw new Error(`C04 successor refused: ${JSON.stringify(result)}`)
+    expect(result.body.value).toMatchObject({ available: true, previousReviewRef: original.id, confirmations: [], unavailableSections: [] })
+    expect(result.body.value.items.map((item) => item.id)).toEqual(original.sections.map((section) => section.id))
+    expect(result.body.value.items[1]!.recordRefs).toEqual(kept)
+    expect(result.body.value.items[2]!.recordRefs).toEqual([])
+    const currentSections = result.body.value.items.map(({ id, period, selectionRef, topic, recordRefs }, index) => ({
+      id, period, selectionRef, topic, recordRefs: recordRefs!, title: original.sections[index]!.title,
+    }))
+    const successor = await deadline.phase("dashboard.preserve-successor", async () => {
+      const current = await preview({ sections: currentSections })
+      expect(current.sections[1]!.recordRefs).toEqual(kept)
+      expect(projectIds(current.sections[1]!.projection)).toEqual(expectedIds)
+      expect(current.sections[0]!.projection.values.find((value) => value.id === forecast)?.value).toBe(1400)
+      return preserve(current, original.id)
+    })
+    expect(successor.id).not.toBe(original.id)
+    expect(successor.previousReviewRef).toBe(original.id)
+    expect(successor.sections.map(({ id, title, period, count }) => ({ id, title, period, count })))
+      .toEqual(original.sections.map(({ id, title, period, count }) => ({ id, title, period, count })))
+    expect(projectIds(readProjection(successor.sections[1]!.content))).toEqual(expectedIds)
+    expect(readProjection(successor.sections[0]!.content).values.find((value) => value.id === forecast)?.value).toBe(1400)
+    const reread = () => exchange(SfDashboardDashboardReview.output, { sf: "dashboard-review", id: original.id })
+    expect(await reread()).toEqual({ status: 200, body: { status: "ok", value: original } })
+    expect(await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: { projects: snapshot.data.projects, opexEntries: snapshot.data.opexEntries } })))
+      .toEqual({ projects: projectRows, opexEntries: editedEntries })
+    expect(await deadline.phase("dashboard.mixed-refused", () => update(mixed.id)))
+      .toEqual({ status: 503, body: { status: "unavailable", reason: "review-record-selection-unavailable" } })
+    await f.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.projects = projectRows.map((row, index) => index === 0 ? { ...row, name: "Changed source" } : row)
+      return { commit: true, value: undefined }
+    })
+    expect(await deadline.phase("dashboard.stale-refused", () => update(original.id)))
+      .toEqual({ status: 409, body: { status: "stale", reason: "review-record-selection-changed" } })
+    expect(await reread()).toEqual({ status: 200, body: { status: "ok", value: original } })
+    f.active.value = false
+    const revoked = await deadline.phase("dashboard.revoked-refused", () => update(original.id))
+    expect(revoked).toMatchObject({ status: 403, body: { status: "denied" } })
+    expect(revoked.body).not.toHaveProperty("value")
   } finally { await deadline.close() }
 }, 120_000)
 

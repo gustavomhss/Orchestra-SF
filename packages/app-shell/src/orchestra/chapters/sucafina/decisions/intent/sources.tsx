@@ -1,5 +1,5 @@
-import { createEffect, For, onCleanup, Show } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createEffect, createSignal, For, onCleanup, Show } from "solid-js"
+import { createStore, unwrap } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import { createSfBiClient } from "@orchestra/client/sucafina/bi"
@@ -18,9 +18,19 @@ type Inspected = Readonly<{
   projection: Extract<SfBiBiDataOutput, { projection: unknown }>["projection"]
 }>
 type Phase = "editing" | "reviewing" | "submitting" | "unknown" | "conflict" | "failed"
+type Controls = Extract<typeof SfDecisions.operations["decisions.controls.read"]["output"]["Type"], { status: "ok" }>["value"]
+type ProcurementSource = NonNullable<NonNullable<Controls["selected"]>["procurementEvidence"]>["sources"][number]
+const unresolvedEdits = new WeakMap<ReturnType<typeof useSfContext>, Set<string>>()
+const procurementCopy = {
+  find: ["Find Procurement sources", "Buscar fontes de Compras"],
+  source: ["Procurement source", "Fonte de Compras"],
+  inspect: ["Inspect selected procurement source", "Inspecionar fonte de Compras selecionada"],
+  preview: ["Procurement source preview", "Prévia da fonte de Compras"],
+  attach: ["Attach procurement source to draft", "Anexar fonte de Compras ao rascunho"],
+  empty: ["No authorized Procurement sources were provided for this period.", "Nenhuma fonte autorizada de Compras foi fornecida para este período."],
+} as const
 
-/** Attach only the original BI-issued evidence. The source owns case CAS and
- * revalidates each digest; this editor never constructs a Planner reference. */
+/** Display and attach only issued evidence; the decision producer revalidates each digest and the case CAS. */
 export function SfCaseSourcesEditor(props: Readonly<{
   projection: SfCaseProjection
   onSaved: () => void
@@ -28,6 +38,8 @@ export function SfCaseSourcesEditor(props: Readonly<{
   const owner = useSfContext()
   const language = useLanguage()
   const t = (key: string) => language.t(key as Parameters<typeof language.t>[0])
+  const copy = (key: keyof typeof procurementCopy) => procurementCopy[key][language.locale().startsWith("pt") ? 1 : 0]
+  const [reviewed, setReviewed] = createSignal<EditInput>()
   const [draft, setDraft] = createStore({
     objective: "", start: "", end: "", currency: "",
     criteria: [] as EditInput["criteria"],
@@ -35,6 +47,9 @@ export function SfCaseSourcesEditor(props: Readonly<{
     options: [] as Options,
     selected: "",
     inspected: undefined as Inspected | undefined,
+    procurement: [] as readonly ProcurementSource[],
+    procurementSelected: "",
+    procurementInspected: undefined as ProcurementSource | undefined,
     busy: false,
     phase: "editing" as Phase,
     message: "",
@@ -45,16 +60,27 @@ export function SfCaseSourcesEditor(props: Readonly<{
     const record = props.projection.case
     owner.generation()
     pending?.abort()
+    setReviewed(undefined)
     setDraft({ objective: record.objective, start: record.horizon.start, end: record.horizon.end,
       currency: record.currency, criteria: record.criteria.map(({ id, description, required }) => ({ id, description, required })),
       sources: record.sourceRefs, options: [], selected: "", inspected: undefined,
+      procurement: [], procurementSelected: "", procurementInspected: undefined,
       busy: false, phase: "editing", message: "" })
   })
   const permitted = (operation: string) => {
     const ready = owner.ready()
     return !!ready && sfOperationReady(ready.context, operation)
   }
-  const editing = () => !draft.busy && (draft.phase === "editing" || draft.phase === "failed")
+  const lockKey = () => {
+    const stamp = owner.ready()?.context.stamp
+    const record = props.projection.case
+    if (stamp) return JSON.stringify([stamp.installationId, stamp.projectId, stamp.hostId, stamp.principalRef, record.id, record.incarnation, record.version])
+  }
+  const locked = () => {
+    const key = lockKey()
+    return !!key && unresolvedEdits.get(owner)?.has(key) === true
+  }
+  const editing = () => !draft.busy && (draft.phase === "editing" || draft.phase === "failed") && !locked()
   const current = (generation: number, record: SfCaseRecord) =>
     owner.generation() === generation && !!owner.ready() &&
     props.projection.case.id === record.id && props.projection.case.incarnation === record.incarnation &&
@@ -133,6 +159,54 @@ export function SfCaseSourcesEditor(props: Readonly<{
     if (!source || !editing() || draft.sources.some((current) => current.refDigest === source.refDigest)) return
     setDraft({ sources: [...draft.sources, source], inspected: undefined, message: "" })
   }
+  const readProcurement = async (selected?: ProcurementSource) => {
+    const ready = owner.ready(), record = props.projection.case
+    if (!ready || !editing() || !permitted("decisions.controls.read")) return
+    const generation = owner.generation(), abort = new AbortController()
+    pending = abort
+    setDraft({ busy: true, procurementInspected: undefined, message: "",
+      ...(selected ? {} : { procurement: [], procurementSelected: "" }) })
+    try {
+      const caseRef = `case:${encodeURIComponent(record.id)}:${encodeURIComponent(record.incarnation)}`
+      const reply = await createSfDecisionsClient(ready.transport)["decisions.controls.read"]({ case: caseRef }, { signal: abort.signal })
+      if (abort.signal.aborted || !current(generation, record)) return
+      if (reply.kind !== "response" || reply.status !== 200 || reply.body.status !== "ok") throw new Error("source-unavailable")
+      const value = reply.body.value, observed = value.selected, stamp = ready.context.stamp
+      if (value.accessRevision !== stamp.accessRevision || !value.actions.includes("decisions.edit") || !observed || observed.ref !== caseRef ||
+        ![observed.caseRef, observed.decision].every((identity) => identity.id === record.id &&
+          identity.incarnation === record.incarnation && identity.version === record.version) || !observed.procurementEvidence)
+        throw new Error("source-unavailable")
+      const sources = observed.procurementEvidence.sources.filter(({ source, projection }, _, all) => {
+        const { target } = source, context = projection.context
+        return source.evidenceLevel === "observed" && source.installationId === stamp.installationId && source.projectId === stamp.projectId &&
+          target.surface === "procurement" && target.recordType === "procurement-request" && target.fields.includes("originalAmount") &&
+          Number.isSafeInteger(target.version) && target.version > 0 &&
+          source.refId === `sf-procurement:${encodeURIComponent(target.incarnation)}:${target.version}` &&
+          target.period?.start === record.horizon.start && target.period.end === record.horizon.end &&
+          context.surface === "procurement" && context.installationId === stamp.installationId && context.projectId === stamp.projectId &&
+          context.principalRef === stamp.principalRef && context.policyVersion === stamp.policyVersion && context.accessRevision === stamp.accessRevision &&
+          context.currency === record.currency && context.period.start === record.horizon.start && context.period.end === record.horizon.end &&
+          projection.version === target.version && all.filter(({ source: other }) =>
+            other.refDigest === source.refDigest || other.target.recordId === target.recordId).length === 1
+      })
+      if (!selected) { setDraft({ procurement: sources, message: sources.length ? "" : "procurement-empty" }); return }
+      const found = sources.find(({ source }) => source.refDigest === selected.source.refDigest &&
+        source.refId === selected.source.refId && source.target.recordId === selected.source.target.recordId)
+      if (!found) throw new Error("source-unavailable")
+      setDraft("procurementInspected", found)
+    } catch {
+      if (!abort.signal.aborted && current(generation, record)) setDraft("message", "sf.ui34.sourcesUnavailable")
+    } finally {
+      if (!abort.signal.aborted && current(generation, record)) setDraft("busy", false)
+    }
+  }
+  const selectedProcurement = () => draft.procurement.find(({ source }) => source.refDigest === draft.procurementSelected)
+  const procurementToAttach = () => {
+    const inspected = draft.procurementInspected
+    return inspected && draft.procurementSelected === inspected.source.refDigest &&
+      !draft.sources.some((source) => source.kind === "record" && source.target.surface === "procurement" &&
+        source.target.recordType === "procurement-request" && source.target.recordId === inspected.source.target.recordId) ? inspected.source : undefined
+  }
   const changed = () => {
     const record = props.projection.case
     return draft.objective.trim() !== record.objective || draft.start !== record.horizon.start ||
@@ -142,31 +216,36 @@ export function SfCaseSourcesEditor(props: Readonly<{
   }
   const review = () => {
     if (!editing() || !permitted("decisions.decision-edit") || !changed()) return
-    const input = payload(props.projection.case, draft.sources)
+    const input = payload(props.projection.case, structuredClone(unwrap(draft.sources)))
     if (Option.isNone(input)) { setDraft("message", "sf.ui34.sourcesUnavailable"); return }
+    setReviewed(input.value)
     setDraft({ phase: "reviewing", message: "" })
   }
   const save = async () => {
-    const ready = owner.ready(), record = props.projection.case
-    if (!ready || draft.busy || draft.phase !== "reviewing" || !permitted("decisions.decision-edit")) return
-    const input = payload(record, draft.sources)
-    if (Option.isNone(input)) { setDraft({ phase: "failed", message: "sf.ui34.sourcesUnavailable" }); return }
+    const ready = owner.ready(), record = props.projection.case, input = reviewed(), key = lockKey()
+    if (!ready || !input || !key || locked() || draft.busy || draft.phase !== "reviewing" || !permitted("decisions.decision-edit") ||
+      input.caseRef.id !== record.id || input.caseRef.incarnation !== record.incarnation || input.caseRef.version !== record.version) return
     const generation = owner.generation(), abort = new AbortController()
     pending = abort
+    const locks = unresolvedEdits.get(owner) ?? new Set<string>()
+    locks.add(key)
+    unresolvedEdits.set(owner, locks)
     setDraft({ busy: true, phase: "submitting", message: "" })
     try {
       const result = await createSfDecisionsClient(ready.transport)["decisions.decision-edit"](
-        input.value, { signal: abort.signal, idempotencyKey: crypto.randomUUID() },
+        input, { signal: abort.signal, idempotencyKey: crypto.randomUUID() },
       )
       if (abort.signal.aborted || !current(generation, record)) return
       if (result.kind !== "response") { setDraft({ phase: "unknown", message: "sf.ui34.editUnknown" }); return }
       if (result.status === 401 || result.status === 403) { await owner.reload(); return }
-      if (result.body.status !== "ok") {
+      if (result.body.status !== "ok" && (result.status === 400 || result.status === 409)) {
+        locks.delete(key)
         setDraft({ phase: result.status === 409 ? "conflict" : "failed", message: "sf.ui34.editChanged" })
         return
       }
+      if (result.status !== 200 || result.body.status !== "ok") { setDraft({ phase: "unknown", message: "sf.ui34.editUnknown" }); return }
       const confirmed = result.body.value.caseRef
-      if (confirmed.id !== record.id || confirmed.incarnation !== record.incarnation || confirmed.version <= record.version) {
+      if (confirmed.id !== record.id || confirmed.incarnation !== record.incarnation || confirmed.version !== record.version + 1) {
         setDraft({ phase: "unknown", message: "sf.ui34.editUnknown" })
         return
       }
@@ -230,23 +309,47 @@ export function SfCaseSourcesEditor(props: Readonly<{
     </section>}</Show>
     <button class="mx-btn" type="button" disabled={!editing() || !draft.inspected}
       onClick={attach}>{t("sf.ui34.attachSource")}</button>
-    <Show when={draft.phase === "reviewing"}>
+    <div class="sf-n24-actions">
+      <button class="mx-btn" type="button" disabled={!editing() || !permitted("decisions.controls.read")}
+        onClick={() => void readProcurement()}>{copy("find")}</button>
+      <label class="sf-n24-field"><span>{copy("source")}</span>
+        <select value={draft.procurementSelected} disabled={!editing() || !draft.procurement.length}
+          onChange={(event) => setDraft({ procurementSelected: event.currentTarget.value, procurementInspected: undefined })}>
+          <option value="">{t("sf.ui34.selectSource")}</option>
+          <For each={draft.procurement}>{(entry) => <option value={entry.source.refDigest}>{entry.label}</option>}</For>
+        </select>
+      </label>
+      <button class="mx-btn" type="button" disabled={!editing() || !selectedProcurement()}
+        onClick={() => { const selected = selectedProcurement(); if (selected) void readProcurement(selected) }}>{copy("inspect")}</button>
+    </div>
+    <Show when={draft.procurementInspected}>{(entry) => <section data-procurement-preview data-state="ready" aria-label={copy("preview")}>
+      <h3>{entry().label}</h3>
+      <p><bdi>{entry().source.refId}</bdi> · {entry().projection.context.currency} · {entry().projection.context.period.start} – {entry().projection.context.period.end}</p>
+      <ul><For each={entry().projection.values}>{(value) => <li>{value.id}: {value.value === null ? t("sf.common.unavailable") : String(value.value)} {value.currency ?? value.unit ?? ""}</li>}</For></ul>
+      <button class="mx-btn" type="button" disabled={!editing() || !procurementToAttach()} onClick={() => {
+        const source = procurementToAttach()
+        if (source && editing()) setDraft({ sources: [...draft.sources, source], procurementInspected: undefined, message: "" })
+      }}>{copy("attach")}</button>
+    </section>}</Show>
+    <Show when={draft.phase === "reviewing" && reviewed()}>{(input) =>
       <section role="group" aria-label={t("sf.ui34.reviewEdit")}>
         <p>{t("sf.ui34.attachScope")}</p>
-        <p>{t("sf.ui34.current")}: {props.projection.case.version}</p>
-        <p>{draft.objective.trim()}</p>
-        <p>{draft.start} – {draft.end} · {draft.currency}</p>
-        <ol><For each={draft.criteria}>{(criterion) => <li>{criterion.description.trim()}</li>}</For></ol>
-        <ul><For each={draft.sources}>{(source) => <li>{source.refId}</li>}</For></ul>
+        <p>{t("sf.ui34.current")}: {input().caseRef.version}</p>
+        <p>{input().objective}</p>
+        <p>{input().horizon?.start} – {input().horizon?.end} · {input().currency}</p>
+        <ol><For each={input().criteria}>{(criterion) => <li>{criterion.description}</li>}</For></ol>
+        <ul><For each={input().sourceRefs}>{(source) => <li>{source.refId}</li>}</For></ul>
         <button class="mx-btn primary" type="button" disabled={draft.busy} onClick={() => void save()}>{t("sf.ui34.confirmEdit")}</button>
         <button class="mx-btn" type="button" onClick={() => setDraft("phase", "editing")}>{t("sf.ui33.cancel")}</button>
       </section>
-    </Show>
+    }</Show>
     <Show when={draft.phase !== "reviewing"}>
       <button class="mx-btn primary" type="button"
         disabled={!editing() || !permitted("decisions.decision-edit") || !changed()}
         onClick={review}>{t("sf.ui34.reviewEdit")}</button>
     </Show>
-    <Show when={draft.message}><p role="status">{t(draft.message)}</p></Show>
+    <Show when={draft.message || (locked() && draft.phase === "editing" ? "sf.ui34.editUnknown" : "")}>
+      {(message) => <p role="status">{message() === "procurement-empty" ? copy("empty") : t(message())}</p>}
+    </Show>
   </section>
 }

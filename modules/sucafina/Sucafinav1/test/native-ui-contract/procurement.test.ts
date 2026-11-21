@@ -284,6 +284,85 @@ describe("W11 Procurement A03 public contract", () => {
     expect(reads).toBe(2)
     expect(finishes).toBe(7)
     expect(commits).toEqual([false, false, false, false, false, false, false])
+
+    afterRead = "ok"
+    const attachment = { id: "asset-1", name: "evidence.txt", type: "text/plain", bytes: 7, size: 7 }
+    state.data.store = { ...object(state.data.store), suppliers: [
+      { id: "supplier-1", attachments: [{ ...attachment, key: "private-storage-key" }] },
+      { id: "supplier-2", attachments: [{ ...attachment, id: "asset-2" }] },
+    ] }
+    contributions.push({ ...producer, pages: ["Suppliers"] })
+    let revokeAssetsAfterRead = false
+    let assetContextReads = 0
+    const suppliers = createSfProcurementProjectionHandlers({
+      ...deps,
+      readContext: async (request) => {
+        const context = await deps.readContext(request)
+        if (context.status !== "ok") return context
+        const assetReadReady = ++assetContextReads === 1 || !revokeAssetsAfterRead
+        return { status: "ok", value: {
+          ...context.value,
+          destinations: [{ capabilityId: "CAP27", surface: "procurement", page: "Suppliers", canRead: true, allowedActionIds: [] }],
+          availability: assetReadReady ? [{ family: "files", resource: "evidence", state: "ready", operations: [
+            { operationId: "files.asset.link", state: "ready", reason: null, operational: true },
+            { operationId: "files.asset.download", state: "ready", reason: null, operational: true },
+          ] }] : [],
+        } }
+      },
+    }).find((item) => item.operationId === "domain.page.CAP27")
+    if (!suppliers) throw new Error("CAP27 handler not registered")
+    const supplierRead = (search: string) => suppliers.handle(new Request("https://sf.example/sucafina/api/ui/pages/CAP27" + search))
+    const detail = await supplierRead("?supplier=supplier-1")
+    expect(detail.status).toBe(200)
+    const projection = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await detail.json())
+    if (projection.status !== "ok") throw new Error("CAP27 detail unavailable")
+    expect(projection.value.data.suppliers.find((row) => row.id === "supplier-1")?.attachments).toEqual([attachment])
+    expect(projection.value.data.suppliers.find((row) => row.id === "supplier-2")?.attachments).toBeUndefined()
+
+    const list = await supplierRead("")
+    expect(list.status).toBe(200)
+    const listProjection = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await list.json())
+    if (listProjection.status !== "ok") throw new Error("CAP27 list unavailable")
+    expect(listProjection.value.data.suppliers).toHaveLength(2)
+    for (const row of listProjection.value.data.suppliers) expect(row.attachments).toBeUndefined()
+
+    revokeAssetsAfterRead = true
+    assetContextReads = 0
+    const lostAssetAccess = await supplierRead("?supplier=supplier-1")
+    expect(lostAssetAccess.status).toBe(409)
+    expect(await lostAssetAccess.json()).toEqual({ status: "stale", reason: "procurement-context-changed" })
+
+    const created = domain.execute(state, requester, {
+      page: "Requests", action: "create", version: 0, values: { pr: originalPr },
+    }, environment)
+    if (!created.ok) throw new Error("canonical creation did not create a request")
+    const requestId = String(object(created.value).number)
+    contributions.push({ ...producer, pages: ["My approvals"] })
+    const approvals = createSfProcurementProjectionHandlers({
+      ...deps,
+      readContext: async (request) => {
+        const context = await deps.readContext(request)
+        if (context.status !== "ok") return context
+        return { status: "ok", value: { ...context.value, destinations: [
+          { capabilityId: "CAP26", surface: "procurement", page: "My approvals", canRead: true, allowedActionIds: [] },
+        ] } }
+      },
+    }).find((item) => item.operationId === "domain.page.CAP26")
+    if (!approvals) throw new Error("CAP26 handler not registered")
+    const approvalUrl = new URL("https://sf.example/sucafina/api/ui/pages/CAP26")
+    approvalUrl.searchParams.set("request", requestId)
+    const beforeApprovalRead = structuredClone(state)
+    const approvalRead = await approvals.handle(new Request(approvalUrl))
+    expect(approvalRead.status).toBe(200)
+    expect(await approvalRead.json()).toMatchObject({ status: "ok", value: {
+      selection: { request: requestId },
+      data: { requests: expect.arrayContaining([expect.objectContaining({ number: requestId, status: "draft" })]) },
+      versions: { ["requests:" + requestId]: { version: 1 } }, allowedActionIds: [],
+    } })
+    approvalUrl.searchParams.append("request", requestId)
+    expect((await approvals.handle(new Request(approvalUrl))).status).toBe(400)
+    expect(state).toEqual(beforeApprovalRead)
+    expect(commits.at(-1)).toBe(false)
   })
 
 })

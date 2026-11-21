@@ -5,7 +5,7 @@ import type { CreateSfHostRuntime, SfHostServices } from "../../../../../modules
 import { selectSfNamespaceHealth } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { sfHasOperationalResource } from "./live-context.ts"
 
-type Operation = "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover"
+type Operation = "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover" | "decisions.procurement-proposal-review" | "decisions.procurement-proposal-advance"
 
 /** Observe the installed C12 producers; selected case/target authorization stays in their original handlers. */
 export async function observeSfDecisionApplicationHealth(input: {
@@ -21,6 +21,8 @@ export async function observeSfDecisionApplicationHealth(input: {
     { id: "decisions.decision-review", query: "decision-review", human: "decisions.portfolio.read", write: false },
     { id: "decisions.decision-apply", query: "decision-apply", human: "decisions.apply", write: true },
     { id: "decisions.decision-recover", query: "decision-recover", human: "decisions.apply", write: true },
+    { id: "decisions.procurement-proposal-review", query: "decision-proposal-review", human: "decisions.procurement-proposal.review", write: false },
+    { id: "decisions.procurement-proposal-advance", query: "decision-proposal-advance", human: "decisions.procurement-proposal.advance", write: false },
   ] as const
   const results = await Promise.allSettled(candidates.map(async (candidate) => {
     const metadata = SfOperationRegistry[candidate.id]
@@ -50,7 +52,7 @@ export async function observeSfDecisionApplicationHealth(input: {
         !(await input.humanActions(request)).includes(candidate.human)) return []
       // C12 links the case to an actual receipt. Infrastructure reads use the
       // original C08 selectors; no application, grant or receipt is manufactured.
-      for (const namespace of ["cases", "receipts"] as const) {
+      for (const namespace of candidate.query.startsWith("decision-proposal-") ? ["cases"] as const : ["cases", "receipts"] as const) {
         const mode = namespace === "cases" && candidate.write ? "write" : "read"
         const read = () => state.read(request, namespace, selectSfNamespaceHealth(namespace, stamp, mode))
         const first = await read(), second = await read()

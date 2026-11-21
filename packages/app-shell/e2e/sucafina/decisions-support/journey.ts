@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
 import { Schema } from "effect"
-import { SfProjectionCase } from "@orchestra/schema/sucafina/decisions"
+import { SfDecisionsPortfolioCatalog, SfProjectionCase } from "@orchestra/schema/sucafina/decisions"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 
 export const draft = {
@@ -31,10 +31,11 @@ export function caseIdentity(reference: string) {
 }
 
 export async function withInstallation(page: Page, info: TestInfo,
-  action: (installation: Awaited<ReturnType<typeof startPlannerInstallation>>, observations: Record<string, unknown>[]) => Promise<void>) {
+  action: (installation: Awaited<ReturnType<typeof startPlannerInstallation>>, observations: Record<string, unknown>[]) => Promise<void>,
+  options?: Parameters<typeof startPlannerInstallation>[1]) {
   const observations: Record<string, unknown>[] = []
   const body = { completed: false }
-  const installation = await startPlannerInstallation(info)
+  const installation = await startPlannerInstallation(info, options)
   const requests: { method: string; mode: string; operation?: string; idempotencyKey?: string }[] = []
   const listener = (request: Request) => {
     const url = new URL(request.url())
@@ -89,7 +90,7 @@ export async function enterWorkbench(page: Page, origin: string) {
   await expect(page.getByRole("button", { name: "New case", exact: true })).toBeEnabled()
 }
 
-export async function fillDecision(page: Page, objective: string) {
+export async function fillDecision(page: Page, objective: string, criteria: readonly string[] = draft.criteria) {
   await page.getByRole("button", { name: "New case", exact: true }).click()
   const form = page.locator("section.sf-n24-create form")
   await expect(form).toHaveCount(1)
@@ -98,13 +99,13 @@ export async function fillDecision(page: Page, objective: string) {
   await form.getByLabel("Start", { exact: true }).fill(draft.horizon.start)
   await form.getByLabel("End", { exact: true }).fill(draft.horizon.end)
   await form.getByLabel("Currency", { exact: true }).fill(draft.currency)
-  await form.getByLabel("Criteria, one per line", { exact: true }).fill(draft.criteria.join("\n"))
+  await form.getByLabel("Criteria, one per line", { exact: true }).fill(criteria.join("\n"))
   const review = form.getByRole("button", { name: "Review creation", exact: true })
   await expect(review).toBeEnabled()
   await review.click()
   const proposed = form.getByRole("group", { name: "Review creation", exact: true })
   await expect(proposed).toContainText(objective)
-  for (const criterion of draft.criteria) await expect(proposed.getByRole("listitem").filter({ hasText: criterion })).toHaveText(criterion)
+  for (const criterion of criteria) await expect(proposed.getByRole("listitem").filter({ hasText: criterion })).toHaveText(criterion)
   await expect(form.getByRole("button", { name: "Confirm this decision creation", exact: true })).toBeEnabled()
   return form
 }
@@ -186,6 +187,77 @@ export async function readCase(page: Page, reference: string) {
   if (result.status !== "ok") throw new Error("The original case projection was not admitted")
   expect(result.value.projection.case).toMatchObject(caseIdentity(reference))
   return result.value.projection.case
+}
+
+/** Observe the installed producer and UI42 for the same independently read case revision. */
+export async function assertPortfolioCatalog(page: Page, origin: string, reference: string, version: number,
+  observations: Record<string, unknown>[]) {
+  const saved = await readCase(page, reference)
+  expect(saved.version).toBe(version)
+  const caseRef = { ...caseIdentity(reference), version }
+  const catalogUrl = `${origin}/sucafina/dashboard?sf=decision-portfolio-catalog`
+  const catalogRequests: Request[] = []
+  const evaluations: string[] = []
+  const observe = (request: Request) => {
+    const url = new URL(request.url())
+    if (url.origin !== origin || url.pathname !== "/sucafina/dashboard") return
+    const mode = url.searchParams.get("sf")
+    if (mode === "decision-portfolio-catalog" && request.method() === "POST") catalogRequests.push(request)
+    if (mode === "decision-portfolio-preview" || mode === "decision-portfolio-evaluate") evaluations.push(mode)
+  }
+  page.on("request", observe)
+  try {
+    const [listed] = await Promise.all([
+      page.waitForResponse((response) => response.url() === `${origin}/sucafina/api/ui/projections/cases` && response.request().method() === "GET"),
+      page.goto(`${origin}/orchestra/sf-portfolio/scenarios`),
+    ])
+    const list = await readReply(listed, observations)
+    expect(asRecord(list.value).cases).toEqual([{ caseRef: reference, title: saved.objective, version }])
+    const portfolio = page.locator('[data-sf-scenarios][data-sf-surface="UI42"]')
+    const select = portfolio.getByRole("button", { name: `${saved.objective} Case version ${version}`, exact: true })
+    await expect(select).toBeEnabled()
+    expect(catalogRequests).toHaveLength(0)
+    const [reply] = await Promise.all([
+      page.waitForResponse((response) => response.url() === catalogUrl && response.request().method() === "POST"),
+      select.click(),
+    ])
+    expect(reply.request().postDataJSON()).toEqual({ purpose: "catalog", caseRefs: [caseRef] })
+    const catalog = Schema.decodeUnknownSync(Schema.toType(SfDecisionsPortfolioCatalog.output), { onExcessProperty: "error" })(await readReply(reply, observations))
+    if (catalog.status !== "ok") throw new Error("The original catalog was not admitted")
+    expect(catalog.value.cases).toHaveLength(1)
+    const entry = catalog.value.cases[0]!
+    expect(entry).toMatchObject({ caseRef, caseVersion: version, objective: saved.objective,
+      horizon: saved.horizon, currency: saved.currency, criteria: saved.criteria })
+    expect(entry.alternatives).toHaveLength(saved.alternatives.length)
+    expect(new Set(entry.alternatives.map((alternative) => alternative.alternativeId))).toEqual(new Set(saved.alternatives.map((alternative) => alternative.id)))
+    expect(new Set(entry.alternatives.map((alternative) => alternative.candidateRef)).size).toBe(entry.alternatives.length)
+    for (const alternative of saved.alternatives) {
+      expect(entry.alternatives.find((candidate) => candidate.alternativeId === alternative.id)).toEqual({
+        candidateRef: expect.any(String), alternativeId: alternative.id, alternativeVersion: alternative.version, title: alternative.title,
+        operations: alternative.scenario.operations, assumptions: alternative.scenario.assumptions,
+        comparisonStatus: alternative.result.comparisonStatus, costCoverage: alternative.result.costCoverage,
+      })
+    }
+    await expect(page).toHaveURL((url) => url.pathname === `/orchestra/sf-portfolio/scenarios/${encodeSfRouteRef(reference)}`)
+    const picker = portfolio.locator("[data-sf-catalog-case]")
+    await expect(picker).toHaveAttribute("data-sf-catalog-case", reference)
+    await expect(picker).toHaveAttribute("data-sf-catalog-version", String(version))
+    const candidates = picker.getByRole("group", { name: "Candidate scenarios", exact: true })
+    await expect(candidates.getByRole("checkbox")).toHaveCount(entry.alternatives.length)
+    for (const candidate of entry.alternatives) {
+      const checkbox = candidates.getByRole("checkbox", { name: `${candidate.title} · v${candidate.alternativeVersion}`, exact: true })
+      await expect(checkbox).toHaveValue(candidate.candidateRef)
+      await expect(checkbox).not.toBeChecked()
+    }
+    if (!entry.alternatives.length)
+      await expect(candidates.getByText("No eligible scenarios in the authorized case.", { exact: true })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Preview combinations", exact: true })).toBeDisabled()
+    await expect(portfolio.getByRole("button", { name: "Confirm evaluation", exact: true })).toHaveCount(0)
+    expect(catalogRequests).toEqual([reply.request()])
+    expect(evaluations).toEqual([])
+    observations.push({ stage: "alternative-catalog", caseRef: reference, version, candidateRefs: entry.alternatives.map((candidate) => candidate.candidateRef), evaluations })
+    return entry
+  } finally { page.off("request", observe) }
 }
 
 export async function assertCase(page: Page, reference: string, objective: string, version: number) {

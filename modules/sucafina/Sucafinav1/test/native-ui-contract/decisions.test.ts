@@ -18,17 +18,18 @@ function accepts<S extends Schema.Top>(schema: S, value: unknown) {
 }
 
 describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qualifies)", () => {
-  test("all 21 pinned literal IDs and the original edit extension exist without a generic endpoint", () => {
+  test("pinned literal IDs and original producer extensions exist without a generic endpoint", () => {
     expect(Object.keys(SfDecisions.operations).sort()).toEqual([
       "projection.cases", "projection.case",
       "decisions.choice.read", "decisions.controls.read",
       "decisions.command.sf_case_draft", "decisions.command.sf_change_prepare", "decisions.command.sf_question_prepare",
       "decisions.current-choice-prepare", "decisions.current-choice-promote",
       "decisions.decision-add-question", "decisions.decision-answer-question", "decisions.decision-apply",
-      "decisions.decision-choose", "decisions.decision-condition", "decisions.decision-coverage",
+      "decisions.decision-choose", "decisions.decision-compare", "decisions.decision-condition", "decisions.decision-coverage",
       "decisions.decision-criteria", "decisions.decision-prepare-changes", "decisions.decision-promote",
       "decisions.decision-recover", "decisions.decision-review", "decisions.decision-select-portfolio",
       "decisions.decision-edit",
+      "decisions.portfolio.catalog",
     ].sort())
     for (const [id, operation] of Object.entries(SfDecisions.operations)) {
       expect<string>(operation.operationId).toBe(id)
@@ -38,6 +39,15 @@ describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qua
     }
   })
 
+  test("catalog accepts only the original purpose and exact, nonempty case references", () => {
+    const op = SfDecisions.operations["decisions.portfolio.catalog"]
+    expect(accepts(op.input, { purpose: "catalog", caseRefs: [caseRef] })).toBe(true)
+    expect(accepts(op.input, { purpose: "evaluate", caseRefs: [caseRef] })).toBe(false)
+    expect(accepts(op.input, { purpose: "catalog", caseRefs: [] })).toBe(false)
+    expect(accepts(op.input, { purpose: "catalog", caseRefs: [{ id: caseRef.id, version: caseRef.version }] })).toBe(false)
+    expect(accepts(op.input, { purpose: "catalog", caseRefs: [caseRef, { ...caseRef, version: 4 }] })).toBe(false)
+  })
+
   test("caseRef is a closed incarnation+positive-version CAS object", () => {
     const op = SfDecisions.operations["decisions.decision-add-question"]
     expect(accepts(op.input, { caseRef, questionRef: "question-1" })).toBe(true)
@@ -45,6 +55,32 @@ describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qua
     expect(accepts(op.input, { caseRef: { id: "case-1", version: 3 }, questionRef: "question-1" })).toBe(false)
     expect(accepts(op.input, { caseRef, questionRef: "question-1", authority: "fake" })).toBe(false)
     expect(accepts(op.input, { caseRef, questionRef: "question-1", caseVersion: 4 })).toBe(false)
+  })
+
+  test("C10 takes case and alternative IDs and returns the exact stored scenario pair", () => {
+    const op = SfDecisions.operations["decisions.decision-compare"]
+    const input = { caseRef, baselineAlternativeId: "baseline", alternativeId: "candidate", criteria: ["cost"] }
+    const request = { scenarioRefs: ["decision-result:baseline", "decision-result:candidate"], criteria: input.criteria }
+    const comparison = {
+      baselineResultRef: request.scenarioRefs[0], alternativeResultRef: request.scenarioRefs[1],
+      costCoverageRefs: ["coverage:baseline", "coverage:candidate"],
+      criterionResults: [{ criterionId: "cost", state: "unknown", reason: "criterion-rule-unavailable" }],
+      unresolvedConditions: ["comparison-requires-complete-current-coverage"],
+      comparisonStatus: "conditioned", knownDifference: 0, completeDifference: null,
+    }
+    const success = { status: "ok", value: { request, comparison } }
+    expect(accepts(op.input, input)).toBe(true)
+    expect(accepts(op.input, { ...input, alternativeId: input.baselineAlternativeId })).toBe(false)
+    expect(accepts(op.input, { ...input, criteria: ["cost", "cost"] })).toBe(false)
+    expect(accepts(op.input, { ...input, criteria: [] })).toBe(false)
+    expect(accepts(op.input, { ...input, scenarioRefs: request.scenarioRefs })).toBe(false)
+    expect(accepts(op.output, success)).toBe(true)
+    expect(accepts(op.output, { ...success, value: { request, comparison: { ...comparison, completeDifference: 0 } } })).toBe(false)
+    expect(accepts(op.output, { ...success, value: { request: { ...request, scenarioRefs: [...request.scenarioRefs].reverse() }, comparison } })).toBe(false)
+    const blocked = { ...comparison, comparisonStatus: "incompatible", criterionResults: [], knownDifference: null }
+    expect(accepts(op.output, { ...success, value: { request, comparison: blocked } })).toBe(true)
+    expect(accepts(op.output, { ...success, value: { request, comparison: { ...blocked, knownDifference: 0 } } })).toBe(false)
+    expect(accepts(op.output, { status: "unavailable", reason: "scenario-results-unavailable" })).toBe(true)
   })
 
   test("workbench command discriminators do not accept another operation", () => {
