@@ -69,7 +69,7 @@ import { prepareSourcingDossier, type ProcurementPreparation } from "../../../..
 import { resolveSfDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 
-export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites?: WeakSet<object>; procurementEvidenceWrites?: WeakSet<object>; caseSelectionWrites?: WeakSet<object>; threadHistoryWrites?: WeakSet<object>; readQuestionContribution?: ReturnType<typeof createSfContributionReader>; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean }) {
+export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites?: WeakSet<object>; procurementEvidenceWrites?: WeakSet<object>; caseSelectionWrites?: WeakSet<object>; threadHistoryWrites?: WeakSet<object>; readQuestionContribution?: ReturnType<typeof createSfContributionReader>; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; procurementRequest?: Readonly<{ request: Request; period: Period }> }) {
   const host = input.authority.host
   const dashboardHostWrites = input.dashboardHostWrites ?? new WeakSet<object>()
   const periods = new Map<string, { period: Period; expiresAt: number }>()
@@ -86,7 +86,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }
   const key = (call: TrustedDomainContext) => digestSfValue({ installationId: call.binding.installationId, projectId: call.binding.projectId,
     principalRef: call.binding.principalRef, policyVersion: call.binding.policyVersion, accessRevision: call.binding.accessRevision })
-  const selectedPeriod = (call: TrustedDomainContext) => pagePeriods.get(call) ?? periods.get(key(call))
+  const procurementRequest = input.procurementRequest
+  const requestPeriod = procurementRequest && { period: structuredClone(procurementRequest.period), expiresAt: Date.now() + 60_000 }
+  const selectedPeriod = (call: TrustedDomainContext) => pagePeriods.get(call) ?? periods.get(key(call)) ??
+    (procurementRequest && host.requestFor(call) === procurementRequest.request ? requestPeriod : undefined)
   const contextFor = async (call: TrustedDomainContext) => {
     const request = host.requestFor(call)
     const selected = selectedPeriod(call)

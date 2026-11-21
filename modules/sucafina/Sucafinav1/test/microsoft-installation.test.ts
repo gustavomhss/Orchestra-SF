@@ -1,3 +1,4 @@
+import { createSfTeamPurchaseMcp } from "../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { expect, test } from "bun:test"
 import { Database } from "bun:sqlite"
@@ -13,6 +14,9 @@ import { openCorporateRecoveryRegister } from "../runtime/corporate-recovery-reg
 import { createLocalBackups } from "../runtime/local-backups.ts"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
 import type { LocalConfiguration } from "../runtime/local-configuration.ts"
+import { initialProcurementSettings } from "../src/initial-settings.ts"
+import { changed } from "../runtime/contract.ts"
+import { teamProfileInstallationId } from "../runtime/team-profile-access.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { bindMicrosoftInstallation } from "../runtime/microsoft-configuration.ts"
 import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
@@ -41,7 +45,7 @@ async function fixture(
   enabledTeamIds?: unknown,
   groups: LocalConfiguration["groups"] = { dashboard: {}, planner: {}, procurement: {} },
   teamDirectory?: "members",
-  options: { nativeDecisions?: boolean; nativeRecovery?: boolean; nativeWeb?: boolean } = {},
+  options: { nativeDecisions?: boolean; nativeRecovery?: boolean; nativeWeb?: boolean; purchasePrincipals?: readonly string[] } = {},
 ) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sf-microsoft-installation-"))
   const directory = join(root, "installation")
@@ -52,7 +56,8 @@ async function fixture(
     await mkdir(workspaceDirectory, { mode: 0o700 })
     const grants = options.nativeDecisions
       ? [{ principalRef: oid, namespaces: ["cases"], operations: ["sf_case_draft"], ...(options.nativeRecovery ? { migrationActions: ["recover"] } : {}) }]
-      : [{ principalRef: grantPrincipal, operations: ["sf_case_read"] }]
+      : options.purchasePrincipals?.map((principalRef) => ({ principalRef, operations: ["sf_request_read", "sf_sourcing_compare"] })) ??
+        [{ principalRef: grantPrincipal, operations: ["sf_case_read"] }]
     await writeFile(file, JSON.stringify({
       version: 1, deployment: "azure-https", authentication: "microsoft",
       origin, listenerOrigin, ingressOrigin, mount, tenantId, clientId, workspaceDirectory,
@@ -60,6 +65,7 @@ async function fixture(
       grants: grants.map((grant) => ({ ...grant, principalRef: grant.principalRef.toUpperCase() })),
       supremeAdminGroupId: grantPrincipal.toUpperCase(), scanner: null,
       ...(teams ? { teams } : {}),
+      ...(options.purchasePrincipals ? { clawPurchasePeriod: { start: "2026-01-01", end: "2026-12-31" } } : {}),
       teamDirectory,
       enabledTeamIds,
     }))
@@ -97,7 +103,9 @@ async function fixture(
     expect(prepared.loaded.config.supremeAdminGroupId).toBe(grantPrincipal)
     await expect(bindMicrosoftInstallation(directory, { ...prepared.loaded.config, tenantId: oid })).rejects
       .toThrow("Microsoft installation identity cannot change")
-    const open = () => createMicrosoftInstallation({ origin: listenerOrigin }, file, environment, {
+    const open = () => createMicrosoftInstallation({ origin: listenerOrigin,
+      ...(options.purchasePrincipals ? { loadTeamPurchaseMcp: async () => createSfTeamPurchaseMcp } : {}),
+    }, file, environment, {
       fetch, now: () => new Date(epoch * 1000),
       openRecoveryRegister: (file, directory) => openCorporateRecoveryRegister(file, directory, process.getuid?.()),
     })
@@ -131,6 +139,135 @@ const ingress = (relative: string, headers?: Record<string, string>, init?: Pick
   ...init,
   headers: { host: new URL(ingressOrigin).host, ...headers },
 })
+
+test("Installed purchase MCP keeps paired A/B procurement in its admitted Team", async () => {
+  const keys = await generateKeyPair("RS256", { extractable: true })
+  const jwk = await exportJWK(keys.publicKey)
+  const nonces = new Map<string, string>()
+  const principals = [oid, grantPrincipal]
+  const membership = { revokeOnRoleCheck: false, teamRemoved: false }
+  const teams = [teamObjectId, secondTeamId].map((id) => ({ id, tenantId, displayName: id, isArchived: false }))
+  const fetch = async (request: Request) => {
+    const url = new URL(request.url)
+    if (url.href === authority + "/v2.0/.well-known/openid-configuration") return discovery()
+    if (url.href === authority + "/discovery/v2.0/keys") return Response.json({ keys: [{ ...jwk, kid: "installation-test" }] })
+    if (url.href === authority + "/oauth2/v2.0/token") {
+      const code = new URLSearchParams(await request.text()).get("code") ?? ""
+      const nonce = nonces.get(code)
+      if (!nonce) throw new Error("Unexpected test authorization code")
+      const idToken = await new SignJWT({ tid: tenantId, oid: code, nonce })
+        .setSubject(code).setIssuer(authority + "/v2.0").setAudience(clientId)
+        .setIssuedAt(epoch).setExpirationTime(epoch + 3600)
+        .setProtectedHeader({ alg: "RS256", kid: "installation-test" }).sign(keys.privateKey)
+      return Response.json({ access_token: "synthetic-" + code, id_token: idToken,
+        token_type: "Bearer", expires_in: 3600, scope: "User.Read Team.ReadBasic.All" })
+    }
+    if (url.origin === "https://graph.microsoft.com") {
+      const principal = principals.find((id) => request.headers.get("authorization") === "Bearer synthetic-" + id)
+      if (!principal) throw new Error("Unexpected test Microsoft session")
+      if (url.pathname === "/v1.0/me") return Response.json({ id: principal, displayName: "Test purchaser" })
+      if (url.href === graph + "/me/checkMemberGroups") {
+        if (principal === oid && membership.revokeOnRoleCheck) membership.teamRemoved = true
+        return Response.json({ value: [grantPrincipal] })
+      }
+      if (url.href === graph + "/me/joinedTeams")
+        return Response.json({ value: principal === oid && membership.teamRemoved ? teams.slice(1) : teams })
+    }
+    throw new Error("Unexpected synthetic Microsoft request")
+  }
+  const f = await fixture("direct", fetch, [teamObjectId, secondTeamId], {
+    dashboard: {}, planner: {}, procurement: { requester: "group:" + grantPrincipal },
+  }, undefined, { purchasePrincipals: principals })
+  try {
+    const signIn = async (principal: string) => {
+      const begin = await f.installation.handler(ingress("/auth/login"))
+      expect(begin?.status).toBe(303)
+      const login = new URL(begin!.headers.get("location")!)
+      nonces.set(principal, login.searchParams.get("nonce")!)
+      const finish = await f.installation.handler(ingress("/auth/callback?" + new URLSearchParams({
+        code: principal, state: login.searchParams.get("state")!,
+      }), { cookie: begin!.headers.getSetCookie().find((item) => item.includes("_login="))!.split(";")[0]! }))
+      expect(finish?.status).toBe(303)
+      return finish!.headers.getSetCookie().find((item) => item.includes("_session="))!.split(";")[0]!
+    }
+    const installationId = teamProfileInstallationId({ origin, mount, directory: f.directory })
+    const select = (id: string) => JSON.stringify({ contractRevision: "sf-team-profile/1",
+      kind: "team", profile: { installationId, tenantId, teamObjectId: id } })
+    const pair = async (cookie: string, id: string) => {
+      const response = await f.installation.handler(ingress("/api/claw/connect", {
+        cookie, origin, "x-sf-claw-purpose": "purchases", "x-sf-team-profile": select(id),
+      }, { method: "POST" }))
+      expect(response?.status).toBe(200)
+      return ((await response!.json()) as { token: string }).token
+    }
+    const cases = await Promise.all([
+      [oid, teamObjectId, "PR-2026-0901", "A"],
+      [grantPrincipal, secondTeamId, "PR-2026-0902", "B"],
+    ].map(async ([principal, team, ref, label]) => {
+      const cookie = await signIn(principal!)
+      const partition = digestSfValue({ installationId, tenantId, teamObjectId: team })
+      const store = await openLocalStore(join(f.directory, "business-teams", partition))
+      try {
+        await store.transaction("procurement", async (snapshot) => {
+          const at = new Date(epoch * 1000).toISOString()
+          const entry = { version: 1, request: {
+            number: ref, createdBy: principal, createdAt: at, status: "sourcing",
+            pr: { title: "Test purchase " + label },
+            sourcing: { selectedId: null, quotes: [1, 2, 3].map((id) => ({
+              id: label + id, supplier: "Supplier " + label + id, total: id * 100,
+              currency: "USD", techPass: true, scores: {}, techScores: {}, commScores: {},
+            })) },
+          } }
+          snapshot.data.store = { settings: initialProcurementSettings(), requests: { [ref!]: entry } }
+          changed(snapshot, "requests:" + ref, { id: "fixture", roles: [], canWrite: false }, at, undefined, entry)
+          return { commit: true, value: undefined }
+        })
+      } finally { await store.dispose() }
+      return { cookie, team: team!, ref: ref!, label, token: await pair(cookie, team!) }
+    }))
+    const rpc = (token: string, method: string, params?: Record<string, unknown>, extra?: Record<string, string>) =>
+      f.installation.handler(ingress("/api/claw/mcp", {
+        authorization: "Bearer " + token, "content-type": "application/json", accept: "application/json, text/event-stream", ...extra,
+      }, { method: "POST", body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) }))
+    const call = (token: string, requestRef: string, extra?: Record<string, string>) =>
+      rpc(token, "tools/call", { name: "sf_comparar_compra", arguments: { requestRef } }, extra)
+    for (const actor of cases) {
+      const tools = await (await rpc(actor.token, "tools/list"))!.json()
+      expect(tools.result.tools.map((tool: { name: string }) => tool.name)).toEqual(["sf_comparar_compra"])
+      for (const target of cases) {
+        const response = await call(actor.token, target.ref)
+        expect(response?.status).toBe(200)
+        const envelope = await response!.json()
+        const result = JSON.parse(envelope.result.content[0].text)
+        if (actor === target) {
+          expect(result.status).toBe("ok")
+          expect(result.comparison.proposals.map((quote: { proposalRef: string }) => quote.proposalRef))
+            .toEqual([actor.label + "1", actor.label + "2", actor.label + "3"])
+          const review = new URL(result.reviewUrl)
+          expect(review.pathname).toBe(mount + "/teams/" + actor.team + "/procurement")
+          expect(review.searchParams.get("request")).toBe(actor.ref)
+        } else {
+          expect(envelope.result.isError).toBe(true)
+          expect(result).toEqual({ status: "denied" })
+          expect((await call(actor.token, target.ref, { "x-sf-team-profile": select(target.team) }))?.status).toBe(403)
+          expect((await call(actor.token, target.ref, { cookie: target.cookie }))?.status).toBe(403)
+        }
+      }
+    }
+    const a = cases[0]!
+    membership.revokeOnRoleCheck = true
+    expect((await call(a.token, a.ref))?.status).toBe(403)
+    expect(membership.teamRemoved).toBe(true)
+    membership.revokeOnRoleCheck = false
+    membership.teamRemoved = false
+    const rotated = await pair(a.cookie, a.team)
+    expect((await call(a.token, a.ref))?.status).toBe(403)
+    expect((await f.installation.handler(ingress("/auth/logout", { cookie: a.cookie, origin, accept: "application/json" }, {
+      method: "POST",
+    })))?.status).toBe(204)
+    expect((await call(rotated, a.ref))?.status).toBe(403)
+  } finally { await f.close() }
+}, 20_000)
 
 test("Corporate dashboard authorizes only current, enabled direct Teams from the signed HTTPS session", async () => {
   const keys = await generateKeyPair("RS256", { extractable: true })
