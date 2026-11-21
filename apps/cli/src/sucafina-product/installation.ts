@@ -57,7 +57,8 @@ export async function composeSfInstallation(value: unknown, origin: string) {
     const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
     const source = sanitized.source instanceof Request ? sanitized.source : undefined
     const url = source ? new URL(source.url) : Option.getOrUndefined(HttpServerRequest.toURL(sanitized))
-    if (!url || url.origin !== requestOrigin) return rejectIncoming(incoming, 403)
+    if (!url || url.origin !== requestOrigin ||
+      (url.pathname !== installation.mount && !url.pathname.startsWith(`${installation.mount}/`))) return rejectIncoming(incoming, 403)
     if ((incoming.method === "GET" || incoming.method === "HEAD") && (sanitized.headers["transfer-encoding"] !== undefined || Number(sanitized.headers["content-length"]) > 0)) return rejectIncoming(incoming, 400)
     const configured = yield* HttpServerRequest.MaxBodySize
     const defaultLimit = 16 * 1024 * 1024

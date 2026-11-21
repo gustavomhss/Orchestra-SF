@@ -85,18 +85,20 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
         if (publicOrigin !== undefined && (installationFile === undefined || !URL.canParse(publicOrigin) ||
           new URL(publicOrigin).origin !== publicOrigin)) return yield* Effect.fail(new Error("Explicit installation and canonical public origin required"))
         const installation = installationFile
-          ? yield* Effect.tryPromise({
-            try: async () => {
-              const port = Option.getOrUndefined(input.port)
-              if (port === undefined) throw new Error("An explicit installation requires an explicit port")
-              const hostname = input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname
-              const { loadSfInstallation } = await import("../../sucafina-product/installation")
-              return loadSfInstallation(installationFile, new URL(`http://${hostname}:${port}`).origin, publicOrigin)
-            },
-            catch: (error) => error instanceof Error ? error : new Error("Installation unavailable"),
-          })
+          ? yield* Effect.acquireRelease(
+            Effect.tryPromise({
+              try: async () => {
+                const port = Option.getOrUndefined(input.port)
+                if (port === undefined) throw new Error("An explicit installation requires an explicit port")
+                const hostname = input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname
+                const { loadSfInstallation } = await import("../../sucafina-product/installation")
+                return loadSfInstallation(installationFile, new URL(`http://${hostname}:${port}`).origin, publicOrigin)
+              },
+              catch: (error) => error instanceof Error ? error : new Error("Installation unavailable"),
+            }),
+            (loaded) => Effect.promise(async () => { await loaded.dispose() }),
+          )
           : undefined
-        if (installation) yield* Effect.addFinalizer(() => Effect.promise(async () => { await installation.dispose() }))
         const daemon = yield* Daemon.Service
         // A desktop-owned child gets a per-launch password in env and never touches the daemon's password file.
         const password = process.env.ORCHESTRA_SERVER_PASSWORD || (yield* daemon.password())
