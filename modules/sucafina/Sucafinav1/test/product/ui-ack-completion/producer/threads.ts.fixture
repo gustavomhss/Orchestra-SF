@@ -154,3 +154,5 @@ export function isThread(value: unknown): value is CollaborationThread {
     return [message.id, message.incarnation, message.authorRef, message.body, message.createdAt].every((part) => typeof part === "string" && !!part.trim()) && Number.isSafeInteger(message.version) && Number(message.version) > 0
   }) && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).id)).size === thread.messages.length && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).incarnation)).size === thread.messages.length && thread.messages.every((message) => !!threadMessageContext(value as CollaborationThread, message as CollaborationThread["messages"][number]))
 }
+
+

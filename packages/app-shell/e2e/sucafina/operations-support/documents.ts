@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "node:crypto"
 import { expect } from "@playwright/test"
 import type { APIResponse, Page, Response, TestInfo } from "@playwright/test"
 import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { login, modeURL, observation } from "./runtime.ts"
 import type { Account } from "./runtime.ts"
 
@@ -79,20 +80,27 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(supplierRow).toHaveCount(1)
   const supplier = await supplierRow.getAttribute("data-sf-row")
   if (!supplier || !/^[a-zA-Z0-9_-]+$/.test(supplier)) throw new Error("The supplier chapter did not expose the created supplier identity")
-  const upload = page.locator(`form[data-private-upload="supplier"][data-record="${supplier}"]`)
-  await expect(upload).toHaveCount(1)
-  await expect(upload).toHaveAttribute("data-version", /^\d+$/)
-  const beforeVersion = Number(await upload.getAttribute("data-version"))
+  const supplierNumberCell = supplierRow.locator(".sf-s01-cell-value").filter({ hasText: /^SUP-\d+$/ })
+  await expect(supplierNumberCell).toHaveCount(1)
+  const supplierNumber = (await supplierNumberCell.innerText()).trim()
+  expect((await page.goto(`${suppliersURL}/${encodeSfRouteRef(supplier)}`))?.status()).toBe(200)
+  const supplierDetail = page.locator(`[data-sf-supplier-ref="${supplier}"]`)
+  await expect(supplierDetail).toHaveCount(1)
+  await expect(supplierDetail).toHaveAttribute("data-source-version", /^\d+$/)
+  const beforeVersion = Number(await supplierDetail.getAttribute("data-source-version"))
   expect(Number.isSafeInteger(beforeVersion)).toBe(true)
-  await upload.getByLabel(name, { exact: true }).setInputFiles({ name: filename, mimeType: "text/plain", buffer: bytes })
+  const upload = supplierDetail.locator(`.sf-bound-assets[data-sf-asset-record="${supplier}"]`)
+  await expect(upload).toHaveCount(1)
+  await upload.getByLabel("Attach a source document (server scan required)", { exact: true })
+    .setInputFiles({ name: filename, mimeType: "text/plain", buffer: bytes })
   const uploaded = page.waitForResponse((response) => {
     const url = new URL(response.url())
     return url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" && url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier && response.request().method() === "POST"
-  })
-  await upload.getByRole("button", { name: "Upload document", exact: true }).click()
-  const uploadResponse = await uploaded
+  }).then(async (response) => ({ response, result: await response.json() as { ok?: boolean; errors?: unknown } }))
+  const [{ response: uploadResponse, result: uploadResult }] = await Promise.all([
+    uploaded, upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }).click(),
+  ])
   if (uploadResponse.status() !== 200) {
-    const responseBody = await uploadResponse.json().catch(() => null) as { errors?: unknown } | null
     const knownErrors = new Set([
       "Attachment limit is not configured.",
       "Attachment exceeds the configured limit.",
@@ -102,8 +110,8 @@ export async function documentJourney(page: Page, info: TestInfo) {
     ])
     await observation(info, "operations-document-upload-blocked", {
       stage: "supplier-private-upload", httpStatus: uploadResponse.status(),
-      producerErrors: Array.isArray(responseBody?.errors)
-        ? responseBody.errors.filter((value): value is string => typeof value === "string" && knownErrors.has(value))
+      producerErrors: Array.isArray(uploadResult.errors)
+        ? uploadResult.errors.filter((value): value is string => typeof value === "string" && knownErrors.has(value))
         : [],
       scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
       bypassedScanner: false,
@@ -111,17 +119,31 @@ export async function documentJourney(page: Page, info: TestInfo) {
   }
   expect(uploadResponse.status()).toBe(200)
   expect(new URL(uploadResponse.url()).searchParams.get("recordVersion")).toBe(String(beforeVersion))
-  expect(await uploadResponse.json()).toMatchObject({ ok: true })
-  const fileLink = page.getByRole("link", { name: filename, exact: true })
-  await expect(fileLink).toHaveCount(1)
-  const href = await fileLink.getAttribute("href")
-  if (!href) throw new Error("The real uploaded asset has no authorized download link")
-  const assetURL = new URL(href, page.url())
-  expect(assetURL.searchParams.get("asset")).not.toBeNull()
-  const original = await page.request.get(assetURL.href, { maxRetries: 0 })
+  expect(uploadResult).toMatchObject({ ok: true })
+  await expect(supplierDetail).toHaveAttribute("data-source-version", String(beforeVersion + 1))
+  const file = upload.getByRole("listitem").filter({ has: page.getByText(filename, { exact: true }) })
+  await expect(file).toHaveCount(1)
+  const asset = (await file.locator("span").allInnerTexts())
+    .map((label) => /^\s*· ref: ([A-Za-z0-9_-]+)$/.exec(label)?.[1])
+    .find((ref) => ref !== undefined)
+  if (!asset) throw new Error("The reconciled supplier asset did not expose its reference")
+  const linkedAsset = page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.origin === account.origin &&
+      url.pathname === new URL(account.baseURL).pathname + "/procurement" && url.searchParams.get("asset") === asset &&
+      url.searchParams.has("expires") && url.searchParams.has("signature")
+  }).then(async (response) => ({ response, body: await response.body() }))
+  const downloaded = page.waitForEvent("download")
+  const [{ response: original, body: originalBytes }, download] = await Promise.all([
+    linkedAsset, downloaded, file.getByRole("button", { name: "Download (verify access)", exact: true }).click(),
+  ])
   expect(original.status()).toBe(200)
-  expect(await original.body()).toEqual(bytes)
-  await expect(upload).toHaveAttribute("data-version", String(beforeVersion + 1))
+  expect(originalBytes).toEqual(bytes)
+  expect(download.suggestedFilename()).toBe(filename)
+  const assetURL = new URL(original.url())
+  expect(assetURL.searchParams.get("asset")).toBe(asset)
+  expect(assetURL.searchParams.get("expires")).toMatch(/^[1-9]\d*$/)
+  expect(assetURL.searchParams.get("signature")).toMatch(/^[a-f0-9]{64}$/)
   const requests: string[] = []
   page.context().on("request", (request) => {
     const mode = new URL(request.url()).searchParams.get("sf")
@@ -219,7 +241,8 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await readerRow.getByRole("button", { name: "Open record", exact: true }).click()
   const readerDetail = reader.locator("[data-sf-record-detail]")
   await expect(readerDetail).toHaveCount(1)
-  await expect(readerDetail.locator("p.sf-s01-secondary bdi")).toHaveText(supplier)
+  await expect(reader.locator(`[data-sf-supplier-ref="${supplier}"]`)).toHaveCount(1)
+  await expect(readerDetail.locator("p.sf-s01-secondary bdi")).toHaveText(supplierNumber)
   const remove = readerDetail.getByRole("button", { name: "Delete pending supplier", exact: true })
   await expect(remove).toHaveCount(1)
   await expect(remove).toBeEnabled()
@@ -245,7 +268,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect((await reader.goto(suppliersURL))?.status()).toBe(200)
   await expect(reader.locator(`tr[data-sf-row="${supplier}"]`)).toHaveCount(0)
   await expect(reader.getByRole("cell", { name, exact: true })).toHaveCount(0)
-  await expect(reader.getByRole("link", { name: filename, exact: true })).toHaveCount(0)
+  await expect(reader.getByText(filename, { exact: true })).toHaveCount(0)
   const revokedAsset = await page.request.get(assetURL.href, { maxRetries: 0 })
   expect(revokedAsset.status()).toBe(403)
   expect(await revokedAsset.text()).toBe("Access denied")

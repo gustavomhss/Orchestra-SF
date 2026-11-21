@@ -8,6 +8,7 @@ import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import { sfCaseCandidatesForAuthority } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { observeSfCaseSource } from "./case-health.ts"
 import { contextualCaseReturn } from "../../../../../modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router.ts"
@@ -117,7 +118,7 @@ async function readCases(request: Request, deps: SfNativeHostDependencies): Prom
       if (authority.principalRef !== admitted.value.binding.principalRef ||
         authority.policyVersion !== admitted.value.binding.policyVersion ||
         authority.accessRevision !== admitted.value.binding.accessRevision) return undefined
-      return Object.values(state.cases).filter((item) => item.participants.includes(authority.principalRef)).map(encodeCaseRef)
+      return sfCaseCandidatesForAuthority(state, authority).map(encodeCaseRef)
     })
     const listed = await identities()
     const empty = listed.status === "unavailable" && listed.reason === "product-state-uninitialized"

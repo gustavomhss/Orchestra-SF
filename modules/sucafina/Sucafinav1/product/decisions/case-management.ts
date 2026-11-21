@@ -1,4 +1,4 @@
-import { sfTransactionLookup } from "../host-binding/state-provider.ts"
+import { sfCaseCandidatesForAuthority, sfCaseTeamScopeMatches, sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -26,7 +26,7 @@ export function createDecisionCaseManagement(input: {
     list: async (context: TrustedDomainContext): Promise<PortResult<readonly { caseRef: CaseRef; objective: string; state: DecisionCase["state"] }[]>> => {
       const source = input.host.requestFor(context)
       if (!source || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
-      const read = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? Object.values(state.cases).filter((value) => value.participants.includes(context.binding.principalRef)) : undefined)
+      const read = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? sfCaseCandidatesForAuthority(state, authority) : undefined)
       const current = await read().catch(() => undefined)
       if (!current || current.status !== "ok" || !current.value) return { status: "unavailable", reason: "case-list-unavailable" }
       const allowed = await Promise.all(current.value.map(async (value) => context.kind === "native" && (context.binding.caseId !== value.id || context.binding.caseIncarnation !== value.incarnation || context.binding.caseVersion !== value.version) ? undefined : await input.authorizeCase(value, context).catch(() => false) && await (input.verifyReadEvidence ?? input.verifyEvidence)(value.sourceRefs, context).catch(() => false) ? value : undefined))
@@ -46,9 +46,12 @@ export function createDecisionCaseManagement(input: {
       if (!source || !identity || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
       const loaded = await input.state.read(source, "cases", (state, authority) => {
         if (!(sameAuthority(authority, context))) return undefined
+        const value = state.cases[request.caseRef.id]
+        if (!value || value.incarnation !== request.caseRef.incarnation || !value.participants.includes(context.binding.principalRef) ||
+          !sfCaseTeamScopeMatches(state, authority, value)) return { value: undefined, prior: undefined }
         const savedIntent = sfTransactionLookup(state, authority, { namespace: "cases", targetRef: request.caseRef.id, idempotencyKey: `${identity}:edit` })
         if (savedIntent.status === "ambiguous") return undefined
-        return { value: state.cases[request.caseRef.id], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
+        return { value, prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
       }).catch(() => undefined)
       if (!loaded || loaded.status !== "ok" || !loaded.value) return { status: "unavailable", reason: "case-unavailable" }
       const current = loaded.value.value

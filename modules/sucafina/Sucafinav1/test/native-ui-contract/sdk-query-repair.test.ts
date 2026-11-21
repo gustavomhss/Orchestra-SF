@@ -64,7 +64,7 @@ test("raw URL parser retains all four exact wire branches and rejects partial/mi
   expect(parseSfInstallationSelector(discoveryUrl(currentQuery.toString()))).toEqual({
     select: "current", contractRevision: teamSelection.contractRevision,
   })
-  expect(parseSfInstallationSelector(discoveryUrl(installationQuery.toString()))).toEqual({
+  expect<unknown>(parseSfInstallationSelector(discoveryUrl(installationQuery.toString()))).toEqual({
     select: "installation", ...teamSelection,
   })
 

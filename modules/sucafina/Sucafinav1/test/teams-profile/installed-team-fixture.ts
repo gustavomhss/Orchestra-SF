@@ -7,17 +7,20 @@ import { composeSfInstallation } from "../../../../../apps/cli/src/sucafina-prod
 import { createMicrosoftInstallation } from "../../local/entry.ts"
 import type { SfProductGrant } from "../../product/integration/product-authority.ts"
 import type { LocalConfiguration } from "../../runtime/local-configuration.ts"
-import { openLocalStore } from "../../runtime/local-store.ts"
+import { openLocalStore, type LocalStore } from "../../runtime/local-store.ts"
+import { prepareMicrosoftInstallation } from "../../runtime/microsoft-installation.ts"
 import { microsoftNativeHost } from "../microsoft-login/native-host.ts"
 import { group, microsoftFixture, oid } from "../microsoft-login/oidc-fixture.ts"
 import { ingressOrigin, listenerOrigin, privateFixture } from "../microsoft-login/private-fixture.ts"
 import { admitMicrosoftFixtureTeam } from "../microsoft-login/team-admission-fixture.ts"
 
 /** The production installation and its original host graph on disposable storage.
- * Only Microsoft OIDC and Graph are synthetic. No business records are seeded. */
+ * Microsoft OIDC and Graph are synthetic. Tests may prepare factual source data before startup. */
 export async function openInstalledTeamFixture(input: {
   grants: readonly SfProductGrant[]
   groups: LocalConfiguration["groups"]
+  seed?: (store: LocalStore) => Promise<void>
+  additionalTeamIds?: readonly string[]
 }) {
   const disk = await privateFixture()
   const cleanup: (() => Promise<void> | void)[] = [disk.close]
@@ -32,9 +35,16 @@ export async function openInstalledTeamFixture(input: {
     await writeFile(disk.file, JSON.stringify({ ...disk.config, groups: input.groups, grants: input.grants,
       teams: "direct", supremeAdminGroupId: group }), { mode: 0o600 })
     const provider = await microsoftFixture({ teams: "direct" })
+    const overrides = { fetch: provider.fetch, now: () => new Date(provider.clock.value) }
+    if (input.seed) {
+      // Bind the validated installation before the source fixture can create its
+      // private store. Production must still reject adoption of unbound data.
+      await prepareMicrosoftInstallation({ origin: listenerOrigin }, disk.file, disk.environment, overrides)
+      const store = await openLocalStore(path.join(disk.directory, "business-microsoft"))
+      try { await input.seed(store) } finally { await store.dispose() }
+    }
     const application = await createMicrosoftInstallation(
-      { origin: listenerOrigin, createHostRuntime: createSfHostRuntime }, disk.file, disk.environment,
-      { fetch: provider.fetch, now: () => new Date(provider.clock.value) },
+      { origin: listenerOrigin, createHostRuntime: createSfHostRuntime }, disk.file, disk.environment, overrides,
     )
     cleanup.push(application.dispose)
     const installation = await composeSfInstallation(application, listenerOrigin)
@@ -52,7 +62,7 @@ export async function openInstalledTeamFixture(input: {
       headers.set("host", url.host)
       return router.handler(new Request(url, { ...init, headers }))
     }
-    const team = await admitMicrosoftFixtureTeam({ installation, provider, request })
+    const team = await admitMicrosoftFixtureTeam({ installation, provider, request, additionalTeamIds: input.additionalTeamIds })
     const runtime = await installation.discovery?.current(new AbortController().signal)
     const binding = runtime?.identity()
     if (!binding) throw new Error("Installed Team fixture discovery unavailable")

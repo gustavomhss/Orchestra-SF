@@ -12,7 +12,7 @@ import type { SfCopyKey } from "../frame/types"
  * can create an asset; reads require a fresh, actor-bound 5-minute HMAC link.
  * No raw URL, client-side scanner decision, local blob persistence or retry.
  */
-type UploadKind = "contract" | "quote" | "signed-po"
+type UploadKind = "contract" | "quote" | "signed-po" | "supplier"
 type PublicAsset = Readonly<{
   id?: unknown
   name?: unknown
@@ -23,7 +23,7 @@ type PublicAsset = Readonly<{
 export type SfBoundAssetProps = Readonly<{
   surface: "dashboard" | "procurement"
   uploadKind?: UploadKind
-  page: "Vendor Contracts" | "Requests"
+  page: "Vendor Contracts" | "Requests" | "Suppliers"
   recordRef: string
   recordVersion: number
   assets: readonly PublicAsset[]
@@ -121,7 +121,7 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
         entry.operationId === operation && entry.state === "ready" && entry.operational)) === true
   const canAdmit = () => !!props.uploadKind && !props.disabled && !!scope() &&
     safeRef(props.recordRef) && Number.isSafeInteger(props.recordVersion) &&
-    props.recordVersion >= 0 && portReady("files.asset.upload")
+    props.recordVersion >= 0 && ui.phase !== "outcome-unknown" && portReady("files.asset.upload")
 
   createEffect(() => {
     void sf.generation()
@@ -151,6 +151,7 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
     setUi({ file, phase: "selected", detail: "" })
   }
   const admit = async () => {
+    if (ui.phase === "outcome-unknown") return
     const file = ui.file
     const snapshot = scope()
     const upload = props.uploadKind
@@ -197,6 +198,7 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
         response.status === 403 ? "orchestra.sf.s04.bound.denied" : "orchestra.sf.s04.bound.unavailable" })
   }
   const download = async (id: string, name: string) => {
+    if (ui.phase === "outcome-unknown") return
     const snapshot = scope()
     const ready = sf.ready()
     if (!snapshot || !ready || ui.busy || !portReady("files.asset.link") ||
@@ -251,7 +253,7 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
           <Show when={id} fallback={<span>{" · "}{t("orchestra.sf.s04.bound.refUnavailable")}</span>}>
             {(ref) => <>
               <span>{" · "}{t("orchestra.sf.s04.bound.ref", { ref: ref() })}</span>
-              <button type="button" class="mx-btn" disabled={ui.busy || !portReady("files.asset.link") ||
+              <button type="button" class="mx-btn" disabled={ui.busy || ui.phase === "outcome-unknown" || !portReady("files.asset.link") ||
                 !portReady("files.asset.download") || !scope()}
                 onClick={() => { void download(ref(), name) }}>{t("orchestra.sf.s04.bound.download")}</button>
             </>}

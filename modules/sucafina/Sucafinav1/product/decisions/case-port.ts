@@ -6,7 +6,7 @@ import type { CommandReceipt, CommandReceiptView } from "../contracts/context.ts
 import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort, SfStateResult } from "../contracts/state.ts"
-import { selectSfCase, selectSfCaseWithOwner, sfTransactionLookup } from "../host-binding/state-provider.ts"
+import { selectSfCase, selectSfCaseWithOwner, sfCaseTeamScopeMatches, sfTransactionLookup } from "../host-binding/state-provider.ts"
 
 export function encodeCaseRef(value: Pick<DecisionCase, "id" | "incarnation">) {
   return `case:${encodeURIComponent(value.id)}:${encodeURIComponent(value.incarnation)}`
@@ -66,7 +66,7 @@ export function createDecisionCasePort(input: {
       const savedCase = saved.value
       const savedDigest = digestSfValue(savedCase)
       if (!savedCase.participants.includes(context.binding.principalRef) || !await input.authorizeCase(savedCase, context) || !await accessible(input.evidence, savedCase.sourceRefs, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
-      const current = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[savedCase.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+      const current = await input.state.read(source, "cases", selectSfCase(savedCase.id, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
       if (current.status !== "ok") return failure(current)
       if (!current.value || current.value.incarnation !== savedCase.incarnation || !current.value.participants.includes(context.binding.principalRef)) return { status: "denied", reason: "case-access-unavailable" }
       if (digestSfValue(current.value) !== savedDigest || digestSfValue(savedCase) !== savedDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
@@ -165,7 +165,8 @@ export function createDecisionCasePort(input: {
       if (typeof original.id !== "string" || !original.id || typeof original.incarnation !== "string" || !original.incarnation ||
         !Array.isArray(original.participants) || !original.participants.includes(authority.principalRef)) return { kind: "changed" }
       const current = state.cases[original.id]
-      if (!current || current.incarnation !== original.incarnation || !current.participants.includes(authority.principalRef))
+      if (!current || current.incarnation !== original.incarnation || !current.participants.includes(authority.principalRef) ||
+        !sfCaseTeamScopeMatches(state, authority, current))
         return { kind: "changed" }
       return {
         kind: "committed", caseRef: encodeCaseRef(current), caseDigest: digestSfValue(current),

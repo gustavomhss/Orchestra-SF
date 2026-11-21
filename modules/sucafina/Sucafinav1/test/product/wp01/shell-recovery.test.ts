@@ -89,8 +89,12 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       page.setDefaultTimeout(10_000)
       page.on("pageerror", (error) => errors.push(error.message))
       page.on("dialog", (dialog) => dialog.accept())
-      const login = await page.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)
-      expect(login?.status()).toBe(200)
+      const enrollment = await page.request.get(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`, {
+        maxRedirects: 0,
+        maxRetries: 0,
+      })
+      expect(enrollment.status()).toBe(303)
+      expect(enrollment.headers().location).toBe("/")
       const url = `${origin}/sucafina/dashboard?page=OPEX+Detail&year=2026`
       await page.goto(url)
       await check({ page, context, origin, url, fault, persistence, errors })

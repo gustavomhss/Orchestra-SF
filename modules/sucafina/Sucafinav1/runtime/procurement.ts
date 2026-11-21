@@ -393,6 +393,13 @@ function retainedFormRows(path: string[], entries: unknown[], previous: FormRowC
   })
 }
 
+function numericFormField(path: readonly string[]) {
+  return [
+    "estAmount", "estAnnual", "minQuotes", "techWeight", "commWeight", "uploadCap",
+    "reminderDays", "escalationDays", "threshold", "rate", "weight", "tech", "comm", "total", "qty", "unitPrice",
+  ].includes(path.at(-1) ?? "") || path.includes("scores") || path.includes("cscores")
+}
+
 function inputs(values: Record<string, unknown>, previous?: FormRowContext, errors: FormRowError[] = []): Record<string, unknown> | undefined {
   const result: Record<string, unknown> = {}
   for (const [key, raw] of Object.entries(values)) {
@@ -400,27 +407,6 @@ function inputs(values: Record<string, unknown>, previous?: FormRowContext, erro
     if (parts.length > 7 || parts.some((part) => ["__proto__", "prototype", "constructor"].includes(part)))
       return undefined
     const name = parts.at(-1)!
-    const numeric =
-      [
-        "estAmount",
-        "estAnnual",
-        "minQuotes",
-        "techWeight",
-        "commWeight",
-        "uploadCap",
-        "reminderDays",
-        "escalationDays",
-        "threshold",
-        "rate",
-        "weight",
-        "tech",
-        "comm",
-        "total",
-        "qty",
-        "unitPrice",
-      ].includes(name) ||
-      parts.includes("scores") ||
-      parts.includes("cscores")
     const boolean = [
       "recurring",
       "dueDiligence",
@@ -441,7 +427,7 @@ function inputs(values: Record<string, unknown>, previous?: FormRowContext, erro
             .filter(Boolean)
         : boolean
           ? raw === true || raw === "true" || raw === "on"
-          : numeric && typeof raw === "string"
+          : numericFormField(parts) && typeof raw === "string"
             ? raw === ""
               ? null
               : Number(raw)
@@ -456,6 +442,12 @@ function inputs(values: Record<string, unknown>, previous?: FormRowContext, erro
   return errors.length ? undefined : normalized
 }
 function structuredInput(value: unknown, path: string[] = [], previous?: FormRowContext, errors: FormRowError[] = []): unknown {
+  // Typed native forms send nested number inputs; legacy forms use flat keys.
+  if (typeof value === "string" && numericFormField(path)) {
+    if (value === "") return null
+    const number = Number(value)
+    return Number.isFinite(number) ? number : value
+  }
   if (value === null || typeof value !== "object") return value
   const record = object(value)
   const keys = Object.keys(record)

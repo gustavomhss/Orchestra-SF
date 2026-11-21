@@ -86,6 +86,11 @@ test("CAP25 create command removes absent PR fields and retains explicit falsy v
   expect(codec.decodeInput({
     ...input, values: { pr: prFromRecord() },
   })).toEqual({ status: "invalid" })
+
+  const edited = { ...source, estAmount: "100.50", estAnnual: "" }
+  const editedInput = { ...input, values: { pr: prCommandInput(edited) } }
+  expect(editedInput.values.pr).toEqual({ title: "", estAmount: 100.5, recurring: false, estAnnual: null })
+  expect(codec.decodeInput(editedInput)).toEqual({ status: "ok", value: editedInput })
 })
 
 test("CAP25 operation schema retains its queue view and admitted Team binding", () => {

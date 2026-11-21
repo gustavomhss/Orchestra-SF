@@ -24,7 +24,7 @@ import type { TrustedExecutionBinding } from "../contracts/sf-execution.ts"
 import type { SfStateAuthority, SfStateNamespace } from "../contracts/state.ts"
 import { parseCaseRef } from "../decisions/case-port.ts"
 import { createSfExecutionBindingRegistry } from "../host-binding/execution-context.ts"
-import { createSfProductState } from "../host-binding/state-provider.ts"
+import { createSfProductState, sfCaseTeamScopeMatchesSnapshot } from "../host-binding/state-provider.ts"
 import { createSfDomainAuthority, createSfUiAuthority } from "./ui-authority.ts"
 import { createSfHumanAuthority, sfHumanActions, sfHumanReadActions } from "./human-authority.ts"
 import type { SfHumanAction } from "./human-authority.ts"
@@ -241,6 +241,7 @@ export function createSfProductAuthority(input: {
       if (actor.canWrite && creationNamespaces.includes(namespace) && targetRef === creationTarget.ref) return { incarnation: creationTarget.incarnation }
       const state = object(snapshot.data.__sfProductV1)
       const cases = object(state.cases)
+      const profile = actor.profile?.admission?.profile
       // Domain receipts are authorized against their preparation, even when a domain ID also names a case.
       if (namespace === "receipts" && command.domainSurface === "dashboard") {
         if (!actor.canWrite) return undefined
@@ -248,6 +249,7 @@ export function createSfProductAuthority(input: {
         const targets = Object.values(cases).flatMap((value) => {
           const decision = object(value)
           if (typeof decision.id !== "string" || typeof decision.incarnation !== "string" || !Number.isSafeInteger(decision.version) || typeof decision.version !== "number" || decision.version < 1 || !Array.isArray(decision.participants) || !decision.participants.includes(actor.principalRef) || !Array.isArray(decision.choices) || !Array.isArray(decision.preparedChanges)) return []
+          const caseIdentity = { id: decision.id, incarnation: decision.incarnation }
           const changes: readonly unknown[] = decision.preparedChanges
           const choices: readonly unknown[] = decision.choices
           const decisionVersion = decision.version
@@ -260,7 +262,7 @@ export function createSfProductAuthority(input: {
             const boundChoices = choices.map(object).filter((choice) => choice.id === change.choiceId)
             if (binding.schema !== "sf-dashboard-prepared-binding-v1" || binding.changeId !== change.id || binding.choiceId !== change.choiceId || caseRef.id !== decision.id || caseRef.incarnation !== decision.incarnation || !Number.isSafeInteger(caseRef.version) || typeof caseRef.version !== "number" || caseRef.version < 1 || caseRef.version > decisionVersion || (change.state === "planned" && !change.receipt && caseRef.version !== decisionVersion) || binding.principalRef !== actor.principalRef || binding.accessRevision !== actor.accessRevision || binding.policyVersion !== actor.policyVersion || boundChoices.length !== 1 || binding.choiceDigest !== digestSfValue(boundChoices[0]) || digestSfValue(binding.command) !== digestSfValue(change.operation)) return []
             const material = Object.fromEntries(Object.entries(binding).filter(([key]) => key !== "recordDigest"))
-            if (binding.recordDigest !== digestSfValue(material)) return []
+            if (binding.recordDigest !== digestSfValue(material) || !sfCaseTeamScopeMatchesSnapshot(snapshot, profile, caseIdentity)) return []
             return [{ incarnation: target.incarnation }]
           })
         })
@@ -278,7 +280,9 @@ export function createSfProductAuthority(input: {
       const id = parsed?.id ?? targetRef
       const entry = Object.hasOwn(cases, id) ? object(cases[id]) : undefined
       if (entry && entry.id === id && typeof entry.incarnation === "string" && (!parsed || parsed.incarnation === entry.incarnation) &&
-        Array.isArray(entry.participants) && entry.participants.includes(actor.principalRef)) return { incarnation: entry.incarnation }
+        Array.isArray(entry.participants) && entry.participants.includes(actor.principalRef))
+        return sfCaseTeamScopeMatchesSnapshot(snapshot, profile, { id, incarnation: entry.incarnation })
+          ? { incarnation: entry.incarnation } : undefined
       if (namespace === "documents") {
         const target = await input.authorizeDocument(request, snapshot, targetRef, actor.principalRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
         const current = await principal(request, snapshot)
