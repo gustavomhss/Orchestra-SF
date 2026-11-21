@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from "node:crypto"
+import { isDeepStrictEqual } from "node:util"
 import { SF_REVIEW_ARTIFACT_BLOB_PREFIX, sfReviewArtifactBlobInventory } from "./artifact.ts"
 import type { Environment, Notice, Persistence, Result, Snapshot } from "./contract.ts"
 import type { AssetPersistence } from "./assets.ts"
@@ -403,6 +404,10 @@ export async function restoreBackup(
       (surface === "dashboard" ? sfReviewArtifactBlobInventory({ ...snapshot, data: restoredData }) : [])
         .map((report) => [report.key, report]),
     )
+    const documents = (data: Snapshot["data"]) => record(record(data.__sfProductV1).documents)
+    const archivedDocuments = documents(recovered.data)
+    const currentDocuments = documents(snapshot.data)
+    const restoredDocuments = documents(restoredData)
     // Verify every retained blob's actual size and SHA; the adapter keeps all puts private until commit.
     for (const blob of manifest.blobs) {
       corporate?.signal?.throwIfAborted()
@@ -412,21 +417,27 @@ export async function restoreBackup(
       const archivedType = expected.get(blob.key)?.type
       const restoredReport = restoredReports.get(blob.key)
       if (archivedType && !restoredReport) continue
+      const ref = "report:" + blob.key.slice(SF_REVIEW_ARTIFACT_BLOB_PREFIX.length)
       if (restoredReport && (restoredReport.bytes !== blob.bytes || restoredReport.sha256 !== blob.sha256 ||
-        restoredReport.type !== archivedType))
+        restoredReport.type !== archivedType || !isDeepStrictEqual(restoredDocuments[ref], archivedDocuments[ref])))
         throw new Error("Backup conflicts with a retained private report")
       const currentReport = currentReports.get(blob.key)
       if (currentReport && (currentReport.bytes !== blob.bytes || currentReport.sha256 !== blob.sha256 ||
-        currentReport.type !== archivedType))
+        currentReport.type !== archivedType || !isDeepStrictEqual(currentDocuments[ref], archivedDocuments[ref])))
         throw new Error("Backup conflicts with a current private report")
       const existing = retention || archivedType ? await blobs.get(blob.key) : undefined
       if (retention) retention.verifyBlobReplacement(existing, bytes)
       if (archivedType && existing) {
-        if (existing.byteLength !== blob.bytes || createHash("sha256").update(existing).digest("hex") !== blob.sha256)
-          throw new Error("Backup cannot overwrite an immutable private report")
-        continue
+        if (existing.byteLength === blob.bytes && createHash("sha256").update(existing).digest("hex") === blob.sha256)
+          continue
+        if (!currentReport) throw new Error("Backup cannot overwrite an unbound private report blob")
       }
       await blobs.put(blob.key, bytes, archivedType ?? "application/octet-stream")
+    }
+    if (!retention && !options?.retainCurrentProduct) {
+      for (const reportKey of currentReports.keys()) {
+        if (!restoredReports.has(reportKey)) await blobs.remove(reportKey)
+      }
     }
     const previous = structuredClone(snapshot.data)
     const delivery = snapshot.data.noticeDelivery
