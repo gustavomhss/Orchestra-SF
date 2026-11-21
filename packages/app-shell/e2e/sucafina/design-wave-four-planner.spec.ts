@@ -54,8 +54,8 @@ async function confirm(page: Page, installation: DesignInstallation, sourcePage:
   if (!response) throw new Error("The original Planner producer did not return a command response")
   expect(response.status).toBe(200)
   expect(response.contentType).toContain("application/json")
-  // Chromium can discard a completed fetch body after the native client consumes
-  // and aborts its owner-scoped request. Observe the real HTTP status and the UI's
+  // CDP body retrieval was unavailable after completed native requests in CI.
+  // Observe the real HTTP status and the UI's
   // acknowledged transition instead; every caller also requires an exact fresh
   // canonical readback and exactly one POST, independent of the edited draft.
   await expect(review(page)).toHaveCount(0)
@@ -388,7 +388,7 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     await expect(comparison.locator(".sf-u46-compare-content")).toContainText(revised)
     await expect(comparison.locator(".sf-u46-compare-content")).toContainText(copyName)
     const selectedRight = await comparison.getByLabel("Compare budget", { exact: true }).inputValue()
-    await expect(comparison.getByLabel("Source version", { exact: true }).locator('option[value="' + selectedRight + '"]')).toBeDisabled()
+    await expect(comparison.getByLabel("Source version", { exact: true }).locator('option[value="' + selectedRight + '"]')).toHaveJSProperty("disabled", true)
     await views(page, info, "CAP23-source-comparison")
     const monthly = comparison.locator(".sf-u46-compare-scroll").filter({ has: page.locator(".sf-u46-monthly") })
     await expect.poll(() => monthly.evaluate((element) => element.scrollWidth - element.clientWidth)).toBeGreaterThan(0)
