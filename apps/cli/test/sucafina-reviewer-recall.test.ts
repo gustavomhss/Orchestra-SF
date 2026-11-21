@@ -80,9 +80,9 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
       turns++
       if (turns === 1) {
         expect(incoming.tools.some((tool) => tool.name === operation)).toBe(true)
-        return Stream.make(...Object.entries(toolInputs).map(([id, ref]) => LLMEvent.toolCall({
+        return Stream.make(LLMEvent.stepStart({ index: 0 }), ...Object.entries(toolInputs).map(([id, ref]) => LLMEvent.toolCall({
           id, name: operation, input: { selectionRefs: [ref], similarityCriteria: ["decision-type"], period, limit: 5 },
-        })), LLMEvent.finish({ reason: "tool-calls" }))
+        })), LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }), LLMEvent.finish({ reason: "tool-calls" }))
       }
       const prompt = incoming.messages.flatMap((message) => message.content.flatMap((part) => {
         if (part.type !== "text" || !part.text.trimStart().startsWith("{")) return []
@@ -92,9 +92,9 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
       const canonical = object(object(object(prompt?.context).decisionRecall).result)
       const matches = canonical.matches as CaseRecall["matches"]
       expect(matches).toHaveLength(1)
-      return Stream.make(LLMEvent.textDelta({ id: "recall", text: JSON.stringify({
+      return Stream.make(LLMEvent.stepStart({ index: 0 }), LLMEvent.textStart({ id: "recall" }), LLMEvent.textDelta({ id: "recall", text: JSON.stringify({
         kind: "CaseRecall", payload: canonical, evidenceRefs: matches.flatMap((match) => match.evidenceRefs),
-      }) }), LLMEvent.finish({ reason: "stop" }))
+      }) }), LLMEvent.textEnd({ id: "recall" }), LLMEvent.stepFinish({ index: 0, reason: "stop" }), LLMEvent.finish({ reason: "stop" }))
     }) as unknown as LLMClientShape["stream"],
   }))
   try {
@@ -119,7 +119,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
         operations: ["sf_dashboard_read", "sf_case_draft", "sf_case_read", operation], humanActions: ["analysis.prepare", "analysis.start", "analysis.read"] })),
     })
     const merged = Host.merge([...ProductHost.contributions(), ...runtime.contributions])
-    const layer = AppNodeBuilder.build(LayerNode.group([...merged.nodes, SessionV2.node, SessionExecution.node, LocationServiceMap.node]),
+    const layer = AppNodeBuilder.build(LayerNode.group([...merged.nodes, AppProcess.node, SessionV2.node, SessionExecution.node, LocationServiceMap.node]),
       [[SessionExecution.node, SessionExecutionLocal.node], ...merged.replacements, [Database.node, Database.layerFromPath(":memory:")],
         [LayerNodePlatform.llmClient, llm]], merged.locationNodes)
     await Effect.gen(function* () {
