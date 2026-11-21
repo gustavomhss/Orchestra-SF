@@ -1043,14 +1043,15 @@ function aclCodecCurrent() {
   return JSON.stringify === aclCodec.stringify && JSON.parse === aclCodec.parse && Array.prototype.map === aclCodec.map &&
     !Object.getOwnPropertyDescriptor(Array.prototype, "toJSON") && !Object.getOwnPropertyDescriptor(Object.prototype, "toJSON")
 }
-type SnapshotMaterialization = Readonly<{ identity: object; payload: string; json: string; missing: string; acl?: string; units: number }>
+type SnapshotMaterialization = Readonly<{ identity: object; payload: string; json: string; missing: string; largeStrings: string; acl?: string; units: number }>
 
 function planSnapshotMaterialization(snapshot: Snapshot, payload: string): SnapshotMaterialization | undefined {
   if (payload.length > SNAPSHOT_MATERIALIZATION_UNITS) return
   const parts: string[] = []
   const missing: string[] = []
+  const largeStrings: string[] = []
   const path: string[] = []
-  const budget = { units: payload.length + 2, nodes: 0 }
+  const budget = { units: payload.length + 4, nodes: 0 }
   const append = (text: string) => {
     budget.units += text.length
     if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) return false
@@ -1073,7 +1074,21 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string): Snaps
     if (Object.is(value, -0)) return append("-0")
     if (value === null || typeof value !== "object") {
       const encoded = JSON.stringify(value)
-      return typeof encoded === "string" && append(encoded)
+      if (typeof encoded !== "string") return false
+      // Large immutable file strings already live in the retained SQLite
+      // payload. Index that exact JSON literal instead of retaining it twice.
+      if (typeof value === "string" && encoded.length >= 64 * 1024 && largeStrings.length < 16) {
+        const offset = payload.indexOf(encoded)
+        if (offset >= 0) {
+          const escaped = encoded.length !== value.length + 2
+          const pointer = JSON.stringify([offset, encoded.length, escaped, path])
+          budget.units += pointer.length + (largeStrings.length ? 1 : 0)
+          if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) return false
+          largeStrings.push(pointer)
+          return append("null")
+        }
+      }
+      return append(encoded)
     }
     const array = Array.isArray(value)
     if (!append(array ? "[" : "{")) return false
@@ -1092,26 +1107,35 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string): Snaps
   if (!visit(snapshot)) return
   const json = parts.join("")
   const absent = "[" + missing.join(",") + "]"
-  const units = payload.length + json.length + absent.length
+  const retainedStrings = "[" + largeStrings.join(",") + "]"
+  const units = payload.length + json.length + absent.length + retainedStrings.length
   const acl = aclCodecCurrent() ? encodeSnapshot({
     data: Object.fromEntries(snapshotAclFields.flatMap((name) => Object.hasOwn(snapshot.data, name) ? [[name, snapshot.data[name]]] : [])),
     versions: {}, sequences: {}, audit: [], notices: [],
   }) : undefined
   return Object.freeze(acl && units + acl.length <= SNAPSHOT_MATERIALIZATION_UNITS
-    ? { identity: {}, payload, json, missing: absent, acl, units: units + acl.length }
-    : { identity: {}, payload, json, missing: absent, units })
+    ? { identity: {}, payload, json, missing: absent, largeStrings: retainedStrings, acl, units: units + acl.length }
+    : { identity: {}, payload, json, missing: absent, largeStrings: retainedStrings, units })
 }
 
 function materializeSnapshot(plan: SnapshotMaterialization): Snapshot {
   const snapshot = JSON.parse(plan.json) as Snapshot
   // Null placeholders preserve property order and array density. Only these
   // known own paths need repair; -0 is preserved by its native JSON literal.
+  const restore = (path: string[], value: string | undefined) => {
+    let parent: Record<string, unknown> = snapshot
+    for (let index = 0; index < path.length - 1; index++) parent = parent[path[index]!] as Record<string, unknown>
+    Object.defineProperty(parent, path[path.length - 1]!, { value, enumerable: true, writable: true, configurable: true })
+  }
   if (plan.missing !== "[]") {
-    const paths = JSON.parse(plan.missing) as string[][]
-    for (const path of paths) {
-      let parent: Record<string, unknown> = snapshot
-      for (let index = 0; index < path.length - 1; index++) parent = parent[path[index]!] as Record<string, unknown>
-      Object.defineProperty(parent, path[path.length - 1]!, { value: undefined, enumerable: true, writable: true, configurable: true })
+    for (const path of JSON.parse(plan.missing) as string[][]) restore(path, undefined)
+  }
+  if (plan.largeStrings !== "[]") {
+    for (const [offset, length, escaped, path] of JSON.parse(plan.largeStrings) as [number, number, boolean, string[]][]) {
+      const value: string = escaped
+        ? JSON.parse(plan.payload.slice(offset, offset + length))
+        : plan.payload.slice(offset + 1, offset + length - 1)
+      restore(path, value)
     }
   }
   return snapshot

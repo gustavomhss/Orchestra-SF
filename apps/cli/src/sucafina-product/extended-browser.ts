@@ -24,15 +24,16 @@ if (root && bootstrap) {
   let discussion: ReturnType<typeof createReviewCollaborationView> | undefined
   const pending = new Set<AbortController>()
   let foregroundRequests = 0
+  let focusProbe: AbortController | undefined
   const foreground = async <T>(work: () => Promise<T>) => {
     if (++foregroundRequests === 1) {
+      focusProbe?.abort()
       root.setAttribute("data-sf-review-foreground", "")
       root.dispatchEvent(new Event("sucafina:review-foreground-start", { bubbles: true }))
     }
     try { return await work() }
     finally { if (--foregroundRequests === 0) root.removeAttribute("data-sf-review-foreground") }
   }
-  let focusProbe: AbortController | undefined
   const navigation = (window as Window & { navigation?: EventTarget & {
     navigate: (url: string) => { committed: Promise<unknown>; finished: Promise<unknown> }
   } }).navigation
@@ -84,15 +85,17 @@ if (root && bootstrap) {
     const controller = new AbortController(); pending.add(controller)
     focusProbe = controller
     const timer = setTimeout(() => controller.abort(), 30_000)
+    let refreshDiscussion = false
     try {
       const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
       if (response.status === 401 || response.status === 403) clearPrivate()
       await response.body?.cancel()
-      // Re-read the mounted discussion only after this focus probe succeeds.
-      // Its refresh retains pending human commands and never retries a mutation.
-      if (response.ok && !closed && !controller.signal.aborted) await discussion?.refresh()
+      refreshDiscussion = response.ok && !closed && !controller.signal.aborted
     } catch { /* A network failure does not authorize a new render or erase preserved history. */ }
     finally { clearTimeout(timer); pending.delete(controller); focusProbe = undefined }
+    // The discussion owns its foreground reads. End the shell probe first so
+    // a foreground command can abort an obsolete shell request independently.
+    if (refreshDiscussion && !closed) await discussion?.refresh()
   }
   window.addEventListener("focus", () => { void probe() })
   // The shell has just reopened this exact review/preparation under current

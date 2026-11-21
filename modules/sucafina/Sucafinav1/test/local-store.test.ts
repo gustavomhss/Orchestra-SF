@@ -102,6 +102,36 @@ test("a cold sealed preimage keeps independent reads detached from the writable 
   })
 })
 
+test("large file bytes do not evict the bounded snapshot plan or alias its copies", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const encodedFile = "QUJD".repeat(5 * 1024 * 1024 / 4)
+    const escapedContent = "YWJj".repeat(16 * 1024) + '\n"preserved" \\ Ω'
+    await store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.artifact = { entries: [encodedFile, escapedContent, undefined] }
+      return { commit: true, value: undefined }
+    })
+    await store.dispose()
+
+    const reopened = await open()
+    if (!reopened.readSnapshotRoot) throw new Error("LocalStore must provide a read snapshot root")
+    const readArtifact = async () => {
+      const identity = reopened.currentSnapshotScope?.()?.bytesIdentity
+      if (!identity) throw new Error("The bounded plan must recognize the exact stored bytes")
+      const artifact = reopened.currentSnapshot?.("dashboard")?.data.artifact
+      if (!artifact || typeof artifact !== "object" || !("entries" in artifact) || !Array.isArray(artifact.entries))
+        throw new Error("The SQLite root did not preserve the file and its metadata")
+      return { identity, entries: artifact.entries }
+    }
+    const first = await reopened.readSnapshotRoot(readArtifact)
+    expect(first.entries).toEqual([encodedFile, escapedContent, undefined])
+    first.entries[0] = "modified detached copy"
+    const second = await reopened.readSnapshotRoot(readArtifact)
+    expect(second.identity).toBe(first.identity)
+    expect(second.entries).toEqual([encodedFile, escapedContent, undefined])
+  })
+})
+
 test("codec preserves sentinel-shaped objects, tagged-looking arrays and nested undefined", async () => {
   await fixture(async (_directory, open) => {
     const store = await open()
