@@ -18,6 +18,9 @@ import type { SessionScope } from "../scope"
 import type { SessionTodo } from "../todo"
 import { SessionTable } from "../sql"
 import type { SessionStore } from "../store"
+import type { SkillLoadFacts, SkillLoadReceipt } from "./skill-load-receipt"
+export { consumeSkillLoad } from "./skill-load-receipt"
+export type { SkillLoadFacts, SkillLoadReceipt } from "./skill-load-receipt"
 
 /**
  * What the runner hands an execution host for one provider turn. An agent whose `engine` names a registered host runs
@@ -136,6 +139,9 @@ export interface Interface {
   readonly id: string
   readonly stateKey: string
   readonly stream: (turn: Turn) => Stream.Stream<LLMEvent, LLMError>
+  readonly observeSkillLoad?: (receipt: SkillLoadReceipt) => Effect.Effect<void>
+  /** Authenticated delivery evidence only; not a permission or an execution grant. */
+  readonly observedSkillLoad?: (input: Readonly<{ sessionID: SessionSchema.ID; skillName: string }>) => Effect.Effect<SkillLoadFacts | undefined>
 }
 
 export interface Registry {
