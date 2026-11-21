@@ -4,7 +4,9 @@ A preparação corporativa usa o arquivo privado escolhido pelo proprietário. P
 
 A configuração fixa as origens do listener, do proxy e da aplicação pública HTTPS, além do tenant e do cliente Entra. Mantenha `client-secret.txt` e as chaves no diretório privado da instalação, separado do workspace. As sessões corporativas usam cookies seguros e credenciais criptografadas por instalação.
 
-A composição disponibiliza o leitor de membresia apenas ao servidor. A política de acesso ao produto e a homologação do tenant têm etapas próprias.
+Em modo `"teams": "direct"`, defina `enabledTeamIds` no descritor privado com os IDs de objeto dos Teams autorizados para esta instalação. Por exemplo, `"enabledTeamIds": ["44444444-4444-4444-8444-444444444444"]`. A configuração é carregada na inicialização. Uma lista vazia ou ausente bloqueia o acesso por Team.
+
+A entrada da instalação e o dashboard exigem membresia direta e atual em um Team habilitado e ativo. A instalação seleciona automaticamente quando há uma única opção. Quando há várias, retorna HTTP 409 com as opções elegíveis. O cliente envia o `profile` da opção escolhida no cabeçalho `X-SF-Team-Profile` com `contractRevision: "sf-team-profile/1"` e `kind: "team"`. A instalação consulta o Graph novamente antes de aceitar a escolha. A ausência de acesso resulta em HTTP 403. Uma consulta indisponível ou incompleta resulta em HTTP 503.
 
 ## Montagem no host
 
@@ -14,4 +16,4 @@ No diretório do descritor, com acesso exclusivo ao usuário do serviço, crie `
 
 Crie `ingress-secret.txt` no diretório privado da instalação, com modo `0600` e 32 bytes aleatórios codificados em 64 caracteres hexadecimais minúsculos. Configure o proxy para substituir qualquer `X-SF-Ingress-Proof` recebido do cliente pelo valor privado. O host exige uma conexão loopback e confere esse valor antes de encaminhar a requisição. O cabeçalho é removido antes de chegar à instalação.
 
-O listener corporativo é dedicado ao mount da instalação, com login e logout. Encaminhe apenas esse caminho e seus descendentes no proxy. Aplique limites de taxa por cliente e de concorrência a `/auth/login` e `/auth/callback` antes do encaminhamento ao listener. Use os caminhos do mount ou do dashboard ao iniciar o fluxo de login. A leitura de membresia fica disponível ao código do servidor. A autorização de negócio por Team entra em um recorte posterior.
+O listener corporativo é dedicado ao mount da instalação, com login e logout. Encaminhe apenas esse caminho e seus descendentes no proxy. Aplique limites de taxa por cliente e de concorrência a `/auth/login` e `/auth/callback` antes do encaminhamento ao listener. Use os caminhos do mount ou do dashboard ao iniciar o fluxo de login. A leitura de membresia fica disponível ao código do servidor. A admissão ao dashboard antecede as permissões de negócio de cada fluxo.
