@@ -85,17 +85,8 @@ export async function confirmSubmittedHumanAnswer(page: Page, app: ReportsInstal
   await expect(discussion.getByRole("status")).toHaveText("Reply saved in this preserved review.")
   const article = discussion.getByRole("article", { name: `Message ${message.id}`, exact: true })
   await expect(article).toContainText(message.body)
-  const prepared = await test.step("Prepare the exact human reply for inspection", async () => {
-    const mode = "collaboration-answer-prepare-message"
-    const transport = observeReviewTransport(page, app, mode)
-    const pending = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
-    try {
-      await article.getByRole("button", { name: "Review this answer", exact: true }).click()
-      return await observed(await Promise.race([pending, transport.failed]), mode)
-    } finally {
-      await transport.finish(info)
-    }
-  })
+  const prepared = await test.step("Prepare the exact human reply for inspection", () =>
+    submit(page, app, article.getByRole("button", { name: "Review this answer", exact: true }), "collaboration-answer-prepare-message", info))
   expect(prepared.payload).toEqual({ questionId: question.id, messageId: message.id, incarnation: message.incarnation, version: message.version })
   const answer = expectPreparedReviewAnswer(question, message, prepared.value)
   expect(answer.projection).toEqual(captured)
@@ -117,8 +108,9 @@ export async function confirmSubmittedHumanAnswer(page: Page, app: ReportsInstal
   // The button submits exactly the displayed observation. No re-prepare or mutation retry.
   const beforeConfirmation = await api.version()
   const answerRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))
+  void answerRead.catch(() => undefined)
   const confirmed = await test.step("Confirm the displayed observation", () =>
-    submit(page, app, confirmation.getByRole("button", { name: "Confirm this answer", exact: true }), "collaboration-answer-confirm"))
+    submit(page, app, confirmation.getByRole("button", { name: "Confirm this answer", exact: true }), "collaboration-answer-confirm", info))
   expect(confirmed.payload).toMatchObject({
     questionId: question.id, answerRef: answer.answerRef, mutation: {
       observationRef: answer.observationRef, observedSourceVersion: answer.observedSourceVersion,
@@ -197,11 +189,17 @@ export async function editHumanAnswer(page: Page, app: ReportsInstallation, api:
   return current
 }
 
-async function submit(page: Page, app: ReportsInstallation, button: Locator, mode: string) {
+async function submit(page: Page, app: ReportsInstallation, button: Locator, mode: string, info?: TestInfo) {
+  const transport = info && (mode === "collaboration-answer-prepare-message" || mode === "collaboration-answer-confirm")
+    ? observeReviewTransport(page, app, mode) : undefined
   const pending = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
-  await button.click()
-  const response = await pending
-  return observed(response, mode)
+  void pending.catch(() => undefined)
+  try {
+    await button.click()
+    return observed(await (transport ? Promise.race([pending, transport.failed]) : pending), mode)
+  } finally {
+    if (transport && info) await transport.finish(info)
+  }
 }
 
 export async function observed(response: Response, mode: string) {

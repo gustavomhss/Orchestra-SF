@@ -80,19 +80,30 @@ export async function revokeReportsSession(input: {
     expect(forbidden.status()).toBe(403)
     expect(forbidden.request().postDataJSON()).toEqual({ id: answer.questionId })
     expect(forbidden.headers()["cache-control"]).toContain("no-store")
-    const deniedBody = await forbidden.text()
-    for (const secret of [answer.message.body, answer.pin.reviewDigest, ...Object.values(retainedPending.drafts)])
+    // The browser discards the response body as it removes the private view.
+    // Verify the same denied read through the retained context's real cookie.
+    const binding = text(await forbidden.request().headerValue("x-sf-review-binding"))
+    const directDenial = await old.request.post(productURL(app.dashboardURL, "collaboration-thread-read").href, {
+      headers: { Origin: app.origin, "X-SF-Review-Binding": binding }, data: { id: answer.questionId }, maxRedirects: 0,
+    }).catch(() => { throw new Error("The revoked session's direct thread read did not complete") })
+    expect(directDenial.status()).toBe(403)
+    expect(directDenial.headers()["cache-control"]).toContain("no-store")
+    const deniedBody = await directDenial.text()
+    for (const secret of [saved.id, answer.message.body, answer.pin.reviewDigest, ...Object.values(retainedPending.drafts)])
       expect(deniedBody, "The real denied read must not return protected content or drafts").not.toContain(secret)
-    const cleared = retained.locator("[data-sf-review-workspace]")
-    await expect(cleared.getByRole("status")).toHaveText("O acesso mudou. Reabra uma revisão autorizada.")
+    const cleared = retained.locator("main[data-access-unavailable]")
+    await expect(cleared.getByRole("status").filter({ hasText: "The previous view was removed." }))
+      .toHaveText("The previous view was removed. Reload to continue with your current permissions.")
+    await expect(cleared.getByRole("heading")).toHaveText(/^(Your session has expired|Your access has changed)$/)
+    const clearedReview = retained.locator("[data-sf-review-workspace]")
     // The installed host now disposes all protected views on denied access.
     // Removing navigation entirely is stronger than retaining a disabled button.
     await expect(meeting).toHaveCount(0)
     await expect(meeting.getByRole("heading")).toHaveCount(0)
     await expect(meeting.getByRole("listitem")).toHaveCount(0)
-    await expect(cleared.getByRole("heading")).toHaveCount(0)
-    await expect(cleared.getByRole("listitem")).toHaveCount(0)
-    await expect(cleared.getByRole("button")).toHaveCount(0)
+    await expect(clearedReview.getByRole("heading")).toHaveCount(0)
+    await expect(clearedReview.getByRole("listitem")).toHaveCount(0)
+    await expect(clearedReview.getByRole("button")).toHaveCount(0)
     await expect(retained.getByRole("region", { name: "Review discussion", exact: true })).toHaveCount(0)
     await expect(retained.getByRole("region", { name: "Confirmed answer", exact: true })).toHaveCount(0)
     await expect(retained.getByRole("button", { name: "Next topic", exact: true })).toHaveCount(0)
