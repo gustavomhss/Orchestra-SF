@@ -180,10 +180,10 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
       node.once("aborted", disconnected)
       node.socket.once("close", disconnected)
       if (node.aborted || node.socket.destroyed) disconnected()
-      const response = await installation.handler(new Request(url, {
+      const response = await Promise.resolve().then(() => installation.handler(new Request(url, {
         method: incoming.method, headers, signal: AbortSignal.any([signal, disconnect.signal]),
         ...(body ? { body, duplex: "half" } : {}),
-      })).catch(() => new Response(null, { status: 503 })).finally(() => {
+      }))).catch(() => new Response(null, { status: 503 })).finally(() => {
         node.off("aborted", disconnected)
         node.socket.off("close", disconnected)
       })

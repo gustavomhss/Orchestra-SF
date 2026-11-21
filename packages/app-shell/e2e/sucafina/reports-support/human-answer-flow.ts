@@ -1,4 +1,4 @@
-import { expect } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 import type { Locator, Page, Response, TestInfo } from "@playwright/test"
 import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import { object, projection, responseFor, text } from "./model.ts"
@@ -49,9 +49,9 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
   const questionBody = `Confirm the preserved ${corpus.year} forecast of ${corpus.before}; distinguish it from the current source.`
   await discussion.getByRole("textbox", { name: "Question", exact: true }).fill(questionBody)
   const beforeQuestion = await api.version()
-  const created = options.loseCreatedThreadRead
-    ? await recoverCreatedQuestionAfterReadLoss({ page, app, api, discussion, body: questionBody, expectedStorageVersion: beforeQuestion, info })
-    : await submit(page, app, discussion.getByRole("button", { name: "Ask about this review", exact: true }), "collaboration-thread-create")
+  const created = await test.step("Submit the preserved-review question and observe its receipt", () => options.loseCreatedThreadRead
+    ? recoverCreatedQuestionAfterReadLoss({ page, app, api, discussion, body: questionBody, expectedStorageVersion: beforeQuestion, info })
+    : submit(page, app, discussion.getByRole("button", { name: "Ask about this review", exact: true }), "collaboration-thread-create"))
   expect(created.payload.draft).toEqual({
     kind: "clarification", ...basis, reviewContext: pin, recipientRef: app.actorId, body: questionBody,
   })
@@ -63,16 +63,18 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
   const replyBody = `Human answer: this review retains ${corpus.before} for ${corpus.annual.start} through ${corpus.annual.end}. REPORTS_HUMAN_ORIGINAL`
   await discussion.getByRole("textbox", { name: "Reply", exact: true }).fill(replyBody)
   const beforeReply = await api.version()
-  const replied = options.loseReplyResponse
-    ? await recoverLostReplyResponse({ page, app, api, discussion, question, body: replyBody, expectedStorageVersion: beforeReply, info })
-    : await submit(page, app, discussion.getByRole("button", { name: "Send reply", exact: true }), "collaboration-thread-reply")
+  const replied = await test.step("Submit the human reply and observe its receipt", () => options.loseReplyResponse
+    ? recoverLostReplyResponse({ page, app, api, discussion, question, body: replyBody, expectedStorageVersion: beforeReply, info })
+    : submit(page, app, discussion.getByRole("button", { name: "Send reply", exact: true }), "collaboration-thread-reply"))
   expect(replied.payload).toMatchObject({ id: question.id, body: replyBody })
   expectMutation(replied.payload.mutation, beforeReply)
-  const message = await expectRepliedReviewQuestion(api, question, { principalRef: app.actorId, body: replyBody }, replied.value)
+  const message = await test.step("Read the persisted reply and independently confirm the answer is unconfirmed", () =>
+    expectRepliedReviewQuestion(api, question, { principalRef: app.actorId, body: replyBody }, replied.value))
   await expect(discussion.getByRole("status")).toHaveText("Reply saved in this preserved review.")
   const article = discussion.getByRole("article", { name: `Message ${message.id}`, exact: true })
   await expect(article).toContainText(message.body)
-  const prepared = await submit(page, app, article.getByRole("button", { name: "Review this answer", exact: true }), "collaboration-answer-prepare-message")
+  const prepared = await test.step("Prepare the exact human reply for inspection", () =>
+    submit(page, app, article.getByRole("button", { name: "Review this answer", exact: true }), "collaboration-answer-prepare-message"))
   expect(prepared.payload).toEqual({ questionId: question.id, messageId: message.id, incarnation: message.incarnation, version: message.version })
   const answer = expectPreparedReviewAnswer(question, message, prepared.value)
   expect(answer.projection).toEqual(captured)
@@ -93,7 +95,8 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
 
   // The button submits exactly the displayed observation. No re-prepare or mutation retry.
   const beforeConfirmation = await api.version()
-  const confirmed = await submit(page, app, confirmation.getByRole("button", { name: "Confirm this answer", exact: true }), "collaboration-answer-confirm")
+  const confirmed = await test.step("Confirm the displayed observation", () =>
+    submit(page, app, confirmation.getByRole("button", { name: "Confirm this answer", exact: true }), "collaboration-answer-confirm"))
   expect(confirmed.payload).toMatchObject({
     questionId: question.id, answerRef: answer.answerRef, mutation: {
       observationRef: answer.observationRef, observedSourceVersion: answer.observedSourceVersion,
@@ -101,7 +104,8 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
     },
   })
   expectMutation(confirmed.payload.mutation, beforeConfirmation)
-  const receipt = await expectConfirmedReviewAnswer(api, answer, confirmed.value)
+  const receipt = await test.step("Verify the confirmed answer and its read-only reuse", () =>
+    expectConfirmedReviewAnswer(api, answer, confirmed.value))
   await expect(discussion.getByRole("status")).toHaveText("Answer confirmed against the inspected preserved source.")
   await expectConfirmedAnswerVisible(page, answer)
   await info.attach("human-answer-confirmation", { body: JSON.stringify({

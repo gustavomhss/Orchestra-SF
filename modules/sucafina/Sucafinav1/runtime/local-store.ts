@@ -553,6 +553,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         if (transactionOptions?.dashboardSourceRoot || transactionOptions?.dashboardAclRoot) throw new Error("Local Dashboard source read needs a held root")
         const candidate = transactionOptions?.targetPreimageCurrent
         const currentPreimage = candidate && preimages.delete(candidate) && candidate() ? candidate : undefined
+        const budget = currentPreimage && {
+          remaining: SNAPSHOT_MATERIALIZATION_UNITS - [...materializations.values()].reduce((sum, plan) => sum + plan.units, 0),
+        }
         const read = (name: Surface) => {
           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
           // Ordinary single-surface transactions keep dev's lazy observation
@@ -567,6 +570,13 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           if (name !== surface || currentPreimage) {
             if (source.copy) copies[name] = source.copy
             if (source.copyAcl) aclCopies[name] = source.copyAcl
+            const plan = source.freshPlan
+            // Use the cold byte plan for sealed preimages, as in a read-only
+            // root. Each callback still receives an independent detached copy.
+            if (budget && !source.copy && plan && plan.units <= budget.remaining) {
+              budget.remaining -= plan.units
+              copies[name] = () => validateSnapshot(materializeSnapshot(plan))
+            }
           }
           const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
           return () => {
@@ -583,8 +593,8 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           get procurement() { return observed.procurement() },
         }
         const snapshot = snapshots[surface]
-        // A cold target has no memo plan; materialize one genuinely private
-        // preimage before handing the writable snapshot to its owner.
+        // If no byte plan is available, capture a private preimage before
+        // handing the writable snapshot to its owner.
         const preimage = currentPreimage && (() => {
           const materialize = copies[surface]
           if (materialize) {

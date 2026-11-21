@@ -75,6 +75,31 @@ test("real SQLite persists the entire snapshot, binary blobs and undefined acros
   })
 })
 
+test("a cold sealed preimage keeps independent reads detached from the writable target", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    await store.transaction("dashboard", async (snapshot) => {
+      await populate(snapshot)
+      return { commit: true, value: undefined }
+    })
+    await store.dispose()
+
+    const reopened = await open()
+    const retained = reopened.holdTargetPreimage()
+    await reopened.transaction("dashboard", async (snapshot) => {
+      snapshot.data.record = { name: "staged" }
+      const first = await reopened.transaction("dashboard", async (preimage) => ({ commit: false, value: preimage }))
+      expect(first.data.record).toEqual({ name: "created", optional: undefined })
+      first.data.record = { name: "modified detached copy" }
+      const second = await reopened.transaction("dashboard", async (preimage) => ({ commit: false, value: preimage }))
+      expect(second.data.record).toEqual({ name: "created", optional: undefined })
+      expect(snapshot.data.record).toEqual({ name: "staged" })
+      return { commit: true, value: undefined }
+    }, { targetPreimageCurrent: retained.current })
+    expect((await read(reopened)).snapshot.data.record).toEqual({ name: "staged" })
+  })
+})
+
 test("codec preserves sentinel-shaped objects, tagged-looking arrays and nested undefined", async () => {
   await fixture(async (_directory, open) => {
     const store = await open()

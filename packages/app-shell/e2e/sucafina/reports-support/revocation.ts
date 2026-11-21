@@ -85,14 +85,13 @@ export async function revokeReportsSession(input: {
     const control = await fresh.newPage()
     await app.signIn(control)
     const current = reportsCollaboration(control.request, app.dashboardURL)
-    const [freshReview, freshVersion, freshThread, download] = await Promise.all([
+    const [freshReview, download] = await Promise.all([
       readReview(control.request, app.dashboardURL, saved.id),
-      current.version(),
-      current.thread(answer.questionId),
       control.request.get(artifact.href, { maxRedirects: 0 }),
       expectReusedReviewAnswer(current, answer),
     ])
     expect(freshReview).toEqual(saved)
+    const [freshVersion, freshThread] = await Promise.all([current.version(), current.thread(answer.questionId)])
     expect(freshVersion, "Logout and denied reconciliation must not submit either retained reply").toBe(localPending.storageVersion)
     expect(freshThread.messages).toEqual(localPending.messages)
     expect(localPending.writes).toEqual([localPending.serialized])

@@ -36,19 +36,28 @@ if (root && bootstrap) {
   const navigation = (window as Window & { navigation?: EventTarget & {
     navigate: (url: string) => { committed: Promise<unknown>; finished: Promise<unknown> }
   } }).navigation
-  const resumeNavigation = () => root.removeAttribute("data-sf-review-navigating")
+  let navigationOwner = 0
   const beginNavigation = () => {
+    const owner = ++navigationOwner
     root.setAttribute("data-sf-review-navigating", "")
     root.dispatchEvent(new Event("sucafina:review-foreground-start", { bubbles: true }))
     focusProbe?.abort()
+    return () => {
+      if (owner === navigationOwner) root.removeAttribute("data-sf-review-navigating")
+    }
   }
   navigation?.addEventListener("navigate", (event) => {
     if (closed || !("destination" in event) || typeof event.destination !== "object" || !event.destination ||
-      !("sameDocument" in event.destination) || event.destination.sameDocument || !("signal" in event) || !(event.signal instanceof AbortSignal) || event.signal.aborted) return
-    beginNavigation()
-    event.signal.addEventListener("abort", resumeNavigation, { once: true })
+      !("sameDocument" in event.destination) || event.destination.sameDocument || !("url" in event.destination) ||
+      typeof event.destination.url !== "string" || !("signal" in event) || !(event.signal instanceof AbortSignal) ||
+      event.signal.aborted) return
+    // Attachment responses can leave this document in place without committing
+    // or aborting navigation. Pause only for a transition to the meeting.
+    const destination = new URL(event.destination.url)
+    if (destination.origin !== location.origin || destination.pathname !== location.pathname ||
+      destination.searchParams.get("sf") !== "review") return
+    event.signal.addEventListener("abort", beginNavigation(), { once: true })
   })
-  navigation?.addEventListener("navigateerror", resumeNavigation)
   const clearPrivate = () => {
     if (closed) return
     closed = true; generation += 1
@@ -209,7 +218,7 @@ if (root && bootstrap) {
         if (closed || root.hasAttribute("data-sf-review-navigating")) return
         const destination = reviewUrl(reference)
         if (typeof navigation?.navigate !== "function") { location.assign(destination); return }
-        beginNavigation()
+        const resumeNavigation = beginNavigation()
         try {
           // The outgoing document remains alive until the destination commits.
           // Let this actual navigation settle before resuming its background poll.
