@@ -18,6 +18,12 @@ Crie `ingress-secret.txt` no diretório privado da instalação, com modo `0600`
 
 O listener corporativo é dedicado ao mount da instalação, com login e logout. Encaminhe apenas esse caminho e seus descendentes no proxy. Aplique limites de taxa por cliente e de concorrência a `/auth/login` e `/auth/callback` antes do encaminhamento ao listener. Use os caminhos do mount ou do dashboard ao iniciar o fluxo de login. A leitura de membresia fica disponível ao código do servidor.
 
+## Entrada Web nativa
+
+No pacote Linux com a Web Sucafina em `bin/web`, `SUCAFINA_NATIVE_TEAM_WEB=1` habilita a entrada em `/` na instalação Microsoft com `"teams": "direct"`. Mantenha o mesmo proxy HTTPS confiável para a entrada, `/assets/`, `/orchestra/`, `/brand/sucafina/`, `/api/sucafina/installations` e o mount. As requisições continuam sujeitas à prova de ingresso.
+
+O login Microsoft retorna à raiz. A página usa a sessão da instalação para consultar os Teams habilitados, seleciona a única opção ou permite escolher entre várias e oferece o link para o dashboard do Team confirmado. Cada escolha consulta novamente o servidor. Sem um Team autorizado, a página mostra a negativa e não oferece o dashboard.
+
 ## Fluxos por Team
 
 Dashboard, Planner e Procurement usam as rotas `<mount>/teams/<teamObjectId>/<aplicação>`. Os links e formulários mantêm o Team na URL, inclusive quando dois Teams estão abertos em abas diferentes. Cada Team tem seu próprio banco, anexos, versões e auditoria. Registros preexistentes seguem onde foram criados até a migração explícita.

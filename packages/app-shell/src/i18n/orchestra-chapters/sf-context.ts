@@ -21,6 +21,12 @@ export const SF_CONTEXT_COPY = {
   "sf.ui67.chooseOption": "Choose an installation",
   "sf.ui67.authorizeChoice": "Select and reauthorize",
   "sf.ui67.discardNavigate": "Discard the draft and change context?",
+  "sf.teams.title": "Team access",
+  "sf.teams.team": "Team",
+  "sf.teams.select": "Select a Team",
+  "sf.teams.signIn": "Sign in with Microsoft",
+  "sf.teams.noTeams": "This account has no access to an enabled Team.",
+  "sf.teams.dashboard": "Open Team dashboard",
 } as const
 
 export const SF_CONTEXT_COPY_BR: Record<keyof typeof SF_CONTEXT_COPY, string> = {
@@ -45,4 +51,10 @@ export const SF_CONTEXT_COPY_BR: Record<keyof typeof SF_CONTEXT_COPY, string> = 
   "sf.ui67.chooseOption": "Escolha uma instalação",
   "sf.ui67.authorizeChoice": "Selecionar e reautorizar",
   "sf.ui67.discardNavigate": "Descartar o rascunho e mudar de contexto?",
+  "sf.teams.title": "Acesso ao Team",
+  "sf.teams.team": "Team",
+  "sf.teams.select": "Selecione um Team",
+  "sf.teams.signIn": "Entrar com Microsoft",
+  "sf.teams.noTeams": "Esta conta não tem acesso a um Team habilitado.",
+  "sf.teams.dashboard": "Abrir dashboard do Team",
 }
