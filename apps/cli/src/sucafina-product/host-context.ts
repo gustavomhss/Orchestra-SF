@@ -72,7 +72,9 @@ import { createSfRoutineNativePhaseComposition } from "./routine-native-phase-co
 import { createSfNativePhasePromptContribution } from "./host-native-phase-prompt.ts"
 import { SF_ROUTINE_PHASE_PLAYBOOK } from "./routine-native-phase-scope.ts"
 import { ExecutionHost } from "@orchestra/core/session/runner"
+import { FSUtil } from "@orchestra/core/fs-util"
 import { SkillV2 } from "@orchestra/core/skill"
+import { SkillTool } from "@orchestra/core/tool/skill"
 import type { SessionSchema } from "@orchestra/core/session/schema"
 import { createSfReviewsProjectionHandlers } from "./native-ui/reviews.ts"
 import type { SfRoutineNativeAdmissionOrigin } from "./routine-native-admission.ts"
@@ -920,7 +922,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
         if (!scope || scope.scope.skills.entry !== SF_ROUTINE_PHASE_PLAYBOOK) return false
         return Effect.runPromise(Effect.gen(function* () {
           const skills = yield* SkillV2.Service
-          const winner = (yield* skills.list()).find((entry) => entry.name === SF_ROUTINE_PHASE_PLAYBOOK)
+          const catalog = yield* skills.list()
+          const winner = catalog.find((entry) => entry.name === SF_ROUTINE_PHASE_PLAYBOOK)
           const source = winner && skills.sourceOf?.(winner)
           if (!winner || !source?.reserved || !source.key.trim()) return false
           const engine = yield* ExecutionHost.engineOf(resources.agents, resources.store)(session)
@@ -940,9 +943,14 @@ export const createSfHostRuntimeWithRoutineNative = async (
           if (!facts || facts.sessionID !== session.id || facts.skillName !== SF_ROUTINE_PHASE_PLAYBOOK ||
             !facts.source.reserved || facts.source.key !== source.key ||
             facts.source.location !== winner.location || !/^[a-f0-9]{64}$/.test(facts.source.contentDigest)) return false
+          const fs = yield* FSUtil.Service
+          const currentMaterial = yield* SkillTool.load(fs, winner, SkillV2.children(catalog, winner))
           const delivered = yield* resources.store.message(facts.loadedMessageID)
-          return delivered?.sessionID === session.id && delivered.message.type === "synthetic" &&
-            createHash("sha256").update(delivered.message.text, "utf8").digest("hex") === facts.source.contentDigest
+          yield* skills.list()
+          return skills.sourceOf?.(winner) === source &&
+            delivered?.sessionID === session.id && delivered.message.type === "synthetic" &&
+            delivered.message.text === currentMaterial &&
+            createHash("sha256").update(currentMaterial, "utf8").digest("hex") === facts.source.contentDigest
         }).pipe(Effect.provide(locations.get(session.location)), Effect.provideService(LocationServiceMap.Service, locations), Effect.scoped)).catch(() => false)
       }
       yield* Effect.addFinalizer(() => Effect.gen(function* () {
