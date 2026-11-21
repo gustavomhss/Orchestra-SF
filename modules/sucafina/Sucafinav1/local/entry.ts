@@ -351,7 +351,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
               const recovered = await withRecoveryPoint(recovery, values.at, (point) => backups.capture(point, surface, new Date().toISOString())).catch(() => undefined)
               if (!recovered) return utilityJson({ ok: false, errors: ["That recovery point is unavailable or could not be verified. Live data was not changed."] }, 422)
               await backups.capture(store, surface, new Date().toISOString())
-              const result = await restoreBackup(restoration, backups.source, surface, recovered.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString())
+              const result = await restoreBackup(restoration, backups.source, surface, recovered.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString(), undefined, { retainCurrentProduct: !!sourcePersistence })
               return utilityJson(result, result.ok ? 200 : result.status)
             }
             if (command.action !== "restore-backup" || command.confirmed !== true || typeof values.id !== "string" || !/^backup-[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(values.id) || !Number.isSafeInteger(command.version) || Number(command.version) < 0) return utilityJson({ ok: false, errors: ["Confirmed restoration and current revision required."] }, 422)
@@ -361,7 +361,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
             if (!pinned) return utilityJson({ ok: false, errors: ["Backup is no longer available."] }, 404)
             // Keep a verified copy of the current state before replacing business data.
             await backups.capture(store, surface, new Date().toISOString())
-            const restored = await restoreBackup(restoration, pinned, surface, values.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString())
+            const restored = await restoreBackup(restoration, pinned, surface, values.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString(), undefined, { retainCurrentProduct: !!sourcePersistence })
             return utilityJson(restored, restored.ok ? 200 : restored.status)
           }
           const surfaces = ["dashboard", "planner", "procurement"] as const

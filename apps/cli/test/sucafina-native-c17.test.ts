@@ -11,7 +11,7 @@ import type { PortResult } from "../../../modules/sucafina/Sucafinav1/product/co
 import type { CapabilityResult } from "../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { ReviewAgendaCatalog } from "../../../modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts"
 import type { ReviewAgendaPreview } from "../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
-import { validateReportArtifact } from "../../../modules/sucafina/Sucafinav1/runtime/artifact.ts"
+import { sfReviewArtifactBlobKey, validateReportArtifact } from "../../../modules/sucafina/Sucafinav1/runtime/artifact.ts"
 import { object } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { DashboardPortfolio } from "../../../modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts"
 import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
@@ -97,7 +97,8 @@ it.live.skipIf(process.platform === "win32")(
         resultDigest: digestSfValue(prepared.result),
       })
 
-      const download = await installation.request(`/dashboard?${new URLSearchParams({ sf: "review-download", artifactRef })}`)
+      const downloadPath = `/dashboard?${new URLSearchParams({ sf: "review-download", artifactRef })}`
+      const download = await installation.request(downloadPath)
       expect(download.status).toBe(200)
       expect(download.headers.get("content-type")).toBe(mime)
       expect(download.headers.get("content-disposition")).toMatch(/^attachment; filename\*=UTF-8''.+\.docx$/)
@@ -106,7 +107,8 @@ it.live.skipIf(process.platform === "win32")(
 
       const store = await openLocalStore(installation.businessDirectory)
       try {
-        const persisted = await store.transaction("dashboard", async (snapshot) => {
+        const blobKey = sfReviewArtifactBlobKey(artifactRef)
+        const persisted = await store.transaction("dashboard", async (snapshot, blobs) => {
           const state = object(snapshot.data.__sfProductV1)
           const command = digestSfValue({ operation: "sf_report_prepare", key: reportKey })
           return {
@@ -114,6 +116,7 @@ it.live.skipIf(process.platform === "win32")(
             value: {
               review: object(state.reviews)[review.id],
               report: object(object(state.documents)[artifactRef]),
+              bytes: await blobs.get(blobKey),
               receipt: object(state.transactions)[JSON.stringify([
                 installation.actorId, "documents", `sf-workspace:${encodeURIComponent(installation.actorId.split(":")[1]!)}`, command,
               ])],
@@ -121,16 +124,36 @@ it.live.skipIf(process.platform === "win32")(
           }
         })
         expect(persisted.review).toMatchObject({ id: review.id, version: review.version })
+        const digest = createHash("sha256").update(bytes).digest("hex")
         expect(persisted.report).toMatchObject({
-          kind: "sf-review-artifact-v1", principalRef: installation.actorId, reviewRef: review.id, format: "docx", mediaType: mime,
-          sectionRefs: payload.sectionRefs, bytes: Buffer.from(bytes).toString("base64"),
-          digest: createHash("sha256").update(bytes).digest("hex"),
+          kind: "sf-review-artifact-v2", principalRef: installation.actorId, reviewRef: review.id, format: "docx", mediaType: mime,
+          sectionRefs: payload.sectionRefs, byteLength: bytes.byteLength, digest,
         })
+        expect(Object.hasOwn(persisted.report, "bytes")).toBe(false)
+        if (!persisted.bytes) throw new Error("Installed C17 omitted the artifact blob")
+        expect(persisted.bytes).toEqual(bytes)
+        expect(createHash("sha256").update(persisted.bytes).digest("hex")).toBe(digest)
         expect(persisted.receipt).toMatchObject({
           namespace: "documents", principalRef: installation.actorId, storageVersion: expect.any(Number),
           commandDigest: expect.stringMatching(/^[a-f0-9]{64}$/), value: true,
         })
         expect(await validateReportArtifact({ name: String(persisted.report.name), type: mime, bytes }, "docx", 8 * 1024 * 1024)).toBe(true)
+
+        // Reopen the same artifact through production after installing the
+        // historical inline representation with the original receipt intact.
+        await store.transaction("dashboard", async (snapshot, blobs) => {
+          const documents = object(object(snapshot.data.__sfProductV1).documents)
+          const inline = object(documents[artifactRef])
+          delete inline.byteLength
+          inline.kind = "sf-review-artifact-v1"
+          inline.bytes = Buffer.from(bytes).toString("base64")
+          await blobs.remove(blobKey)
+          return { commit: true, value: undefined }
+        })
+        const legacy = await installation.request(downloadPath)
+        expect(legacy.status).toBe(200)
+        expect(legacy.headers.get("content-type")).toBe(mime)
+        expect(new Uint8Array(await legacy.arrayBuffer())).toEqual(bytes)
       } finally {
         await store.dispose()
       }

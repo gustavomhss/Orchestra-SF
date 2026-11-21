@@ -1,5 +1,7 @@
 import { types } from "node:util"
 import type { Persistence, Snapshot } from "../../runtime/contract.ts"
+import type { AssetPersistence } from "../../runtime/assets.ts"
+import { sfReviewArtifactBlobKey } from "../../runtime/artifact.ts"
 import { hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
 import { consumeLocalTransactionAbort, observeLocalTransactionAbort } from "../../runtime/local-store.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
@@ -128,6 +130,21 @@ export function selectSfReviewAuthority<T>(project: (authority: SfStateAuthority
 export function stageSfReviewThreadWrite<T>(work: (state: SfProductState, authority: SfStateAuthority) => Promise<{ commit: boolean; value: T }>) {
   stagedReviewThreadWrites.add(work)
   return work
+}
+
+type ReviewArtifactWrite = Readonly<{ ref: string; bytes: Uint8Array; mediaType: string; digest: string }>
+const stagedReviewArtifactWrites = new WeakMap<object, ReviewArtifactWrite>()
+const reviewArtifactBlobReaders = new WeakMap<SfProductStatePort,
+  (request: Request, ref: string, metadataDigest: string, expected: SfStateAuthority) => Promise<Uint8Array | undefined>>()
+
+export function stageSfReviewArtifactWrite<T>(artifact: ReviewArtifactWrite,
+  work: (state: SfProductState, authority: SfStateAuthority) => Promise<{ commit: boolean; value: T }>) {
+  stagedReviewArtifactWrites.set(work, Object.freeze({ ...artifact, bytes: new Uint8Array(artifact.bytes) }))
+  return work
+}
+
+export function sfReviewArtifactBlobReader(port: SfProductStatePort) {
+  return reviewArtifactBlobReaders.get(port)
 }
 
 const namespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"] as const
@@ -341,6 +358,7 @@ export function isSfProductStateReader(port: SfProductStatePort, persistence: Pe
 export function createSfProductState(input: {
   persistence: Persistence
   stagedReviewThreadTarget?: string
+  reviewArtifactPersistence?: AssetPersistence
   authorize: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, mode: "read" | "write") => Promise<SfStateAuthority | undefined>
   createId: () => string
   /** Root-private callback identities; never exposed through a product capability or serialized input. */
@@ -355,6 +373,11 @@ export function createSfProductState(input: {
   procurementEvidenceWrites?: WeakSet<object>
   resolveTarget: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, targetRef: string, command: SfStateMutation) => Promise<{ incarnation: string } | undefined>
 }): SfProductStatePort {
+  const artifacts = input.reviewArtifactPersistence
+  const assetTransaction = artifacts?.transaction
+  const artifactFence = () => artifacts && assetTransaction && input.reviewArtifactPersistence === artifacts &&
+    artifacts.transaction === assetTransaction && Object.is(artifacts, input.persistence) &&
+    hasSfDashboardSourceFence(input.persistence) ? input.persistence.dashboardSourceFence : undefined
   const port: SfProductStatePort = {
     read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
       input.persistence.transaction<SfStateResult<T>>("dashboard", async (snapshot) => {
@@ -516,6 +539,30 @@ export function createSfProductState(input: {
         snapshot.data.__sfProductV1 = staged
         return { commit: true, value: { status: "ok", storageVersion: staged.versions[command.namespace], aggregateRevision: staged.revision, incarnation: staged.incarnation, value: result.value } }
       }
+      const artifact = stagedReviewArtifactWrites.get(work)
+      if (artifact) {
+        const atomic = artifactFence()
+        if (!atomic || !artifacts || !assetTransaction || !atomic.current() ||
+            command.namespace !== "documents" || command.targetRef !== input.stagedReviewThreadTarget || command.domainSurface ||
+            command.sourceFence || command.additionalNamespaces?.length || command.checkNamespaces?.length)
+          return Promise.resolve({ status: "denied", reason: "report-blob-storage-unavailable" })
+        const preimage = atomic.holdTargetPreimage()
+        const current = () => artifactFence() === atomic && !request.signal.aborted
+        return artifacts.transaction<SfStateResult<T>>("dashboard", async (snapshot, blobs) => {
+          if (!current()) return { commit: false, value: { status: "denied", reason: "report-blob-storage-unavailable" } }
+          const result = await run(snapshot, snapshot, preimage.release)
+          if (!result.commit) return result
+          const stored = object(object(object(snapshot.data.__sfProductV1).documents)[artifact.ref])
+          if (!current() || stored.kind !== "sf-review-artifact-v2" || stored.byteLength !== artifact.bytes.byteLength ||
+              stored.digest !== artifact.digest || stored.mediaType !== artifact.mediaType)
+            throw new Error("SF_REPORT_BLOB_METADATA_CHANGED")
+          const key = sfReviewArtifactBlobKey(artifact.ref)
+          if (await blobs.get(key)) throw new Error("SF_REPORT_BLOB_ALREADY_EXISTS")
+          await blobs.put(key, artifact.bytes, artifact.mediaType)
+          if (!current()) throw new Error("SF_REPORT_BLOB_STORAGE_CHANGED")
+          return result
+        }, { signal: request.signal, targetPreimageCurrent: preimage.current })
+      }
       if (command.sourceFence === "all" || command.namespace === "documents" || command.additionalNamespaces?.some((entry) => entry.namespace === "documents") || command.checkNamespaces?.some((entry) => entry.namespace === "documents") || command.domainSurface) {
         if (!input.persistence.transactionAll) return Promise.resolve({ status: "unavailable", reason: "cross-surface-transaction-unavailable" })
         const atomic = hasSfDashboardSourceFence(input.persistence) ? input.persistence.dashboardSourceFence : undefined
@@ -549,6 +596,22 @@ export function createSfProductState(input: {
       }
       return input.persistence.transaction("dashboard", (snapshot) => run(snapshot, snapshot), { signal: request.signal })
     },
+  }
+  if (artifactFence() && artifacts) {
+    reviewArtifactBlobReaders.set(port, (request, ref, metadataDigest, expected) => {
+      const atomic = artifactFence()
+      if (!atomic || request.signal.aborted) return Promise.resolve(undefined)
+      const current = () => artifactFence() === atomic && !request.signal.aborted
+      return artifacts.transaction("dashboard", async (snapshot, blobs) => {
+        const admitted = await input.authorize(request, snapshot, "documents", "read")
+        const metadata = readSfState(snapshot)?.documents[ref]
+        if (!current() || !sameAuthority(expected, admitted) || digestSfValue(metadata) !== metadataDigest)
+          return { commit: false, value: undefined }
+        const bytes = await blobs.get(sfReviewArtifactBlobKey(ref))
+        const latest = await input.authorize(request, snapshot, "documents", "read")
+        return { commit: false, value: current() && sameAuthority(expected, latest) ? bytes : undefined }
+      }, { signal: request.signal, sealedRead: true, targetPreimageCurrent: atomic.holdTargetPreimage().current })
+    })
   }
   if (!types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype) {
     const driver = Object.getOwnPropertyDescriptor(input, "persistence")

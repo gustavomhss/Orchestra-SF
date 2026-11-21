@@ -47,6 +47,7 @@ export function createSfProductAuthority(input: {
   origin: string
   policyVersion: string
   persistence: Application["persistence"]
+  assets?: Application["assets"]
   authenticate: Application["authenticate"]
   environment: Application["environment"]
   isAuthenticated?: (request: Request) => Promise<boolean>
@@ -188,6 +189,7 @@ export function createSfProductAuthority(input: {
   }
   const state = createSfProductState({
     stagedReviewThreadTarget: creationTarget.ref,
+    reviewArtifactPersistence: input.assets?.persistence,
     persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, nativePublicationGuards: input.nativePublicationGuards, signalRegistryWrites: input.signalRegistryWrites, caseSelectionWrites: input.caseSelectionWrites, threadHistoryWrites: input.threadHistoryWrites,
     dashboardHostWrites: input.dashboardHostWrites, procurementEvidenceWrites: input.procurementEvidenceWrites, analysisSelectionWrites: input.analysisSelectionWrites,
     authorize: async (request, snapshot, namespace, mode) => {

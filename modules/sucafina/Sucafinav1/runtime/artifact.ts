@@ -1,4 +1,5 @@
-import type { Result } from "./contract.ts"
+import type { Result, Snapshot } from "./contract.ts"
+import { object } from "./contract.ts"
 export type Artifact = {
   ok: true
   name: string
@@ -18,6 +19,27 @@ export function validReportArtifactMetadata(artifact: Pick<Artifact, "name" | "t
   return artifact.type === (format === "docx"
     ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     : "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+}
+
+export const SF_REVIEW_ARTIFACT_BLOB_PREFIX = "sf-review-artifact:"
+
+export function sfReviewArtifactBlobKey(ref: string) {
+  if (!/^report:[a-f0-9]{64}$/.test(ref)) throw new Error("SF_REPORT_ARTIFACT_REFERENCE_INVALID")
+  return SF_REVIEW_ARTIFACT_BLOB_PREFIX + ref.slice("report:".length)
+}
+
+/** Private report objects share the SQLite backup inventory, without becoming public assets. */
+export function sfReviewArtifactBlobInventory(snapshot: Snapshot) {
+  return Object.entries(object(object(snapshot.data.__sfProductV1).documents)).flatMap(([ref, value]) => {
+    const artifact = object(value)
+    if (artifact.kind !== "sf-review-artifact-v2") return []
+    if (typeof artifact.byteLength !== "number" || !Number.isSafeInteger(artifact.byteLength) || artifact.byteLength < 1 ||
+        typeof artifact.digest !== "string" || !/^[a-f0-9]{64}$/.test(artifact.digest) ||
+        typeof artifact.name !== "string" || typeof artifact.mediaType !== "string" ||
+        typeof artifact.format !== "string" || !validReportArtifactMetadata({ name: artifact.name, type: artifact.mediaType }, artifact.format))
+      throw new Error("SF_REPORT_ARTIFACT_METADATA_INVALID")
+    return [{ key: sfReviewArtifactBlobKey(ref), bytes: artifact.byteLength, sha256: artifact.digest, type: artifact.mediaType }]
+  })
 }
 
 /** Check the bounded ZIP envelope and its main part without decompressing document content. */
