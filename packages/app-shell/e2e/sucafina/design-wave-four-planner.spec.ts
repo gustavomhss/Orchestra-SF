@@ -46,12 +46,26 @@ async function confirm(page: Page, installation: DesignInstallation, sourcePage:
     if (request.method() !== "POST" || new URL(response.url()).pathname !== installation.mount + "/planner") return false
     const input = request.postDataJSON()
     return input?.page === sourcePage && input.action === action && (collection === undefined || input.values?.collection === collection)
-  }).then(async (response) => ({ ok: response.ok(), body: await response.json() as unknown }))
+  }).then((response) => ({
+    status: response.status(), contentType: response.headers()["content-type"],
+  })).catch(() => undefined)
   await review(page).getByRole("button", { name: label, exact: true }).click()
   const response = await saved
-  expect(response.ok).toBe(true)
-  expect(response.body).toMatchObject({ ok: true })
+  if (!response) throw new Error("The original Planner producer did not return a command response")
+  expect(response.status).toBe(200)
+  expect(response.contentType).toContain("application/json")
+  // Chromium can discard a completed fetch body after the native client consumes
+  // and aborts its owner-scoped request. Observe the real HTTP status and the UI's
+  // acknowledged transition instead; every caller also requires an exact fresh
+  // canonical readback and exactly one POST, independent of the edited draft.
   await expect(review(page)).toHaveCount(0)
+  const host = page.locator('[data-sf-host="owner-runtime231"]')
+  await expect(host).toHaveAttribute("data-sf-provider-state", "ready")
+  await expect(host).toHaveAttribute("data-sf-view-state", "ready")
+  await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(1)
+  await expect(host.locator('[aria-busy="true"]')).toHaveCount(0)
+  console.info("SF_DESIGN_COMMAND " + JSON.stringify({ sourcePage, action, status: response.status,
+    acknowledgement: "native review completed; canonical readback follows" }))
 }
 async function discard(page: Page, editor: Locator) {
   page.once("dialog", async (dialog) => {
@@ -85,6 +99,7 @@ async function portuguese(browser: Browser, page: Page, owner: Owner, installati
       await capture(localized, info, screen.id + "-pt-BR-dark-320-test-data")
     }
     expect(messages.pageErrors).toEqual([])
+    expect(messages.consoleErrors).toEqual([])
     await info.attach("planner-pt-BR-diagnostics", { body: JSON.stringify(messages, null, 2), contentType: "application/json" })
   } finally { await context.close() }
 }
@@ -224,6 +239,7 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
   await portuguese(browser, page, owner, installation, info, screens.slice(0, 2))
   expect(mutations).toEqual(["Headcount/save", "Entities & allocations/save"])
   expect(messages.pageErrors).toEqual([])
+    expect(messages.consoleErrors).toEqual([])
   await info.attach("native-planner-headcount-allocation-evidence", {
     body: JSON.stringify({ source: "Original domain commands and fresh authorized native reads; no request, authority or receipt mocks",
       areas: ["CAP20", "CAP21"], widths: [1440, 320], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
@@ -388,6 +404,7 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
   await portuguese(browser, page, owner, installation, info, screens.slice(2))
   expect(mutations).toEqual(["FX rates/save", "Versions/save", "Versions/copy"])
   expect(messages.pageErrors).toEqual([])
+    expect(messages.consoleErrors).toEqual([])
   await info.attach("native-planner-fx-versions-evidence", {
     body: JSON.stringify({ source: "Original domain commands and fresh authorized native reads; no request, authority or receipt mocks",
       areas: ["CAP22", "CAP23", "CAP23-compare"], widths: [1440, 320], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
