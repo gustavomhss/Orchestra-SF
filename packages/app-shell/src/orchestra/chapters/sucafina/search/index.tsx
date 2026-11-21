@@ -233,7 +233,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
           </p>
         </Show>
         <Show
-          when={owner.state().status === "ready" && sourceReady() && (!screen.searched || screen.state === "ready")}
+          when={owner.state().status === "ready" && sourceReady() && screen.state === "ready"}
           fallback={
             <SfStatePanel
               state={screen.state === "ready" ? "unavailable" : screen.state}

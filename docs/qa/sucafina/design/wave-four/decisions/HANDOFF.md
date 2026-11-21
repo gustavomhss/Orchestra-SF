@@ -65,3 +65,44 @@ Run root's production Actions fixture with this exact spec and the other wave-fo
 Watch the canonical seed for a producer refusal rather than weakening grants or replacing emitted evidence. UI35 must show the real historical choice on the opaque route. UI41 must issue the choices/list POSTs successfully; a UI-only unavailable placeholder is not proof.
 
 Read `REVIEW.md` for the state matrix and explicit limits. UI39/40 populated apply/receipt paths and UI41 execution/output are preserved but not browser-proven by the current fixture. Do not label them fully qualified without source-backed evidence.
+
+## Decisions6 composition follow-up
+
+The original current-choice GET and question-preparation workbench descriptor lacked native operational observations. Do not replace the existing historical-choice and question assertions with a fabricated unavailable/empty success. The leaf guards now leave loading when their read operation is unadmitted. The native context observer must also be installed.
+
+New files:
+- `apps/cli/src/sucafina-product/native-ui/decision-reading-health.ts`
+- `apps/cli/test/sucafina-decision-reading-health.test.ts`
+
+The host contract's `nativeReadBinding` union adds exactly `decisions.choice.read` and `decisions.command.sf_question_prepare`. The mounting callback in `local/entry.ts` already returns the original generic product binding; it needs no new route or grant.
+
+Parent-owned `apps/cli/src/sucafina-product/host-context.ts` integration (apply to current root; do not copy the worker's older host file):
+
+```ts
+import { observeSfDecisionReadingHealth } from "./native-ui/decision-reading-health.ts"
+
+// Add to the nativeUiContext operational Promise.allSettled:
+observeSfDecisionReadingHealth({
+  ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+  binding: input.nativeReadBinding,
+  source: (operationId) => {
+    if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch) return undefined
+    if (operationId === "decisions.choice.read") {
+      if (!currentChoice || !input.currentChoiceFence) return undefined
+      return { producer: productHttp,
+        dependencies: [currentChoiceHttp, currentChoice, currentChoice.options, business.withCase,
+          business.cases, business.cases.read, business.plannerProduct, business.plannerProduct.issueSource,
+          business.readSourceFences, input.persistence],
+        choice: { fence: input.currentChoiceFence, options: currentChoice.options } }
+    }
+    return { producer: productHttp,
+      dependencies: [services.dispatch, business.collaboration, business.collaboration.authority,
+        business.collaboration.authority.sources, business.cases, business.cases.read, input.persistence],
+      question: { catalog: descriptors, capabilities: business.collaboration.capabilities, dispatch: nativeSearchDispatch } }
+  },
+}, request, stamp),
+```
+
+The source callback only captures actual installed identities. C08 namespace reads, original UI admission/validation and final revalidation establish infrastructure readiness. Question preparation requires the exact original descriptor in both arrays and cases/threads read authority; choice requires its registered real fence and cases/preferences read authority. No health probe calls options, dispatch, prepare, promote or receipt production. All acquired leases finish exactly once, and the binding is rechecked after finish.
+
+Run the 21 new health tests in the parent's CLI gate. They use the real UI authority, C08 state reader, source-lifecycle implementation and current-choice fence over the existing isolated test driver; they reject denial, missing namespace authority, copied fence/descriptor, dependency replacement, revision drift, source failure, abort and disposal during finish. No new test has been executed locally.

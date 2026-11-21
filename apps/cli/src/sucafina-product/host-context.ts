@@ -107,6 +107,7 @@ import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-healt
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
 import { observeSfPersonalViewsHealth } from "./native-ui/personal-views-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
+import { observeSfDecisionReadingHealth } from "./native-ui/decision-reading-health.ts"
 import { observeSfDecisionApplicationHealth } from "./native-ui/decision-application-health.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
@@ -1075,6 +1076,25 @@ export const createSfHostRuntimeWithRoutineNative = async (
               extended.bi.source, extended.bi.source.read, extended.bi.source.revalidate, business.plannerProduct,
               business.plannerProduct.versions, business.plannerProduct.issueSource, input.persistence] }
           } }, request, stamp),
+        observeSfDecisionReadingHealth({
+          ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+          binding: input.nativeReadBinding,
+          source: (operationId) => {
+            if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch) return undefined
+            if (operationId === "decisions.choice.read") {
+              if (!currentChoice || !input.currentChoiceFence) return undefined
+              return { producer: productHttp,
+                dependencies: [currentChoiceHttp, currentChoice, currentChoice.options, business.withCase,
+                  business.cases, business.cases.read, business.plannerProduct, business.plannerProduct.issueSource,
+                  business.readSourceFences, input.persistence],
+                choice: { fence: input.currentChoiceFence, options: currentChoice.options } }
+            }
+            return { producer: productHttp,
+              dependencies: [services.dispatch, business.collaboration, business.collaboration.authority,
+                business.collaboration.authority.sources, business.cases, business.cases.read, input.persistence],
+              question: { catalog: descriptors, capabilities: business.collaboration.capabilities, dispatch: nativeSearchDispatch } }
+          },
+        }, request, stamp),
         observeSfDecisionApplicationHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
           humanActions: authority.humanActions, source: (operationId) => {
             if (services.productHttp !== productHttp || !identity()) return undefined

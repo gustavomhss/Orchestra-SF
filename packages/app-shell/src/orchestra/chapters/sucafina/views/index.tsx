@@ -204,7 +204,12 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
     } else if (props.route.kind === "entry") {
       if (surface) open(props.route.params.viewId, surface)
       else setScreen("detailState", "unavailable")
-    } else loadList()
+    } else {
+      // This route has no selected view. Only the list is loading; an editor
+      // spinner must not remain active after the original list has returned.
+      setScreen("detailState", "empty")
+      loadList()
+    }
     onCleanup(() => {
       listRequest?.abort()
       detailRequest?.abort()
