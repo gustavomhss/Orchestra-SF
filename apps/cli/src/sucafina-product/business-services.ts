@@ -69,7 +69,7 @@ import { prepareSourcingDossier, type ProcurementPreparation } from "../../../..
 import { resolveSfDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 
-export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites?: WeakSet<object>; procurementEvidenceWrites?: WeakSet<object>; caseSelectionWrites?: WeakSet<object>; threadHistoryWrites?: WeakSet<object>; readQuestionContribution?: ReturnType<typeof createSfContributionReader>; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader }) {
+export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites?: WeakSet<object>; procurementEvidenceWrites?: WeakSet<object>; caseSelectionWrites?: WeakSet<object>; threadHistoryWrites?: WeakSet<object>; readQuestionContribution?: ReturnType<typeof createSfContributionReader>; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean }) {
   const host = input.authority.host
   const dashboardHostWrites = input.dashboardHostWrites ?? new WeakSet<object>()
   const periods = new Map<string, { period: Period; expiresAt: number }>()
@@ -426,7 +426,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const procurementScenarios = createSfProcurementScenarioServices({ host, state: input.authority.state, sources: individual, port: procurement, withCase: withCalculationCase })
   const product = createPlannerProduct({ standalone: { supports: procurementScenarios.producer.supports,
     supportsSource: (reference) => reference.startsWith("sf-procurement:"), simulateScenario: procurementScenarios.producer.simulateScenario,
-    resolveSource: procurementScenarios.resolveSource, resolveStored: procurementScenarios.resolveStored }, host, scopedSources: input.persistence, evidence: context,
+    resolveSource: procurementScenarios.resolveSource, resolveStored: procurementScenarios.resolveStored }, host, scopedSources: input.persistence, evidence: context, currentChoicePreparing: input.currentChoicePreparing,
     coverageFor: createPlannerCoverageRouter({ forecast: async (ref, call) => {
       if (ref.startsWith("sf-procurement-coverage:")) return procurementScenarios.producer.resolveForecastCoverage(ref, call)
       if (ref.startsWith("proposal-coverage:")) return decisionDomain.current?.proposalCoverage.resolveForecastCoverage(ref, call) ?? { status: "unavailable", reason: "decision-domain-not-initialized" }
@@ -464,7 +464,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     recordedPlanner: createSfRecordedPlannerOperationAccess({ host, state: input.authority.state, resolveEvidence: context.resolve }) })
   const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, replay: planner, resolveCase })
   const calculationProducer = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
-    writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase, withHistoricalCalculationCase,
+    currentChoicePreparing: input.currentChoicePreparing, writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase, withHistoricalCalculationCase,
     // The historical reader alone receives this coverage route. The exposed
     // Planner and baseline registry continue using the strict original selector.
     resolveHistoricalForecastCoverage: async (ref, call) => {
@@ -482,13 +482,17 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const persistAndIssue: typeof calculationProducer.persistAndIssue = (incoming, callId, call, replay) => readOnlyScenario(incoming.request)
     ? Promise.resolve({ status: "needs-input", reason: "procurement-scenario-explicit-promotion-required" }) : calculationProducer.persistAndIssue(incoming, callId, call, replay)
   // Callers and Atlas must observe the same verifier and persistence facade.
-  const calculations = { ...calculationProducer, persist, persistAndIssue }
+  const persistCurrentChoice: typeof calculationProducer.persistCurrentChoice = (incoming, callId, call, replay, observeRegisteredRequest) =>
+    incoming.kind === "scenario" && readOnlyScenario(incoming.request)
+      ? Promise.resolve({ status: "needs-input", reason: "procurement-scenario-explicit-promotion-required" })
+      : calculationProducer.persistCurrentChoice(incoming, callId, call, replay, observeRegisteredRequest)
+  const calculations = { ...calculationProducer, persist, persistCurrentChoice, persistAndIssue }
   calculationVerifier.current = calculations.verifyCalculationSources
   const receipt = input.authority.authority.receiptFor
   const descriptors = [
     ...input.extraDescriptors ?? [],
     ...createDashboardCapabilities(dashboard, async (call, operation, digest, result) => receipt(call, operation, digest, result)),
-    ...createPlannerCapabilities(planner, receipt, persist, { readOnlyScenario }),
+    ...createPlannerCapabilities(planner, receipt, calculations.persist, { readOnlyScenario }),
     ...createProcurementCapabilities({ port: procurement, authority: input.authority.authority }),
     ...collaboration.capabilities,
     ...createDecisionCapabilities({ cases, createReceipt: receipt, requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } }),

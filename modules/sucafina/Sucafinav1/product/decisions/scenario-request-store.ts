@@ -8,7 +8,7 @@ import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../co
 import type { Snapshot } from "../../runtime/contract.ts"
 import type { createSfDecisionResultStore, StoredDecisionResult } from "./result-store.ts"
 import type { HistoricalCalculationRead } from "./calculation-history.ts"
-import { selectSfCase } from "../host-binding/state-provider.ts"
+import { selectSfCase, selectSfDecisionResult, selectSfNamespaceHealth } from "../host-binding/state-provider.ts"
 
 type StoredScenarioRequest = { schema: "sf-scenario-request-v1"; resultRef: string; caseRef: { id: string; incarnation: string; version: number }; request: ScenarioRequest; requestDigest: string; resultDigest: string; engineVersion: string; recordDigest: string }
 const key = (resultRef: string) => `sf:proposal-coverage:scenario-request:${digestSfValue(resultRef)}`
@@ -20,7 +20,8 @@ export function createScenarioRequestStore(input: {
   results: ReturnType<typeof createSfDecisionResultStore>
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
   authorizeCase: (decision: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
-  authorizeProducer: (request: ScenarioRequest, resultRef: string, engineVersion: string, context: TrustedDomainContext) => Promise<boolean>
+  authorizeProducer: (request: ScenarioRequest, resultRef: string, engineVersion: string, context: TrustedDomainContext) =>
+    Promise<boolean | Extract<StoredDecisionResult, { kind: "scenario" }>>
   /** Nested input is admitted only with the canonical producer's source-closure and ancestry verifier. */
   verifyRequestSources?: (request: ScenarioRequest, result: Extract<StoredDecisionResult, { kind: "scenario" }>, context: TrustedDomainContext) => Promise<boolean>
   verifySnapshot: (snapshot: Snapshot, record: StoredScenarioRequest, context: TrustedDomainContext) => boolean
@@ -81,25 +82,31 @@ export function createScenarioRequestStore(input: {
   const read = (resultRef: string, context: TrustedDomainContext) => readRequest(resultRef, context)
   const readHistorical = (request: HistoricalCalculationRead, context: TrustedDomainContext) => readRequest(request.reference.target.runId, context, request)
   const register = async (incoming: { resultRef: string; request: ScenarioRequest; engineVersion: string }, context: TrustedDomainContext,
-    observe?: (stored: Extract<StoredDecisionResult, { kind: "scenario" }>, read: () => Promise<PortResult<StoredScenarioRequest>>) => Promise<PortResult<StoredScenarioRequest>>): Promise<PortResult<StoredScenarioRequest>> => {
+    observe?: (stored: Extract<StoredDecisionResult, { kind: "scenario" }>, read: () => Promise<PortResult<StoredScenarioRequest>>,
+      committedDigest: string) => Promise<PortResult<StoredScenarioRequest>>): Promise<PortResult<StoredScenarioRequest>> => {
     try {
       const request = structuredClone(incoming)
       const source = input.host.requestFor(context)
       const operation = input.operationIdentity(context)
-      if (!source || !operation || !request.engineVersion.trim() || !decodeSfOperationInput("sf_scenario_simulate", request.request).ok || !await input.authorizeProducer(request.request, request.resultRef, request.engineVersion, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "scenario-request-access-unavailable" }
-      const result = await input.results.read({ resultRef: request.resultRef, kind: "scenario" }, context)
+      if (!source || !operation || !request.engineVersion.trim() || !decodeSfOperationInput("sf_scenario_simulate", request.request).ok) return { status: "denied", reason: "scenario-request-access-unavailable" }
+      const producer = await input.authorizeProducer(request.request, request.resultRef, request.engineVersion, context)
+      if (!producer || source.signal.aborted || input.host.requestFor(context) !== source || !await input.host.revalidate(context)) return { status: "denied", reason: "scenario-request-access-unavailable" }
+      const result = producer === true ? await input.results.read({ resultRef: request.resultRef, kind: "scenario" }, context)
+        : { status: "ok" as const, value: structuredClone(producer) }
       if (result.status !== "ok") return result
-      if (result.value.kind !== "scenario" || result.value.requestDigest !== digestSfValue(request.request)) return { status: "conflict", reason: "scenario-request-mismatch" }
-      const cases = await input.state.read(source, "cases", selectSfCase(result.value.caseRef.id, context))
-      const preferences = await input.state.read(source, "preferences", (_state, authority) => sameAuthority(authority, context))
-      if (cases.status !== "ok" || !cases.value || cases.value.version !== result.value.caseRef.version || cases.value.incarnation !== result.value.caseRef.incarnation || !cases.value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(cases.value, context) || preferences.status !== "ok" || !preferences.value) return { status: "denied", reason: "scenario-request-access-unavailable" }
+      if (result.value.kind !== "scenario" || result.value.resultRef !== request.resultRef || result.value.requestDigest !== digestSfValue(request.request)) return { status: "conflict", reason: "scenario-request-mismatch" }
+      const expectedResult = digestSfValue(result.value)
+      const cases = await input.state.read(source, "cases", selectSfDecisionResult(request.resultRef, context, result.value.caseRef.id))
+      const decision = cases.status === "ok" ? cases.value?.current : undefined
+      const preferences = await input.state.read(source, "preferences", selectSfNamespaceHealth("preferences", context.binding))
+      if (cases.status !== "ok" || digestSfValue(cases.value?.stored) !== expectedResult || !decision || decision.version !== result.value.caseRef.version || decision.incarnation !== result.value.caseRef.incarnation || !decision.participants.includes(context.binding.principalRef) || !await input.authorizeCase(decision, context) || preferences.status !== "ok" || !preferences.value) return { status: "denied", reason: "scenario-request-access-unavailable" }
       const value = { schema: "sf-scenario-request-v1" as const, resultRef: request.resultRef, caseRef: result.value.caseRef, request: request.request, requestDigest: result.value.requestDigest, resultDigest: result.value.resultDigest, engineVersion: request.engineVersion, recordDigest: "" }
       const record = { ...value, recordDigest: digest(value) }
       const work = async (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => {
         const actual = state.cases[record.caseRef.id]
         const stored = state.decisionResults?.[record.resultRef]
         const previous = state.preferences[key(record.resultRef)]
-        if (!sameAuthority(authority, context) || !actual || actual.incarnation !== record.caseRef.incarnation || actual.version !== record.caseRef.version || !actual.participants.includes(context.binding.principalRef) || !stored || digestSfValue(stored) !== digestSfValue(result.value) || previous && digestSfValue(previous) !== digestSfValue(record) || !input.verifySnapshot(snapshot, record, context)) return { commit: false, value: null }
+        if (!sameAuthority(authority, context) || !actual || actual.incarnation !== record.caseRef.incarnation || actual.version !== record.caseRef.version || !actual.participants.includes(context.binding.principalRef) || !stored || digestSfValue(stored) !== expectedResult || previous && digestSfValue(previous) !== digestSfValue(record) || !input.verifySnapshot(snapshot, record, context)) return { commit: false, value: null }
         state.preferences[key(record.resultRef)] = record
         return { commit: true, value: record }
       }
@@ -107,7 +114,7 @@ export function createScenarioRequestStore(input: {
       const saved = await input.state.transaction(source, { namespace: "preferences", domainSurface: "planner", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: cases.storageVersion }], targetRef: record.caseRef.id, targetIncarnation: record.caseRef.incarnation, idempotencyKey: `scenario-request:${operation}`, commandDigest: digestSfValue(record) }, work).finally(() => input.writes.delete(work))
       if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" || saved.status === "preview" ? "conflict" : "unavailable", reason: "scenario-request-unavailable" }
       const verify = () => read(record.resultRef, context)
-      return observe ? await observe(result.value, verify) : await verify()
+      return observe ? await observe(result.value, verify, digestSfValue(saved.value)) : await verify()
     } catch { return { status: "unavailable", reason: "scenario-request-unavailable" } }
   }
   return { register, read, readHistorical }

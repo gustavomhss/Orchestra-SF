@@ -3,7 +3,9 @@ import { Database } from "bun:sqlite"
 import { chmod, chown, link, mkdir, mkdtemp, realpath, rename, rm, stat, symlink, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { openLocalStore } from "../runtime/local-store.ts"
+import { observeLocalSnapshotStability, openLocalStore } from "../runtime/local-store.ts"
+import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
+import type { TrustedDomainContext } from "../product/contracts/sf-execution.ts"
 import type { LocalStore } from "../runtime/local-contract.ts"
 import type { BlobTransaction } from "../runtime/assets.ts"
 import type { Snapshot } from "../runtime/contract.ts"
@@ -47,6 +49,73 @@ async function populate(snapshot: Snapshot) {
   snapshot.audit.push({ who: "actor", at: "2026-11-11", record: "record", was: undefined, became: snapshot.data.record })
   snapshot.notices.push({ kind: "pending", to: ["reviewer"], record: "record", at: "2026-11-11" })
 }
+
+test("snapshot stability attests only the live LocalStore root and its mutable target", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const other = await open()
+    if (!store.readSnapshotRoot || !store.transactionAll) throw new Error("LocalStore snapshot transactions unavailable")
+    expect(observeLocalSnapshotStability(store)).toBeUndefined()
+
+    const observation = await store.transaction("planner", async (snapshot) => {
+      const witness = observeLocalSnapshotStability(store)
+      expect(witness?.mutable?.surface).toBe("planner")
+      expect(witness?.mutable?.snapshot.data).toEqual({})
+      expect(witness?.current()).toBe(true)
+      expect(observeLocalSnapshotStability({ ...store })).toBeUndefined()
+      expect(observeLocalSnapshotStability(other)).toBeUndefined()
+      snapshot.data.changed = true
+
+      await store.transaction("dashboard", async (dashboard) => {
+        expect(witness?.current()).toBe(false)
+        const nested = observeLocalSnapshotStability(store)
+        expect(nested?.mutable?.surface).toBe("planner")
+        expect(nested?.mutable?.snapshot.data.changed).toBe(true)
+        dashboard.data.detached = true
+        return { commit: false, value: undefined }
+      })
+      expect(witness?.current()).toBe(true)
+      expect(witness?.mutable?.snapshot.data.changed).toBeUndefined()
+      expect(store.currentSnapshot?.("dashboard")?.data.detached).toBeUndefined()
+      return { commit: false, value: witness }
+    })
+    expect(observation?.current()).toBe(false)
+
+    await store.readSnapshotRoot(async () => {
+      const witness = observeLocalSnapshotStability(store)
+      expect(witness?.current()).toBe(true)
+      expect(witness?.mutable).toBeUndefined()
+    })
+    await store.transactionAll(async () => {
+      expect(observeLocalSnapshotStability(store)).toBeUndefined()
+      return { commit: false, value: undefined }
+    })
+  })
+})
+
+test("CurrentChoice rejects replacing the snapshot driver during reauthorization", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const request = new Request("https://example.invalid/current-choice")
+    const identity = { installationId: "test-installation", projectId: "test-project" }
+    const call = Object.freeze({ kind: "ui", binding: Object.freeze(identity), lease: Object.freeze({}) }) as TrustedDomainContext
+    const alternate: LocalStore = { ...store, currentSnapshots: () => {
+      const snapshots = store.currentSnapshots?.()
+      if (snapshots) snapshots.dashboard.data.changed = true
+      return snapshots
+    } }
+    const host = { requestFor: () => request, revalidate: async () => {
+      input.persistence = alternate
+      return true
+    } }
+    const input = { persistence: store, host: () => host, operationIdentity: () => "prepare", identity: () => identity }
+    const fence = createCurrentChoiceFence(input)
+
+    await expect(fence.run(call, () => fence.persistence.transaction("planner", async () => ({
+      commit: false, value: "candidate",
+    })))).rejects.toThrow("SF_CURRENT_CHOICE_FENCE_CHANGED")
+  })
+})
 
 test("real SQLite persists the entire snapshot, binary blobs and undefined across reopen", async () => {
   await fixture(async (directory, open) => {
