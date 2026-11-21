@@ -132,7 +132,9 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
   const can = (action: SupplierAction) => {
     const current = page()
     const context = host.ready()?.context
+    const selected = ref()
     return !!current && !!context &&
+      (action === "create" || !!selected && current.value.selection.supplier === selected) &&
       current.value.allowedActionIds.includes(action) &&
       context.availability.some((resource) =>
         resource.family === "procurement" && resource.resource === "CAP27" &&
