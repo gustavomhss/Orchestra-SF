@@ -1,7 +1,10 @@
+import { types } from "node:util"
+import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads } from "../../runtime/local-store.ts"
+import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
 import type { Persistence, Snapshot, TransactionOptions } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
-import { digestSfValue } from "../contracts/canonical.ts"
+import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
 
 // An identity reservation exists only while the source producer owns this snapshot.
 const creationBinders = new WeakMap<Snapshot, (recordType: string, recordId: string) => string>()
@@ -26,31 +29,116 @@ export type SfScopedSourcePort = {
   checkScopedSource?: (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => Promise<boolean>
 }
 
+type CanonicalScopedSourceCheck = NonNullable<SfScopedSourcePort["checkScopedSource"]>
+// Register only factory-owned code. No snapshot, observation or result is retained.
+const canonicalSourceChecks = new WeakMap<object, CanonicalScopedSourceCheck>()
+const plannerAclReaders = new WeakSet<object>()
+
+/** The canonical Planner source authorizer needs the current role map only. */
+export function plannerScopeAuthority(authorize: (snapshot: Pick<Snapshot, "data">) => Promise<boolean>) {
+  plannerAclReaders.add(authorize)
+  return authorize
+}
+
+/** A wrapped/replaced method must keep its wrapper's existing authority path. */
+export function canonicalScopedSourceCheck(port: SfScopedSourcePort): CanonicalScopedSourceCheck | undefined {
+  const check = canonicalSourceChecks.get(port)
+  const method = check && Object.getOwnPropertyDescriptor(port, "checkScopedSource")
+  return method && Object.hasOwn(method, "value") && method.value === check ? check : undefined
+}
+
+const authorityMethods = ["currentSnapshots", "currentSnapshot", "hasCurrentSnapshots", "transaction", "transactionAll", "currentSnapshotScope"] as const
+const sourceAuthorityReaders = new WeakMap<object, { base: object; current: (owner: object) => boolean }>()
+
+/** Read lexical presence without copying data for a registered local adapter. */
+export function hasSfLocalSnapshotScope(owner: object) {
+  const all = !types.isProxy(owner) && Object.getOwnPropertyDescriptor(owner, "currentSnapshots")?.value
+  const registered = typeof all === "function" ? sourceAuthorityReaders.get(all) : undefined
+  if (!registered) return hasLocalSnapshotScope(owner)
+  return registered.current(owner) ? hasLocalSnapshotScope(registered.base) : undefined
+}
+
+/** Observe the other two surfaces when Dashboard is already observed by its transaction. */
+export function currentSfSiblingSnapshots(owner: Pick<Persistence, "currentSnapshot" | "currentSnapshots">) {
+  const all = !types.isProxy(owner) && Object.getOwnPropertyDescriptor(owner, "currentSnapshots")?.value
+  const registered = typeof all === "function" ? sourceAuthorityReaders.get(all) : undefined
+  const paired = registered ? registered.current(owner) && hasPairedLocalSnapshotReads(registered.base) : hasPairedLocalSnapshotReads(owner)
+  if (!paired || !owner.currentSnapshot) return owner.currentSnapshots?.()
+  const planner = owner.currentSnapshot("planner")
+  const procurement = owner.currentSnapshot("procurement")
+  return planner && procurement ? { planner, procurement } : undefined
+}
+
+/** Recognize only factory-owned forwarders, including their canonical spread composition. */
+export function currentSfReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
+  if (types.isProxy(owner) || Object.getPrototypeOf(owner) !== Object.prototype) return undefined
+  const descriptor = Object.getOwnPropertyDescriptor(owner, "currentSnapshots")
+  const registered = descriptor && Object.hasOwn(descriptor, "value") && typeof descriptor.value === "function" ?
+    sourceAuthorityReaders.get(descriptor.value) : undefined
+  if (!registered) return currentLocalReadonlyAuthorityData(owner, surfaces)
+  const root = Object.getOwnPropertyDescriptor(owner, "readSnapshotRoot")
+  if (!root || !Object.hasOwn(root, "value") || typeof root.value !== "function" || !registered.current(owner)) return undefined
+  // A caller may bracket the root callback. The admitted snapshot methods
+  // and the actual underlying LocalStore scope still determine its data.
+  const observation = currentLocalReadonlyAuthorityData(registered.base, surfaces)
+  if (!observation) return undefined
+  const integrity = { failed: false }
+  return { snapshots: observation.snapshots, scope: observation.scope, current: (requirement) => {
+    const method = Object.getOwnPropertyDescriptor(owner, "readSnapshotRoot")
+    const valid = observation.current(requirement) && !integrity.failed && registered.current(owner) &&
+      !!method && Object.hasOwn(method, "value") && method.value === root.value
+    if (!valid) integrity.failed = true
+    return valid
+  } }
+}
+
+/** A known read root seals the full snapshot set while its live callbacks run. */
+export function currentSfReadonlySnapshotScope(owner: Pick<Persistence, "currentSnapshotScope">) {
+  const method = !types.isProxy(owner) && Object.getOwnPropertyDescriptor(owner, "currentSnapshotScope")
+  if (!method || typeof method.value !== "function") return undefined
+  const observed = currentSfReadonlyAuthorityData(owner, [])
+  if (!observed?.scope) return undefined
+  const optionalFields = ["sfSources", "sfBlobGenerations"]
+  const plain = () => sfCanonicalSerializerUnhooked() &&
+    optionalFields.every((field) => !Object.getOwnPropertyDescriptor(Object.prototype, field))
+  if (!plain()) return undefined
+  return { identity: observed.scope.identity, bytesIdentity: observed.scope.bytesIdentity,
+    current: () => observed.current("unpoisoned") && plain() }
+}
+
 export type SfSourceIdentityInput = { recordType: string; recordId: string; inputDigest: string }
+
+type SourceDriver = AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "currentSnapshot" | "hasCurrentSnapshots" | "readSnapshotRoot" | "currentSnapshotScope">
 
 /** Wrap the installation's existing driver once, shared by HTTP, jobs and restore. No new store. */
 export function createSfSourcePersistence(input: {
-  persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot">
+  persistence: SourceDriver
   enumerate: (surface: Surface, snapshot: Snapshot) => readonly SfSourceIdentityInput[]
   createId: () => string
   purpose?: "business-restore"
   projectScope?: (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => unknown | undefined
-}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
-  const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
+}): SourceDriver & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
+  const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, ownedAcl?: ReadonlyAuthorityData<"planner">) => {
     requireSourceIdentities(snapshot)
     const scope = structuredClone(requested)
     if (![scope.principalRef, scope.accessRevision, scope.policyVersion, scope.recordType, scope.recordId].every((value) => typeof value === "string" && value.trim())) throw new Error("SF_SOURCE_SCOPE_INVALID")
     if (!input.projectScope) throw new Error("SF_SOURCE_SCOPE_PROJECTOR_UNAVAILABLE")
-    const before = digestSfValue(snapshot)
-    if (!await authorize(snapshot)) return undefined
+    const acl = ownedAcl && plannerAclReaders.has(authorize) ? ownedAcl : undefined
+    const before = acl ? undefined : digestSfValue(snapshot)
+    const authenticate = () => {
+      if (!acl) return authorize(snapshot)
+      if (!acl.current()) return Promise.resolve(false)
+      return authorize({ data: structuredClone(acl.snapshots.planner.data), versions: {}, sequences: {}, audit: [], notices: [] })
+    }
+    if (!await authenticate()) return undefined
     const projection = input.projectScope(surface, structuredClone(snapshot), structuredClone(scope))
     const source = sfSourceIdentity(snapshot, scope.recordType, scope.recordId)
-    if (projection === undefined || !source || !await authorize(snapshot)) return undefined
-    if (digestSfValue(snapshot) !== before) throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
+    if (projection === undefined || !source || !await authenticate()) return undefined
+    if (acl ? !acl.current() : digestSfValue(snapshot) !== before) throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
     return { scope, projection, source, inputDigest: digestSfValue(projection) }
   }
-  const readScopedSnapshot = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
-    const observed = await observe(surface, snapshot, requested, authorize)
+  const readScopedSnapshot = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, ownedAcl?: ReadonlyAuthorityData<"planner">) => {
+    const observed = await observe(surface, snapshot, requested, authorize, ownedAcl)
     if (!observed) return { commit: false, value: undefined }
     const { scope, projection, source, inputDigest } = observed
     const key = digestSfValue(scope)
@@ -64,16 +152,18 @@ export function createSfSourcePersistence(input: {
     requireSourceIdentities(snapshot)
     return { commit: digestSfValue(prior) !== digestSfValue(entry), value: { projection: structuredClone(projection), incarnation: entry.incarnation, version: entry.version, inputDigest } }
   }
-  const guard = (surface: Surface, snapshot: Snapshot) => {
-    const before = digestSfValue(snapshot.sfSources)
+  const guard = (surface: Surface, snapshot: Snapshot, sealedPreimage?: () => Snapshot | undefined) => {
+    const before = sealedPreimage ? undefined : digestSfValue(snapshot.sfSources)
     const auditStart = snapshot.audit.length
-    const auditPrefix = digestSfValue(snapshot.audit)
+    const auditPrefix = sealedPreimage ? undefined : digestSfValue(snapshot.audit)
     const productState = input.purpose === "business-restore" ? structuredClone(snapshot.data.__sfProductV1) : undefined
     const reserved = new Map<string, { incarnation: string; inputDigest: string }>()
     const previous = creationBinders.get(snapshot)
     const bind = (recordType: string, recordId: string) => {
       requireSourceIdentities(snapshot)
-      if (input.purpose === "business-restore" || before !== digestSfValue(snapshot.sfSources))
+      const original = sealedPreimage?.()
+      if (input.purpose === "business-restore" || (sealedPreimage && !original) ||
+        (sealedPreimage ? digestSfValue(original?.sfSources) : before) !== digestSfValue(snapshot.sfSources))
         throw new Error("SF_SOURCE_IDENTITY_MUTATION")
       if (!recordType.trim() || !recordId.trim()) throw new Error("SF_SOURCE_INPUT_INVALID")
       const key = JSON.stringify([recordType, recordId])
@@ -95,6 +185,8 @@ export function createSfSourcePersistence(input: {
     creationBinders.set(snapshot, bind)
     return {
       finish: () => {
+        // The native store must see commit:true so it can poison the read root.
+        if (sealedPreimage) return
         requireSourceIdentities(snapshot)
         if (before !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
         if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
@@ -121,8 +213,11 @@ export function createSfSourcePersistence(input: {
       },
     }
   }
-  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
+  const persistence: SourceDriver & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
+    ...(input.persistence.hasCurrentSnapshots ? { hasCurrentSnapshots: () => input.persistence.hasCurrentSnapshots!() } : {}),
+    ...(input.persistence.currentSnapshotScope ? { currentSnapshotScope: () => input.persistence.currentSnapshotScope!() } : {}),
     ...(input.persistence.currentSnapshots ? { currentSnapshots: () => input.persistence.currentSnapshots!() } : {}),
+    ...(input.persistence.currentSnapshot ? { currentSnapshot: (surface: Surface) => input.persistence.currentSnapshot!(surface) } : {}),
     // Scope forwarding does not admit a source. Callers still enter transaction
     // below, preserving source guards and any underlying CurrentChoice fence.
     ...(input.persistence.readSnapshotRoot ? { readSnapshotRoot: <T>(work: () => Promise<T>, options?: TransactionOptions) =>
@@ -141,14 +236,32 @@ export function createSfSourcePersistence(input: {
     },
     readScopedSource: (surface, requested, authorize) => input.persistence.transaction(surface, (snapshot) =>
       readScopedSnapshot(surface, snapshot, requested, authorize)),
-    readScopedSourcePrepared: (surface, prepare, options) => input.persistence.transaction(surface, async (snapshot) => {
-      requireSourceIdentities(snapshot)
-      // Preparation receives an isolated view. Its callback cannot alter the held
-      // source snapshot before observe establishes its existing mutation guard.
-      const prepared = await prepare(structuredClone(snapshot))
-      if (!prepared) return { commit: false, value: undefined }
-      return readScopedSnapshot(surface, snapshot, prepared.scope, prepared.authorize)
-    }, options),
+    readScopedSourcePrepared: (surface, prepare, options) => {
+      const driver = input.persistence
+      const method = surface === "planner" && !types.isProxy(driver) && Object.getOwnPropertyDescriptor(driver, "transaction")
+      return driver.transaction(surface, async (snapshot) => {
+        requireSourceIdentities(snapshot)
+        const active = method && Object.getOwnPropertyDescriptor(driver, "transaction")
+        const provider = !types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype &&
+          Object.getOwnPropertyDescriptor(input, "persistence")
+        const owned = method && Object.hasOwn(method, "value") && active && Object.hasOwn(active, "value") &&
+          active.value === method.value && provider && Object.hasOwn(provider, "value") && provider.value === driver ?
+          currentLocalReadonlyAuthorityData(driver, ["planner"]) : undefined
+        // Preparation receives an isolated view before source authorization.
+        const prepared = await prepare(structuredClone(snapshot))
+        if (!prepared) return { commit: false, value: undefined }
+        const acl = owned && plannerAclReaders.has(prepared.authorize) ? {
+          snapshots: owned.snapshots,
+          current: () => {
+            const current = Object.getOwnPropertyDescriptor(input, "persistence")
+            return Object.getPrototypeOf(input) === Object.prototype && !!current && Object.hasOwn(current, "value") &&
+              current.value === driver && owned.current()
+          },
+        } : undefined
+        if (acl && !acl.current()) return { commit: false, value: undefined }
+        return readScopedSnapshot(surface, snapshot, prepared.scope, prepared.authorize, acl)
+      }, options)
+    },
     ...(input.persistence.currentSnapshots ? { checkScopedSource: async (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => {
       const check = async (snapshot: Snapshot) => {
         const observed = await observe(surface, snapshot, scope, authorize)
@@ -170,15 +283,25 @@ export function createSfSourcePersistence(input: {
       synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, false)
       return { commit: true, value: undefined }
     }),
-    transaction: (surface, work, options) => input.persistence.transaction(surface, async (snapshot, blobs) => {
-      requireSourceIdentities(snapshot)
-      const guarded = guard(surface, snapshot)
-      try {
-        const result = await work(snapshot, blobs)
-        if (result.commit) guarded.finish()
-        return result
-      } finally { guarded.dispose() }
-    }, options),
+    transaction: (surface, work, options) => {
+      const driver = input.persistence
+      const method = !types.isProxy(driver) && Object.getOwnPropertyDescriptor(driver, "transaction")
+      return driver.transaction(surface, async (snapshot, blobs) => {
+        requireSourceIdentities(snapshot)
+        const active = method && Object.getOwnPropertyDescriptor(driver, "transaction")
+        // A writable or opaque driver still needs the full preflight before work.
+        const sealed = input.purpose !== "business-restore" && method && Object.hasOwn(method, "value") &&
+          active && Object.hasOwn(active, "value") && active.value === method.value ?
+          currentLocalReadonlyAuthorityData(driver, []) : undefined
+        const sealedPreimage = sealed ? () => sealed.current() ? driver.currentSnapshot?.(surface) : undefined : undefined
+        const guarded = guard(surface, snapshot, sealedPreimage)
+        try {
+          const result = await work(snapshot, blobs)
+          if (result.commit) guarded.finish()
+          return result
+        } finally { guarded.dispose() }
+      }, options)
+    },
     ...(input.persistence.transactionAll ? { transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) =>
       input.persistence.transactionAll!(async (snapshots) => {
         const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
@@ -195,6 +318,28 @@ export function createSfSourcePersistence(input: {
           return result
         } finally { guarded.forEach((entry) => entry.dispose()) }
       }, options) } : {}),
+  }
+  if (persistence.checkScopedSource) canonicalSourceChecks.set(persistence, persistence.checkScopedSource)
+  // Registration accepts no external callback. Only these freshly constructed
+  // forwarders can identify this factory, and their base remains independently
+  // recognized by LocalStore. Inspecting a custom input must not call a getter.
+  if (!types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype) {
+    const descriptor = Object.getOwnPropertyDescriptor(input, "persistence")
+    const key = Object.getOwnPropertyDescriptor(persistence, "currentSnapshots")?.value
+    if (descriptor && Object.hasOwn(descriptor, "value") && descriptor.value && typeof descriptor.value === "object" && typeof key === "function") {
+      const base = descriptor.value
+      const original = authorityMethods.map((name) => Object.getOwnPropertyDescriptor(persistence, name)?.value)
+      sourceAuthorityReaders.set(key, { base, current: (owner) => {
+        if (types.isProxy(owner) || Object.getPrototypeOf(owner) !== Object.prototype ||
+          types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) return false
+        const current = Object.getOwnPropertyDescriptor(input, "persistence")
+        return !!current && Object.hasOwn(current, "value") && current.value === base && authorityMethods.every((name, index) => {
+          const method = Object.getOwnPropertyDescriptor(owner, name)
+          if (original[index] === undefined) return !method && !Object.getOwnPropertyDescriptor(Object.prototype, name)
+          return !!method && Object.hasOwn(method, "value") && method.value === original[index]
+        })
+      } })
+    }
   }
   return persistence
 }

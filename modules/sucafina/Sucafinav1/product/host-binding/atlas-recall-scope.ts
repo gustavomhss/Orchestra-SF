@@ -28,7 +28,7 @@ export function createSfAtlasRecallScope(input: {
   state: SfProductStatePort
   sources: PlannerSourceHost
   readPlanner: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
-  calculation: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
+  calculation: (ref: BusinessEvidenceRef, call: TrustedDomainContext, cited?: boolean) => Promise<BusinessEvidenceResolution>
   withCalculationCase: SfCalculationCaseScope
   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
   now: () => string
@@ -88,22 +88,22 @@ export function createSfAtlasRecallScope(input: {
     return after?.kind === "current" && after.digest === before.digest && current(scope)
       ? { kind: "current", digest: digestSfValue({ snapshot: after.digest, coverage: coverage.value }) } : undefined
   }
-  const resolve = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+  const resolve = async (ref: BusinessEvidenceRef, call: TrustedDomainContext, cited?: boolean): Promise<BusinessEvidenceResolution> => {
     const scope = local.getStore()
     if (!scope || scope.call !== call || scope.closed || scope.busy || ref.kind !== "calculation" || ref.target.calculationId !== "planner:scenario" ||
       !ref.target.sourceRefs.length || !plannerRefs(ref.target.sourceRefs)?.length || scope.proof && scope.proof.refDigest !== digestSfValue(ref))
-      return input.calculation(ref, call)
+      return input.calculation(ref, call, cited)
     const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() })
     if (!current(scope)) return unavailable()
     const captured = structuredClone(ref), refDigest = digestSfValue(ref)
     scope.busy = true
     try {
       const before = await fence(scope, captured)
-      if (before?.kind === "unsupported" && !scope.proof) return await input.calculation(ref, call)
+      if (before?.kind === "unsupported" && !scope.proof) return await input.calculation(ref, call, cited)
       if (before?.kind !== "current" || scope.proof && scope.proof.fence !== before.digest) { scope.invalid = true; return unavailable() }
       // Never hold a Promise or serialize recursive work. Reentry above reaches
       // the unchanged financial producer and its existing cycle guard.
-      const result = scope.proof ? structuredClone(scope.proof.resolution) : await input.calculation(ref, call)
+      const result = scope.proof ? structuredClone(scope.proof.resolution) : await input.calculation(ref, call, cited)
       if (result.state !== "fresh") return result
       if (!result.currentRef || !result.authorizedProjection || result.accessRevision !== call.binding.accessRevision ||
         digestSfValue(result.ref) !== refDigest || digestSfValue(result.currentRef) !== refDigest) return unavailable()

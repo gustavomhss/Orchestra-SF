@@ -8,6 +8,7 @@ import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../co
 import type { Snapshot } from "../../runtime/contract.ts"
 import type { createSfDecisionResultStore, StoredDecisionResult } from "./result-store.ts"
 import type { HistoricalCalculationRead } from "./calculation-history.ts"
+import { selectSfCase } from "../host-binding/state-provider.ts"
 
 type StoredScenarioRequest = { schema: "sf-scenario-request-v1"; resultRef: string; caseRef: { id: string; incarnation: string; version: number }; request: ScenarioRequest; requestDigest: string; resultDigest: string; engineVersion: string; recordDigest: string }
 const key = (resultRef: string) => `sf:proposal-coverage:scenario-request:${digestSfValue(resultRef)}`
@@ -38,25 +39,32 @@ export function createScenarioRequestStore(input: {
       if (!decodeSfOperationInput("sf_scenario_simulate", record.request).ok || !input.verifyRequestSources && (record.request.assumptions.some((item) => item.evidenceRefs.some((ref) => ref.kind !== "record")) || record.request.operations.some((item) => item.replacementRef !== undefined))) return { status: "unavailable", reason: "calculation-source-unsupported" }
       const result = await readResult()
       if (result.status !== "ok" || result.value.kind !== "scenario") return { status: "unavailable", reason: "scenario-request-unavailable" }
-      const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[result.value.caseRef.id] : undefined)
+      const current = await input.state.read(source, "cases", selectSfCase(result.value.caseRef.id, context))
       const decision = current.status === "ok" ? structuredClone(current.value) : undefined
       const expectedCase = historical?.caseRef ?? record.caseRef
       if (record.schema !== "sf-scenario-request-v1" || record.resultRef !== resultRef || record.recordDigest !== digest(record) || !decodeSfOperationInput("sf_scenario_simulate", record.request).ok || record.requestDigest !== digestSfValue(record.request) || record.requestDigest !== result.value.requestDigest || record.resultDigest !== result.value.resultDigest || digestSfValue(record.caseRef) !== digestSfValue(result.value.caseRef) || !record.engineVersion.trim() || historical && record.engineVersion !== historical.reference.target.engineVersion || !decision || decision.id !== expectedCase.id || decision.version !== expectedCase.version || decision.incarnation !== expectedCase.incarnation || !decision.participants.includes(context.binding.principalRef) || !await authorizeCase(decision, context)) return { status: "unavailable", reason: "scenario-request-unavailable" }
       if (input.verifyRequestSources && !await verifyRequestSources(record.request, result.value, context)) return { status: "unavailable", reason: "calculation-request-sources-unproven" }
       const again = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[key(resultRef)] : undefined)
       const resultAgain = await readResult()
-      const caseAgain = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[result.value.caseRef.id] : undefined)
-      if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(record) || resultAgain.status !== "ok" || digestSfValue(resultAgain.value) !== digestSfValue(result.value) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "scenario-request-changed" }
-      if (caseAgain.status !== "ok" || !caseAgain.value || digestSfValue(caseAgain.value) !== digestSfValue(decision) || !await authorizeCase(caseAgain.value, context)) return { status: "stale", reason: "scenario-request-case-changed" }
+      const caseAgain = await input.state.read(source, "cases", selectSfCase(result.value.caseRef.id, context))
+      if (again.status !== "ok") return { status: "stale", reason: "scenario-request-changed" }
+      const observedRecordDigest = digestSfValue(again.value)
+      // Only reuse hashes of the private clones, never of callback-owned or fresh reads.
+      const baselineRecordDigest = digestSfValue(record)
+      if (observedRecordDigest !== baselineRecordDigest || resultAgain.status !== "ok" || digestSfValue(resultAgain.value) !== digestSfValue(result.value) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "scenario-request-changed" }
+      if (caseAgain.status !== "ok" || !caseAgain.value) return { status: "stale", reason: "scenario-request-case-changed" }
+      const observedCaseDigest = digestSfValue(caseAgain.value)
+      const baselineCaseDigest = digestSfValue(decision)
+      if (observedCaseDigest !== baselineCaseDigest || !await authorizeCase(caseAgain.value, context)) return { status: "stale", reason: "scenario-request-case-changed" }
       if (input.verifyRequestSources && (resultAgain.value.kind !== "scenario" || !await verifyRequestSources(record.request, resultAgain.value, context) || source.signal.aborted || !await input.host.revalidate(context))) return { status: "unavailable", reason: "calculation-request-sources-unproven" }
       // Request-source replay can await work after caseAgain. Reauthorize both
       // namespaces, then fence the request, result and case in one final C08 read.
       const finalRecord = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[key(resultRef)] : undefined)
-      if (finalRecord.status !== "ok" || digestSfValue(finalRecord.value) !== digestSfValue(record)) return { status: "stale", reason: "scenario-request-changed" }
+      if (finalRecord.status !== "ok" || digestSfValue(finalRecord.value) !== baselineRecordDigest) return { status: "stale", reason: "scenario-request-changed" }
       const final = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { decision: state.cases[result.value.caseRef.id], result: state.decisionResults?.[resultRef], record: state.preferences[key(resultRef)] } : undefined)
       if (final.status !== "ok" || !final.value || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "scenario-request-changed" }
-      if (!final.value.decision || digestSfValue(final.value.decision) !== digestSfValue(decision)) return { status: "stale", reason: "scenario-request-case-changed" }
-      if (digestSfValue(final.value.record) !== digestSfValue(record) || digestSfValue(final.value.result) !== digestSfValue(resultAgain.value)) return { status: "stale", reason: "scenario-request-changed" }
+      if (!final.value.decision || digestSfValue(final.value.decision) !== baselineCaseDigest) return { status: "stale", reason: "scenario-request-case-changed" }
+      if (digestSfValue(final.value.record) !== baselineRecordDigest || digestSfValue(final.value.result) !== digestSfValue(resultAgain.value)) return { status: "stale", reason: "scenario-request-changed" }
       return { status: "ok", value: structuredClone(record) }
     } catch { return { status: "unavailable", reason: "scenario-request-unavailable" } }
   }
@@ -72,7 +80,8 @@ export function createScenarioRequestStore(input: {
   }
   const read = (resultRef: string, context: TrustedDomainContext) => readRequest(resultRef, context)
   const readHistorical = (request: HistoricalCalculationRead, context: TrustedDomainContext) => readRequest(request.reference.target.runId, context, request)
-  const register = async (incoming: { resultRef: string; request: ScenarioRequest; engineVersion: string }, context: TrustedDomainContext): Promise<PortResult<StoredScenarioRequest>> => {
+  const register = async (incoming: { resultRef: string; request: ScenarioRequest; engineVersion: string }, context: TrustedDomainContext,
+    observe?: (stored: Extract<StoredDecisionResult, { kind: "scenario" }>, read: () => Promise<PortResult<StoredScenarioRequest>>) => Promise<PortResult<StoredScenarioRequest>>): Promise<PortResult<StoredScenarioRequest>> => {
     try {
       const request = structuredClone(incoming)
       const source = input.host.requestFor(context)
@@ -81,7 +90,7 @@ export function createScenarioRequestStore(input: {
       const result = await input.results.read({ resultRef: request.resultRef, kind: "scenario" }, context)
       if (result.status !== "ok") return result
       if (result.value.kind !== "scenario" || result.value.requestDigest !== digestSfValue(request.request)) return { status: "conflict", reason: "scenario-request-mismatch" }
-      const cases = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[result.value.caseRef.id] : undefined)
+      const cases = await input.state.read(source, "cases", selectSfCase(result.value.caseRef.id, context))
       const preferences = await input.state.read(source, "preferences", (_state, authority) => sameAuthority(authority, context))
       if (cases.status !== "ok" || !cases.value || cases.value.version !== result.value.caseRef.version || cases.value.incarnation !== result.value.caseRef.incarnation || !cases.value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(cases.value, context) || preferences.status !== "ok" || !preferences.value) return { status: "denied", reason: "scenario-request-access-unavailable" }
       const value = { schema: "sf-scenario-request-v1" as const, resultRef: request.resultRef, caseRef: result.value.caseRef, request: request.request, requestDigest: result.value.requestDigest, resultDigest: result.value.resultDigest, engineVersion: request.engineVersion, recordDigest: "" }
@@ -97,7 +106,8 @@ export function createScenarioRequestStore(input: {
       input.writes.add(work)
       const saved = await input.state.transaction(source, { namespace: "preferences", domainSurface: "planner", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: cases.storageVersion }], targetRef: record.caseRef.id, targetIncarnation: record.caseRef.incarnation, idempotencyKey: `scenario-request:${operation}`, commandDigest: digestSfValue(record) }, work).finally(() => input.writes.delete(work))
       if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" || saved.status === "preview" ? "conflict" : "unavailable", reason: "scenario-request-unavailable" }
-      return read(record.resultRef, context)
+      const verify = () => read(record.resultRef, context)
+      return observe ? await observe(result.value, verify) : await verify()
     } catch { return { status: "unavailable", reason: "scenario-request-unavailable" } }
   }
   return { register, read, readHistorical }

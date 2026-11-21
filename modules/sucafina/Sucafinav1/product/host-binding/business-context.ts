@@ -201,7 +201,7 @@ export function createSfEvidenceRouter(input: {
   procurement: ReturnType<typeof createSfProcurementSourceAccess>
   document?: ReturnType<typeof createSfDocumentSourceAccess>
   planner?: ReturnType<typeof createSfDashboardSourceAccess>
-  calculation?: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
+  calculation?: (ref: BusinessEvidenceRef, call: TrustedDomainContext, cited?: boolean) => Promise<BusinessEvidenceResolution>
   dashboardProof: ReturnType<typeof createSfDashboardContinuityProof>
   caseEventProof: ReturnType<typeof createSfSourceContinuityProof>
   procurementProof: ReturnType<typeof createSfSourceContinuityProof>
@@ -221,7 +221,7 @@ export function createSfEvidenceRouter(input: {
       if (ref.kind === "receipt" && ["dashboard", "procurement"].includes(ref.target.surface) && input.receipt) return input.receipt(ref, call)
       if (ref.kind === "document" && input.document) return input.document(ref, call)
       if (ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version" && input.planner) return input.planner(ref, call)
-      if (ref.kind === "calculation" && input.calculation) return input.calculation(ref, call)
+      if (ref.kind === "calculation" && input.calculation) return input.calculation(ref, call, ancestors.size > 0)
       return Promise.resolve({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
     },
     proveContinuity(original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext): Promise<boolean> {
@@ -259,7 +259,7 @@ export function createSfAtlasBusiness(input: {
   planner?: { sources: PlannerSourceHost; port: PlannerPort; project?: (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext) => Promise<import("../contracts/ports.ts").PortResult<DomainProjection>>;
     /** Host-owned reader with current source and projection checks; an arbitrary project callback does not qualify. */
     readEvidence?: (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution> }
-  calculation?: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
+  calculation?: (ref: BusinessEvidenceRef, call: TrustedDomainContext, cited?: boolean) => Promise<BusinessEvidenceResolution>
   caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<readonly { id: string; incarnation: string }[] | { id: string; incarnation: string } | undefined>
   calculationHistorical?: (ref: BusinessEvidenceRef, call: TrustedDomainContext,
     readCapture: (caseRef: { id: string; incarnation: string; version: number }, digest: string, call: TrustedDomainContext) => Promise<ProtectedEvidenceCapture | undefined>) => Promise<BusinessEvidenceResolution>
@@ -403,8 +403,8 @@ export function createSfAtlasBusiness(input: {
   const currentCalculation = recallScope?.resolve ?? input.calculation
   const historicalCalculation = input.calculationHistorical ? (ref: BusinessEvidenceRef, call: TrustedDomainContext) =>
     input.calculationHistorical!(ref, call, (caseRef, digest, trusted) => memory.readOriginalCapture(caseRef, digest, trusted)) : undefined
-  const calculation = currentCalculation ? async (ref: BusinessEvidenceRef, call: TrustedDomainContext) => {
-    const current = await currentCalculation(ref, call)
+  const calculation = currentCalculation ? async (ref: BusinessEvidenceRef, call: TrustedDomainContext, cited?: boolean) => {
+    const current = await currentCalculation(ref, call, cited)
     if (current.state === "fresh" || !historicalCalculation) return current
     const historical = await historicalCalculation(ref, call)
     return historical.state === "historical" ? historical : current
