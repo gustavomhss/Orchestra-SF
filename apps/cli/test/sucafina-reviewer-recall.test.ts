@@ -53,6 +53,19 @@ function value<T>(result: PortResult<T> | SfStateResult<T>, step: string): T {
   return result.value
 }
 
+async function step<T>(label: string, timeoutMs: number, run: (signal: AbortSignal) => Promise<T>): Promise<T> {
+  const abort = new AbortController()
+  const start = performance.now()
+  console.info(`SF_REVIEWER_PROOF ${label} started`)
+  const timer = setTimeout(() => abort.abort(new Error(`SF_REVIEWER_PROOF ${label} exceeded ${timeoutMs}ms`)), timeoutMs)
+  try {
+    const expired = new Promise<never>((_, reject) => abort.signal.addEventListener("abort", () => reject(abort.signal.reason), { once: true }))
+    const result = await Promise.race([run(abort.signal), expired])
+    console.info(`SF_REVIEWER_PROOF ${label} completed in ${Math.round(performance.now() - start)}ms`)
+    return result
+  } finally { clearTimeout(timer) }
+}
+
 test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected Atlas precedent and rejects other cases without writing business state", async () => {
   expectSpawn(import.meta.path)
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "sf-reviewer-"))
@@ -61,8 +74,9 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
   const year = at.slice(0, 4)
   const period = { start: year + "-01-01", end: year + "-12-31" }
   const actors = new WeakMap<Request, string>()
-  const request = (principal = "reviewer") => {
-    const incoming = new Request(origin + "/sucafina/dashboard", { method: "POST", headers: { origin, "idempotency-key": randomUUID() } })
+  const revoked = new Set<string>()
+  const request = (principal = "reviewer", signal?: AbortSignal) => {
+    const incoming = new Request(origin + "/sucafina/dashboard", { method: "POST", signal, headers: { origin, "idempotency-key": randomUUID() } })
     actors.set(incoming, principal)
     return incoming
   }
@@ -76,11 +90,13 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
     if (new URL(request.url).origin !== "https://api.openai.com") return fetch(incoming, init)
     if (request.url === "https://api.openai.com/v1/responses/input_tokens") {
       tokenCounts++
+      console.info(`SF_REVIEWER_PROOF token count ${tokenCounts}`)
       return Response.json({ object: "response.input_tokens", input_tokens: 120 })
     }
     expect(request.url).toBe("https://api.openai.com/v1/responses")
     const payload = object(await request.json())
     turns++
+    console.info(`SF_REVIEWER_PROOF model turn ${turns}`)
     const toolCalls = () => {
       expect(Array.isArray(payload.tools) && payload.tools.some((tool) => object(tool).name === operation)).toBe(true)
       return Object.entries(toolInputs).map(([id, ref]) => ({ type: "response.output_item.done", item: {
@@ -125,7 +141,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
       installationId: "reviewer-recall", directory: root, sourceRoot, origin, mount: "/sucafina", authMode: "local-operator", persistence,
       authenticate: async (incoming, scope) => {
         const principal = actors.get(incoming)
-        return principal && scope ? { id: principal, canWrite: true, roles: [{ surface: scope.surface, role: "admin" }] } : null
+        return principal && scope && !revoked.has(principal) ? { id: principal, canWrite: true, roles: [{ surface: scope.surface, role: "admin" }] } : null
       },
       environment: async () => ({ at, id: randomUUID, directory: [] }),
       grants: ["reviewer", "other"].map((principalRef) => ({ principalRef, namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
@@ -173,8 +189,8 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
               return await work(call)
             } finally { services.ui.finish(call) }
           }
-          const human = async <T>(action: SfHumanAction, payload: unknown, work: (call: TrustedUiContext) => Promise<T>, principal = "reviewer") => {
-            const call = value(await services.human.admit(request(principal), action, payload), action)
+          const human = async <T>(action: SfHumanAction, payload: unknown, work: (call: TrustedUiContext) => Promise<T>, principal = "reviewer", signal?: AbortSignal) => {
+            const call = value(await services.human.admit(request(principal, signal), action, payload), action)
             try { return await work(call) } finally { services.human.finish(call) }
           }
           const issue = createDashboardSourceIssuer({ host: business.host, scopedSources: persistence })
@@ -209,31 +225,41 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           const analysis = { caseRef: current, objective: "Read the authorized precedent", profileId: selected.profile.id,
             profileVersion: selected.profile.version, skillId: skill.id, skillVersion: skill.version, manifestDigest: selected.manifestDigest,
             outputSchemaVersion: "sf-contribution-v1" as const, requestedOperationScope: [operation] }
-          const prepare = (candidate: typeof precedent, principal = "reviewer") => {
+          const prepare = (candidate: typeof precedent, principal = "reviewer", signal?: AbortSignal) => {
             const input = { request: analysis, selection: { currentCase: current, query: analysis.objective,
               recallScope: { cases: [candidate], period, includeHistorical: true } } }
-            return human("analysis.prepare", input, (call) => services.analysisInputs!.prepare(call, input), principal)
+            return human("analysis.prepare", input, (call) => services.analysisInputs!.prepare(call, input), principal, signal)
           }
           expect((await prepare(ref(previous))).status).not.toBe("ok")
           expect((await prepare(other)).status).not.toBe("ok")
           expect((await prepare(precedent, "other")).status).not.toBe("ok")
-          const skillInput = value(await prepare(precedent), "prepare authorized precedent")
+          const skillInput = value(await step("prepare authorized precedent", 25_000, (signal) => prepare(precedent, "reviewer", signal)), "prepare authorized precedent")
           const businessDigest = async () => digestSfValue(value(await services.state.read(request(), "cases", (state) =>
             ({ cases: state.cases, atlas: state.atlas, outbox: state.outbox })), "business snapshot"))
-          const initial = await businessDigest()
+          const initial = await step("snapshot business state", 10_000, businessDigest)
           toolInputs.selected = encodeCaseRef(precedent)
           toolInputs.outside = encodeCaseRef(outside)
           const start = { request: analysis, skillInput, model: { providerID, id: modelID } }
-          const { runRef } = value(await human("analysis.start", start, (call) => analyses.start(call, start)), "start reviewer")
-          const progress = () => human("analysis.read", { runRef }, (call) => analyses.read(call, runRef))
-          const deadline = Date.now() + 75_000
-          let run = value(await progress(), "read reviewer")
-          while (["queued", "running", "preparing"].includes(run.state) && Date.now() < deadline) {
-            await Bun.sleep(100)
-            run = value(await progress(), "poll reviewer")
-          }
+          revoked.add("reviewer")
+          try {
+            const denied = await step("deny a revoked reviewer", 8_000, (signal) => services.human.admit(request("reviewer", signal), "analysis.start", start))
+            if (denied.status === "ok") services.human.finish(denied.value)
+            expect(denied.status).toBe("denied")
+          } finally { revoked.delete("reviewer") }
+          const { runRef } = value(await step("start reviewer runner", 30_000, (signal) =>
+            human("analysis.start", start, (call) => analyses.start(call, start), "reviewer", signal)), "start reviewer")
+          const run = await step("reviewer runner and tool result", 45_000, async (signal) => {
+            const progress = () => human("analysis.read", { runRef }, (call) => analyses.read(call, runRef), "reviewer", signal)
+            let current = value(await progress(), "read reviewer")
+            while (["queued", "running", "preparing"].includes(current.state) && !signal.aborted) {
+              await Bun.sleep(200)
+              current = value(await progress(), "poll reviewer")
+            }
+            return current
+          })
           if (run.state !== "ready" || !run.native) throw new Error(`Reviewer ended as ${run.state} (${run.reason ?? "unknown"}) after ${turns} provider turns`)
-          const messages = await Effect.runPromise(sessions.messages({ sessionID: SessionSchema.ID.make(run.native.sessionID) }))
+          const sessionID = SessionSchema.ID.make(run.native.sessionID)
+          const messages = await step("read the native tool receipts", 8_000, (signal) => Effect.runPromise(sessions.messages({ sessionID }), { signal }))
           const calls = messages.flatMap((message) => message.type === "assistant" ? message.content.flatMap((part) =>
             part.type === "tool" && part.state.status === "completed" ? [object(part.state.structured)] : []) : [])
           expect(calls).toHaveLength(2)
@@ -242,16 +268,19 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           expect(object(accepted?.result).matches).toEqual([expect.objectContaining({ caseRef: precedent,
             evidenceRefs: expect.arrayContaining([source]), memoryRecordRef: archived.eventId })])
           expect(calls.find((call) => call.status === "unavailable")).toHaveProperty("reason", "unavailable")
-          const output = value(await human("analysis.read", { runRef }, (call) => analyses.output(call, runRef)), "read verified contribution")
+          const output = value(await step("read verified contribution", 10_000, (signal) =>
+            human("analysis.read", { runRef }, (call) => analyses.output(call, runRef), "reviewer", signal)), "read verified contribution")
           expect(output).toMatchObject({ kind: "CaseRecall", state: "ready", evidenceRefs: expect.arrayContaining([source]),
             runProvenance: expect.objectContaining({ profileId: "sf_reviewer", nativeSessionId: run.native.sessionID }) })
           expect(tokenCounts).toBe(2)
-          expect(await businessDigest()).toBe(initial)
+          expect(await step("verify business state", 10_000, businessDigest)).toBe(initial)
         } finally { business.dispose() }
       })
     }).pipe(Effect.scoped, Effect.provide(layer), Effect.runPromise)
   } finally {
-    await store.dispose()
-    await rm(root, { recursive: true, force: true })
+    await step("cleanup", 8_000, async () => {
+      await store.dispose()
+      await rm(root, { recursive: true, force: true })
+    })
   }
 }, 180_000)
