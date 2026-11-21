@@ -82,7 +82,7 @@ export async function revokeReportsSession(input: {
     expect(forbidden.headers()["cache-control"]).toContain("no-store")
     // The browser discards the response body as it removes the private view.
     // Verify the same denied read through the retained context's real cookie.
-    const binding = text(await forbidden.request().headerValue("x-sf-review-binding"))
+    const binding = text(forbidden.request().headers()["x-sf-review-binding"])
     const directDenial = await old.request.post(productURL(app.dashboardURL, "collaboration-thread-read").href, {
       headers: { Origin: app.origin, "X-SF-Review-Binding": binding }, data: { id: answer.questionId }, maxRedirects: 0,
     }).catch(() => { throw new Error("The revoked session's direct thread read did not complete") })
