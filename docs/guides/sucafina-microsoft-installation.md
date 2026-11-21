@@ -20,7 +20,7 @@ Com a Web nativa desabilitada, o listener corporativo é dedicado ao mount da in
 
 ## Entrada Web nativa
 
-No pacote Linux com a Web Sucafina em `bin/web`, `SUCAFINA_NATIVE_TEAM_WEB=1` habilita a entrada em `/` na instalação Microsoft com `"teams": "direct"`. Mantenha o mesmo proxy HTTPS confiável para a entrada, `/assets/`, `/orchestra/`, `/brand/sucafina/`, `/api/sucafina/installations` e o mount. As requisições continuam sujeitas à prova de ingresso.
+No pacote Linux com a Web Sucafina em `bin/web`, `SUCAFINA_NATIVE_TEAM_WEB=1` habilita a entrada em `/` na instalação Microsoft com `"teams": "direct"`. Mantenha o mesmo proxy HTTPS confiável para a entrada, `/assets/`, `/orchestra/`, `/brand/sucafina/`, `/oc-theme-preload.js`, `/api/sucafina/installations` e o mount. As requisições continuam sujeitas à prova de ingresso.
 
 O login Microsoft retorna à raiz. A página usa a sessão da instalação para consultar os Teams habilitados, seleciona a única opção ou permite escolher entre várias e oferece o link para o dashboard do Team confirmado. Cada escolha consulta novamente o servidor. Sem um Team autorizado, a página mostra a negativa e não oferece o dashboard.
 
