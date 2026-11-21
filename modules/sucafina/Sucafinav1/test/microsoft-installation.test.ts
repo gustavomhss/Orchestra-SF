@@ -41,7 +41,7 @@ async function fixture(
   enabledTeamIds?: unknown,
   groups: LocalConfiguration["groups"] = { dashboard: {}, planner: {}, procurement: {} },
   teamDirectory?: "members",
-  options: { nativeDecisions?: boolean; nativeRecovery?: boolean } = {},
+  options: { nativeDecisions?: boolean; nativeRecovery?: boolean; nativeWeb?: boolean } = {},
 ) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sf-microsoft-installation-"))
   const directory = join(root, "installation")
@@ -85,6 +85,7 @@ async function fixture(
       XDG_CACHE_HOME: join(directory, "host-cache"),
       XDG_STATE_HOME: join(directory, "host-state"),
       ...(options.nativeDecisions ? { SUCAFINA_NATIVE_TEAM_DECISIONS: "1" } : {}),
+      ...(options.nativeWeb ? { SUCAFINA_NATIVE_TEAM_WEB: "1" } : {}),
       ...(options.nativeRecovery ? { SUCAFINA_CORPORATE_RECOVERY_REGISTER: register } : {}),
     }
     const prepare = () => prepareMicrosoftInstallation({ origin: listenerOrigin }, file, environment,
@@ -427,9 +428,9 @@ test("Installed Teams Decisions replays a native draft after authenticated resto
     throw new Error("Unexpected synthetic Microsoft request")
   }, [teamObjectId, secondTeamId], {
     dashboard: { contributor: "group:" + grantPrincipal }, planner: {}, procurement: {},
-  }, undefined, { nativeDecisions: true, nativeRecovery: true })
+  }, undefined, { nativeDecisions: true, nativeRecovery: true, nativeWeb: true })
   try {
-    const begin = await f.installation.handler(ingress("/auth/login"))
+    const begin = await f.installation.handler(ingress("/auth/login?returnTo=%2F"))
     expect(begin?.status).toBe(303)
     const authorize = new URL(begin!.headers.get("location")!)
     login.nonce = authorize.searchParams.get("nonce")!
@@ -438,7 +439,26 @@ test("Installed Teams Decisions replays a native draft after authenticated resto
       code: "synthetic-code", state: authorize.searchParams.get("state")!,
     }), { cookie: challenge }))
     expect(finish?.status).toBe(303)
+    expect(new URL(finish!.headers.get("location")!, origin).href).toBe(origin + "/")
     const cookie = finish!.headers.getSetCookie().find((value) => value.includes("_session="))!.split(";")[0]
+    const nativeContext = async (id: string, session?: string) => {
+      const installed = await f.installation.discovery?.current(AbortSignal.timeout(1000))
+      const binding = installed?.identity()
+      if (!binding) throw new Error("Expected the current Microsoft installation")
+      return f.installation.handler(ingress("/api/ui/context?" + new URLSearchParams({
+        contractRevision: "sf-team-profile/1", installationId: binding.installationId, hostId: binding.hostId,
+        tenantId, kind: "team", teamObjectId: id,
+      }), session ? { cookie: session } : undefined))
+    }
+    expect((await nativeContext(teamObjectId))?.status).toBe(401)
+    const context = await nativeContext(teamObjectId, cookie)
+    expect(context?.status).toBe(200)
+    expect(await context?.json()).toMatchObject({
+      status: "ok", value: { profile: { teams: { selected: { teamObjectId } } } },
+    })
+    const crossTeam = await nativeContext(secondTeamId, cookie)
+    expect(crossTeam?.status).toBe(403)
+    expect(await crossTeam?.json()).toEqual({ status: "denied" })
     const input = { objective: "Preserve the recorded Team decision",
       horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: ["Keep the original case"], sourceRefs: [] }
     const draft = (id: string, fields: Record<string, string> = {}) => f.installation.handler(
@@ -509,6 +529,9 @@ test("Installed Teams Decisions replays a native draft after authenticated resto
     expect(await retry!.json()).toEqual(result)
     expect(await readFrontier()).toEqual(frontier)
     membership.active = false
+    const noTeam = await nativeContext(teamObjectId, cookie)
+    expect(noTeam?.status).toBe(403)
+    expect(await noTeam?.json()).toEqual({ status: "denied" })
     expect((await draft(teamObjectId))?.status).toBe(403)
     expect(await readFrontier()).toEqual(frontier)
 
