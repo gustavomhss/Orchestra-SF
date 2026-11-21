@@ -215,8 +215,14 @@ export function createSfTransport(options: Readonly<{
            operation.operationId === "files.asset.download")) return failure("contract-unavailable")
       if (metadata.responseMode !== "json" && metadata.responseMode !== "empty" && !isBytes)
         return failure("contract-unavailable")
+      const webFiles = operation.operationId.startsWith("files.") && !options.desktop
       if (operation.operationId.startsWith("files.") && !stamp)
         return failure("contract-unavailable")
+      const fileOwner = webFiles && stamp ? { ...stamp } : undefined
+      const currentFileOwner = () => !!fileOwner && !!stamp && isCurrent() &&
+        !call.signal.aborted && equalContextStamp(stamp, fileOwner)
+      const revalidateFileOwner = async () => !!fileOwner && currentFileOwner() &&
+        await refreshSfFileAuthority(options, fileOwner, operation.operationId, call.signal) && currentFileOwner()
       // ctx.context expectations are ALWAYS taken from the approved descriptor.
       // The frozen F01 signatures allow an undefined public argument, while the
       // catalog requires exactly this private three-field query; never trust an
@@ -321,9 +327,7 @@ export function createSfTransport(options: Readonly<{
         if (mutating && previous === undefined) pending.delete(key!)
         return failure("aborted")
       }
-      if (operation.operationId.startsWith("files.") && stamp &&
-          !options.desktop &&
-          !await refreshSfFileAuthority(options, stamp, operation.operationId, call.signal)) {
+      if (webFiles && !await revalidateFileOwner()) {
         if (mutating) pending.delete(key!)
         return failure("contract-unavailable")
       }
@@ -439,10 +443,8 @@ export function createSfTransport(options: Readonly<{
             await result.body?.cancel().catch(() => undefined)
             response = failure("contract-unavailable")
           } else if (isBytes && result.status === 200) {
-            const bytes = sfAllowedByteMime(operation.operationId, result.headers.get("content-type")) && stamp
-              ? await readSfBytesBounded(result, call.signal, async () =>
-                  isCurrent() && webOrigin() && !!stamp &&
-                  await refreshSfFileAuthority(options, stamp, operation.operationId, call.signal)) : undefined
+            const bytes = sfAllowedByteMime(operation.operationId, result.headers.get("content-type")) && currentFileOwner()
+              ? await readSfBytesBounded(result, call.signal, async () => webOrigin() && await revalidateFileOwner()) : undefined
             response = bytes
               ? { status: result.status, headers: extracted, body: bytes }
               : failure("invalid-response")
@@ -474,6 +476,7 @@ export function createSfTransport(options: Readonly<{
       if (mutating && response.status >= 500) return failure("outcome-unknown")
       const uncertain = mutating && response.status !== 401 && response.status !== 403
       if (isBytes) {
+        if (webFiles && !currentFileOwner()) return failure("contract-unavailable")
         if (response.status !== 200 || !(response.body instanceof Uint8Array))
           return failure("invalid-response")
         const parsedBytes = Schema.decodeUnknownOption(Schema.toType(operation.output))(response.body)
@@ -487,8 +490,7 @@ export function createSfTransport(options: Readonly<{
       if (wireDecoded.status !== "ok") return failure(uncertain ? "outcome-unknown" : "invalid-response")
       const parsedOutput = Schema.decodeUnknownOption(Schema.toType(operation.output), { onExcessProperty: "error" })(wireDecoded.value)
       if (Option.isNone(parsedOutput)) return failure(uncertain ? "outcome-unknown" : "invalid-response")
-      if (operation.operationId.startsWith("files.") && stamp && !options.desktop &&
-          !await refreshSfFileAuthority(options, stamp, operation.operationId, call.signal))
+      if (webFiles && !await revalidateFileOwner())
         return failure(mutating ? "outcome-unknown" : "contract-unavailable")
       if (operation.operationId === "ctx.context") {
         if (!validContextOutcome(parsedOutput.value, options.binding, response.status)) {
