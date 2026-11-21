@@ -12,16 +12,19 @@ export type LocalConfiguration = {
   clientId: string | null
   groups: Record<Surface, Record<string, string>>
   authentication?: "microsoft" | "local-operator"
-  localOperator?: { installationId: string; uid: number; buyer?: boolean }
+  // The display name is recorded with the rest of the owner's OS account so the
+  // serving process never re-derives identity from its own environment.
+  localOperator?: { installationId: string; uid: number; buyer?: boolean; name?: string }
   scanner: { host: "127.0.0.1"; port: number } | null
 }
 
-export async function prepareLocalConfiguration(directory: string) {
+export async function prepareLocalConfiguration(directory: string, origin = "http://localhost:4110") {
+  requireLocalOrigin(origin)
   if (!path.isAbsolute(directory)) throw new Error("Absolute private installation directory required")
   await mkdir(directory, { recursive: true, mode: 0o700 })
   await requirePrivate(directory, true)
   const file = path.join(directory, "installation.json")
-  const config: LocalConfiguration = { version: 1, origin: "http://localhost:4110", mount: "/sucafina", tenantId: null, clientId: null, groups: { dashboard: {}, planner: {}, procurement: {} }, scanner: null }
+  const config: LocalConfiguration = { version: 1, origin, mount: "/sucafina", tenantId: null, clientId: null, groups: { dashboard: {}, planner: {}, procurement: {} }, scanner: null }
   for (const name of ["session", "bank", "assets"]) await createPrivate(path.join(directory, `${name}.key`), randomBytes(32))
   await createPrivate(path.join(directory, "host-credential.key"), Buffer.from(randomBytes(32).toString("base64")))
   await createPrivate(file, Buffer.from(`${JSON.stringify(config, null, 2)}\n`))
@@ -33,6 +36,13 @@ export async function prepareLocalConfiguration(directory: string) {
   return file
 }
 
+function requireLocalOrigin(value: string) {
+  const origin = new URL(value)
+  if (value !== origin.origin || origin.protocol !== "http:" ||
+      !["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname))
+    throw new Error("Explicit HTTP loopback installation origin required")
+}
+
 export async function loadLocalConfiguration(file: string) {
   if (!path.isAbsolute(file)) throw new Error("Explicit absolute local configuration required")
   const directory = path.dirname(file)
@@ -40,8 +50,8 @@ export async function loadLocalConfiguration(file: string) {
   await requirePrivate(file, false)
   const value: unknown = await Bun.file(file).json()
   if (value === null || typeof value !== "object" || !("version" in value) || value.version !== 1 || !("origin" in value) || typeof value.origin !== "string" || !("mount" in value) || typeof value.mount !== "string") throw new Error("Invalid installation configuration")
-  const origin = new URL(value.origin)
-  if (value.origin !== origin.origin || origin.protocol !== "http:" || origin.hostname !== "localhost" || origin.port !== "4110" || !/^\/[A-Za-z0-9_-]+$/.test(value.mount)) throw new Error("Fixed localhost installation origin required")
+  requireLocalOrigin(value.origin)
+  if (!/^\/[A-Za-z0-9_-]+$/.test(value.mount)) throw new Error("Local installation mount required")
   const record = value as Record<string, unknown>
   if (record.authentication !== undefined && record.authentication !== "microsoft" && record.authentication !== "local-operator") throw new Error("Invalid authentication profile")
   if (record.authentication === "local-operator") {
@@ -91,8 +101,10 @@ async function createPrivate(file: string, bytes: Uint8Array) {
 }
 
 
-export function requireLocalOperator(value: unknown): { installationId: string; uid: number; buyer?: boolean } {
+export function requireLocalOperator(value: unknown): { installationId: string; uid: number; buyer?: boolean; name?: string } {
   if (!value || typeof value !== "object" || !("installationId" in value) || typeof value.installationId !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.installationId) || !("uid" in value) || typeof value.uid !== "number" || !Number.isSafeInteger(value.uid) || value.uid < 0 || value.uid !== process.getuid?.()) throw new Error("Local operator must be the actual installation owner")
   if ("buyer" in value && typeof value.buyer !== "boolean") throw new Error("Explicit boolean local buyer policy required")
-  return { installationId: value.installationId, uid: value.uid, ...("buyer" in value ? { buyer: value.buyer as boolean } : {}) }
+  if ("name" in value && (typeof value.name !== "string" || !value.name.trim() || value.name.trim() !== value.name || value.name.length > 256))
+    throw new Error("Explicit local operator display name required")
+  return { installationId: value.installationId, uid: value.uid, ...("buyer" in value ? { buyer: value.buyer as boolean } : {}), ...("name" in value ? { name: value.name as string } : {}) }
 }

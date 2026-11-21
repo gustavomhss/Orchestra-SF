@@ -121,7 +121,16 @@
     "./capability-management": "./src/capability-management.ts",
     "./capability-schedule-management": "./src/capability-schedule-management.ts",
     "./capability-setup": "./src/capability-setup.ts",
-    "./lsp": "./src/lsp.ts"
+    "./lsp": "./src/lsp.ts",
+    "./sucafina/common": "./src/sucafina/common.ts",
+    "./sucafina/context": "./src/sucafina/context.ts",
+    "./sucafina/operation-registry": "./src/sucafina/operation-registry.ts",
+    "./sucafina/planner": "./src/sucafina/planner.ts",
+    "./sucafina/domain": "./src/sucafina/domain.ts",
+    "./sucafina/memory": "./src/sucafina/memory.ts",
+    "./sucafina/operations": "./src/sucafina/operations.ts",
+    "./sucafina/people": "./src/sucafina/people.ts",
+    "./sucafina/routines": "./src/sucafina/routines.ts"
   },
   "scripts": {
     "test": "bun test ./test --preload ../../script/test-guard.ts --timeout 30000 --only-failures",
