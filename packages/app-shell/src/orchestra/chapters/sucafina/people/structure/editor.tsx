@@ -111,7 +111,7 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
     for (const field of props.fields) {
       if (field.required && !String(current.value[field.name] ?? "").trim()) return t(field.labelKey)
       if (field.input === "select" && field.options &&
-          !field.options.some((opt) => opt.value === current.value[field.name])) return t(field.labelKey)
+          !field.options.some((opt) => opt.value === (current.value[field.name] ?? ""))) return t(field.labelKey)
     }
     return
   }
