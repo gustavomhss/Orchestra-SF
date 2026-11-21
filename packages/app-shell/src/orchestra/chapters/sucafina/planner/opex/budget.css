@@ -138,3 +138,5 @@
   .sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-u07-tabs .mx-btn { flex: 1 1 auto; justify-content: center; }
 }
 @media (prefers-reduced-motion: reduce) { .sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) * { scroll-behavior: auto; transition-duration: 0s; animation-duration: 0s; } }
+
+.sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-u07-review-controls { min-inline-size: 0; margin: 0; padding: 0; border: 0; }

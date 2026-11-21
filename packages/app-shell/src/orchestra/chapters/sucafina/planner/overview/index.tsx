@@ -392,9 +392,9 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                             )}>
                               {(comparison) => <tr>
                                 <th scope="row">{comparison.name}</th>
-                                <td>{comparison.total === null ? copy.t(key("sf.u06.missingActual")) :
+                                <td data-label={copy.t(key("sf.u06.budget"))}>{comparison.total === null ? copy.t(key("sf.u06.missingActual")) :
                                   new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(comparison.total)}</td>
-                                <td>{comparison.fte === null ? copy.t(key("sf.u06.missingActual")) :
+                                <td data-label={copy.t(key("sf.u06.fteDecember"))}>{comparison.fte === null ? copy.t(key("sf.u06.missingActual")) :
                                   new Intl.NumberFormat(copy.locale()).format(comparison.fte)}</td>
                               </tr>}
                             </For>

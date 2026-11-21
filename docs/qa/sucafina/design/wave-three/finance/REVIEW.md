@@ -127,3 +127,25 @@ The minimal consumer correction is in vendorCommandInput: snapshot Object.entrie
 All four regressions now live in test-browser/sucafina-vendor-contract-command.test.ts, where the maintained browser condition creates the actual Solid proxy. The proxy test retains its environment guard and additionally verifies that later store edits cannot mutate the already-created DTO or the bytes bound to the digest. The temporary product attribute, shape logger, POST logger and probe logger have been removed.
 
 The integration owner will run the focused regressions and both real finance journeys again. No CAP14 successful confirmation or unreached CAP18/19 state is claimed until those original-source checks pass.
+
+
+### Focused browser-condition regression result
+
+The corrected consumer passed [44943957335](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44943957335), job 136967042624: all four permanent browser-condition regressions passed with 27 assertions, including a tracked Solid proxy, immutable DTO bytes after a later store edit, omitted undefined optionals, legitimate zero and unchanged numeric-string/empty-string/null inputs. The schema, codec and producer remained unchanged. This focused PASS establishes command admission and snapshot stability; the production-browser journey is still required to establish successful source dispatch and readback.
+
+
+## Fourth real Actions critique
+
+Run [44943953560](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44943953560), job 136967031151, completed with one passing journey and one failing journey. CAP05/CAP14 passed in full: the source month write, contract write and verified reread, creation and deletion reviews without dispatch, responsive stages and pt-BR entry captures. CAP17's metrics, 12 source rows, both versions, explicit select labels and comparison filter passed. No console or page errors were reported in either installation.
+
+The run emitted 27 captures. Direct inspection of the new CAP14 creation/deletion reviews and Portuguese list found no layout overlap. Creation review did expose a semantic defect: absent optional fields used the source-unavailable message. The field mapper now distinguishes absent values (Not provided) from an explicit empty string (Empty value), and never presents source failure for a blank draft. Known contract term enums reuse their existing localized labels; unrecognized values stay literal. Existing English catalog values and command values are unchanged. The creation journey now asserts these distinctions.
+
+CAP17's desktop summary and narrow toolbar were visually coherent. On the narrow comparison capture, only version names fitted before the horizontal scroll, forcing a swipe to compare two numbers. That three-column comparison now reflows to labeled records below 620px; the full source-series table remains a horizontally scrollable table.
+
+CAP18's actual native vertical-scroller check passed. Keyboard End correctly changed the active descendant to December, but the real capture still displayed January through May. The shared monthly grid did not scroll after its navigation callback. With integration-owner authorization, the smallest shared correction now brings the owner-selected cell into view using block/inline nearest after a keyboard navigation event. It preserves focus on the grid, all navigation callbacks, controllers and selection semantics, and performs no scroll on mount. The existing End-to-December assertion remains the regression. The integration owner will rerun prior-wave coverage because this path is shared.
+
+A read-only peer review also identified two local control issues. The CAP19 approval placeholder is now disabled: empty string is not an accepted approval enum, and silently omitting it would turn the user's attempted clear into a no-op. The review groups in CAP14/CAP18/CAP19 are disabled while a command is in flight or its outcome is unknown; their local Cancel/Revise callbacks also guard those states. Existing reconciliation and source controllers are unchanged.
+
+CAP19's confirmation assertion no longer relies on a transient status that the original reload immediately clears. It awaits the original project-save response, checks successful acceptance, waits for the review to close, and re-enters the native page to verify the persisted project description independently of the edit draft. This stronger confirmation has not yet run.
+
+The remaining visual work is CAP18's post-navigation, paste, record and settings captures plus CAP19's project and confirmation captures. The fifth production-browser run is required; no completion claim is made for those unreached states.
