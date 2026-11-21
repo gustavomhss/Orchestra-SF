@@ -249,7 +249,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const answerFence = hasSfDashboardSourceFence(replayPersistence) ? replayPersistence.dashboardSourceFence : undefined
   const answerEvidence = createThreadAnswerEvidence(threadReads, input.host, {
     read: answerRead,
-    installed: () => !!answerFence && replayCurrent() && hasSfDashboardSourceFence(replayPersistence) &&
+    installed: () => !!answerFence && replayCurrent() && !!registeredLocalReview(replayEvidence) && hasSfDashboardSourceFence(replayPersistence) &&
       replayPersistence.dashboardSourceFence === answerFence && input.state === answerState &&
       answerState.read === readAnswerState && isInstalledSfStateRead(readAnswerState) && threadReads.read === answerRead,
   })
@@ -306,11 +306,10 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     const observed = !issued ? observedAnswers.get(context) : undefined
     const proof = issued ?? observed
     if (!proof) return undefined
-    const unsupported = () => admittedAnswers.has(proof) ? denied : undefined
+    const unsupported = () => admittedAnswers.has(proof) || issued && answerEvidence.issuedForPreparation(issued) ? denied : undefined
     const proofCurrent = () => issued ? answerEvidence.issuedTo(issued, context)
       : observed?.questionId === questionId && observedAnswers.get(context) === observed && observed.current()
-    if (!proofCurrent()) return issued && answerEvidence.issuedForPreparation(issued) ? denied : unsupported()
-    if (!source || !isRegisteredAnswerSource(evidence, source) || !isInstalledSfStateRead(readAnswerState) || state.read !== readAnswerState ||
+    if (!proofCurrent() || !source || !isRegisteredAnswerSource(evidence, source) || !isInstalledSfStateRead(readAnswerState) || state.read !== readAnswerState ||
       !hasSfDashboardSourceFence(persistence)) return unsupported()
     const host = input.host
     const requestFor = host.requestFor

@@ -41,6 +41,7 @@ export function createRecipientThreadReader(input: {
     const reissue = input.reissue
     const refresh = input.refresh
     const authorize = input.authorize
+    const lease = context.lease
     const binding = observeAnswer && digestSfValue([context.kind, context.binding])
     const currentAccess = async () => !!request && input.host.requestFor(context) === request && await input.host.revalidate(context) && input.host.requestFor(context) === request
     try {
@@ -65,6 +66,8 @@ export function createRecipientThreadReader(input: {
       if (messageContexts.some((basis) => !basis)) return { status: "unavailable", reason: "thread-source-unavailable" }
       const historyRefs = [...new Map([...originals, ...messageContexts.flatMap((basis) => basis!.evidenceRefs)].map((ref) => [ref.refDigest, ref])).values()]
       const reviewBasis = messageContexts[0]?.reviewContext ? messageContexts[0] : undefined
+      const basisDigest = observeAnswer && reviewBasis ? digestSfValue(reviewBasis) : undefined
+      const pairEligible = basisDigest !== undefined && messageContexts.every((basis) => digestSfValue(basis) === basisDigest)
       const authorizeHistorical = input.authorizeHistorical
       const authorizeContext = input.authorizeContext
       const authorizeReviewLeg = input.authorizeReviewLeg
@@ -128,18 +131,19 @@ export function createRecipientThreadReader(input: {
       let finalHistory: boolean | undefined
       const observeFinalHistory = async () => finalHistory ??= !preserved || await input.authorizeHistorical!(historyRefs, context)
       const final = await observeReviewLeg(again.value.thread, observeFinalHistory)
+      if (pairEligible && initial === true && final === undefined) return { status: "denied", reason: "thread-access-unavailable" }
       if (!(final ?? (await observeFinalHistory() && (!reviewBasis || await input.authorizeContext!(reviewBasis, context)))) ||
         !await currentAccess()) return { status: "denied", reason: "thread-access-unavailable" }
       if (digestSfValue(again.value.thread) !== digestSfValue(thread) || digestSfValue(finalScopes) !== digestSfValue(issued)) return { status: "stale", reason: "thread-content-changed" }
       // Both independent C08 observations completed under the installed review
       // reader. Only the private answer selector may observe the final raw row.
-      if (observeAnswer && initial === true && final === true && preserved) {
+      if (observeAnswer && pairEligible && initial === true && final === true && preserved) {
         const current = () => !request.signal.aborted && input.host.requestFor === requestFor &&
           input.host.revalidate === revalidate && requestFor.call(input.host, context) === request &&
           input.state.read === stateRead && input.reissue === reissue && input.refresh === refresh &&
           input.authorize === authorize && input.authorizeHistorical === authorizeHistorical &&
           input.authorizeContext === authorizeContext && input.authorizeReviewLeg === authorizeReviewLeg &&
-          digestSfValue([context.kind, context.binding]) === binding
+          context.lease === lease && digestSfValue([context.kind, context.binding]) === binding
         if (!current()) return { status: "denied", reason: "thread-access-unavailable" }
         observeAnswer({ thread: again.value.thread, current })
       }
