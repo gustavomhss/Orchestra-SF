@@ -34,11 +34,18 @@ def main(root):
     package.mkdir()
     with tarfile.open(archive, "r:gz") as payload:
         payload.extractall(package, filter="data")
-    binary = package / "bin/orchestra"
-    if digest(binary) != CLI_SHA:
-        raise ValueError("archived executable digest differs")
-
     distribution = json.loads((package / "distribution.json").read_bytes())
+    binary_entry = next(entry for entry in distribution["files"] if entry["path"] == "bin/orchestra")
+    binary = package / "bin/orchestra"
+    if binary.is_symlink() or not binary.is_file() or binary_entry["executable"] is not True:
+        raise ValueError("archive does not declare a regular executable CLI")
+    if binary_entry["sha256"] != CLI_SHA or digest(binary) != CLI_SHA:
+        raise ValueError("archived executable digest differs")
+    # Apply the executable mode from the validated manifest, as the installer does.
+    binary.chmod(0o555)
+    if digest(binary) != CLI_SHA:
+        raise ValueError("staged executable digest differs")
+
     expected = {
         entry["path"]: entry["sha256"]
         for entry in distribution["files"]
@@ -105,9 +112,10 @@ def symbols(binary, workspace, evidence, name, source):
             "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "0",
         },
         capture_output=True,
-        check=True,
         timeout=90,
     )
+    if completed.returncode != 0:
+        raise ValueError(f"{name}: archived CLI exited with {completed.returncode}: {completed.stderr.decode('utf-8', 'replace')[:2000]}")
     observed = json.loads(completed.stdout)
     if observed.get("coverage", {}).get("complete") is not True:
         raise ValueError(f"{name}: extraction coverage is incomplete")
