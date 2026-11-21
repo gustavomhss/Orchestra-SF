@@ -17,18 +17,23 @@ const otherProjectId = "wp12-homonymous-project"
 const capexId = "wp12-capex-plan"
 const milestoneId = `milestone:${encodeURIComponent(projectId)}:release`
 
-async function initializeDependencies(persistence: Wp12NativeMissionContext["persistence"]) {
-  await initializeWp12PortfolioSources(persistence)
-  await persistence.transaction("dashboard", async (snapshot) => {
+async function initializeDependencies(context: Wp12NativeMissionContext) {
+  const observedAt = new Date(context.at)
+  if (!Number.isFinite(observedAt.getTime())) throw new Error("The host project observation time is invalid")
+  const year = observedAt.getUTCFullYear()
+  const observationPeriod = { start: `${year}-01-01`, end: `${year}-12-31` }
+  const milestoneDate = observationPeriod.end
+  await context.persistence.transaction("dashboard", async (snapshot) => {
     snapshot.data.projects = [
       { id: projectId, name: "Shared delivery name", status: "Planning", risk: "Low", budget: 0, spent: 0, pct: 0,
-        milestones: [{ id: "release", name: "Delivery checkpoint", date: "2027-05-15", status: "upcoming" }] },
+        milestones: [{ id: "release", name: "Delivery checkpoint", date: milestoneDate, status: "upcoming" }] },
       { id: otherProjectId, name: "Shared delivery name", status: "Planning", risk: "Low", budget: 0, spent: 0, pct: 0, milestones: [] },
     ]
     snapshot.data.capexProjects = [{ id: capexId, name: "Shared delivery name", year: 2027, ownerId: "wp12-source-owner" }]
     snapshot.data.capexEntries = []
     return { commit: true, value: undefined }
   })
+  return { observationPeriod, milestoneDate }
 }
 
 async function collaboration(context: Wp12NativeMissionContext, mode: string, payload: unknown) {
@@ -43,21 +48,37 @@ test("dependency review uses a confirmed relation, actual choice and dated miles
   await withWp12NativeMissionHost({ label: "portfolio-dependencies", operations: [...WP12_PORTFOLIO_OPERATIONS, "sf_relation_read", "sf_dashboard_read", "sf_work_list"],
     humanActions: [...WP12_PORTFOLIO_HUMAN_ACTIONS, "collaboration.relation.confirm", "collaboration.storage.version"],
     namespaces: ["cases", "preferences", "documents", "contributions", "receipts", "outbox", "atlas", "threads", "relations", "confirmations"],
-    initialize: initializeDependencies }, async (harness) => {
+    initialize: initializeWp12PortfolioSources }, async (harness) => {
     const initial = await harness.open("initial", async (context) => {
+      const delivery = await initializeDependencies(context)
       const sources = await context.ui("sf_context_get", { purpose: "native-dependency-sources" }, async (call) => {
-        // One page projection carries dates; records are issued separately for
-        // the actual C06 relation. Names never act as join keys.
+        // Project status and milestone status are current observations. Their
+        // period is separate from the 2027 CAPEX and Planner financial horizon.
+        // The page carries the dated milestone; scalar records identify C06
+        // relation endpoints. Equal names never act as join keys.
         const page = await createDashboardSourceIssuer({ host: context.business.host, scopedSources: context.persistence })({
-          page: "Portfolio Dashboard", fields: ["milestoneDates"], period: WP12_PORTFOLIO_PERIOD }, call)
+          page: "Portfolio Dashboard", fields: ["milestoneDates"], period: delivery.observationPeriod }, call)
         const project = await context.business.dashboardRecords.issue({ page: "Portfolio Dashboard", recordType: "projects", recordId: projectId,
-          fields: ["name", "milestones"], period: WP12_PORTFOLIO_PERIOD }, call)
+          fields: ["name"], period: delivery.observationPeriod }, call)
         const other = await context.business.dashboardRecords.issue({ page: "Portfolio Dashboard", recordType: "projects", recordId: otherProjectId,
-          fields: ["name", "milestones"], period: WP12_PORTFOLIO_PERIOD }, call)
+          fields: ["name"], period: delivery.observationPeriod }, call)
         const capex = await context.business.dashboardRecords.issue({ page: "CAPEX Projects", recordType: "capexProjects", recordId: capexId,
           fields: ["name"], period: WP12_PORTFOLIO_PERIOD }, call)
         if (page.status !== "ok" || project.status !== "ok" || other.status !== "ok" || capex.status !== "ok")
           throw new Error("The real dashboard issuers did not authorize the selected dependency sources")
+        expect(page.value.evidence.target.period).toEqual(delivery.observationPeriod)
+        expect(project.value.target.period).toEqual(delivery.observationPeriod)
+        expect(other.value.target.period).toEqual(delivery.observationPeriod)
+        expect(capex.value.target.period).toEqual(WP12_PORTFOLIO_PERIOD)
+        for (const ref of [project.value, other.value, capex.value]) {
+          expect(ref.target.fields).toEqual(["name"])
+          const projection = await context.business.dashboardRecords.read(ref.refId, call)
+          if (projection.status !== "ok") throw new Error(`The actual dependency endpoint is unreadable: ${projection.reason}`)
+          expect(projection.value.values).toHaveLength(1)
+          expect(projection.value.values[0]?.value).toBe("Shared delivery name")
+          expect(projection.value.values[0]?.sourceRefs).toEqual([ref])
+          expect(projection.value.values[0]?.drilldown).toEqual(ref)
+        }
         return { page: page.value.evidence, project: project.value, other: other.value, capex: capex.value }
       })
       const storageVersion = await collaboration(context, "storage-version", { namespace: "relations" })
@@ -72,12 +93,21 @@ test("dependency review uses a confirmed relation, actual choice and dated miles
       const preparedCase = await prepareWp12PortfolioCase(context, [sources.page, sources.project, sources.other, sources.capex])
       const criterionId = preparedCase.case.criteria[0]?.id
       if (!criterionId) throw new Error("The actual dependency case has no criterion")
+      const choiceStartedAt = performance.now()
+      let choicePhaseAt = choiceStartedAt
       const chosen = await chooseWp12Alternative(context, { caseRef: preparedCase.caseRef,
         baselineResultRef: preparedCase.baseline.resultRef, alternativeResultRef: preparedCase.lowerCost.resultRef,
         alternativeId: preparedCase.lowerCost.alternative.id, alternativeVersion: preparedCase.lowerCost.alternative.version,
         parameterRef: preparedCase.parameterRef, criterionId, threshold: -20_000,
-        reason: "Human choice retained for review of delivery conditions; financial preview does not establish capacity or delivery feasibility." })
-      const declaredConstraints = ["Human expects delivery in March 2027; this is an unverified request, not a confirmed due date.",
+        reason: "Human choice retained for review of delivery conditions; financial preview does not establish capacity or delivery feasibility." }, {
+        beforeAction: async (phase) => {
+          const at = performance.now()
+          console.log("SF_WP12_NATIVE_DEPENDENCY_CHOICE_PHASE:" + JSON.stringify({ githubSha: process.env.GITHUB_SHA ?? null,
+            caseRef: preparedCase.caseRef, phase, elapsedMs: at - choiceStartedAt, sincePreviousPhaseMs: at - choicePhaseAt }))
+          choicePhaseAt = at
+        },
+      })
+      const declaredConstraints = [`Human expects delivery in March ${delivery.observationPeriod.start.slice(0, 4)}; this is an unverified request, not a confirmed due date.`,
         "A human mentioned 1 FTE; no available capacity or allocation was confirmed."]
       const selection = { relationRefIds: [sources.project.refId, sources.capex.refId], commitmentIds: [chosen.choice.id],
         milestoneIds: [milestoneId], declaredConstraints }
@@ -90,7 +120,7 @@ test("dependency review uses a confirmed relation, actual choice and dated miles
       expect(input.value.relations).toHaveLength(1)
       expect(input.value.relations[0]?.id).toBe(relation.id)
       expect(input.value.commitments.map((entry) => entry.id)).toEqual([chosen.choice.id])
-      expect(input.value.milestones).toEqual([{ id: milestoneId, projectRef: sources.page, at: "2027-05-15", state: "upcoming" }])
+      expect(input.value.milestones).toEqual([{ id: milestoneId, projectRef: sources.page, at: delivery.milestoneDate, state: "upcoming" }])
       expect(input.value.declaredConstraints).toEqual(declaredConstraints)
       const homonym = await prepareWp12PortfolioMission(context, { ...incoming,
         selection: { ...selection, relationRefIds: [sources.other.refId] } })
@@ -109,7 +139,8 @@ test("dependency review uses a confirmed relation, actual choice and dated miles
       expect(digestSfValue(current.body.value)).toBe(digestSfValue(input.value))
       console.log("SF_WP12_NATIVE_DEPENDENCY_INPUT:" + JSON.stringify({ scope: "real-confirmed-relation-choice-and-dashboard-milestone",
         githubSha: process.env.GITHUB_SHA ?? null, caseRef: chosen.caseRef, inputDigest: digestSfValue(input.value),
-        relationId: relation.id, commitmentId: chosen.choice.id, milestoneId, milestoneDate: "2027-05-15",
+        relationId: relation.id, commitmentId: chosen.choice.id, milestoneId, milestoneDate: delivery.milestoneDate,
+        observedAt: context.at, projectObservationPeriod: delivery.observationPeriod, financialHorizon: WP12_PORTFOLIO_PERIOD,
         sameNameRelationRefused: true, capacityConfirmed: false, declaredConstraintCount: declaredConstraints.length,
         inferenceExecuted: false, officialDateChanged: false }))
       if (!context.models.length) {

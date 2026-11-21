@@ -187,13 +187,31 @@ export async function prepareWp12ProcurementCase(context: Wp12NativeMissionConte
     if (!sourceValueDigest) throw new Error(`The canonical ${key} purchase source has no numeric value digest`)
     expect(digestSfValue(item.alternative.result.components.map((component) => ({ id: component.id, amount: component.amount, currency: component.currency, period: component.period })))).toBe(sourceValueDigest)
   }
-  // Observed category coverage does not turn a simulated choice into an applied
-  // result. Both alternatives retain the actual engine's hypothetical boundary.
+  // A source-only alternative observes current values; an explicit choice
+  // operation remains hypothetical, even when it proposes the same amount.
   for (const item of [baseline, candidate]) {
-    expect(item.alternative.result.total).toBeNull()
-    expect(item.alternative.result.comparisonStatus).toBe("conditioned")
-    expect(item.alternative.result.unresolvedConditions).toContain("scenario-is-hypothetical")
-    expect(item.alternative.result.restrictions).toContain("preview-not-applied")
+    const result = item.alternative.result
+    if (item === candidate && options.withChoiceParameter) {
+      expect(result.total).toBeNull()
+      expect(result.comparisonStatus).toBe("conditioned")
+      expect(result.unresolvedConditions).toContain("scenario-is-hypothetical")
+      expect(result.restrictions).toContain("preview-not-applied")
+    } else {
+      expect(item.alternative.scenario.operations).toEqual([])
+      expect(item.alternative.scenario.assumptions).toEqual([])
+      expect(result.id.startsWith("source-scenario:")).toBe(true)
+      expect(result.restrictions).toEqual([])
+      if (item === baseline || options.selected === "complete") {
+        expect(result.total).toBe(item === baseline ? 240_000 : 250_000)
+        expect(result.comparisonStatus).toBe("complete")
+        expect(result.unresolvedConditions).toEqual([])
+      } else {
+        expect(result.total).toBeNull()
+        expect(result.comparisonStatus).toBe("conditioned")
+        expect(result.unresolvedConditions).toContain("coverage:training:missing-category")
+        expect(result.unresolvedConditions).not.toContain("scenario-is-hypothetical")
+      }
+    }
     expect(item.alternative.result.costCoverage.basisId).toBe(basis.id)
     expect(item.alternative.result.costCoverage.basisVersion).toBe(basis.version)
   }
