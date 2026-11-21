@@ -603,6 +603,8 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     value: visible ? (saved?.request ?? { deleted: was }) : undefined,
   }
 }
+const keepPreviousHolder = "keep-previous-holder"
+
 function settings(snapshot: Snapshot, store: Store, actor: Actor, command: Command, environment: Environment): Result {
   if (!has(actor, "admin")) return { ok: false, status: 403 }
   if (!["save", "reset"].includes(command.action)) return { ok: false, status: 400 }
@@ -622,11 +624,14 @@ function settings(snapshot: Snapshot, store: Store, actor: Actor, command: Comma
         .map((line) => line.trim())
         .filter(Boolean)
   }
+  const currentHolders = new Map(rows(store.settings.levels).map((level) => [text(level.id), text(level.holderId)]))
   const levels = rows(next.levels).map(
     (level): Record<string, unknown> => ({
       ...level,
       id: String(level.id ?? ""),
-      holderId: level.holderId == null || level.holderId === "" ? null : String(level.holderId),
+      holderId: environment.directoryScope === "team" && level.holderId === keepPreviousHolder
+        ? currentHolders.get(text(level.id)) || keepPreviousHolder
+        : level.holderId == null || level.holderId === "" ? null : String(level.holderId),
     }),
   )
   const fx = rows(next.fxRates)
@@ -650,7 +655,6 @@ function settings(snapshot: Snapshot, store: Store, actor: Actor, command: Comma
   )
     return { ok: false, status: 422, errors: ["Invalid matrix or currencies"] }
   if (environment.directoryScope === "team") {
-    const currentHolders = new Map(rows(store.settings.levels).map((level) => [text(level.id), text(level.holderId)]))
     if (new Set(levels.map((level) => text(level.id))).size !== levels.length)
       return { ok: false, status: 422, errors: ["Duplicate approval level"] }
     if (levels.some((level) => {
@@ -866,6 +870,7 @@ export const domain: Domain = {
         suppliers,
         register,
         directory: environment.directory,
+        directoryScope: environment.directoryScope,
         formSettings: pick(store.settings, [
           "currency",
           "fxRates",
@@ -1119,15 +1124,18 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             "escalationDays",
           ]) +
           '</fieldset><fieldset class="form-section"><legend>Approval matrix</legend>' +
-          repeatRows("levels", rows(settings.levels), ["id", "name", "threshold"], (row, prefix) =>
-            selectField(`${prefix}.holderId`, "Approval holder", row.holderId, [
+          repeatRows("levels", rows(settings.levels), ["id", "name", "threshold"], (row, prefix) => {
+            const holder = text(row.holderId)
+            const unavailable = data.directoryScope === "team" && !!holder && !directory.some((person) => person.id === holder)
+            return selectField(`${prefix}.holderId`, "Approval holder", unavailable ? keepPreviousHolder : holder, [
               { value: "", label: "Unassigned" },
+              ...(unavailable ? [{ value: keepPreviousHolder, label: "Keep previous holder (unavailable)" }] : []),
               ...directory.map((person) => ({
                 value: String(person.id ?? ""),
                 label: text(person.name),
               })),
-            ]),
-          ) +
+            ])
+          }) +
           '</fieldset><fieldset class="form-section"><legend>Currencies</legend>' +
           repeatRows("fxRates", rows(settings.fxRates), ["code", "rate"]) +
           fields([{ name: "fxUpdated", label: "Rates last updated", type: "date", value: settings.fxUpdated }]) +

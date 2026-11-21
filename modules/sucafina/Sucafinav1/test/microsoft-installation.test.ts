@@ -384,7 +384,8 @@ test("Corporate Team directory scopes assignment choices to the mounted Team", a
           provider.joined = [{ ...finance, isArchived: true }, planning]
         const value = [member("caller-opaque", oid, "Verified person")]
         if (team === secondTeamId) value.push(member("planning-opaque", planningPerson, "Planning colleague"))
-        if (team === teamObjectId && (provider.roster !== "depart" || ++provider.commitRosterReads === 1))
+        if (team === teamObjectId && provider.roster !== "missing-finance" &&
+            (provider.roster !== "depart" || ++provider.commitRosterReads === 1))
           value.push(member("finance-opaque", financePerson, "Finance colleague"))
         return Response.json({ value, ...(provider.roster === "incomplete" ? { "@odata.count": value.length + 1 } : {}) })
       }
@@ -430,16 +431,25 @@ test("Corporate Team directory scopes assignment choices to the mounted Team", a
     expect(await (await dashboard(teamObjectId))?.text()).toContain('value="Operations" checked')
     expect(await (await dashboard(secondTeamId))?.text()).not.toContain('value="Operations" checked')
 
-    const settings = (holderId?: string) => f.installation.handler(
+    const settings = (holderId?: string, version = 1) => f.installation.handler(
       ingress(`/teams/${teamObjectId}/procurement`, { cookie, origin, "content-type": "application/json" }, {
         method: "POST", body: JSON.stringify(holderId === undefined
           ? { page: "Settings", action: "reset", version: 0, values: {} }
-          : { page: "Settings", action: "save", version: 1, values: { levels: [{ id: "L1", name: "Reviewer", threshold: 0, holderId }] } }),
+          : { page: "Settings", action: "save", version, values: { levels: [{ id: "L1", name: "Reviewer", threshold: 0, holderId }] } }),
       }),
     )
     expect((await settings())?.status).toBe(200)
     expect((await settings(planningPerson))?.status).toBe(422)
     expect((await settings(financePerson))?.status).toBe(200)
+
+    provider.roster = "missing-finance"
+    const settingsPage = () => f.installation.handler(ingress(`/teams/${teamObjectId}/procurement?page=Settings`, { cookie }))
+    const previous = await (await settingsPage())?.text()
+    expect(previous).toContain('value="keep-previous-holder" selected')
+    expect(previous).not.toContain(financePerson)
+    expect((await settings("keep-previous-holder", 2))?.status).toBe(200)
+    provider.roster = "complete"
+    expect(await (await settingsPage())?.text()).toContain(`value="${financePerson}" selected`)
 
     for (const state of ["incomplete", "down"]) {
       provider.roster = state
