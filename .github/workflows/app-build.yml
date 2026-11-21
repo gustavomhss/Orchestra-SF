@@ -41,9 +41,10 @@ jobs:
           gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14722264806" > "$out/origin.json"
           jq -e --arg digest "sha256:$ZIP_SHA"             '.id == 14722264806 and .digest == $digest and .expired == false and .workflow_run.id == 44944208924'             "$out/origin.json" >/dev/null
           gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14722264806/zip" > "$out/original.zip"
-          gh api "repos/$GITHUB_REPOSITORY/actions/jobs/136967815702" > "$out/producer-job.json"
-          gh api "repos/$GITHUB_REPOSITORY/actions/jobs/136967815702/logs" > "$out/producer-job.log"
           printf '%s  %s\n' "$ZIP_SHA" "$out/original.zip" | sha256sum --check
+          gh api "repos/$GITHUB_REPOSITORY/actions/jobs/136967815702" > "$out/producer-job.json"
+          # Keep the producer's raw ANSI bytes in a private file for the pinned hash.
+          gh api --allow-escape-sequences "repos/$GITHUB_REPOSITORY/actions/jobs/136967815702/logs" > "$out/producer-job.log"
           for member in orchestra-sf-entra-linux-x64-baseline.tar.gz compile-provenance.json cli-source-map-index.json cli-source-maps.tar.gz; do
             unzip -p "$out/original.zip" "$member" > "$out/$member"
           done
