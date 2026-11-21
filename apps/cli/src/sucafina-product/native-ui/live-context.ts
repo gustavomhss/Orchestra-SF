@@ -230,6 +230,10 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
   const currentBinding = source.currentBinding
   const read = async (request: Request, expected: Binding, internal: boolean): Promise<SfContextResult> => {
     if (!originalRequest(request, expected, source.origin, source.mount, internal)) return mismatch()
+    // CAP25 checks its own queue, record and actions before returning data. Its
+    // preflight needs current authority, not a health probe of every SF surface.
+    const procurementRequestPage = internal && request.method === "GET" &&
+      new URL(request.url).pathname === source.mount + "/api/ui/pages/CAP25"
     const firstBinding = currentBinding()
     if (!firstBinding) return { status: "unavailable", reason: "identity-unavailable" }
     if (!sameBinding(firstBinding, expected)) return mismatch()
@@ -251,7 +255,7 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
     if (!destinations) return mismatch()
 
     const readOperations = async (): Promise<ReadonlyMap<string, SfOperationAvailability> | undefined> => {
-      if (!source.operational) return operational([])
+      if (!source.operational || procurementRequestPage) return operational([])
       const actual = await source.operational(request, admittedStamp)
       if (request.signal.aborted || !stillCurrent()) return undefined
       // These two settings operations are local-operator UI69 producers. Mode

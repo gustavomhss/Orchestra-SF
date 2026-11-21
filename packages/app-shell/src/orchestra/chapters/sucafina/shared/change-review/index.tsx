@@ -165,8 +165,9 @@ export function SfChangeReview(props: SfChangeReviewProps): JSX.Element {
   const id = createUniqueId()
   const isRevoked = () => props.state === "denied" || props.state === "session-expired"
   const isUncertain = () => props.state === "outcome-unknown"
+  const confirmationBlocked = () => !props.busy && props.confirmation.kind === "blocked"
   const mayConfirm = () =>
-    (props.state === "ready" || props.state === "partial") &&
+    !props.busy && (props.state === "ready" || props.state === "partial") &&
     props.coverage.state !== "unavailable" &&
     props.blockingReasons.length === 0 &&
     props.confirmation.kind === "admitted"
@@ -227,11 +228,11 @@ export function SfChangeReview(props: SfChangeReviewProps): JSX.Element {
           </section>
         </Show>
 
-        <Show when={props.blockingReasons.length > 0 || props.confirmation.kind === "blocked"}>
+        <Show when={props.blockingReasons.length > 0 || confirmationBlocked()}>
           <div class="sf-s03-notice" role="alert">
             <p>{sfCopy(language, "sf.s03.confirmationBlocked")}</p>
             <ul>
-              <For each={[...props.blockingReasons, ...(props.confirmation.kind === "blocked" ? props.confirmation.reasons : [])]}>
+              <For each={[...props.blockingReasons, ...(confirmationBlocked() && props.confirmation.kind === "blocked" ? props.confirmation.reasons : [])]}>
                 {(reason) => <li>{sfMessage(language, reason)}</li>}
               </For>
             </ul>
@@ -239,10 +240,10 @@ export function SfChangeReview(props: SfChangeReviewProps): JSX.Element {
         </Show>
 
         <div class="sf-s03-actions">
-          <button type="button" class="mx-btn" onClick={props.onCancel}>
+          <button type="button" class="mx-btn" disabled={props.busy} onClick={props.onCancel}>
             {sfCopy(language, "sf.s03.cancel")}
           </button>
-          <button type="button" class="mx-btn" onClick={props.onRevise}>
+          <button type="button" class="mx-btn" disabled={props.busy} onClick={props.onRevise}>
             {sfCopy(language, "sf.s03.revise")}
           </button>
           <button

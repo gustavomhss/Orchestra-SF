@@ -1,0 +1,43 @@
+{
+  "matrix": [
+    {
+      "account": "A",
+      "purchase": "PR-2026-0901",
+      "http": 200,
+      "status": "ok",
+      "proposals": 3
+    },
+    {
+      "account": "A",
+      "purchase": "PR-2026-0902",
+      "http": 200,
+      "status": "denied"
+    },
+    {
+      "account": "B",
+      "purchase": "PR-2026-0901",
+      "http": 200,
+      "status": "denied"
+    },
+    {
+      "account": "B",
+      "purchase": "PR-2026-0902",
+      "http": 200,
+      "status": "ok",
+      "proposals": 3
+    }
+  ],
+  "pluginSha256": "a9e504d600503927ece0ec8b8524afd5d1d35d47a6a6a7d320e834cba5fa181e",
+  "azureRunCommand": "sf-purchase-invoke-proof-1795290751",
+  "verifiedAt": "2026-11-21T19:54:26.876307+00:00",
+  "gatewayHost": "orchsf-maestro-vm",
+  "method": "POST",
+  "endpoint": "/tools/invoke",
+  "tool": "sfcompras__sf_comparar_compra",
+  "crossedResult": {
+    "isError": true,
+    "payload": {
+      "status": "denied"
+    }
+  }
+}

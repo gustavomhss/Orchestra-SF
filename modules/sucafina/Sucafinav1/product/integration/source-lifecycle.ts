@@ -185,6 +185,7 @@ export function createSfSourcePersistence(input: {
   enumerate: (surface: Surface, snapshot: Snapshot) => readonly SfSourceIdentityInput[]
   createId: () => string
   purpose?: "business-restore"
+  bootstrapOnWrite?: boolean
   projectScope?: (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => unknown | undefined
   observeAuthority?: SnapshotAuthorityRead
   hasSnapshotRoot?: () => boolean
@@ -592,6 +593,17 @@ export function createSfSourcePersistence(input: {
           }
           checkReadCommit(checking, false)
           if (!seal.current() || !authorityCurrent() || identity && !sealedDigestsCurrent()) throw new Error("SF_SEALED_READ_CHANGED")
+          return result
+        }
+        // A Team can predate the source catalog. Regular business reads remain
+        // read-only; its first authorized write enrolls the sources atomically.
+        if (snapshot.sfSources === undefined && input.bootstrapOnWrite) {
+          const result = await work(snapshot, blobs)
+          checkReadCommit(checking, result.commit)
+          if (result.commit) {
+            snapshot.sfSources = { schemaVersion: 1, records: {} }
+            synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, false)
+          }
           return result
         }
         requireSourceIdentities(snapshot)

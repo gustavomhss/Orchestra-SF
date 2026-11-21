@@ -1,4 +1,5 @@
 import { createHmac, randomUUID } from "node:crypto"
+import type { SfTeamCurrentChoice } from "../../../../apps/cli/src/sucafina-product/team-current-choice.ts"
 import path from "node:path"
 import { createModule } from "../index.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
@@ -26,6 +27,7 @@ export async function runTeamBusiness(input: {
   directory: string
   keys: { assets: Uint8Array; bank: Uint8Array }
   now: () => Date
+  teamCurrentChoice?: SfTeamCurrentChoice
   decisionIntentions?: Pick<LocalStore, "transaction">
 }) {
   const { request, route, admission, identity, config, keys } = input
@@ -33,9 +35,9 @@ export async function runTeamBusiness(input: {
   const denied = () => new Response(null, { status: 403, headers: { "Cache-Control": "no-store" } })
   const rolePolicy = (surface: Surface) => emptyMap().filter((row) => row.surface === surface)
     .map((row) => ({ ...row, entra: config.groups[surface][row.role] ?? null }))
-  const currentActor = async () => {
+  const currentActor = async (surface = route.surface) => {
     if (!await admission.verifyCurrent()) return null
-    const actor = await identity.authenticate(request, { surface: route.surface, roleMap: rolePolicy(route.surface) })
+    const actor = await identity.authenticate(request, { surface, roleMap: rolePolicy(surface) })
     return actor?.id === admission.principalObjectId && await admission.verifyCurrent() ? actor : null
   }
   const authorized: { actor?: ResolvedActor; committed: boolean; roster?: string } = { committed: false }
@@ -58,8 +60,25 @@ export async function runTeamBusiness(input: {
     return admission.verifyCurrent()
   }
   const storeDirectory = path.join(input.directory, "business-teams", partition)
+  const currentChoice = input.teamCurrentChoice?.handles(request) ? input.teamCurrentChoice : undefined
   const store = await openLocalStore(storeDirectory)
   try {
+    if (currentChoice) {
+      if (route.surface !== "dashboard") return denied()
+      const grants = config.grants.filter((grant) => grant.principalRef === admission.principalObjectId)
+      if (grants.length !== 1 || !grants[0]) return denied()
+      const actor = await currentActor()
+      if (!actor?.roles.some((role) => role.surface === "dashboard") ||
+          request.method === "POST" && (!actor.canWrite || !actor.roles.some((role) => role.surface === "dashboard" && ["admin", "contributor"].includes(role.role)))) return denied()
+      authorized.actor = actor
+      return await currentChoice.run({
+        request, origin: config.origin, mount: route.mount, partition, directory: storeDirectory, persistence: store,
+        principalId: admission.principalObjectId, grant: grants[0],
+        authenticate: (original, context) => original === request && context ? currentActor(context.surface) : Promise.resolve(null),
+        environment: async () => ({ at: input.now().toISOString(), id: randomUUID, directory: [] }),
+        current: () => reauthorize({ refreshSession: false }),
+      })
+    }
     if (input.decisionIntentions && route.surface === "dashboard" && new URL(request.url).searchParams.get("sf") === "workbench-command") {
       const grants = config.grants.filter((grant) => grant.principalRef === admission.principalObjectId)
       const grant = grants[0]
@@ -75,8 +94,16 @@ export async function runTeamBusiness(input: {
         authenticate: (original, context) => original === request && context?.surface === "dashboard" ? currentActor() : Promise.resolve(null),
       })
     }
+    const sourceStore = input.teamCurrentChoice?.sources(store) ??
+      (config.clawPurchasePeriod && route.surface === "procurement" ? await (async () => {
+        const { createSfSourcePersistence } = await import("../product/integration/source-lifecycle.ts")
+        const { enumerateSfSources } = await import("../product/integration/source-inventory.ts")
+        const { projectSfProcurementScope } = await import("../product/integration/procurement-projections.ts")
+        return createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources,
+          projectScope: projectSfProcurementScope, createId: randomUUID, bootstrapOnWrite: true })
+      })() : store)
     const persistence: AssetPersistence = {
-      transaction: (surface, work, options) => store.transaction(surface, async (snapshot, blobs) => {
+      transaction: (surface, work, options) => sourceStore.transaction(surface, async (snapshot, blobs) => {
         const result = await work(snapshot, blobs)
         // Blob writes and business mutations share this transaction and roll back together.
         if (result.commit) {
@@ -120,7 +147,8 @@ export async function runTeamBusiness(input: {
       return denied()
     return response
   } catch (error) {
-    if (error instanceof TeamAuthorityChanged) return denied()
+    if (error instanceof TeamAuthorityChanged || currentChoice && !request.signal.aborted &&
+        !await reauthorize({ refreshSession: false }).catch(() => false)) return denied()
     if (error instanceof TeamDirectoryUnavailable)
       return new Response(null, { status: 503, headers: { "Cache-Control": "no-store" } })
     throw error
