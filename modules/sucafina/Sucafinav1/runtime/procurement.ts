@@ -591,7 +591,9 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
       queueNotice(snapshot, {
         roles: ["buyer"],
         kind: command.action === "approve" ? "approved" : "rejected",
-        to: [...new Set([text(saved.request.createdBy), text(saved.request.buyerId)].filter(Boolean))],
+        to: [...new Set([text(saved.request.createdBy), text(saved.request.buyerId)].filter((id) =>
+          id && (environment.directoryScope !== "team" || environment.directory.some((person) => person.id === id)),
+        ))],
         record: actualId,
         at: environment.at,
       })

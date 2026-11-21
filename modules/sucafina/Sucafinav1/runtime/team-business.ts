@@ -91,7 +91,7 @@ export async function runTeamBusiness(input: {
         }
         const person = await identity.person(request)
         const directory = person?.id === admission.principalObjectId ? [person] : []
-        return { at, id: randomUUID, directory, bankKey }
+        return { at, id: randomUUID, directory, bankKey, directoryScope: "team" as const }
       },
       maxJsonBytes: 2 * 1024 * 1024,
       assets: { persistence, services: { signingKey: derive(keys.assets), scan: (bytes) => scanLocalFile(bytes, config.scanner) } },

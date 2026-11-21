@@ -147,7 +147,7 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
   }, [teamObjectId.toUpperCase(), secondTeamId], {
     dashboard: { admin: "group:" + grantPrincipal },
     planner: { viewer: "group:" + grantPrincipal },
-    procurement: { buyer: "group:" + grantPrincipal },
+    procurement: { buyer: "group:" + grantPrincipal, admin: "group:" + grantPrincipal },
   })
   try {
     expect(f.installation.mount).toBe(mount)
@@ -272,6 +272,18 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
       const partition = digestSfValue({ installationId: profile.installationId, tenantId, teamObjectId: id })
       expect(await Bun.file(join(f.directory, "business-teams", partition, "installation.sqlite")).exists()).toBe(true)
     }
+
+    const writeSettings = (action: "reset" | "save", version: number, holderId?: string) =>
+      f.installation.handler(ingress(teamPath(teamObjectId, "procurement"), {
+        ...headers, origin, "content-type": "application/json",
+      }, {
+        method: "POST",
+        body: JSON.stringify({ page: "Settings", action, version, values: holderId
+          ? { levels: [{ id: "first", name: "First", threshold: 100, holderId }] } : {} }),
+      }))
+    expect((await writeSettings("reset", 0))?.status).toBe(200)
+    expect((await writeSettings("save", 1, grantPrincipal))?.status).toBe(422)
+    expect((await writeSettings("save", 1, oid))?.status).toBe(200)
 
     membership.group = false
     expect((await suppliers(teamObjectId))?.status).toBe(403)
