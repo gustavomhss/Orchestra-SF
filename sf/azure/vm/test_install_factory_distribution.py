@@ -65,10 +65,10 @@ class InstallerTest(unittest.TestCase):
         ))
 
     def package(self, candidate=FIRST, *, closure_entry=MICROSOFT_ENTRY,
-                extra=None, corrupt_payload=False):
+                extra=None, corrupt_payload=False, orchestra=ELF_HEADER):
         bundle = b"export default {}\n"
         contents = {
-            "bin/orchestra": ELF_HEADER,
+            "bin/orchestra": orchestra,
             "bin/hugr_omni.node": ELF_HEADER,
             "bin/hugr-omni-supervisor": ELF_HEADER,
             "package.json": b'{"version":"1.0.0"}\n',
@@ -189,7 +189,7 @@ class InstallerTest(unittest.TestCase):
 
         write_json(receipt_file, valid)
         receipt_file.chmod(0o622)
-        with self.assertRaisesRegex(RuntimeError, "protected root-owned file"):
+        with self.assertRaisesRegex(RuntimeError, "protected file with the expected owner"):
             self.result(installer.install, args, apply=True)
         receipt_file.chmod(0o600)
         substitute = receipt_file.with_name("receipt-link")
@@ -222,6 +222,9 @@ class InstallerTest(unittest.TestCase):
         write_json(receipt_file, {**receipt, "manifestSha256": "0" * 64})
         with self.assertRaisesRegex(RuntimeError, "manifest SHA256"):
             self.result(installer.install, args, apply=True)
+        for apply in (False, True):
+            with self.assertRaisesRegex(RuntimeError, "native ELF"):
+                self.result(installer.install, self.package(orchestra=b"not ELF"), apply=apply)
         self.assertEqual(self.preflights, [])
         self.assertEqual(self.snapshot(), {})
 
@@ -243,6 +246,15 @@ class InstallerTest(unittest.TestCase):
         second = self.result(installer.install, args, apply=True)
         self.assertTrue(second["idempotent"])
         self.assertEqual(self.snapshot(), before)
+        for name in ("distribution.json", "checksums.sha256", ".a7-source.json"):
+            path = self.current / name
+            path.chmod(0o644)
+            try:
+                with self.assertRaisesRegex(RuntimeError, "metadata permission drift"):
+                    self.result(installer.install, args, apply=True)
+            finally:
+                path.chmod(0o444)
+        self.assertEqual(self.snapshot(), before)
 
         damaged = self.package(SECOND, corrupt_payload=True)
         with self.assertRaisesRegex(RuntimeError, "payload"):
@@ -252,9 +264,41 @@ class InstallerTest(unittest.TestCase):
             self.result(installer.install, damaged, apply=True)
         self.assertEqual(self.snapshot(), before)
 
+    def test_retry_syncs_release_and_current_entries_after_interrupted_publication(self):
+        args = self.package()
+        durable_sync = installer.sync_directory
+
+        def fail_release(path):
+            if Path(path) == self.releases:
+                raise OSError("release fsync failed")
+            durable_sync(path)
+
+        with patch.object(installer, "sync_directory", side_effect=fail_release):
+            with self.assertRaisesRegex(OSError, "release fsync failed"):
+                self.result(installer.install, args, apply=True)
+        self.assertFalse(self.current.is_symlink())
+        self.assertTrue((self.releases / FIRST).is_dir())
+
+        def fail_current(path):
+            if Path(path) == self.vm:
+                raise OSError("current fsync failed")
+            durable_sync(path)
+
+        with patch.object(installer, "sync_directory", side_effect=fail_current):
+            with self.assertRaisesRegex(OSError, "current fsync failed"):
+                self.result(installer.install, args, apply=True)
+        self.assertEqual(self.current.readlink(), self.releases / FIRST)
+        with patch.object(installer, "sync_directory", wraps=durable_sync) as sync:
+            self.assertTrue(self.result(installer.install, args, apply=True)["idempotent"])
+            self.assertEqual([Path(call.args[0]) for call in sync.call_args_list], [self.releases, self.vm])
+
     def test_rollback_requires_current_approval_proof_and_retained_release(self):
-        self.result(installer.install, self.package(), apply=True)
+        first = self.package()
+        self.result(installer.install, first, apply=True)
         self.result(installer.install, self.package(SECOND), apply=True)
+        with self.assertRaisesRegex(RuntimeError, "requires rollback approval"):
+            self.result(installer.install, first, apply=True)
+        self.assertEqual(self.current.readlink(), self.releases / SECOND)
         approval = self.root / "approval.json"
         compatibility = self.root / "compatibility.json"
         reviewed = {

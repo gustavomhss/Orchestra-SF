@@ -2,6 +2,7 @@
 # Render __SF_FQDN__ with the public HTTPS hostname.
 # Render __SF_INGRESS_HOST__ with the authority (host and port, if any) of the private ingressOrigin.
 # Supply SF_INGRESS_PROOF in Caddy's private process environment from the installation ingress secret.
+# Remove --environ from Caddy's startup command before provisioning SF_INGRESS_PROOF.
 # Keep debug logging disabled because reverse_proxy can log upstream request headers.
 __SF_FQDN__ {
     encode zstd gzip

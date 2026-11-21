@@ -35,6 +35,8 @@ REQUIRED = {
     "bin/orchestra", "bin/hugr_omni.node", "bin/hugr-omni-supervisor",
     "package.json", "bin/local/entry.mjs", "bin/local/closure.json",
 }
+NATIVE = ("bin/orchestra", "bin/hugr_omni.node", "bin/hugr-omni-supervisor")
+METADATA = {"distribution.json", "checksums.sha256", ".a7-source.json"}
 
 
 def refuse(reason):
@@ -72,18 +74,18 @@ def must_file(path, owner=None, max_size=None):
 
 
 @contextmanager
-def root_input(path, maximum, mode=None):
+def protected_input(path, maximum, mode=None, *, owner=0):
     with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK), "rb") as reader:
         item = os.fstat(reader.fileno())
-        if not stat.S_ISREG(item.st_mode) or item.st_uid != 0 or item.st_nlink != 1 or \
+        if not stat.S_ISREG(item.st_mode) or item.st_uid != owner or item.st_nlink != 1 or \
            item.st_mode & 0o022 or not 0 < item.st_size <= maximum or \
            (mode is not None and stat.S_IMODE(item.st_mode) != mode):
-            refuse("input must be a bounded, protected root-owned file")
+            refuse("input must be a bounded, protected file with the expected owner")
         yield reader
 
 
-def parse_receipt(receipt_path, c, expected_sha):
-    with root_input(receipt_path, 131072) as file:
+def parse_receipt(receipt_path, c, expected_sha, *, owner=0):
+    with protected_input(receipt_path, 131072, owner=owner) as file:
         try:
             receipt = json.load(file)
         except (UnicodeError, ValueError):
@@ -189,10 +191,26 @@ def validate_tar(artifact, c, expected_sha, receipt):
            factory["bundle"].get("sha256") != receipt["bundleSha256"] or \
            file_index["bin/local/entry.mjs"]["sha256"] != receipt["bundleSha256"]:
             refuse("CI factory bundle/source closure identity mismatch")
+        for name in NATIVE:
+            with archive.extractfile(members[name]) as file:
+                require_native_header(file, name)
         return archive, members, file_index, manifest_bytes
     except Exception:
         archive.close()
         raise
+
+
+def require_native_header(file, name):
+    elf = file.read(20)
+    if elf[:4] != b"\x7fELF" or len(elf) < 20 or elf[4:6] != b"\x02\x01" or elf[18:20] != b"\x3e\x00":
+        refuse("native ELF not Linux x86_64 ELF64: " + name)
+
+
+def verify_payload(archive, members, entries):
+    for name, entry in entries.items():
+        with archive.extractfile(members[name]) as source:
+            if hash_stream(source) != entry["sha256"]:
+                refuse("archive payload differs from manifest: " + name)
 
 
 def check_release(path, source, expected_sha, file_index, manifest_bytes, *, staging=False):
@@ -212,8 +230,10 @@ def check_release(path, source, expected_sha, file_index, manifest_bytes, *, sta
                 refuse("installed directory permission drift")
         for name in files:
             file = Path(base) / name
-            must_file(file, owner=0)
+            metadata = must_file(file, owner=0)
             relative = file.relative_to(path).as_posix()
+            if relative in METADATA and stat.S_IMODE(metadata.st_mode) != 0o444:
+                refuse("installed metadata permission drift")
             if relative == ".a7-source.json":
                 continue
             discovered[relative] = sha256(file)
@@ -235,11 +255,9 @@ def check_release(path, source, expected_sha, file_index, manifest_bytes, *, sta
        proof.get("sourceSHA") != source or proof.get("archiveSha256") != expected_sha or \
        proof.get("manifestSha256") != expected["distribution.json"]:
         refuse("installed candidate/digest receipt does not match")
-    for native in ("bin/orchestra", "bin/hugr_omni.node", "bin/hugr-omni-supervisor"):
+    for native in NATIVE:
         with (path / native).open("rb") as f:
-            elf = f.read(20)
-        if elf[:4] != b"\x7fELF" or len(elf) < 20 or elf[4:6] != b"\x02\x01" or elf[18:20] != b"\x3e\x00":
-            refuse("native ELF not Linux x86_64 ELF64: " + native)
+            require_native_header(f, native)
     return proof
 
 
@@ -267,7 +285,7 @@ def vm_preflight(fqdn, *, require_maintenance=True):
     if RELEASES.is_symlink() or (RELEASES.exists() and (not RELEASES.is_dir() or RELEASES.stat().st_uid != 0 or
        stat.S_IMODE(RELEASES.stat().st_mode) != 0o755)):
         refuse("unsafe release directory")
-    with root_input(CADDY, 65536) as file:
+    with protected_input(CADDY, 65536) as file:
         caddy = file.read().decode("utf-8").strip()
     if require_maintenance:
         if not re.fullmatch(r"(?:# managed-orchestra-sf-mode: maintenance\n)?" + re.escape(fqdn) +
@@ -325,7 +343,7 @@ def install_lock():
         os.close(fd)
 
 
-def install(a):
+def package_input(a, *, owner=0):
     if not SHA40.fullmatch(a.candidate) or not SHA64.fullmatch(a.sha256):
         refuse("expected exact candidate 40-hex and archive SHA256 64-hex")
     artifact = Path(a.artifact)
@@ -333,8 +351,22 @@ def install(a):
     if not artifact.is_absolute() or not receipt_file.is_absolute():
         refuse("operator must pass absolute artifact and receipt files")
     # The receipt and archive digest are checked before changing the host.
-    receipt = parse_receipt(receipt_file, a.candidate, a.sha256)
-    with root_input(artifact, MAX_BYTES) as reader:
+    return artifact, parse_receipt(receipt_file, a.candidate, a.sha256, owner=owner)
+
+
+def verify(a):
+    owner = os.geteuid()
+    artifact, receipt = package_input(a, owner=owner)
+    with protected_input(artifact, MAX_BYTES, owner=owner) as reader:
+        archive, members, entries, _ = validate_tar(reader, a.candidate, a.sha256, receipt)
+        with archive:
+            verify_payload(archive, members, entries)
+    print(json.dumps({"result": "PACKAGE_VERIFIED", "candidate": a.candidate, "archiveDigest": a.sha256}))
+
+
+def install(a):
+    artifact, receipt = package_input(a)
+    with protected_input(artifact, MAX_BYTES) as reader:
         install_archive(a, reader, receipt)
 
 
@@ -347,10 +379,7 @@ def install_archive(a, artifact, receipt):
         if target.exists() or target.is_symlink():
             check_release(target, a.candidate, a.sha256, entries, manifest_bytes)
         if a.dry_run:
-            for name, entry in entries.items():
-                with archive.extractfile(members[name]) as source:
-                    if hash_stream(source) != entry["sha256"]:
-                        refuse("archive payload differs from manifest: " + name)
+            verify_payload(archive, members, entries)
             print(json.dumps({"result": "DRY_RUN_NO_WRITES", "candidate": a.candidate,
                               "archiveDigest": a.sha256, "current": old, "targetExists": target.exists()}))
             return
@@ -359,6 +388,8 @@ def install_archive(a, artifact, receipt):
         with install_lock():
             vm_preflight(a.fqdn)
             old = current_source()
+            if target.exists() and old is not None and old != a.candidate:
+                refuse("selecting a retained non-current release requires rollback approval")
             if not RELEASES.exists():
                 RELEASES.mkdir(mode=0o755)
                 RELEASES.chmod(0o755)
@@ -404,13 +435,15 @@ def install_archive(a, artifact, receipt):
                     # No invalid/tampered factory release can be published even momentarily.
                     check_release(temp, a.candidate, a.sha256, entries, manifest_bytes, staging=True)
                     os.rename(temp, target)
-                    sync_directory(RELEASES)
                 finally:
                     if temp.exists():
                         shutil.rmtree(temp)
             check_release(target, a.candidate, a.sha256, entries, manifest_bytes)
+            sync_directory(RELEASES)
             if old != a.candidate:
                 atomic_current(a.candidate)
+            else:
+                sync_directory(CURRENT.parent)
             print(json.dumps({"result": "INSTALLED_NOT_STARTED_CADDY_STILL_503",
                               "candidate": a.candidate, "previous": old,
                               "archiveDigest": a.sha256, "idempotent": old == a.candidate}))
@@ -423,9 +456,9 @@ def check_rollback_approval(a):
     proof_file = Path(a.compatibility_proof)
     if not approval_file.is_absolute() or not proof_file.is_absolute():
         refuse("rollback approval/proof must be absolute private files")
-    with root_input(approval_file, 65536, 0o600) as file:
+    with protected_input(approval_file, 65536, 0o600) as file:
         approval = json.load(file)
-    with root_input(proof_file, 65536, 0o600) as file:
+    with protected_input(proof_file, 65536, 0o600) as file:
         proof_bytes = file.read()
         proof = json.loads(proof_bytes)
     if not isinstance(approval, dict) or \
@@ -469,6 +502,7 @@ def rollback(a):
             refuse("concurrent release switch")
         check_rollback_approval(a)
         check_rollback_release(a.to_candidate)
+        sync_directory(RELEASES)
         atomic_current(a.to_candidate)
         print(json.dumps({"result": "ROLLED_BACK_CODE_ONLY_CADDY_STILL_503",
                           "from": a.from_candidate, "to": a.to_candidate,
@@ -479,13 +513,13 @@ def check_rollback_release(candidate):
     target = RELEASES / candidate
     if not target.is_dir() or target.is_symlink():
         refuse("retained previous release absent")
-    with root_input(target / ".a7-source.json", 131072) as file:
+    with protected_input(target / ".a7-source.json", 131072) as file:
         proof = json.load(file)
     if not isinstance(proof, dict) or proof.get("schema") != RELEASE_SCHEMA or \
        proof.get("sourceSHA") != candidate or \
        not SHA64.fullmatch(str(proof.get("archiveSha256", ""))):
         refuse("previous release lacks an immutable Entra receipt")
-    with root_input(target / "distribution.json", 5_000_000) as file:
+    with protected_input(target / "distribution.json", 5_000_000) as file:
         manifest_bytes = file.read()
     if hashlib.sha256(manifest_bytes).hexdigest() != proof.get("manifestSha256"):
         refuse("rollback manifest SHA256 differs from receipt")
@@ -498,10 +532,12 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     commands = p.add_subparsers(dest="command", required=True)
     ins = commands.add_parser("install")
-    ins.add_argument("--artifact", required=True)
-    ins.add_argument("--sha256", required=True)
-    ins.add_argument("--receipt", required=True)
-    ins.add_argument("--candidate", required=True)
+    validation = commands.add_parser("verify")
+    for cmd in (validation, ins):
+        cmd.add_argument("--artifact", required=True)
+        cmd.add_argument("--sha256", required=True)
+        cmd.add_argument("--receipt", required=True)
+        cmd.add_argument("--candidate", required=True)
     roll = commands.add_parser("rollback")
     roll.add_argument("--from-candidate", required=True)
     roll.add_argument("--to-candidate", required=True)
@@ -514,7 +550,7 @@ def main():
         mode.add_argument("--apply", action="store_true")
     a = p.parse_args()
     try:
-        {"install": install, "rollback": rollback}[a.command](a)
+        {"verify": verify, "install": install, "rollback": rollback}[a.command](a)
     except (OSError, ValueError, KeyError, RuntimeError, tarfile.TarError, json.JSONDecodeError) as err:
         print("INSTALL_BLOCKED: " + str(err), file=sys.stderr)
         sys.exit(1)

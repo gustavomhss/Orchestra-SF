@@ -94,7 +94,10 @@ async function packageEntra(input: { dist: string; out: string; expectedSourceSH
         bundleSha256,
         ...(hosted ? { runID, runAttempt } : {}),
       }
-      await writeFile(join(output, receiptFile), JSON.stringify(receipt, null, 2) + "\n", { flag: "wx" })
+      const receiptPath = join(output, receiptFile)
+      await writeFile(receiptPath, JSON.stringify(receipt, null, 2) + "\n", { flag: "wx", mode: 0o644 })
+      const verifier = join(workspace, "sf/azure/vm/install-factory-distribution.py")
+      await $`python3 -B ${verifier} verify --artifact ${join(output, archiveFile)} --receipt ${receiptPath} --candidate ${checkoutSHA} --sha256 ${archive.sha256}`.quiet()
       return receipt
     } catch (error) {
       await rm(output, { recursive: true, force: true })

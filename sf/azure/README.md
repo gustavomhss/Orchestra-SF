@@ -4,7 +4,7 @@ O instalador seleciona uma distribuição Linux x64 em `/opt/orchestra-sf/curren
 
 ## Preparar o pacote
 
-Use o checkout limpo do SHA escolhido e o build nativo `cli-linux-x64-baseline` produzido a partir desse mesmo checkout. O packager confere o SHA do checkout e a arquitetura do binário fornecido. A origem do binário continua sendo responsabilidade do produtor.
+Use Bun e Python 3 no checkout limpo do SHA escolhido. Forneça o build nativo `cli-linux-x64-baseline` produzido a partir do mesmo checkout. O packager confere o SHA do checkout, a arquitetura do binário e a aceitação do arquivo pelo verificador Python. A origem do binário continua sendo responsabilidade do produtor.
 
 ```sh
 bun apps/cli/script/azure-entra-package.ts \
@@ -13,14 +13,14 @@ bun apps/cli/script/azure-entra-package.ts \
   --source-sha "$CANDIDATE_SHA"
 ```
 
-A saída contém `orchestra-sf-entra-linux-x64-baseline.tar.gz` e `orchestra-sf-entra-package-receipt.json`. O recibo `packaged` registra os hashes do arquivo, do manifesto e da factory empacotada a partir de `local/microsoft-entry.ts`. Verifique o SHA-256 do arquivo por um canal confiável antes de transferi-lo. A homologação do binário instalado, do proxy e do tenant real exige uma prova operacional separada.
+A saída contém `orchestra-sf-entra-linux-x64-baseline.tar.gz` e `orchestra-sf-entra-package-receipt.json`. O recibo `packaged` registra os hashes do arquivo, do manifesto e da factory empacotada a partir de `local/microsoft-entry.ts`. Obtenha o recibo e o par exato de SHA do candidato e SHA-256 do arquivo pelo canal confiável do produtor. A homologação do binário instalado, do proxy e do tenant real exige uma prova operacional separada.
 
 ## Preparar a VM e o Entra
 
 - Provisione a conta sem privilégios `orchestra-sf`, o diretório `/opt/orchestra-sf` de `root:root` com modo `0755` e o volume montado em `/var/lib/orchestra-sf` de `orchestra-sf` com modo `0700`.
-- Provisione o descritor e os segredos no diretório privado previsto em [runtime.env.example](runtime/runtime.env.example). Siga o [guia da instalação Microsoft](../../docs/guides/sucafina-microsoft-installation.md) para chaves, ambiente XDG, grupos e Teams. Configure `mount` como `/sucafina`, `listenerOrigin` como `http://127.0.0.1:4096` e o `workspaceDirectory` fora da árvore do descritor. O navegador usa a origem HTTPS pública. Registre no Entra a URI pública de callback `/sucafina/auth/callback`.
+- Provisione o descritor e os segredos no diretório privado previsto em [runtime.env.example](runtime/runtime.env.example). Siga o [guia da instalação Microsoft](../../docs/guides/sucafina-microsoft-installation.md) para chaves, ambiente XDG, grupos e Teams. Configure `mount` como `/sucafina`, `listenerOrigin` como `http://127.0.0.1:4096` e `workspaceDirectory` como uma pasta privada irmã da instalação, por exemplo `/var/lib/orchestra-sf/home/workspace`, de `orchestra-sf` com modo `0700`. O navegador usa a origem HTTPS pública. Registre no Entra a URI pública de callback `/sucafina/auth/callback`.
 - Instale a [unidade systemd](runtime/orchestra-sf.service) e o ambiente `/etc/orchestra-sf/runtime.env` com `root:root` e modo `0600`. A unidade lê a configuração privada e roda como `orchestra-sf`.
-- Reserve o [template Caddy](runtime/Caddyfile.template) para a abertura do tráfego. Substitua `__SF_FQDN__` pelo hostname público e `__SF_INGRESS_HOST__` pela autoridade de `ingressOrigin`, com porta quando configurada. Forneça `SF_INGRESS_PROOF` no ambiente privado do processo Caddy com os mesmos 64 caracteres hexadecimais de `ingress-secret.txt`. Restrinja a administração do proxy ao operador, mantenha o log de depuração desativado e aplique os limites de taxa e concorrência nas rotas de autenticação descritos no guia.
+- Reserve o [template Caddy](runtime/Caddyfile.template) para a abertura do tráfego. Substitua `__SF_FQDN__` pelo hostname público e `__SF_INGRESS_HOST__` pela autoridade de `ingressOrigin`, com porta quando configurada. Instale o [override de systemd do Caddy](runtime/caddy-entra.conf) em `/etc/systemd/system/caddy.service.d/orchestra-sf-entra.conf` antes de fornecer a prova. Ele remove `--environ`, que imprime o ambiente no log, e usa um socket de administração em `/run/caddy` privado. Forneça `SF_INGRESS_PROOF` em `/etc/caddy/orchestra-sf-ingress.env` de `root:root` e modo `0600`, com os mesmos 64 caracteres hexadecimais de `ingress-secret.txt`. Mantenha o log de depuração desativado e aplique os limites de taxa e concorrência nas rotas de autenticação descritos no guia. [Unidade oficial do Caddy](https://github.com/caddyserver/dist/blob/master/init/caddy.service) · [Administração do Caddy](https://caddyserver.com/docs/api)
 
 ## Selecionar a versão
 
@@ -36,6 +36,6 @@ sudo python3 sf/azure/vm/install-factory-distribution.py install \
   --fqdn "$SF_FQDN" --dry-run
 ```
 
-Repita com `--apply` para publicar o diretório imutável e trocar `current` atomicamente. A execução mantém o serviço parado e o proxy em manutenção. Durante a janela de manutenção, valide a inicialização com o binário extraído e o ingresso local com prova privada. A fábrica dedicada exige essa prova, e a navegação sem sessão começa com redirecionamento para login. Faça a homologação com uma conta permitida e outra negada antes da abertura do proxy. O teste do tenant real deve usar o callback e as rotas protegidas configurados na instalação.
+Repita com `--apply` para publicar o diretório imutável e trocar `current` atomicamente. A execução mantém o serviço parado e o proxy em manutenção. Durante a janela de manutenção, valide a inicialização com o binário extraído e o ingresso local com prova privada. A fábrica dedicada exige essa prova, e a navegação sem sessão começa com redirecionamento para login. Para homologar com uma conta permitida e outra negada, abra uma janela autorizada com acesso HTTPS restrito aos validadores, incluindo o callback público do Entra. Depois da homologação, abra o tráfego geral conforme a decisão do operador.
 
-O comando `rollback` seleciona outra distribuição Entra instalada e verificada. Exige os SHAs de origem e destino, um documento de aprovação e uma prova independente de compatibilidade com o estado persistente, ambos de `root:root` em modo `0600`. Use `--dry-run` antes de `--apply`. A reversão troca apenas o código e mantém os dados no volume existente.
+O comando `rollback` seleciona outra distribuição Entra instalada e verificada. A seleção de um release retido enquanto outro está ativo exige esse caminho, inclusive se a tentativa anterior publicou o diretório e parou antes de trocar `current`. Exige os SHAs de origem e destino, um documento de aprovação e uma prova independente de compatibilidade com o estado persistente, ambos de `root:root` em modo `0600`. Use `--dry-run` antes de `--apply`. A reversão troca apenas o código e mantém os dados no volume existente.

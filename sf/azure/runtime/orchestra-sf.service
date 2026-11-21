@@ -3,6 +3,7 @@ Description=Orchestra-SF Sucafina service (Microsoft Entra)
 After=network-online.target
 Wants=network-online.target
 RequiresMountsFor=/var/lib/orchestra-sf
+AssertPathIsMountPoint=/var/lib/orchestra-sf
 StartLimitIntervalSec=60
 StartLimitBurst=3
 
