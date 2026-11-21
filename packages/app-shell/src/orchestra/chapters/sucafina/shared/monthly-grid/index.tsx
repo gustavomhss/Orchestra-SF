@@ -223,6 +223,14 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
       props.onSelectRange({ anchor, extent: { ...target } })
     } else props.onSelectRange(null)
     props.onNavigate({ from: current, key, visibleRowCount })
+    // Keep the owner-selected cell visible without moving the grid's focus.
+    // This runs only after keyboard navigation, never when the view mounts.
+    queueMicrotask(() => {
+      const active = activeId()
+      const cell = active && focusTarget?.ownerDocument.getElementById(active)
+      if (cell && focusTarget?.contains(cell))
+        cell.scrollIntoView({ block: "nearest", inline: "nearest" })
+    })
   }
 
   const pasteAnchor = () => props.selectedRange?.anchor ?? props.activeCell

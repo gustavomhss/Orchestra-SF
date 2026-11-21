@@ -1091,7 +1091,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                               if(snapshot?.availability==="active")ctrl?.edit({...snapshot.value,approvalState:event.currentTarget.value})
                             }}>
                             <Show when={draft().value.approvalState && !["draft", "pending", "approved", "rejected"].includes(draft().value.approvalState)}><option value={draft().value.approvalState}>{draft().value.approvalState}</option></Show>
-                            <option value="">{t("sf.u07.approval.unset")}</option>
+                            <option value="" disabled>{t("sf.u07.approval.unset")}</option>
                             <option value="draft">{t("sf.u07.approval.draft")}</option>
                             <option value="pending">{t("sf.u07.approval.pending")}</option>
                             <option value="approved">{t("sf.u07.approval.approved")}</option>
@@ -1128,9 +1128,11 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       <Show when={state.error}><p role="status" class="sf-u07-error">{state.error}</p></Show>
       <Show when={review()}>
         {(r)=><div class="sf-u07-review" data-sf-wave="three">
-          <h2>{t("sf.u07.reviewTitle")}</h2>
+          <h2 id={stageId + "-review-heading"}>{t("sf.u07.reviewTitle")}</h2>
           <p>{t("sf.u07.reviewScope")}</p>
           <Show when={r().kind==="spread"||r().kind==="reset"}><p>{t("sf.u07.noPreview")}</p></Show>
+          <fieldset class="sf-u07-review-controls" disabled={state.busy || state.uncertainty}
+            aria-labelledby={stageId + "-review-heading"}>
           <SfChangeReview
             operation={{ref:r().operationRef,label:msg(isOpex()?"sf.cap18.primary":"sf.cap19.primary"),
               scope:{kind:"data",text:versionId()}}}
@@ -1153,9 +1155,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                 reasons:[msg("sf.u07.readDenied")]}}
             state={reviewState()}
             onConfirm={()=>void submitReview()}
-            onRevise={()=>setState("review",null)}
-            onCancel={()=>setState("review",null)}
+            onRevise={()=>{ if (!state.busy && !state.uncertainty) setState("review",null) }}
+            onCancel={()=>{ if (!state.busy && !state.uncertainty) setState("review",null) }}
           />
+          </fieldset>
         </div>}
       </Show>
     </SfPageFrame>

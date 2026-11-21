@@ -50,11 +50,16 @@ function fieldKey(field: Field): Key { return ("sf.u15.field." + field) as Key }
 function editFields(values: SfVendorEdit): readonly SfReviewField[] {
   return FIELDS.map((field) => {
     const value = values[field]
+    const option = field === "amtType" && ["total", "monthly", "annual"].includes(String(value)) ||
+      field === "renewType" && ["fixed", "na", "auto"].includes(String(value))
     return {
       path: field, label: message(fieldKey(field)),
       value: value === null || value === undefined
-        ? { kind: "missing" as const, reason: message("sf.u15.notAvailable") }
-        : { kind: "text" as const, text: dataText(String(value)) },
+        ? { kind: "missing" as const, reason: message("sf.u15.reviewMissing") }
+        : { kind: "text" as const, text: value === ""
+          ? { kind: "message" as const, message: message("sf.u15.emptyValue") }
+          : option ? { kind: "message" as const, message: message(("sf.u15.option." + value) as Key) }
+            : dataText(String(value)) },
     }
   })
 }
@@ -443,7 +448,8 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     const actionKey = review.action === "save" ? "sf.u15.save" : "sf.u15.delete"
     const fields = review.action === "delete"
       ? editFields(vendorEditFromRecord(base)) : editFields(review.values)
-    return <SfChangeReview
+    return <fieldset class="sf-u15-review-controls" disabled={view.sending || view.outcomeUnknown}
+      aria-label={t("sf.u15.reviewScope")}><SfChangeReview
       operation={{ ref: review.operationRef, label: message(actionKey), scope: dataText(t("sf.u15.reviewScope")) }}
       base={original} current={original}
       proposed={{ kind: "draft", intentRef: review.intentRef, sourceRef: ref ?? null,
@@ -460,9 +466,15 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
           confirmation: "presentation-only" } }}
       state={view.sending ? "loading" : "ready"}
       onConfirm={() => { void confirm() }}
-      onRevise={() => { draft()?.setPhase("dirty"); setView("reviewing", undefined) }}
-      onCancel={() => { draft()?.setPhase("dirty"); setView("reviewing", undefined) }}
-    />
+      onRevise={() => {
+        if (view.sending || view.outcomeUnknown) return
+        draft()?.setPhase("dirty"); setView("reviewing", undefined)
+      }}
+      onCancel={() => {
+        if (view.sending || view.outcomeUnknown) return
+        draft()?.setPhase("dirty"); setView("reviewing", undefined)
+      }}
+    /></fieldset>
   }
 
   return <section data-component="sf-vendor-contracts" data-sf-surface="CAP14" aria-busy={view.sending}>

@@ -212,6 +212,9 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     await create.getByRole("button", { name: "Review contract change", exact: true }).click()
     await expect(stage.locator('[data-component="sf-change-review"]')).toContainText("36000")
     await reviewActions(page)
+    await expect(review).toContainText("Not provided")
+    await expect(review).toContainText("Empty value")
+    await expect(review).not.toContainText("The authorized source is unavailable.")
     await capture(page, info, "CAP14-dark-desktop-create-review-test-data")
     await stage.getByRole("button", { name: "Revise", exact: true }).click()
     await create.getByRole("button", { name: "Discard changes", exact: true }).click()
@@ -421,6 +424,7 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     const detail = surface.locator("[data-sf-record-detail]")
     await expect(detail.getByRole("heading", { name: waveThreeData.planner.project, exact: true })).toBeVisible()
     await expect(detail.getByLabel("Approval state", { exact: true })).toHaveValue("approved")
+    await expect(detail.getByLabel("Approval state", { exact: true }).locator('option[value=""]')).toBeDisabled()
     await detail.getByLabel("Description", { exact: true }).fill("Design test data · Revised infrastructure resilience investment and source review.")
     await scrollPageTop(page)
     await capture(page, info, "CAP19-dark-320-project-editor-test-data")
@@ -434,10 +438,28 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await desktop()
     await detail.getByRole("button", { name: "Review changes", exact: true }).click()
     const before = posts.length
+    const saved = page.waitForResponse((response) => {
+      const request = response.request()
+      if (request.method() !== "POST" || new URL(response.url()).pathname !== installation.mount + "/planner") return false
+      const input = request.postDataJSON()
+      return input?.page === "CAPEX" && input.action === "save" && input.values?.collection === "projects"
+    })
     await review.getByRole("button", { name: "Confirm", exact: true }).click()
-    await expect(surface.locator(".sf-u07-error")).toContainText("The producer accepted the change.")
-    await expect(detail.getByLabel("Description", { exact: true })).toHaveValue("Design test data · Revised infrastructure resilience investment and source review.")
+    const response = await saved
+    expect(response.ok()).toBe(true)
+    expect(await response.json()).toMatchObject({ ok: true })
+    await expect(review).toHaveCount(0)
+    await ready(page, "CAPEX")
     expect(posts).toHaveLength(before + 1)
+    // A fresh native entry must read the persisted project, independent of the edit draft.
+    await go(screens[4])
+    await surface.getByLabel("Version", { exact: true }).selectOption({ label: waveThreeData.planner.version + " · " + installation.year })
+    await ready(page, "CAPEX")
+    await surface.getByRole("tab", { name: "Projects", exact: true }).click()
+    await project.getByRole("button", { name: "Edit project", exact: true }).click()
+    await expect(detail.getByLabel("Description", { exact: true })).toHaveValue("Design test data · Revised infrastructure resilience investment and source review.")
+    await scrollPageTop(page)
+    await capture(page, info, "CAP19-dark-desktop-confirmed-project-test-data")
     await detail.getByRole("button", { name: "Back to plan", exact: true }).click()
     await surface.getByRole("tab", { name: "Lines", exact: true }).click()
     const lines = surface.locator(".sf-u07-lines-panel")
