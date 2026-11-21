@@ -7,7 +7,8 @@ const localScopes = "openid profile offline_access User.Read User.ReadBasic.All 
 const bodyLimit = 2 * 1024 * 1024
 const requestTimeout = 10000
 const teamMemberScope = "TeamMember.Read.All"
-const teamMemberSelect = "userId,displayName,tenantId"
+// Graph requires derived conversationMember fields to be qualified in $select.
+const teamMemberSelect = "id,displayName,microsoft.graph.aadUserConversationMember/userId,microsoft.graph.aadUserConversationMember/tenantId"
 const otherConversationMemberTypes = new Set([
   "#microsoft.graph.anonymousGuestConversationMember",
   "#microsoft.graph.azureCommunicationServicesUserConversationMember",
