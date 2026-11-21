@@ -82,11 +82,14 @@ export function createPlannerCalculationEvidence(input: {
     const simulate = input.nested?.replayScenario ?? input.replayRecordOnly
     const reproduced = structuredClone(await simulate(structuredClone(binding.value.request), context))
     if (reproduced.status !== "ok") return reproduced
-    if (!sourceClosure(reproduced.value, stored.value.sourceRefs, context, !!input.nested) || plannerScenarioDigest(reproduced.value) !== plannerScenarioDigest(stored.value.result)) return { status: "stale", reason: "calculation-replay-changed" }
+    if (!sourceClosure(reproduced.value, stored.value.sourceRefs, context, !!input.nested)) return { status: "stale", reason: "calculation-replay-changed" }
+    // This clone never reaches a callback. Reuse only its digest, not the replay.
+    const reproducedDigest = plannerScenarioDigest(reproduced.value)
+    if (reproducedDigest !== plannerScenarioDigest(stored.value.result)) return { status: "stale", reason: "calculation-replay-changed" }
     const latestBinding = structuredClone(await input.loadRecordOnlyRequest(runId, context))
     const latest = structuredClone(await input.readForCalculation({ resultRef: runId, kind: "scenario" }, context))
     const replayAgain = structuredClone(await simulate(structuredClone(binding.value.request), context))
-    if (latestBinding.status !== "ok" || digestSfValue(latestBinding.value) !== digestSfValue(binding.value) || latest.status !== "ok" || digestSfValue(latest.value) !== digestSfValue(stored.value) || replayAgain.status !== "ok" || !sourceClosure(replayAgain.value, stored.value.sourceRefs, context, !!input.nested) || plannerScenarioDigest(replayAgain.value) !== plannerScenarioDigest(reproduced.value) || input.nested && !await verifyCalculationRequestSources(binding.value.request, stored.value, context) || http.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "calculation-or-authority-changed" }
+    if (latestBinding.status !== "ok" || digestSfValue(latestBinding.value) !== digestSfValue(binding.value) || latest.status !== "ok" || digestSfValue(latest.value) !== digestSfValue(stored.value) || replayAgain.status !== "ok" || !sourceClosure(replayAgain.value, stored.value.sourceRefs, context, !!input.nested) || plannerScenarioDigest(replayAgain.value) !== reproducedDigest || input.nested && !await verifyCalculationRequestSources(binding.value.request, stored.value, context) || http.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "calculation-or-authority-changed" }
     const value: CalculationEvidence = { schema: "sf-evidence-v1", kind: "calculation", refId: `planner-calculation:${encodeURIComponent(runId)}`, installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "proposal", target: { calculationId: "planner:scenario", runId, engineVersion: binding.value.engineVersion, inputDigest: stored.value.requestDigest, resultDigest: stored.value.resultDigest, sourceRefs: stored.value.sourceRefs, period: stored.value.result.horizon, currency: stored.value.result.currency } }
     return { status: "ok", value: { ...value, refDigest: digestSfEvidenceRef(value) } }
   }
@@ -115,9 +118,7 @@ function sourceClosure(result: ScenarioResult, sources: readonly BusinessEvidenc
   if (!decodeSfOperationOutput("sf_scenario_simulate", result).ok || !decodeSfOperationOutput("sf_scenario_simulate", { ...result, sourceRefs: sources }).ok) return false
   const refs = [...result.sourceRefs, ...result.costCoverage.evaluatedSourceRefs, ...result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
   if (!sources.length || !refs.length || !nested && [...sources, ...refs].some((ref) => ref.kind !== "record")) return false
-  // The shared traversal rejects cyclic/tampered graphs before a canonical digest can recurse.
-  sfEvidenceSourceMaps([...sources, ...refs])
-  const graph = evidenceGraph([...sources, ...refs])
+  const graph = evidenceGraph([...sources, ...refs], { detached: true })
   if (graph.some((ref) => ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId)) return false
   if (refs.some((ref) => !sources.some((source) => source.refDigest === ref.refDigest))) return false
   return result.components.every((component) => component.sourceRefs.every((ref) => graph.some((source) => source.kind === "record" && source.target.surface === ref.surface && source.target.recordType === ref.type && source.target.recordId === ref.id && source.target.incarnation === ref.incarnation && source.target.version === ref.version && ref.fields.every((field) => source.target.fields.includes(field)))))
@@ -128,8 +129,15 @@ function completeSources(result: ScenarioResult, sources: readonly BusinessEvide
     .filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index)
 }
 
-function evidenceGraph(refs: readonly BusinessEvidenceRef[]): readonly BusinessEvidenceRef[] {
-  sfEvidenceSourceMaps(refs)
-  return refs.flatMap((ref) => [ref, ...(ref.kind === "calculation" ? evidenceGraph(ref.target.sourceRefs) : ref.kind === "case-event" ? evidenceGraph(ref.target.evidenceRefs) : [])])
-    .filter((ref, index, all) => all.findIndex((other) => other.refDigest === ref.refDigest) === index)
+function evidenceGraph(refs: readonly BusinessEvidenceRef[], options?: { detached?: true }): readonly BusinessEvidenceRef[] {
+  // This validates every occurrence, including duplicates, before enumeration.
+  sfEvidenceSourceMaps(refs, options)
+  const graph = new Map<string, BusinessEvidenceRef>()
+  const visit = (ref: BusinessEvidenceRef) => {
+    if (!graph.has(ref.refDigest)) graph.set(ref.refDigest, ref)
+    if (ref.kind === "calculation") ref.target.sourceRefs.forEach(visit)
+    if (ref.kind === "case-event") ref.target.evidenceRefs.forEach(visit)
+  }
+  refs.forEach(visit)
+  return [...graph.values()]
 }

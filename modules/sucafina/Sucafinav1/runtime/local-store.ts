@@ -12,13 +12,32 @@ import type { Surface } from "../src/identity.ts"
 
 export type ReadonlyAuthorityData<S extends Surface> = Readonly<{
   snapshots: Record<S, Pick<Snapshot, "data">>
-  current: () => boolean
+  current: (requirement?: "unpoisoned") => boolean
+  scope?: Readonly<{ identity: object; bytesIdentity?: object }>
 }>
 
 type AuthorityDataReader = <S extends Surface>(surfaces: readonly S[]) => ReadonlyAuthorityData<S> | undefined
 // Only openLocalStore can register its own closed reader. This is neither an
 // adapter capability nor an authorization cache; unknown owners stay legacy.
 const readonlyAuthorityReaders = new WeakMap<object, AuthorityDataReader>()
+const snapshotReadPairs = new WeakMap<object, { single: object; present: () => boolean }>()
+
+/** Both detached readers must come from the same LocalStore. */
+export function hasPairedLocalSnapshotReads(owner: object) {
+  if (types.isProxy(owner) || Object.getPrototypeOf(owner) !== Object.prototype) return false
+  const single = Object.getOwnPropertyDescriptor(owner, "currentSnapshot")?.value
+  const all = Object.getOwnPropertyDescriptor(owner, "currentSnapshots")?.value
+  return typeof single === "function" && typeof all === "function" && snapshotReadPairs.get(all)?.single === single
+}
+
+/** Lexical presence through exact original reader methods, including native spreads. */
+export function hasLocalSnapshotScope(owner: object): boolean | undefined {
+  if (types.isProxy(owner) || Object.getPrototypeOf(owner) !== Object.prototype) return undefined
+  const all = Object.getOwnPropertyDescriptor(owner, "currentSnapshots")?.value
+  const present = Object.getOwnPropertyDescriptor(owner, "hasCurrentSnapshots")?.value
+  const pair = typeof all === "function" ? snapshotReadPairs.get(all) : undefined
+  return pair && pair.present === present ? pair.present() : undefined
+}
 
 export function currentLocalReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
   return readonlyAuthorityReaders.get(owner)?.(surfaces)
@@ -140,6 +159,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   const observeSnapshot = (surface: Surface, payload?: string): {
     materialize: () => Snapshot
     copy?: () => Snapshot
+    freshPlan?: SnapshotMaterialization
     copyAcl?: () => Snapshot["data"] | undefined
     bytesIdentity?: object
   } => {
@@ -166,9 +186,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       }
       materializations.set(surface, plan)
     }
-    // New plans remain only in the bounded shared memo. A root captures copy
-    // factories only for hits from its initial memo, whose aggregate already fits.
-    return { materialize: () => snapshot, bytesIdentity: plan?.identity }
+    return { materialize: () => snapshot, freshPlan: plan, bytesIdentity: plan?.identity }
   }
   const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
 
@@ -408,14 +426,23 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const copies: SnapshotCopies = {}
         const aclCopies: AclCopies = {}
         const byteKeys: Partial<Record<Surface, object>> = {}
+        // Initial memo hits can outlive eviction in this root. Reserve their
+        // budget before taking fresh plans for repeated reads of cold surfaces.
+        const budget = { remaining: SNAPSHOT_MATERIALIZATION_UNITS - [...materializations.values()].reduce((sum, plan) => sum + plan.units, 0) }
         const read = (surface: Surface) => {
           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
           // Keep the same SQL order and changed-payload admission as mutable
-          // roots. No target escapes here, so every initial memo hit can copy.
+          // roots. No callback receives this root's authoritative graphs.
           const source = observeSnapshot(surface, row?.payload)
           byteKeys[surface] = source.bytesIdentity
           if (source.copy) copies[surface] = source.copy
           if (source.copyAcl) aclCopies[surface] = source.copyAcl
+          const plan = source.freshPlan
+          if (plan && plan.units <= budget.remaining) {
+            budget.remaining -= plan.units
+            // This path replaces cloneSnapshot, including its current shape checks.
+            copies[surface] = () => validateSnapshot(materializeSnapshot(plan))
+          }
           const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
           return () => {
             if (observed.value) return observed.value
@@ -460,7 +487,8 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       const scope = context.getStore()
       if (!scope) return undefined
       requireScope(scope)
-      return { dashboard: copyCurrentSnapshot(scope, "dashboard"), planner: copyCurrentSnapshot(scope, "planner"), procurement: copyCurrentSnapshot(scope, "procurement") }
+      return { dashboard: copyCurrentSnapshot(scope, "dashboard"), planner: copyCurrentSnapshot(scope, "planner"),
+        procurement: copyCurrentSnapshot(scope, "procurement") }
     },
     currentSnapshot: (surface) => {
       const scope = context.getStore()
@@ -782,7 +810,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       return lifecycle.disposing
     },
   }
-  const methods = ["currentSnapshots", "currentSnapshot", "transaction", "transactionAll", "readSnapshotRoot", "currentSnapshotScope"] as const
+  if (store.currentSnapshots && store.currentSnapshot && store.hasCurrentSnapshots)
+    snapshotReadPairs.set(store.currentSnapshots, { single: store.currentSnapshot, present: store.hasCurrentSnapshots })
+  const methods = ["currentSnapshots", "currentSnapshot", "hasCurrentSnapshots", "transaction", "transactionAll", "readSnapshotRoot", "currentSnapshotScope"] as const
   const original = methods.map((name) => Object.getOwnPropertyDescriptor(store, name)?.value)
   const sameStore = () => !types.isProxy(store) && Object.getPrototypeOf(store) === Object.prototype &&
     methods.every((name, index) => {
@@ -817,10 +847,10 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     // this closure independently of the scope that clears its graphs on close.
     const absent = fields.filter((_field, index) => admitted.some((entry) => !entry.descriptors[index]))
     const integrity = { failed: false }
-    const current = () => {
+    const current = (requirement?: "unpoisoned") => {
       requireScope(scope)
       if (integrity.failed) return false
-      const valid = context.getStore() === scope && sameStore() &&
+      const valid = context.getStore() === scope && (requirement !== "unpoisoned" || !scope.root.poisoned) && sameStore() &&
         absent.every((field) => Object.getOwnPropertyDescriptor(Object.prototype, field) === undefined)
       if (!valid) integrity.failed = true
       return valid
@@ -833,7 +863,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         return descriptor ? [[field, copyValue(descriptor.value, new Set())]] : []
       })),
     }])) as Record<S, Pick<Snapshot, "data">>
-    return { snapshots, current }
+    return surfaces.length === 0
+      ? { snapshots, current, scope: { identity: scope.root.identity, bytesIdentity: scope.root.bytesIdentity } }
+      : { snapshots, current }
   })
   return store
 }
@@ -988,10 +1020,9 @@ export function encodeSnapshot(snapshot: Snapshot): string {
 }
 
 // The shared memo retains at most three entries and 16 MiB of UTF-16 strings.
-// A root captures only plans already hit during its admission, a subset of the
-// initial memo: lazy materializers and fresh-copy factories together retain at
-// most one additional memo budget, even after eviction. Newly built plans are
-// never captured for copies. The copy-factory record is cleared when the root closes.
+// The plans held by a root stay within one additional memo budget after
+// eviction. A readonly root reserves space for its initial hits and only uses
+// the available space for fresh plans. Its copy factories are cleared on exit.
 // The bound counts string content, not decoded graphs, overhead or total heap.
 // These are optimization limits only: larger/deeper valid v1 snapshots keep
 // using the original decoder. No new persisted format or acceptance limit.

@@ -120,8 +120,8 @@ export type Persistence = {
       readDashboardAuthority?: <T>(work: () => Promise<T>, signal: AbortSignal) => Promise<T>
     }>
   currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
+  // Detached content of one surface with the same scope checks as currentSnapshots.
   currentSnapshot?: (surface: Surface) => Snapshot | undefined
-  currentSnapshotScope?: () => { identity: object; bytesIdentity?: object; readOnly: boolean; poisoned: boolean } | undefined
   // Lexical presence only: the same scope lifetime/abort checks, without copying
   // or validating snapshot contents. Never a source witness or authorization.
   // Adapters without this capability retain currentSnapshots for presence checks.
@@ -133,6 +133,8 @@ export type Persistence = {
   // required. Any attempted write poisons the root even when its error is caught.
   // Older adapters omit this capability and retain their existing transaction path.
   readSnapshotRoot?: <T>(work: () => Promise<T>, options?: TransactionOptions) => Promise<T>
+  // Metadata for the current scope only. No snapshot, authorization or write capability.
+  currentSnapshotScope?: () => { identity: object; bytesIdentity?: object; readOnly: boolean; poisoned: boolean } | undefined
 }
 
 export function hasSfDashboardSourceFence(persistence: Persistence) {

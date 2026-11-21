@@ -2,6 +2,15 @@
 import type { BusinessEvidenceRef } from "./business-context.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 
+const canonicalStringify = JSON.stringify
+
+/** Memoized canonical bytes require the original serializer and plain tagged arrays. */
+export function sfCanonicalSerializerUnhooked() {
+  return JSON.stringify === canonicalStringify && Object.getPrototypeOf(Array.prototype) === Object.prototype &&
+    !Object.getOwnPropertyDescriptor(Array.prototype, "toJSON") &&
+    !Object.getOwnPropertyDescriptor(Object.prototype, "toJSON")
+}
+
 export function canonicalSfValue(value: unknown): string {
   return JSON.stringify(canonical(value))
 }
@@ -36,17 +45,21 @@ function canonical(value: unknown): unknown {
 }
 
 /** Join memory source identities to the original evidence digest, including authorized historical refs. */
-export function sfEvidenceSourceMaps(refs: readonly BusinessEvidenceRef[]) {
+export function sfEvidenceSourceMaps(refs: readonly BusinessEvidenceRef[], options?: { detached?: true }) {
   const sourceVersions: Record<string, number> = {}
   const sourceIncarnations: Record<string, string> = {}
   const active = new WeakSet<object>()
+  // A private structured clone preserves aliases but cannot change during this walk.
+  const digests = options?.detached ? new WeakMap<object, string>() : undefined
   const visit = (ref: BusinessEvidenceRef, depth: number) => {
     if (!ref || typeof ref !== "object" || depth > 16 || active.has(ref) ||
       !["record", "document", "receipt", "case-event", "calculation", "policy"].includes(ref.kind)) throw new Error("SF_EVIDENCE_GRAPH_INVALID")
     active.add(ref)
     if (ref.kind === "calculation") ref.target.sourceRefs.forEach((child) => visit(child, depth + 1))
     if (ref.kind === "case-event") ref.target.evidenceRefs.forEach((child) => visit(child, depth + 1))
-    if (ref.refDigest !== digestSfEvidenceRef(ref)) throw new Error("SF_EVIDENCE_DIGEST_INVALID")
+    const digest = digests?.get(ref) ?? digestSfEvidenceRef(ref)
+    if (ref.refDigest !== digest) throw new Error("SF_EVIDENCE_DIGEST_INVALID")
+    digests?.set(ref, digest)
     const identity = ref.kind === "record" ? { version: ref.target.version, incarnation: ref.target.incarnation }
       : ref.kind === "document" ? { version: ref.target.revision, incarnation: ref.target.incarnation }
       : ref.kind === "receipt" ? { version: ref.target.version, incarnation: ref.target.targetIncarnation }

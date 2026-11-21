@@ -1,8 +1,10 @@
+import { types } from "node:util"
 import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { digestSfValue, sfCanonicalSerializerUnhooked } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { DomainPortHost } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { Persistence, Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { currentSfReadonlySnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import type { Surface } from "../../../../modules/sucafina/Sucafinav1/src/identity.ts"
 
 type SourceFences = Record<Surface, string>
@@ -11,9 +13,43 @@ type Snapshots = Readonly<Record<Surface, Snapshot>>
 /** Borrow only the actual provider's active atomic read; never open a nested writer. */
 export function createSfSourceFenceReader(input: {
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
-  persistence: Pick<Persistence, "currentSnapshots" | "transactionAll">
+  persistence: Pick<Persistence, "currentSnapshots" | "transactionAll" | "currentSnapshotScope">
 }) {
-  return async (call: TrustedDomainContext): Promise<SourceFences | undefined> => {
+  // Retain only deterministic fences, indexed by a sealed LocalStore root.
+  // Each reader still observes its live scope and reauthorizes the real Request.
+  const sealed = new WeakMap<object, SourceFences>()
+  const observe = () => {
+    if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype || !sfCanonicalSerializerUnhooked()) return undefined
+    const descriptor = Object.getOwnPropertyDescriptor(input, "persistence")
+    if (!descriptor || !Object.hasOwn(descriptor, "value") || !descriptor.value || typeof descriptor.value !== "object") return undefined
+    const owner: typeof input.persistence = descriptor.value
+    const scope = currentSfReadonlySnapshotScope(owner)
+    if (!scope) return undefined
+    return { owner, scope, current: () => {
+      const active = Object.getOwnPropertyDescriptor(input, "persistence")
+      return Object.getPrototypeOf(input) === Object.prototype && !!active && Object.hasOwn(active, "value") &&
+        active.value === owner && sfCanonicalSerializerUnhooked() && scope.current()
+    } }
+  }
+  const fromScope = (observation: NonNullable<ReturnType<typeof observe>>) => {
+    if (!observation.current()) return undefined
+    const identity = observation.scope.bytesIdentity ?? observation.scope.identity
+    const remembered = sealed.get(identity)
+    if (remembered) return { ...remembered }
+    const snapshots = observation.owner.currentSnapshots?.()
+    if (!snapshots || !complete(snapshots)) return undefined
+    const result = fences(snapshots)
+    if (!observation.current()) return undefined
+    sealed.set(identity, { ...result })
+    return result
+  }
+  const locked = () => {
+    const observation = observe()
+    if (observation) return fromScope(observation)
+    const snapshots = input.persistence.currentSnapshots?.()
+    return snapshots && complete(snapshots) ? fences(snapshots) : undefined
+  }
+  const read = async (call: TrustedDomainContext): Promise<SourceFences | undefined> => {
     try {
       // Capture authority and the complete provider snapshot before the first
       // asynchronous callback. A source-only fence excludes C08 and is not enough
@@ -24,6 +60,13 @@ export function createSfSourceFenceReader(input: {
       const requestDigest = requestIdentity(request)
       const current = () => input.host.requestFor(call) === request && !request.signal.aborted &&
         requestIdentity(request) === requestDigest && digestSfValue([call.kind, call.binding]) === binding
+      const observation = observe()
+      if (observation) {
+        const observed = fromScope(observation)
+        if (!observed || !await input.host.revalidate(call) || !current() || !observation.current()) return undefined
+        if (!await input.host.revalidate(call) || !current() || !observation.current()) return undefined
+        return observed
+      }
       const initial = input.persistence.currentSnapshots?.()
       if (initial && !complete(initial)) return undefined
       const captured = initial ? structuredClone(initial) : undefined
@@ -48,6 +91,7 @@ export function createSfSourceFenceReader(input: {
       return await input.host.revalidate(call) && current() ? found : undefined
     } catch { return undefined }
   }
+  return Object.assign(read, { locked })
 }
 
 function fences(snapshots: Snapshots): SourceFences {

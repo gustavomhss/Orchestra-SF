@@ -5,7 +5,7 @@ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainPortHost, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
-import type { SfScopedSourcePort } from "./source-lifecycle.ts"
+import { plannerScopeAuthority, type SfScopedSourcePort } from "./source-lifecycle.ts"
 import { sfPlannerProjectionSelector } from "./source-projections.ts"
 
 export function sfPlannerSourceSelector(id: string, incarnation: string, version: number) {
@@ -57,14 +57,14 @@ export function createSfPlannerSourceHost(input: {
             policyVersion: context.binding.policyVersion, recordType: "planner-version", recordId: decoded[0]!, selector }
           return {
             scope,
-            authorize: async (snapshot: Snapshot) => {
+            authorize: plannerScopeAuthority(async (snapshot) => {
               if (request.signal.aborted) return false
               const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
               if (!principal || principal.id !== scope.principalRef) return false
               const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
               const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer") }
               return digestSfValue(sfPlannerProjectionSelector(snapshot, actor)) === digestSfValue(selector)
-            },
+            }),
           }
         }
         const legacy = async () => {

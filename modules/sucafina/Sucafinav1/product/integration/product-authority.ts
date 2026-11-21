@@ -1,6 +1,6 @@
 import type { SessionSchema } from "@orchestra/core/session/schema"
 import { types } from "node:util"
-import { currentSfReadonlyAuthorityData } from "./source-lifecycle.ts"
+import { currentSfReadonlyAuthorityData, currentSfSiblingSnapshots } from "./source-lifecycle.ts"
 import type { Application } from "../../runtime/application.ts"
 import { roleMap } from "../../runtime/admin.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../../src/nav.ts"
@@ -127,7 +127,7 @@ export function createSfProductAuthority(input: {
   const principal = async (request: Request, dashboard: Pick<Snapshot, "data">,
     supplied?: { planner: Pick<Snapshot, "data">; procurement: Pick<Snapshot, "data"> }, suppliedCurrent?: () => boolean) => {
     const projection = supplied ? undefined : (observeAuthority(["planner", "procurement"]) ?? authorityData(["planner", "procurement"]))
-    const snapshots = supplied ?? projection?.snapshots ?? input.persistence.currentSnapshots?.()
+    const snapshots = supplied ?? projection?.snapshots ?? currentSfSiblingSnapshots(input.persistence)
     const currentRead = suppliedCurrent ?? projection?.current
     if (!snapshots) return undefined
     const current = identity()

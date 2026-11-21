@@ -35,7 +35,6 @@ import { createProcurementPort } from "../../../../modules/sucafina/Sucafinav1/p
 import { createProcurementCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/procurement/capabilities.ts"
 import { createProcurementContractSource } from "../../../../modules/sucafina/Sucafinav1/product/procurement/contracts.ts"
 import { createProcurementDecisionHost } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
-import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
 import { createPlannerProduct, createPlannerCoverageRouter } from "../../../../modules/sucafina/Sucafinav1/product/planner/product.ts"
 import { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
 import { createDecisionCoverageAccess, decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
@@ -75,14 +74,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const dashboardHostWrites = input.dashboardHostWrites ?? new WeakSet<object>()
   const periods = new Map<string, { period: Period; expiresAt: number }>()
   const pagePeriods = new WeakMap<TrustedDomainContext, { period: Period; expiresAt: number }>()
-  const fences = (snapshots: NonNullable<ReturnType<NonNullable<typeof input.persistence.currentSnapshots>>>) => ({
-    dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement),
-  })
-  const readSourceFences = createSfSourceFenceReader({ host, persistence: input.persistence })
-  const lockedSourceFences = () => {
-    const snapshots = input.persistence.currentSnapshots?.()
-    return snapshots ? fences(snapshots) : undefined
-  }
+  const sourceFences = createSfSourceFenceReader({ host, persistence: input.persistence })
+  const readSourceFences = (call: TrustedDomainContext) => sourceFences(call)
+  const lockedSourceFences = sourceFences.locked
   // Only available inside the current C08 transaction; returns a digest, never mutable state.
   const lockedDecisionStateDigest = (caseId: string) => {
     const snapshot = input.persistence.currentSnapshots?.()?.dashboard
@@ -485,9 +479,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   // existing explicit human promotion may publish their C08 result.
   const persist: typeof calculationProducer.persist = (incoming, callId, call, replay) => incoming.kind === "scenario" && readOnlyScenario(incoming.request)
     ? Promise.resolve({ status: "needs-input", reason: "procurement-scenario-explicit-promotion-required" }) : calculationProducer.persist(incoming, callId, call, replay)
-  // Atlas and callers share the same service facade. A caller observing this
-  // producer before Atlas initialization must observe the producer Atlas uses.
-  const calculations = { ...calculationProducer, persist }
+  const persistAndIssue: typeof calculationProducer.persistAndIssue = (incoming, callId, call, replay) => readOnlyScenario(incoming.request)
+    ? Promise.resolve({ status: "needs-input", reason: "procurement-scenario-explicit-promotion-required" }) : calculationProducer.persistAndIssue(incoming, callId, call, replay)
+  // Callers and Atlas must observe the same verifier and persistence facade.
+  const calculations = { ...calculationProducer, persist, persistAndIssue }
   calculationVerifier.current = calculations.verifyCalculationSources
   const receipt = input.authority.authority.receiptFor
   const descriptors = [
