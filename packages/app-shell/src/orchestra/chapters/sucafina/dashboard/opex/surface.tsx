@@ -853,6 +853,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     state={view.page?.entries ? "ready" : "partial"}
     rows={<For each={months}>{(month) => showMonth(owner, month)}</For>}
     canEditMonths={allowed("save-entry") || allowed("save-deviation")}
+    hasHint={Boolean(hintFor(owner))}
     hint={<Show when={hintFor(owner)}>
       {(hint) => <dl class="sf-budget-hint">
         <div><dt>{t(key("yearAmount"))}</dt><dd>{opexAmount(hint().amount)}</dd></div>

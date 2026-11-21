@@ -18,6 +18,7 @@ export function SfOpexDetail(props: Readonly<{
   rows: JSX.Element
   canEditMonths: boolean
   hint: JSX.Element
+  hasHint: boolean
   actions: readonly SfAction[]
   annualActions: readonly SfAction[]
   sourceActions: readonly SfAction[]
@@ -32,7 +33,7 @@ export function SfOpexDetail(props: Readonly<{
         {t(key("sf.u39.backToLines"))}
       </button>
       <div class="sf-opex-detail-actions">
-        <For each={props.actions}>{(action) => <SfActionButton action={action} />}</For>
+        <For each={props.actions}>{(action) => <SfActionButton action={action} variant={action.tone === "primary" ? "primary" : "secondary"} />}</For>
       </div>
       <div class="sf-opex-detail-title">
         <h2 id={id} tabindex="-1" data-sf-detail-heading><bdi>{props.owner.name ?? String(props.owner.id)}</bdi></h2>
@@ -76,7 +77,7 @@ export function SfOpexDetail(props: Readonly<{
       </SfStatePanel>
     </section>
     <div class="sf-opex-detail-foot">
-      <Show when={props.annualActions.length > 0}>
+      <Show when={props.annualActions.length > 0 || props.hasHint}>
         <details class="sf-opex-annual-actions">
           <summary>{t(key("sf.u39.annualSettings"))}<Icon name="chevron-down" size="small" /></summary>
           <div class="sf-budget-actions"><For each={props.annualActions}>{(action) => <SfActionButton action={action} />}</For></div>

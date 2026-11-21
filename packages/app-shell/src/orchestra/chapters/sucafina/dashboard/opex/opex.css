@@ -371,6 +371,9 @@
   .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-months :is(th, td),
   .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-months :is(th, td):first-child,
   .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-months :is(th, td):last-child { display: block; min-inline-size: 0; max-inline-size: none; padding: 0; border: 0; text-align: start; }
+  .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-months :is(th, td):nth-child(2),
+  .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-months :is(th, td):nth-child(3),
+  .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-months :is(th, td):nth-child(4) { text-align: start; }
   .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-months tbody th { grid-column: 1 / -1; font-family: var(--mx-emphasis); font-weight: 600; }
   .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-months td:nth-child(5) { grid-column: 1; }
   .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-months td:nth-child(6) { grid-column: 2 / -1; }
