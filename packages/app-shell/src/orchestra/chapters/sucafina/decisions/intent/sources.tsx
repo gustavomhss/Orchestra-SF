@@ -218,9 +218,12 @@ export function SfCaseSourcesEditor(props: Readonly<{
       </label>}</For>
     </div>
     <p>{t("sf.ui34.attachScope")}</p>
-    <ul data-sf-decision-sources><For each={draft.sources}>{(source) =>
-      <li>{source.kind === "record" ? source.target.recordType + " · " + source.target.recordId : source.kind} · {source.refId}</li>
-    }</For></ul>
+    <details class="sf-decision-source-scope">
+      <summary>{t("sf.ui34.sources")} · <bdi>{draft.sources.length}</bdi></summary>
+      <ul data-sf-decision-sources><For each={draft.sources}>{(source) =>
+        <li><bdi>{source.kind === "record" ? source.target.recordType + " · " + source.target.recordId : source.kind} · {source.refId}</bdi></li>
+      }</For></ul>
+    </details>
     <div class="sf-n24-actions">
       <button class="mx-btn" type="button" disabled={!editing() || !permitted("bi.bi-options")} onClick={() => void discover()}>
         {t("sf.ui34.findPlanner")}
@@ -250,7 +253,10 @@ export function SfCaseSourcesEditor(props: Readonly<{
         <p>{draft.objective.trim()}</p>
         <p>{draft.start} – {draft.end} · {draft.currency}</p>
         <ol><For each={draft.criteria}>{(criterion) => <li>{criterion.description.trim()}</li>}</For></ol>
-        <ul><For each={draft.sources}>{(source) => <li>{source.refId}</li>}</For></ul>
+        <details class="sf-decision-source-scope">
+          <summary>{t("sf.ui34.sources")} · <bdi>{draft.sources.length}</bdi></summary>
+          <ul><For each={draft.sources}>{(source) => <li><bdi>{source.refId}</bdi></li>}</For></ul>
+        </details>
         <button class="mx-btn primary" type="button" disabled={draft.busy} onClick={() => void save()}>{t("sf.ui34.confirmEdit")}</button>
         <button class="mx-btn" type="button" disabled={draft.busy} onClick={() => setDraft("phase", "editing")}>{t("sf.ui33.cancel")}</button>
       </section>
