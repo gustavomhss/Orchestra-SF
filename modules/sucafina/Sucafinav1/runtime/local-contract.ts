@@ -6,13 +6,37 @@ import type { RoleRow, ResolvedActor, Surface } from "../src/identity.ts"
 export type LocalSecrets = {
   put: (key: string, value: Uint8Array, expiresAt: number) => Promise<void>
   get: (key: string, at: number) => Promise<Uint8Array | undefined>
+  /** Read credential and revocation marker in the same store snapshot. */
+  getActive?: (key: string, revokedKey: string, at: number) => Promise<Uint8Array | undefined>
   take: (key: string, at: number) => Promise<Uint8Array | undefined>
   remove: (key: string) => Promise<void>
 }
 export type LocalStore = Persistence & AssetPersistence & { secrets: LocalSecrets; dispose: () => Promise<void> }
 export type DirectoryPerson = { id: string; name: string }
-export type EntraTokens = { accessToken: string; refreshToken?: string; idToken?: string; expiresAt: number }
+export type EntraTokens = { accessToken: string; refreshToken?: string; idToken?: string; expiresAt: number; grantedScopes?: readonly string[] }
+/** An observation available to the server for a verified Microsoft principal. */
+export type EntraTeamsResult =
+  | Readonly<{
+      state: "complete"
+      tenantId: string
+      principalObjectId: string
+      source: "joinedTeams"
+      membership: "direct"
+      teams: readonly Readonly<{ teamObjectId: string; name: string; archived: boolean }>[]
+    }>
+  | Readonly<{
+      state: "unavailable"
+      reason: "capability_disabled" | "consent_required" | "token_expired" | "identity_mismatch" | "unauthenticated" | "forbidden" | "throttled" | "timeout" | "provider_unavailable" | "invalid_response" | "incomplete" | "limit_exceeded"
+      retryAfterMs?: number
+    }>
+export type EntraTeamsSessionResult = EntraTeamsResult | Readonly<{ state: "unauthenticated" }>
+export type EntraTeamsInput = Readonly<{
+  tokens: Pick<EntraTokens, "accessToken" | "expiresAt" | "grantedScopes">
+  principal: Readonly<{ tenantId: string; principalObjectId: string }>
+}>
 export type EntraClient = {
+  readonly tenantId?: string
+  joinedTeams?: (input: EntraTeamsInput) => Promise<EntraTeamsResult>
   authorization: (input: { state: string; nonce: string; challenge: string; redirectUri: string }) => Promise<string>
   exchange: (input: { code: string; verifier: string; redirectUri: string; nonce: string }) => Promise<{ tokens: EntraTokens; person: DirectoryPerson }>
   refresh: (refreshToken: string) => Promise<EntraTokens>
@@ -21,6 +45,7 @@ export type EntraClient = {
   resolve: (accessToken: string, map: readonly RoleRow[]) => Promise<ResolvedActor>
 }
 export type EntraOptions = {
+  teams?: "direct"
   tenantId: string
   clientId: string
   fetch?: (request: Request) => Promise<Response>
@@ -28,6 +53,8 @@ export type EntraOptions = {
   directoryLimit?: number
 }
 export type LocalIdentity = {
+  /** Reads direct Teams from the current encrypted session. */
+  teamDirectory?: (request: Request) => Promise<EntraTeamsSessionResult>
   handle: (request: Request) => Promise<Response | undefined>
   /** Refreshes credentials before entering the business transaction. */
   prepare: (request: Request) => Promise<void>
