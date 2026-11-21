@@ -592,7 +592,8 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                             : ("n16-review:" + String(active()!.entity!.id)) as SfIntentRef
                         }
                         return <SfChangeReview
-                          operation={{ ref: active().operationRef, label: message(spec.primary),
+                          operation={{ ref: active().operationRef,
+                            label: message(active().entity ? "sf.common.edit" : spec.primary),
                             scope: { kind: "message", message: message(spec.title) } }}
                           base={originalSnapshot(active().entity)}
                           current={originalSnapshot(active().entity)}
