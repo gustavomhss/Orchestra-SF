@@ -130,12 +130,17 @@ test("only a real reserved direct load opens the same host's governed gate", asy
     yield* Stream.runCollect(host.stream(turnFor("ses_unreserved")))
     yield* skills.transform((draft) => draft.source({ type: "directory", path: AbsolutePath.make(path.join(tmp.path, "reserved")) }, { reserved: true }))
     const winner = (yield* skills.list()).find((item) => item.name === "maestro-run-governed")!
-    const original = winner.content
-    Object.assign(winner, { content: "forged instructions" })
-    expect(yield* SessionDirectCommands.skill(deps, { sessionID: SessionSchema.ID.make("ses_mutated"), skill: "maestro-run-governed" })).toBe(true)
-    expect(yield* host.observedSkillLoad!({ sessionID: SessionSchema.ID.make("ses_mutated"), skillName: "maestro-run-governed" })).toBeUndefined()
-    yield* Stream.runCollect(host.stream(turnFor("ses_mutated")))
-    Object.assign(winner, { content: original })
+    const tampered = { ...winner, content: "forged instructions" }
+    expect(() => Object.assign(winner, { content: tampered.content })).toThrow(TypeError)
+    expect(skills.sourceOf?.(winner)?.reserved).toBe(true)
+    expect(skills.sourceOf?.(tampered)).toBeUndefined()
+    const tamperedCatalog = { ...skills, list: () => Effect.succeed([tampered]) }
+    const tamperedSession = SessionSchema.ID.make("ses_tampered")
+    expect(yield* SessionDirectCommands.skill({ ...deps, skills: tamperedCatalog }, {
+      sessionID: tamperedSession, skill: tampered.name,
+    })).toBe(true)
+    expect(yield* host.observedSkillLoad!({ sessionID: tamperedSession, skillName: tampered.name })).toBeUndefined()
+    yield* Stream.runCollect(host.stream(turnFor(tamperedSession)))
     expect(yield* SessionDirectCommands.skill(deps, { sessionID: SessionSchema.ID.make("ses_other"), skill: "other" })).toBe(true)
     expect(yield* host.observedSkillLoad!({ sessionID: SessionSchema.ID.make("ses_other"), skillName: "other" })).toBeUndefined()
     yield* Stream.runCollect(host.stream(turnFor("ses_other")))
