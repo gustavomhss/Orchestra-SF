@@ -57,6 +57,10 @@ export async function loadSfInstallation(
         const { createSfTeamPurchaseMcp } = await import("./team-purchase-mcp")
         return createSfTeamPurchaseMcp
       },
+      loadTeamSupplierMcp: async () => {
+        const { createSfTeamSupplierMcp } = await import("./team-purchase-mcp")
+        return createSfTeamSupplierMcp
+      },
     } : {}),
     ...(runtime ? {
       createHostRuntime: runtime.createSfHostRuntime,

@@ -26,7 +26,8 @@ export async function runSfGatewayProof(spec, installed) {
   const directory = await mkdtemp(join(tmpdir(), "sf-gateway-proof-"))
   const actors = Object.keys(refs)
   const profileTokens = installed?.tokens ?? Object.fromEntries(actors.map((actor) => [actor, randomBytes(32).toString("hex")]))
-  const secrets = [...Object.values(profileTokens), ...(installed ? [installed.control] : [])]
+  const confirmationControl = installed?.control
+  const secrets = [...Object.values(profileTokens), ...(confirmationControl ? [confirmationControl] : [])]
   const excludedToken = randomBytes(32).toString("hex")
   secrets.push(excludedToken)
   let excludedRequests = 0
@@ -188,7 +189,7 @@ export async function runSfGatewayProof(spec, installed) {
         assert.equal(result.isError, actor !== target)
         if (actor === target) {
           spec.assertOwn(payload, actor)
-          if (installed) {
+          if (confirmationControl) {
             assert.equal(payload.comparison.requestVersion, 1)
             assert.equal(payload.comparison.selection.proposalRef, null)
             assert.equal(payload.comparison.ranking[0], `${actor}1`)
@@ -198,7 +199,7 @@ export async function runSfGatewayProof(spec, installed) {
           assert.deepEqual(result, { isError: true, content: [{ type: "text", text: '{"status":"denied"}' }] })
         }
       }
-      if (installed && actor === "A") invokeA = invoke
+      if (confirmationControl && actor === "A") invokeA = invoke
       if (actor === "B") {
         profileConfig.mcp.servers[serverId].enabled = false
         const nextConfig = config + ".next"
@@ -219,11 +220,11 @@ export async function runSfGatewayProof(spec, installed) {
     }
     assert.equal(excludedRequests, 0)
     const expectedCalls = actors.flatMap((actor) => actors.map((target) => [actor, refs[target]]))
-    if (installed) {
+    if (confirmationControl) {
       assert.ok(initial && invokeA)
       const quoteId = initial.comparison.ranking[0]
       const confirmation = await fetch(installed.url + "/confirm", {
-        method: "POST", headers: { authorization: `Bearer ${installed.control}`, "content-type": "application/json" },
+        method: "POST", headers: { authorization: `Bearer ${confirmationControl}`, "content-type": "application/json" },
         body: JSON.stringify({ reviewUrl: initial.reviewUrl, version: initial.comparison.requestVersion, quoteId }),
         signal: AbortSignal.timeout(30_000),
       })
