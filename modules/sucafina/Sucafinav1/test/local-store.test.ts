@@ -157,6 +157,33 @@ test("retains canonical byte identity when a valid snapshot exceeds the copy-pla
   })
 })
 
+test("fingerprints oversized SQLite rows without accepting a same-length replacement", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const body = "A".repeat(8 * 1024 * 1024)
+    const write = (suffix: string) => store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.attachment = body + suffix
+      return { commit: true, value: undefined }
+    })
+    if (!store.readSnapshotRoot) throw new Error("LocalStore must provide a read snapshot root")
+    const inspect = async (suffix: string) => {
+      const identity = store.currentSnapshotScope?.()?.bytesIdentity
+      const attachment = store.currentSnapshot?.("dashboard")?.data.attachment
+      if (!identity || typeof attachment !== "string") throw new Error("Oversized local snapshot unavailable")
+      expect(attachment.length).toBe(body.length + suffix.length)
+      expect(attachment.endsWith(suffix)).toBe(true)
+      return identity
+    }
+    await write("1")
+    const first = await store.readSnapshotRoot(() => inspect("1"))
+    expect(await store.readSnapshotRoot(() => inspect("1"))).toBe(first)
+    await write("2")
+    const second = await store.readSnapshotRoot(() => inspect("2"))
+    expect(first === second).toBe(false)
+    expect(await store.readSnapshotRoot(() => inspect("2"))).toBe(second)
+  })
+})
+
 test("codec preserves sentinel-shaped objects, tagged-looking arrays and nested undefined", async () => {
   await fixture(async (_directory, open) => {
     const store = await open()

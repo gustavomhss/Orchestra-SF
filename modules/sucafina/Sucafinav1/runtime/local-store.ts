@@ -159,13 +159,18 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   const observeSnapshot = (surface: Surface, payload?: string): {
     materialize: () => Snapshot
     copy?: () => Snapshot
-    freshPlan?: SnapshotMaterialization
+    freshPlan?: { units: number; copy: () => Snapshot }
     copyAcl?: () => Snapshot["data"] | undefined
     bytesIdentity?: object
   } => {
     const prior = materializations.get(surface)
-    if (payload !== undefined && prior?.payload === payload && snapshotDecoderCurrent()) {
-      const materialize = () => materializeSnapshot(prior)
+    const codecCurrent = snapshotDecoderCurrent()
+    const fingerprint = codecCurrent && payload !== undefined && payload.length > SNAPSHOT_MATERIALIZATION_UNITS &&
+      payload.length <= SNAPSHOT_MATERIALIZATION_UNITS * 4
+      ? createHash("sha256").update(payload, "utf16le").digest("hex") : undefined
+    if (payload !== undefined && prior && codecCurrent &&
+        (prior.payload === payload || fingerprint !== undefined && prior.fingerprint === fingerprint && prior.payloadUnits === payload.length)) {
+      const materialize = () => materializeSnapshot(prior, payload)
       const acl = prior.acl
       return { materialize, copy: materialize, bytesIdentity: prior.identity,
         ...(acl === undefined ? {} : { copyAcl: () => aclCodecCurrent() ? decodeSnapshot(acl).data : undefined }) }
@@ -176,7 +181,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       return { materialize: empty, copy: empty, bytesIdentity: emptySnapshotIdentity }
     }
     const snapshot = decodeSnapshot(payload)
-    const plan = planSnapshotMaterialization(snapshot, payload)
+    const plan = planSnapshotMaterialization(snapshot, payload, fingerprint)
     if (plan) {
       const retained = { units: [...materializations.values()].reduce((sum, entry) => sum + entry.units, 0) }
       for (const [name, entry] of materializations) {
@@ -186,7 +191,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       }
       materializations.set(surface, plan)
     }
-    return { materialize: () => snapshot, freshPlan: plan, bytesIdentity: plan?.identity }
+    return { materialize: () => snapshot,
+      ...(plan ? { freshPlan: { units: plan.units, copy: () => materializeSnapshot(plan, payload) }, bytesIdentity: plan.identity } : {}),
+    }
   }
   const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
 
@@ -442,7 +449,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           if (plan && plan.units <= budget.remaining) {
             budget.remaining -= plan.units
             // This path replaces cloneSnapshot, including its current shape checks.
-            copies[surface] = () => validateSnapshot(materializeSnapshot(plan))
+            copies[surface] = () => validateSnapshot(plan.copy())
           }
           const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
           return () => {
@@ -576,7 +583,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
             // root. Each callback still receives an independent detached copy.
             if (budget && !source.copy && plan && plan.units <= budget.remaining) {
               budget.remaining -= plan.units
-              copies[name] = () => validateSnapshot(materializeSnapshot(plan))
+              copies[name] = () => validateSnapshot(plan.copy())
             }
           }
           const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
@@ -1036,9 +1043,12 @@ export function encodeSnapshot(snapshot: Snapshot): string {
 // eviction. A readonly root reserves space for its initial hits and only uses
 // the available space for fresh plans. Its copy factories are cleared on exit.
 // The bound counts string content, not decoded graphs, overhead or total heap.
-// A plan without room for a copy retains only the original bytes and small
-// ACL materialization, still using the original decoder. Snapshots larger than
-// the memo budget stay uncached. No persisted format or acceptance limit changes.
+// A plan without room for a copy uses the original decoder. A larger SQL
+// value can retain a SHA-256 fingerprint and its small ACL representation
+// without retaining the value itself. Each root hashes its own observed bytes.
+// Active roots can hold their observed SQL rows until their detached readers
+// finish. The shared memo never retains an oversized SQL value itself.
+// No persisted format or acceptance limit changes.
 const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024
 const snapshotAclFields = ["roleMap", "access"] as const
 const aclCodec = { stringify: JSON.stringify, parse: JSON.parse, map: Array.prototype.map }
@@ -1059,14 +1069,16 @@ function aclCodecCurrent() {
 }
 type SnapshotMaterialization = Readonly<{
   identity: object
-  payload: string
+  payload?: string
+  fingerprint?: string
+  payloadUnits: number
   copy?: Readonly<{ json: string; missing: string; largeStrings: string }>
   acl?: string
   units: number
 }>
 
-function planSnapshotMaterialization(snapshot: Snapshot, payload: string): SnapshotMaterialization | undefined {
-  if (payload.length > SNAPSHOT_MATERIALIZATION_UNITS || !snapshotDecoderCurrent()) return
+function planSnapshotMaterialization(snapshot: Snapshot, payload: string, fingerprint?: string): SnapshotMaterialization | undefined {
+  if (!snapshotDecoderCurrent() || (payload.length > SNAPSHOT_MATERIALIZATION_UNITS && !fingerprint)) return
   const parts: string[] = []
   const missing: string[] = []
   const largeStrings: string[] = []
@@ -1126,24 +1138,26 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string): Snaps
   }
   // Exact stored bytes can still identify independently observed roots when
   // a second JSON representation would exceed the copy-plan budget.
-  const copy = visit(snapshot) ? {
+  const copy = !fingerprint && visit(snapshot) ? {
     json: parts.join(""), missing: "[" + missing.join(",") + "]",
     largeStrings: "[" + largeStrings.join(",") + "]",
   } : undefined
-  const units = payload.length + (copy ? copy.json.length + copy.missing.length + copy.largeStrings.length : 0)
+  const units = (fingerprint?.length ?? payload.length) +
+    (copy ? copy.json.length + copy.missing.length + copy.largeStrings.length : 0)
   const acl = aclCodecCurrent() ? encodeSnapshot({
     data: Object.fromEntries(snapshotAclFields.flatMap((name) => Object.hasOwn(snapshot.data, name) ? [[name, snapshot.data[name]]] : [])),
     versions: {}, sequences: {}, audit: [], notices: [],
   }) : undefined
   return Object.freeze({
-    identity: {}, payload, copy, ...(acl && units + acl.length <= SNAPSHOT_MATERIALIZATION_UNITS
+    identity: {}, ...(fingerprint ? { fingerprint } : { payload }), payloadUnits: payload.length, copy,
+    ...(acl && units + acl.length <= SNAPSHOT_MATERIALIZATION_UNITS
       ? { acl, units: units + acl.length } : { units }),
   })
 }
 
-function materializeSnapshot(plan: SnapshotMaterialization): Snapshot {
+function materializeSnapshot(plan: SnapshotMaterialization, payload: string): Snapshot {
   const copy = plan.copy
-  if (!copy) return decodeSnapshot(plan.payload)
+  if (!copy) return decodeSnapshot(payload)
   const snapshot = JSON.parse(copy.json) as Snapshot
   // Null placeholders preserve property order and array density. Only these
   // known own paths need repair; -0 is preserved by its native JSON literal.
@@ -1158,8 +1172,8 @@ function materializeSnapshot(plan: SnapshotMaterialization): Snapshot {
   if (copy.largeStrings !== "[]") {
     for (const [offset, length, escaped, path] of JSON.parse(copy.largeStrings) as [number, number, boolean, string[]][]) {
       const value: string = escaped
-        ? JSON.parse(plan.payload.slice(offset, offset + length))
-        : plan.payload.slice(offset + 1, offset + length - 1)
+        ? JSON.parse(payload.slice(offset, offset + length))
+        : payload.slice(offset + 1, offset + length - 1)
       restore(path, value)
     }
   }
