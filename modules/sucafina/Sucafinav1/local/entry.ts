@@ -16,12 +16,19 @@ import { restoreBackup } from "../runtime/operations.ts"
 import type { RestoreTransport } from "../runtime/operations.ts"
 import type { Surface } from "../src/identity.ts"
 import { createLocalIdentity } from "../runtime/local-identity.ts"
-import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
+import { startAuthMaintenance } from "../runtime/auth-maintenance.ts"
+import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
+import { bootstrapLocalSurface, initializeConfiguredMicrosoftRoleMaps } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
 
 /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
 export default async function installation(context: { origin: string }) {
+  if (process.env.SUCAFINA_MICROSOFT_CONFIG !== undefined) {
+    const microsoft = await prepareMicrosoftInstallation(context, process.env.SUCAFINA_MICROSOFT_CONFIG)
+    const configured = await createConfiguredInstallation(microsoft.loaded, microsoft)
+    return { ...configured, transport: microsoft.transport }
+  }
   return createLocalInstallation(context, process.env.SUCAFINA_LOCAL_CONFIG)
 }
 
@@ -30,10 +37,17 @@ export async function createLocalInstallation(context: { origin: string }, file:
   const loaded = await loadLocalConfiguration(file)
   if (context.origin !== loaded.config.origin) throw new Error("Installation origin mismatch")
   await requireLocalIsolation(loaded.directory, environment)
+  return createConfiguredInstallation(loaded)
+}
+
+async function createConfiguredInstallation(
+  loaded: Awaited<ReturnType<typeof loadLocalConfiguration>>,
+  microsoft?: Awaited<ReturnType<typeof prepareMicrosoftInstallation>>,
+) {
   const config = loaded.config
   const operator = config.authentication === "local-operator" && config.localOperator ? { ...config.localOperator, name: userInfo().username } : undefined
-  const client = !operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined
-  const store = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
+  const client = microsoft?.client ?? (!operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined)
+  const store = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : microsoft ? "business-microsoft" : "business"), { microsoftAuthentication: Boolean(microsoft) })
   const services = { jobs: undefined as Awaited<ReturnType<typeof createLocalJobs>> | undefined }
   const status = (request: Request) => {
     const url = new URL(request.url)
@@ -51,7 +65,8 @@ export async function createLocalInstallation(context: { origin: string }, file:
     handler: async (request: Request) => status(request) ?? new Response("Microsoft 365 application is not configured. Set tenantId and clientId in the private installation configuration, then start this isolated instance again.", { status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" } }),
     dispose: () => store.dispose(),
   }
-  const identity = operator
+  if (microsoft) await initializeConfiguredMicrosoftRoleMaps({ groups: config.groups, store })
+  const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
   const backupDirectory = path.join(loaded.directory, operator ? "backups-local" : "backups-microsoft")
@@ -69,6 +84,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
   } : undefined
   const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount, ...(recoveryDrill ? { recoveryDrill } : {}), ...(operator ? { operator: { id: `macos:${operator.installationId}:${operator.uid}`, name: operator.name } } : {}), schedule: !!operator })
   services.jobs = jobs
+  const authentication = microsoft ? startAuthMaintenance({ secrets: store.secrets }) : undefined
   const business = createModule(config.mount, {
     persistence: store,
     authenticate: identity.authenticate,
@@ -81,7 +97,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
     async handler(request: Request) {
       const url = new URL(request.url)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
-      if (operator && request.method === "POST" && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
+      if ((operator || microsoft) && request.method === "POST" && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
       const readiness = status(request)
       if (readiness) return readiness
       const auth = await identity.handle(request)
@@ -161,7 +177,12 @@ export async function createLocalInstallation(context: { origin: string }, file:
       return localChrome(response)
 
     },
-    async dispose() { await jobs.dispose(); await store.dispose() },
+    async dispose() {
+      try {
+        await authentication?.dispose()
+        await jobs.dispose()
+      } finally { await store.dispose() }
+    },
   }
 
   function localChrome(response: Response) {
