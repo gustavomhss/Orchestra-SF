@@ -17,9 +17,8 @@ import { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SessionSchema } from "@orchestra/core/session/schema"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
-import { LLMClient, LLMEvent } from "@orchestra/llm"
-import type { LLMClientShape, LLMRequest } from "@orchestra/llm"
-import { Effect, Layer, Stream } from "effect"
+import { Effect, Layer } from "effect"
+import { FetchHttpClient, HttpClient, HttpClientResponse } from "effect/unstable/http"
 import { ProductHost } from "../src/host.ts"
 import { createSfHostRuntime } from "../src/sucafina-product/host-context.ts"
 import { createSfBusinessServices } from "../src/sucafina-product/business-services.ts"
@@ -70,32 +69,53 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
   }
   const toolInputs: { selected?: string; outside?: string } = {}
   let turns = 0
-  // Only the provider response is scripted. The runner executes the real tool
-  // and the test separately reads and verifies its recorded native receipt.
-  const llm = Layer.succeed(LLMClient.Service, LLMClient.Service.of({
-    prepare: () => Effect.die("unused provider prepare"),
-    generate: () => Effect.die("unexpected provider generate"),
-    stream: ((incoming: LLMRequest) => {
-      turns++
-      if (turns === 1) {
-        expect(incoming.tools.some((tool) => tool.name === operation)).toBe(true)
-        return Stream.make(LLMEvent.stepStart({ index: 0 }), ...Object.entries(toolInputs).map(([id, ref]) => LLMEvent.toolCall({
-          id, name: operation, input: { selectionRefs: [ref], similarityCriteria: ["decision-type"], period, limit: 5 },
-        })), LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }), LLMEvent.finish({ reason: "tool-calls" }))
-      }
-      const prompt = incoming.messages.flatMap((message) => message.content.flatMap((part) => {
-        if (part.type !== "text" || !part.text.trimStart().startsWith("{")) return []
-        const candidate = object(JSON.parse(part.text))
-        return Object.hasOwn(candidate, "skillInput") ? [candidate] : []
-      }))[0]
-      const canonical = object(object(object(prompt?.context).decisionRecall).result)
-      const matches = canonical.matches as CaseRecall["matches"]
-      expect(matches).toHaveLength(1)
-      return Stream.make(LLMEvent.stepStart({ index: 0 }), LLMEvent.textStart({ id: "recall" }), LLMEvent.textDelta({ id: "recall", text: JSON.stringify({
-        kind: "CaseRecall", payload: canonical, evidenceRefs: matches.flatMap((match) => match.evidenceRefs),
-      }) }), LLMEvent.textEnd({ id: "recall" }), LLMEvent.stepFinish({ index: 0, reason: "stop" }), LLMEvent.finish({ reason: "stop" }))
-    }) as unknown as LLMClientShape["stream"],
-  }))
+  let tokenCounts = 0
+  // Replay the provider wire only. C15 still counts, persists a receipt and
+  // authorizes the actual tool call through the full product host.
+  const transport = Layer.effect(HttpClient.HttpClient, Effect.gen(function* () {
+    const fallback = yield* HttpClient.HttpClient
+    return HttpClient.make((incoming) => {
+      if (new URL(incoming.url).origin !== "https://api.openai.com") return fallback.execute(incoming)
+      return Effect.sync(() => {
+        if (incoming.url === "https://api.openai.com/v1/responses/input_tokens") {
+          tokenCounts++
+          return HttpClientResponse.fromWeb(incoming, Response.json({ object: "response.input_tokens", input_tokens: 120 }))
+        }
+        expect(incoming.url).toBe("https://api.openai.com/v1/responses")
+        if (incoming.body._tag !== "Uint8Array") throw new Error("Expected a JSON provider request")
+        const payload = object(JSON.parse(new TextDecoder().decode(incoming.body.body)))
+        turns++
+        const toolCalls = () => {
+          expect(Array.isArray(payload.tools) && payload.tools.some((tool) => object(tool).name === operation)).toBe(true)
+          return Object.entries(toolInputs).map(([id, ref]) => ({ type: "response.output_item.done", item: {
+            type: "function_call", id: "item-" + id, call_id: "call-" + id, name: operation,
+            arguments: JSON.stringify({ selectionRefs: [ref], similarityCriteria: ["decision-type"], period, limit: 5 }),
+          } }))
+        }
+        const finalText = () => {
+          const messages = Array.isArray(payload.input) ? payload.input : []
+          const prompt = messages.flatMap((message) => {
+            const content = object(message).content
+            return (Array.isArray(content) ? content : []).flatMap((part) => {
+              const text = object(part).text
+              if (typeof text !== "string" || !text.trimStart().startsWith("{")) return []
+              const candidate = object(JSON.parse(text))
+              return Object.hasOwn(candidate, "skillInput") ? [candidate] : []
+            })
+          })[0]
+          const canonical = object(object(object(prompt?.context).decisionRecall).result)
+          const matches = canonical.matches as CaseRecall["matches"]
+          expect(matches).toHaveLength(1)
+          return [{ type: "response.output_text.delta", item_id: "reviewer-answer", delta: JSON.stringify({
+            kind: "CaseRecall", payload: canonical, evidenceRefs: matches.flatMap((match) => match.evidenceRefs),
+          }) }]
+        }
+        const events = [...(turns === 1 ? toolCalls() : finalText()), { type: "response.completed", response: {} }]
+        const wire = events.map((event) => "data: " + JSON.stringify(event) + "\n\n").join("")
+        return HttpClientResponse.fromWeb(incoming, new Response(wire, { headers: { "content-type": "text/event-stream" } }))
+      })
+    })
+  })).pipe(Layer.provide(FetchHttpClient.layer))
   try {
     const persistence = { ...store, ...createSfSourcePersistence({ persistence: store, createId: randomUUID,
       enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) }) }
@@ -119,7 +139,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
     })
     const merged = Host.merge([...ProductHost.contributions(), ...runtime.contributions])
     const layer = AppNodeBuilder.build(LayerNode.group([...merged.nodes, AppProcess.node, SessionV2.node, SessionExecution.node, LocationServiceMap.node]),
-      [[SessionExecution.node, SessionExecutionLocal.node], ...merged.replacements, [LayerNodePlatform.llmClient, llm]], merged.locationNodes)
+      [[SessionExecution.node, SessionExecutionLocal.node], ...merged.replacements, [LayerNodePlatform.httpClient, transport]], merged.locationNodes)
     await Effect.gen(function* () {
       const sessions = yield* SessionV2.Service
       const locations = yield* LocationServiceMap.Service
@@ -131,7 +151,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
         const catalog = yield* Catalog.Service
         yield* catalog.transform((draft) => {
           draft.model.update(providerID, modelID, (model) => {
-            model.api = { type: "aisdk", id: modelID, package: "@ai-sdk/openai", url: "http://127.0.0.1:1/v1" }
+            model.api = { type: "aisdk", id: modelID, package: "@ai-sdk/openai", url: "https://api.openai.com/v1" }
             model.limit = { context: 64_000, output: 4_000 }
             model.capabilities = { tools: true, input: ["text"], output: ["text"] }
           })
@@ -230,6 +250,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           const output = value(await human("analysis.read", { runRef }, (call) => analyses.output(call, runRef)), "read verified contribution")
           expect(output).toMatchObject({ kind: "CaseRecall", state: "ready", evidenceRefs: expect.arrayContaining([source]),
             runProvenance: expect.objectContaining({ profileId: "sf_reviewer", nativeSessionId: run.native.sessionID }) })
+          expect(tokenCounts).toBe(2)
           expect(await businessDigest()).toBe(initial)
         } finally { business.dispose() }
       })
