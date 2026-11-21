@@ -265,6 +265,3 @@ await write("independent-diagnostic-correspondence.json", {
   schema: "sf-g09-diagnostic-correspondence-v1", formalG09Pass: false,
   receiptSha256: pin.supplement, classificationsInherited: false, rows: correspondence,
 })
-console.log(JSON.stringify({ status: metadataOut.status, formalG09Pass: false, counts: report.counts,
-  knownSubsetMatched: metadataOut.recoveredSubset.matched, completeInventoryEquality: metadataOut.previousCheckpoint.completeInventoryEquality,
-  reportSha256: metadataOut.reportSha256, occurrenceGroups: groups.occurrenceGroups.length, findingGroups: groups.findingGroups.length }))

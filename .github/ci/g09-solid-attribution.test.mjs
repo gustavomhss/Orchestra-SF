@@ -55,6 +55,27 @@ test("substring text in a string literal is not accepted as an identifier", () =
     .toThrow("G09_IDENTIFIER_TOKEN_BOUNDARY_DIFFER")
 })
 
+test("raw JSX attribute names have exact JSXIdentifier bounds distinct from their expression values", () => {
+  const text = "const jsx = <DialogMoveSession projectID={projectID} />"
+  const bytes = Buffer.from(text)
+  const identifiers = parseIdentifiers(toolchain.babel, text, true)
+  const attribute = identifierSpan(bytes, identifiers, bytes.indexOf("projectID"), "projectID")
+  const expression = identifierSpan(bytes, identifiers, bytes.lastIndexOf("projectID"), "projectID")
+  expect(attribute.astNodeTypes).toEqual(["JSXIdentifier"])
+  expect(expression.astNodeTypes).toEqual(["Identifier"])
+  expect(attribute.byteEnd - attribute.byteStart).toBe(9)
+})
+
+test("JSX identifier support rejects matching prefixes and attribute string contents", () => {
+  const text = 'const jsx = <DialogMoveSession projectIDSuffix="projectID" />'
+  const bytes = Buffer.from(text)
+  const identifiers = parseIdentifiers(toolchain.babel, text, true)
+  expect(() => identifierSpan(bytes, identifiers, bytes.indexOf("projectID"), "projectID"))
+    .toThrow("G09_IDENTIFIER_TOKEN_BOUNDARY_DIFFER")
+  expect(() => identifierSpan(bytes, identifiers, bytes.lastIndexOf("projectID"), "projectID"))
+    .toThrow("G09_IDENTIFIER_TOKEN_BOUNDARY_DIFFER")
+})
+
 test("source-map coordinates outside the actual intermediate are rejected", () => {
   expect(() => offsetAt("x\nz", 1, 2)).toThrow("G09_SOURCE_COORDINATE_INVALID")
   expect(() => offsetAt("x\nz", 2, 0)).toThrow("G09_SOURCE_COORDINATE_INVALID")

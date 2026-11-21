@@ -116,7 +116,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/g09-input" "$RUNNER_TEMP/g09-out" "$RUNNER_TEMP/g09-runtime/release"
           g09_input="$RUNNER_TEMP/g09-input"
           gh api repos/gustavomhss/Orchestra-SF/actions/artifacts/14722264806 > "$g09_input/artifact.json"
-          gh api repos/gustavomhss/Orchestra-SF/actions/runs/44944208924 > "$g09_input/producer-run.json"
+          gh api repos/gustavomhss/Orchestra-SF/actions/runs/44944208924/attempts/1 > "$g09_input/producer-run.json"
           gh api repos/gustavomhss/Orchestra-SF/actions/artifacts/14722264806/zip > "$g09_input/original.zip"
           python3 -B "$G09_HARNESS/.github/ci/g09-preserved-inputs.py" "$g09_input" "$RUNNER_TEMP/g09-out/preserved-inputs.json"
           gh api repos/gustavomhss/Orchestra-SF/actions/artifacts/14726642873/zip > "$g09_input/supplement.zip"
@@ -137,6 +137,9 @@ jobs:
             --candidate "$SOURCE_REVISION" \
             --sha256 dc11455bbcce4565b24cdca53ce3e5ab05f883757f6c0765910a0e4c98147d83
           tar -xzf "$g09_input/orchestra-sf-entra-linux-x64-baseline.tar.gz" -C "$RUNNER_TEMP/g09-runtime/release"
+          python3 -B "$G09_HARNESS/.github/ci/g09-installation-modes.py" \
+            "$RUNNER_TEMP/g09-runtime/release" "$g09_input/orchestra-sf-entra-package-receipt.json" \
+            "$SF_G09_SOURCE_DIR/sf/azure/vm/install-factory-distribution.py" "$RUNNER_TEMP/g09-out/installation-modes.json"
           mkdir "$g09_input/maps"
           tar -xzf "$g09_input/cli-source-maps.tar.gz" -C "$g09_input/maps"
           ln -s "$RUNNER_TEMP/g09-runtime/release/bin/orchestra" "$g09_input/orchestra"
@@ -232,13 +235,36 @@ jobs:
           trap 'kill "$g09_server" 2>/dev/null || true; wait "$g09_server" 2>/dev/null || true' EXIT
           g09_ready=0
           for g09_tick in {1..60}; do
-            kill -0 "$g09_server"
+            if ! kill -0 "$g09_server" 2>/dev/null; then break; fi
             g09_status="$(curl --silent --output /dev/null --write-out '%{http_code}' \
               --max-time 2 -H "Host: sf-ingress.example.test:$CI_PORT" \
               "http://127.0.0.1:$CI_PORT/sucafina/dashboard" || true)"
             if [ "$g09_status" = 403 ]; then g09_ready=1; break; fi
             sleep 1
           done
+          python3 -B - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path(os.environ['CI_RUNTIME'])
+          raw = (root / 'server.log').read_bytes()
+          text = raw[-65536:].decode('utf-8', errors='replace')
+          secrets = [os.environ['CI_PROOF'], 'hosted-ci-only']
+          for name in ('client-secret.txt', 'ingress-secret.txt', 'host-credential.key'):
+              file = root / 'installation' / name
+              if file.is_file() and file.stat().st_size <= 131072:
+                  secrets.append(file.read_text().strip())
+          for value in secrets:
+              if value:
+                  text = text.replace(value, '[fixture-secret-redacted]')
+          out = Path(os.environ['RUNNER_TEMP']) / 'g09-out'
+          (out / 'tui-startup.log').write_text(text)
+          (out / 'tui-startup-log.json').write_text(json.dumps({
+              'schema': 'g09-tui-startup-log-v1', 'phase': 'before-oauth-and-tui',
+              'originalSha256': hashlib.sha256(raw).hexdigest(), 'originalBytes': len(raw),
+              'redactedSha256': hashlib.sha256(text.encode()).hexdigest(),
+              'truncated': len(raw) > 65536, 'formalG09Pass': False,
+          }, indent=2) + '\n')
+          PY
           test "$g09_ready" = 1
           python3 -B "$G09_HARNESS/.github/ci/g09-tui-boundary-proof.py" \
             --binary "$g09_installed/orchestra" --factory "$g09_installed/local/entry.mjs" \

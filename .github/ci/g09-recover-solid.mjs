@@ -94,9 +94,12 @@ export function identifierIndex(ast) {
       pending.push(...node)
       continue
     }
-    if (node.type === "Identifier") {
+    // A preserved JSX attribute name is a JSXIdentifier in the raw TSX AST,
+    // then an Identifier after Solid lowers it to an object property. Both
+    // provide exact lexical token bounds; neither permits a string substring.
+    if (node.type === "Identifier" || node.type === "JSXIdentifier") {
       const existing = identifiers.get(node.start) ?? []
-      existing.push({ name: node.name, start: node.start, end: node.end })
+      existing.push({ type: node.type, name: node.name, start: node.start, end: node.end })
       identifiers.set(node.start, existing)
     }
     for (const [key, value] of Object.entries(node)) {
@@ -135,6 +138,7 @@ export function identifierSpan(bytes, identifiers, byteOffset, seed) {
   return {
     byteStart: byteOffset, byteEnd: byteOffset + seed.length,
     utf16Start: start, utf16End: start + seed.length,
+    astNodeTypes: [...new Set(matches.map((node) => node.type))].sort(),
     start: position(text, start), end: position(text, start + seed.length),
   }
 }
@@ -373,8 +377,6 @@ async function main() {
   }
   await writeFile(path.join(output, "solid-recovery-receipt.json"), JSON.stringify(receipt, null, 2) + "\n",
     { flag: "wx", mode: 0o600 })
-  console.log(JSON.stringify({ status: receipt.status, summary: receipt.summary ?? null,
-    failure: receipt.failure ?? null, formalG09Pass: false }))
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url))

@@ -43,4 +43,3 @@ await writeFile(file, JSON.stringify({
 }) + "\n")
 await writeFile(join(directory, "client-secret.txt"), "hosted-ci-only", { flag: "wx", mode: 0o600 })
 await writeFile(join(directory, "ingress-secret.txt"), proof, { flag: "wx", mode: 0o600 })
-console.log("G09_TUI_FIXTURE_CONFIGURED: synthetic Entra transport; product configuration implementation reused")
