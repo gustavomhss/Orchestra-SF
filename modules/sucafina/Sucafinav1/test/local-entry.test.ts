@@ -116,10 +116,17 @@ test("local operator Files export uses the installed business producer and its s
 
     const enrolled = await installation.handler(new Request(`${origin}/sucafina/auth/local?code=${f.code}`))
     const cookie = enrolled!.headers.getSetCookie()[0].split(";")[0]
+    const maintenance = await installation.handler(new Request(`${origin}/sucafina/backups`, {
+      method: "POST", headers: { cookie, origin, "content-type": "application/json" },
+      body: JSON.stringify({ action: "run-maintenance" }),
+    }))
+    expect(maintenance?.status).toBe(200)
     const exported = await installation.handler(new Request(route, { headers: { cookie } }))
     expect(exported?.status).toBe(200)
     expect(exported?.headers.get("content-disposition")).toContain("cio-dashboard.json")
-    expect(await exported?.json()).toEqual({ hotTopics: [{ id: "topic", action: "Installed Files export" }] })
+    const data = await exported?.json()
+    expect(data).toMatchObject({ hotTopics: [{ id: "topic", action: "Installed Files export" }] })
+    expect(data).not.toHaveProperty("__sfProductV1")
     const wrongMethod = await installation.handler(new Request(route, { method: "POST", headers: { cookie, origin } }))
     expect(wrongMethod?.status).toBe(405)
     expect(wrongMethod?.headers.get("allow")).toBe("GET")
