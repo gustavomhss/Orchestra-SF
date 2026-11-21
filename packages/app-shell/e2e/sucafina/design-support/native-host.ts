@@ -40,6 +40,14 @@ const stop = new AbortController()
 process.once("SIGTERM", () => stop.abort())
 process.once("SIGINT", () => stop.abort())
 
+async function reportFailure(error: unknown) {
+  const message = error instanceof Error ? error.stack ?? error.message : String(error)
+  const safe = message.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/code=[^&\s"\']+/g, "code=[redacted]").slice(-8192)
+  // Persist the bounded diagnostic before exit; the process exit event can beat stderr delivery.
+  await writeFile(path.join(privateRoot, "failure.txt"), safe, { mode: 0o600 }).catch(() => undefined)
+  process.stderr.write(safe + "\n")
+}
+
 const program = Effect.scoped(Effect.gen(function* () {
   const launcher = yield* AppProcess.Service
   const webRoot = path.join(privateRoot, "web")
@@ -184,7 +192,14 @@ const program = Effect.scoped(Effect.gen(function* () {
   process.stdout.write("SF_DESIGN_STAGE native-ready\n")
   if (decisionsWave) {
     process.stdout.write("SF_DESIGN_STAGE decisions-seed\n")
-    yield* Effect.promise(() => seedWaveFourDecisions(installed, year))
+    yield* Effect.promise(async () => {
+      try { await seedWaveFourDecisions(installed, year) }
+      catch (error: unknown) {
+        // Record the source failure before scoped child-process cleanup starts.
+        await reportFailure(error)
+        throw error
+      }
+    })
     process.stdout.write("SF_DESIGN_STAGE decisions-ready\n")
   }
   if (!configuration) throw new Error("Native installation configuration was not observed")
@@ -214,11 +229,7 @@ try {
   await Effect.runPromise(program, { signal: stop.signal })
 } catch (error: unknown) {
   if (!stop.signal.aborted) {
-    const message = error instanceof Error ? error.stack ?? error.message : String(error)
-    const safe = message.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/code=[^&\s"\']+/g, "code=[redacted]").slice(-8192)
-    // Persist the bounded diagnostic before exit; the process exit event can beat stderr delivery.
-    await writeFile(path.join(privateRoot, "failure.txt"), safe, { mode: 0o600 }).catch(() => undefined)
-    process.stderr.write(safe + "\n")
+    await reportFailure(error)
     process.exitCode = 1
   }
 }
