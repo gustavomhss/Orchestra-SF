@@ -395,7 +395,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
     reasons: [], knownCount: null, expectedCount: null } as const)
 
   return (
-    <div data-sf-authorized={isCurrent()}>
+    <div class="sf-u30-host" data-sf-authorized={isCurrent()}>
       <SfPageFrame titleKey={k(spec.title)} context={[]} tabs={[]} activeTab={null}
         density="comfortable" layout="work" onLayoutMode={() => undefined}
         primaryAction={store.mode === "list" && admitted("save") ? { id: "new", labelKey: k(spec.primary), tone: "primary",

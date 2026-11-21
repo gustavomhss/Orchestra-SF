@@ -20,6 +20,7 @@ Branch `sf-polish-ops` starts at plan commit `24c02f7f366ecea94a8511c88cdaf2bebc
 - Native type tokens: md body, sm secondary copy, lg row headings, xl section headings, 2xl focused titles and 3xl recorded measures.
 - Panels use native raised/soft materials, line tokens, 20 px desktop padding and 16 px narrow padding. No replacement palette, blur system or font asset is introduced.
 - All visible input/action targets are at least 44 px tall. Long text wraps; action groups reflow.
+- CAP13/CAP15 and CAP16 outer view wrappers explicitly pass the host flex sizing and minimum block size to the frame. A long-editor browser assertion checks bounded height and real internal scroll movement.
 - Editors and review stages have a 760 px maximum width. The list/overview remains mounted but hidden during editing and review; source draft controllers are not replaced.
 - CAP11 ticket and SLA tables retain a 560 px readable minimum, with a 760 px application ledger inside named keyboard-focusable scrollers.
 - CAP12 history/department tables retain a 560 px minimum and incidents an 820 px minimum. Campaign department editors use responsive labeled fields rather than a horizontal editing table.

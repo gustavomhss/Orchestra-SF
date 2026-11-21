@@ -253,6 +253,7 @@ waveThreeTest("installed native operations · five areas, source values and real
     await expect(editor.getByLabel("Score", { exact: true })).toHaveValue("3")
     await expect(editor.getByLabel("Total weight (1 = 100%)", { exact: true })).toHaveValue("0.6")
     await editor.getByLabel("Notes", { exact: true }).fill(performanceNotes)
+    await scrollableEditor(page)
     await editorGeometry(editor)
     await scrollPageTop(page)
     await capture(page, info, "CAP16-subitem-editor-dark-desktop-test-data")
@@ -389,6 +390,16 @@ async function loaded(page: Page, id: typeof screens[number]["id"]) {
   else if (id === "CAP16") await expect(surface.locator("[data-sf-performance-item]")).toHaveCount(2)
   else await expect(surface.locator("tr[data-sf-row]").first()).toBeVisible()
   await reflow(page)
+  await scrollPageTop(page)
+}
+
+async function scrollableEditor(page: Page) {
+  const scroller = page.locator('[data-sf-frame="page"] .mx-page')
+  const sizes = await scroller.evaluate((element) => ({ client: element.clientHeight, content: element.scrollHeight }))
+  expect(sizes.client, "the frame receives bounded height through the native view wrapper").toBeGreaterThan(0)
+  expect(sizes.content, "the long sub-item editor stays inside the native scroll region").toBeGreaterThan(sizes.client)
+  await scroller.evaluate((element) => element.scrollTo({ top: element.scrollHeight, behavior: "instant" }))
+  await expect.poll(() => scroller.evaluate((element) => element.scrollTop)).toBeGreaterThan(0)
   await scrollPageTop(page)
 }
 
