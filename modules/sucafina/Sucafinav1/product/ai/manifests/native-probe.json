@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "profiles": [
+    {
+      "id": "sf_finance",
+      "version": "1.0.0",
+      "mission": "Reconciliar forecast, comparar cenários e calcular sensibilidade pelo motor canônico.",
+      "allowedSkills": [
+        "sf-explicar-forecast",
+        "sf-comparar-cenarios",
+        "sf-avaliar-sensibilidade",
+        "sf-produzir-bi-contextual",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowedOperations": [
+        "sf_alternative_draft",
+        "sf_bi_view",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_dashboard_read",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_forecast_compare",
+        "sf_freshness_check",
+        "sf_import_preview",
+        "sf_knowledge_search",
+        "sf_kpi_explain",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate",
+        "sf_source_get"
+      ],
+      "outputTypes": [
+        "FinancialAnalysis",
+        "ScenarioComparison",
+        "SensitivityResult",
+        "ContextualBIProposal",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "contextBudgetTokens": 20000,
+      "maxSteps": 10,
+      "maxDelegations": 0,
+      "modelClass": "reasoning",
+      "resumePolicy": "Retomar somente após nova validação de referências/base e skill pinada.",
+      "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+      "sourceDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793"
+    }
+  ],
+  "skills": [
+    {
+      "id": "sf-explicar-forecast",
+      "version": "1.0.0",
+      "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+      "sourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+      "instructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+      "inputSchemaRef": "ForecastExplainInput",
+      "outputSchemaRefs": [
+        "FinancialAnalysis"
+      ],
+      "allowedProfiles": [
+        "sf_finance"
+      ],
+      "allowedOperations": [
+        "sf_context_get",
+        "sf_forecast_compare",
+        "sf_freshness_check",
+        "sf_import_preview",
+        "sf_kpi_explain",
+        "sf_source_get"
+      ],
+      "workflow": [
+        "Selecionar versões/período/moeda.",
+        "Invocar comparação canônica.",
+        "Reconciliar delta até componentes.",
+        "Explicar fontes, ausência e FX sem causa inventada.",
+        "Na entrada opcional Analisar impacto do arquivo, usar sf_import_preview com admittedFileRef/format/options e base autorizada; consumir ImportManifest e seus erros/deltas. O host vincula um caso real antes da chamada; a importação determinística continua disponível sem iniciar análise IA."
+      ],
+      "limits": {
+        "maxSteps": 10,
+        "contextBudgetTokens": 20000
+      },
+      "positiveAcceptance": [
+        "Delta 12000/6000 reconciliado aparece no gráfico e no objeto FinancialAnalysis."
+      ],
+      "negativeAcceptance": [
+        "Sem FX ou coluna privada, retornar limite; não tratar ausente como zero."
+      ]
+    }
+  ],
+  "packs": [
+    {
+      "id": "planning",
+      "name": "Planning",
+      "version": "1.0.0",
+      "owner_task": "WP10.T06",
+      "consumer_tasks": [
+        "WP10.T06",
+        "WP12.T01",
+        "WP01.T05",
+        "WP09.T07"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04"
+      ],
+      "evidence_packages": [
+        "E01",
+        "E10",
+        "E11",
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "operations": [
+        {
+          "id": "sf_forecast_compare",
+          "mode": "simulate",
+          "producer_task": "WP03.T01",
+          "handler_path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+          "handler_export": "compareForecast",
+          "input_type": "ForecastCompareRequest",
+          "required_business_fields": "baseRef,candidateRef,period,currency",
+          "output_type": "FinancialAnalysis",
+          "contracts": [
+            "C02",
+            "C10"
+          ],
+          "profiles": [
+            "sf_finance"
+          ],
+          "input_schema_policy": "Schema fechado; additionalProperties=false; identidade/contexto/provider/owner do Atlas não são argumentos; refs são seletores sujeitos a ACL, nunca credenciais."
+        }
+      ]
+    }
+  ],
+  "operation_call_routes": [
+    {
+      "operation_id": "sf_forecast_compare",
+      "pack_id": "planning",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-explicar-forecast",
+      "entry_mode": "interactive",
+      "input_schema": "ForecastCompareRequest",
+      "output_type": "FinancialAnalysis",
+      "producer_task": "WP03.T01",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    }
+  ]
+}
