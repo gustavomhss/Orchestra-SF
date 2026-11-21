@@ -379,7 +379,7 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
 }
 
 /** Observe transport only: never serialize headers, bodies, cookies or query values. */
-export function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "review-agenda" | "review-report" | "review-read" | "review-download" | "collaboration-answer-prepare-message" | "collaboration-answer-confirm" = "review-agenda", method: "GET" | "POST" = "POST") {
+export function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "review-agenda" | "review-report" | "review-read" | "review-download" | "collaboration-answer-prepare-message" | "collaboration-answer-confirm" | "collaboration-thread-edit" = "review-agenda", method: "GET" | "POST" = "POST") {
   const expected = new URL(app.dashboardURL)
   const started = Date.now()
   const entries: Record<string, unknown>[] = []

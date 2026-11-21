@@ -104,11 +104,16 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
       })
     })
 
-    reportsTest("RPT-02c retains drafts through read loss and rejects the superseded answer", async ({}, info) => {
-      const { app, corpus, page } = journey
+    reportsTest("RPT-02c retains drafts through read loss without a mutation", async ({}, info) => {
+      const { app, page } = journey
       const { api, answer } = confirmed
       await reportsTest.step("Keep question, reply and edit drafts through repeated authorized read loss without sending", () =>
         reconcilePrivateDraftsAfterReadLoss(page, app, api, answer, info))
+    })
+
+    reportsTest("RPT-02d retries the failed edit and rejects the superseded answer", async ({}, info) => {
+      const { app, corpus, page } = journey
+      const { api, answer } = confirmed
       edited = await reportsTest.step("Edit once through Review; reject old selector/reuse and read the exact original through history", () => editHumanAnswer(page, app, api, answer,
         `Edited human answer: the current source is ${corpus.after}. REPORTS_HUMAN_EDITED`, { recoverRequestFailure: true, info }))
       expect(edited.incarnation).toBe(answer.message.incarnation)
@@ -122,7 +127,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
       }, null, 2), contentType: "application/json" })
     })
 
-    reportsTest("RPT-02d recovers a lost edit receipt and reads the previous versions after reload", async ({}, info) => {
+    reportsTest("RPT-02e recovers a lost edit receipt and reads the previous versions after reload", async ({}, info) => {
       const { app, page } = journey
       const { api, answer } = confirmed
       const recovered = await reportsTest.step("Recover a committed edit after its response is lost, using only the exact original intent", () =>

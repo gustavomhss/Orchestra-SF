@@ -1,4 +1,4 @@
-import { probeSfReviewMutationReceipt } from "../host-binding/state-provider.ts"
+import { probeSfReviewMutationReceipt, stageSfReviewThreadWrite } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { SfProductStatePort, SfProductState, SfStateAuthority } from "../contracts/state.ts"
@@ -133,6 +133,7 @@ export function createThreadHistory(input: {
         state.threads[id] = { ...prior, messages: prior.messages.map((entry) => entry.id === message.id ? { ...entry, body: selected.body, version: entry.version + 1, sourceContext: basis } : entry), messageRevisions: [...(prior.messageRevisions ?? []), message] }
         return { commit: true, value: message.version + 1 }
       }
+      if (ownReview) stageSfReviewThreadWrite(work)
       input.threadHistoryWrites.add(work)
       const saved = await input.state.transaction(request, command, work).finally(() => input.threadHistoryWrites.delete(work))
       if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }

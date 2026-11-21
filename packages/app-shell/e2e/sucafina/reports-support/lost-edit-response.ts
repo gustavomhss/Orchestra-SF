@@ -2,6 +2,7 @@ import { expect } from "@playwright/test"
 import type { Locator, Page, Request, Route, TestInfo } from "@playwright/test"
 import type { ReportsCollaboration, ReviewAnswer } from "./confirmation.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
+import { observeReviewTransport } from "./review-flow.ts"
 import { object, responseFor, text } from "./model.ts"
 
 /** Lose a real committed edit's response. A fresh authorized read must retain
@@ -83,9 +84,17 @@ export async function recoverLostEditResponse(input: {
     expect(writes, "A newer authorized version must never silently rebase and send the retained edit").toEqual([receipt.serialized])
     expect(await api.version()).toBe(input.expectedStorageVersion + 1)
 
+    const transport = observeReviewTransport(page, app, mode)
     const recovered = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
-    await retry.click()
-    const response = await recovered
+    void recovered.catch(() => undefined)
+    const response = await (async () => {
+      try {
+        await retry.click()
+        return await Promise.race([recovered, transport.failed])
+      } finally {
+        await transport.finish(input.info)
+      }
+    })()
     expect(response.status()).toBe(200)
     expect(response.headers()["cache-control"]).toContain("no-store")
     expect(response.request().postData()).toBe(receipt.serialized)

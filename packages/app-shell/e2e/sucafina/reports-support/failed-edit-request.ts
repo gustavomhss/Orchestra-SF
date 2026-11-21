@@ -2,6 +2,7 @@ import { expect } from "@playwright/test"
 import type { Locator, Page, Request, Route, TestInfo } from "@playwright/test"
 import type { ReportsCollaboration, ReviewAnswer } from "./confirmation.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
+import { observeReviewTransport } from "./review-flow.ts"
 import { object, responseFor, text } from "./model.ts"
 
 /** A transport failure before the real edit reaches the server must preserve
@@ -77,9 +78,17 @@ export async function recoverFailedEditRequest(input: {
     expect(writes, "Reconciliation must not submit the retained edit").toEqual([attempt.serialized])
     expect(await api.version()).toBe(input.expectedStorageVersion)
 
+    const transport = observeReviewTransport(page, app, mode)
     const recovered = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
-    await retry.click()
-    const response = await recovered
+    void recovered.catch(() => undefined)
+    const response = await (async () => {
+      try {
+        await retry.click()
+        return await Promise.race([recovered, transport.failed])
+      } finally {
+        await transport.finish(input.info)
+      }
+    })()
     expect(response.status()).toBe(200)
     expect(response.headers()["cache-control"]).toContain("no-store")
     expect(response.request().postData()).toBe(attempt.serialized)
