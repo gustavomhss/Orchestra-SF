@@ -181,7 +181,7 @@ function createIdentity(
         if (request.method !== "POST" || request.headers.get("origin") !== origin.origin ||
             request.headers.get("sec-fetch-site") === "cross-site" || !await sameSession()) return false
         const actor = await options.client.resolve(current.value.tokens.accessToken, [
-          { surface: "dashboard", role: "admin", entra: "group:" + groupId.toLowerCase() },
+          { surface: "dashboard", role: "admin", entra: "group:" + groupId.toLowerCase(), version: 0, by: "" },
         ]).catch(() => undefined)
         return !!actor?.canWrite && actor.id === principalId &&
           actor.roles.some((row) => row.surface === "dashboard" && row.role === "admin") && await sameSession()
