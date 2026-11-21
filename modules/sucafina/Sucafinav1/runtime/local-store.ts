@@ -2,12 +2,13 @@ import { Database } from "bun:sqlite"
 import { constants, lstatSync } from "node:fs"
 import { lstat, mkdir, open, realpath } from "node:fs/promises"
 import { isAbsolute, join, parse, resolve, sep } from "node:path"
+import { createAuthenticationSecrets, initializeAuthentication } from "./auth-maintenance.ts"
 import type { LocalStore } from "./local-contract.ts"
 import type { Snapshot, TransactionOptions } from "./contract.ts"
 import type { BlobTransaction } from "./assets.ts"
 import type { Surface } from "../src/identity.ts"
 
-export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number } = {}): Promise<LocalStore> {
+export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number; microsoftAuthentication?: boolean } = {}): Promise<LocalStore> {
   if (!isAbsolute(directory)) throw new Error("Local storage requires an absolute dedicated directory")
   const timeout = options.lockTimeoutMs ?? 5000
   if (!Number.isFinite(timeout) || timeout < 0) throw new Error("Invalid lock timeout")
@@ -65,23 +66,27 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       throw error
     }
   }
-  const initial = connect()
-  try {
-    await retryLock(() => initial.exec("PRAGMA journal_mode=WAL"), timeout)
-    await retryLock(() => initial.exec("BEGIN IMMEDIATE"), timeout)
+  const authentication = await (async () => {
+    const initial = connect()
     try {
-      initial.exec(`
-        CREATE TABLE IF NOT EXISTS snapshots (surface TEXT PRIMARY KEY, payload TEXT NOT NULL);
-        CREATE TABLE IF NOT EXISTS blobs (surface TEXT NOT NULL, key TEXT NOT NULL, payload BLOB NOT NULL, type TEXT NOT NULL, PRIMARY KEY (surface, key));
-        CREATE TABLE IF NOT EXISTS authentication_payloads (key TEXT PRIMARY KEY, payload BLOB NOT NULL, expires_at REAL NOT NULL);
-        COMMIT;
-      `)
+      await retryLock(() => initial.exec("PRAGMA journal_mode=WAL"), timeout)
+      await retryLock(() => initial.exec("BEGIN IMMEDIATE"), timeout)
+      try {
+        initial.exec(`
+          CREATE TABLE IF NOT EXISTS snapshots (surface TEXT PRIMARY KEY, payload TEXT NOT NULL);
+          CREATE TABLE IF NOT EXISTS blobs (surface TEXT NOT NULL, key TEXT NOT NULL, payload BLOB NOT NULL, type TEXT NOT NULL, PRIMARY KEY (surface, key));
+          CREATE TABLE IF NOT EXISTS authentication_payloads (key TEXT PRIMARY KEY, payload BLOB NOT NULL, expires_at REAL NOT NULL);
+        `)
+        const limits = options.microsoftAuthentication ? initializeAuthentication(initial) : undefined
+        initial.exec("COMMIT")
+        return limits
+      } finally {
+        if (initial.inTransaction) initial.exec("ROLLBACK")
+      }
     } finally {
-      if (initial.inTransaction) initial.exec("ROLLBACK")
+      initial.close()
     }
-  } finally {
-    initial.close()
-  }
+  })()
 
   const lifecycle = { closed: false, disposing: undefined as Promise<void> | undefined }
   const active = new Set<Promise<unknown>>()
@@ -197,7 +202,20 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         }
         return result.value
       }, transactionOptions?.signal),
-    secrets: {
+    secrets: authentication ? createAuthenticationSecrets({
+      limits: authentication,
+      read: (work) => {
+        if (lifecycle.closed) throw new Error("Local store is disposed")
+        const db = connect()
+        try { return work(db) }
+        finally { db.close() }
+      },
+      write: (work) => operation(true, async (db) => {
+        const value = work(db)
+        db.exec("COMMIT")
+        return value
+      }),
+    }) : {
       put: (key, bytes, expiresAt) => operation(true, async (db) => {
         if (!Number.isFinite(expiresAt)) throw new Error("Invalid authentication expiry")
         db.query("INSERT INTO authentication_payloads (key, payload, expires_at) VALUES (?, ?, ?) ON CONFLICT (key) DO UPDATE SET payload=excluded.payload, expires_at=excluded.expires_at").run(key, bytes, expiresAt)
