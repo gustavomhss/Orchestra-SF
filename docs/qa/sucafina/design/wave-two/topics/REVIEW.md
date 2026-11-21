@@ -1,6 +1,6 @@
 # CAP02 — Hot Topics redesign
 
-Status: IMPLEMENTED, AWAITING ACTIONS AND REAL VISUAL REVIEW.
+Status: REAL JOURNEY PASS AND VISUAL REVIEW COMPLETED FOR CANDIDATE 263e694; CAP02 REFERENCE-SELECTOR POLISH AWAITS UPDATED CAPTURE. No user visual approval or golden baseline.
 
 ## Scope and origin
 
@@ -50,7 +50,7 @@ Primary localization reference inspected: Mozilla Firefox's maintained pt-BR glo
 
 ## Validation and limits
 
-No local build, test, app execution or owner-app restart. Root owns the consolidated Actions run and actual dark/light, Portuguese and narrow captures. Static source comparison confirmed unchanged remove logic, preserved save dispatch/admission semantics and preservation of all existing catalog pairs. The new source has not yet been runtime validated, visually accepted or assigned a golden baseline. Narrow CSS is not evidence of browser zoom. Post-save source refresh and owner draft lifecycle retain the original implementation and must be exercised through the real installation.
+No local build, test, app execution or owner-app restart. Root owns the consolidated Actions runs and actual dark/light, Portuguese and narrow captures. Static source comparison confirmed unchanged remove logic, preserved save dispatch/admission semantics and preservation of all existing catalog pairs. Candidate 263e694ef565376cc1af61cae0dc9e44777075b8 passed the real-installation journey and the focused registry tests documented below. The subsequent reference-selector CSS polish is not yet covered by a new capture. No user visual approval or golden baseline has been recorded. A 320px viewport is reflow evidence, not browser-zoom evidence.
 
 ## Inherited confirmation lifecycle repair
 
@@ -62,7 +62,7 @@ The actual source refresh still runs immediately after the confirmed command. Th
 
 The final action remains **Back to topics / Voltar aos tópicos**. Success is now `[data-sf-topic-confirmed] [data-topic-feedback="saved"]`, outside `[data-sf-topic-editor]`. The success panel contains no form, review button or send action. Transport capture occurs immediately before the existing client call; it changes no request parameters and lets a late response from an old owner be rejected by the presentation callback.
 
-Inspection of the owner registry showed Map-backed acquire and a draft constructor that does not read its snapshot. No reactive self-subscription was observed there, so no speculative untrack was added. Runtime proof of the repair remains the responsibility of the consolidated real-installation journey.
+Inspection of the owner registry showed Map-backed acquire and a draft constructor that does not read its snapshot. No reactive self-subscription was observed there, so no speculative untrack was added. The initial repair required runtime proof from the consolidated real-installation journey; its later PASS is recorded below.
 
 ### First Actions result and marker hardening
 
@@ -83,3 +83,41 @@ CAP02 captures the submitted draft identity before awaiting, confirms the actual
 A focused regression file was added to the existing Bun browser test suite:
 `packages/app-shell/test-browser/sucafina-draft-confirmation.test.ts`.
 It uses the real owner registry and draft controller; unrelated external dependencies throw if called. Cases cover omitted/wrong confirmation references, unresolved-marker protection, exact confirmed release, acquisition of a fresh version/value, pending/submitting/outcome-unknown protection, and unchanged ordinary discard behavior for clean/dirty/conflict drafts. Run through the existing Actions app test runner with browser conditions. No local test or additional CI was launched by this worker.
+
+## Real journey and final visual review — candidate 263e694
+
+Reviewed product candidate: `263e694ef565376cc1af61cae0dc9e44777075b8`.
+
+- Real browser journey: [run 44919606458](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44919606458), [job 136892554713](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44919606458/job/136892554713), **1 passed (2.8m)**; all 36 expected preview names were emitted with no skipped test.
+- The journey exercised the authorized source fixture and actual producer commands. CAP02 coverage includes creation, a fourth source row after reread, editing an existing topic, retaining a confirmed result through refresh, reopening with fresh values/version, deletion review and cancellation, and Done → zero records → clear filter → three records. Root reports three real commands across the consolidated journey: topic creation, topic editing and the OPEX monthly update.
+- Focused owner-registry test: [run 44919739363](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44919739363), [job 136892953895](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44919739363/job/136892953895), **6 pass, 0 fail, 29 assertions**. The actual job log was inspected. The request used `./test-browser/sucafina-draft-confirmation.test.ts` in the existing browser-conditioned Bun runner.
+
+### Exact images inspected
+
+All thirteen CAP02 images below were viewed from the final journey's actual `SF_DESIGN_PREVIEW` data, not inferred from source. The compact navigation was present in these captures.
+
+| Image name | Review |
+| --- | --- |
+| `CAP02-dark-desktop-test-data` | Three source rows; stable aligned metadata and actions; compact navigation. |
+| `CAP02-dark-1440x800-test-data` | All three rows and primary controls fit the shorter desktop viewport. |
+| `CAP02-light-desktop-test-data` | Native light surfaces retain clear row and status hierarchy. |
+| `CAP02-light-320-test-data` | Toolbar and rows reflow; complete first record and full-width detail action are readable. |
+| `CAP02-dark-desktop-editor-test-data` | Paired fields align; focused Notes remains inside the surface; review/discard actions are complete. |
+| `CAP02-dark-desktop-review-test-data` | New-topic original/current context stays compact; proposed fields and final actions are readable. |
+| `CAP02-dark-320-review-test-data` | Captured lower review region stacks proposed fields and three complete 44px actions without horizontal clipping. |
+| `CAP02-dark-desktop-detail-test-data` | Title, metadata, Notes and edit/delete are aligned; the reference selector has the concrete finish defect described below. |
+| `CAP02-dark-desktop-existing-review-test-data` | Original/current/proposed snapshots remain readable in equal columns, with the changed Notes visible and complete footer actions. |
+| `CAP02-dark-desktop-saved-test-data` | A stable saved result and Back to topics remain visible while the real source reread shows its loading state; no replacement editor/send action appears. |
+| `CAP02-pt-BR-dark-desktop-test-data` | Four source records, localized status/priority/date labels and complete actions. |
+| `CAP02-pt-BR-dark-desktop-editor-test-data` | Portuguese labels and action captions fit; paired fields and focus treatment remain coherent. |
+| `CAP02-pt-BR-dark-desktop-review-test-data` | Portuguese original/current/proposed labels and confirmation actions fit without overlap. |
+
+The core list, editor, review and confirmation composition has no new blocking geometry issue in these images. Existing-record review was captured after scrolling toward the footer; the partially scrolled page eyebrow is not evidence of a broken title layout. The mobile review image covers the lower review region, not the entire page. Deletion review/cancel was exercised by the journey but no separate deletion screenshot was emitted; this report does not claim visual inspection of an absent image.
+
+### Concrete visual finding and scoped correction
+
+The detail image shows **Executive references → Open canonical record** with the selector rendered as bare text and a chevron, without the native field surface or a clear gap from its label. The shared component uses `select.mx-input`; CAP02's new input styling covered the list filter and editor but omitted this related-reference selector.
+
+With root authorization, only `hot-topics/topics.css` now extends the existing native input treatment to `.sf-topics-related select`: 44px minimum height, native line/fill/radius, padding, full available width and inherited color scheme. Scoped related-section rules provide a 12px title/row gap and 8px label/control gap, with shrinkable label sizing for narrow screens. No shared cross-link markup, targets, commands, strings or authorization/admission code changes.
+
+**Updated image pending:** these thirteen images predate this final CSS correction. Root will rerun the existing journey on the integrated candidate and replace the detail evidence. The patch is source-complete but has not been visually accepted before that render. This report is a worker critique, not user approval or a golden-baseline designation.

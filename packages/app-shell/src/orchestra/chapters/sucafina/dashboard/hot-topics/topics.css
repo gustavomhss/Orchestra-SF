@@ -120,7 +120,7 @@
   inline-size: var(--sf-topics-filter);
   min-inline-size: 0;
 }
-.sf-topics :is(.sf-topics-filter select, .sf-topics-form input, .sf-topics-form select, .sf-topics-form textarea) {
+.sf-topics :is(.sf-topics-filter select, .sf-topics-form input, .sf-topics-form select, .sf-topics-form textarea, .sf-topics-related select) {
   inline-size: 100%;
   min-inline-size: 0;
   max-inline-size: 100%;
@@ -133,7 +133,7 @@
   font: var(--orchestra-font-size-md)/1.6 var(--mx-sans);
   box-sizing: border-box;
 }
-.sf-topics :is(.sf-topics-filter select, .sf-topics-form select) {
+.sf-topics :is(.sf-topics-filter select, .sf-topics-form select, .sf-topics-related select) {
   color-scheme: inherit;
 }
 .sf-topics .sf-topics-filter select {
@@ -334,6 +334,25 @@
 .sf-topics .sf-topics-related > a,
 .sf-topics .sf-topics-related > button {
   justify-self: start;
+}
+.sf-topics .sf-topics-related [data-sf-executive-record-links] {
+  display: grid;
+  gap: var(--sf-topics-md);
+  min-inline-size: 0;
+  margin-block-start: 0;
+}
+.sf-topics .sf-topics-related [data-sf-executive-record-links] > div {
+  gap: var(--sf-topics-md);
+  min-inline-size: 0;
+}
+.sf-topics .sf-topics-related [data-sf-executive-record-links] label {
+  display: grid;
+  flex: 1;
+  gap: var(--sf-topics-sm);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  color: var(--orchestra-body);
+  font-size: var(--orchestra-font-size-sm);
 }
 .sf-topics .sf-topics-source {
   min-inline-size: 0;
