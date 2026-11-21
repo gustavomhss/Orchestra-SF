@@ -146,6 +146,10 @@ The same six journeys are therefore split into the three group-owned specs above
 
 This split is for accessible evidence and failure diagnosis. It is not a passing rerun and does not remove a failing assertion.
 
+## Existing-record review identity
+
+The Ops6 CAP13 review-top capture also showed the create label New risk above an existing record's original/current comparison. The shared CAP13/CAP15 save review used the primary create label unconditionally. Its presentation now uses the existing Edit label when the admitted draft has an entity, and preserves the area-specific primary label for creation. Record identity, controller and save binding are unchanged. Each corresponding English journey checks the review operation label before saving. This observed presentation defect is recorded separately from the still-unknown cause of the Ops6 workflow failure.
+
 ## User guide notes for integration
 
 Service: select year/month, inspect SLA/history and ticket categories, edit the required section, then review. Categories/applications are under their disclosure. Monthly replacement is prepared and reviewed before sending.
