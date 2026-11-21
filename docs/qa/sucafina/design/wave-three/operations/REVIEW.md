@@ -50,9 +50,9 @@ The integration owner will run the existing scoped Actions gates and the group j
 
 ### Authored real-installation journeys
 
-The operations spec contains two production journeys. The first covers all five areas in dark/light desktop, lower-page ticket/application/campaign/incident/owner panels, grouped forms and review cancellation, then performs five real reviewed commands with fresh navigation/readback: CAP11 SLA, CAP12 campaign, CAP13 risk, CAP15 relationship and CAP16 sub-item. It records write counts and browser diagnostics without request payloads or credentials.
+The operations spec now contains four production journeys. Three independent English installations cover CAP11, CAP12 and CAP13/CAP15/CAP16 respectively. Together they cover all five areas in dark/light desktop, lower-page ticket/application/campaign/incident/owner panels, grouped forms and review cancellation, then perform five real reviewed commands with updated same-view projection and fresh navigation/readback: CAP11 SLA, CAP12 campaign, CAP13 risk, CAP15 relationship and CAP16 sub-item. Each journey records its own write count and browser diagnostics without request payloads or credentials. A failure in service no longer blocks security or the collection/performance journey.
 
-The second reuses the genuine scoped operator cookie in a BR context, captures all five desktop/390 px overviews, opens each focused editor and review, checks reflow and every review action in the viewport, and verifies revision retains the draft without sending a command. The root helper owns installation/authentication and capture bounds. These are authored journeys; passing execution is not yet claimed.
+The fourth reuses the genuine scoped operator cookie in a BR context, captures all five desktop/390 px overviews, opens each focused editor and review, checks reflow and every review action in the viewport, and verifies revision retains the draft without sending a command. The root helper owns installation/authentication and capture bounds. These are authored journeys; passing execution is not yet claimed.
 
 ### Pending evidence
 
@@ -93,6 +93,16 @@ Additional scoped corrections from the real BR captures:
 - All three long BR wrapped editors explicitly assert nonzero bounded client height, content overflow and actual movement inside the native page scroller.
 
 This commit awaits the next integration execution. No additional successful English write or final visual approval is claimed yet.
+
+## Diagnosed editor teardown and independent journeys
+
+Runs [44941155893](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44941155893) and [44942005547](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44942005547) each completed with the BR journey passing and the English journey failing after CAP11 Save. Therefore the ordering change in 2530476 alone did **not** fix the issue.
+
+The bounded, redacted diagnostic in job 136961044738 identified the concrete failure: `TypeError: Cannot read properties of null (reading 'action')` in a reactive consumer computation. The temporary stack logger has been removed. The CAP11 editor subtree now captures its admitted editor identity with a keyed Show; its review captures the active draft snapshot separately. Review snapshot construction receives that editor explicitly, and editor-only page reads use the page captured while that subtree mounted. Equivalent CAP12 code receives the same cleanup fix. Closing the global editor can no longer make those existing reactive props dereference a null editor. Submit handlers still read current owner, admission and pending state at execution.
+
+The English spec is split into three isolated installations to expose failures independently. Its expectations remain strict: the new value must appear in the same mounted view before fresh navigation, the source must return it again, the exact number of commands must match, and console/page errors must be absent. Additional screenshots record already exercised category/heatmap/import/deletion states; they do not add commands.
+
+Run 44941155893 also verified all three long BR editors have bounded native scrolling, localized review labels in CAP13/CAP15 and paired quarter/status form order in CAP16. Run 44942005547 includes the narrow CAP12 KPI label-height correction. Final approval still waits for successful independent English writes.
 
 ## User guide notes for integration
 

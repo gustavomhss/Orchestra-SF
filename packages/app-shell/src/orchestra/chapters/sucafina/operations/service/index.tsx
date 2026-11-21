@@ -396,13 +396,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       }
     }).catch((error) => {
       if (request.signal.aborted) return
-      const stack = error instanceof Error ? error.stack?.replace(
-        /https?:\/\/[^\s)]+/g, (url) => "[consumer]" + (/:[0-9]+:[0-9]+$/.exec(url)?.[0] ?? ""),
-      ).replace(/[a-f0-9]{64}/gi, "[redacted]")
-        .replace(/\b(?:Bearer|Basic)\s+[A-Za-z0-9._~+/-]+=*/gi, "[credential]")
-        .replace(/\b(code|token|password|secret|authorization)\s*[:=]\s*("[^"]*"|'[^']*'|[^\s&,]+)/gi, "$1=[redacted]")
-        .slice(0, 2400) : undefined
-      console.error("Sucafina CAP11 read failure", error instanceof Error ? error.name : "unknown", stack ?? "")
+      console.error("Sucafina CAP11 read failure", error instanceof Error ? error.name : "unknown")
       setState("page", undefined)
       setState("state", "unavailable")
     }).finally(() => { pendingRequests.delete(request) })
@@ -614,9 +608,9 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       </Show>
     </label>
   )
-  const ticketFields = (prefix = "") => (
+  const ticketFields = (page: SfServicePage, prefix = "") => (
     <div class="sf-ops-ticket-fields">
-      <For each={serviceCategories(state.page!)}>{(category) => (
+      <For each={serviceCategories(page)}>{(category) => (
         <section class="sf-ops-ticket-category" aria-label={category}>
           <h3>{category}</h3>
           <For each={SERVICE_TICKET_TYPES}>{(kind) => (
@@ -636,8 +630,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
   const reviewState = () => state.operationState === "conflict" ? "conflict" :
     state.operationState === "unknown" ? "outcome-unknown" :
     state.operationState === "failed" ? "invalid" : state.state
-  const reviewSnapshot = (values: DraftValues, original: boolean, version: SfVersion = state.editor!.version): SfReviewSnapshot => {
-    const editor = state.editor!
+  const reviewSnapshot = (editor: Editor, values: DraftValues, original: boolean, version: SfVersion = editor.version): SfReviewSnapshot => {
     if (original && editor.identity.kind === "new")
       return { kind: "not-provided", reason: message(commonKey("empty")) }
     return original
@@ -873,124 +866,130 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
             <p role="alert">{state.errorText ?? t(commonKey("failed"))}</p>
           </Show>
 
-          <Show when={state.editor && activeDraft()}>
-            <section class="sf-ops-editor" data-sf-editor aria-labelledby="sf-cap11-editor-title" aria-busy={state.submitting}
-              onKeyDown={(event) => {
-                if (event.key === "Escape" && !state.editor?.review && !state.submitting) {
-                  event.stopPropagation()
-                  closeEditor()
-                }
-              }}>
-              <header class="sf-ops-editor-head"><p class="sf-ops-caption">{state.page!.selection.year} · {state.page!.selection.month}</p>
-                <h2 id="sf-cap11-editor-title">{t(heading())}</h2>
-                <p class="sf-ops-caption">{t(sourceKey(state.editor!.review ? "design.reviewHint" : "design.editHint"))}</p>
-              </header>
-              <Show when={!state.editor!.review} fallback={
-                <SfChangeReview
-                  operation={{
-                    ref: state.editor!.operationRef,
-                    label: message(sourceKey("action." + state.editor!.action)),
-                    scope: { kind: "data", text: serviceRecordId(state.page!.selection.year, state.page!.selection.month) },
-                  }}
-                  base={reviewSnapshot(activeDraft()!.base ?? {}, true)}
-                  current={reviewSnapshot(
-                     activeDraft()!.conflict?.current ?? activeDraft()!.base ?? {}, true,
-                     activeDraft()!.conflict?.currentVersion ?? state.editor!.version,
-                   )}
-                  proposed={reviewSnapshot(currentFields(), false)}
-                  effects={[{
-                    id: state.editor!.action,
-                    domain: "dashboard", title: { kind: "message", message: message(sourceKey("action." + state.editor!.action)) },
-                    state: "proposed", details: reviewFields(state.editor!.action, currentFields(), serviceFieldLabel),
-                  }]}
-                  coverage={{
-                    state: "complete", summary: message(commonKey("currentSource")),
-                    reasons: [], knownCount: null, expectedCount: null,
-                  }}
-                  blockingReasons={!isValid(state.editor!.action, currentFields(), state.page!) ?
-                    [message(commonKey("fieldErrorSummary"))] : []}
-                  confirmation={{
-                    kind: "admitted",
-                    labelKey: sourceKey("action." + state.editor!.action),
-                    purpose: state.editor!.action === "import-month" ? "import" : "save",
-                    binding: {
-                      kind: "catalog-command",
-                      operationId: SOURCE_OPERATION_IDS[state.editor!.action],
-                      version: { kind: "record", expectedVersion: state.editor!.version },
-                      confirmation: state.editor!.action === "import-month" ?
-                        "producer-confirmed-field" : "presentation-only",
-                    },
-                  }}
-                  state={reviewState()}
-                  onConfirm={() => { void submitReviewed() }}
-                  onRevise={() => { setEditorReview(false); draft?.setPhase("dirty") }}
-                  onCancel={() => setEditorReview(false)}
-                   onReconcile={() => setState("refresh", (value) => value + 1)}
-                />
-              }>
-                <form onSubmit={(event) => { event.preventDefault(); showReview() }}>
-                  <Show when={state.editor!.action === "save-tickets"}>
-                    {ticketFields()}
-                  </Show>
-                  <Show when={state.editor!.action === "save-sla"}>
-                    <div class="sf-ops-grid">
-                      <For each={SERVICE_SLA_FIELDS}>{(name) => sourceDataField(name)}</For>
-                    </div>
-                  </Show>
-                  <Show when={state.editor!.action === "save-heatmap"}>
-                    <label class="sf-ops-field">{t(sourceKey("field.item.label"))}
-                      <select aria-label={t(sourceKey("field.item.label"))} value={currentFields().item ?? ""}
-                        onChange={(event) => edit("item", event.currentTarget.value)}>
-                        <For each={serviceItems(state.page!)}>{(item) => <option value={item}>{item}</option>}</For>
-                      </select>
-                    </label>
-                    <div class="sf-ops-grid">
-                      <For each={SERVICE_HEAT_FIELDS}>{(name) => sourceDataField(name)}</For>
-                      {sourceDataField("comments", "textarea")}
-                    </div>
-                  </Show>
-                  <Show when={state.editor!.action === "save-categories" || state.editor!.action === "save-items"}>
-                    <p class="sf-ops-caption">{t(sourceKey("design.namesHint"))}</p>
-                    {sourceDataField("names", "textarea")}
-                  </Show>
-                  <Show when={state.editor!.action === "import-month"}>
-                    <section>
-                      <h3>{t(sourceKey("section.tickets"))}</h3>
-                      {ticketFields("ticket.")}
-                    </section>
-                    <section>
-                      <h3>{t(sourceKey("section.sla"))}</h3>
-                      <div class="sf-ops-grid">
-                        <For each={SERVICE_SLA_FIELDS}>{(name) =>
-                          sourceDataField("sla." + name)}</For>
-                      </div>
-                    </section>
-                    <section>
-                      <h3>{t(sourceKey("section.heatmap"))}</h3>
-                      <For each={serviceItems(state.page!)}>{(item) => <fieldset class="sf-ops-import-item">
-                        <legend>{item}</legend>
-                        <div class="sf-ops-grid sf-ops-grid-three">
-                          <For each={[...SERVICE_HEAT_FIELDS, "comments"]}>{(name) =>
-                            sourceDataField("heatmap." + item + "." + name,
-                              name === "comments" ? "textarea" : "number", t(sourceKey("design.field." + name)))}</For>
+          <Show when={state.editor && activeDraft() ? state.editor : null} keyed>
+            {(editor) => {
+              const editorPage = state.page
+              if (!editorPage) return null
+              return (
+                <section class="sf-ops-editor" data-sf-editor aria-labelledby="sf-cap11-editor-title" aria-busy={state.submitting}
+                  onKeyDown={(event) => {
+                    if (event.key === "Escape" && !editor.review && !state.submitting) {
+                      event.stopPropagation()
+                      closeEditor()
+                    }
+                  }}>
+                  <header class="sf-ops-editor-head"><p class="sf-ops-caption">{editorPage.selection.year} · {editorPage.selection.month}</p>
+                    <h2 id="sf-cap11-editor-title">{t(heading())}</h2>
+                    <p class="sf-ops-caption">{t(sourceKey(editor.review ? "design.reviewHint" : "design.editHint"))}</p>
+                  </header>
+                  <Show when={!editor.review} fallback={
+                    <Show when={activeDraft()} keyed>{(snapshot) => <SfChangeReview
+                      operation={{
+                        ref: editor.operationRef,
+                        label: message(sourceKey("action." + editor.action)),
+                        scope: { kind: "data", text: serviceRecordId(editorPage.selection.year, editorPage.selection.month) },
+                      }}
+                      base={reviewSnapshot(editor, snapshot.base ?? {}, true)}
+                      current={reviewSnapshot(editor,
+                         snapshot.conflict?.current ?? snapshot.base ?? {}, true,
+                         snapshot.conflict?.currentVersion ?? editor.version,
+                       )}
+                      proposed={reviewSnapshot(editor, snapshot.value, false)}
+                      effects={[{
+                        id: editor.action,
+                        domain: "dashboard", title: { kind: "message", message: message(sourceKey("action." + editor.action)) },
+                        state: "proposed", details: reviewFields(editor.action, snapshot.value, serviceFieldLabel),
+                      }]}
+                      coverage={{
+                        state: "complete", summary: message(commonKey("currentSource")),
+                        reasons: [], knownCount: null, expectedCount: null,
+                      }}
+                      blockingReasons={!isValid(editor.action, snapshot.value, editorPage) ?
+                        [message(commonKey("fieldErrorSummary"))] : []}
+                      confirmation={{
+                        kind: "admitted",
+                        labelKey: sourceKey("action." + editor.action),
+                        purpose: editor.action === "import-month" ? "import" : "save",
+                        binding: {
+                          kind: "catalog-command",
+                          operationId: SOURCE_OPERATION_IDS[editor.action],
+                          version: { kind: "record", expectedVersion: editor.version },
+                          confirmation: editor.action === "import-month" ?
+                            "producer-confirmed-field" : "presentation-only",
+                        },
+                      }}
+                      state={reviewState()}
+                      onConfirm={() => { void submitReviewed() }}
+                      onRevise={() => { setEditorReview(false); draft?.setPhase("dirty") }}
+                      onCancel={() => setEditorReview(false)}
+                       onReconcile={() => setState("refresh", (value) => value + 1)}
+                    />}</Show>
+                  }>
+                    <form onSubmit={(event) => { event.preventDefault(); showReview() }}>
+                      <Show when={editor.action === "save-tickets"}>
+                        {ticketFields(editorPage)}
+                      </Show>
+                      <Show when={editor.action === "save-sla"}>
+                        <div class="sf-ops-grid">
+                          <For each={SERVICE_SLA_FIELDS}>{(name) => sourceDataField(name)}</For>
                         </div>
-                      </fieldset>}</For>
-                    </section>
-                    <p>{t(commonKey("reviewImport"))}</p>
+                      </Show>
+                      <Show when={editor.action === "save-heatmap"}>
+                        <label class="sf-ops-field">{t(sourceKey("field.item.label"))}
+                          <select aria-label={t(sourceKey("field.item.label"))} value={currentFields().item ?? ""}
+                            onChange={(event) => edit("item", event.currentTarget.value)}>
+                            <For each={serviceItems(editorPage)}>{(item) => <option value={item}>{item}</option>}</For>
+                          </select>
+                        </label>
+                        <div class="sf-ops-grid">
+                          <For each={SERVICE_HEAT_FIELDS}>{(name) => sourceDataField(name)}</For>
+                          {sourceDataField("comments", "textarea")}
+                        </div>
+                      </Show>
+                      <Show when={editor.action === "save-categories" || editor.action === "save-items"}>
+                        <p class="sf-ops-caption">{t(sourceKey("design.namesHint"))}</p>
+                        {sourceDataField("names", "textarea")}
+                      </Show>
+                      <Show when={editor.action === "import-month"}>
+                        <section>
+                          <h3>{t(sourceKey("section.tickets"))}</h3>
+                          {ticketFields(editorPage, "ticket.")}
+                        </section>
+                        <section>
+                          <h3>{t(sourceKey("section.sla"))}</h3>
+                          <div class="sf-ops-grid">
+                            <For each={SERVICE_SLA_FIELDS}>{(name) =>
+                              sourceDataField("sla." + name)}</For>
+                          </div>
+                        </section>
+                        <section>
+                          <h3>{t(sourceKey("section.heatmap"))}</h3>
+                          <For each={serviceItems(editorPage)}>{(item) => <fieldset class="sf-ops-import-item">
+                            <legend>{item}</legend>
+                            <div class="sf-ops-grid sf-ops-grid-three">
+                              <For each={[...SERVICE_HEAT_FIELDS, "comments"]}>{(name) =>
+                                sourceDataField("heatmap." + item + "." + name,
+                                  name === "comments" ? "textarea" : "number", t(sourceKey("design.field." + name)))}</For>
+                            </div>
+                          </fieldset>}</For>
+                        </section>
+                        <p>{t(commonKey("reviewImport"))}</p>
+                      </Show>
+                      <div class="sf-ops-actions">
+                        <button class="mx-btn primary" type="submit" disabled={state.submitting || !isValid(editor.action, currentFields(), editorPage)}>
+                          {t(commonKey("review"))}
+                        </button>
+                        <button type="button" onClick={closeEditor}>
+                          {t(commonKey("close"))}
+                        </button>
+                        <button type="button" disabled={state.submitting || state.operationState === "unknown"}
+                          onClick={discardCurrent}>{t(commonKey("discard"))}</button>
+                      </div>
+                    </form>
                   </Show>
-                  <div class="sf-ops-actions">
-                    <button class="mx-btn primary" type="submit" disabled={state.submitting || !isValid(state.editor!.action, currentFields(), state.page!)}>
-                      {t(commonKey("review"))}
-                    </button>
-                    <button type="button" onClick={closeEditor}>
-                      {t(commonKey("close"))}
-                    </button>
-                    <button type="button" disabled={state.submitting || state.operationState === "unknown"}
-                      onClick={discardCurrent}>{t(commonKey("discard"))}</button>
-                  </div>
-                </form>
-              </Show>
-            </section>
+                </section>
+              )
+            }}
           </Show>
         </Show>
       </section>
