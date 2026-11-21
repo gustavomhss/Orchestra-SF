@@ -38,6 +38,7 @@ function runCommand(label: string, executable: string, args: readonly string[], 
       cwd,
       // No approval carried in from a runner environment may relax the guard invocation.
       env: { GUARDRAIL_APPROVED: "" },
+      extendEnv: true,
       stdin: "ignore",
       stdout: "pipe",
       stderr: "pipe",
