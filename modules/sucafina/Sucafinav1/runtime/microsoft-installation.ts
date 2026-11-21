@@ -34,11 +34,11 @@ export async function prepareMicrosoftInstallation(
   })
   return {
     loaded: { config, directory, keys }, transport,
-    createIdentity(secrets: CorporateLocalSecrets) {
+    createIdentity(secrets: CorporateLocalSecrets, nativeWeb = false) {
       const identity = createMicrosoftIdentity({
         origin: config.origin, mount: config.mount, tenantId: config.tenantId, clientId: config.clientId,
         client, secrets, key: keys.session, sessionSeconds: config.sessionSeconds, loginSeconds: config.loginSeconds,
-        now: overrides.now,
+        now: overrides.now, nativeWeb,
       })
       if (config.teams === "direct" && !identity.teamDirectory) throw new Error("Microsoft Teams session reader unavailable")
       return identity
