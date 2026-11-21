@@ -10,246 +10,271 @@ import { createRequire } from "node:module"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { setTimeout as delay } from "node:timers/promises"
+import { pathToFileURL } from "node:url"
 
-const directory = await mkdtemp(join(tmpdir(), "sf-purchase-invoke-"))
-const plugin = "sf-purchase-gateway"
-const tool = "sfcompras__sf_comparar_compra"
-const upstreamTool = "sf_comparar_compra"
-const refs = { A: "PR-2026-0901", B: "PR-2026-0902" }
-const actors = Object.keys(refs)
-const installed = process.argv.includes("--installed-fixture") ? JSON.parse(readFileSync(0, "utf8")) : undefined
-const profileTokens = installed?.tokens ?? Object.fromEntries(actors.map((actor) => [actor, randomBytes(32).toString("hex")]))
-const secrets = [...Object.values(profileTokens), ...(installed ? [installed.control] : [])]
-const excludedToken = randomBytes(32).toString("hex")
-secrets.push(excludedToken)
-let excludedRequests = 0
-let upstreamRequests = 0
-const calls = []
-const gateways = []
-let upstream
+export async function runSfGatewayProof(spec, installed) {
+  const { pack, serverId, requestKey, refs } = spec
+  const manifest = JSON.parse(await readFile(new URL("gateway/openclaw.plugin.json", pack), "utf8"))
+  const configExample = JSON.parse(await readFile(new URL("openclaw-mcp.example.json", pack), "utf8"))
+  const plugin = manifest.id
+  const [tool] = manifest.contracts.tools
+  const [upstreamTool] = configExample.toolFilter.include
+  const endpoint = new URL(configExample.url).pathname
+  const tokenEnv = /^Bearer \$\{([A-Z][A-Z0-9_]*)\}$/.exec(configExample.headers.Authorization)?.[1]
+  assert.ok(tokenEnv, "Expected an environment reference for the profile bearer")
+  assert.equal(tool, serverId + "__" + upstreamTool)
+  const directory = await mkdtemp(join(tmpdir(), "sf-gateway-proof-"))
+  const actors = Object.keys(refs)
+  const profileTokens = installed?.tokens ?? Object.fromEntries(actors.map((actor) => [actor, randomBytes(32).toString("hex")]))
+  const secrets = [...Object.values(profileTokens), ...(installed ? [installed.control] : [])]
+  const excludedToken = randomBytes(32).toString("hex")
+  secrets.push(excludedToken)
+  let excludedRequests = 0
+  let upstreamRequests = 0
+  const calls = []
+  const gateways = []
+  let upstream
 
-function run(file, args) {
-  const result = spawnSync(file, args, { cwd: directory, stdio: "inherit", timeout: 600_000 })
-  if (result.error) throw result.error
-  assert.equal(result.status, 0, `${file} failed`)
-}
+  function run(file, args) {
+    const result = spawnSync(file, args, { cwd: directory, stdio: "inherit", timeout: 600_000 })
+    if (result.error) throw result.error
+    assert.equal(result.status, 0, `${file} failed`)
+  }
 
-async function listen(server) {
-  const listening = once(server, "listening")
-  server.listen(0, "127.0.0.1")
-  await listening
-  return server.address().port
-}
+  async function listen(server) {
+    const listening = once(server, "listening")
+    server.listen(0, "127.0.0.1")
+    await listening
+    return server.address().port
+  }
 
-async function close(server) {
-  server.closeAllConnections?.()
-  await new Promise((resolve) => server.close(resolve))
-}
+  async function close(server) {
+    server.closeAllConnections?.()
+    await new Promise((resolve) => server.close(resolve))
+  }
 
-try {
-  // Pin the Gateway and SDK used in the VM proof. Keep all installation and state inside the fixture.
-  run("npm", ["install", "--no-fund", "--no-audit", "--ignore-scripts", "openclaw@2026.8.1", "@modelcontextprotocol/sdk@1.30.0"])
-  const module = createRequire(join(directory, "package.json"))
-  const { Server } = module("@modelcontextprotocol/sdk/server/index.js")
-  const { StreamableHTTPServerTransport } = module("@modelcontextprotocol/sdk/server/streamableHttp.js")
-  const { CallToolRequestSchema } = module("@modelcontextprotocol/sdk/types.js")
-  const packagePath = join(directory, plugin)
-  await cp(new URL("../../../modules/sucafina/Sucafinav1/product/ai/packs/procurement/gateway", import.meta.url),
-    packagePath, { recursive: true })
+  try {
+    // Pin the Gateway and SDK used in the VM proof. Keep all installation and state inside the fixture.
+    run("npm", ["install", "--no-fund", "--no-audit", "--ignore-scripts", "openclaw@2026.8.1", "@modelcontextprotocol/sdk@1.30.0"])
+    const module = createRequire(join(directory, "package.json"))
+    const { Server } = module("@modelcontextprotocol/sdk/server/index.js")
+    const { StreamableHTTPServerTransport } = module("@modelcontextprotocol/sdk/server/streamableHttp.js")
+    const schemas = module("@modelcontextprotocol/sdk/types.js")
+    const packagePath = join(directory, plugin)
+    await cp(new URL("gateway/", pack),
+      packagePath, { recursive: true })
 
-  run("openssl", ["req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "1",
-    "-subj", "/CN=127.0.0.1", "-addext", "subjectAltName=IP:127.0.0.1", "-keyout", "key.pem", "-out", "ca.pem"])
-  upstream = httpsServer({
-    key: await readFile(join(directory, "key.pem")),
-    cert: await readFile(join(directory, "ca.pem")),
-  }, async (request, response) => {
-    upstreamRequests++
-    if (request.headers.authorization === `Bearer ${excludedToken}`) excludedRequests++
-    const actor = actors.find((key) => request.headers.authorization === `Bearer ${profileTokens[key]}`)
-    if (!actor || request.url !== "/sucafina/api/claw/mcp" || request.method !== "POST") {
-      response.writeHead(403).end()
-      return
-    }
-    if (installed) {
-      const body = Buffer.concat(await Array.fromAsync(request))
-      const rpc = JSON.parse(body.toString())
-      if (rpc.method === "tools/call") calls.push([actor, rpc.params.arguments.requestRef])
-      const forwarded = await fetch(installed.url + request.url, {
-        method: "POST", body, signal: AbortSignal.timeout(30_000),
-        headers: { authorization: request.headers.authorization, accept: request.headers.accept,
-          "content-type": request.headers["content-type"] },
+    run("openssl", ["req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "1",
+      "-subj", "/CN=127.0.0.1", "-addext", "subjectAltName=IP:127.0.0.1", "-keyout", "key.pem", "-out", "ca.pem"])
+    upstream = httpsServer({
+      key: await readFile(join(directory, "key.pem")),
+      cert: await readFile(join(directory, "ca.pem")),
+    }, async (request, response) => {
+      upstreamRequests++
+      if (request.headers.authorization === `Bearer ${excludedToken}`) excludedRequests++
+      const actor = actors.find((key) => request.headers.authorization === `Bearer ${profileTokens[key]}`)
+      if (!actor || request.url !== endpoint || request.method !== "POST") {
+        response.writeHead(403).end()
+        return
+      }
+      if (installed) {
+        const body = Buffer.concat(await Array.fromAsync(request))
+        const rpc = JSON.parse(body.toString())
+        if (rpc.method === "tools/call") calls.push([actor, rpc.params.arguments[requestKey]])
+        const forwarded = await fetch(installed.url + request.url, {
+          method: "POST", body, signal: AbortSignal.timeout(30_000),
+          headers: { authorization: request.headers.authorization, accept: request.headers.accept,
+            "content-type": request.headers["content-type"] },
+        })
+        response.writeHead(forwarded.status, { "content-type": forwarded.headers.get("content-type") ?? "text/plain" })
+          .end(Buffer.from(await forwarded.arrayBuffer()))
+        return
+      }
+      const server = new Server({ name: "sf-purchase-fixture", version: "1" }, { capabilities: { tools: {} } })
+      const transport = new StreamableHTTPServerTransport({ enableJsonResponse: true })
+      spec.register(server, schemas, actor, (ref) => calls.push([actor, ref]))
+      try {
+        await server.connect(transport)
+        await transport.handleRequest(request, response)
+      } finally {
+        await server.close()
+      }
+    })
+    const upstreamUrl = `https://127.0.0.1:${await listen(upstream)}${endpoint}`
+
+    let invokeA
+    let initial
+    const profiles = [...actors.map((actor) => ({ actor, excluded: false })), { actor: "B", excluded: true }]
+    for (const { actor, excluded } of profiles) {
+      const reservation = netServer()
+      const port = await listen(reservation)
+      await close(reservation)
+      const profile = join(directory, excluded ? "B-excluded" : actor)
+      const workspace = join(profile, "workspace")
+      const config = join(profile, "openclaw.json")
+      await mkdir(workspace, { recursive: true })
+      const token = randomBytes(32).toString("hex")
+      secrets.push(token)
+      const profileConfig = {
+        gateway: { mode: "local", bind: "loopback", port, auth: { mode: "token" } },
+        agents: {
+          defaults: { workspace, heartbeat: { every: "0m" } },
+          entries: { maestro: { name: "Maestro", tools: { profile: "minimal", alsoAllow: [tool] } } },
+          ownership: "explicit",
+        },
+        mcp: { servers: { [serverId]: {
+          enabled: true, ...configExample, url: upstreamUrl,
+          ...(excluded ? { toolFilter: { ...configExample.toolFilter, exclude: ["*"] } } : {}),
+        } } },
+        tools: { deny: ["exec", "browser", "message"] },
+        plugins: { allow: [plugin], load: { paths: [packagePath] }, entries: { [plugin]: { enabled: true } } },
+        discovery: { mdns: { mode: "off" } },
+      }
+      await writeFile(config, JSON.stringify(profileConfig))
+
+      const gateway = spawn(process.execPath, [join(directory, "node_modules/openclaw/openclaw.mjs"), "gateway", "run"], {
+        cwd: directory,
+        env: {
+          PATH: process.env.PATH,
+          HOME: profile,
+          OPENCLAW_STATE_DIR: profile,
+          OPENCLAW_CONFIG_PATH: config,
+          OPENCLAW_GATEWAY_TOKEN: token,
+          [tokenEnv]: excluded ? excludedToken : profileTokens[actor],
+          NODE_EXTRA_CA_CERTS: join(directory, "ca.pem"),
+        },
+        stdio: ["ignore", "pipe", "pipe"],
       })
-      response.writeHead(forwarded.status, { "content-type": forwarded.headers.get("content-type") ?? "text/plain" })
-        .end(Buffer.from(await forwarded.arrayBuffer()))
-      return
+      const stopped = once(gateway, "close")
+      gateway.output = ""
+      for (const stream of [gateway.stdout, gateway.stderr])
+        stream.on("data", (chunk) => { gateway.output = (gateway.output + chunk).slice(-8_000) })
+      gateways.push({ gateway, stopped })
+
+      const url = `http://127.0.0.1:${port}`
+      let ready = false
+      for (let attempt = 0; attempt < 120 && gateway.exitCode === null; attempt++) {
+        ready = await fetch(`${url}/health`, { signal: AbortSignal.timeout(1000) })
+          .then((response) => response.ok, () => false)
+        if (ready) break
+        await delay(500)
+      }
+      assert.ok(ready, `Gateway ${actor} failed to start`)
+
+      const invoke = (ref, auth = token) => fetch(`${url}/tools/invoke`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${auth}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ tool, agentId: "maestro", args: { [requestKey]: ref } }),
+        signal: AbortSignal.timeout(65_000),
+      })
+      const unauthorized = await invoke(refs[actor], "invalid-fixture-token")
+      assert.equal(unauthorized.status, 401)
+      await unauthorized.body?.cancel()
+      if (excluded) {
+        const response = await invoke(refs[actor])
+        assert.equal(response.status, 200)
+        const { result } = await response.json()
+        assert.equal(result.isError, true)
+        assert.deepEqual(JSON.parse(result.content[0].text), { status: "unavailable" })
+        continue
+      }
+      for (const target of actors) {
+        const response = await invoke(refs[target])
+        assert.equal(response.status, 200, `Gateway ${actor} / ${target}: ${await response.clone().text()}`)
+        const body = await response.json()
+        assert.equal(body.ok, true)
+        const result = body.result
+        const payload = JSON.parse(result.content[0].text)
+        assert.equal(result.isError, actor !== target)
+        if (actor === target) {
+          spec.assertOwn(payload, actor)
+          if (installed) {
+            assert.equal(payload.comparison.requestVersion, 1)
+            assert.equal(payload.comparison.selection.proposalRef, null)
+            assert.equal(payload.comparison.ranking[0], `${actor}1`)
+            if (actor === "A") initial = payload
+          }
+        } else {
+          assert.deepEqual(result, { isError: true, content: [{ type: "text", text: '{"status":"denied"}' }] })
+        }
+      }
+      if (installed && actor === "A") invokeA = invoke
+      if (actor === "B") {
+        profileConfig.mcp.servers[serverId].enabled = false
+        const nextConfig = config + ".next"
+        await writeFile(nextConfig, JSON.stringify(profileConfig))
+        await rename(nextConfig, config)
+        const applied = `config hot reload applied (mcp.servers.${serverId}.enabled)`
+        for (let attempt = 0; attempt < 80 && !gateway.output.includes(applied); attempt++) await delay(250)
+        assert.ok(gateway.output.includes(applied), "Gateway failed to apply the MCP disable without restarting")
+
+        const before = upstreamRequests
+        const response = await invoke(refs[actor])
+        assert.equal(response.status, 200)
+        const { result } = await response.json()
+        assert.equal(result.isError, true)
+        assert.deepEqual(JSON.parse(result.content[0].text), { status: "unavailable" })
+        assert.equal(upstreamRequests, before)
+      }
     }
-    const server = new Server({ name: "sf-purchase-fixture", version: "1" }, { capabilities: { tools: {} } })
-    const transport = new StreamableHTTPServerTransport({ enableJsonResponse: true })
-    server.setRequestHandler(CallToolRequestSchema, async ({ params }) => {
-      assert.equal(params.name, upstreamTool)
+    assert.equal(excludedRequests, 0)
+    const expectedCalls = actors.flatMap((actor) => actors.map((target) => [actor, refs[target]]))
+    if (installed) {
+      assert.ok(initial && invokeA)
+      const quoteId = initial.comparison.ranking[0]
+      const confirmation = await fetch(installed.url + "/confirm", {
+        method: "POST", headers: { authorization: `Bearer ${installed.control}`, "content-type": "application/json" },
+        body: JSON.stringify({ reviewUrl: initial.reviewUrl, version: initial.comparison.requestVersion, quoteId }),
+        signal: AbortSignal.timeout(30_000),
+      })
+      assert.equal(confirmation.status, 204, await confirmation.text())
+      const reread = await invokeA(refs.A)
+      assert.equal(reread.status, 200)
+      const { result } = await reread.json()
+      assert.notEqual(result.isError, true)
+      const payload = JSON.parse(result.content[0].text)
+      assert.equal(payload.status, "ok")
+      assert.equal(payload.comparison.requestVersion, 2)
+      assert.equal(payload.comparison.selection.proposalRef, quoteId)
+      expectedCalls.push(["A", refs.A])
+      console.log(`SF synthetic purchase ${refs.A}: A/B 4/4, confirmed ${quoteId}, version 1 -> 2, one quotation selection in history.`)
+    }
+    assert.deepEqual(calls, expectedCalls)
+    console.log("Gateway /tools/invoke: 4/4 MCP cases passed; invalid credentials, excluded tool and live disable rejected.")
+  } catch (error) {
+    const diagnostics = gateways.map(({ gateway }) => gateway.output).join("\n")
+    if (diagnostics) console.error(secrets.reduce((text, secret) => text.replaceAll(secret, "[redacted]"), diagnostics))
+    throw error
+  } finally {
+    for (const { gateway } of gateways) gateway.kill("SIGTERM")
+    await Promise.all(gateways.map(({ stopped }) => stopped))
+    if (upstream) await close(upstream)
+    await rm(directory, { recursive: true, force: true })
+  }
+}
+
+const procurement = {
+  pack: new URL("../../../modules/sucafina/Sucafinav1/product/ai/packs/procurement/", import.meta.url),
+  serverId: "sfcompras",
+  requestKey: "requestRef",
+  refs: { A: "PR-2026-0901", B: "PR-2026-0902" },
+  register(server, schemas, actor, observe) {
+    server.setRequestHandler(schemas.CallToolRequestSchema, async ({ params }) => {
+      assert.equal(params.name, "sf_comparar_compra")
       const ref = params.arguments?.requestRef
-      calls.push([actor, ref])
-      const own = refs[actor] === ref
+      observe(ref)
+      const own = procurement.refs[actor] === ref
       const payload = own ? { status: "ok", comparison: { proposals: ["P1", "P2", "P3"] } } : { status: "denied" }
       return { content: [{ type: "text", text: JSON.stringify(payload) }], isError: !own }
     })
-    try {
-      await server.connect(transport)
-      await transport.handleRequest(request, response)
-    } finally {
-      await server.close()
-    }
-  })
-  const upstreamUrl = `https://127.0.0.1:${await listen(upstream)}/sucafina/api/claw/mcp`
-
-  let invokeA
-  let initial
-  const profiles = [...actors.map((actor) => ({ actor, excluded: false })), { actor: "B", excluded: true }]
-  for (const { actor, excluded } of profiles) {
-    const reservation = netServer()
-    const port = await listen(reservation)
-    await close(reservation)
-    const profile = join(directory, excluded ? "B-excluded" : actor)
-    const workspace = join(profile, "workspace")
-    const config = join(profile, "openclaw.json")
-    await mkdir(workspace, { recursive: true })
-    const token = randomBytes(32).toString("hex")
-    secrets.push(token)
-    const profileConfig = {
-      gateway: { mode: "local", bind: "loopback", port, auth: { mode: "token" } },
-      agents: {
-        defaults: { workspace, heartbeat: { every: "0m" } },
-        entries: { maestro: { name: "Maestro", tools: { profile: "minimal", alsoAllow: [tool] } } },
-        ownership: "explicit",
-      },
-      mcp: { servers: { sfcompras: {
-        enabled: true, url: upstreamUrl, transport: "streamable-http",
-        headers: { Authorization: "Bearer ${SF_CLAW_PURCHASE_TOKEN}" },
-        toolFilter: { include: [upstreamTool], ...(excluded ? { exclude: ["*"] } : {}) },
-      } } },
-      tools: { deny: ["exec", "browser", "message"] },
-      plugins: { allow: [plugin], load: { paths: [packagePath] }, entries: { [plugin]: { enabled: true } } },
-      discovery: { mdns: { mode: "off" } },
-    }
-    await writeFile(config, JSON.stringify(profileConfig))
-
-    const gateway = spawn(process.execPath, [join(directory, "node_modules/openclaw/openclaw.mjs"), "gateway", "run"], {
-      cwd: directory,
-      env: {
-        PATH: process.env.PATH,
-        HOME: profile,
-        OPENCLAW_STATE_DIR: profile,
-        OPENCLAW_CONFIG_PATH: config,
-        OPENCLAW_GATEWAY_TOKEN: token,
-        SF_CLAW_PURCHASE_TOKEN: excluded ? excludedToken : profileTokens[actor],
-        NODE_EXTRA_CA_CERTS: join(directory, "ca.pem"),
-      },
-      stdio: ["ignore", "pipe", "pipe"],
-    })
-    const stopped = once(gateway, "close")
-    gateway.output = ""
-    for (const stream of [gateway.stdout, gateway.stderr])
-      stream.on("data", (chunk) => { gateway.output = (gateway.output + chunk).slice(-8_000) })
-    gateways.push({ gateway, stopped })
-
-    const url = `http://127.0.0.1:${port}`
-    let ready = false
-    for (let attempt = 0; attempt < 120 && gateway.exitCode === null; attempt++) {
-      ready = await fetch(`${url}/health`, { signal: AbortSignal.timeout(1000) })
-        .then((response) => response.ok, () => false)
-      if (ready) break
-      await delay(500)
-    }
-    assert.ok(ready, `Gateway ${actor} failed to start`)
-
-    const invoke = (ref, auth = token) => fetch(`${url}/tools/invoke`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${auth}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ tool, agentId: "maestro", args: { requestRef: ref } }),
-      signal: AbortSignal.timeout(65_000),
-    })
-    const unauthorized = await invoke(refs[actor], "invalid-fixture-token")
-    assert.equal(unauthorized.status, 401)
-    await unauthorized.body?.cancel()
-    if (excluded) {
-      const response = await invoke(refs[actor])
-      assert.equal(response.status, 200)
-      const { result } = await response.json()
-      assert.equal(result.isError, true)
-      assert.deepEqual(JSON.parse(result.content[0].text), { status: "unavailable" })
-      continue
-    }
-    for (const target of actors) {
-      const response = await invoke(refs[target])
-      assert.equal(response.status, 200, `Gateway ${actor} / ${target}: ${await response.clone().text()}`)
-      const body = await response.json()
-      assert.equal(body.ok, true)
-      const result = body.result
-      const payload = JSON.parse(result.content[0].text)
-      assert.equal(result.isError, actor !== target)
-      if (actor === target) {
-        assert.equal(payload.status, "ok")
-        assert.equal(payload.comparison.proposals.length, 3)
-        if (installed) {
-          assert.equal(payload.comparison.requestVersion, 1)
-          assert.equal(payload.comparison.selection.proposalRef, null)
-          assert.equal(payload.comparison.ranking[0], `${actor}1`)
-          if (actor === "A") initial = payload
-        }
-      } else {
-        assert.deepEqual(payload, { status: "denied" })
-      }
-    }
-    if (installed && actor === "A") invokeA = invoke
-    if (actor === "B") {
-      profileConfig.mcp.servers.sfcompras.enabled = false
-      const nextConfig = config + ".next"
-      await writeFile(nextConfig, JSON.stringify(profileConfig))
-      await rename(nextConfig, config)
-      const applied = "config hot reload applied (mcp.servers.sfcompras.enabled)"
-      for (let attempt = 0; attempt < 80 && !gateway.output.includes(applied); attempt++) await delay(250)
-      assert.ok(gateway.output.includes(applied), "Gateway failed to apply the MCP disable without restarting")
-
-      const before = upstreamRequests
-      const response = await invoke(refs[actor])
-      assert.equal(response.status, 200)
-      const { result } = await response.json()
-      assert.equal(result.isError, true)
-      assert.deepEqual(JSON.parse(result.content[0].text), { status: "unavailable" })
-      assert.equal(upstreamRequests, before)
-    }
-  }
-  assert.equal(excludedRequests, 0)
-  const expectedCalls = actors.flatMap((actor) => actors.map((target) => [actor, refs[target]]))
-  if (installed) {
-    assert.ok(initial && invokeA)
-    const quoteId = initial.comparison.ranking[0]
-    const confirmation = await fetch(installed.url + "/confirm", {
-      method: "POST", headers: { authorization: `Bearer ${installed.control}`, "content-type": "application/json" },
-      body: JSON.stringify({ reviewUrl: initial.reviewUrl, version: initial.comparison.requestVersion, quoteId }),
-      signal: AbortSignal.timeout(30_000),
-    })
-    assert.equal(confirmation.status, 204, await confirmation.text())
-    const reread = await invokeA(refs.A)
-    assert.equal(reread.status, 200)
-    const { result } = await reread.json()
-    assert.notEqual(result.isError, true)
-    const payload = JSON.parse(result.content[0].text)
+  },
+  assertOwn(payload) {
     assert.equal(payload.status, "ok")
-    assert.equal(payload.comparison.requestVersion, 2)
-    assert.equal(payload.comparison.selection.proposalRef, quoteId)
-    expectedCalls.push(["A", refs.A])
-    console.log(`SF synthetic purchase ${refs.A}: A/B 4/4, confirmed ${quoteId}, version 1 -> 2, one quotation selection in history.`)
-  }
-  assert.deepEqual(calls, expectedCalls)
-  console.log("Gateway /tools/invoke: 4/4 MCP cases passed; invalid credentials, excluded tool and live disable rejected.")
-} catch (error) {
-  const diagnostics = gateways.map(({ gateway }) => gateway.output).join("\n")
-  if (diagnostics) console.error(secrets.reduce((text, secret) => text.replaceAll(secret, "[redacted]"), diagnostics))
-  throw error
-} finally {
-  for (const { gateway } of gateways) gateway.kill("SIGTERM")
-  await Promise.all(gateways.map(({ stopped }) => stopped))
-  if (upstream) await close(upstream)
-  await rm(directory, { recursive: true, force: true })
+    assert.equal(payload.comparison.proposals.length, 3)
+  },
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const installed = process.argv.includes("--installed-fixture") ? JSON.parse(readFileSync(0, "utf8")) : undefined
+  await runSfGatewayProof(procurement, installed)
 }
