@@ -167,6 +167,13 @@ for (const { item, name, omni, omniFiles, treeSitter } of prepared) {
     const metafile = result.metafile
     if (!metafile || !Object.keys(metafile.inputs).length || !Object.keys(metafile.outputs).length)
       throw new Error("CLI_COMPILE_METAFILE_MISSING_OR_EMPTY")
+    const executable = path.resolve(dir, `dist/${name}/bin/${binary}${item.os === "win32" ? ".exe" : ""}`)
+    if (!(await lstat(executable)).isFile()) throw new Error("CLI_COMPILE_BINARY_NOT_REGULAR")
+    const binaryBytes = Buffer.from(await Bun.file(executable).arrayBuffer())
+    const textEvidence = Bun.version === "1.4.1" && item.target === "linux-x64-baseline"
+      ? await import("./compile-text-evidence")
+      : undefined
+    const proveText = textEvidence?.linuxBunTextWitness(binaryBytes)
     const inputs = await Promise.all(Object.keys(metafile.inputs).filter(onDisk).map(async (key) => {
       const canonical = await realpath(path.resolve(dir, key)).catch((cause: unknown) => {
         throw new Error(`CLI_COMPILER_INPUT_NOT_OBSERVED: ${key}`, { cause })
@@ -175,26 +182,31 @@ for (const { item, name, omni, omniFiles, treeSitter } of prepared) {
       if (!input) throw new Error(`CLI_COMPILER_INPUT_NOT_OBSERVED: ${key}`)
       if (JSON.stringify(await sourceFile(canonical)) !== JSON.stringify({ path: input.path, bytes: input.bytes, sha256: input.sha256, gitBlob: input.gitBlob }))
         throw new Error(`CLI_COMPILER_INPUT_CHANGED_DURING_BUILD: ${key}`)
-      if (input.analysisBytes !== metafile.inputs[key].bytes) throw new Error(`CLI_COMPILER_EFFECTIVE_INPUT_CHANGED: ${key}`)
       if (input.backing) {
         if (!input.packageFile || JSON.stringify(await sourceFile(input.backing.path)) !== JSON.stringify(input.backing) ||
             JSON.stringify(await sourceFile(input.packageFile.path)) !== JSON.stringify(input.packageFile))
           throw new Error(`CLI_SOLID_BACKING_CHANGED_DURING_BUILD: ${key}`)
       }
-      return { key, ...input, compilerBytes: metafile.inputs[key].bytes }
+      const compilerBytes = metafile.inputs[key].bytes
+      if (input.analysisBytes === compilerBytes) return { key, ...input, compilerBytes }
+      const analysisEdges = analysisMetafile && textImportEdges(analysisMetafile.inputs, input.analysisKey)
+      const compilerEdges = textImportEdges(metafile.inputs, key)
+      if (!proveText || input.transform !== "bun-native" || input.analysisBytes !== input.bytes || compilerBytes !== 0 ||
+          !analysisEdges || !compilerEdges || JSON.stringify(analysisEdges) !== JSON.stringify(compilerEdges))
+        throw new Error(`CLI_COMPILER_EFFECTIVE_INPUT_CHANGED: ${key}`)
+      const embedded = proveText(canonical, Buffer.from(await Bun.file(canonical).arrayBuffer()), input.sha256)
+      return { key, ...input, compilerBytes, effectiveInput: { rule: "bun-1.4.1-preencoded-text", ...embedded } }
     }))
     if (inputs.length !== before.length || new Set(inputs.map((input) => input.path)).size !== observed.size ||
         before.some((input) => !inputs.some((compiled) => compiled.path === input.path)))
       throw new Error("CLI_COMPILER_ANALYSIS_INPUT_SET_DIFFERENT")
     if (JSON.stringify(await solidToolchain()) !== JSON.stringify(toolchain)) throw new Error("CLI_SOLID_TOOLCHAIN_CHANGED_DURING_BUILD")
-    const executable = path.resolve(dir, `dist/${name}/bin/${binary}${item.os === "win32" ? ".exe" : ""}`)
-    if (!(await lstat(executable)).isFile()) throw new Error("CLI_COMPILE_BINARY_NOT_REGULAR")
     // Sibling of the payload root: distribution-payload admits only package.json
     // and bin/**. Versioned sibling survives the next native buildVersions turn.
     await Bun.write(path.join(dir, "dist", `compile-evidence-${item.target}-${Script.version}.json`), JSON.stringify({
       schema: "orchestra-compile-evidence-v2", bun: process.versions.bun, cwd: await realpath(dir),
       version: Script.version, target: item.target, entrypoints: ["./src/omni-entry.ts"],
-      binary: { path: executable, sha256: new Bun.CryptoHasher("sha256").update(await Bun.file(executable).arrayBuffer()).digest("hex") },
+      binary: { path: executable, sha256: new Bun.CryptoHasher("sha256").update(binaryBytes).digest("hex") },
       inputs, metafile: withoutVirtual(metafile), analysisMetafile: analysisMetafile && withoutVirtual(analysisMetafile),
       transformLedger: { toolchain, scope: "Raw resolved files and audited backing files captured before/after original-plugin compile; JSX effective data is compiler byte-count evidence, not a claimed raw-file hash" },
     }, null, 2))
@@ -238,6 +250,17 @@ type CompilerInput = Awaited<ReturnType<typeof sourceFile>> & {
   packageFile?: Awaited<ReturnType<typeof sourceFile>>
   packageVersion?: string
   loader?: "js"
+}
+
+function textImportEdges(
+  inputs: Record<string, { imports: readonly { path: string; kind?: string; original?: string; external?: boolean; with?: unknown }[] }>,
+  key: string,
+) {
+  const edges = Object.entries(inputs).flatMap(([source, input]) =>
+    input.imports.filter((edge) => edge.path === key).map((edge) => ({ source, edge })))
+  if (!edges.length || edges.some(({ edge }) => edge.external ||
+      typeof edge.with !== "object" || edge.with === null || !("type" in edge.with) || edge.with.type !== "text")) return undefined
+  return edges.map(({ source, edge }) => JSON.stringify([source, edge.kind, edge.original])).sort()
 }
 
 async function sourceFile(file: string) {
