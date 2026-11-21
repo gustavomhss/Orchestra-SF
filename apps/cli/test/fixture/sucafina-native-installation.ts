@@ -45,7 +45,7 @@ export function withNativeInstallation(input: {
       const access = await prepareOperatorAccess(config, true)
       const loaded = await loadLocalConfiguration(config)
       const operator = loaded.config.localOperator
-      if (!operator) throw new Error("Fixture enrollment did not configure a local operator")
+      if (!operator?.name) throw new Error("Fixture enrollment did not persist its local operator identity")
       const actorId = `macos:${operator.installationId}:${userInfo().uid}`
       const shop = path.join(root, "business-local")
       const store = await openLocalStore(shop)
@@ -94,7 +94,8 @@ export function withNativeInstallation(input: {
     const cookie = yield* Effect.promise(async () => {
       const response = await fetch(seed.signIn, { redirect: "manual", signal: AbortSignal.timeout(10_000) })
       const cookie = response.headers.getSetCookie()[0]?.split(";")[0]
-      if (response.status !== 303 || !cookie) throw new Error("Native installation enrollment failed")
+      if (response.status !== 303 || !cookie)
+        throw new Error(`Native installation enrollment failed (HTTP ${response.status}, session cookie issued: ${Boolean(cookie)})`)
       return cookie
     })
     return {

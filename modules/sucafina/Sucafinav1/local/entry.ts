@@ -51,7 +51,9 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
   if (context.origin !== loaded.config.origin) throw new Error("Installation origin mismatch")
   await requireLocalIsolation(loaded.directory, environment)
   const config = loaded.config
-  const operator = config.authentication === "local-operator" && config.localOperator ? { ...config.localOperator, name: userInfo().username } : undefined
+  const operator = config.authentication === "local-operator" && config.localOperator
+    ? { ...config.localOperator, name: config.localOperator.name ?? userInfo().username }
+    : undefined
   const client = !operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined
   const driver = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
   const services = { jobs: undefined as Awaited<ReturnType<typeof createLocalJobs>> | undefined }
