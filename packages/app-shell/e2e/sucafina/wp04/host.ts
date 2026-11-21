@@ -79,13 +79,35 @@ const configurations = [
 ] as const
 const people = configurations.map((entry) => ({ id: "macos:" + installationId + ":" + entry.uid, name: entry.name }))
 const active: { ready: boolean; handle?: (request: Request) => Promise<Response> } = { ready: false }
+const contextRequests = new WeakMap<Request, { order: number; start: number }>()
+let contextRequestOrder = 0
+function contextCheckpoint(request: Request, phase: string, status?: number) {
+  const context = contextRequests.get(request)
+  if (context) console.error("SF_FILES_CONTEXT", JSON.stringify({
+    order: context.order, phase, elapsedMs: Math.round(performance.now() - context.start),
+    ...(status === undefined ? {} : { status }),
+  }))
+}
 const server = Bun.serve({
   hostname: "127.0.0.1",
   port: 4174,
   fetch: async (request) => {
     if (new URL(request.url).pathname === "/__wp04_ready")
       return new Response(active.ready ? "ready" : "starting", { status: active.ready ? 200 : 503 })
-    return await active.handle?.(request) ?? new Response("Starting", { status: 503 })
+    if (approvalDirectory || request.method !== "GET" || new URL(request.url).pathname !== mount + "/api/ui/context")
+      return await active.handle?.(request) ?? new Response("Starting", { status: 503 })
+    contextRequests.set(request, { order: ++contextRequestOrder, start: performance.now() })
+    const abort = () => contextCheckpoint(request, "abort")
+    request.signal.addEventListener("abort", abort, { once: true })
+    contextCheckpoint(request, "enter")
+    try {
+      const response = await active.handle?.(request) ?? new Response("Starting", { status: 503 })
+      contextCheckpoint(request, "exit", response.status)
+      return response
+    } finally {
+      request.signal.removeEventListener("abort", abort)
+      contextRequests.delete(request)
+    }
   },
 })
 const origin = "http://127.0.0.1:3000"
@@ -208,7 +230,9 @@ active.handle = async (request) => {
   if (url.pathname !== mount && !url.pathname.startsWith(mount + "/")) return new Response("Not found", { status: 404 })
   const enrollment = url.pathname === mount + "/auth/local" && url.searchParams.getAll("code").length === 1
     ? url.searchParams.get("code") : undefined
+  contextCheckpoint(request, "session-enter")
   const account = enrollment ? enrollmentOwners.get(enrollment) : await sessionAccount(request)
+  contextCheckpoint(request, "session-exit")
   if (account) {
     await account.identity.prepare(request)
     const authentication = await account.identity.handle(request)
@@ -219,6 +243,7 @@ active.handle = async (request) => {
   }
   if (request.method === "POST" && (request.headers.get("origin") !== origin || request.headers.get("sec-fetch-site") === "cross-site"))
     return new Response("Access denied", { status: 403 })
+  contextCheckpoint(request, "application-enter")
   return await installation.application(request) ?? new Response("Not found", { status: 404 })
 }
 const enrolled: Record<string, { baseURL: string; principal: string; enrollments: Record<string, string> }> = {}
