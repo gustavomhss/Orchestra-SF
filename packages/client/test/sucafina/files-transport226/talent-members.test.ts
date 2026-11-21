@@ -103,3 +103,52 @@ test("document actions retain their distinct mounted request bodies", async () =
     else Reflect.deleteProperty(globalThis, "window")
   }
 })
+
+test("a web Files download cannot adopt an access revision established during its request", async () => {
+  const descriptor = { installationId: "installation", projectId: "project", hostId: "host",
+    publicOrigin: "https://installation.example", mount: "/sucafina", authMode: "microsoft" as const,
+    contractRevision: "sf-native-ui/1" as const }
+  const expectedContext = { installationId: descriptor.installationId, projectId: descriptor.projectId, hostId: descriptor.hostId }
+  const stamp = { ...expectedContext, principalRef: "owner", policyVersion: "policy", accessRevision: "initial" }
+  const downloadStarted = Promise.withResolvers<void>()
+  const downloadRelease = Promise.withResolvers<void>()
+  const operation = { signal: new AbortController().signal }
+  const contextRead = { signal: new AbortController().signal }
+  const previous = Object.getOwnPropertyDescriptor(globalThis, "window")
+  Object.defineProperty(globalThis, "window", { configurable: true, value: { location: { origin: descriptor.publicOrigin } } })
+  try {
+    const transport = createSfTransport({ binding: descriptor, generation: 1, currentGeneration: () => 1,
+      operations: SfNativeOperationBindings,
+      fetch: async (input, init) => {
+        const url = new URL(String(input))
+        if (url.searchParams.has("asset")) {
+          expect(init?.signal).toBe(operation.signal)
+          downloadStarted.resolve()
+          await downloadRelease.promise
+          return new Response(new Uint8Array([1, 2, 3]), { headers: { "content-type": "application/octet-stream" } })
+        }
+        expect(url.pathname).toBe("/sucafina/api/ui/context")
+        expect([operation.signal, contextRead.signal]).toContain(init?.signal)
+        return Response.json({ status: "ok", value: {
+          stamp, contractRevision: "sf-native-ui/1", authMode: "microsoft", destinations: [],
+          availability: [{ family: "files", resource: "evidence", state: "ready",
+            operations: [{ operationId: "files.asset.download", state: "ready", reason: null, operational: true }] }],
+        } })
+      },
+    })
+    const client = createSfContextClient(transport)
+    expect((await client["ctx.context"](expectedContext, contextRead)).kind).toBe("response")
+    const download = createSfFilesClient(transport)["files.asset.download"]({
+      surface: "procurement", assetId: "asset", expires: 100, signature: "a".repeat(64),
+    }, operation)
+    await Promise.race([downloadStarted.promise, download.then(() => { throw new Error("The genuine byte route did not start") })])
+    stamp.accessRevision = "changed"
+    expect((await client["ctx.context"](expectedContext, contextRead)).kind).toBe("response")
+    downloadRelease.resolve()
+    expect((await download).kind).toBe("transport-error")
+  } finally {
+    downloadRelease.resolve()
+    if (previous) Object.defineProperty(globalThis, "window", previous)
+    else Reflect.deleteProperty(globalThis, "window")
+  }
+})
