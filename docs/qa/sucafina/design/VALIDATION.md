@@ -87,4 +87,6 @@ Earlier authentic native Web build/discovery/context smoke passed in [4488105198
 
 ## Acceptance
 
-This version is offered for the user's visual review. Passing checks, real screenshots and bounded peer findings do not fabricate user approval, golden-image acceptance, merge or deployment.
+**APPROVED BY USER — 2026-11-21 (America/Sao_Paulo).** After the final screenshots and branch were presented, the user explicitly replied “aprovado”. The approval covers the second composition of UI29, UI33 and CAP01 in product `245e15bf10b5c5287fa9338aa98d0adb28aeda76`, presented through evidence commit `032eb5b8b93c3e75dbad3ebf19cd64f8a40f73a6`.
+
+This is actual user visual acceptance, distinct from the preceding technical checks. The remaining 67 surfaces keep their inventory-only status. This documentation update does not change application code, test baselines, merge state or deployment.

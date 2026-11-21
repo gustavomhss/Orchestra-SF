@@ -62,7 +62,7 @@
       "generatedFilesUnchanged": 7
     },
     "visualReview": "Root and three workers reviewed actual captured states; see VALIDATION.md",
-    "userAcceptance": "PENDING_SECOND_COMPOSITION_REVIEW",
+    "userAcceptance": "APPROVED_BY_USER",
     "currentCandidateInventory": "70 surfaces and75 component entrypoints verified in current candidate tree; route-registry blob unchanged",
     "currentCandidateRouteInventory": "70 surfaces,165 route patterns,15 chapters; original route-registry blob unchanged",
     "localeScope": "en-US desktop dark/light, short/narrow; pt-BR desktop dark including decision editor/review; native date format not qualified"
@@ -88,9 +88,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
+      "status": "SECOND_COMPOSITION_APPROVED_BY_USER",
       "designWork": {
-        "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
+        "status": "SECOND_COMPOSITION_APPROVED_BY_USER",
         "workerCommit": "615b97f78f9ff6e279f899e834024f98e88ddded",
         "productCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76"
       },
@@ -1084,9 +1084,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
+      "status": "SECOND_COMPOSITION_APPROVED_BY_USER",
       "designWork": {
-        "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
+        "status": "SECOND_COMPOSITION_APPROVED_BY_USER",
         "workerCommit": "27746dbefb71e3257e387fab4800f729e2dbc162",
         "productCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76"
       },
@@ -1199,9 +1199,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
+      "status": "SECOND_COMPOSITION_APPROVED_BY_USER",
       "designWork": {
-        "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
+        "status": "SECOND_COMPOSITION_APPROVED_BY_USER",
         "workerCommit": "7d86706bdf0185a8e9b48fb3d9b1c16fa0969655",
         "productCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76"
       },
@@ -2237,7 +2237,7 @@
     }
   ],
   "firstWaveDelivery": {
-    "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
+    "status": "SECOND_COMPOSITION_APPROVED_BY_USER",
     "appliedToProduct": true,
     "summary": "WAVE-ONE.md",
     "workers": [
@@ -2274,7 +2274,22 @@
       "Forecast band and independent Today columns with compact metadata",
       "Focused decision editing/review, draft-preserving Back/Resume and completed Portuguese labels",
       "Executive label/value rows isolated from shared four-column CSS, compact navigation and readable source review"
-    ]
+    ],
+    "acceptance": {
+      "status": "APPROVED_BY_USER",
+      "recordedAt": "2026-11-21T14:46:56Z",
+      "date": "2026-11-21",
+      "timezone": "America/Sao_Paulo",
+      "userStatement": "aprovado",
+      "scope": [
+        "UI29",
+        "UI33",
+        "CAP01"
+      ],
+      "productCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76",
+      "evidenceCommit": "032eb5b8b93c3e75dbad3ebf19cd64f8a40f73a6",
+      "basis": "Explicit user approval after the final screenshots and branch were presented"
+    }
   },
   "historicalSource": {
     "branch": "sf-join-four",

@@ -52,4 +52,4 @@ The narrow footer is scrolled through the real DOM using centered alignment and 
 
 [VALIDATION.md](VALIDATION.md) and the [gallery](evidence/README.md) identify the exact tested product and actual screenshots. Historical patches under `wave-one/` belong to the rejected first delivery and remain historical provenance.
 
-No shared frame, native shell, global kit/palette, source route registry, API or legacy white/green interface redesign is included. The other 67 surfaces are inventoried only. Tests and peer review do not imply user acceptance, golden-baseline approval, merge or deployment.
+No shared frame, native shell, global kit/palette, source route registry, API or legacy white/green interface redesign is included. The other 67 surfaces are inventoried only. The user explicitly approved the presented second composition on 2026-11-21 with “aprovado”; [VALIDATION.md](VALIDATION.md) pins its product and evidence commits. This records visual acceptance without modifying application code, golden baselines, merge state or deployment.

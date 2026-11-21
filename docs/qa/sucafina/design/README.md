@@ -1,6 +1,6 @@
 # Sucafina nativa — inventário e retrabalho das primeiras três telas
 
-## Segunda versão para revisão
+## Primeiras três telas aprovadas
 
 A primeira entrega foi rejeitada pelo usuário. Esta versão refaz a composição de **Hoje (UI29), Casos/Decisões (UI33) e Visão executiva (CAP01)**. Os testes anteriores não foram tratados como aprovação visual. A [galeria](evidence/README.md) apresenta a aplicação real; [VALIDATION.md](VALIDATION.md) registra resultados e limites.
 
@@ -24,7 +24,7 @@ As regras e os materiais nativos do Orchestra continuam sendo a referência. O n
 
 As imagens usam dados isolados de teste. Incluem desktop em claro/escuro, português no tema escuro, janela de notebook com 800px de altura, Casos/Executivo a 320 CSS px e Hoje a 390 CSS px. O formulário de decisão e sua revisão também foram capturados em português. Os limites da matriz estão no relatório; reflow não é apresentado como zoom real.
 
-A aprovação visual pertence ao usuário. As outras **67 superfícies** continuam inventariadas para as próximas rodadas.
+**Aprovação visual recebida em 21/11/2026:** o usuário respondeu “aprovado” após ver as capturas finais de Hoje (UI29), Decisões (UI33) e Visão executiva (CAP01). O produto aprovado é `245e15bf10b5c5287fa9338aa98d0adb28aeda76`, apresentado com a evidência `032eb5b8b93c3e75dbad3ebf19cd64f8a40f73a6`. As outras **67 superfícies** continuam inventariadas para as próximas rodadas.
 
 ## Exact inventory
 

@@ -1,6 +1,6 @@
 # Galeria — retrabalho das três telas nativas da Sucafina
 
-Segunda versão após a rejeição da primeira entrega. Estas são **capturas reais do Chromium**, executando a aplicação nativa com uma instalação autêntica e dados isolados de teste. Os JPEGs são os próprios arquivos emitidos pelo navegador, sem recorte, retoque ou reconstrução.
+**Segunda versão aprovada pelo usuário em 21/11/2026**, após a apresentação das imagens abaixo. A primeira entrega foi rejeitada e permanece no histórico. Estas são **capturas reais do Chromium**, executando a aplicação nativa com uma instalação autêntica e dados isolados de teste. Os JPEGs são os próprios arquivos emitidos pelo navegador, sem recorte, retoque ou reconstrução.
 
 Produto: [`245e15bf10b5c5287fa9338aa98d0adb28aeda76`](https://github.com/gustavomhss/Orchestra-SF/commit/245e15bf10b5c5287fa9338aa98d0adb28aeda76) · branch [`sf-design-polish`](https://github.com/gustavomhss/Orchestra-SF/tree/sf-design-polish).
 
@@ -77,4 +77,4 @@ Os textos dos registros, critérios e valores de status pertencem aos dados de t
 
 As imagens estreitas demonstram reflow a 320/390 CSS px, não zoom real de 200%/400%. A imagem do rodapé estreito é rolada para tornar as ações visíveis. As demais 67 superfícies continuam apenas inventariadas.
 
-A primeira entrega permanece no histórico do Git. Esta galeria apresenta a nova versão para revisão; testes e revisão técnica não significam aprovação visual pelo usuário, merge ou deployment.
+A aprovação foi explícita: o usuário respondeu “aprovado” após ver a versão apresentada na evidência `032eb5b8b93c3e75dbad3ebf19cd64f8a40f73a6`. Ela cobre Hoje, Decisões e Visão executiva no produto identificado acima. O registro da aprovação mantém intactos o código testado e as capturas.

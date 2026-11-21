@@ -84,8 +84,23 @@
       }
     ],
     "peerFindings": "No blocking geometry in the observed final states; final Portuguese images inspected by the respective workers",
-    "userAcceptance": "PENDING_SECOND_COMPOSITION_REVIEW",
-    "previousDelivery": "REJECTED_BY_USER"
+    "userAcceptance": "APPROVED_BY_USER",
+    "previousDelivery": "REJECTED_BY_USER",
+    "acceptance": {
+      "status": "APPROVED_BY_USER",
+      "recordedAt": "2026-11-21T14:46:56Z",
+      "date": "2026-11-21",
+      "timezone": "America/Sao_Paulo",
+      "userStatement": "aprovado",
+      "scope": [
+        "UI29",
+        "UI33",
+        "CAP01"
+      ],
+      "productCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76",
+      "evidenceCommit": "032eb5b8b93c3e75dbad3ebf19cd64f8a40f73a6",
+      "basis": "Explicit user approval after the final screenshots and branch were presented"
+    }
   },
   "images": [
     {
@@ -516,6 +531,6 @@
     "Record titles, criteria and source status values are preserved fixture/source data, including English values",
     "No exhaustive denied/stale/error/recovery state or quantitative composite-contrast certification",
     "CAP03 shared-editor fix source-reviewed; no CAP03 browser journey",
-    "No user baseline approval, merge, deployment or production-data claim"
+    "No golden-image baseline update, merge, deployment or production-data claim"
   ]
 }
