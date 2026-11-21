@@ -243,7 +243,16 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     return captured
   }
   const recipientActions = recipientThread ? createRecipientThreadActions({ state: input.state, host: input.host, human: input.human, mutationFence: createCollaborationMutationFence(input.host), read: recipientThread, prepareReviewThreadFence, authorizeReviewRecipient: authority.reviewRecipientSources, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, answerWork: answerWork?.project, creationTarget: input.creationTarget, createId: input.createId, now: input.now }) : undefined
-  const answerEvidence = createThreadAnswerEvidence(threadReads, input.host)
+  const answerRead = threadReads.read
+  const answerState = input.state
+  const readAnswerState = answerState.read
+  const answerFence = hasSfDashboardSourceFence(replayPersistence) ? replayPersistence.dashboardSourceFence : undefined
+  const answerEvidence = createThreadAnswerEvidence(threadReads, input.host, {
+    read: answerRead,
+    installed: () => !!answerFence && replayCurrent() && hasSfDashboardSourceFence(replayPersistence) &&
+      replayPersistence.dashboardSourceFence === answerFence && input.state === answerState &&
+      answerState.read === readAnswerState && isInstalledSfStateRead(readAnswerState) && threadReads.read === answerRead,
+  })
   const threadHistory = input.threadHistoryWrites ? createThreadHistory({ host: input.host, state: input.state, replayCurrent, read: threadReads.read, readHistorical: threadReads.readHistorical, prepareReviewThreadFence, authorizeReviewRecipient: authority.reviewRecipientSources, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, authorizeSources: async (basis, context) => await authority.readHistoricalSources(basis.evidenceRefs, context) && await authority.readReviewThreadBasis(basis, context), human: input.human, fence: createCollaborationMutationFence(input.host), target: input.creationTarget, threadHistoryWrites: input.threadHistoryWrites }) : undefined
   const storageVersion = async (namespace: "threads" | "relations" | "confirmations", context: TrustedDomainContext): Promise<PortResult<number>> => {
     const request = input.host.requestFor(context)
@@ -284,7 +293,6 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     const basis = message ? threadMessageContext(thread, message) : undefined
     return !!message && !!basis?.reviewContext && basis.evidenceRefs.every((ref) => ref.installationId === context.binding.installationId && ref.projectId === context.binding.projectId) && answerReference(questionId, message) === answerRef && await input.host.revalidate(context)
   }
-  const readAnswerState = input.state.read
   const admittedAnswers = new WeakMap<object, () => boolean>()
   const observedAnswers = new WeakMap<TrustedDomainContext, {
     questionId: string; refId: string; projectionDigest: string; current: () => boolean
@@ -301,7 +309,8 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     const unsupported = () => admittedAnswers.has(proof) ? denied : undefined
     const proofCurrent = () => issued ? answerEvidence.issuedTo(issued, context)
       : observed?.questionId === questionId && observedAnswers.get(context) === observed && observed.current()
-    if (!proofCurrent() || !source || !isRegisteredAnswerSource(evidence, source) || !isInstalledSfStateRead(readAnswerState) || state.read !== readAnswerState ||
+    if (!proofCurrent()) return issued && answerEvidence.issuedForPreparation(issued) ? denied : unsupported()
+    if (!source || !isRegisteredAnswerSource(evidence, source) || !isInstalledSfStateRead(readAnswerState) || state.read !== readAnswerState ||
       !hasSfDashboardSourceFence(persistence)) return unsupported()
     const host = input.host
     const requestFor = host.requestFor

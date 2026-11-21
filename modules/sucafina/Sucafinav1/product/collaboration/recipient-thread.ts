@@ -18,6 +18,8 @@ export type RecipientThread = Pick<CollaborationThread, "id" | "kind" | "recipie
   continuity: "unchanged" | "historical"
 }
 
+export type ReviewAnswerObservation = { thread: CollaborationThread; current: () => boolean }
+
 /** Current refs are issued for the reader; original refs require an explicit historical source grant. */
 export function createRecipientThreadReader(input: {
   state: SfProductStatePort
@@ -30,9 +32,16 @@ export function createRecipientThreadReader(input: {
   authorizeReviewLeg?: (thread: CollaborationThread, basis: ThreadSourceContext, refs: readonly BusinessEvidenceRef[],
     context: TrustedDomainContext, historical: () => Promise<boolean>) => Promise<boolean | undefined>
 }) {
-  return async (id: string, context: TrustedDomainContext): Promise<PortResult<RecipientThread>> => {
+  return async (id: string, context: TrustedDomainContext, observeAnswer?: (latest: ReviewAnswerObservation) => void): Promise<PortResult<RecipientThread>> => {
     if (typeof id !== "string" || !id.trim()) return { status: "needs-input", reason: "invalid-thread-reference" }
     const request = input.host.requestFor(context)
+    const stateRead = input.state.read
+    const requestFor = input.host.requestFor
+    const revalidate = input.host.revalidate
+    const reissue = input.reissue
+    const refresh = input.refresh
+    const authorize = input.authorize
+    const binding = observeAnswer && digestSfValue([context.kind, context.binding])
     const currentAccess = async () => !!request && input.host.requestFor(context) === request && await input.host.revalidate(context) && input.host.requestFor(context) === request
     try {
       if (!request || !await currentAccess()) return { status: "denied", reason: "thread-access-unavailable" }
@@ -122,6 +131,18 @@ export function createRecipientThreadReader(input: {
       if (!(final ?? (await observeFinalHistory() && (!reviewBasis || await input.authorizeContext!(reviewBasis, context)))) ||
         !await currentAccess()) return { status: "denied", reason: "thread-access-unavailable" }
       if (digestSfValue(again.value.thread) !== digestSfValue(thread) || digestSfValue(finalScopes) !== digestSfValue(issued)) return { status: "stale", reason: "thread-content-changed" }
+      // Both independent C08 observations completed under the installed review
+      // reader. Only the private answer selector may observe the final raw row.
+      if (observeAnswer && initial === true && final === true && preserved) {
+        const current = () => !request.signal.aborted && input.host.requestFor === requestFor &&
+          input.host.revalidate === revalidate && requestFor.call(input.host, context) === request &&
+          input.state.read === stateRead && input.reissue === reissue && input.refresh === refresh &&
+          input.authorize === authorize && input.authorizeHistorical === authorizeHistorical &&
+          input.authorizeContext === authorizeContext && input.authorizeReviewLeg === authorizeReviewLeg &&
+          digestSfValue([context.kind, context.binding]) === binding
+        if (!current()) return { status: "denied", reason: "thread-access-unavailable" }
+        observeAnswer({ thread: again.value.thread, current })
+      }
       return { status: "ok", value: { id: thread.id, kind: thread.kind, ...(thread.recipientRef ? { recipientRef: thread.recipientRef } : {}), state: thread.state, messages: thread.messages, observed: { version: thread.observedVersion, period: thread.period }, current: { sourceRef, evidenceRefs: current }, ...(preserved ? { historical: { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: originals } } : {}), continuity: changed ? "historical" : "unchanged" } }
     } catch {
       const authorized = await currentAccess().catch(() => undefined)

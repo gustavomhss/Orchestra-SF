@@ -1,14 +1,14 @@
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import type { createRecipientThreadReader } from "./recipient-thread.ts"
+import type { createRecipientThreadReader, ReviewAnswerObservation } from "./recipient-thread.ts"
 import type { createThreadPort } from "./threads.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { CollaborationThread } from "./threads.ts"
 
 /** Internal adapter for consumers that require the thread shape and current actor-scoped evidence. */
 export function createRecipientAwareThreadReads(threads: Pick<ReturnType<typeof createThreadPort>, "read">, recipientThread?: ReturnType<typeof createRecipientThreadReader>) {
-  return { read: async (id: string, context: TrustedDomainContext) => {
+  return { read: async (id: string, context: TrustedDomainContext, observeAnswer?: (latest: ReviewAnswerObservation) => void) => {
     if (recipientThread) {
-      const projected = await recipientThread(id, context)
+      const projected = await recipientThread(id, context, observeAnswer)
       // A fallback cannot overrule denial or hide an inconclusive read. The
       // canonical reader remains available for unsupported source projections.
       if (projected.status === "denied" || projected.status === "stale" || projected.status === "unavailable" && projected.reason === "thread-read-unavailable") return projected

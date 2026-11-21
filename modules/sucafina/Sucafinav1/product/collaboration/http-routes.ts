@@ -60,7 +60,7 @@ export function createCollaborationHttpRoutes(host: Host) {
     ["confirmation-project", { keys: ["id"], read: "collaboration.confirmation.project", invoke: (p, c) => host.confirmation?.project(p.id as string, c) ?? unavailable() }],
     ["answer-prepare", { keys: ["questionId", "answerRef"], read: "collaboration.answer.prepare", invoke: (p, c) => prepareAnswer(p.questionId as string, p.answerRef as string, c) }],
     ["answer-prepare-message", { keys: ["questionId", "messageId", "incarnation", "version"], read: "collaboration.answer.prepare", validate: (p) => [p.questionId, p.messageId, p.incarnation].every((value) => typeof value === "string" && !!value.trim()) && Number.isSafeInteger(p.version) && (p.version as number) > 0, invoke: async (p, c) => {
-      const issued = await host.answerEvidence.issue(p.questionId as string, p.messageId as string, c)
+      const issued = await host.answerEvidence.issueForPreparation(p.questionId as string, p.messageId as string, c)
       if (issued.status !== "ok") return issued
       if (issued.value.target.recordId !== p.messageId || issued.value.target.incarnation !== p.incarnation || issued.value.target.version !== p.version) return { status: "stale", reason: "answer-selection-changed" }
       return prepareAnswer(p.questionId as string, issued.value.refId, c, issued.value)
