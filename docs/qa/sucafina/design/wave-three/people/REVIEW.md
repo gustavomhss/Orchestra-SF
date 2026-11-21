@@ -47,5 +47,13 @@ Visual and interaction evidence must come from the grouped native Actions run, u
 
 - Source review: complete for the five areas and their editor/controller seams.
 - GitHub persistence readback: performed with each implementation commit.
-- Group E2E: being added against the integration owner's shared wave-three helper.
+- Group E2E: two journeys in `design-wave-three-people.spec.ts`, importing the integration owner's real wave-three fixture and canonical seed labels. They exercise three browser-confirmed source writes (member, project and milestone), review/revise retention, cancellation without writes, source rereads, localized pages and workbook limitations.
 - Dark/light, narrow reflow, Brazilian Portuguese, review/cancel and command evidence: pending grouped Actions and screenshot critique.
+
+## Terminology and automation references
+
+The Portuguese action vocabulary was cross-checked against the maintained [Firefox preferences corpus](https://github.com/mozilla-l10n/firefox-l10n/blob/main/pt-BR/browser/browser/preferences/preferences.ftl) and [VS Code Git corpus](https://github.com/microsoft/vscode-loc/blob/main/i18n/vscode-language-pack-pt-BR/translations/extensions/vscode.git.i18n.json): editar, salvar, excluir, importar and descartar alterações. Headcount is retained as the established product term; CIO is the source acronym. Talent classifications and employment terms remain domain translations for native-speaker review, with their canonical English payloads untouched.
+
+The journey uses role/label locators, explicit DOM contracts and awaited assertions as recommended in the [official Playwright locator documentation](https://github.com/microsoft/playwright/blob/main/docs/src/locators.md). Screenshots and geometry checks run only through Actions. The 320px view measures reflow, not browser zoom.
+
+Creating an unassigned member exposed an existing presentation validation mismatch: the optional leader select visibly defaults to its empty option while the draft may omit the key. Validation now compares an omitted optional select value to its declared empty option; it does not manufacture a leader, value, version or permission.

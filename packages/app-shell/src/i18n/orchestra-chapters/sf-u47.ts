@@ -1,7 +1,7 @@
 /**
- * N14 / U47 leaf dictionary. Frozen CAP08 strings are bilingual; original
- * Talent Review renderer field/option labels intentionally retain English when
- * the source supplies no pinned pt-BR translation.
+ * N14 / U47 leaf dictionary. Existing English is frozen. Native Brazilian
+ * Portuguese labels translate the presentation; canonical source enums stay
+ * unchanged in the producer commands.
  */
 export const SF_U47_COPY = {
   "sf.cap08.title": "Talent Review",

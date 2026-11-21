@@ -1,7 +1,7 @@
 /**
  * N14 / U03 leaf dictionary. CAP06/CAP07 title and primary copy are the
- * frozen surface-manifest literals. Other labels below preserve the pinned
- * legacy renderer English verbatim (no speculative pt-BR translation).
+ * frozen surface-manifest literals. Existing English remains byte-for-byte;
+ * Brazilian Portuguese follows the native chapter terminology.
  * I00/125 imports the pair into the global orchestra chapter dictionary.
  */
 export const SF_U03_COPY = {

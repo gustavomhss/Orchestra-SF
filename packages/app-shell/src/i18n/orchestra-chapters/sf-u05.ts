@@ -1,5 +1,5 @@
-// U05/COPY-01. Inherited producer labels/options retain literal source English
-// in both locales when no frozen translation was supplied.
+// U05/COPY-01. Existing English is frozen. Source enum values are translated
+// for display only; producer payloads retain their canonical values.
 export const SF_U05_COPY = {
   "sf.cap09.title": "Portfolio Dashboard",
   "sf.cap09.primary": "Open projects",

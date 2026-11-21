@@ -87,7 +87,7 @@ export function SfProjectEditor(props: Readonly<{
                 </select>
               </label>
               <For each={editFields.slice(1, 4)}>{(field) => (
-                <label class="sf-u05-field" data-sf-field={field.id} classList={{ "sf-u05-field-wide": field.type === "textarea" }}>{t(field.label)}>
+                <label class="sf-u05-field" data-sf-field={field.id} classList={{ "sf-u05-field-wide": field.type === "textarea" }}>{t(field.label)}
                   {field.type === "textarea" ?
                     <textarea value={String(current()[field.id])} onInput={(event) => update(field.id, event.currentTarget.value as never)} /> :
                     <input value={String(current()[field.id])} onInput={(event) => update(field.id, event.currentTarget.value as never)} />}
