@@ -4,6 +4,7 @@ const pending = { html: null, loading: false, focus: null, closed: false, denied
 function notice(message) { if (pending.denied) return; const output = document.querySelector("dialog[open] [data-editor-status]") || document.getElementById("notice"); if (output) output.textContent = message }
 function revokeAccess(status, notify = true) {
   if (pending.denied) return
+  const reviewWasMounted = !!document.querySelector("[data-sf-review-workspace]")
   pending.denied = true
   pending.closed = true
   pending.generation++
@@ -31,6 +32,15 @@ function revokeAccess(status, notify = true) {
     retry.textContent = "Reload access"
     retry.addEventListener("click", () => location.reload())
     main.append(heading, message, retry)
+    if (reviewWasMounted) {
+      const review = document.createElement("section")
+      review.setAttribute("data-sf-review-workspace", "")
+      const status = document.createElement("p")
+      status.setAttribute("role", "status")
+      status.textContent = "O acesso mudou. Reabra uma revisão autorizada."
+      review.append(status)
+      main.append(review)
+    }
     document.body.replaceChildren(main)
     history.replaceState(null, "", location.href)
     heading.focus()

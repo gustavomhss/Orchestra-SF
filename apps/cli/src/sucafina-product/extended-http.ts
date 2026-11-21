@@ -273,7 +273,7 @@ export function createSfExtendedHttp(input: {
       const bootstrapHtml = data === undefined ? "" : `<script type="application/json" data-sf-review-bootstrap>${JSON.stringify(mode === "review" ? { ...(data as object), principalRef: call.binding.principalRef } : data).replace(/</g, "\\u003c")}</script>`
       const title = mode === "review" ? "Review and reports" : "Business intelligence"
       const accessRevision = call.binding.accessRevision
-      const shell = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "", "", accessRevision)
+      const shell = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "", "", undefined, accessRevision)
       const html = shell
         // A replacement string would interpret dollar sequences in the bundle
         // or bootstrap as substitutions of the surrounding document.
