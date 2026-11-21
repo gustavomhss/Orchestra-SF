@@ -33,6 +33,12 @@ export function createReviewAnswerSource(input: {
 }) {
   const contexts = createReviewThreadContext(input)
   const readContext = input.readContext
+  const resolved = new WeakMap<TrustedDomainContext, {
+    scopeKey: string
+    snapshot: ReviewThreadSnapshot
+    material: NonNullable<ReturnType<typeof answerMaterial>>
+    current: () => boolean
+  }>()
   const leases = new Map<string, { authorityScopeDigest: string; reviewDigest: string; observationDigest: string; fence: () => Promise<boolean>; current: () => boolean }>()
   const key = (scope: ConfirmationScope, basis: ReviewAnswerBasis, context: TrustedDomainContext) => digestSfValue({ scope, basis, authority: context.binding })
   const read = async (basis: ReviewAnswerBasis, context: TrustedDomainContext) => {
@@ -83,11 +89,29 @@ export function createReviewAnswerSource(input: {
   return {
     resolve: async (basis: ReviewAnswerBasis, context: TrustedDomainContext): Promise<PortResult<{ scope: ConfirmationScope }>> => {
       try {
+        resolved.delete(context)
         const selected = structuredClone(basis)
+        const host = input.host
+        const reviews = input.reviews
+        const readReview = reviews.read
+        const revalidate = host.revalidate
+        const requestFor = host.requestFor
+        const persistence = host.persistence
+        const atomic = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
+        const prepareAccess = input.prepareAccess
+        const request = readContext && atomic && context.kind === "ui" && requestFor.call(host, context)
+        const lease = context.lease
+        const current = () => !!request && !request.signal.aborted && context.lease === lease && input.host === host &&
+          host.requestFor === requestFor && host.revalidate === revalidate && requestFor.call(host, context) === request &&
+          input.reviews === reviews && reviews.read === readReview && host.persistence === persistence && !!atomic &&
+          hasSfDashboardSourceFence(persistence) && persistence.dashboardSourceFence === atomic &&
+          input.readContext === readContext && input.prepareAccess === prepareAccess
         const found = await read(selected, context)
         if (found.status !== "ok") return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
         const material = answerMaterial(found.value, selected)
-        return material ? { status: "ok", value: { scope: material.scope } } : { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
+        if (!material) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
+        if (current()) resolved.set(context, { scopeKey: key(material.scope, selected, context), snapshot: found.value, material, current })
+        return { status: "ok", value: { scope: structuredClone(material.scope) } }
       } catch { return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" } }
     },
     // Thread writes retain the whole authenticated C05 authority. They do not
@@ -176,25 +200,32 @@ export function createReviewAnswerSource(input: {
         const current = () => input.reviews === reviews && reviews.read === readReview && input.host === host && host.revalidate === revalidate && host.requestFor === requestFor && host.persistence === persistence && persistence.transactionAll === transactionAll && persistence.currentSnapshots === currentSnapshots && input.prepareAccess === prepareAccess && requestFor.call(host, context) === request && !request?.signal.aborted &&
           (!atomic || persistence.dashboardSourceFence === atomic && hasSfDashboardSourceFence(persistence))
         if (!request || !transactionAll || !currentSnapshots || typeof prepareAccess !== "function" || hasActiveSfSnapshot(persistence) || !current()) return unavailable
-        const found = await read(selected.basis, context)
-        if (!current() || found.status !== "ok") return unavailable
-        const material = answerMaterial(found.value, selected.basis)
+        // Only reuse detached material produced for this admitted request and
+        // scope. prepareAccess still makes its own pair of protected reads.
+        const candidate = resolved.get(context)
+        resolved.delete(context)
+        const cached = candidate?.scopeKey === key(selected.scope, selected.basis, context) ? candidate : undefined
+        const materialCurrent = () => current() && (!cached || cached.current())
+        if (!materialCurrent()) return unavailable
+        const found = cached ? { status: "ok" as const, value: cached.snapshot } : await read(selected.basis, context)
+        if (!materialCurrent() || found.status !== "ok") return unavailable
+        const material = cached?.material ?? answerMaterial(found.value, selected.basis)
         if (!material || digestSfValue(material.scope) !== digestSfValue(selected.scope)) return { state: "dependency-unavailable", sourceVersion: 0 }
         const access = await prepareAccess(structuredClone(found.value.pin), structuredClone(selected.basis), structuredClone(found.value.review), context)
-        if (!current() || access.status !== "ok" || typeof access.value.fence !== "function" || !await revalidate.call(host, context)) return unavailable
+        if (!materialCurrent() || access.status !== "ok" || typeof access.value.fence !== "function" || !await revalidate.call(host, context) || !materialCurrent()) return unavailable
         const accessLease = access.value
         const accessFence = accessLease.fence
         const sourceFingerprint = digestSfValue({ reviewContext: found.value.pin, source: material.evidence, projection: material.projection })
         const dependencyFingerprint = digestSfValue({ reviewContext: found.value.pin, evidenceRefs: material.references, dependencies: material.scope.materialDependencies })
         const observation: ReviewAnswerObservation = { state: "available", sourceVersion: material.evidence.target.version, incarnation: material.evidence.target.incarnation, physicalIncarnation: digestSfValue(found.value.pin), sourceFingerprint, dependencyFingerprint, scopeFingerprint: digestSfValue({ scope: selected.scope, basis: selected.basis, sourceFingerprint, dependencyFingerprint }), evidence: material.evidence, projection: material.projection, accessLeaseRef: crypto.randomUUID() }
         const leaseKey = observation.accessLeaseRef
-        leases.set(leaseKey, { authorityScopeDigest: key(selected.scope, selected.basis, context), reviewDigest: found.value.pin.reviewDigest, observationDigest: digestSfValue(observation), fence: () => accessFence.call(accessLease), current: () => current() && accessLease.fence === accessFence })
+        leases.set(leaseKey, { authorityScopeDigest: key(selected.scope, selected.basis, context), reviewDigest: found.value.pin.reviewDigest, observationDigest: digestSfValue(observation), fence: () => accessFence.call(accessLease), current: () => materialCurrent() && accessLease.fence === accessFence })
         if (leases.size > 512) leases.delete(leases.keys().next().value!)
-        const verify = async () => ({ commit: false, value: current() && await fence(selected.scope, observation, selected.basis, context) })
+        const verify = async () => ({ commit: false, value: materialCurrent() && await fence(selected.scope, observation, selected.basis, context) })
         const verified = await (atomic
           ? atomic.transaction("dashboard", verify, { signal: request.signal, targetPreimageCurrent: atomic.holdTargetPreimage().current, sealedRead: true })
           : transactionAll.call(persistence, verify, { signal: request.signal })).catch(() => false)
-        if (!verified || !current() || !await revalidate.call(host, context) || !current()) { leases.delete(leaseKey); return unavailable }
+        if (!verified || !materialCurrent() || !await revalidate.call(host, context) || !materialCurrent()) { leases.delete(leaseKey); return unavailable }
         return structuredClone(observation)
       } catch { return unavailable }
     },

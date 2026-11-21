@@ -392,7 +392,8 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       // Current-domain answers keep the actor-scoped source issued by the
       // authenticated reader. Its observedVersion remains historical; do not
       // replace its current scope with a different page's original incarnation.
-      const thread = await readSelfReviewThread(questionId, context, issued) ?? await threadReads.read(questionId, context)
+      const ownReview = await readSelfReviewThread(questionId, context, issued)
+      const thread = ownReview ?? await threadReads.read(questionId, context)
       if (thread.status !== "ok" || thread.value.kind === "comment" || thread.value.id !== questionId) return { status: "unavailable", reason: "answer-scope-unavailable" }
       const message = thread.value.messages.find((entry, index) => index > 0 && entry.authorRef === thread.value.recipientRef && answerReference(thread.value.id, entry) === answerRef)
       if (!message) return { status: "unavailable", reason: "answer-scope-unavailable" }
@@ -403,7 +404,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
         const pinned = threadMessageContext(thread.value, message)
         const source = input.reviewAnswerSource
         const resolve = source?.resolve
-        if (!pinned?.reviewContext || !source || !resolve || !await authority.historicalSources(pinned.evidenceRefs, context)) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
+        if (!pinned?.reviewContext || !source || !resolve || !ownReview && !await authority.historicalSources(pinned.evidenceRefs, context)) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
         const reviewBasis = { ...pinned, reviewContext: pinned.reviewContext }
         const current = () => input.reviewAnswerSource === source && source.resolve === resolve
         if (!current()) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
