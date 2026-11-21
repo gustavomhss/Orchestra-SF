@@ -165,19 +165,19 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
                 <input type="search" value={filters.value.search}
                   onInput={(event) => filters.change({ search: event.currentTarget.value })} />
               </label>
-              <label>{t("sf.u05.projects.status")}
-                <select value={filters.value.status} onChange={(event) => filters.change({ status: event.currentTarget.value })}>
+              <div class="sf-u05-filter"><label for="sf-cap09-status">{t("sf.u05.projects.status")}</label>
+                <select id="sf-cap09-status" value={filters.value.status} onChange={(event) => filters.change({ status: event.currentTarget.value })}>
                   <option value="">{t("sf.u05.projects.all")}</option>
                   <For each={PROJECT_STATUS}>{(status) => <option value={status}>{t(sfProjectStatusKey(status))}</option>}</For>
                 </select>
-              </label>
-              <label>{t("sf.u05.projects.show")}
-                <select value={filters.value.filter} onChange={(event) => filters.change({ filter: event.currentTarget.value })}>
+              </div>
+              <div class="sf-u05-filter"><label for="sf-cap09-filter">{t("sf.u05.projects.show")}</label>
+                <select id="sf-cap09-filter" value={filters.value.filter} onChange={(event) => filters.change({ filter: event.currentTarget.value })}>
                   <option value="">{t("sf.u05.projects.all")}</option>
                   <option value="watch">{t("sf.u05.projects.watch")}</option>
                   <option value="at-risk">{t("sf.u05.projects.atRisk")}</option>
                 </select>
-              </label>
+              </div>
               <button class="mx-btn" type="button" onClick={() => filters.reset()}>{t("sf.u05.projects.reset")}</button>
             </form>
             <dl class="sf-u05-overview-metrics">

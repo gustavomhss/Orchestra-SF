@@ -30,8 +30,8 @@
   background: var(--mx-raised);
   margin-block-end: var(--sf-u05-gap);
 }
-.sf-u05-overview-filters > label { min-inline-size: 0; flex: 1 1 var(--sf-u05-filter-min); display: grid; gap: var(--sf-u05-field-gap); font-size: var(--orchestra-font-size-sm); color: var(--mx-dim); }
-.sf-u05-overview-filters > label:first-child { flex-grow: 2; }
+.sf-u05-overview-filters > :is(label,.sf-u05-filter) { min-inline-size: 0; flex: 1 1 var(--sf-u05-filter-min); display: grid; gap: var(--sf-u05-field-gap); font-size: var(--orchestra-font-size-sm); color: var(--mx-dim); }
+.sf-u05-overview-filters > :is(label,.sf-u05-filter):first-child { flex-grow: 2; }
 .sf-u05-overview-filters :is(input,select) {
   box-sizing: border-box;
   inline-size: 100%;
@@ -83,7 +83,7 @@
 .sf-u05-overview :is(input,select,button,summary,[tabindex]):focus-visible { outline: 2px solid var(--orchestra-accent); outline-offset: 2px; }
 @container sf-frame (max-width: 600px) {
   .sf-u05-overview-filters { flex-direction: column; align-items: stretch; }
-  .sf-u05-overview-filters > label { flex-basis: auto; }
+  .sf-u05-overview-filters > :is(label,.sf-u05-filter) { flex-basis: auto; }
   .sf-u05-overview-metrics { grid-template-columns: minmax(0,1fr); }
   .sf-u05-overview-metrics > div + div { border-inline-start: 0; border-block-start: 1px solid var(--mx-line); }
   .sf-u05-overview-metrics > div { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; }
