@@ -114,7 +114,7 @@ The existing route.query.filter path is retained. Risk-tier deep links were not 
 
 CAP13, CAP15 and CAP16 now have separate English installations, retaining one real write and strict same-view/fresh-read assertions in each. Their successful writes are still pending; no outcome is inferred from CAP11/CAP12 success.
 
-Direct review of the new CAP12 incident deletion image revealed empty source cards and a UUID-only operation identity. Its presentation now includes the already captured incident/campaign/action fields in original/current source, uses the record title/name/text where available, and explains the proposed removal with new EN/BR copy. The exact deletion binding, version and command remain unchanged; the journey cancels deletion. Long reviews also get a top capture in addition to their existing action-footer capture.
+Direct review of the new CAP12 incident deletion image revealed empty source cards and a UUID-only operation identity. Its presentation now includes the already captured incident/campaign/action fields in original/current source, uses the record title/name/text where available, and explains the proposed removal with new EN/BR copy. Original/current source fields use the admitted source row to preserve absence/null as missing, including BooleanStored flags; an unknown flag is not presented as a confirmed No merely because the existing checkbox draft defaults to false. The exact deletion binding, version, draft values and command remain unchanged; the journey cancels deletion. Long reviews also get a top capture in addition to their existing action-footer capture.
 
 ## JSON command boundary before the sixth execution
 
