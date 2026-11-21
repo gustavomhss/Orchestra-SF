@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test"
+import { AbsolutePath } from "@orchestra/schema/schema"
+import { Location } from "@orchestra/schema/location"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { CapabilityResult, TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
@@ -32,10 +34,15 @@ test("purchase MCP is opt-in and requires endpoint authentication", async () => 
 
 test("purchase MCP dispatches only the admitted comparison and returns its recorded version and review link", async () => {
   let session = true
-  let revokeAfterDispatch = false
+  let token = true
+  let revokeAfterDispatch: "host" | "token" | "session" | undefined
   let wrongTarget = false
   let dispatched = 0
   let binding: TrustedUiContext | undefined
+  let hostIdentity = {
+    installationId: identity.installationId, projectId: identity.projectId, hostId: "host",
+    location: Location.Ref.make({ directory: AbsolutePath.make("/test") }),
+  }
   const ui = createSfUiAuthority({
     authorize: async (request, action) => session && request === authorized && action === operation ? identity : undefined,
     commandIdentity: async () => "command",
@@ -67,7 +74,9 @@ test("purchase MCP dispatches only the admitted comparison and returns its recor
       expect(await ui.validate(binding, action, digest)).toBe(true)
       expect(ui.requestFor(binding)).toBe(authorized)
       const receipt = ui.receiptFor(binding, action, digest)!
-      if (revokeAfterDispatch) session = false
+      if (revokeAfterDispatch === "session") session = false
+      if (revokeAfterDispatch === "token") token = false
+      if (revokeAfterDispatch === "host") hostIdentity = { ...hostIdentity, hostId: "replaced" }
       const source = comparison.sourceRefs[0]!
       const result = wrongTarget
         ? { ...comparison, sourceRefs: [{ ...source, target: { ...source.target, recordId: "different-request" } }] }
@@ -76,8 +85,8 @@ test("purchase MCP dispatches only the admitted comparison and returns its recor
     },
   }
   const handler = createSfClawMcpHandler({
-    origin, mount, procurement: () => runtime,
-    authenticate: async (request) => request.headers.get("authorization") === "Bearer fixture-session",
+    origin, mount, procurement: { identity: () => hostIdentity, services: () => runtime },
+    authenticate: async (request) => token && request.headers.get("authorization") === "Bearer fixture-session",
     read: async () => ({ status: "ok" }),
   })
   const call = (args: object, name = "sf_comparar_compra") => rpc("tools/call", { name, arguments: args })
@@ -111,10 +120,13 @@ test("purchase MCP dispatches only the admitted comparison and returns its recor
   expect(JSON.parse(tampered.result.content[0].text)).toEqual({ status: "unavailable" })
 
   wrongTarget = false
-  revokeAfterDispatch = true
-  authorized = call({ requestRef })
-  const revoked = await (await handler(authorized))?.json()
-  expect(revoked.result.isError).toBe(true)
-  expect(JSON.parse(revoked.result.content[0].text)).toEqual({ status: "denied" })
-  expect(ui.requestFor(binding!)).toBeUndefined()
+  for (const credential of ["host", "token", "session"] as const) {
+    token = true
+    revokeAfterDispatch = credential
+    authorized = call({ requestRef })
+    const revoked = await (await handler(authorized))?.json()
+    expect(revoked.result.isError).toBe(true)
+    expect(JSON.parse(revoked.result.content[0].text)).toEqual({ status: credential === "host" ? "unavailable" : "denied" })
+    expect(ui.requestFor(binding!)).toBeUndefined()
+  }
 })

@@ -2,20 +2,22 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js"
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js"
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
-import type { SfHostServices } from "../contracts/host-context.ts"
+import type { SfHostRuntime, SfHostServices } from "../contracts/host-context.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import { limitRequestBody } from "../../runtime/request-body.ts"
 
 const pendingTool = "sf_pendencias"
 const purchaseTool = "sf_comparar_compra"
 const maxRequestRefLength = 512
-type ProcurementRuntime = Pick<SfHostServices, "ui" | "dispatch">
+type ProcurementHost = Pick<SfHostRuntime, "identity"> & {
+  services?: () => Pick<SfHostServices, "ui" | "dispatch"> | undefined
+}
 const readOnly = { readOnlyHint: true, destructiveHint: false, idempotentHint: true }
 const headers = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" }
 
 export function createSfClawMcpHandler(input: {
   origin: string
-  procurement?: () => ProcurementRuntime | undefined
+  procurement?: ProcurementHost
   mount: string
   authenticate: (request: Request) => Promise<boolean>
   read: (request: Request) => Promise<{ status: "ok" | "denied" | "unavailable" }>
@@ -52,7 +54,7 @@ export function createSfClawMcpHandler(input: {
         ? await input.read(request)
         : call.params.name === purchaseTool && input.procurement && Object.keys(args).length === 1 &&
           typeof requestRef === "string" && requestRef.length <= maxRequestRefLength && requestRef.trim()
-          ? await comparePurchase(request, requestRef, input.origin, input.procurement)
+          ? await comparePurchase(request, requestRef, input.origin, input.procurement, input.authenticate)
           : { status: "invalid" }
       return {
         content: [{ type: "text", text: JSON.stringify(result) }],
@@ -80,23 +82,28 @@ async function comparePurchase(
   request: Request,
   requestRef: string,
   origin: string,
-  current: () => ProcurementRuntime | undefined,
+  host: ProcurementHost,
+  authenticate: (request: Request) => Promise<boolean>,
 ) {
   const operation = "sf_sourcing_compare"
-  const runtime = current()
-  if (!runtime) return { status: "unavailable" }
+  const identity = host.identity()
+  const runtime = host.services?.()
+  if (!identity || !runtime) return { status: "unavailable" }
+  const current = () => !request.signal.aborted && host.identity() === identity && host.services?.() === runtime
   const input = decodeSfOperationInput(operation, { requestRef, proposalRefs: [], criteria: [] })
   if (!input.ok) return { status: "invalid" }
   const admission = await runtime.ui.admit(request, operation, digestSfValue(input.value))
   if (admission.status !== "ok") return { status: admission.status === "conflict" ? "stale" : admission.status }
 
   try {
-    if (request.signal.aborted || current() !== runtime) return { status: "unavailable" }
+    if (!current()) return { status: "unavailable" }
+    if (admission.value.binding.installationId !== identity.installationId ||
+      admission.value.binding.projectId !== identity.projectId) return { status: "denied" }
     const result = await runtime.dispatch(operation, input.value, admission.value)
-    if (request.signal.aborted || current() !== runtime) return { status: "unavailable" }
+    if (!current()) return { status: "unavailable" }
     if (result.status !== "ok") return { status: result.status }
-    if (!await runtime.ui.revalidate(admission.value)) return { status: "denied" }
-    if (request.signal.aborted || current() !== runtime) return { status: "unavailable" }
+    if (!await authenticate(request) || !await runtime.ui.revalidate(admission.value)) return { status: "denied" }
+    if (!current()) return { status: "unavailable" }
     const comparison = decodeSfOperationOutput(operation, result.result)
     if (!comparison.ok || comparison.value.requestRef !== requestRef) return { status: "unavailable" }
     const source = comparison.value.sourceRefs.find((ref) =>
