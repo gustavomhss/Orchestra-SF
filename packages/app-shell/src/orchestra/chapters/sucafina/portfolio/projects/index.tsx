@@ -361,14 +361,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
         id: "create-project", labelKey: k("sf.cap10.primary"), tone: "primary", busy: false,
         disabled: view.busy || view.uncertain, onInvoke: () => go("new"),
       } : undefined}
-      secondaryActions={canImport() && !selection() && props.route.kind !== "new" && !view.review ? [{
-        id: "import", labelKey: k("sf.u05.projects.import"), tone: "secondary", busy: false,
-        disabled: view.busy || view.uncertain,
-        onInvoke: () => {
-          const href = sfProjectHref(props.route, "imports")
-          if (href && !hasDirty()) navigate(href)
-        },
-      }] : []}>
+      secondaryActions={[]}>
       <section class="sf-u05-projects" data-sf-projects data-sf-source="CAP10"
         data-sf-wave="three" data-sf-surface="CAP10" data-sf-route={props.route.kind}
         data-sf-stage={view.review || view.reviewSave ? "review" : props.route.kind === "new" || props.route.kind === "edit" ? "editor" : selection() ? "detail" : "collection"}>
@@ -378,25 +371,34 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
           <div class="sf-u05-collection" hidden={props.route.kind === "new" || props.route.kind === "edit" || !!view.review}>
             <SfListDetail
               list={<section class="sf-u05-list" aria-label={t("sf.u05.projects.filters")}>
-                <div class="sf-u05-collection-heading"><p>{t("sf.u05.design.collectionLead")}</p>
-                  <small>{t("sf.u05.design.listHint")}</small></div>
+                <div class="sf-u05-collection-heading">
+                  <div><p>{t("sf.u05.design.collectionLead")}</p>
+                    <small>{t("sf.u05.design.listHint")}</small></div>
+                  <Show when={canImport() && !selection() && props.route.kind !== "new" && !view.review}>
+                    <button type="button" class="mx-btn" disabled={view.busy || view.uncertain}
+                      onClick={() => {
+                        const href = sfProjectHref(props.route, "imports")
+                        if (href && !hasDirty()) navigate(href)
+                      }}>{t("sf.u05.projects.import")}</button>
+                  </Show>
+                </div>
                 <div class="sf-u05-list-surface">
                   <form class="sf-u05-filters" onSubmit={(event) => event.preventDefault()}>
                     <label>{t("sf.u05.projects.search")}
                       <input type="search" value={filters.value.search} onInput={(event) => filters.change({ search: event.currentTarget.value })} />
                     </label>
-                    <label>{t("sf.u05.projects.status")}
-                      <select value={filters.value.status} onChange={(event) => filters.change({ status: event.currentTarget.value })}>
+                    <div class="sf-u05-filter"><label for="sf-cap10-status">{t("sf.u05.projects.status")}</label>
+                      <select id="sf-cap10-status" value={filters.value.status} onChange={(event) => filters.change({ status: event.currentTarget.value })}>
                         <option value="">{t("sf.u05.projects.all")}</option>
                         <For each={PROJECT_STATUS}>{(status) => <option value={status}>{t(sfProjectStatusKey(status))}</option>}</For>
                       </select>
-                    </label>
-                    <label>{t("sf.u05.projects.show")}
-                      <select value={filters.value.filter} onChange={(event) => filters.change({ filter: event.currentTarget.value })}>
+                    </div>
+                    <div class="sf-u05-filter"><label for="sf-cap10-filter">{t("sf.u05.projects.show")}</label>
+                      <select id="sf-cap10-filter" value={filters.value.filter} onChange={(event) => filters.change({ filter: event.currentTarget.value })}>
                         <option value="">{t("sf.u05.projects.all")}</option><option value="watch">{t("sf.u05.projects.watch")}</option>
                         <option value="at-risk">{t("sf.u05.projects.atRisk")}</option>
                       </select>
-                    </label>
+                    </div>
                     <button class="mx-btn" type="button" onClick={() => filters.reset()}>{t("sf.u05.projects.reset")}</button>
                   </form>
                   <SfDataTable rows={rows()} getRowKey={(row) => row.id as SfRef} columns={columns}

@@ -1,4 +1,4 @@
-import { createMemo, For, Show, type JSX } from "solid-js"
+import { createMemo, createUniqueId, For, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SF_U05_COPY } from "@/i18n/orchestra-chapters/sf-u05"
@@ -34,6 +34,7 @@ export function SfProjectEditor(props: Readonly<{
   onDiscard: () => void
 }>): JSX.Element {
   const language = useLanguage()
+  const fieldId = createUniqueId()
   const t = (key: CopyKey) => language.t(key as Parameters<typeof language.t>[0])
   const snapshot = () => props.draft.snapshot()
   const active = () => {
@@ -76,16 +77,16 @@ export function SfProjectEditor(props: Readonly<{
               <label class="sf-u05-field" data-sf-field="name">{t("sf.u05.projects.form.name")}
                 <input required value={current().name} onInput={(event) => update("name", event.currentTarget.value)} />
               </label>
-              <label class="sf-u05-field">{t("sf.u05.projects.form.status")}
-                <select value={current().status} onChange={(event) => update("status", event.currentTarget.value as SfProjectEdit["status"])}>
+              <div class="sf-u05-field"><label for={fieldId + "-status"}>{t("sf.u05.projects.form.status")}</label>
+                <select id={fieldId + "-status"} value={current().status} onChange={(event) => update("status", event.currentTarget.value as SfProjectEdit["status"])}>
                   <For each={PROJECT_STATUS}>{(status) => <option value={status}>{t(sfProjectStatusKey(status))}</option>}</For>
                 </select>
-              </label>
-              <label class="sf-u05-field">{t("sf.u05.projects.form.risk")}
-                <select value={current().risk} onChange={(event) => update("risk", event.currentTarget.value as SfProjectEdit["risk"])}>
+              </div>
+              <div class="sf-u05-field"><label for={fieldId + "-risk"}>{t("sf.u05.projects.form.risk")}</label>
+                <select id={fieldId + "-risk"} value={current().risk} onChange={(event) => update("risk", event.currentTarget.value as SfProjectEdit["risk"])}>
                   <For each={PROJECT_RISK}>{(risk) => <option value={risk}>{t(sfProjectRiskKey(risk))}</option>}</For>
                 </select>
-              </label>
+              </div>
               <For each={editFields.slice(1, 4)}>{(field) => (
                 <label class="sf-u05-field" data-sf-field={field.id} classList={{ "sf-u05-field-wide": field.type === "textarea" }}>{t(field.label)}
                   {field.type === "textarea" ?
@@ -189,6 +190,7 @@ export function SfMilestoneEditor(props: Readonly<{
   onDelete: (milestoneId: string) => void
 }>): JSX.Element {
   const language = useLanguage()
+  const fieldId = createUniqueId()
   const t = (key: CopyKey) => language.t(key as Parameters<typeof language.t>[0])
   const [draft, setDraft] = createStore<MilestoneDraft>({
     milestoneId: props.source?.id ?? "", name: props.source?.name ?? "",
@@ -211,11 +213,11 @@ export function SfMilestoneEditor(props: Readonly<{
         <label class="sf-u05-field">{t("sf.u05.projects.date")}
           <input type="date" value={draft.date} onInput={(event) => setDraft("date", event.currentTarget.value)} />
         </label>
-        <label class="sf-u05-field">{t("sf.u05.projects.milestoneStatus")}
-          <select value={draft.status ?? "upcoming"} onChange={(event) => setDraft("status", event.currentTarget.value as SfMilestoneDraft["status"])}>
+        <div class="sf-u05-field"><label for={fieldId + "-status"}>{t("sf.u05.projects.milestoneStatus")}</label>
+          <select id={fieldId + "-status"} value={draft.status ?? "upcoming"} onChange={(event) => setDraft("status", event.currentTarget.value as SfMilestoneDraft["status"])}>
             <For each={MILESTONE_STATUS}>{(status) => <option value={status}>{t(sfMilestoneStatusKey(status))}</option>}</For>
           </select>
-        </label>
+        </div>
         <label class="sf-u05-field sf-u05-field-wide">{t("sf.u05.projects.milestoneNotes")}
           <textarea value={draft.notes} onInput={(event) => setDraft("notes", event.currentTarget.value)} />
         </label>

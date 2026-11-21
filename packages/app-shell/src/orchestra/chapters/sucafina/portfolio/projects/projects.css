@@ -19,7 +19,8 @@
 .sf-u05-projects h3 { font-size: var(--orchestra-font-size-lg); font-weight: 600; line-height: 1.4; }
 .sf-u05-projects :is(button,.mx-btn) { min-block-size: var(--sf-u05-control); white-space: normal; }
 .sf-u05-projects .sf-u05-collection { min-inline-size: 0; }
-.sf-u05-projects .sf-u05-collection-heading { margin-block-end: var(--sf-u05-gap); color: var(--mx-dim); }
+.sf-u05-projects .sf-u05-collection-heading { display: flex; align-items: start; justify-content: space-between; flex-wrap: wrap; gap: var(--sf-u05-gap); margin-block-end: var(--sf-u05-gap); color: var(--mx-dim); }
+.sf-u05-projects .sf-u05-collection-heading > div { flex: 1 1 var(--sf-u05-filter-min); min-inline-size: 0; }
 .sf-u05-projects .sf-u05-collection-heading small { display: block; font-size: var(--orchestra-font-size-sm); margin-block-start: var(--sf-u05-field-gap); }
 .sf-u05-projects .sf-s01-list-detail { border: 0; border-radius: 0; background: transparent; overflow: visible; }
 .sf-u05-projects :is(.sf-s01-list-pane,.sf-s01-detail-pane) { background: transparent; }
@@ -34,8 +35,8 @@
   padding: var(--sf-u05-gap);
   min-inline-size: 0;
 }
-.sf-u05-projects .sf-u05-filters label { display: grid; gap: var(--sf-u05-field-gap); min-inline-size: 0; flex: 1 1 var(--sf-u05-filter-min); font-size: var(--orchestra-font-size-sm); color: var(--mx-dim); }
-.sf-u05-projects .sf-u05-filters label:first-child { flex-grow: 2; }
+.sf-u05-projects .sf-u05-filters > :is(label,.sf-u05-filter) { display: grid; gap: var(--sf-u05-field-gap); min-inline-size: 0; flex: 1 1 var(--sf-u05-filter-min); font-size: var(--orchestra-font-size-sm); color: var(--mx-dim); }
+.sf-u05-projects .sf-u05-filters > :is(label,.sf-u05-filter):first-child { flex-grow: 2; }
 .sf-u05-projects :is(.sf-u05-filters,.sf-u05-field) :is(input,select,textarea) {
   box-sizing: border-box;
   inline-size: 100%;
@@ -130,7 +131,7 @@
 }
 @container sf-frame (max-width: 600px) {
   .sf-u05-projects .sf-u05-filters { flex-direction: column; align-items: stretch; }
-  .sf-u05-projects .sf-u05-filters label { flex-basis: auto; }
+  .sf-u05-projects .sf-u05-filters > :is(label,.sf-u05-filter) { flex-basis: auto; }
   .sf-u05-projects :is(.sf-u05-editor-grid,.sf-u05-detail-fields,.sf-s01-detail-sections,.sf-u05-review-summary) { grid-template-columns: minmax(0,1fr); }
   .sf-u05-projects [data-sf-section="budget-spent"] .sf-u05-detail-fields { grid-template-columns: minmax(0,1fr); }
   .sf-u05-projects .sf-u05-form-actions { flex-direction: column; align-items: stretch; }
