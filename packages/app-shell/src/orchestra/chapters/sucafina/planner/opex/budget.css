@@ -3,6 +3,7 @@
   --sf-plan-rule: 1px; --sf-plan-focus: 2px; --sf-plan-hit: 44px;
   --sf-plan-xs: 4px; --sf-plan-sm: 8px; --sf-plan-md: 12px; --sf-plan-lg: 16px;
   --sf-plan-xl: 20px; --sf-plan-2xl: 24px; --sf-plan-3xl: 32px;
+  --sf-plan-grid-label: 260px; --sf-plan-grid-currency: 88px;
   --sf-plan-editor: 760px; --sf-plan-version: 520px; --sf-plan-table: 800px; --sf-plan-textarea: 120px;
   display: flex; flex: 1 1 auto; inline-size: 100%; min-block-size: 0;
   min-inline-size: 0; color: var(--mx-strong); font: var(--orchestra-font-size-md)/1.6 var(--mx-sans);
@@ -32,7 +33,9 @@
 .sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-s02 { min-inline-size: 0; }
 .sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-s02 > :is(.sf-s02-help,.sf-s02-status,.sf-s02-readonly) { padding-inline: var(--sf-plan-xl); color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
 .sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-s02-scroll { background-image: none; border-inline: 0; border-radius: 0; scrollbar-width: thin; }
-.sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-s02 :is(.sf-s02-header-cell,.sf-s02-meta) { background: var(--mx-raised); }
+.sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-s02 :is(.sf-s02-header-cell,.sf-s02-meta):nth-child(1) { inline-size: var(--sf-plan-grid-label); min-inline-size: var(--sf-plan-grid-label); max-inline-size: var(--sf-plan-grid-label); inset-inline-start: 0; }
+.sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-s02 :is(.sf-s02-header-cell,.sf-s02-meta):nth-child(2) { inline-size: var(--sf-plan-grid-currency); min-inline-size: var(--sf-plan-grid-currency); max-inline-size: var(--sf-plan-grid-currency); inset-inline-start: var(--sf-plan-grid-label); }
+.sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-s02 .sf-s02-header-cell:nth-child(-n+2) { z-index: 3; }
 .sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-s02-header-cell { font-size: var(--orchestra-font-size-sm); color: var(--mx-dim); font-weight: 500; }
 .sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-s02-meta { font-family: var(--mx-emphasis); font-size: var(--orchestra-font-size-lg); }
 .sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-s02-measure-name { font-size: var(--orchestra-font-size-sm); }

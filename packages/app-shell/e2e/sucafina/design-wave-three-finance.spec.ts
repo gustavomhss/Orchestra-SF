@@ -321,9 +321,25 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await grid.press("End")
     await expect(grid).toHaveAttribute("aria-activedescendant", /-m11$/)
     await expect(grid.getByRole("columnheader", { name: "December", exact: true })).toBeInViewport()
+    await expect.poll(() => row.evaluate((element) => {
+      const headers = [...element.querySelectorAll('[role="rowheader"]')].map((item) => item.getBoundingClientRect())
+      return headers.length === 2 && headers[0]!.right <= headers[1]!.left + 1
+    }), { message: "The sticky line identity and currency remain separate while viewing December" }).toBe(true)
     await capture(page, info, "CAP18-dark-desktop-monthly-grid-december-test-data")
     await grid.press("Home")
     await expect(grid).toHaveAttribute("aria-activedescendant", /-m0$/)
+    await expect(grid).toBeFocused()
+    await expect(january).toBeInViewport()
+    await expect.poll(() => january.evaluate((cell) => {
+      const bounds = cell.getBoundingClientRect()
+      const row = cell.closest('[role="row"]')
+      const table = cell.closest('[role="grid"]')
+      const metadata = [...(row?.querySelectorAll('[role="rowheader"]') ?? [])]
+      const headers = [...(table?.querySelectorAll('[role="columnheader"]') ?? [])]
+      return metadata.length > 0 && headers.length > 0 &&
+        bounds.left >= Math.max(...metadata.map((item) => item.getBoundingClientRect().right)) - 1 &&
+        bounds.top >= Math.max(...headers.map((item) => item.getBoundingClientRect().bottom)) - 1
+    }), { message: "January remains visible beyond the sticky row and column headers after Home" }).toBe(true)
     await scheme(page, "light")
     await scrollPageTop(page)
     await capture(page, info, "CAP18-light-desktop-grid-test-data")
@@ -414,7 +430,8 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await surface.getByRole("tab", { name: "Projects", exact: true }).click()
     await expect(surface.locator("[data-sf-project]")).toHaveCount(2)
     const project = surface.locator("[data-sf-project]").filter({ hasText: waveThreeData.planner.project })
-    await expect(project).toContainText("Approved")
+    await expect(project.locator(".sf-u07-approval")).toHaveText("Not specified")
+    await expect(project.locator('[data-sf-value="missing"]')).toHaveCount(2)
     await scrollPageTop(page)
     await capture(page, info, "CAP19-dark-desktop-projects-test-data")
     await narrow()
@@ -423,7 +440,9 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await project.getByRole("button", { name: "Edit project", exact: true }).click()
     const detail = surface.locator("[data-sf-record-detail]")
     await expect(detail.getByRole("heading", { name: waveThreeData.planner.project, exact: true })).toBeVisible()
-    await expect(detail.getByLabel("Approval state", { exact: true })).toHaveValue("approved")
+    await expect(detail.getByLabel("Approval state", { exact: true })).toHaveValue("")
+    await expect(detail.getByLabel("Investment start", { exact: true })).toHaveValue("")
+    await expect(detail.getByLabel("Investment end", { exact: true })).toHaveValue("")
     await expect(detail.getByLabel("Approval state", { exact: true }).locator('option[value=""]')).toBeDisabled()
     await detail.getByLabel("Description", { exact: true }).fill("Design test data · Revised infrastructure resilience investment and source review.")
     await scrollPageTop(page)
@@ -493,9 +512,14 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
       await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
     }
     await localized.getByRole("tab", { name: "Projetos", exact: true }).click()
-    await localized.locator("[data-sf-project]").filter({ hasText: waveThreeData.planner.project })
-      .getByRole("button", { name: "Editar projeto", exact: true }).click()
-    await expect(localized.getByLabel("Aprovação", { exact: true })).toHaveValue("approved")
+    const localizedProject = localized.locator("[data-sf-project]").filter({ hasText: waveThreeData.planner.project })
+    await expect(localizedProject.locator(".sf-u07-approval")).toHaveText("Não informada")
+    await expect(localizedProject.locator('[data-sf-value="missing"]')).toHaveCount(2)
+    await localizedProject.getByRole("button", { name: "Editar projeto", exact: true }).click()
+    await expect(localized.getByLabel("Aprovação", { exact: true })).toHaveValue("")
+    await expect(localized.getByLabel("Aprovação", { exact: true }).locator('option[value=""]')).toBeDisabled()
+    await expect(localized.getByLabel("Início do investimento", { exact: true })).toHaveValue("")
+    await expect(localized.getByLabel("Fim do investimento", { exact: true })).toHaveValue("")
     await localized.setViewportSize({ width: 320, height: 900 })
     await reflow(localized)
     await scrollPageTop(localized)
