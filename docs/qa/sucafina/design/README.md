@@ -1,12 +1,12 @@
 # Sucafina nativa — inventário e retrabalho das telas
 
-## Segunda rodada pronta para revisão
+## Segunda rodada aceita para integração
 
 **Hot Topics (CAP02), Visão do orçamento (CAP03) e OPEX (CAP04)** foram retrabalhados por três agentes, integrados e verificados na branch [`sf-design-two`](https://github.com/gustavomhss/Orchestra-SF/tree/sf-design-two), criada diretamente de `dev bcdc109326de02e20c01c32ffb6b00bee3ff978d`. Produto verificado: [`5012d7a`](https://github.com/gustavomhss/Orchestra-SF/commit/5012d7adf0e5d02576fe6a0add6f79331a812137).
 
 Veja a [galeria com 39 capturas reais](wave-two/evidence/README.md), incluindo 11 em português; o [resumo da rodada](WAVE-TWO.md) e a [validação](wave-two/VALIDATION.md) registram o resultado. A jornada no navegador, os tipos da aplicação/E2E, as regras e a paridade da paleta passaram. Os seis casos de proteção do rascunho confirmado também passaram.
 
-A aprovação visual desta segunda rodada está **pendente**. A aprovação anterior continua restrita a Hoje, Casos/Decisões e Visão executiva. O inventário tem **70 telas**, com **seis retrabalhadas** entre as duas rodadas e **64 mapeadas para as próximas etapas**.
+Após avaliar o resultado, o usuário autorizou a integração das duas rodadas na `dev`. O [PR #583](https://github.com/gustavomhss/Orchestra-SF/pull/583) registra o estado do merge; [DEV-INTEGRATION.md](DEV-INTEGRATION.md) registra a composição e a verificação sobre a `dev` atual. A aprovação explícita anterior de Hoje, Casos/Decisões e Visão executiva permanece preservada. O inventário tem **70 telas**, com **seis retrabalhadas** entre as duas rodadas e **64 mapeadas para as próximas etapas**.
 
 ## Primeiras três telas aprovadas
 

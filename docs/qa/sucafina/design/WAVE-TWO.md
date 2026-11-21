@@ -1,6 +1,6 @@
 # Wave two — native Sucafina design
 
-Status: **VISUALLY_REVIEWED_AWAITING_USER**. User authorized this wave with “do it” after approving wave one. The implementation and its verification are complete; this wave has no user-approval record yet.
+Status: **ACCEPTED_FOR_INTEGRATION**. User authorized this wave with “do it” after approving wave one, then praised the delivered result and instructed completion of the merge to dev. The exact statements and fresh integration verification are recorded in [DEV-INTEGRATION.md](DEV-INTEGRATION.md); the merge event is recorded by [PR #583](https://github.com/gustavomhss/Orchestra-SF/pull/583).
 
 ## Branch and reference
 
@@ -9,7 +9,7 @@ Status: **VISUALLY_REVIEWED_AWAITING_USER**. User authorized this wave with “d
 - Approved reference: `sf-design-polish 8f18ca831df7b144d843e6b0b3477825abe88e46`.
 - The first-wave approved product is `245e15bf10b5c5287fa9338aa98d0adb28aeda76`; its images and explicit user acceptance remain unchanged.
 - The approved first-wave tree was integrated onto the current dev tree. Forty of the 41 upstream-changed paths are preserved byte for byte; one exported return type required a type-only annotation. See [integration](wave-two/INTEGRATION.md).
-- No writes to shared dev, merge or deployment.
+- The original delivery did not modify shared dev. Subsequent integration to dev is explicitly authorized through PR #583. Deployment is outside this change.
 
 ## Three independently assigned surfaces
 

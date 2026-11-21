@@ -2,7 +2,7 @@
 
 **Hot Topics (CAP02), Visão do orçamento (CAP03) e OPEX (CAP04).** Produto [5012d7a](https://github.com/gustavomhss/Orchestra-SF/commit/5012d7adf0e5d02576fe6a0add6f79331a812137), na branch [sf-design-two](https://github.com/gustavomhss/Orchestra-SF/tree/sf-design-two), criada de `dev bcdc109`.
 
-São **39 capturas da aplicação real**, incluindo **11 em português**, produzidas na [jornada final aprovada pelo CI](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44920647017). Os registros identificados como “Dados de teste” pertencem à instalação isolada de verificação. A aprovação visual do usuário para esta rodada está pendente.
+São **39 capturas da aplicação real**, incluindo **11 em português**, produzidas na [jornada final aprovada pelo CI](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44920647017). Os registros identificados como “Dados de teste” pertencem à instalação isolada de verificação. Após avaliar o resultado, o usuário autorizou a integração na dev; o [registro da integração](../../DEV-INTEGRATION.md) e o [PR #583](https://github.com/gustavomhss/Orchestra-SF/pull/583) documentam essa etapa.
 
 ## Hot Topics e ações
 
@@ -82,4 +82,4 @@ Cada arquivo mostra o viewport indicado. As revisões a 320px são capturas rola
 - [PNG originais e diagnósticos no Actions](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44920647017/artifacts/14713935784), com retenção até 28/11/2026. Os JPEGs desta pasta ficam preservados no repositório.
 - [Galeria da primeira rodada aprovada](../../evidence/README.md), preservada separadamente.
 
-Esta galeria é evidência para revisão. Não é uma declaração de aprovação do usuário, golden baseline, deploy ou revisão de todas as 70 telas.
+Esta galeria preserva a evidência visual da segunda rodada. A autorização de integração está registrada separadamente; golden baseline e deploy não são declarados, e a cobertura continua limitada às telas e estados listados.

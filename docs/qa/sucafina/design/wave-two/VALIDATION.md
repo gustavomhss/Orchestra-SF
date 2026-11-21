@@ -1,6 +1,6 @@
 # Wave two — validation and evidence
 
-Status: **VISUALLY_REVIEWED_AWAITING_USER**. Product: [`5012d7adf0e5d02576fe6a0add6f79331a812137`](https://github.com/gustavomhss/Orchestra-SF/commit/5012d7adf0e5d02576fe6a0add6f79331a812137). Branch: [`sf-design-two`](https://github.com/gustavomhss/Orchestra-SF/tree/sf-design-two), created directly from `dev bcdc109326de02e20c01c32ffb6b00bee3ff978d`. Date: 2026-11-21.
+Historical wave-two verification. The user subsequently accepted the result and authorized integration; see [DEV-INTEGRATION.md](../DEV-INTEGRATION.md) and [PR #583](https://github.com/gustavomhss/Orchestra-SF/pull/583). Product: [`5012d7adf0e5d02576fe6a0add6f79331a812137`](https://github.com/gustavomhss/Orchestra-SF/commit/5012d7adf0e5d02576fe6a0add6f79331a812137). Branch: [`sf-design-two`](https://github.com/gustavomhss/Orchestra-SF/tree/sf-design-two), created directly from `dev bcdc109326de02e20c01c32ffb6b00bee3ff978d`. Date: 2026-11-21.
 
 This record covers CAP02 Hot Topics, CAP03 Budget Overview and CAP04 OPEX. The first-wave approval applies only to UI29, UI33 and CAP01. It remains preserved in the parent inventory and first-wave evidence.
 
@@ -98,5 +98,5 @@ Earlier diagnostic results are retained as history:
 - Narrow captures are viewport crops. The OPEX 320px detail image does not show later months, the ledger footer or monthly edit controls below the viewport.
 - CAP04 annual-entry, deviation editing and delete review have no new screenshots in this matrix. CAP05 isolation was reviewed statically, without a new CAP05 runtime matrix.
 - Guards and type checks do not prove that every unvisited state or all 70 inventoried screens are visually approved.
-- Shared dev was not modified, and no merge or deployment was performed.
-- User acceptance and any golden baseline for CAP02/CAP03/CAP04 remain pending.
+- At the time of this snapshot, shared dev had not been modified and no merge/deployment had been performed. The subsequent authorized merge is tracked by PR #583.
+- Subsequent user acceptance and integration authorization are recorded in DEV-INTEGRATION.md. No golden baseline is asserted.

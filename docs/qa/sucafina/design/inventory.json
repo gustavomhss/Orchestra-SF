@@ -12,7 +12,10 @@
     "nativeFrontendPresentInDevBase": true,
     "approvedReference": "8f18ca831df7b144d843e6b0b3477825abe88e46",
     "reviewedProductCommit": "5012d7adf0e5d02576fe6a0add6f79331a812137",
-    "latestDevInspectionScope": "The branch was created directly from this dev commit before the approved first-wave tree was integrated."
+    "latestDevInspectionScope": "The branch was created directly from this dev commit before the approved first-wave tree was integrated.",
+    "integrationCandidate": "85ebc5bb5774f3c3bc5942465235e7eb1689ec88",
+    "integrationBase": "761abac2f8ee4106db0347189ff304a4a79bf026",
+    "integrationPullRequest": 583
   },
   "source": {
     "branch": "dev",
@@ -70,7 +73,7 @@
       "identicalRegistryAndTestBlobsInFinal": true
     },
     "visualReview": "Broader worker review on 263e694 plus final targeted CAP02 reference selector and CAP04 320px detail review on 5012d7a; exact inspected states and limits in each worker report.",
-    "userAcceptance": "AWAITING_USER_REVIEW",
+    "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
     "firstWaveUserAcceptance": "APPROVED_BY_USER",
     "localeScope": "en-US dark/light desktop, short/narrow; pt-BR dark desktop including editor/review/detail; not an exhaustive cross-browser or zoom matrix.",
     "browser": {
@@ -81,7 +84,8 @@
       "failed": 0,
       "previewCount": 39,
       "portuguesePreviews": 11
-    }
+    },
+    "integration": "PASS: both native design journeys (2 tests, 67 captures) and four technical gates against dev 761abac2; see DEV-INTEGRATION.md and PR #583."
   },
   "surfaces": [
     {
@@ -143,7 +147,7 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "VISUALLY_REVIEWED_AWAITING_USER",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
         "status": "IMPLEMENTED_VISUALLY_REVIEWED",
         "worker": "redesign_topics",
@@ -174,7 +178,7 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "VISUALLY_REVIEWED_AWAITING_USER",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
         "status": "IMPLEMENTED_VISUALLY_REVIEWED",
         "worker": "redesign_budget",
@@ -217,7 +221,7 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "VISUALLY_REVIEWED_AWAITING_USER",
+      "status": "ACCEPTED_FOR_INTEGRATION",
       "designWork": {
         "status": "IMPLEMENTED_VISUALLY_REVIEWED",
         "worker": "redesign_opex",
@@ -2455,7 +2459,7 @@
     "CAP04"
   ],
   "secondWaveDelivery": {
-    "status": "VISUALLY_REVIEWED_AWAITING_USER",
+    "status": "ACCEPTED_FOR_INTEGRATION",
     "authorization": "User: do it, after explicitly approving UI29/UI33/CAP01.",
     "appliedToProduct": true,
     "appliedToBranch": "sf-design-two",
@@ -2488,14 +2492,22 @@
     "evidence": "wave-two/evidence/manifest.json",
     "gallery": "wave-two/evidence/README.md",
     "acceptance": {
-      "status": "AWAITING_USER_REVIEW",
+      "status": "ACCEPTED_FOR_INTEGRATION",
+      "recordedAt": "2026-11-21T18:10:17Z",
+      "timezone": "America/Sao_Paulo",
       "scope": [
         "CAP02",
         "CAP03",
         "CAP04"
       ],
+      "basis": "Positive user review followed by explicit instruction to complete the merge to dev.",
+      "userStatements": [
+        "thats great work. Jam ergeou tudo?",
+        "Ja sabe o que fazr entao"
+      ],
       "productCommit": "5012d7adf0e5d02576fe6a0add6f79331a812137",
-      "userApproval": null,
+      "integrationCandidate": "85ebc5bb5774f3c3bc5942465235e7eb1689ec88",
+      "pullRequest": 583,
       "goldenBaseline": null
     },
     "remainingInventoried": 64,
@@ -2506,5 +2518,51 @@
     },
     "captureCount": 39,
     "portugueseCaptureCount": 11
+  },
+  "integration": {
+    "pullRequest": 583,
+    "targetBranch": "dev",
+    "status": "VALIDATED_FOR_INTEGRATION",
+    "base": "761abac2f8ee4106db0347189ff304a4a79bf026",
+    "productCommit": "85ebc5bb5774f3c3bc5942465235e7eb1689ec88",
+    "productTree": "636f12ee75ae4bbbfcf174b0c347a72cb1204292",
+    "upstreamPathsPreserved": 19,
+    "designPathsPreserved": 132,
+    "overlappingPaths": 0,
+    "browser": {
+      "run": 44933847309,
+      "job": 136936092807,
+      "product": "85ebc5bb5774f3c3bc5942465235e7eb1689ec88",
+      "snapshot": "795082a26dd90fd34c81163e3ed65d23d3a35f32",
+      "passed": 2,
+      "failed": 0,
+      "duration": "4.7m",
+      "previewCount": 67,
+      "incompletePreviews": [],
+      "previewSkips": 0
+    },
+    "gates": {
+      "run": 44933852596,
+      "job": 136936109695,
+      "snapshot": "b373e5d5519b6c3262dcdc58c41e075754fe4a98",
+      "passed": 4,
+      "failed": 0,
+      "assertions": 11,
+      "guards": {
+        "rules": 78,
+        "errors": 0,
+        "warnings": 5,
+        "approvals": 0
+      },
+      "paletteFilesUnchanged": 7
+    },
+    "artifact": {
+      "id": 14718614204,
+      "bytes": 84800045,
+      "digest": "sha256:28f8c0e82530c590d63666b0093cf97244211184a8406289bf057f1f912540a2",
+      "expiresAt": "2026-11-28T18:14:34Z"
+    },
+    "mergeRecord": "https://github.com/gustavomhss/Orchestra-SF/pull/583",
+    "report": "DEV-INTEGRATION.md"
   }
 }
