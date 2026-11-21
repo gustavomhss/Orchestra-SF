@@ -400,7 +400,7 @@ test("Installed Teams Decisions replays a native draft after authenticated resto
   const keys = await generateKeyPair("RS256", { extractable: true })
   const jwk = await exportJWK(keys.publicKey)
   const login = { nonce: "" }
-  const membership = { active: true, both: false }
+  const membership = { active: true, both: false, reads: 0, queued: Promise.withResolvers<void>() }
   const f = await fixture("direct", async (request) => {
     const url = new URL(request.url)
     if (url.href === authority + "/v2.0/.well-known/openid-configuration") return discovery()
@@ -418,8 +418,12 @@ test("Installed Teams Decisions replays a native draft after authenticated resto
       expect(await request.json()).toEqual({ groupIds: [grantPrincipal] })
       return Response.json({ value: [grantPrincipal] })
     }
-    if (url.href === graph + "/me/joinedTeams") return Response.json({ value: membership.active
-      ? [teamObjectId, ...(membership.both ? [secondTeamId] : [])].map(id => ({ id, tenantId, displayName: id, isArchived: false })) : [] })
+    if (url.href === graph + "/me/joinedTeams") {
+      const value = membership.active
+        ? [teamObjectId, ...(membership.both ? [secondTeamId] : [])].map(id => ({ id, tenantId, displayName: id, isArchived: false })) : []
+      if (++membership.reads === 2) membership.queued.resolve()
+      return Response.json({ value })
+    }
     throw new Error("Unexpected synthetic Microsoft request")
   }, [teamObjectId, secondTeamId], {
     dashboard: { contributor: "group:" + grantPrincipal }, planner: {}, procurement: {},
@@ -507,6 +511,33 @@ test("Installed Teams Decisions replays a native draft after authenticated resto
     membership.active = false
     expect((await draft(teamObjectId))?.status).toBe(403)
     expect(await readFrontier()).toEqual(frontier)
+
+    const authStore = await openLocalStore(join(f.directory, "business-microsoft"))
+    const locked = Promise.withResolvers<void>()
+    const release = Promise.withResolvers<void>()
+    const before = authStore.transaction("dashboard", async (snapshot) => {
+      locked.resolve()
+      await release.promise
+      return { commit: false, value: digestSfValue(snapshot.data.teamDecisionIntentions) }
+    })
+    try {
+      await locked.promise
+      membership.active = true
+      membership.reads = 0
+      membership.queued = Promise.withResolvers<void>()
+      const waiting = draft(teamObjectId, { "idempotency-key": "native-team-revocation-race" })
+      await Promise.race([membership.queued.promise, waiting.then(() => { throw new Error("Expected a queued Decisions write") })])
+      membership.active = false
+      release.resolve()
+      expect((await waiting)?.ok).toBe(false)
+      expect(await authStore.transaction("dashboard", async (snapshot) => ({
+        commit: false, value: digestSfValue(snapshot.data.teamDecisionIntentions),
+      }))).toBe(await before)
+      expect(await readFrontier()).toEqual(frontier)
+    } finally {
+      release.resolve()
+      await authStore.dispose()
+    }
   } finally { await f.close() }
 }, 60_000)
 

@@ -46,12 +46,12 @@ export async function runTeamBusiness(input: {
       throw new TeamDirectoryUnavailable()
     })
   }
-  const reauthorize = async () => {
+  const reauthorize = async (options?: { refreshSession?: boolean }) => {
     // Recheck the roster before the last authority read so a provider wait cannot extend that decision.
     if (authorized.roster !== undefined && rosterDigest(await readDirectory(admission)) !== authorized.roster) return false
     const [actor, current] = await Promise.all([
       currentActor(),
-      input.authorizeTeam(request, route.teamObjectId),
+      input.authorizeTeam(request, route.teamObjectId, options),
     ])
     if (!actor || !authorized.actor || digestSfValue(actor) !== digestSfValue(authorized.actor) ||
         current.status !== "allowed" || current.principalObjectId !== admission.principalObjectId) return false

@@ -18,7 +18,7 @@ export async function runTeamDecisions(input: {
   persistence: LocalStore
   intentions: Pick<LocalStore, "transaction">
   authenticate: Application["authenticate"]
-  current: () => Promise<boolean>
+  current: (options?: { refreshSession?: boolean }) => Promise<boolean>
   now: () => Date
 }) {
   const { request, principalId, partition, directory, persistence, intentions, current, authenticate, now } = input
@@ -84,6 +84,8 @@ export async function runTeamDecisions(input: {
     const bound = await intentions.transaction("dashboard", async (snapshot) => {
       const previous = object(snapshot.data.teamDecisionIntentions)
       if (Object.hasOwn(previous, key)) return { commit: false, value: previous[key] === binding }
+      // The intention store also holds the Entra session. Recheck authority without refreshing it under the writer lock.
+      if (!await current({ refreshSession: false })) return { commit: false, value: false }
       snapshot.data.teamDecisionIntentions = { ...previous, [key]: binding }
       return { commit: true, value: true }
     }, { signal: request.signal })
