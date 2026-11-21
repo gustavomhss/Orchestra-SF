@@ -61,15 +61,17 @@ export function editableSourcing(request: SourcingRequest): SourcingEdit {
   const source = request.sourcing
   return {
     quotes: source?.quotes?.map((quote) => ({ ...quote })) ?? [],
-    evaluator: source?.evaluator,
-    selectedId: source?.selectedId,
-    fewQuotesJustification: source?.fewQuotesJustification,
-    selectionJustification: source?.selectionJustification,
-    contractStrategy: source?.contractStrategy,
-    weights: source?.weights
-      ? { ...source.weights,criteria:source.weights.criteria?.map((entry)=>({...entry})),
-          commCriteria:source.weights.commCriteria?.map((entry)=>({...entry})) }
-      : undefined,
+    ...Object.fromEntries(scalarFields.filter((field) => source?.[field] !== undefined)
+      .map((field) => [field, source![field]])),
+    ...(source?.weights ? { weights: {
+      ...source.weights,
+      ...(source.weights.criteria === undefined ? {} : {
+        criteria: source.weights.criteria.map((entry) => ({ ...entry })),
+      }),
+      ...(source.weights.commCriteria === undefined ? {} : {
+        commCriteria: source.weights.commCriteria.map((entry) => ({ ...entry })),
+      }),
+    } } : {}),
   }
 }
 export function uniqueRequest(page: Cap25PageOk, requestRef: string): SourcingRequest | null {
