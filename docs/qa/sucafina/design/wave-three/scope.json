@@ -1,0 +1,512 @@
+{
+  "version": 1,
+  "status": "IN_PROGRESS",
+  "base": "acc0181508ceda7416bce57284b2307a9b20385b",
+  "branch": "sf-design-fifteen",
+  "groups": [
+    {
+      "key": "finance",
+      "branch": "sf-polish-finance",
+      "ids": [
+        "CAP05",
+        "CAP14",
+        "CAP17",
+        "CAP18",
+        "CAP19"
+      ],
+      "owner": "redesign_finance_five"
+    },
+    {
+      "key": "people",
+      "branch": "sf-polish-people",
+      "ids": [
+        "CAP06",
+        "CAP07",
+        "CAP08",
+        "CAP09",
+        "CAP10"
+      ],
+      "owner": "redesign_people_five"
+    },
+    {
+      "key": "operations",
+      "branch": "sf-polish-ops",
+      "ids": [
+        "CAP11",
+        "CAP12",
+        "CAP13",
+        "CAP15",
+        "CAP16"
+      ],
+      "owner": "redesign_operations_five"
+    }
+  ],
+  "areaCount": 15,
+  "routePatterns": 56,
+  "areas": [
+    {
+      "id": "CAP05",
+      "label": "CAPEX — realizado e previsão",
+      "group": "finance",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-dashboard/capex"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-dashboard/capex/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-dashboard/capex/:projectRef"
+        },
+        {
+          "kind": "edit",
+          "pattern": "/orchestra/sf-dashboard/capex/:projectRef/edit"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/capex/index.tsx",
+          "blobSha": "87a847f859fc15c5473a0ba6f778700be5e0e470"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP06",
+      "label": "Pessoas — visão geral",
+      "group": "people",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-people/overview"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+          "blobSha": "0912fc52ea5423a1e6ef24863ff68c9007901dc1"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP07",
+      "label": "Estrutura e membros",
+      "group": "people",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-people/structure"
+        },
+        {
+          "kind": "cio",
+          "pattern": "/orchestra/sf-people/structure/cio"
+        },
+        {
+          "kind": "new-member",
+          "pattern": "/orchestra/sf-people/structure/members/new"
+        },
+        {
+          "kind": "leader",
+          "pattern": "/orchestra/sf-people/structure/leaders/:personRef"
+        },
+        {
+          "kind": "member",
+          "pattern": "/orchestra/sf-people/structure/members/:personRef"
+        },
+        {
+          "kind": "member-edit",
+          "pattern": "/orchestra/sf-people/structure/members/:personRef/edit"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx",
+          "blobSha": "c4b9cb76fb617b405c01069f84fb95b381122f64"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP08",
+      "label": "Talentos",
+      "group": "people",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-people/talent"
+        },
+        {
+          "kind": "export",
+          "pattern": "/orchestra/sf-people/talent/export"
+        },
+        {
+          "kind": "import",
+          "pattern": "/orchestra/sf-people/talent/import"
+        },
+        {
+          "kind": "member",
+          "pattern": "/orchestra/sf-people/talent/:personRef"
+        },
+        {
+          "kind": "edit",
+          "pattern": "/orchestra/sf-people/talent/:personRef/edit"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+          "blobSha": "fcdb83cfc20e0168fdf27479f8aa009b59821585"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP09",
+      "label": "Portfólio — visão geral",
+      "group": "people",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-portfolio/overview"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/overview/index.tsx",
+          "blobSha": "55e80ff7253bae9c8cf4b2d9db394251879d1b2b"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP10",
+      "label": "Projetos",
+      "group": "people",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-portfolio/projects"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-portfolio/projects/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-portfolio/projects/:projectRef"
+        },
+        {
+          "kind": "edit",
+          "pattern": "/orchestra/sf-portfolio/projects/:projectRef/edit"
+        },
+        {
+          "kind": "milestones",
+          "pattern": "/orchestra/sf-portfolio/projects/:projectRef/milestones"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx",
+          "blobSha": "373e2389aa6d1690c1bb5e9156bab67e5f147b24"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP11",
+      "label": "Serviço e SLA",
+      "group": "operations",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-operations/service"
+        },
+        {
+          "kind": "edit-month",
+          "pattern": "/orchestra/sf-operations/service/edit"
+        },
+        {
+          "kind": "import",
+          "pattern": "/orchestra/sf-operations/service/import"
+        },
+        {
+          "kind": "settings",
+          "pattern": "/orchestra/sf-operations/service/settings"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx",
+          "blobSha": "6150473ed6f7bcc3d5234f68551ed9e4e5864bc2"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP12",
+      "label": "Segurança",
+      "group": "operations",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-operations/security"
+        },
+        {
+          "kind": "edit-kpi",
+          "pattern": "/orchestra/sf-operations/security/kpi/edit"
+        },
+        {
+          "kind": "action",
+          "pattern": "/orchestra/sf-operations/security/actions/:recordRef"
+        },
+        {
+          "kind": "campaign",
+          "pattern": "/orchestra/sf-operations/security/campaigns/:recordRef"
+        },
+        {
+          "kind": "incident",
+          "pattern": "/orchestra/sf-operations/security/incidents/:recordRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
+          "blobSha": "bdc686c4efa75672991de61b215be0691fc54cd4"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP13",
+      "label": "Riscos",
+      "group": "operations",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-operations/risks"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-operations/risks/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-operations/risks/:riskRef"
+        },
+        {
+          "kind": "edit",
+          "pattern": "/orchestra/sf-operations/risks/:riskRef/edit"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/index.tsx",
+          "blobSha": "9f55c881506896e756a9a9f5ad4e1f23d05fde72"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP14",
+      "label": "Contratos",
+      "group": "finance",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-procurement/contracts"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-procurement/contracts/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-procurement/contracts/:contractRef"
+        },
+        {
+          "kind": "edit",
+          "pattern": "/orchestra/sf-procurement/contracts/:contractRef/edit"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+          "blobSha": "f1e8a88f37563a6276f56cc38b36f4821d5a741f"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP15",
+      "label": "Stakeholders",
+      "group": "operations",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-operations/stakeholders"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-operations/stakeholders/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-operations/stakeholders/:stakeholderRef"
+        },
+        {
+          "kind": "edit",
+          "pattern": "/orchestra/sf-operations/stakeholders/:stakeholderRef/edit"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/stakeholders/index.tsx",
+          "blobSha": "aebff25e95fb0014518b80ff8d85e0474833e856"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP16",
+      "label": "Desempenho operacional",
+      "group": "operations",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-operations/performance"
+        },
+        {
+          "kind": "item",
+          "pattern": "/orchestra/sf-operations/performance/items/:itemRef"
+        },
+        {
+          "kind": "subitem",
+          "pattern": "/orchestra/sf-operations/performance/items/:itemRef/subitems/:subitemRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+          "blobSha": "e4cd8eb36184d210879fd1b535c0596b9649714f"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP17",
+      "label": "Planner — visão geral",
+      "group": "finance",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-planner/overview"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/overview/index.tsx",
+          "blobSha": "eae3664b7e0db079259774446f0fa305da541de4"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP18",
+      "label": "Planner OPEX",
+      "group": "finance",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-planner/opex"
+        },
+        {
+          "kind": "review",
+          "pattern": "/orchestra/sf-planner/opex/review"
+        },
+        {
+          "kind": "line",
+          "pattern": "/orchestra/sf-planner/opex/lines/:lineRef"
+        },
+        {
+          "kind": "line-edit",
+          "pattern": "/orchestra/sf-planner/opex/lines/:lineRef/edit"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/index.tsx",
+          "blobSha": "b6274f9f22ac3a5a5c85a7b0c3c19efeb4519143"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "CAP19",
+      "label": "Planner CAPEX",
+      "group": "finance",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-planner/capex"
+        },
+        {
+          "kind": "review",
+          "pattern": "/orchestra/sf-planner/capex/review"
+        },
+        {
+          "kind": "line",
+          "pattern": "/orchestra/sf-planner/capex/lines/:lineRef"
+        },
+        {
+          "kind": "line-edit",
+          "pattern": "/orchestra/sf-planner/capex/lines/:lineRef/edit"
+        },
+        {
+          "kind": "project",
+          "pattern": "/orchestra/sf-planner/capex/projects/:projectRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/capex/index.tsx",
+          "blobSha": "771f8524a5972cbf19473b7b4173a0d97accfae1"
+        }
+      ],
+      "status": "ASSIGNED",
+      "views": [],
+      "verification": "NOT_RUN"
+    }
+  ]
+}
