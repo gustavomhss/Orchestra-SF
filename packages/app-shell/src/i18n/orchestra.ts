@@ -2,6 +2,7 @@ import { HOME_COPY, HOME_COPY_BR } from "./orchestra-chapters/home"
 import { SHELL_COPY, SHELL_COPY_BR } from "./orchestra-chapters/shell"
 import { SF_CONTEXT_COPY, SF_CONTEXT_COPY_BR } from "./orchestra-chapters/sf-context"
 import { SF_COMMON_COPY, SF_COMMON_COPY_BR } from "./orchestra-chapters/sf-common"
+import { SF_DESIGN_COPY, SF_DESIGN_COPY_BR } from "./orchestra-chapters/sf-design"
 import { SF_S02_COPY, SF_S02_COPY_BR } from "./orchestra-chapters/sf-s02"
 import { SF_S03_COPY, SF_S03_COPY_BR } from "./orchestra-chapters/sf-s03"
 import { SF_S01_COPY, SF_S01_COPY_BR } from "./orchestra-chapters/sf-s01"
@@ -422,6 +423,7 @@ export const ORCHESTRA_COPY = {
   ...SHELL_COPY,
   ...SF_CONTEXT_COPY,
   ...SF_COMMON_COPY,
+  ...SF_DESIGN_COPY,
   ...SF_S02_COPY,
   ...SF_S03_COPY,
   ...SF_S01_COPY,
@@ -828,6 +830,7 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...SHELL_COPY_BR,
   ...SF_CONTEXT_COPY_BR,
   ...SF_COMMON_COPY_BR,
+  ...SF_DESIGN_COPY_BR,
   ...SF_S02_COPY_BR,
   ...SF_S03_COPY_BR,
   ...SF_S01_COPY_BR,
