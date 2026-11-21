@@ -263,13 +263,14 @@ function MountedSurface(props: Readonly<{
   })
   onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
-  const firstWave = () => {
+  const polishedSurface = () => {
     const surface = current()?.surfaceId
-    return surface === "UI29" || surface === "UI33" || surface === "CAP01"
+    return surface === "UI29" || surface === "UI33" || surface === "CAP01" ||
+      surface === "CAP02" || surface === "CAP03" || surface === "CAP04"
   }
   return (
     <>
-    <Show when={firstWave()} fallback={
+    <Show when={polishedSurface()} fallback={
     <div class="flex flex-wrap gap-2" role="toolbar" aria-label={language.t("sf.ui67.title")}>
       <button type="button" class="mx-btn" disabled={authBusy()}
         onClick={() => { void handle.reload() }}>{language.t("sf.ui67.refreshAccess")}</button>

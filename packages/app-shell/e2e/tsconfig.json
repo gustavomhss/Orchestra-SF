@@ -4,7 +4,11 @@
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "rootDir": "../..",
-    "types": ["node", "bun", "vite/client"]
+    "types": [
+      "node",
+      "bun",
+      "vite/client"
+    ]
   },
   "include": [
     "../src/native-titlebar.ts",
@@ -31,6 +35,7 @@
     "../playwright.config.ts",
     "./playwright.production.config.ts",
     "./sucafina/design-wave-one.spec.ts",
+    "./sucafina/design-wave-two.spec.ts",
     "./sucafina/design-support/*.ts",
     "../../../apps/cli/test/fixture/sucafina-native-installation.ts",
     "../../../modules/sucafina/Sucafinav1/local/enroll.ts",

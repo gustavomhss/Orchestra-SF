@@ -15,12 +15,13 @@ export type DesignInstallation = {
   year: number
   month: number
   topicName: string
+  opexName: string
   riskName: string
   projectName: string
 }
 
 /** Node owns the Bun adapter's scope; the existing fixture owns the real CLI. */
-export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>) {
+export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>, wave: "one" | "two" = "one") {
   const support = path.dirname(fileURLToPath(import.meta.url))
   const repository = path.resolve(support, "../../../../..")
   // Test listing must not initialize the process graph.
@@ -50,7 +51,7 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
     const installed = yield* Effect.gen(function* () {
       const ready = yield* Deferred.make<void, Error>()
       const diagnostic = { tail: "" }
-      const child = yield* launcher.spawn(ChildProcess.make("bun", [path.join(support, "native-host.ts"), root], {
+      const child = yield* launcher.spawn(ChildProcess.make("bun", [path.join(support, "native-host.ts"), root, wave], {
         cwd: repository,
         env: isolatedEnvironment(root),
         extendEnv: false,
@@ -110,7 +111,7 @@ function isolatedEnvironment(root: string): Record<string, string> {
 
 function isInstallation(value: unknown): value is DesignInstallation {
   if (!value || typeof value !== "object") return false
-  const fields = ["root", "origin", "mount", "actorId", "signIn", "serverPassword", "topicName", "riskName", "projectName"] as const
+  const fields = ["root", "origin", "mount", "actorId", "signIn", "serverPassword", "topicName", "opexName", "riskName", "projectName"] as const
   if (!fields.every((field) => field in value && typeof Reflect.get(value, field) === "string")) return false
   return "year" in value && typeof value.year === "number" && Number.isSafeInteger(value.year) &&
     "month" in value && typeof value.month === "number" && Number.isInteger(value.month) && value.month >= 1 && value.month <= 12

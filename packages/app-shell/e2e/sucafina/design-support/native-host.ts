@@ -19,10 +19,13 @@ if (!privateRoot || !path.isAbsolute(privateRoot)) throw new Error("Private capt
 if (Object.keys(process.env).some((key) => key.startsWith("VITE_")))
   throw new Error("Native capture build must not inherit Vite server overrides")
 
+const secondWave = process.argv[3] === "two"
 const now = new Date()
 const year = now.getUTCFullYear()
 const month = now.getUTCMonth() + 1
-const topicName = "Design test data · Confirm the regional sourcing review and its supporting evidence"
+const topicName = secondWave ? "Dados de teste · Revisão de contratos e evidências da origem" :
+  "Design test data · Confirm the regional sourcing review and its supporting evidence"
+const opexName = secondWave ? "Dados de teste · Operações regionais" : "Design test data · Regional operations"
 const riskName = "Design test data · Supplier concentration across the regional delivery programme"
 const projectName = "Design test data · Regional delivery programme"
 const stop = new AbortController()
@@ -63,7 +66,7 @@ const program = Effect.scoped(Effect.gen(function* () {
         }
         const ownerId = recordId(execute(DashboardBudget.domain, {
           page: "OPEX Detail", action: "save", version: 0,
-          values: { name: "Design test data · Regional operations", budget: 180000 },
+          values: { name: opexName, budget: 180000 },
         }))
         execute(DashboardBudget.domain, {
           page: "OPEX Detail", action: "save-entry", version: 0,
@@ -97,6 +100,46 @@ const program = Effect.scoped(Effect.gen(function* () {
           page: "Executive Dashboard", action: "save-benchmark", version: 0,
           values: { year, month, value: 2800 },
         })
+        if (secondWave) {
+          // Additional records belong only to the second-wave isolated fixture.
+          // Every value is accepted by the original producer before the browser reads it.
+          for (const line of [
+            { name: "Dados de teste · Infraestrutura de TI", budget: 96000, actual: 7200, forecast: 7700 },
+            { name: "Dados de teste · Governança e serviços", budget: 144000, actual: 11800, forecast: 12100 },
+          ]) {
+            const id = recordId(execute(DashboardBudget.domain, {
+              page: "OPEX Detail", action: "save", version: 0,
+              values: { name: line.name, budget: line.budget },
+            }))
+            execute(DashboardBudget.domain, {
+              page: "OPEX Detail", action: "save-entry", version: 0,
+              values: { ownerId: id, year, month: 1, budget: line.budget / 12, actual: line.actual, forecast: line.forecast },
+            })
+          }
+          for (const entry of [
+            { month: 2, actual: 13800, forecast: 14500 },
+            { month: 3, actual: 14100, forecast: 14800 },
+            { month: 4, actual: 14700, forecast: 15100 },
+            { month: 5, actual: 14500, forecast: 14900 },
+            { month: 6, actual: 15100, forecast: 15400 },
+          ]) execute(DashboardBudget.domain, {
+            page: "OPEX Detail", action: "save-entry", version: 0,
+            values: { ownerId, year, month: entry.month, budget: 15000, actual: entry.actual, forecast: entry.forecast },
+          })
+          execute(DashboardBudget.domain, {
+            page: "Budget Overview", action: "save-month", version: 0, values: { year, month: 6 },
+          })
+          execute(DashboardBudget.domain, {
+            page: "Budget Overview", action: "save-revenue", version: 0, values: { year, revenue: 2400000 },
+          })
+          for (const topic of [
+            { action: "Dados de teste · Validar plano de continuidade do fornecedor", owner: "Suprimentos", due: year + "-12-19", status: "blocked", priority: "critical" },
+            { action: "Dados de teste · Concluir a revisão de despesas recorrentes", owner: "Finanças", due: year + "-12-05", status: "open", priority: "normal" },
+          ]) execute(DashboardPeople.domain, {
+            page: "Hot Topics & Actions", action: "save", version: 0,
+            values: { ...topic, notes: "Registro demonstrativo criado pelo produtor na instalação isolada de teste." },
+          })
+        }
         return { commit: true, value: undefined }
       })
     },
@@ -117,7 +160,7 @@ const program = Effect.scoped(Effect.gen(function* () {
     throw new Error("Native enrollment destination does not match this installation")
   const metadata = {
     root: installed.root, origin: installed.origin, mount: installed.mount, actorId: installed.actorId,
-    signIn, serverPassword, year, month, topicName, riskName, projectName,
+    signIn, serverPassword, year, month, topicName, opexName, riskName, projectName,
   }
   yield* Effect.promise(() => writeFile(path.join(privateRoot, "installation.json"), JSON.stringify(metadata), { mode: 0o600, flag: "wx" }))
   process.stdout.write("SF_DESIGN_READY\n")
