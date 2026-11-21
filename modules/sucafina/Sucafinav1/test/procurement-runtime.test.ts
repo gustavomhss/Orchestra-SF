@@ -52,11 +52,12 @@ test("request fields survive creation, save, submission and actual holder decisi
   const created = domain.execute(
     state,
     requester,
-    { page: "Requests", action: "create", version: 0, values: { pr } },
+    { page: "Requests", action: "create", version: 0, values: { pr: { ...pr, estAmount: "100" } } },
     environment,
   )
   expect(created.ok).toBe(true)
   const requests = domain.view(state, requester, environment).data.requests as Record<string, unknown>[]
+  expect(object(requests[0]!.pr).estAmount).toBe(100)
   const id = String(requests[0]!.number)
   expect(
     domain.execute(
@@ -1036,8 +1037,8 @@ test("actual browser-shaped nested arrays omit untouched repeat placeholders and
   const before = domain.view(state, actor, env).data.settings as Record<string, unknown>
   const values = {
     ...structuredClone(before),
-    levels: [...before.levels as Record<string, unknown>[], { _new: "true", id: "levels-3", name: "", threshold: null, holderId: "" }],
-    fxRates: [...before.fxRates as Record<string, unknown>[], { _new: "true", code: "", rate: null }],
+    levels: [...(before.levels as Record<string, unknown>[]).map((level) => ({ ...level, threshold: String(level.threshold) })), { _new: "true", id: "levels-3", name: "", threshold: null, holderId: "" }],
+    fxRates: [...(before.fxRates as Record<string, unknown>[]).map((rate) => ({ ...rate, rate: String(rate.rate) })), { _new: "true", code: "", rate: null }],
     criteria: [...before.criteria as Record<string, unknown>[], { _new: "true", name: "", weight: null }],
     commCriteria: [...before.commCriteria as Record<string, unknown>[], { _new: "true", name: "", weight: null, auto: false }],
   }

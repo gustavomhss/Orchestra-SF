@@ -50,6 +50,8 @@ export function requestVersion(
 }
 const numberInput = (item: string | number | boolean | null | undefined): string | number | null | undefined =>
   item === null ? null : typeof item === "number" || typeof item === "string" ? item : undefined
+const commandAmount = (item: string | number | null): number | null =>
+  item === null || typeof item === "string" && !item.trim() ? null : Number(item)
 const booleanInput = (item: string | boolean | undefined): boolean | "true" | "false" | "on" | undefined =>
   item === true || item === "true" || item === "on" ? true : item === false || item === "false" ? false : undefined
 
@@ -72,13 +74,13 @@ export function prCommandInput(values: SfPrEdit): SfPrCommandInput {
     ...(values.title !== undefined ? { title: values.title } : {}),
     ...(values.type !== undefined ? { type: values.type } : {}),
     ...(values.description !== undefined ? { description: values.description } : {}),
-    ...(values.estAmount !== undefined ? { estAmount: values.estAmount } : {}),
+    ...(values.estAmount !== undefined ? { estAmount: commandAmount(values.estAmount) } : {}),
     ...(values.costCenter !== undefined ? { costCenter: values.costCenter } : {}),
     ...(values.needBy !== undefined ? { needBy: values.needBy } : {}),
     ...(values.justification !== undefined ? { justification: values.justification } : {}),
     ...(values.recurring !== undefined ? { recurring: values.recurring } : {}),
     ...(values.frequency !== undefined ? { frequency: values.frequency } : {}),
-    ...(values.estAnnual !== undefined ? { estAnnual: values.estAnnual } : {}),
+    ...(values.estAnnual !== undefined ? { estAnnual: commandAmount(values.estAnnual) } : {}),
     ...(values.expenseType !== undefined ? { expenseType: values.expenseType } : {}),
     ...(values.category !== undefined ? { category: values.category } : {}),
   }
