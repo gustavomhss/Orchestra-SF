@@ -187,7 +187,8 @@ export function createSfPlannerCalculationServices(input: {
     return current() && coverage.status === "ok"
   }
   const issueObserved = async <Value>(runId: string, call: TrustedDomainContext,
-    finish: (reference: Calculation, observed: SfCalculationObservedReads | undefined) => Promise<PortResult<Value>>, cited = false, sealFinish = false): Promise<PortResult<Value>> => {
+    finish: (reference: Calculation, observed: SfCalculationObservedReads | undefined) => Promise<PortResult<Value>>,
+    cited = false, sealFinish = false, verifyRegistration?: () => Promise<PortResult<unknown>>): Promise<PortResult<Value>> => {
     if (typeof runId !== "string" || !runId.trim()) return { status: "denied", reason: "calculation-authority-unavailable" }
     if (!readRoot.allows(call)) return { status: "unavailable", reason: "calculation-read-root-unavailable" }
     // Bound the selector admission too: canonical readers may resolve ancestors
@@ -258,6 +259,11 @@ export function createSfPlannerCalculationServices(input: {
               if (sealFinish && mixed) prepareFinish = () => readRoot.prepare(call, initialize, sameReaders, sameOwner)
             }
           }
+          if (verifyRegistration && !preparedRoot) {
+            const registered = await verifyRegistration()
+            if (registered.status !== "ok") return registered
+            if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
+          }
           const eligible = call.kind === "ui" && plannerCalculationClosure(selection.stored)
           if (eligible) {
             scope.observation = await readScope.open(selection, call, current)
@@ -266,7 +272,14 @@ export function createSfPlannerCalculationServices(input: {
           const parsed = decodeSfOperationInput("sf_scenario_simulate", object(selection.request).request)
           const recordOnly = call.kind === "ui" && parsed.ok && !parsed.value.assumptions.length &&
             !parsed.value.operations.some((operation) => operation.replacementRef) && !!plannerRecordSources(selection.stored)
-          const produce = () => (recordOnly ? recordCalculation : calculation).issue(runId, call)
+          const produce = async (): Promise<PortResult<Calculation>> => {
+            if (verifyRegistration && preparedRoot) {
+              const registered = await verifyRegistration()
+              if (registered.status !== "ok") return registered
+              if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
+            }
+            return (recordOnly ? recordCalculation : calculation).issue(runId, call)
+          }
           // Stage the value until the physical root is accepted. The original
           // completed/finish/final witness below still run after this boundary.
           const issued = preparedRoot ? await preparedRoot.run(produce) : await produce()
@@ -304,11 +317,23 @@ export function createSfPlannerCalculationServices(input: {
       const saved = await input.persist(value, callId, call, { ...comparisonReplay, simulateScenario: input.replayScenario })
       if (saved.status !== "ok") return saved
       captured.resultRef = saved.value.resultRef
-      const registered = await requests.register({ resultRef: saved.value.resultRef, request: value.request, engineVersion: "planner-runtime-v1" }, call)
+      let published: PortResult<Calculation> | undefined
+      const registered = await requests.register({ resultRef: saved.value.resultRef, request: value.request, engineVersion: "planner-runtime-v1" }, call, async (stored, verify) => {
+        if (call.kind !== "ui" || !input.host.persistence.currentSnapshotScope ||
+          value.request.assumptions.some((assumption) => assumption.state !== "hypothetical") ||
+          value.request.operations.some((operation) => operation.replacementRef) ||
+          !plannerLocalSourcePlan(stored, value.request.baseRef)?.calculations.length) return verify()
+        let receipt: Awaited<ReturnType<typeof verify>> | undefined
+        // Both canonical producers run. Only their physical root is shared.
+        // issueObserved settles that root before the final case and C08 reads.
+        published = await issueObserved(saved.value.resultRef, call, async (value) => ({ status: "ok", value }), false, false, async () => {
+          receipt = await verify()
+          return receipt
+        })
+        return receipt ?? { status: "unavailable", reason: "calculation-request-binding-unavailable" }
+      })
       if (registered.status !== "ok") return { status: registered.status, reason: "calculation-request-binding-unavailable" }
-      // The issue producer owns its observation and revalidates it after the
-      // post-CAS registration has returned.
-      const issued = await issue(saved.value.resultRef, call)
+      const issued = published ?? await issue(saved.value.resultRef, call)
       return issued.status === "ok" ? { status: "ok", value: { resultRef: saved.value.resultRef, calculation: issued.value } } : issued
     } catch { return { status: "unavailable", reason: "calculation-publication-unavailable" } }
     finally { captures.delete(call) }
