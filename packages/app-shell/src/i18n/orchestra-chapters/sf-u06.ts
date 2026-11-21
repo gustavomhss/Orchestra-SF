@@ -42,6 +42,8 @@ export const SF_U06_COPY = {
   "sf.u06.missingLegend": "A dash means the source has no value. A recorded zero remains 0.",
   "sf.u06.versionsHint": "Compare the plans available for the selected fiscal year.",
   "sf.u06.sourceDetails": "Source coverage",
+  "sf.u06.manageVersions": "Manage versions",
+  "sf.u06.comparisonTable": "Budget comparison table",
 } as const
 
 export const SF_U06_COPY_BR: Readonly<Record<keyof typeof SF_U06_COPY, string>> = {
@@ -86,4 +88,6 @@ export const SF_U06_COPY_BR: Readonly<Record<keyof typeof SF_U06_COPY, string>> 
   "sf.u06.missingLegend": "Um traço indica que a fonte não informa o valor. Um zero registrado permanece 0.",
   "sf.u06.versionsHint": "Compare os planos disponíveis para o exercício selecionado.",
   "sf.u06.sourceDetails": "Cobertura da fonte",
+  "sf.u06.manageVersions": "Gerenciar versões",
+  "sf.u06.comparisonTable": "Tabela de comparação dos orçamentos",
 }

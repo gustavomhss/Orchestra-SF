@@ -182,7 +182,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
     const partial = !!source && (source.warnings.length > 0 || known !== 12)
     return {
       state: partial ? "partial" as const : source ? "complete" as const : "unavailable" as const,
-      summary: message("sf.u06.budget"),
+      summary: message("sf.u06.sourceDetails"),
       reasons: source?.warnings.map((warning) => message("sf.u06.missingFx", { codes: warning })) ?? [],
       knownCount: known,
       expectedCount: source ? 12 : null,
@@ -247,18 +247,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
         disabled: !canCompare() || view.state !== "ready",
         onInvoke: () => open("compare", { year: year() }),
       }}
-      secondaryActions={[
-        {
-          id: "versions", labelKey: key("sf.u06.version"), tone: "secondary" as const,
-          disabled: !canCompare(), busy: false,
-          onInvoke: () => open("versions", { year: year() }),
-        },
-        {
-          id: "import", labelKey: key("sf.u06.importWorkbook"), tone: "secondary" as const,
-          disabled: !importReady(), busy: false,
-          onInvoke: () => open("import"),
-        },
-      ]}
+      secondaryActions={[]}
       density="comfortable"
       layout="reading"
       onLayoutMode={() => undefined}
@@ -274,7 +263,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
             <section class="sf-u06" data-sf-wave="three" data-sf-surface="CAP17">
               <div class="sf-u06-toolbar">
                 <label>{copy.t(key("sf.u06.year"))}
-                  <select value={year() ?? ""} onChange={(event) => {
+                  <select aria-label={copy.t(key("sf.u06.year"))} value={year() ?? ""} onChange={(event) => {
                     const available = loaded().data.versions.find((version) => String(version.year) === event.currentTarget.value)
                     if (available) open("overview", { year: available.year, version: available.id })
                     event.currentTarget.value = String(year() ?? "")
@@ -286,7 +275,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                   </select>
                 </label>
                 <label class="sf-u06-version">{copy.t(key("sf.u06.version"))}
-                  <select value={selected()?.id ?? ""} onChange={(event) => {
+                  <select aria-label={copy.t(key("sf.u06.version"))} value={selected()?.id ?? ""} onChange={(event) => {
                     const available = versionOptions().find((version) => version.id === event.currentTarget.value)
                     if (available) open("overview", { year: available.year, version: available.id })
                     event.currentTarget.value = selected()?.id ?? ""
@@ -295,6 +284,12 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                     <For each={versionOptions()}>{(version) => <option value={version.id}>{version.name}</option>}</For>
                   </select>
                 </label>
+                <div class="sf-u06-toolbar-actions">
+                  <button type="button" class="mx-btn" disabled={!canCompare()}
+                    onClick={() => open("versions", { year: year() })}>{copy.t(key("sf.u06.manageVersions"))}</button>
+                  <button type="button" class="mx-btn" disabled={!importReady()}
+                    onClick={() => open("import")}>{copy.t(key("sf.u06.importWorkbook"))}</button>
+                </div>
               </div>
               <Show when={summary()} fallback={<p role="status">{copy.t(key("sf.u06.noVersion"))}</p>}>
                 {(item) => (
@@ -381,8 +376,8 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                       !versionOptions().some((version) => version.id === props.route.query.filter)}>
                       <p role="status">{copy.t(key("sf.u06.invalidComparison"))}</p>
                     </Show>
-                    <section class="sf-u06-comparison-list" aria-label={copy.t(key("sf.u06.compareBudgets"))}>
-                      <div class="sf-u06-scroll" tabIndex={0} role="region" aria-label={copy.t(key("sf.u06.compareBudgets"))}>
+                    <div class="sf-u06-comparison-list">
+                      <div class="sf-u06-scroll" tabIndex={0} role="region" aria-label={copy.t(key("sf.u06.comparisonTable"))}>
                         <table>
                           <caption>{copy.t(key("sf.u06.compareBudgets"))}</caption>
                           <thead><tr>
@@ -406,7 +401,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                           </tbody>
                         </table>
                       </div>
-                    </section>
+                    </div>
                     </section>
                   </>
                 )}

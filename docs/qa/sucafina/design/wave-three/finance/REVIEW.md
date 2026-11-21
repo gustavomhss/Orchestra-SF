@@ -112,3 +112,18 @@ These are five campaign areas. The conservative journey covers 35 functional wor
 | CAP19 | Monthly grid; projects; project editor and review; lines; line editor; spread review. | 7 |
 
 The count describes the retained journey, not 35 newly created pages, and does not claim the as-yet-unreached Planner states have passed.
+
+
+## Third real Actions critique and command-boundary proof
+
+Production-browser run [44941864205](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44941864205), job 136960606195, ran both installations independently. CAP14 again stopped before sending any POST. The bounded input-shape observation contained all 15 ordinary values (14 strings and one number), with no undefined values. This disproved optional absence as the cause of that particular seeded edit. CAP17 reached its first real rendered overview, then stopped because a select's wrapped label included its option text and could not be addressed by the exact Version label.
+
+The CAP17 capture was inspected directly. Its source summary and plot were intact, but Versions and Import occupied an isolated native secondary-action row. Both actions now sit in the same local toolbar as Year and Version, preserving their original admission and handlers. The select fields across CAP14 and CAP17–19 now have explicit localized accessible names. The comparison table has its own distinct accessible region name. Complete chart coverage remains available to assistive technology; partial-source warnings stay visible. The 640px plot scroller and source table remain unchanged.
+
+A focused command-boundary regression then reproduced the CAP14 defect with the original schema and codec. Probe [44942933262](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44942933262) used the SSR condition, so its explicit real-proxy guard correctly rejected that environment. The browser-condition probe [44943193740](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44943193740), job 136964684727, established the actual cause: the tracked Solid store exposed two symbol metadata keys; the original input failed both the typed schema and codec, while a plain object snapshot passed both. Complete plain values and zero/string/empty/null cases passed. A separate source-shaped case also proved that own optional fields containing undefined cannot cross the JSON codec.
+
+The minimal consumer correction is in vendorCommandInput: snapshot Object.entries into a new object and omit only undefined values. It does not coerce data, remove unexpected string keys, change accepted types, add page/action discriminators, relax schema/codec validation or alter CAS. Explicit null, zero and empty strings supplied to this DTO boundary are preserved. This is not a claim that the existing source-to-editor normalization preserves every source null; that separate normalization remains unchanged.
+
+All four regressions now live in test-browser/sucafina-vendor-contract-command.test.ts, where the maintained browser condition creates the actual Solid proxy. The proxy test retains its environment guard and additionally verifies that later store edits cannot mutate the already-created DTO or the bytes bound to the digest. The temporary product attribute, shape logger, POST logger and probe logger have been removed.
+
+The integration owner will run the focused regressions and both real finance journeys again. No CAP14 successful confirmation or unreached CAP18/19 state is claimed until those original-source checks pass.

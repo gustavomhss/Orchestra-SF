@@ -32,24 +32,6 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
   const narrow = async () => { await page.setViewportSize({ width: 320, height: 900 }); await reflow(page) }
 
 
-  page.on("response", async (response) => {
-    const request = response.request()
-    if (request.method() !== "POST" || new URL(response.url()).pathname !== installation.mount + "/dashboard" ||
-        !request.headers()["content-type"]?.includes("application/json")) return
-    const input = request.postDataJSON()
-    if (input?.page !== "Vendor Contracts") return
-    const output = await response.json().catch(() => undefined)
-    const sourceMessages = ["Vendor is required.", "Amount must be a number.", "Choose valid contract terms."]
-    console.info("SF_FINANCE_COMMAND_DIAGNOSTICS " + JSON.stringify({
-      command: "CAP14." + String(input.action), status: response.status(), ok: output?.ok,
-      producerStatus: output?.status,
-      fieldTypes: Object.fromEntries(Object.entries(input.values ?? {}).map(([field, value]) =>
-        [field, value === null ? "null" : Array.isArray(value) ? "array" : typeof value])),
-      validation: Array.isArray(output?.errors) ? output.errors.map((value: unknown) =>
-        typeof value === "string" && sourceMessages.includes(value) ? value : "redacted source message") : [],
-    }))
-  })
-
   await waveThreeTest.step("CAP05 · list, twelve source months, annual settings, deviation and a confirmed month", async () => {
     await go(screens[0])
     await scheme(page, "dark")
@@ -208,15 +190,8 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     await expect(editor.getByLabel("Notice period", { exact: true })).toHaveValue("120 days")
     await desktop()
     await editor.getByRole("button", { name: "Review contract change", exact: true }).click()
-    console.info("SF_FINANCE_COMMAND_DIAGNOSTICS " + JSON.stringify({ command: "CAP14.save",
-      inputShape: JSON.parse(await surface.getAttribute("data-sf-contract-input-shape") ?? "null") }))
     await review.getByRole("button", { name: "Confirm", exact: true }).click()
-    try {
-      await expect(surface.locator(".sf-u15-notice")).toContainText("Current record verified after saving.")
-    } finally {
-      console.info("SF_FINANCE_COMMAND_DIAGNOSTICS " + JSON.stringify({ command: "CAP14.save",
-        observedPostDelta: posts.length - before }))
-    }
+    await expect(surface.locator(".sf-u15-notice")).toContainText("Current record verified after saving.")
     expect(posts).toHaveLength(before + 1)
     await surface.getByRole("button", { name: "Discard changes", exact: true }).click()
     await expect(stage).toHaveAttribute("data-sf-contract-stage", "detail")
@@ -317,7 +292,7 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await overview.getByLabel("Compare budget", { exact: true }).selectOption({ label: waveThreeData.planner.comparison })
     await ready(page, "Overview")
     await expect(overview.locator(".sf-u06-comparison-list tbody tr")).toHaveCount(2)
-    await overview.getByRole("region", { name: "Compare budgets", exact: true }).scrollIntoViewIfNeeded()
+    await overview.getByRole("region", { name: "Budget comparison table", exact: true }).scrollIntoViewIfNeeded()
     await capture(page, info, "CAP17-light-320-version-comparison-test-data")
     await desktop()
     await scheme(page, "dark")

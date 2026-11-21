@@ -399,18 +399,6 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     }
   }
 
-  // Temporary bounded evidence for the installed source journey: names and types only.
-  const reviewInputShape = () => {
-    const review = view.reviewing
-    if (!review) return undefined
-    const input = review.action === "save"
-      ? vendorCommandInput("save", review.ref, review.version, review.values)
-      : vendorCommandInput("delete", review.ref!, review.version, review.values)
-    const types = (value: object) => Object.fromEntries(Object.entries(value).map(([field, item]) =>
-      [field, item === null ? "null" : Array.isArray(item) ? "array" : typeof item]))
-    return JSON.stringify({ fields: types(input), values: types(input.values) })
-  }
-
   const renderField = (field: Field) => {
     const current = activeDraft()
     const value = current?.value[field]
@@ -424,9 +412,9 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
       <span>{label}<Show when={field === "vendor"}><span aria-hidden="true"> *</span></Show></span>
       <Show when={choices} fallback={
         field === "desc" || field === "notes" ?
-          <textarea rows={3} disabled={disabled} value={value == null ? "" : String(value)}
+          <textarea rows={3} aria-label={label} disabled={disabled} value={value == null ? "" : String(value)}
             onInput={(event) => setField(field, event.currentTarget.value)} /> :
-          <input
+          <input aria-label={label}
             type={field === "start" || field === "end" || field === "renewal" ? "date" :
               field === "amount" ? "number" : "text"}
             step={field === "amount" ? "any" : undefined}
@@ -434,7 +422,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
             value={value == null ? "" : String(value)}
             onInput={(event) => setField(field, field === "amount" && event.currentTarget.value === "" ? null : event.currentTarget.value)} />
       }>
-        {(items) => <select disabled={disabled} value={value == null ? "" : String(value)}
+        {(items) => <select aria-label={label} disabled={disabled} value={value == null ? "" : String(value)}
           onChange={(event) => setField(field, event.currentTarget.value)}>
           <For each={items()}>{(option) => <option value={option}>
             {field === "eval" ? option || "—" : t(("sf.u15.option." + option) as Key)}
@@ -477,8 +465,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     />
   }
 
-  return <section data-component="sf-vendor-contracts" data-sf-surface="CAP14" aria-busy={view.sending}
-    data-sf-contract-input-shape={reviewInputShape()}>
+  return <section data-component="sf-vendor-contracts" data-sf-surface="CAP14" aria-busy={view.sending}>
     <SfPageFrame
       titleKey={key("sf.cap14.title")}
       context={[]} tabs={[]} activeTab={null}
