@@ -59,6 +59,12 @@ export const SF_U40_COPY = {
   "sf.u40.flagGreen": "On track",
   "sf.u40.flagAmber": "Attention",
   "sf.u40.flagRed": "At risk",
+  "sf.u40.statusInProgress": "In Progress",
+  "sf.u40.statusPlanned": "Planned",
+  "sf.u40.statusCompleted": "Completed",
+  "sf.u40.statusOnHold": "On Hold",
+  "sf.u40.statusCancelled": "Cancelled",
+  "sf.u40.statusActive": "Active",
 } as const
 
 export const SF_U40_COPY_BR: Readonly<Record<keyof typeof SF_U40_COPY, string>> = {
@@ -120,4 +126,10 @@ export const SF_U40_COPY_BR: Readonly<Record<keyof typeof SF_U40_COPY, string>> 
   "sf.u40.flagGreen": "Em dia",
   "sf.u40.flagAmber": "Atenção",
   "sf.u40.flagRed": "Em risco",
+  "sf.u40.statusInProgress": "Em andamento",
+  "sf.u40.statusPlanned": "Planejado",
+  "sf.u40.statusCompleted": "Concluído",
+  "sf.u40.statusOnHold": "Em espera",
+  "sf.u40.statusCancelled": "Cancelado",
+  "sf.u40.statusActive": "Ativo",
 }
