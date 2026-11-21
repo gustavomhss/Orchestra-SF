@@ -215,8 +215,14 @@ export function createSfTransport(options: Readonly<{
            operation.operationId === "files.asset.download")) return failure("contract-unavailable")
       if (metadata.responseMode !== "json" && metadata.responseMode !== "empty" && !isBytes)
         return failure("contract-unavailable")
+      const webFiles = operation.operationId.startsWith("files.") && !options.desktop
       if (operation.operationId.startsWith("files.") && !stamp)
         return failure("contract-unavailable")
+      const fileOwner = webFiles && stamp ? { ...stamp } : undefined
+      const currentFileOwner = () => !!fileOwner && !!stamp && isCurrent() &&
+        !call.signal.aborted && equalContextStamp(stamp, fileOwner)
+      const revalidateFileOwner = async () => !!fileOwner && currentFileOwner() &&
+        await refreshSfFileAuthority(options, fileOwner, operation.operationId, call.signal) && currentFileOwner()
       // ctx.context expectations are ALWAYS taken from the approved descriptor.
       // The frozen F01 signatures allow an undefined public argument, while the
       // catalog requires exactly this private three-field query; never trust an
@@ -321,9 +327,7 @@ export function createSfTransport(options: Readonly<{
         if (mutating && previous === undefined) pending.delete(key!)
         return failure("aborted")
       }
-      if (operation.operationId.startsWith("files.") && stamp &&
-          !options.desktop &&
-          !await refreshSfFileAuthority(options, stamp, operation.operationId)) {
+      if (webFiles && !await revalidateFileOwner()) {
         if (mutating) pending.delete(key!)
         return failure("contract-unavailable")
       }
@@ -439,10 +443,8 @@ export function createSfTransport(options: Readonly<{
             await result.body?.cancel().catch(() => undefined)
             response = failure("contract-unavailable")
           } else if (isBytes && result.status === 200) {
-            const bytes = sfAllowedByteMime(operation.operationId, result.headers.get("content-type")) && stamp
-              ? await readSfBytesBounded(result, call.signal, async () =>
-                  isCurrent() && webOrigin() && !!stamp &&
-                  await refreshSfFileAuthority(options, stamp, operation.operationId)) : undefined
+            const bytes = sfAllowedByteMime(operation.operationId, result.headers.get("content-type")) && currentFileOwner()
+              ? await readSfBytesBounded(result, call.signal, async () => webOrigin() && await revalidateFileOwner()) : undefined
             response = bytes
               ? { status: result.status, headers: extracted, body: bytes }
               : failure("invalid-response")
@@ -474,6 +476,7 @@ export function createSfTransport(options: Readonly<{
       if (mutating && response.status >= 500) return failure("outcome-unknown")
       const uncertain = mutating && response.status !== 401 && response.status !== 403
       if (isBytes) {
+        if (webFiles && !currentFileOwner()) return failure("contract-unavailable")
         if (response.status !== 200 || !(response.body instanceof Uint8Array))
           return failure("invalid-response")
         const parsedBytes = Schema.decodeUnknownOption(Schema.toType(operation.output))(response.body)
@@ -487,9 +490,17 @@ export function createSfTransport(options: Readonly<{
       if (wireDecoded.status !== "ok") return failure(uncertain ? "outcome-unknown" : "invalid-response")
       const parsedOutput = Schema.decodeUnknownOption(Schema.toType(operation.output), { onExcessProperty: "error" })(wireDecoded.value)
       if (Option.isNone(parsedOutput)) return failure(uncertain ? "outcome-unknown" : "invalid-response")
-      if (operation.operationId.startsWith("files.") && stamp && !options.desktop &&
-          !await refreshSfFileAuthority(options, stamp, operation.operationId))
-        return failure(mutating ? "outcome-unknown" : "contract-unavailable")
+      if (webFiles) {
+        if (response.status === 401 || response.status === 403) {
+          // The server's rejection already cleared the local stamp. Keep the
+          // typed denial, but never release a success payload under that status.
+          const denied = asJsonObject(wireDecoded.value)
+          if (!denied || "value" in denied || denied.status === "ok" || denied.ok === true)
+            return failure("contract-unavailable")
+        } else if (!await revalidateFileOwner()) {
+          return failure(mutating ? "outcome-unknown" : "contract-unavailable")
+        }
+      }
       if (operation.operationId === "ctx.context") {
         if (!validContextOutcome(parsedOutput.value, options.binding, response.status)) {
           clear()
@@ -964,7 +975,8 @@ async function sha256Bytes(bytes: Uint8Array): Promise<string | undefined> {
 async function refreshSfFileAuthority(options: Readonly<{
   binding: SfInstallationDescriptor; fetch: SfTransportFetch;
   operations: SfOperationBindings;
-}>, expected: SfContextStamp, operationId: SfOperationId): Promise<boolean> {
+}>, expected: SfContextStamp, operationId: SfOperationId, signal: AbortSignal): Promise<boolean> {
+  if (signal.aborted) return false
   const meta = cataloguedRoute("ctx.context")
   const codec = options.operations["ctx.context"]
   if (!meta || !codec || meta.method !== "GET" || meta.responseMode !== "json") return false
@@ -975,11 +987,11 @@ async function refreshSfFileAuthority(options: Readonly<{
   try {
     const reply = await options.fetch(route, {
       method: "GET", credentials: "same-origin", cache: "no-store", redirect: "error",
-      headers: { Accept: "application/json" },
+      signal, headers: { Accept: "application/json" },
     })
     if (reply.status !== 200 || !isJsonContentType(reply.headers.get("content-type"))) return false
     const wire = await readJsonBounded(reply)
-    if (wire === undefined) return false
+    if (signal.aborted || wire === undefined) return false
     const context = codec.decodeOutput(wire)
     if (context.status !== "ok" || !validContextOutcome(context.value, options.binding, 200)) return false
     const value = context.value
