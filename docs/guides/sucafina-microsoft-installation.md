@@ -1,4 +1,4 @@
-# Instalação Sucafina com login Microsoft
+# Membresia Teams na instalação Microsoft
 
 A preparação corporativa usa o arquivo privado escolhido pelo proprietário. Para habilitar a leitura da membresia direta, defina `"teams": "direct"` nesse arquivo antes de preparar a instalação. O login confidencial solicita o escopo delegado `Team.ReadBasic.All` quando a leitura está habilitada.
 
@@ -17,7 +17,3 @@ No diretório do descritor, com acesso exclusivo ao usuário do serviço, crie `
 Crie `ingress-secret.txt` no diretório privado da instalação, com modo `0600` e 32 bytes aleatórios codificados em 64 caracteres hexadecimais minúsculos. Configure o proxy para substituir qualquer `X-SF-Ingress-Proof` recebido do cliente pelo valor privado. O host exige uma conexão loopback e confere esse valor antes de encaminhar a requisição. O cabeçalho é removido antes de chegar à instalação.
 
 O listener corporativo é dedicado ao mount da instalação, com login e logout. Encaminhe apenas esse caminho e seus descendentes no proxy. Aplique limites de taxa por cliente e de concorrência a `/auth/login` e `/auth/callback` antes do encaminhamento ao listener. Use os caminhos do mount ou do dashboard ao iniciar o fluxo de login. A leitura de membresia fica disponível ao código do servidor. A admissão ao dashboard antecede as permissões de negócio de cada fluxo.
-
-Dashboard, Planner e Procurement também verificam a sessão e os grupos definidos para a respectiva superfície. Configure os vínculos no formato `group:<object-id>`. Na partida, a instalação preenche mapas ausentes e preserva os existentes, inclusive os que foram esvaziados. Os dados corporativos ficam em `business-microsoft`. Consulte `<mount>/status` pelo proxy para verificar a prontidão do perfil.
-
-Operações que selecionam outros usuários dependem de uma fonte corporativa autorizada. As rotas governadas exigem a autoridade de produto que aplica `grants` e `supremeAdminGroupId`. A homologação com o tenant real é uma etapa separada.

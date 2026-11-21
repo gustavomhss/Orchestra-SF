@@ -50,9 +50,11 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     throw new Error("Trusted installation ingress requires a loopback listener, canonical HTTP origin and authorizer")
   }
   const contractLimit = (method: string, url: URL) => {
-    if (method === "POST" && url.pathname === `${installation.mount}/dashboard` &&
-      url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract") {
-      return 25 * 1024 * 1024
+    if (method !== "POST" || url.searchParams.getAll("upload").length !== 1 || url.searchParams.get("upload") !== "contract") return undefined
+    if (url.pathname === `${installation.mount}/dashboard`) return 25 * 1024 * 1024
+    if (ingress && url.pathname.startsWith(`${installation.mount}/`)) {
+      const relative = url.pathname.slice(installation.mount.length)
+      if (/^\/teams\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/dashboard$/.test(relative)) return 25 * 1024 * 1024
     }
   }
   const bodyLimit = (incoming: HttpServerRequest.HttpServerRequest) => {

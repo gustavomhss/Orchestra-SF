@@ -127,13 +127,16 @@ const serveInstallation = (trusted: boolean) => () =>
           ingressProof: null, forwardingHeaders: [], method: "POST", cookie: "installation=fixture", body: "original body",
         })
         const attachment = new Uint8Array(17 * 1024 * 1024)
-        const upload = (query: string) => dispatch(`/sucafina/dashboard?${query}`, {
+        const upload = (route: string, query: string) => dispatch(`/sucafina${route}?${query}`, {
           method: "POST", headers: { host, "x-sf-ingress-proof": proof }, body: attachment,
         })
-        const contract = await upload("upload=contract")
-        expect(contract.status).toBe(200)
-        expect(await contract.json()).toBe(attachment.byteLength)
-        expect((await upload("upload=contract&upload=contract")).status).toBe(413)
+        for (const route of ["/dashboard", "/teams/44444444-4444-4444-8444-444444444444/dashboard"]) {
+          const contract = await upload(route, "upload=contract")
+          expect(contract.status).toBe(200)
+          expect(await contract.json()).toBe(attachment.byteLength)
+          expect((await upload(route, "upload=contract&upload=contract")).status).toBe(413)
+        }
+        expect((await upload("/teams/not-a-team/dashboard", "upload=contract")).status).toBe(413)
         return
       }
       const base = await dispatch("/sucafina")

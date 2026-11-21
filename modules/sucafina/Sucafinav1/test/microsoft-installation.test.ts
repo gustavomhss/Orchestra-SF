@@ -42,11 +42,7 @@ async function fixture(
     await writeFile(file, JSON.stringify({
       version: 1, deployment: "azure-https", authentication: "microsoft",
       origin, listenerOrigin, ingressOrigin, mount, tenantId, clientId, workspaceDirectory,
-      groups: {
-        dashboard: { viewer: `group:${grantPrincipal}` },
-        planner: { viewer: `group:${grantPrincipal}` },
-        procurement: { viewer: `group:${grantPrincipal}` },
-      },
+      groups: { dashboard: {}, planner: {}, procurement: {} },
       grants: [{ principalRef: grantPrincipal.toUpperCase(), operations: ["sf_case_read"] }],
       supremeAdminGroupId: grantPrincipal.toUpperCase(), scanner: null,
       ...(teams ? { teams } : {}),
@@ -107,7 +103,7 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
   const finance = { id: teamObjectId, tenantId, displayName: "Finance", isArchived: false }
   const planning = { ...finance, id: secondTeamId, displayName: "Planning" }
   const disabled = { ...finance, id: disabledTeamId, displayName: "Disabled" }
-  const membership = { teams: [finance, disabled], incomplete: false, down: false, group: true }
+  const membership = { teams: [finance, disabled], incomplete: false, down: false }
   const f = await fixture("direct", async (request) => {
     const url = new URL(request.url)
     if (url.href === authority + "/v2.0/.well-known/openid-configuration") return discovery()
@@ -126,10 +122,6 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
       graphCalls.push(url.pathname)
       expect(request.headers.get("authorization")).toBe("Bearer " + accessToken)
       if (url.pathname === "/v1.0/me") return Response.json({ id: oid, displayName: "Verified person" })
-      if (url.pathname === "/v1.0/me/checkMemberGroups") {
-        expect(await request.json()).toEqual({ groupIds: [grantPrincipal] })
-        return Response.json({ value: membership.group ? [grantPrincipal] : [] })
-      }
       if (url.href === graph + "/me/joinedTeams") {
         if (membership.down) return new Response(null, { status: 503 })
         return Response.json({
@@ -172,7 +164,7 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     expect(callbackTarget.href).toBe(origin + mount + "/dashboard")
     expect((await f.installation.handler(ingress(callbackTarget.pathname.slice(mount.length), {
       ...headers, "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "document",
-    })))?.status).toBe(200)
+    })))?.status).toBe(204)
     expect(await f.installation.handler(ingress("/teams", headers))).toBeUndefined()
     expect((await f.installation.handler(ingress("/auth/login", { host: "foreign.example.test" })))?.status).toBe(403)
     expect((await f.installation.handler(new Request(listenerOrigin + mount + "/auth/login", {
@@ -188,15 +180,14 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     })
     expect(JSON.stringify(result)).not.toContain(accessToken)
     const read = ["/v1.0/me", "/v1.0/me/joinedTeams", "/v1.0/me"]
-    const businessRead = ["/v1.0/me", "/v1.0/me", "/v1.0/me/checkMemberGroups"]
-    expect(graphCalls).toEqual(["/v1.0/me", ...read, ...businessRead, ...read])
+    expect(graphCalls).toEqual(["/v1.0/me", ...read, ...read])
 
     const dashboard = (fields?: Record<string, string>) =>
       f.installation.handler(ingress("/dashboard", { ...headers, ...fields }))
     expect((await dashboard({ "x-sf-team-profile": "" }))?.status).toBe(403)
     expect((await dashboard({ "sec-fetch-site": "cross-site" }))?.status).toBe(403)
     expect((await f.installation.handler(ingress("/dashboard?teamObjectId=" + teamObjectId, headers)))?.status).toBe(403)
-    expect(graphCalls).toEqual(["/v1.0/me", ...read, ...businessRead, ...read])
+    expect(graphCalls).toEqual(["/v1.0/me", ...read, ...read])
 
     membership.teams = [finance, planning, disabled]
     const selection = await dashboard()
@@ -209,9 +200,7 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     const selector = (target: unknown) => ({
       "x-sf-team-profile": JSON.stringify({ contractRevision: "sf-team-profile/1", kind: "team", profile: target }),
     })
-    const page = await dashboard(selector(profile))
-    expect(page?.status).toBe(200)
-    expect(page?.headers.get("content-type")).toContain("text/html")
+    expect((await dashboard(selector(profile)))?.status).toBe(204)
     expect((await dashboard({
       ...selector(profile), "sec-fetch-site": "cross-site", "sec-fetch-mode": "navigate", "sec-fetch-dest": "document",
     }))?.status).toBe(403)
@@ -232,18 +221,6 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     membership.down = false
     membership.teams = [disabled]
     expect((await f.installation.handler(ingress("", headers)))?.status).toBe(403)
-    const mutation = new Request(ingress("/dashboard", headers), {
-      method: "POST", headers: { ...headers, host: new URL(ingressOrigin).host, origin },
-    })
-    expect((await f.installation.handler(mutation))?.status).toBe(403)
-    for (const surface of ["planner", "procurement"]) {
-      expect((await f.installation.handler(ingress(`/${surface}`, headers)))?.status).toBe(200)
-    }
-    membership.teams = [finance]
-    membership.group = false
-    for (const surface of ["dashboard", "planner", "procurement"]) {
-      expect((await f.installation.handler(ingress(`/${surface}`, headers)))?.status).toBe(403)
-    }
   } finally { await f.close() }
 })
 

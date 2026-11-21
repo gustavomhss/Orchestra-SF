@@ -254,11 +254,7 @@ function createIdentity(
       const current = await ready(request)
       if (!current || !context) return null
       const actor = await options.client.resolve(current.value.tokens.accessToken, context.roleMap.filter((row) => row.surface === context.surface)).catch(() => null)
-      if (actor?.id !== current.value.person.id) return null
-      if (!corporate) return actor
-      const latest = await ready(request)
-      return latest?.handle === current.handle && latest.encrypted.byteLength === current.encrypted.byteLength &&
-        timingSafeEqual(latest.encrypted, current.encrypted) ? actor : null
+      return actor?.id === current.value.person.id ? actor : null
     },
     async directory(request) {
       const current = await ready(request)
