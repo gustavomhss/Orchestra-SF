@@ -68,6 +68,9 @@
 .sf-u05-overview .sf-s01-row-open { min-block-size: var(--sf-u05-control); font-size: var(--orchestra-font-size-md); font-weight: 600; }
 .sf-u05-overview .sf-s01-pagination { padding-inline: var(--sf-u05-gap); }
 .sf-u05-overview .sf-u05-status { display: inline-block; padding: var(--sf-u05-field-gap) var(--sf-u05-small-gap); border-radius: var(--orchestra-radius-sm); background: var(--mx-soft); font-size: var(--orchestra-font-size-sm); color: var(--mx-strong); }
+.sf-u05-overview .sf-u05-status { white-space: nowrap; overflow-wrap: normal; }
+/* CAP09 exposes opening the record, with no row commands in this read-only table. */
+.sf-u05-overview .sf-s01-actions-head, .sf-u05-overview .sf-s01-actions-cell { display: none; }
 .sf-u05-overview .sf-u05-status[data-risk="High"] { color: var(--orchestra-warm); }
 .sf-u05-overview-scroll { overflow-x: auto; max-inline-size: 100%; }
 .sf-u05-overview-scroll table { inline-size: 100%; min-inline-size: var(--sf-u05-milestone-min); border-collapse: collapse; font-size: var(--orchestra-font-size-sm); }

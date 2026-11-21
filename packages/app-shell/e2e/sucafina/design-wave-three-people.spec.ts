@@ -44,7 +44,7 @@ waveThreeTest("native people design · reported headcount, structure, talent and
       await scheme(page, "dark")
       await capture(page, info, screen.id + "-dark-desktop-test-data")
       if (screen.id === "CAP07") {
-        await surface.getByRole("region", { name: "Members", exact: true }).scrollIntoViewIfNeeded()
+        await surface.locator('.sf-people-table-region[aria-label="Members"]').scrollIntoViewIfNeeded()
         await capture(page, info, "CAP07-dark-desktop-members-test-data")
         await scrollPageTop(page)
       }
@@ -55,8 +55,12 @@ waveThreeTest("native people design · reported headcount, structure, talent and
       await scrollPageTop(page)
       await capture(page, info, screen.id + "-light-320-test-data")
       if (screen.id === "CAP07") {
-        await surface.getByRole("region", { name: "Members", exact: true }).scrollIntoViewIfNeeded()
+        await surface.locator('.sf-people-table-region[aria-label="Members"]').scrollIntoViewIfNeeded()
         await capture(page, info, "CAP07-light-320-members-test-data")
+      }
+      if (screen.id === "CAP06") {
+        await surface.locator(".sf-people-table-region").scrollIntoViewIfNeeded()
+        await capture(page, info, "CAP06-light-320-leaders-test-data")
       }
     }
   })
@@ -111,10 +115,10 @@ waveThreeTest("native people design · reported headcount, structure, talent and
     expect(mutations).toHaveLength(1)
     await page.setViewportSize({ width: 1440, height: 1100 })
     await surface.getByRole("button", { name: "Back to team", exact: true }).click()
-    await expect(surface.getByRole("region", { name: "Members", exact: true })).toContainText("Regional service delivery manager")
+    await expect(surface.locator('.sf-people-table-region[aria-label="Members"]')).toContainText("Regional service delivery manager")
 
     await page.getByRole("button", { name: "Add member", exact: true }).click()
-    await editor.getByLabel("Name", { exact: true }).fill("Design test data · New member draft")
+    await editor.getByRole("textbox", { name: "Name", exact: true }).fill("Design test data · New member draft")
     await editor.getByLabel("Title", { exact: true }).fill("Regional programme analyst")
     await scrollPageTop(page)
     await capture(page, info, "CAP07-dark-desktop-new-member-test-data")
@@ -244,7 +248,7 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
       await scheme(page, "dark")
       await capture(page, info, screen.id + "-dark-desktop-test-data")
       if (screen.id === "CAP09") {
-        await surface.getByRole("region", { name: "Milestones", exact: true }).scrollIntoViewIfNeeded()
+        await surface.locator('.sf-u05-overview-scroll[aria-label="Milestones"]').scrollIntoViewIfNeeded()
         await capture(page, info, "CAP09-dark-desktop-milestones-test-data")
         await scrollPageTop(page)
       }
