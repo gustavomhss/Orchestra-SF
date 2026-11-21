@@ -53,3 +53,9 @@ CREATE TABLE recovery_pins (
 ```
 
 Para habilitar o comando de criação de rascunho de Decisions no QA, defina `SUCAFINA_NATIVE_TEAM_DECISIONS=1` e conceda `namespaces: ["cases"]` e `operations: ["sf_case_draft"]` ao principal de teste. O produtor exige o papel de contributor ou admin no dashboard e a membresia atual no Team. O cliente usa `POST <mount>/teams/<teamObjectId>/dashboard?sf=workbench-command` com uma chave `Idempotency-Key` estável. O comando e seu recibo ficam na partição usada pela rota de recuperação. A chave fica vinculada à requisição original e ao Team na área privada da instalação, fora da partição restaurada.
+
+### Escolha vigente no Team
+
+Com `SUCAFINA_NATIVE_TEAM_DECISIONS=1`, abra `<mount>/teams/<teamObjectId>/dashboard?sf=current-choice` e selecione um caso do Team. A leitura exige `sf_case_read` no grant do principal e acesso ao dashboard. A preparação exige também `planner.preview`, papel de escrita e acesso às fontes do Planner. A instalação vincula a prévia ao caso, à escolha existente e às fontes atuais do Team. A prévia mantém o resultado registrado e permite revisar o cálculo antes da promoção.
+
+A captura de uma escolha registrada usa `POST <mount>/teams/<teamObjectId>/dashboard?sf=decision-archive-choice`, com JSON `{ "id": "...", "incarnation": "...", "version": 1 }` da revisão registrada e uma `Idempotency-Key` estável. O produtor exige `sf_evidence_get`, acesso aos namespaces do caso, Atlas e outbox, e o mesmo principal responsável pelo evento. A preparação permanece indisponível até o Atlas confirmar a captura. A promoção exige sua própria permissão e confirmação.

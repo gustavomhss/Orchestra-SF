@@ -70,6 +70,41 @@ export function createCurrentChoicePreview(input: {
       const choices = decision.choices.filter((choice) => choice.id === request.choiceId && choice.alternativeId === request.alternativeRef.id)
       const alternatives = decision.alternatives.filter((item) => item.id === request.alternativeRef.id && item.version === request.alternativeRef.version)
       if (choices.length !== 1 || alternatives.length !== 1) return { status: "stale", reason: "choice-or-alternative-changed" }
+      const idempotencyKey = `choice-preview-binding:${operation}`
+      const commandDigest = digestSfValue(request)
+      const receiptKey = JSON.stringify([context.binding.principalRef, "preferences", request.caseRef.id, idempotencyKey])
+      const prior = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context)
+        ? { receipt: state.transactions[receiptKey] }
+        : undefined)
+      if (prior.status !== "ok" || !prior.value) return { status: "unavailable", reason: "choice-preview-receipt-unavailable" }
+      if (prior.value.receipt) {
+        const receipt = prior.value.receipt
+        if (receipt.commandDigest !== commandDigest || receipt.targetIncarnation !== request.caseRef.incarnation)
+          return { status: "conflict", reason: "choice-preview-idempotency-changed" }
+        // Run C08's original replay checks, including write authority for both
+        // namespaces. If the receipt has disappeared, this callback never writes.
+        const replay = await input.state.transaction<PreparedPreview | undefined>(source, {
+          namespace: "preferences", domainSurface: "planner", expectedStorageVersion: prior.storageVersion,
+          additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }],
+          targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey, commandDigest,
+        }, async () => ({ commit: false, value: undefined }))
+        if (replay.status !== "ok" || !replay.value || digestSfValue(replay.value) !== digestSfValue(receipt.value))
+          return { status: "conflict", reason: "choice-preview-receipt-changed" }
+        const saved = replay.value
+        const published = saved.promotion
+        if (!published || digestSfValue(published.caseRef) !== digestSfValue(request.caseRef) ||
+            published.choiceId !== request.choiceId || published.choiceDigest !== digestSfValue(choices[0]) ||
+            digestSfValue(published.alternativeRef) !== digestSfValue(request.alternativeRef))
+          return { status: "conflict", reason: "choice-preview-receipt-changed" }
+        input.fence!.observe(context, (snapshots) => {
+          const state = snapshots.dashboard.data.__sfProductV1 as SfProductState | undefined
+          return !!state && digestSfValue(state.transactions[receiptKey]) === digestSfValue(receipt)
+        })
+        const verified = await read(published, context)
+        if (verified.status !== "ok" || digestSfValue(verified.value.binding) !== saved.bindingDigest || !await input.fence!.check(context))
+          return { status: "unavailable", reason: "choice-preview-receipt-unavailable" }
+        return { status: "ok", value: { ...saved, result: verified.value.result, caseDigest: verified.value.caseDigest, historical: verified.value.historical } }
+      }
       const preview = await input.resimulate({ caseRef: request.caseRef, choice: choices[0]! }, context)
       if (preview.status !== "ok") return preview
       if (preview.value.choiceDigest !== digestSfValue(choices[0]) || preview.value.requestDigest !== digestSfValue(preview.value.scenario) || preview.value.resultDigest !== digestSfValue(preview.value.result) || digestSfValue(preview.value.scenario) !== digestSfValue({ ...choices[0]!.scenario, baseRef: preview.value.source.refId }) || preview.value.originalSource.refId !== choices[0]!.scenario.baseRef || !choices[0]!.result.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(preview.value.originalSource)) || !preview.value.result.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(preview.value.source))) return { status: "conflict", reason: "choice-preview-mismatch" }
@@ -123,7 +158,7 @@ export function createCurrentChoicePreview(input: {
         return { commit: true, value: { promotion, bindingDigest: digestSfValue(binding) } }
       }
       input.writes.add(work)
-      const saved = await input.state.transaction(source, { namespace: "preferences", domainSurface: "planner", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: latest.storageVersion }], targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `choice-preview-binding:${operation}`, commandDigest: digestSfValue(request) }, work).finally(() => input.writes.delete(work))
+      const saved = await input.state.transaction(source, { namespace: "preferences", domainSurface: "planner", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: latest.storageVersion }], targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey, commandDigest }, work).finally(() => input.writes.delete(work))
       if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" || saved.status === "preview" ? "conflict" : "unavailable", reason: "choice-preview-unavailable" }
       // Keep the producer, coverage and binding guards on the preparation fence
       // until the installed caller publishes its response.
@@ -254,6 +289,7 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
   host: () => Pick<DomainPortHost, "requestFor" | "revalidate">
   operationIdentity: (context: TrustedDomainContext) => string | undefined
   identity: () => { installationId: string; projectId: string } | undefined
+  authorizeCommit?: () => Promise<boolean>
 }): CurrentChoiceFence & { persistence: P } {
   type Scope = {
     context: TrustedDomainContext
@@ -344,28 +380,34 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
       options?: TransactionOptions,
     ) => {
       const scope = scopes.getStore()
-      if (!scope) return input.persistence.transaction(surface, work, options)
-      return track(scope, () => input.persistence.transaction(surface, async (snapshot, blobs) => {
-        if (!currentScope(scope)) throw denied()
+      if (!scope && !input.authorizeCommit) return input.persistence.transaction(surface, work, options)
+      const run = () => input.persistence.transaction(surface, async (snapshot, blobs) => {
+        if (scope && !currentScope(scope)) throw denied()
         const result = await work(snapshot, blobs)
+        if (result.commit && input.authorizeCommit && !await input.authorizeCommit()) throw denied()
+        if (!scope) return result
         // The shipped SQLite driver holds one serialized transaction and exposes
         // all three current snapshots, including this callback's staged writes.
         const authorized = await authorizeSnapshot(scope)
         if (!publication(scope, authorized)) throw denied()
         return result
-      }, options))
+      }, options)
+      return scope ? track(scope, run) : run()
     },
     ...(input.persistence.transactionAll ? {
       transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
         const scope = scopes.getStore()
-        if (!scope) return input.persistence.transactionAll!(work, options)
-        return track(scope, () => input.persistence.transactionAll!(async (snapshots) => {
-          if (!currentScope(scope)) throw denied()
+        if (!scope && !input.authorizeCommit) return input.persistence.transactionAll!(work, options)
+        const run = () => input.persistence.transactionAll!(async (snapshots) => {
+          if (scope && !currentScope(scope)) throw denied()
           const result = await work(snapshots)
+          if (result.commit && input.authorizeCommit && !await input.authorizeCommit()) throw denied()
+          if (!scope) return result
           const authorized = await authorizeSnapshot(scope)
           if (!publication(scope, authorized)) throw denied()
           return result
-        }, options))
+        }, options)
+        return scope ? track(scope, run) : run()
       },
     } : {}),
   }
