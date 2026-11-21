@@ -595,9 +595,10 @@ function reply(body: string | null, status: number, headers: Record<string, stri
   })
 }
 
-export function htmlPolicy(html: string) {
-  const hashes = new Set(Array.from(html.matchAll(/<script>([\s\S]*?)<\/script>/g),
-    ([, script]) => `'sha256-${createHash("sha256").update(script!).digest("base64")}'`))
+export function htmlPolicy(html: string, appScript?: string) {
+  const shellScript = html.match(/<script>([\s\S]*?)<\/script>/)?.[1]
+  const hashes = new Set([shellScript, appScript].filter((script) => script !== undefined)
+    .map((script) => `'sha256-${createHash("sha256").update(script).digest("base64")}'`))
   return `default-src 'self'; script-src ${hashes.size ? [...hashes].join(" ") : "'none'"}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; form-action 'self'`
 }
 function fileControls(

@@ -279,7 +279,7 @@ export function createSfExtendedHttp(input: {
         // or bootstrap as substitutions of the surrounding document.
         .replace("</body>", () => `${bootstrapHtml}<script>${inline}</script></body>`)
       trace("BEFORE_RETURN")
-      return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff", ...(accessRevision ? { "X-SF-Access-Revision": accessRevision } : {}) } })
+      return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(shell, inline), "X-Content-Type-Options": "nosniff", ...(accessRevision ? { "X-SF-Access-Revision": accessRevision } : {}) } })
     } catch (error) {
       if (!reviewRead) throw error
       // Before validate consumes the lease, requestFor is intentionally empty.
