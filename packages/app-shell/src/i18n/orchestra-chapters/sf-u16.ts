@@ -4,6 +4,12 @@
  */
 export const SF_U16_COPY = {
   "sf.ui33.title": "Decisions",
+  "sf.ui33.workspaceTitle": "Decision cases",
+  "sf.ui33.reference": "Case reference",
+  "sf.ui33.detailsStep": "Details",
+  "sf.ui33.reviewStep": "Review",
+  "sf.ui33.createHint": "Define the objective, time horizon and criteria for this decision.",
+  "sf.ui33.reviewHint": "Check the details below before confirming the creation.",
   "sf.ui33.primary": "New case",
   "sf.ui33.filter": "Filter decisions",
   "sf.ui33.filterPlaceholder": "Search objective or case reference",
@@ -85,6 +91,12 @@ export const SF_U16_COPY = {
 
 export const SF_U16_COPY_BR: Record<keyof typeof SF_U16_COPY, string> = {
   "sf.ui33.title": "Decisões",
+  "sf.ui33.workspaceTitle": "Casos de decisão",
+  "sf.ui33.reference": "Referência do caso",
+  "sf.ui33.detailsStep": "Detalhes",
+  "sf.ui33.reviewStep": "Revisão",
+  "sf.ui33.createHint": "Defina o objetivo, o período e os critérios desta decisão.",
+  "sf.ui33.reviewHint": "Confira os detalhes abaixo antes de confirmar a criação.",
   "sf.ui33.primary": "Novo caso",
   "sf.ui33.filter": "Filtrar decisões",
   "sf.ui33.filterPlaceholder": "Buscar por objetivo ou referência do caso",
