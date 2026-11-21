@@ -347,9 +347,9 @@ function applyRefresh() {
   }
 }
 let backgroundRefresh
-document.addEventListener("sucafina:review-navigation-start", () => backgroundRefresh?.abort())
+document.addEventListener("sucafina:review-foreground-start", () => backgroundRefresh?.abort())
 async function refresh(silent = false) {
-  if (pending.closed || silent && document.querySelector("[data-sf-review-workspace][data-sf-review-navigating]")) return
+  if (pending.closed || silent && document.querySelector("[data-sf-review-workspace]:is([data-sf-review-navigating], [data-sf-review-foreground])")) return
   if (pending.loading) { if (!silent) pending.again = true; return }
   const generation = pending.generation
   pending.loading = true

@@ -210,24 +210,12 @@ export function createSfExtendedHttp(input: {
       }
       let data: unknown = undefined
       let verifyReviewBootstrap: (() => Promise<Response | undefined>) | undefined
+      const reviewRef = mode === "review" ? url.searchParams.get("reviewRef") : null
+      const reviews = input.reviews?.reviews
+      const readReview = reviews?.read
       if (mode === "review") {
-        if (!input.reviews) return json({ status: "unavailable", reason: "review-producers-unavailable" }, 503)
-        const reviewRef = url.searchParams.get("reviewRef")
-        if (reviewRef) {
-          const current = await input.reviews.reviews.read(reviewRef, call)
-          if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
-          const captured = digestSfValue(current.value)
-          verifyReviewBootstrap = async () => {
-            const again = await input.reviews!.reviews.read(reviewRef, call)
-            if (again.status !== "ok") return json(again, again.status === "denied" ? 403 : 409)
-            if (digestSfValue(again.value) !== captured) return json({ status: "stale", reason: "review-changed-before-display" }, 409)
-            return undefined
-          }
-          const sectionId = url.searchParams.get("sectionId")
-          const selectedSection = sectionId ? current.value.sections.find((section) => section.id === sectionId) : undefined
-          if (sectionId && !selectedSection) return json({ status: "denied", reason: "review-section-unavailable" }, 403)
-          data = { reviewRef, ...(selectedSection ? { selectedSection: { ...selectedSection, content: selectedSection.content as DomainProjection } } : {}) }
-        } else if (url.searchParams.has("previousReviewRef")) {
+        if (!reviews || !readReview) return json({ status: "unavailable", reason: "review-producers-unavailable" }, 503)
+        if (!reviewRef && url.searchParams.has("previousReviewRef")) {
           const updated = await reviewCycle.update(url.searchParams.get("previousReviewRef")!, call)
           if (updated.status !== "ok") return json(updated, readStatus(updated.status))
           data = updated.value
@@ -238,7 +226,7 @@ export function createSfExtendedHttp(input: {
             if (digestSfValue(again.value) !== captured) return json({ status: "stale", reason: "review-update-changed-before-display" }, 409)
             return undefined
           }
-        } else {
+        } else if (!reviewRef) {
           // The existing Generate Report form chooses the actual ordered agenda.
           // Each topic is reopened by its production producer; none is dropped.
           const pages = reportTopics?.map((topic) => topic === "Executive Summary" ? "Executive Dashboard" : topic) ?? [url.searchParams.get("page") ?? "Budget Overview"]
@@ -265,6 +253,20 @@ export function createSfExtendedHttp(input: {
       if (verifyReviewBootstrap) {
         const unavailable = await verifyReviewBootstrap()
         if (unavailable) return unavailable
+      }
+      if (reviewRef && reviews && readReview) {
+        // The final producer read follows bundle loading. The mounted browser
+        // still makes its own independently authorized review-read request.
+        const currentReader = () => input.reviews?.reviews === reviews && reviews.read === readReview &&
+          !request.signal.aborted && authority.ui.requestFor(call) === request
+        if (!currentReader()) return json({ status: "denied", reason: "authority-unavailable" }, 403)
+        const current = await readReview.call(reviews, reviewRef, call)
+        if (!currentReader()) return json({ status: "denied", reason: "authority-unavailable" }, 403)
+        if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
+        const sectionId = url.searchParams.get("sectionId")
+        const selectedSection = sectionId ? current.value.sections.find((section) => section.id === sectionId) : undefined
+        if (sectionId && !selectedSection) return json({ status: "denied", reason: "review-section-unavailable" }, 403)
+        data = { reviewRef, ...(selectedSection ? { selectedSection: { ...selectedSection, content: selectedSection.content as DomainProjection } } : {}) }
       }
       // These client workspaces retain their live state across shell probes.
       // The published shell still owns navigation, notifications and sign-out.

@@ -23,17 +23,27 @@ if (root && bootstrap) {
   let dispose = () => {}
   let discussion: ReturnType<typeof createReviewCollaborationView> | undefined
   const pending = new Set<AbortController>()
+  let foregroundRequests = 0
+  const foreground = async <T>(work: () => Promise<T>) => {
+    if (++foregroundRequests === 1) {
+      root.setAttribute("data-sf-review-foreground", "")
+      root.dispatchEvent(new Event("sucafina:review-foreground-start", { bubbles: true }))
+    }
+    try { return await work() }
+    finally { if (--foregroundRequests === 0) root.removeAttribute("data-sf-review-foreground") }
+  }
   let probing = false
   const clearPrivate = () => {
     if (closed) return
     closed = true; generation += 1
     root.removeAttribute("data-sf-review-navigating")
+    root.removeAttribute("data-sf-review-foreground")
     for (const controller of pending) controller.abort()
     pending.clear(); dispose(); bootstrap.remove()
     const message = document.createElement("p"); message.setAttribute("role", "status"); message.textContent = "O acesso mudou. Reabra uma revisão autorizada."
     root.replaceChildren(message)
   }
-  const privateRead = async (url: URL) => {
+  const privateRead = (url: URL) => foreground(async () => {
     if (closed) return undefined
     const turn = generation, controller = new AbortController(); pending.add(controller)
     const timer = setTimeout(() => controller.abort(), 30_000)
@@ -43,7 +53,7 @@ if (root && bootstrap) {
       const body = await response.json().catch(() => undefined)
       return !closed && turn === generation && !controller.signal.aborted ? { response, body } : undefined
     } catch { return undefined } finally { clearTimeout(timer); pending.delete(controller) }
-  }
+  })
   const probe = async () => {
     if (closed || probing) return
     probing = true
@@ -166,7 +176,8 @@ if (root && bootstrap) {
     }
     const view = createReviewPreparationView({ items: update.items, ...(typeof update.previousReviewRef === "string" ? { previousReviewRef: update.previousReviewRef } : {}),
       client: { ...client, contribution: (payload) => guarded(() => client.contribution(payload)), agenda: (items) => guarded(() => client.agenda(items)),
-        preview: (payload) => guarded(() => client.preview(payload)), preserve: (payload) => guarded(() => client.preserve(payload)), report: (payload) => guarded(() => client.report(payload)),
+        preview: (payload) => guarded(() => client.preview(payload)), preserve: (payload) => guarded(() => client.preserve(payload)),
+        report: (payload) => foreground(() => guarded(() => client.report(payload))),
         downloadUrl: (reference) => closed ? undefined : client.downloadUrl(reference) },
       refreshItems: (items) => guarded<ReviewAgendaItem[]>(() => items.length > 0 && items.every((item) => item.kind === "dashboard" && item.recordRefs !== undefined)
         ? refreshDashboardReviewAgenda(items, discover)
@@ -187,7 +198,7 @@ if (root && bootstrap) {
         if (typeof navigation?.navigate !== "function") { location.assign(destination); return }
         const resume = () => root.removeAttribute("data-sf-review-navigating")
         root.setAttribute("data-sf-review-navigating", "")
-        root.dispatchEvent(new Event("sucafina:review-navigation-start", { bubbles: true }))
+        root.dispatchEvent(new Event("sucafina:review-foreground-start", { bubbles: true }))
         try {
           // The outgoing document remains alive until the destination commits.
           // Let this actual navigation settle before resuming its background poll.
