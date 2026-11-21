@@ -240,10 +240,12 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                           <dd class="sf-decision-amount"><bdi>{amount(result.comparisonStatus === "complete" ? result.total : result.knownSubtotal)} <span>{result.currency}</span></bdi></dd>
                           <dt>{t("sf.ui35.status")}</dt><dd><bdi>{result.comparisonStatus}</bdi></dd>
                           <dt>{t("sf.ui35.coverage")}</dt><dd><bdi>{result.costCoverage.coverageState}</bdi></dd>
-                          <dt>{t("sf.ui35.basis")}</dt><dd><bdi>{result.costCoverage.basisId}</bdi> · {result.costCoverage.basisVersion}</dd>
                           <dt>{t("sf.ui35.horizon")}</dt><dd>{result.horizon.start} – {result.horizon.end}</dd>
                         </dl>
                       </section>
+                      <details class="sf-decision-source-scope">
+                        <summary>{t("sf.ui35.coverage")}</summary>
+                        <dl><dt>{t("sf.ui35.basis")}</dt><dd><bdi>{result.costCoverage.basisId}</bdi> · {result.costCoverage.basisVersion}</dd></dl>
                       <Show when={result.costCoverage.derivedMissingCategoryIds.length}>
                         <h3>{t("sf.ui35.categories")}</h3>
                         <ul class="sf-n24-list"><For each={result.costCoverage.derivedMissingCategoryIds}>{(value) => <li><bdi>{value}</bdi></li>}</For></ul>
@@ -260,6 +262,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                         <h3>{t("sf.ui35.restrictions")}</h3>
                         <ul class="sf-n24-list"><For each={result.restrictions}>{(value) => <li><bdi>{value}</bdi></li>}</For></ul>
                       </Show>
+                      </details>
                       <details>
                         <summary>{t("sf.ui35.sources")}</summary>
                         <ul class="sf-n24-list"><For each={result.sourceRefs}>{(source) => <li><bdi>{source.refId}</bdi></li>}</For></ul>

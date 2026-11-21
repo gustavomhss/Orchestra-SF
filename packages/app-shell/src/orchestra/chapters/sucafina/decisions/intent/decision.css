@@ -83,6 +83,8 @@
   cursor: pointer;
 }
 .sf-decision-page details[open] > summary { margin-block-end: 8px; }
+.sf-decision-page details > :is(h3, h4) { margin-block: 16px 8px; }
+.sf-decision-page details dl { display: grid; gap: 8px 16px; min-inline-size: 0; }
 .sf-decision-page :is(.sf-decision-source-scope, .sf-decision-review-evidence) {
   border-block-start: 1px solid var(--mx-line);
   padding-block-start: 6px;
