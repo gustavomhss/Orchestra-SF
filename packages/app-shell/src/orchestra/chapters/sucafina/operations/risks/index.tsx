@@ -71,8 +71,14 @@ const spec: CollectionSpec<"CAP13", Risk, RiskValues> = {
     const response=await createSfDomainClient(transport)["domain.page.CAP13"](query,{signal})
     if(response.kind!=="response"||response.body.status!=="ok")return {kind:"error",state:readFailure(response)}
     const rows=response.body.value.data.risks
-    return rows===undefined?{kind:"error",state:"unavailable"}:{
-      kind:"ok", rows, versions:response.body.value.versions,
+    // The native projection contains all authorized records; Apply selects this read's query.
+    const search=query.q?.trim().toLowerCase()??""
+    const selected=rows?.filter((row)=>
+      (!search||[row.name,row.title,row.desc].some((value)=>typeof value==="string"&&value.toLowerCase().includes(search)))&&
+      (!query.status||row.status===query.status)&&
+      (!query.owner||[row.owner,row.responsible].includes(query.owner)))
+    return selected===undefined?{kind:"error",state:"unavailable"}:{
+      kind:"ok", rows:selected, versions:response.body.value.versions,
       actions:response.body.value.allowedActionIds,
     }
   },

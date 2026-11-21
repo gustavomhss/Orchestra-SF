@@ -65,8 +65,13 @@ const spec: CollectionSpec<"CAP15", Stakeholder, Values> = {
     const response=await createSfDomainClient(transport)["domain.page.CAP15"](query,{signal})
     if(response.kind!=="response"||response.body.status!=="ok")return {kind:"error",state:readFailure(response)}
     const rows=response.body.value.data.stakeholders
-    return rows===undefined?{kind:"error",state:"unavailable"}:{
-      kind:"ok",rows,versions:response.body.value.versions,
+    // This source exposes name/title and owner, with no status/vendor/description fields.
+    const search=query.q?.trim().toLowerCase()??""
+    const selected=rows?.filter((row)=>
+      (!search||[row.name,row.title].some((value)=>typeof value==="string"&&value.toLowerCase().includes(search)))&&
+      !query.status&&(!query.owner||row.owner===query.owner))
+    return selected===undefined?{kind:"error",state:"unavailable"}:{
+      kind:"ok",rows:selected,versions:response.body.value.versions,
       actions:response.body.value.allowedActionIds,
     }
   },

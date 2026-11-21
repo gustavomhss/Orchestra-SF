@@ -50,9 +50,9 @@ The integration owner will run the existing scoped Actions gates and the group j
 
 ### Authored real-installation journeys
 
-The operations spec now contains four production journeys. Three independent English installations cover CAP11, CAP12 and CAP13/CAP15/CAP16 respectively. Together they cover all five areas in dark/light desktop, lower-page ticket/application/campaign/incident/owner panels, grouped forms and review cancellation, then perform five real reviewed commands with updated same-view projection and fresh navigation/readback: CAP11 SLA, CAP12 campaign, CAP13 risk, CAP15 relationship and CAP16 sub-item. Each journey records its own write count and browser diagnostics without request payloads or credentials. A failure in service no longer blocks security or the collection/performance journey.
+The operations spec now contains six production journeys. Five independent English installations cover CAP11, CAP12, CAP13, CAP15 and CAP16 respectively. Together they cover all five areas in dark/light desktop, lower-page ticket/application/campaign/incident/owner panels, grouped forms and review cancellation, then perform five real reviewed commands with updated same-view projection and fresh navigation/readback: CAP11 SLA, CAP12 campaign, CAP13 risk, CAP15 relationship and CAP16 sub-item. Each journey records its own write count and browser diagnostics without request payloads or credentials. A failure in service no longer blocks security or the collection/performance journey.
 
-The fourth reuses the genuine scoped operator cookie in a BR context, captures all five desktop/390 px overviews, opens each focused editor and review, checks reflow and every review action in the viewport, and verifies revision retains the draft without sending a command. The root helper owns installation/authentication and capture bounds. These are authored journeys; passing execution is not yet claimed.
+The sixth reuses the genuine scoped operator cookie in a BR context, captures all five desktop/390 px overviews, opens each focused editor and review, checks reflow and every review action in the viewport, and verifies revision retains the draft without sending a command. The root helper owns installation/authentication and capture bounds. These are authored journeys; passing execution is not yet claimed.
 
 ### Pending evidence
 
@@ -103,6 +103,18 @@ The bounded, redacted diagnostic in job 136961044738 identified the concrete fai
 The English spec is split into three isolated installations to expose failures independently. Its expectations remain strict: the new value must appear in the same mounted view before fresh navigation, the source must return it again, the exact number of commands must match, and console/page errors must be absent. Additional screenshots record already exercised category/heatmap/import/deletion states; they do not add commands.
 
 Run 44941155893 also verified all three long BR editors have bounded native scrolling, localized review labels in CAP13/CAP15 and paired quarter/status form order in CAP16. Run 44942005547 includes the narrow CAP12 KPI label-height correction. Final approval still waits for successful independent English writes.
+
+## Fifth browser execution: service/security writes pass; applied selection corrected
+
+Run [44943089044](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44943089044), browser job 136964366000, completed with three journeys passing and one failing (5.2 minutes), and emitted 52 complete previews including the failure capture. The independent CAP11 and CAP12 journeys passed their real reviewed writes, updated same-view projection, fresh source readback and zero console/page-error checks. The BR journey passed with zero errors. This proves the captured editor/snapshot cleanup fix for those exercised save paths.
+
+The collection journey failed before its first write: after applying status `closed`, the source-backed count returned 2 instead of 0. The strengthened count assertion exposed a real defect that the earlier transient loading-row assertion missed. The native domain projection returns all authorized records; the original q/status/owner selection exists in the legacy renderer rather than the native DTO. CAP13/CAP15 now select only from those already authorized rows inside their read consumers, using the applied query captured for that read. Search uses source text name/title/description fields, trimmed case-insensitive input; status and ownership use exact equality. Versions, actions, source values and producers are unchanged. Draft filter edits still wait for Apply. The spec checks both the unchanged pre-Apply count and the post-Apply result.
+
+The existing route.query.filter path is retained. Risk-tier deep links were not qualified and gained no support in this wave; no tier formula was copied into the native app and no module/runtime dependency was added. The visible panel exposes search and status.
+
+CAP13, CAP15 and CAP16 now have separate English installations, retaining one real write and strict same-view/fresh-read assertions in each. Their successful writes are still pending; no outcome is inferred from CAP11/CAP12 success.
+
+Direct review of the new CAP12 incident deletion image revealed empty source cards and a UUID-only operation identity. Its presentation now includes the already captured incident/campaign/action fields in original/current source, uses the record title/name/text where available, and explains the proposed removal with new EN/BR copy. The exact deletion binding, version and command remain unchanged; the journey cancels deletion. Long reviews also get a top capture in addition to their existing action-footer capture.
 
 ## User guide notes for integration
 

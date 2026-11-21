@@ -178,7 +178,6 @@ function securityReadState(page: SfSecurityPage): "ready" | "empty" | "filtered-
 }
 
 function formFields(editor: SecurityEditor, value: FormValues, label: (field: string) => string): SfReviewField[] {
-  if (editor.command.startsWith("delete-")) return []
   const sourceFields = editor.entity === "kpi" ? [...SECURITY_KPI_FIELDS, "notes"] :
     editor.entity === "action" ? ["text", "done"] :
     editor.entity === "incident" ? [...fields, ...SECURITY_INCIDENT_FLAGS, "consequences"] :
@@ -673,6 +672,8 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   const removeDepartment = (index: number) =>
     edit("departments", JSON.stringify(departmentRows().filter((_row, i) => i !== index)))
   const reviewSnapshot = (editor: SecurityEditor, value: FormValues, original: boolean, version: SfVersion = editor.version): SfReviewSnapshot => {
+    if (!original && editor.command.startsWith("delete-"))
+      return { kind: "not-provided", reason: msg(key("design.deleteProposed")) }
     if (original && editor.identity.kind === "new")
       return { kind: "not-provided", reason: msg(common("empty")) }
     return original
@@ -1027,7 +1028,8 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                         ref: editor.operationRef,
                         label: msg(key("action." + editor.command)),
                         scope: { kind: "data", text:
-                          editor.id ?? String(editorPage.selection.year) + "-" + String(editorPage.selection.month) },
+                          stringOf(snapshot.value.title) || stringOf(snapshot.value.name) || stringOf(snapshot.value.text) ||
+                          editor.id || String(editorPage.selection.year) + "-" + String(editorPage.selection.month) },
                       }}
                       base={reviewSnapshot(editor, snapshot.base ?? {}, true)}
                       current={reviewSnapshot(editor,
@@ -1038,9 +1040,9 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                       effects={[{
                         id: editor.command, domain: "dashboard",
                         title: { kind: "message", message: msg(key("action." + editor.command)) },
-                        state: "proposed", details: reviewFieldsFor(editor, snapshot.value),
+                        state: "proposed", details: editor.command.startsWith("delete-") ? [] : reviewFieldsFor(editor, snapshot.value),
                         ...(editor.command.startsWith("delete-") ?
-                          { reason: msg(common("deleteConfirmation")) } : {}),
+                          { reason: msg(key("design.deleteConfirmation")) } : {}),
                       }]}
                       coverage={{
                         state: "complete", summary: msg(common("currentSource")),

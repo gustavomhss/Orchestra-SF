@@ -80,6 +80,8 @@ waveThreeTest("installed native operations · service source values and a real r
     const importReview = editor.locator('[data-component="sf-change-review"]')
     await expect(importReview.getByRole("button", { name: "Replace month", exact: true })).toBeEnabled()
     await expect(importReview).toContainText("Infrastructure · Incidents · Opened")
+    await scrollPageTop(page)
+    await capture(page, info, "CAP11-import-review-top-dark-desktop-test-data")
     await reviewActions(page)
     await capture(page, info, "CAP11-import-review-dark-desktop-test-data")
     await importReview.getByRole("button", { name: "Cancel review", exact: true }).click()
@@ -164,6 +166,10 @@ waveThreeTest("installed native operations · security source values and a real 
     const incident = security.locator(".sf-security-incident-table tbody tr").filter({ hasText: waveThreeData.operations.incident })
     await incident.getByRole("button", { name: "Delete incident", exact: true }).click()
     await expect(security.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Delete incident", exact: true })).toBeEnabled()
+    await expect(security.locator('[data-component="sf-change-review"]')).toContainText(waveThreeData.operations.incident)
+    await expect(security.locator('[data-component="sf-change-review"]')).toContainText("This record will be deleted.")
+    await scrollPageTop(page)
+    await capture(page, info, "CAP12-incident-delete-review-top-dark-desktop-test-data")
     await reviewActions(page)
     await capture(page, info, "CAP12-incident-delete-review-dark-desktop-test-data")
     await security.getByRole("button", { name: "Cancel review", exact: true }).click()
@@ -186,6 +192,8 @@ waveThreeTest("installed native operations · security source values and a real 
     const review = editor.locator('[data-component="sf-change-review"]')
     await expect(review).toContainText(sourceNotes)
     await expect(review).toContainText("Department name: Regional operations")
+    await scrollPageTop(page)
+    await capture(page, info, "CAP12-campaign-review-top-dark-desktop-test-data")
     await reviewActions(page)
     await capture(page, info, "CAP12-campaign-review-dark-desktop-test-data")
     await review.getByRole("button", { name: "Revise", exact: true }).click()
@@ -212,7 +220,7 @@ waveThreeTest("installed native operations · security source values and a real 
   })
 })
 
-waveThreeTest("installed native operations · risks relationships and performance real reviewed writes", async ({ page, installation, owner }, info) => {
+waveThreeTest("installed native operations · risks source filtering and a real reviewed write", async ({ page, installation, owner }, info) => {
   waveThreeTest.setTimeout(300_000)
   page.setDefaultTimeout(15_000)
   expect(info.project.metadata.bundle).toBe("production")
@@ -228,7 +236,7 @@ waveThreeTest("installed native operations · risks relationships and performanc
     await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title)
     await loaded(page, screen.id)
   }
-  const selectedScreens = [screens[2], screens[3], screens[4]]
+  const selectedScreens = [screens[2]]
 
   await waveThreeTest.step("desktop dark and light overviews use the installed producer data", async () => {
     for (const screen of selectedScreens) {
@@ -246,6 +254,7 @@ waveThreeTest("installed native operations · risks relationships and performanc
     await scheme(page, "dark")
     const surface = page.locator('[data-sf-surface="CAP13"]')
     await surface.getByLabel("Status", { exact: true }).selectOption("closed")
+    await expect(surface.locator(".sf-u30-count strong")).toHaveText("2")
     await surface.getByRole("button", { name: "Apply filters", exact: true }).click()
     await expect(surface.locator("tr[data-sf-row]")).toHaveCount(0)
     await expect(surface.locator(".sf-u30-count strong")).toHaveText("0")
@@ -275,6 +284,8 @@ waveThreeTest("installed native operations · risks relationships and performanc
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     const review = surface.locator('[data-component="sf-change-review"]')
     await expect(review).toContainText(riskNotes)
+    await scrollPageTop(page)
+    await capture(page, info, "CAP13-review-top-dark-desktop-test-data")
     await reviewActions(page)
     await capture(page, info, "CAP13-review-dark-desktop-test-data")
     await review.getByRole("button", { name: "Cancel review", exact: true }).click()
@@ -292,10 +303,58 @@ waveThreeTest("installed native operations · risks relationships and performanc
     expect(mutations).toHaveLength(1)
   })
 
+  expect([...sourceOrigins]).toEqual([installation.origin])
+  expect(messages.pageErrors).toEqual([])
+  expect(messages.consoleErrors).toEqual([])
+  await info.attach("native-operations-source-evidence", {
+    body: JSON.stringify({ areas: selectedScreens.map((screen) => screen.id), data: "isolated canonical source producers",
+      writes: mutations.length, mutationPaths: mutations, widths: [1440], themes: ["dark", "light"],
+      checks: ["risk filter and delete cancellation","cancel/revise retains draft","one reviewed browser command","updated same-view projection","fresh source readback"], ...messages }, null, 2),
+    contentType: "application/json",
+  })
+})
+
+waveThreeTest("installed native operations · relationships source values and a real reviewed write", async ({ page, installation, owner }, info) => {
+  waveThreeTest.setTimeout(300_000)
+  page.setDefaultTimeout(15_000)
+  expect(info.project.metadata.bundle).toBe("production")
+  const messages = observePage(page)
+  const mutations: string[] = []
+  const sourceOrigins = new Set<string>()
+  page.on("request", (request) => {
+    const url = new URL(request.url())
+    if (url.pathname.startsWith(installation.mount + "/")) sourceOrigins.add(url.origin)
+    if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/")) mutations.push(url.pathname)
+  })
+  const visit = async (screen: typeof screens[number]) => {
+    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title)
+    await loaded(page, screen.id)
+  }
+  const selectedScreens = [screens[3]]
+
+  await waveThreeTest.step("desktop dark and light overviews use the installed producer data", async () => {
+    for (const screen of selectedScreens) {
+      await page.setViewportSize({ width: 1440, height: 1100 })
+      await visit(screen)
+      await scheme(page, "dark")
+      await capture(page, info, screen.id + "-operations-dark-desktop-test-data")
+      await scheme(page, "light")
+      await capture(page, info, screen.id + "-operations-light-desktop-test-data")
+    }
+  })
+
   await waveThreeTest.step("relationship profile, localized option values and one reviewed save", async () => {
     await visit(screens[3])
     await scheme(page, "dark")
     const surface = page.locator('[data-sf-surface="CAP15"]')
+    await surface.getByLabel("Search", { exact: true }).fill("  REGIONAL OPERATIONS COUNCIL  ")
+    await expect(surface.locator(".sf-u30-count strong")).toHaveText("2")
+    await surface.getByRole("button", { name: "Apply filters", exact: true }).click()
+    await expect(surface.locator(".sf-u30-count strong")).toHaveText("1")
+    await expect(surface.locator("tr[data-sf-row]")).toHaveCount(1)
+    await surface.getByLabel("Search", { exact: true }).fill("")
+    await surface.getByRole("button", { name: "Apply filters", exact: true }).click()
+    await expect(surface.locator(".sf-u30-count strong")).toHaveText("2")
     await surface.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.operations.stakeholder })
       .getByRole("button", { name: "Open record", exact: true }).click()
     const detail = surface.locator("[data-sf-record-detail]")
@@ -312,12 +371,14 @@ waveThreeTest("installed native operations · risks relationships and performanc
     await capture(page, info, "CAP15-editor-dark-desktop-test-data")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     const review = surface.locator('[data-component="sf-change-review"]')
+    await scrollPageTop(page)
+    await capture(page, info, "CAP15-review-top-dark-desktop-test-data")
     await reviewActions(page)
     await capture(page, info, "CAP15-review-dark-desktop-test-data")
     await review.getByRole("button", { name: "Cancel review", exact: true }).click()
     await expect(editor.getByLabel("Notes", { exact: true })).toHaveValue(relationshipNotes)
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
-    expect(mutations).toHaveLength(1)
+    expect(mutations).toHaveLength(0)
     await review.getByRole("button", { name: "Save", exact: true }).click()
     await expect(review).toHaveCount(0)
     await expect(surface.locator("[data-sf-record-detail]")).toContainText(relationshipNotes)
@@ -325,7 +386,47 @@ waveThreeTest("installed native operations · risks relationships and performanc
     await page.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.operations.stakeholder })
       .getByRole("button", { name: "Open record", exact: true }).click()
     await expect(page.locator("[data-sf-record-detail]")).toContainText(relationshipNotes)
-    expect(mutations).toHaveLength(2)
+    expect(mutations).toHaveLength(1)
+  })
+
+  expect([...sourceOrigins]).toEqual([installation.origin])
+  expect(messages.pageErrors).toEqual([])
+  expect(messages.consoleErrors).toEqual([])
+  await info.attach("native-operations-source-evidence", {
+    body: JSON.stringify({ areas: selectedScreens.map((screen) => screen.id), data: "isolated canonical source producers",
+      writes: mutations.length, mutationPaths: mutations, widths: [1440], themes: ["dark", "light"],
+      checks: ["relationship source profile","cancel/revise retains draft","one reviewed browser command","updated same-view projection","fresh source readback"], ...messages }, null, 2),
+    contentType: "application/json",
+  })
+})
+
+waveThreeTest("installed native operations · performance hierarchy and a real reviewed write", async ({ page, installation, owner }, info) => {
+  waveThreeTest.setTimeout(300_000)
+  page.setDefaultTimeout(15_000)
+  expect(info.project.metadata.bundle).toBe("production")
+  const messages = observePage(page)
+  const mutations: string[] = []
+  const sourceOrigins = new Set<string>()
+  page.on("request", (request) => {
+    const url = new URL(request.url())
+    if (url.pathname.startsWith(installation.mount + "/")) sourceOrigins.add(url.origin)
+    if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/")) mutations.push(url.pathname)
+  })
+  const visit = async (screen: typeof screens[number]) => {
+    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title)
+    await loaded(page, screen.id)
+  }
+  const selectedScreens = [screens[4]]
+
+  await waveThreeTest.step("desktop dark and light overviews use the installed producer data", async () => {
+    for (const screen of selectedScreens) {
+      await page.setViewportSize({ width: 1440, height: 1100 })
+      await visit(screen)
+      await scheme(page, "dark")
+      await capture(page, info, screen.id + "-operations-dark-desktop-test-data")
+      await scheme(page, "light")
+      await capture(page, info, screen.id + "-operations-light-desktop-test-data")
+    }
   })
 
   await waveThreeTest.step("performance hierarchy, item editor, sub-item detail and confirmed write", async () => {
@@ -362,20 +463,22 @@ waveThreeTest("installed native operations · risks relationships and performanc
     const review = surface.locator('[data-component="sf-change-review"]')
     await expect(review).toContainText(performanceNotes)
     await expect(surface.getByLabel("Confirm weights exceeding total allocation", { exact: true })).not.toBeChecked()
+    await scrollPageTop(page)
+    await capture(page, info, "CAP16-subitem-review-top-dark-desktop-test-data")
     await reviewActions(page)
     await capture(page, info, "CAP16-subitem-review-dark-desktop-test-data")
     await review.getByRole("button", { name: "Cancel review", exact: true }).click()
     await expect(editor.getByLabel("Notes", { exact: true })).toHaveValue(performanceNotes)
     await expect(editor.getByLabel("Score", { exact: true })).toHaveValue("3")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
-    expect(mutations).toHaveLength(2)
+    expect(mutations).toHaveLength(0)
     await review.getByRole("button", { name: "Save", exact: true }).click()
     await expect(review).toHaveCount(0)
     await expect(surface.locator("[data-sf-performance-detail]")).toContainText(performanceNotes)
     await visit(screens[4])
     await page.locator(".sf-u31-open").filter({ hasText: waveThreeData.operations.subitem }).click()
     await expect(page.locator("[data-sf-performance-detail]")).toContainText(performanceNotes)
-    expect(mutations).toHaveLength(3)
+    expect(mutations).toHaveLength(1)
   })
 
   expect([...sourceOrigins]).toEqual([installation.origin])
@@ -384,7 +487,7 @@ waveThreeTest("installed native operations · risks relationships and performanc
   await info.attach("native-operations-source-evidence", {
     body: JSON.stringify({ areas: selectedScreens.map((screen) => screen.id), data: "isolated canonical source producers",
       writes: mutations.length, mutationPaths: mutations, widths: [1440], themes: ["dark", "light"],
-      checks: ["risk filter and delete cancellation","relationship source profile","cancel/revise retains draft","three reviewed browser commands","updated same-view projections","fresh source readback","item/sub-item hierarchy","bounded internal scroll"], ...messages }, null, 2),
+      checks: ["item/sub-item hierarchy","cancel/revise retains draft","one reviewed browser command","updated same-view projection","fresh source readback","bounded internal scroll"], ...messages }, null, 2),
     contentType: "application/json",
   })
 })
