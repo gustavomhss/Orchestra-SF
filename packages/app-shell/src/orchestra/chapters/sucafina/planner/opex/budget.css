@@ -1,0 +1,23 @@
+/* N19 U07 budget leaves. The shared SfMonthlyGrid handles its own 12-month
+   region scroll, TSV and keyboard accessibility; never shrink its columns. */
+.sf-u07 { display: grid; gap: 1.25rem; min-width: 0; }
+.sf-u07 section { min-width: 0; }
+.sf-u07 h2 { font-size: 1.15rem; margin: 0 0 .65rem; }
+.sf-u07-toolbar { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+.sf-u07-toolbar label { display: flex; align-items: center; gap: .5rem; }
+.sf-u07-toolbar select { min-height: 2.5rem; max-width: 100%; }
+.sf-u07-table-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
+.sf-u07-table-scroll table { border-collapse: collapse; width: 100%; min-width: 680px; text-align: left; }
+.sf-u07-table-scroll th,.sf-u07-table-scroll td { padding: .6rem; border-bottom: 1px solid var(--mx-border, currentColor); vertical-align: top; }
+.sf-u07-table-scroll th { font-weight: 650; }
+.sf-u07-table-scroll td code { overflow-wrap: anywhere; }
+.sf-u07-project-list, .sf-u07-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.sf-u07-detail, .sf-u07-review { min-width: 0; }
+.sf-u07-form-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: .85rem; }
+.sf-u07-form-fields label { display: grid; gap: .3rem; min-width: 0; }
+.sf-u07-form-fields :is(input, select) { min-height: 2.5rem; width: 100%; box-sizing: border-box; }
+.sf-u07-actions { margin-top: 1rem; }
+.sf-u07-error { overflow-wrap: anywhere; }
+.sf-u07-review { margin-block: 1rem; }
+.sf-u07 .mx-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media (max-width: 440px) { .sf-u07-toolbar > * { flex: 1 1 auto; } .sf-u07-actions .mx-btn { min-height: 2.75rem; } }
