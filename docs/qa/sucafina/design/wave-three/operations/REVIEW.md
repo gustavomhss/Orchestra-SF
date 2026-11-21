@@ -50,7 +50,7 @@ The integration owner will run the existing scoped Actions gates and the group j
 
 ### Authored real-installation journeys
 
-The operations spec now contains six production journeys. Five independent English installations cover CAP11, CAP12, CAP13, CAP15 and CAP16 respectively. Together they cover all five areas in dark/light desktop, lower-page ticket/application/campaign/incident/owner panels, grouped forms and review cancellation, then perform five real reviewed commands with updated same-view projection and fresh navigation/readback: CAP11 SLA, CAP12 campaign, CAP13 risk, CAP15 relationship and CAP16 sub-item. Each journey records its own write count and browser diagnostics without request payloads or credentials. A failure in service no longer blocks security or the collection/performance journey.
+The operations group contains six production journeys across three bounded specs: service/security English in `design-wave-three-operations.spec.ts`, risks/relationships/performance English in `design-wave-three-operations-records.spec.ts`, and the localized journey in `design-wave-three-operations-br.spec.ts`. Five independent English installations cover CAP11, CAP12, CAP13, CAP15 and CAP16 respectively. Together they cover all five areas in dark/light desktop, lower-page ticket/application/campaign/incident/owner panels, grouped forms and review cancellation, then perform five real reviewed commands with updated same-view projection and fresh navigation/readback: CAP11 SLA, CAP12 campaign, CAP13 risk, CAP15 relationship and CAP16 sub-item. Each journey records its own write count and browser diagnostics without request payloads or credentials. A failure in service no longer blocks security or the collection/performance journey.
 
 The sixth reuses the genuine scoped operator cookie in a BR context, captures all five desktop/390 px overviews, opens each focused editor and review, checks reflow and every review action in the viewport, and verifies revision retains the draft without sending a command. The root helper owns installation/authentication and capture bounds. These are authored journeys; passing execution is not yet claimed.
 
@@ -129,6 +129,22 @@ These corrections need the independent runtime writes and final scoped type gate
 CAP11/CAP12 Cancel/Revise callbacks now reject transitions while a command is submitting or its outcome is unknown. A local native disabled fieldset makes this restriction visible and keyboard-safe, without changing shared S03. The existing Check outcome action remains available outside that disabled fieldset during outcome-unknown and calls the same scoped refresh; the duplicate internal reconcile button is omitted in that state. Existing fieldset styling already resets its border, padding and width, so the normal review geometry is unchanged. No draft, pending operation, idempotency or command is cleared by closing presentation.
 
 This is a local guard confirmed by source review; the campaign does not simulate lost responses or claim runtime qualification of artificial outcome-unknown states. The normal real writes and final browser captures remain the execution gate. Scope is now frozen except for concrete runtime or gate findings.
+
+## Import comparison found in the sixth runtime capture
+
+The newly captured top of CAP11 monthly replacement review in run [44945528183](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44945528183) exposed a concrete presentation error: Original/Current said No records yet even though the selected month contained ticket, SLA and application records. The draft's new command intent was incorrectly treated as absence of source data.
+
+The presentation now uses the source's existing `ops:year-month` group reference only when that exact version key is present in the admitted page. Original/current use the existing draft baseline/conflict values and their existing month CAS; Proposed retains the new command intent. If the source lacks that comparison key, the review explicitly says the source does not provide a comparison for the selected month. It does not invent a record reference or version. Draft acquisition, digest, command and confirmation remain unchanged.
+
+The CAP11 journey now requires Original and Current source to show Infrastructure Incidents Opened = 12 and Incident SLA = 98.4 before canceling the replacement review. Its existing top/footer capture names remain stable. This minimum correction needs its targeted runtime rerun; the other independent journeys continue unaffected.
+
+## Sixth-run evidence retrieval and bounded execution groups
+
+Run 44945528183 finished with workflow failure and preserved artifact 14723751314. The GitHub connector could read an early 4.2 MB partial log, proving clean CAP11/CAP12 page-close diagnostics and capturing CAP13 through its applied empty filter and review. Repeated attempts to read the completed log returned Transport closed to both integration owner and worker. The alternate annotations endpoint was not permitted by the connector. Neither restriction was bypassed. The final test failure count and cause are not inferred from the workflow status or annotation count.
+
+The same six journeys are therefore split into the three group-owned specs above for independent existing test-ci jobs. Test names, source commands, captures, counts, same-view waits, fresh readback and all prior assertions are preserved. Only short constants and helpers are repeated; no CI/config/helper contract changes are introduced. The BR journey also explicitly asserts the already recorded empty console-error array, matching the English gates. The CAP11 monthly comparison assertions from 75f00a3 remain included.
+
+This split is for accessible evidence and failure diagnosis. It is not a passing rerun and does not remove a failing assertion.
 
 ## User guide notes for integration
 
