@@ -157,42 +157,44 @@ describe("procurement drafts at the original JSON command boundary", () => {
 
 describe("procurement settings source delivery", () => {
   test("source delivery does not observe its own draft publication and retains version conflicts", () => {
-    createRoot((dispose) => {
-      try {
-        const [projection, setProjection] = createStore({
-          version: 1, settings: { currency: "USD", reminderDays: 7 },
+    const fixture = createRoot((dispose) => {
+      const [projection, setProjection] = createStore({
+        version: 1, settings: { currency: "USD", reminderDays: 7 },
+      })
+      const controller = createSfDraft<Settings>({
+        ownerKey: "settings-test-owner" as SfOwnerKey,
+        surfaceId: "CAP28",
+        identity: { kind: "record", recordRef: "settings" as SfRef },
+        editScopeKey: "CAP28:test" as SfEditScopeKey,
+        baseVersion: projection.version,
+        base: projection.settings,
+        value: projection.settings,
+      })
+      let deliveries = 0
+      createRenderEffect(() => {
+        deliveries++
+        if (deliveries > 3) throw new Error("Source delivery subscribed to its own draft publication")
+        receiveSettingsSource(controller, {
+          baseVersion: projection.version, value: projection.settings,
         })
-        const controller = createSfDraft<Settings>({
-          ownerKey: "settings-test-owner" as SfOwnerKey,
-          surfaceId: "CAP28",
-          identity: { kind: "record", recordRef: "settings" as SfRef },
-          editScopeKey: "CAP28:test" as SfEditScopeKey,
-          baseVersion: projection.version,
-          base: projection.settings,
-          value: projection.settings,
-        })
-        let deliveries = 0
-        createRenderEffect(() => {
-          deliveries++
-          if (deliveries > 3) throw new Error("Source delivery subscribed to its own draft publication")
-          receiveSettingsSource(controller, {
-            baseVersion: projection.version, value: projection.settings,
-          })
-        })
-        expect(deliveries).toBe(1)
-        controller.edit({ currency: "USD", reminderDays: 9 })
-        expect(deliveries).toBe(1)
-        setProjection({ version: 2, settings: { currency: "USD", reminderDays: 8 } })
-        expect(deliveries).toBe(2)
-        const state = controller.snapshot()
-        expect(state.availability).toBe("active")
-        if (state.availability !== "active") throw new Error("Settings draft unavailable")
-        expect(state.value.reminderDays).toBe(9)
-        expect(state.baseVersion).toBe(1)
-        expect(state.conflict?.currentVersion).toBe(2)
-        expect(state.conflict?.current.reminderDays).toBe(8)
-        expect(state.phase).toBe("conflict")
-      } finally { dispose() }
+      })
+      return { dispose, controller, setProjection, deliveries: () => deliveries }
     })
+    // Complete the actual Solid mount before exercising subsequent source edits.
+    try {
+      expect(fixture.deliveries()).toBe(1)
+      fixture.controller.edit({ currency: "USD", reminderDays: 9 })
+      expect(fixture.deliveries()).toBe(1)
+      fixture.setProjection({ version: 2, settings: { currency: "USD", reminderDays: 8 } })
+      expect(fixture.deliveries()).toBe(2)
+      const state = fixture.controller.snapshot()
+      expect(state.availability).toBe("active")
+      if (state.availability !== "active") throw new Error("Settings draft unavailable")
+      expect(state.value.reminderDays).toBe(9)
+      expect(state.baseVersion).toBe(1)
+      expect(state.conflict?.currentVersion).toBe(2)
+      expect(state.conflict?.current.reminderDays).toBe(8)
+      expect(state.phase).toBe("conflict")
+    } finally { fixture.dispose() }
   })
 })
