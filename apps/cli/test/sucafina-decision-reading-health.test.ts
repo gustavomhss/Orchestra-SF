@@ -24,8 +24,9 @@ const stamp = Object.freeze({
 
 /** Original UI leases, C08 reader, source lifecycle and current-choice fence; only external revocation is controlled. */
 async function fixture() {
-  const controls = { allowed: true, revision: stamp.accessRevision, installed: true, calls: 0,
-    deniedOperation: "", deniedNamespace: "" }
+  const controls: { allowed: boolean; revision: string; installed: boolean; calls: number; deniedOperation: string; deniedNamespace: string } = {
+    allowed: true, revision: stamp.accessRevision, installed: true, calls: 0, deniedOperation: "", deniedNamespace: "",
+  }
   const hooks: { read?: (surface: Surface, snapshot: Snapshot) => Promise<void>; finish?: () => void } = {}
   const memory = testPersistence({ dashboard: empty(), planner: empty(), procurement: empty() })
   const never = async (): Promise<never> => {
