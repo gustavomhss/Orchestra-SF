@@ -1,5 +1,7 @@
 # First-wave verification plan
 
+> Current execution plan: [INTEGRATION.md](INTEGRATION.md). The product files are now applied on the isolated #572/#573 composition. Historical E2E files named below are not included by that shell-restoration PR; they remain source references, not runnable current coverage. A narrow real-installed first-wave browser capture spec is being prepared without changing workflow policy.
+
 ## Current status
 
 The target dev base is `948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1`; the native frontend reference is `fdeb988881c927f952a2d9fd5b8002c892f56635`. Native source and installed harness are not present in the target base. All product test, typecheck, render, screenshot and palette execution gates below are **NOT_RUN**. A reviewable patch is not an installed product.

@@ -3,6 +3,7 @@ import type { AsyncStorage, SyncStorage } from "@solid-primitives/storage"
 import type { Accessor } from "solid-js"
 import type { DesktopMenuAction } from "../desktop-menu"
 import { ServerConnection } from "./server"
+import type { SfDesktopCapability } from "@orchestra/client/sucafina/transport"
 import type { WslServersPlatform } from "../wsl/types"
 import type { UpdaterPlatform } from "../updater"
 import type { DraftStore } from "@/utils/draft-store"
@@ -143,6 +144,8 @@ type PlatformBase = {
 
   /** Fetch override */
   fetch?: typeof fetch
+  /** Native owner-bound bridge supplied only by the existing Electron preload. */
+  sucafina?: SfDesktopCapability
 
   /** Get the configured default server URL (platform-specific) */
   getDefaultServer?(): Promise<ServerConnection.Key | null>

@@ -1,0 +1,22 @@
+/* N30 U37: original SF shell/theme tokens are inherited; no iframe or HTML rendering. */
+.sf-analyses { display: grid; min-width: 0; gap: 1.2rem; color: inherit; }
+.sf-analyses-controls { display: flex; flex-wrap: wrap; align-items: end; gap: .8rem; min-width: 0; }
+.sf-analyses-controls label { display: grid; flex: 1 1 14rem; gap: .4rem; min-width: 0; }
+.sf-analyses-controls .sf-analyses-wide { flex-basis: 100%; }
+.sf-analyses-controls select, .sf-analyses-controls textarea { box-sizing: border-box; width: 100%; min-width: 0; border: 1px solid color-mix(in srgb, currentColor 30%, transparent); background: transparent; color: inherit; border-radius: .5rem; padding: .6rem; font: inherit; }
+.sf-analyses-controls option { color: CanvasText; background: Canvas; }
+.sf-analyses-controls button, .sf-analyses-actions button { min-height: 2.75rem; }
+.sf-analyses-section { display: grid; gap: .7rem; min-width: 0; padding-block: .45rem; }
+.sf-analyses-section h2 { margin: .2rem 0; font: inherit; font-size: 1.12em; font-weight: 650; }
+.sf-analyses-note { margin: .3rem 0; overflow-wrap: anywhere; }
+.sf-analyses-list { display: grid; gap: .6rem; list-style: none; padding: 0; margin: 0; min-width: 0; }
+.sf-analyses-list li { display: flex; flex-wrap: wrap; gap: .65rem; align-items: center; border: 1px solid color-mix(in srgb, currentColor 19%, transparent); padding: .85rem; border-radius: .6rem; overflow-wrap: anywhere; }
+.sf-analyses-list li span:first-child { flex: 1 1 16rem; min-width: 0; }
+.sf-analyses-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.sf-analyses-facts { display: grid; grid-template-columns: minmax(7rem,.4fr) minmax(0,1fr); gap: .4rem 1rem; margin: 0; overflow-wrap: anywhere; }
+.sf-analyses-facts dt { opacity: .75; } .sf-analyses-facts dd { margin: 0; }
+.sf-analyses-warning { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.sf-analyses-warning p { width: 100%; }
+.sf-analyses-original { max-width: 100%; overflow: auto; overflow-wrap: anywhere; white-space: pre-wrap; background: color-mix(in srgb, currentColor 5%, transparent); border: 1px solid color-mix(in srgb, currentColor 20%, transparent); border-radius: .5rem; padding: 1rem; font: 0.9em/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
+@media (max-width: 37rem) { .sf-analyses-controls label,.sf-analyses-controls button { flex-basis: 100%; } .sf-analyses-facts { grid-template-columns: 1fr; gap: .1rem; } .sf-analyses-facts dd { margin-bottom: .5rem; } }
+@media (prefers-reduced-motion: reduce) { .sf-analyses * { scroll-behavior: auto; } }

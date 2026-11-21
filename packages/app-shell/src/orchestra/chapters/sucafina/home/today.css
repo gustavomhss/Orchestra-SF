@@ -1,0 +1,238 @@
+/* UI29 only. Compose the native chapter kit; keep its materials and palette roles. */
+.sf-today {
+  --sf-today-gap: 20px;
+  --sf-today-row-gap: 14px;
+  --sf-today-small-gap: 10px;
+  --sf-today-detail-gap: 6px;
+  --sf-today-hairline: 1px;
+  --sf-today-focus-width: 2px;
+  --sf-today-body-leading: 1.65;
+  --sf-today-heading-leading: 1.4;
+  --sf-today-value-leading: 1.2;
+  --sf-today-heading-tracking: -0.015em;
+  --sf-today-value-tracking: -0.035em;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--sf-today-gap);
+  min-inline-size: 0;
+  color: var(--mx-strong);
+  font-family: var(--mx-sans);
+  font-size: var(--orchestra-font-size-md);
+  line-height: var(--sf-today-body-leading);
+}
+.sf-today :is(section, div, li, dl, dt, dd) {
+  min-inline-size: 0;
+}
+.sf-today .sf-today-section {
+  padding: var(--sf-today-gap);
+}
+.sf-today :is(h2, h3) {
+  margin: 0;
+  color: var(--mx-strong);
+  font-family: var(--mx-emphasis);
+  font-weight: 600;
+  line-height: var(--sf-today-heading-leading);
+  letter-spacing: var(--sf-today-heading-tracking);
+  overflow-wrap: anywhere;
+}
+.sf-today .sf-today-section > h2 {
+  margin-block-end: var(--sf-today-row-gap);
+  font-size: var(--orchestra-font-size-xl);
+}
+.sf-today .sf-today-section .sf-today-description {
+  margin: calc(-1 * var(--sf-today-detail-gap)) 0 var(--sf-today-small-gap);
+  font-size: var(--orchestra-font-size-sm);
+  color: var(--mx-dim);
+}
+.sf-today .sf-today-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sf-today :is(.sf-today-record, .sf-today-case) {
+  padding-block: var(--sf-today-row-gap);
+  overflow-wrap: anywhere;
+}
+.sf-today :is(.sf-today-record, .sf-today-case) + :is(.sf-today-record, .sf-today-case) {
+  border-block-start: var(--sf-today-hairline) solid var(--mx-line);
+}
+.sf-today .sf-today-list > :first-child {
+  padding-block-start: 0;
+}
+.sf-today .sf-today-list > :last-child {
+  padding-block-end: 0;
+}
+.sf-today .sf-today-title {
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  min-block-size: var(--sf-row-height);
+  padding: 0;
+  border: 0;
+  border-radius: var(--orchestra-radius-sm);
+  background: transparent;
+  color: var(--mx-strong);
+  font-family: var(--mx-emphasis);
+  font-size: var(--orchestra-font-size-lg);
+  font-weight: 600;
+  line-height: var(--sf-today-heading-leading);
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.sf-today .sf-today-title:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--mx-blue);
+  text-underline-offset: var(--sf-today-detail-gap);
+}
+.sf-today :is(button, a):focus-visible {
+  outline: var(--sf-today-focus-width) solid var(--orchestra-accent);
+  outline-offset: var(--sf-today-focus-width);
+}
+.sf-today .sf-today-meta {
+  display: block;
+  margin-block-start: var(--sf-today-detail-gap);
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+  overflow-wrap: anywhere;
+}
+.sf-today .sf-today-section .sf-today-note {
+  margin: var(--sf-today-row-gap) 0 0;
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+  overflow-wrap: anywhere;
+}
+.sf-today :is(.sf-today-forecast, .sf-today-resume) {
+  grid-column: 1 / -1;
+}
+.sf-today .sf-today-forecast-content {
+  display: grid;
+  gap: var(--sf-today-gap);
+}
+.sf-today .sf-today-metrics {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sf-today-gap);
+  margin: 0;
+}
+.sf-today .sf-today-metrics > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--sf-today-small-gap);
+}
+.sf-today .sf-today-metrics dt {
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+  overflow-wrap: anywhere;
+}
+.sf-today .sf-today-metrics dd {
+  margin: 0;
+  color: var(--mx-strong);
+  font-family: var(--mx-emphasis);
+  font-size: var(--orchestra-font-size-3xl);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: var(--sf-today-value-leading);
+  letter-spacing: var(--sf-today-value-tracking);
+  overflow-wrap: anywhere;
+}
+.sf-today .sf-today-provenance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sf-today-row-gap) var(--sf-today-gap);
+  margin: 0;
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-today .sf-today-provenance dd {
+  margin: var(--sf-today-detail-gap) 0 0;
+  overflow-wrap: anywhere;
+}
+.sf-today .sf-today-provenance dt {
+  overflow-wrap: anywhere;
+}
+.sf-today :is(.sf-today-provenance code, .sf-today-run-ref) {
+  font-family: var(--mx-mono);
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-today .sf-today-resume-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sf-today-gap);
+}
+.sf-today .sf-today-resume-grid h3 {
+  margin-block-end: var(--sf-today-small-gap);
+  font-size: var(--orchestra-font-size-lg);
+}
+.sf-today .sf-today-case {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sf-today-small-gap) var(--sf-today-row-gap);
+}
+.sf-today .sf-today-case-copy {
+  flex: 1 1 60%;
+}
+.sf-today .sf-today-case-copy strong {
+  font-family: var(--mx-emphasis);
+  font-size: var(--orchestra-font-size-lg);
+  font-weight: 600;
+}
+.sf-today .sf-today-case > .sf-state-panel {
+  flex: 1 1 100%;
+}
+.sf-today .sf-today-resume-action {
+  min-block-size: var(--sf-row-height);
+  max-inline-size: 100%;
+  padding-inline: var(--sf-today-small-gap);
+  background: transparent;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.sf-today .sf-today-resume-action:hover {
+  background: var(--orchestra-surface-hover);
+}
+.sf-today .sf-today-run-ref {
+  display: block;
+  margin-block-start: var(--sf-today-detail-gap);
+  color: var(--mx-dim);
+  overflow-wrap: anywhere;
+}
+.sf-today .sf-today-availability {
+  padding-block-start: var(--sf-today-row-gap);
+  border-block-start: var(--sf-today-hairline) solid var(--mx-line);
+}
+.sf-today .sf-today-availability h2 {
+  margin-block-end: var(--sf-today-small-gap);
+  font-size: var(--orchestra-font-size-lg);
+}
+.sf-today .sf-today-availability .sf-state-message {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.sf-today .sf-today-availability .sf-state-title {
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+  font-weight: 400;
+  line-height: var(--sf-today-body-leading);
+}
+/* Use the real workspace width, so sidebar width and browser zoom drive reflow. */
+@container sf-frame (min-width: 640px) {
+  .sf-today .sf-today-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@container sf-frame (min-width: 860px) {
+  .sf-today {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sf-today .sf-today-resume-grid {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+}

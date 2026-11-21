@@ -6,17 +6,25 @@
     "branch": "sf-design-polish",
     "createdFrom": "dev",
     "baseCommit": "948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1",
-    "nativeFrontendPresent": false,
+    "nativeFrontendPresent": true,
     "latestDevInspected": "b5297b938735eab8ae37a686f01015f37c727724",
-    "latestDevNativeFrontendPresent": false
+    "latestDevNativeFrontendPresent": false,
+    "nativeFrontendPresentInDevBase": false
   },
   "source": {
-    "branch": "sf-join-four",
-    "commit": "fdeb988881c927f952a2d9fd5b8002c892f56635",
+    "branch": "sf-local-shell",
+    "commit": "a22e4296bfa802b70597fc73485d1833658cced4",
     "readOnly": true,
     "routeRegistry": "packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts",
     "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
-    "nativeTree": "dcabe802724db8173607a011bd2f049b04514c03"
+    "nativeTree": "76c9b3a151d9d8e1f4a8dbdc7e986fdfae93ae4a",
+    "pullRequest": 573,
+    "dependency": {
+      "pullRequest": 572,
+      "branch": "sf-web-contracts",
+      "commit": "4aa86a2ce41c9689b218ec0ceb462cf39242be08"
+    },
+    "relationshipToDev": "Current explicit dev-descended frontend dependency; draft PRs unmerged at composition"
   },
   "counts": {
     "chapters": 15,
@@ -58,12 +66,13 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
       "designWork": {
-        "status": "SOURCE_REVIEWED_CANDIDATE_NOT_APPLIED",
+        "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
         "workerCommit": "73b7e5bbd7b378fdfdd3a64d79442a2447ee0a60",
         "patch": "wave-one/03-executive/candidate.patch"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP02",
@@ -96,10 +105,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP03",
@@ -120,10 +130,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP04",
@@ -156,10 +167,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP05",
@@ -192,10 +204,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP06",
@@ -216,10 +229,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP07",
@@ -260,10 +274,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP08",
@@ -300,10 +315,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP09",
@@ -324,10 +340,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP10",
@@ -364,10 +381,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP11",
@@ -400,10 +418,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP12",
@@ -440,10 +459,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP13",
@@ -476,10 +496,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP14",
@@ -512,10 +533,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP15",
@@ -548,10 +570,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP16",
@@ -580,10 +603,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP17",
@@ -604,10 +628,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP18",
@@ -640,10 +665,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP19",
@@ -680,10 +706,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP20",
@@ -724,10 +751,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP21",
@@ -756,10 +784,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP22",
@@ -780,10 +809,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP23",
@@ -820,10 +850,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP24",
@@ -844,10 +875,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP25",
@@ -904,10 +936,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP26",
@@ -940,10 +973,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP27",
@@ -976,10 +1010,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "CAP28",
@@ -1000,10 +1035,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI29",
@@ -1024,12 +1060,13 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
       "designWork": {
-        "status": "SOURCE_REVIEWED_CANDIDATE_NOT_APPLIED",
+        "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
         "workerCommit": "1a317384bd0dcef67c924e5056dc059edfcf547b",
         "patch": "wave-one/01-today/candidate.patch"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI30",
@@ -1050,10 +1087,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI31",
@@ -1074,10 +1112,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI32",
@@ -1106,10 +1145,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI33",
@@ -1134,12 +1174,13 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
       "designWork": {
-        "status": "SOURCE_REVIEWED_CANDIDATE_NOT_APPLIED",
+        "status": "APPLIED_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
         "workerCommit": "2f87d4637b127056495a5ab46cca864f64d0b10c",
         "patch": "wave-one/02-cases/candidate.patch"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI34",
@@ -1160,10 +1201,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI35",
@@ -1192,10 +1234,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI36",
@@ -1216,10 +1259,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI37",
@@ -1240,10 +1284,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI38",
@@ -1264,10 +1309,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI39",
@@ -1292,10 +1338,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI40",
@@ -1320,10 +1367,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI41",
@@ -1348,10 +1396,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI42",
@@ -1376,10 +1425,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI43",
@@ -1400,10 +1450,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI44",
@@ -1428,10 +1479,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI45",
@@ -1452,10 +1504,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI46",
@@ -1476,10 +1529,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI47",
@@ -1500,10 +1554,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI48",
@@ -1532,10 +1587,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI49",
@@ -1556,10 +1612,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI50",
@@ -1584,10 +1641,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI51",
@@ -1616,10 +1674,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI52",
@@ -1640,10 +1699,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI53",
@@ -1664,10 +1724,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI54",
@@ -1688,10 +1749,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI55",
@@ -1712,10 +1774,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI56",
@@ -1736,10 +1799,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI57",
@@ -1768,10 +1832,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI58",
@@ -1800,10 +1865,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI59",
@@ -1824,10 +1890,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI60",
@@ -1848,10 +1915,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI61",
@@ -1876,10 +1944,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI62",
@@ -1904,10 +1973,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI63",
@@ -1932,10 +2002,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI64",
@@ -1964,10 +2035,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI65",
@@ -1992,10 +2064,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI66",
@@ -2024,10 +2097,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI67",
@@ -2048,10 +2122,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI68",
@@ -2072,10 +2147,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI69",
@@ -2096,10 +2172,11 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     },
     {
       "id": "UI70",
@@ -2120,15 +2197,16 @@
       ],
       "presentInTargetDev": false,
       "visualVerification": "NOT_RUN",
-      "status": "BLOCKED_NATIVE_FRONTEND_ABSENT_IN_DEV",
+      "status": "DEPENDENCY_PRESENT_DESIGN_NOT_ASSIGNED",
       "designWork": {
         "status": "INVENTORIED_NOT_ASSIGNED"
-      }
+      },
+      "presentInCandidate": true
     }
   ],
   "firstWaveDelivery": {
-    "status": "SOURCE_REVIEWED_CANDIDATES_NOT_APPLIED",
-    "appliedToProduct": false,
+    "status": "APPLIED_TO_ISOLATED_CANDIDATE_AWAITING_RUNTIME_AND_VISUAL_VERIFICATION",
+    "appliedToProduct": true,
     "summary": "WAVE-ONE.md",
     "workers": [
       {
@@ -2155,6 +2233,16 @@
         "patch": "wave-one/03-executive/candidate.patch",
         "review": "wave-one/03-executive/REVIEW.md"
       }
-    ]
+    ],
+    "appliedToBranch": "sf-design-polish",
+    "currentStatusDocument": "INTEGRATION.md"
+  },
+  "historicalSource": {
+    "branch": "sf-join-four",
+    "commit": "fdeb988881c927f952a2d9fd5b8002c892f56635",
+    "readOnly": true,
+    "routeRegistry": "packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts",
+    "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
+    "nativeTree": "dcabe802724db8173607a011bd2f049b04514c03"
   }
 }

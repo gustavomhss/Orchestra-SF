@@ -1,4 +1,6 @@
-# First wave — reviewed implementation candidates
+# First wave — delegated implementation record
+
+> Current status: the seven presentation files are now applied to the isolated current-dependency candidate. See [INTEGRATION.md](INTEGRATION.md). The source-review report below records the earlier doc-only delivery and its original limits.
 
 ## Delivery status
 

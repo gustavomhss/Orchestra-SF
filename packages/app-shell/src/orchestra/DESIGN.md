@@ -324,3 +324,14 @@ Measured at 1920×1200 in the dev app. Spacing values sit on a 2px grid; most ga
   - `regression/new-session-panel-corner.spec.ts`.
 
   When a value changes on purpose, read the new computed value from the live app and paste it in.
+
+## 10. Sucafina first-wave chapter presentation
+
+The native UI29 (Today), UI33 (Cases) and CAP01 (Executive) use page-scoped styles. The native shell, palette mechanics, shared frame and existing fonts remain unchanged. The following are source measurements of the candidate; live computed values and visual acceptance must be recorded after browser inspection.
+
+- Typography: native md body (13px), sm supporting copy (12px), lg record/subheadings (14px), xl section headings (16px) and 3xl numeric values (24px). Missing/unscoped values retain body hierarchy. Monospace is limited to identifiers and code.
+- Geometry: local spacing is 6/10/14/20px, with 24px Executive metric gaps and a 28px Cases section gap. Inputs and actions have a 44px minimum block size and may grow with wrapped content. Hairlines are 1px; visible focus is 2px with a 2px offset. Native radii are used without a new global token.
+- Today: forecast columns begin at a 640px named frame; resume columns use a 2:1 split from 860px. Unavailable meetings/material changes remain visible.
+- Cases: record/form/review columns adapt at 767px and actions stack at 479px. Long case titles and identifiers wrap. The retained header action becomes visually secondary while the inline create panel is open.
+- Executive: financial and variance metrics use three equal columns, people metrics four, reducing at 767px and 420px. Financial and signal tables retain readable 480px/640px minimum widths within named keyboard-focusable scrollers. Editors have a 280px minimum track and inline review uses the available full width. Body/heading/value line heights are 1.6/1.4/1.25; numeric tracking is −0.035em.
+- Isolation: styles root at `.sf-today`, `.sf-cases`, or `.sf-u02-page[data-sf-surface="CAP01"]`. The Cases header paint rule is explicitly gated by its create state. Shared `n24.css`, `u02.css`, `edit.tsx` and CAP03 Budget are unchanged.
