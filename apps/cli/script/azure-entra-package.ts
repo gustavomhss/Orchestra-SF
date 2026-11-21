@@ -11,13 +11,14 @@ const archiveFile = `orchestra-sf-entra-${target}.tar.gz`
 const receiptFile = "orchestra-sf-entra-package-receipt.json"
 const entry = "modules/sucafina/Sucafinav1/local/microsoft-entry.ts"
 const bundlePath = "bin/local/entry.mjs"
-const usage = "Usage: bun apps/cli/script/azure-entra-package.ts --dist <raw CLI dist> --out <new directory> --source-sha <40-hex SHA>"
+const usage = "Usage: bun apps/cli/script/azure-entra-package.ts --dist <raw CLI dist> --out <new directory> --source-sha <40-hex SHA> [--web <built Sucafina Web directory>]"
 
 if (import.meta.main) {
   const { values } = parseArgs({
     options: {
       dist: { type: "string" },
       out: { type: "string" },
+      web: { type: "string" },
       "source-sha": { type: "string" },
       help: { type: "boolean" },
     },
@@ -29,10 +30,10 @@ if (import.meta.main) {
   const expectedSourceSHA = values["source-sha"]
   if (!values.dist || !values.out || !expectedSourceSHA || !/^[a-f0-9]{40}$/.test(expectedSourceSHA))
     throw new Error(usage)
-  console.log(JSON.stringify(await packageEntra({ dist: values.dist, out: values.out, expectedSourceSHA })))
+  console.log(JSON.stringify(await packageEntra({ dist: values.dist, out: values.out, web: values.web, expectedSourceSHA })))
 }
 
-async function packageEntra(input: { dist: string; out: string; expectedSourceSHA: string }) {
+async function packageEntra(input: { dist: string; out: string; web?: string; expectedSourceSHA: string }) {
   const workspace = await realpath(resolve(import.meta.dir, "../../.."))
   const checkoutSHA = await requireCheckout(workspace, input.expectedSourceSHA)
   const runID = process.env.GITHUB_RUN_ID
@@ -40,12 +41,13 @@ async function packageEntra(input: { dist: string; out: string; expectedSourceSH
   const hosted = process.env.GITHUB_ACTIONS === "true" || runID !== undefined || runAttempt !== undefined
   if (hosted && (!runID || !runAttempt || !/^[1-9][0-9]*$/.test(runID) || !/^[1-9][0-9]*$/.test(runAttempt)))
     throw new Error("GitHub Actions package receipts require a decimal run ID and attempt")
-  if ([input.dist, input.out].some((path) => path.includes("\0") || path.split(/[\\/]/).includes("..")))
+  if ([input.dist, input.out, ...(input.web === undefined ? [] : [input.web])].some((path) => path.includes("\0") || path.split(/[\\/]/).includes("..")))
     throw new Error("Unsafe package location")
   const dist = await realpath(input.dist)
   const output = join(await realpath(dirname(resolve(input.out))), basename(resolve(input.out)))
-  if (output === dist || output.startsWith(dist + sep) || dist.startsWith(output + sep))
-    throw new Error("Package output overlaps the raw CLI distribution")
+  const sources = [dist, ...(input.web === undefined ? [] : [await realpath(input.web)])]
+  if (sources.some((source) => output === source || output.startsWith(source + sep) || source.startsWith(output + sep)))
+    throw new Error("Package output overlaps a distribution source")
 
   // The raw CLI build must be supplied by the producer from this same checkout.
   const rawTarget = join(dist, `cli-${target}`)
@@ -72,7 +74,18 @@ async function packageEntra(input: { dist: string; out: string; expectedSourceSH
     await rename(join(native, "package.json"), join(stagingTarget, "package.json"))
     const bundleSha256 = await stageFactory(workspace, stagingTarget)
     const payload = join(scratch, "payload")
-    const manifest = await prepareDistribution({ dist: stagingDist, out: payload, target, version: raw.version })
+    const manifest = await prepareDistribution({ dist: stagingDist, out: payload, target, version: raw.version, web: input.web })
+    if (input.web !== undefined) {
+      let branded = false
+      const html = new HTMLRewriter().on("html", {
+        element(root) {
+          branded = root.getAttribute("data-orchestra-brand") === "sucafina" &&
+            root.getAttribute("data-sucafina-artwork") === "ready"
+        },
+      })
+      await html.transform(new Response(Bun.file(join(payload, "bin/web/index.html")))).arrayBuffer()
+      if (!branded) throw new Error("The Entra Web build must include the Sucafina branding and artwork")
+    }
     if (manifest.files.find((file) => file.path === bundlePath)?.sha256 !== bundleSha256)
       throw new Error("Packaged Entra factory digest differs from the staged bundle")
     const manifestSha256 = digest(await readFile(join(payload, "distribution.json")))
