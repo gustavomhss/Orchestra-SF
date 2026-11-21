@@ -399,11 +399,9 @@
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signal-source > summary {
   display: flex;
   align-items: center;
+  gap: var(--sf-exec-space-sm);
   color: var(--mx-dim);
   font-size: var(--orchestra-font-size-sm);
-  text-decoration: underline;
-  text-decoration-color: var(--mx-line);
-  text-underline-offset: var(--sf-exec-space-xs);
 }
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signal-source bdi {
   display: block;
@@ -640,5 +638,12 @@
   [data-sf-source-navigation="sf-dashboard"]:has(> a[data-sf-capability="CAP01"][aria-current="page"]) { --sf-exec-nav-gutter: 24px; }
 }
 @media (max-width: 767px) {
-  [data-sf-source-navigation="sf-dashboard"]:has(> a[data-sf-capability="CAP01"][aria-current="page"]) { --sf-exec-nav-gutter: 16px; }
+  [data-sf-source-navigation="sf-dashboard"]:has(> a[data-sf-capability="CAP01"][aria-current="page"]) {
+    --sf-exec-nav-gutter: 16px;
+    --sf-exec-nav-fade: 12px;
+    padding-inline-end: var(--sf-exec-nav-fade);
+    scroll-padding-inline-end: var(--sf-exec-nav-fade);
+    /* Alpha-only edge fade follows the native shell; terminal padding protects the last item. */
+    mask-image: linear-gradient(to right, #000 calc(100% - var(--sf-exec-nav-fade)), transparent);
+  }
 }
