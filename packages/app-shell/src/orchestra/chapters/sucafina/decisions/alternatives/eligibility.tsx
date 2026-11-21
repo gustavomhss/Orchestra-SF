@@ -1,4 +1,5 @@
 import { createEffect, createMemo, onCleanup, Show } from "solid-js"
+import { useLanguage } from "@/context/language"
 import { createStore } from "solid-js/store"
 import type { Schema } from "effect"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -17,6 +18,7 @@ export function SfEligibilityRegistration(props: {
   sameBasis: boolean
   onReload: () => void
 }) {
+  const language = useLanguage()
   const [ui, setUi] = createStore<{
     reason: string; phase: Phase; error: string; request?: ChoiceInput
     receipt?: { version: number; resultRef?: string; key: string }
@@ -80,7 +82,7 @@ export function SfEligibilityRegistration(props: {
       )
       if (controller.signal.aborted || generation !== props.owner.generation()) return
       if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied")) {
-        setUi({ phase: "failed", request: undefined, error: result.status === 401 || result.body.status === "unauthenticated" ? "Sessão expirada." : "Sem permissão para registrar a escolha." })
+        setUi({ phase: "failed", request: undefined, error: language.t(result.status === 401 ? "sf.common.loginAgain" : "sf.common.noAccess") })
       } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setUi({ phase: "unknown", error: `Resultado incerto. Não reenviar; correlação ${key}.` })
       } else if (result.kind !== "response") {

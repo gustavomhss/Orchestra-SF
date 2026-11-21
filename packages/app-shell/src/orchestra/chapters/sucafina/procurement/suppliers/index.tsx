@@ -805,9 +805,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     primaryAction={can("create") ? {id:"create",labelKey:k("sf.cap27.primary"),tone:"primary",
       disabled:active(ui.phase),busy:false,
       onInvoke:()=>{setUi("mode","new");setUi("selected",null)}} : undefined}
-    secondaryActions={[{id:"csv",labelKey:k("sf.u14.csv"),tone:"secondary",
-      disabled:!csvReady(),reasonKey:csvReady() ? undefined : k("sf.u14.csvUnavailable"),
-      busy:ui.csvState==="downloading",onInvoke:()=>void beginCsv()}]}
+    secondaryActions={[]}
   >
     <div class="sf-u14-layout">
       <Show when={state() === "ready" || state() === "empty" || state() === "filtered-empty" || state() === "outcome-unknown"}
@@ -888,7 +886,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
               captionKey={k("sf.cap27.title")} density="comfortable"
               state={rows().length===0 ? page()?.value.data.suppliers.length===0 ? "empty" : "filtered-empty" : "ready"}
             />
-            <Show when={!csvAllowed()}><p class="sf-u14-hint">{t("sf.u14.csvUnavailable")}</p></Show>
+
             <Show when={ui.csvState === "downloading"}><p role="status">{t("sf.u14.loading")}</p></Show>
             <Show when={ui.csvState === "unavailable"}><p role="alert">{t("sf.u14.unavailable")}</p></Show>
             <Show when={ui.csvState === "stale"}><p role="alert">{t("sf.u14.stale")}</p></Show>
