@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises"
 import { expect } from "@playwright/test"
 import type { APIResponse, Locator, Page, Response, Route, TestInfo } from "@playwright/test"
 import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
-import { chapterURL, login, modeURL, observation } from "./runtime.ts"
+import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime.ts"
 
@@ -163,9 +163,8 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const assetEndpoint = new URL(account.baseURL + "/procurement")
   const linkURL = new URL(assetEndpoint)
   linkURL.searchParams.set("asset-link", asset)
-  const issuedLink = page.waitForResponse((response) =>
-    response.request().method() === "GET" && response.url() === linkURL.href,
-  ).then(async (response) => {
+  const linkCapture = await forwardOnce(page, linkURL.href, "GET")
+  const issuedLink = linkCapture.completed.then(async ({ response }) => {
     expect(response.status()).toBe(200)
     const link = await response.json() as { ok?: boolean; query?: string }
     expect(link.ok).toBe(true)
@@ -183,7 +182,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const downloaded = page.waitForEvent("download")
   const [signedQuery, assetURL, download] = await Promise.all([
     issuedLink, linkedAsset, downloaded, file.getByRole("button", { name: "Download (verify access)", exact: true }).click(),
-  ])
+  ]).finally(() => linkCapture.close())
   expect(assetURL.search.slice(1) === signedQuery, "download uses the producer's exact signed query").toBe(true)
   expect(assetURL.searchParams.get("asset")).toBe(asset)
   expect(assetURL.searchParams.get("expires")).toMatch(/^[1-9]\d*$/)

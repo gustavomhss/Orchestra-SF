@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { expect } from "@playwright/test"
-import type { APIResponse, Locator, Page, Route, TestInfo } from "@playwright/test"
+import type { APIResponse, Locator, Page, Request, Route, TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfContextResult, SfInstallationList } from "@orchestra/schema/sucafina/context"
 
@@ -151,4 +151,30 @@ export async function captureProcurementCommand(page: Page, account: Account, co
   } finally {
     await page.unroute(match, forward)
   }
+}
+
+export async function forwardOnce(page: Page, endpoint: string | (() => string | undefined), method: "GET" | "POST",
+  beforeDelivery?: (response: APIResponse) => Promise<void>) {
+  const match = (url: URL) => url.href === (typeof endpoint === "string" ? endpoint : endpoint())
+  const producer = Promise.withResolvers<{ response: APIResponse; request: Request }>()
+  void producer.promise.catch(() => undefined)
+  const forward = async (route: Route) => {
+    const request = route.request()
+    try {
+      expect(request.method()).toBe(method)
+      // Keep the producer body outside Chromium's response cache; deliver it unchanged.
+      const response = await route.fetch({ maxRedirects: 0, maxRetries: 0 })
+      try {
+        await beforeDelivery?.(response)
+      } finally {
+        await route.fulfill({ response })
+      }
+      producer.resolve({ response, request })
+    } catch (error) {
+      producer.reject(error)
+      await route.abort("failed").catch(() => undefined)
+    }
+  }
+  await page.route(match, forward, { times: 1 })
+  return { completed: producer.promise, close: () => page.unroute(match, forward) }
 }

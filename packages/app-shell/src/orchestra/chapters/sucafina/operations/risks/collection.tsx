@@ -277,10 +277,20 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
     row && version(row) !== undefined ? { kind: "persisted", ref: idOf(row.id),
       version: version(row)!, fields: reviewFields(row, row) } : null
   const activeState = () => draft()?.controller.snapshot()
+  const staleDraft = () => {
+    const row = draft()?.entity
+    const snap = activeState()
+    return !!row && snap?.availability === "active" &&
+      (snap.conflict !== null || snap.baseVersion !== version(row))
+  }
   const beginSaveReview = () => {
     const current = draft()
     const snap = activeState()
     if (!admitted("save") || !current || snap?.availability !== "active" || store.unknown) return
+    if (staleDraft()) {
+      setStore("error", t("sf.common.stale"))
+      return
+    }
     if (fieldList(current.entity).some((field) => field.required &&
         !scalar(snap.value[field.name]).trim())) {
       setStore("error", t("sf.common.fieldErrorSummary"))
@@ -302,8 +312,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
     const row = action === "delete" ? selected() : currentDraft?.entity
     const snap = action === "save" ? currentDraft?.controller.snapshot() : undefined
     if ((row && version(row) === undefined) ||
-        (action === "save" && (!currentDraft || snap?.availability !== "active" ||
-          (row && snap.baseVersion !== version(row))))) {
+        (action === "save" && (!currentDraft || snap?.availability !== "active" || staleDraft()))) {
       setStore({ error: t("sf.common.stale"), mode: action === "save" ? "edit" : "detail" })
       return
     }
@@ -505,7 +514,8 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                           </label>
                         }}</For>
                         <div class="sf-u30-actions">
-                          <button type="submit" class="mx-btn primary" disabled={store.busy || store.unknown}>
+                          <button type="submit" class="mx-btn primary" disabled={store.busy || store.unknown}
+                            formNoValidate={staleDraft()}>
                             {t("sf.common.review")}
                           </button>
                           <button type="button" class="mx-btn" onClick={() => setStore("mode", "detail")}>
@@ -543,7 +553,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                             details: proposedFields() }]}
                           coverage={complete()}
                           blockingReasons={store.unknown ? [message("sf.common.operationUnknown")] : []}
-                          confirmation={!store.unknown && admitted("save") &&
+                          confirmation={!store.unknown && !staleDraft() && admitted("save") &&
                             (!active().entity || version(active().entity!) !== undefined)
                             ? { kind: "admitted", labelKey: k("sf.common.save"), purpose: "save",
                               binding: { kind: "catalog-command", operationId: spec.saveOperation,
@@ -551,7 +561,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                                   ? { kind: "record", expectedVersion: version(active().entity!)! }
                                   : { kind: "none" }, confirmation: "presentation-only" } }
                             : { kind: "blocked", labelKey: k("sf.common.unavailable"),
-                              reasons: [message("sf.common.unavailable")] }}
+                              reasons: [message(staleDraft() ? "sf.common.stale" : "sf.common.unavailable")] }}
                           state={store.unknown ? "outcome-unknown" : "ready"}
                           onConfirm={() => { void commit("save") }}
                           onRevise={() => setStore("mode", "edit")}

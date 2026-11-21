@@ -4,6 +4,7 @@ import type { Application } from "../../../../../modules/sucafina/Sucafinav1/run
 import { createApplication } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import type { LocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-contract.ts"
 import { contributions } from "../../../../../modules/sucafina/Sucafinav1/index.ts"
+import { createSfWorkbenchHttp } from "../../../../../modules/sucafina/Sucafinav1/product/interface/http.ts"
 import { scanLocalFile } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-scanner.ts"
 import type { SfScopedSourcePort } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import type { CreateSfHostRuntime } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
@@ -89,12 +90,16 @@ export async function createOperationsInstallation(input: {
       humanActions: operator.readOnly ? [] : ["imports.admit", "imports.apply", "documents.schema", "documents.confirm"],
     })),
   })
+  const workbench = input.currentChoiceFence ? createSfWorkbenchHttp({
+    origin: input.origin, mount: input.mount, runtime: () => runtime.services?.(),
+  }) : undefined
   const application: Application = {
     persistence: input.persistence,
     authenticate: input.authenticate,
     environment: input.environment,
     assets,
-    product: async (request, surface) => runtime.services?.()?.productHttp?.(request, surface),
+    product: async (request, surface) => await runtime.services?.()?.productHttp?.(request, surface) ??
+      await workbench?.(request, surface),
     productView: async (request, surface, page) => runtime.services?.()?.productView?.(request, surface, page),
     domains: contributions,
     maxJsonBytes: 100_000,

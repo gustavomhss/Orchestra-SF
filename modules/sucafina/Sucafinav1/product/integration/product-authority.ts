@@ -318,6 +318,22 @@ export function createSfProductAuthority(input: {
       commit: false, value: await readAdmittedContext(),
     }), { signal: request.signal })
   }
-  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission }
+  // C06 availability observes the same operation grants used by the UI and
+  // human authorities without minting leases or opening document references.
+  const readDocumentGrants = async (request: Request, expected: import("@orchestra/schema/sucafina/context").SfContextStamp) => {
+    const actor = await resolve(request).catch(() => undefined)
+    if (!actor || request.signal.aborted || !actor.grant.namespaces.includes("documents") ||
+        actor.identity.installationId !== expected.installationId || actor.identity.projectId !== expected.projectId ||
+        actor.identity.hostId !== expected.hostId || actor.principalRef !== expected.principalRef ||
+        actor.policyVersion !== expected.policyVersion || actor.accessRevision !== expected.accessRevision) return undefined
+    return {
+      extract: actor.grant.operations.includes("sf_document_extract"),
+      open: actor.grant.operations.includes("sf_evidence_get"),
+      search: actor.grant.operations.includes("sf_knowledge_search"),
+      schema: actor.canWrite && actor.grant.humanActions?.includes("documents.schema") === true,
+      confirm: actor.canWrite && actor.grant.humanActions?.includes("documents.confirm") === true,
+    }
+  }
+  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission, readDocumentGrants }
 }
 

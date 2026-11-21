@@ -63,8 +63,9 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
   const frozen = page.locator("section.sf-u12-comparison")
   await expect(frozen.getByRole("row").filter({ hasText: "Journey registered supplier" }).getByRole("cell", { name: "30240 USD (submitted FX: 1.08)", exact: true })).toHaveCount(1)
   await expect(frozen.getByRole("status").filter({ hasText: limited })).toBeVisible()
-  await setEurRate(page, account, "1.08", "2")
+  let restore = false
   try {
+    await setEurRate(page, account, "1.08", "2", () => { restore = true })
     await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
     await expect(stage).toHaveText("Stage: src_pending · Source version: " + pendingVersion)
     await expect(page.locator(`p[data-request-summary="${id}"]`)).toContainText("Sourcing approval")
@@ -76,13 +77,12 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
     await expect(page.getByRole("button", { name: "Submit sourcing", exact: true })).toHaveCount(0)
     await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing/compare`)
     await expect(page.locator("section.sf-u12-comparison").getByRole("cell", { name: "30240 USD (submitted FX: 1.08)", exact: true })).toHaveCount(1)
-    await page.reload()
     await expect(stage).toHaveText("Stage: src_pending · Source version: " + pendingVersion)
     await expect(page.locator(`p[data-request-money="${id}"]`)).toHaveText("Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).")
     await expect(page.locator("section.sf-u12-comparison").getByRole("cell", { name: "30240 USD (submitted FX: 1.08)", exact: true })).toHaveCount(1)
     await observation(info, "operations-sourcing-frozen-fx", { recordId: id, domainVersion: pendingVersion, pendingSourcing: { original: 28000, currency: "EUR", rate: 1.08, baseAmount: 30240, state: "src_pending" }, futurePo: { baseAmount: 56000, rate: 2, submitted: false }, c06MaterialConfirmation: "BLOCKED_DEPENDENCY" })
   } finally {
-    await setEurRate(page, account, "2", "1.08")
+    if (restore) await setEurRate(page, account, "2", "1.08")
   }
 }
 
@@ -160,7 +160,7 @@ async function fillEnabledScores(quote: Locator) {
   }
 }
 
-async function setEurRate(page: Page, account: Account, expectedRate: string, value: string) {
+async function setEurRate(page: Page, account: Account, expectedRate: string, value: string, onSaved?: () => void) {
   await page.goto("/orchestra/sf-procurement/settings")
   const settings = page.locator("form.sf-n21-settings-form")
   await expect(settings).toHaveCount(1)
@@ -181,6 +181,7 @@ async function setEurRate(page: Page, account: Account, expectedRate: string, va
   })
   expect(saved.status).toBe(200)
   expect(saved.body).toMatchObject({ ok: true })
+  onSaved?.()
   await expect(settings).toHaveAttribute("data-version", String(version + 1))
   await expect(code).toHaveValue("EUR")
   await expect(rate).toHaveValue(value)

@@ -270,10 +270,9 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     expect(await cell.inputValue()).toBe("Unsaved typing")
     phase("reject stale review")
     // The native controller retains CAS 1 despite seeing source version 2.
-    // Attempting the reviewed save must block before dispatch, not adopt CAS 2.
+    // The stale edit must stay open and refuse review without a second POST.
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
-    await page.getByRole("button", { name: "Save", exact: true }).click()
-    await page.getByText("Review the current source before continuing.", { exact: true }).waitFor()
+    await page.getByRole("alert").getByText("Review the current source before continuing.", { exact: true }).waitFor()
     expect(await cell.inputValue()).toBe("Unsaved typing")
     expect(writes).toHaveLength(1)
     expect(await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,

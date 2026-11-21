@@ -4,7 +4,7 @@ import type { APIRequestContext, APIResponse, Page, TestInfo, Request, Response,
 import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
 import type { ReportsCorpus } from "./corpus.ts"
-import { object, projection, readReview, responseFor, review, text } from "./model.ts"
+import { object, projection, readReview, review, text } from "./model.ts"
 import { inspectReport, officePackageText } from "./ooxml.ts"
 
 const reportPages = ["Budget Overview", "Portfolio Dashboard", "Hot Topics & Actions"] as const
@@ -91,9 +91,9 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   const confirmed = agenda.locator("[data-sf-preserved-confirmed]")
   await expect(confirmed).toBeVisible()
   await expect(confirmed.locator("dd").first()).toHaveText(saved.id)
-  expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
   const preservedPath = "/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id)
-  await confirmed.getByRole("link", { name: /^(Open preserved review|Abrir revisão preservada)$/ }).click()
+  const openReview = confirmed.getByRole("link", { name: /^(Open preserved review|Abrir revisão preservada)$/ })
+  await observePreservedReview(page, app, saved, () => openReview.click())
   await expect(page).toHaveURL((url) => url.origin === app.origin && url.pathname === preservedPath)
   const preparation = page.locator('[data-sf-surface="UI48"]')
   await expect(preparation).toBeVisible()
@@ -211,7 +211,7 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
   await budgetPreview.getByText(priorBudget[0]!.title, { exact: true }).click()
   const forecast = budgetPreview.locator("dl > div").filter({ has: page.getByText(corpus.forecastField, { exact: true }) })
   await expect(forecast).toBeVisible()
-  await expect(forecast.locator("dd")).toContainText(String(corpus.after))
+  await expect(forecast.locator("dd .sf-numeric")).toContainText(await formatReviewNumber(page, corpus.after, 2))
   await expect(save).toBeEnabled()
   const { response, body } = await observeOriginalJson(page, new URL(app.dashboardURL), "POST",
     (url) => url.searchParams.get("sf") === "dashboard-review-preserve", () => save.click())
@@ -328,12 +328,7 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
       expect(current.searchParams.get(key)).toBeTruthy()
       expect(target.searchParams.getAll(key)).toEqual(current.searchParams.getAll(key))
     }
-    const { response, body } = await observeOriginalJson(page, endpoint, "GET",
-      (url) => url.searchParams.size === 2 && url.searchParams.get("sf") === "dashboard-review" &&
-        url.searchParams.get("id") === saved.id, () => link.click())
-    expect(response.status).toBe(200)
-    expect(body.status).toBe("ok")
-    expect(body.value).toEqual(saved)
+    await observePreservedReview(page, app, saved, () => link.click())
     await expect(page).toHaveURL(target.href)
   }
   const report = page.locator('[data-sf-surface="UI50"]')
@@ -401,17 +396,7 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
 }
 
 export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview, budgetSection: PreservedSection) {
-  const endpoint = new URL(app.dashboardURL)
-  const readMeeting = async (navigate: () => Promise<Response | null>) => {
-    const { response, body } = await observeOriginalJson(page, endpoint, "GET",
-      (url) => url.searchParams.size === 2 && url.searchParams.get("sf") === "dashboard-review" && url.searchParams.get("id") === saved.id,
-      async () => { await navigate() })
-    expect(response.status).toBe(200)
-    expect(response.headers["cache-control"]).toContain("no-store")
-    expect(body.status).toBe("ok")
-    expect(body.value).toEqual(saved)
-  }
-  await readMeeting(() => page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id)))
+  await observePreservedReview(page, app, saved, () => page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id)))
   const article = page.locator('[data-sf-surface="UI48"]').locator('article[data-review-ref="' + saved.id + '"]')
   await expect(article).toHaveAttribute("data-review-version", String(saved.version))
   const surface = page.locator('[data-sf-surface="UI48"]')
@@ -430,7 +415,7 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
   expect(budgetIndex).toBeGreaterThanOrEqual(0)
   const reloadMeeting = async () => {
     const reloadURL = page.url()
-    await readMeeting(() => page.reload())
+    await observePreservedReview(page, app, saved, () => page.reload())
     await expect(surface).toHaveAttribute("data-sf-presentation", "false")
     await expect(article).toHaveAttribute("data-review-version", String(saved.version))
     await expect(meeting.getByRole("status")).toContainText("Preserved review " + saved.id + " v" + saved.version)
@@ -480,25 +465,13 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const navigation = page.getByRole("list", { name: "Preserved source navigation", exact: true })
   const link = navigation.getByRole("button", { name: `Open source ${reference.refId}`, exact: true })
   await expect(link, "The installed meeting must use the existing authorized source resolver").toBeEnabled()
-  const matchesRead = responseFor(app.dashboardURL, "dashboard-review", "GET")
-  const matchesSource = responseFor(app.dashboardURL, "review-source", "GET")
-  const [, links] = await Promise.all([
-    page.waitForResponse((response) => matchesRead(response) &&
-      new URL(response.url()).searchParams.get("id") === saved.id).then(async (response) => {
-      expect(response.status()).toBe(200)
-      expect(object(await response.json()).value).toEqual(saved)
-    }),
-    page.waitForResponse((response) => {
-      if (!matchesSource(response)) return false
-      const query = new URL(response.url()).searchParams
-      return query.get("reviewRef") === saved.id && query.get("referenceId") === reference.refId
-    }).then(async (response) => {
-      expect(response.status()).toBe(200)
-      expect(response.headers()["cache-control"]).toBe("no-store")
-      return object(await response.json()).links
-    }),
-    link.click(),
-  ])
+  const { response, body } = await observeOriginalJson(page, new URL(app.dashboardURL), "GET",
+    (url) => url.searchParams.size === 3 && url.searchParams.get("sf") === "review-source" &&
+      url.searchParams.get("reviewRef") === saved.id && url.searchParams.get("referenceId") === reference.refId,
+    () => observePreservedReview(page, app, saved, () => link.click()))
+  expect(response.status).toBe(200)
+  expect(response.headers["cache-control"]).toBe("no-store")
+  const links = body.links
   expect(Array.isArray(links)).toBe(true)
   expect(links).toHaveLength(1)
   const authorized = object((links as unknown[])[0])
@@ -523,12 +496,15 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   expect(target.origin).toBe(nativeOrigin)
   expect(target.pathname).toBe("/orchestra/sf-dashboard/budget")
   expect(target.searchParams.get("year")).toBe(String(corpus.year))
+  await expect(dashboard.locator('[data-sf-metric="forecast"] dd'),
+    "The native Budget must display the current producer total for the linked year").toHaveText(await formatReviewNumber(page, corpus.after))
+  expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
+}
+
+async function formatReviewNumber(page: Page, value: number, minimumFractionDigits = 0) {
   const locale = await page.locator("html").getAttribute("lang")
   expect(locale).toBeTruthy()
-  const displayed = Intl.NumberFormat(locale!, { maximumFractionDigits: 2 }).format(corpus.after)
-  await expect(dashboard.locator('[data-sf-metric="forecast"] dd'),
-    "The native Budget must display the current producer total for the linked year").toHaveText(displayed)
-  expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
+  return Intl.NumberFormat(locale!, { minimumFractionDigits, maximumFractionDigits: 2 }).format(value)
 }
 
 async function observeBudgetPage(page: Page, app: ReportsInstallation, year: number, navigate: () => Promise<unknown>) {
@@ -540,6 +516,16 @@ async function observeBudgetPage(page: Page, app: ReportsInstallation, year: num
   expect(projection.capabilityId).toBe("CAP03")
   expect(object(projection.selection).year).toBe(year)
   return projection
+}
+
+async function observePreservedReview(page: Page, app: ReportsInstallation, saved: PreservedReview, action: () => Promise<unknown>) {
+  const { response, body } = await observeOriginalJson(page, new URL(app.dashboardURL), "GET",
+    (url) => url.searchParams.size === 2 && url.searchParams.get("sf") === "dashboard-review" &&
+      url.searchParams.get("id") === saved.id, action)
+  expect(response.status).toBe(200)
+  expect(response.headers["cache-control"]).toContain("no-store")
+  expect(body.status).toBe("ok")
+  expect(body.value).toEqual(saved)
 }
 
 function encodeReviewRef(value: string) {

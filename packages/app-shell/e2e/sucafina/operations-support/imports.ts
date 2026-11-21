@@ -6,7 +6,7 @@ import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import type { APIResponse, Locator, Page, Request, Route, TestInfo } from "@playwright/test"
 import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
-import { chapterURL, login, modeURL, observation } from "./runtime.ts"
+import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
 import type { Account } from "./runtime.ts"
 
 // ExcelJS belongs to the existing Sucafina package. Resolve there under Bun's isolated workspace linker.
@@ -21,32 +21,6 @@ async function valueOf<T>(response: APIResponse): Promise<T> {
   const body = await response.json() as { status: string; value: T }
   expect(body.status).toBe("ok")
   return body.value
-}
-
-async function forwardOnce(page: Page, endpoint: string | (() => string | undefined), method: "GET" | "POST",
-  beforeDelivery?: (response: APIResponse) => Promise<void>) {
-  const match = (url: URL) => url.href === (typeof endpoint === "string" ? endpoint : endpoint())
-  const producer = Promise.withResolvers<{ response: APIResponse; request: Request }>()
-  void producer.promise.catch(() => undefined)
-  const forward = async (route: Route) => {
-    const request = route.request()
-    try {
-      expect(request.method()).toBe(method)
-      // Keep the producer body outside Chromium's response cache; deliver it unchanged.
-      const response = await route.fetch({ maxRedirects: 0, maxRetries: 0 })
-      try {
-        await beforeDelivery?.(response)
-      } finally {
-        await route.fulfill({ response })
-      }
-      producer.resolve({ response, request })
-    } catch (error) {
-      producer.reject(error)
-      await route.abort("failed").catch(() => undefined)
-    }
-  }
-  await page.route(match, forward, { times: 1 })
-  return { completed: producer.promise, close: () => page.unroute(match, forward) }
 }
 
 async function forwardedRead<T>(page: Page, url: string, action: () => Promise<T>) {
@@ -443,10 +417,19 @@ export async function importJourney(page: Page, info: TestInfo) {
   const resultURL = chapterURL(account, `/orchestra/sf-imports/r_${Buffer.from(preview.id).toString("base64url")}/receipt`)
   expect(new URL(resultHref, page.url()).href).toBe(resultURL.href)
   const resultRoot = '[data-sf-leaf="u23"][data-sf-surface="UI57"]'
+  const openResult = async (tab: Page, principal: string) => {
+    const { response: owner, result: navigation } = await forwardedRead(tab, context.url(), () => tab.goto(resultURL.href))
+    expect(navigation?.status()).toBe(200)
+    expect(owner.status()).toBe(200)
+    expect(await owner.json()).toMatchObject({
+      status: "ok",
+      value: { stamp: { principalRef: principal, installationId: account.installationId, projectId: account.projectId } },
+    })
+    return tab.locator(resultRoot)
+  }
   const resultPage = await page.context().newPage()
   try {
-    expect((await resultPage.goto(resultURL.href))?.status()).toBe(200)
-    const result = resultPage.locator(resultRoot)
+    const result = await openResult(resultPage, account.principal)
     await expect(result).toHaveCount(1)
     await expect(result).toBeVisible()
     const read = result.locator(".sf-files-fields").getByRole("button", { name: "Refresh receipt", exact: true })
@@ -488,8 +471,7 @@ export async function importJourney(page: Page, info: TestInfo) {
     expect(viewer.principal).not.toBe(account.principal)
     const visibleAfterRevocation = await exported(viewerPage, viewer, version)
     expect(visibleAfterRevocation.OPEX).toEqual(after.OPEX)
-    expect((await viewerPage.goto(resultURL.href))?.status()).toBe(200)
-    const result = viewerPage.locator(resultRoot)
+    const result = await openResult(viewerPage, viewer.principal)
     const { response: foreign } = await forwardedRead(viewerPage, referenceURL, () =>
       result.locator(".sf-files-fields").getByRole("button", { name: "Refresh receipt", exact: true }).click())
     expect(foreign.status()).toBe(403)

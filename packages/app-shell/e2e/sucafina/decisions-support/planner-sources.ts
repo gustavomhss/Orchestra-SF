@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from "@playwright/test"
+import { expect, type Locator, type Page, type Route } from "@playwright/test"
 import { asRecord } from "./journey"
 
 export const sourceNames = { baseline: "Decisions baseline plan", candidate: "Decisions candidate plan", line: "Decision annual service" }
@@ -169,15 +169,7 @@ async function confirmVersion(page: Page, origin: string, opener: Locator, actio
   await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
   const confirm = review.getByRole("button", { name: "Confirm", exact: true })
   await expect(confirm).toBeEnabled()
-  const [{ result, command, httpStatus }] = await Promise.all([page.waitForResponse((response) => {
-    if (response.request().method() !== "POST" || response.url() !== `${origin}/sucafina/planner?page=Versions`) return false
-    const body = response.request().postDataJSON()
-    return body?.page === "Versions" && body.action === action
-  }).then(async (response) => {
-    expect(response.status()).toBe(200)
-    expect(response.headers()["content-type"]).toContain("application/json")
-    return { result: asRecord(await response.json()), command: asRecord(response.request().postDataJSON()), httpStatus: response.status() }
-  }), confirm.click()])
+  const { result, command, httpStatus } = await observePlannerCommand(page, origin, "Versions", action, confirm)
   expect(command.confirmed).toBe(true)
   if (sourceId !== undefined) expect(command.id).toBe(sourceId)
   expect(result.ok).toBe(true)
@@ -216,15 +208,7 @@ async function confirmLine(page: Page, opener: Locator, expected: { version: num
   const confirm = review.getByRole("button", { name: "Confirm", exact: true })
   await expect(confirm).toBeEnabled()
   const origin = new URL(page.url()).origin
-  const [{ result, body, httpStatus }] = await Promise.all([page.waitForResponse((response) => {
-    if (response.request().method() !== "POST" || response.url() !== `${origin}/sucafina/planner?page=OPEX`) return false
-    const body = response.request().postDataJSON()
-    return body?.page === "OPEX" && body?.action === "save"
-  }).then(async (response) => {
-    expect(response.status()).toBe(200)
-    expect(response.headers()["content-type"]).toContain("application/json")
-    return { result: asRecord(await response.json()), body: asRecord(response.request().postDataJSON()), httpStatus: response.status() }
-  }), confirm.click()])
+  const { result, command: body, httpStatus } = await observePlannerCommand(page, origin, "OPEX", "save", confirm)
   expect(result.ok).toBe(true)
   expect(body.page).toBe("OPEX")
   expect(body.action).toBe("save")
@@ -233,4 +217,36 @@ async function confirmLine(page: Page, opener: Locator, expected: { version: num
   expect(asRecord(body.values)).toMatchObject(expected.values)
   observations.push({ stage: "planner-human-command", action: "save", httpStatus, ok: result.ok, version: body.version })
   return result
+}
+
+
+// Retain the original producer response before an installed refresh can evict it
+// from Chromium. A matched command reaches the server once and keeps its body.
+async function observePlannerCommand(page: Page, origin: string, name: "Versions" | "OPEX", action: string, confirm: Locator) {
+  const endpoint = `${origin}/sucafina/planner?page=${name}`
+  const match = (url: URL) => url.href === endpoint
+  const captured = Promise.withResolvers<{ result: Record<string, unknown>; command: Record<string, unknown>; httpStatus: number }>()
+  let requests = 0
+  const handle = async (route: Route) => {
+    const request = route.request()
+    if (request.method() !== "POST") return route.fallback()
+    try {
+      const command = asRecord(request.postDataJSON())
+      if (command.page !== name || command.action !== action) return route.fallback()
+      expect(++requests, "one original Planner command").toBe(1)
+      const response = await route.fetch({ maxRedirects: 0, maxRetries: 0 })
+      const result = await response.json().finally(() => route.fulfill({ response }))
+      expect(response.status()).toBe(200)
+      expect(response.headers()["content-type"]).toContain("application/json")
+      captured.resolve({ result: asRecord(result), command, httpStatus: response.status() })
+    } catch (error) {
+      captured.reject(error)
+      await route.abort("failed").catch(() => undefined)
+    }
+  }
+  await page.route(match, handle)
+  try {
+    const [result] = await Promise.all([captured.promise, confirm.click()])
+    return result
+  } finally { await page.unroute(match, handle) }
 }

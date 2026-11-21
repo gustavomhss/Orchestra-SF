@@ -35,33 +35,15 @@ export async function observeSfDocumentHealth(input: {
       binding("files.document-sources", source.producer) === installed &&
       digestSfValue(stamp) === digestSfValue(expectedStamp)
   }
-  const observed = async (operation: "sf_document_extract" | "sf_evidence_get" | "sf_knowledge_search") => {
-    const digest = digestSfValue({ purpose: "document-source-health", operation })
-    const result = await authority.ui.admit(request, operation, digest)
-    if (result.status !== "ok") return false
-    try {
-      const context = result.value
-      const proof = context.binding
-      return current() && proof.installationId === expectedStamp.installationId &&
-        proof.projectId === expectedStamp.projectId && proof.principalRef === expectedStamp.principalRef &&
-        proof.policyVersion === expectedStamp.policyVersion && proof.accessRevision === expectedStamp.accessRevision &&
-        authority.ui.requestFor(context) === request && await authority.ui.validate(context, operation, digest) &&
-        await authority.ui.revalidate(context) && current()
-    } finally {
-      authority.ui.finish(result.value)
-    }
-  }
-  if (!await observed("sf_document_extract")) return []
-  const read = await authority.state.read(request, "documents", selectSfNamespaceHealth("documents", expectedStamp))
-  if (read.status !== "ok" || !read.value) return []
-  const write = await authority.state.read(request, "documents", selectSfNamespaceHealth("documents", expectedStamp, "write"))
+  const grants = await authority.readDocumentGrants(request, expectedStamp)
+  if (!grants?.extract) return []
+  const [read, write] = await Promise.all([
+    authority.state.read(request, "documents", selectSfNamespaceHealth("documents", expectedStamp)),
+    authority.state.read(request, "documents", selectSfNamespaceHealth("documents", expectedStamp, "write")),
+  ])
+  if (read.status !== "ok" || !read.value || !current()) return []
   const canWrite = write.status === "ok" && !!write.value && write.incarnation === read.incarnation &&
     write.aggregateRevision === read.aggregateRevision
-  const actions = canWrite ? await authority.humanActions(request) : []
-  const open = await observed("sf_evidence_get")
-  const search = await observed("sf_knowledge_search")
-  const final = await authority.readContextAdmission(request)
-  if (!current() || final.status !== "ok" || digestSfValue(final.stamp) !== digestSfValue(expectedStamp)) return []
 
   const service = source.service
   const candidates = [
@@ -70,11 +52,11 @@ export async function observeSfDocumentHealth(input: {
     ["files.document-admit", "POST", "mutation", service.admitSelection, canWrite],
     ["files.document-candidates", "GET", "read", service.documents.list, true],
     ["files.document-schemas", "GET", "read", service.schemas.list, true],
-    ["files.document-schema", "POST", "mutation", service.schemas.register, actions.includes("documents.schema")],
+    ["files.document-schema", "POST", "mutation", service.schemas.register, canWrite && grants.schema],
     ["files.document-extract", "POST", "mutation", service.documents.extract, canWrite],
-    ["files.document-confirm", "POST", "mutation", service.documents.confirm, actions.includes("documents.confirm")],
-    ["files.document-open", "GET", "read", service.documents.resolvePresentation, open],
-    ["files.document-search", "POST", "read", service.documents.search, search],
+    ["files.document-confirm", "POST", "mutation", service.documents.confirm, canWrite && grants.confirm],
+    ["files.document-open", "GET", "read", service.documents.resolvePresentation, grants.open],
+    ["files.document-search", "POST", "read", service.documents.search, grants.search],
   ] as const
   return candidates.flatMap(([id, method, effect, producer, allowed]) => {
     const metadata = SfOperationRegistry[id]
