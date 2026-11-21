@@ -232,6 +232,9 @@
   .sf-today {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .sf-today > :is([aria-labelledby="sf-u01-attention"], [aria-labelledby="sf-u01-risks"]) {
+    align-self: stretch;
+  }
   .sf-today .sf-today-resume-grid {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   }

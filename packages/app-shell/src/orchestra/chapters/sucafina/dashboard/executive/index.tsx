@@ -129,7 +129,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
           <h2 id="sf-u02-period">{t(key("sf.u02.period"))}</h2>
           <div class="sf-u02-controls">
             <label>{t(key("sf.u02.year"))}
-              <select value={year() ?? ""} onChange={(event) => reader.setYear(Number(event.currentTarget.value))}>
+              <select aria-label={t(key("sf.u02.year"))} value={year() ?? ""} onChange={(event) => reader.setYear(Number(event.currentTarget.value))}>
                 <option value="" disabled>{missing()}</option>
                 <For each={[2024, 2025, 2026, 2027]}>{(item) =>
                   <option value={item}>{item}</option>}</For>
@@ -140,7 +140,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
                 <For each={MONTHS}>{(item) => <option value={item}>{item}</option>}</For>
               </select></label>
             <label>{t(key("sf.u02.opsMonth"))}
-              <select value={selected().opsMonth ?? ""} onChange={(event) => reader.setOpsMonth(Number(event.currentTarget.value))}>
+              <select aria-label={t(key("sf.u02.opsMonth"))} value={selected().opsMonth ?? ""} onChange={(event) => reader.setOpsMonth(Number(event.currentTarget.value))}>
                 <option value="" disabled>{missing()}</option>
                 <For each={MONTHS}>{(item) => <option value={item}>{item}</option>}</For>
               </select></label>

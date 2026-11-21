@@ -240,7 +240,7 @@ export function SfCreateCase(props: Readonly<{
               <h4>{t("sf.ui33.criteria")}</h4>
               <ol>{form.criteria.split("\n").map((part) => part.trim()).filter(Boolean).map((criterion) => <li><bdi>{criterion}</bdi></li>)}</ol>
             </div>
-            <p class="sf-cases-source-note"><code>sourceRefs: []</code></p>
+            <p class="sf-cases-source-note">{t("sf.ui34.noSources")}</p>
           </div>
         </Show>
         <Show when={form.message}><p class="sf-cases-status" role="status" aria-live="polite">{t(form.message)}</p></Show>
