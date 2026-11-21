@@ -69,7 +69,7 @@ async function createConfiguredInstallation(
   const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
-  const backupDirectory = path.join(loaded.directory, operator ? "backups-local" : "backups-microsoft")
+  const backupDirectory = path.join(loaded.directory, operator ? "backups-local" : microsoft ? "backups-entra" : "backups-microsoft")
   const backups = await createLocalBackups(backupDirectory)
   const recovery = operator ? await loadRecoveryConfiguration(loaded.directory) : undefined
   const recoveryDrill = recovery ? async (at: string) => {
@@ -88,7 +88,7 @@ async function createConfiguredInstallation(
   const business = createModule(config.mount, {
     persistence: store,
     authenticate: identity.authenticate,
-    environment: async (request) => ({ at: new Date().toISOString(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank }),
+    environment: async (request) => ({ at: new Date().toISOString(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank, microsoftGroupIdsOnly: Boolean(microsoft) }),
     maxJsonBytes: 2 * 1024 * 1024,
     assets: { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes) => scanLocalFile(bytes, config.scanner) } },
   })

@@ -8,6 +8,8 @@ orchestra serve --hostname 127.0.0.1 --port 4096 \
   --public-origin https://sf.exemplo.com
 ```
 
-Aponte `SUCAFINA_MICROSOFT_CONFIG` para o perfil proprietário da instalação. A instalação exige diretório, chaves, segredo do cliente e variáveis XDG privados, além de um workspace separado da configuração. O perfil vincula o banco corporativo ao tenant e ao cliente Entra. O acesso às telas existentes do SF é resolvido com grupos Microsoft e o mapa de papéis persistido.
+Aponte `SUCAFINA_MICROSOFT_CONFIG` para o perfil proprietário da instalação. A instalação exige diretório, chaves, segredo do cliente e variáveis XDG privados, além de um workspace separado da configuração. O perfil vincula o banco corporativo ao tenant e ao cliente Entra. O acesso às telas existentes do SF é resolvido com grupos Microsoft e o mapa de papéis persistido. Ao editar um grupo, use `group:<object-id>` ou deixe vazio para remover o vínculo. O perfil confidencial grava seus backups novos em `backups-entra`, em um diretório separado dos arquivos de login local.
+
+O perfil de login usa o diretório do próprio titular. Operações que selecionam outros usuários dependem de uma fonte de diretório corporativa autorizada.
 
 A projeção nativa de Meu trabalho e a conexão Claw entram após a integração da autoridade de produto que aplica `sf_work_list`.

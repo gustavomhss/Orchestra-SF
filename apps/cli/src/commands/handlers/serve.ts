@@ -81,7 +81,8 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
         )
         const installationFile = Option.getOrUndefined(input.installation ?? Option.none())
         const publicOrigin = Option.getOrUndefined(input.publicOrigin ?? Option.none())
-        if (publicOrigin && (!installationFile || !URL.canParse(publicOrigin) ||
+        if (installationFile === "") return yield* Effect.fail(new Error("Explicit installation path required"))
+        if (publicOrigin !== undefined && (installationFile === undefined || !URL.canParse(publicOrigin) ||
           new URL(publicOrigin).origin !== publicOrigin)) return yield* Effect.fail(new Error("Explicit installation and canonical public origin required"))
         const installation = installationFile
           ? yield* Effect.tryPromise({

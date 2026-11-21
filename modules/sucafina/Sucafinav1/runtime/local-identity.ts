@@ -72,6 +72,9 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
     return fenced() || Boolean(await options.secrets.get(storageKey, now())) || fenced()
   }
   const retire = async (kind: string, id: string) => {
+    const auth = options.secrets.authentication
+    // Managed storage already fences a known handle before waiting on its writer.
+    if (auth) return auth.revoke(slot(kind, id), now())
     const storageKey = slot(`revoked-${kind}`, id)
     retiring.forEach((expires, key) => { if (expires <= now()) retiring.delete(key) })
     // Fence pending work immediately, including reads inside an older business transaction.
@@ -79,13 +82,8 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
     // A cancelled login also covers its remaining challenge lifetime before any late session write.
     const expiresAt = now() + (28800 + (kind === "login" ? 600 : 0)) * 1000
     retiring.set(storageKey, expiresAt)
-    const auth = options.secrets.authentication
-    if (!auth) {
-      await options.secrets.put(storageKey, new Uint8Array([1]), expiresAt)
-      await options.secrets.remove(slot(kind, id))
-      return
-    }
-    await auth.revoke(slot(kind, id), now())
+    await options.secrets.put(storageKey, new Uint8Array([1]), expiresAt)
+    await options.secrets.remove(slot(kind, id))
   }
   const cookie = (kind: string, value: string, seconds: number) => `${cookiePrefix}_${kind}=${value}; Path=${options.mount}; HttpOnly; SameSite=Lax; Max-Age=${seconds}${origin.protocol === "https:" ? "; Secure" : ""}`
   const handle = (request: Request, kind: string) => {

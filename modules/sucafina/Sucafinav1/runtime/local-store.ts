@@ -206,12 +206,17 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       limits: authentication,
       read: (work) => {
         if (lifecycle.closed) throw new Error("Local store is disposed")
+        requireDatabaseFile()
         const db = connect()
-        try { return work(db) }
-        finally { db.close() }
+        try {
+          const value = work(db)
+          requireDatabaseFile()
+          return value
+        } finally { db.close() }
       },
       write: (work) => operation(true, async (db) => {
         const value = work(db)
+        requireDatabaseFile()
         db.exec("COMMIT")
         return value
       }),

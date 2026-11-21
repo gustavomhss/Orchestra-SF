@@ -60,7 +60,11 @@ export async function composeSfInstallation(value: unknown, origin: string) {
     if (!url || url.origin !== requestOrigin) return rejectIncoming(incoming, 403)
     if ((incoming.method === "GET" || incoming.method === "HEAD") && (sanitized.headers["transfer-encoding"] !== undefined || Number(sanitized.headers["content-length"]) > 0)) return rejectIncoming(incoming, 400)
     const configured = yield* HttpServerRequest.MaxBodySize
-    const limit = Number(configured ?? 16 * 1024 * 1024)
+    const defaultLimit = 16 * 1024 * 1024
+    const maximum = Number(configured ?? defaultLimit)
+    const contractUpload = incoming.method === "POST" && url.pathname === `${installation.mount}/dashboard` &&
+      url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract"
+    const limit = contractUpload && maximum === defaultLimit ? 25 * 1024 * 1024 : maximum
     const response = yield* Effect.tryPromise({
       try: async (signal) => {
         const node = source ? undefined : NodeHttpServerRequest.toIncomingMessage(sanitized)
