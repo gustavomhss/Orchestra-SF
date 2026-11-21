@@ -764,18 +764,24 @@
   "verification": {
     "runtime": "IN_PROGRESS",
     "visual": "IN_PROGRESS",
-    "technical": "TEN_GATES_PASSED_AT_0F762E71",
+    "technical": "TWELVE_GATES_PASSED_AT_31944B99",
     "regression": "FIRST_SIX_PASSED_AT_4B224618",
     "userAcceptance": "PENDING",
     "merge": "NOT_MERGED"
   },
   "technicalEvidence": {
-    "run": 44960551065,
-    "snapshot": "197ace0be5a215669036a9c17b49a0c3026c9666",
-    "productHead": "0f762e71a00ceb6985b614462a579ba81997afbf",
-    "checks": 10,
-    "regressionTests": 40,
+    "run": 44963051950,
+    "snapshot": "7f33a61d9b8152075eaa9c36871adb01f1c110a6",
+    "productHead": "31944b99c3e9a049f1a529c149d32fa390c783a3",
+    "checks": 12,
+    "regressionTests": 83,
     "includesOriginalInstalledHost": true,
-    "fullCli": "Baseline has seven existing diagnostics; audit3 pending after fixing one new test-only type error."
+    "fullCli": {
+      "status": "KNOWN_BASELINE_FAILURE_NO_NEW_DIAGNOSTICS",
+      "run": 44963827656,
+      "baselineRun": 44958162297,
+      "existingDiagnostics": 7,
+      "newDiagnostics": 0
+    }
   }
 }

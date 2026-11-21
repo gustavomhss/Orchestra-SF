@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedThrough": "2026-11-21T23:47:00Z",
+  "updatedThrough": "2026-11-21T23:55:00Z",
   "note": "Historical attempts include failures and incomplete journeys. Only a final passing run qualifies its stated coverage.",
   "attempts": [
     {
@@ -617,6 +617,19 @@
       "status": "failed",
       "cause": "Seven prior diagnostics and three new test-only diagnostics in the SQLite decision health fixture: two TS7006 callback parameter annotations and one TS2722 optional transactionAll call. Worker correction pending; no suppression or compiler flag change.",
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44963238936"
+    },
+    {
+      "group": "cli-audit",
+      "attempt": 5,
+      "run": 44963827656,
+      "job": 137028278910,
+      "snapshot": "71e73384e3fb0a9d10faa8b7e2b17a491469c930",
+      "head": "7c0caf8da905a03579379c35ce1cd49375a87509",
+      "status": "known-baseline-failure",
+      "existingDiagnostics": 7,
+      "newDiagnostics": 0,
+      "cause": "Exact baseline comparison preserved all seven file/code/message diagnostics; no new CLI errors. Previous fixture diagnostics fixed with exact types and original-method guards.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44963827656"
     }
   ]
 }
