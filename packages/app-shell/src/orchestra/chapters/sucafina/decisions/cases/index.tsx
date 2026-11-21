@@ -74,7 +74,7 @@ export function SfCasesView(props: SfSurfaceProps): JSX.Element {
                 />
               </div>}
           </Show>
-          <section class="sf-cases-list" aria-label={t("sf.ui33.caseList")}>
+          <section class="sf-cases-list" hidden={ui.create} aria-label={t("sf.ui33.caseList")}>
             <div class="sf-cases-list-head">
               <div class="sf-cases-list-title">
                 <h2 ref={listHeading} tabindex="-1">{t("sf.ui33.workspaceTitle")}</h2>

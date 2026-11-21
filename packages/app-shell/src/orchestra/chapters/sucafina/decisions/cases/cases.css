@@ -265,7 +265,8 @@
 .sf-cases .sf-cases-create-slot {
   min-inline-size: 0;
 }
-.sf-cases .sf-cases-create-slot[hidden] {
+.sf-cases .sf-cases-create-slot[hidden],
+.sf-cases .sf-cases-list[hidden] {
   display: none;
 }
 .sf-cases .sf-n24-create {
@@ -472,6 +473,7 @@
   color: var(--mx-good);
 }
 .sf-cases .sf-n24-actions {
+  scroll-margin-block: var(--sf-cases-space-2xl);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

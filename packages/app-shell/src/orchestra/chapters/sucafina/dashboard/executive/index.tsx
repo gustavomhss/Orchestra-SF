@@ -254,7 +254,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
                 <tr data-signal-id={signal.id}><th scope="row">{signal.fact}</th><td>{signal.rule}</td>
                   <td><time dateTime={signal.date}>{signal.date ? shownDate(signal.date) : missing()}</time></td>
                   <td>
-                    <details class="sf-u02-signal-source"><summary>{signal.page}</summary><bdi>{signal.recordId}</bdi></details>
+                    <details class="sf-u02-signal-source"><summary>{signal.page}<Icon name="chevron-down" size="small" /></summary><bdi>{signal.recordId}</bdi></details>
                     <Show when={sfExecutiveSignalTarget(signal)}>{(target) =>
                       <SfExecutiveAction from={signalFrom()} target={target()}
                         label={{ key: key("sf.u02.openRecord") }} />}

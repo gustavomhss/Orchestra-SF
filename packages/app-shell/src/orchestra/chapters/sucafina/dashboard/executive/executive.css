@@ -205,7 +205,18 @@
   padding-inline-start: 0;
   border-inline-start: 0;
 }
+/* u02.css is also imported by CAP03; reset its metric tiles only inside CAP01. */
+.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-stat {
+  min-inline-size: 0;
+  min-block-size: 0;
+  gap: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-stat dt {
+  opacity: 1;
   color: var(--mx-dim);
   font-size: var(--orchestra-font-size-md);
   overflow-wrap: anywhere;
@@ -254,6 +265,7 @@
 /* Native ledger: legible numbers, quiet rules and a named scroll region. */
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-table-scroll {
   min-inline-size: 0;
+  border: 0;
   max-inline-size: 100%;
   overflow-x: auto;
   overscroll-behavior-inline: contain;
@@ -318,6 +330,9 @@
 }
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-records {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: auto;
+  gap: 0;
   margin-block-start: var(--sf-exec-space-md);
 }
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-records > .sf-u02-stat {
@@ -330,6 +345,7 @@
   border-block-end: var(--sf-exec-rule) solid var(--mx-line);
 }
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-records > .sf-u02-stat:last-child { border-block-end: 0; }
+.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-records dt { overflow-wrap: normal; }
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-records dd {
   font-size: var(--orchestra-font-size-lg);
   text-align: end;
@@ -368,6 +384,7 @@
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signals-table th:nth-child(3) { inline-size: 14%; }
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signals-table th:nth-child(4) { inline-size: 18%; }
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signals-table th:nth-child(5) { inline-size: 16%; }
+.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signals-table :is(th, td) { text-align: start; }
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signals-table tbody :is(th, td) {
   vertical-align: top;
   padding-block: var(--sf-exec-space-lg);
@@ -382,11 +399,9 @@
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signal-source > summary {
   display: flex;
   align-items: center;
+  gap: var(--sf-exec-space-sm);
   color: var(--mx-dim);
   font-size: var(--orchestra-font-size-sm);
-  text-decoration: underline;
-  text-decoration-color: var(--mx-line);
-  text-underline-offset: var(--sf-exec-space-xs);
 }
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signal-source bdi {
   display: block;
@@ -403,6 +418,7 @@
   border-color: var(--mx-rim);
 }
 .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signals-foot {
+  max-inline-size: none;
   padding-block-start: var(--sf-exec-space-md);
   border-block-start: var(--sf-exec-rule) solid var(--mx-line);
 }
@@ -512,6 +528,20 @@
   .sf-u02-page[data-sf-surface="CAP01"] .sf-s03-head { grid-template-columns: minmax(0, 1fr); }
 }
 @container sf-frame (max-width: 420px) {
+  .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-crosslinks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+  .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-crosslinks [data-sf-executive-action] { min-inline-size: 0; }
+  .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-crosslinks .mx-btn {
+    inline-size: 100%;
+    block-size: 100%;
+    min-inline-size: 0;
+    justify-content: flex-start;
+    text-align: start;
+    white-space: normal;
+  }
   .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-controls label:last-child { grid-column: 1 / -1; }
   .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-financial-metrics { grid-template-columns: minmax(0, 1fr); margin-block: var(--sf-exec-space-lg); }
@@ -560,6 +590,7 @@
   box-sizing: border-box;
   display: flex;
   flex: none;
+  flex-wrap: nowrap;
   align-items: stretch;
   gap: var(--sf-exec-nav-gap);
   min-inline-size: 0;

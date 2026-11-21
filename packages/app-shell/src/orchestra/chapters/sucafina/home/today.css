@@ -1,7 +1,7 @@
 /* UI29 work overview. Native materials, one surface level, intrinsic content height. */
 .sf-today {
   --sf-today-gap: 24px;
-  --sf-today-panel-padding: 24px;
+  --sf-today-panel-padding: 20px;
   --sf-today-row-gap: 16px;
   --sf-today-small-gap: 10px;
   --sf-today-detail-gap: 6px;
@@ -40,7 +40,7 @@
 }
 .sf-today .sf-today-section-head {
   justify-content: space-between;
-  margin-block-end: var(--sf-today-row-gap);
+  margin-block-end: var(--sf-today-small-gap);
 }
 .sf-today .sf-today-section-title > [data-component="icon"] {
   flex: none;
@@ -216,14 +216,20 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, .8fr);
   gap: var(--sf-today-small-gap) var(--sf-today-row-gap);
-  margin: var(--sf-today-row-gap) 0 0;
+  margin: var(--sf-today-detail-gap) 0 0;
+}
+.sf-today .sf-today-record-meta > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sf-today-detail-gap);
 }
 .sf-today .sf-today-record-meta dt {
   color: var(--mx-dim);
   font-size: var(--orchestra-font-size-sm);
 }
 .sf-today .sf-today-record-meta dd {
-  margin: var(--sf-today-detail-gap) 0 0;
+  margin: 0;
   color: var(--mx-strong);
   font-size: var(--orchestra-font-size-sm);
   overflow-wrap: anywhere;
@@ -238,7 +244,7 @@
   font-size: var(--orchestra-font-size-sm);
 }
 .sf-today .sf-today-risk-state bdi { color: var(--mx-strong); }
-.sf-today .sf-today-context { margin-block-start: var(--sf-today-small-gap); }
+.sf-today .sf-today-context { margin-block-start: 0; }
 .sf-today .sf-today-context > div {
   padding-inline-start: var(--sf-today-row-gap);
   border-inline-start: var(--sf-today-focus-width) solid var(--mx-line);

@@ -220,6 +220,9 @@ export function SfCreateCase(props: Readonly<{
     })
   })
   const busy = () => form.phase === "submitting"
+  // Reconciliation can use the live list while this unknown result stays mounted.
+  // Closing here never clears its marker, discards its draft or resends a command.
+  const canReturnToList = () => !busy() && (!form.hasPending || form.phase === "unknown")
   const field = (label: string, value: string, onInput: (value: string) => void, type = "text") => (
     <label class="sf-n24-field">
       <span>{t(label)}</span>
@@ -305,9 +308,9 @@ export function SfCreateCase(props: Readonly<{
           </div>
         </Show>
         <div class="sf-n24-actions">
-          <Show when={form.phase !== "reviewing" && !busy() && !form.hasPending}>
+          <Show when={form.phase !== "reviewing" && canReturnToList()}>
             <button class="mx-btn sf-cases-cancel" type="button"
-              onClick={() => { if (!busy() && !form.hasPending) props.onClose(form.phase === "confirmed") }}>
+              onClick={() => { if (canReturnToList()) props.onClose(form.phase === "confirmed") }}>
               <Icon name="arrow-left" size="small" />
               {t("sf.ui33.return")}
             </button>

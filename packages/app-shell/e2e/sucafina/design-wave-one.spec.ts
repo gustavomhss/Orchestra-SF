@@ -208,10 +208,11 @@ designTest("installed native first-wave design · real operator, source data, re
   const createdHref = await opened.getAttribute("href")
   expect(createdHref).toMatch(/^\/orchestra\/sf-decisions\//)
   const list = page.getByRole("region", { name: "Authorized decision cases", exact: true })
-  await expect(list.getByRole("listitem").filter({ hasText: objective }).getByRole("link", { name: "Open decision", exact: true }))
-    .toHaveAttribute("href", createdHref!)
+  await expect(list).toBeHidden()
   await form.getByRole("button", { name: "Back to decisions", exact: true }).click()
   await expect(form).toHaveCount(0)
+  await expect(list.getByRole("listitem").filter({ hasText: objective }).getByRole("link", { name: "Open decision", exact: true }))
+    .toHaveAttribute("href", createdHref!)
   await expect(start).toBeEnabled()
   await start.click()
   await expect(form.getByLabel("Decision objective", { exact: true })).toBeEditable()
@@ -253,10 +254,21 @@ designTest("installed native first-wave design · real operator, source data, re
       await capture(page, info, "UI29-dark-desktop-source-availability-test-data", true)
     }
     if (screen.id === "CAP01") {
+      const people = page.getByRole("region", { name: "People and efficiency", exact: true })
+      await people.scrollIntoViewIfNeeded()
+      await expect(people).toBeInViewport({ ratio: 1 })
+      await capture(page, info, "CAP01-dark-desktop-people-test-data", true)
       await page.locator("[data-dashboard-signals]").scrollIntoViewIfNeeded()
       await capture(page, info, "CAP01-dark-desktop-signals-test-data", true)
     }
   }
+  // Review actual density in a shorter laptop window as well as the large capture.
+  await page.setViewportSize({ width: 1440, height: 800 })
+  for (const screen of screens) {
+    await enter(screen)
+    await capture(page, info, screen.id + "-dark-1440x800-test-data", true)
+  }
+  await page.setViewportSize({ width: 1440, height: 1100 })
   await scheme(page, "light")
   for (const screen of screens) {
     await enter(screen)
@@ -276,8 +288,12 @@ designTest("installed native first-wave design · real operator, source data, re
   await form.getByRole("button", { name: "Review creation", exact: true }).click()
   await expect(form.getByRole("group", { name: "Review creation", exact: true }).getByRole("listitem")).toHaveText(criteria)
   const narrowActions = form.locator(".sf-n24-actions")
-  await narrowActions.scrollIntoViewIfNeeded()
+  // Center the real scroll target with breathing room inside the native page.
+  // Nearest alignment can leave a fractional pixel under the rounded shell edge.
+  await narrowActions.evaluate((element) => element.scrollIntoView({ block: "center", inline: "nearest", behavior: "instant" }))
   await expect(narrowActions).toBeInViewport({ ratio: 1 })
+  await expect(narrowActions.getByRole("button", { name: "Cancel", exact: true })).toBeInViewport({ ratio: 1 })
+  await expect(narrowActions.getByRole("button", { name: "Confirm this decision creation", exact: true })).toBeInViewport({ ratio: 1 })
   await reflow(page)
   await capture(page, info, "UI33-light-320-inline-review-test-data", true)
   await form.getByRole("button", { name: "Cancel", exact: true }).click()
@@ -359,17 +375,56 @@ designTest("installed native first-wave design · real operator, source data, re
     for (const screen of localizedScreens) {
       await localized.goto(href(screen.path))
       await ready(localized, screen.title)
+      if (screen.id === "UI29") {
+        await expect(localized.locator('[data-sf-home="authorized"]')).toBeVisible()
+        await expect(localized.getByRole("button", { name: installation.topicName, exact: true })).toBeVisible()
+        await expect(localized.getByRole("button", { name: installation.riskName, exact: true })).toBeVisible()
+        await expect(localized.locator("[data-sf-home-forecast] dd")).toHaveCount(5)
+        await expect(localized.getByRole("button", { name: "Retomar caso: " + objective, exact: true })).toBeEnabled()
+      }
+      if (screen.id === "UI33") {
+        const cases = localized.getByRole("region", { name: "Casos de decisão autorizados", exact: true })
+        await expect(cases.getByRole("listitem").filter({ hasText: objective })).toHaveCount(1)
+        await expect(cases.getByRole("link", { name: "Abrir decisão", exact: true })).toBeEnabled()
+      }
+      if (screen.id === "CAP01") {
+        await expect(localized.locator('[data-sf-surface="CAP01"]')).toBeVisible()
+        await expect(localized.locator('[data-sf-metric="budget"]')).toHaveAttribute("data-sf-value", "number")
+        await expect(localized.locator('[data-sf-metric="forecast"]')).toHaveAttribute("data-sf-value", "number")
+        await expect(localized.locator('[data-sf-metric="risks"]')).toHaveAttribute("data-sf-value", "missing")
+      }
       await scheme(localized, "dark")
       await reflow(localized)
       await scrollPageTop(localized)
       await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data", true)
+      if (screen.id === "UI33") {
+        await localized.getByRole("button", { name: "Novo caso", exact: true }).click()
+        const draft = localized.locator("section.sf-n24-create form")
+        await draft.getByLabel("Objetivo da decisão", { exact: true }).fill(objective)
+        await draft.getByLabel("Início", { exact: true }).fill(installation.year + "-01-01")
+        await draft.getByLabel("Fim", { exact: true }).fill(installation.year + "-12-31")
+        await draft.getByLabel("Moeda", { exact: true }).fill("USD")
+        await draft.getByLabel("Critérios, um por linha", { exact: true }).fill(criteria.join("\n"))
+        await expect(localized.getByRole("region", { name: "Casos de decisão autorizados", exact: true })).toBeHidden()
+        await reflow(localized)
+        await capture(localized, info, "UI33-pt-BR-dark-desktop-editor-test-data", true)
+        await draft.getByRole("button", { name: "Revisar criação", exact: true }).click()
+        await expect(draft.getByRole("button", { name: "Confirmar a criação desta decisão", exact: true })).toBeEnabled()
+        await expect(draft.getByRole("group", { name: "Revisar criação", exact: true }).getByRole("listitem")).toHaveText(criteria)
+        await reflow(localized)
+        await capture(localized, info, "UI33-pt-BR-dark-desktop-inline-review-test-data", true)
+        await draft.getByRole("button", { name: "Cancelar", exact: true }).click()
+        await expect(draft.getByLabel("Objetivo da decisão", { exact: true })).toHaveValue(objective)
+        await draft.getByRole("button", { name: "Voltar às decisões", exact: true }).click()
+        await expect(draft).toBeHidden()
+      }
     }
   } finally {
     await portuguese.close()
   }
   await info.attach("native-wave-one-evidence", {
     body: JSON.stringify({ source: "isolated canonical producer test data", casesCreated: creationRequests.length,
-      views: ["UI29", "UI33", "CAP01"], widths: [1440, 320, 390], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
+      views: ["UI29", "UI33", "CAP01"], widths: [1440, 320, 390], heights: [1100, 800], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
       actualBrowserZoom: "not measured", consoleErrors, pageErrors: errors, cap01Reads: diagnostics.cap01Reads }, null, 2),
     contentType: "application/json",
   })
