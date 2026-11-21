@@ -35,7 +35,7 @@ export async function observeSfDecisionReadingHealth(input: {
   if (!bindingFor || request.signal.aborted || !isSfProductStateReader(state, persistence)) return []
   const expected = Object.freeze({ ...stamp }), stampDigest = digestSfValue(expected)
   const candidates = [
-    { id: "decisions.choice.read", operation: "sf_case_read", method: "GET", query: "current-choice", path: "{mount}/{surface}", namespaces: ["cases", "preferences"] },
+    { id: "decisions.choice.read", operation: "sf_case_read", method: "GET", query: "current-choice", path: "{mount}/dashboard", namespaces: ["cases", "preferences"] },
     { id: "decisions.command.sf_question_prepare", operation: "sf_question_prepare", method: "POST", query: "workbench-command", path: "{mount}/dashboard", namespaces: ["cases", "threads"] },
   ] as const
   const observed = await Promise.allSettled(candidates.map(async (candidate) => {
@@ -77,7 +77,8 @@ export async function observeSfDecisionReadingHealth(input: {
     const descriptorDigest = descriptorValue(), descriptorHandler = descriptor?.handler
     const ownDependencies = () => [
       ui.admit, ui.validate, ui.revalidate, ui.requestFor, ui.finish, state.read, persistence.transaction,
-      choice?.fence.persistence, choice?.fence.run, choice?.fence.observe, choice?.fence.check, choice?.fence.current,
+      choice?.fence.persistence, choice?.fence.persistence.transaction, choice?.fence.persistence.transactionAll,
+      choice?.fence.persistence.currentSnapshots, choice?.fence.run, choice?.fence.observe, choice?.fence.check, choice?.fence.current,
       descriptor?.inputSchema, descriptor?.outputSchema,
     ]
     const own = ownDependencies()
@@ -127,8 +128,17 @@ export async function observeSfDecisionReadingHealth(input: {
         return values.every((value) => value.aggregateRevision === values[0]!.aggregateRevision &&
           value.incarnation === values[0]!.incarnation) ? digestSfValue(values) : undefined
       }
-      const first = await readHealth(), second = first ? await readHealth() : undefined
-      if (!first || first !== second || !current() || !await ui.revalidate(admitted.value) ||
+      const inspect = async () => {
+        const first = await readHealth(), second = first ? await readHealth() : undefined
+        return !!first && first === second && current() && await ui.revalidate(admitted.value) &&
+          ui.requestFor(admitted.value) === request && current()
+      }
+      // The real choice service cannot publish without its snapshot fence.
+      // Exercise that same infrastructure with metadata only, never options().
+      const healthy = candidate.id === "decisions.choice.read" && choice
+        ? await choice.fence.run(admitted.value, inspect)
+        : await inspect()
+      if (!healthy || !current() || !await ui.revalidate(admitted.value) ||
         ui.requestFor(admitted.value) !== request || !current()) return undefined
     } finally { finish(admitted.value) }
     return { current, value: { operationId: candidate.id, state: "ready" as const, reason: null, operational: true as const } }

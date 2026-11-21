@@ -63,7 +63,8 @@ async function observeAvailability(page: Page, owner: Owner) {
   const resources = object(body.value).availability
   expect(Array.isArray(resources)).toBe(true)
   const ids = ["decisions.choice.read", "decisions.command.sf_question_prepare",
-    "intelligence.analysis.choices", "intelligence.analysis.list", "intelligence.analysis.prepare"]
+    "intelligence.analysis.choices", "intelligence.analysis.list", "intelligence.analysis.prepare",
+    "collaboration.selection-list", "collaboration.cycle-read", "collaboration.recipients"]
   const operations = (resources as unknown[]).flatMap((resource) => object(resource).operations as unknown[])
     .map(object).filter((operation) => ids.includes(String(operation.operationId)))
   const summary = ids.map((id) => {
@@ -275,6 +276,12 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
 
   await waveFourTest.step("UI37 prepares a question after retained review, without recording or sending it", async () => {
     await openScreen(page, owner, screens[3]!)
+    if (!availability.some((entry) => entry.operation === "collaboration.selection-list" &&
+      entry.state === "ready" && entry.operational === true)) {
+      const cycles = page.locator('section[aria-labelledby="sf-n24-cycles"]')
+      await expect(cycles.locator('[data-sf-state="unavailable"]')).toBeVisible()
+      await expect(cycles.locator('[data-sf-state="empty"]')).toHaveCount(0)
+    }
     const composer = page.locator("[data-sf-question-composer]")
     await composer.locator("summary").first().click()
     const question = composer.getByLabel("Question text", { exact: true })

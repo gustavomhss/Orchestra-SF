@@ -122,10 +122,10 @@ observeSfAnalysisReadingHealth({
   binding: input.nativeReadBinding,
   source: (operationId) => {
     if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch ||
-      services.analyses !== analyses || services.selected !== selected || !state.models) return undefined
+      services.analyses !== analyses || services.selected !== selected) return undefined
     if (operationId === "intelligence.analysis.choices") return {
       producer: productHttp,
-      dependencies: [analysisHttp, readSfImportAnalysisChoices, services.models, state.models,
+      dependencies: [analysisHttp, readSfImportAnalysisChoices, services.models, ...(state.models ? [state.models] : []),
         selected, nativeSearchDispatch, business.cases, business.cases.read, authority.human, authority.human.admit, input.persistence],
     }
     return { producer: productHttp,
@@ -138,3 +138,9 @@ observeSfAnalysisReadingHealth({
 The original choices producer uses the private `analysis.prepare` action even though choices itself is a read. History uses `analysis.read`. The health observer retains these exact action admissions, verifies Cases/Contributions metadata through the canonical state reader, and never enumerates cases, queries a provider, prepares input or produces a run/output. Original source methods and the mounted product binding remain fenced across awaited reads and final lease disposal.
 
 The UI41 test awaits the actual browser POST status and native view acknowledgement, then compares its visible selectors with a fresh authorized read of that same original endpoint through `page.request`. This API response retains its body independently of Chromium/CDP. Both responses must succeed. There is no intercepted response, fabricated catalog, grant or model. Selection/input preparation assertions remain conditional on actual native availability and the real catalog.
+
+## Original choice-fence proof
+
+The effective registry overrides `decisions.choice.read` to `{mount}/dashboard`; the observer checks this final route. Its two metadata observations now run inside the original registered `CurrentChoiceFence.run` and require its final snapshot publication check. The exact nested persistence transaction/transactionAll/currentSnapshots methods are pinned across awaited reads. The 24 decision health tests now use the real isolated `openLocalStore` SQLite driver, preserving its transaction and snapshot methods; hooks only schedule revocation/corruption. Negative cases remove original snapshot support or replace a nested persistence method and must not publish readiness. The parent CLI gate must run these tests; no execution was performed locally.
+
+UI37 optional cycle/recipient selectors now leave loading when their own operation is unadmitted. The journey records those exact operation states and distinguishes unavailable from the empty response of an admitted producer. These optional Collaboration source paths are not claimed as positively qualified when no operational observation is published. The primary question preparation remains positively asserted through the original producer.

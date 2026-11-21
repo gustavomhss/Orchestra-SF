@@ -31,7 +31,11 @@ export function SfQuestionCycles(props: Readonly<{ owner: SfContextHandle; caseR
     const generation = props.owner.generation()
     const ref = props.caseRef
     setUi({ choices: [], selected: "", cycle: undefined, choicesState: active ? "loading" : "unavailable", cycleState: "empty" })
-    if (!active || !ref || !sfOperationReady(active.context, "collaboration.selection-list")) return
+    if (!active || !ref) return
+    if (!sfOperationReady(active.context, "collaboration.selection-list")) {
+      setUi("choicesState", "unavailable")
+      return
+    }
     const abort = new AbortController()
     onCleanup(() => abort.abort())
     void createSfCollaborationClient(active.transport)["collaboration.selection-list"](
@@ -59,7 +63,11 @@ export function SfQuestionCycles(props: Readonly<{ owner: SfContextHandle; caseR
     const ref = props.caseRef
     const selected = ui.choices.find((item) => item.selectionRef === ui.selected && item.state === "active")
     setUi({ cycle: undefined, cycleState: selected ? "loading" : "empty" })
-    if (!active || !selected || !ref || !sfOperationReady(active.context, "collaboration.cycle-read")) return
+    if (!active || !selected || !ref) return
+    if (!sfOperationReady(active.context, "collaboration.cycle-read")) {
+      setUi("cycleState", "unavailable")
+      return
+    }
     const abort = new AbortController()
     onCleanup(() => abort.abort())
     void createSfCollaborationClient(active.transport)["collaboration.cycle-read"](
@@ -87,7 +95,8 @@ export function SfQuestionCycles(props: Readonly<{ owner: SfContextHandle; caseR
       <h2 id="sf-n24-cycles">{t("sf.ui37.cycle")}</h2>
       <Show when={ui.choicesState === "ready"} fallback={
         <SfStatePanel state={ui.choicesState}
-          messageKey={"sf.ui37.noCycles" as import("../../shared/frame").SfCopyKey} />
+          messageKey={(ui.choicesState === "loading" ? "sf.ui37.reading" :
+            ui.choicesState === "empty" ? "sf.ui37.noCycles" : "sf.ui37.unavailable") as import("../../shared/frame").SfCopyKey} />
       }>
         <label class="sf-n24-field">
           <span>{t("sf.ui37.cycleSelect")}</span>
