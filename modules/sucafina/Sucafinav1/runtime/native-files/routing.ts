@@ -1,8 +1,10 @@
 import { SfFileRoutes } from "@orchestra/schema/sucafina/files/routes"
 import { createSfFilesHostBindings, type SfFilesHostSources } from "./bindings.ts"
 
-const fail = (status: number, headers?: Record<string, string>) =>
-  Response.json({ status: "invalid" }, { status, headers: { "Cache-Control": "no-store", ...headers } })
+function fail(request: Request, status: number, headers?: Record<string, string>) {
+  const init = { status, headers: { "Cache-Control": "no-store", ...headers } }
+  return request.method === "HEAD" ? new Response(null, init) : Response.json({ status: "invalid" }, init)
+}
 
 export function mountSfFilesOriginalRoutes(input: Readonly<{
   origin: string
@@ -31,7 +33,7 @@ export function mountSfFilesOriginalRoutes(input: Readonly<{
     const selected = ["sf", "download", "asset", "asset-link", "upload"].filter((key) => query.has(key))
     const selector = selected[0]
     if (!selector) return undefined
-    if (selected.length !== 1 || query.getAll(selector).length !== 1) return fail(400)
+    if (selected.length !== 1 || query.getAll(selector).length !== 1) return fail(request, 400)
     const value = query.get(selector)
     const operation = selector === "asset" ? "files.asset.download"
       : selector === "asset-link" ? "files.asset.link"
@@ -41,8 +43,11 @@ export function mountSfFilesOriginalRoutes(input: Readonly<{
     if (!operation) return undefined
 
     const metadata = SfFileRoutes[operation]
-    if (metadata.pathTemplate !== "{mount}/{surface}") return fail(503)
-    if (metadata.method !== request.method) return fail(405, { Allow: metadata.method })
+    if (metadata.pathTemplate !== "{mount}/{surface}") return fail(request, 503)
+    // The existing application handles HEAD for its GET assets and exports.
+    if (request.method === "HEAD" && metadata.method === "GET" &&
+      (selector === "asset" || selector === "asset-link" || selector === "download")) return undefined
+    if (metadata.method !== request.method) return fail(request, 405, { Allow: metadata.method })
     // Original producers keep ownership of access, redaction, streamed byte caps and revalidation.
     return bound[operation](request, surface)
   }

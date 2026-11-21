@@ -131,8 +131,18 @@ test("local operator Files export uses the installed business producer and its s
     expect(wrongMethod?.status).toBe(405)
     expect(wrongMethod?.headers.get("allow")).toBe("GET")
 
-    const documents = await installation.handler(new Request(`${origin}/sucafina/dashboard?sf=document-requests`, { headers: { cookie } }))
-    expect(documents?.status).toBe(503)
+    const headers = { cookie }
+    const head = await installation.handler(new Request(route, { method: "HEAD", headers }))
+    expect(head?.status).toBe(200)
+    expect(head?.body).toBeNull()
+    const conflictingHead = await installation.handler(new Request(route + "&download=xlsx", { method: "HEAD", headers }))
+    expect(conflictingHead?.status).toBe(400)
+
+    const documents = `${origin}/sucafina/dashboard?sf=document-requests`
+    expect((await installation.handler(new Request(documents, { headers })))?.status).toBe(503)
+    const documentsHead = await installation.handler(new Request(documents, { method: "HEAD", headers }))
+    expect(documentsHead?.status).toBe(405)
+    expect(documentsHead?.body).toBeNull()
   } finally { await installation.dispose(); await f.store.dispose() }
 })
 

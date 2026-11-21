@@ -159,8 +159,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
         if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
       }
-      const file = request.method === "HEAD" ? undefined : await files?.(request)
-      const response = file ?? await business(request)
+      const response = await files?.(request) ?? await business(request)
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
       if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
       return localChrome(response)
