@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto"
-import { expect } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 import type { APIRequestContext, Browser, Page, Request, Route, TestInfo } from "@playwright/test"
 import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ReviewAnswer } from "./confirmation.ts"
@@ -23,11 +23,12 @@ export async function revokeReportsSession(input: {
     const retainedApi = reportsCollaboration(old.request, app.dashboardURL)
     const versionBeforeReopen = await retainedApi.version()
     const browserAnswer = retained.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))
-    const [savedAgain, response] = await Promise.all([
-      readReview(old.request, app.dashboardURL, saved.id),
-      browserAnswer,
-      retained.goto(page.url()),
-    ])
+    const [savedAgain, response] = await test.step("Reopen the real retained session and read its confirmed answer", () =>
+      Promise.all([
+        readReview(old.request, app.dashboardURL, saved.id),
+        browserAnswer,
+        retained.goto(page.url()),
+      ]))
     expect(savedAgain).toEqual(saved)
     const browserRead = await observed(response, "collaboration-answer-read")
     expect(browserRead.payload).toEqual({ questionId: answer.questionId })
@@ -42,9 +43,8 @@ export async function revokeReportsSession(input: {
       cleanup.push(pending.cleanup)
       return pending
     }
-    const [local, remote] = await Promise.allSettled([
-      retain(page, "logout"), retain(retained, "retained"),
-    ])
+    const [local, remote] = await test.step("Retain both unsent intents and verify they changed no stored data", () =>
+      Promise.allSettled([retain(page, "logout"), retain(retained, "retained")]))
     if (local.status === "rejected") throw local.reason
     if (remote.status === "rejected") throw remote.reason
     const localPending = local.value
@@ -53,7 +53,7 @@ export async function revokeReportsSession(input: {
     expect(retainedPending.key).not.toBe(localPending.key)
     const pendingLogout = page.waitForResponse((response) => response.url() === `${app.origin}${app.mount}/auth/logout` && response.request().method() === "POST")
     await page.getByRole("button", { name: "Sign out", exact: true }).click()
-    const logout = await pendingLogout
+    const logout = await test.step("Observe the installed logout response", () => pendingLogout)
     expect(logout.status()).toBe(204)
     expect(logout.headers()["cache-control"]).toContain("no-store")
     await expect(page).toHaveURL((url) => url.origin === app.origin && url.pathname === `${app.mount}/auth/login`)
@@ -63,7 +63,7 @@ export async function revokeReportsSession(input: {
     const deniedRead = retained.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
     await retained.getByRole("region", { name: "Review discussion", exact: true })
       .getByRole("button", { name: "Reconcile action", exact: true }).click()
-    const forbidden = await deniedRead
+    const forbidden = await test.step("Observe the real refusal for the retained credential", () => deniedRead)
     expect(forbidden.status()).toBe(403)
     expect(forbidden.request().postDataJSON()).toEqual({ id: answer.questionId })
     expect(forbidden.headers()["cache-control"]).toContain("no-store")
@@ -86,18 +86,20 @@ export async function revokeReportsSession(input: {
     await expectPrivateAttemptCleared(retained, retainedPending.drafts)
     for (const secret of [answer.message.body, answer.pin.reviewDigest, "REPORTS_LONG_NOTE_END", "reports-project-01", "totalForecast", "1320"])
       await expect(cleared, "Revocation must remove cached review and answer content").not.toContainText(secret)
-    await denied(old.request, app, saved, answer, artifact.href, true)
+    await test.step("Deny the previous credential before fresh enrollment", () =>
+      denied(old.request, app, saved, answer, artifact.href, true))
 
     // Positive controls distinguish actual credential revocation from an absent
     // route/artifact or a broken server. A new legitimate enrollment cannot revive it.
     const control = await fresh.newPage()
-    await app.signIn(control)
+    await test.step("Enroll a fresh real local-operator session", () => app.signIn(control))
     const current = reportsCollaboration(control.request, app.dashboardURL)
-    const [freshReview, download] = await Promise.all([
-      readReview(control.request, app.dashboardURL, saved.id),
-      control.request.get(artifact.href, { maxRedirects: 0 }),
-      expectReusedReviewAnswer(current, answer),
-    ])
+    const [freshReview, download] = await test.step("Read the same review, Office bytes and answer under fresh authority", () =>
+      Promise.all([
+        readReview(control.request, app.dashboardURL, saved.id),
+        control.request.get(artifact.href, { maxRedirects: 0 }),
+        expectReusedReviewAnswer(current, answer),
+      ]))
     expect(freshReview).toEqual(saved)
     const [freshVersion, freshThread] = await Promise.all([current.version(), current.thread(answer.questionId)])
     expect(freshVersion, "Logout and denied reconciliation must not submit either retained reply").toBe(localPending.storageVersion)
@@ -107,7 +109,8 @@ export async function revokeReportsSession(input: {
     expect(download.status()).toBe(200)
     expect(download.headers()["content-type"]).toContain("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     expect(createHash("sha256").update(await download.body()).digest("hex")).toBe(artifact.sha256)
-    await denied(old.request, app, saved, answer, artifact.href, false)
+    await test.step("Deny the previous credential after fresh enrollment", () =>
+      denied(old.request, app, saved, answer, artifact.href, false))
     await expectPrivateAttemptCleared(page, localPending.drafts)
     await expectPrivateAttemptCleared(retained, retainedPending.drafts)
     expect(localPending.writes).toEqual([localPending.serialized])
