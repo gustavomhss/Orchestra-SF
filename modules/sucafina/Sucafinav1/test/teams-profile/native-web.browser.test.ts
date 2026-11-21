@@ -5,6 +5,7 @@ import type { BrowserContext, Page } from "@playwright/test"
 import { Schema } from "effect"
 import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { SfDomainCommandCap25Create, SfDomainPageCap25 } from "@orchestra/schema/sucafina/procurement"
 import { expectSpawn } from "../../../../../packages/core/test/fixture/omni-expect.ts"
 import { launchBrowserDriver } from "../product/wp02/browser-driver-fixture.ts"
@@ -13,6 +14,8 @@ import { nativeProcurementWebFixture, nativeTeamWebFixture } from "./native-web-
 import { serveNativeTeamsWeb } from "./native-web-network.ts"
 import { profileA, profileB, teamRow } from "./installation-fixture.ts"
 import { authority, group, oid } from "../microsoft-login/oidc-fixture.ts"
+
+const principalObjectId = Schema.decodeUnknownSync(TeamProfile.PrincipalObjectId)(oid)
 
 test("native Web composition retains the live host identity through anonymous F02 admission", async () => {
   const f = await nativeTeamWebFixture()
@@ -38,7 +41,7 @@ test("native Teams fixture auto-binds exactly one eligible Team to the purchase 
   expect(context.value.stamp).toMatchObject({ installationId: f.technical.installationId,
     projectId: f.technical.projectId, hostId: f.technical.hostId, principalRef: oid })
   expect(context.value.stamp.team).toEqual({
-    owner: { profile: profileA, principal: { tenantId: profileA.tenantId, principalObjectId: oid } },
+    owner: { profile: profileA, principal: { tenantId: profileA.tenantId, principalObjectId } },
     revisions: { configRevision: context.value.profile.teams.configRevision,
       accessRevision: context.value.profile.accessRevision },
   })
@@ -276,7 +279,7 @@ async function runPurchaseJourney(warmIO: boolean) {
     expect(admission.value.profile.teams.choices.map((choice) => choice.profile)).toEqual([profileA])
     expect(admission.value.profile.teams.selected).toEqual(profileA)
     expect(admission.value.stamp.team).toEqual({
-      owner: { profile: profileA, principal: { tenantId: profileA.tenantId, principalObjectId: oid } },
+      owner: { profile: profileA, principal: { tenantId: profileA.tenantId, principalObjectId } },
       revisions: { configRevision: admission.value.profile.teams.configRevision,
         accessRevision: admission.value.profile.accessRevision },
     })

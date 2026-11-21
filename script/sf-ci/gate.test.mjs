@@ -764,6 +764,25 @@ test("diagnostic inventory preserves failed Bun identities without creating a pa
     casesSha256: "0".repeat(64), filesSha256: "1".repeat(64) }
   assert.throws(() => checkCoverageBaseline({ id: suite.id, coverageBaseline: baseline }, diagnostic), /SF_CI_FAIL_CLOSED/)
 })
+test("Bun diagnostics preserve legitimate long and multiline titles in the coverage hash", () => {
+  const suite = manifest.suites.find((item) => item.id === "CI-APP-SRC")
+  const summary = JSON.parse(report.toString("utf8"))
+  const names = ["round-trips " + "row\\n".repeat(286), "\nmatches a/b c against a*c"]
+  summary.cases.forEach((row, index) => {
+    row.name = names[index]
+    row.known_control_or_hook = 0
+  })
+  const raw = JSON.stringify(summary)
+  const diagnostic = describeInventory(raw, suite)
+  assert.deepEqual(diagnostic.identities.map((row) => row.name).sort(), [...names].sort())
+  assert.equal(diagnostic.casesSha256, bunCoverageIdentity(raw).casesSha256)
+  assert.equal(diagnostic.executedCasesSha256, bunCoverageIdentity(raw).casesSha256)
+  for (const change of [{ name: "bad\0title" }, { name: "bad\rtitle" }, { name: "bad\ttitle" },
+    { name: "a".repeat(4097) }, { classname: "bad\nclass" }, { file: "test/bad\npath.test.ts" }]) {
+    const cases = [{ ...summary.cases[0], ...change }, summary.cases[1]]
+    assert.throws(() => describeInventory(JSON.stringify({ ...summary, cases }), suite), /SF_CI_FAIL_CLOSED/)
+  }
+})
 test("diagnostic inventory hashes Playwright case IDs and excludes report payloads", () => {
   const suite = manifest.suites.find((item) => item.id === "CI-UI-OPERATIONS")
   const source = JSON.parse(playwright(suite).toString("utf8"))

@@ -46,14 +46,14 @@ export const authorizationLayerWith = (installed?: SfTrustedInstallationSource, 
   Authorization,
   Effect.gen(function* () {
     const config = yield* ServerAuth.Config
-    const protect = <A, E, R>(effect: Effect.Effect<A, E, R>, group: string, endpoint: string) =>
+    const protect = <A, E, R>(effect: Effect.Effect<A, E, R>, group: string, endpoint: string, hostAuthenticated = false) =>
       Effect.gen(function* () {
         // Technical health contains no profile data. Corporate administration
         // remains on its separately authenticated installation mount.
         if (group === "server.health") return yield* effect
-        // An installation's technical operator never admits business APIs.
-        // A configured source that is missing or failed cannot become a bare technical server.
-        if (installed)
+        // Only the trusted, loaded local installation keeps technical host access.
+        // Bare transport credentials cannot admit corporate or unresolved installations.
+        if (installed && (!hostAuthenticated || !(yield* Effect.promise((signal) => localOperator(installed, signal)))))
           return yield* new UnauthorizedError({ message: "Corporate installation admission required" })
         if (owners) {
           const scope = yield* owners.open().pipe(Effect.mapError(() =>
@@ -78,7 +78,7 @@ export const authorizationLayerWith = (installed?: SfTrustedInstallationSource, 
         if (installed && (yield* Effect.promise((signal) => publicBootstrap(request, installed, signal)))) return yield* effect
         if (!ServerAuth.required(config)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
         const credential = yield* credentialFromRequest(request)
-        if (ServerAuth.authorized(credential, config)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
+        if (ServerAuth.authorized(credential, config)) return yield* protect(effect, options.group.identifier, options.endpoint.name, true)
         if (process.env.SF_AUTH_DIAG === "1" && /^\/sucafina\/(?:dashboard|planner|procurement)$/.test(url.pathname)) {
           console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "server-middleware", stage: "authorization-denied", path: url.pathname }))
           yield* HttpEffect.appendPreResponseHandler((_request, response) =>
@@ -95,6 +95,15 @@ export const authorizationLayerWith = (installed?: SfTrustedInstallationSource, 
 )
 
 export const authorizationLayer = authorizationLayerWith()
+
+async function localOperator(installed: SfTrustedInstallationSource, signal: AbortSignal) {
+  const runtime = await installed.current(signal).catch(() => undefined)
+  if (signal.aborted || runtime?.authMode !== "local-operator" || runtime.tenantId !== undefined || !URL.canParse(runtime.publicOrigin))
+    return false
+  const origin = new URL(runtime.publicOrigin)
+  return origin.origin === runtime.publicOrigin && origin.protocol === "http:" &&
+    ["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname)
+}
 
 async function publicBootstrap(request: HttpServerRequest.HttpServerRequest, installed: SfTrustedInstallationSource, signal: AbortSignal) {
   if (request.method !== "GET" && request.method !== "HEAD") return false

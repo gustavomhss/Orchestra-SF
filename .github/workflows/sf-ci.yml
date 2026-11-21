@@ -710,15 +710,19 @@ jobs:
         with:
           node-version: "24.15"
       - name: Verify the ordered pool contract and available Google Chrome
+        id: pool_chrome
         shell: bash
         run: |
           set -euo pipefail
           test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
           test "$SF_PRODUCT_SOURCE_SHA" = "$(git rev-parse HEAD)"
           node --test script/sf-ci/browser-pool.test.mjs
-          command -v google-chrome
-          google-chrome --version > "$RUNNER_TEMP/sf-browser-chrome-version.txt"
+          chrome=/opt/google/chrome/chrome
+          test "$(realpath -e "$chrome")" = "$chrome"
+          test -f "$chrome" && test -x "$chrome"
+          "$chrome" --version > "$RUNNER_TEMP/sf-browser-chrome-version.txt"
           test -s "$RUNNER_TEMP/sf-browser-chrome-version.txt"
+          printf 'executable=%s\n' "$chrome" >> "$GITHUB_OUTPUT"
       - name: Prepare exact candidate and lifecycle evidence
         id: pool_prepare
         shell: bash
@@ -741,11 +745,13 @@ jobs:
         env:
           # Preserve the canonical Bun test guard/preloads. CI remains true.
           GITHUB_ACTIONS: "false"
+          SF_BROWSER_POOL_CHROME: ${{ steps.pool_chrome.outputs.executable }}
         shell: bash
         run: |
           set -euo pipefail
           test "$SF_PRODUCT_SOURCE_SHA" = "$(git -C ../.. rev-parse HEAD)"
           test "$SF_CHECKOUT_SHA" = "$SF_PRODUCT_SOURCE_SHA"
+          test -x "$SF_BROWSER_POOL_CHROME"
           set +e
           bun test --timeout 30000 --reporter=junit \
             "--reporter-outfile=$SF_BROWSER_POOL_OUTPUT/report.xml" \

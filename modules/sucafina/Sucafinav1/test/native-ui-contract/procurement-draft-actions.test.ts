@@ -35,6 +35,7 @@ test("actual native request projection emits source-stamped draft capabilities",
   if (!created.ok) throw new Error("source request creation failed")
   const id = String(object(created.value).number)
   const saved = object(object(object(snapshot.data.store).requests)[id])
+  if (typeof saved.version !== "number") throw new Error("Saved request has no version")
   expect(created.procurementCreate).toEqual({ requestRef: id, requestVersion: saved.version })
   expect(snapshot.versions[`requests:${id}`]?.version).toBe(saved.version)
   let actor = { id: "owner", role: "requester", canWrite: true }

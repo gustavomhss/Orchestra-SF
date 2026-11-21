@@ -102,8 +102,14 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
   const services = Object.freeze({ nativeUiProducts: live })
   const context = createSfContextHandler({ origin: f.binding.origin, mount: f.binding.mount,
     runtime: () => services })
+  const unsupported = async () => { throw new Error("The procurement fixture does not mount execution services") }
+  const procurementRuntime = procurement ? {
+    ...f.authority, productView: procurement.procurementQueueView,
+    dispatch: unsupported, selected: [], models: unsupported,
+    sessions: { prepare: unsupported, execute: unsupported, collect: unsupported, interrupt: unsupported },
+  } : undefined
   const deps = { origin: f.binding.origin, mount: f.binding.mount, application,
-    runtime: () => procurement ? { ...f.authority, productView: procurement.procurementQueueView } : undefined,
+    runtime: () => procurementRuntime,
     readContext: context.readContext }
   const handlers = [...createSfPlannerProjectionHandlers(deps), ...(procurement ? createSfProcurementProjectionHandlers(deps) : [])]
   actions = createSfActionSource(deps, handlers)

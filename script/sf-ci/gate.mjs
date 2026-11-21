@@ -447,8 +447,11 @@ export function describeInventory(raw, suite, binding = {}) {
       }
       if (row.known_control_or_hook === 1) continue
       const file = validateRelative(row.file.replaceAll("\\", "/"))
-      if (!isTestFile(file) || row.classname.length > 512 || row.name.length > 1024 ||
-          /[\x00-\x1f\x7f]/.test(row.classname + row.name)) fail("unsafe Bun inventory identity")
+      // Bun preserves LF in parametrized titles. The strict path grammar and two
+      // NUL delimiters per tuple keep the legacy hash framing unambiguous.
+      if (!isTestFile(file) || row.classname.length > 512 || row.name.length > 4096 ||
+          /[\x00-\x1f\x7f]/.test(row.classname) ||
+          /[\x00-\x09\x0b-\x1f\x7f]/.test(row.name)) fail("unsafe Bun inventory identity")
       const status = row.failures || row.errors ? "failed" : row.skipped ? "skipped" : row.executed === 1 ? "passed" : "not-run"
       const identity = { file, classname: row.classname, name: row.name, status }
       identities.push(identity)

@@ -230,7 +230,8 @@ try {
   const launchTimeoutMs = Math.min(launchCeilingMs, startup.deadlineEpochMs - Date.now())
   if (launchTimeoutMs <= 0) throw new Error("Node browser startup deadline expired before launch")
   console.log(JSON.stringify({ event: "phase", phase: "chromium-launch", timeoutMs: launchTimeoutMs, deadlineEpochMs: startup.deadlineEpochMs }))
-  server = await chromium.launchServer({ host: "127.0.0.1", headless: true, args: ["--no-sandbox"], timeout: launchTimeoutMs, logger: launchLogger })
+  server = await chromium.launchServer({ host: "127.0.0.1", headless: true, executablePath: startup.executablePath,
+    args: ["--no-sandbox"], timeout: launchTimeoutMs, logger: launchLogger })
   clearInterval(launchSampler)
   inspectLaunch()
   console.log(JSON.stringify({ event: "phase", phase: "chromium-launched" }))
@@ -391,7 +392,8 @@ export async function launchBrowserDriver(consumer: "teams-web-transport" | "wp0
     const process = yield* AppProcess.Service
     if (abort.signal.aborted) throw abort.signal.reason
     phase("app-process-spawn", { remainingMs: remaining(), deadlineEpochMs, launchCeilingMs })
-    const child = yield* process.spawn(ChildProcess.make(node, ["--input-type=module", "-e", nodeDriver, import.meta.resolve("@playwright/test"), import.meta.resolve("@playwright/test/package.json"), JSON.stringify(limits), JSON.stringify({ consumer, deadlineEpochMs, ceilingMs: launchCeilingMs })], {
+    const executablePath = consumer === "wp01-shared-pool" ? Bun.env.SF_BROWSER_POOL_CHROME : undefined
+    const child = yield* process.spawn(ChildProcess.make(node, ["--input-type=module", "-e", nodeDriver, import.meta.resolve("@playwright/test"), import.meta.resolve("@playwright/test/package.json"), JSON.stringify(limits), JSON.stringify({ consumer, deadlineEpochMs, ceilingMs: launchCeilingMs, executablePath })], {
       extendEnv: true, stdin: Stream.fromEffect(Effect.promise(() => stop.promise)).pipe(Stream.drain), stdout: "pipe", stderr: "pipe",
     }))
     observed.pid = Number(child.pid)

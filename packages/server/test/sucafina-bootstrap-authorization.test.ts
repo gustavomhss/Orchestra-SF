@@ -30,7 +30,10 @@ function fixture(value: Awaited<ReturnType<SfTrustedInstallationSource["current"
   const observations = { current: 0, locations: 0, privateCalls: 0 }
   const source: SfTrustedInstallationSource = {
     current: async () => { observations.current++; if (failure) throw new Error("offline"); return value ?? undefined },
-    forAdmittedLocation: async () => { observations.locations++; throw new Error("No Location discovery in bootstrap") },
+    forAdmittedLocation: async (location) => {
+      observations.locations++
+      return value?.authMode === "local-operator" && location.directory === "/work" ? [value] : []
+    },
   }
   const probe = HttpApiGroup.make("bootstrap.probe")
     .add(HttpApiEndpoint.get("private", "/api/private", { success: Schema.String }))
@@ -111,7 +114,7 @@ test("public bootstrap is bound to the configured transport host and origin with
   expect(f.observations.locations).toBe(0)
 })
 
-test("installed Microsoft and local operators cannot use generic business APIs while an uninstalled technical server retains Basic", async () => {
+test("host credentials cannot admit generic APIs on a Microsoft installation", async () => {
   const f = fixture()
   for (const value of [webRequest("/api/private"), webRequest("/api/sucafina/other"), webRequest(current, { method: "POST" })]) {
     expect((await f.handler(value)).status).toBe(401)
@@ -123,9 +126,38 @@ test("installed Microsoft and local operators cannot use generic business APIs w
   expect(f.observations.privateCalls).toBe(0)
   const malformed = await f.handler(webRequest("/api/sucafina/installations?select=current", { headers: { authorization: basic } }))
   expect(malformed.status).toBe(401)
-  const localOperator = fixture({ ...installed, authMode: "local-operator", publicOrigin: "http://127.0.0.1:4096" })
-  expect((await localOperator.handler(webRequest("/api/private", { headers: { authorization: basic } }))).status).toBe(401)
-  expect(localOperator.observations.privateCalls).toBe(0)
+})
+
+test("an installed loopback operator requires valid host credentials for technical access and discovery", async () => {
+  const local = { ...installed, authMode: "local-operator" as const, tenantId: undefined, publicOrigin: "http://127.0.0.1:4096" }
+  const f = fixture(local)
+  const location = "/api/sucafina/installations?select=location&location[directory]=%2Fwork"
+  for (const authorization of [undefined, "Basic " + btoa("orchestra:wrong")]) {
+    const headers = authorization ? { authorization } : {}
+    expect((await f.handler(webRequest(location, { headers }, local.publicOrigin))).status).toBe(401)
+  }
+  expect(f.observations.current).toBe(0)
+  expect(f.observations.locations).toBe(0)
+  const headers = { authorization: basic }
+  expect((await f.handler(webRequest("/api/private", { headers }, local.publicOrigin))).status).toBe(200)
+  expect(f.observations.privateCalls).toBe(1)
+  const discovery = await f.handler(webRequest(location, { headers }, local.publicOrigin))
+  expect(discovery.status).toBe(200)
+  expect(await discovery.json()).toEqual({ installations: [{
+    ...local.identity(), publicOrigin: local.publicOrigin, mount: local.mount,
+    authMode: "local-operator", contractRevision: "sf-native-ui/1",
+  }] })
+  expect(f.observations.locations).toBe(1)
+})
+
+test("resolved technical servers retain Basic while unresolved installation sources fail closed", async () => {
+  const headers = { authorization: basic }
+  for (const f of [fixture(null), fixture(installed, true),
+    fixture({ ...installed, authMode: "local-operator", tenantId: undefined, publicOrigin: "http://sf.example.test" }),
+    fixture({ ...installed, authMode: "local-operator", publicOrigin: "http://127.0.0.1:4096" })]) {
+    expect((await f.handler(webRequest("/api/private", { headers }))).status).toBe(401)
+    expect(f.observations.privateCalls).toBe(0)
+  }
   const technical = fixture(null, false, true)
   expect((await technical.handler(webRequest("/api/private", { headers: { authorization: basic } }))).status).toBe(200)
   expect(technical.observations.privateCalls).toBe(1)
