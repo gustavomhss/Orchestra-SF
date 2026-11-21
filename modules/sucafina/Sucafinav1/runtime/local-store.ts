@@ -1,5 +1,5 @@
 import { Database } from "bun:sqlite"
-import { constants } from "node:fs"
+import { constants, lstatSync } from "node:fs"
 import { lstat, mkdir, open, realpath } from "node:fs/promises"
 import { isAbsolute, join, parse, resolve, sep } from "node:path"
 import type { LocalStore } from "./local-contract.ts"
@@ -41,12 +41,18 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       throw new Error("Local database must be a private regular file")
     return open(path, constants.O_RDWR | constants.O_NOFOLLOW)
   })
-  try {
-    const opened = await file.stat()
-    if (!opened.isFile() || opened.uid !== uid || (opened.mode & 0o077) !== 0 || await realpath(path) !== path)
+  const databaseFile = await file.stat({ bigint: true }).then(async (opened) => {
+    if (!opened.isFile() || opened.uid !== BigInt(uid) || (opened.mode & 0o077n) !== 0n || await realpath(path) !== path)
       throw new Error("Local database must be owned by the current UID at its real path")
-  } finally {
-    await file.close()
+    return { dev: opened.dev, ino: opened.ino, invalid: false }
+  }).finally(() => file.close())
+  const requireDatabaseFile = () => {
+    const installed = !databaseFile.invalid && lstatSync(path, { bigint: true, throwIfNoEntry: false })
+    if (!installed || !installed.isFile() || installed.uid !== BigInt(uid) || (installed.mode & 0o077n) !== 0n ||
+      installed.dev !== databaseFile.dev || installed.ino !== databaseFile.ino) {
+      databaseFile.invalid = true
+      throw new Error("Local database identity changed; reopen the store")
+    }
   }
 
   const connect = () => {
@@ -80,6 +86,23 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   const lifecycle = { closed: false, disposing: undefined as Promise<void> | undefined }
   const active = new Set<Promise<unknown>>()
   const queue = { tail: undefined as Promise<void> | undefined }
+  // Only the serialized top-level writer borrows this connection. Each use
+  // still acquires a new SQL lock and finishes its own transaction.
+  const writer: { db?: Database } = {}
+  const closeWriter = () => {
+    const db = writer.db
+    delete writer.db
+    db?.close()
+  }
+  const acquireWriter = () => {
+    try {
+      requireDatabaseFile()
+      return writer.db ??= connect()
+    } catch (error) {
+      closeWriter()
+      throw error
+    }
+  }
   const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal): Promise<T> => {
     if (lifecycle.closed) return Promise.reject(new Error("Local store is disposed"))
     const previous = write ? queue.tail : undefined
@@ -90,16 +113,28 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       // remain independent because authentication awaits them inside that transaction.
       if (previous) await waitForAdmission(previous, Math.max(0, deadline - performance.now()), signal)
       signal?.throwIfAborted()
-      const db = connect()
+      if (!write) requireDatabaseFile()
+      const db = write ? acquireWriter() : connect()
+      const status = { completed: false }
       try {
-        if (write) await retryLock(() => db.exec("BEGIN IMMEDIATE"), Math.max(0, deadline - performance.now()), signal)
+        if (write) {
+          await retryLock(() => db.exec("BEGIN IMMEDIATE"), Math.max(0, deadline - performance.now()), signal)
+          requireDatabaseFile()
+        }
         signal?.throwIfAborted()
-        return await work(db)
+        const value = await work(db)
+        requireDatabaseFile()
+        status.completed = true
+        return value
       } finally {
         try {
           if (db.inTransaction) db.exec("ROLLBACK")
+        } catch (error) {
+          status.completed = false
+          throw error
         } finally {
-          db.close()
+          if (!write) db.close()
+          if (write && !status.completed) closeWriter()
         }
       }
     })()
@@ -129,6 +164,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const blobs: BlobTransaction = {
           put: async (key, bytes, type) => {
             requireOpen()
+            requireDatabaseFile()
             db.query("INSERT INTO blobs (surface, key, payload, type) VALUES (?, ?, ?, ?) ON CONFLICT (surface, key) DO UPDATE SET payload=excluded.payload, type=excluded.type").run(surface, key, bytes, type)
           },
           get: async (key) => {
@@ -138,6 +174,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           },
           remove: async (key) => {
             requireOpen()
+            requireDatabaseFile()
             db.query("DELETE FROM blobs WHERE surface = ? AND key = ?").run(surface, key)
           },
         }
@@ -150,10 +187,12 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         })()
         transactionOptions?.signal?.throwIfAborted()
         if (result.commit) {
+          requireDatabaseFile()
           const payload = encodeSnapshot(snapshot)
           decodeSnapshot(payload)
           db.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?) ON CONFLICT (surface) DO UPDATE SET payload=excluded.payload").run(surface, payload)
           transactionOptions?.signal?.throwIfAborted()
+          requireDatabaseFile()
           db.exec("COMMIT")
         }
         return result.value
@@ -162,6 +201,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       put: (key, bytes, expiresAt) => operation(true, async (db) => {
         if (!Number.isFinite(expiresAt)) throw new Error("Invalid authentication expiry")
         db.query("INSERT INTO authentication_payloads (key, payload, expires_at) VALUES (?, ?, ?) ON CONFLICT (key) DO UPDATE SET payload=excluded.payload, expires_at=excluded.expires_at").run(key, bytes, expiresAt)
+        requireDatabaseFile()
         db.exec("COMMIT")
       }),
       // Authentication runs while the business writer owns the lock. This must never acquire a write lock, even for expired records.
@@ -174,17 +214,19 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
         const row = db.query<{ payload: Uint8Array }, [string, number]>("SELECT payload FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)
         db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
+        requireDatabaseFile()
         db.exec("COMMIT")
         return row ? new Uint8Array(row.payload) : undefined
       }),
       remove: (key) => operation(true, async (db) => {
         db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
+        requireDatabaseFile()
         db.exec("COMMIT")
       }),
     },
     dispose: () => {
       lifecycle.closed = true
-      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => undefined)
+      lifecycle.disposing ??= Promise.allSettled([...active]).then(closeWriter)
       return lifecycle.disposing
     },
   }

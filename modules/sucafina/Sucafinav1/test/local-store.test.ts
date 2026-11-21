@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { Database } from "bun:sqlite"
-import { chmod, chown, mkdir, mkdtemp, realpath, rm, stat, symlink } from "node:fs/promises"
+import { chmod, chown, link, mkdir, mkdtemp, realpath, rename, rm, stat, symlink, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { openLocalStore } from "../runtime/local-store.ts"
@@ -322,6 +322,37 @@ test("a corrupt existing SQLite file rejects rather than returning an empty inst
     await store.dispose()
     await Bun.write(join(directory, "installation.sqlite"), "not a SQLite database")
     await expect((async () => read(await open()))()).rejects.toThrow()
+  })
+})
+
+test("a store with a warm writer rolls back its staged writes if the SQLite file is replaced", async () => {
+  await fixture(async (directory, open) => {
+    const store = await open()
+    await store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.marker = "original database"
+      return { commit: true, value: undefined }
+    })
+    const file = join(directory, "installation.sqlite")
+    const original = join(directory, "original.sqlite")
+    const replacement = join(directory, "replacement.sqlite")
+    const checkpoint = new Database(file)
+    try { checkpoint.exec("PRAGMA wal_checkpoint(TRUNCATE)") }
+    finally { checkpoint.close() }
+    await link(file, original)
+    await writeFile(replacement, "different database file", { mode: 0o600 })
+    await expect(store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
+      snapshot.data.marker = "staged"
+      await blobs.put("document", bytes, "application/octet-stream")
+      await rename(replacement, file)
+      return { commit: true, value: undefined }
+    })).rejects.toThrow("Local database identity changed")
+    expect(await Bun.file(file).text()).toBe("different database file")
+    await rename(original, file)
+    await expect(read(store)).rejects.toThrow("Local database identity changed")
+    await store.dispose()
+    const persisted = await read(await open())
+    expect(persisted.snapshot.data.marker).toBe("original database")
+    expect(persisted.blob).toBeUndefined()
   })
 })
 
