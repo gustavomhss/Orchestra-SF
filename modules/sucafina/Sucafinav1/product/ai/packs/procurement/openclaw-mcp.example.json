@@ -1,0 +1,10 @@
+{
+  "url": "https://sf.example.invalid/sucafina/api/claw/mcp",
+  "transport": "streamable-http",
+  "headers": {
+    "Authorization": "Bearer ${SF_CLAW_PURCHASE_TOKEN}"
+  },
+  "toolFilter": {
+    "include": ["sf_comparar_compra"]
+  }
+}
