@@ -29,6 +29,8 @@ No new visible copy is introduced. Existing English and pt-BR dictionary entries
 
 The historical-choice response provides `caseRef.id` and `caseRef.incarnation`; the route contains the opaque `case:id:incarnation` reference. Raw-ID equality discarded valid responses. The view now uses its existing `sameRouteCase` helper consistently in read admission, selection, preparation, eligibility and review display. No producer admission rule is relaxed.
 
+The authorized selection may also exist with an empty `choices` array. Its list now uses the existing localized no-choice fallback instead of an empty section. The test reopens the real editable case in UI35 and checks both its authoritative empty collections and the displayed message.
+
 ### POST reads in UI41
 
 The typed F02 transport owns identity for POST read operations and rejects an explicit command idempotency key. `choices`, `list`, `read` and `output` now receive only their abort signal. Prepare/start/cancel retain fresh command keys. Owner generation, read epochs, aborts, frozen prepared input and unknown-outcome reconciliation remain intact.
@@ -54,7 +56,7 @@ No snapshot projection, authorization, model, source archive, choice request, pr
 The executable Playwright journey covers all eight surfaces in dark and light desktop, 390px English and pt-BR desktop; 320px comparison and pt-BR question review are additional stress cases. It exercises:
 
 - UI34 edit, cancel review, close/reopen retained draft, save once with exact case CAS and original idempotency, and authoritative readback.
-- UI35 two-source comparison, original values, cost uncertainty, provenance disclosure and the formerly broken historical choice on an opaque route.
+- UI35 the separate editable case's authoritative empty alternative/choice state, two-source comparison, original values, cost uncertainty, provenance disclosure and the formerly broken historical choice on an opaque route.
 - UI36 open/confirmed filter, filtered empty state and evidence detail.
 - UI37 review/cancel retention, one preparation command, and proof that the case/question list was not committed or sent.
 - UI38 actual recorded choice with producer admission blocked by missing archive provenance.
