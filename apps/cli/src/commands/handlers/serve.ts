@@ -6,8 +6,7 @@ import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { PermissionSaved } from "@orchestra/core/permission/saved"
 import { SessionV2 } from "@orchestra/core/session"
-import { Context, Layer, Option } from "effect"
-import * as Effect from "effect/Effect"
+import { Context, Effect, Layer, Option } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { createServer } from "node:http"
 import { writeSync } from "node:fs"
@@ -24,16 +23,20 @@ import { listenerHosts } from "./serve-host"
 import { addressInUse } from "./serve-port"
 import { ServeShutdown } from "./serve-shutdown"
 
+type LoadedSfInstallation = Awaited<ReturnType<typeof import("../../sucafina-product/installation").loadSfInstallation>>
+
 const SHUTDOWN_GRACE_MS = 2_000
 
 export default Runtime.handler(Commands.commands.serve, (input) =>
-  serveForever({ ...input, allowedHosts: input["allowed-host"] }),
+  serveForever({ ...input, allowedHosts: input["allowed-host"], publicOrigin: input["public-origin"] }),
 )
 
 export type ServeInput = {
   readonly hostname: string
   readonly port: Option.Option<number>
   readonly register: boolean
+  readonly installation?: Option.Option<string>
+  readonly publicOrigin?: Option.Option<string>
   readonly cors?: ReadonlyArray<string>
   readonly allowedHosts?: ReadonlyArray<string>
   /** Runs once the server answers, with the address it bound. */
@@ -76,6 +79,23 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
             process.exit()
           }),
         )
+        const installationFile = Option.getOrUndefined(input.installation ?? Option.none())
+        const publicOrigin = Option.getOrUndefined(input.publicOrigin ?? Option.none())
+        if (publicOrigin && (!installationFile || !URL.canParse(publicOrigin) ||
+          new URL(publicOrigin).origin !== publicOrigin)) return yield* Effect.fail(new Error("Explicit installation and canonical public origin required"))
+        const installation = installationFile
+          ? yield* Effect.tryPromise({
+            try: async () => {
+              const port = Option.getOrUndefined(input.port)
+              if (port === undefined) throw new Error("An explicit installation requires an explicit port")
+              const hostname = input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname
+              const { loadSfInstallation } = await import("../../sucafina-product/installation")
+              return loadSfInstallation(installationFile, new URL(`http://${hostname}:${port}`).origin, publicOrigin)
+            },
+            catch: (error) => error instanceof Error ? error : new Error("Installation unavailable"),
+          })
+          : undefined
+        if (installation) yield* Effect.addFinalizer(() => Effect.promise(async () => { await installation.dispose() }))
         const daemon = yield* Daemon.Service
         // A desktop-owned child gets a per-launch password in env and never touches the daemon's password file.
         const password = process.env.ORCHESTRA_SERVER_PASSWORD || (yield* daemon.password())
@@ -95,7 +115,7 @@ export const serveForever = Effect.fn("cli.serve")(function* (input: ServeInput)
           Effect.catchCause((cause) => Effect.logError("legacy session import failed", cause)),
         )
         const allowedHosts = listenerHosts(input.hostname, input.allowedHosts)
-        const listening = yield* listen(input.hostname, input.port, password, hosts(), root, allowedHosts, input.cors)
+        const listening = yield* listen(input.hostname, input.port, password, [...hosts(), ...(installation?.host ?? [])], root, allowedHosts, input.cors, installation)
         const address = listening.address
         // Closing the server waits for every open connection, and the event stream never ends on its own. Scope
         // finalizers run in reverse, so this drops the connections before the server closes.
@@ -123,10 +143,11 @@ function listen(
   root: string | undefined,
   allowedHosts: ReadonlyArray<string>,
   cors?: ReadonlyArray<string>,
+  installation?: LoadedSfInstallation,
 ) {
-  if (Option.isSome(port)) return bind(hostname, port.value, password, host, root, allowedHosts, cors)
+  if (Option.isSome(port)) return bind(hostname, port.value, password, host, root, allowedHosts, cors, installation)
   const next = (port: number): ReturnType<typeof bind> =>
-    bind(hostname, port, password, host, root, allowedHosts, cors).pipe(
+    bind(hostname, port, password, host, root, allowedHosts, cors, installation).pipe(
       Effect.catch((error) => (port === 65_535 || !addressInUse(error) ? Effect.fail(error) : next(port + 1))),
     )
   return next(4096)
@@ -140,13 +161,15 @@ function bind(
   root: string | undefined,
   allowedHosts: ReadonlyArray<string>,
   cors?: ReadonlyArray<string>,
+  installation?: LoadedSfInstallation,
 ) {
   const server = createServer()
   return Layer.build(
-    HttpRouter.serve(createRoutes({ password, host, webRoot: root, cors, allowedHosts }), {
+    HttpRouter.serve(Layer.merge(createRoutes({ password, host, webRoot: root, cors, allowedHosts }), installation?.layer ?? Layer.empty), {
       disableListenLog: true,
       disableLogger: true,
     }).pipe(
+      Layer.provide(installation?.privacy ?? Layer.empty),
       Layer.provideMerge(NodeHttpServer.layer(() => server, { port, host: hostname })),
       Layer.provide(AppNodeBuilder.build(LayerNode.group([Credential.node, PermissionSaved.node, ClaudeCodeAccount.node]))),
     ),

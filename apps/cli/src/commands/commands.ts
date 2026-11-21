@@ -495,6 +495,8 @@ export const Commands = Spec.make(typeof ORCHESTRA_CLI_NAME === "string" ? ORCHE
         hostname: Flag.string("hostname").pipe(Flag.withDefault("127.0.0.1")),
         port: Flag.integer("port").pipe(Flag.optional),
         register: Flag.boolean("register").pipe(Flag.withDefault(false)),
+        installation: Flag.string("installation").pipe(Flag.withDescription("absolute path to a trusted installation factory"), Flag.optional),
+        "public-origin": Flag.string("public-origin").pipe(Flag.withDescription("expected public origin for the explicit installation"), Flag.optional),
         "allowed-host": Flag.string("allowed-host").pipe(
           Flag.withDescription("additional HTTP hostname to allow (repeat for proxy names or aliases; bracket IPv6)"),
           Flag.atMost(100),
