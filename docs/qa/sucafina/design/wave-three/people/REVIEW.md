@@ -65,3 +65,16 @@ Run [44938725714](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44938
 The viewed CAP06 metric band and CAP07 leadership surface show the intended native typography, hairline separation, aligned actions and quiet materials. CAP09 exposed a concrete defect: the shared table allowed status/risk words to break inside narrow chips. Both CAP09/CAP10 now keep these short labels unbroken; CAP09 also omits the empty row-command column because it never supplies row commands. Record opening remains available. A follow-up capture must verify this correction.
 
 Integration gates reported by the owner: [44938736472](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44938736472), job 136951027408, passed application types, E2E types, guards and palette parity. These gates are not visual approval.
+
+
+## Second real browser critique
+
+Run [44939804395](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44939804395), job 136954292594, reached 30 normal captures across 15 distinct business views, plus two failure diagnostics. Themes, languages, widths and lower-panel captures are variants of a business view, not extra screens. The member title update was confirmed by the original producer and reread by the browser. Page and console error lists remained empty.
+
+Direct image review covered CAP09 desktop, CAP07 member editor/review and narrow review actions, CAP07 narrow members, CAP08 desktop/narrow collection, and CAP10 record detail. The CAP09 status/risk correction is visible: In Progress and Medium now remain intact and the unused row-command column is gone. CAP07 shows the intended 760px editor, clear field groups and readable comparison; all three review actions are fully visible at 320px. CAP07/CAP08 narrow ledgers retain record labels and readable action buttons.
+
+The next refinement makes the record-opening action occupy a consistent line beneath each project name. People review now displays the authorized option label (including the known CAP07 leader name) while retaining the untouched canonical value in its draft and command; an explicitly empty value is described as not recorded. A missing source field remains unknown.
+
+Two concrete blockers remain from that run. CAP08's status select had an implicit enclosing label whose accessible name also absorbed option text; the control now has a separate, explicit label association. CAP10 supplied real project reads but no write actions, including New project. The producer admission checks remain intact while a sanitized observation of the real context response records only CAP10 destinations and operation availability. No grant or operational state is fabricated. Project editing and command evidence cannot be claimed until that source-admission issue is resolved and the journey passes.
+
+The five existing Portuguese import strings in the CAP10 catalog have also been completed without altering their English values.
