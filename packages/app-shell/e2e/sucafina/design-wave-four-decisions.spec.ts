@@ -24,6 +24,32 @@ function action(request: Request, mode: string, operation?: string) {
   if (request.method() !== "POST" || new URL(request.url()).searchParams.get("sf") !== mode) return false
   return !operation || object(request.postDataJSON()).operation === operation
 }
+function observeDecisionReads(page: Page) {
+  const pending = new Map<Request, { operation: string; started: number }>()
+  const completed: { operation: string; elapsedMs: number; status: number | "failed" }[] = []
+  page.on("request", (request) => {
+    const mode = new URL(request.url()).searchParams.get("sf")
+    if (request.method() === "GET" && mode === "current-choice")
+      pending.set(request, { operation: mode, started: performance.now() })
+  })
+  page.on("response", (response) => {
+    const read = pending.get(response.request())
+    if (!read) return
+    pending.delete(response.request())
+    const value = { operation: read.operation, elapsedMs: Math.round(performance.now() - read.started), status: response.status() }
+    completed.push(value)
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-read", ...value }))
+  })
+  page.on("requestfailed", (request) => {
+    const read = pending.get(request)
+    if (!read) return
+    pending.delete(request)
+    const value = { operation: read.operation, elapsedMs: Math.round(performance.now() - read.started), status: "failed" as const }
+    completed.push(value)
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-read", ...value }))
+  })
+  return completed
+}
 async function readCase(page: Page, origin: string, mount: string, caseRef: string) {
   const response = await page.request.get(origin + mount + "/api/ui/projections/case", { params: { caseRef } })
   expect(response.status()).toBe(200)
@@ -32,7 +58,9 @@ async function readCase(page: Page, origin: string, mount: string, caseRef: stri
   return object(object(body.value).projection).case as SfCase
 }
 async function openScreen(page: Page, owner: Owner, screen: Screen, localized = false) {
-  await enter(page, owner, screen.href, localized ? screen.titleBr : screen.title)
+  // Current-choice options revalidate every authorized case before the selected choice.
+  await enter(page, owner, screen.href, localized ? screen.titleBr : screen.title,
+    screen.id === "UI35" || screen.id === "UI38" ? 40_000 : 10_000)
   const root = page.locator('[data-sf-decision="' + screen.id + '"]')
   await expect(root).toHaveAttribute("data-sf-wave", "four")
   await expect(root).toBeVisible()
@@ -58,6 +86,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   expect(info.project.metadata.bundle).toBe("production")
   expect(info.config.workers).toBe(1)
   const diagnostic = observePage(page)
+  const readTimes = observeDecisionReads(page)
   const writes: Request[] = []
   page.on("request", (request) => {
     if (action(request, "decision-edit") || action(request, "workbench-command", "sf_question_prepare") ||
@@ -149,6 +178,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     const posted = object(writes[0]!.postDataJSON())
     expect(posted.caseRef).toEqual({ id: editableSource.id, incarnation: editableSource.incarnation, version: editableSource.version })
     expect(writes[0]!.headers()["idempotency-key"]).toBeTruthy()
+    expect(diagnostic.consoleErrors).toEqual([])
     await page.setViewportSize({ width: 1440, height: 1100 })
   })
 
@@ -311,6 +341,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   })
   const localized = await portuguese.newPage()
   const localizedDiagnostic = observePage(localized)
+  const localizedReadTimes = observeDecisionReads(localized)
   try {
     for (const screen of screens) {
       await openScreen(localized, owner, screen, true)
@@ -329,14 +360,17 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await composer.getByRole("button", { name: "Cancelar", exact: true }).click()
     await expect(composer.getByLabel("Texto da pergunta", { exact: true })).toHaveValue(waveFourDecisionsData.question)
     expect(localizedDiagnostic.pageErrors).toEqual([])
+    expect(localizedDiagnostic.consoleErrors).toEqual([])
   } finally { await portuguese.close() }
 
   expect(diagnostic.pageErrors).toEqual([])
+  expect(diagnostic.consoleErrors).toEqual([])
   await info.attach("decisions-scope", { contentType: "application/json", body: JSON.stringify({
     surfaces: screens.map((screen) => screen.id),
     realCommands: ["decision-edit", "sf_question_prepare"],
     sourceState: { alternatives: 2, assumptions: 2, choices: 1, preparedChanges: 0, applicationReceipts: 0 },
     preservedLimits: ["Current-choice preparation requires producer provenance", "No application was prepared or applied", "No analysis model or result was invented"],
     consoleErrors: diagnostic.consoleErrors,
+    sourceReadTimes: [...readTimes, ...localizedReadTimes],
   }) })
 })

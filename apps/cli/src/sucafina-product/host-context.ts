@@ -101,6 +101,7 @@ import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
 import { observeSfImportHealth } from "./native-ui/import-health.ts"
 import { observeSfDocumentHealth } from "./native-ui/document-health.ts"
+import { observeSfSearchHealth } from "./native-ui/work-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
@@ -985,6 +986,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
     runtime: () => identity() ? { ui: authority.ui, recoverCreation: business.cases.recoverCreation } : undefined })
   // 162-only composition. A live source must re-admit the same original Request;
   // missing operation probes remain explicitly unavailable (never catalog-ready).
+  const nativeSearchDispatch = services.dispatch
   const nativeUiContext = createSfLiveContext({
     origin: input.origin, mount: input.mount, currentBinding: identity,
     operational: async (request, stamp) => {
@@ -1003,6 +1005,13 @@ export const createSfHostRuntimeWithRoutineNative = async (
         observeSfDocumentHealth({ authority, binding: input.nativeReadBinding, source: () =>
           identity() && services.productHttp === productHttp && documents && input.assets
             ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets } : undefined,
+        }, request, stamp),
+        observeSfSearchHealth({ ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+          binding: input.nativeReadBinding, source: () =>
+            identity() && services.productHttp === productHttp && services.dispatch === nativeSearchDispatch &&
+              documents && services.documents === documents.documents && input.assets
+              ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets,
+                catalog: descriptors, dispatch: nativeSearchDispatch } : undefined,
         }, request, stamp),
         observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfReviewThreadContextHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),

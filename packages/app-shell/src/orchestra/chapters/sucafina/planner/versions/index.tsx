@@ -48,9 +48,7 @@ const msg = (value: keyof typeof SF_U46_COPY, params?: Record<string, string | n
   ({ key: key(value), params })
 const data = (text: string) => ({ kind: "data" as const, text })
 const textValue = (text: string): SfDisplayValue => ({ kind: "text", text: data(text) })
-const yearValue = (value: number): SfDisplayValue => ({
-  kind: "number", value, fractionDigits: 0, unit: { kind: "unspecified", label: msg("sf.u46.year") },
-})
+const yearValue = (value: number): SfDisplayValue => textValue(String(value))
 
 function stateCopy(value: SfUiState): SfCopyKey {
   switch (value) {
