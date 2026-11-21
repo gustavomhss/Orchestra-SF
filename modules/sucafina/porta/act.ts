@@ -160,7 +160,8 @@ function admit(
   if (parsedRequest?.status === "cancelled") return { code: "cancelled" }
   if (parsedRequest?.status === "po_issued") return { code: "already_issued" }
   const parsedAction = action as Action
-  if ((type === "approve" || type === "reject") && !firstPending(parsedRequest)) return { code: "no_step" }
+  const pendingApproval = type === "approve" || type === "reject" ? firstPending(parsedRequest) : undefined
+  if (pendingApproval === null) return { code: "no_step" }
   if ((type === "create" || type === "submit_pr") && !whoRequester(parsedRequest, parsedActor, type)) {
     return { code: "not_requester" }
   }
@@ -174,13 +175,9 @@ function admit(
   if (type === "cancel" && !isCreatedBy(parsedRequest, parsedActor) && !hasRole(parsedActor, "admin")) {
     return { code: "not_canceller" }
   }
-  if (type === "approve" || type === "reject") {
-    const pending = firstPending(parsedRequest)
-    const holderSet = pending?.step.holderId != null
-    const notHolder = pending?.step.holderId !== parsedActor.id
-    if (holderSet && notHolder && hasRole(parsedActor, "admin")) return { code: "no_override" }
-    if (holderSet && notHolder && !hasRole(parsedActor, "admin")) return { code: "not_approver" }
-    if (parsedSettings.blockSelfApproval && isCreatedBy(parsedRequest, parsedActor)) return { code: "self_approval" }
+  if (pendingApproval) {
+    const failure = approvalFailure(parsedRequest, pendingApproval.step, parsedActor, parsedSettings)
+    if (failure) return { code: failure }
   }
   if ((type === "reject" || type === "cancel") && reasonEmpty(parsedAction.reason)) return { code: "reason_required" }
   if (type === "select_quote" && !namedQuote(parsedRequest, String(parsedAction.quoteId))) return { code: "no_quote" }
@@ -207,6 +204,24 @@ function admit(
     issued: parsedIssued,
     supplier: parsedSupplier,
   }
+}
+
+function approvalFailure(request: Request | null, step: Step, actor: Actor, settings: Settings) {
+  const notHolder = step.holderId !== actor.id
+  if (step.holderId != null && notHolder && hasRole(actor, "admin")) return "no_override" as const
+  if (step.holderId != null && notHolder) return "not_approver" as const
+  if (settings.blockSelfApproval && isCreatedBy(request, actor)) return "self_approval" as const
+  return undefined
+}
+
+/** Read-only reuse of the same holder/self-approval checks as the transition. */
+export function canApproveCurrentRequest(request: unknown, actor: unknown, settings: unknown) {
+  const currentActor = parseActor(actor)
+  const currentSettings = parseSettings(settings)
+  if (!currentActor?.canWrite || !currentSettings || !isRequest(request) ||
+    !["pr_pending", "src_pending", "po_pending"].includes(request.status)) return false
+  const pending = firstPending(request)
+  return Boolean(pending && !approvalFailure(request, pending.step, currentActor, currentSettings))
 }
 
 function apply(ready: Ready): Request {

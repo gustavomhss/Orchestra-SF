@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { act } from "./act.ts"
+import { act, canApproveCurrentRequest } from "./act.ts"
 
 const AT = "2026-11-10T12:00:00Z"
 const ISSUED = { pr: [] as string[], po: [] as string[] }
@@ -66,6 +66,27 @@ test("S3-1 create then submit_pr copies only L1", () => {
   if (!submitted.ok) throw new Error(submitted.code)
   expect(submitted.request.prApproval?.steps).toHaveLength(1)
   expect(submitted.request.prApproval?.steps[0].levelId).toBe("L1")
+})
+
+test("the Work approval predicate honors the current holder and self-approval rule", () => {
+  const owner = { id: "ada", canWrite: true, roles: ["requester"] }
+  const approvalSettings = settings({
+    blockSelfApproval: true,
+    levels: settings().levels.map((level) => ({ ...level, holderId: "bea" })),
+  })
+  const created = act(null, { type: "create", pr: { estAmount: 52000, recurring: false, expenseType: "" } }, owner, approvalSettings, AT, ISSUED, null)
+  if (!created.ok) throw new Error(created.code)
+  const submitted = act(created.request, { type: "submit_pr" }, owner, approvalSettings, AT, ISSUED, null)
+  if (!submitted.ok) throw new Error(submitted.code)
+  const holder = { id: "bea", canWrite: true, roles: ["admin"] }
+  const otherAdmin = { ...holder, id: "cam" }
+  const before = structuredClone(submitted.request)
+  expect(canApproveCurrentRequest(submitted.request, holder, approvalSettings)).toBe(true)
+  expect(canApproveCurrentRequest(submitted.request, otherAdmin, approvalSettings)).toBe(false)
+  expect(canApproveCurrentRequest(submitted.request, { ...holder, canWrite: false }, approvalSettings)).toBe(false)
+  expect(canApproveCurrentRequest({ ...submitted.request, createdBy: holder.id }, holder, approvalSettings)).toBe(false)
+  expect(act(submitted.request, { type: "approve" }, otherAdmin, approvalSettings, AT, ISSUED, null)).toEqual({ ok: false, code: "no_override" })
+  expect(submitted.request).toEqual(before)
 })
 
 test("S3-2 sourcing 30000 USD stays on L1 even in matrix mode", () => {
