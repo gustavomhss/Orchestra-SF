@@ -33,6 +33,9 @@ export function observePage(page: Page) {
   }
   page.on("pageerror", (error) => record(messages.pageErrors, error.stack ?? error.message))
   page.on("console", (entry) => { if (entry.type() === "error") record(messages.consoleErrors, entry.text()) })
+  page.once("close", () => {
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "wave-three-page-closed", ...messages }))
+  })
   return messages
 }
 
