@@ -3,10 +3,10 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import { documentHtml, esc, pageMain } from "../../src/screen-shell.ts"
 import { htmlPolicy } from "../../runtime/application.ts"
-import { RequestBodyError, readRequestBody } from "../../runtime/request-body.ts"
 import { decisionDesk, routineStatus, workList } from "../ui/components.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 import { handleSfAnalysis } from "./analysis-http.ts"
+import { handleSfWorkbenchCommand } from "./workbench-command-http.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { decisionCreateForm, decisionCreateScript } from "../ui/decision-create.ts"
 import { handleSfPlannerMonthly } from "./planner-http.ts"
@@ -68,32 +68,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
         return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
       } finally { runtime.ui.finish(access.value) }
     }
-    if (mode === "workbench-command") {
-      if (request.method !== "POST") return reply({ status: "denied" }, 405)
-      if (request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
-      if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1 || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "invalid" }, 400)
-      const bytes = await readRequestBody(request, 65536).catch((error) => error)
-      if (bytes instanceof RequestBodyError) return reply({ status: "invalid" }, bytes.status)
-      if (!(bytes instanceof Uint8Array)) return reply({ status: "invalid" }, 400)
-      const body = await Promise.resolve().then(() => new TextDecoder("utf-8", { fatal: true }).decode(bytes)).catch(() => undefined)
-      if (body === undefined) return reply({ status: "invalid" }, 400)
-      const parsed: unknown = await Promise.resolve().then(() => JSON.parse(body)).catch(() => undefined)
-      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed) || Object.keys(parsed).some((key) => !["operation", "input"].includes(key)) || !("operation" in parsed) || !("input" in parsed)) return reply({ status: "invalid" }, 400)
-      const operation = parsed.operation
-      if (operation !== "sf_case_draft" && operation !== "sf_question_prepare" && operation !== "sf_change_prepare") return reply({ status: "denied" }, 403)
-      const decoded = decodeSfOperationInput(operation, parsed.input)
-      if (!decoded.ok) return reply({ status: "invalid" }, 400)
-      const admitted = await runtime.ui.admit(request, operation, digestSfValue(decoded.value))
-      if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
-      try {
-        const result = await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined)
-        if (!result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
-        if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
-        const output = decodeSfOperationOutput(operation, result.result)
-        if (!output.ok || !await runtime.ui.revalidate(admitted.value)) return reply({ status: "unavailable" }, 503)
-        return reply({ status: "ok", value: output.value, outputRef: result.outputRef }, 200)
-      } finally { runtime.ui.finish(admitted.value) }
-    }
+    if (mode === "workbench-command") return handleSfWorkbenchCommand(request, input.origin, runtime)
     if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "denied" }, 405)
     const allowed = mode === "workbench" ? ["sf"] : mode === "workbench-case" ? ["sf", "caseRef"] : mode === "workbench-work" ? ["sf", "selectionRef", "start", "end"] : mode === "workbench-search" ? ["sf", "q"] : ["sf", "runRef"]
     if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1)) return reply({ status: "invalid" }, 400)

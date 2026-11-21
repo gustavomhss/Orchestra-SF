@@ -1,5 +1,6 @@
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { expect, test } from "bun:test"
+import { Database } from "bun:sqlite"
 import { Schema } from "effect"
 import { mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -7,6 +8,9 @@ import { join } from "node:path"
 import { exportJWK, generateKeyPair, SignJWT } from "jose"
 import { createMicrosoftInstallation } from "../local/microsoft-entry.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
+import { inspectSfProductRestoreFrontier } from "../product/host-binding/state-provider.ts"
+import { openCorporateRecoveryRegister } from "../runtime/corporate-recovery-register.ts"
+import { createLocalBackups } from "../runtime/local-backups.ts"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
 import type { LocalConfiguration } from "../runtime/local-configuration.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
@@ -37,18 +41,23 @@ async function fixture(
   enabledTeamIds?: unknown,
   groups: LocalConfiguration["groups"] = { dashboard: {}, planner: {}, procurement: {} },
   teamDirectory?: "members",
+  options: { nativeDecisions?: boolean; nativeRecovery?: boolean } = {},
 ) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sf-microsoft-installation-"))
   const directory = join(root, "installation")
   const workspaceDirectory = join(root, "workspace")
+  const register = join(root, "witness.sqlite")
   try {
     const file = await prepareLocalConfiguration(directory)
     await mkdir(workspaceDirectory, { mode: 0o700 })
+    const grants = options.nativeDecisions
+      ? [{ principalRef: oid, namespaces: ["cases"], operations: ["sf_case_draft"], ...(options.nativeRecovery ? { migrationActions: ["recover"] } : {}) }]
+      : [{ principalRef: grantPrincipal, operations: ["sf_case_read"] }]
     await writeFile(file, JSON.stringify({
       version: 1, deployment: "azure-https", authentication: "microsoft",
       origin, listenerOrigin, ingressOrigin, mount, tenantId, clientId, workspaceDirectory,
       groups,
-      grants: [{ principalRef: grantPrincipal.toUpperCase(), operations: ["sf_case_read"] }],
+      grants: grants.map((grant) => ({ ...grant, principalRef: grant.principalRef.toUpperCase() })),
       supremeAdminGroupId: grantPrincipal.toUpperCase(), scanner: null,
       ...(teams ? { teams } : {}),
       teamDirectory,
@@ -56,6 +65,15 @@ async function fixture(
     }))
     await writeFile(join(directory, "client-secret.txt"), secret, { mode: 0o600 })
     await writeFile(join(directory, "ingress-secret.txt"), ingressProof, { mode: 0o600 })
+    if (options.nativeRecovery) {
+      const database = new Database(register)
+      try {
+        database.exec(`CREATE TABLE recovery_pins (
+          installation_digest TEXT, partition_digest TEXT, generation INTEGER, checkpoint_digest TEXT,
+          frontier_digest TEXT, archive_digest TEXT, PRIMARY KEY (installation_digest, partition_digest, generation)
+        ) STRICT`)
+      } finally { database.close() }
+    }
     const environment = {
       ORCHESTRA_DB: join(directory, "host-data", "orchestra.db"),
       ORCHESTRA_INHERIT_CREDENTIALS: "0",
@@ -66,24 +84,33 @@ async function fixture(
       XDG_CONFIG_HOME: join(directory, "host-config"),
       XDG_CACHE_HOME: join(directory, "host-cache"),
       XDG_STATE_HOME: join(directory, "host-state"),
+      ...(options.nativeDecisions ? { SUCAFINA_NATIVE_TEAM_DECISIONS: "1" } : {}),
+      ...(options.nativeRecovery ? { SUCAFINA_CORPORATE_RECOVERY_REGISTER: register } : {}),
     }
     const prepare = () => prepareMicrosoftInstallation({ origin: listenerOrigin }, file, environment,
       { fetch, now: () => new Date(epoch * 1000) })
     const [prepared, concurrent] = await Promise.all([prepare(), prepare()])
     expect(concurrent.loaded.config).toEqual(prepared.loaded.config)
-    expect(prepared.loaded.config.grants).toEqual([{ principalRef: grantPrincipal, operations: ["sf_case_read"] }])
+    expect(prepared.loaded.config.grants).toEqual(grants)
     expect(Object.isFrozen(prepared.loaded.config.grants[0]?.operations)).toBe(true)
     expect(prepared.loaded.config.supremeAdminGroupId).toBe(grantPrincipal)
     await expect(bindMicrosoftInstallation(directory, { ...prepared.loaded.config, tenantId: oid })).rejects
       .toThrow("Microsoft installation identity cannot change")
-    const installation = await createMicrosoftInstallation({ origin: listenerOrigin }, file, environment,
-      { fetch, now: () => new Date(epoch * 1000) })
+    const open = () => createMicrosoftInstallation({ origin: listenerOrigin }, file, environment, {
+      fetch, now: () => new Date(epoch * 1000),
+      openRecoveryRegister: (file, directory) => openCorporateRecoveryRegister(file, directory, process.getuid?.()),
+    })
+    const state = { installation: await open() }
     return {
-      installation,
-      directory,
+      get installation() { return state.installation },
+      directory, register,
       prepare,
+      async reopen() {
+        await state.installation.dispose()
+        state.installation = await open()
+      },
       async close() {
-        try { await installation.dispose() }
+        try { await state.installation.dispose() }
         finally { await rm(root, { recursive: true, force: true }) }
       },
     }
@@ -368,6 +395,151 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     expect((await suppliers(teamObjectId))?.status).toBe(303)
   } finally { await f.close() }
 })
+
+test("Installed Teams Decisions replays a native draft after authenticated restore and reopening the installation", async () => {
+  const keys = await generateKeyPair("RS256", { extractable: true })
+  const jwk = await exportJWK(keys.publicKey)
+  const login = { nonce: "" }
+  const membership = { active: true, both: false, reads: 0, queued: Promise.withResolvers<void>() }
+  const f = await fixture("direct", async (request) => {
+    const url = new URL(request.url)
+    if (url.href === authority + "/v2.0/.well-known/openid-configuration") return discovery()
+    if (url.href === authority + "/discovery/v2.0/keys") return Response.json({ keys: [{ ...jwk, kid: "installation-test" }] })
+    if (url.href === authority + "/oauth2/v2.0/token") {
+      const idToken = await new SignJWT({ tid: tenantId, oid, nonce: login.nonce })
+        .setSubject("synthetic-subject").setIssuer(authority + "/v2.0").setAudience(clientId)
+        .setIssuedAt(epoch).setExpirationTime(epoch + 3600)
+        .setProtectedHeader({ alg: "RS256", kid: "installation-test" }).sign(keys.privateKey)
+      return Response.json({ access_token: accessToken, id_token: idToken, token_type: "Bearer", expires_in: 3600, scope: "User.Read Team.ReadBasic.All" })
+    }
+    expect(request.headers.get("authorization")).toBe("Bearer " + accessToken)
+    if (url.origin === "https://graph.microsoft.com" && url.pathname === "/v1.0/me") return Response.json({ id: oid, displayName: "Verified person" })
+    if (url.href === graph + "/me/checkMemberGroups") {
+      expect(await request.json()).toEqual({ groupIds: [grantPrincipal] })
+      return Response.json({ value: [grantPrincipal] })
+    }
+    if (url.href === graph + "/me/joinedTeams") {
+      const value = membership.active
+        ? [teamObjectId, ...(membership.both ? [secondTeamId] : [])].map(id => ({ id, tenantId, displayName: id, isArchived: false })) : []
+      if (++membership.reads === 2) membership.queued.resolve()
+      return Response.json({ value })
+    }
+    throw new Error("Unexpected synthetic Microsoft request")
+  }, [teamObjectId, secondTeamId], {
+    dashboard: { contributor: "group:" + grantPrincipal }, planner: {}, procurement: {},
+  }, undefined, { nativeDecisions: true, nativeRecovery: true })
+  try {
+    const begin = await f.installation.handler(ingress("/auth/login"))
+    expect(begin?.status).toBe(303)
+    const authorize = new URL(begin!.headers.get("location")!)
+    login.nonce = authorize.searchParams.get("nonce")!
+    const challenge = begin!.headers.getSetCookie().find((value) => value.includes("_login="))!.split(";")[0]
+    const finish = await f.installation.handler(ingress("/auth/callback?" + new URLSearchParams({
+      code: "synthetic-code", state: authorize.searchParams.get("state")!,
+    }), { cookie: challenge }))
+    expect(finish?.status).toBe(303)
+    const cookie = finish!.headers.getSetCookie().find((value) => value.includes("_session="))!.split(";")[0]
+    const input = { objective: "Preserve the recorded Team decision",
+      horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: ["Keep the original case"], sourceRefs: [] }
+    const draft = (id: string, fields: Record<string, string> = {}) => f.installation.handler(
+      ingress(`/teams/${id}/dashboard?sf=workbench-command`, {
+        cookie, origin, "content-type": "application/json", "idempotency-key": "native-team-restart-draft", ...fields,
+      }, { method: "POST", body: JSON.stringify({ operation: "sf_case_draft", input }) }),
+    )
+    const installationId = digestSfValue({ origin, mount, directory: f.directory })
+    const partitionFor = (id: string) => digestSfValue({ installationId, tenantId, teamObjectId: id })
+    const pathFor = (id: string) => join(f.directory, "business-teams", partitionFor(id))
+    const readFrontier = async () => {
+      const store = await openLocalStore(pathFor(teamObjectId))
+      try {
+        return await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: inspectSfProductRestoreFrontier(snapshot) }))
+      } finally { await store.dispose() }
+    }
+    expect((await draft(teamObjectId, { cookie: "" }))?.status).toBe(401)
+    expect((await draft(secondTeamId))?.status).toBe(403)
+    expect((await draft(teamObjectId, { "idempotency-key": "native-team-checkpoint-draft" }))?.status).toBe(200)
+    const store = await openLocalStore(pathFor(teamObjectId))
+    const clock = new Date(epoch * 1000).toISOString()
+    const archive = await createLocalBackups(join(f.directory, "backups-teams", partitionFor(teamObjectId)))
+    const checkpoint = await archive.capture(store, "dashboard", clock)
+    const checkpointData = await archive.source.load("dashboard", checkpoint.id)
+    expect(checkpointData).toBeDefined()
+    await store.dispose()
+    const created = await draft(teamObjectId)
+    expect(created?.status).toBe(200)
+    const result = await created!.json()
+    expect(result).toMatchObject({ status: "ok", outputRef: expect.stringMatching(/^case:[^:]+:[^:]+$/), value: { objective: input.objective } })
+    const frontier = await readFrontier()
+    expect(frontier?.transactions).toHaveLength(2)
+    expect(await Bun.file(join(pathFor(secondTeamId), "installation.sqlite")).exists()).toBe(false)
+
+    membership.both = true
+    expect((await draft(secondTeamId))?.status).toBe(403)
+    const witness = new Database(f.register)
+    try {
+      witness.query("INSERT INTO recovery_pins VALUES (?, ?, ?, ?, ?, ?)").run(
+        digestSfValue({ installationId, tenantId, clientId }), partitionFor(teamObjectId), 1,
+        digestSfValue(checkpointData!.snapshot), digestSfValue(frontier),
+        digestSfValue({ checkpointId: checkpoint.id, manifest: checkpoint.manifest }),
+      )
+    } finally { witness.close() }
+    const modified = await openLocalStore(pathFor(teamObjectId))
+    try {
+      await modified.transaction("dashboard", async (snapshot) => {
+        snapshot.data.qaMarkerAfterCheckpoint = true
+        return { commit: true, value: undefined }
+      })
+    } finally { await modified.dispose() }
+    const recovery = await f.installation.handler(ingress("/api/ui/team-profile-migration/recover", {
+      cookie, origin, "content-type": "application/json",
+    }, { method: "POST", body: JSON.stringify({ teamObjectId, checkpointId: checkpoint.id, expectedVersion: 0, confirm: true }) }))
+    expect(recovery?.status).toBe(204)
+    const restored = await openLocalStore(pathFor(teamObjectId))
+    try {
+      await restored.transaction("dashboard", async (snapshot) => {
+        expect(snapshot.data.qaMarkerAfterCheckpoint).toBeUndefined()
+        expect(snapshot.versions.dataset?.version).toBe(1)
+        return { commit: false, value: undefined }
+      })
+    } finally { await restored.dispose() }
+    expect(await readFrontier()).toEqual(frontier)
+    await f.reopen()
+    const retry = await draft(teamObjectId)
+    expect(retry?.status).toBe(200)
+    expect(await retry!.json()).toEqual(result)
+    expect(await readFrontier()).toEqual(frontier)
+    membership.active = false
+    expect((await draft(teamObjectId))?.status).toBe(403)
+    expect(await readFrontier()).toEqual(frontier)
+
+    const authStore = await openLocalStore(join(f.directory, "business-microsoft"))
+    const locked = Promise.withResolvers<void>()
+    const release = Promise.withResolvers<void>()
+    const before = authStore.transaction("dashboard", async (snapshot) => {
+      locked.resolve()
+      await release.promise
+      return { commit: false, value: digestSfValue(snapshot.data.teamDecisionIntentions) }
+    })
+    try {
+      await locked.promise
+      membership.active = true
+      membership.reads = 0
+      membership.queued = Promise.withResolvers<void>()
+      const waiting = draft(teamObjectId, { "idempotency-key": "native-team-revocation-race" })
+      await Promise.race([membership.queued.promise, waiting.then(() => { throw new Error("Expected a queued Decisions write") })])
+      membership.active = false
+      release.resolve()
+      expect((await waiting)?.ok).toBe(false)
+      expect(await authStore.transaction("dashboard", async (snapshot) => ({
+        commit: false, value: digestSfValue(snapshot.data.teamDecisionIntentions),
+      }))).toBe(await before)
+      expect(await readFrontier()).toEqual(frontier)
+    } finally {
+      release.resolve()
+      await authStore.dispose()
+    }
+  } finally { await f.close() }
+}, 60_000)
 
 test("Corporate Team directory scopes assignment choices to the mounted Team", async () => {
   const keys = await generateKeyPair("RS256", { extractable: true })
