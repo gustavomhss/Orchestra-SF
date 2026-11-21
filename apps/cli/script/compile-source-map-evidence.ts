@@ -45,12 +45,14 @@ export async function detachCompileSourceMaps(
     const embedded = layout.graph.subarray(map.start, map.end)
     const bound = verifyEmbeddedMap(embedded, emitted)
     files.set(mapName, bound.json)
+    const embeddedOffset = layout.graphOffset + map.start
     modules.push({ ...code, status: "matched-compiler-map" as const, map: mapName,
       coordinates: bound.coordinates, sources: bound.sourceHashes, mapSha256: digest(Buffer.from(bound.json)),
-      emittedMapSha256: digest(emitted), embeddedMapSha256: digest(embedded),
+      emittedMapSha256: digest(emitted),
+      embeddedMap: { offset: embeddedOffset, byteLength: embedded.length, sha256: digest(embedded) },
     })
     changes.push(
-      { start: layout.graphOffset + map.start, end: layout.graphOffset + map.end },
+      { start: embeddedOffset, end: embeddedOffset + embedded.length },
       { start: layout.graphOffset + row + 16, end: layout.graphOffset + row + 24 },
     )
   }
