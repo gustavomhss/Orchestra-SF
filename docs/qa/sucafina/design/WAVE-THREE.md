@@ -1,6 +1,19 @@
 # Wave three — fifteen native Sucafina areas
 
-Status: IN_PROGRESS. User instruction: “Otimo. Pga maos um bloco grqnde 15 ai e manda bala com seus agents”.
+Status: **IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW**. User instruction: “Otimo. Pga maos um bloco grqnde 15 ai e manda bala com seus agents”.
+
+The requested fifteen-area candidate is implemented on `sf-design-fifteen`. Final product: `e378923d7619c168b2d7b2c82b1232449eca2c45`. Review: [PR #587](https://github.com/gustavomhss/Orchestra-SF/pull/587). The branch starts directly from dev `acc0181508ceda7416bce57284b2307a9b20385b`.
+
+**Review the [177-image gallery](wave-three/evidence/README.md), [verification](wave-three/VALIDATION.md), [integration record](wave-three/INTEGRATION.md) and [exact state map](wave-three/scope.json).** These are actual native application captures from isolated canonical test data. New visual acceptance remains pending; this wave has not been merged.
+
+| Group | Areas | Route patterns | Functional states | Pictured states | Captures |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| People / portfolio | 5 | 18 | 28 | 28 | 58 |
+| Finance / planner | 5 | 18 | 35 | 26 | 47 |
+| Operations | 5 | 20 | 25 | 25 | 72 |
+| **Total** | **15** | **56** | **88** | **79** | **177** |
+
+The campaign now has six accepted/merged areas, fifteen implemented areas awaiting this review and 49 inventoried areas remaining. That is **21 of 70 implemented**, with acceptance and merge tracked separately. Screenshots, locale, theme and viewport variants do not increase the area count.
 
 ## Pinned start and scope
 
@@ -48,8 +61,8 @@ Preserve current source adapters, routing, owners, grants, CAS, idempotency, pen
 
 ## Delivery and verification
 
-Each worker maps list/detail/create/edit/review and special states for all five areas, supplies actual source-seeding requirements and stable locators, and records unverified states honestly. Root integrates before the grouped scoped Actions runs. Three production journeys share a genuine isolated installation helper and canonical producer data, with dark/light desktop, Portuguese, narrow layout and meaningful interactions for each area.
+Each worker maps list/detail/create/edit/review and special states for all five areas, supplies actual source-seeding requirements and stable locators, and records unverified states honestly. Root integrates before the grouped scoped Actions runs. The grouped production journeys share a genuine isolated installation helper and canonical producer data, with dark/light desktop, Portuguese, narrow layout and meaningful interactions for each area.
 
 All repository work uses GitHub MCP; no shell, local builds/tests or user-machine runtime. All execution is through existing scoped test-ci snapshots. Do not run sf-ci, add epic labels or change CI mechanisms. No mocks or synthetic authentication/grants. Runtime/source errors found during actual verification must be fixed at their source rather than hidden by tests.
 
-Final evidence distinguishes areas, registered routes, distinct business views and capture variants. Passing tests do not establish user visual approval. User-facing screenshots and a complete gallery are required. Remaining inventory after this scope is 49 areas, conditional on the full 15 being delivered.
+Final evidence distinguishes areas, registered routes, distinct business views and capture variants. Passing tests do not establish user visual approval. User-facing screenshots and a complete gallery are required. The completed scope leaves 49 inventory areas for the next rounds. The remaining work is listed in the central inventory.

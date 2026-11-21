@@ -64,7 +64,7 @@ Consulte os indicadores do período e os registros de campanhas e incidentes. Os
 
 ### Riscos e stakeholders
 
-Localize um registro na lista para consultar o contexto, os fatores, o responsável e o acompanhamento. A edição apresenta os campos do registro em uma etapa própria. A revisão permite conferir a mudança antes de salvar; a exclusão também pede confirmação.
+Ajuste os filtros e aplique-os para localizar um registro. Abra o detalhe para consultar o contexto, os fatores, o responsável e o acompanhamento. A edição apresenta os campos do registro em uma etapa própria. A revisão permite conferir a mudança antes de salvar; a exclusão também pede confirmação.
 
 ### Desempenho
 
@@ -90,4 +90,4 @@ A edição, a colagem de valores, a distribuição e a revisão usam as regras d
 
 ## Leitura em telas menores
 
-As listas se reorganizam em registros com rótulos. Os campos e as ações de revisão ficam em uma coluna quando o espaço é menor. Uma tabela financeira pode ter rolagem horizontal dentro de sua própria área, sem deslocar a página inteira.
+As listas se reorganizam em registros com rótulos. Os campos e as ações de revisão ficam em uma coluna quando o espaço é menor. Uma tabela financeira pode ter rolagem horizontal dentro de sua própria área, sem deslocar a página inteira. Nas grades mensais, a navegação por teclado acompanha a célula escolhida e mantém as colunas de identificação visíveis.

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "status": "IN_PROGRESS",
+  "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
   "base": "acc0181508ceda7416bce57284b2307a9b20385b",
   "branch": "sf-design-fifteen",
   "groups": [
@@ -14,7 +14,15 @@
         "CAP18",
         "CAP19"
       ],
-      "owner": "redesign_finance_five"
+      "owner": "redesign_finance_five",
+      "commit": "b02b9a268cffefd53385e90e89cb3dbef9fed32d",
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "report": "finance/REVIEW.md",
+      "gallery": "evidence/finance/README.md",
+      "manifest": "evidence/finance/manifest.json",
+      "functionalStates": 35,
+      "photographedStates": 26,
+      "captures": 47
     },
     {
       "key": "people",
@@ -26,7 +34,15 @@
         "CAP09",
         "CAP10"
       ],
-      "owner": "redesign_people_five"
+      "owner": "redesign_people_five",
+      "commit": "19213217280ba59ada452585446e1a3d9d407250",
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "report": "people/REVIEW.md",
+      "gallery": "evidence/people/README.md",
+      "manifest": "evidence/people/manifest.json",
+      "functionalStates": 28,
+      "photographedStates": 28,
+      "captures": 58
     },
     {
       "key": "operations",
@@ -38,7 +54,15 @@
         "CAP15",
         "CAP16"
       ],
-      "owner": "redesign_operations_five"
+      "owner": "redesign_operations_five",
+      "commit": "05afd18d1ceee381c418b588f26186db1ad3b9b4",
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "report": "operations/REVIEW.md",
+      "gallery": "evidence/operations/README.md",
+      "manifest": "evidence/operations/manifest.json",
+      "functionalStates": 25,
+      "photographedStates": 25,
+      "captures": 72
     }
   ],
   "areaCount": 15,
@@ -72,9 +96,111 @@
           "blobSha": "87a847f859fc15c5473a0ba6f778700be5e0e470"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP05",
+          "id": "collection",
+          "label": "Lista de projetos",
+          "principal": "CAP05-dark-desktop-list-test-data",
+          "variants": [
+            "CAP05-light-desktop-list-test-data",
+            "CAP05-light-320-list-test-data",
+            "CAP05-pt-BR-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP05",
+          "id": "monthly-detail",
+          "label": "Detalhe com doze meses",
+          "principal": "CAP05-dark-desktop-twelve-months-test-data",
+          "variants": [
+            "CAP05-dark-320-monthly-records-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP05",
+          "id": "annual-editor",
+          "label": "Editor anual",
+          "principal": null,
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "NO_DEDICATED_CAPTURE"
+        },
+        {
+          "area": "CAP05",
+          "id": "annual-review",
+          "label": "Revisão anual",
+          "principal": "CAP05-dark-desktop-annual-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP05",
+          "id": "deviation-editor",
+          "label": "Editor de desvio",
+          "principal": null,
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "NO_DEDICATED_CAPTURE"
+        },
+        {
+          "area": "CAP05",
+          "id": "deviation-review",
+          "label": "Revisão de desvio",
+          "principal": "CAP05-dark-desktop-deviation-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP05",
+          "id": "month-editor",
+          "label": "Editor mensal",
+          "principal": "CAP05-dark-desktop-month-editor-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP05",
+          "id": "month-review",
+          "label": "Revisão mensal",
+          "principal": "CAP05-dark-320-month-review-actions-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP05",
+          "id": "project-create",
+          "label": "Criação de projeto",
+          "principal": "CAP05-dark-desktop-create-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP05",
+          "id": "project-create-review",
+          "label": "Revisão da criação de projeto",
+          "principal": null,
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "NO_DEDICATED_CAPTURE"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 11,
+        "report": "finance/REVIEW.md"
+      }
     },
     {
       "id": "CAP06",
@@ -89,12 +215,33 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
-          "blobSha": "0912fc52ea5423a1e6ef24863ff68c9007901dc1"
+          "blobSha": "2e80843571f1c60b7949c15ef8c36c724a6c1d9c",
+          "previousBlobSha": "0912fc52ea5423a1e6ef24863ff68c9007901dc1"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP06",
+          "id": "overview",
+          "label": "Headcount overview and leader breakdown",
+          "principal": "CAP06-dark-desktop-test-data",
+          "variants": [
+            "CAP06-light-desktop-test-data",
+            "CAP06-light-320-test-data",
+            "CAP06-light-320-leaders-test-data",
+            "CAP06-pt-BR-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 5,
+        "report": "people/REVIEW.md"
+      }
     },
     {
       "id": "CAP07",
@@ -129,12 +276,117 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx",
-          "blobSha": "c4b9cb76fb617b405c01069f84fb95b381122f64"
+          "blobSha": "8b8bb7beb784d225df67e4c9476e668ac1e1e4e2",
+          "previousBlobSha": "c4b9cb76fb617b405c01069f84fb95b381122f64"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP07",
+          "id": "structure",
+          "label": "CIO, leaders and member collection",
+          "principal": "CAP07-dark-desktop-test-data",
+          "variants": [
+            "CAP07-dark-desktop-members-test-data",
+            "CAP07-light-desktop-test-data",
+            "CAP07-light-320-test-data",
+            "CAP07-light-320-members-test-data",
+            "CAP07-pt-BR-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP07",
+          "id": "cio-editor",
+          "label": "Existing CIO editor",
+          "principal": "CAP07-dark-desktop-cio-editor-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP07",
+          "id": "leader-detail",
+          "label": "Leader detail",
+          "principal": "CAP07-dark-desktop-leader-detail-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP07",
+          "id": "leader-editor",
+          "label": "Existing leader editor",
+          "principal": "CAP07-dark-desktop-leader-editor-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP07",
+          "id": "member-detail",
+          "label": "Member detail",
+          "principal": "CAP07-dark-desktop-member-detail-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP07",
+          "id": "member-editor",
+          "label": "Existing member editor",
+          "principal": "CAP07-dark-desktop-member-editor-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP07",
+          "id": "member-review",
+          "label": "Existing member change review",
+          "principal": "CAP07-dark-desktop-member-review-test-data",
+          "variants": [
+            "CAP07-dark-320-member-review-actions-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP07",
+          "id": "new-member",
+          "label": "New member editor",
+          "principal": "CAP07-dark-desktop-new-member-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP07",
+          "id": "new-member-review",
+          "label": "New member review",
+          "principal": "CAP07-dark-desktop-new-member-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP07",
+          "id": "leader-delete",
+          "label": "Leader deletion review",
+          "principal": "CAP07-dark-desktop-delete-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 16,
+        "report": "people/REVIEW.md"
+      }
     },
     {
       "id": "CAP08",
@@ -165,12 +417,87 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
-          "blobSha": "fcdb83cfc20e0168fdf27479f8aa009b59821585"
+          "blobSha": "29aec81cc8b0dbf7e385ddbe9a1bd73f4c76c4bd",
+          "previousBlobSha": "fcdb83cfc20e0168fdf27479f8aa009b59821585"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP08",
+          "id": "talent",
+          "label": "Talent collection, including Terminated filter",
+          "principal": "CAP08-dark-desktop-test-data",
+          "variants": [
+            "CAP08-light-desktop-test-data",
+            "CAP08-light-320-test-data",
+            "CAP08-dark-desktop-terminated-filter-test-data",
+            "CAP08-pt-BR-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP08",
+          "id": "member-detail",
+          "label": "Talent member detail",
+          "principal": "CAP08-dark-desktop-member-detail-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP08",
+          "id": "assessment-editor",
+          "label": "Existing assessment editor",
+          "principal": "CAP08-dark-desktop-assessment-editor-test-data",
+          "variants": [
+            "CAP08-pt-BR-dark-desktop-assessment-editor-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP08",
+          "id": "assessment-review",
+          "label": "Assessment change review",
+          "principal": "CAP08-dark-desktop-assessment-review-test-data",
+          "variants": [
+            "CAP08-dark-320-assessment-review-actions-test-data",
+            "CAP08-pt-BR-dark-desktop-assessment-review-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP08",
+          "id": "import-unavailable",
+          "label": "Workbook import unavailable",
+          "principal": "CAP08-dark-desktop-import-unavailable-test-data",
+          "variants": [
+            "CAP08-pt-BR-dark-desktop-import-unavailable-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP08",
+          "id": "export-unavailable",
+          "label": "Workbook export unavailable",
+          "principal": "CAP08-dark-desktop-export-unavailable-test-data",
+          "variants": [
+            "CAP08-pt-BR-dark-desktop-export-unavailable-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 15,
+        "report": "people/REVIEW.md"
+      }
     },
     {
       "id": "CAP09",
@@ -185,12 +512,33 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/overview/index.tsx",
-          "blobSha": "55e80ff7253bae9c8cf4b2d9db394251879d1b2b"
+          "blobSha": "938963d23aff1cbe6b5a4354dc4952d044ac91b0",
+          "previousBlobSha": "55e80ff7253bae9c8cf4b2d9db394251879d1b2b"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP09",
+          "id": "overview",
+          "label": "Portfolio overview, projects and milestone schedule",
+          "principal": "CAP09-dark-desktop-test-data",
+          "variants": [
+            "CAP09-dark-desktop-milestones-test-data",
+            "CAP09-light-desktop-test-data",
+            "CAP09-light-320-test-data",
+            "CAP09-pt-BR-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 5,
+        "report": "people/REVIEW.md"
+      }
     },
     {
       "id": "CAP10",
@@ -221,12 +569,119 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx",
-          "blobSha": "373e2389aa6d1690c1bb5e9156bab67e5f147b24"
+          "blobSha": "68f9aca8322be859078f70274389e3d64f042ba6",
+          "previousBlobSha": "373e2389aa6d1690c1bb5e9156bab67e5f147b24"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP10",
+          "id": "projects",
+          "label": "Project collection",
+          "principal": "CAP10-dark-desktop-test-data",
+          "variants": [
+            "CAP10-light-desktop-test-data",
+            "CAP10-light-320-test-data",
+            "CAP10-pt-BR-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP10",
+          "id": "project-detail",
+          "label": "Existing project detail",
+          "principal": "CAP10-dark-desktop-project-detail-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP10",
+          "id": "project-editor",
+          "label": "Existing project editor",
+          "principal": "CAP10-dark-desktop-project-editor-test-data",
+          "variants": [
+            "CAP10-pt-BR-dark-desktop-project-editor-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP10",
+          "id": "project-review",
+          "label": "Existing project change review",
+          "principal": "CAP10-dark-desktop-project-review-test-data",
+          "variants": [
+            "CAP10-dark-320-project-review-actions-test-data",
+            "CAP10-pt-BR-dark-desktop-project-review-test-data",
+            "CAP10-pt-BR-dark-320-project-review-actions-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP10",
+          "id": "milestones",
+          "label": "Project milestone collection",
+          "principal": "CAP10-dark-desktop-milestones-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP10",
+          "id": "milestone-editor",
+          "label": "Existing milestone editor",
+          "principal": "CAP10-dark-desktop-milestone-editor-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP10",
+          "id": "milestone-review",
+          "label": "Milestone change review",
+          "principal": "CAP10-dark-desktop-milestone-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP10",
+          "id": "project-delete",
+          "label": "Project deletion review",
+          "principal": "CAP10-dark-desktop-delete-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP10",
+          "id": "new-project",
+          "label": "New project editor",
+          "principal": "CAP10-dark-desktop-new-project-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP10",
+          "id": "new-project-review",
+          "label": "New project review",
+          "principal": "CAP10-dark-desktop-new-project-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 17,
+        "report": "people/REVIEW.md"
+      }
     },
     {
       "id": "CAP11",
@@ -253,12 +708,95 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx",
-          "blobSha": "6150473ed6f7bcc3d5234f68551ed9e4e5864bc2"
+          "blobSha": "fa0af934b7e952e44399501ad0e61e174f4e0f5c",
+          "previousBlobSha": "6150473ed6f7bcc3d5234f68551ed9e4e5864bc2"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP11",
+          "id": "CAP11-overview",
+          "label": "Visão geral do serviço",
+          "principal": "CAP11-operations-dark-desktop-test-data",
+          "variants": [
+            "CAP11-operations-light-desktop-test-data",
+            "CAP11-ticket-ledger-dark-desktop-test-data",
+            "CAP11-application-health-dark-desktop-test-data",
+            "CAP11-settings-dark-desktop-test-data",
+            "CAP11-operations-pt-BR-dark-desktop-test-data",
+            "CAP11-operations-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP11",
+          "id": "CAP11-application-editor",
+          "label": "Editor de indicadores da aplicação",
+          "principal": "CAP11-application-editor-dark-desktop-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP11",
+          "id": "CAP11-categories-editor",
+          "label": "Editor de categorias",
+          "principal": "CAP11-categories-editor-dark-desktop-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP11",
+          "id": "CAP11-month-replacement-editor",
+          "label": "Preparação da substituição mensal",
+          "principal": "CAP11-import-editor-dark-desktop-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP11",
+          "id": "CAP11-month-replacement-review",
+          "label": "Revisão da substituição mensal",
+          "principal": "CAP11-import-review-top-dark-desktop-test-data",
+          "variants": [
+            "CAP11-import-review-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP11",
+          "id": "CAP11-sla-editor",
+          "label": "Editor dos níveis de serviço",
+          "principal": "CAP11-sla-editor-dark-desktop-test-data",
+          "variants": [
+            "CAP11-editor-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP11",
+          "id": "CAP11-sla-review",
+          "label": "Revisão dos níveis de serviço",
+          "principal": "CAP11-sla-review-dark-desktop-test-data",
+          "variants": [
+            "CAP11-review-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 16,
+        "report": "operations/REVIEW.md"
+      }
     },
     {
       "id": "CAP12",
@@ -289,12 +827,71 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
-          "blobSha": "bdc686c4efa75672991de61b215be0691fc54cd4"
+          "blobSha": "11a5742a08851f08d48695a18c5a91dc02eb6908",
+          "previousBlobSha": "bdc686c4efa75672991de61b215be0691fc54cd4"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP12",
+          "id": "CAP12-overview",
+          "label": "Visão geral de segurança",
+          "principal": "CAP12-operations-dark-desktop-test-data",
+          "variants": [
+            "CAP12-operations-light-desktop-test-data",
+            "CAP12-campaign-departments-dark-desktop-test-data",
+            "CAP12-incidents-dark-desktop-test-data",
+            "CAP12-unscoped-actions-dark-desktop-test-data",
+            "CAP12-operations-pt-BR-dark-desktop-test-data",
+            "CAP12-operations-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP12",
+          "id": "CAP12-incident-delete-review",
+          "label": "Revisão da exclusão de incidente",
+          "principal": "CAP12-incident-delete-review-top-dark-desktop-test-data",
+          "variants": [
+            "CAP12-incident-delete-review-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP12",
+          "id": "CAP12-campaign-editor",
+          "label": "Editor de campanha",
+          "principal": "CAP12-campaign-editor-dark-desktop-test-data",
+          "variants": [
+            "CAP12-department-editor-dark-desktop-test-data",
+            "CAP12-editor-pt-BR-dark-390-test-data",
+            "CAP12-departments-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP12",
+          "id": "CAP12-campaign-review",
+          "label": "Revisão de campanha",
+          "principal": "CAP12-campaign-review-top-dark-desktop-test-data",
+          "variants": [
+            "CAP12-campaign-review-dark-desktop-test-data",
+            "CAP12-review-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 16,
+        "report": "operations/REVIEW.md"
+      }
     },
     {
       "id": "CAP13",
@@ -321,12 +918,76 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/index.tsx",
-          "blobSha": "9f55c881506896e756a9a9f5ad4e1f23d05fde72"
+          "blobSha": "eb1e0c6d7617fc02cc89086323cd3c700ce148fd",
+          "previousBlobSha": "9f55c881506896e756a9a9f5ad4e1f23d05fde72"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP13",
+          "id": "CAP13-list",
+          "label": "Registro de riscos",
+          "principal": "CAP13-operations-dark-desktop-test-data",
+          "variants": [
+            "CAP13-operations-light-desktop-test-data",
+            "CAP13-filtered-empty-dark-desktop-test-data",
+            "CAP13-operations-pt-BR-dark-desktop-test-data",
+            "CAP13-operations-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP13",
+          "id": "CAP13-detail",
+          "label": "Detalhe do risco",
+          "principal": "CAP13-detail-dark-desktop-test-data",
+          "variants": [
+            "CAP13-detail-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP13",
+          "id": "CAP13-delete-review",
+          "label": "Revisão da exclusão de risco",
+          "principal": "CAP13-delete-review-dark-desktop-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP13",
+          "id": "CAP13-editor",
+          "label": "Editor de risco",
+          "principal": "CAP13-editor-dark-desktop-test-data",
+          "variants": [
+            "CAP13-editor-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP13",
+          "id": "CAP13-edit-review",
+          "label": "Revisão da edição de risco",
+          "principal": "CAP13-review-top-dark-desktop-test-data",
+          "variants": [
+            "CAP13-review-dark-desktop-test-data",
+            "CAP13-review-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 13,
+        "report": "operations/REVIEW.md"
+      }
     },
     {
       "id": "CAP14",
@@ -353,12 +1014,88 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
-          "blobSha": "f1e8a88f37563a6276f56cc38b36f4821d5a741f"
+          "blobSha": "dc8df021cc3a23127ae2187476f9ea1175812b8e",
+          "previousBlobSha": "f1e8a88f37563a6276f56cc38b36f4821d5a741f"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP14",
+          "id": "collection",
+          "label": "Lista de contratos",
+          "principal": "CAP14-dark-desktop-list-test-data",
+          "variants": [
+            "CAP14-light-desktop-list-test-data",
+            "CAP14-light-320-list-test-data",
+            "CAP14-pt-BR-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP14",
+          "id": "contract-detail",
+          "label": "Detalhe do contrato",
+          "principal": "CAP14-dark-desktop-contract-detail-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP14",
+          "id": "contract-editor",
+          "label": "Editor do contrato",
+          "principal": "CAP14-dark-desktop-fifteen-field-editor-test-data",
+          "variants": [
+            "CAP14-dark-320-editor-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP14",
+          "id": "contract-review",
+          "label": "Revisão da edição",
+          "principal": "CAP14-dark-320-review-actions-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP14",
+          "id": "contract-delete",
+          "label": "Revisão da exclusão",
+          "principal": "CAP14-dark-desktop-delete-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP14",
+          "id": "contract-create",
+          "label": "Criação de contrato",
+          "principal": null,
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "NO_DEDICATED_CAPTURE"
+        },
+        {
+          "area": "CAP14",
+          "id": "contract-create-review",
+          "label": "Revisão da criação",
+          "principal": "CAP14-dark-desktop-create-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 10,
+        "report": "finance/REVIEW.md"
+      }
     },
     {
       "id": "CAP15",
@@ -385,12 +1122,66 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/stakeholders/index.tsx",
-          "blobSha": "aebff25e95fb0014518b80ff8d85e0474833e856"
+          "blobSha": "b23db34f419fa64fa281af3f23319092a885cff4",
+          "previousBlobSha": "aebff25e95fb0014518b80ff8d85e0474833e856"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP15",
+          "id": "CAP15-list",
+          "label": "Lista de relacionamentos",
+          "principal": "CAP15-operations-dark-desktop-test-data",
+          "variants": [
+            "CAP15-operations-light-desktop-test-data",
+            "CAP15-operations-pt-BR-dark-desktop-test-data",
+            "CAP15-operations-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP15",
+          "id": "CAP15-detail",
+          "label": "Detalhe do relacionamento",
+          "principal": "CAP15-detail-dark-desktop-test-data",
+          "variants": [
+            "CAP15-detail-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP15",
+          "id": "CAP15-editor",
+          "label": "Editor de relacionamento",
+          "principal": "CAP15-editor-dark-desktop-test-data",
+          "variants": [
+            "CAP15-editor-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP15",
+          "id": "CAP15-edit-review",
+          "label": "Revisão da edição de relacionamento",
+          "principal": "CAP15-review-top-dark-desktop-test-data",
+          "variants": [
+            "CAP15-review-dark-desktop-test-data",
+            "CAP15-review-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 11,
+        "report": "operations/REVIEW.md"
+      }
     },
     {
       "id": "CAP16",
@@ -413,12 +1204,79 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
-          "blobSha": "e4cd8eb36184d210879fd1b535c0596b9649714f"
+          "blobSha": "1691c2d651e3bc5655bda000ee1f1540fadf156e",
+          "previousBlobSha": "e4cd8eb36184d210879fd1b535c0596b9649714f"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP16",
+          "id": "CAP16-overview",
+          "label": "Visão geral do contrato de performance",
+          "principal": "CAP16-operations-dark-desktop-test-data",
+          "variants": [
+            "CAP16-operations-light-desktop-test-data",
+            "CAP16-items-dark-desktop-test-data",
+            "CAP16-owner-assignments-dark-desktop-test-data",
+            "CAP16-operations-pt-BR-dark-desktop-test-data",
+            "CAP16-operations-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP16",
+          "id": "CAP16-item-editor",
+          "label": "Editor de item",
+          "principal": "CAP16-item-editor-dark-desktop-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP16",
+          "id": "CAP16-subitem-detail",
+          "label": "Detalhe do subitem",
+          "principal": "CAP16-subitem-detail-dark-desktop-test-data",
+          "variants": [
+            "CAP16-subitem-quarters-dark-desktop-test-data",
+            "CAP16-subitem-detail-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP16",
+          "id": "CAP16-subitem-editor",
+          "label": "Editor de subitem",
+          "principal": "CAP16-subitem-editor-dark-desktop-test-data",
+          "variants": [
+            "CAP16-editor-pt-BR-dark-390-test-data",
+            "CAP16-quarter-editor-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP16",
+          "id": "CAP16-subitem-review",
+          "label": "Revisão do subitem",
+          "principal": "CAP16-subitem-review-top-dark-desktop-test-data",
+          "variants": [
+            "CAP16-subitem-review-dark-desktop-test-data",
+            "CAP16-review-pt-BR-dark-390-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 16,
+        "report": "operations/REVIEW.md"
+      }
     },
     {
       "id": "CAP17",
@@ -433,12 +1291,33 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/overview/index.tsx",
-          "blobSha": "eae3664b7e0db079259774446f0fa305da541de4"
+          "blobSha": "a296e9c6292433bd9224669be34097470c44e424",
+          "previousBlobSha": "eae3664b7e0db079259774446f0fa305da541de4"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP17",
+          "id": "overview",
+          "label": "Indicadores, séries mensais e comparação",
+          "principal": "CAP17-dark-desktop-summary-and-series-test-data",
+          "variants": [
+            "CAP17-light-desktop-summary-test-data",
+            "CAP17-light-320-summary-test-data",
+            "CAP17-light-320-version-comparison-test-data",
+            "CAP17-pt-BR-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 5,
+        "report": "finance/REVIEW.md"
+      }
     },
     {
       "id": "CAP18",
@@ -468,9 +1347,110 @@
           "blobSha": "b6274f9f22ac3a5a5c85a7b0c3c19efeb4519143"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP18",
+          "id": "monthly-grid",
+          "label": "Grade mensal",
+          "principal": "CAP18-dark-desktop-monthly-grid-start-test-data",
+          "variants": [
+            "CAP18-dark-desktop-monthly-grid-december-test-data",
+            "CAP18-light-desktop-grid-test-data",
+            "CAP18-dark-320-source-months-test-data",
+            "CAP18-pt-BR-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP18",
+          "id": "paste-preview",
+          "label": "Prévia do produtor para colagem",
+          "principal": "CAP18-dark-desktop-original-producer-paste-preview-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP18",
+          "id": "lines",
+          "label": "Lista de linhas",
+          "principal": null,
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "NO_DEDICATED_CAPTURE"
+        },
+        {
+          "area": "CAP18",
+          "id": "line-editor",
+          "label": "Editor de linha",
+          "principal": "CAP18-dark-desktop-record-editor-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP18",
+          "id": "line-review",
+          "label": "Revisão de linha",
+          "principal": "CAP18-dark-320-record-review-actions-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP18",
+          "id": "line-create",
+          "label": "Criação de linha",
+          "principal": null,
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "NO_DEDICATED_CAPTURE"
+        },
+        {
+          "area": "CAP18",
+          "id": "line-create-review",
+          "label": "Revisão da criação",
+          "principal": "CAP18-dark-desktop-create-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP18",
+          "id": "settings",
+          "label": "Configurações do plano",
+          "principal": null,
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "NO_DEDICATED_CAPTURE"
+        },
+        {
+          "area": "CAP18",
+          "id": "closed-month-review",
+          "label": "Revisão do período fechado",
+          "principal": "CAP18-dark-desktop-closed-month-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP18",
+          "id": "split-review",
+          "label": "Revisão da divisão por elemento",
+          "principal": "CAP18-dark-desktop-split-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 11,
+        "report": "finance/REVIEW.md"
+      }
     },
     {
       "id": "CAP19",
@@ -504,9 +1484,104 @@
           "blobSha": "771f8524a5972cbf19473b7b4173a0d97accfae1"
         }
       ],
-      "status": "ASSIGNED",
-      "views": [],
-      "verification": "NOT_RUN"
+      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "views": [
+        {
+          "area": "CAP19",
+          "id": "monthly-grid",
+          "label": "Grade mensal",
+          "principal": "CAP19-dark-desktop-monthly-grid-test-data",
+          "variants": [
+            "CAP19-light-desktop-monthly-grid-test-data",
+            "CAP19-pt-BR-dark-desktop-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP19",
+          "id": "projects",
+          "label": "Lista de projetos",
+          "principal": "CAP19-dark-desktop-projects-test-data",
+          "variants": [
+            "CAP19-dark-320-projects-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP19",
+          "id": "project-editor",
+          "label": "Editor de projeto",
+          "principal": "CAP19-dark-320-project-editor-test-data",
+          "variants": [
+            "CAP19-dark-desktop-confirmed-project-test-data",
+            "CAP19-pt-BR-dark-320-project-editor-test-data"
+          ],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP19",
+          "id": "project-review",
+          "label": "Revisão de projeto",
+          "principal": "CAP19-dark-320-project-review-actions-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        },
+        {
+          "area": "CAP19",
+          "id": "lines",
+          "label": "Lista de linhas",
+          "principal": null,
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "NO_DEDICATED_CAPTURE"
+        },
+        {
+          "area": "CAP19",
+          "id": "line-editor",
+          "label": "Editor de linha",
+          "principal": null,
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "NO_DEDICATED_CAPTURE"
+        },
+        {
+          "area": "CAP19",
+          "id": "spread-review",
+          "label": "Revisão de distribuição",
+          "principal": "CAP19-dark-desktop-spread-review-test-data",
+          "variants": [],
+          "status": "FUNCTIONALLY_VERIFIED",
+          "visualEvidence": "PHOTOGRAPHED"
+        }
+      ],
+      "verification": {
+        "runtime": "PASS",
+        "userAcceptance": "PENDING_USER_REVIEW",
+        "captureCount": 10,
+        "report": "finance/REVIEW.md"
+      }
     }
-  ]
+  ],
+  "product": "e378923d7619c168b2d7b2c82b1232449eca2c45",
+  "nativeTree": "bbbacbfc2cc344df42d367477622636ba8e4c193",
+  "pullRequest": 587,
+  "userAcceptance": "PENDING_USER_REVIEW",
+  "counts": {
+    "areas": 15,
+    "routePatterns": 56,
+    "functionalStates": 88,
+    "photographedStates": 79,
+    "captures": 177,
+    "captureVariants": 98,
+    "confirmedCommands": 11,
+    "implementedCampaignAreas": 21,
+    "acceptedMergedAreas": 6,
+    "remainingAreas": 49,
+    "implementedAreaRouteScope": 69,
+    "remainingRouteScope": 96
+  }
 }
