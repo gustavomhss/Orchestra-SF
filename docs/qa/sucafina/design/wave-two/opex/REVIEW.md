@@ -1,6 +1,6 @@
 # CAP04 — OPEX design review
 
-Status: implemented candidate; actual browser/Actions review pending. This is not user acceptance.
+Status: implemented candidate, reviewed in the real application on integration candidate `263e694ef565376cc1af61cae0dc9e44777075b8`. The scoped browser journey passed. This is not user acceptance.
 
 ## Scope and source
 
@@ -54,6 +54,25 @@ Reference corpora:
 - Review: `[data-component="sf-change-review"]`. Existing Revise returns to the fields. Existing Cancel closes the editor while the owner-scoped registry retains the draft. Reopening uses the same registry.
 - Source detail shows version without the currency-warning suffix; original owner scope and Source navigation remain.
 
-## Remaining verification
+## Actual visual review
 
-Root must run current-source application/E2E type checks, scoped guards and palette parity, then inspect actual dark/light desktop, narrow and Portuguese renders. Specifically inspect list search alignment, financial/notes wrapping, editor review focus and fully accessible narrow footer, unchanged saved numbers, and CAP05 isolation. CSS media reflow is not real browser zoom. No golden baseline or user approval is asserted.
+Reviewed the real application from [run 44919606458](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44919606458), job `136892554713`, on integration candidate `263e694ef565376cc1af61cae0dc9e44777075b8`. The log reports one passed journey in 2.8 minutes. Root's journey exercises new-line review/revise/discard and monthly draft retention/cancel/reopen followed by a real save and authorized source reread.
+
+Images actually inspected in this final pass:
+
+- `CAP04-dark-desktop-new-line-test-data`
+- `CAP04-dark-desktop-detail-test-data`
+- `CAP04-dark-desktop-editor-test-data`
+- `CAP04-dark-desktop-review-test-data`
+- `CAP04-dark-320-review-test-data`
+- `CAP04-pt-BR-dark-desktop-detail-test-data`
+- `CAP04-pt-BR-dark-desktop-editor-test-data`
+- `CAP04-pt-BR-dark-desktop-review-test-data`
+
+The detail keeps identity and annual budget distinct from the monthly ledger. Known amounts align with their financial columns and absent source values remain dashes. The new-line and monthly forms have a clear label/input hierarchy; the three monthly financial fields align. Desktop review has three readable comparison columns. In the scrolled 320px review capture, all three actions are wholly visible with separate targets. Portuguese detail shows the genuinely refreshed January forecast `14.600`; the subsequent editor/review keeps the new `14800` draft separate from the `14600` source and version 2. No relevant visual defect was identified that justified another product patch.
+
+A prior pass inspected the four list/toolbar captures (dark desktop, dark 1440×800, light desktop, light 320px) from run `44918211856`: search alignment, budget alignment and narrow row reflow were sound. That earlier journey failed later in CAP02 and is not presented as a green test run. Root subsequently corrected the shared navigation strip; the final eight captures above include the corrected navigation.
+
+## Verification limits
+
+Application/E2E type checks, scoped guards, palette parity and the final complete evidence manifest are consolidated by root. CAP05 isolation was reviewed statically against its unchanged `surface.css`, original branches and flattened wrappers; this leaf review does not claim a CAP05 browser capture. The final captures above do not add screenshot coverage for annual-entry, deviation editing or delete review. CSS media reflow is not real browser zoom. No golden baseline or user approval is asserted.
