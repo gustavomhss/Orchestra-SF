@@ -29,7 +29,8 @@ export function createDecisionBaselineCoverage(input: {
   proposalCoverageWrites: WeakSet<object>
   now: () => string
 }) {
-  const resolveForecastCoverage: PlannerSourceHost["resolveForecastCoverage"] = async (selector, context) => {
+  type Coverage = { coverageRef: string; basis: CostCoverageBasis; assessment: CostCoverageAssessment }
+  const readCoverage = async (selector: string, context: TrustedDomainContext, withClassification: boolean): Promise<PortResult<Coverage & { classification?: CoverageClassification }>> => {
     try {
       const source = input.host.requestFor(context)
       const bound = await input.resolveCase(context)
@@ -37,22 +38,40 @@ export function createDecisionBaselineCoverage(input: {
       const readCase = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[bound.value.id] : undefined)
       const current = await readCase()
       if (current.status !== "ok" || !allowed(current.value, bound.value, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "baseline-coverage-access-unavailable" }
-      const readRecords = () => input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? Object.entries(state.preferences).filter(([key]) => key.startsWith("sf:proposal-coverage:baseline:active:")).flatMap(([, value]) => {
-        if (!isBaseline(value)) return []
-        const classification = state.preferences[classificationKey(value.caseRef, value.source.refId)]
-        return isClassification(classification) && classification.classificationDigest === value.classificationDigest && classification.classificationDigest === classificationDigest(classification) && classification.version === value.version ? [value] : []
-      }) : undefined)
+      const readRecords = (coverageRef?: string) => input.state.read(source, "preferences", (state, authority) => {
+        if (!sameAuthority(authority, context)) return undefined
+        const preferences = Object.entries(state.preferences)
+        return preferences.filter(([key]) => key.startsWith("sf:proposal-coverage:baseline:active:")).flatMap<{ record: BaselineCoverage; classification?: CoverageClassification }>(([key, value]) => {
+          if (!isBaseline(value) || value.caseRef.id !== bound.value.id || value.caseRef.incarnation !== bound.value.incarnation || (value.source.refId !== selector && value.coverageRef !== selector && value.coverageRef !== coverageRef)) return []
+          const classification = state.preferences[classificationKey(value.caseRef, value.source.refId)]
+          if (!isClassification(classification) || classification.classificationDigest !== value.classificationDigest || classification.classificationDigest !== classificationDigest(classification) || classification.version !== value.version) return []
+          if (!withClassification) return [{ record: value }]
+          if (key !== activeKey(bound.value, classification.source.refId) || digestSfValue(classification.caseRef) !== digestSfValue(value.caseRef) || digestSfValue(classification.source) !== digestSfValue(value.source) || digestSfValue(classification.basis) !== digestSfValue(value.basis)) return [{ record: value }]
+          // A duplicate active classification is ambiguous even if its bytes match.
+          const count = preferences.filter(([key, candidate]) => key.startsWith("sf:proposal-coverage:classification:active:") && isClassification(candidate) &&
+            candidate.classificationDigest === value.classificationDigest && candidate.classificationDigest === classificationDigest(candidate)).length
+          return [{ record: value, classification: count === 1 ? classification : undefined }]
+        })
+      })
       const records = await readRecords()
       if (records.status !== "ok" || !records.value) return { status: "unavailable", reason: "baseline-coverage-unavailable" }
-      const matches = records.value.filter((value) => value.caseRef.id === bound.value.id && value.caseRef.incarnation === bound.value.incarnation && (value.source.refId === selector || value.coverageRef === selector))
+      const matches = records.value
       if (matches.length !== 1) return { status: matches.length > 1 ? "conflict" : "unavailable", reason: matches.length > 1 ? "ambiguous-baseline-coverage" : "baseline-coverage-unavailable" }
-      const record = matches[0]!
+      const { record, classification } = matches[0]!
+      if (withClassification && !classification) return { status: "unavailable", reason: "classification-unavailable" }
       if (record.recordDigest !== recordDigest(record) || record.installationId !== context.binding.installationId || record.projectId !== context.binding.projectId || record.caseRef.version > bound.value.version || record.caseScopeDigest !== caseScopeDigest(current.value!) || record.source.refDigest !== digestSfEvidenceRef(record.source) || record.source.installationId !== context.binding.installationId || record.source.projectId !== context.binding.projectId || !await fresh(record, input.resolveEvidence, context)) return { status: "unavailable", reason: "baseline-coverage-evidence-unavailable" }
       const again = await readCase()
-      const againRecords = await readRecords()
-      if (again.status !== "ok" || !allowed(again.value, bound.value, context) || digestSfValue(again.value) !== digestSfValue(current.value) || againRecords.status !== "ok" || !againRecords.value || againRecords.value.filter((value) => isBaseline(value) && value.coverageRef === record.coverageRef && digestSfValue(value) === digestSfValue(record)).length !== 1 || !await input.authorizeCase(again.value!, context) || !await fresh(record, input.resolveEvidence, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "baseline-coverage-changed" }
-      return { status: "ok", value: { coverageRef: record.coverageRef, basis: structuredClone(record.basis), assessment: structuredClone(record.assessment) } }
+      const againRecords = await readRecords(withClassification ? record.coverageRef : undefined)
+      if (again.status !== "ok" || !allowed(again.value, bound.value, context) || digestSfValue(again.value) !== digestSfValue(current.value) || againRecords.status !== "ok" || !againRecords.value || againRecords.value.filter((value) => value.record.coverageRef === record.coverageRef && digestSfValue(value.record) === digestSfValue(record) && (!withClassification || value.classification?.classificationDigest === classification?.classificationDigest)).length !== 1 || withClassification && againRecords.value.length !== 1 || !await input.authorizeCase(again.value!, context) || !await fresh(record, input.resolveEvidence, context) || source.signal.aborted || !await input.host.revalidate(context) || withClassification && (source.signal.aborted || input.host.requestFor(context) !== source)) return { status: "stale", reason: "baseline-coverage-changed" }
+      return { status: "ok", value: { coverageRef: record.coverageRef, basis: structuredClone(record.basis), assessment: structuredClone(record.assessment), ...(classification ? { classification: structuredClone(classification) } : {}) } }
     } catch { return { status: "unavailable", reason: "baseline-coverage-unavailable" } }
+  }
+  const resolveForecastCoverage: PlannerSourceHost["resolveForecastCoverage"] = (selector, context) => readCoverage(selector, context, false)
+  const resolveClassifiedCoverage = async (selector: string, context: TrustedDomainContext): Promise<PortResult<Coverage & { classification: CoverageClassification }>> => {
+    const coverage = await readCoverage(selector, context, true)
+    if (coverage.status !== "ok") return coverage
+    const classification = coverage.value.classification
+    return classification ? { status: "ok", value: { ...coverage.value, classification } } : { status: "unavailable", reason: "classification-unavailable" }
   }
   const register = async (incoming: BaselineCoverageRequest, context: TrustedDomainContext): Promise<PortResult<{ coverageRef: string; version: number }>> => {
     try {
@@ -127,7 +146,7 @@ export function createDecisionBaselineCoverage(input: {
     if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(coverage.value)) return { status: "stale", reason: "classification-changed" }
     return { status: "ok", value: structuredClone(matches[0]!) }
   }
-  return { register, resolveForecastCoverage, readClassification }
+  return { register, resolveForecastCoverage, resolveClassifiedCoverage, readClassification }
 }
 function sameAuthority(authority: SfStateAuthority, context: TrustedDomainContext) { return authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision }
 function allowed(value: DecisionCase | undefined, ref: CaseRef, context: TrustedDomainContext) { return !!value && value.id === ref.id && value.incarnation === ref.incarnation && value.version === ref.version && value.participants.includes(context.binding.principalRef) && (context.kind !== "native" || (context.binding.caseId === value.id && context.binding.caseIncarnation === value.incarnation && context.binding.caseVersion === value.version)) }

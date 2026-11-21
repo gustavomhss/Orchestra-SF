@@ -282,6 +282,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const documents = createSfDocumentServices({ runtime: input, authority })
   const questionContributions: { read?: ReturnType<typeof createSfContributionReader> } = {}
   const business = createSfBusinessServices({ authority, persistence: input.persistence, proposalCoverageWrites, procurementEvidenceWrites, dashboardHostWrites, caseSelectionWrites, threadHistoryWrites,
+    currentChoicePreparing: (call, baseRef): boolean => currentChoice?.isPreparing(call, baseRef) ?? false,
     readQuestionContribution: (request, call) => questionContributions.read?.(request, call) ?? Promise.resolve({ status: "unavailable", reason: "contribution-reader-unavailable" }),
     documentRead: documents?.documents.reader, documentEvidenceList: documents?.documents.list,
     extraDescriptors: [...imports?.descriptors ?? [], ...documents?.descriptors ?? []] })
