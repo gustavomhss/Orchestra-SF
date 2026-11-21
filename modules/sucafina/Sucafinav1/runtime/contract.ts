@@ -44,6 +44,7 @@ export type Snapshot = {
   }
 }
 export type Environment = {
+  microsoftGroupIdsOnly?: boolean
   at: string
   id: () => string
   directory: { id: string; name: string }[]
@@ -56,8 +57,10 @@ export type Result =
       ok: false
       status: 400 | 403 | 404 | 409 | 422 | 503
       errors?: string[]
+      fieldErrors?: { field: string; message: string }[]
       stored?: unknown
       by?: string
+      currentVersionCAS?: number
     }
 export type View = {
   data: Record<string, unknown>
@@ -107,9 +110,9 @@ export function text(value: unknown): string {
 export function finite(value: unknown, fallback = 0): number {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback
 }
-export function conflict(snapshot: Snapshot, key: string, command: Command, stored: unknown): Result | undefined {
+export function conflict(snapshot: Snapshot, key: string, command: Command, stored: unknown): Extract<Result, { ok: false }> | undefined {
   const current = snapshot.versions[key]
-  if ((current?.version ?? 0) !== command.version) return { ok: false, status: 409, stored, by: current?.by }
+  if ((current?.version ?? 0) !== command.version) return { ok: false, status: 409, stored, by: current?.by, currentVersionCAS: current?.version ?? 0 }
 }
 export function changed(snapshot: Snapshot, key: string, actor: Actor, at: string, was: unknown, became: unknown) {
   snapshot.versions[key] = {
