@@ -1,5 +1,5 @@
 import { For, Show, createEffect, onCleanup, type JSX } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { A } from "@solidjs/router"
 import { useLanguage } from "@/context/language"
 import { createSfFilesClient } from "@orchestra/client/sucafina/files"
@@ -26,6 +26,9 @@ type Preview = Extract<SfFilesOperationOutput<"files.document-scenario-preview">
 type Failure = Exclude<SfFilesOperationOutput<"files.document-candidates">, { status: "ok" }>
 type Port<Value> = Readonly<{ status: "ok"; value: Value }> | Failure
 type Result<Value> = Readonly<{ kind: "value"; value: Value }> | Readonly<{ kind: "failure"; state: SfUiState }>
+
+// The transport validates the exact producer shape, outside Solid store proxies.
+const documentInput = <T,>(value: T): T => structuredClone(unwrap(value))
 
 function unpack<Value>(reply: SfTransportResult<Port<Value>>): Result<Value> {
   if (reply.kind === "transport-error")
@@ -305,7 +308,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     if (!api || !permitted("files.document-open")) { setState("status", "unavailable"); return }
     const token = fence()
     setState({ selectedCandidateId: "", opened: undefined, status: "loading", busy: true })
-    const result = await api["files.document-open"]({ surface: state.surface, ref }, { signal: token.signal })
+    const result = await api["files.document-open"]({ surface: state.surface, ref: documentInput(ref) }, { signal: token.signal })
     const source = accept(token, unpack(result))
     if (!source || !current(token)) return
     setState({ opened: source, status: "ready", busy: false })
@@ -317,7 +320,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const token = fence()
     setState({ selectedCandidateId: candidate.id, opened: undefined, status: "loading", busy: true,
       preview: undefined, targets: [], selectedTarget: "" })
-    const result = await api["files.document-open"]({ surface: state.surface, ref: candidate.ref }, { signal: token.signal })
+    const result = await api["files.document-open"]({ surface: state.surface, ref: documentInput(candidate.ref) }, { signal: token.signal })
     const opened = accept(token, unpack(result))
     if (!opened || !current(token)) return
     setState({ opened, status: "ready", busy: false, phase: "candidates" })
@@ -353,7 +356,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const token = fence()
     setState({ busy: true, phase: "confirming", status: "loading" })
     const result = unpack(await api["files.document-confirm"]({
-      surface: state.surface, evidence: candidate,
+      surface: state.surface, evidence: documentInput(candidate),
     }, { signal: token.signal, idempotencyKey: crypto.randomUUID() }))
     if (!current(token)) return
     if (result.kind === "failure") { fail(result.state, true); return }
@@ -386,7 +389,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const token = fence()
     setState({ phase: "confirming", busy: true, status: "loading" })
     const result = unpack(await api["files.document-confirm"]({
-      surface: state.surface, action: "reject", evidence: candidate, reason, page,
+      surface: state.surface, action: "reject", evidence: documentInput(candidate), reason, page,
     }, { signal: token.signal, idempotencyKey: crypto.randomUUID() }))
     if (!current(token)) return
     if (result.kind === "failure") { fail(result.state, true); return }
@@ -413,12 +416,12 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
       preview: undefined, status: "loading", busy: true })
     if (!permitted("files.document-open")) { fail("unavailable"); return }
     const opened = accept(token, unpack(await api["files.document-open"]({
-      surface: state.surface, ref: candidate.ref,
+      surface: state.surface, ref: documentInput(candidate.ref),
     }, { signal: token.signal })))
     if (!opened || !current(token)) return
     setState("opened", opened)
     const result = await api["files.document-scenario-targets"]({
-      surface: state.surface, ref: candidate.ref,
+      surface: state.surface, ref: documentInput(candidate.ref),
     }, { signal: token.signal })
     const targets = accept(token, unpack(result))
     if (!targets || !current(token)) return
@@ -434,8 +437,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const token = fence()
     setState({ status: "loading", phase: "scenario", preview: undefined, busy: true })
     const result = unpack(await api["files.document-scenario-preview"]({
-      surface: state.surface, documentRef: candidate.ref,
-      baseRef: target.baseRef, targetRef: target.targetRef, period: target.period,
+      surface: state.surface, documentRef: documentInput(candidate.ref),
+      baseRef: target.baseRef, targetRef: target.targetRef, period: documentInput(target.period),
     }, { signal: token.signal }))
     if (!current(token)) return
     if (result.kind === "failure") { fail(result.state, true); return }
@@ -462,8 +465,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const token = fence()
     setState({ busy: true, status: "loading" })
     const result = unpack(await api["files.document-confirm"]({
-      surface: state.surface, action: "link", documentRef: candidate.ref,
-      baseRef: target.baseRef, targetRef: target.targetRef, period: target.period,
+      surface: state.surface, action: "link", documentRef: documentInput(candidate.ref),
+      baseRef: target.baseRef, targetRef: target.targetRef, period: documentInput(target.period),
     }, { signal: token.signal, idempotencyKey: crypto.randomUUID() }))
     if (!current(token)) return
     if (result.kind === "failure") { fail(result.state, true); return }
@@ -475,7 +478,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     }
     const receipt = result.value
     const refreshed = unpack(await api["files.document-scenario-targets"]({
-      surface: state.surface, ref: candidate.ref,
+      surface: state.surface, ref: documentInput(candidate.ref),
     }, { signal: token.signal }))
     if (!current(token)) return
     if (refreshed.kind === "failure") { fail(refreshed.state); return }
