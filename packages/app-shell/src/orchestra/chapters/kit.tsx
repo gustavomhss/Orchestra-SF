@@ -21,7 +21,9 @@ export function MxPage(props: {
               <div class="mx-eyebrow">{props.eyebrow}</div>
             </Show>
             <h1 id={`${props.id}-title`}>{props.title}</h1>
-            <p>{props.description}</p>
+            <Show when={props.description}>
+              <p>{props.description}</p>
+            </Show>
           </div>
           <Show when={props.action}>
             <div>{props.action}</div>

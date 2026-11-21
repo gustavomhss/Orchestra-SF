@@ -1,0 +1,34 @@
+.sf-u05-projects{display:grid;gap:1.1rem;min-width:0}
+.sf-u05-collection{display:grid;gap:1rem;min-width:0}
+.sf-u05-list,.sf-u05-new,.sf-u05-edit{min-width:0}
+.sf-u05-filters{display:flex;align-items:end;flex-wrap:wrap;gap:.75rem;margin:0 0 1rem}
+.sf-u05-filters label{min-width:9.5rem;flex:1;display:grid;gap:.3rem;font-size:.875rem}
+.sf-u05-filters input,.sf-u05-filters select,.sf-u05-field input,.sf-u05-field select,.sf-u05-field textarea{width:100%;min-height:2.45rem;border:1px solid var(--border,#757e9955);border-radius:.5rem;padding:.45rem .7rem;background:var(--surface,transparent);color:inherit}
+.sf-u05-filters input:focus-visible,.sf-u05-filters select:focus-visible,.sf-u05-field input:focus-visible,.sf-u05-field select:focus-visible,.sf-u05-field textarea:focus-visible{outline:2px solid var(--focus,#3881ec);outline-offset:1px}
+.sf-u05-editor{display:grid;gap:1rem;min-width:0}
+.sf-u05-editor fieldset,.sf-u05-milestone-editor fieldset{min-width:0;border:1px solid var(--border,#757e9955);border-radius:.75rem;padding:1rem;display:grid;gap:.75rem}
+.sf-u05-editor legend,.sf-u05-milestone-editor legend{font-weight:650;padding:0 .35rem}
+.sf-u05-editor-grid{display:grid;gap:.75rem;grid-template-columns:repeat(2,minmax(0,1fr))}
+.sf-u05-field{display:grid;gap:.25rem;min-width:0;font-size:.9rem}
+.sf-u05-field textarea{min-height:5rem;resize:vertical}
+.sf-u05-field:has(textarea){grid-column:1 / -1}
+.sf-u05-check{display:flex;gap:.5rem;align-items:center}
+.sf-u05-check input{width:1.2rem;height:1.2rem}
+.sf-u05-form-actions{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}
+.sf-u05-review{display:grid;gap:.5rem;border:1px solid var(--border,#757e9955);border-radius:.75rem;padding:1rem}
+.sf-u05-review h3,.sf-u05-edit h2,.sf-u05-new h2{margin:0;font-size:1.05rem}
+.sf-u05-notice{margin:0;padding:.65rem 1rem;border-inline-start:3px solid var(--focus,#3881ec)}
+.sf-u05-milestones{padding-inline-start:1.4rem;display:grid;gap:.75rem}
+.sf-u05-milestones li{overflow-wrap:anywhere}
+.sf-u05-milestones small{display:block;color:var(--text-muted,inherit);margin-top:.25rem}
+.sf-u05-milestone-editor{display:grid;gap:.5rem;margin-block:.65rem}
+.sf-u05-detail-fields{margin:0;display:grid;gap:.5rem;grid-template-columns:repeat(2,minmax(0,1fr))}
+.sf-u05-detail-fields div{min-width:0}
+.sf-u05-detail-fields dt{font-size:.82rem;color:var(--text-muted,inherit)}
+.sf-u05-detail-fields dd{margin:.3rem 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.sf-u05-num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.sf-u05-list-detail-placeholder{min-height:0}
+@media(max-width:1023px){.sf-u05-collection{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:767px){.sf-u05-editor-grid,.sf-u05-detail-fields{grid-template-columns:minmax(0,1fr)}.sf-u05-filters label{min-width:7.5rem}.sf-u05-editor fieldset{padding:.75rem}}
+@media(max-width:360px){.sf-u05-filters{display:grid}.sf-u05-filters label{min-width:0}}
+@media(prefers-reduced-motion:reduce){.sf-u05-projects *{scroll-behavior:auto}}

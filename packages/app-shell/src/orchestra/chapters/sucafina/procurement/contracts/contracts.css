@@ -1,0 +1,21 @@
+.sf-u15-layout { display:grid; grid-template-columns: minmax(19rem, .92fr) minmax(0, 1.08fr); gap: 1rem; width:100%; min-width:0; align-items:start; }
+.sf-u15-list, .sf-u15-detail { min-width:0; }
+.sf-u15-detail { border:1px solid var(--v2-border-weak, currentColor); border-radius:.75rem; padding:clamp(.75rem, 2vw, 1.4rem); }
+.sf-u15-detail-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.5rem; margin-bottom:1rem; }
+.sf-u15-detail-head h2 { font-size:1.15rem; overflow-wrap:anywhere; }
+.sf-u15-filters, .sf-u15-actions { display:flex; flex-wrap:wrap; gap:.6rem; margin:.65rem 0; }
+.sf-u15-filters input { flex:1 1 10rem; min-width:0; }
+.sf-u15-edit fieldset { border:0; padding:0; margin:0 0 1.1rem; min-width:0; }
+.sf-u15-edit legend,.sf-u15-read h3 { font-weight:650; padding:.35rem 0; }
+.sf-u15-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.75rem; }
+.sf-u15-field { min-width:0; display:flex; flex-direction:column; gap:.3rem; overflow-wrap:anywhere; }
+.sf-u15-field input,.sf-u15-field textarea,.sf-u15-field select,.sf-u15-filters input { width:100%; max-width:100%; min-width:0; padding:.55rem .65rem; background:var(--v2-surface-base,transparent); color:var(--v2-text-text-strong,inherit); border:1px solid var(--v2-border-weak,currentColor); border-radius:.45rem; }
+.sf-u15-read dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.4rem 1rem; }
+.sf-u15-read dl > div { min-width:0; overflow-wrap:anywhere; }
+.sf-u15-read dt { color:var(--v2-text-text-muted,inherit); font-size:.86rem; }
+.sf-u15-read dd { overflow-wrap:anywhere; }
+.sf-u15-read section { margin-bottom:1.1rem; }
+.sf-u15-notice { display:flex; flex-wrap:wrap; align-items:center; gap:.8rem; margin-top:1rem; overflow-wrap:anywhere; }
+@media (max-width: 64rem) { .sf-u15-layout { grid-template-columns:minmax(0,1fr); } }
+@media (max-width: 35rem) { .sf-u15-fields,.sf-u15-read dl { grid-template-columns:minmax(0,1fr); } .sf-u15-detail { padding:.75rem; } }
+@media (forced-colors: active) { .sf-u15-field input,.sf-u15-field select,.sf-u15-field textarea { border-color:CanvasText; } }

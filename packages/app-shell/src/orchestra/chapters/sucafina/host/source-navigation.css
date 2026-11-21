@@ -1,0 +1,6 @@
+/* Source navigation belongs to the installed F01 body, within the shell. */
+.sf-source-navigation { display:flex; flex-wrap:wrap; gap:.5rem; min-width:0; margin:1rem 0 }
+.sf-source-navigation a { display:flex; align-items:center; box-sizing:border-box; min-height:44px; min-width:0; max-width:100%; padding:.5rem .75rem; border:1px solid var(--border-subtle,currentColor); border-radius:8px; color:inherit; overflow-wrap:anywhere; text-decoration:none; font:inherit }
+.sf-source-navigation a[aria-current="page"] { font-weight:600; border-color:var(--border-default,currentColor); background:var(--background-secondary,transparent); text-decoration:underline; text-underline-offset:.2em }
+.sf-source-navigation a:focus-visible { outline:2px solid currentColor; outline-offset:2px }
+.sf-source-navigation a[aria-disabled="true"] { opacity:.65 }

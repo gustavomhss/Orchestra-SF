@@ -25,6 +25,8 @@ export type NativeFixtureSeed = {
 
 export function withNativeInstallation(input: {
   scanner?: { host: string; port: number }
+  webRoot?: string
+  serverPassword?: string
   seed: (seed: NativeFixtureSeed) => Promise<void>
 }) {
   return Effect.gen(function* () {
@@ -75,6 +77,8 @@ export function withNativeInstallation(input: {
         XDG_CONFIG_HOME: path.join(root, "host-config"),
         XDG_CACHE_HOME: path.join(root, "host-cache"),
         XDG_STATE_HOME: path.join(root, "host-state"),
+        ...(input.webRoot ? { ORCHESTRA_WEB_UI_DIR: input.webRoot } : {}),
+        ...(input.serverPassword ? { ORCHESTRA_SERVER_PASSWORD: input.serverPassword } : {}),
       },
     }))
     const ready = yield* Deferred.make<void>()
