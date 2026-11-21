@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import { readFile, writeFile, realpath } from "node:fs/promises"
 import path from "node:path"
 import { auditResidues, gitBlob, hash, parseCanonicalJson, readSource, readTarArchive, record, verifyGitSource } from "./team-profile-residue.mjs"
-import { original, verifyOriginalBytes, verifyProducer } from "./g09-581-package.mjs"
+import { original, verifyOriginalBytes, verifyProducer, verifyInstalledC17 } from "./g09-581-package.mjs"
 
 const [candidateArg, producerArg, evidenceRoot] = process.argv.slice(2)
 const env = process.env
@@ -17,7 +17,7 @@ const optional = async (name) => {
 async function audit() {
   assert.deepEqual([env.GITHUB_ACTIONS, env.GITHUB_REPOSITORY, Number(env.GITHUB_REPOSITORY_ID), env.RUNNER_OS,
     env.RUNNER_ARCH, env.GITHUB_REF],
-  ["true", original.repository, original.repositoryId, "Linux", "X64", "refs/heads/g09-bun-ledger"])
+  ["true", original.repository, original.repositoryId, "Linux", "X64", "refs/heads/g09-team-package"])
   const candidate = await realpath(candidateArg)
   const producer = await realpath(producerArg)
   const verified = verifyGitSource(await read("source.commit"), await read("source.tree"), original.sourceSHA)
@@ -45,12 +45,16 @@ async function audit() {
   assert.equal(gitBlob(catalogBytes), tool.entries.find((entry) => entry.path === "script/sf-ci/g09-581-catalog.json")?.oid)
   const producerSource = verifyGitSource(await read("producer.commit"), await read("producer.tree"), original.workflowSHA)
   const evidenceFiles = new Map()
-  for (const name of ["entra-native-http.mjs", "entra-native-provider.mjs"]) {
+  for (const name of ["entra-native-http.mjs", "entra-native-provider.mjs", "entra-team-c17.mjs"]) {
     const relative = ".github/ci/" + name
     const bytes = await readFile(path.join(producer, relative))
     assert.equal(gitBlob(bytes), producerSource.entries.find((entry) => entry.path === relative)?.oid)
     evidenceFiles.set(relative, record("source", relative, bytes))
   }
+  artifact.installedC17Sha256 = verifyInstalledC17({
+    receiptBytes: await read("c17-team-proof.json"), log: await read("c17-team-proof.log"),
+    spec: evidenceFiles.get(".github/ci/entra-team-c17.mjs"), source, artifact, archive: archiveFiles,
+  })
   const historical = {
     toolSource: tool, toolRecords, evidenceFiles,
     validatorSha256: hash(JSON.stringify(toolRecords.map((file) => [file.path, file.sha256]))),

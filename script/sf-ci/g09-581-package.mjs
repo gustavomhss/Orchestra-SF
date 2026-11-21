@@ -4,31 +4,31 @@ import { hash, parseCanonicalJson } from "./team-profile-residue.mjs"
 export const original = Object.freeze({
   repository: "gustavomhss/Orchestra-SF",
   repositoryId: 1455724710,
-  sourceSHA: "aff245e1aaf79a38548e50da6c8e7763d2e1ae01",
-  sourceTreeSHA: "bf92de86276f09b03595863d663ab82eb4e7f42d",
-  runId: 44924237467,
+  sourceSHA: "e32bd1186d966de218d49825aca00728d2e87175",
+  sourceTreeSHA: "7aa75b671a2d52cd01197bf6bbdf8eff70fa76c7",
+  runId: 44937176924,
   runAttempt: 1,
-  checkRunId: 136906703128,
+  checkRunId: 136946260313,
   workflowId: 417570814,
-  workflowSHA: "a4c4ec4a20bef465505aba3671b1e9c90f43f9f5",
-  artifactId: 14715072445,
-  containerDigest: "sha256:ec102a042d20e9145c6b7f917158859f193f62711f263fc45e76f216f80dc2e8",
+  workflowSHA: "47c0e101f3ce03edd58e5ca84fe88fec9f09e591",
+  artifactId: 14720407018,
+  containerDigest: "sha256:b94e62d50aec2a06422ee69c5fc8c319cd20be1f9ef0e66898a7fd6f9c92b15c",
   bun: "1.4.1",
   bunRevision: "1.4.1+4661e494f",
   bunArchiveSha256: "a8c9c6738202e2fced555dd860a953c56c0cd059f75041e7010ae81a32802646",
-  packedCliSha256: "91ffe736421c0a50c1593a53a58f5eabca2084e25b20123e256445f4a0aa5924",
-  ledgerSha256: "9abde0e89d51d297ceca7775261cd13335839241c9492312986816d66bf33d02",
-  webManifestSha256: "b7e591022af4fe8ae3c0554ec1b7308307cfcc43d244743030514c4db266598b",
+  packedCliSha256: "50156243867766b0db81c4a12091ed204b0046ac9d12b8cc97c7ec33b9ae882d",
+  ledgerSha256: "9d26d74340518aabfeaf49f71fffec576f4d4733ff000da9c22347f399b7a594",
+  webManifestSha256: "90138f95e16d81600bab0ba9c6f03e20f479b383370d0e63c467ead4ddcd7b07",
   tar: "orchestra-sf-entra-linux-x64-baseline.tar.gz",
-  tarSHA: "1032007345eb3e8584063fc2999ce3c7eafbf5bc3e4e77649b7827c9cf1c63a0",
-  manifestSHA: "61d33386367239b4336325291109bdc7c79dcd1ad86277ffe9cfce132511f894",
+  tarSHA: "04226af757d903dc496f6a5f5599864f325a278c5cf141216a5ce7a36bb3a9c1",
+  manifestSHA: "0d08fcbdc405c943e0a2942bc899cef215990fbd0fc5957cea5b287a32c72a9a",
 })
 
 export function verifyProducer(run, artifact) {
   assert.deepEqual([run.id, run.run_attempt, run.workflow_id, run.path, run.status, run.conclusion, run.event,
     run.head_sha, run.head_branch, run.repository.id, run.repository.full_name],
   [original.runId, original.runAttempt, original.workflowId, ".github/workflows/app-build.yml",
-    "completed", "success", "workflow_dispatch", original.workflowSHA, "c17-bun-proof",
+    "completed", "success", "workflow_dispatch", original.workflowSHA, "c17-team-proof",
     original.repositoryId, original.repository], "untrusted original package run")
   assert.deepEqual([artifact.id, artifact.name, artifact.digest, artifact.expired, artifact.workflow_run.id,
     artifact.workflow_run.repository_id, artifact.workflow_run.head_repository_id, artifact.workflow_run.head_sha],
@@ -95,4 +95,28 @@ export function verifyOriginalBytes({
     ciProofSha256: hash(proofBytes), memberCount: rows.size,
     compileEvidenceSha256, packedCliSha256, compileProvenanceSha256: hash(compileProvenanceBytes), webManifestSha256,
   }
+}
+
+export function verifyInstalledC17({ receiptBytes, log, spec, source, artifact, archive }) {
+  const receipt = parseCanonicalJson(receiptBytes, "installed C17 receipt")
+  assert.deepEqual([
+    receipt.schema, receipt.status, receipt.caseName, receipt.sourceSHA, receipt.sourceTreeSHA,
+    receipt.workflowSHA, receipt.runId, receipt.runAttempt, receipt.jobId, receipt.tarSha256,
+    receipt.binary?.path, receipt.binary?.sha256, receipt.factory?.path, receipt.factory?.sha256,
+    receipt.spec?.path, receipt.spec?.sha256, receipt.evidenceSha256,
+    receipt.syntheticEntra, receipt.teamDecisionsEnabled, receipt.beforeAtlas, receipt.prepared,
+    receipt.reload, receipt.replay, receipt.noTeam, receipt.crossTeam, receipt.revoked, receipt.promotion,
+  ], [
+    "sf-c17-installed-team-proof-v1", "pass",
+    "C17 CurrentChoice calculates and persists the recorded Planner scenario for the admitted Microsoft Team",
+    source.sha, source.tree, original.workflowSHA, String(original.runId), String(original.runAttempt),
+    String(original.checkRunId), original.tarSHA,
+    "bin/orchestra", artifact.packedCliSha256, "bin/local/entry.mjs",
+    archive.find((row) => row.path === "bin/local/entry.mjs")?.sha256,
+    spec.path, spec.sha256, hash(log),
+    true, true, 503, 200, 200, 200, 403, 403, 403, false,
+  ], "installed C17 proof is not bound to this tar and job")
+  assert(log.includes(Buffer.from("C17_TEAM_PACKAGE_OK")) && log.includes(Buffer.from("C17_TEAM_PREPARE_REPLAY_OK")),
+    "C17 markers missing from the producer log")
+  return hash(receiptBytes)
 }
