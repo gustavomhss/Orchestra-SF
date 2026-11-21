@@ -56,6 +56,7 @@
 .sf-u05-projects .sf-s01-row-open { font-size: var(--orchestra-font-size-md); font-weight: 600; }
 .sf-u05-projects .sf-s01-pagination { padding-inline: var(--sf-u05-gap); }
 .sf-u05-projects .sf-u05-status { display: inline-block; padding: var(--sf-u05-field-gap) var(--sf-u05-small-gap); border-radius: var(--orchestra-radius-sm); background: var(--mx-soft); font-size: var(--orchestra-font-size-sm); color: var(--mx-strong); }
+.sf-u05-projects .sf-u05-status { white-space: nowrap; overflow-wrap: normal; }
 .sf-u05-projects .sf-u05-status[data-risk="High"] { color: var(--orchestra-warm); }
 .sf-u05-projects .sf-u05-num { font-variant-numeric: tabular-nums; }
 .sf-u05-projects .sf-s01-record-detail { padding: var(--sf-u05-gap); border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg); background: var(--mx-raised); }

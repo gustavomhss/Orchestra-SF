@@ -57,3 +57,11 @@ The Portuguese action vocabulary was cross-checked against the maintained [Firef
 The journey uses role/label locators, explicit DOM contracts and awaited assertions as recommended in the [official Playwright locator documentation](https://github.com/microsoft/playwright/blob/main/docs/src/locators.md). Screenshots and geometry checks run only through Actions. The 320px view measures reflow, not browser zoom.
 
 Creating an unassigned member exposed an existing presentation validation mismatch: the optional leader select visibly defaults to its empty option while the draft may omit the key. Validation now compares an omitted optional select value to its declared empty option; it does not manufacture a leader, value, version or permission.
+
+## First real browser critique
+
+Run [44938725714](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44938725714), job 136950996592, produced actual native CAP06 dark/light/320px, CAP07 dark desktop and CAP09 dark desktop images. The source installation, owner and views were ready; page/console error lists were empty. Both journeys stopped on an ambiguous test locator shared by a named section and its named table scroller. The spec now targets the actual scroller explicitly.
+
+The viewed CAP06 metric band and CAP07 leadership surface show the intended native typography, hairline separation, aligned actions and quiet materials. CAP09 exposed a concrete defect: the shared table allowed status/risk words to break inside narrow chips. Both CAP09/CAP10 now keep these short labels unbroken; CAP09 also omits the empty row-command column because it never supplies row commands. Record opening remains available. A follow-up capture must verify this correction.
+
+Integration gates reported by the owner: [44938736472](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44938736472), job 136951027408, passed application types, E2E types, guards and palette parity. These gates are not visual approval.

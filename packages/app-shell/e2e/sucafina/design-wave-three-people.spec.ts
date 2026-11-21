@@ -58,6 +58,10 @@ waveThreeTest("native people design · reported headcount, structure, talent and
         await surface.locator('.sf-people-table-region[aria-label="Members"]').scrollIntoViewIfNeeded()
         await capture(page, info, "CAP07-light-320-members-test-data")
       }
+      if (screen.id === "CAP06") {
+        await surface.locator(".sf-people-table-region").scrollIntoViewIfNeeded()
+        await capture(page, info, "CAP06-light-320-leaders-test-data")
+      }
     }
   })
 
