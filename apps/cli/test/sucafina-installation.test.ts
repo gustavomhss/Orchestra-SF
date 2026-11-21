@@ -16,7 +16,7 @@ const fixture = fileURLToPath(new URL("./fixture/sucafina-installation.ts", impo
 const entry = fileURLToPath(new URL("../src/index.ts", import.meta.url))
 const it = testEffect(LayerNode.compile(AppProcess.node))
 
-function unfinishedPost(hostname: string, port: number, route: string, headers: string[]) {
+function unfinishedPost(hostname: string, port: number, route: string, headers: string[], contentLength?: number) {
   return new Promise<string>((resolve, reject) => {
     const socket = connect(port, hostname)
     socket.setTimeout(8_000, () => {
@@ -26,9 +26,12 @@ function unfinishedPost(hostname: string, port: number, route: string, headers: 
     socket.once("error", reject)
     socket.once("close", () => reject(new Error("Upload socket closed before returning the status line")))
     socket.once("connect", () => {
-      // Deliver a complete chunk but leave the request body open until the server answers.
+      // Leave the request body open until the server answers. A declared length needs no body bytes.
+      const framing = contentLength === undefined
+        ? ["Transfer-Encoding: chunked", "", "b", "first chunk", ""]
+        : [`Content-Length: ${contentLength}`, "", ""]
       socket.write([
-        `POST ${route} HTTP/1.1`, ...headers, "Transfer-Encoding: chunked", "", "b", "first chunk", "",
+        `POST ${route} HTTP/1.1`, ...headers, ...framing,
       ].join("\r\n"))
     })
     let response = ""
@@ -130,13 +133,16 @@ const serveInstallation = (trusted: boolean) => () =>
         const upload = (route: string, query: string) => dispatch(`/sucafina${route}?${query}`, {
           method: "POST", headers: { host, "x-sf-ingress-proof": proof }, body: attachment,
         })
+        const oversized = (route: string, query: string) => unfinishedPost(hostname, port, `/sucafina${route}?${query}`, [
+          `Host: ${host}`, `X-SF-Ingress-Proof: ${proof}`,
+        ], attachment.byteLength)
         for (const route of ["/dashboard", "/teams/44444444-4444-4444-8444-444444444444/dashboard"]) {
           const contract = await upload(route, "upload=contract")
           expect(contract.status).toBe(200)
           expect(await contract.json()).toBe(attachment.byteLength)
-          expect((await upload(route, "upload=contract&upload=contract")).status).toBe(413)
+          expect(await oversized(route, "upload=contract&upload=contract")).toMatch(/^HTTP\/1\.1 413 /)
         }
-        expect((await upload("/teams/not-a-team/dashboard", "upload=contract")).status).toBe(413)
+        expect(await oversized("/teams/not-a-team/dashboard", "upload=contract")).toMatch(/^HTTP\/1\.1 413 /)
         return
       }
       const base = await dispatch("/sucafina")
