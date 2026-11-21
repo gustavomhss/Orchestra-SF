@@ -1,0 +1,40 @@
+/* U02 only: consume shell theme tokens, never style the global sidebar. */
+.sf-u02-page { display:grid; gap:1rem; min-width:0; color:var(--text-primary,inherit) }
+.sf-u02-section { min-width:0; padding:clamp(1rem,2vw,1.5rem); border:1px solid var(--border-subtle,var(--border-color,currentColor)); border-radius:var(--radius-lg,12px); background:var(--surface-raised,var(--background-secondary,transparent)) }
+.sf-u02-section h2 { margin:0 0 1rem; font-size:1.12rem }
+.sf-u02-section h3 { margin:1.25rem 0 .5rem; font-size:1rem }
+.sf-u02-section p { max-width:80ch; overflow-wrap:anywhere; line-height:1.5 }
+.sf-u02-controls { display:flex; flex-wrap:wrap; align-items:end; gap:.75rem 1.25rem }
+.sf-u02-controls label { display:grid; gap:.35rem; min-width:9rem }
+.sf-u02-controls select, .sf-u02-editor input { font:inherit; min-height:44px; padding:.5rem .7rem; border:1px solid var(--border-default,currentColor); border-radius:8px; color:inherit; background:var(--background-primary,transparent) }
+.sf-u02-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr)); gap:.75rem; margin:0 }
+.sf-u02-four { grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr)) }
+.sf-u02-financial-metrics { grid-template-columns:repeat(3,minmax(0,1fr)) }
+.sf-u02-stats.sf-u02-people-metrics { grid-template-columns:repeat(4,minmax(0,1fr)); grid-auto-rows:1fr }
+.sf-u02-people-metrics .sf-u02-stat { min-height:100px; box-sizing:border-box }
+.sf-u02-benchmark { margin-top:.75rem }
+@media (max-width:1279px) { .sf-u02-stats.sf-u02-people-metrics { grid-template-columns:repeat(2,minmax(0,1fr)) } }
+.sf-u02-stat { display:flex; flex-direction:column; gap:.4rem; min-width:0; padding:1rem; background:var(--background-primary,transparent); border:1px solid var(--border-subtle,transparent); border-radius:10px }
+.sf-u02-stat dt { font-size:.83rem; opacity:.8; overflow-wrap:anywhere }
+.sf-u02-stat dd { margin:0; font-size:clamp(1.22rem,2vw,1.65rem); font-variant-numeric:tabular-nums; overflow-wrap:anywhere }
+.sf-u02-table-scroll { max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch }
+.sf-u02-table-scroll table { width:100%; border-collapse:collapse; text-align:start; font-variant-numeric:tabular-nums }
+.sf-u02-table-scroll caption { text-align:start; margin-block:.4rem .7rem; font-weight:600 }
+.sf-u02-table-scroll th,.sf-u02-table-scroll td { padding:.75rem; border-bottom:1px solid var(--border-subtle,currentColor); vertical-align:top; overflow-wrap:anywhere }
+.sf-u02-table-scroll td:not(:first-child) { text-align:end }
+.sf-u02-table-scroll th { text-align:start }
+.sf-u02-edit-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:1rem }
+.sf-u02-editor { min-width:0 }
+.sf-u02-editor label { display:grid; gap:.4rem; margin-block:.65rem }
+.sf-u02-editor button { margin:.35rem .35rem .35rem 0; min-height:44px }
+.sf-u02-editor [role=alert] { overflow-wrap:anywhere; padding:.6rem; border-left:3px solid var(--border-default,currentColor) }
+.sf-u02-table-scroll button { min-height:40px }
+@media (max-width:767px) {
+ .sf-u02-section { padding:1rem }
+ .sf-u02-controls { flex-direction:column; align-items:stretch }
+ .sf-u02-controls label { min-width:0 }
+ .sf-u02-stats { grid-template-columns:repeat(2,minmax(0,1fr)) }
+ .sf-u02-stat { padding:.7rem }
+ .sf-u02-table-scroll { border:1px solid var(--border-subtle,currentColor) }
+}
+@media (max-width:360px) { .sf-u02-stats { grid-template-columns:1fr } }
