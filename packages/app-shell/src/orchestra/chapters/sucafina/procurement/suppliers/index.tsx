@@ -10,6 +10,7 @@ import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable } from "../../shared/table"
 import { SfRecordDetail } from "../../shared/detail"
+import { SfBoundAssets } from "../../shared/attachments/bound-assets"
 import { SfChangeReview } from "../../shared/change-review"
 import {
   createSfProcurementClient, exportSfSupplierCsv, sfSupplierCsvBindingInstalled,
@@ -52,6 +53,18 @@ const value = (item: unknown): SfDisplayValue => {
 }
 const display = (item: unknown) => typeof item === "string" ? item : item == null ? "" : String(item)
 const fieldKey = (field: string) => k(("sf.u14.field." + field) as SfU14CopyKey)
+/** Detach the reviewed edit from the store and omit absent properties before the JSON codec. */
+function supplierCommandSnapshot(edit: SupplierEdit): SupplierEdit {
+  function copy(value: unknown): unknown {
+    if (Array.isArray(value)) return value.map(copy)
+    if (value === null || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) return value
+    return Object.fromEntries(Object.entries(value)
+      .filter(([, field]) => field !== undefined)
+      .map(([key, field]) => [key, copy(field)]))
+  }
+  return copy(edit) as SupplierEdit
+}
+
 const bankSet = new Set<string>(bankFields)
 const active = (phase: Phase) => phase === "reviewing" || phase === "checking" || phase === "submitting" || phase === "verifying" || phase === "outcome-unknown"
 
@@ -439,7 +452,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
          !!draftState.conflict || (action === "change-bank" && Object.keys(draftState.value).length === 0))) return
     const requested: SupplierEdit =
       action === "create" || action === "save" || action === "change-bank"
-        ? draftValue() : {}
+        ? supplierCommandSnapshot(draftValue()) : {}
     if ((action === "create" || action === "save") && !requested.legalName?.trim()) {
       setUi("error", "invalid")
       return
@@ -532,11 +545,12 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       sending = false
       return
     }
+    const editsDraft = intent.action === "create" || intent.action === "save" || intent.action === "change-bank"
     const opRef = crypto.randomUUID() as SfOperationRef
     const idempotencyKey = crypto.randomUUID()
-    const requestBody = { page: "Suppliers", action: intent.action, id: intent.ref ?? undefined,
-      version: intent.version,
-      values: ["create","save","change-bank"].includes(intent.action) ? { supplier: intent.value } : {} }
+    const record = { page: "Suppliers" as const, ...(intent.ref === null ? {} : { id: intent.ref }), version: intent.version }
+    const supplierValues = { supplier: supplierCommandSnapshot(intent.value) }
+    const requestBody = { ...record, action: intent.action, values: editsDraft ? supplierValues : {} }
     let payloadDigest: string
     try {
       const bytes = new Uint8Array(await crypto.subtle.digest(
@@ -551,7 +565,6 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     }
     if (controller.signal.aborted || token !== authority()) { sending = false; return }
     // A status action never consumes the general or privileged bank draft.
-    const editsDraft = intent.action === "create" || intent.action === "save" || intent.action === "change-bank"
     if (editsDraft) {
       controllerDraft?.setPending({operationRef:opRef,idempotencyKey,payloadDigest,
         expectedVersion:intent.ref ? intent.version : null})
@@ -561,14 +574,13 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     try {
       const client = createSfProcurementClient(host.ready()!.transport)
       const options = { signal: controller.signal, idempotencyKey }
-      const record = { page:"Suppliers" as const, id:intent.ref ?? undefined,version:intent.version }
       const response =
         intent.action === "create"
-          ? await client["domain.command.CAP27.create"]({ ...record, action:"create", values: {supplier:intent.value} }, options)
+          ? await client["domain.command.CAP27.create"]({ ...record, action:"create", values: supplierValues }, options)
         : intent.action === "save"
-          ? await client["domain.command.CAP27.save"]({ ...record, action:"save", values: {supplier:intent.value} }, options)
+          ? await client["domain.command.CAP27.save"]({ ...record, action:"save", values: supplierValues }, options)
         : intent.action === "change-bank"
-          ? await client["domain.command.CAP27.change-bank"]({ ...record, action:"change-bank", values: {supplier:intent.value} }, options)
+          ? await client["domain.command.CAP27.change-bank"]({ ...record, action:"change-bank", values: supplierValues }, options)
         : intent.action === "activate"
           ? await client["domain.command.CAP27.activate"]({ ...record, action:"activate", values:{} }, options)
         : intent.action === "block"
@@ -734,7 +746,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       return <SfStatePanel state="not-found" messageKey={k("sf.u14.notFound")} />
     const linked = linkedRequests(current,selected.id)
     const id = selected.id
-    return <div class="sf-u14-detail">
+    return <div class="sf-u14-detail" data-sf-supplier-ref={id} data-source-version={version() ?? undefined}>
       <SfRecordDetail
         title={data(selected.legalName ?? selected.number ?? id)}
         secondaryId={data(selected.number ?? id)}
@@ -789,6 +801,14 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
         onBack={()=>setUi("selected",null)}
         onOpenPage={()=>setUi("mode","detail")}
       />
+      <Show when={version() !== null && supplier()?.id === id && supplier()?.attachments !== undefined}>
+        <SfBoundAssets surface="procurement" page="Suppliers" recordRef={id} recordVersion={version()!}
+          uploadKind={can("activate") ? "supplier" : undefined} assets={supplier()?.attachments ?? []}
+          disabled={active(ui.phase) || ui.state !== "ready"} onReconcile={() => {
+            const token = authority()
+            if (token && ref() === id) void refresh(token, id)
+          }} />
+      </Show>
       <p class="sf-u14-hint">{t("sf.u14.activationCaution")}</p>
       <Show when={linked.length && selected.status === "pending"}>
         <p role="status">{t("sf.u14.linkedNotice")}</p>
@@ -879,7 +899,11 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
               sort={ui.sort} page={{kind:"none",total:rows().length}}
               onSort={(sort) => setUi("sort",sort)}
               onPage={()=>{}}
-              onSelect={(selection) => {setUi("selected",selection);setUi("mode","detail")}}
+              onSelect={(selection) => {
+                setUi("selected", selection); setUi("mode", "detail")
+                const token = authority()
+                if (token && ref() === selection) void refresh(token, selection)
+              }}
               rowActions={(row) => can("save") && row.id ? [{
                 id:"edit",labelKey:k("sf.u14.save"),tone:"secondary",disabled:active(ui.phase),busy:false,
               }] : []}
