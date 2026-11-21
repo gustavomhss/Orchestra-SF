@@ -172,7 +172,8 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         (prior.payload === payload || fingerprint !== undefined && prior.fingerprint === fingerprint && prior.payloadUnits === payload.length)) {
       const materialize = () => materializeSnapshot(prior, payload)
       const acl = prior.acl
-      return { materialize, copy: materialize, bytesIdentity: prior.identity,
+      return { materialize, bytesIdentity: prior.identity,
+        ...(prior.fingerprint ? {} : { copy: materialize }),
         ...(acl === undefined ? {} : { copyAcl: () => aclCodecCurrent() ? decodeSnapshot(acl).data : undefined }) }
     }
     materializations.delete(surface)
@@ -191,8 +192,8 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       }
       materializations.set(surface, plan)
     }
-    return { materialize: () => snapshot,
-      ...(plan ? { freshPlan: { units: plan.units, copy: () => materializeSnapshot(plan, payload) }, bytesIdentity: plan.identity } : {}),
+    return { materialize: () => snapshot, bytesIdentity: plan?.identity,
+      ...(plan && !plan.fingerprint ? { freshPlan: { units: plan.units, copy: () => materializeSnapshot(plan, payload) } } : {}),
     }
   }
   const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
@@ -1046,8 +1047,8 @@ export function encodeSnapshot(snapshot: Snapshot): string {
 // A plan without room for a copy uses the original decoder. A larger SQL
 // value can retain a SHA-256 fingerprint and its small ACL representation
 // without retaining the value itself. Each root hashes its own observed bytes.
-// Active roots can hold their observed SQL rows until their detached readers
-// finish. The shared memo never retains an oversized SQL value itself.
+// Never retain an oversized SQL value in the memo or in a root copy plan.
+// Active roots use the original decoder and independently detach their copies.
 // No persisted format or acceptance limit changes.
 const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024
 const snapshotAclFields = ["roleMap", "access"] as const
