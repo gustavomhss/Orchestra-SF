@@ -258,7 +258,8 @@ export function protectSfReviewReads(input: {
       const dependencyPin = captureDependencies?.()
       if (captureDependencies && !dependencyPin) return undefined
       const binding = digestSfValue([call.kind, call.binding])
-      return () => sameCall(scope, call, binding) && (!dependencyPin || dependencyPin())
+      const current = () => sameCall(scope, call, binding) && (!dependencyPin || dependencyPin())
+      return { current, delegated: () => current() && scope.delegated.get(call)?.has(id) === true }
     },
     prepareRevalidation: (id: string, digest: string, call: TrustedDomainContext) => {
       const scope = execution.getStore()

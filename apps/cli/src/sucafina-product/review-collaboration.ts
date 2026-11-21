@@ -183,7 +183,11 @@ export function createSfReviewCollaboration(input: {
     selected.set(key(pin, basis, call), lease); leases.set(call, selected)
     return { status: "ok", value: lease }
   }
-  const observePinnedContext = async (pin: ReviewThreadContext, basis: ThreadSourceContext, call: TrustedDomainContext, requireFingerprint = false, leg?: { complete: () => Promise<boolean>; coldCurrent?: () => boolean }) => {
+  const observePinnedContext = async (pin: ReviewThreadContext, basis: ThreadSourceContext, call: TrustedDomainContext, requireFingerprint = false, leg?: {
+    complete: () => Promise<boolean>
+    cold?: { current: () => boolean; delegated: () => boolean }
+    ineligible?: boolean
+  }) => {
     const requestFor = host.requestFor
     const revalidate = host.revalidate
     const request = requestFor.call(host, call)
@@ -202,9 +206,9 @@ export function createSfReviewCollaboration(input: {
       reviews.read === readReview && requestFor.call(host, call) === request && !request.signal.aborted &&
       digestSfValue([call.kind, call.binding]) === binding && persistence.dashboardSourceFence === atomic &&
       hasSfDashboardSourceFence(persistence) && atomic.readSealed === seal && atomic.transaction === transaction &&
-      atomic.holdTargetPreimage === preimage && (!leg?.coldCurrent || leg.coldCurrent())
+      atomic.holdTargetPreimage === preimage && (!leg?.cold || leg.cold.current())
     const ready = prepare.call(readScope, pin.reviewRef, pin.reviewDigest, call)
-    if (!ready && !leg?.coldCurrent) return requireFingerprint ? denied : readContext.call(contexts, pin, basis, call)
+    if (!ready && !leg?.cold) return requireFingerprint ? denied : readContext.call(contexts, pin, basis, call)
     // The canonical cold read may materialize source metadata. Observe it
     // outside the seal and hand its detached result to the pair exactly once.
     const initial = !ready && await (async () => {
@@ -214,7 +218,12 @@ export function createSfReviewCollaboration(input: {
     })()
     if (initial && initial.status !== "ok") return initial
     const strict = ready ?? prepare.call(readScope, pin.reviewRef, pin.reviewDigest, call)
-    if (!strict || !current()) return denied
+    if (!strict || !current()) {
+      // An independently authenticated producer may mark a review outside
+      // its optimized shape. Keep those reviews on the original route.
+      if (!strict && initial && initial.status === "ok" && leg?.cold?.delegated()) leg.ineligible = true
+      return denied
+    }
     let first = initial || undefined
     const completionFailure: { error?: unknown } = {}
     const paired = await readContext.call(contexts, pin, basis, call, (run) =>
@@ -281,11 +290,13 @@ export function createSfReviewCollaboration(input: {
     if (!readerCurrent || !readScope || !prepareRevalidation ||
       !hasSfDashboardSourceFence(persistence) || hasActiveSfSnapshot(persistence)) return undefined
     const existing = prepareRevalidation.call(readScope, pin.reviewRef, pin.reviewDigest, call)
-    const coldCurrent = !existing ? prepareCold?.call(readScope, pin.reviewRef, call) : undefined
-    if (!existing && !coldCurrent) return undefined
+    const cold = !existing ? prepareCold?.call(readScope, pin.reviewRef, call) : undefined
+    if (!existing && !cold) return undefined
     const current = () => sameProducer() && host.persistence === persistence && host.requestFor === requestFor &&
       host.revalidate === revalidate && requestFor.call(host, call) === request && !request.signal.aborted
-    const found = await observePinnedContext(pin, basis, call, true, { complete, coldCurrent })
+    const leg = { complete, cold, ineligible: false }
+    const found = await observePinnedContext(pin, basis, call, true, leg)
+    if (leg.ineligible && current()) return undefined
     return found.status === "ok" && current() && await revalidate.call(host, call) && current()
   }
   const recipientLeases = new WeakMap<TrustedDomainContext, Map<string, RecipientLease>>()
