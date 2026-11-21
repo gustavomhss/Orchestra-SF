@@ -23,6 +23,8 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     if (url.pathname.endsWith("/api/ui/projections/search")) {
       searchRequests.push({ method: request.method(), url: request.url(), body: request.postData() })
     }
+    if (request.method() === "POST" && url.searchParams.get("sf") === "collaboration-work-destination")
+      console.info("SF_DESIGN_WORK_DESTINATION_REQUEST " + JSON.stringify({ method: request.method(), operation: "collaboration.work-destination" }))
     if (request.method() === "POST" && url.searchParams.get("sf") === "workbench-views") {
       const body: unknown = request.postDataJSON()
       if (body && typeof body === "object" && "action" in body && (body.action === "save" || body.action === "remove"))
@@ -66,7 +68,16 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     await expect(details.locator("[data-sf-work-owner-ref]")).toHaveAttribute("data-sf-work-owner-ref", seeded.ownerRef)
     await expect(details.locator("[data-sf-work-source-version]")).toHaveText(String(seeded.sourceVersion))
     await expect(surface.locator(".sf-work-list")).toBeHidden()
+    const destinationReply = page.waitForResponse((response) =>
+      response.request().method() === "POST" &&
+      new URL(response.url()).pathname === installation.mount + "/dashboard" &&
+      new URL(response.url()).searchParams.get("sf") === "collaboration-work-destination",
+      { timeout: 40_000 }).then((response) => ({ status: response.status(), contentType: response.headers()["content-type"] }))
     await details.getByRole("button", { name: "Check current destination", exact: true }).click()
+    const checkedDestination = await destinationReply
+    console.info("SF_DESIGN_WORK_DESTINATION " + JSON.stringify(checkedDestination))
+    expect(checkedDestination.status).toBe(200)
+    expect(checkedDestination.contentType).toContain("application/json")
     await expect(details.getByRole("button", { name: "Open current source", exact: true })).toBeVisible()
     await scrollPageTop(page)
     await capture(page, info, "UI30-dark-desktop-authorized-detail")
@@ -188,7 +199,7 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     await reflow(page)
     await reviewActions(page)
     await capture(page, info, "UI32-light-320-existing-view-review-actions")
-    await review.getByRole("button", { name: "Cancel", exact: true }).click()
+    await review.getByRole("button", { name: "Cancel review", exact: true }).click()
     await expect(editor.getByLabel("Name", { exact: true })).toHaveValue(revised)
     await editor.getByRole("button", { name: "Review view changes", exact: true }).click()
     await review.getByRole("button", { name: "Confirm save", exact: true }).click()
@@ -211,7 +222,7 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     await editor.getByRole("button", { name: "Remove saved view", exact: true }).click()
     await expect(review.getByRole("button", { name: "Confirm removal", exact: true })).toBeVisible()
     await capture(page, info, "UI32-light-desktop-removal-review")
-    await review.getByRole("button", { name: "Cancel", exact: true }).click()
+    await review.getByRole("button", { name: "Cancel review", exact: true }).click()
     expect(writes).toEqual(["save"])
     await enter(page, owner, new URL("/orchestra/sf-work/views/new", installation.origin).href, "Saved views")
     await expect(surface.getByText("Native views and preferred entry are not available until the V2 producer is installed and admitted.", { exact: true })).toBeVisible()
