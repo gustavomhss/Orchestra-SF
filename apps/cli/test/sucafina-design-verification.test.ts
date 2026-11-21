@@ -9,9 +9,9 @@ import { testEffect } from "@orchestra/core/test/lib/effect"
 import { Effect } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 
-const app = path.resolve(import.meta.dir, "../..")
-const repository = path.resolve(app, "../..")
-const generated = path.join(import.meta.dir, "palette/generated")
+const repository = path.resolve(import.meta.dir, "../../..")
+const app = path.join(repository, "packages/app-shell")
+const generated = path.join(app, "src/orchestra/palette/generated")
 const dev = "b5297b938735eab8ae37a686f01015f37c727724"
 const checks = testEffect(LayerNode.compile(AppProcess.node))
 
