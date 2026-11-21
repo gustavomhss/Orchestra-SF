@@ -6,7 +6,7 @@ import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { testEffect } from "@orchestra/core/test/lib/effect"
 import { Document, Packer, Paragraph } from "docx"
 import { Effect } from "effect"
-import { uploadAsset } from "../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
+import { uploadAsset, type AssetPersistence } from "../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
 import { object } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { scanLocalFile } from "../../../modules/sucafina/Sucafinav1/runtime/local-scanner.ts"
 import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
@@ -77,7 +77,8 @@ it.live.skipIf(process.platform === "win32")(
     const installed = yield* withNativeInstallation({
       scanner: scanner.endpoint,
       seed: async ({ actorId, keys, store }) => {
-        const staged = await store.transaction("procurement", async (snapshot, blobs) => {
+        const assets: AssetPersistence = store
+        const staged = await assets.transaction("procurement", async (snapshot, blobs) => {
           snapshot.data.store = { suppliers: [{ id: supplierId, name: "Documents proof supplier" }], settings: { uploadCap: 100_000 } }
           const uploaded = await uploadAsset(
             snapshot, blobs,

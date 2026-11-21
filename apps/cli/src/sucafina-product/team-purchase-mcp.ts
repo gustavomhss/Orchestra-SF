@@ -8,6 +8,7 @@ import { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav
 import { enumerateSfSources } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
 import { createSfSourcePersistence } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { projectSfProcurementScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts"
+import type { AssetPersistence } from "../../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
 import type { LocalIdentity, LocalStore } from "../../../../modules/sucafina/Sucafinav1/runtime/local-contract.ts"
 import { openLocalStore } from "../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import type { MicrosoftConfiguration } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts"
@@ -138,10 +139,11 @@ function purchaseRuntime(input: {
   const identity = Object.freeze({ installationId: input.partition, projectId: input.partition,
     hostId: digestSfValue({ partition: input.partition, capability: "purchase-mcp" }),
     location: sfNativeLocationRef({ directory: AbsolutePath.make(input.directory) }) })
+  const assets: AssetPersistence = input.store
   const persistence = createSfSourcePersistence({
     persistence: {
       ...input.store,
-      transaction: (surface, work, options) => input.store.transaction(surface, async (snapshot, blobs) => {
+      transaction: (surface, work, options) => assets.transaction(surface, async (snapshot, blobs) => {
         const result = await work(snapshot, blobs)
         // Only scoped source observations can write, and only under the live pairing.
         if (result.commit && !await input.current()) throw new Error("Purchase MCP authority changed")
