@@ -45,44 +45,71 @@ const lockBytes = source("bun.lock")
 assert.equal(sha(lockBytes), fixture.lockfileSha256)
 const lock = jsonc("bun.lock", lockBytes)
 const packageConfig = new Map()
+const gitConfigs = new Map()
+const decode = new TextDecoder("utf-8", { fatal: true })
 
-async function targetBytes(row) {
-  const target = row.target
-  if (target.kind === "git-tree-blob") {
-    const resolved = path.posix.normalize(path.posix.join(path.posix.dirname(row.sourcePath), row.extends))
-    assert.equal(resolved, target.path)
-    const contents = source(resolved)
-    assert.equal(git("rev-parse", fixture.sourceSHA + ":" + resolved).toString().trim(), target.gitBlob)
-    return contents
+function gitConfig(file) {
+  assert(file && !file.startsWith("/") && !file.split("/").some((part) => part === ".." || part === "node_modules"))
+  if (!gitConfigs.has(file)) {
+    const raw = source(file)
+    gitConfigs.set(file, { parsed: jsonc(file, raw), hash: sha(raw),
+      blob: git("rev-parse", fixture.sourceSHA + ":" + file).toString().trim() })
   }
-  assert.equal(target.kind, "lock-sri-tar-member")
-  const dependency = row.extends.match(/^@tsconfig\/(bun|node22)\/tsconfig\.json$/)?.[1]
-  assert(dependency)
-  const name = "@tsconfig/" + dependency
-  assert.deepEqual(lock.packages[name].filter((field) => typeof field === "string").filter(Boolean),
-    [name + "@" + target.version, target.packageIntegrity])
-  const expectedUrl = `https://registry.npmjs.org/${name}/-/${dependency}-${target.version}.tgz`
-  assert.equal(target.source, expectedUrl)
-  assert.equal(target.member, "package/tsconfig.json")
-  if (!packageConfig.has(expectedUrl)) {
-    const response = await fetch(expectedUrl, { redirect: "error", signal: AbortSignal.timeout(12_000) })
+  return gitConfigs.get(file)
+}
+
+async function packageTarget(inherited) {
+  const module = inherited.match(/^@tsconfig\/(bun|node22)\/tsconfig\.json$/)?.[1]
+  assert(module, "unverified package config: " + inherited)
+  const name = "@tsconfig/" + module
+  const [specifier, packageIntegrity] = lock.packages[name].filter((field) => typeof field === "string").filter(Boolean)
+  assert(specifier.startsWith(name + "@") && /^sha512-[A-Za-z0-9+/=]+$/.test(packageIntegrity))
+  const version = specifier.slice(name.length + 1)
+  assert(/^\d+\.\d+\.\d+$/.test(version))
+  if (!packageConfig.has(name)) {
+    const url = `https://registry.npmjs.org/${name}/-/${module}-${version}.tgz`
+    const response = await fetch(url, { redirect: "error", signal: AbortSignal.timeout(12_000) })
     assert(response.ok)
     const tar = Buffer.from(await response.arrayBuffer())
     assert(tar.length < 250_000)
-    assert.equal("sha512-" + createHash("sha512").update(tar).digest("base64"), target.packageIntegrity)
-    const member = execFileSync("tar", ["-xzOf", "-", target.member], { input: tar, maxBuffer: 250_000 })
-    packageConfig.set(expectedUrl, member)
+    assert.equal("sha512-" + createHash("sha512").update(tar).digest("base64"), packageIntegrity)
+    const member = "package/tsconfig.json"
+    const bytes = execFileSync("tar", ["-xzOf", "-", member], { input: tar, maxBuffer: 250_000 })
+    assert.equal(jsonc(member, bytes).extends, undefined, "unverified inherited package config")
+    packageConfig.set(name, { kind: "lock-sri-tar-member", version, source: url, packageIntegrity, member, sha256: sha(bytes) })
   }
-  return packageConfig.get(expectedUrl)
+  return packageConfig.get(name)
+}
+
+async function traceConfig(file) {
+  const seen = new Set()
+  const edges = []
+  for (;;) {
+    assert(!seen.has(file), "inheritance cycle")
+    seen.add(file)
+    const { parsed, hash } = gitConfig(file)
+    const inherited = parsed.extends
+    if (inherited === undefined) break
+    assert(typeof inherited === "string")
+    if (!inherited.startsWith(".")) {
+      edges.push({ sourcePath: file, sourceSha256: hash, target: await packageTarget(inherited) })
+      break
+    }
+    const relative = path.posix.normalize(path.posix.join(path.posix.dirname(file), inherited))
+    const parent = gitConfig(relative)
+    edges.push({ sourcePath: file, sourceSha256: hash,
+      target: { kind: "git-tree-blob", path: relative, gitBlob: parent.blob, sha256: parent.hash } })
+    file = relative
+  }
+  return edges
 }
 
 assert.equal(fixture.tsconfig.length, 50)
 const originalPaths = git("ls-tree", "-r", "-z", "--name-only", fixture.sourceSHA).toString().split("\0")
 const configPattern = /(^|\/)tsconfig(?:\.[^/]+)?\.json$/
 const actual = new Map(originalPaths.filter((file) => configPattern.test(file)).flatMap((file) => {
-  const raw = source(file)
-  const { extends: inherited } = jsonc(file, raw)
-  return inherited === undefined ? [] : [[file, { inherited, hash: sha(raw) }]]
+  const { parsed, hash } = gitConfig(file)
+  return parsed.extends === undefined ? [] : [[file, { inherited: parsed.extends, hash }]]
 }))
 assert.equal(actual.size, fixture.tsconfig.length)
 const rowsByPath = new Map(fixture.tsconfig.map((row) => [row.sourcePath, row]))
@@ -94,17 +121,9 @@ for (const [name, observed] of actual) {
   const id = digest({ kind: "tsconfig-extends-requires-review", domain: "source", path: name,
     fileSha256: observed.hash, extends: observed.inherited })
   assert.equal(id, row.findingId)
-  const seen = new Set()
-  for (let link = row; link; link = rowsByPath.get(link.target.path)) {
-    assert(!seen.has(link.findingId), "inheritance cycle")
-    seen.add(link.findingId)
-  }
-  const parent = await targetBytes(row)
-  assert.equal(sha(parent), row.target.sha256, name)
-  const parentConfig = jsonc(row.target.member ?? row.target.path, parent)
-  if (parentConfig.extends !== undefined)
-    assert.equal(rowsByPath.get(row.target.path)?.extends, parentConfig.extends, "unverified parent inheritance")
-  configResults.push({ id, sourcePath: name, targetSha256: row.target.sha256, resolution: "verified",
+  const chain = await traceConfig(name)
+  assert.deepEqual(chain[0]?.target, row.target, name)
+  configResults.push({ id, sourcePath: name, chain, resolution: "verified",
     buildSelection: name === "apps/cli/tsconfig.json" ? "observed-in-original-cli-build" : "not-observed" })
 }
 assert(!read("tar-members.txt").toString().split("\n").some((file) => configPattern.test(file)))
@@ -177,9 +196,9 @@ for (const row of fixture.solid) {
   assert.equal(chunk.subarray(offset, offset + row.length).toString(), row.seed)
   assert.equal(digest({ domain: "archive", path: "bin/orchestra", fileSha256: fixture.elfSha256, byteOffset: row.elfOffset,
     byteLength: row.length, seed: row.seed, encoding: "utf8" }), row.id)
-  const text = chunk.toString("latin1")
-  assert.equal(identifierAt(row.module, text, offset, ts.ScriptKind.JS), row.seed)
-  const prior = text.slice(0, offset)
+  const text = decode.decode(chunk)
+  const prior = decode.decode(chunk.subarray(0, offset))
+  assert.equal(identifierAt(row.module, text, prior.length, ts.ScriptKind.JS), row.seed)
   const line = prior.split("\n").length - 1
   const column = prior.length - prior.lastIndexOf("\n") - 1
   assert.deepEqual([line, column], [row.start.generatedLine, row.start.generatedStartColumn])
