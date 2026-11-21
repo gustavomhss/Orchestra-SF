@@ -79,6 +79,11 @@ export async function loadSfInstallation(
     await installation.dispose()
     throw new Error("Native installation Web requires trusted ingress, installed discovery and a built Web bundle")
   }
+  if (nativeWeb && ["/orchestra", "/assets", "/brand/sucafina"].some((prefix) =>
+    installation.mount === prefix || installation.mount.startsWith(prefix + "/") || prefix.startsWith(installation.mount + "/"))) {
+    await installation.dispose()
+    throw new Error("Installation mount overlaps the native Web bundle")
+  }
   const hostContributions = runtime && !ingress ? installation.host : undefined
   if (hostContributions !== undefined && (!Array.isArray(hostContributions) ||
     hostContributions.some((contribution) => !contribution || typeof contribution.id !== "string" || !contribution.id.trim()))) {
