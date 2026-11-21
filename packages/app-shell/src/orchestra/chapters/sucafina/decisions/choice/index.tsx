@@ -75,6 +75,10 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
       clearPrivate(currentState())
       return
     }
+    if (!sfOperationReady(ready.context, "decisions.choice.read")) {
+      clearPrivate("unavailable")
+      return
+    }
     readAbort?.abort()
     const controller = new AbortController()
     readAbort = controller

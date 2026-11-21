@@ -92,7 +92,11 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
       choicesState: active ? "loading" : blocked ?? "unavailable",
       choiceReview: undefined, reviewState: blocked ?? "empty",
     })
-    if (!active || !current || !sfOperationReady(active.context, "decisions.choice.read")) return
+    if (!active || !current) return
+    if (!sfOperationReady(active.context, "decisions.choice.read")) {
+      setUi("choicesState", "unavailable")
+      return
+    }
     const abort = new AbortController()
     onCleanup(() => abort.abort())
     void createSfDecisionsClient(active.transport)["decisions.choice.read"](

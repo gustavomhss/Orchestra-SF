@@ -29,8 +29,10 @@ function observeDecisionReads(page: Page) {
   const completed: { operation: string; elapsedMs: number; status: number | "failed" }[] = []
   page.on("request", (request) => {
     const mode = new URL(request.url()).searchParams.get("sf")
-    if (request.method() === "GET" && mode === "current-choice")
+    if (request.method() === "GET" && mode === "current-choice") {
       pending.set(request, { operation: mode, started: performance.now() })
+      console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-read-start", operation: mode }))
+    }
   })
   page.on("response", (response) => {
     const read = pending.get(response.request())
@@ -49,6 +51,30 @@ function observeDecisionReads(page: Page) {
     console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-read", ...value }))
   })
   return completed
+}
+async function observeAvailability(page: Page, owner: Owner) {
+  const query = new URLSearchParams({
+    installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId,
+  })
+  const response = await page.request.get(owner.publicOrigin + owner.mount + "/api/ui/context?" + query)
+  expect(response.status()).toBe(200)
+  const body = object(await response.json())
+  expect(body.status).toBe("ok")
+  const resources = object(body.value).availability
+  expect(Array.isArray(resources)).toBe(true)
+  const ids = ["decisions.choice.read", "decisions.command.sf_question_prepare",
+    "intelligence.analysis.choices", "intelligence.analysis.list", "intelligence.analysis.prepare"]
+  const operations = (resources as unknown[]).flatMap((resource) => object(resource).operations as unknown[])
+    .map(object).filter((operation) => ids.includes(String(operation.operationId)))
+  const summary = ids.map((id) => {
+    const found = operations.filter((operation) => operation.operationId === id)
+    expect(found.length).toBeGreaterThan(0)
+    const value = { operation: id, state: found[0]!.state, operational: found[0]!.operational }
+    expect(found.every((entry) => entry.state === value.state && entry.operational === value.operational)).toBe(true)
+    return value
+  })
+  console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-availability", operations: summary }))
+  return summary
 }
 async function readCase(page: Page, origin: string, mount: string, caseRef: string) {
   const response = await page.request.get(origin + mount + "/api/ui/projections/case", { params: { caseRef } })
@@ -112,6 +138,9 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   const editableRef = await page.locator('[data-sf-decision="UI34"]').getAttribute("data-sf-case-ref")
   if (!caseRef || !editableRef) throw new Error("The native case route omitted its source reference")
   expect(caseRef).toMatch(/^case:[^:]+:[^:]+$/)
+  const availability = await observeAvailability(page, owner)
+  for (const operation of ["decisions.choice.read", "decisions.command.sf_question_prepare"])
+    expect(availability.find((entry) => entry.operation === operation)).toMatchObject({ state: "ready", operational: true })
   const source = await readCase(page, installation.origin, installation.mount, caseRef)
   const editableSource = await readCase(page, installation.origin, installation.mount, editableRef)
   expect(source.alternatives).toHaveLength(2)
@@ -388,5 +417,6 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     preservedLimits: ["Current-choice preparation requires producer provenance", "No application was prepared or applied", "No analysis model or result was invented"],
     consoleErrors: diagnostic.consoleErrors,
     sourceReadTimes: [...readTimes, ...localizedReadTimes],
+    operationAvailability: availability,
   }) })
 })
