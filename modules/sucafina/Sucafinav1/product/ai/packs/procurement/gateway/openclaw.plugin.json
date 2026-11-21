@@ -1,0 +1,15 @@
+{
+  "id": "sf-purchase-gateway",
+  "name": "SF Purchase Gateway",
+  "description": "Makes the SF purchase comparison MCP tool available through the Gateway.",
+  "contracts": {
+    "tools": ["sfcompras__sf_comparar_compra"]
+  },
+  "activation": {
+    "onStartup": true
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false
+  }
+}

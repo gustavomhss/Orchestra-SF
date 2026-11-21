@@ -1,0 +1,19 @@
+# Comparação de compras pelo Gateway
+
+Use um perfil OpenClaw isolado por conta SF, com o MCP de comparação disponível na instalação. Configure `mcp.servers.sfcompras` com a URL HTTPS terminada em `/sucafina/api/claw/mcp`, transporte `streamable-http` e filtro `{"include":["sf_comparar_compra"]}`. Habilite o servidor e forneça a credencial SF do perfil ao processo em `SF_CLAW_PURCHASE_TOKEN`.
+
+Adicione o [plugin do Gateway](../../modules/sucafina/Sucafinav1/product/ai/packs/procurement/gateway) a `plugins.load.paths`. O diretório deve resolver as instalações existentes de OpenClaw e `@modelcontextprotocol/sdk`. Habilite `plugins.entries.sf-purchase-gateway.enabled` e inclua `sf-purchase-gateway` em `plugins.allow` quando o perfil usar uma lista explícita. Permita `sfcompras__sf_comparar_compra` para o agente e reinicie o Gateway do perfil.
+
+Envie `POST /tools/invoke` à porta privada do perfil, com o token de operador do Gateway e `Content-Type: application/json`.
+
+```json
+{
+  "tool": "sfcompras__sf_comparar_compra",
+  "agentId": "maestro",
+  "args": { "requestRef": "PR-2026-0901" }
+}
+```
+
+O Gateway encaminha a consulta de leitura ao SF com a credencial do perfil. Para um pedido fora do escopo, o HTTP retorna `200` e a resposta da ferramenta contém `isError: true` e o texto JSON `{"status":"denied"}`. A chave de operador deve ficar restrita à interface privada do Gateway.
+
+A [prova do piloto](../qa/sucafina/procurement/gateway-tools-invoke.json) registra os quatro casos com duas contas Microsoft e pedidos de teste distintos. O SHA-256 é calculado sobre a concatenação do conteúdo dos três arquivos do plugin, em ordem alfabética de nome.
