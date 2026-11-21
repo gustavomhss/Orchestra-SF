@@ -5,7 +5,7 @@
  * installation, membership, policy and resource grants.
  */
 import { Schema } from "effect"
-import { NonNegativeInt } from "../schema"
+import { NonNegativeInt, optional } from "../schema"
 
 export * as TeamProfile from "./team-profile"
 
@@ -120,6 +120,12 @@ export const Selector = Schema.Union([
   }),
   Schema.Struct({
     contractRevision: ContractRevision,
+    kind: Schema.Literal("selection"),
+    installationId: InstallationId,
+    tenantId: TenantId,
+  }),
+  Schema.Struct({
+    contractRevision: ContractRevision,
     kind: Schema.Literal("administration"),
     installationId: InstallationId,
     tenantId: TenantId,
@@ -129,6 +135,20 @@ export const Selector = Schema.Union([
   parseOptions: { onExcessProperty: "error" },
 })
 export type Selector = Schema.Schema.Type<typeof Selector>
+
+/** A closed context query carries the requested Team, never admitted authority. */
+export const ContextQuery = Schema.Struct({
+  contractRevision: ContractRevision,
+  installationId: InstallationId,
+  tenantId: TenantId,
+  hostId: Schema.NonEmptyString,
+  kind: Schema.Literals(["selection", "team", "administration"]),
+  teamObjectId: optional(TeamObjectId),
+}).check(Schema.makeFilter(
+  (query) => query.kind === "team" ? query.teamObjectId !== undefined : query.teamObjectId === undefined,
+  { message: "Only a Team intent contains a complete Team object ID" },
+)).annotate({ identifier: "Sucafina.TeamContextQuery", parseOptions: { onExcessProperty: "error" } })
+export interface ContextQuery extends Schema.Schema.Type<typeof ContextQuery> {}
 
 export const Choice = Schema.Struct({
   profile: Ref,
