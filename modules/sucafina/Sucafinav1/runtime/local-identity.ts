@@ -21,6 +21,7 @@ type IdentityOptions = {
   now?: () => Date
   sessionSeconds?: number
   loginSeconds?: number
+  nativeWeb?: boolean
 }
 
 /** The local profile is explicitly bound to loopback. */
@@ -221,7 +222,7 @@ function createIdentity(
         const returnTo = url.searchParams.get("returnTo")
         const login: Login = {
           nonce: randomBytes(32).toString("hex"), verifier,
-          returnTo: safeReturn(corporate && returnTo && returnTo.length > 2048 ? null : returnTo, options.mount, !!corporate && !!observeTeams),
+          returnTo: safeReturn(corporate && returnTo && returnTo.length > 2048 ? null : returnTo, options.mount, !!corporate && !!observeTeams, !!corporate && options.nativeWeb === true),
         }
         const storageKey = slot("login", state)
         const issuedAt = now()
@@ -263,7 +264,7 @@ function createIdentity(
       }
       await options.secrets.put(slot("session", id), seal(slot("session", id), value), value.expiresAt)
       responseHeaders.append("set-cookie", cookie("session", id, sessionSeconds))
-      responseHeaders.set("location", safeReturn(login.returnTo, options.mount, !!corporate && !!observeTeams))
+      responseHeaders.set("location", safeReturn(login.returnTo, options.mount, !!corporate && !!observeTeams, !!corporate && options.nativeWeb === true))
       return new Response(null, { status: 303, headers: responseHeaders })
     },
     async prepare(request) {
@@ -331,7 +332,8 @@ function validSession(value: unknown): value is Session {
 function validLogin(value: unknown): value is Login {
   return value !== null && typeof value === "object" && "nonce" in value && typeof value.nonce === "string" && /^[a-f0-9]{64}$/.test(value.nonce) && "verifier" in value && typeof value.verifier === "string" && /^[A-Za-z0-9_-]{43}$/.test(value.verifier) && "returnTo" in value && typeof value.returnTo === "string"
 }
-function safeReturn(value: string | null, mount: string, teams: boolean) {
+function safeReturn(value: string | null, mount: string, teams: boolean, nativeWeb: boolean) {
+  if (nativeWeb && value === "/") return "/"
   const fallback = `${mount}/dashboard`
   if (!value || !value.startsWith(`${mount}/`) || /[\\\r\n]/.test(value)) return fallback
   const parsed = new URL(value, "http://localhost")

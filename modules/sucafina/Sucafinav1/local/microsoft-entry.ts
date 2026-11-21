@@ -1,9 +1,12 @@
 import path from "node:path"
+import { randomUUID } from "node:crypto"
+import type { SfTeamContextQuery } from "@orchestra/schema/sucafina/context"
+import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
 import type { openCorporateRecoveryRegister } from "../runtime/corporate-recovery-register.ts"
 import { loadMicrosoftIngressAuthorizer } from "../runtime/microsoft-configuration.ts"
 import { microsoftRequest, prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 import type { EntraOptions, EntraTeamsSessionResult } from "../runtime/local-contract.ts"
-import { createTeamProfileAccess } from "../runtime/team-profile-access.ts"
+import { createTeamProfileAccess, teamProfileInstallationId } from "../runtime/team-profile-access.ts"
 import { runTeamBusiness } from "../runtime/team-business.ts"
 import { teamBusinessRoute } from "../runtime/team-profile-selector.ts"
 import { esc } from "../src/screen-shell.ts"
@@ -27,10 +30,12 @@ export async function createMicrosoftInstallation(
     throw new Error("Microsoft installation requires a concrete loopback listener")
   const prepared = await prepareMicrosoftInstallation(context, file, environment, overrides)
   const { config, directory } = prepared.loaded
+  const nativeWeb = environment.SUCAFINA_NATIVE_TEAM_WEB === "1"
+  if (nativeWeb && config.teams !== "direct") throw new Error("Native Team Web requires Microsoft Teams admission")
   const authorize = await loadMicrosoftIngressAuthorizer(directory)
   const store = await openLocalStore(path.join(directory, "business-microsoft"))
   try {
-    const identity = prepared.createIdentity(store.secrets)
+    const identity = prepared.createIdentity(store.secrets, nativeWeb)
     const now = overrides.now ?? (() => new Date())
     const registerPath = environment.SUCAFINA_CORPORATE_RECOVERY_REGISTER
     const recovery = registerPath === undefined ? undefined : await (async () => {
@@ -46,12 +51,33 @@ export async function createMicrosoftInstallation(
       origin: config.origin, mount: config.mount, directory, tenantId: config.tenantId,
       enabledTeamIds: config.enabledTeamIds ?? [], prepare: identity.prepare, observeTeams: identity.observeTeams,
     })
+    if (nativeWeb && !teamAccess) throw new Error("Native Team Web admission is unavailable")
     const headers = { "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" }
     const htmlHeaders = { ...headers, "Content-Type": "text/html; charset=utf-8",
       "Content-Security-Policy": "default-src 'none'; frame-ancestors 'self'; base-uri 'none'" }
+    const web = nativeWeb && teamAccess ? (() => {
+      const installationId = teamProfileInstallationId({ origin: config.origin, mount: config.mount, directory })
+      const binding = Object.freeze({ installationId, projectId: installationId, hostId: randomUUID() })
+      const runtime = Object.freeze({ nativeUiProducts: {
+        currentBinding: () => binding,
+        teamTenantId: config.tenantId,
+        readTeamContext: (request: Request, query: SfTeamContextQuery) =>
+          teamAccess.readContext(request, query, binding),
+      } })
+      const context = createSfContextHandler({ origin: config.origin, mount: config.mount, runtime: () => runtime })
+      const discovered = Object.freeze({
+        publicOrigin: config.origin, mount: config.mount, authMode: "microsoft" as const, tenantId: config.tenantId,
+        identity: () => ({ ...binding, location: { directory } }),
+      })
+      return { context, discovery: {
+        current: async (signal: AbortSignal) => signal.aborted ? undefined : discovered,
+        forAdmittedLocation: async () => [],
+      } }
+    })() : undefined
     return {
       mount: config.mount,
       trustedIngress: Object.freeze({ origin: prepared.transport.ingressOrigin, authorize }),
+      ...(web ? { nativeWeb: true, discovery: web.discovery } : {}),
       async handler(incoming: Request) {
         const request = microsoftRequest(incoming, prepared.transport)
         if (!request) return new Response(null, { status: 403, headers })
@@ -65,6 +91,7 @@ export async function createMicrosoftInstallation(
         }
         const auth = await identity.handle(request)
         if (auth) return auth
+        if (web && url.pathname === config.mount + "/api/ui/context") return web.context.handle(request)
         const recovered = await recovery?.(request)
         if (recovered) return recovered
         const route = teamAccess ? teamBusinessRoute(url.pathname, config.mount) : undefined
@@ -98,10 +125,12 @@ export async function createMicrosoftInstallation(
             decisionIntentions: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? store : undefined,
           })
           return new Response(null, { status: 303, headers: {
-            ...headers, Location: config.mount + "/teams/" + access.profile.teamObjectId + "/" + surface,
+            ...headers, Location: web && !url.search ? "/" : config.mount + "/teams/" + access.profile.teamObjectId + "/" + surface,
           } })
         }
         if (access.status === "selection-required") {
+          if (web && request.method === "GET" && !url.search && request.headers.get("accept")?.includes("text/html"))
+            return new Response(null, { status: 303, headers: { ...headers, Location: "/" } })
           if (request.method === "HEAD") return new Response(null, { status: 409, headers })
           if (!request.headers.get("accept")?.includes("text/html")) return Response.json(access, { status: 409, headers })
           const choices = access.choices.map((choice) =>
