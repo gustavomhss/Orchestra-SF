@@ -108,9 +108,8 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
             else controller.error(new Error("Installation request body exceeds the limit"))
           },
         }))
-        const response = await installation.handler(new Request(source, {
-          body, signal: requestSignal, duplex: "half",
-        })).catch(() => new Response(null, { status: 503 }))
+        const init = { body, signal: requestSignal, duplex: "half" as const }
+        const response = await installation.handler(new Request(source, init)).catch(() => new Response(null, { status: 503 }))
         if (!body.locked) void body.cancel().catch(() => undefined)
         if (exceeded) return oversized()
         return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
