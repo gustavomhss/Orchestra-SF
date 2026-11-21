@@ -32,6 +32,7 @@ import { profileProject, projectForSession } from "@/pages/layout/helpers"
 import { createNativeTitlebarFrame } from "./orchestra/native-frame"
 import { breadcrumbLabel } from "../orchestra/navigation"
 import { CrumbTrail } from "../orchestra/crumbs"
+import { isSucafinaBrand } from "@/orchestra/brand-identity"
 
 const v2TitlebarHeight = 36
 const desktopTitlebarHeight = 45
@@ -482,7 +483,7 @@ export function Titlebar(props: {
             data-slot="orchestra-titlebar-breadcrumb"
             class="pointer-events-none absolute inset-0 flex items-center justify-center gap-2 text-xs"
           >
-            <span>{language.t("orchestra.brand.name")}</span>
+            <span>{isSucafinaBrand() ? "Sucafina" : language.t("orchestra.brand.name")}</span>
             <span aria-hidden="true">/</span>
             <CrumbTrail label={language.t(breadcrumbLabel(layout.route()))} />
           </div>

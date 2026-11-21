@@ -64,7 +64,8 @@ const notify: Platform["notify"] = async (title, description, onClick) => {
 
   const notification = new Notification(title, {
     body: description ?? "",
-    icon: "/orchestra/hugr-symbol-primary.svg",
+    // Do not leak HuGR into notifications for the Sucafina distribution.
+    icon: document.documentElement.dataset.orchestraBrand === "sucafina" ? "/brand/sucafina/mark-primary.svg" : "/orchestra/hugr-symbol-primary.svg",
   })
 
   notification.onclick = () => {
