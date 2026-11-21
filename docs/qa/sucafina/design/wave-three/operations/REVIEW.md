@@ -47,6 +47,12 @@ Product source review is complete for this commit. Catalog inspection confirms u
 
 The integration owner will run the existing scoped Actions gates and the group journey `design-wave-three-operations.spec.ts` against an isolated real native installation. Visual PASS is **not** claimed before actual captures are inspected. User acceptance is separate from code and test success.
 
+### Authored real-installation journeys
+
+The operations spec contains two production journeys. The first covers all five areas in dark/light desktop, lower-page ticket/application/campaign/incident/owner panels, grouped forms and review cancellation, then performs five real reviewed commands with fresh navigation/readback: CAP11 SLA, CAP12 campaign, CAP13 risk, CAP15 relationship and CAP16 sub-item. It records write counts and browser diagnostics without request payloads or credentials.
+
+The second reuses the genuine scoped operator cookie in a BR context, captures all five desktop/390 px overviews, opens each focused editor and review, checks reflow and every review action in the viewport, and verifies revision retains the draft without sending a command. The root helper owns installation/authentication and capture bounds. These are authored journeys; passing execution is not yet claimed.
+
 ### Pending evidence
 
 - Desktop dark/light overview and active editor/review for all five areas.
