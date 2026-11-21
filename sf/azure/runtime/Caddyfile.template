@@ -1,0 +1,27 @@
+# managed-orchestra-sf-mode: proxy
+# Render __SF_FQDN__ with the public HTTPS hostname.
+# Render __SF_INGRESS_HOST__ with the authority (host and port, if any) of the private ingressOrigin.
+# Supply SF_INGRESS_PROOF in Caddy's private process environment from the installation ingress secret.
+# Remove --environ from Caddy's startup command before provisioning SF_INGRESS_PROOF.
+# Keep debug logging disabled because reverse_proxy can log upstream request headers.
+__SF_FQDN__ {
+    encode zstd gzip
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+        Strict-Transport-Security "max-age=31536000"
+    }
+
+    @sucafina path_regexp sucafina ^/sucafina(/|$)
+    handle @sucafina {
+        reverse_proxy 127.0.0.1:4096 {
+            header_up Host __SF_INGRESS_HOST__
+            header_up X-SF-Ingress-Proof {env.SF_INGRESS_PROOF}
+            header_up -Forwarded
+        }
+    }
+
+    handle {
+        respond 404
+    }
+}
