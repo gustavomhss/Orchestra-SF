@@ -632,6 +632,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                       confirmation: "presentation-only",
                     },
                   }}
+                  busy={screen.busy}
                   state={screen.busy ? "loading" : "ready"}
                   onConfirm={() => { void submit() }}
                   onRevise={() => { draft()?.setPhase("dirty"); setScreen("intent", null) }}

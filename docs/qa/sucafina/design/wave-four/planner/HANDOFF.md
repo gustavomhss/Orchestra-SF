@@ -27,3 +27,7 @@ No local build, tests, user-machine execution or browser was used by this agent.
 Pay particular attention to review unmounts after revise/cancel/submit, restored F01 saved-view drafts,320px review action visibility, long position names, local comparison scroll and the difference between missing and recorded zero.
 
 The preexisting V2 saved-view gap, absent roster-impact preview and producer-owned financial calculations remain explicit product limits, not waived checks.
+
+## Pending-operation controls
+
+A separate follow-up passes the existing busy contract to CAP21/CAP22/CAP23 change reviews during the original command and its source readback. Cancel and Revise stay available again in editable phases. Unknown outcomes retain the existing reconciliation behavior. UI32 edit fields and discard are disabled as soon as its mutation enters digest/submitting, before the pending-operation fingerprint is attached. This closes the brief opportunity to type into a draft already being submitted without changing any command, idempotency key, CAS rule or producer response.

@@ -404,7 +404,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
                             class="mx-input w-full"
                             maxLength={120}
                             value={state().value.title}
-                            disabled={!operationReady("views.save") || !!state().pendingOperation}
+                            disabled={!mayMutate("views.save") || !!state().pendingOperation}
                             onInput={(event) => {
                               const active = activeDraft()
                               if (!active) return
@@ -417,7 +417,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
                           <select
                             class="mx-input"
                             value={state().value.density ?? "comfortable"}
-                            disabled={!operationReady("views.save") || !!state().pendingOperation}
+                            disabled={!mayMutate("views.save") || !!state().pendingOperation}
                             onChange={(event) => {
                               const active = activeDraft()
                               const density = event.currentTarget.value
@@ -436,7 +436,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
                           <button type="button" class="mx-btn primary" disabled={!mayMutate("views.save") || !state().dirty || !!state().pendingOperation} onClick={reviewSave}>
                             {t(key("sf.ui32.reviewSave"))}
                           </button>
-                          <button type="button" class="mx-btn" disabled={!state().dirty || !!state().pendingOperation} onClick={() => editor?.discard()}>
+                          <button type="button" class="mx-btn" disabled={screen.mutation !== "idle" || !state().dirty || !!state().pendingOperation} onClick={() => editor?.discard()}>
                             {t(key("sf.common.discard"))}
                           </button>
                           <button type="button" class="mx-btn" disabled={!mayMutate("views.remove") || !!state().pendingOperation} onClick={reviewRemove}>
