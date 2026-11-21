@@ -99,7 +99,7 @@ The design skill's older prose asks for broad saturated glass with rim and grain
 | --- | --- | --- | --- |
 | Today | UI29 | `home/index.tsx` and a new page-local stylesheet | Context, data/transport, host, navigation, shared frame, all other pages |
 | Cases | UI33 | `decisions/cases/index.tsx`, presentation markup in `create.tsx`, and a new UI33-local stylesheet | Shared `n24.css` used by other decision pages, models, routes, mutation rules, global styles |
-| Executive | CAP01 | `dashboard/executive/index.tsx`, presentation markup in `edit.tsx`, and the page-local `u02.css` | Domain/projection math, cross-link authority, other dashboard pages, global styles |
+| Executive | CAP01 | `dashboard/executive/index.tsx` and a new CAP01-only stylesheet | Existing `u02.css` and `edit.tsx` are shared with CAP03 and remain unchanged; domain/projection math, cross-link authority, other dashboard pages, global styles |
 
 All worker branches must be descendants of this dev-based planning commit. Because the native sources are absent from dev, workers produce reviewable unified patches against the pinned native source under `docs/qa/sucafina/design/wave-one/`; they must not install an unrequested old frontend, create unresolved product imports, or pretend the patches changed the app. The application step is blocked until the intended native source is available in the dev-based product tree.
 
@@ -109,8 +109,14 @@ All worker branches must be descendants of this dev-based planning commit. Becau
 2. Deliberate information density and alignment: equal sibling metrics, consistent content baselines, legible metadata, useful empty/loading/error states, intrinsic widths and no viewport overflow. Tables retain localized labels, tabular figures and correct numeric alignment.
 3. Page-local changes only. Preserve source-authorized navigation, provenance, ownership fencing, retained drafts, read/review/confirm stages, and every disabled/revoked/stale state. No fabricated data, hidden failure, relaxed test, extra business action or changed API.
 4. Dialogs, where the existing screen has them, retain the actual accessible primitive, focus trap, Escape behavior and focus restoration. Give fields, content, controls and footer coherent sizing. Do not manufacture a dialog just to satisfy a checklist.
-5. Final visual acceptance requires the actual native app: dark and light, relevant generated palettes, 1440×900 and 1280×800 desktop, 1024×768, and narrow/zoomed layouts including 390×844 and 200% zoom. Inspect headings, values, empty/loading/error/denied/stale states and open editors. Collect actual screenshots; source review is not visual proof.
+5. Final visual acceptance requires the actual native app: dark and light, relevant generated palettes, 1440×900 and 1280×800 desktop, 1024×768, and narrow/zoomed layouts including 390×844, 320 CSS px reflow, 200% text scaling and 400% equivalent reflow. Inspect headings, values, empty/loading/error/denied/stale states and open editors. Collect actual screenshots; source review is not visual proof.
 6. Hosted verification only, in one composed first-wave candidate after review. Run scoped native journeys, package typecheck, guards and relevant palette parity/contrast gates. Do not run the full sf-ci campaign, modify workflow policy or claim checks ran when they did not. Never alter expected evidence to make a test green.
+
+## Review discovery: shared Executive/Budget files
+
+`dashboard/budget/index.tsx` imports Executive's existing `u02.css` and `SfU02Edit`. The initial ownership assumption that these were CAP01-only was incorrect. The worker scope was tightened before implementation: keep both shared files unchanged and add CAP01-local presentation rules. This finding also requires CAP03 nonregression evidence after application.
+
+See `VALIDATION.md` for the exact existing regression files and the difference between source-level checks and actual visual/hosted proof.
 
 ## Verified now / pending
 
