@@ -93,6 +93,7 @@ designTest("installed native first-wave design · real operator, source data, re
       await expect(page.locator('[data-sf-metric="risks"]')).toHaveAttribute("data-sf-value", "missing")
     }
     await reflow(page)
+    await scrollPageTop(page)
   }
 
   // Create exactly one case through the actual inline form and original command.
@@ -145,18 +146,37 @@ designTest("installed native first-wave design · real operator, source data, re
     await enter(screen)
     await capture(page, info, screen.id + "-dark-desktop-test-data", true)
     if (screen.id === "UI29") {
-      await page.getByRole("heading", { name: "Resume", exact: true }).scrollIntoViewIfNeeded()
+      const resume = page.locator(".sf-today-resume").filter({
+        has: page.getByRole("heading", { name: "Resume", exact: true }),
+      })
+      await resume.scrollIntoViewIfNeeded()
+      await expect(resume).toBeInViewport({ ratio: 1 })
       await capture(page, info, "UI29-dark-desktop-resume-test-data", true)
-      await page.getByRole("heading", { name: "Material changes", exact: true }).scrollIntoViewIfNeeded()
+      const availability = page.locator(".sf-today-availability").filter({
+        has: page.getByRole("heading", { name: "Material changes", exact: true }),
+      })
+      await availability.scrollIntoViewIfNeeded()
+      await expect(availability).toBeInViewport({ ratio: 1 })
+      await expect(availability.getByText("Material changes are not supplied by this projection.", { exact: true }))
+        .toBeInViewport({ ratio: 1 })
       await capture(page, info, "UI29-dark-desktop-source-availability-test-data", true)
     }
     if (screen.id === "CAP01") {
       await page.locator("[data-dashboard-signals]").scrollIntoViewIfNeeded()
       await capture(page, info, "CAP01-dark-desktop-signals-test-data", true)
-      await page.getByLabel("Year", { exact: true }).selectOption(String(installation.year))
-      await expect(page.getByLabel("Year", { exact: true })).toHaveValue(String(installation.year))
+      const yearControl = page.getByLabel("Year", { exact: true })
+      await expect(yearControl).toBeVisible()
+      await expect(yearControl).toBeEnabled()
+      await expect(yearControl.getByRole("option", { name: String(installation.year), exact: true })).toHaveCount(1)
+      await yearControl.selectOption(String(installation.year))
+      await expect(yearControl).toHaveValue(String(installation.year))
       await expect(page.locator('[data-sf-metric="risks"] dd')).toHaveText("1")
-      await page.getByLabel("Month", { exact: true }).selectOption(String(installation.month))
+      const monthControl = page.getByLabel("Month", { exact: true })
+      await expect(monthControl).toBeVisible()
+      await expect(monthControl).toBeEnabled()
+      await expect(monthControl.getByRole("option", { name: String(installation.month), exact: true })).toHaveCount(1)
+      await monthControl.selectOption(String(installation.month))
+      await expect(monthControl).toHaveValue(String(installation.month))
       const editor = page.locator('[data-sf-u02-edit="save-users"]')
       await expect(editor.getByLabel("Total IT users", { exact: true })).toHaveValue("128")
       await editor.getByLabel("Total IT users", { exact: true }).fill("129")
@@ -200,7 +220,11 @@ designTest("installed native first-wave design · real operator, source data, re
   await page.setViewportSize({ width: 390, height: 1100 })
   await enter(screens[0])
   await capture(page, info, "UI29-dark-390-test-data", true)
-  await page.getByRole("heading", { name: "Resume", exact: true }).scrollIntoViewIfNeeded()
+  const narrowResume = page.locator(".sf-today-resume").filter({
+    has: page.getByRole("heading", { name: "Resume", exact: true }),
+  })
+  await narrowResume.scrollIntoViewIfNeeded()
+  await expect(narrowResume).toBeInViewport({ ratio: 1 })
   await capture(page, info, "UI29-dark-390-resume-test-data", true)
   expect([...sourceOrigins]).toEqual([installation.origin])
   await info.attach("native-wave-one-evidence", {
@@ -237,6 +261,14 @@ async function scheme(page: Page, expected: "dark" | "light") {
   if (await html.getAttribute("data-color-scheme") !== expected)
     await page.locator('[data-slot="orchestra-theme-toggle"]').click()
   await expect(html).toHaveAttribute("data-color-scheme", expected)
+}
+
+async function scrollPageTop(page: Page) {
+  const scroller = page.locator('[data-sf-frame="page"] .mx-page')
+  await scroller.evaluate((element) => element.scrollTo({ top: 0, left: 0, behavior: "instant" }))
+  await expect.poll(() => scroller.evaluate((element) => element.scrollTop), {
+    message: "the actual native page scroller starts the main capture at the top",
+  }).toBe(0)
 }
 
 async function reflow(page: Page) {
