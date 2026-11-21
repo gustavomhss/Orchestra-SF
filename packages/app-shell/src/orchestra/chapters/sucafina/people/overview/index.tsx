@@ -61,8 +61,6 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
     <SfPageFrame
       titleKey={key("sf.cap06.title")}
       context={snapshot() ? [
-        { id: "installation", label: { key: key("sf.u03.installation") },
-          value: { kind: "data", text: snapshot()!.context.stamp.installationId } },
         { id: "year", label: { key: key("sf.u03.year") },
           value: { kind: "data", text: String(snapshot()!.value.selection.year ?? "") } },
       ] : []}
@@ -78,6 +76,8 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
       secondaryActions={[]} density="comfortable" layout="reading"
       onLayoutMode={() => undefined}
     >
+      <div class="sf-people-workspace" data-sf-wave="three" data-sf-surface="CAP06">
+      <p class="sf-people-lead">{t(key("sf.u03.design.overviewLead"))}</p>
       <SfStatePanel
         state={session.ui()} messageKey={stateMessage()}
         onRetryRead={() => { void session.reload() }}
@@ -86,7 +86,10 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
           {(current) => (
             <>
               <section class="sf-people-section" aria-label={t(key("sf.cap06.title"))}>
-                <h2>{t(key("sf.u03.authorizedHeadcount"))}</h2>
+                <div class="sf-people-section-heading"><div>
+                  <h2>{t(key("sf.u03.authorizedHeadcount"))}</h2>
+                  <p>{t(key("sf.u03.design.source"))}</p>
+                </div></div>
                 <dl class="sf-people-stats" data-sf-metrics="headcount">
                   {metric("sf.u03.metrics.active", current().metrics.active)}
                   {metric("sf.u03.metrics.terminated", current().metrics.terminated)}
@@ -99,11 +102,14 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
                 </dl>
               </section>
               <section class="sf-people-section" aria-label={t(key("sf.u03.leaders"))}>
-                <h2>{t(key("sf.u03.leaders"))}</h2>
+                <div class="sf-people-section-heading"><div>
+                  <h2>{t(key("sf.u03.leaders"))}</h2>
+                  <p>{t(key("sf.u03.design.leadersLead"))}</p>
+                </div></div>
                 <div class="sf-people-table-region" role="region"
                   aria-label={t(key("sf.u03.leaders"))} tabindex="0">
                   <table class="sf-people-table">
-                    <caption>{t(key("sf.u03.leaders"))}</caption>
+                    <caption class="sf-people-sr-only">{t(key("sf.u03.leaders"))}</caption>
                     <thead><tr>
                       <th scope="col">{t(key("sf.u03.leader"))}</th>
                       <th scope="col">{t(key("sf.u03.metrics.active"))}</th>
@@ -129,6 +135,7 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
           )}
         </Show>
       </SfStatePanel>
+      </div>
     </SfPageFrame>
   )
 }
