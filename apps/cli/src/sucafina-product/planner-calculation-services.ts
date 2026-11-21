@@ -13,7 +13,7 @@ import { createPlannerPort } from "../../../../modules/sucafina/Sucafinav1/produ
 import { plannerScenarioDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
 import type { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
 import { createSfPlannerCalculationHistory } from "./planner-calculation-history.ts"
-import { createSfPlannerCalculationReadScope } from "./planner-calculation-read-scope.ts"
+import { createSfPlannerCalculationReadScope, plannerRequestIdentity } from "./planner-calculation-read-scope.ts"
 import { createSfPlannerCalculationRoot } from "./planner-calculation-root.ts"
 import type { SfCalculationObservedReads } from "./planner-calculation-read-scope.ts"
 import type { SfCalculationCaseScope } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts"
@@ -147,7 +147,7 @@ export function createSfPlannerCalculationServices(input: {
     return checked.status === "ok" && checked.value
   }
   const prepareMixedSources = async (plan: LocalSourcePlan, owner: StoredScenario, request: ScenarioRequest,
-    call: TrustedDomainContext, current: () => boolean, pin: (value: unknown) => void): Promise<boolean | "unsupported"> => {
+    call: TrustedDomainContext, current: () => boolean): Promise<boolean | "unsupported"> => {
     const pending = [...plan.calculations], seen = new Map<string, string>()
     // Inspect only authenticated selectors. These observations never replace the
     // request/result loaders, ledger authorization or canonical replays below.
@@ -160,8 +160,8 @@ export function createSfPlannerCalculationServices(input: {
       seen.set(runId, identity)
       const found = await readScope.select(runId, call)
       if (!current() || found.status !== "ok") return false
-      pin(found.value)
-      const bound = object(found.value.request), stored = found.value.stored
+      const selection = structuredClone(found.value)
+      const bound = object(selection.request), stored = selection.stored
       const parsed = decodeSfOperationInput("sf_scenario_simulate", bound.request)
       if (!parsed.ok || bound.schema !== "sf-scenario-request-v1" || bound.resultRef !== runId ||
         bound.engineVersion !== "planner-runtime-v1" || bound.requestDigest !== digestSfValue(bound.request) ||
@@ -194,20 +194,23 @@ export function createSfPlannerCalculationServices(input: {
     // before the producer's own replay guard starts.
     const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), parent = replaying.getStore()
     if (!request || request.signal.aborted) return { status: "denied", reason: "calculation-authority-unavailable" }
-    const requestDigest = requestIdentity(request)
+    const requestDigest = plannerRequestIdentity(request)
     const ancestors = parent?.open && parent.call === call && parent.request === request && parent.binding === binding ? parent.runs : new Set<string>()
     if (ancestors.has(runId) || ancestors.size >= 16) return { status: "unavailable", reason: "calculation-replay-cycle" }
     const scope: ReplayScope = { call, request, requestDigest, binding, runId, runs: new Set([...ancestors, runId]), open: true }
     const current = () => scope.open && replaying.getStore() === scope && input.host.requestFor(call) === request && !request.signal.aborted &&
-      requestIdentity(request) === requestDigest && digestSfValue([call.kind, call.binding]) === binding
+      plannerRequestIdentity(request) === requestDigest && digestSfValue([call.kind, call.binding]) === binding
     return replaying.run(scope, async (): Promise<PortResult<Value>> => {
       try {
         const selected = await readScope.select(runId, call)
         if (selected.status !== "ok") return selected
+        // Adapters never receive this copy, so nested replays can use the
+        // original owner checks without rehashing its detached input.
+        const selection = structuredClone(selected.value)
         if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
         // Enter the actual persisted case before request-store callbacks can
         // turn a precise scope refusal into a generic unavailable request.
-        return await input.withCalculationCase<Value>(call, selected.value.stored.caseRef, async () => {
+        return await input.withCalculationCase<Value>(call, structuredClone(selection.stored.caseRef), async () => {
           if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
           let preparedRoot: Awaited<ReturnType<typeof readRoot.prepare>> | undefined
           let prepareFinish: (() => ReturnType<typeof readRoot.prepare>) | undefined
@@ -219,9 +222,9 @@ export function createSfPlannerCalculationServices(input: {
           if (call.kind === "ui" && (!parent || inheritedOwner) && input.host === rootHost &&
             input.state === rootState && input.results === rootResults && input.sources === rootSources &&
             rootSources.resolveForecastSource === sourceReader && rootSources.resolveForecastCoverage === coverageReader) {
-            const preparedInput = decodeSfOperationInput("sf_scenario_simulate", object(selected.value.request).request)
+            const preparedInput = decodeSfOperationInput("sf_scenario_simulate", object(selection.request).request)
             const records = preparedInput.ok && !preparedInput.value.assumptions.length &&
-              !preparedInput.value.operations.some((operation) => operation.replacementRef) ? plannerRecordSources(selected.value.stored) : undefined
+              !preparedInput.value.operations.some((operation) => operation.replacementRef) ? plannerRecordSources(selection.stored) : undefined
             const mixed = preparedInput.ok && !records &&
               !preparedInput.value.assumptions.some((assumption) => assumption.state !== "hypothetical") &&
               !preparedInput.value.operations.some((operation) => operation.replacementRef) &&
@@ -229,26 +232,22 @@ export function createSfPlannerCalculationServices(input: {
             if (preparedInput.ok && ((inheritedOwner || cited) && records || mixed)) {
               const stateReader = rootState.read, resultReader = rootResults.readForCalculation
               const evidenceResolve = rootEvidence.resolve, evidenceContext = rootEvidence.context
-              const selectedDigest = digestSfValue(selected.value)
-              const admissions: { value: unknown; digest: string }[] = []
               const sameOwner = () => scope.open && !request.signal.aborted && input.host.requestFor(call) === request &&
-                requestIdentity(request) === requestDigest && digestSfValue([call.kind, call.binding]) === binding &&
+                plannerRequestIdentity(request) === requestDigest && digestSfValue([call.kind, call.binding]) === binding &&
                 (!parent || parent.open && parent.call === call && parent.request === request &&
                   parent.requestDigest === requestDigest && parent.binding === binding) && input.host === rootHost &&
                 input.state === rootState && input.results === rootResults && input.sources === rootSources &&
                 rootState.read === stateReader && rootResults.readForCalculation === resultReader &&
                 rootSources.resolveForecastSource === sourceReader && rootSources.resolveForecastCoverage === coverageReader &&
                 (!mixed || input.replayScenario === rootReplay && input.evidence === rootEvidence &&
-                  rootEvidence.resolve === evidenceResolve && rootEvidence.context === evidenceContext) &&
-                digestSfValue(selected.value) === selectedDigest && admissions.every((entry) => digestSfValue(entry.value) === entry.digest)
+                  rootEvidence.resolve === evidenceResolve && rootEvidence.context === evidenceContext)
               const sameReaders = () => current() && sameOwner()
               // Own and foreign C08 scopes skip this initializer entirely. All
               // extra selectors and any source warming belong before baseline.
               const initialize = async () => {
                 if (mixed) {
-                  const plan = plannerLocalSourcePlan(selected.value.stored, preparedInput.value.baseRef)
-                  return plan ? prepareMixedSources(plan, selected.value.stored, preparedInput.value, call, sameReaders,
-                    (value) => admissions.push({ value, digest: digestSfValue(value) })) : "unsupported" as const
+                  const plan = plannerLocalSourcePlan(selection.stored, preparedInput.value.baseRef)
+                  return plan ? prepareMixedSources(plan, selection.stored, preparedInput.value, call, sameReaders) : "unsupported" as const
                 }
                 if (!records || !await freshRecordSources(records, call) || !sameReaders()) return false
                 const coverage = await coverageReader(preparedInput.value.baseRef, call)
@@ -259,14 +258,14 @@ export function createSfPlannerCalculationServices(input: {
               if (sealFinish && mixed) prepareFinish = () => readRoot.prepare(call, initialize, sameReaders, sameOwner)
             }
           }
-          const eligible = call.kind === "ui" && plannerCalculationClosure(selected.value.stored)
+          const eligible = call.kind === "ui" && plannerCalculationClosure(selection.stored)
           if (eligible) {
-            scope.observation = await readScope.open(selected.value, call, current)
+            scope.observation = await readScope.open(selection, call, current)
             if (!scope.observation) return { status: "unavailable", reason: "calculation-observation-unavailable" }
           }
-          const parsed = decodeSfOperationInput("sf_scenario_simulate", object(selected.value.request).request)
+          const parsed = decodeSfOperationInput("sf_scenario_simulate", object(selection.request).request)
           const recordOnly = call.kind === "ui" && parsed.ok && !parsed.value.assumptions.length &&
-            !parsed.value.operations.some((operation) => operation.replacementRef) && !!plannerRecordSources(selected.value.stored)
+            !parsed.value.operations.some((operation) => operation.replacementRef) && !!plannerRecordSources(selection.stored)
           const produce = () => (recordOnly ? recordCalculation : calculation).issue(runId, call)
           // Stage the value until the physical root is accepted. The original
           // completed/finish/final witness below still run after this boundary.
@@ -429,5 +428,3 @@ function plannerCalculationClosure(stored: StoredScenario): boolean {
   try { sfEvidenceSourceMaps(refs); return refs.length > 0 && refs.every((ref) => visit(ref, new Set())) }
   catch { return false }
 }
-
-function requestIdentity(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] }) }
