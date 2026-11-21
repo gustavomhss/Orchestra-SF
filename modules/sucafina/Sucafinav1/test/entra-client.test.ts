@@ -553,7 +553,8 @@ test("Teams consent must be observed on both initial and refreshed credentials",
 })
 
 const membersEndpoint = `${graph}/teams/${teamA}/members`
-const membersUrl = `${membersEndpoint}?$select=userId,displayName,tenantId`
+const memberSelection = "id,displayName,microsoft.graph.aadUserConversationMember/userId,microsoft.graph.aadUserConversationMember/tenantId"
+const membersUrl = `${membersEndpoint}?$select=${memberSelection}`
 const memberScope = "TeamMember.Read.All"
 const memberProfile = {
   profile: "web-confidential",
@@ -588,8 +589,8 @@ test("Teams roster requests delegated consent only for the confidential direct T
   expect(f.requests).toHaveLength(count)
 })
 
-test("Teams roster follows only the selected Team's pages and projects same-tenant user IDs and names", async () => {
-  const next = `${membersEndpoint}?%24select=userId%2CdisplayName%2CtenantId&%24skiptoken=opaque%2Bcursor`
+test("Teams roster requests qualified member fields and retains same-tenant names across pages", async () => {
+  const next = `${membersEndpoint}?%24select=${encodeURIComponent(memberSelection)}&%24skiptoken=opaque%2Bcursor`
   const f = await fixture({ ...memberProfile, route: (request) => {
     if (request.url === membersUrl) return Response.json({
       value: [memberRow(), memberRow(oid, teamB), { "@odata.type": "#microsoft.graph.skypeUserConversationMember", displayName: "Excluded" }],
