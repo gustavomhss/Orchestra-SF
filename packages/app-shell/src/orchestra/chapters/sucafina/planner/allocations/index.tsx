@@ -499,7 +499,8 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
         onRetryRead={refresh}
         onBack={() => { setScreen("selected", null); setScreen("state", "ready") }}
       >
-        <div class="sf-n20-allocations" data-sf-surface="CAP21">
+        <div class="sf-n20-allocations" data-sf-surface="CAP21" data-sf-polish="planner">
+          <div class="sf-n20-reading" hidden={!!currentValue() || !!screen.intent || !!screen.selected}>
           <p>{language.t("sf.cap21.shared")}</p>
           <div class="sf-n20-toolbar">
             <label>
@@ -515,9 +516,11 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
             {sectionRows("entities")}
             {sectionRows("allocations")}
           </div>
+          </div>
           <Show when={screen.selected && !draft() && !screen.intent}>
             <section class="mx-card sf-n20-detail" aria-labelledby="sf-n20-detail-heading">
-              <h2 id="sf-n20-detail-heading">{language.t("sf.cap21.detail")}</h2>
+              <div class="sf-n20-detail-heading"><h2 id="sf-n20-detail-heading">{language.t("sf.cap21.detail")}</h2>
+                <button type="button" class="mx-btn" onClick={() => setScreen("selected", null)}>{language.t("sf.common.returnToList")}</button></div>
               <Show when={selectedRow()} keyed fallback={<p>{language.t("sf.common.removed")}</p>}>
                 {(row) => (
                   <dl>

@@ -409,7 +409,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
       >
         <Show when={state.page}>
           {(page) => (
-            <div class="sf-u08" data-sf-surface="CAP20">
+            <div class="sf-u08" data-sf-surface="CAP20" data-sf-polish="planner" hidden={!!currentReview()}>
               <div class="sf-u08-toolbar">
                 <label>{t("sf.u08.version")}
                   <select value={page().data.selectedVersion?.id ?? ""}
@@ -433,9 +433,19 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                   {t("sf.u08.sync")}
                 </button>
               </div>
-              <section aria-labelledby="sf-u08-positions">
-                <h2 id="sf-u08-positions">{t("sf.u08.positions")}</h2>
-                <div class="sf-u08-table-scroll" role="region" tabIndex={0}>
+              <section class="sf-u08-plan-summary">
+                <h2>{t("sf.u08.metrics")}</h2>
+                <dl class="sf-u08-summary">
+                  <div><dt>{t("sf.u08.fte")}</dt><dd>{page().data.metrics?.fte === undefined || page().data.metrics?.fte === null
+                    ? t("sf.u08.none") : page().data.metrics?.fte}</dd></div>
+                  <Show when={page().data.rates !== undefined && page().data.metrics?.hrTotal !== undefined}>
+                    <div><dt>{soleRateCurrency(page().data.rates)?.toUpperCase() === "USD" ? t("sf.u08.total") : t("sf.u06.hrStaff")}</dt><dd>{money(page().data.metrics?.hrTotal, soleRateCurrency(page().data.rates), language.intl()) ?? t("sf.u08.none")}</dd></div>
+                  </Show>
+                </dl>
+              </section>
+              <details class="sf-u08-positions" open={!pos()}>
+                <summary id="sf-u08-positions">{t("sf.u08.positions")}</summary>
+                <div class="sf-u08-table-scroll" role="region" aria-labelledby="sf-u08-positions" tabIndex={0}>
                   <table>
                     <thead><tr>
                       <th>{t("sf.u08.position")}</th><th>{t("sf.u08.domain")}</th>
@@ -456,10 +466,10 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                     </tbody>
                   </table>
                 </div>
-              </section>
+              </details>
               <Show when={pos()}>
                 {(selected) => (
-                  <section class="sf-u08-detail">
+                  <section class="sf-u08-detail" data-sf-headcount-position={selected().id}>
                     <h2>{selected().name}</h2>
                     <Show when={state.formKind === "position" && currentForm()?.availability === "active"}
                       fallback={<button type="button" class="mx-btn" disabled={readOnly()}
@@ -503,7 +513,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                                 }} />
                             </label>
                           </Show>
-                          <label><input type="checkbox" checked={activePosition()?.value.include ?? false}
+                          <label class="sf-u08-checkbox"><input type="checkbox" checked={activePosition()?.value.include ?? false}
                             disabled={readOnly()} onChange={(e) => {
                               const draft = positionDraft(selected())
                               const snapshot = draft?.snapshot()
@@ -528,7 +538,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                     </Show>
                     <Show when={page().data.rates !== undefined && selected().months}>
                       {(months) => (
-                        <div class="sf-u08-table-scroll" role="region" tabIndex={0}>
+                        <div class="sf-u08-table-scroll" role="region" aria-label={t("sf.u08.monthly")} tabIndex={0}>
                           <h3>{t("sf.u08.monthly")}</h3>
                           <table><thead><tr><For each={months()}>{(_, index) => <th>{index() + 1}</th>}</For></tr></thead>
                             <tbody><tr><For each={months()}>{(amount) =>
@@ -540,23 +550,13 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                   </section>
                 )}
               </Show>
-              <section>
-                <h2>{t("sf.u08.metrics")}</h2>
-                <dl class="sf-u08-summary">
-                  <div><dt>{t("sf.u08.fte")}</dt><dd>{page().data.metrics?.fte === undefined || page().data.metrics?.fte === null
-                    ? t("sf.u08.none") : page().data.metrics?.fte}</dd></div>
-                  <Show when={page().data.rates !== undefined && page().data.metrics?.hrTotal !== undefined}>
-                    <div><dt>{soleRateCurrency(page().data.rates)?.toUpperCase() === "USD" ? t("sf.u08.total") : t("sf.u06.hrStaff")}</dt><dd>{money(page().data.metrics?.hrTotal, soleRateCurrency(page().data.rates), language.intl()) ?? t("sf.u08.none")}</dd></div>
-                  </Show>
-                </dl>
-              </section>
               <Show when={page().data.rates}>
                 {(rates) => (
                   <section>
                     <h2>{t("sf.u08.rates")}</h2>
                     <div class="sf-u08-rate-list"><For each={rates()}>{(r) =>
                       <button type="button" class="mx-btn" onClick={() => selectRate(r)}>
-                        {r.name} · {r.cur} · {money(r.annual,r.cur,language.intl()) ?? t("sf.u08.none")}
+                        <span>{r.name}</span><span>{r.cur} · {money(r.annual,r.cur,language.intl()) ?? t("sf.u08.none")}</span>
                       </button>}
                     </For></div>
                     <Show when={state.formKind === "rate" && state.rateForm}>
@@ -627,7 +627,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
       </SfStatePanel>
       <Show when={state.error}><p role="status" class="sf-u08-message">{state.error}</p></Show>
       <Show when={currentReview()}>
-        {(current) => <div class="sf-u08-review">
+        {(current) => <div class="sf-u08-review" data-sf-polish="planner">
           <p>{t("sf.u08.reviewChange")}</p>
           <Show when={current().kind === "sync"}><p>{t("sf.u08.noRoster")}</p></Show>
           <SfChangeReview
