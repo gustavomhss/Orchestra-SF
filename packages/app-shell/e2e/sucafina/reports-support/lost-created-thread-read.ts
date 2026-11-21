@@ -38,8 +38,7 @@ export async function recoverCreatedQuestionAfterReadLoss(input: {
     expect(object(payload.mutation)).toMatchObject({ expectedStorageVersion: input.expectedStorageVersion, idempotencyKey: key })
     return { serialized: text(request.postData()), payload, key, value: object(result.value) }
   })
-  let resolve!: () => void, reject!: (reason: unknown) => void
-  const droppedRead = new Promise<void>((yes, no) => { resolve = yes; reject = no })
+  const droppedRead = Promise.withResolvers<ReturnType<typeof object>>()
   const loseRead = async (route: Route) => {
     try {
       const created = await receipt
@@ -50,11 +49,14 @@ export async function recoverCreatedQuestionAfterReadLoss(input: {
       expect(response.headers()["cache-control"]).toContain("no-store")
       const result = object(await response.json())
       expect(result.status).toBe("ok")
-      expect(object(result.value).id).toBe(created.value.id)
-      resolve()
+      const saved = object(result.value)
+      expect(saved.id).toBe(created.value.id)
+      expect(saved.messages).toHaveLength(1)
+      expect(saved.messages).toEqual(created.value.messages)
+      droppedRead.resolve(saved)
       await route.abort("failed")
     } catch (error) {
-      reject(error)
+      droppedRead.reject(error)
       await route.abort("failed").catch(() => {})
     }
   }
@@ -63,11 +65,8 @@ export async function recoverCreatedQuestionAfterReadLoss(input: {
   try {
     const failed = page.waitForEvent("requestfailed", { predicate: (request) => request.method() === "POST" && matchesRead(new URL(request.url())) })
     await discussion.getByRole("button", { name: "Ask about this review", exact: true }).click()
-    const [created] = await Promise.all([receipt, droppedRead, failed])
+    const [created, saved] = await Promise.all([receipt, droppedRead.promise, failed])
     const questionId = text(created.value.id), question = discussion.getByRole("textbox", { name: "Question", exact: true })
-    const saved = await api.thread(questionId)
-    expect(saved.messages).toHaveLength(1)
-    expect(saved.messages).toEqual(created.value.messages)
     await expect(question).toHaveValue(input.body)
     await expect(question).not.toBeEditable()
     await expect(discussion.getByRole("button", { name: "Reconcile action", exact: true })).toBeEnabled()
@@ -124,8 +123,9 @@ export async function recoverCreatedQuestionAfterReadLoss(input: {
     await expect(discussion.getByRole("status")).toHaveText("Question saved against the preserved review.")
     await expect(question).toHaveValue("")
     expect(writes).toEqual([created.serialized, created.serialized])
-    expect(await api.version(), "Recovering a known create receipt must not create another thread").toBe(input.expectedStorageVersion + 1)
-    expect((await api.thread(questionId)).messages).toEqual(saved.messages)
+    const [recoveredVersion, persistedThread] = await Promise.all([api.version(), api.thread(questionId)])
+    expect(recoveredVersion, "Recovering a known create receipt must not create another thread").toBe(input.expectedStorageVersion + 1)
+    expect(persistedThread.messages).toEqual(saved.messages)
     await input.info.attach("reports-created-thread-read-loss", {
       body: JSON.stringify({
         questionId, idempotencyKey: created.key, originalPayload: created.payload,
@@ -136,7 +136,7 @@ export async function recoverCreatedQuestionAfterReadLoss(input: {
         reconciliation: "explicit authorized read adopts known thread; real focus probe/read retains draft and intent before exact explicit receipt replay",
       }, null, 2), contentType: "application/json",
     })
-    return { payload: created.payload, value: result.value }
+    return { payload: created.payload, value: result.value, persistedThread }
   } finally {
     page.off("request", record)
     await page.unroute(matchesRead, loseRead)

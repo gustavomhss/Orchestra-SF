@@ -17,7 +17,7 @@ import { recoverCreatedQuestionAfterReadLoss } from "./lost-created-thread-read.
  * The real local operator is the recipient; distinct-person authority is not
  * asserted without a genuinely admitted second identity.
  */
-export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo, options: { loseReplyResponse?: boolean; loseCreatedThreadRead?: boolean } = {}) {
+export async function submitHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo, options: { loseReplyResponse?: boolean; loseCreatedThreadRead?: boolean } = {}) {
   const sections = saved.sections.filter((section) => section.title === "Budget")
   expect(sections).toHaveLength(1)
   const section = sections[0]!
@@ -49,14 +49,17 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
   const questionBody = `Confirm the preserved ${corpus.year} forecast of ${corpus.before}; distinguish it from the current source.`
   await discussion.getByRole("textbox", { name: "Question", exact: true }).fill(questionBody)
   const beforeQuestion = await api.version()
-  const created = await test.step("Submit the preserved-review question and observe its receipt", () => options.loseCreatedThreadRead
-    ? recoverCreatedQuestionAfterReadLoss({ page, app, api, discussion, body: questionBody, expectedStorageVersion: beforeQuestion, info })
-    : submit(page, app, discussion.getByRole("button", { name: "Ask about this review", exact: true }), "collaboration-thread-create"))
+  const created = await test.step("Submit the preserved-review question and observe its receipt", async () => {
+    if (options.loseCreatedThreadRead)
+      return recoverCreatedQuestionAfterReadLoss({ page, app, api, discussion, body: questionBody, expectedStorageVersion: beforeQuestion, info })
+    const result = await submit(page, app, discussion.getByRole("button", { name: "Ask about this review", exact: true }), "collaboration-thread-create")
+    return { ...result, persistedThread: undefined }
+  })
   expect(created.payload.draft).toEqual({
     kind: "clarification", ...basis, reviewContext: pin, recipientRef: app.actorId, body: questionBody,
   })
   expectMutation(created.payload.mutation, beforeQuestion)
-  const question = await expectCreatedReviewQuestion(api, { pin, basis, principalRef: app.actorId, question: questionBody }, created.value)
+  const question = await expectCreatedReviewQuestion(api, { pin, basis, principalRef: app.actorId, question: questionBody }, created.value, created.persistedThread)
   await expect(page).toHaveURL((url) => url.searchParams.get("reviewThread") === question.id)
   await expect(discussion.getByRole("status")).toHaveText("Question saved against the preserved review.")
 
@@ -71,6 +74,12 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
   })
   expect(replied.payload).toMatchObject({ id: question.id, body: replyBody })
   expectMutation(replied.payload.mutation, beforeReply)
+  return { api, captured, discussion, pin, question, replied, replyBody }
+}
+
+export async function confirmSubmittedHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo,
+  submitted: Awaited<ReturnType<typeof submitHumanAnswer>>) {
+  const { api, captured, discussion, pin, question, replied, replyBody } = submitted
   const message = await test.step("Read the persisted reply and independently confirm the answer is unconfirmed", () =>
     expectRepliedReviewQuestion(api, question, { principalRef: app.actorId, body: replyBody }, replied.value, replied.persistedThread))
   await expect(discussion.getByRole("status")).toHaveText("Reply saved in this preserved review.")
@@ -120,6 +129,11 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
     separateRecipientAuthority: "NOT_PROVEN",
   }, null, 2), contentType: "application/json" })
   return { api, answer }
+}
+
+export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo) {
+  const submitted = await submitHumanAnswer(page, app, saved, corpus, info)
+  return confirmSubmittedHumanAnswer(page, app, saved, corpus, info, submitted)
 }
 
 export async function expectConfirmedAnswerVisible(page: Page, answer: ReviewAnswer) {

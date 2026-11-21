@@ -39,7 +39,7 @@ export function reportsCollaboration(request: APIRequestContext, mount: string) 
       headers: { Origin: url.origin, "Content-Type": "application/json", ...(key ? { "Idempotency-Key": key } : {}) },
       failOnStatusCode: false,
       maxRedirects: 0,
-    })
+    }).catch(() => { throw new Error(`Installed Reports transport failed during ${mode}`) })
     const value: unknown = await response.json()
     expect(response.headers()["cache-control"], mode).toContain("no-store")
     return { httpStatus: response.status(), body: object(value) }
@@ -71,7 +71,7 @@ export async function expectCreatedReviewQuestion(api: ReportsCollaboration, inp
   basis: ReviewBasis
   principalRef: string
   question: string
-}, value: unknown) {
+}, value: unknown, persistedThread?: Awaited<ReturnType<ReportsCollaboration["thread"]>>) {
   const created = object(value)
   const id = text(created.id)
   expect(created).toMatchObject({ id, kind: "clarification", state: "open", recipientRef: input.principalRef, ...input.basis })
@@ -80,7 +80,7 @@ export async function expectCreatedReviewQuestion(api: ReportsCollaboration, inp
   expect(messages[0]).toMatchObject({ version: 1, authorRef: input.principalRef, body: input.question, sourceContext: { ...input.basis, reviewContext: input.pin } })
   const [pin, reopened] = await Promise.all([
     api.ok("review-thread-context", { reviewRef: input.pin.reviewRef, sectionId: input.pin.sectionId, basis: input.basis }),
-    api.thread(id),
+    persistedThread ?? api.thread(id),
   ])
   expect(object(pin)).toEqual(input.pin)
   expect(reopened.messages).toEqual(created.messages)
