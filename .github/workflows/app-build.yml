@@ -1,5 +1,5 @@
 name: app-build
-run-name: Azure Entra installed Team CurrentChoice proof
+run-name: Azure Entra C17 with compile maps for the shipped Linux ELF
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
         required: true
 
 concurrency:
-  group: c17-team-proof
+  group: c17-elf-proof
   cancel-in-progress: false
 
 permissions:
@@ -22,7 +22,7 @@ defaults:
 
 jobs:
   build:
-    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/c17-team-proof'"
+    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/c17-elf-proof'"
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
@@ -101,7 +101,7 @@ jobs:
           ORCHESTRA_VERSION="$(jq -er '.version' package.json)"
           export ORCHESTRA_VERSION
           sha256sum "$models"
-          bun script/build.ts --single --skip-install --target linux-x64-baseline
+          bun script/build.ts --single --skip-install --target linux-x64-baseline --external-compile-maps
 
       - name: Build the native Sucafina Web
         working-directory: apps/web
@@ -116,7 +116,7 @@ jobs:
           set -euo pipefail
           git fetch --depth 1 origin "$WORKFLOW_SHA"
           mkdir -m 0700 "$RUNNER_TEMP/azure-entra-proof"
-          for fixture in entra-native-provider.mjs entra-native-http.mjs entra-team-c17.mjs; do
+          for fixture in entra-native-provider.mjs entra-native-http.mjs entra-team-c17.mjs entra-tree-sitter-proof.py verify-packaged-compile-maps.py; do
             git show "$WORKFLOW_SHA:.github/ci/$fixture" > "$RUNNER_TEMP/azure-entra-proof/$fixture"
           done
 
@@ -142,7 +142,14 @@ jobs:
               rel = mapping.relative_to(web)
               destination = maps / rel
               destination.parent.mkdir(parents=True, exist_ok=True)
-              mapping.rename(destination)
+              raw = json.loads(mapping.read_bytes())
+              assert raw["version"] == 3
+              published = {key: raw[key] for key in ("version", "sources", "mappings")}
+              published["names"] = raw.get("names", [])
+              if "sourceRoot" in raw:
+                  published["sourceRoot"] = raw["sourceRoot"]
+              destination.write_text(json.dumps(published, separators=(",", ":")) + "\n")
+              mapping.unlink()
               records.append({"output": "bin/web/" + emitted.relative_to(web).as_posix(),
                               "outputSha256": digest(emitted), "map": rel.as_posix(), "mapSha256": digest(destination)})
           assert records and any(item["output"].endswith(".js") for item in records)
@@ -150,6 +157,26 @@ jobs:
           PYMAP
           bun apps/cli/script/azure-entra-package.ts --dist "$PWD/apps/cli/dist" --web "$PWD/apps/web/dist" --out "$archive_dir" --source-sha "$SOURCE_REVISION" --factory-source-map
           tar -C "$RUNNER_TEMP/web-source-maps" -czf "$archive_dir/web-source-maps.tar.gz" .
+          python3 -B - "$archive_dir" <<'PYMAP'
+          from hashlib import sha256
+          import json, sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1])
+          factory = root / "factory-source-map.json"
+          receipt = root / "factory-source-map-receipt.json"
+          emitted = factory.read_bytes()
+          mapping = json.loads(emitted)
+          record = json.loads(receipt.read_bytes())
+          assert sha256(emitted).hexdigest() == record["mapSha256"] and mapping["version"] == 3
+          published = {key: mapping[key] for key in ("version", "sources", "names", "mappings")}
+          if "sourceRoot" in mapping:
+              published["sourceRoot"] = mapping["sourceRoot"]
+          factory.write_text(json.dumps(published, separators=(",", ":")) + "\n")
+          record["emittedMapSha256"] = record["mapSha256"]
+          record["mapSha256"] = sha256(factory.read_bytes()).hexdigest()
+          receipt.write_text(json.dumps(record, separators=(",", ":")) + "\n")
+          PYMAP
           filename=orchestra-sf-entra-linux-x64-baseline.tar.gz
           observed="$(sha256sum "$archive_dir/$filename" | cut -d' ' -f1)"
           expected="$(jq -er '.archiveSha256' "$archive_dir/orchestra-sf-entra-package-receipt.json")"
@@ -196,12 +223,17 @@ jobs:
               (("bin/web/" + .file) as $path | $files | index($path) != null)
             ))
           ' > /dev/null
+          cli_maps="apps/cli/dist/compile-source-maps-linux-x64-baseline"
+          python3 -B "$RUNNER_TEMP/azure-entra-proof/verify-packaged-compile-maps.py" "$tarball" "$cli_maps"
+          install -m 0644 "$cli_maps/index.json" "$archive_dir/cli-source-map-index.json"
+          tar -C "$cli_maps" -czf "$archive_dir/cli-source-maps.tar.gz" .
           install -m 0644 "$ledger" "$archive_dir/compile-evidence.json"
           install -m 0644 "$web_manifest" "$archive_dir/web-build-manifest.json"
           (
             cd "$archive_dir"
             sha256sum compile-evidence.json web-build-manifest.json web-source-maps.tar.gz \
-              factory-source-map.json factory-source-map-receipt.json >> SHA256SUMS
+              factory-source-map.json factory-source-map-receipt.json \
+              cli-source-map-index.json cli-source-maps.tar.gz >> SHA256SUMS
           )
 
           jq -e --arg source "$SOURCE_REVISION" --arg tree "$(git rev-parse 'HEAD^{tree}')" \
@@ -210,18 +242,22 @@ jobs:
             --arg bun "$compiler" --arg bunRevision "$(bun --revision)" --arg bunArchive "$BUN_BASELINE_SHA256" \
             --arg binary "$binary_sha" \
             --arg ledger "$(sha256sum "$archive_dir/compile-evidence.json" | cut -d' ' -f1)" \
+            --arg cliMapIndex "$(sha256sum "$archive_dir/cli-source-map-index.json" | cut -d' ' -f1)" \
+            --arg cliMaps "$(sha256sum "$archive_dir/cli-source-maps.tar.gz" | cut -d' ' -f1)" \
             --arg web "$(sha256sum "$archive_dir/web-build-manifest.json" | cut -d' ' -f1)" '
               select(.sourceSHA == $source and .checkoutSHA == $source and .runID == $run and
                 .runAttempt == $attempt and ($checkRun | test("^[1-9][0-9]*$"))) |
               {
-                schema: "sf-linux-compile-provenance-v1",
+                schema: "sf-linux-compile-provenance-v2",
                 sourceSHA: $source, sourceTreeSHA: $tree, workflowSHA: $workflow,
                 runId: $run, runAttempt: $attempt, job: $job, checkRunId: $checkRun,
                 target, bun: $bun, bunRevision: $bunRevision, bunArchiveSha256: $bunArchive,
                 archiveSha256, manifestSha256,
                 binary: {path: "bin/orchestra", sha256: $binary},
                 ledger: {file: "compile-evidence.json", sha256: $ledger},
-                webManifest: {file: "web-build-manifest.json", sha256: $web}
+                webManifest: {file: "web-build-manifest.json", sha256: $web},
+                cliSourceMaps: { file: "cli-source-maps.tar.gz", sha256: $cliMaps,
+                  index: "cli-source-map-index.json", indexSha256: $cliMapIndex }
               }
             ' "$receipt" > "$archive_dir/compile-provenance.json"
 
@@ -425,6 +461,16 @@ jobs:
             --arg log "$(sha256sum "$proof_dir/palette-proof.log" | cut -d' ' -f1)" \
             '{path: $path, fileSha256: $file, caseName: $case, status: "pass", jobId: $job, evidenceSha256: $log}' \
             > "$proof_dir/palette-proof.json"
+
+      - name: Exercise installed Tree-sitter for TypeScript and Python
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/azure-entra-package"
+          python3 -B "$RUNNER_TEMP/azure-entra-proof/entra-tree-sitter-proof.py" \
+            "$archive" "$RUNNER_TEMP/azure-entra-vm/current" \
+            "$RUNNER_TEMP/installed-tree-sitter-proof" | tee "$archive/tree-sitter-proof.log"
 
       - name: Upload the validated package and receipt
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
