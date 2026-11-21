@@ -1,0 +1,124 @@
+/* N27 native files leaves. Uses existing Mx/Orchestra tokens and the shared F03 frame. */
+.sf-files {
+  display: grid;
+  gap: 20px;
+  min-inline-size: 0;
+  container-type: inline-size;
+  color: var(--mx-strong);
+  font-family: var(--mx-sans);
+}
+.sf-files .sf-state-panel, .sf-files .sf-state-content { min-inline-size: 0; }
+.sf-files-fields,
+.sf-files-section {
+  display: grid;
+  gap: 14px;
+  min-inline-size: 0;
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-lg);
+  background: var(--mx-raised);
+  padding: 18px;
+}
+.sf-files-fields {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  align-items: end;
+}
+.sf-files-fields h2, .sf-files-fields p {
+  grid-column: 1 / -1;
+}
+.sf-files-fields label {
+  min-inline-size: 0;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-files-fields label:has(> input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+  min-block-size: 44px;
+  gap: 10px;
+}
+.sf-files-fields :is(input:not([type="checkbox"]), select, textarea) {
+  inline-size: 100%;
+  min-inline-size: 0;
+  box-sizing: border-box;
+  min-block-size: 44px;
+  color: var(--mx-strong);
+  background: var(--mx-soft);
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-md);
+  font: inherit;
+  padding: 10px 12px;
+}
+.sf-files-fields input[type="checkbox"] { inline-size: 18px; block-size: 18px; flex: none; }
+.sf-files :is(button, a.mx-btn) { min-block-size: 44px; white-space: normal; overflow-wrap: anywhere; }
+.sf-files :is(input, select, button, summary, a):focus-visible {
+  outline: 2px solid var(--mx-blue);
+  outline-offset: 2px;
+}
+.sf-files-section h2 {
+  margin: 0;
+  font-size: var(--orchestra-font-size-lg);
+  color: var(--mx-strong);
+}
+.sf-files-section h3 {
+  margin: 0;
+  font-size: var(--orchestra-font-size-md);
+}
+.sf-files-section p, .sf-files-section li,
+.sf-files-section dt, .sf-files-section dd,
+.sf-files-section blockquote { overflow-wrap: anywhere; word-break: normal; }
+.sf-files-section dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 10px 16px;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.sf-files-section dt { color: var(--mx-dim); }
+.sf-files-section dd { margin: 0; min-inline-size: 0; }
+.sf-files-section details {
+  padding: 12px;
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-md);
+}
+.sf-files-section summary { cursor: pointer; min-block-size: 36px; overflow-wrap: anywhere; }
+.sf-files-change { padding: 12px 0; border-block-end: 1px solid var(--mx-line); min-inline-size: 0; }
+.sf-files-change:last-child { border: 0; }
+.sf-files-change p { white-space: pre-wrap; }
+.sf-files-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.sf-files-note {
+  background: var(--mx-soft);
+  color: var(--mx-dim);
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-md);
+  padding: 12px;
+  overflow-wrap: anywhere;
+}
+.sf-files-candidates { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.sf-files-candidates > li { padding: 14px; display: flex; align-items: start; gap: 8px; flex-wrap: wrap; min-inline-size: 0; }
+.sf-files-candidates button { max-inline-size: 100%; }
+.sf-files blockquote {
+  padding: 12px 16px;
+  margin: 0;
+  border-inline-start: 3px solid var(--mx-line);
+  background: var(--mx-soft);
+  white-space: pre-wrap;
+}
+@container (max-width: 520px) {
+  .sf-files-fields, .sf-files-section { padding: 12px; grid-template-columns: minmax(0, 1fr); }
+  .sf-files-section dl { grid-template-columns: minmax(0, 1fr); }
+  .sf-files-actions, .sf-files-candidates > li { flex-direction: column; align-items: stretch; }
+  .sf-files-actions .mx-btn, .sf-files-candidates .mx-btn { inline-size: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-files * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}
+
+.sf-files[data-sf-leaf="u24"] .sf-files-candidates > li[data-sf-evidence-state="confirmed"] {
+  border-inline-start: 3px solid var(--mx-blue);
+}
+.sf-files[data-sf-leaf="u24"] .sf-files-section[data-sf-confirmation="review"] {
+  border-color: var(--mx-blue);
+}

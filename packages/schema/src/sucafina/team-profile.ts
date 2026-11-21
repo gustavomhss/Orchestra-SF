@@ -5,7 +5,7 @@
  * installation, membership, policy and resource grants.
  */
 import { Schema } from "effect"
-import { NonNegativeInt, optional } from "../schema"
+import { NonNegativeInt, PositiveInt, optional } from "../schema"
 
 export * as TeamProfile from "./team-profile"
 
@@ -97,6 +97,86 @@ export const Owner = Schema.Struct({
   parseOptions: { onExcessProperty: "error" },
 })
 export interface Owner extends Schema.Schema.Type<typeof Owner> {}
+
+/**
+ * Response namespace for private Session data. The server derives this label
+ * from its currently admitted scope after revalidation. Decoding or echoing it
+ * never grants access and never restores an owner, auth epoch or writer lease.
+ * authorityGeneration is the current durable authority generation, not the
+ * Session's original creation generation or a browser's selection epoch.
+ */
+export const SessionNamespace = Schema.Struct({
+  version: Schema.Literal(1),
+  owner: Owner,
+  authorityGeneration: PositiveInt,
+}).annotate({
+  identifier: "Sucafina.TeamProfile.SessionNamespace",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface SessionNamespace extends Schema.Schema.Type<typeof SessionNamespace> {}
+
+/**
+ * Explicitly shared configuration content. These selectors and inline texts do
+ * not authorize a provider, tool, process or filesystem path. Fields with
+ * secret, executable or unclassified provenance are deliberately outside v1.
+ */
+const SharedAgentId = Schema.String.check(
+  Schema.isPattern(/^[a-z][a-z0-9_-]{0,63}$/),
+  Schema.makeFilter((value) => !["__proto__", "prototype", "constructor"].includes(value)),
+)
+const SharedModelSelector = Schema.NonEmptyString.check(
+  Schema.isMaxLength(512), Schema.isTrimmed(),
+  Schema.isPattern(/^[A-Za-z0-9][A-Za-z0-9._-]*\/[A-Za-z0-9][A-Za-z0-9._:/-]*$/),
+)
+const SharedText = Schema.String.check(Schema.isPattern(/^[^\u0000]*$/), Schema.isMaxLength(16384))
+export const ConfigurationAgent = Schema.Struct({
+  name: Schema.optional(SharedText.check(Schema.isMaxLength(256))),
+  description: Schema.optional(SharedText.check(Schema.isMaxLength(2048))),
+  system: Schema.optional(SharedText),
+  model: Schema.optional(SharedModelSelector),
+  variant: Schema.optional(OpaqueText),
+  mode: Schema.optional(Schema.Literals(["subagent", "primary", "all"])),
+  hidden: Schema.optional(Schema.Boolean),
+  disabled: Schema.optional(Schema.Boolean),
+}).annotate({
+  identifier: "Sucafina.TeamProfile.ConfigurationAgent",
+  parseOptions: { onExcessProperty: "error" },
+})
+export const ConfigurationDocument = Schema.Struct({
+  version: Schema.Literal(1),
+  settings: Schema.Struct({
+    model: Schema.optional(SharedModelSelector),
+    default_agent: Schema.optional(SharedAgentId),
+    agents: Schema.optional(Schema.Record(SharedAgentId, ConfigurationAgent).check(
+      Schema.makeFilter((agents) => Object.keys(agents).length <= 100, { message: "At most 100 shared agents" }),
+    )),
+  }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+}).annotate({
+  identifier: "Sucafina.TeamProfile.ConfigurationDocument",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface ConfigurationDocument extends Schema.Schema.Type<typeof ConfigurationDocument> {}
+
+export const ConfigurationSnapshot = Schema.Struct({
+  origin: Schema.Literal("installation-team-store"),
+  profile: Ref,
+  configRevision: NonNegativeInt,
+  document: ConfigurationDocument,
+}).annotate({
+  identifier: "Sucafina.TeamProfile.ConfigurationSnapshot",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface ConfigurationSnapshot extends Schema.Schema.Type<typeof ConfigurationSnapshot> {}
+
+export const ConfigurationCommand = Schema.Struct({
+  profile: Ref,
+  expectedRevision: NonNegativeInt,
+  document: ConfigurationDocument,
+}).annotate({
+  identifier: "Sucafina.TeamProfile.ConfigurationCommand",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface ConfigurationCommand extends Schema.Schema.Type<typeof ConfigurationCommand> {}
 
 export const Binding = Schema.Struct({
   owner: Owner,
@@ -281,3 +361,103 @@ export const Projection = Schema.Union([
   parseOptions: { onExcessProperty: "error" },
 })
 export type Projection = Schema.Schema.Type<typeof Projection>
+
+/** Administration has no Team selection or transferable authority revision. */
+export const AdminUnavailableReason = Schema.Literals([
+  "identity-unavailable",
+  "capability-disabled",
+  "consent-required",
+  "forbidden",
+  "rate-limited",
+  "timeout",
+  "incomplete",
+  "invalid-response",
+  "provider-unavailable",
+  "policy-unavailable",
+  "policy-changed",
+  "store-unavailable",
+]).annotate({ identifier: "Sucafina.TeamProfile.AdminUnavailableReason" })
+export type AdminUnavailableReason = typeof AdminUnavailableReason.Type
+
+/** A configuration intent; the server separately verifies current supreme membership. */
+export const AdminCommand = Schema.Struct({
+  action: Schema.Literals(["enable", "disable", "remove"]),
+  profile: Ref,
+  expectedRevision: NonNegativeInt,
+}).annotate({
+  identifier: "Sucafina.TeamProfile.AdminCommand",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface AdminCommand extends Schema.Schema.Type<typeof AdminCommand> {}
+
+export const AdminProfile = Schema.Struct({
+  profile: Ref,
+  enabled: Schema.Boolean,
+}).annotate({
+  identifier: "Sucafina.TeamProfile.AdminProfile",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface AdminProfile extends Schema.Schema.Type<typeof AdminProfile> {}
+
+const AdminProfiles = Schema.Array(AdminProfile).check(
+  Schema.isMaxLength(10000),
+  Schema.makeFilter(
+    (profiles) => new Set(profiles.map((entry) => JSON.stringify([
+      entry.profile.installationId, entry.profile.tenantId, entry.profile.teamObjectId,
+    ]))).size === profiles.length && profiles.every((entry) =>
+      entry.profile.installationId === profiles[0]?.profile.installationId &&
+      entry.profile.tenantId === profiles[0]?.profile.tenantId),
+    { message: "Administrative profiles must be unique and belong to one installation and resource tenant" },
+  ),
+)
+
+const AdminFailure = Schema.Union([
+  Schema.Struct({ status: Schema.Literal("unauthenticated") }),
+  Schema.Struct({ status: Schema.Literal("denied") }),
+  Schema.Struct({ status: Schema.Literal("invalid-request") }),
+  Schema.Struct({ status: Schema.Literal("unavailable"), reason: AdminUnavailableReason }),
+])
+
+/** Shared configuration only; no groups, grants, audit rows, tokens or session handles. */
+export const AdminListResult = Schema.Union([
+  Schema.Struct({
+    status: Schema.Literal("ok"),
+    configRevision: NonNegativeInt,
+    profiles: AdminProfiles,
+  }),
+  AdminFailure,
+]).annotate({
+  identifier: "Sucafina.TeamProfile.AdminListResult",
+  parseOptions: { onExcessProperty: "error" },
+})
+export type AdminListResult = Schema.Schema.Type<typeof AdminListResult>
+
+/** Compare-and-swap outcome; revision numbers are safe integers and are never coerced. */
+export const AdminConfigureResult = Schema.Union([
+  Schema.Struct({
+    status: Schema.Literal("ok"),
+    configRevision: NonNegativeInt,
+    changed: Schema.Boolean,
+  }),
+  Schema.Struct({ status: Schema.Literal("conflict"), configRevision: NonNegativeInt }),
+  Schema.Struct({ status: Schema.Literal("not-found") }),
+  AdminFailure,
+]).annotate({
+  identifier: "Sucafina.TeamProfile.AdminConfigureResult",
+  parseOptions: { onExcessProperty: "error" },
+})
+export type AdminConfigureResult = Schema.Schema.Type<typeof AdminConfigureResult>
+
+/** Administrative read only; no personal token, connection, run or lease is transported. */
+export const ConfigurationReadResult = Schema.Union([
+  Schema.Struct({ status: Schema.Literal("ok"), configuration: ConfigurationSnapshot }),
+  Schema.Struct({ status: Schema.Literal("not-found") }),
+  Schema.Struct({ status: Schema.Literal("invalid-request") }),
+  Schema.Struct({ status: Schema.Literal("unauthenticated") }),
+  Schema.Struct({ status: Schema.Literal("denied") }),
+  Schema.Struct({ status: Schema.Literal("unavailable"), reason: AdminUnavailableReason }),
+]).annotate({
+  identifier: "Sucafina.TeamProfile.ConfigurationReadResult",
+  parseOptions: { onExcessProperty: "error" },
+})
+export type ConfigurationReadResult = Schema.Schema.Type<typeof ConfigurationReadResult>

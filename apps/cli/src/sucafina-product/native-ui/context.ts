@@ -1,18 +1,23 @@
 import { Schema } from "effect"
 import {
   SfContextResult as SfContextResultSchema,
+  SfTeamContextResult,
+  type SfTeamContextQuery,
   sfIsCatalogResource,
   type SfContext, type SfContextResult, type SfExpectedContextBinding,
 } from "@orchestra/schema/sucafina/context"
+import { readTeamContextQuery } from "../../../../../modules/sucafina/Sucafinav1/runtime/team-profile-selector.ts"
 import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import type { SfNativeHostDependencies } from "./router.ts"
 
 type TrustedContextReader = (request: Request, expected: SfExpectedContextBinding) => Promise<SfContextResult>
-type HostWithReader = SfHostServices & Readonly<{ nativeUiProducts?: Readonly<{
+type HostWithReader = Readonly<{ nativeUiProducts?: Readonly<{
   /** I00 installs a read-only live view of runtime.identity(), never caller data. */
   currentBinding?: () => Readonly<{ installationId: string; projectId: string; hostId: string }> | undefined
   readContext?: TrustedContextReader
   readRequestContext?: TrustedContextReader
+  teamTenantId?: string
+  readTeamContext?: (request: Request, expected: SfTeamContextQuery) => Promise<SfTeamContextResult>
 }> }>
 const jsonHeaders = (additional?: HeadersInit): Headers => {
   const headers = new Headers(additional)
@@ -44,7 +49,7 @@ function expectedContext(request: Request, origin: string, mount: string): SfExp
     hostId: url.searchParams.get("hostId")!,
   }
 }
-function validAvailability(context: SfContext): boolean {
+function validAvailability(context: Pick<SfContext, "availability">): boolean {
   return context.availability.every((resource) => {
     if (!sfIsCatalogResource(resource) || !resource.operations.length ||
         resource.operations.some((entry) =>
@@ -65,7 +70,10 @@ function validAvailability(context: SfContext): boolean {
  * role map bootstrap or optimistic operation availability.
  */
 export function createSfContextHandler(
-  deps: Omit<SfNativeHostDependencies, "readContext">,
+  deps: Omit<SfNativeHostDependencies, "readContext" | "runtime" | "application"> & Readonly<{
+    runtime: () => SfHostServices | HostWithReader | undefined
+    application?: SfNativeHostDependencies["application"]
+  }>,
 ): Readonly<{ readContext(request: Request): Promise<SfContextResult>; handle(request: Request): Promise<Response> }> {
   const read = async (request: Request, internal: boolean): Promise<SfContextResult> => {
     const services = deps.runtime() as HostWithReader | undefined
@@ -92,8 +100,52 @@ export function createSfContextHandler(
         !validAvailability(result.value)) return { status: "unavailable", reason: "contract-mismatch" }
     return result
   }
+  const readTeam = async (request: Request, expected: SfTeamContextQuery): Promise<SfTeamContextResult> => {
+    const services = deps.runtime() as HostWithReader | undefined
+    const producer = services?.nativeUiProducts
+    const binding = producer?.currentBinding?.()
+    if (!producer?.readTeamContext || !producer.teamTenantId || !binding)
+      return { status: "unavailable", reason: "host-unavailable" }
+    if (expected.installationId !== binding.installationId || expected.hostId !== binding.hostId ||
+      expected.tenantId !== producer.teamTenantId || request.signal.aborted)
+      return { status: "unavailable", reason: "contract-mismatch" }
+    const result = await producer.readTeamContext(request, expected).catch((): SfTeamContextResult =>
+      ({ status: "unavailable", reason: "host-unavailable" }))
+    if (request.signal.aborted || deps.runtime() !== services || producer.currentBinding?.() !== binding ||
+      !Schema.is(SfTeamContextResult)(result)) return { status: "unavailable", reason: "contract-mismatch" }
+    if (result.status !== "ok") return result
+    const value = result.value
+    if (!sameBinding(binding, value.stamp) || value.profile.principal.tenantId !== expected.tenantId ||
+      expected.kind === "administration" && value.stamp.team ||
+      expected.kind === "team" && value.profile.teams.status === "ready" &&
+        value.profile.teams.selected.teamObjectId !== expected.teamObjectId ||
+      !validAvailability(value)) return { status: "unavailable", reason: "contract-mismatch" }
+    return result
+  }
   const readContext = (request: Request) => read(request, true)
   const handle = async (request: Request): Promise<Response> => {
+    const producer = (deps.runtime() as HostWithReader | undefined)?.nativeUiProducts
+    if (producer?.teamTenantId !== undefined || new URL(request.url).searchParams.has("contractRevision")) {
+      const binding = producer?.currentBinding?.()
+      if (!producer?.teamTenantId || !binding) return new Response(JSON.stringify({
+        status: "unavailable", reason: "host-unavailable",
+      }), { status: 503, headers: jsonHeaders() })
+      const expected = readTeamContextQuery(request, {
+        installationId: binding.installationId, tenantId: producer.teamTenantId,
+        origin: deps.origin, mount: deps.mount,
+      })
+      if (!expected || expected.hostId !== binding.hostId) return malformed()
+      if (request.method === "HEAD") return new Response(null, {
+        status: 200, headers: jsonHeaders({ "X-SF-Contract-Revision": "sf-team-profile/1" }),
+      })
+      const result = await readTeam(request, expected)
+      const status = result.status === "ok" ? 200 : result.status === "unauthenticated" ? 401 :
+        result.status === "denied" ? 403 : result.reason === "contract-mismatch" ? 409 : 503
+      return new Response(JSON.stringify(result), { status, headers: jsonHeaders(result.status === "ok" ? {
+        "X-SF-Contract-Revision": result.value.contractRevision,
+        "X-SF-Access-Revision": result.value.stamp.accessRevision,
+      } : undefined) })
+    }
     const expected = expectedContext(request, deps.origin, deps.mount)
     if (!expected) return malformed()
     if (request.method !== "GET" && request.method !== "HEAD")

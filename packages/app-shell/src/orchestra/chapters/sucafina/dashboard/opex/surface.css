@@ -1,0 +1,138 @@
+/* Native U39/U40 budget surfaces. No global overrides or second sidebar. */
+.sf-budget-surface {
+  min-width: 0;
+  max-width: 100%;
+  container-type: inline-size;
+}
+.sf-budget-surface .sf-budget-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-lg, 1.25rem);
+  align-items: start;
+  min-width: 0;
+}
+.sf-budget-owners, .sf-budget-detail, .sf-budget-editor, .sf-budget-detail-section {
+  min-width: 0;
+}
+.sf-budget-owners label, .sf-budget-form label {
+  display: block;
+  font-weight: 600;
+  margin-block: .75rem .3rem;
+}
+.sf-budget-owners input, .sf-budget-form input, .sf-budget-form select, .sf-budget-form textarea {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  min-width: 0;
+  max-width: 100%;
+  font: inherit;
+  border-radius: var(--radius-sm, .375rem);
+  border: 1px solid var(--border, currentColor);
+  padding: .55rem .65rem;
+  background: var(--surface, transparent);
+  color: inherit;
+}
+.sf-budget-form {
+  margin-block: 1.25rem;
+  padding: 1.25rem;
+  max-width: 46rem;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+.sf-budget-form input[readonly] { opacity: .85; }
+.sf-budget-actions, .sf-budget-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  gap: .5rem;
+  margin-block: .8rem;
+}
+.sf-budget-actions button, .sf-budget-row-actions button {
+  min-height: 2.75rem;
+  max-width: 100%;
+  white-space: normal;
+  text-align: start;
+}
+.sf-budget-months-scroll {
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid var(--border, currentColor);
+  border-radius: .4rem;
+}
+.sf-budget-months {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.sf-budget-months caption {
+  text-align: start;
+  font-weight: 650;
+  padding: .65rem;
+}
+.sf-budget-months td, .sf-budget-months th {
+  padding: .65rem;
+  border-bottom: 1px solid var(--border, currentColor);
+  vertical-align: top;
+  text-align: start;
+}
+.sf-budget-months thead th { font-weight: 600; }
+.sf-budget-months td:nth-child(2),
+.sf-budget-months td:nth-child(3),
+.sf-budget-months td:nth-child(4),
+.sf-budget-number {
+  font-variant-numeric: tabular-nums;
+}
+.sf-budget-hint {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-block: .65rem;
+}
+.sf-budget-hint > div { min-width: 8rem; }
+.sf-budget-hint dt { font-weight: 600; }
+.sf-budget-hint dd { margin: .25rem 0 0; }
+.sf-budget-status { margin-block: .75rem; }
+.sf-budget-error { color: var(--color-danger, #b42318); margin-block: .75rem; }
+.sf-budget-confirm {
+  border: 1px solid var(--border, currentColor);
+  border-radius: .4rem;
+  padding: .8rem;
+}
+.sf-budget-source {
+  overflow-wrap: anywhere;
+}
+.sf-budget-source code { white-space: normal; overflow-wrap: anywhere; }
+@container (min-width: 940px) {
+  .sf-budget-surface .sf-budget-body:has(.sf-budget-detail) {
+    grid-template-columns: minmax(320px, 1fr) minmax(480px, 1.45fr);
+  }
+}
+@container (max-width: 520px) {
+  .sf-budget-months { min-width: 0; }
+  .sf-budget-months thead { display: none; }
+  .sf-budget-months tbody { display: grid; gap: .75rem; padding: .5rem; }
+  .sf-budget-months tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border: 1px solid var(--border, currentColor);
+    border-radius: .4rem;
+    padding: .35rem;
+    min-width: 0;
+  }
+  .sf-budget-months th, .sf-budget-months td {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    padding: .4rem;
+    border-bottom: 0;
+  }
+  .sf-budget-months tbody th { grid-column: 1 / -1; }
+  .sf-budget-months tbody td:last-child { grid-column: 1 / -1; }
+  .sf-budget-row-actions button { flex: 1 1 8rem; }
+  .sf-budget-form { padding: .75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-budget-surface * { scroll-behavior: auto !important; }
+}

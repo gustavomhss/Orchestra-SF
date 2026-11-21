@@ -10,7 +10,7 @@ export function BrandLoading() {
       data-tauri-drag-region
       data-app-loading
       role="status"
-      aria-label={language.t("common.loading")}
+      aria-label={language.t("sf.common.loading")}
     >
       <HugrSplash />
     </div>

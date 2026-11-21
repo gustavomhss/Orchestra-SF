@@ -1,0 +1,26 @@
+@import "../agenda/agenda.css";
+/* Native report/review layouts share the app's tokens and existing mx-card kit. */
+.sf-n28-summary dl, .sf-n28-values, .sf-n28-dual {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: .75rem;
+  min-width: 0;
+}
+.sf-n28-summary dt, .sf-n28-values dt { font-weight: 600; }
+.sf-n28-summary dd, .sf-n28-values dd { margin-inline-start: 0; overflow-wrap: anywhere; }
+.sf-n28-values > div { display: grid; gap: .25rem; min-width: 0; }
+.sf-n28-preserved[data-sf-presentation="true"] .sf-n28-section { max-width: 72rem; }
+.sf-n28-preserved[data-sf-presentation="true"] .sf-n28-items > li { gap: 1rem; }
+.sf-n28-scroll { overflow-x: auto; max-width: 100%; }
+.sf-n28-scroll table { border-collapse: collapse; width: 100%; min-width: 30rem; }
+.sf-n28-scroll th, .sf-n28-scroll td { padding: .5rem; text-align: start; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+.sf-n28-dual > div { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 767px) {
+  .sf-n28-scroll:focus-visible { outline: 2px solid currentColor; }
+  .sf-n28-dual { grid-template-columns: 1fr; }
+}
+
+/* Scope-qualified U32 comparison: preserve readable source and evidence details on narrow screens. */
+.sf-n28-source-list { margin: .25rem 0; padding-inline-start: 1.25rem; overflow-wrap: anywhere; }
+.sf-n28-source-list > li + li { margin-block-start: .35rem; }
+.sf-n28-compare-value { display: grid; gap: .25rem; min-width: 12rem; overflow-wrap: anywhere; }
+.sf-n28-change-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-block-start: .25rem; }
+.sf-n28-change-tags span { font-size: .8em; font-weight: 500; }

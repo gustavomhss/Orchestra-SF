@@ -1,0 +1,39 @@
+/* N20 U45: version-aware FX view, no global theme or table overrides. */
+.sf-n20-fx {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+  width: 100%;
+}
+.sf-n20-fx-toolbar,
+.sf-n20-fx-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  align-items: end;
+}
+.sf-n20-fx-toolbar > label,
+.sf-n20-fx-editor > label { display: grid; gap: .375rem; min-width: min(100%, 13rem); }
+.sf-n20-fx-toolbar :is(select, input), .sf-n20-fx-editor input { max-width: 100%; min-width: 0; }
+.sf-n20-fx-base,
+.sf-n20-fx-usage,
+.sf-n20-fx-editor,
+.sf-n20-fx-review { display: grid; gap: .75rem; padding: 1.25rem; min-width: 0; }
+.sf-n20-fx-base h2, .sf-n20-fx-rates h2, .sf-n20-fx-usage h2 { margin-top: 0; }
+.sf-n20-fx-base strong { font-variant-numeric: tabular-nums; }
+.sf-n20-fx-rates { min-width: 0; }
+.sf-n20-fx-rates .sf-s01-table-viewport { max-width: 100%; overflow-x: auto; }
+.sf-n20-fx-usage ul { margin: 0; overflow-wrap: anywhere; }
+.sf-n20-fx-editor { grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
+.sf-n20-fx-editor h2,
+.sf-n20-fx-editor p,
+.sf-n20-fx-editor .sf-n20-fx-actions { grid-column: 1 / -1; }
+.sf-n20-fx-error { color: var(--mx-danger, currentColor); overflow-wrap: anywhere; }
+.sf-n20-fx :is(input, select, button, a):focus-visible { outline: 2px solid var(--mx-focus, currentColor); outline-offset: 2px; }
+@media (max-width: 500px) {
+  .sf-n20-fx-toolbar > label, .sf-n20-fx-actions > button { width: 100%; }
+  .sf-n20-fx-base, .sf-n20-fx-usage, .sf-n20-fx-editor, .sf-n20-fx-review { padding: .75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-n20-fx * { scroll-behavior: auto; animation: none; }
+}

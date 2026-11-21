@@ -1,0 +1,53 @@
+/* N25/U22 pure BI views; no alternate chart engine or new palette. */
+.sf-u22-decision-figure { inline-size: 100%; max-inline-size: 100%; min-inline-size: 0; }
+.sf-u22-detail {
+  display: grid;
+  gap: .7rem;
+  min-inline-size: 0;
+  margin-block-start: 1rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--mx-line);
+}
+.sf-u22-detail h3, .sf-u22-detail h4 { margin: 0; }
+.sf-u22-detail p, .sf-u22-detail li, .sf-u22-detail dt, .sf-u22-detail dd {
+  overflow-wrap: anywhere;
+}
+.sf-u22-detail dl {
+  display: grid;
+  grid-template-columns: minmax(9rem, 1fr) minmax(0, 2fr);
+  gap: .45rem .85rem;
+  margin: 0;
+}
+.sf-u22-detail dl dd { margin: 0; }
+.sf-u22-detail dl dt { color: var(--mx-dim); }
+.sf-u22-table-scroll { min-inline-size: 0; max-inline-size: 100%; overflow-x: auto; }
+.sf-u22-table-scroll table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.sf-u22-table-scroll caption { text-align: start; font-weight: 600; margin-bottom: .5rem; }
+.sf-u22-table-scroll th, .sf-u22-table-scroll td {
+  text-align: start;
+  min-inline-size: 7rem;
+  padding: .6rem .7rem;
+  border-block-end: 1px solid var(--mx-line);
+  overflow-wrap: anywhere;
+}
+.sf-u22-timeline { display: grid; list-style: none; padding: 0; gap: .55rem; margin: 0; }
+.sf-u22-timeline > li {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem;
+  padding: .7rem;
+  border-inline-start: 3px solid var(--mx-blue);
+  background: var(--mx-soft);
+  min-inline-size: 0;
+}
+.sf-u22-status { color: var(--mx-dim); }
+.sf-u22-drilldown { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 0; padding: 0; }
+.sf-u22-drilldown > li { min-inline-size: 0; max-inline-size: 100%; }
+.sf-u22-drilldown button { max-inline-size: 100%; min-block-size: 44px; overflow-wrap: anywhere; text-align: start; white-space: normal; }
+.sf-u22-detail button:focus-visible { outline: 2px solid var(--mx-blue); outline-offset: 2px; }
+@container sf-frame (max-width: 540px) {
+  .sf-u22-detail dl { grid-template-columns: minmax(0, 1fr); }
+  .sf-u22-drilldown { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .sf-u22-drilldown button { inline-size: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-u22-detail * { transition-duration: 0s; animation-duration: 0s; scroll-behavior: auto; }
+}

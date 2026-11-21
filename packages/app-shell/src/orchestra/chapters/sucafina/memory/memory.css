@@ -1,0 +1,50 @@
+/* N30 U26. Owner-scoped, token-inheriting layout: no private overlays or new shell. */
+.sf-memory { display: grid; gap: 1.25rem; min-width: 0; color: inherit; }
+.sf-memory-form { display: flex; align-items: end; flex-wrap: wrap; gap: .75rem; min-width: 0; }
+.sf-memory-form label { display: grid; gap: .35rem; flex: 1 1 10.5rem; min-width: 0; font: inherit; }
+.sf-memory-form input { width: 100%; min-width: 0; border: 1px solid color-mix(in srgb, currentColor 30%, transparent); background: transparent; color: inherit; border-radius: .5rem; padding: .65rem .75rem; font: inherit; }
+.sf-memory-form button { min-height: 2.75rem; }
+.sf-memory-help { width: 100%; font-size: .9em; opacity: .8; margin: 0; }
+.sf-memory-section { min-width: 0; display: grid; gap: .75rem; }
+.sf-memory-section h2, .sf-memory-section h3 { margin: .25rem 0; font: inherit; font-weight: 650; }
+.sf-memory-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+.sf-memory-list li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: start; gap: .75rem; padding: .9rem; border-radius: .65rem; border: 1px solid color-mix(in srgb, currentColor 19%, transparent); min-width: 0; overflow-wrap: anywhere; }
+.sf-memory-list li > div { min-width: min(100%, 16rem); flex: 1 1 16rem; display: grid; gap: .25rem; }
+.sf-memory-list small { opacity: .78; }
+.sf-memory-facts { display: grid; grid-template-columns: minmax(7rem, .45fr) minmax(0, 1fr); gap: .5rem 1rem; margin: 0; overflow-wrap: anywhere; }
+.sf-memory-facts dt { opacity: .78; }
+.sf-memory-facts dd { margin: 0; min-width: 0; }
+.sf-memory-section ul:not(.sf-memory-list) { margin-top: 0; overflow-wrap: anywhere; }
+@media (max-width: 37rem) { .sf-memory-facts { grid-template-columns: 1fr; gap: .15rem; } .sf-memory-facts dd { margin-bottom: .5rem; } .sf-memory-form label, .sf-memory-form button { flex-basis: 100%; } }
+@media (prefers-reduced-motion: reduce) { .sf-memory * { scroll-behavior: auto; } }
+
+
+/* 217/UI62 — source-locked similarity. Token inheriting, no overlay or private cache. */
+.sf-memory-similarity-form { display: grid; gap: .95rem; min-width: 0; }
+.sf-memory-similarity-form > label, .sf-memory-section > label { display: grid; gap: .4rem; min-width: 0; }
+.sf-memory-similarity input[type="search"], .sf-memory-similarity select {
+  width: 100%; min-width: 0; font: inherit; color: inherit; background: transparent;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: .5rem; padding: .65rem .75rem;
+}
+.sf-memory-similarity .sf-memory-check {
+  display: flex; align-items: center; gap: .6rem; min-width: 0;
+  overflow-wrap: anywhere;
+}
+.sf-memory-similarity .sf-memory-check input { flex: 0 0 auto; width: 1.15rem; height: 1.15rem; }
+.sf-memory-candidates { min-width: 0; margin: 0; padding: .8rem; border-radius: .65rem;
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent); }
+.sf-memory-candidates legend { font-weight: 650; padding-inline: .3rem; }
+.sf-memory-candidate-grid { display: grid; gap: .6rem; max-height: 17rem; overflow-y: auto; min-width: 0; }
+.sf-memory-candidate-grid label { padding: .4rem; border-radius: .35rem; }
+.sf-memory-candidate-grid label:focus-within { outline: 2px solid currentColor; outline-offset: 1px; }
+.sf-memory-similarity .sf-memory-list li > div { min-width: min(100%, 17rem); }
+.sf-memory-similarity [data-sf-similar-detail] { border-block-start: 1px solid color-mix(in srgb, currentColor 24%, transparent); padding-block-start: 1rem; }
+@media (min-width: 60rem) {
+  .sf-memory-candidate-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 37rem) {
+  .sf-memory-similarity-form, .sf-memory-similarity .sf-memory-list li { gap: .8rem; }
+  .sf-memory-similarity .sf-memory-list li > button { width: 100%; }
+  .sf-memory-similarity .sf-memory-candidate-grid { grid-template-columns: minmax(0, 1fr); }
+}

@@ -3,7 +3,7 @@ import { useDialog } from "@orchestra/ui/context/dialog"
 import { Dialog, DialogHeader, DialogTitleGroup } from "@orchestra/ui/v2/dialog-v2"
 import { Icon } from "@orchestra/ui/v2/icon"
 import { ProjectAvatar } from "@orchestra/ui/v2/project-avatar-v2"
-import { useNavigate } from "@solidjs/router"
+import { useLocation, useNavigate } from "@solidjs/router"
 import { skipToken, useQuery } from "@tanstack/solid-query"
 import { createMemo, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -11,6 +11,7 @@ import { useDirectoryPicker } from "@/components/directory-picker"
 import { useCommand } from "@/context/command"
 import { useGlobal } from "@/context/global"
 import { directoryKey } from "@/context/global-sync/utils"
+import { chapterPageTitleKey, labeledNativeHref } from "@/context/layout-route"
 import { getProjectAvatarVariant, type LocalProject, useLayout } from "@/context/layout"
 import { useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
@@ -20,6 +21,8 @@ import { HugrBrand } from "@/orchestra/brand"
 import { isSucafinaBrand } from "@/orchestra/brand-identity"
 import { chapterPages } from "@/orchestra/chapter-route"
 import { FlightNavChip } from "@/orchestra/chapters/flight-engineer/entry"
+import { requestSfOwnerShellExit237 } from "@/orchestra/chapters/sucafina/host/owner-runtime231"
+import { openSfNativeChapter, requestSfNativeChapterNavigation, sfNativeChapterEntry } from "@/orchestra/chapters/sucafina/host/native-chapter-entry"
 import { createAdvancedNavigation } from "@/orchestra/compact-navigation"
 import { advancedNavigation, navigation, primaryNavigation, settingsNavigation, showWip } from "@/orchestra/navigation"
 import { OrchestraNavigationToggle } from "@/orchestra/navigation-toggle"
@@ -44,6 +47,22 @@ import { showToast } from "@/utils/toast"
 const icons = {
   home: '<path d="M2.8 6.6 8 2.6l5.2 4v6a1 1 0 0 1-1 1h-2.7v-3.8H6.5v3.8H3.8a1 1 0 0 1-1-1z"/>',
   chat: '<path d="M2.6 3.6h10.8v6.9H6.9l-3.1 2.3v-2.3H2.6z"/>',
+  // Sucafina chapter marks. Same 16-unit stroke grid as the nav icons; each silhouette is that screen.
+  "sf-home": '<path d="M2.8 11.4h10.4"/><path d="M4.4 11.4a3.6 3.6 0 0 1 7.2 0"/><path d="M8 3.1v1.5M5 4.9l1 .9M11 4.9l-1 .9"/>',
+  "sf-decisions": '<path d="M8 2.4 12.6 8 8 13.6 3.4 8Z"/><path d="m6.15 8.1 1.3 1.3 2.4-2.55"/>',
+  "sf-dashboard": '<rect x="2" y="2" width="5.2" height="5.2" rx="1.05"/><rect x="8.8" y="2" width="5.2" height="5.2" rx="1.05"/><rect x="2" y="8.8" width="5.2" height="5.2" rx="1.05"/><rect x="8.8" y="8.8" width="5.2" height="5.2" rx="1.05"/>',
+  "sf-people": '<circle cx="3.7" cy="5.2" r="1.25"/><circle cx="8" cy="4.5" r="1.5"/><circle cx="12.3" cy="5.2" r="1.25"/><path d="M2.1 12.3c.7-2.1 2-3 3.2-3h5.4c1.2 0 2.5.9 3.2 3"/>',
+  "sf-operations": '<rect x="2.6" y="2.1" width="10.8" height="3.2" rx=".75"/><rect x="2.6" y="6.4" width="10.8" height="3.2" rx=".75"/><rect x="2.6" y="10.7" width="10.8" height="3.2" rx=".75"/><path d="M11.2 3v1.4M11.2 7.3v1.4M11.2 11.6v1.4"/>',
+  "sf-portfolio": '<path d="M4.6 3.2h6.8"/><path d="M3.4 5.2h9.2"/><rect x="2.2" y="7" width="11.6" height="6.6" rx="1.05"/>',
+  "sf-procurement": '<rect x="3.1" y="3.6" width="9.8" height="10" rx="1.05"/><path d="M6.2 3.6V2.2h3.6v1.4"/><path d="M5.3 6.8h5.4M5.3 9h5.4M5.3 11.1h3.2"/>',
+  "sf-planner": '<path d="M2.6 2.3v11.4"/><rect x="4.4" y="3.1" width="6.4" height="2" rx="1"/><rect x="4.4" y="7" width="8.8" height="2" rx="1"/><rect x="4.4" y="10.9" width="4.4" height="2" rx="1"/>',
+  "sf-work": '<circle cx="4.5" cy="4.7" r="1.65"/><path d="M2.3 11.5c.45-1.9 1.45-2.8 2.2-2.8s1.75.9 2.2 2.8"/><path d="M9.1 4.1h4.3M9.1 7.2h4.3M9.1 10.3h2.7"/>',
+  "sf-bi": '<path d="M2.4 2.5v11h11.2"/><path d="m4.2 10.2 2.5-2.5 2.1 1.6 3.4-4"/>',
+  "sf-reviews": '<rect x="2.5" y="1.8" width="11" height="12.4" rx="1.2"/><path d="M2.5 4.6h11"/><path d="M4.2 7.1h1.15M4.2 9.4h1.15M4.2 11.7h1.15"/><path d="M6.3 7.1h5M6.3 9.4h5M6.3 11.7h3.2"/>',
+  "sf-imports": '<path d="M8 1.9v6.4"/><path d="m5.1 6.1 2.9 2.9 2.9-2.9"/><path d="M2.8 11.2h10.4v1.6a1 1 0 0 1-1 1H3.8a1 1 0 0 1-1-1z"/>',
+  "sf-documents": '<path d="M4.8 3.4h6.4v8.6"/><path d="M3.2 4.8v7.6"/><path d="M6.4 5.2h4.2l1.7 1.7v6.2a.9.9 0 0 1-.9.9H6.4a.9.9 0 0 1-.9-.9V6.1a.9.9 0 0 1 .9-.9z"/><path d="M10.6 5.3v1.7h1.7"/>',
+  "sf-memory": '<circle cx="8" cy="11.6" r="1.15"/><path d="M5.3 9a3.7 3.7 0 0 1 5.4 0"/><path d="M3.2 6.7a6.6 6.6 0 0 1 9.6 0"/>',
+  "sf-routines": '<path d="M12.6 6.2A4.6 4.6 0 1 0 11.4 11.8"/><path d="M12.6 2.8v3.5H9.1"/>',
   inbox: '<path d="m2 9 2-6h8l2 6v4H2V9Z"/><path d="M2 9h3l1.2 2h3.6L11 9h3"/>',
   // Projects board: three columns of cards.
   board: '<rect x="2" y="2.6" width="3.2" height="10.8" rx="1"/><rect x="6.4" y="2.6" width="3.2" height="7.4" rx="1"/><rect x="10.8" y="2.6" width="3.2" height="4.6" rx="1"/>',
@@ -95,6 +114,7 @@ export function OrchestraSidebar(props: {
   const language = useLanguage()
   const command = useCommand()
   const navigate = useNavigate()
+  const location = useLocation()
   const dialog = useDialog()
   const pickDirectory = useDirectoryPicker()
   const platform = usePlatform()
@@ -260,6 +280,7 @@ export function OrchestraSidebar(props: {
 
   async function selectProject(conn: ServerConnection.Any, project: LocalProject, draft = false) {
     if (global.servers.health[ServerConnection.key(conn)]?.healthy === false) return
+    if (!(await requestSfOwnerShellExit237())) return
     const current = ++requests.profile
     const route = layout.route()
     const ctx = global.ensureServerCtx(conn)
@@ -316,7 +337,36 @@ export function OrchestraSidebar(props: {
     })
   }
 
-  function openChapter(id: string, view = "") {
+  async function openChapter(id: string, view = "") {
+    const native = sfNativeChapterEntry(id)
+    if (native) {
+      const label = navigation.find((item) => item.id === id)?.label
+      const named = label ? labeledNativeHref(id, label) : undefined
+      if (named && named !== native) {
+        if (!(await requestSfOwnerShellExit237())) return
+        const target = profile()
+        const directory = target.project?.worktree ?? target.directory
+        if (directory) layout.home.setSelection({ server: target.server, directory })
+        navigate(named)
+        return
+      }
+      const target = profile()
+      const directory = target.project?.worktree ?? target.directory
+      await openSfNativeChapter({ chapter: id, server: target.server, directory }, {
+        request: requestSfNativeChapterNavigation,
+        confirmExit: requestSfOwnerShellExit237,
+        sameProfile: () => {
+          const latest = profile()
+          return !requests.disposed && latest.server === target.server &&
+            pathKey(latest.project?.worktree ?? latest.directory ?? "") === pathKey(directory ?? "")
+        },
+        // Initial discovery uses the actual selected profile, never a remembered installation ID.
+        selectProfile: () => layout.home.setSelection({ server: target.server, ...(directory ? { directory } : {}) }),
+        navigate,
+      })
+      return
+    }
+    if (!(await requestSfOwnerShellExit237())) return
     // Chapter pages read the Home selection; carry the profile the user is looking at.
     const target = profile()
     const directory = target.project?.worktree ?? target.directory
@@ -402,22 +452,33 @@ export function OrchestraSidebar(props: {
 
   const advancedOpen = () => advanced.open() || advancedActive()
 
+  function rowName(item: (typeof navigation)[number]) {
+    if (!current(item.id)) return language.t(item.label)
+    const page = chapterPageTitleKey(location.pathname)
+    if (!page) return language.t(item.label)
+    const key = page as Parameters<typeof language.t>[0]
+    const text = language.t(key)
+    return text === page ? language.t(item.label) : text
+  }
+
   // One navigation row. Expanded, a WIP row's tooltip carries the mark's meaning; the compact rail keeps names.
   function row(item: (typeof navigation)[number]) {
+    const name = () => rowName(item)
     return (
       <OrchestraNavigationTooltip
         enabled={props.compact || showWip(item.id)}
+        openDelay={item.id.startsWith("sf-") ? 0 : undefined}
         value={
           !props.compact && showWip(item.id)
             ? language.t("orchestra.shell.wip.description")
-            : language.t(item.label)
+            : name()
         }
       >
         {(Trigger) => (
           <Trigger
             type="button"
             class="orchestra-nav-button"
-            aria-label={language.t(item.label)}
+            aria-label={name()}
             aria-description={showWip(item.id) ? language.t("orchestra.shell.wip.description") : undefined}
             disabled={
               (item.id === "search" && !command.options.some((option) => option.id === "command.palette")) ||
@@ -427,16 +488,23 @@ export function OrchestraSidebar(props: {
             onPointerEnter={() => preload(item.id)}
             onFocus={() => preload(item.id)}
             onClick={() => {
+              if (item.id === "home") {
+                void requestSfOwnerShellExit237().then((accepted) => {
+                  if (!accepted) return
+                  props.onNavigate?.()
+                  navigate("/")
+                })
+                return
+              }
               props.onNavigate?.()
-              if (item.id === "home") return navigate("/")
               if (item.id === "chat") return openChat()
               if (item.id === "maestro") return openMaestro()
               if (item.id === "search") return command.show()
               if (chapterPages[item.id]) return openChapter(item.id)
             }}
           >
-            <svg class="orchestra-nav-icon" viewBox="0 0 16 16" aria-hidden="true" innerHTML={icons[item.id]} />
-            <span class="orchestra-nav-label">{language.t(item.label)}</span>
+            <svg class="orchestra-nav-icon" viewBox="0 0 16 16" aria-hidden="true" innerHTML={icons[item.id as keyof typeof icons] ?? (sfNativeChapterEntry(item.id) ? icons["sf-home"] : undefined)} />
+            <span class="orchestra-nav-label">{name()}</span>
             <Show when={item.id === "search"}>
               <kbd>{command.keybind("command.palette")}</kbd>
             </Show>
@@ -591,13 +659,7 @@ export function OrchestraSidebar(props: {
                               disabled={
                                 !layout.ready() || !tabs.ready() || global.servers.health[group.key]?.healthy === false
                               }
-                              onSelect={() => {
-                                // Only what moves focus or opens tabs waits for the menu to unmount. The profile
-                                // applies now: a chapter opened while the menu closes would otherwise mount
-                                // against the previous profile and mount again when the selection lands.
-                                layout.home.setSelection({ server: group.key, directory: worktree })
-                                afterProfileClose(() => selectProject(group.conn, project()))
-                              }}
+                              onSelect={() => afterProfileClose(() => { void selectProject(group.conn, project()) })}
                             >
                               <DropdownMenu.ItemLabel class="orchestra-profile-item-name">
                                 <bdi>{displayName(project())}</bdi>
@@ -659,7 +721,11 @@ export function OrchestraSidebar(props: {
                       class="orchestra-profile-item"
                       onSelect={() => {
                         const target = item()
-                        afterProfileClose(() => home.project.close(target.conn, target.project.worktree))
+                        afterProfileClose(() => {
+                          void requestSfOwnerShellExit237().then((accepted) => {
+                            if (accepted) home.project.close(target.conn, target.project.worktree)
+                          })
+                        })
                       }}
                     >
                       <Icon name="close" />

@@ -1,0 +1,20 @@
+/* N19 U08 headcount keeps salary and roster tables inside authorized content. */
+.sf-u08 { display: grid; gap: 1.25rem; min-width: 0; }
+.sf-u08 h2 { font-size: 1.15rem; margin: 0 0 .65rem; }
+.sf-u08-toolbar, .sf-u08-rate-list, .sf-u08-actions { display: flex; flex-wrap: wrap; gap: .65rem; align-items: center; }
+.sf-u08-toolbar label { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.sf-u08 select { max-width: 100%; min-height: 2.5rem; }
+.sf-u08-table-scroll { overflow-x: auto; overscroll-behavior-inline: contain; max-width: 100%; }
+.sf-u08-table-scroll table { border-collapse: collapse; min-width: 660px; width: 100%; text-align: left; }
+.sf-u08-table-scroll th,.sf-u08-table-scroll td { padding: .6rem; border-bottom: 1px solid var(--mx-border, currentColor); vertical-align: top; }
+.sf-u08-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr)); gap: .85rem; }
+.sf-u08-fields label { display: grid; gap: .3rem; }
+.sf-u08-fields input { min-height: 2.5rem; width: 100%; box-sizing: border-box; }
+.sf-u08-actions { grid-column: 1/-1; }
+.sf-u08-summary { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 0; }
+.sf-u08-summary dt { font-size: .85rem; }
+.sf-u08-summary dd { margin: .15rem 0 0; font-weight: 650; }
+.sf-u08-review { margin-top: 1.2rem; }
+.sf-u08-message { overflow-wrap: anywhere; }
+.sf-u08 .mx-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media (max-width: 440px) { .sf-u08-toolbar > * { flex: 1 1 auto; } }

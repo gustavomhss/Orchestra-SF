@@ -1,0 +1,26 @@
+/* U28: native Orchestra tokens only; scroll belongs to the local data table. */
+.sf-u28-layout { display: grid; gap: 1.5rem; min-width: 0; }
+.sf-u28-layout > section { min-width: 0; overflow-wrap: anywhere; }
+.sf-u28-definition { display: grid; grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr); gap: .45rem 1rem; margin-block: .75rem; }
+.sf-u28-definition dt { font-weight: 600; }
+.sf-u28-definition dd { margin: 0; overflow-wrap: anywhere; }
+.sf-u28-notifications { padding-inline-start: 1.2rem; display: grid; gap: .5rem; }
+.sf-u28-notifications li { display: flex; flex-wrap: wrap; gap: .75rem; }
+.sf-u28-table-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  background-color: transparent;
+  background-image:
+    linear-gradient(to right, var(--mx-raised, Canvas), transparent),
+    linear-gradient(to left, var(--mx-raised, Canvas), transparent),
+    radial-gradient(farthest-side at 0 50%, color-mix(in srgb, var(--mx-strong, CanvasText) 18%, transparent), transparent),
+    radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--mx-strong, CanvasText) 18%, transparent), transparent);
+  background-position: left, right, left, right;
+  background-size: 20px 100%, 20px 100%, 12px 100%, 12px 100%;
+  background-repeat: no-repeat;
+  background-attachment: local, local, scroll, scroll;
+}
+.sf-u28-table-scroll table { width: 100%; border-collapse: collapse; text-align: start; }
+.sf-u28-table-scroll th, .sf-u28-table-scroll td { text-align: start; vertical-align: top; padding: .55rem; border-block-end: 1px solid var(--border, currentColor); }
+.sf-u28-table-scroll :focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+@media (max-width: 767px) { .sf-u28-definition { grid-template-columns: minmax(0, 1fr); } .sf-u28-layout { gap: 1rem; } }

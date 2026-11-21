@@ -334,6 +334,7 @@ export type SfResolvedRoute<Id extends SurfaceId = SurfaceId> = {
  */
 
 import { Schema } from "effect"
+import { optional } from "../schema"
 import { SfOperationId } from "./common"
 
 /** Frozen UI inventory; route parsing never implies a principal or grant. */
@@ -408,7 +409,13 @@ export interface SfNativeOwnerExpectation extends Schema.Schema.Type<typeof SfNa
 export const SfContextStamp = Schema.Struct({
   installationId: NonEmpty, projectId: NonEmpty, hostId: NonEmpty, principalRef: NonEmpty,
   policyVersion: NonEmpty, accessRevision: NonEmpty,
-}).annotate({ identifier: "Sucafina.ContextStamp" })
+  team: optional(TeamProfile.Binding),
+}).check(Schema.makeFilter(
+  (stamp) => !stamp.team || stamp.team.owner.profile.installationId === stamp.installationId &&
+    stamp.team.owner.principal.principalObjectId === stamp.principalRef &&
+    stamp.team.revisions.accessRevision === stamp.accessRevision,
+  { message: "The Team binding must match the original technical context and effective authority revision" },
+)).annotate({ identifier: "Sucafina.ContextStamp" })
 export interface SfContextStamp extends Schema.Schema.Type<typeof SfContextStamp> {}
 
 export const SfResourceKey = Schema.Union([
@@ -585,6 +592,62 @@ export const SfContextResult = Schema.Union([
   Schema.Struct({ status: Schema.Literal("unavailable"), reason: Schema.Literals(["identity-unavailable", "host-unavailable", "contract-mismatch"]) }),
 ]).annotate({ identifier: "Sucafina.ContextResult" })
 export type SfContextResult = Schema.Schema.Type<typeof SfContextResult>
+
+/** Closed public query; a selector is intent, never an admitted handle. */
+export const SfTeamContextQuery = Schema.Struct({
+  contractRevision: TeamProfile.ContractRevision,
+  installationId: TeamProfile.InstallationId,
+  tenantId: TeamProfile.TenantId,
+  hostId: NonEmpty,
+  kind: Schema.Literals(["selection", "team", "administration"]),
+  teamObjectId: optional(TeamProfile.TeamObjectId),
+}).check(Schema.makeFilter(
+  (query) => query.kind === "team" ? query.teamObjectId !== undefined : query.teamObjectId === undefined,
+  { message: "Only a Team intent contains a complete Team object ID" },
+)).annotate({ identifier: "Sucafina.TeamContextQuery", parseOptions: { onExcessProperty: "error" } })
+export interface SfTeamContextQuery extends Schema.Schema.Type<typeof SfTeamContextQuery> {}
+
+/**
+ * Corporate context can remain authenticated with no business admission.
+ * The profile projection preserves zero/multiple/unavailable Teams and the
+ * independent administration outcome. No business destination is invented.
+ */
+export const SfTeamContext = Schema.Struct({
+  contractRevision: TeamProfile.ContractRevision,
+  authMode: Schema.Literal("microsoft"),
+  stamp: SfContextStamp,
+  profile: TeamProfile.Authenticated,
+  destinations: SfContext.fields.destinations,
+  availability: SfContext.fields.availability,
+}).check(Schema.makeFilter(
+  (context) => {
+    if (context.stamp.installationId !== context.profile.installationId ||
+      context.stamp.principalRef !== context.profile.principal.principalObjectId ||
+      context.stamp.accessRevision !== context.profile.accessRevision) return false
+    const binding = context.stamp.team
+    if (!binding) return context.destinations.length === 0 && context.availability.length === 0
+    const state = context.profile.teams
+    return state.status === "ready" &&
+      binding.owner.principal.tenantId === context.profile.principal.tenantId &&
+      binding.owner.profile.installationId === state.selected.installationId &&
+      binding.owner.profile.tenantId === state.selected.tenantId &&
+      binding.owner.profile.teamObjectId === state.selected.teamObjectId &&
+      binding.revisions.configRevision === state.configRevision
+  },
+  { message: "The corporate projection and business destinations must share one current admitted owner" },
+)).annotate({ identifier: "Sucafina.TeamContext", parseOptions: { onExcessProperty: "error" } })
+export interface SfTeamContext extends Schema.Schema.Type<typeof SfTeamContext> {}
+/** Native readers consume the original versioned DTO without relabeling corporate context as legacy. */
+export type SfReadableContext = SfContext | SfTeamContext
+
+export const SfTeamContextResult = Schema.Union([
+  Schema.Struct({ status: Schema.Literal("ok"), value: SfTeamContext }),
+  Schema.Struct({ status: Schema.Literal("unauthenticated") }),
+  Schema.Struct({ status: Schema.Literal("denied") }),
+  Schema.Struct({ status: Schema.Literal("unavailable"),
+    reason: Schema.Union([TeamProfile.UnavailableReason, Schema.Literals(["host-unavailable", "contract-mismatch"])]) }),
+]).annotate({ identifier: "Sucafina.TeamContextResult", parseOptions: { onExcessProperty: "error" } })
+export type SfTeamContextResult = Schema.Schema.Type<typeof SfTeamContextResult>
 
 /** Runtime authority check after schema decode: reject undeclared family/resource pairs. */
 export function sfIsCatalogResource(input: Readonly<{ family: string; resource: string }>): input is SfResourceKey {

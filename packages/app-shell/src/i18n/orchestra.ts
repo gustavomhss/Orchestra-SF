@@ -1,5 +1,62 @@
+import { SF_TEAMS_COPY, SF_TEAMS_COPY_BR } from "./orchestra-chapters/sf-teams"
 import { HOME_COPY, HOME_COPY_BR } from "./orchestra-chapters/home"
 import { SHELL_COPY, SHELL_COPY_BR } from "./orchestra-chapters/shell"
+import { SF_CONTEXT_COPY, SF_CONTEXT_COPY_BR } from "./orchestra-chapters/sf-context"
+import { SF_COMMON_COPY, SF_COMMON_COPY_BR } from "./orchestra-chapters/sf-common"
+import { SF_S02_COPY, SF_S02_COPY_BR } from "./orchestra-chapters/sf-s02"
+import { SF_S03_COPY, SF_S03_COPY_BR } from "./orchestra-chapters/sf-s03"
+import { SF_S01_COPY, SF_S01_COPY_BR } from "./orchestra-chapters/sf-s01"
+import { SF_S04_COPY, SF_S04_COPY_BR } from "./orchestra-chapters/sf-s04"
+import { SF_S05_COPY, SF_S05_COPY_BR } from "./orchestra-chapters/sf-s05"
+import { SF_U01_COPY, SF_U01_COPY_BR } from "./orchestra-chapters/sf-u01"
+import { SF_U02_COPY, SF_U02_COPY_BR } from "./orchestra-chapters/sf-u02"
+import { SF_U03_COPY, SF_U03_COPY_BR } from "./orchestra-chapters/sf-u03"
+import { SF_U04_COPY, SF_U04_COPY_BR } from "./orchestra-chapters/sf-u04"
+import { SF_U05_COPY, SF_U05_COPY_BR } from "./orchestra-chapters/sf-u05"
+import { SF_U06_COPY, SF_U06_COPY_BR } from "./orchestra-chapters/sf-u06"
+import { SF_U07_COPY, SF_U07_COPY_BR } from "./orchestra-chapters/sf-u07"
+import { SF_U08_COPY, SF_U08_COPY_BR } from "./orchestra-chapters/sf-u08"
+import { SF_U09_COPY, SF_U09_COPY_BR } from "./orchestra-chapters/sf-u09"
+import { SF_U10_QUEUE_COPY, SF_U10_QUEUE_COPY_BR } from "../orchestra/chapters/sucafina/procurement/queues/copy"
+import { SF_U11_REMAINING_COPY, SF_U11_REMAINING_COPY_BR } from "../orchestra/chapters/sucafina/procurement/requests/copy"
+import { SF_U12_COPY, SF_U12_COPY_BR } from "./orchestra-chapters/sf-u12"
+import { SF_U13_COPY, SF_U13_COPY_BR } from "./orchestra-chapters/sf-u13"
+import { SF_U14_COPY, SF_U14_COPY_BR } from "./orchestra-chapters/sf-u14"
+import { SF_U15_COPY, SF_U15_COPY_BR } from "./orchestra-chapters/sf-u15"
+import { SF_U16_COPY, SF_U16_COPY_BR } from "./orchestra-chapters/sf-u16"
+import { SF_U17_COPY, SF_U17_COPY_BR } from "./orchestra-chapters/sf-u17"
+import { SF_U18_COPY, SF_U18_COPY_BR } from "./orchestra-chapters/sf-u18"
+import { SF_U19_COPY, SF_U19_COPY_BR } from "./orchestra-chapters/sf-u19"
+import { SF_U20_COPY, SF_U20_COPY_BR } from "./orchestra-chapters/sf-u20"
+import { SF_U21_COPY, SF_U21_COPY_BR } from "./orchestra-chapters/sf-u21"
+import { SF_U22_COPY, SF_U22_COPY_BR } from "./orchestra-chapters/sf-u22"
+import { SF_U23_COPY, SF_U23_COPY_BR } from "./orchestra-chapters/sf-u23"
+import { SF_U24_COPY, SF_U24_COPY_BR } from "./orchestra-chapters/sf-u24"
+import { SF_U25_COPY, SF_U25_COPY_BR } from "./orchestra-chapters/sf-u25"
+import { SF_U26_COPY, SF_U26_COPY_BR } from "./orchestra-chapters/sf-u26"
+import { SF_SIMILARITY217_COPY, SF_SIMILARITY217_COPY_BR } from "../orchestra/chapters/sucafina/memory/similarity-copy"
+import { SF_U27_COPY, SF_U27_COPY_BR } from "./orchestra-chapters/sf-u27"
+import { SF_U28_COPY, SF_U28_COPY_BR } from "./orchestra-chapters/sf-u28"
+import { SF_U29_COPY, SF_U29_COPY_BR } from "./orchestra-chapters/sf-u29"
+import { SF_U30_COPY, SF_U30_COPY_BR } from "./orchestra-chapters/sf-u30"
+import { SF_U31_COPY, SF_U31_COPY_BR } from "./orchestra-chapters/sf-u31"
+import { SF_U32_COPY, SF_U32_COPY_BR } from "./orchestra-chapters/sf-u32"
+import { SF_U33_COPY, SF_U33_COPY_BR } from "./orchestra-chapters/sf-u33"
+import { SF_U34_COPY, SF_U34_COPY_BR } from "./orchestra-chapters/sf-u34"
+import { SF_U35_COPY, SF_U35_COPY_BR } from "./orchestra-chapters/sf-u35"
+import { SF_U36_COPY, SF_U36_COPY_BR } from "./orchestra-chapters/sf-u36"
+import { SF_U37_COPY, SF_U37_COPY_BR } from "./orchestra-chapters/sf-u37"
+import { SF_U38_COPY, SF_U38_COPY_BR } from "./orchestra-chapters/sf-u38"
+import { SF_U39_COPY, SF_U39_COPY_BR } from "./orchestra-chapters/sf-u39"
+import { SF_U40_COPY, SF_U40_COPY_BR } from "./orchestra-chapters/sf-u40"
+import { SF_U41_COPY, SF_U41_COPY_BR } from "./orchestra-chapters/sf-u41"
+import { SF_U42_COPY, SF_U42_COPY_BR } from "./orchestra-chapters/sf-u42"
+import { SF_CROSS_COPY, SF_CROSS_COPY_BR } from "./orchestra-chapters/sf-cross"
+import { SF_U43_COPY, SF_U43_COPY_BR } from "./orchestra-chapters/sf-u43"
+import { SF_U44_COPY, SF_U44_COPY_BR } from "./orchestra-chapters/sf-u44"
+import { SF_U45_COPY, SF_U45_COPY_BR } from "./orchestra-chapters/sf-u45"
+import { SF_U46_COPY, SF_U46_COPY_BR } from "./orchestra-chapters/sf-u46"
+import { SF_U47_COPY, SF_U47_COPY_BR } from "./orchestra-chapters/sf-u47"
 import { MCP_COPY, MCP_COPY_BR } from "./orchestra-chapters/mcp"
 import { SKILLS_COPY, SKILLS_COPY_BR } from "./orchestra-chapters/skills"
 import { PLUGINS_COPY, PLUGINS_COPY_BR } from "./orchestra-chapters/plugins"
@@ -363,6 +420,63 @@ export const ORCHESTRA_COPY = {
   "orchestra.governance.reason.unknown": "No reason was reported.",
   ...HOME_COPY,
   ...SHELL_COPY,
+  ...SF_CONTEXT_COPY,
+  ...SF_TEAMS_COPY,
+  ...SF_COMMON_COPY,
+  ...SF_S02_COPY,
+  ...SF_S03_COPY,
+  ...SF_S01_COPY,
+  ...SF_S04_COPY,
+  ...SF_S05_COPY,
+  ...SF_U01_COPY,
+  ...SF_U02_COPY,
+  ...SF_U03_COPY,
+  ...SF_U04_COPY,
+  ...SF_U05_COPY,
+  ...SF_U06_COPY,
+  ...SF_U07_COPY,
+  ...SF_U08_COPY,
+  ...SF_U09_COPY,
+  ...SF_U10_QUEUE_COPY,
+  ...SF_U11_REMAINING_COPY,
+  ...SF_U12_COPY,
+  ...SF_U13_COPY,
+  ...SF_U14_COPY,
+  ...SF_U15_COPY,
+  ...SF_U16_COPY,
+  ...SF_U17_COPY,
+  ...SF_U18_COPY,
+  ...SF_U19_COPY,
+  ...SF_U20_COPY,
+  ...SF_U21_COPY,
+  ...SF_U22_COPY,
+  ...SF_U23_COPY,
+  ...SF_U24_COPY,
+  ...SF_U25_COPY,
+  ...SF_U26_COPY,
+  ...SF_SIMILARITY217_COPY,
+  ...SF_U27_COPY,
+  ...SF_U28_COPY,
+  ...SF_U29_COPY,
+  ...SF_U30_COPY,
+  ...SF_U31_COPY,
+  ...SF_U32_COPY,
+  ...SF_U33_COPY,
+  ...SF_U34_COPY,
+  ...SF_U35_COPY,
+  ...SF_U36_COPY,
+  ...SF_U37_COPY,
+  ...SF_U38_COPY,
+  ...SF_U39_COPY,
+  ...SF_U40_COPY,
+  ...SF_U41_COPY,
+  ...SF_U42_COPY,
+  ...SF_CROSS_COPY,
+  ...SF_U43_COPY,
+  ...SF_U44_COPY,
+  ...SF_U45_COPY,
+  ...SF_U46_COPY,
+  ...SF_U47_COPY,
   ...MCP_COPY,
   ...SKILLS_COPY,
   ...PLUGINS_COPY,
@@ -712,6 +826,63 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...ORCHESTRA_BASE_COPY_BR,
   ...HOME_COPY_BR,
   ...SHELL_COPY_BR,
+  ...SF_CONTEXT_COPY_BR,
+  ...SF_TEAMS_COPY_BR,
+  ...SF_COMMON_COPY_BR,
+  ...SF_S02_COPY_BR,
+  ...SF_S03_COPY_BR,
+  ...SF_S01_COPY_BR,
+  ...SF_S04_COPY_BR,
+  ...SF_S05_COPY_BR,
+  ...SF_U01_COPY_BR,
+  ...SF_U02_COPY_BR,
+  ...SF_U03_COPY_BR,
+  ...SF_U04_COPY_BR,
+  ...SF_U05_COPY_BR,
+  ...SF_U06_COPY_BR,
+  ...SF_U07_COPY_BR,
+  ...SF_U08_COPY_BR,
+  ...SF_U09_COPY_BR,
+  ...SF_U10_QUEUE_COPY_BR,
+  ...SF_U11_REMAINING_COPY_BR,
+  ...SF_U12_COPY_BR,
+  ...SF_U13_COPY_BR,
+  ...SF_U14_COPY_BR,
+  ...SF_U15_COPY_BR,
+  ...SF_U16_COPY_BR,
+  ...SF_U17_COPY_BR,
+  ...SF_U18_COPY_BR,
+  ...SF_U19_COPY_BR,
+  ...SF_U20_COPY_BR,
+  ...SF_U21_COPY_BR,
+  ...SF_U22_COPY_BR,
+  ...SF_U23_COPY_BR,
+  ...SF_U24_COPY_BR,
+  ...SF_U25_COPY_BR,
+  ...SF_U26_COPY_BR,
+  ...SF_SIMILARITY217_COPY_BR,
+  ...SF_U27_COPY_BR,
+  ...SF_U28_COPY_BR,
+  ...SF_U29_COPY_BR,
+  ...SF_U30_COPY_BR,
+  ...SF_U31_COPY_BR,
+  ...SF_U32_COPY_BR,
+  ...SF_U33_COPY_BR,
+  ...SF_U34_COPY_BR,
+  ...SF_U35_COPY_BR,
+  ...SF_U36_COPY_BR,
+  ...SF_U37_COPY_BR,
+  ...SF_U38_COPY_BR,
+  ...SF_U39_COPY_BR,
+  ...SF_U40_COPY_BR,
+  ...SF_U41_COPY_BR,
+  ...SF_U42_COPY_BR,
+  ...SF_CROSS_COPY_BR,
+  ...SF_U43_COPY_BR,
+  ...SF_U44_COPY_BR,
+  ...SF_U45_COPY_BR,
+  ...SF_U46_COPY_BR,
+  ...SF_U47_COPY_BR,
   ...MCP_COPY_BR,
   ...SKILLS_COPY_BR,
   ...PLUGINS_COPY_BR,
