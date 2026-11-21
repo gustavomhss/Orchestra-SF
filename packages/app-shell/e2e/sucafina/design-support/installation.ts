@@ -21,7 +21,7 @@ export type DesignInstallation = {
 }
 
 /** Node owns the Bun adapter's scope; the existing fixture owns the real CLI. */
-export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>, wave: "one" | "two" = "one") {
+export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>, wave: "one" | "two" | "three" = "one") {
   const support = path.dirname(fileURLToPath(import.meta.url))
   const repository = path.resolve(support, "../../../../..")
   // Test listing must not initialize the process graph.
