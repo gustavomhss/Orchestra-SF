@@ -31,6 +31,9 @@ export function createDecisionCasePort(input: {
   authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
   verifyScenarioOperations: (value: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
   evidence: BusinessContextService
+  /** Optional host-private span for the authenticated read suffix, never mutations. */
+  observeRead?: (value: { request: Parameters<DecisionCasePort["read"]>[0]; decision: DecisionCase }, context: TrustedDomainContext,
+    work: () => ReturnType<DecisionCasePort["read"]>) => ReturnType<DecisionCasePort["read"]>
   createId: () => string
   now: () => string
 }) {
@@ -92,26 +95,29 @@ export function createDecisionCasePort(input: {
         if (!value || value.incarnation !== ref.incarnation || (context.kind === "native" && context.binding.caseVersion !== value.version) || !value.participants.includes(context.binding.principalRef)) return { status: "denied", reason: "case-access-unavailable" }
         const caseDigest = digestSfValue(value)
         if (!await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
-        const refs = evidenceReferences(value)
-        const refsDigest = digestSfValue(refs)
-        if (!sourcesCovered(value, refs) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(value, context)) return { status: "unavailable", reason: "case-evidence-unavailable" }
-        if (!await input.authorizeCase(value, context) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(value, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
-        const checkedAt = input.now()
-        // All external checks may await while C08 changes. Keep the second
-        // observation after them and release only the same complete case.
-        const again = await input.state.read(source, "cases", selectSfCase(ref.id, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
-        if (again.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
-        if (again.status !== "ok") return failure(again)
-        // Namespace authorization may await after the state callback. Check
-        // the live lease synchronously with the complete final snapshot.
-        if (!again.value || digestSfValue(again.value) !== caseDigest || digestSfValue(value) !== caseDigest || digestSfValue(refs) !== refsDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
-        const final = again.value
-        const projection: AuthorizedCaseProjection = {
-          context: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision, ...(context.kind === "native" ? { kind: "native" as const, profileId: context.binding.profileId } : { kind: "ui" as const }) },
-          case: { ...final, preparedChanges: final.preparedChanges.map(changeView), receipts: final.receipts.map((receipt) => receiptView(receipt, final.preparedChanges)) },
-          events: final.ledger, evidenceRefs: refs, checkedAt,
+        const complete = async (): ReturnType<DecisionCasePort["read"]> => {
+          const refs = evidenceReferences(value)
+          const refsDigest = digestSfValue(refs)
+          if (!sourcesCovered(value, refs) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(value, context)) return { status: "unavailable", reason: "case-evidence-unavailable" }
+          if (!await input.authorizeCase(value, context) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(value, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
+          const checkedAt = input.now()
+          // All external checks may await while C08 changes. Keep the second
+          // observation after them and release only the same complete case.
+          const again = await input.state.read(source, "cases", selectSfCase(ref.id, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+          if (again.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
+          if (again.status !== "ok") return failure(again)
+          // Namespace authorization may await after the state callback. Check
+          // the live lease synchronously with the complete final snapshot.
+          if (!again.value || digestSfValue(again.value) !== caseDigest || digestSfValue(value) !== caseDigest || digestSfValue(refs) !== refsDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
+          const final = again.value
+          const projection: AuthorizedCaseProjection = {
+            context: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision, ...(context.kind === "native" ? { kind: "native" as const, profileId: context.binding.profileId } : { kind: "ui" as const }) },
+            case: { ...final, preparedChanges: final.preparedChanges.map(changeView), receipts: final.receipts.map((receipt) => receiptView(receipt, final.preparedChanges)) },
+            events: final.ledger, evidenceRefs: refs, checkedAt,
+          }
+          return { status: "ok", value: projection }
         }
-        return { status: "ok", value: projection }
+        return input.observeRead ? await input.observeRead({ request, decision: value }, context, complete) : await complete()
       } catch {
         return { status: "unavailable", reason: "case-state-unavailable" }
       }

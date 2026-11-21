@@ -165,10 +165,14 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const operationIdentity = (call: TrustedDomainContext) => call.kind === "ui" ? input.authority.ui.operationIdentity(call) : input.authority.native.operationIdentity?.(call)
   const authorizeCase = async (value: DecisionCase, call: TrustedDomainContext) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call)
   let scenarioOperationAccess: ReturnType<typeof createSfScenarioOperationAccess> | undefined
+  const calculationRead: { current?: ReturnType<typeof createSfPlannerCalculationServices>["observeRead"] } = {}
   const canonicalCases = createDecisionCasePort({ state: input.authority.state, host, creationTarget: input.authority.creationTarget,
     operationIdentity,
     authorizeCase,
     verifyScenarioOperations: (value, call) => scenarioOperationAccess ? scenarioOperationAccess(value, call) : Promise.resolve(false),
+    observeRead: (value, call, work) => calculationRead.current && value.decision.ledger.some((event) =>
+      event.evidenceRefs.some((ref) => ref.kind === "calculation" || ref.kind === "case-event"))
+      ? calculationRead.current(value, call, work) : work(),
     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
   const procurementCaseRead = createSfProcurementCaseReadScope({ host, state: input.authority.state, read: canonicalCases.read,
     selection: selectedPeriod, readerIdentity: () => evidence.current, isCurrentRecord: individual.isCurrent, lockedSourceFences })
@@ -404,6 +408,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const calculationVerifier: { current?: NonNullable<Parameters<typeof createSfDecisionResultStore>[0]["verifyCalculationSources"]> } = {}
   const results = createSfDecisionResultStore({ state: input.authority.state, host, authorizeCase, createId: randomUUID, now: () => new Date().toISOString(),
     verifyCalculationSources: (value, refs, call) => calculationVerifier.current?.(value, refs, call) ?? Promise.resolve(false),
+    observeRead: (value, call, work) => calculationRead.current ? calculationRead.current(value, call, work) : work(),
     verifySources: async (_value, refs, call) => {
       const found = await context.context({ refs }, call)
       return found.length === refs.length && found.every((item, index) => item.state === "fresh" && !!item.authorizedProjection && !!item.currentRef &&
@@ -471,6 +476,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, replay: planner, resolveCase })
   const calculationProducer = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
     writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase, withHistoricalCalculationCase,
+    readerIdentity: () => [forecastCoverage.current, decisionDomain.current,
+      ...[evidence.current, baselineCoverage, decisionDomain.current?.proposalCoverage, canonicalCases, cases, planner].flatMap((reader) =>
+        [reader, ...Object.entries(reader ?? {}).flatMap(([key, value]) => [key, value])])],
     // The historical reader alone receives this coverage route. The exposed
     // Planner and baseline registry continue using the strict original selector.
     resolveHistoricalForecastCoverage: async (ref, call) => {
@@ -481,6 +489,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return decisionDomain.current ? historicalCoverage.resolveForecastCoverage(ref, call)
         : forecastCoverage.current?.(ref, call) ?? historicalCoverage.resolveForecastCoverage(ref, call)
     } })
+  calculationRead.current = calculationProducer.observeRead
+  // The public readonly preview and the private replay retain the same completed
+  // ancestor boundary. The producer captured the original simulator above.
+  planner.simulateScenario = calculationProducer.simulateScenario
   // Standalone and composite Procurement previews are transient. Only the
   // existing explicit human promotion may publish their C08 result.
   const persist: typeof calculationProducer.persist = (incoming, callId, call, replay) => incoming.kind === "scenario" && readOnlyScenario(incoming.request)
