@@ -615,3 +615,23 @@ test("Core admission excludes a native run when its exact case belongs to a diff
   expect(await Effect.runPromise(own.authorize("read", sessionID))).toBe(false)
   expect(await Effect.runPromise(own.excludedSessions())).toEqual([sessionID])
 })
+
+test("document readiness requires the complete current Team binding", async () => {
+  const f = await fixture({
+    enabled: [profileA, profileB],
+    grants: [{ ...productGrant(), operations: ["sf_document_extract", "sf_evidence_get"],
+      humanActions: ["documents.schema"] }],
+  })
+  const request = f.contextRequest("team")
+  const context = await f.authority.readTeamContextAdmission(request)
+  if (context.status !== "ok" || !context.binding) throw new Error("Current Team document context required")
+  const expected = { ...context.technical, team: context.binding }
+  expect(await f.authority.readDocumentGrants(request, expected)).toEqual({
+    extract: true, open: true, search: false, schema: true, confirm: false,
+  })
+  expect(await f.authority.readDocumentGrants(f.contextRequest("team", profileB), expected)).toBeUndefined()
+  expect(await f.authority.readDocumentGrants(request, { ...expected, team: {
+    ...expected.team, owner: { ...expected.team.owner, profile: profileB },
+  } })).toBeUndefined()
+  expect(await f.authority.readDocumentGrants(request, context.technical)).toBeUndefined()
+})

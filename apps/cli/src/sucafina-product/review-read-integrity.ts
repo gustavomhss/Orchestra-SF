@@ -18,7 +18,8 @@ type ReadScope = { request: Request; open: boolean; calls: WeakMap<TrustedDomain
 
 /** Every consumer reopens the body's own C08 receipt, in addition to producer ACL checks. */
 export function protectSfReviewReads(input: {
-  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "state" | "creationTarget">
+  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "state" | "creationTarget"> &
+    Partial<Pick<ReturnType<typeof createSfProductAuthority>, "requiresTeamProfile">>
   reviews: ReturnType<typeof createReviewPort>
   /** Only the default installation readers have their entire authority in these snapshots. */
   localSnapshotReaders?: boolean
@@ -93,37 +94,44 @@ export function protectSfReviewReads(input: {
     const currentAccess = async () => pinned() && await host.revalidate(call) && pinned()
     try {
       if (!request || !await currentAccess()) return denied()
-      const first = await read(id, call)
-      trace("LEGACY_FIRST_DONE")
-      if (!await currentAccess()) return denied()
-      if (first.status !== "ok") return first
-      const digest = digestSfValue(first.value)
-      const proof = async (): Promise<PortResult<string>> => {
+      const proof = async (expectedDigest?: string): Promise<PortResult<{ digest: string; receipt: string }>> => {
         if (!await currentAccess()) return denied()
-        const checked = await authority.state.read(request, "reviews", (state, actor): PortResult<string> => {
-          if (!pinned() || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion ||
-            !state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return denied()
+        const checked = await authority.state.read(request, "reviews", (state, actor): PortResult<{ digest: string; receipt: string }> => {
+          const review = state.reviews[id]
+          if (!pinned() || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
+            actor.policyVersion !== call.binding.policyVersion || !review || review.id !== id) return denied()
+          const digest = digestSfValue(review)
+          if (expectedDigest !== undefined && digest !== expectedDigest) return denied()
           // The original writer may differ from the current authorized reader.
           const receipt = receiptDigest(state, id, digest, actor)
-          return receipt ? { status: "ok", value: receipt } : denied()
+          return receipt ? { status: "ok", value: { digest, receipt } } : denied()
         })
         if (!pinned()) return denied()
         if ("reason" in checked) return checked.status === "denied" || await currentAccess() ? checked : denied()
         return checked.status === "ok" ? checked.value : unavailable()
       }
-      const before = await proof()
+      // Prove Team ownership before a source reader can materialize evidence for this review.
+      const ownership = authority.requiresTeamProfile ? await proof() : undefined
+      if (ownership && ownership.status !== "ok") return ownership
+      const first = await read(id, call)
+      trace("LEGACY_FIRST_DONE")
+      if (!await currentAccess()) return denied()
+      if (first.status !== "ok") return first
+      const digest = digestSfValue(first.value)
+      const before = ownership ?? await proof(digest)
       trace("LEGACY_BEFORE_PROOF_DONE")
       if (before.status !== "ok") return before
+      if (before.value.digest !== digest) return denied()
       const current = await read(id, call)
       trace("LEGACY_SECOND_DONE")
       if (!await currentAccess()) return denied()
       if (current.status !== "ok") return current
       if (digestSfValue(current.value) !== digest) return denied()
-      const after = await proof()
+      const after = await proof(digest)
       trace("LEGACY_AFTER_PROOF_DONE")
       if (!await currentAccess()) return denied()
       if (after.status !== "ok") return after
-      if (after.value !== before.value) return denied()
+      if (after.value.digest !== before.value.digest || after.value.receipt !== before.value.receipt) return denied()
       return first
     } catch {
       const authorized = await currentAccess().catch(() => undefined)

@@ -662,7 +662,28 @@ export function createSfProductAuthority(input: {
       }),
     })
   }
-  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission, readTeamContextAdmission, readCoreSessionAdmission }
+  const readDocumentGrants = async (request: Request, expected: import("@orchestra/schema/sucafina/context").SfContextStamp) => {
+    const actor = await resolve(request).catch(() => undefined)
+    if (!actor || request.signal.aborted || !actor.grant.namespaces.includes("documents") ||
+        actor.identity.installationId !== expected.installationId || actor.identity.projectId !== expected.projectId ||
+        actor.identity.hostId !== expected.hostId || actor.principalRef !== expected.principalRef ||
+        actor.policyVersion !== expected.policyVersion || actor.accessRevision !== expected.accessRevision) return undefined
+    const admitted = actor.profile?.admission
+    if (teamProfiles && !admitted) return undefined
+    const binding = admitted ? {
+      owner: { profile: admitted.profile, principal: admitted.principal },
+      revisions: { configRevision: admitted.configRevision, accessRevision: actor.accessRevision },
+    } : null
+    if (digestSfValue(binding) !== digestSfValue(expected.team ?? null)) return undefined
+    return {
+      extract: actor.grant.operations.includes("sf_document_extract"),
+      open: actor.grant.operations.includes("sf_evidence_get"),
+      search: actor.grant.operations.includes("sf_knowledge_search"),
+      schema: actor.canWrite && actor.grant.humanActions?.includes("documents.schema") === true,
+      confirm: actor.canWrite && actor.grant.humanActions?.includes("documents.confirm") === true,
+    }
+  }
+  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission, readTeamContextAdmission, readCoreSessionAdmission, readDocumentGrants, requiresTeamProfile: !!teamProfiles }
 }
 
 
