@@ -1,3 +1,4 @@
+import { types } from "node:util"
 import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import { object } from "../../runtime/contract.ts"
 import { consumeLocalTransactionAbort, observeLocalTransactionAbort } from "../../runtime/local-store.ts"
@@ -206,6 +207,77 @@ function projectResultRead(state: SfProductState, selection: ResultSelection): S
   return structuredClone({ cases: chosenCases, decisionResults: chosenResults }) as unknown as SfProductState
 }
 
+
+/** Only this factory-owned callback may omit unrelated namespaces from a clone.
+ * All result envelopes remain one graph; filtering still occurs after cloning. */
+const scenarioReads = new WeakMap<object, {
+  project: (decisionResults: SfProductState["decisionResults"], authority: SfStateAuthority) => NonNullable<SfProductState["decisionResults"]>[string][] | undefined
+}>()
+
+export function selectSfScenarioCandidates(request: { caseRef: { id: string; incarnation: string; version: number } }, requestDigest: string, resultDigest: string, context: TrustedDomainContext) {
+  const read = (state: Pick<SfProductState, "decisionResults">, authority: SfStateAuthority) =>
+    authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? Object.values(state.decisionResults ?? {}).filter((item) => item.kind === "scenario" && item.caseRef.id === request.caseRef.id && item.caseRef.incarnation === request.caseRef.incarnation && item.caseRef.version <= request.caseRef.version && item.requestDigest === requestDigest && item.resultDigest === resultDigest) : undefined
+  // Do not snapshot the caller's mutable request or invoke proxy traps during
+  // registration. The original predicate observes both after C08 admission.
+  if (types.isProxy(context)) return read
+  const binding = Object.getOwnPropertyDescriptor(context, "binding")
+  if (Object.isFrozen(context) && binding && "value" in binding && binding.value && typeof binding.value === "object" && !types.isProxy(binding.value) && Object.isFrozen(binding.value) &&
+    ["principalRef", "policyVersion", "accessRevision"].every((key) => {
+      const field = Object.getOwnPropertyDescriptor(binding.value, key)
+      return !!field && "value" in field && typeof field.value === "string"
+    })) scenarioReads.set(read, { project: (decisionResults, authority) => read({ decisionResults }, authority) })
+  return read
+}
+
+function scenarioResultMap(state: SfProductState) {
+  if (types.isProxy(state)) return undefined
+  const field = Object.getOwnPropertyDescriptor(state, "decisionResults")
+  if (!field?.enumerable || !("value" in field) || !field.value || typeof field.value !== "object" || Array.isArray(field.value) || types.isProxy(field.value) ||
+    ![Object.prototype, null].includes(Object.getPrototypeOf(field.value))) return undefined
+  return field.value as NonNullable<SfProductState["decisionResults"]>
+}
+
+
+type CaseIdentity = Pick<SfProductState["cases"][string], "id" | "incarnation" | "version">
+const caseIdentityReads = new WeakMap<object, {
+  project: (cases: SfProductState["cases"], actor: SfStateAuthority) => CaseIdentity | undefined
+}>()
+
+/** Current case membership only; the consumer retains its own Request and scope fences. */
+export function selectSfCaseIdentity(captured: CaseIdentity, call: TrustedDomainContext) {
+  const read = (state: Pick<SfProductState, "cases">, actor: SfStateAuthority) => {
+    const value = state.cases[captured.id]
+    return value && value.incarnation === captured.incarnation && value.version === captured.version && value.participants.includes(actor.principalRef) &&
+      actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
+      ? { id: value.id, incarnation: value.incarnation, version: value.version } : undefined
+  }
+  // Preserve the original observation of captured and call inside the C08
+  // callback. Registration recognizes code and immutable data context only.
+  if (types.isProxy(call)) return read
+  const binding = Object.getOwnPropertyDescriptor(call, "binding")
+  if (Object.isFrozen(call) && binding && "value" in binding && binding.value && typeof binding.value === "object" && !types.isProxy(binding.value) && Object.isFrozen(binding.value) &&
+    ["principalRef", "policyVersion", "accessRevision"].every((key) => {
+      const field = Object.getOwnPropertyDescriptor(binding.value, key)
+      return !!field && "value" in field && typeof field.value === "string"
+    })) caseIdentityReads.set(read, { project: (cases, actor) => read({ cases }, actor) })
+  return read
+}
+
+function caseIdentityMap(state: SfProductState) {
+  if (types.isProxy(state)) return undefined
+  const field = Object.getOwnPropertyDescriptor(state, "cases")
+  if (!field?.enumerable || !("value" in field) || !field.value || typeof field.value !== "object" || Array.isArray(field.value) || types.isProxy(field.value) ||
+    ![Object.prototype, null].includes(Object.getPrototypeOf(field.value))) return undefined
+  return field.value as SfProductState["cases"]
+}
+
+const productStateReaders = new WeakMap<SfProductStatePort, (persistence: Persistence) => boolean>()
+
+/** Authenticate the original read callback and its exact snapshot provider. */
+export function isSfProductStateReader(port: SfProductStatePort, persistence: Persistence) {
+  return productStateReaders.get(port)?.(persistence) === true
+}
+
 /** The caller composes current product authority; a Dashboard role never grants it implicitly. */
 export function createSfProductState(input: {
   persistence: Persistence
@@ -239,6 +311,10 @@ export function createSfProductState(input: {
           ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
         const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
         const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
+        const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
+        const scenarioResults = scenarioSelection ? scenarioResultMap(state) : undefined
+        const identitySelection = namespace === "cases" ? caseIdentityReads.get(read) : undefined
+        const identityCases = identitySelection ? caseIdentityMap(state) : undefined
         // Keep missing/inherited, accessor and malformed lookups on the original
         // path. Durable SQLite snapshots contain plain cloneable data.
         const value = readiness
@@ -247,6 +323,8 @@ export function createSfProductState(input: {
           typeof selected.value === "object" && !Array.isArray(selected.value)
           ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
           : selectedResults ? await read(selectedResults, authority)
+          : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
+          : identitySelection && identityCases ? await identitySelection.project(structuredClone(identityCases), authority) as T
           : await read(structuredClone(state), authority)
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
         const current = await input.authorize(request, snapshot, namespace, mode)
@@ -377,6 +455,17 @@ export function createSfProductState(input: {
       }
       return input.persistence.transaction("dashboard", (snapshot) => run(snapshot, snapshot), { signal: request.signal })
     },
+  }
+  if (!types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype) {
+    const driver = Object.getOwnPropertyDescriptor(input, "persistence")
+    const read = port.read
+    if (driver && Object.hasOwn(driver, "value") && driver.value) productStateReaders.set(port, (persistence) => {
+      const active = Object.getOwnPropertyDescriptor(input, "persistence")
+      const method = Object.getOwnPropertyDescriptor(port, "read")
+      return driver.value === persistence && Object.getPrototypeOf(input) === Object.prototype &&
+        !!active && Object.hasOwn(active, "value") && active.value === persistence &&
+        Object.getPrototypeOf(port) === Object.prototype && !!method && Object.hasOwn(method, "value") && method.value === read
+    })
   }
   return port
 }

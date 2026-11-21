@@ -17,7 +17,7 @@ import { projectDashboardSource } from "../dashboard/port.ts"
 import { publicSfData } from "./public-state.ts"
 
 /** Saved roles define the projection, never authenticate a later caller. Reads authenticate again. */
-export function sfPlannerProjectionSelector(snapshot: Snapshot, actor: Actor) {
+export function sfPlannerProjectionSelector(snapshot: Pick<Snapshot, "data">, actor: Actor) {
   return { kind: "planner-source-v1", roles: [...actor.roles].sort(), canWrite: actor.canWrite, roleMapDigest: digestSfValue(roleMap(snapshot, "planner")) }
 }
 
