@@ -174,7 +174,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     for (const param of ["server", "project", "installation"])
       if (url.searchParams.has(param)) query.set(param, url.searchParams.get(param)!)
     return "/orchestra/sf-procurement/requests/" + encodeSfRouteRef(ref) +
-      (part === "detail" ? "" : "/" + part) + (query.size ? "?" + query.toString() : "")
+      (part === "detail" ? "" : part === "quotes" ? "/sourcing/compare" : "/" + part) +
+      (query.size ? "?" + query.toString() : "")
   }
 
   createEffect(() => {

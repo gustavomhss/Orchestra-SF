@@ -153,13 +153,15 @@ waveFourTest("installed procurement wave · lists, drafts, source reviews and co
 
   await waveFourTest.step("CAP25 · canonical sourcing comparison, retained quote metadata and one save", async () => {
     await requestRow(page, data.requests.sourcing).locator('[data-sf-action="select"]').click()
-    const sourceLink = page.locator(".sf-u11-tabs").getByRole("link", { name: "Sourcing", exact: true })
-    await expect(sourceLink).toHaveAttribute("href", new RegExp("/sourcing"))
-    await sourceLink.click()
+    const comparisonLink = page.locator(".sf-u11-tabs").getByRole("link", { name: "Open sourcing comparison", exact: true })
+    await expect(comparisonLink).toHaveAttribute("href", /\/sourcing\/compare(?:\?|$)/)
+    await comparisonLink.click()
     await ready(page, "Requests")
-    await expect(page).toHaveURL((url) => url.searchParams.get("project") === owner.projectId &&
-      url.searchParams.get("installation") === owner.installationId)
+    await expect(page).toHaveURL((url) => url.pathname.endsWith("/sourcing/compare") &&
+      url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
     const surface = page.locator(".sf-u12-root")
+    await expect(surface.locator(".sf-u12-comparison tr[data-sf-row]")).toHaveCount(3)
+    await surface.locator(".sf-u12-switch").getByRole("button", { name: "Sourcing", exact: true }).click()
     const editor = surface.locator(".sf-u12-editor")
     await expect(editor.locator(".sf-u12-quote")).toHaveCount(3)
     await expect(editor.locator(".sf-u12-quote").first().getByLabel("Description", { exact: true })).toHaveValue(data.description)

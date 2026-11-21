@@ -26,10 +26,17 @@ function route(mode: string, parameters: Record<string, string> = {}) {
   return "/dashboard?" + new URLSearchParams({ sf: mode, ...parameters })
 }
 async function responseBody(response: Response, mode: string) {
-  const body = object(await response.json())
-  if (response.status !== 200 || body.status !== "ok")
-    throw new Error("Canonical Decisions seed rejected " + mode + " (" + response.status + "): " + String(body.reason ?? body.status))
-  return body
+  try {
+    const body = object(await response.json())
+    if (response.status !== 200 || body.status !== "ok")
+      throw new Error("Canonical Decisions seed rejected " + mode + " (" + response.status + "): " + String(body.reason ?? body.status))
+    return body
+  } catch (error: unknown) {
+    // Emit before the native process scope closes; do not print bodies, cookies or credentials.
+    console.error("Canonical Decisions seed response failed: " + mode + " HTTP " + response.status + " " +
+      (error instanceof Error ? error.message : "unclassified response"))
+    throw error
+  }
 }
 
 /**
@@ -41,10 +48,22 @@ async function responseBody(response: Response, mode: string) {
 export async function seedWaveFourDecisions(installed: Installed, year: number): Promise<void> {
   const horizon = { start: year + "-01-01", end: year + "-12-31" }
   const currency = "USD"
+  const request = async (mode: string, parameters: Record<string, string> = {}, init?: RequestInit) => {
+    process.stdout.write("SF_DESIGN_STAGE decisions-request-" + mode + "\n")
+    try {
+      const response = await installed.request(route(mode, parameters), init)
+      process.stdout.write("SF_DESIGN_STAGE decisions-response-" + mode + "\n")
+      return response
+    } catch (error: unknown) {
+      console.error("Canonical Decisions seed transport failed: " + mode + " " +
+        (error instanceof Error ? error.name : "unclassified transport"))
+      throw error
+    }
+  }
   const get = async (mode: string, parameters: Record<string, string>) =>
-    responseBody(await installed.request(route(mode, parameters)), mode)
+    responseBody(await request(mode, parameters), mode)
   const post = async (mode: string, input: unknown) =>
-    responseBody(await installed.request(route(mode), {
+    responseBody(await request(mode, {}, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Idempotency-Key": randomUUID() },
       body: JSON.stringify(input),
@@ -72,7 +91,7 @@ export async function seedWaveFourDecisions(installed: Installed, year: number):
     const version = versions.find((entry) => typeof entry.label === "string" && entry.label.startsWith(title + " ("))
     if (!version) throw new Error("Canonical Decisions seed cannot find the installed Planner version " + title)
     const ref = text(version.ref)
-    const reply = await installed.request(route("bi-data", { ...parameters, baseRef: ref, candidateRef: ref, currency }))
+    const reply = await request("bi-data", { ...parameters, baseRef: ref, candidateRef: ref, currency })
     if (reply.status !== 200) throw new Error("Canonical Decisions seed could not read Planner BI evidence")
     const projection = object(object(await reply.json()).projection)
     const evidence = list(projection.values).map(object).flatMap((value) =>

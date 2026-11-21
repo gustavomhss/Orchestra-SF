@@ -25,7 +25,8 @@ if (Object.keys(process.env).some((key) => key.startsWith("VITE_")))
   throw new Error("Native capture build must not inherit Vite server overrides")
 
 const secondWave = process.argv[3] === "two"
-const fourthWave = process.argv[3] === "four"
+const decisionsWave = process.argv[3] === "four-decisions"
+const fourthWave = process.argv[3] === "four" || decisionsWave
 const thirdWave = process.argv[3] === "three" || fourthWave
 const now = new Date()
 const year = now.getUTCFullYear()
@@ -181,7 +182,7 @@ const program = Effect.scoped(Effect.gen(function* () {
     },
   })
   process.stdout.write("SF_DESIGN_STAGE native-ready\n")
-  if (fourthWave) {
+  if (decisionsWave) {
     process.stdout.write("SF_DESIGN_STAGE decisions-seed\n")
     yield* Effect.promise(() => seedWaveFourDecisions(installed, year))
     process.stdout.write("SF_DESIGN_STAGE decisions-ready\n")

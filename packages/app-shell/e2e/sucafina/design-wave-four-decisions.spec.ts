@@ -1,12 +1,19 @@
 import { expect, type Page, type Request, type TestInfo } from "@playwright/test"
-import type { SfDecisions } from "@orchestra/schema/sucafina/decisions"
+import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
 import { waveThreeData } from "./design-support/wave-three-data"
 import {
   waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop,
 } from "./design-support/wave-four"
 
-type SfCase = Extract<typeof SfDecisions.operations["projection.case"]["output"]["Type"], { status: "ok" }>["value"]["projection"]["case"]
+// Public producer fields only; projection-only change/receipt collections are counted, not interpreted.
+type SfCase = Pick<DecisionCase, "id" | "incarnation" | "version" | "objective" | "criteria" | "sourceRefs" |
+  "alternatives" | "assumptions" | "questions" | "choices"> & {
+    preparedChanges: readonly unknown[]
+    receipts: readonly unknown[]
+  }
+waveFourTest.use({ designWave: "four-decisions" })
+
 type Owner = Parameters<typeof enter>[1]
 type Screen = { id: string; href: string; title: string; titleBr: string }
 
