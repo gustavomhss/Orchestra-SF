@@ -109,7 +109,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
   let readController:AbortController|undefined
   let commandController:AbortController|undefined
   let readSequence=0
-  const authority=()=>{
+  const authority=createMemo(()=>{
     const state=host.state(),ready=host.ready()
     if(state.status!=="ready"||!ready)return null
     const selected=props.route.ownerSelection
@@ -117,7 +117,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       state.selection.projectId!==selected.projectId||
       state.selection.installationId!==selected.installationId)return null
     return JSON.stringify([state.ownerKey,host.generation(),state.owner.authEpoch,state.context.stamp,props.route.href])
-  }
+  })
   const directRef=()=>props.route.kind==="sourcing"||props.route.kind==="quotes"||
     props.route.kind==="detail"||props.route.kind==="requisition"||
     props.route.kind==="po"||props.route.kind==="history"
@@ -178,7 +178,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       return {kind:"ok",page}
     }catch{return {kind:"unavailable"}}
   }
-  const refresh=async(token:string,requestRef?:string)=>{
+  const refresh=async(token:string,requestRef?:string,verification?:Intent)=>{
     readController?.abort()
     const controller=new AbortController()
     readController=controller
@@ -190,7 +190,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       setUi("state",result.kind)
       return null
     }
-    if(ui.review&&requestRevision(result.page,ui.review.requestRef)!==ui.review.sourceRevision){
+    if(ui.review&&ui.review!==verification&&requestRevision(result.page,ui.review.requestRef)!==ui.review.sourceRevision){
       draft()?.setPhase("conflict")
       setUi({review:null,phase:"conflict"})
     }
@@ -240,6 +240,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
   })
   const snapshot=()=>draft()?.snapshot()
   const draftPending=()=>{const state=snapshot();return state?.availability==="active"&&!!state.pendingOperation}
+  const outcomeUnknown=()=>ui.phase==="outcome-unknown"||draftPending()&&!ui.sending
   const draftConflict=()=>sfDraftConflicted(snapshot(),sourceVersion()??undefined)
   const editable=()=>!!sfDraftForEdit(snapshot(),sourceVersion()??undefined)
   const edit=():SourcingEdit=>{
@@ -308,7 +309,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         status==="unavailable"||status==="choose-installation"?"unavailable":"session-expired"
     }
     if(ui.state!=="ready")return ui.state
-    if(ui.phase==="outcome-unknown"||draftPending())return "outcome-unknown"
+    if(outcomeUnknown())return "outcome-unknown"
     if(ui.phase==="conflict"&&!request())return "conflict"
     if(ui.phase==="failed"){
       const snap=snapshot()
@@ -319,13 +320,13 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     if(!ref()&&requestRows().length===0)return "empty"
     return "ready"
   }
-  const message=():SfU12CopyKey=>({
+  const message=(value:SfUiState=state()):SfU12CopyKey=>({
     loading:"sf.u12.loading",unavailable:"sf.u12.unavailable",denied:"sf.u12.denied",
     "session-expired":"sf.u12.sessionExpired","not-found":"sf.u12.notFound",
     invalid:"sf.u12.invalid",empty:"sf.u12.empty",stale:"sf.u12.stale",
     conflict:"sf.u12.conflict","outcome-unknown":"sf.u12.unknown",
     "filtered-empty":"sf.u12.filteredEmpty",
-  } as Partial<Record<SfUiState,SfU12CopyKey>>)[state()]??"sf.u12.unavailable"
+  } as Partial<Record<SfUiState,SfU12CopyKey>>)[value]??"sf.u12.unavailable"
   const begin=(action:SourcingAction)=>{
     const row=request(),current=page(),token=authority(),requestRef=row?.number,version=sourceVersion()
     if(!row||!current||!token||!requestRef||version===null||
@@ -353,18 +354,27 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     if (!amount && !currency) return null
     return amount ? amount + (currency ? " " + currency : " unspecified") : currency
   }
-  const fields=(intent:Intent):SfReviewField[]=>[
-    {path:"status",label:m("sf.u12.stage"),value:toView(request()?.status)},
-    {path:"sourcing.evaluator",label:m("sf.u12.evaluator"),value:toView(intent.sourcing.evaluator)},
-    {path:"sourcing.selectionJustification",label:m("sf.u12.selectionJustification"),value:toView(intent.sourcing.selectionJustification)},
-    {path:"sourcing.contractStrategy",label:m("sf.u12.contractStrategy"),value:toView(intent.sourcing.contractStrategy)},
-    {path:"sourcing.quotes",label:m("sf.u12.quotes"),value:toView(intent.sourcing.quotes?.length)},
-    ...(intent.sourcing.quotes ?? []).flatMap((quote, index) => [
-      {path:"sourcing.quotes." + index + ".currency",label:m("sf.u12.quoteCurrency"),value:toView(quote.currency)},
-      {path:"sourcing.quotes." + index + ".total",label:m("sf.u12.quoteTotal"),value:toView(quoteAmount(quote))},
-    ]),
-    {path:"quoteId",label:m("sf.u12.selectId"),value:toView(intent.quoteId)},
-  ]
+  const fields=(intent:Intent):SfReviewField[]=>{
+    if(intent.action==="select_quote"){
+      const quote=intent.sourcing.quotes?.find((item)=>item.id===intent.quoteId)
+      return [
+        {path:"quoteId",label:m("sf.u12.selectId"),value:toView(quote?.supplier??intent.quoteId)},
+        {path:"sourcing.quote.total",label:m("sf.u12.quoteTotal"),value:toView(quote?quoteAmount(quote):null)},
+      ]
+    }
+    return [
+      {path:"status",label:m("sf.u12.stage"),value:toView(request()?.status)},
+      {path:"sourcing.evaluator",label:m("sf.u12.evaluator"),value:toView(intent.sourcing.evaluator)},
+      {path:"sourcing.selectionJustification",label:m("sf.u12.selectionJustification"),value:toView(intent.sourcing.selectionJustification)},
+      {path:"sourcing.contractStrategy",label:m("sf.u12.contractStrategy"),value:toView(intent.sourcing.contractStrategy)},
+      {path:"sourcing.quotes",label:m("sf.u12.quotes"),value:toView(intent.sourcing.quotes?.length)},
+      ...(intent.sourcing.quotes ?? []).flatMap((quote, index) => [
+        {path:"sourcing.quotes." + index + ".currency",label:m("sf.u12.quoteCurrency"),value:toView(quote.currency)},
+        {path:"sourcing.quotes." + index + ".total",label:m("sf.u12.quoteTotal"),value:toView(quoteAmount(quote))},
+      ]),
+      {path:"quoteId",label:m("sf.u12.selectId"),value:toView(intent.quoteId)},
+    ]
+  }
   const reviewSnapshot=(intent:Intent):SfReviewSnapshot=>({
     kind:"persisted",ref:intent.requestRef as SfRef,version:intent.version,
     fields:fields({...intent,sourcing:request()?editableSourcing(request()!):intent.sourcing,
@@ -378,7 +388,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     const intent=ui.review
     if(!intent||draftConflict()||draftPending()||!can(intent.action)||intent.token!==authority()||
       !sourcingDraftDispatchable(draft()?.snapshot(),intent.version,intent.action,intent.sourcing))
-      return {kind:"blocked",labelKey:k("sf.u12.readOnly"),reasons:[m("sf.u12.readOnly")]} as const
+      return {kind:"blocked",labelKey:k(ui.sending?"sf.u12.confirm":"sf.u12.readOnly"),reasons:[m("sf.u12.readOnly")]} as const
     return {kind:"admitted",labelKey:k("sf.u12.confirm"),purpose:
       (intent.action==="select_quote"?"select":intent.action==="save"?"save":"submit") as "select"|"submit"|"save",
       binding:{kind:"catalog-command",operationId:
@@ -411,6 +421,10 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     // Fresh reads of phase; static narrowing above predates setUi("phase","checking").
     const phaseNow=()=>ui.phase
     if(ui.review!==intent||phaseNow()!=="checking"||ref()!==intent.requestRef){release();return}
+    if(fresh.kind==="unavailable"){
+      setUi({phase:"reviewing",lastError:fresh.kind})
+      release();return
+    }
     const next=fresh.kind==="ok"?uniqueRequest(fresh.page,intent.requestRef):null
     if(fresh.kind!=="ok"||!next||
       requestRevision(fresh.page,intent.requestRef)!==intent.sourceRevision||
@@ -504,14 +518,13 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         if(code===401||code===403)setUi("page",null)
         return
       }
-      setUi("review",null)
       setUi("sourceWarnings",response.body.warnings??[])
       setUi("fieldErrors",[])
       setUi("phase","verifying")
       // The producer returned an explicit success, not a receipt. Close the
       // exact pending draft fence only with that acknowledgement, and use a
       // later authorized projection only when its version actually advanced.
-      const confirmedPage=await refresh(token,intent.requestRef)
+      const confirmedPage=await refresh(token,intent.requestRef,intent)
       if(controller.signal.aborted||authority()!==token)return
       const confirmedRecord=confirmedPage?uniqueRequest(confirmedPage,intent.requestRef):null
       const confirmedVersion=confirmedPage?requestVersion(confirmedPage,intent.requestRef):null
@@ -520,7 +533,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           baseVersion:confirmedVersion,value:editableSourcing(confirmedRecord)})
       else controllerDraft.confirmSave({kind:"confirmed-without-projection",
         operationRef:intentRef,resultVersion:confirmedVersion})
-      setUi("phase","producer-confirmed")
+      setUi({review:null,phase:"producer-confirmed"})
     }catch{
       if(!controller.signal.aborted&&authority()===token){
         controllerDraft.setPhase("outcome-unknown")
@@ -632,7 +645,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     const state=snapshot()
     if(state?.availability!=="active")
       return <SfStatePanel state="unavailable" messageKey={k("sf.u12.readOnly")}/>
-    if(draftPending())return <SfStatePanel state="outcome-unknown" messageKey={k("sf.u12.unknown")}/>
+    if(outcomeUnknown())return <SfStatePanel state="outcome-unknown" messageKey={k("sf.u12.unknown")}/>
     if(draftConflict())return conflictPanel()
     const current=edit()
     const keyFields=[
@@ -680,7 +693,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
   }
   const comparison=():JSX.Element=>{
     if(ui.phase==="conflict")return conflictPanel()
-    if(draftPending())return <SfStatePanel state="outcome-unknown" messageKey={k("sf.u12.unknown")}/>
+    if(outcomeUnknown())return <SfStatePanel state="outcome-unknown" messageKey={k("sf.u12.unknown")}/>
     if(draftConflict())return conflictPanel()
     const row=request()
     if(!row)return <SfStatePanel state="not-found" messageKey={k("sf.u12.notFound")}/>
@@ -782,20 +795,23 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     secondaryActions={[{id:"refresh",labelKey:k("sf.u12.refresh"),tone:"secondary",disabled:active(ui.phase),busy:false,
       onInvoke:()=>{const token=authority();if(token)void refresh(token,ref()??undefined)}}]}
   >
-    <div class="sf-u12-root">
+    <div class="sf-u12-root" data-confirmation-phase={ui.phase}>
       <For each={ui.sourceWarnings}>{(message)=><p role="alert">{message}</p>}</For>
       <Show when={state()==="ready"||state()==="empty"||state()==="filtered-empty"||state()==="outcome-unknown"}
         fallback={<SfStatePanel state={state()} messageKey={k(message())}
           onRetryRead={()=>{const token=authority();if(token)void refresh(token,ref()??undefined)}}/>}>
-        <Show when={ui.phase==="outcome-unknown"||draftPending()}>
+        <Show when={outcomeUnknown()}>
           <p role="alert">{t("sf.u12.unknown")}</p>
           <button class="mx-btn" type="button" onClick={()=>{
             const token=authority();if(token)void refresh(token,ref()??undefined)
           }}>{t("sf.u12.refresh")}</button>
         </Show>
+        <Show when={ui.sending && (ui.phase==="checking"||ui.phase==="submitting"||ui.phase==="verifying")}>
+          <p role="status">{t(ui.phase==="submitting"?"sf.u12.submitting":"sf.u12.loading")}</p>
+        </Show>
         <Show when={ui.phase==="producer-confirmed"}><p role="status">{t("sf.u12.confirmed")}</p></Show>
         <Show when={ui.phase==="failed"}><p role="alert">{t("sf.u12.failed")}</p></Show>
-        <Show when={ui.phase!=="outcome-unknown"&&!draftPending()}>
+        <Show when={!outcomeUnknown()}>
         <Show when={!ref()}>
           <section><h3>{t("sf.u12.request")}</h3>
             <ul><For each={requestRows()}>{(row)=>
@@ -844,7 +860,9 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
             <button type="button" aria-pressed={ui.stage==="quotes"} class="mx-btn"
               onClick={()=>setUi("stage","quotes")}>{t("sf.u12.compare")}</button>
           </div>
-          <Show when={!ui.review} fallback={<SfChangeReview
+          <Show when={!ui.review} fallback={<>
+            <Show when={ui.phase==="reviewing"&&ui.lastError}><p role="alert">{t(message(ui.lastError!))}</p></Show>
+            <SfChangeReview
             operation={{ref:(ui.review?.intentRef??"CAP25:unknown") as SfOperationRef,
               label:m("sf.u12.review"),scope:data(ui.review?.requestRef??"")}}
             base={ui.review?reviewSnapshot(ui.review):null}
@@ -853,14 +871,15 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
             effects={[{id:"sourcing",domain:"procurement",title:data(ui.review?.action??""),
               state:"proposed",details:[]}]}
             coverage={{state:"partial",summary:m("sf.u12.coverage"),
-              reasons:[m("sf.u12.rankUnavailable")],knownCount:null,expectedCount:null}}
+              reasons:ui.review?.action==="select_quote"?[]:[m("sf.u12.rankUnavailable")],knownCount:null,expectedCount:null}}
             blockingReasons={[]}
             confirmation={confirmation()}
+            busy={ui.sending}
             state={ui.phase==="conflict"?"conflict":"ready"}
             onConfirm={(review)=>void confirm(review as Extract<ReturnType<typeof confirmation>,{kind:"admitted"}>)}
             onRevise={()=>{setUi("review",null);setUi("phase","idle")}}
             onCancel={()=>{setUi("review",null);setUi("phase","idle")}}
-          />}>
+          /></>}>
             <Show when={ui.stage==="quotes"} fallback={editor()}>{comparison()}</Show>
             <Show when={!can("save")}><p role="status">{t("sf.u12.notEditable")}</p></Show>
           </Show>
