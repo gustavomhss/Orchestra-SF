@@ -9,6 +9,7 @@ import "@orchestra/ui/v2/tooltip-v2.css"
 export function OrchestraNavigationTooltip(props: {
   enabled: boolean
   value: string
+  openDelay?: number
   children: (trigger: typeof Tooltip.Trigger) => JSX.Element
 }) {
   const language = useLanguage()
@@ -24,7 +25,7 @@ export function OrchestraNavigationTooltip(props: {
       disabled={!props.enabled}
       placement={language.direction() === "rtl" ? "left" : "right"}
       gutter={4}
-      openDelay={400}
+      openDelay={props.openDelay ?? 400}
       closeDelay={0}
       ignoreSafeArea
     >

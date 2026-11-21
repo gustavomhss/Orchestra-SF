@@ -1,4 +1,4 @@
-import type { Persistence } from "./contract.ts"
+import type { HoldTargetPreimage, Persistence, SnapshotAuthorityRead } from "./contract.ts"
 import type { AssetPersistence } from "./assets.ts"
 import type { RoleRow, ResolvedActor, Surface } from "../src/identity.ts"
 
@@ -17,7 +17,13 @@ export type CorporateLocalSecrets = LocalSecrets & {
   retireSession: (key: string, revokedKey: string, at: number) => Promise<void>
   refreshSession: (key: string, revokedKey: string, expected: Uint8Array, value: Uint8Array, at: number) => Promise<void>
 }
-export type LocalStore = Persistence & AssetPersistence & { secrets: CorporateLocalSecrets; dispose: () => Promise<void> }
+export type LocalStore = Persistence & AssetPersistence & {
+  hasSnapshotRoot?: () => boolean
+  holdTargetPreimage?: HoldTargetPreimage
+  observeAuthority?: SnapshotAuthorityRead
+  secrets: CorporateLocalSecrets
+  dispose: () => Promise<void>
+}
 export type DirectoryPerson = { id: string; name: string }
 export type EntraTokens = { accessToken: string; refreshToken?: string; idToken?: string; expiresAt: number; grantedScopes?: readonly string[] }
 /** An observation available to the server for a verified Microsoft principal. */

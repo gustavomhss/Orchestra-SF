@@ -8,7 +8,7 @@ import { isReviewThreadContext } from "../reviews/thread-context.ts"
 import type { ReviewThreadContext } from "../reviews/thread-context.ts"
 
 export type ThreadSourceContext = Pick<CollaborationThread, "sourceRef" | "sourceIncarnation" | "observedVersion" | "period" | "evidenceRefs"> & { reviewContext?: ReviewThreadContext }
-export type ReviewThreadContextAuthorizer = (pin: ReviewThreadContext, basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
+export type ReviewThreadContextAuthorizer = (pin: ReviewThreadContext, basis: ThreadSourceContext, context: TrustedDomainContext, purpose?: "read") => Promise<boolean>
 
 /** Structural selection check only; scoped incarnation is actor-bound, not physical identity or permission.
  * The recipient reader proves physical continuity and current authority for every record basis.

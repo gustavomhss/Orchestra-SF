@@ -1,3 +1,5 @@
+import { probeSfReviewMutationReceipt, stageSfReviewThreadWrite } from "../host-binding/state-provider.ts"
+import { createAnswerStateFence } from "./answer-state-fence.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { SfProductStatePort, SfProductState, SfStateAuthority } from "../contracts/state.ts"
@@ -18,18 +20,23 @@ type RevisionThread = CollaborationThread & { messageRevisions?: readonly Messag
 /** Historical content stays with the canonical thread and is shown only under current source access. */
 export function createThreadHistory(input: {
   state: SfProductStatePort
-  host: Pick<DomainPortHost, "requestFor" | "revalidate">
+  replayCurrent?: () => boolean
+  host: Pick<DomainPortHost, "requestFor" | "revalidate" | "persistence">
   read: ReturnType<typeof createRecipientAwareThreadReads>["read"]
   readHistorical?: ReturnType<typeof createRecipientAwareThreadReads>["readHistorical"]
   authorizeSources?: (basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
+  authorizeEditBasis?: (thread: CollaborationThread, basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
   prepareReviewThreadFence?: PrepareReviewThreadFence
   authorizeReviewRecipient?: (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
   checkReviewRecipientAtCommit?: (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => boolean
+  prepareEditReceipt?: (thread: CollaborationThread, basis: ThreadSourceContext, context: TrustedDomainContext, current: () => boolean) =>
+    Promise<(() => boolean) | "reissue" | undefined>
   human: CollaborationHumanAuthority
   fence: CollaborationMutationFence
   target: { ref: string; incarnation: string }
   threadHistoryWrites: WeakSet<object>
 }) {
+  const captureReceipt = createAnswerStateFence(input.host)
   const load = async (id: string, context: TrustedDomainContext, historical = false): Promise<PortResult<{ thread: RevisionThread; visible: CollaborationThread }>> => {
     const request = input.host.requestFor(context)
     const currentAccess = async () => !!request && input.host.requestFor(context) === request && await input.host.revalidate(context) && input.host.requestFor(context) === request
@@ -71,7 +78,9 @@ export function createThreadHistory(input: {
       if (!message || message.authorRef !== context.binding.principalRef || message.version >= Number.MAX_SAFE_INTEGER) return { status: "denied", reason: "thread-access-unavailable" }
       const basis = threadMessageContext(prior, message)
       if (!basis) return { status: "unavailable", reason: "thread-history-unavailable" }
-      const readable = input.authorizeSources ? await input.authorizeSources(basis, context).catch(() => undefined) : true
+      const authorizeEditBasis = input.authorizeEditBasis
+      const authorizeSelected = () => authorizeEditBasis?.(prior, basis, context) ?? input.authorizeSources?.(basis, context) ?? Promise.resolve(true)
+      const readable = await authorizeSelected().catch(() => undefined)
       if (readable === false || input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request) return { status: "denied", reason: "thread-history-unavailable" }
       if (readable !== true) return { status: "unavailable", reason: "thread-read-unavailable" }
       const review = basis.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
@@ -79,30 +88,99 @@ export function createThreadHistory(input: {
       if (review && "reason" in review) return review
       if (basis.reviewContext && review?.status !== "ok") return { status: "unavailable", reason: "review-thread-context-unavailable" }
       if (review?.status === "ok" && !review.value) return { status: "denied", reason: "review-thread-context-unavailable" }
+      const command = { namespace: "threads" as const, ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue({ id, messageId, expectedVersion, body }), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }
+      const state = input.state
+      const readState = state.read
+      const transaction = state.transaction
+      const framework = input.replayCurrent
+      const host = input.host
+      const requestFor = host.requestFor
+      const revalidate = host.revalidate
+      const read = input.read
+      const authorizeSources = input.authorizeSources
+      const current = () => input.state === state && state.read === readState && state.transaction === transaction && input.host === host && host.requestFor === requestFor && host.revalidate === revalidate &&
+        input.read === read && input.authorizeSources === authorizeSources && input.authorizeEditBasis === authorizeEditBasis && requestFor.call(host, context) === request && !request.signal.aborted
+      const releaseReceipt = async (version: number, installedReview = false): Promise<PortResult<{ id: string; messageId: string; version: number }>> => {
+        const loaded = await load(id, context)
+        if (loaded.status !== "ok") return loaded
+        if (!current() || !await revalidate.call(host, context) || !current() || installedReview && (input.replayCurrent !== framework || !framework?.()) || !sameThreadReadScope(prior, loaded.value.thread)) return { status: "denied", reason: "thread-access-unavailable" }
+        if (!loaded.value.thread.messages.some((entry) => entry.id === message.id && entry.incarnation === message.incarnation && entry.version === version && entry.body === selected.body)) return { status: "stale", reason: "thread-content-changed" }
+        return { status: "ok", value: { id, messageId, version } }
+      }
+      if (basis.reviewContext && prior.recipientRef === context.binding.principalRef && framework?.()) {
+        const replay = await probeSfReviewMutationReceipt<number>(state, request, command, context, () => current() && input.replayCurrent === framework && framework())
+        if (replay) {
+          if ("reason" in replay) return replay
+          if (replay.status !== "ok" || !Number.isSafeInteger(replay.value) || replay.value !== expectedVersion + 1) return { status: "unavailable", reason: "thread-read-unavailable" }
+          return releaseReceipt(replay.value, true)
+        }
+      }
       const prepareReviewFence = input.prepareReviewThreadFence
+      const prepareEditReceipt = input.prepareEditReceipt
       const checkReviewRecipient = input.checkReviewRecipientAtCommit
       const reviewFence = basis.reviewContext && prepareReviewFence ? await prepareReviewFence(basis, context) : undefined
-      if (basis.reviewContext && (!reviewFence || prior.recipientRef && (!input.authorizeReviewRecipient || !checkReviewRecipient || !await input.authorizeReviewRecipient(prior.recipientRef, basis, context)))) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
+      const ownReview = !!reviewFence && !!framework?.() && !!authorizeSources && prior.recipientRef === context.binding.principalRef
+      if (basis.reviewContext && (!reviewFence || prior.recipientRef && (!checkReviewRecipient ||
+        !ownReview && (!input.authorizeReviewRecipient || !await input.authorizeReviewRecipient(prior.recipientRef, basis, context))))) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
+      const priorDigest = digestSfValue(prior)
       const fence = await input.fence.prepare(async () => {
-        const current = await load(id, context)
-        return current.status === "ok" && digestSfValue(current.value.thread) === digestSfValue(prior) && (!input.authorizeSources || await input.authorizeSources(basis, context))
+        if (ownReview) {
+          if (!current() || input.replayCurrent !== framework || !framework?.() || !await revalidate.call(host, context)) return false
+          const observed = await state.read(request, "threads", (stored, actor) =>
+            actor.principalRef === context.binding.principalRef && actor.accessRevision === context.binding.accessRevision &&
+            actor.policyVersion === context.binding.policyVersion ? digestSfValue(stored.threads[id]) : undefined)
+          return current() && observed.status === "ok" && observed.value === priorDigest &&
+            !!authorizeSources && await authorizeSelected() && current() && framework()
+        }
+        const observed = await load(id, context)
+        return observed.status === "ok" && digestSfValue(observed.value.thread) === priorDigest && (!input.authorizeSources || await input.authorizeSources(basis, context))
       })
       if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
+      const revised = { ...prior, messages: prior.messages.map((entry) => entry.id === message.id ? { ...entry, body: selected.body, version: entry.version + 1, sourceContext: basis } : entry), messageRevisions: [...(prior.messageRevisions ?? []), message] }
+      const installedCurrent = () => ownReview && current() && input.replayCurrent === framework && framework?.() === true &&
+        input.prepareEditReceipt === prepareEditReceipt && input.prepareReviewThreadFence === prepareReviewFence
+      let stagedEdit = false
       const work = async (state: SfProductState, authority: SfStateAuthority) => {
+        if (ownReview && !installedCurrent()) return { commit: false, value: 0 }
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.edit", selected) || basis.reviewContext && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence || prior.recipientRef && (input.checkReviewRecipientAtCommit !== checkReviewRecipient || !checkReviewRecipient || !checkReviewRecipient(prior.recipientRef, basis, context) || input.checkReviewRecipientAtCommit !== checkReviewRecipient)) || !input.fence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || message.version !== selected.expectedVersion || prior.state !== "open") return { commit: false, value: 0 }
-        state.threads[id] = { ...prior, messages: prior.messages.map((entry) => entry.id === message.id ? { ...entry, body: selected.body, version: entry.version + 1, sourceContext: basis } : entry), messageRevisions: [...(prior.messageRevisions ?? []), message] }
+        if (ownReview && !installedCurrent()) return { commit: false, value: 0 }
+        state.threads[id] = revised
+        stagedEdit = true
         return { commit: true, value: message.version + 1 }
       }
+      if (ownReview) stageSfReviewThreadWrite(work)
       input.threadHistoryWrites.add(work)
-      const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue({ id, messageId, expectedVersion, body }), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.threadHistoryWrites.delete(work))
+      const saved = await input.state.transaction(request, command, work).finally(() => input.threadHistoryWrites.delete(work))
       if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
       if ("reason" in saved) return saved
       if (!saved.value) return { status: "unavailable", reason: "thread-access-unavailable" }
-      const current = await load(id, context)
-      if (current.status !== "ok") return current
-      if (input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request || !sameThreadReadScope(prior, current.value.thread)) return { status: "denied", reason: "thread-access-unavailable" }
-      if (!current.value.thread.messages.some((entry) => entry.id === message.id && entry.incarnation === message.incarnation && entry.version === saved.value)) return { status: "stale", reason: "thread-content-changed" }
-      return { status: "ok", value: { id, messageId, version: saved.value } }
+      // A fresh installed self edit returns only its receipt. Reobserve its
+      // entire committed row and its live source independently under a seal.
+      const basisDigest = digestSfValue(basis)
+      const classifyUnreleased = async () => {
+        // The canonical reader may establish revocation. A failed fast
+        // observation never releases a receipt, even if the reread succeeds.
+        const latest = await load(id, context)
+        if (!installedCurrent() || !await revalidate.call(host, context) || !installedCurrent())
+          return { status: "denied" as const, reason: "thread-access-unavailable" }
+        return latest.status === "ok" ? { status: "unavailable" as const, reason: "thread-receipt-unavailable" } : latest
+      }
+      if (stagedEdit && ownReview && reviewFence && prepareEditReceipt && saved.value === selected.expectedVersion + 1 &&
+        [...prior.messages, ...(prior.messageRevisions ?? [])].every((entry) => digestSfValue(threadMessageContext(prior, entry)) === basisDigest)) {
+        if (!installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
+        const continuity = await prepareEditReceipt(prior, basis, context, installedCurrent)
+        if (!installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
+        if (!continuity) return classifyUnreleased()
+        if (continuity !== "reissue") {
+          const confirmed = await captureReceipt({ questionId: id, threadDigest: digestSfValue(revised) }, async () =>
+            installedCurrent() && continuity() && await reviewFence() && continuity() &&
+            await revalidate.call(host, context) && installedCurrent(), request.signal)
+          if (!await revalidate.call(host, context) || !installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
+          if (!confirmed) return classifyUnreleased()
+          return { status: "ok", value: { id, messageId, version: saved.value } }
+        }
+      }
+      return releaseReceipt(saved.value, ownReview)
     },
     readVersion: async (id: string, messageId: string, incarnation: string, version: number, context: TrustedDomainContext): Promise<PortResult<{ message: Message } & ThreadSourceContext>> => {
       const request = input.host.requestFor(context)

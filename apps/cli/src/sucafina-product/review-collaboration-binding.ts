@@ -1,3 +1,6 @@
+import { localRecordReview } from "./review-collaboration.ts"
+import { registerReviewEvidenceBatch } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/authority.ts"
+import type { ReviewThreadReadLeg } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/authority.ts"
 import type { BusinessContextService, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { ReviewThreadContextAuthorizer } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts"
 import type { ReviewThreadRecipientAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts"
@@ -6,6 +9,7 @@ import type { createReviewAnswerSource } from "../../../../modules/sucafina/Suca
 export type SfReviewCollaborationBinding = {
   evidence: BusinessContextService
   authorizeReviewThreadContext: ReviewThreadContextAuthorizer
+  readLeg?: ReviewThreadReadLeg
   reviewRecipientAuthority: ReviewThreadRecipientAuthority
   reviewAnswerSource: ReturnType<typeof createReviewAnswerSource>
 }
@@ -13,7 +17,7 @@ export type SfReviewCollaborationBinding = {
 /** Collaboration is built before Review. Bind its stable producer callbacks once,
  * after the real application exists; no ID/directory entry supplies authority. */
 export function createSfReviewCollaborationBinding(original: BusinessContextService) {
-  const holder: { current?: SfReviewCollaborationBinding; closed: boolean } = { closed: false }
+  const holder: { current?: SfReviewCollaborationBinding; resolve?: BusinessContextService["resolve"]; closed: boolean } = { closed: false }
   const unavailable: BusinessContextService["resolve"] = async (ref, call) => ({
     state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString(),
   })
@@ -27,9 +31,21 @@ export function createSfReviewCollaborationBinding(original: BusinessContextServ
   }
   const evidence: BusinessContextService = { ...original, resolve,
     context: (request, call) => Promise.all(request.refs.map((ref) => resolve(ref, call))) }
-  const authorizeReviewThreadContext: ReviewThreadContextAuthorizer = async (pin, basis, call) => {
+  const authorizeReviewThreadContext: ReviewThreadContextAuthorizer = async (pin, basis, call, purpose) => {
     const bound = holder.current, authorize = bound?.authorizeReviewThreadContext
-    return !!bound && !!authorize && await authorize(pin, basis, call) && holder.current === bound && !holder.closed && bound.authorizeReviewThreadContext === authorize
+    return !!bound && !!authorize && await authorize(pin, basis, call, purpose) && holder.current === bound && !holder.closed && bound.authorizeReviewThreadContext === authorize
+  }
+  const readLeg: ReviewThreadReadLeg = async (pin, basis, call, complete, before) => {
+    const bound = holder.current, run = bound?.readLeg
+    if (!bound || holder.closed) return false
+    if (!run) return undefined
+    const producer = bound.evidence, resolve = holder.resolve
+    const current = () => !holder.closed && holder.current === bound && bound.readLeg === run &&
+      bound.evidence === producer && producer.resolve === resolve
+    if (!current()) return false
+    const result = await run(pin, basis, call, async () => current() && await complete() && current(),
+      before && (async () => current() && await before() && current()))
+    return current() ? result : false
   }
   const reviewRecipientAuthority: ReviewThreadRecipientAuthority = {
     authorize: async (recipient, basis, call) => {
@@ -74,8 +90,13 @@ export function createSfReviewCollaborationBinding(original: BusinessContextServ
   return { evidence, authorizeReviewThreadContext, reviewRecipientAuthority, reviewAnswerSource,
     bind: (binding: SfReviewCollaborationBinding) => {
       if (holder.current || holder.closed) throw new Error("SF_REVIEW_COLLABORATION_ALREADY_BOUND")
-      holder.current = Object.freeze({ ...binding })
+      const bound = Object.freeze({ ...binding })
+      const resolve = bound.evidence.resolve
+      holder.current = bound
+      holder.resolve = resolve
+      registerReviewEvidenceBatch(evidence, reviewAnswerSource, authorizeReviewThreadContext, reviewRecipientAuthority, readLeg,
+        () => !holder.closed && holder.current === bound && bound.evidence.resolve === resolve ? localRecordReview : undefined)
     },
-    dispose: () => { holder.closed = true; holder.current = undefined },
+    dispose: () => { holder.closed = true; holder.current = undefined; holder.resolve = undefined },
   }
 }

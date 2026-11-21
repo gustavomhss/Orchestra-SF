@@ -5,10 +5,12 @@ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { SfScopedSourcePort, SfSourceScope } from "../integration/source-lifecycle.ts"
+import { dashboardScopeAuthority } from "../integration/source-lifecycle.ts"
 import type { DashboardSourceHost } from "./port.ts"
 import type { DomainProjection, Period, SourceRef } from "../contracts/context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
+import { dashboardRecordIssuanceReader } from "../integration/dashboard-sources.ts"
 
 export function dashboardSourceSelector(incarnation: string, version: number) {
   return `sf-source:${encodeURIComponent(incarnation)}:${version}`
@@ -18,19 +20,65 @@ export function dashboardMetricSelector(selectionRef: string, metric: string) {
   return `dashboard-metric:${encodeURIComponent(selectionRef)}:${encodeURIComponent(metric)}`
 }
 
+type PageSourceCompletion = { current: () => boolean; retain: (current: () => boolean) => void }
+type PageSourceResolver = DashboardSourceHost["resolveDashboardSource"]
+const pageObservationReaders = new WeakMap<object, {
+  host: DomainPortHost; sources: SfScopedSourcePort; owners: () => boolean
+  resolve: PageSourceResolver
+  observe: (reference: string, context: TrustedDomainContext, selection: { fields: readonly string[]; period: Period } | undefined, complete: PageSourceCompletion) => ReturnType<PageSourceResolver>
+}>()
+
+/** A lexical completion of the two existing Page resolutions. Only the original
+ * source factory can retain checks of its borrowed bodies; none survive work. */
+export function dashboardPageSourceObservationReader(sources: DashboardSourceHost, host: DomainPortHost) {
+  const owned = pageObservationReaders.get(sources)
+  if (!owned || owned.host !== host) return undefined
+  const methods = recordObservationMethods(host, owned.sources)
+  const readMethod = Object.getOwnPropertyDescriptor(owned.sources, "readScopedSource")?.value
+  const current = () => !!methods && methods() && typeof readMethod === "function" &&
+    Object.getOwnPropertyDescriptor(owned.sources, "readScopedSource")?.value === readMethod &&
+    owned.owners() && pageObservationReaders.get(sources) === owned &&
+    Object.getOwnPropertyDescriptor(sources, "resolveDashboardSource")?.value === owned.resolve
+  if (!current()) return undefined
+  const run = async <Value>(work: (resolve: PageSourceResolver, current: () => boolean) => Promise<PortResult<Value>>, ownerCurrent: () => boolean): Promise<PortResult<Value>> => {
+    let active = true, pending = 0
+    const observations: (() => boolean)[] = []
+    const live = () => active && current() && ownerCurrent()
+    const resolve: PageSourceResolver = async (reference, context, selection) => {
+      if (!live()) return { status: "stale", reason: "source-observation-expired" }
+      pending++
+      try {
+        return await owned.observe(reference, context, selection, { current: live, retain: (check) => { if (live()) observations.push(check) } })
+      } finally { pending-- }
+    }
+    try {
+      const result = await work(resolve, live)
+      if (!live() || pending !== 0 || result.status === "ok" && observations.length !== 2 ||
+        observations.some((check) => !check()) || !live())
+        return { status: "stale", reason: "source-or-authority-changed" }
+      return result
+    } finally {
+      active = false
+      observations.length = 0
+    }
+  }
+  return Object.freeze({ sources: owned.sources, current, run })
+}
+
 export function createDashboardSourceHost(input: { host: DomainPortHost; scopedSources: SfScopedSourcePort }): DashboardSourceHost {
-  const host = input.host
-  const sources: DashboardSourceHost = {
-    resolveDashboardSource: async (reference, context, selection): Promise<PortResult<{ page: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>> => {
+  const host = input.host, scopedSources = input.scopedSources
+  const owners = () => Object.getOwnPropertyDescriptor(input, "host")?.value === host &&
+    Object.getOwnPropertyDescriptor(input, "scopedSources")?.value === scopedSources
+  const resolveSource = async (reference: string, context: TrustedDomainContext, selection?: { fields: readonly string[]; period: Period }, complete?: PageSourceCompletion): Promise<PortResult<{ page: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>> => {
       const parts = /^sf-source:([^:]+):([1-9]\d*)$/.exec(reference)
       const incarnation = parts && safeDecode(parts[1]!)
       if (!incarnation || encodeURIComponent(incarnation) !== parts?.[1] || !Number.isSafeInteger(Number(parts[2]))) return { status: "needs-input", reason: "invalid-dashboard-source-selector" }
       const request = host.requestFor(context)
-      if (!request || !(await host.revalidate(context))) return { status: "denied", reason: "source-authority-unavailable" }
-      const read = () => input.scopedSources.resolveScopedSource("dashboard", incarnation, async (snapshot, scope) => {
-        if (request.signal.aborted || scope.principalRef !== context.binding.principalRef || scope.accessRevision !== context.binding.accessRevision || scope.policyVersion !== context.binding.policyVersion || scope.recordType !== "dashboard-page") return false
+      if (!request || complete && !complete.current() || !(await host.revalidate(context)) || complete && !complete.current()) return { status: "denied", reason: "source-authority-unavailable" }
+      const read = () => complete && !complete.current() ? Promise.resolve(undefined) : input.scopedSources.resolveScopedSource("dashboard", incarnation, dashboardScopeAuthority(async (snapshot, scope: SfSourceScope) => {
+        if (complete && !complete.current() || request.signal.aborted || scope.principalRef !== context.binding.principalRef || scope.accessRevision !== context.binding.accessRevision || scope.policyVersion !== context.binding.policyVersion || scope.recordType !== "dashboard-page") return false
         const principal = await host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
-        if (!principal || principal.id !== scope.principalRef || principal.id.startsWith("local:")) return false
+        if (!principal || principal.id !== scope.principalRef || principal.id.startsWith("local:") || complete && !complete.current()) return false
         const access = object(object(snapshot.data.access)[principal.id])
         const roles = principal.roles.filter((entry) => entry.surface === "dashboard").map((entry) => entry.role)
         const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
@@ -38,18 +86,27 @@ export function createDashboardSourceHost(input: { host: DomainPortHost; scopedS
         if (scope.recordId !== selector.page || digestSfValue(selector.actor) !== digestSfValue(actor)) return false
         if (selection && (digestSfValue(selector.fields) !== digestSfValue([...selection.fields].sort()) || digestSfValue(selector.period) !== digestSfValue(selection.period))) return false
         return true
-      })
-      const current = await read().catch(() => undefined)
-      if (!current || !(await host.revalidate(context))) return { status: "denied", reason: "source-unavailable" }
+      }))
+      const observed = await read().catch(() => undefined)
+      if (!observed || complete && !complete.current() || !(await host.revalidate(context)) || complete && !complete.current()) return { status: "denied", reason: "source-unavailable" }
+      const current = complete ? structuredClone(observed) : observed
+      const expected = complete ? digestSfValue(current) : ""
       if (current.version !== Number(parts[2])) return { status: "stale", reason: "source-replaced-or-changed" }
       const selector = object(current.scope.selector)
       const period = object(selector.period)
       if (typeof selector.page !== "string" || !Array.isArray(selector.fields) || selector.fields.some((field) => typeof field !== "string") || typeof period.start !== "string" || typeof period.end !== "string") return { status: "unavailable", reason: "invalid-source-scope" }
       const value: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", refId: reference, installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "observed", target: { surface: "dashboard", recordType: "dashboard-page", recordId: selector.page, incarnation, version: current.version, fields: selector.fields, period: { start: period.start, end: period.end }, projectionDigest: current.inputDigest } }
       const again = await read().catch(() => undefined)
-      if (!again || digestSfValue(again) !== digestSfValue(current) || !(await host.revalidate(context))) return { status: "stale", reason: "source-or-authority-changed" }
+      if (!again || digestSfValue(again) !== digestSfValue(current) || complete && !complete.current() || !(await host.revalidate(context))) return { status: "stale", reason: "source-or-authority-changed" }
+      if (complete) {
+        const unchanged = () => complete.current() && digestSfValue(observed) === expected && digestSfValue(again) === expected && complete.current()
+        if (!unchanged()) return { status: "stale", reason: "source-or-authority-changed" }
+        complete.retain(unchanged)
+      }
       return { status: "ok", value: { page: selector.page, evidence: { ...value, refDigest: digestSfEvidenceRef(value) } } }
-    },
+  }
+  const sources: DashboardSourceHost = {
+    resolveDashboardSource: (reference, context, selection) => resolveSource(reference, context, selection),
     resolveDashboardMetric: async (reference, context) => {
       const parts = /^dashboard-metric:([^:]+):([^:]+)$/.exec(reference)
       const selectionRef = parts && safeDecode(parts[1]!)
@@ -66,7 +123,43 @@ export function createDashboardSourceHost(input: { host: DomainPortHost; scopedS
       return { status: "unavailable", reason: "metric-not-available-for-page" }
     },
   }
+  pageObservationReaders.set(sources, { host, sources: scopedSources, owners, resolve: sources.resolveDashboardSource, observe: resolveSource })
   return sources
+}
+
+type DashboardRecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
+type DashboardRecordObservation = { evidence: DashboardRecordRef; projection: DomainProjection }
+type DashboardRecordObservationReader = <Value>(reference: string, context: TrustedDomainContext, consumer: {
+  current: () => boolean
+  before: (evidence: DashboardRecordRef) => Promise<boolean>
+  project: (observation: DashboardRecordObservation) => PortResult<Value>
+  after: () => Promise<boolean>
+}) => Promise<PortResult<Value>>
+const recordObservationReaders = new WeakMap<object, {
+  host: DomainPortHost; sources: SfScopedSourcePort; owners: () => boolean
+  resolve: object; read: object; observe: DashboardRecordObservationReader
+}>()
+
+const recordHostMethods = ["requestFor", "revalidate", "authenticate", "environment"] as const
+function recordObservationMethods(host: DomainPortHost, sources: SfScopedSourcePort) {
+  const entries = [...recordHostMethods.map((name) => [host, name] as const), [sources, "resolveScopedSource"] as const]
+    .map(([owner, name]) => ({ owner, name, value: Object.getOwnPropertyDescriptor(owner, name)?.value }))
+  if (entries.some((entry) => typeof entry.value !== "function")) return undefined
+  return () => entries.every((entry) => Object.getOwnPropertyDescriptor(entry.owner, entry.name)?.value === entry.value)
+}
+
+/** Composition belongs only to the original factory and its unchanged methods.
+ * The registry retains capabilities, never a source observation or authorization. */
+export function dashboardRecordObservationReader(records: object, host: DomainPortHost): Readonly<{
+  read: DashboardRecordObservationReader; current: () => boolean
+}> | undefined {
+  const owned = recordObservationReaders.get(records)
+  if (!owned || owned.host !== host) return undefined
+  const methods = recordObservationMethods(host, owned.sources)
+  const current = () => !!methods && methods() && owned.owners() && recordObservationReaders.get(records) === owned &&
+    Object.getOwnPropertyDescriptor(records, "resolve")?.value === owned.resolve &&
+    Object.getOwnPropertyDescriptor(records, "read")?.value === owned.read
+  return current() ? Object.freeze({ read: owned.observe, current }) : undefined
 }
 
 /** Scoped record references are opaque selectors; each resolution reauthenticates the caller. */
@@ -75,76 +168,147 @@ export function createDashboardRecordEvidenceHost(input: {
   scopedSources: SfScopedSourcePort
   issueRecord: (selection: { page: string; recordType: string; recordId: string; fields: readonly string[]; period: Period }, context: TrustedDomainContext) => Promise<{ scope: SfSourceScope; source: SourceRef } | undefined>
 }) {
-  const resolveCurrent = async (reference: string, context: TrustedDomainContext): Promise<PortResult<{ evidence: Extract<BusinessEvidenceRef, { kind: "record" }>; projection: Record<string, unknown> }>> => {
+  const host = input.host, scopedSources = input.scopedSources
+  const owners = () => input.host === host && input.scopedSources === scopedSources
+  type RecordObservation = { evidence: Extract<BusinessEvidenceRef, { kind: "record" }>; projection: Record<string, unknown> }
+  const resolveCurrent = async <T>(reference: string, context: TrustedDomainContext,
+    project: (value: RecordObservation, request: Request) => PortResult<T> | Promise<PortResult<T>>,
+    complete?: { publish: (result: PortResult<T>) => Promise<PortResult<T>>; current: () => boolean }): Promise<PortResult<T>> => {
     const parts = /^sf-source:([^:]+):([1-9]\d*)$/.exec(reference)
     const incarnation = parts && safeDecode(parts[1]!)
     if (!incarnation || encodeURIComponent(incarnation) !== parts?.[1] || !Number.isSafeInteger(Number(parts[2]))) return { status: "needs-input", reason: "invalid-dashboard-source-selector" }
-    const request = input.host.requestFor(context)
-    if (!request || request.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "source-authority-unavailable" }
-    const read = () => input.scopedSources.resolveScopedSource("dashboard", incarnation, async (snapshot, scope) => {
-      if (request.signal.aborted || scope.principalRef !== context.binding.principalRef || scope.accessRevision !== context.binding.accessRevision || scope.policyVersion !== context.binding.policyVersion || scope.recordType === "dashboard-page") return false
-      const principal = await input.host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
-      if (!principal || principal.id !== scope.principalRef || principal.id.startsWith("local:")) return false
+    const request = host.requestFor(context), lease = context.lease
+    const binding = digestSfValue([context.kind, context.binding])
+    const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+    const currentAuthority = () => owners() && (!complete || complete.current()) && !!request && !request.signal.aborted &&
+      host.requestFor(context) === request && context.lease === lease &&
+      digestSfValue([context.kind, context.binding]) === binding &&
+      digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest
+    if (!request || !currentAuthority() || !await host.revalidate(context) || !currentAuthority()) return { status: "denied", reason: "source-authority-unavailable" }
+    const read = () => complete && !complete.current() ? Promise.resolve(undefined) :
+      scopedSources.resolveScopedSource("dashboard", incarnation, dashboardScopeAuthority(async (snapshot, scope: SfSourceScope) => {
+      if (complete && !complete.current() || request.signal.aborted || scope.principalRef !== context.binding.principalRef || scope.accessRevision !== context.binding.accessRevision || scope.policyVersion !== context.binding.policyVersion || scope.recordType === "dashboard-page") return false
+      const principal = await host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
+      if (!principal || principal.id !== scope.principalRef || principal.id.startsWith("local:") || complete && !complete.current()) return false
       const access = object(object(snapshot.data.access)[principal.id])
       const roles = principal.roles.filter((entry) => entry.surface === "dashboard").map((entry) => entry.role)
       const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
       return digestSfValue(object(scope.selector).actor) === digestSfValue(actor)
-    })
-    const current = await read().catch(() => undefined)
-    if (!current || !await input.host.revalidate(context)) return { status: "denied", reason: "source-unavailable" }
+    }))
+    const observed = await read().catch(() => undefined)
+    if (!observed || complete && !complete.current() || !await host.revalidate(context)) return { status: "denied", reason: "source-unavailable" }
+    const current = structuredClone(observed)
+    const sourceDigest = digestSfValue(current)
     if (current.version !== Number(parts[2])) return { status: "stale", reason: "source-replaced-or-changed" }
     const selector = object(current.scope.selector)
     if (typeof selector.page !== "string" || !Array.isArray(selector.fields) || !selector.fields.length || selector.fields.some((field) => typeof field !== "string" || !field) || new Set(selector.fields).size !== selector.fields.length || !isSfPeriod(selector.period)) return { status: "unavailable", reason: "invalid-source-scope" }
     const value: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", refId: reference, installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "observed", target: { surface: "dashboard", recordType: current.scope.recordType, recordId: current.scope.recordId, incarnation, version: current.version, fields: selector.fields, period: selector.period, projectionDigest: current.inputDigest } }
-    const again = await read().catch(() => undefined)
-    if (!again || digestSfValue(again) !== digestSfValue(current) || !await input.host.revalidate(context)) return { status: "stale", reason: "source-or-authority-changed" }
     const projection = object(current.projection)
-    if (!current.projection || typeof current.projection !== "object" || Array.isArray(current.projection) || digestSfValue(Object.keys(projection).sort()) !== digestSfValue([...selector.fields].sort())) return { status: "unavailable", reason: "invalid-record-projection" }
-    return { status: "ok", value: { evidence: { ...value, refDigest: digestSfEvidenceRef(value) }, projection } }
+    const projected: PortResult<T> = !current.projection || typeof current.projection !== "object" || Array.isArray(current.projection) ||
+      digestSfValue(Object.keys(projection).sort()) !== digestSfValue([...selector.fields].sort())
+      ? { status: "unavailable", reason: "invalid-record-projection" }
+      : await project({ evidence: { ...value, refDigest: digestSfEvidenceRef(value) }, projection }, request)
+    // Projection work belongs between the source producer's independent
+    // observations. Reopening that entire producer twice repeats the same proof.
+    const again = await read().catch(() => undefined)
+    if (!again || digestSfValue(again) !== sourceDigest || complete && !complete.current() || !await host.revalidate(context) ||
+      digestSfValue(again) !== sourceDigest || !currentAuthority())
+      return { status: "stale", reason: "source-or-authority-changed" }
+    if (!complete) return projected
+    // The consumer's independent final authorization may await. Neither borrowed
+    // source body nor the request may change after the producer's last check.
+    const completed = await complete.publish(projected)
+    if (!currentAuthority() || !complete.current() || digestSfValue(observed) !== sourceDigest || digestSfValue(again) !== sourceDigest)
+      return { status: "stale", reason: "source-or-authority-changed" }
+    return completed
+  }
+  const projectRecord = async ({ evidence: ref, projection }: RecordObservation, request: Request,
+    context: TrustedDomainContext): Promise<PortResult<DomainProjection>> => {
+    const environment = await host.environment(request)
+    if (!Number.isFinite(Date.parse(environment.at))) return { status: "unavailable", reason: "observation-time-unavailable" }
+    const period = ref.target.period
+    if (!period) return { status: "unavailable", reason: "source-period-unavailable" }
+    if (ref.target.recordType === "hotTopics" && (period.start !== new Date(environment.at).toISOString().slice(0, 10) || period.end !== period.start)) return { status: "stale", reason: "source-observation-day-changed" }
+    const values: DomainProjection["values"][number][] = []
+    const missing: DomainProjection["missing"][number][] = []
+    for (const field of ref.target.fields) {
+      const value = projection[field] === undefined ? null : projection[field]
+      if (value !== null && typeof value !== "string" && typeof value !== "boolean" && !(typeof value === "number" && Number.isFinite(value))) return { status: "unavailable", reason: "non-scalar-record-field" }
+      const id = `${ref.target.recordType}:${encodeURIComponent(ref.target.recordId)}:${encodeURIComponent(field)}`
+      values.push({ id, value, period, granularity: "record", sourceRefs: [ref], drilldown: ref, evidenceState: value === null ? "absent" : "confirmed" })
+      if (value === null) missing.push({ field: id, reason: "missing" })
+    }
+    const source = { surface: "dashboard" as const, type: ref.target.recordType, id: ref.target.recordId, incarnation: ref.target.incarnation, version: ref.target.version, fields: ref.target.fields, period, observedAt: new Date(environment.at).toISOString() }
+    return { status: "ok", value: { context: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: "dashboard", period, currency: "unspecified", sourceRefs: [source], capabilities: [] }, version: ref.target.version, engineVersion: "dashboard-record-v1", components: [], values, missing } }
   }
   const resolve = async (reference: string, context: TrustedDomainContext): Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> => {
-    const result = await resolveCurrent(reference, context)
-    return result.status === "ok" ? { status: "ok", value: result.value.evidence } : result
+    return resolveCurrent(reference, context, ({ evidence }) => ({ status: "ok", value: evidence }))
   }
-  return {
+  const read = (reference: string, context: TrustedDomainContext): Promise<PortResult<DomainProjection>> =>
+    resolveCurrent(reference, context, (value, request) => projectRecord(value, request, context))
+  const records = {
     resolve,
-    read: async (reference: string, context: TrustedDomainContext): Promise<PortResult<DomainProjection>> => {
-      const result = await resolveCurrent(reference, context)
-      if (result.status !== "ok") return result
-      const request = input.host.requestFor(context)
-      if (!request) return { status: "denied", reason: "source-authority-unavailable" }
-      const environment = await input.host.environment(request)
-      if (!Number.isFinite(Date.parse(environment.at))) return { status: "unavailable", reason: "observation-time-unavailable" }
-      const ref = result.value.evidence
-      const period = ref.target.period
-      if (!period) return { status: "unavailable", reason: "source-period-unavailable" }
-      if (ref.target.recordType === "hotTopics" && (period.start !== new Date(environment.at).toISOString().slice(0, 10) || period.end !== period.start)) return { status: "stale", reason: "source-observation-day-changed" }
-      const values: DomainProjection["values"][number][] = []
-      const missing: DomainProjection["missing"][number][] = []
-      for (const field of ref.target.fields) {
-        const value = result.value.projection[field] === undefined ? null : result.value.projection[field]
-        if (value !== null && typeof value !== "string" && typeof value !== "boolean" && !(typeof value === "number" && Number.isFinite(value))) return { status: "unavailable", reason: "non-scalar-record-field" }
-        const id = `${ref.target.recordType}:${encodeURIComponent(ref.target.recordId)}:${encodeURIComponent(field)}`
-        values.push({ id, value, period, granularity: "record", sourceRefs: [ref], drilldown: ref, evidenceState: value === null ? "absent" : "confirmed" })
-        if (value === null) missing.push({ field: id, reason: "missing" })
-      }
-      const again = await resolveCurrent(reference, context)
-      if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(result.value) || !await input.host.revalidate(context)) return { status: "stale", reason: "source-or-authority-changed" }
-      const source = { surface: "dashboard" as const, type: ref.target.recordType, id: ref.target.recordId, incarnation: ref.target.incarnation, version: ref.target.version, fields: ref.target.fields, period, observedAt: new Date(environment.at).toISOString() }
-      return { status: "ok", value: { context: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: "dashboard", period, currency: "unspecified", sourceRefs: [source], capabilities: [] }, version: ref.target.version, engineVersion: "dashboard-record-v1", components: [], values, missing } }
-    },
+    read,
     issue: async (selection: { page: string; recordType: string; recordId: string; fields: readonly string[]; period: Period }, context: TrustedDomainContext): Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> => {
       if (!selection || typeof selection.page !== "string" || !selection.page || typeof selection.recordType !== "string" || !selection.recordType || typeof selection.recordId !== "string" || !selection.recordId || !Array.isArray(selection.fields) || !selection.fields.length || selection.fields.some((field) => typeof field !== "string" || !field) || new Set(selection.fields).size !== selection.fields.length || !isSfPeriod(selection.period)) return { status: "needs-input", reason: "invalid-source-selection" }
-      const issued = await input.issueRecord(selection, context).catch(() => undefined)
+      const issueRecord = input.issueRecord
+      const read = dashboardRecordIssuanceReader(issueRecord, input.host, input.scopedSources)
+      const request = read && input.host.requestFor(context), lease = context.lease
+      const binding = digestSfValue([context.kind, context.binding]), selectionDigest = digestSfValue(selection)
+      const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+      const completed = read && await read(selection, context).catch(() => undefined)
+      const issued = read ? completed?.issued : await issueRecord(selection, context).catch(() => undefined)
       if (!issued || issued.source.surface !== "dashboard" || issued.source.type !== selection.recordType || issued.source.id !== selection.recordId || digestSfValue([...issued.source.fields].sort()) !== digestSfValue([...selection.fields].sort()) || digestSfValue(issued.source.period) !== digestSfValue(selection.period) || object(issued.scope.selector).page !== selection.page) return { status: "denied", reason: "source-unavailable" }
-      const resolved = await resolve(dashboardSourceSelector(issued.source.incarnation, issued.source.version), context)
+      // Only the original factory and its exact host/source pair can complete
+      // this path. A substituted issuer still goes through resolveCurrent.
+      if (read && (!completed || !request || request.signal.aborted || input.host.requestFor(context) !== request || context.lease !== lease ||
+        input.issueRecord !== issueRecord || dashboardRecordIssuanceReader(issueRecord, input.host, input.scopedSources) !== read ||
+        digestSfValue([context.kind, context.binding]) !== binding || digestSfValue(selection) !== selectionDigest ||
+        digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) !== requestDigest))
+        return { status: "stale", reason: "source-or-authority-changed" }
+      const resolved: PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>> = completed
+        ? { status: "ok", value: structuredClone(completed.evidence) }
+        : await resolve(dashboardSourceSelector(issued.source.incarnation, issued.source.version), context)
       if (resolved.status !== "ok") return resolved
       if (resolved.value.target.recordType !== selection.recordType || resolved.value.target.recordId !== selection.recordId || digestSfValue(resolved.value.target.fields) !== digestSfValue([...selection.fields].sort()) || digestSfValue(resolved.value.target.period) !== digestSfValue(selection.period)) return { status: "stale", reason: "source-or-authority-changed" }
       return resolved
     },
   }
+  const observe: DashboardRecordObservationReader = async (reference, context, consumer) => {
+    const { current: consumerCurrent, before, project, after } = consumer
+    // Hooks may be replaced between invocations, but never within one proof.
+    const reader = dashboardRecordObservationReader(records, host)
+    const current = () => !!reader && reader.read === observe && reader.current() && consumerCurrent() && reader.current()
+    const denied = (): PortResult<never> => ({ status: "denied", reason: "source-authority-unavailable" })
+    if (!current()) return denied()
+    return resolveCurrent(reference, context, async (observation, request) => {
+      // Callbacks receive detached, frozen values; the private source bodies and
+      // their comparison digest never leave this invocation.
+      const evidence = freezeRecordObservation(structuredClone(observation.evidence))
+      if (!current() || !await before(evidence) || !current()) return denied()
+      const projection = await projectRecord(observation, request, context)
+      if (projection.status !== "ok") return projection
+      if (!current()) return denied()
+      return project(freezeRecordObservation(structuredClone({ evidence, projection: projection.value })))
+    }, { current, publish: async (result) => {
+      if (result.status !== "ok") return result
+      if (!current() || !await after() || !current()) return denied()
+      return result
+    } })
+  }
+  recordObservationReaders.set(records, { host, sources: scopedSources, owners, resolve, read, observe })
+  return records
 }
 
 function safeDecode(value: string) {
   try { return decodeURIComponent(value) } catch { return undefined }
+}
+
+function freezeRecordObservation<Value>(value: Value, seen = new WeakSet<object>()): Value {
+  if (value && typeof value === "object" && !seen.has(value)) {
+    seen.add(value)
+    for (const child of Object.values(value)) freezeRecordObservation(child, seen)
+    Object.freeze(value)
+  }
+  return value
 }

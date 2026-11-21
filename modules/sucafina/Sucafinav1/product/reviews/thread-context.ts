@@ -10,6 +10,8 @@ import type { createReviewPort } from "./port.ts"
 /** A C05 pin is separate from domain evidence. It never stands in for a C17 reference. */
 export type ReviewThreadContext = { reviewRef: string; reviewVersion: number; reviewDigest: string; sectionId: string }
 export type ReviewThreadSnapshot = { pin: ReviewThreadContext; review: PreservedReview }
+type ReadObservation = () => Promise<PortResult<PreservedReview>>
+type ReadContextPair = (run: (read: ReadObservation) => Promise<PortResult<ReviewThreadSnapshot>>) => Promise<PortResult<ReviewThreadSnapshot>>
 
 export function isReviewThreadContext(value: unknown): value is ReviewThreadContext {
   if (!value || typeof value !== "object" || Array.isArray(value) || Reflect.ownKeys(value).length !== 4 || Reflect.ownKeys(value).some((key) => typeof key !== "string" || !["reviewRef", "reviewVersion", "reviewDigest", "sectionId"].includes(key))) return false
@@ -25,7 +27,7 @@ export function createReviewThreadContext(input: {
   reviews: Pick<ReturnType<typeof createReviewPort>, "read">
   host: Pick<DomainPortHost, "revalidate">
 }) {
-  async function read(selection: { reviewRef: string; sectionId: string }, basis: ThreadSourceContext, context: TrustedDomainContext, expected?: ReviewThreadContext): Promise<PortResult<ReviewThreadSnapshot>> {
+  async function read(selection: { reviewRef: string; sectionId: string }, basis: ThreadSourceContext, context: TrustedDomainContext, expected?: ReviewThreadContext, pair?: ReadContextPair): Promise<PortResult<ReviewThreadSnapshot>> {
     if (!selection || typeof selection !== "object" || Array.isArray(selection) || Reflect.ownKeys(selection).length !== 2 || Reflect.ownKeys(selection).some((key) => key !== "reviewRef" && key !== "sectionId") || typeof selection.reviewRef !== "string" || !selection.reviewRef.trim() || typeof selection.sectionId !== "string" || !selection.sectionId.trim()) return { status: "needs-input", reason: "invalid-review-thread-context" }
     const selected = structuredClone({ selection, basis, expected })
     const reviews = input.reviews
@@ -33,18 +35,21 @@ export function createReviewThreadContext(input: {
     const readReview = reviews.read
     const revalidate = host.revalidate
     const current = () => input.reviews === reviews && input.host === host && reviews.read === readReview && host.revalidate === revalidate
-    if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
-    const first = await readReview.call(reviews, selected.selection.reviewRef, context)
-    if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
-    if (first.status !== "ok") return first
-    const review = structuredClone(first.value)
-    const pin: ReviewThreadContext = { reviewRef: review.id, reviewVersion: review.version, reviewDigest: digestSfValue(review), sectionId: selected.selection.sectionId }
-    if (!isReviewThreadContext(pin) || pin.reviewRef !== selected.selection.reviewRef || selected.expected && digestSfValue(selected.expected) !== digestSfValue(pin) || !containsBasis(review, pin, selected.basis)) return { status: "denied", reason: "review-thread-context-unavailable" }
-    const again = await readReview.call(reviews, selected.selection.reviewRef, context)
-    if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
-    if (again.status !== "ok") return again
-    if (digestSfValue(again.value) !== pin.reviewDigest || !containsBasis(again.value, pin, selected.basis)) return { status: "denied", reason: "review-thread-context-unavailable" }
-    return { status: "ok", value: { pin, review } }
+    const run = async (observe: ReadObservation): Promise<PortResult<ReviewThreadSnapshot>> => {
+      if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
+      const first = await observe()
+      if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
+      if (first.status !== "ok") return first
+      const review = structuredClone(first.value)
+      const pin: ReviewThreadContext = { reviewRef: review.id, reviewVersion: review.version, reviewDigest: digestSfValue(review), sectionId: selected.selection.sectionId }
+      if (!isReviewThreadContext(pin) || pin.reviewRef !== selected.selection.reviewRef || selected.expected && digestSfValue(selected.expected) !== digestSfValue(pin) || !containsBasis(review, pin, selected.basis)) return { status: "denied", reason: "review-thread-context-unavailable" }
+      const again = await observe()
+      if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
+      if (again.status !== "ok") return again
+      if (digestSfValue(again.value) !== pin.reviewDigest || !containsBasis(again.value, pin, selected.basis)) return { status: "denied", reason: "review-thread-context-unavailable" }
+      return { status: "ok", value: { pin, review } }
+    }
+    return pair ? pair(run) : run(() => readReview.call(reviews, selected.selection.reviewRef, context))
   }
   return {
     prepare: async (selection: { reviewRef: string; sectionId: string }, basis: ThreadSourceContext, context: TrustedDomainContext): Promise<PortResult<ReviewThreadContext>> => {
@@ -53,9 +58,9 @@ export function createReviewThreadContext(input: {
     },
     // Private producer composition reuses these same two authenticated C05 reads.
     // This snapshot is never accepted from a browser or exposed as an admission.
-    read: (pin: ReviewThreadContext, basis: ThreadSourceContext, context: TrustedDomainContext): Promise<PortResult<ReviewThreadSnapshot>> => {
+    read: (pin: ReviewThreadContext, basis: ThreadSourceContext, context: TrustedDomainContext, pair?: ReadContextPair): Promise<PortResult<ReviewThreadSnapshot>> => {
       if (!isReviewThreadContext(pin)) return Promise.resolve({ status: "denied", reason: "review-thread-context-unavailable" })
-      return read({ reviewRef: pin.reviewRef, sectionId: pin.sectionId }, basis, context, pin).catch(() => ({ status: "unavailable", reason: "review-thread-context-unavailable" }))
+      return read({ reviewRef: pin.reviewRef, sectionId: pin.sectionId }, basis, context, pin, pair).catch(() => ({ status: "unavailable", reason: "review-thread-context-unavailable" }))
     },
     authorize: async (pin: ReviewThreadContext, basis: ThreadSourceContext, context: TrustedDomainContext): Promise<boolean> => {
       if (!isReviewThreadContext(pin)) return false

@@ -1,3 +1,4 @@
+import { discoverSfDashboardAgenda } from "./dashboard-services.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { resolveDashboardBiSelection } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/bi-metadata.ts"
@@ -40,6 +41,7 @@ export function createSfExtendedHttp(input: {
   const reviewCycle = createSfExtendedReviewCycle(input)
   const decisionNavigation = createSfBiDecisionNavigation(input)
   const agendaHttp = input.reviewAgenda ? createSfReviewAgendaHttp({ authority, agenda: input.reviewAgenda, origin: input.origin }) : undefined
+  const loadingMeetings = new Map<string, number>()
   const handle = async (request: Request, surface: string): Promise<Response | undefined> => {
     const diagnosticMode = new URL(request.url).searchParams.get("sf")
     const diagnosticStamp = Date.now()
@@ -93,9 +95,24 @@ export function createSfExtendedHttp(input: {
     if (admitted.status !== "ok") return json(admitted, reviewRead ? readStatus(admitted.status) : 403)
     const call = admitted.value
     let validated = false
+    let loading: string | undefined
     try {
       if (!await authority.ui.validate(call, action, digest)) return json({ status: "denied", reason: "authority-unavailable" }, 403)
       validated = true
+      if (mode === "review" && bootstrap.reviewRef && request.method === "GET") {
+        const key = digestSfValue([call.binding.installationId, call.binding.projectId,
+          call.binding.principalRef, call.binding.accessRevision, bootstrap.reviewRef])
+        const destination = request.headers.get("sec-fetch-dest")
+        if (destination === "document" && request.headers.get("sec-fetch-mode") === "navigate") {
+          loading = key
+          loadingMeetings.set(key, (loadingMeetings.get(key) ?? 0) + 1)
+        }
+        // Chromium can keep the old page's interval alive while reload waits
+        // for the producer. Its background HTML read cannot delay this same
+        // authorized meeting's navigation and separate review-read.
+        if (destination === "empty" && loadingMeetings.has(key))
+          return json({ status: "unavailable", reason: "review-loading" }, 503)
+      }
       if (mode === "review-update") {
         const reference = url.searchParams.get("reviewRef")
         if (!reference || reference.length > 2048) return json({ status: "needs-input", reason: "invalid-review-reference" }, 400)
@@ -116,7 +133,7 @@ export function createSfExtendedHttp(input: {
           sources = reviewCycle.evidence(previous.value, referenceId)
         }
         if (!sources.length || sources.some((source) => digestSfValue(source) !== digestSfValue(sources[0]))) return json({ status: "denied", reason: "source-outside-preserved-review" }, 403)
-        const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url, reviewEvidence: input.reviewEvidence })
+        const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url, installedReview: true, reviewEvidence: input.reviewEvidence })
         // The canonical readers may materialize source scopes. Finish that work
         // before C08; the final grouped reads require the same complete proof.
         await input.reviews.readScope?.prepare(preserved.map((entry) => entry.reference), call)
@@ -209,24 +226,12 @@ export function createSfExtendedHttp(input: {
       }
       let data: unknown = undefined
       let verifyReviewBootstrap: (() => Promise<Response | undefined>) | undefined
+      const reviewRef = mode === "review" ? url.searchParams.get("reviewRef") : null
+      const reviews = input.reviews?.reviews
+      const readReview = reviews?.read
       if (mode === "review") {
-        if (!input.reviews) return json({ status: "unavailable", reason: "review-producers-unavailable" }, 503)
-        const reviewRef = url.searchParams.get("reviewRef")
-        if (reviewRef) {
-          const current = await input.reviews.reviews.read(reviewRef, call)
-          if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
-          const captured = digestSfValue(current.value)
-          verifyReviewBootstrap = async () => {
-            const again = await input.reviews!.reviews.read(reviewRef, call)
-            if (again.status !== "ok") return json(again, again.status === "denied" ? 403 : 409)
-            if (digestSfValue(again.value) !== captured) return json({ status: "stale", reason: "review-changed-before-display" }, 409)
-            return undefined
-          }
-          const sectionId = url.searchParams.get("sectionId")
-          const selectedSection = sectionId ? current.value.sections.find((section) => section.id === sectionId) : undefined
-          if (sectionId && !selectedSection) return json({ status: "denied", reason: "review-section-unavailable" }, 403)
-          data = { reviewRef, ...(selectedSection ? { selectedSection: { ...selectedSection, content: selectedSection.content as DomainProjection } } : {}) }
-        } else if (url.searchParams.has("previousReviewRef")) {
+        if (!reviews || !readReview) return json({ status: "unavailable", reason: "review-producers-unavailable" }, 503)
+        if (!reviewRef && url.searchParams.has("previousReviewRef")) {
           const updated = await reviewCycle.update(url.searchParams.get("previousReviewRef")!, call)
           if (updated.status !== "ok") return json(updated, readStatus(updated.status))
           data = updated.value
@@ -237,14 +242,14 @@ export function createSfExtendedHttp(input: {
             if (digestSfValue(again.value) !== captured) return json({ status: "stale", reason: "review-update-changed-before-display" }, 409)
             return undefined
           }
-        } else {
+        } else if (!reviewRef) {
           // The existing Generate Report form chooses the actual ordered agenda.
           // Each topic is reopened by its production producer; none is dropped.
           const pages = reportTopics?.map((topic) => topic === "Executive Summary" ? "Executive Dashboard" : topic) ?? [url.searchParams.get("page") ?? "Budget Overview"]
           if (new Set(pages).size !== pages.length) return json({ status: "needs-input", reason: "duplicate-report-topic" }, 400)
           const items: ReturnType<typeof sfDashboardReviewAgendaItem>[] = []
           for (const page of pages) {
-            const current = await business.dashboardServices.discover({ page, period }, call)
+            const current = await discoverSfDashboardAgenda(business.dashboardServices, { page, period }, call)
             if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
             if (!current.value.agenda) return json({ status: "unavailable", reason: "review-source-selection-unavailable" }, 409)
             // Discovery uses one local "dashboard" ID; a report needs one stable ID per chosen topic.
@@ -265,6 +270,20 @@ export function createSfExtendedHttp(input: {
         const unavailable = await verifyReviewBootstrap()
         if (unavailable) return unavailable
       }
+      if (reviewRef && reviews && readReview) {
+        // The final producer read follows bundle loading. The mounted browser
+        // still makes its own independently authorized review-read request.
+        const currentReader = () => input.reviews?.reviews === reviews && reviews.read === readReview &&
+          !request.signal.aborted && authority.ui.requestFor(call) === request
+        if (!currentReader()) return json({ status: "denied", reason: "authority-unavailable" }, 403)
+        const current = await readReview.call(reviews, reviewRef, call)
+        if (!currentReader()) return json({ status: "denied", reason: "authority-unavailable" }, 403)
+        if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
+        const sectionId = url.searchParams.get("sectionId")
+        const selectedSection = sectionId ? current.value.sections.find((section) => section.id === sectionId) : undefined
+        if (sectionId && !selectedSection) return json({ status: "denied", reason: "review-section-unavailable" }, 403)
+        data = { reviewRef, ...(selectedSection ? { selectedSection: { ...selectedSection, content: selectedSection.content as DomainProjection } } : {}) }
+      }
       // These client workspaces retain their live state across shell probes.
       // The published shell still owns navigation, notifications and sign-out.
       const content = mode === "review" ? '<section data-sf-review-workspace data-sf-retain-view><p role="status">Loading review…</p></section>' : '<section data-sf-bi data-sf-retain-view><p role="status">Loading analyses…</p></section>'
@@ -272,13 +291,13 @@ export function createSfExtendedHttp(input: {
       const bootstrapHtml = data === undefined ? "" : `<script type="application/json" data-sf-review-bootstrap>${JSON.stringify(mode === "review" ? { ...(data as object), principalRef: call.binding.principalRef } : data).replace(/</g, "\\u003c")}</script>`
       const title = mode === "review" ? "Review and reports" : "Business intelligence"
       const accessRevision = call.binding.accessRevision
-      const shell = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "", "", accessRevision)
+      const shell = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "", "", undefined, accessRevision)
       const html = shell
         // A replacement string would interpret dollar sequences in the bundle
         // or bootstrap as substitutions of the surrounding document.
         .replace("</body>", () => `${bootstrapHtml}<script>${inline}</script></body>`)
       trace("BEFORE_RETURN")
-      return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff", ...(accessRevision ? { "X-SF-Access-Revision": accessRevision } : {}) } })
+      return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(shell, inline), "X-Content-Type-Options": "nosniff", ...(accessRevision ? { "X-SF-Access-Revision": accessRevision } : {}) } })
     } catch (error) {
       if (!reviewRead) throw error
       // Before validate consumes the lease, requestFor is intentionally empty.
@@ -287,7 +306,14 @@ export function createSfExtendedHttp(input: {
       if (request.signal.aborted || authorized === false || validated && authority.ui.requestFor(call) !== request)
         return json({ status: "denied", reason: "authority-unavailable" }, 403)
       return json({ status: "unavailable", reason: "review-read-unavailable" }, 503)
-    } finally { authority.ui.finish(call) }
+    } finally {
+      if (loading) {
+        const remaining = (loadingMeetings.get(loading) ?? 1) - 1
+        if (remaining) loadingMeetings.set(loading, remaining)
+        else loadingMeetings.delete(loading)
+      }
+      authority.ui.finish(call)
+    }
   }
   return (request: Request, surface: string) => input.reviews?.readScope
     ? input.reviews.readScope.run(request, () => handle(request, surface)) : handle(request, surface)

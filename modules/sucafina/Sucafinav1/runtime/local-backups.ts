@@ -8,7 +8,7 @@ import type { BlobTransaction } from "./assets.ts"
 import type { Persistence, Snapshot } from "./contract.ts"
 import type { LocalStore } from "./local-contract.ts"
 import { decodeSnapshot, encodeSnapshot, openLocalStore } from "./local-store.ts"
-import { backup, restoreBackup } from "./operations.ts"
+import { backup, backupBlobInventory, requireBackupManifest, restoreBackup } from "./operations.ts"
 import type { BackupManifest, RestoreTransport } from "./operations.ts"
 
 export type BackupOperationOptions = { signal?: AbortSignal }
@@ -217,19 +217,17 @@ export async function createLocalBackups(directory: string, dependencies: Backup
             options.signal?.throwIfAborted()
             const payload = encodeSnapshot(copy)
             if (!isDeepStrictEqual(decodeSnapshot(payload), captured)) throw new Error("Snapshot codec changed captured state")
-            const assets = copy.data.assets === undefined ? [] : copy.data.assets
-            if (!Array.isArray(assets)) throw new Error("Invalid backup assets")
             const retained: BackupManifest["blobs"][number][] = []
-            for (const asset of assets) {
+            for (const asset of backupBlobInventory(copy, surface).values()) {
               options.signal?.throwIfAborted()
-              if (!record(asset) || typeof asset.key !== "string" || !asset.key || !Number.isSafeInteger(asset.bytes) || Number(asset.bytes) < 0 || retained.some((blob) => blob.key === asset.key))
-                throw new Error("Invalid backup asset")
               const bytes = await readCapturedBlob(asset.key)
               if (!bytes || bytes.byteLength !== asset.bytes) throw new Error("Missing or corrupt live blob")
+              const sha256 = hash(bytes)
+              if (asset.sha256 !== undefined && asset.sha256 !== sha256) throw new Error("Missing or corrupt live blob")
               const name = blobName(asset.key)
               written.push(name)
               await durableWrite(join(staging, name), bytes, options.signal, dependencies.io)
-              retained.push({ key: asset.key, bytes: bytes.byteLength, sha256: hash(bytes) })
+              retained.push({ key: asset.key, bytes: bytes.byteLength, sha256 })
             }
             const manifest: BackupManifest = { version: 1, surface, at: instant, snapshotSha256: hash(JSON.stringify(copy)), blobs: retained, integrity: "verified", private: true }
             written.push("snapshot.json")
@@ -435,10 +433,7 @@ async function readArchiveMetadata(path: string, surface: Surface, id: string, s
     if (hash(payload) !== envelope.payloadSha256) throw new Error("Corrupt encoded backup snapshot")
     try { snapshot = decodeSnapshot(payload.toString("utf8")) }
     catch { throw new Error("Corrupt encoded backup snapshot") }
-    if (manifest.snapshotSha256 !== hash(JSON.stringify(snapshot))) throw new Error("Invalid backup manifest")
-    const assets = snapshot.data.assets === undefined ? [] : snapshot.data.assets
-    if (!Array.isArray(assets) || assets.length !== manifest.blobs.length || assets.some((asset) => !record(asset) || typeof asset.key !== "string" || !manifest.blobs.some((blob) => blob.key === asset.key && blob.bytes === asset.bytes)) || new Set(assets.map((asset) => record(asset) ? asset.key : undefined)).size !== assets.length)
-      throw new Error("Backup assets do not match retained blobs")
+    requireBackupManifest(snapshot, manifest, surface, manifest.at)
   }
   signal?.throwIfAborted()
   return { manifest, payloadSha256: envelope.payloadSha256, files, tier, ...(snapshot ? { snapshot } : {}) }

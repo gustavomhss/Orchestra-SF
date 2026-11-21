@@ -1,4 +1,6 @@
 import { createHash, randomUUID } from "node:crypto"
+import { isDeepStrictEqual } from "node:util"
+import { SF_REVIEW_ARTIFACT_BLOB_PREFIX, sfReviewArtifactBlobInventory } from "./artifact.ts"
 import type { Environment, Notice, Persistence, Result, Snapshot } from "./contract.ts"
 import type { AssetPersistence } from "./assets.ts"
 import type { Surface } from "../src/identity.ts"
@@ -244,7 +246,8 @@ export type BackupTransport = {
   // Resolve only after snapshot + complete blob manifest and referenced bytes are durable and consistent.
   // Verify digests against stored bytes; missing/corrupt blobs reject. Keep private backup blob versions pinned
   // independently of live deletion until backup retention expires. Restore must verify integrity before applying.
-  // snapshotSha256 hashes UTF-8 JSON.stringify(snapshot); blob keys must exactly match snapshot.data.assets keys.
+  // snapshotSha256 hashes UTF-8 JSON.stringify(snapshot); the blob manifest
+  // must cover the exact ordinary asset and private report inventories.
   save: (surface: Surface, snapshot: Snapshot, at: string) => Promise<{ id: string; manifest: BackupManifest }>
   prune: (surface: Surface, olderThan: string) => Promise<void>
 }
@@ -270,14 +273,34 @@ export async function backup(
     )
   return result
 }
-function requireBackupManifest(
+export function backupBlobInventory(snapshot: Snapshot, surface: Surface) {
+  const assets = snapshot.data.assets === undefined ? [] : snapshot.data.assets
+  if (!Array.isArray(assets)) throw new Error("Invalid backup assets")
+  const entries = new Map<string, { key: string; bytes: number; sha256?: string; type?: string }>()
+  for (const value of assets) {
+    const asset = record(value)
+    if (typeof asset.key !== "string" || !asset.key || typeof asset.bytes !== "number" || !Number.isSafeInteger(asset.bytes) ||
+      asset.bytes < 0 || entries.has(asset.key)) throw new Error("Invalid backup asset")
+    if (surface === "dashboard" && asset.key.startsWith(SF_REVIEW_ARTIFACT_BLOB_PREFIX))
+      throw new Error("Invalid backup asset in private report namespace")
+    entries.set(asset.key, { key: asset.key, bytes: asset.bytes })
+  }
+  const reports = surface === "dashboard" ? sfReviewArtifactBlobInventory(snapshot) : []
+  for (const report of reports) {
+    if (entries.has(report.key)) throw new Error("Private report overlaps a backup blob")
+    entries.set(report.key, report)
+  }
+  return entries
+}
+
+export function requireBackupManifest(
   snapshot: Snapshot,
   manifest: BackupManifest,
   surface: Surface,
   at: string,
   digest = createHash("sha256").update(JSON.stringify(snapshot)).digest("hex"),
 ) {
-  const assets = Array.isArray(snapshot.data.assets) ? snapshot.data.assets.map(record) : []
+  const expected = backupBlobInventory(snapshot, surface)
   if (
     !manifest ||
     manifest.version !== 1 ||
@@ -299,10 +322,14 @@ function requireBackupManifest(
         !/^[a-f0-9]{64}$/.test(blob.sha256),
     ) ||
     new Set(manifest.blobs.map((blob) => blob.key)).size !== manifest.blobs.length ||
-    manifest.blobs.some((blob) => !assets.some((asset) => asset.key === blob.key)) ||
-    assets.some((asset) => !manifest.blobs.some((blob) => blob.key === asset.key && blob.bytes === asset.bytes))
+    expected.size !== manifest.blobs.length ||
+    manifest.blobs.some((blob) => {
+      const reference = expected.get(blob.key)
+      return !reference || reference.bytes !== blob.bytes || reference.sha256 !== undefined && reference.sha256 !== blob.sha256
+    })
   )
     throw new Error("Invalid durable backup manifest")
+  return expected
 }
 
 export type RestoreTransport = {
@@ -341,6 +368,7 @@ export async function restoreBackup(
     verifyCurrent: () => Promise<boolean>
     signal?: AbortSignal
   },
+  options?: { retainCurrentProduct?: boolean },
 ) {
   if (!actor.canWrite || !actor.roles.includes("admin") || corporate && !await corporate.verifyCurrent())
     return { ok: false as const, status: 403 }
@@ -350,7 +378,7 @@ export async function restoreBackup(
   if (!archive) return { ok: false as const, status: 404 }
   const recovered = structuredClone(archive.snapshot)
   const manifest = structuredClone(archive.manifest)
-  requireBackupManifest(recovered, manifest, surface, manifest?.at)
+  const expected = requireBackupManifest(recovered, manifest, surface, manifest?.at)
   return persistence.transaction<Result>(surface, async (snapshot, blobs) => {
     if ((snapshot.versions.dataset?.version ?? 0) !== expectedVersion)
       return {
@@ -362,14 +390,54 @@ export async function restoreBackup(
         },
       }
     const retention = corporate?.retain(snapshot, recovered, manifest)
+    const restoredData = structuredClone(recovered.data)
+    if (retention) retention.apply(restoredData)
+    if (surface === "dashboard" && options?.retainCurrentProduct) {
+      const product = snapshot.data.__sfProductV1
+      if (product === undefined) delete restoredData.__sfProductV1
+      if (product !== undefined) restoredData.__sfProductV1 = structuredClone(product)
+    }
+    const currentReports = new Map(
+      (surface === "dashboard" ? sfReviewArtifactBlobInventory(snapshot) : []).map((report) => [report.key, report]),
+    )
+    const restoredReports = new Map(
+      (surface === "dashboard" ? sfReviewArtifactBlobInventory({ ...snapshot, data: restoredData }) : [])
+        .map((report) => [report.key, report]),
+    )
+    const documents = (data: Snapshot["data"]) => record(record(data.__sfProductV1).documents)
+    const archivedDocuments = documents(recovered.data)
+    const currentDocuments = documents(snapshot.data)
+    const restoredDocuments = documents(restoredData)
     // Verify every retained blob's actual size and SHA; the adapter keeps all puts private until commit.
     for (const blob of manifest.blobs) {
       corporate?.signal?.throwIfAborted()
       const bytes = await source.readBlob(surface, id, blob.key, corporate?.signal)
       if (!bytes || bytes.byteLength !== blob.bytes || createHash("sha256").update(bytes).digest("hex") !== blob.sha256)
         throw new Error("Missing or corrupt private backup blob")
-      if (retention) retention.verifyBlobReplacement(await blobs.get(blob.key), bytes)
-      await blobs.put(blob.key, bytes, "application/octet-stream")
+      const archivedType = expected.get(blob.key)?.type
+      const restoredReport = restoredReports.get(blob.key)
+      if (archivedType && !restoredReport) continue
+      const ref = "report:" + blob.key.slice(SF_REVIEW_ARTIFACT_BLOB_PREFIX.length)
+      if (restoredReport && (restoredReport.bytes !== blob.bytes || restoredReport.sha256 !== blob.sha256 ||
+        restoredReport.type !== archivedType || !isDeepStrictEqual(restoredDocuments[ref], archivedDocuments[ref])))
+        throw new Error("Backup conflicts with a retained private report")
+      const currentReport = currentReports.get(blob.key)
+      if (currentReport && (currentReport.bytes !== blob.bytes || currentReport.sha256 !== blob.sha256 ||
+        currentReport.type !== archivedType || !isDeepStrictEqual(currentDocuments[ref], archivedDocuments[ref])))
+        throw new Error("Backup conflicts with a current private report")
+      const existing = retention || archivedType ? await blobs.get(blob.key) : undefined
+      if (retention) retention.verifyBlobReplacement(existing, bytes)
+      if (archivedType && existing) {
+        if (existing.byteLength === blob.bytes && createHash("sha256").update(existing).digest("hex") === blob.sha256)
+          continue
+        if (!currentReport) throw new Error("Backup cannot overwrite an unbound private report blob")
+      }
+      await blobs.put(blob.key, bytes, archivedType ?? "application/octet-stream")
+    }
+    if (!retention && !options?.retainCurrentProduct) {
+      for (const reportKey of currentReports.keys()) {
+        if (!restoredReports.has(reportKey)) await blobs.remove(reportKey)
+      }
     }
     const previous = structuredClone(snapshot.data)
     const delivery = snapshot.data.noticeDelivery
@@ -378,8 +446,7 @@ export async function restoreBackup(
     const inbox = snapshot.data.localInbox
     const jobState = snapshot.data.localJobState
     const currentStore = record(snapshot.data.store)
-    snapshot.data = structuredClone(recovered.data)
-    retention?.apply(snapshot.data)
+    snapshot.data = restoredData
     delete snapshot.data.noticeDelivery
     delete snapshot.data.noticeClaims
     delete snapshot.data.noticeSchedule

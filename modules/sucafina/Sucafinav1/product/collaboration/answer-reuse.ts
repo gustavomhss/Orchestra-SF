@@ -1,3 +1,4 @@
+import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { createAnswerStateFence } from "./answer-state-fence.ts"
 import type { ConfirmationScope } from "../contracts/context.ts"
@@ -10,6 +11,7 @@ import type { ReviewThreadContext } from "../reviews/thread-context.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
 
+type IssuedAnswer = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Answer = { id: string; ref: string; authorRef: string; questionId: string; body: string; digest: string; threadDigest: string }
 export type AnswerConfirmationMutation = { expectedStorageVersion: number; idempotencyKey: string; observationRef: string; observedSourceVersion: number; expectedScopeFingerprint: string }
 export type AnswerReuseBaseline = { answerId: string; answerRef: string; answerDigest: string; questionId: string; confirmerRef: string; installationId: string; projectId: string; scope: ConfirmationScope; reviewBasis?: ReviewAnswerBasis; physicalIncarnation: string; sourceFingerprint: string; dependencyFingerprint: string; scopeFingerprint: string; observedVersion: number }
@@ -24,9 +26,10 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
   host: Pick<DomainPortHost, "requestFor" | "revalidate" | "persistence">
   state: SfProductStatePort
   target: { ref: string; incarnation: string }
-  answer: (questionId: string, context: TrustedDomainContext) => Promise<PortResult<Answer>>
+  currentAnswer?: (context: TrustedDomainContext, issued?: IssuedAnswer) => boolean
+  answer: (questionId: string, context: TrustedDomainContext, issued?: IssuedAnswer) => Promise<PortResult<Answer>>
   belongsToQuestion: (questionId: string, answerRef: string, context: TrustedDomainContext) => Promise<boolean>
-  scopeForAnswer: (questionId: string, answerRef: string, context: TrustedDomainContext) => Promise<PortResult<{ scope: ConfirmationScope; reviewBasis?: ReviewAnswerBasis }>>
+  scopeForAnswer: (questionId: string, answerRef: string, context: TrustedDomainContext, issued?: IssuedAnswer) => Promise<PortResult<{ scope: ConfirmationScope; reviewBasis?: ReviewAnswerBasis }>>
   reviewSource?: ReturnType<typeof createReviewAnswerSource>
   observe: ConfirmationObserver<T>["observe"]
   fence: (scope: ConfirmationScope, observation: T, context: TrustedDomainContext) => Promise<boolean>
@@ -55,19 +58,21 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
   const observations = new Map<string, { authority: string; issuedAt: number; expiresAt: number; answer: Answer; scope: ConfirmationScope; reviewBasis?: ReviewAnswerBasis; observation: AvailableConfirmationScopeObservation }>()
   const currentReceipt = (receipt: { issuedAt: number; expiresAt: number }) => { const instant = now(); return Number.isFinite(instant) && instant >= receipt.issuedAt && instant < receipt.expiresAt }
   return {
-    prepare: async (questionId: string, answerRef: string, context: TrustedDomainContext) => {
-      if (context.kind !== "ui" || typeof questionId !== "string" || !questionId.trim() || typeof answerRef !== "string" || !answerRef.trim() || !input.host.requestFor(context) || !await input.host.revalidate(context)) return { status: "denied" as const, reason: "answer-observation-unavailable" }
-      const answer = await input.answer(questionId, context)
+    prepare: async (questionId: string, answerRef: string, context: TrustedDomainContext, issued?: IssuedAnswer) => {
+      const request = input.host.requestFor(context)
+      if (context.kind !== "ui" || typeof questionId !== "string" || !questionId.trim() || typeof answerRef !== "string" || !answerRef.trim() || !request || !await input.host.revalidate(context)) return { status: "denied" as const, reason: "answer-observation-unavailable" }
+      const answer = await input.answer(questionId, context, issued)
       if (answer.status !== "ok") return answer
       if (answer.value.questionId !== questionId || answer.value.ref !== answerRef || !answer.value.body.trim() || !answer.value.authorRef.trim() || !await input.belongsToQuestion(questionId, answerRef, context)) return { status: "unavailable" as const, reason: "answer-observation-unavailable" }
-      const derived = await input.scopeForAnswer(questionId, answerRef, context)
+      const derived = await input.scopeForAnswer(questionId, answerRef, context, issued)
       if (derived.status !== "ok") return derived
       const scope = structuredClone(derived.value.scope)
       const bound = await observe(scope, context, derived.value.reviewBasis)
       const observation = bound.value
       if (observation.state !== "available" || !Number.isSafeInteger(observation.sourceVersion) || observation.sourceVersion < 1 || !observation.scopeFingerprint || !observation.physicalIncarnation || !observation.sourceFingerprint || !observation.dependencyFingerprint || observation.incarnation !== scope.sourceRef.incarnation) return { status: "unavailable" as const, reason: "answer-scope-unavailable" }
-      const again = await input.answer(questionId, context)
-      if (again.status !== "ok" || answerIdentity(again.value) !== answerIdentity(answer.value) || !await input.belongsToQuestion(questionId, answerRef, context) || !await input.host.revalidate(context) || !await capture({ questionId, threadDigest: again.value.threadDigest }, bound.fence)) return { status: "stale" as const, reason: "answer-observation-changed" }
+      const again = await input.answer(questionId, context, issued)
+      if (again.status !== "ok" || answerIdentity(again.value) !== answerIdentity(answer.value) || !await input.belongsToQuestion(questionId, answerRef, context) || !await input.host.revalidate(context) || !await capture({ questionId, threadDigest: again.value.threadDigest }, bound.fence, request.signal) || request.signal.aborted ||
+        input.host.requestFor(context) !== request || input.currentAnswer?.(context, issued) === false) return { status: "stale" as const, reason: "answer-observation-changed" }
       const issuedAt = now()
       const expiresAt = issuedAt + 5 * 60 * 1000
       if (!Number.isFinite(issuedAt) || !Number.isFinite(expiresAt)) return { status: "unavailable" as const, reason: "answer-observation-clock-unavailable" }
@@ -108,14 +113,16 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
       if ("reason" in saved) return { status: saved.status === "conflict" ? "stale" : saved.status, reason: saved.reason }
       if (saved.status === "preview") return { status: "conflict", reason: "answer-confirmation-not-committed" }
       if (!saved.value || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-confirmation-unavailable" }
-      if (!await capture({ questionId, threadDigest: answer.value.threadDigest, baseline: { key: key(questionId, answer.value.id, context), digest: digestSfValue(baseline) } }, bound.fence)) return { status: "stale", reason: "answer-scope-changed" }
+      if (!await capture({ questionId, threadDigest: answer.value.threadDigest, baseline: { key: key(questionId, answer.value.id, context), digest: digestSfValue(baseline) } }, bound.fence, request.signal) ||
+        input.host.requestFor(context) !== request || input.currentAnswer?.(context) === false) return { status: "stale", reason: "answer-scope-changed" }
       return { status: "ok", value: { answerRef: answer.value.ref, observedVersion: observed.observation.sourceVersion } }
     },
     read: async (questionId: string, context: TrustedDomainContext): Promise<PortResult<{ answerRef: string; answer: string; authorRef: string; observedVersion: number; reviewContext?: ReviewThreadContext }>> => {
       const request = input.host.requestFor(context)
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "answer-reuse-unavailable" }
       const candidate = await input.answer(questionId, context)
-      if (candidate.status !== "ok") return candidate
+      if (candidate.status !== "ok") return candidate.status === "unavailable" && candidate.reason === "answer-unavailable"
+        ? { status: "unavailable", reason: "answer-reuse-unavailable" } : candidate
       if (candidate.value.questionId !== questionId || !await input.belongsToQuestion(questionId, candidate.value.ref, context)) return { status: "unavailable", reason: "answer-reuse-unavailable" }
       const derived = await input.scopeForAnswer(questionId, candidate.value.ref, context)
       if (derived.status !== "ok") return { status: "unavailable", reason: "answer-reuse-unavailable" }
@@ -145,7 +152,8 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
       if (again.status !== "ok" || again.value.id !== candidate.value.id || again.value.ref !== candidate.value.ref || again.value.digest !== candidate.value.digest || again.value.authorRef !== candidate.value.authorRef || !await input.belongsToQuestion(questionId, again.value.ref, context) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-reuse-unavailable" }
       const latest = await readBaseline()
       if (latest.status !== "ok" || !latest.value?.baseline || digestSfValue(latest.value.baseline) !== digestSfValue(baseline) || !await input.host.revalidate(context)) return { status: "stale", reason: "answer-baseline-changed" }
-      if (!await capture({ questionId, threadDigest: again.value.threadDigest, baseline: expectedBaseline }, bound.fence)) return { status: "stale", reason: "answer-scope-changed" }
+      if (!await capture({ questionId, threadDigest: again.value.threadDigest, baseline: expectedBaseline }, bound.fence, request.signal) ||
+        input.host.requestFor(context) !== request || input.currentAnswer?.(context) === false) return { status: "stale", reason: "answer-scope-changed" }
       return { status: "ok", value: { answerRef: again.value.ref, answer: again.value.body, authorRef: again.value.authorRef, observedVersion: baseline.observedVersion, ...(baseline.reviewBasis ? { reviewContext: baseline.reviewBasis.reviewContext } : {}) } }
     },
   }

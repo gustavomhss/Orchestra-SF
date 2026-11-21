@@ -1,0 +1,26 @@
+/* N18 / U06 — token-first overview, scroll only where tabular meaning requires it. */
+.sf-u06 { display: grid; gap: 1.25rem; min-width: 0; }
+.sf-u06-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr)); gap: .75rem; margin: 0; }
+.sf-u06-metric { min-width: 0; padding: 1rem; border: 1px solid var(--border, currentColor); border-radius: .75rem; }
+.sf-u06-metric dt { font-size: .875rem; opacity: .85; line-height: 1.45; }
+.sf-u06-metric dd { margin: .5rem 0 0; font-size: clamp(1.1rem, 2vw, 1.55rem); font-weight: 650; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.sf-u06-warnings { padding: .75rem 1.25rem; margin: 0; border-inline-start: .25rem solid currentColor; }
+.sf-u06-plot { display: block; width: 100%; max-width: 60rem; height: auto; color: inherit; }
+.sf-u06-point-budget { fill: var(--accent, currentColor); }
+.sf-u06-point-actual { fill: none; stroke: currentColor; stroke-width: 2.5; }
+.sf-u06-point-outlook { fill: currentColor; opacity: .55; }
+.sf-u06-description { margin: 0; line-height: 1.6; }
+.sf-u06-compare { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .75rem; }
+.sf-u06-compare label { width: 100%; font-weight: 600; }
+.sf-u06-compare select { flex: 1 1 15rem; min-width: 0; max-width: 100%; }
+.sf-u06-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
+.sf-u06-scroll table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.sf-u06-scroll th, .sf-u06-scroll td { padding: .65rem; text-align: start; border-block-end: 1px solid var(--border, currentColor); }
+.sf-u06-scroll th { font-weight: 600; }
+.sf-u06-scroll caption { text-align: start; padding-block: .5rem; font-weight: 650; }
+@media (max-width: 480px) {
+  .sf-u06-compare > * { flex-basis: 100%; }
+  .sf-u06-metric { padding: .75rem; }
+  .sf-u06-scroll { border-inline-end: 1px solid var(--border, currentColor); }
+}
+@media (prefers-reduced-motion: reduce) { .sf-u06 * { scroll-behavior: auto; } }

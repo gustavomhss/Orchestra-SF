@@ -5,7 +5,7 @@ import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/cont
 import type { createSfBusinessServices } from "./business-services.ts"
 
 /** Links are derived from producer-authorized evidence, never an incoming URL. */
-export async function sfExtendedSourceLinks(input: { business: ReturnType<typeof createSfBusinessServices>; reference: BusinessEvidenceRef; call: TrustedDomainContext; url: URL; reviewEvidence?: Pick<BusinessContextService, "resolve"> }) {
+export async function sfExtendedSourceLinks(input: { business: ReturnType<typeof createSfBusinessServices>; reference: BusinessEvidenceRef; call: TrustedDomainContext; url: URL; installedReview?: boolean; reviewEvidence?: Pick<BusinessContextService, "resolve"> }) {
   const refs: BusinessEvidenceRef[] = input.reference.kind === "calculation" ? [...input.reference.target.sourceRefs] : [input.reference]
   const links: { label: string; url: string }[] = []
   for (const reference of refs) {
@@ -51,7 +51,13 @@ export async function sfExtendedSourceLinks(input: { business: ReturnType<typeof
       }
     }
     if (target.period) url.searchParams.set("year", target.period.start.slice(0, 4))
-    if (target.surface === "dashboard") {
+    // The installed Review shell follows its own authenticated Dashboard pages.
+    // The native Budget chapter currently withholds totals for a pinned year.
+    const year = url.searchParams.get("year")
+    const installedAnnualBudget = input.installedReview && target.surface === "dashboard" &&
+      target.recordType === "dashboard-page" && target.recordId === "Budget Overview" &&
+      target.period?.start === `${year}-01-01` && target.period.end === `${year}-12-31`
+    if (target.surface === "dashboard" && !installedAnnualBudget) {
       const routes: Record<string, string> = {
         "Executive Dashboard": "/orchestra/sf-dashboard/executive",
         "Budget Overview": "/orchestra/sf-dashboard/budget",

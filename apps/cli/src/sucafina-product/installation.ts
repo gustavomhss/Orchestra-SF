@@ -45,6 +45,8 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
     ...(runtime ? {
       createHostRuntime: runtime.createSfHostRuntime,
       createCurrentChoiceFence: runtime.createCurrentChoiceFence,
+      currentChoiceOwnsSnapshotTransactions: runtime.currentChoiceOwnsSnapshotTransactions,
+      createSfSourcePersistence: runtime.createSfSourcePersistence,
       sourceRoot: path.resolve(path.dirname(entry), "../product/ai"),
     } : {}),
   })
@@ -171,9 +173,20 @@ export async function loadSfInstallation(file: string, hostname: string, port: n
         node.once("close", () => node.off("error", ignoreDisconnect))
       }
       const headers = ingress ? corporateHeaders(incoming.headers, url.host) : incoming.headers
-      const response = await installation.handler(new Request(url, {
-        method: incoming.method, headers, signal, ...(body ? { body, duplex: "half" } : {}),
-      })).catch(() => new Response(null, { status: 503 }))
+      const disconnect = new AbortController()
+      const disconnected = () => disconnect.abort()
+      // A GET has already consumed its request body while the producer is
+      // running. Its socket can still close when the browser aborts a poll.
+      node.once("aborted", disconnected)
+      node.socket.once("close", disconnected)
+      if (node.aborted || node.socket.destroyed) disconnected()
+      const response = await Promise.resolve().then(() => installation.handler(new Request(url, {
+        method: incoming.method, headers, signal: AbortSignal.any([signal, disconnect.signal]),
+        ...(body ? { body, duplex: "half" } : {}),
+      }))).catch(() => new Response(null, { status: 503 })).finally(() => {
+        node.off("aborted", disconnected)
+        node.socket.off("close", disconnected)
+      })
       if (body && !body.locked) void body.cancel().catch(() => undefined)
       if (exceeded) return oversized()
       const result = response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })

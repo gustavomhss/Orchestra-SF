@@ -4,7 +4,7 @@ import { currentSfReadonlyAuthorityData, currentSfSiblingSnapshots } from "./sou
 import type { Application } from "../../runtime/application.ts"
 import { roleMap } from "../../runtime/admin.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../../src/nav.ts"
-import { object } from "../../runtime/contract.ts"
+import { hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
@@ -47,6 +47,7 @@ export function createSfProductAuthority(input: {
   origin: string
   policyVersion: string
   persistence: Application["persistence"]
+  assets?: Application["assets"]
   authenticate: Application["authenticate"]
   environment: Application["environment"]
   isAuthenticated?: (request: Request) => Promise<boolean>
@@ -107,9 +108,26 @@ export function createSfProductAuthority(input: {
       return valid
     } }
   }
+  const observeAuthority = <S extends Surface>(selected: readonly S[]) => {
+    if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) return undefined
+    const descriptor = Object.getOwnPropertyDescriptor(input, "persistence")
+    if (!descriptor || !Object.hasOwn(descriptor, "value") || !descriptor.value || typeof descriptor.value !== "object") return undefined
+    const persistence: typeof input.persistence = descriptor.value
+    if (!hasSfDashboardSourceFence(persistence)) return undefined
+    const fence = persistence.dashboardSourceFence
+    const observation = fence?.observeAuthority?.(selected)
+    if (!observation) return undefined
+    const integrity = { current: true }
+    return { snapshots: observation.snapshots, current: () => {
+      const active = Object.getOwnPropertyDescriptor(input, "persistence")
+      integrity.current &&= Object.getPrototypeOf(input) === Object.prototype && !!active && Object.hasOwn(active, "value") &&
+        active.value === persistence && persistence.dashboardSourceFence === fence && hasSfDashboardSourceFence(persistence) && observation.current()
+      return integrity.current
+    } }
+  }
   const principal = async (request: Request, dashboard: Pick<Snapshot, "data">,
     supplied?: { planner: Pick<Snapshot, "data">; procurement: Pick<Snapshot, "data"> }, suppliedCurrent?: () => boolean) => {
-    const projection = supplied ? undefined : authorityData(["planner", "procurement"])
+    const projection = supplied ? undefined : (observeAuthority(["planner", "procurement"]) ?? authorityData(["planner", "procurement"]))
     const snapshots = supplied ?? projection?.snapshots ?? currentSfSiblingSnapshots(input.persistence)
     const currentRead = suppliedCurrent ?? projection?.current
     if (!snapshots) return undefined
@@ -146,14 +164,32 @@ export function createSfProductAuthority(input: {
     return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
   }
   const resolve = async (request: Request) => {
-    const projection = authorityData(surfaces)
-    if (projection) return principal(request, projection.snapshots.dashboard, projection.snapshots, projection.current)
+    const observed = observeAuthority(surfaces) ?? authorityData(surfaces)
+    if (observed) return principal(request, observed.snapshots.dashboard, observed.snapshots, observed.current)
     if (!input.persistence.currentSnapshots) return undefined
     const snapshots = input.persistence.currentSnapshots()
     if (snapshots) return principal(request, snapshots.dashboard, snapshots)
-    return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
+    const persistence = input.persistence
+    const fence = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
+    const read = fence?.readDashboardAuthority
+    if (fence && read) {
+      const current = () => input.persistence === persistence && persistence.dashboardSourceFence === fence &&
+        fence.readDashboardAuthority === read && hasSfDashboardSourceFence(persistence)
+      const resolved = await read.call(fence, async () => {
+        const authority = current() ? observeAuthority(surfaces) : undefined
+        if (!authority) return undefined
+        return principal(request, authority.snapshots.dashboard, authority.snapshots, () => current() && authority.current())
+      }, request.signal) as Awaited<ReturnType<typeof principal>>
+      return !request.signal.aborted && current() ? resolved : undefined
+    }
+    return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), {
+      signal: request.signal, ...(hasSfDashboardSourceFence(input.persistence)
+        ? { targetPreimageCurrent: input.persistence.dashboardSourceFence?.holdTargetPreimage().current, sealedRead: true } : {}),
+    })
   }
   const state = createSfProductState({
+    stagedReviewThreadTarget: creationTarget.ref,
+    reviewArtifactPersistence: input.assets?.persistence,
     persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, nativePublicationGuards: input.nativePublicationGuards, signalRegistryWrites: input.signalRegistryWrites, caseSelectionWrites: input.caseSelectionWrites, threadHistoryWrites: input.threadHistoryWrites,
     dashboardHostWrites: input.dashboardHostWrites, procurementEvidenceWrites: input.procurementEvidenceWrites, analysisSelectionWrites: input.analysisSelectionWrites,
     authorize: async (request, snapshot, namespace, mode) => {
@@ -347,5 +383,21 @@ export function createSfProductAuthority(input: {
       commit: false, value: await readAdmittedContext(),
     }), { signal: request.signal })
   }
-  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission }
+  // C06 availability observes the same operation grants used by the UI and
+  // human authorities without minting leases or opening document references.
+  const readDocumentGrants = async (request: Request, expected: import("@orchestra/schema/sucafina/context").SfContextStamp) => {
+    const actor = await resolve(request).catch(() => undefined)
+    if (!actor || request.signal.aborted || !actor.grant.namespaces.includes("documents") ||
+        actor.identity.installationId !== expected.installationId || actor.identity.projectId !== expected.projectId ||
+        actor.identity.hostId !== expected.hostId || actor.principalRef !== expected.principalRef ||
+        actor.policyVersion !== expected.policyVersion || actor.accessRevision !== expected.accessRevision) return undefined
+    return {
+      extract: actor.grant.operations.includes("sf_document_extract"),
+      open: actor.grant.operations.includes("sf_evidence_get"),
+      search: actor.grant.operations.includes("sf_knowledge_search"),
+      schema: actor.canWrite && actor.grant.humanActions?.includes("documents.schema") === true,
+      confirm: actor.canWrite && actor.grant.humanActions?.includes("documents.confirm") === true,
+    }
+  }
+  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission, readDocumentGrants }
 }
