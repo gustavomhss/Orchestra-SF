@@ -23,3 +23,25 @@ O listener corporativo é dedicado ao mount da instalação, com login e logout.
 Dashboard, Planner e Procurement usam as rotas `<mount>/teams/<teamObjectId>/<aplicação>`. Os links e formulários mantêm o Team na URL, inclusive quando dois Teams estão abertos em abas diferentes. Cada Team tem seu próprio banco, anexos, versões e auditoria. Registros preexistentes seguem onde foram criados até a migração explícita.
 
 A membresia dá acesso à avaliação dos papéis da aplicação. Configure os papéis no descritor privado em `groups.dashboard`, `groups.planner` e `groups.procurement`, em formato `group:<ID de objeto Entra>`. A instalação resolve esses grupos para a conta autenticada. Para selecionar outras pessoas, habilite `"teamDirectory": "members"` no descritor, junto de `"teams": "direct"`. O aplicativo Entra precisa do consentimento para a permissão delegada `TeamMember.Read.All`. Entre novamente após conceder o consentimento. O seletor carrega os membros do Team escolhido no tenant de recursos. Cada pessoa é identificada pelo ID de objeto do Entra. Sem essa opção, o diretório continua limitado à pessoa autenticada. Se a lista habilitada estiver indisponível ou incompleta, o fluxo retorna HTTP 503. A instalação confere novamente a lista e as permissões antes de entregar resultados ou confirmar alterações. O Graph fornece a lista e os papéis em consultas separadas. A habilitação de restauração e tarefas programadas por Team tem validação própria.
+
+## Recuperação corporativa de um Team
+
+A rota administrativa fica desabilitada até configurar `SUCAFINA_CORPORATE_RECOVERY_REGISTER` com o caminho absoluto do SQLite mantido pelo observador de recuperação. Execute o serviço com um UID dedicado e acesso de leitura ao registro. O registro, seus diretórios e seus ancestrais devem ficar sob controle de root e fora dos dados da instalação e do workspace. O observador usa o mesmo arquivo no modo SQLite `DELETE` e acrescenta gerações crescentes com transações. Ele conserva o registro durante o backup, a restauração e o reinício do aplicativo.
+
+Configure `supremeAdminGroupId` no descritor privado e inclua uma única entrada em `grants` para o ID de objeto de cada recuperador autorizado com `"migrationActions": ["recover"]`. A recuperação exige a mesma sessão Microsoft e verifica novamente a membresia atual no grupo administrativo antes do commit. O papel de recuperação independe da membresia em Teams e autoriza somente restaurar o dashboard de um Team habilitado.
+
+O cliente de operação envia um `POST` de mesma origem para `<mount>/api/ui/team-profile-migration/recover` com `teamObjectId`, `checkpointId`, `expectedVersion` e `confirm: true`. O arquivo do Team fica sob `backups-teams/<partitionDigest>` no diretório privado. A resposta `204` confirma o commit. `409` indica revisão vencida e `503` indica que a instalação não confirmou o registro e o backup. As respostas carregam apenas o status.
+
+O observador mantém a tabela abaixo e publica a geração após confirmar o efeito na fonte independente autorizada. Os digests usam `digestSfValue`. O ID da instalação usa `{ origin, mount, directory }`. As chaves do registro usam `{ installationId, tenantId, clientId }` e `{ installationId, tenantId, teamObjectId }`, respectivamente. A geração vincula o snapshot do checkpoint, a fronteira atual do produtor de recibos e `{ checkpointId, manifest }`. O manifesto inclui os hashes dos anexos. O registro segura a mesma geração até o fim do commit.
+
+```sql
+CREATE TABLE recovery_pins (
+  installation_digest TEXT NOT NULL,
+  partition_digest TEXT NOT NULL,
+  generation INTEGER NOT NULL CHECK (generation > 0),
+  checkpoint_digest TEXT NOT NULL,
+  frontier_digest TEXT NOT NULL,
+  archive_digest TEXT NOT NULL,
+  PRIMARY KEY (installation_digest, partition_digest, generation)
+) STRICT;
+```

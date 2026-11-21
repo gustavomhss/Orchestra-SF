@@ -91,17 +91,17 @@ export async function createLocalBackups(directory: string, dependencies: Backup
   }
 
   const source: RestoreTransport = {
-    load: async (surface, id) => {
-      const archive = await load(surface, id)
+    load: async (surface, id, signal) => {
+      const archive = await load(surface, id, signal)
       return archive ? { snapshot: archive.snapshot, manifest: archive.manifest } : undefined
     },
-    readBlob: async (surface, id, key) => {
-      const path = await archivePath(surface, id)
+    readBlob: async (surface, id, key, signal) => {
+      const path = await archivePath(surface, id, signal)
       if (!path) return undefined
-      const metadata = await readArchiveMetadata(path, surface, id, undefined, false)
+      const metadata = await readArchiveMetadata(path, surface, id, signal, false)
       const expected = metadata.manifest.blobs.find((blob) => blob.key === key)
       if (!expected) return undefined
-      const bytes = await privateRead(join(path, blobName(key)))
+      const bytes = await privateRead(join(path, blobName(key)), signal)
       if (bytes.byteLength !== expected.bytes || hash(bytes) !== expected.sha256) throw new Error("Missing or corrupt retained blob")
       return new Uint8Array(bytes)
     },

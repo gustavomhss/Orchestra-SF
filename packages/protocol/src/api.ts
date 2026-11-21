@@ -19,6 +19,7 @@ import type { Definition } from "@orchestra/schema/event"
 import { AgentGroup } from "./groups/agent"
 import { HealthGroup } from "./groups/health"
 import { InstallationGroup } from "./groups/installation"
+import { SucafinaGroup } from "./groups/sucafina"
 import { PtyGroup } from "./groups/pty"
 import { makeQuestionGroup } from "./groups/question"
 import { ReferenceGroup } from "./groups/reference"
@@ -129,6 +130,7 @@ const makeApiFromGroup = <
     .add(makeCapabilitySchedulesGroup(locationMiddleware))
     .add(CapabilityContentGroup)
     .add(InboxGroup.middleware(inboxLocationMiddleware))
+    .add(SucafinaGroup)
     .annotateMerge(
       OpenApi.annotations({
         title: "orchestra HttpApi",

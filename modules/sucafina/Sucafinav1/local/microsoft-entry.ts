@@ -28,6 +28,16 @@ export async function createMicrosoftInstallation(
   const store = await openLocalStore(path.join(directory, "business-microsoft"))
   try {
     const identity = prepared.createIdentity(store.secrets)
+    const now = overrides.now ?? (() => new Date())
+    const registerPath = environment.SUCAFINA_CORPORATE_RECOVERY_REGISTER
+    const recovery = registerPath === undefined ? undefined : await (async () => {
+      if (!process.getuid?.() || !config.supremeAdminGroupId || !identity.observeCorporateRecoveryActor)
+        throw new Error("Corporate recovery requires a non-root service and explicit Microsoft Teams administration")
+      const { createCorporateRecoveryHttp } = await import("../runtime/corporate-recovery-http.ts")
+      const { openCorporateRecoveryRegister } = await import("../runtime/corporate-recovery-register.ts")
+      const register = await openCorporateRecoveryRegister(registerPath, directory)
+      return createCorporateRecoveryHttp({ config, directory, identity, now, register })
+    })()
     const readTeams = identity.teamDirectory
     const teamAccess = identity.observeTeams && createTeamProfileAccess({
       origin: config.origin, mount: config.mount, directory, tenantId: config.tenantId,
@@ -52,6 +62,8 @@ export async function createMicrosoftInstallation(
         }
         const auth = await identity.handle(request)
         if (auth) return auth
+        const recovered = await recovery?.(request)
+        if (recovered) return recovered
         const route = teamAccess ? teamBusinessRoute(url.pathname, config.mount) : undefined
         const landing = url.pathname === config.mount || url.pathname === config.mount + "/dashboard" ||
           (!!teamAccess && (url.pathname === config.mount + "/planner" || url.pathname === config.mount + "/procurement"))
@@ -79,7 +91,7 @@ export async function createMicrosoftInstallation(
         if (access.status === "allowed") {
           if (route) return runTeamBusiness({
             request, route, admission: access, authorizeTeam: teamAccess, identity, config, directory,
-            keys: prepared.loaded.keys, now: overrides.now ?? (() => new Date()),
+            keys: prepared.loaded.keys, now,
           })
           return new Response(null, { status: 303, headers: {
             ...headers, Location: config.mount + "/teams/" + access.profile.teamObjectId + "/" + surface,

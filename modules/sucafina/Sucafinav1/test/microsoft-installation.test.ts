@@ -9,6 +9,7 @@ import { createMicrosoftInstallation } from "../local/microsoft-entry.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
 import type { LocalConfiguration } from "../runtime/local-configuration.ts"
+import { openLocalStore } from "../runtime/local-store.ts"
 import { bindMicrosoftInstallation } from "../runtime/microsoft-configuration.ts"
 import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 
@@ -80,6 +81,7 @@ async function fixture(
     return {
       installation,
       directory,
+      prepare,
       async close() {
         try { await installation.dispose() }
         finally { await rm(root, { recursive: true, force: true }) }
@@ -329,11 +331,37 @@ test("Corporate dashboard authorizes only current, enabled direct Teams from the
     membership.down = true
     expect((await dashboard())?.status).toBe(503)
     membership.down = false
-    membership.teams = [disabled]
+    membership.teams = []
     expect((await f.installation.handler(ingress("", headers)))?.status).toBe(403)
 
-    const logout = await f.installation.handler(ingress("/auth/logout", { ...headers, origin }, { method: "POST" }))
-    expect(logout?.status).toBe(204)
+    const prepared = await f.prepare()
+    const store = await openLocalStore(join(f.directory, "business-microsoft"))
+    try {
+      const identity = prepared.createIdentity(store.secrets)
+      const observeRecovery = identity.observeCorporateRecoveryActor!
+      const recovery = (fields: HeadersInit, requestOrigin = origin) =>
+        new Request(requestOrigin + mount + "/api/ui/corporate-recovery", { method: "POST", headers: fields })
+      const callsBeforeRecovery = graphCalls.length
+      expect(await observeRecovery(recovery({ origin }), grantPrincipal)).toBeUndefined()
+      expect(await observeRecovery(recovery({ ...headers, origin: "https://other.example.test" }), grantPrincipal)).toBeUndefined()
+      expect(await observeRecovery(recovery({ ...headers, origin }, "https://other.example.test"), grantPrincipal)).toBeUndefined()
+      expect(await observeRecovery(recovery({ ...headers, origin, "sec-fetch-site": "cross-site" }), grantPrincipal)).toBeUndefined()
+      expect(graphCalls.length).toBe(callsBeforeRecovery)
+
+      const admitted = await observeRecovery(recovery({ ...headers, origin }), grantPrincipal)
+      expect(admitted?.principalId).toBe(oid)
+      expect(graphCalls.slice(callsBeforeRecovery)).toEqual(["/v1.0/me", "/v1.0/me/checkMemberGroups"])
+      membership.group = false
+      expect(await admitted?.verifyCurrent()).toBe(false)
+      membership.group = true
+      expect(await admitted?.verifyCurrent()).toBe(true)
+
+      const logout = await f.installation.handler(ingress("/auth/logout", { ...headers, origin }, { method: "POST" }))
+      expect(logout?.status).toBe(204)
+      const callsBeforeRevokedSession = graphCalls.length
+      expect(await admitted?.verifyCurrent()).toBe(false)
+      expect(graphCalls.length).toBe(callsBeforeRevokedSession)
+    } finally { await store.dispose() }
     const signedOut = await f.installation.handler(ingress("/auth/signed-out"))
     expect(signedOut?.status).toBe(200)
     expect(await signedOut?.text()).toContain(`href="${mount}/auth/login"`)
