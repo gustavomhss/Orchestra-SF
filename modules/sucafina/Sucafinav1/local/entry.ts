@@ -203,7 +203,10 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
       persistence: store,
       authenticate: identity.authenticate,
       environment: environmentFor,
-      ...(runtime ? { product } : {}),
+      ...(runtime ? { product,
+        productView: async (request: Request, surface: Surface, page: string | undefined) =>
+          runtime?.services?.()?.productView?.(request, surface, page),
+      } : {}),
       maxJsonBytes: 2 * 1024 * 1024,
       assets,
     }

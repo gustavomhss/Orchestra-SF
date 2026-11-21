@@ -209,6 +209,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
           <span class="block">{t(key("sf.ui31.typeFilter"))}</span>
           <select
             class="mx-input"
+            aria-label={t(key("sf.ui31.typeFilter"))}
             value={screen.kind}
             disabled={!sourceReady()}
             onChange={(event) => {

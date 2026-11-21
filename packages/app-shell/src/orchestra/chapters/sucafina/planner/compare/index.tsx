@@ -214,7 +214,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
               />
               <div class="sf-u46-compare-select">
                 <label for="sf-u46-base">{copy.t(key("sf.u46.source"))}
-                  <select id="sf-u46-base" class="mx-input" value={comparison.left}
+                  <select id="sf-u46-base" class="mx-input" aria-label={copy.t(key("sf.u46.source"))} value={comparison.left}
                     disabled={choices().length < 2}
                     onChange={(event) => {
                       const candidate = choices().find((v) => v.id === event.currentTarget.value && v.id !== comparison.right)
@@ -227,7 +227,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                   </select>
                 </label>
                 <label for="sf-u46-candidate">{copy.t(key("sf.u46.target"))}
-                  <select id="sf-u46-candidate" class="mx-input" value={comparison.right}
+                  <select id="sf-u46-candidate" class="mx-input" aria-label={copy.t(key("sf.u46.target"))} value={comparison.right}
                     disabled={choices().length < 2}
                     onChange={(event) => {
                       const candidate = choices().find((v) => v.id === event.currentTarget.value && v.id !== comparison.left)

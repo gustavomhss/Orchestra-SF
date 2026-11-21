@@ -35,3 +35,11 @@ A separate follow-up passes the existing busy contract to CAP21/CAP22/CAP23 chan
 ## Work filter status
 
 The work list delegates filtered-empty presentation to SfDataTable and its original SfStatePanel. The redundant leaf status paragraph was removed after source inspection confirmed both rendered the same sf.common.filterEmpty message. Filtering behavior, source reads and the table status announcement are unchanged.
+
+## First browser findings
+
+Remote Planner run [44956708140](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44956708140), snapshot 6d1a40be15ca1fb5ea2deddd3fe38e72266d68d8, reached the real native browser in both tests. It failed before the intended journeys because wrapped select labels included their option text, preventing exact accessible-label selection. The six selects in this group now explicitly use their existing visible i18n label as the accessible name. The test selectors remain unchanged.
+
+The two failure captures show the CAP20/CAP22 dark desktop reading surfaces. They were inspected, yielding two local Headcount refinements: left-aligned row headings and an explicit position-ledger summary hierarchy. They do not approve the unvisited editor, review, light, BR or narrow stages. Both recorded page and console error arrays were empty at these stops.
+
+The FX capture also exposed missing provenance in the existing CAP22 projection. The canonical seed and FxEntry schema already contain sourceRef/provider/observedAt; apps/cli/src/sucafina-product/native-ui/planner.ts omitted them from its mapped rows. The root owns the narrow producer passthrough fix; this group does not counterfeit the values or weaken readback assertions.

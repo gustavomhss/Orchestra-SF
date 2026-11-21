@@ -239,6 +239,9 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
   const rates = rows(current?.fx).map((r) => ({
     id: id(r.id), cur: text(r.cur), rate: typeof r.rate === "string" ? r.rate : money(r.rate),
     revision: revision(view, id(current?.id) + ":fx:" + id(r.id)),
+    ...(string(r.sourceRef) !== undefined ? { sourceRef: r.sourceRef } : {}),
+    ...(string(r.provider) !== undefined ? { provider: r.provider } : {}),
+    ...(string(r.observedAt) !== undefined ? { observedAt: r.observedAt } : {}),
   })).filter((r) => r.id !== "")
   const raw = object(current?.summary).warnings
   const warnings = Array.isArray(raw) ? raw.filter((v): v is string => typeof v === "string") : []
