@@ -1101,11 +1101,11 @@ export const createSfHostRuntimeWithRoutineNative = async (
           binding: input.nativeReadBinding,
           source: (operationId) => {
             if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch ||
-              services.analyses !== analyses || services.selected !== selected || !state.models) return undefined
+              services.analyses !== analyses || services.selected !== selected) return undefined
             if (operationId === "intelligence.analysis.choices") return {
               producer: productHttp,
-              dependencies: [analysisHttp, readSfImportAnalysisChoices, services.models, state.models,
-                selected, nativeSearchDispatch, business.cases, business.cases.read,
+              dependencies: [analysisHttp, readSfImportAnalysisChoices, services.models,
+                ...(state.models ? [state.models] : []), selected, nativeSearchDispatch, business.cases, business.cases.read,
                 authority.human, authority.human.admit, input.persistence],
             }
             return { producer: productHttp,
