@@ -562,6 +562,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                           binding: { kind: "catalog-command", operationId: op[request.action],
                             version: { kind: "record", expectedVersion: request.expected }, confirmation: "presentation-only" } }
                       : { kind: "blocked", labelKey: key("sf.u46.confirm"), reasons: [msg("sf.u46.reviewScope")] }}
+                    busy={screen.busy || !!screen.verified}
                     state={screen.outcome === "unknown" ? "outcome-unknown" :
                       screen.outcome === "conflict" ? "conflict" : "ready"}
                     onConfirm={() => { void submit(request) }}
