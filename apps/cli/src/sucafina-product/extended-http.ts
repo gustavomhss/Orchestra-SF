@@ -133,7 +133,7 @@ export function createSfExtendedHttp(input: {
           sources = reviewCycle.evidence(previous.value, referenceId)
         }
         if (!sources.length || sources.some((source) => digestSfValue(source) !== digestSfValue(sources[0]))) return json({ status: "denied", reason: "source-outside-preserved-review" }, 403)
-        const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url, reviewEvidence: input.reviewEvidence })
+        const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url, installedReview: true, reviewEvidence: input.reviewEvidence })
         // The canonical readers may materialize source scopes. Finish that work
         // before C08; the final grouped reads require the same complete proof.
         await input.reviews.readScope?.prepare(preserved.map((entry) => entry.reference), call)
