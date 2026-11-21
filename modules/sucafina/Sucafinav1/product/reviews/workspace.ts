@@ -157,6 +157,7 @@ export function createReviewPreparationView(input: {
       if (!url) return
       const link = node("a", "Download generated report")
       link.href = url
+      link.download = ""
       root.append(link)
     })
     state.material?.gaps.forEach((gap) => root.append(node("p", `Report limitation: ${gap.reason}`)))
