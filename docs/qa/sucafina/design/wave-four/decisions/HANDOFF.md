@@ -39,10 +39,10 @@ Keep `waveFourTest.use({ designWave: "four-decisions" })` in this spec; other jo
 ## Files
 
 Production leaves:
-- `decisions/intent/index.tsx`, `sources.tsx`, `decision.css`
+- `decisions/intent/index.tsx`, `sources.tsx`, `request.ts`, `decision.css`
 - `decisions/alternatives/index.tsx`
 - `decisions/assumptions/index.tsx`
-- `decisions/questions/index.tsx`
+- `decisions/questions/index.tsx`, `cycles.tsx`, `consume.tsx`
 - `decisions/choice/index.tsx`
 - `decisions/changes/index.tsx`
 - `decisions/receipts/index.tsx`
@@ -52,6 +52,7 @@ Prefix for all above: `packages/app-shell/src/orchestra/chapters/sucafina/`.
 
 Test files:
 - `packages/app-shell/e2e/sucafina/design-wave-four-decisions.spec.ts`
+- `packages/app-shell/test-browser/sucafina-decision-command.test.ts`
 - `packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-data.ts`
 - `packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-seed.ts`
 
@@ -59,7 +60,7 @@ Reserved catalogs `sf-u16`, `sf-u17`, `sf-u18`, `sf-u37` are unchanged.
 
 ## Required verification
 
-Run root's production Actions fixture with this exact spec and the other wave-four journeys. Inspect console diagnostics and screenshots; run app-shell typecheck, source guards and palette generation in the consolidated lane. No command has been executed locally.
+Run root's production Actions fixture with this exact spec and the other wave-four journeys. Inspect console diagnostics and screenshots; run app-shell typecheck, source guards and palette generation in the consolidated lane. No command has been executed locally. Include `test-browser/sucafina-decision-command.test.ts` with the browser condition and the existing Happy DOM preloader. Its five cases use real Solid tracking plus the unchanged native schemas/codecs; ordinary server-mode Solid would not reproduce the metadata regression.
 
 Watch the canonical seed for a producer refusal rather than weakening grants or replacing emitted evidence. UI35 must show the real historical choice on the opaque route. UI41 must issue the choices/list POSTs successfully; a UI-only unavailable placeholder is not proof.
 

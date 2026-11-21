@@ -177,10 +177,11 @@ export function SfCaseSourcesEditor(props: Readonly<{
       if (pending === abort) pending = undefined
       props.onSaved()
     } catch (error) {
-      if (!abort.signal.aborted && current(generation, record))
+      if (pending === abort && !abort.signal.aborted && current(generation, record))
         setDraft({ phase: "unknown", message: "sf.ui34.editUnknown" })
     } finally {
-      if (!abort.signal.aborted && current(generation, record)) setDraft("busy", false)
+      // onSaved may dispose the Show accessor after releasing this completed request.
+      if (pending === abort && !abort.signal.aborted && current(generation, record)) setDraft("busy", false)
     }
   }
   return <section class="mx-card sf-n24-section" data-sf-decision-editor aria-labelledby="sf-case-edit-sources">
