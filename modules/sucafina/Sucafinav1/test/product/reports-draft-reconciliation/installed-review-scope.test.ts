@@ -66,19 +66,24 @@ for (const withResident of [false, true]) test(`Reports composition resident=${w
     })
     const result = async (response: Response | undefined) => {
       if (!response) throw new Error("Actual Reports route unavailable")
-      expect(response.status).toBe(200)
       const body = object(await response.json())
-      expect(body.status).toBe("ok")
+      expect({ code: response.status, status: body.status, reason: body.reason })
+        .toEqual({ code: 200, status: "ok", reason: undefined })
       return body.value
     }
     const post = (mode: string, payload: unknown) => extended.productHttp(new Request("https://example.test/dashboard?sf=" + mode, {
       method: "POST", headers: { origin: "https://example.test", "content-type": "application/json" }, body: JSON.stringify(payload),
     }), "dashboard")
     const query = new URLSearchParams({ sf: "review-agenda", domain: "dashboard", start: corpus.annual.start,
-      end: corpus.annual.end, dashboardTopics: JSON.stringify(["budget", "projects", "hot-topics"]) })
+      end: corpus.annual.end })
     const catalog = await result(await extended.productHttp(new Request("https://example.test/dashboard?" + query), "dashboard")) as ReviewAgendaCatalog
-    expect(catalog.options).toHaveLength(3)
-    const preview = await result(await post("review-agenda", { items: catalog.options.map((option) => option.item) })) as ReviewAgendaPreview
+    const topics = ["budget", "projects", "hot-topics"]
+    const items = topics.map((topic) => {
+      const matches = catalog.options.filter((option) => option.item.kind === "dashboard" && option.item.topic === topic)
+      expect(matches).toHaveLength(1)
+      return matches[0]!.item
+    })
+    const preview = await result(await post("review-agenda", { items })) as ReviewAgendaPreview
     expect(preview.sections.find((section) => section.title === "Projects")?.recordCount).toBe(25)
     const saved = await result(await post("review-preserve", { selectionRef: preview.selectionRef, sectionRefs: preview.sectionRefs })) as PreservedReview
     const readQuery = new URLSearchParams({ sf: "review-read", reviewRef: saved.id })

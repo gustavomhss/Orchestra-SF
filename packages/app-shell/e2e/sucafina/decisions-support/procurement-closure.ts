@@ -199,7 +199,7 @@ async function attachRequisition(page: Page, origin: string, reference: string, 
     expect(added[0]).toEqual(observed)
     expect(added[0]!).toMatchObject({ kind: "record", evidenceLevel: "observed", target: { surface: "procurement", recordType: "procurement-request", recordId: requestId, period: draft.horizon } })
     expect(refs).toHaveLength(3)
-    expect(refs).toEqual(expect.arrayContaining(before.sourceRefs))
+    expect(refs).toEqual(expect.arrayContaining([...before.sourceRefs]))
     expect(asRecord(receipt.value).caseRef).toEqual({ ...caseIdentity(reference), version: 5 })
     await expect(decision).toHaveAttribute("data-sf-case-version", "5")
     await expect(decision.getByRole("region", { name: "Source references", exact: true })).toContainText(String(observed.refId))
