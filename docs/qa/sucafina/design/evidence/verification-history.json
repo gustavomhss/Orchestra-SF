@@ -1,0 +1,143 @@
+{
+  "candidate": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff",
+  "nativeWeb": {
+    "run": 44881051985,
+    "snapshot": "97cdf8291cf9cfa67ba77017f11f22da270894e5",
+    "result": "PASS",
+    "tests": 1,
+    "assertions": 13,
+    "omniSpawns": 2,
+    "durationSeconds": 39.45
+  },
+  "gates": {
+    "run": 44882227862,
+    "snapshot": "13034936e8cd83b1da4ef7bf147d6bc062b13af3",
+    "productParent": "ccfe14a55826a7caee519d3682e14b9fb5214522",
+    "result": "PASS",
+    "appTypecheck": 0,
+    "guardErrors": 0,
+    "guardWarnings": 16,
+    "paletteFilesUnchanged": 7,
+    "tests": 3
+  },
+  "browserAttempt1": {
+    "run": 44882844362,
+    "snapshot": "d5a87a2cc978c5ad37c740dd5b48b500d1320cad",
+    "result": "FAIL",
+    "reason": "CAP01 Year select lacked localized accessible name; fixed in b81c07ab",
+    "screensCaptured": 8,
+    "artifact": 14698787395
+  },
+  "appliedCandidate": "ccfe14a55826a7caee519d3682e14b9fb5214522",
+  "browserAttempt2": {
+    "run": 44883948061,
+    "snapshot": "d0fbaae5b1a4f99ad3f6518f0dddd508c9cc4f89",
+    "productParent": "b81c07ab00d4544e1d2c0cedeb2c156cc50c7db4",
+    "result": "FAIL",
+    "reason": "Incorrect annual-risk test expectation; canonical producer has current activeRisks, but executiveByYear includes only workforce fields. UI missing state is correct.",
+    "artifact": 14699575244,
+    "screensCaptured": 8
+  },
+  "devBase": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
+  "previousGates": {
+    "run": 44885917681,
+    "job": 136791054998,
+    "snapshot": "f606c85630a3caa6d73517a7ad7707d4cb21a0db",
+    "productParent": "3d5e9c8cb29fa097868bc9037b922af39246141b",
+    "result": "PASS",
+    "tests": 4,
+    "assertions": 11,
+    "durationSeconds": 18.24,
+    "appTypecheck": 0,
+    "e2eTypecheck": 0,
+    "guardBase": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
+    "guardRules": 78,
+    "guardFiles": 29,
+    "guardErrors": 0,
+    "guardWarnings": 2,
+    "guardApproved": [],
+    "paletteFilesUnchanged": 7,
+    "omniSpawns": 6
+  },
+  "browserAttempt3": {
+    "run": 44884676701,
+    "job": 136787264273,
+    "snapshot": "ec516bfca1db714446712e53f294fb224ee6b53c",
+    "result": "FAIL",
+    "reason": "Real Executive editor remote effect subscribed to the snapshot it republished when month selection mounted populated editors. Fixed in 3d5e9c8 with untrack around receiveRemote.",
+    "artifact": 14699965666,
+    "screensCaptured": 8
+  },
+  "requestAssemblyFailures": [
+    {
+      "run": 44885831175,
+      "snapshot": "2317e23636936c3a24d344190e354d4d1e86b704",
+      "result": "FAIL_BEFORE_TESTS",
+      "reason": "CI snapshot request used .ci-run instead of .ci-run.json. Product untouched; corrected next snapshots."
+    },
+    {
+      "run": 44885840943,
+      "snapshot": "b2a3160978ea306050eb7cd2ff49c81be0d72502",
+      "result": "FAIL_BEFORE_TESTS",
+      "reason": "CI snapshot request used .ci-run instead of .ci-run.json. Product untouched; corrected next snapshots."
+    }
+  ],
+  "browserPreviousPass": {
+    "run": 44885914349,
+    "job": 136791044708,
+    "snapshot": "ccb386a5316babd5b95fe622c79240519770639f",
+    "productParent": "3d5e9c8cb29fa097868bc9037b922af39246141b",
+    "result": "PASS",
+    "tests": 1,
+    "retries": 0,
+    "reportedDuration": "2.5m",
+    "images": 17,
+    "previewBytes": 1591674,
+    "artifact": 14699763775
+  },
+  "finalGates": {
+    "run": 44886478223,
+    "job": 136792746079,
+    "snapshot": "09c4e8cc74479ad9aaa116a1a7e6b1e095af5a22",
+    "productParent": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff",
+    "result": "PASS",
+    "tests": 4,
+    "appTypecheck": 0,
+    "e2eTypecheck": 0,
+    "guardBase": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
+    "guardRules": 78,
+    "guardFiles": 29,
+    "guardErrors": 0,
+    "guardWarnings": 2,
+    "guardApproved": [],
+    "paletteFilesUnchanged": 7,
+    "omniSpawns": 6,
+    "assertions": 11,
+    "durationSeconds": 17.84
+  },
+  "browserFinal": {
+    "run": 44886474787,
+    "job": 136792735083,
+    "snapshot": "c273ef9bee8ce9fe8761a5437bcb6dd3589bdd72",
+    "productParent": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff",
+    "result": "PASS",
+    "tests": 1,
+    "retries": 0,
+    "reportedDuration": "3.2m",
+    "images": 17,
+    "previewBytes": 1587090,
+    "artifact": 14700078712
+  },
+  "review": {
+    "status": "READY_FOR_USER_VISUAL_REVIEW",
+    "reviewers": [
+      "root",
+      "polish_today",
+      "polish_cases",
+      "polish_executive"
+    ],
+    "basis": "All three agents reviewed their real Capture5 images; root inspected dark/light/narrow and inline reviews. UI29 narrow resume and CAP01 user-count review were then refined and inspected again from Capture6. UI33 and the other screen styles are unchanged between the successful captures.",
+    "actualBrowserZoom": "NOT_MEASURED",
+    "fullCompositeContrast": "NOT_MEASURED"
+  }
+}

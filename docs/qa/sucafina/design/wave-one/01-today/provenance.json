@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "status": "CANDIDATE_AWAITING_NATIVE_IMPORT_AND_VISUAL_VALIDATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-polish-today",
+  "route": "/orchestra/sf-home",
+  "screenId": "UI29",
+  "target": {
+    "devCommit": "948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1",
+    "planningCommit": "20bd10681b83c51d1f5d369b7a438b58d57c9f18"
+  },
+  "reference": {
+    "branch": "sf-join-four",
+    "commit": "fdeb988881c927f952a2d9fd5b8002c892f56635",
+    "sourceBlobs": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+        "sha": "3f777bf0485a5e4d27b716d3e0d40291953f2021"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/frame.css",
+        "sha": "2477afe718a6631d088b0244e1939e1fd398650a"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+        "sha": "2e7edab6f17c57aff3db0307d35e28d06a8364bc"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+        "sha": "69f2ed01a12012c21a269df16478f16bf112244e"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/states.css",
+        "sha": "1bc1027f8888e2937f4a486ecedd883803e3f0c6"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/kit.css",
+        "sha": "d90cfcf2b4b5063931b663fe74bb7b8a4bec85fe"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts",
+        "sha": "340fbae98d8245cf571af266a1c447b226fc98ac"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u01-host231.spec.ts",
+        "sha": "92fe9d0c7b9fe7da94c6ae5c0385e226fa1fe674"
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts",
+        "sha": "9fae974a321af6c863c8749600d42e5271bfa63f"
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u01.ts",
+        "sha": "25ffe0571fe8c23a2a2dea780dfc08db8fcfa831"
+      }
+    ]
+  },
+  "proposedFiles": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+      "operation": "modify",
+      "beforeBlob": "3f777bf0485a5e4d27b716d3e0d40291953f2021",
+      "afterBlob": "7719cce45d7469e8985a7683214ddfd6b762a242"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/today.css",
+      "operation": "add",
+      "beforeBlob": null,
+      "afterBlob": "b18d27c32b717cd9355b5b114b9ae63907f14958"
+    }
+  ],
+  "method": {
+    "readAndWriteTransport": "GitHub MCP",
+    "patchConstruction": "JavaScript line diff with three context lines",
+    "patchValidation": "Independent in-memory unified-hunk reconstruction with exact source/context/postimage comparisons",
+    "postimageHash": "Computed Git blob SHA-1; implementation checked against standard abc digest and the GitHub-reported original source blob",
+    "applicationCodeWrittenToTarget": false
+  },
+  "checks": {
+    "sourceBlobMatches": true,
+    "exactPatchReconstruction": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+        "contextMatched": true,
+        "postimageExact": true,
+        "hunks": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/today.css",
+        "contextMatched": true,
+        "postimageExact": true,
+        "hunks": 1
+      }
+    ],
+    "sourcePreservation": {
+      "businessPrefixUnchanged": true,
+      "copyKeysUnchanged": true,
+      "dataSelectorsUnchanged": true,
+      "jsxBehaviorAttributesUnchanged": {
+        "state": true,
+        "when": true,
+        "each": true,
+        "onClick": true,
+        "onBack": true,
+        "onRetryRead": true,
+        "ref": true,
+        "disabled": true,
+        "messageKey": true,
+        "aria-label": true
+      },
+      "noVisibilitySuppression": true
+    },
+    "allCssTokensResolvedFromReadSources": true,
+    "gitApply": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "browserAndUnitTests": "NOT_RUN",
+    "installedApplicationInteraction": "NOT_RUN",
+    "screenshotsAndComputedStyleInspection": "NOT_RUN",
+    "keyboardAndScreenReader": "NOT_RUN",
+    "narrowAndZoomedLayout": "NOT_RUN",
+    "paletteGenerationParityAndContrast": "NOT_RUN",
+    "guardrails": "NOT_RUN",
+    "productIntegration": "BLOCKED_MISSING_NATIVE_SUCAFINA_FRONTEND_IN_TARGET_DEV"
+  }
+}

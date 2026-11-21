@@ -1,0 +1,485 @@
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx
+--- a/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx
+@@ -13,7 +13,7 @@
+ import { SfU02Edit, sfU02ExecutiveTarget } from "./edit"
+ import { useU02Projection, knownNumber } from "./reader"
+ import { parseSfSignalPriorities, sfExecutiveSignals, sfExecutiveSignalTarget } from "./signals"
+-import "./u02.css"
++import "./executive.css"
+ 
+ type ExecutiveData = typeof SfDomainPageData.CAP01.Type
+ type Key = keyof typeof SF_U02_COPY
+@@ -84,15 +84,17 @@
+   const benchmarkVersion = () => { const target = benchmarkTarget();return target.kind === "unavailable" ? undefined : target.version }
+   const canEdit = (action: string) => reader.canAction(action, "domain.command.CAP01." + action)
+   const stat = (id: string, label: Key, value: number | null | undefined) =>
+-    <div class="sf-u02-stat" data-sf-metric={id}><dt>{t(key(label))}</dt><dd>{numeric(value)}</dd></div>
++    <div class="sf-u02-stat" data-sf-metric={id}
++      data-sf-value={knownNumber(value) === undefined ? "missing" : "number"}><dt>{t(key(label))}</dt><dd>{numeric(value)}</dd></div>
+   const unscopedStat = (id: string, label: Key) =>
+     <div class="sf-u02-stat" data-sf-metric={id} data-sf-scope="unscoped"><dt>{t(key(label))}</dt><dd>{unscoped()}</dd></div>
+   const metricTable = () => {
+     if (year() !== undefined) return <p role="status">{unscoped()}</p>
+     const totals = periodTotals()
+     if (!totals) return <p role="status">{t(key("sf.u02.sourceMissing"))}</p>
+-    return <div class="sf-u02-table-scroll">
+-      <table><caption>{t(key("sf.u02.budgetByLine"))}</caption>
++    return <div class="sf-u02-table-scroll sf-u02-financial-table" tabIndex={0} role="region"
++      aria-labelledby="sf-u02-financial-table-caption">
++      <table><caption id="sf-u02-financial-table-caption">{t(key("sf.u02.budgetByLine"))}</caption>
+         <thead><tr><th scope="col">{t(key("sf.u02.line"))}</th>
+           <th scope="col">{t(key("sf.u02.budget"))}</th>
+           <th scope="col">{t(key("sf.u02.actual"))}</th>
+@@ -111,7 +113,7 @@
+   return <SfPageFrame titleKey={key("sf.cap01.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
+       density="comfortable" layout="reading" onLayoutMode={() => {}}>
+     <div class="sf-u02-page" data-sf-surface="CAP01">
+-      <nav class="flex flex-wrap gap-2" aria-label="Executive cross-links" data-sf-executive-crosslinks>
++      <nav class="sf-u02-crosslinks" aria-label="Executive cross-links" data-sf-executive-crosslinks>
+         <SfExecutiveAction from={props.route} target={{ kind: "agenda" }}
+           label={{ pt: "Criar pauta de revisão", en: "Create review agenda" }} />
+         <SfExecutiveAction from={props.route} target={{ kind: "topics" }}
+@@ -156,7 +158,7 @@
+           <p>{t(key("sf.u02.noCurrency"))}</p>
+           <div data-sf-bi-slot="BI01">{metricTable()}</div>
+         </section>
+-        <section class="sf-u02-section" aria-labelledby="sf-u02-variance">
++        <section class="sf-u02-section sf-u02-variance" aria-labelledby="sf-u02-variance">
+           <h2 id="sf-u02-variance">{t(key("sf.u02.variance"))}</h2>
+           <p>{t(key("sf.u02.sourceWarning"))}</p>
+           <dl class="sf-u02-stats">
+@@ -183,7 +185,8 @@
+             {stat("it-users", "sf.u02.users", data()?.people === undefined ? users()?.users : people()?.users)}
+             {stat("cost-per-user-opex", "sf.u02.costPerUserOpex", people()?.opexCostPerUser)}
+             {stat("cost-per-user-total", "sf.u02.costPerUserTotal", people()?.totalCostPerUser)}
+-            <div class="sf-u02-stat" data-sf-metric="attrition"><dt>{t(key("sf.u02.attrition"))}</dt>
++            <div class="sf-u02-stat" data-sf-metric="attrition"
++              data-sf-value={knownNumber(people()?.attritionYtd) === undefined ? "missing" : "number"}><dt>{t(key("sf.u02.attrition"))}</dt>
+               <dd>{knownNumber(people()?.attritionYtd) === undefined ? missing() :
+                 <SfDisplayValueText value={{ kind: "number", value: people()!.attritionYtd!, fractionDigits: 2, unit: { kind: "percent" } }} />}</dd>
+             </div>
+@@ -214,7 +217,8 @@
+           <p>{language.plural("sf.u02.signalsShowing", entries().length, { shown: signals().length, total: entries().length })}</p>
+           <p>{language.plural("sf.u02.signalsPrioritized", entries().length, { prioritized: pinned().size, total: entries().length })}</p>
+           <Show when={signals().length} fallback={<p>{t(sfCommonKey("sf.common.empty"))}</p>}>
+-            <div class="sf-u02-table-scroll"><table>
++            <div class="sf-u02-table-scroll sf-u02-signals-table" tabIndex={0} role="region"
++              aria-labelledby="sf-u02-alerts"><table>
+               <thead><tr><th scope="col">{t(key("sf.u02.fact"))}</th>
+                 <th scope="col">{t(key("sf.u02.rule"))}</th><th scope="col">{t(key("sf.u02.date"))}</th>
+                 <th scope="col">{t(key("sf.u02.origin"))}</th><th scope="col">{t(key("sf.u02.priority"))}</th></tr></thead>
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/executive.css b/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/executive.css
+new file mode 100644
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/executive.css
+@@ -0,0 +1,409 @@
++/* CAP01 only. CAP03 keeps the shared u02.css and SfU02Edit unchanged. */
++.sf-u02-page[data-sf-surface="CAP01"] {
++  --sf-exec-space-sm: 6px;
++  --sf-exec-space-md: 10px;
++  --sf-exec-space-lg: 14px;
++  --sf-exec-space-xl: 20px;
++  --sf-exec-space-2xl: 24px;
++  --sf-exec-rule: 1px;
++  --sf-exec-focus-width: 2px;
++  --sf-exec-focus-offset: 2px;
++  --sf-exec-control-height: 44px;
++  --sf-exec-metric-min: 140px;
++  --sf-exec-editor-min: 280px;
++  --sf-exec-financial-table-min: 480px;
++  --sf-exec-signals-table-min: 640px;
++  --sf-exec-copy-measure: 68ch;
++  --sf-exec-line-height: 1.6;
++  --sf-exec-heading-line: 1.4;
++  --sf-exec-label-lines: 2;
++  --sf-exec-value-line: 1.25;
++  --sf-exec-value-tracking: -0.035em;
++  --sf-exec-scroll-fade: 20px;
++  --sf-exec-scroll-shadow: 12px;
++  display: grid;
++  gap: var(--sf-exec-space-xl);
++  min-inline-size: 0;
++  max-inline-size: 100%;
++  color: var(--mx-strong);
++  font-family: var(--mx-sans);
++  font-size: var(--orchestra-font-size-md);
++  line-height: var(--sf-exec-line-height);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] *,
++.sf-u02-page[data-sf-surface="CAP01"] *::before,
++.sf-u02-page[data-sf-surface="CAP01"] *::after {
++  box-sizing: border-box;
++}
++
++/* The native state wrapper continues to control disclosure and confidentiality. */
++.sf-u02-page[data-sf-surface="CAP01"] > .sf-state-panel > .sf-state-content {
++  display: grid;
++  gap: var(--sf-exec-space-xl);
++  min-inline-size: 0;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-crosslinks {
++  display: flex;
++  flex-wrap: wrap;
++  align-items: flex-start;
++  gap: var(--sf-exec-space-sm) var(--sf-exec-space-md);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-crosslinks > div {
++  min-inline-size: 0;
++  max-inline-size: 100%;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .mx-btn {
++  min-block-size: var(--sf-exec-control-height);
++  max-inline-size: 100%;
++  margin: 0;
++  white-space: normal;
++  overflow-wrap: anywhere;
++  font-family: var(--mx-sans);
++  font-size: var(--orchestra-font-size-sm);
++  line-height: var(--sf-exec-heading-line);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .mx-btn:not(.primary),
++.sf-u02-page[data-sf-surface="CAP01"] [data-sf-u02-edit] > .mx-btn.primary {
++  color: var(--mx-strong);
++  background: transparent;
++  border-color: var(--mx-line);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .mx-btn:not(:disabled):not(.primary):hover,
++.sf-u02-page[data-sf-surface="CAP01"] [data-sf-u02-edit] > .mx-btn.primary:not(:disabled):hover {
++  background: var(--orchestra-surface-hover);
++  border-color: var(--mx-rim);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-section {
++  min-inline-size: 0;
++  padding: var(--sf-exec-space-xl);
++  border: var(--sf-exec-rule) solid var(--mx-line);
++  border-radius: var(--orchestra-radius-lg);
++  background: var(--mx-raised);
++  box-shadow: var(--mx-card-shadow);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-section > h2 {
++  margin: 0 0 var(--sf-exec-space-lg);
++  color: var(--mx-strong);
++  font-family: var(--mx-emphasis);
++  font-size: var(--orchestra-font-size-xl);
++  font-weight: 600;
++  line-height: var(--sf-exec-heading-line);
++  overflow-wrap: anywhere;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-section > h3 {
++  margin: var(--sf-exec-space-2xl) 0 var(--sf-exec-space-lg);
++  color: var(--mx-strong);
++  font-family: var(--mx-emphasis);
++  font-size: var(--orchestra-font-size-lg);
++  font-weight: 600;
++  line-height: var(--sf-exec-heading-line);
++  overflow-wrap: anywhere;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-section > p {
++  max-inline-size: var(--sf-exec-copy-measure);
++  margin: var(--sf-exec-space-md) 0 var(--sf-exec-space-lg);
++  color: var(--mx-dim);
++  font-size: var(--orchestra-font-size-sm);
++  line-height: var(--sf-exec-line-height);
++  overflow-wrap: anywhere;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-section > :last-child {
++  margin-block-end: 0;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-controls {
++  display: grid;
++  grid-template-columns: repeat(3, minmax(0, 1fr));
++  align-items: end;
++  gap: var(--sf-exec-space-lg);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-controls label,
++.sf-u02-page[data-sf-surface="CAP01"] [data-sf-u02-edit] > label {
++  display: grid;
++  gap: var(--sf-exec-space-sm);
++  min-inline-size: 0;
++  color: var(--mx-dim);
++  font-size: var(--orchestra-font-size-sm);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-controls select,
++.sf-u02-page[data-sf-surface="CAP01"] [data-sf-u02-edit] input {
++  inline-size: 100%;
++  min-inline-size: 0;
++  min-block-size: var(--sf-exec-control-height);
++  padding: var(--sf-exec-space-md);
++  border: var(--sf-exec-rule) solid var(--mx-line);
++  border-radius: var(--orchestra-radius-sm);
++  background: var(--orchestra-surface);
++  color: var(--mx-strong);
++  font: inherit;
++  font-size: var(--orchestra-font-size-md);
++  font-variant-numeric: tabular-nums;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-controls option {
++  background: var(--mx-modal);
++  color: var(--mx-strong);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] :is(button, a, input, select, [tabindex]):focus-visible {
++  outline: var(--sf-exec-focus-width) solid var(--orchestra-accent);
++  outline-offset: var(--sf-exec-focus-offset);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-stats {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--sf-exec-metric-min)), 1fr));
++  align-items: stretch;
++  gap: var(--sf-exec-space-lg) var(--sf-exec-space-2xl);
++  margin: 0;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] :is(.sf-u02-financial-metrics, .sf-u02-variance .sf-u02-stats) {
++  grid-template-columns: repeat(3, minmax(0, 1fr));
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-stats.sf-u02-people-metrics {
++  grid-template-columns: repeat(4, minmax(0, 1fr));
++  grid-auto-rows: auto;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-stat {
++  display: flex;
++  flex-direction: column;
++  align-items: flex-start;
++  gap: var(--sf-exec-space-sm);
++  min-inline-size: 0;
++  min-block-size: 0;
++  padding: var(--sf-exec-space-sm) 0;
++  border: 0;
++  border-radius: initial;
++  background: transparent;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-stat dt {
++  min-block-size: calc(var(--orchestra-font-size-sm) * var(--sf-exec-line-height) * var(--sf-exec-label-lines));
++  color: var(--mx-dim);
++  font-size: var(--orchestra-font-size-sm);
++  line-height: var(--sf-exec-line-height);
++  opacity: 1;
++  overflow-wrap: anywhere;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-stat dd {
++  margin: 0;
++  color: var(--mx-strong);
++  font-family: var(--mx-emphasis);
++  font-size: var(--orchestra-font-size-3xl);
++  font-weight: 600;
++  line-height: var(--sf-exec-value-line);
++  letter-spacing: var(--sf-exec-value-tracking);
++  font-variant-numeric: tabular-nums;
++  overflow-wrap: anywhere;
++}
++
++/* Availability text retains its meaning and uses body hierarchy, never a hero number. */
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-stat:is([data-sf-scope="unscoped"], [data-sf-value="missing"]) dd {
++  color: var(--mx-dim);
++  font-family: var(--mx-sans);
++  font-size: var(--orchestra-font-size-md);
++  font-weight: 400;
++  line-height: var(--sf-exec-line-height);
++  letter-spacing: normal;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-benchmark {
++  grid-template-columns: minmax(0, 1fr);
++  margin-block-start: var(--sf-exec-space-xl);
++  padding-block-start: var(--sf-exec-space-lg);
++  border-block-start: var(--sf-exec-rule) solid var(--mx-line);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-benchmark .sf-u02-stat {
++  flex-direction: row;
++  flex-wrap: wrap;
++  align-items: baseline;
++  justify-content: space-between;
++  gap: var(--sf-exec-space-sm) var(--sf-exec-space-xl);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-benchmark dt {
++  min-block-size: 0;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-benchmark dd {
++  font-size: var(--orchestra-font-size-xl);
++  letter-spacing: normal;
++}
++
++/* Scroll shadows indicate the remaining columns without clipping their text or focus. */
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-table-scroll {
++  max-inline-size: 100%;
++  min-inline-size: 0;
++  overflow-x: auto;
++  border: 0;
++  scrollbar-width: thin;
++  background-image:
++    linear-gradient(to right, var(--mx-raised), transparent),
++    linear-gradient(to left, var(--mx-raised), transparent),
++    radial-gradient(farthest-side at 0 50%, color-mix(in srgb, var(--mx-strong) 18%, transparent), transparent),
++    radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--mx-strong) 18%, transparent), transparent);
++  background-position: left, right, left, right;
++  background-size:
++    var(--sf-exec-scroll-fade) 100%, var(--sf-exec-scroll-fade) 100%,
++    var(--sf-exec-scroll-shadow) 100%, var(--sf-exec-scroll-shadow) 100%;
++  background-repeat: no-repeat;
++  background-attachment: local, local, scroll, scroll;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-table-scroll table {
++  inline-size: 100%;
++  border-collapse: collapse;
++  color: var(--mx-strong);
++  font-size: var(--orchestra-font-size-sm);
++  line-height: var(--sf-exec-line-height);
++  text-align: start;
++  font-variant-numeric: tabular-nums;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-financial-table table {
++  min-inline-size: var(--sf-exec-financial-table-min);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signals-table table {
++  min-inline-size: var(--sf-exec-signals-table-min);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-table-scroll caption {
++  padding-block: var(--sf-exec-space-md) var(--sf-exec-space-lg);
++  margin: 0;
++  color: var(--mx-dim);
++  font-weight: 400;
++  text-align: start;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-table-scroll :is(th, td) {
++  padding: var(--sf-exec-space-lg) var(--sf-exec-space-md);
++  border-block-end: var(--sf-exec-rule) solid var(--mx-line);
++  vertical-align: top;
++  text-align: start;
++  overflow-wrap: anywhere;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-table-scroll thead th {
++  color: var(--mx-dim);
++  font-weight: 400;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-table-scroll tbody th {
++  font-family: var(--mx-emphasis);
++  font-weight: 600;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-financial-table :is(th:not(:first-child), td) {
++  text-align: end;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-financial-table tbody tr:last-child {
++  font-family: var(--mx-emphasis);
++  font-weight: 600;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-table-scroll tbody tr:last-child > * {
++  border-block-end: 0;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-signals-table td > bdi {
++  display: block;
++  margin-block-end: var(--sf-exec-space-sm);
++  color: var(--mx-dim);
++  font-family: var(--mx-mono);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] .sf-u02-edit-grid {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--sf-exec-editor-min)), 1fr));
++  align-items: start;
++  gap: var(--sf-exec-space-xl);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] [data-sf-u02-edit] {
++  display: grid;
++  grid-template-columns: minmax(0, 1fr) auto;
++  align-content: start;
++  gap: var(--sf-exec-space-md);
++  min-inline-size: 0;
++  padding: var(--sf-exec-space-lg);
++  border: var(--sf-exec-rule) solid var(--mx-line);
++  border-radius: var(--orchestra-radius-md);
++  background: var(--mx-soft);
++}
++
++/* Review is inline in this screen. It gets the full reading width, not a new modal. */
++.sf-u02-page[data-sf-surface="CAP01"] [data-sf-u02-edit]:has([data-component="sf-change-review"]) {
++  grid-column: 1 / -1;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] [data-sf-u02-edit] > :is(label, p, [data-component="sf-change-review"]) {
++  grid-column: 1 / -1;
++  min-inline-size: 0;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] [data-sf-u02-edit] > p {
++  margin: 0;
++  color: var(--mx-dim);
++  font-size: var(--orchestra-font-size-sm);
++  overflow-wrap: anywhere;
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] [data-sf-u02-edit] > [role="alert"] {
++  padding: var(--sf-exec-space-md);
++  border-inline-start: var(--sf-exec-focus-width) solid var(--mx-line);
++  background: var(--mx-soft);
++}
++
++.sf-u02-page[data-sf-surface="CAP01"] [data-sf-u02-edit] > [data-component="sf-change-review"] {
++  padding-block-start: var(--sf-exec-space-lg);
++}
++
++@container sf-frame (max-width: 767px) {
++  .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-section {
++    padding: var(--sf-exec-space-lg);
++  }
++
++  .sf-u02-page[data-sf-surface="CAP01"] :is(.sf-u02-stats:not(.sf-u02-benchmark), .sf-u02-stats.sf-u02-people-metrics) {
++    grid-template-columns: repeat(2, minmax(0, 1fr));
++  }
++}
++
++@container sf-frame (max-width: 420px) {
++  .sf-u02-page[data-sf-surface="CAP01"] :is(.sf-u02-controls, .sf-u02-stats, .sf-u02-stats.sf-u02-people-metrics, .sf-u02-edit-grid) {
++    grid-template-columns: minmax(0, 1fr);
++  }
++
++  .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-stat dt {
++    min-block-size: 0;
++  }
++
++  .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-crosslinks,
++  .sf-u02-page[data-sf-surface="CAP01"] [data-sf-u02-edit] {
++    display: grid;
++    grid-template-columns: minmax(0, 1fr);
++  }
++
++  .sf-u02-page[data-sf-surface="CAP01"] .sf-u02-crosslinks .mx-btn {
++    inline-size: 100%;
++  }
++}
