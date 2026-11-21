@@ -1,0 +1,212 @@
+/* F03: a composition layer over Orchestra's native Mx kit, not a new skin.
+   All paint, type and motion read the existing theme tokens. */
+.sf-page-frame {
+  --sf-page-gutter: 32px;
+  --sf-row-height: 44px;
+  display: flex;
+  flex: 1 1 auto;
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  container-name: sf-frame;
+  container-type: inline-size;
+  color: var(--mx-strong);
+  font-family: var(--mx-sans);
+}
+.sf-page-frame[data-sf-density="compact"] { --sf-row-height: 36px; }
+.sf-page-frame .mx-page { inline-size: 100%; min-inline-size: 0; }
+.sf-page-frame .mx-page .mx-inner {
+  inline-size: calc(100% - var(--sf-page-gutter) - var(--sf-page-gutter));
+  max-inline-size: none;
+  box-sizing: border-box;
+  padding-block: 32px 48px;
+}
+.sf-page-frame[data-sf-layout="reading"] .mx-page .mx-inner { max-inline-size: 1020px; }
+.sf-page-frame[data-sf-layout="work"] .mx-page .mx-inner { max-inline-size: 1280px; }
+.sf-page-frame[data-sf-layout="comparison"] .mx-page .mx-inner { max-inline-size: 1440px; }
+.sf-page-frame .mx-heading { flex-wrap: wrap; align-items: center; gap: 16px; margin-block-end: 20px; }
+.sf-page-frame .mx-heading > div:first-child { min-inline-size: 0; flex: 1 1 300px; }
+.sf-page-frame .mx-heading h1,
+.sf-page-frame .mx-heading p,
+.sf-page-frame .mx-eyebrow { overflow-wrap: anywhere; }
+.sf-page-frame .mx-heading p:empty { display: none; }
+.sf-page-frame .mx-heading > div:last-child { min-inline-size: 0; }
+.sf-frame-workarea, .sf-frame-body { min-inline-size: 0; }
+.sf-frame-body { margin-block-start: 18px; }
+.sf-page-context, .sf-chart-context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding: 12px 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+.sf-page-context-item, .sf-chart-context > div { min-inline-size: 0; }
+.sf-page-context dt, .sf-chart-context dt {
+  font-size: var(--orchestra-font-size-sm);
+  color: var(--mx-dim);
+}
+.sf-page-context dd, .sf-chart-context dd { margin: 3px 0 0; overflow-wrap: anywhere; }
+.sf-page-tabs { border-block-end: 1px solid var(--mx-line); min-inline-size: 0; }
+.sf-tabs-inline { display: flex; gap: 3px; overflow: auto; scrollbar-width: thin; }
+.sf-tab {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  min-block-size: 44px;
+  padding-inline: 12px;
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+  border-block-end: 2px solid transparent;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.sf-tab:hover { color: var(--mx-strong); background: var(--mx-soft); }
+.sf-tab-active { color: var(--mx-strong); border-block-end-color: var(--mx-blue); }
+.sf-tab-disabled { color: var(--mx-dim); opacity: .65; }
+.sf-tabs-compact, .sf-secondary-menu { display: none; }
+.sf-tabs-current { min-inline-size: 0; overflow-wrap: anywhere; }
+.sf-tabs-menu, .sf-secondary-menu { min-inline-size: 0; position: relative; }
+.sf-tabs-menu summary, .sf-secondary-menu summary {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding: 8px 12px;
+  color: var(--mx-strong);
+  background: var(--mx-raised);
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-md);
+}
+.sf-tabs-menu-content, .sf-secondary-menu-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 0 0;
+  max-inline-size: 100%;
+}
+.sf-secondary-actions { display: flex; justify-content: flex-end; padding-block: 10px; min-inline-size: 0; }
+.sf-secondary-inline, .sf-secondary-menu-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+  min-inline-size: 0;
+}
+.sf-action { display: inline-flex; flex-direction: column; align-items: stretch; min-inline-size: 0; gap: 4px; }
+.sf-action-button {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-block-size: 44px;
+  white-space: normal;
+  text-align: start;
+}
+.sf-action-button.sf-danger { border-color: var(--mx-bad); color: var(--mx-bad); }
+.sf-action-running { font-size: var(--orchestra-font-size-xs); }
+.sf-action-reason { color: var(--mx-dim); overflow-wrap: anywhere; }
+.sf-page-frame :is(a, button, summary, select):focus-visible,
+.sf-context-bar :is(button, select):focus-visible,
+.sf-chart-frame :is(a, button):focus-visible {
+  outline: 2px solid var(--mx-blue);
+  outline-offset: 2px;
+}
+.sf-context-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-inline-size: 0;
+  padding: 12px;
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-lg);
+  background: var(--mx-raised);
+}
+.sf-context-bar > p { margin: 0; }
+.sf-context-control { flex: 1 1 180px; min-inline-size: 0; display: flex; flex-direction: column; gap: 6px; }
+.sf-context-control label { font-size: var(--orchestra-font-size-sm); color: var(--mx-dim); overflow-wrap: anywhere; }
+.sf-context-control select {
+  inline-size: 100%;
+  min-block-size: 44px;
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-md);
+  background: var(--mx-raised);
+  color: var(--mx-strong);
+  font: inherit;
+  padding-inline: 10px;
+}
+.sf-context-control small { color: var(--mx-dim); overflow-wrap: anywhere; }
+.sf-coverage { padding: 8px 0; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
+.sf-coverage strong { display: block; color: var(--mx-strong); }
+.sf-coverage-reasons { margin: 6px 0 0; padding-inline-start: 20px; }
+.sf-coverage-reasons > li { overflow-wrap: anywhere; }
+.sf-value-list { margin: 0; padding-inline-start: 18px; }
+.sf-unit { margin-inline-start: .3em; color: var(--mx-dim); }
+.sf-numeric { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.sf-missing { color: var(--mx-dim); }
+.sf-chart-frame {
+  min-inline-size: 0;
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-lg);
+  padding: 18px;
+  background: var(--mx-raised);
+}
+.sf-chart-header h2 { margin: 0; font-size: var(--orchestra-font-size-xl); }
+.sf-chart-header p { color: var(--mx-dim); overflow-wrap: anywhere; }
+.sf-chart-visual { min-inline-size: 0; max-inline-size: 100%; overflow: clip; }
+.sf-chart-visual > svg { max-inline-size: 100%; block-size: auto; }
+.sf-chart-table-region {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  background-image:
+    linear-gradient(to right, var(--mx-raised, Canvas), transparent),
+    linear-gradient(to left, var(--mx-raised, Canvas), transparent),
+    radial-gradient(farthest-side at 0 50%, color-mix(in srgb, var(--mx-strong, CanvasText) 18%, transparent), transparent),
+    radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--mx-strong, CanvasText) 18%, transparent), transparent);
+  background-position: left, right, left, right;
+  background-size: 20px 100%, 20px 100%, 12px 100%, 12px 100%;
+  background-repeat: no-repeat;
+  background-attachment: local, local, scroll, scroll;
+}
+.sf-chart-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--orchestra-font-size-sm);
+  text-align: start;
+}
+.sf-chart-table caption { caption-side: top; text-align: start; color: var(--mx-dim); padding: 8px 0; }
+.sf-chart-table :is(th,td) { padding: 10px; border-block-end: 1px solid var(--mx-line); overflow-wrap: anywhere; }
+.sf-chart-table th { color: var(--mx-dim); font-weight: 600; }
+.sf-chart-table tr[data-sf-selected="true"] { background: var(--mx-enabled); }
+.sf-chart-table .mx-btn { min-block-size: 44px; white-space: normal; }
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sf-page-frame { --sf-page-gutter: 24px; }
+}
+@media (max-width: 767px) {
+  .sf-page-frame { --sf-page-gutter: 16px; }
+}
+/* Container width tracks the real workspace, including sidebar and browser zoom.
+   Mobile actions and tabs remain reachable without document-level horizontal scroll. */
+@container sf-frame (max-width: 767px) {
+  .sf-page-frame .mx-heading { flex-direction: column; align-items: stretch; }
+  .sf-page-frame .mx-heading h1 { font-size: var(--orchestra-font-size-2xl); }
+  .sf-page-frame .mx-heading > div:first-child { flex-basis: auto; }
+  .sf-page-frame .mx-heading > div:last-child .sf-action { inline-size: 100%; }
+  .sf-tabs-inline { display: none; }
+  .sf-tabs-compact { display: flex; gap: 8px; align-items: center; justify-content: space-between; min-inline-size: 0; }
+  .sf-tabs-menu-content { flex-direction: column; align-items: flex-start; }
+  .sf-secondary-inline { flex-direction: column; align-items: stretch; inline-size: 100%; }
+  .sf-secondary-inline .sf-action, .sf-secondary-inline button { inline-size: 100%; }
+  .sf-secondary-actions { justify-content: stretch; }
+  .sf-context-control { flex-basis: 100%; }
+  .sf-page-context-item { flex: 1 1 100%; }
+  .sf-chart-frame { padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-page-frame *, .sf-context-bar *, .sf-chart-frame * {
+    scroll-behavior: auto;
+    transition-duration: 0ms;
+    animation-duration: 0ms;
+  }
+}
