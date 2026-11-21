@@ -17,7 +17,7 @@ import type { CollaborationRecipientAuthority, ReviewThreadRecipientAuthority } 
 type ReviewAnswerSource = ReturnType<typeof createReviewAnswerSource>
 // Undefined means the scoped producer was ineligible before acquiring its root.
 export type ReviewThreadReadLeg = (pin: NonNullable<ThreadSourceContext["reviewContext"]>, basis: ThreadSourceContext,
-  context: TrustedDomainContext, complete: () => Promise<boolean>) => Promise<boolean | undefined>
+  context: TrustedDomainContext, complete: () => Promise<boolean>, before?: () => Promise<boolean>) => Promise<boolean | undefined>
 
 const reviewEvidenceBatches = new WeakMap<BusinessContextService, {
   context: BusinessContextService["context"]; answerSource: ReviewAnswerSource; authorizeThread: ReviewThreadContextAuthorizer
@@ -139,6 +139,51 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     if (!allowed || !await input.host.revalidate(context)) return undefined
     return { id: person.id, name: person.name }
   }
+  // The two C08 reads remain independent. Only this leg's installed C05
+  // pair and canonical source authorization can share its held root.
+  const readScopedThreadLeg = async (thread: Pick<CollaborationThread, "recipientRef"> & { messages?: CollaborationThread["messages"] },
+    basis: ThreadSourceContext, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext,
+    complete: () => Promise<boolean>, before?: () => Promise<boolean>) => {
+    const pin = basis.reviewContext
+    if (!pin || context.kind !== "ui" || thread.recipientRef !== context.binding.principalRef ||
+      !thread.messages?.length || !thread.messages.every((message) => message.authorRef === thread.recipientRef) ||
+      !refs.every((ref) => ref?.kind === "record" && ref.target?.surface === "dashboard")) return undefined
+    const evidence = input.evidence
+    const registered = reviewEvidenceBatches.get(evidence)
+    const host = input.host
+    const persistence = host.persistence
+    const atomic = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
+    const authorize = input.authorizeReviewThreadContext
+    if (!registered || !atomic || registered.authorizeThread !== authorize || input.reviewRecipientAuthority !== registered.recipient ||
+      hasActiveSfSnapshot(persistence)) return undefined
+    const requestFor = host.requestFor, revalidate = host.revalidate, authenticate = host.authenticate, environment = host.environment
+    const request = requestFor.call(host, context)
+    const transaction = persistence.transaction
+    const current = () => reviewEvidenceBatches.get(evidence) === registered && registered.providersCurrent() &&
+      input.evidence === evidence && evidence.context === registered.context && input.authorizeReviewThreadContext === authorize &&
+      input.reviewRecipientAuthority === registered.recipient && input.host === host && host.persistence === persistence &&
+      persistence.dashboardSourceFence === atomic && hasSfDashboardSourceFence(persistence) && persistence.transaction === transaction &&
+      host.requestFor === requestFor && host.revalidate === revalidate && host.authenticate === authenticate && host.environment === environment &&
+      !!request && !request.signal.aborted && requestFor.call(host, context) === request
+    if (!validThreadSourceContext(basis) || !current() || !await revalidate.call(host, context) || !current()) return false
+    const leg = { open: true, started: false, finished: false, began: false, heldBefore: false, authorized: !before }
+    const result = await registered.readLeg(pin, basis, context, async () => {
+      if (!leg.open || leg.started || !leg.authorized || !current() || !hasActiveSfSnapshot(persistence)) return false
+      leg.started = true
+      leg.finished = await complete() && leg.open && current()
+      return leg.finished
+    }, before && (async () => {
+      if (!leg.open || leg.began || !current()) return false
+      leg.began = true
+      leg.heldBefore = hasActiveSfSnapshot(persistence)
+      leg.authorized = await before() && leg.open && current()
+      return leg.authorized
+    })).finally(() => { leg.open = false })
+    if (!current() || result === false) return false
+    if (result === true) return leg.finished
+    return leg.started || leg.heldBefore || leg.began && !leg.authorized ? false : undefined
+  }
+
   return {
     sources,
     historicalSources,
@@ -146,6 +191,8 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     readSources,
     readHistoricalSources,
     readReviewThreadBasis,
+    readRecipientReviewLeg: (thread: CollaborationThread, basis: ThreadSourceContext, refs: readonly BusinessEvidenceRef[],
+      context: TrustedDomainContext, historical: () => Promise<boolean>) => readScopedThreadLeg(thread, basis, refs, context, async () => true, historical),
     recipient,
     readRecipient: (id: string, context: TrustedDomainContext) => recipient(id, context, true),
     recipientSources,
@@ -186,37 +233,9 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
         return !thread.recipientRef || !!await recipient(thread.recipientRef, context, mode === "read", sealedRead) &&
           (mode !== "write" || !!pin || await recipientSources(thread.recipientRef, thread.evidenceRefs, context))
       }
-      // Only the registered local record producer may extend its held C05
-      // observation through C06. The caller still makes two separate C08 reads.
-      if (basis && pin && mode === "read" && context.kind === "ui" && thread.recipientRef === context.binding.principalRef &&
-        thread.messages?.length && thread.messages.every((message) => message.authorRef === thread.recipientRef) &&
-        [...thread.evidenceRefs, ...messageRefs].every((ref) => ref?.kind === "record" && ref.target?.surface === "dashboard") && registered) {
-        const host = input.host
-        const persistence = host.persistence
-        const atomic = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
-        const authorize = input.authorizeReviewThreadContext
-        if (atomic && registered.authorizeThread === authorize && input.reviewRecipientAuthority === registered.recipient && !hasActiveSfSnapshot(persistence)) {
-          const requestFor = host.requestFor, revalidate = host.revalidate, authenticate = host.authenticate, environment = host.environment
-          const request = requestFor.call(host, context)
-          const transaction = persistence.transaction
-          const current = () => reviewEvidenceBatches.get(evidence) === registered && registered.providersCurrent() &&
-            input.evidence === evidence && evidence.context === batch && input.authorizeReviewThreadContext === authorize &&
-            input.reviewRecipientAuthority === registered.recipient && input.host === host && host.persistence === persistence &&
-            persistence.dashboardSourceFence === atomic && hasSfDashboardSourceFence(persistence) && persistence.transaction === transaction &&
-            host.requestFor === requestFor && host.revalidate === revalidate && host.authenticate === authenticate && host.environment === environment &&
-            !!request && !request.signal.aborted && requestFor.call(host, context) === request
-          if (!validThreadSourceContext(basis) || !current() || !await revalidate.call(host, context) || !current()) return false
-          const leg = { open: true, started: false, finished: false }
-          const result = await registered.readLeg(pin, basis, context, async () => {
-            if (!leg.open || leg.started || !current() || !hasActiveSfSnapshot(persistence)) return false
-            leg.started = true
-            leg.finished = await complete(true) && leg.open && current()
-            return leg.finished
-          }).finally(() => { leg.open = false })
-          if (!current() || result === false) return false
-          if (result === true) return leg.finished
-          if (leg.started) return false
-        }
+      if (basis && mode === "read") {
+        const scoped = await readScopedThreadLeg(thread, basis, [...thread.evidenceRefs, ...messageRefs], context, () => complete(true))
+        if (scoped !== undefined) return scoped
       }
       if (basis && (!validThreadSourceContext(basis) || !await (mode === "write" ? reviewThreadBasis : readReviewThreadBasis)(basis, context) || mode === "write" && thread.recipientRef && !await reviewRecipientSources(thread.recipientRef, basis, context))) return false
       if (!await complete()) return false

@@ -34,7 +34,7 @@ export function createSfReviewCollaborationBinding(original: BusinessContextServ
     const bound = holder.current, authorize = bound?.authorizeReviewThreadContext
     return !!bound && !!authorize && await authorize(pin, basis, call, purpose) && holder.current === bound && !holder.closed && bound.authorizeReviewThreadContext === authorize
   }
-  const readLeg: ReviewThreadReadLeg = async (pin, basis, call, complete) => {
+  const readLeg: ReviewThreadReadLeg = async (pin, basis, call, complete, before) => {
     const bound = holder.current, run = bound?.readLeg
     if (!bound || holder.closed) return false
     if (!run) return undefined
@@ -42,7 +42,8 @@ export function createSfReviewCollaborationBinding(original: BusinessContextServ
     const current = () => !holder.closed && holder.current === bound && bound.readLeg === run &&
       bound.evidence === producer && producer.resolve === resolve
     if (!current()) return false
-    const result = await run(pin, basis, call, async () => current() && await complete() && current())
+    const result = await run(pin, basis, call, async () => current() && await complete() && current(),
+      before && (async () => current() && await before() && current()))
     return current() ? result : false
   }
   const reviewRecipientAuthority: ReviewThreadRecipientAuthority = {

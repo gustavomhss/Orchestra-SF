@@ -212,7 +212,8 @@ export function createSfReviewCollaboration(input: {
     // The canonical cold read may materialize source metadata. Observe it
     // outside the seal and hand its detached result to the pair exactly once.
     const initial = !ready && await (async () => {
-      if (!current() || !await revalidate.call(host, call) || !current()) return denied
+      if (!current() || !await revalidate.call(host, call) || !current() ||
+        leg?.before && (!await leg.before() || !current())) return denied
       const result = structuredClone(await readReview.call(reviews, pin.reviewRef, call))
       return current() && await revalidate.call(host, call) && current() ? result : denied
     })()
@@ -233,6 +234,16 @@ export function createSfReviewCollaboration(input: {
         const fingerprint = requireFingerprint ? fingerprintReader(pin, root.identity) : undefined
         const before = fingerprint?.()
         if (fingerprint && !before) return { commit: false, value: denied }
+        // Historical access comes first for recipient reads. The cold leg
+        // already ran it before the real protected read outside this seal.
+        if (ready && leg?.before) {
+          try {
+            if (!await leg.before() || !current() || !root.current()) return { commit: false, value: denied }
+          } catch (error) {
+            completionFailure.error = error
+            return { commit: false, value: denied }
+          }
+        }
         const result = await run(async () => {
           if (!current() || !root.current()) return denied
           if (first) {
@@ -281,7 +292,7 @@ export function createSfReviewCollaboration(input: {
       await host.revalidate(call) && sameProducer() && host.persistence === persistence && host.requestFor(call) === request && !request.signal.aborted
     return (await prepareAccess(pin, basis, found.value.review, call)).status === "ok"
   }
-  const readLeg: NonNullable<SfReviewCollaborationBinding["readLeg"]> = async (pin, basis, call, complete) => {
+  const readLeg: NonNullable<SfReviewCollaborationBinding["readLeg"]> = async (pin, basis, call, complete, before) => {
     if (!sameProducer() || !isReviewThreadContext(pin)) return false
     const persistence = host.persistence
     const requestFor = host.requestFor, revalidate = host.revalidate
@@ -294,7 +305,7 @@ export function createSfReviewCollaboration(input: {
     if (!existing && !cold) return undefined
     const current = () => sameProducer() && host.persistence === persistence && host.requestFor === requestFor &&
       host.revalidate === revalidate && requestFor.call(host, call) === request && !request.signal.aborted
-    const leg = { complete, cold, ineligible: false }
+    const leg = { complete, before, cold, ineligible: false }
     const found = await observePinnedContext(pin, basis, call, true, leg)
     if (leg.ineligible && current()) return undefined
     return found.status === "ok" && current() && await revalidate.call(host, call) && current()

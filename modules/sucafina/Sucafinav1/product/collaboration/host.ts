@@ -124,7 +124,8 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const baseSelections = input.workSelections ?? createWorkSelectionPort({ collections: input.collections, authority, captureMember: input.captureWorkSource })
   const caseSelection = input.caseSelectionWrites ? createCaseWorkSelection({ host: input.host, state: input.state, cases: input.cases, authority, human: input.human, fence: createCollaborationMutationFence(input.host), fallback: baseSelections, reissue, refreshWorkSource, workCaseAuthority: input.workCaseAuthority, target: input.creationTarget, createId: input.createId, caseSelectionWrites: input.caseSelectionWrites }) : undefined
   const selections = caseSelection?.port ?? baseSelections
-  const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, refresh: refreshThreadSource, authorize: authority.readSources, authorizeHistorical: authority.readHistoricalSources, authorizeContext: authority.readReviewThreadBasis }) : undefined
+  const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, refresh: refreshThreadSource, authorize: authority.readSources, authorizeHistorical: authority.readHistoricalSources, authorizeContext: authority.readReviewThreadBasis,
+    authorizeReviewLeg: authority.readRecipientReviewLeg }) : undefined
   const authorizeThreadSourceContinuity = reissue ? createThreadSourceContinuity({ host: input.host, reissue, refresh: refreshThreadSource, authorizeHistorical: authority.historicalSources }) : undefined
   const confirmation = (() => {
     if (!input.confirmationSource || typeof input.confirmationSource.verifyManifest !== "function" || typeof input.confirmationSource.fenceManifest !== "function") return undefined
