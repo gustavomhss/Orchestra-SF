@@ -1,5 +1,7 @@
 # Comparação de compras pelo Gateway
 
+Para criar outro pack com a mesma estrutura, use o [template de packs do Orchestra-SF](sf-pack-template.md).
+
 Use um perfil OpenClaw isolado por conta SF, com o MCP de comparação disponível na instalação. Configure `mcp.servers.sfcompras` com a URL HTTPS terminada em `/sucafina/api/claw/mcp`, transporte `streamable-http` e filtro `{"include":["sf_comparar_compra"]}`. Use um filtro sem exclusões para habilitar a comparação por HTTP. Habilite o servidor e forneça a credencial SF do perfil ao processo em `SF_CLAW_PURCHASE_TOKEN`.
 
 Adicione o [plugin do Gateway](../../modules/sucafina/Sucafinav1/product/ai/packs/procurement/gateway) a `plugins.load.paths`. O diretório deve resolver as instalações existentes de OpenClaw e `@modelcontextprotocol/sdk`. Habilite `plugins.entries.sf-purchase-gateway.enabled` e inclua `sf-purchase-gateway` em `plugins.allow` quando o perfil usar uma lista explícita. Permita `sfcompras__sf_comparar_compra` para o agente e reinicie o Gateway do perfil.
