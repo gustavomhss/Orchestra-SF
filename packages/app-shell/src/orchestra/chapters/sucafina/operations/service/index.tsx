@@ -631,16 +631,22 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
   const reviewState = () => state.operationState === "conflict" ? "conflict" :
     state.operationState === "unknown" ? "outcome-unknown" :
     state.operationState === "failed" ? "invalid" : state.state
-  const reviewSnapshot = (editor: Editor, values: DraftValues, original: boolean, version: SfVersion = editor.version): SfReviewSnapshot => {
-    if (original && editor.identity.kind === "new")
-      return { kind: "not-provided", reason: message(commonKey("empty")) }
-    return original
-      ? { kind: "persisted", ref: editor.identity.kind === "record" ? editor.identity.recordRef : asRef(""),
+  const reviewSnapshot = (editor: Editor, page: SfServicePage, values: DraftValues, original: boolean,
+    version: SfVersion = editor.version): SfReviewSnapshot => {
+    const monthKey = "ops:" + serviceRecordId(page.selection.year, page.selection.month)
+    const sourceRef = editor.identity.kind === "record" ? editor.identity.recordRef :
+      editor.action === "import-month" && Object.hasOwn(page.versions, monthKey) ? asRef(monthKey) : null
+    if (original) {
+      if (sourceRef === null) return { kind: "not-provided",
+        reason: message(editor.action === "import-month"
+          ? sourceKey("design.comparisonUnavailable") : commonKey("empty")) }
+      return { kind: "persisted", ref: sourceRef,
         version, fields: reviewFields(editor.action, values, serviceFieldLabel) }
-      : { kind: "draft",
-        intentRef: editor.identity.kind === "new" ? editor.identity.newIntentRef : asIntent("u04:" + editor.scope),
-        sourceRef: editor.identity.kind === "record" ? editor.identity.recordRef : null,
-        sourceVersion: editor.version, fields: reviewFields(editor.action, values, serviceFieldLabel) }
+    }
+    return { kind: "draft",
+      intentRef: editor.identity.kind === "new" ? editor.identity.newIntentRef : asIntent("u04:" + editor.scope),
+      sourceRef, sourceVersion: editor.version,
+      fields: reviewFields(editor.action, values, serviceFieldLabel) }
   }
   const displayedYear = () => state.page?.selection.year ?? state.year
   const displayedMonth = () => state.page?.selection.month ?? state.month
@@ -897,12 +903,12 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                         label: message(sourceKey("action." + editor.action)),
                         scope: { kind: "data", text: serviceRecordId(editorPage.selection.year, editorPage.selection.month) },
                       }}
-                      base={reviewSnapshot(editor, snapshot.base ?? {}, true)}
-                      current={reviewSnapshot(editor,
+                      base={reviewSnapshot(editor, editorPage, snapshot.base ?? {}, true)}
+                      current={reviewSnapshot(editor, editorPage,
                          snapshot.conflict?.current ?? snapshot.base ?? {}, true,
                          snapshot.conflict?.currentVersion ?? editor.version,
                        )}
-                      proposed={reviewSnapshot(editor, snapshot.value, false)}
+                      proposed={reviewSnapshot(editor, editorPage, snapshot.value, false)}
                       effects={[{
                         id: editor.action,
                         domain: "dashboard", title: { kind: "message", message: message(sourceKey("action." + editor.action)) },

@@ -80,6 +80,14 @@ waveThreeTest("installed native operations · service source values and a real r
     const importReview = editor.locator('[data-component="sf-change-review"]')
     await expect(importReview.getByRole("button", { name: "Replace month", exact: true })).toBeEnabled()
     await expect(importReview).toContainText("Infrastructure · Incidents · Opened")
+    for (const name of ["Original", "Current source"]) {
+      const comparison = importReview.getByRole("region", { name, exact: true })
+      await expect(comparison).not.toContainText("No records yet.")
+      await expect(comparison.locator(".sf-s03-field").filter({ hasText: "Infrastructure · Incidents · Opened" })
+        .locator("dd")).toHaveText("12")
+      await expect(comparison.locator(".sf-s03-field").filter({ hasText: "Incident SLA" })
+        .locator("dd")).toHaveText("98.4")
+    }
     await scrollPageTop(page)
     await capture(page, info, "CAP11-import-review-top-dark-desktop-test-data")
     await reviewActions(page)

@@ -130,6 +130,14 @@ CAP11/CAP12 Cancel/Revise callbacks now reject transitions while a command is su
 
 This is a local guard confirmed by source review; the campaign does not simulate lost responses or claim runtime qualification of artificial outcome-unknown states. The normal real writes and final browser captures remain the execution gate. Scope is now frozen except for concrete runtime or gate findings.
 
+## Import comparison found in the sixth runtime capture
+
+The newly captured top of CAP11 monthly replacement review in run [44945528183](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44945528183) exposed a concrete presentation error: Original/Current said No records yet even though the selected month contained ticket, SLA and application records. The draft's new command intent was incorrectly treated as absence of source data.
+
+The presentation now uses the source's existing `ops:year-month` group reference only when that exact version key is present in the admitted page. Original/current use the existing draft baseline/conflict values and their existing month CAS; Proposed retains the new command intent. If the source lacks that comparison key, the review explicitly says the source does not provide a comparison for the selected month. It does not invent a record reference or version. Draft acquisition, digest, command and confirmation remain unchanged.
+
+The CAP11 journey now requires Original and Current source to show Infrastructure Incidents Opened = 12 and Incident SLA = 98.4 before canceling the replacement review. Its existing top/footer capture names remain stable. This minimum correction needs its targeted runtime rerun; the other independent journeys continue unaffected.
+
 ## User guide notes for integration
 
 Service: select year/month, inspect SLA/history and ticket categories, edit the required section, then review. Categories/applications are under their disclosure. Monthly replacement is prepared and reviewed before sending.
