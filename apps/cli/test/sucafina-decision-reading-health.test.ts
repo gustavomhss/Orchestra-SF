@@ -1,4 +1,7 @@
-import { expect, test } from "bun:test"
+import { afterEach, expect, test } from "bun:test"
+import { mkdtemp, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import path from "node:path"
 import type { CapabilityDescriptor, TrustedUiContext } from "../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { digestSfValue } from "../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { sfOperationInputSchemas } from "../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
@@ -7,10 +10,9 @@ import { createSfProductState } from "../../../modules/sucafina/Sucafinav1/produ
 import { createSfSourcePersistence } from "../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { createSfUiAuthority } from "../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
 import { createCurrentChoiceFence } from "../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
-import type { AssetPersistence, BlobTransaction } from "../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
 import { object, type Snapshot } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Surface } from "../../../modules/sucafina/Sucafinav1/src/identity.ts"
-import { empty, testPersistence } from "../../../modules/sucafina/Sucafinav1/test/fixture/persistence.ts"
+import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import { observeSfDecisionReadingHealth } from "../src/sucafina-product/native-ui/decision-reading-health.ts"
 
 type Input = Parameters<typeof observeSfDecisionReadingHealth>[0]
@@ -22,24 +24,32 @@ const stamp = Object.freeze({
   principalRef: "decision-health-person", policyVersion: "decision-health-policy", accessRevision: "decision-health-access",
 })
 
-/** Original UI leases, C08 reader, source lifecycle and current-choice fence; only external revocation is controlled. */
+const cleanups: (() => Promise<void>)[] = []
+afterEach(async () => {
+  for (const cleanup of cleanups.splice(0)) await cleanup()
+})
+
+/** Original SQLite store, UI leases, C08 reader, source lifecycle and choice fence; only revocation scheduling is controlled. */
 async function fixture() {
   const controls: { allowed: boolean; revision: string; installed: boolean; calls: number; deniedOperation: string; deniedNamespace: string } = {
     allowed: true, revision: stamp.accessRevision, installed: true, calls: 0, deniedOperation: "", deniedNamespace: "",
   }
   const hooks: { read?: (surface: Surface, snapshot: Snapshot) => Promise<void>; finish?: () => void } = {}
-  const memory = testPersistence({ dashboard: empty(), planner: empty(), procurement: empty() })
+  const directory = await mkdtemp(path.join(tmpdir(), "sf-decision-health-"))
+  const storage = await openLocalStore(directory)
+  cleanups.push(async () => { await storage.dispose(); await rm(directory, { recursive: true, force: true }) })
   const never = async (): Promise<never> => {
     controls.calls++
     throw new Error("Health must not invoke options, prepare, dispatch, receipts or blobs")
   }
-  const blobs: BlobTransaction = { get: never, put: never, remove: never }
-  const driver: AssetPersistence = {
-    transaction: (surface, work, options) => memory.persistence.transaction(surface, async (snapshot) => {
+  const driver: Parameters<typeof createCurrentChoiceFence>[0]["persistence"] = {
+    ...storage,
+    transaction: (surface, work, options) => storage.transaction(surface, async (snapshot, blobs) => {
       await hooks.read?.(surface, snapshot)
       return work(snapshot, blobs)
     }, options),
   }
+  const snapshotDigest = () => storage.transactionAll(async (snapshots) => ({ commit: false, value: digestSfValue(snapshots) }))
   let ids = 0
   const identity = () => controls.allowed ? {
     installationId: stamp.installationId, projectId: stamp.projectId, principalRef: stamp.principalRef,
@@ -122,18 +132,18 @@ async function fixture() {
     for (const lease of admitted) expect(originalUi.requestFor(lease)).toBeUndefined()
     expect(controls.calls).toBe(0)
   }
-  return { observe, controls, hooks, sources, memory, admitted, finished, terminal, request, controller, input, persistence }
+  return { observe, controls, hooks, sources, storage, driver, snapshotDigest, admitted, finished, terminal, request, controller, input, persistence }
 }
 
 test("decision health observes two mounted operations without reading cases or preparing anything", async () => {
   const context = await fixture()
-  const before = digestSfValue(context.memory.state)
+  const before = await context.snapshotDigest()
   expect(await context.observe()).toEqual([
     { operationId: choice, state: "ready", reason: null, operational: true },
     { operationId: question, state: "ready", reason: null, operational: true },
   ])
   expect(context.admitted.length).toBe(2)
-  expect(digestSfValue(context.memory.state)).toBe(before)
+  expect(await context.snapshotDigest()).toBe(before)
   context.terminal()
 })
 
@@ -234,7 +244,10 @@ test("question health rejects a copied descriptor outside the installed capabili
 
 test("question health requires original C08 state rather than callable availability", async () => {
   const context = await fixture()
-  delete context.memory.state.dashboard.data.__sfProductV1
+  await context.storage.transaction("dashboard", async (snapshot) => {
+    delete snapshot.data.__sfProductV1
+    return { commit: true, value: undefined }
+  })
   expect(await context.observe(question)).toEqual([])
   expect(context.admitted).toHaveLength(1)
   context.terminal()
@@ -244,6 +257,39 @@ test("choice health rejects an aborted request after admission and finishes its 
   const context = await fixture()
   context.hooks.read = async () => { await Promise.resolve(); context.controller.abort() }
   expect(await context.observe(choice)).toEqual([])
+  expect(context.admitted).toHaveLength(1)
+  context.terminal()
+})
+
+test("choice health cannot publish with a registered fence whose current snapshots are unavailable", async () => {
+  const context = await fixture()
+  delete context.driver.currentSnapshots
+  expect(await context.observe(choice)).toEqual([])
+  expect(context.admitted).toHaveLength(1)
+  context.terminal()
+})
+
+test("choice health requires the original final snapshot transaction", async () => {
+  const context = await fixture()
+  delete context.driver.transactionAll
+  expect(await context.observe(choice)).toEqual([])
+  expect(context.admitted).toHaveLength(1)
+  context.terminal()
+})
+
+test("choice health rejects a fence persistence method replaced during an awaited read", async () => {
+  const context = await fixture()
+  const persistence = context.sources[choice]!.choice!.fence.persistence
+  const original = persistence.transaction
+  let replaced = false
+  context.hooks.read = async () => {
+    if (replaced) return
+    await Promise.resolve()
+    replaced = true
+    persistence.transaction = (surface, work, options) => original(surface, work, options)
+  }
+  expect(await context.observe(choice)).toEqual([])
+  expect(replaced).toBe(true)
   expect(context.admitted).toHaveLength(1)
   context.terminal()
 })

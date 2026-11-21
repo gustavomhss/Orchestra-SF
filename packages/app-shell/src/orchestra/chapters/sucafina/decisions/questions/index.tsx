@@ -54,7 +54,11 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
     const ref = caseRef()
     setUi({ recipients: [], recipientState: active ? "loading" : "unavailable",
       phase: "editing", proposal: undefined, text: "", criterion: "", recipient: "", questionId: "" })
-    if (!active || !ref || !sfOperationReady(active.context, "collaboration.recipients")) return
+    if (!active || !ref) return
+    if (!sfOperationReady(active.context, "collaboration.recipients")) {
+      setUi("recipientState", "unavailable")
+      return
+    }
     const controller = new AbortController()
     onCleanup(() => controller.abort())
     void createSfCollaborationClient(active.transport)["collaboration.recipients"](
