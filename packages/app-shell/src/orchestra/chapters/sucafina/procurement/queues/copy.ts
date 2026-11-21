@@ -1,7 +1,7 @@
 /**
  * W12 leaf copy fragment. I00 registers it in the shared typed dictionaries;
- * W12 never edits the shared i18n registry. Legacy producer labels retain their
- * original English in pt-BR until a pinned translation is available (COPY-01).
+ * Wave four adds approved pt-BR labels in this leaf. Original English producer
+ * labels remain unchanged; registration continues to use the shared dictionary.
  */
 export const SF_U10_QUEUE_COPY = {
   "sf.u10.queue.caption": "Procurement requests",
@@ -45,5 +45,40 @@ export const SF_U10_QUEUE_COPY = {
 export type SfU10QueueCopyKey = keyof typeof SF_U10_QUEUE_COPY
 
 export const SF_U10_QUEUE_COPY_BR: Record<SfU10QueueCopyKey, string> = {
-  ...SF_U10_QUEUE_COPY,
+  "sf.u10.queue.caption": "Pedidos de compras",
+  "sf.u10.queue.filters": "Filtros",
+  "sf.u10.queue.group": "Fila",
+  "sf.u10.queue.group.waitingForYou": "Aguardando você",
+  "sf.u10.queue.group.waitingForOthers": "Aguardando outros",
+  "sf.u10.queue.group.unassigned": "Não atribuído",
+  "sf.u10.queue.all": "Todos",
+  "sf.u10.queue.search": "Buscar",
+  "sf.u10.queue.request": "Pedido",
+  "sf.u10.queue.valueBasis": "Base do valor",
+  "sf.u10.queue.moneySentence": "Valores do pedido",
+  "sf.u10.queue.subject": "Assunto",
+  "sf.u10.queue.status": "Status",
+  "sf.u10.queue.stage": "Decisão",
+  "sf.u10.queue.holder": "Responsável",
+  "sf.u10.queue.waiting": "Em espera desde",
+  "sf.u10.queue.next": "Próxima etapa",
+  "sf.u10.queue.amount": "Valor",
+  "sf.u10.queue.reason": "Motivo",
+  "sf.u10.queue.version": "Versão",
+  "sf.u10.queue.unassigned": "Não atribuído",
+  "sf.u10.queue.unresolvedHolder": "Responsável não identificado",
+  "sf.u10.queue.days": "dias",
+  "sf.u10.queue.noTitle": "Indisponível",
+  "sf.u10.queue.status.draft": "Rascunho de requisição",
+  "sf.u10.queue.status.pr_pending": "Aprovação da requisição",
+  "sf.u10.queue.status.pr_rejected": "Requisição rejeitada",
+  "sf.u10.queue.status.sourcing": "Sourcing",
+  "sf.u10.queue.status.src_pending": "Aprovação de sourcing",
+  "sf.u10.queue.status.src_rejected": "Sourcing rejeitado",
+  "sf.u10.queue.status.po_draft": "Rascunho de ordem de compra",
+  "sf.u10.queue.status.po_pending": "Aprovação da ordem de compra",
+  "sf.u10.queue.status.po_rejected": "Ordem de compra rejeitada",
+  "sf.u10.queue.status.po_approved": "Ordem de compra aprovada",
+  "sf.u10.queue.status.po_issued": "Emitida internamente",
+  "sf.u10.queue.status.cancelled": "Cancelado",
 }

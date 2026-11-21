@@ -400,6 +400,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
                 }>
                   <SfChangeReview
                     {...reviewProps()!}
+                    busy={view.busy}
                     onConfirm={(admitted) => { void save(admitted) }}
                     onRevise={closeReview}
                     onCancel={closeReview}

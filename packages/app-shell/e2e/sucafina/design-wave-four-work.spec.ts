@@ -166,7 +166,7 @@ waveFourTest("native work, private search and existing saved views use their adm
       version: 2, view: { ...view, title: revised, density: "compact" },
     } })
     await page.setViewportSize({ width: 1440, height: 1100 })
-    await enter(page, owner, new URL("/orchestra/sf-work/views/" + view.id, installation.origin).href, "Saved views")
+    await enter(page, owner, new URL("/orchestra/sf-work/views/r_" + Buffer.from(view.id, "utf8").toString("base64url"), installation.origin).href, "Saved views")
     await expect(editor.getByLabel("Name", { exact: true })).toHaveValue(revised)
     await expect(editor.getByLabel("Density", { exact: true })).toHaveValue("compact")
     await capture(page, info, "UI32-light-desktop-confirmed-view-readback")

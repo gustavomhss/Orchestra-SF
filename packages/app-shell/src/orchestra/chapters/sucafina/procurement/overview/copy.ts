@@ -1,5 +1,5 @@
 // CAP24 frozen headings + literal existing Dashboard/Procurement source labels.
-// All non-CAP24 keys retain the pinned legacy English on pt-BR by COPY-01.
+// Wave four completes the approved pt-BR presentation; existing English remains literal.
 export const SF_N21_OVERVIEW_COPY = {
   "sf.cap24.title": "Dashboard",
   "sf.cap24.primary": "Open requests",
@@ -30,22 +30,22 @@ export const SF_N21_OVERVIEW_COPY_BR = {
   "sf.cap24.primary": "Abrir pedidos",
   "sf.n21.sourceTotals": "Totais da fonte",
   "sf.n21.sourceCoverage": "Cobertura da fonte",
-  "sf.n21.request": "Request",
+  "sf.n21.request": "Pedido",
   "sf.n21.status": "Status",
-  "sf.n21.amount": "Amount",
-  "sf.n21.open": "Open requests in this status filter",
-  "sf.n21.approvedOpex": "Approved OPEX",
-  "sf.n21.approvedCapex": "Approved CAPEX",
-  "sf.n21.issuedOpex": "Issued internally OPEX",
-  "sf.n21.issuedCapex": "Issued internally CAPEX",
-  "sf.n21.knownSubtotal": "Known subtotal",
+  "sf.n21.amount": "Valor",
+  "sf.n21.open": "Pedidos abertos neste filtro de status",
+  "sf.n21.approvedOpex": "OPEX aprovado",
+  "sf.n21.approvedCapex": "CAPEX aprovado",
+  "sf.n21.issuedOpex": "OPEX emitido internamente",
+  "sf.n21.issuedCapex": "CAPEX emitido internamente",
+  "sf.n21.knownSubtotal": "Subtotal conhecido",
   "sf.n21.stock": "Status",
-  "sf.n21.holder": "Approval holder",
-  "sf.n21.aging": "Aging",
+  "sf.n21.holder": "Responsável pela aprovação",
+  "sf.n21.aging": "Tempo em espera",
   "sf.n21.filter": "Status",
-  "sf.n21.all": "All",
-  "sf.n21.noMatch": "No matching purchase orders",
-  "sf.n21.clear": "Clear filters",
-  "sf.n21.next": "Open requests",
-  "sf.n21.none": "Unavailable"
+  "sf.n21.all": "Todos",
+  "sf.n21.noMatch": "Nenhuma ordem de compra corresponde aos filtros",
+  "sf.n21.clear": "Limpar filtros",
+  "sf.n21.next": "Abrir pedidos",
+  "sf.n21.none": "Indisponível"
 } as const
