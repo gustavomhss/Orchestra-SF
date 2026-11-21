@@ -60,6 +60,11 @@ export function uniqueSupplier(page: Cap27PageOk, ref: string) {
 /** Snapshot equality is an invalidation check, never an authorization grant. */
 export function supplierRevision(page: Cap27PageOk, ref: string): string | null {
   const record = uniqueSupplier(page, ref), version = supplierVersion(page, ref)
-  if (!record || version === null) return null
-  return JSON.stringify({ record, version, stamp: page.context, selection: page.value.selection, actions: page.value.allowedActionIds })
+  const selection = page.value.selection
+  if (!record || version === null || selection.supplier !== undefined && selection.supplier !== ref) return null
+  // The confirmation can narrow a list to the same reviewed supplier.
+  const filters = Object.entries(selection).filter(([key]) => key !== "supplier")
+    .toSorted(([left], [right]) => left.localeCompare(right))
+  return JSON.stringify({ record, version, stamp: page.context,
+    selection: { ...Object.fromEntries(filters), supplier: ref }, actions: page.value.allowedActionIds })
 }
