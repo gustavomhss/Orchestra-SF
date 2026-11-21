@@ -7,11 +7,12 @@
     "createdFrom": "dev",
     "baseCommit": "948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1",
     "nativeFrontendPresent": true,
-    "latestDevInspected": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
+    "latestDevInspected": "65ec572f32ef635478198750bf733e8f7c13d086",
     "latestDevNativeFrontendPresent": true,
     "nativeFrontendPresentInDevBase": false,
-    "synchronizedDevCommit": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
-    "reviewedProductCommit": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff"
+    "synchronizedDevCommit": "1fd255026dec8e1db1f4342f7ec206a6812b42ea",
+    "reviewedProductCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76",
+    "latestDevInspectionScope": "Compatibility declarations; synchronized base is recorded separately"
   },
   "source": {
     "branch": "dev",
@@ -45,24 +46,26 @@
     "inventory": "Matched all route-registry surface IDs and existing component blobs; no runtime claim",
     "sourceTreeTruncated": false,
     "targetPackagesTreeTruncated": false,
-    "build": "PASS: real native Web bundle in final installed Playwright run 44886474787",
-    "typecheck": "PASS: application and E2E, run 44886478223",
-    "tests": "PASS: required installed first-wave journey, run 44886474787",
-    "screenshots": "17 real browser JPEGs + canonical PNG artifacts",
-    "currentDevRouteInventory": "70 unique surfaces, 165 route patterns, 15 chapters; zero missing or extra entries on the current native registry",
+    "build": "PASS: real native Web bundle, run 44913429642",
+    "typecheck": "PASS: application and E2E, run 44913434039",
+    "tests": "PASS: installed first-wave and Portuguese journey, run 44913429642",
+    "screenshots": "28 real browser JPEGs + canonical PNG attachments",
     "browserActualZoom": "NOT_MEASURED",
     "guards": {
-      "run": 44886478223,
+      "run": 44913434039,
       "errors": 0,
       "warnings": 2,
       "approved": 0
     },
     "palette": {
-      "run": 44886478223,
+      "run": 44913434039,
       "generatedFilesUnchanged": 7
     },
-    "visualReview": "Bounded peer review completed; see VALIDATION.md",
-    "userAcceptance": "PENDING_USER_REVIEW"
+    "visualReview": "Root and three workers reviewed actual captured states; see VALIDATION.md",
+    "userAcceptance": "PENDING_SECOND_COMPOSITION_REVIEW",
+    "currentCandidateInventory": "70 surfaces and75 component entrypoints verified in current candidate tree; route-registry blob unchanged",
+    "currentCandidateRouteInventory": "70 surfaces,165 route patterns,15 chapters; original route-registry blob unchanged",
+    "localeScope": "en-US desktop dark/light, short/narrow; pt-BR desktop dark including decision editor/review; native date format not qualified"
   },
   "surfaces": [
     {
@@ -79,17 +82,17 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx",
-          "blobSha": "81d4dd0c878f8b8a7a3a36a1eea8d668d714f69f"
+          "blobSha": "f83d1b9df785a6c2abaae2d5d032e3c7f1da0687",
+          "previousBlobSha": "81d4dd0c878f8b8a7a3a36a1eea8d668d714f69f"
         }
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
+      "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
-        "workerCommit": "73b7e5bbd7b378fdfdd3a64d79442a2447ee0a60",
-        "patch": "wave-one/03-executive/candidate.patch",
-        "productCommit": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff"
+        "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
+        "workerCommit": "615b97f78f9ff6e279f899e834024f98e88ddded",
+        "productCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76"
       },
       "presentInCandidate": true
     },
@@ -1024,7 +1027,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
-          "blobSha": "44803cde2bf10c35e91e4754ec56b7ae4243530a"
+          "blobSha": "881c8d4ec6c2f20cc7d19ea57ba1efbe8566fd90",
+          "previousBlobSha": "44803cde2bf10c35e91e4754ec56b7ae4243530a"
         }
       ],
       "presentInTargetDev": true,
@@ -1074,17 +1078,17 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
-          "blobSha": "3f777bf0485a5e4d27b716d3e0d40291953f2021"
+          "blobSha": "924d5acb95903da0434c5e87ede48a1a87805e45",
+          "previousBlobSha": "3f777bf0485a5e4d27b716d3e0d40291953f2021"
         }
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
+      "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
-        "workerCommit": "1a317384bd0dcef67c924e5056dc059edfcf547b",
-        "patch": "wave-one/01-today/candidate.patch",
-        "productCommit": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff"
+        "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
+        "workerCommit": "27746dbefb71e3257e387fab4800f729e2dbc162",
+        "productCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76"
       },
       "presentInCandidate": true
     },
@@ -1189,17 +1193,17 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/cases/index.tsx",
-          "blobSha": "a22b650d1388545a58f165fb0ca91c70d84071b2"
+          "blobSha": "1ddc7778d2b56c0fcd7342b14b1b875b3df8f307",
+          "previousBlobSha": "a22b650d1388545a58f165fb0ca91c70d84071b2"
         }
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
+      "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
-        "workerCommit": "2f87d4637b127056495a5ab46cca864f64d0b10c",
-        "patch": "wave-one/02-cases/candidate.patch",
-        "productCommit": "41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff"
+        "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
+        "workerCommit": "7d86706bdf0185a8e9b48fb3d9b1c16fa0969655",
+        "productCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76"
       },
       "presentInCandidate": true
     },
@@ -1790,7 +1794,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
-          "blobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
+          "blobSha": "48f3bc53be4559e55ed684a84cacd22db38e9402",
+          "previousBlobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
         }
       ],
       "presentInTargetDev": true,
@@ -1815,7 +1820,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
-          "blobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
+          "blobSha": "48f3bc53be4559e55ed684a84cacd22db38e9402",
+          "previousBlobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
         }
       ],
       "presentInTargetDev": true,
@@ -1848,7 +1854,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
-          "blobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
+          "blobSha": "48f3bc53be4559e55ed684a84cacd22db38e9402",
+          "previousBlobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
         }
       ],
       "presentInTargetDev": true,
@@ -1881,7 +1888,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
-          "blobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80"
+          "blobSha": "429dc4c18fe3efda69462552b448680f75834ee5",
+          "previousBlobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80"
         }
       ],
       "presentInTargetDev": true,
@@ -1906,7 +1914,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
-          "blobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80"
+          "blobSha": "429dc4c18fe3efda69462552b448680f75834ee5",
+          "previousBlobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80"
         }
       ],
       "presentInTargetDev": true,
@@ -1931,7 +1940,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
-          "blobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80"
+          "blobSha": "429dc4c18fe3efda69462552b448680f75834ee5",
+          "previousBlobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80"
         }
       ],
       "presentInTargetDev": true,
@@ -2163,7 +2173,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
-          "blobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
+          "blobSha": "48f3bc53be4559e55ed684a84cacd22db38e9402",
+          "previousBlobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
         }
       ],
       "presentInTargetDev": true,
@@ -2226,7 +2237,55 @@
     }
   ],
   "firstWaveDelivery": {
-    "status": "IMPLEMENTED_VERIFIED_READY_FOR_USER_VISUAL_REVIEW",
+    "status": "SECOND_COMPOSITION_VERIFIED_AWAITING_USER_REVIEW",
+    "appliedToProduct": true,
+    "summary": "WAVE-ONE.md",
+    "workers": [
+      {
+        "surface": "UI29",
+        "agent": "redesign_today",
+        "branch": "sf-redesign-today",
+        "initial": "fcfad9f0debed19e1b422adc376557fffb667067",
+        "commit": "27746dbefb71e3257e387fab4800f729e2dbc162",
+        "visualCorrection": "a1041bc58f499de4292732fe0f12a2a93898abd3"
+      },
+      {
+        "surface": "UI33",
+        "agent": "redesign_cases",
+        "branch": "sf-redesign-cases",
+        "initial": "f78645e94f432323f14005a0c1259ff96e66c646",
+        "commit": "7d86706bdf0185a8e9b48fb3d9b1c16fa0969655"
+      },
+      {
+        "surface": "CAP01",
+        "agent": "redesign_executive",
+        "branch": "sf-redesign-exec",
+        "initial": "b6b32946e0e25c7e338c987f79ae5ca95f370f1c",
+        "commit": "615b97f78f9ff6e279f899e834024f98e88ddded",
+        "visualCorrection": "8b5f5516a34dac29c36b3343282b82733882c43d"
+      }
+    ],
+    "appliedToBranch": "sf-design-polish",
+    "currentStatusDocument": "VALIDATION.md",
+    "productCommit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76",
+    "evidence": "evidence/manifest.json",
+    "gallery": "evidence/README.md",
+    "followups": [
+      "Forecast band and independent Today columns with compact metadata",
+      "Focused decision editing/review, draft-preserving Back/Resume and completed Portuguese labels",
+      "Executive label/value rows isolated from shared four-column CSS, compact navigation and readable source review"
+    ]
+  },
+  "historicalSource": {
+    "branch": "sf-join-four",
+    "commit": "fdeb988881c927f952a2d9fd5b8002c892f56635",
+    "readOnly": true,
+    "routeRegistry": "packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts",
+    "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
+    "nativeTree": "dcabe802724db8173607a011bd2f049b04514c03"
+  },
+  "previousDelivery": {
+    "status": "REJECTED_BY_USER",
     "appliedToProduct": true,
     "summary": "WAVE-ONE.md",
     "workers": [
@@ -2265,14 +2324,35 @@
       "Narrow Today resume uses full-width identity and action; CAP01 user-count review displays localized counts without a currency warning"
     ],
     "evidence": "evidence/manifest.json",
-    "gallery": "evidence/README.md"
+    "gallery": "evidence/README.md",
+    "verification": {
+      "inventory": "Matched all route-registry surface IDs and existing component blobs; no runtime claim",
+      "sourceTreeTruncated": false,
+      "targetPackagesTreeTruncated": false,
+      "build": "PASS: real native Web bundle in final installed Playwright run 44886474787",
+      "typecheck": "PASS: application and E2E, run 44886478223",
+      "tests": "PASS: required installed first-wave journey, run 44886474787",
+      "screenshots": "17 real browser JPEGs + canonical PNG artifacts",
+      "currentDevRouteInventory": "70 unique surfaces, 165 route patterns, 15 chapters; zero missing or extra entries on the current native registry",
+      "browserActualZoom": "NOT_MEASURED",
+      "guards": {
+        "run": 44886478223,
+        "errors": 0,
+        "warnings": 2,
+        "approved": 0
+      },
+      "palette": {
+        "run": 44886478223,
+        "generatedFilesUnchanged": 7
+      },
+      "visualReview": "Bounded peer review completed; see VALIDATION.md",
+      "userAcceptance": "REJECTED_BY_USER"
+    }
   },
-  "historicalSource": {
-    "branch": "sf-join-four",
-    "commit": "fdeb988881c927f952a2d9fd5b8002c892f56635",
-    "readOnly": true,
-    "routeRegistry": "packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts",
+  "candidateSource": {
+    "commit": "245e15bf10b5c5287fa9338aa98d0adb28aeda76",
+    "nativeTree": "5d1c1cc68ebed049ac0f3c6da34c8d8c885f3263",
     "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
-    "nativeTree": "dcabe802724db8173607a011bd2f049b04514c03"
+    "routeRegistryUnchanged": true
   }
 }

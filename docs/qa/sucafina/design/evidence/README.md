@@ -1,71 +1,80 @@
-# Galeria — primeiras três telas nativas da Sucafina
+# Galeria — retrabalho das três telas nativas da Sucafina
 
-Capturas **reais do Chromium**, executando o bundle nativo e uma instalação autêntica. Dados isolados de teste, identificados na própria interface; idioma inglês. As imagens são os JPEGs originais emitidos pelo navegador, sem recorte, retoque ou reconstrução.
+Segunda versão após a rejeição da primeira entrega. Estas são **capturas reais do Chromium**, executando a aplicação nativa com uma instalação autêntica e dados isolados de teste. Os JPEGs são os próprios arquivos emitidos pelo navegador, sem recorte, retoque ou reconstrução.
 
-Produto: `41ea32b657ed2a9c170e544ac76ed6ecaaefe1ff`, branch [`sf-design-polish`](https://github.com/gustavomhss/Orchestra-SF/tree/sf-design-polish).
+Produto: [`245e15bf10b5c5287fa9338aa98d0adb28aeda76`](https://github.com/gustavomhss/Orchestra-SF/commit/245e15bf10b5c5287fa9338aa98d0adb28aeda76) · branch [`sf-design-polish`](https://github.com/gustavomhss/Orchestra-SF/tree/sf-design-polish).
 
-Execução [44886474787](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44886474787) · job `136792735083` · snapshot `c273ef9bee8ce9fe8761a5437bcb6dd3589bdd72` · **PASS, 1 teste, sem retries, 3,2 min**. [Verificações de tipos/regras/paletas](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44886478223) também passaram.
+**PASS:** [jornada real 44913429642](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44913429642), 1 teste, sem retries, 2,5 min · [tipos, regras e paletas 44913434039](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44913434039), 4 verificações. As 28 imagens têm origem e hashes registrados no [manifesto](manifest.json). [Resultados e limites completos](../VALIDATION.md).
 
 ## 1. Hoje — UI29
 
-Cartões de atenção/riscos alinhados, previsão com números comparáveis e retomada de trabalho com hierarquia clara.
+Previsão compacta com a fonte na linha do título. Atenção e retomada ocupam a coluna principal; riscos e rotinas ficam ao lado, com alturas independentes.
 
-![Hoje no tema escuro](UI29-dark-desktop-test-data.jpg)
+![Hoje em português](UI29-pt-BR-dark-desktop-test-data.jpg)
 
-[Ver tema claro](UI29-light-desktop-test-data.jpg) · [Ver tela estreita](UI29-dark-390-test-data.jpg) · [Ver retomada estreita](UI29-dark-390-resume-test-data.jpg) · [Ver mensagens de disponibilidade](UI29-dark-desktop-source-availability-test-data.jpg)
+[Janela de 1440×800](UI29-dark-1440x800-test-data.jpg) · [Tema claro](UI29-light-desktop-test-data.jpg) · [390px](UI29-dark-390-test-data.jpg) · [Retomada estreita](UI29-dark-390-resume-test-data.jpg)
 
-## 2. Casos / Decisões — UI33
+## 2. Decisões — UI33
 
-Filtro e atualização na mesma faixa, registros com identidade legível e uma ação principal explícita.
+Lista, busca e atualização na mesma superfície, com o objetivo em destaque e a referência recolhida.
 
-![Casos no tema escuro](UI33-dark-desktop-test-data.jpg)
+![Lista de decisões em português](UI33-pt-BR-dark-desktop-test-data.jpg)
 
-[Ver tema claro](UI33-light-desktop-test-data.jpg) · [Ver lista a 320 px](UI33-light-320-test-data.jpg)
+A criação ocupa uma área de até 760px. A lista fica oculta enquanto o formulário está aberto; voltar preserva o rascunho e a ação Retomar rascunho o restaura.
 
-### Criação e revisão
+![Criação de decisão em português](UI33-pt-BR-dark-desktop-editor-test-data.jpg)
 
-Campos alinhados, critérios numerados e confirmação/cancelamento inteiros no rodapé.
+A revisão substitui os campos e apresenta uma única confirmação explícita.
 
-![Criação e revisão de caso](UI33-dark-desktop-review-actions-test-data.jpg)
+![Revisão de decisão em português](UI33-pt-BR-dark-desktop-inline-review-test-data.jpg)
 
-[Ver revisão a 320 px](UI33-light-320-inline-review-test-data.jpg)
+[Tema claro](UI33-light-desktop-test-data.jpg) · [Lista em 320px](UI33-light-320-test-data.jpg) · [Revisão e ações em 320px](UI33-light-320-inline-review-test-data.jpg) · [Menu nativo de acesso](UI33-dark-desktop-access-menu-test-data.jpg)
 
-## 3. Dashboard Executivo — CAP01
+## 3. Visão executiva — CAP01
 
-Navegação, controles e métricas no mesmo eixo. Valores financeiros conservam origem e período; ausências não são promovidas a zero.
+Filtros em uma barra compacta, financeiro e tabela juntos, indicadores em linhas de rótulo/valor e revisão organizada do editor.
 
-![Dashboard Executivo no tema escuro](CAP01-dark-desktop-test-data.jpg)
+![Visão executiva em português](CAP01-pt-BR-dark-desktop-test-data.jpg)
 
-[Ver tema claro](CAP01-light-desktop-test-data.jpg) · [Ver topo e filtros a 320 px](CAP01-light-320-test-data.jpg) · [Ver sinais](CAP01-dark-desktop-signals-test-data.jpg)
+[Indicadores de pessoas e entrega](CAP01-dark-desktop-people-test-data.jpg) · [Sinais](CAP01-dark-desktop-signals-test-data.jpg) · [Revisão de 128 para 129 usuários](CAP01-dark-desktop-inline-review-test-data.jpg) · [Tema claro](CAP01-light-desktop-test-data.jpg) · [320px](CAP01-light-320-test-data.jpg)
 
-### Revisão do editor
+## Todas as capturas
 
-A instalação fornece 128 usuários; o teste prepara 129, revisa, cancela e descarta. Não salva a alteração do Executivo.
+| Tela | Estado | Idioma | Tema | Viewport CSS | Imagem |
+| --- | --- | --- | --- | --- | --- |
+| UI33 | Menu de contexto e acesso | en-US | dark | 1440×1100 | [Abrir](UI33-dark-desktop-access-menu-test-data.jpg) |
+| UI33 | Editor da decisão | en-US | dark | 1440×1100 | [Abrir](UI33-dark-desktop-editor-test-data.jpg) |
+| UI33 | Revisão da criação | en-US | dark | 1440×1100 | [Abrir](UI33-dark-desktop-inline-review-test-data.jpg) |
+| UI33 | Revisão e ações completas | en-US | dark | 1440×1100 | [Abrir](UI33-dark-desktop-review-actions-test-data.jpg) |
+| UI29 | Tela principal | en-US | dark | 1440×1100 | [Abrir](UI29-dark-desktop-test-data.jpg) |
+| UI29 | Retomada de trabalho | en-US | dark | 1440×1100 | [Abrir](UI29-dark-desktop-resume-test-data.jpg) |
+| UI29 | Disponibilidade de fontes | en-US | dark | 1440×1100 | [Abrir](UI29-dark-desktop-source-availability-test-data.jpg) |
+| UI33 | Tela principal | en-US | dark | 1440×1100 | [Abrir](UI33-dark-desktop-test-data.jpg) |
+| CAP01 | Tela principal | en-US | dark | 1440×1100 | [Abrir](CAP01-dark-desktop-test-data.jpg) |
+| CAP01 | Pessoas e eficiência | en-US | dark | 1440×1100 | [Abrir](CAP01-dark-desktop-people-test-data.jpg) |
+| CAP01 | Sinais de atenção | en-US | dark | 1440×1100 | [Abrir](CAP01-dark-desktop-signals-test-data.jpg) |
+| UI29 | Tela principal | en-US | dark | 1440×800 | [Abrir](UI29-dark-1440x800-test-data.jpg) |
+| UI33 | Tela principal | en-US | dark | 1440×800 | [Abrir](UI33-dark-1440x800-test-data.jpg) |
+| CAP01 | Tela principal | en-US | dark | 1440×800 | [Abrir](CAP01-dark-1440x800-test-data.jpg) |
+| UI29 | Tela principal | en-US | light | 1440×1100 | [Abrir](UI29-light-desktop-test-data.jpg) |
+| UI33 | Tela principal | en-US | light | 1440×1100 | [Abrir](UI33-light-desktop-test-data.jpg) |
+| CAP01 | Tela principal | en-US | light | 1440×1100 | [Abrir](CAP01-light-desktop-test-data.jpg) |
+| UI33 | Tela principal | en-US | light | 320×1100 | [Abrir](UI33-light-320-test-data.jpg) |
+| CAP01 | Tela principal | en-US | light | 320×1100 | [Abrir](CAP01-light-320-test-data.jpg) |
+| UI33 | Revisão da criação | en-US | light | 320×1100 | [Abrir](UI33-light-320-inline-review-test-data.jpg) |
+| UI29 | Tela principal | en-US | dark | 390×1100 | [Abrir](UI29-dark-390-test-data.jpg) |
+| UI29 | Retomada de trabalho | en-US | dark | 390×1100 | [Abrir](UI29-dark-390-resume-test-data.jpg) |
+| CAP01 | Revisão de 128 para 129 usuários | en-US | dark | 1440×1100 | [Abrir](CAP01-dark-desktop-inline-review-test-data.jpg) |
+| UI29 | Tela principal | pt-BR | dark | 1440×1100 | [Abrir](UI29-pt-BR-dark-desktop-test-data.jpg) |
+| UI33 | Tela principal | pt-BR | dark | 1440×1100 | [Abrir](UI33-pt-BR-dark-desktop-test-data.jpg) |
+| UI33 | Editor da decisão | pt-BR | dark | 1440×1100 | [Abrir](UI33-pt-BR-dark-desktop-editor-test-data.jpg) |
+| UI33 | Revisão da criação | pt-BR | dark | 1440×1100 | [Abrir](UI33-pt-BR-dark-desktop-inline-review-test-data.jpg) |
+| CAP01 | Tela principal | pt-BR | dark | 1440×1100 | [Abrir](CAP01-pt-BR-dark-desktop-test-data.jpg) |
 
-![Revisão da contagem de usuários](CAP01-dark-desktop-inline-review-test-data.jpg)
+## Como interpretar a evidência
 
-## Todas as imagens e proveniência
+Os textos dos registros, critérios e valores de status pertencem aos dados de teste/fonte e podem continuar em inglês. Os rótulos e instruções capturados em português usam o catálogo pt-BR. O controle de data é nativo do navegador; a imagem mostra seu formato e a revisão mantém ISO, sem qualificação completa de apresentação regional de datas.
 
-| Imagem | Tela / estado | Viewport CSS | Tema |
-| --- | --- | --- | --- |
-| [UI33-dark-desktop-inline-review-test-data.jpg](UI33-dark-desktop-inline-review-test-data.jpg) | Criação de caso · revisão aberta | 1440 × 1100 | dark |
-| [UI33-dark-desktop-review-actions-test-data.jpg](UI33-dark-desktop-review-actions-test-data.jpg) | Criação de caso · painel e rodapé completos | 1440 × 1100 | dark |
-| [UI29-dark-desktop-test-data.jpg](UI29-dark-desktop-test-data.jpg) | Hoje · topo e principais cartões | 1440 × 1100 | dark |
-| [UI29-dark-desktop-resume-test-data.jpg](UI29-dark-desktop-resume-test-data.jpg) | Hoje · retomada | 1440 × 1100 | dark |
-| [UI29-dark-desktop-source-availability-test-data.jpg](UI29-dark-desktop-source-availability-test-data.jpg) | Hoje · disponibilidade das fontes | 1440 × 1100 | dark |
-| [UI33-dark-desktop-test-data.jpg](UI33-dark-desktop-test-data.jpg) | Casos · lista e filtro | 1440 × 1100 | dark |
-| [CAP01-dark-desktop-test-data.jpg](CAP01-dark-desktop-test-data.jpg) | Executivo · período e finanças | 1440 × 1100 | dark |
-| [CAP01-dark-desktop-signals-test-data.jpg](CAP01-dark-desktop-signals-test-data.jpg) | Executivo · sinais de atenção | 1440 × 1100 | dark |
-| [UI29-light-desktop-test-data.jpg](UI29-light-desktop-test-data.jpg) | Hoje · tema claro | 1440 × 1100 | light |
-| [UI33-light-desktop-test-data.jpg](UI33-light-desktop-test-data.jpg) | Casos · tema claro | 1440 × 1100 | light |
-| [CAP01-light-desktop-test-data.jpg](CAP01-light-desktop-test-data.jpg) | Executivo · tema claro | 1440 × 1100 | light |
-| [UI33-light-320-test-data.jpg](UI33-light-320-test-data.jpg) | Casos · lista a 320 CSS px | 320 × 1100 | light |
-| [CAP01-light-320-test-data.jpg](CAP01-light-320-test-data.jpg) | Executivo · topo e período a 320 CSS px | 320 × 1100 | light |
-| [UI33-light-320-inline-review-test-data.jpg](UI33-light-320-inline-review-test-data.jpg) | Casos · rodapé de revisão a 320 CSS px | 320 × 1100 | light |
-| [UI29-dark-390-test-data.jpg](UI29-dark-390-test-data.jpg) | Hoje · topo a 390 CSS px | 390 × 1100 | dark |
-| [UI29-dark-390-resume-test-data.jpg](UI29-dark-390-resume-test-data.jpg) | Hoje · retomada e disponibilidade a 390 CSS px | 390 × 1100 | dark |
-| [CAP01-dark-desktop-inline-review-test-data.jpg](CAP01-dark-desktop-inline-review-test-data.jpg) | Executivo · revisão de 128 para 129 usuários | 1440 × 1100 | dark |
+As imagens estreitas demonstram reflow a 320/390 CSS px, não zoom real de 200%/400%. A imagem do rodapé estreito é rolada para tornar as ações visíveis. As demais 67 superfícies continuam apenas inventariadas.
 
-Os PNGs canônicos ficam no artefato da execução, sujeito à retenção do GitHub Actions. Estes JPEGs permanecem versionados nesta branch. O [manifesto](manifest.json) associa cada arquivo ao blob Git, viewport, tema e execução original.
-
-A largura de 320/390 CSS px é evidência de redistribuição do layout, não de zoom real a 200%/400%. A captura estreita do Executivo mostra o topo/controles; a revisão estreita de Casos mostra a parte inferior e as ações. Nenhuma aprovação de usuário ou de baseline visual é presumida. [Cobertura e limites completos](../VALIDATION.md).
+A primeira entrega permanece no histórico do Git. Esta galeria apresenta a nova versão para revisão; testes e revisão técnica não significam aprovação visual pelo usuário, merge ou deployment.
