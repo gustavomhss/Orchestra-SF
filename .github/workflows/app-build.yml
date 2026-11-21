@@ -1,4 +1,5 @@
 name: app-build
+run-name: Azure Entra package proof from dev
 
 on:
   workflow_dispatch:
@@ -10,7 +11,7 @@ on:
         default: ""
 
 concurrency:
-  group: app-build
+  group: azure-entra-package-proof
   cancel-in-progress: false
 
 permissions:
@@ -22,17 +23,17 @@ defaults:
 
 jobs:
   build:
-    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/dev'"
+    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/azure-package-proof'"
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - name: Select revision
         id: source
         env:
-          REQUESTED_REVISION: ${{ inputs.revision || github.sha }}
+          REQUESTED_REVISION: ${{ inputs.revision }}
         run: |
           set -euo pipefail
-          if [[ ! "$REQUESTED_REVISION" =~ ^[0-9a-f]{40}$ ]]; then
+          if [[ "$REQUESTED_REVISION" != "44fcdb84f065d5f9ccd990e980ab99fd85a0c3d4" ]]; then
             printf '%s\n' "revision rejected" >&2
             exit 1
           fi
@@ -74,79 +75,159 @@ jobs:
           rustup show active-toolchain || rustup toolchain install
           cargo build --locked --release -p hugr-omni-node -p omni-supervisor
 
-      - name: Qualify web native distribution
-        id: qualify
+      - name: Build Linux CLI at the selected dev SHA
         working-directory: apps/cli
         env:
           SOURCE_REVISION: ${{ steps.source.outputs.sha }}
-          ORCHESTRA_OMNI_CONTROL: suite
-          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+          ORCHESTRA_CHANNEL: dev
         run: |
           set -euo pipefail
-          observed="$(git rev-parse HEAD)"
-          if [[ "$observed" != "$SOURCE_REVISION" ]]; then
-            printf '%s\n' "HEAD is not the selected revision" >&2
-            exit 1
-          fi
-          if [[ ! -f ./test/distribution-web-native.test.ts ]]; then
-            printf '%s\n' "qualifier missing" >&2
-            exit 1
-          fi
-          nonce="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
-          export ORCHESTRA_OMNI_CONTROL_NONCE="$nonce"
-          bun test ./test/distribution-web-native.test.ts --timeout 1800000
+          test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
+          models="$RUNNER_TEMP/azure-entra-models.json"
+          curl --fail --silent --show-error --max-time 60 --retry 2 https://models.dev/api.json --output "$models"
+          jq -e 'type == "object" and length > 0' "$models" >/dev/null
+          export MODELS_DEV_API_JSON="$models"
+          ORCHESTRA_VERSION="$(jq -er '.version' package.json)"
+          export ORCHESTRA_VERSION
+          sha256sum "$models"
+          bun script/build.ts --single --skip-install --target linux-x64-baseline
 
-      - name: Check build receipt
-        id: receipt
+      - name: Build and verify the Azure Entra archive
         env:
           SOURCE_REVISION: ${{ steps.source.outputs.sha }}
-          WORKFLOW_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          node --input-type=module <<'NODE'
-          import { createHash } from "node:crypto"
-          import { readFileSync } from "node:fs"
-          const die = (label) => { process.stderr.write(label + "\n"); process.exit(1) }
-          const hex = (value, size) => typeof value === "string" && new RegExp(`^[0-9a-f]{${size}}$`).test(value)
-          const receipt = JSON.parse(readFileSync("distribution-logs/build-receipt.json", "utf8"))
-          const version = JSON.parse(readFileSync("apps/cli/package.json", "utf8")).version
-          const selected = process.env.SOURCE_REVISION ?? ""
-          const workflow = process.env.WORKFLOW_SHA ?? ""
-          if (receipt.schema !== "orchestra-web-build-proof-v1") die("schema")
-          if (receipt.repository !== "gustavomhss/Orchestra-SF") die("repository")
-          if (!hex(selected, 40) || receipt.sourceSHA !== selected) die("sourceSHA")
-          if (!hex(workflow, 40) || receipt.workflowSHA !== workflow) die("workflowSHA")
-          if (receipt.target !== "linux-x64-baseline" || receipt.manifest?.target !== "linux-x64-baseline") die("target")
-          if (receipt.version !== version || receipt.manifest?.version !== version) die("version")
-          if (!hex(receipt.modelsSha256, 64)) die("modelsSha256")
-          if (receipt.inspected !== true) die("inspected")
-          if (receipt.providerProof !== false) die("providerProof")
-          if (receipt.archive?.file !== "orchestra-sf-linux-x64-baseline.tar.gz") die("archive.file")
-          const digest = createHash("sha256").update(readFileSync("distribution-logs/orchestra-sf-linux-x64-baseline.tar.gz")).digest("hex")
-          if (digest !== receipt.archive.sha256) die("archive.sha256")
-          if (receipt.manifest?.schema !== "orchestra-distribution-v1") die("manifest.schema")
-          const files = receipt.manifest.files
-          const entry = (file) => !!file && typeof file === "object" && !Array.isArray(file) && typeof file.path === "string" && hex(file.sha256, 64) && typeof file.executable === "boolean" && !file.path.startsWith("/") && !file.path.includes("\\") && !file.path.split("/").includes("..") && !file.path.split("/").includes("")
-          if (!Array.isArray(files) || files.length < 3 || !files.every(entry)) die("files")
-          const at = (name) => files.find((file) => file.path === name)
-          const binary = at("bin/orchestra")
-          const index = at("bin/web/index.html")
-          if (!binary || binary.executable !== true) die("bin/orchestra")
-          if (!index || index.executable !== false) die("bin/web/index.html")
-          const rel = receipt.web?.asset
-          if (typeof rel !== "string" || rel === "" || rel.startsWith("/") || rel.includes("\\") || rel.split("/").includes("..") || rel.split("/").includes("")) die("web.asset")
-          const assetPath = "bin/web/" + rel
-          const asset = at(assetPath)
-          if (!asset || asset.executable !== false || !assetPath.endsWith(".js") || assetPath === "bin/web/index.html") die("web.asset")
-          if (!hex(receipt.web.indexSha256, 64) || receipt.web.indexSha256 !== index.sha256 || receipt.web.assetSha256 !== asset.sha256) die("web.sha256")
-          NODE
+          archive_dir="$RUNNER_TEMP/azure-entra-package"
+          bun apps/cli/script/azure-entra-package.ts --dist "$PWD/apps/cli/dist" --out "$archive_dir" --source-sha "$SOURCE_REVISION"
+          filename=orchestra-sf-entra-linux-x64-baseline.tar.gz
+          observed="$(sha256sum "$archive_dir/$filename" | cut -d' ' -f1)"
+          expected="$(jq -er '.archiveSha256' "$archive_dir/orchestra-sf-entra-package-receipt.json")"
+          test "$observed" = "$expected"
+          python3 -B sf/azure/vm/install-factory-distribution.py verify \
+            --artifact "$archive_dir/$filename" --receipt "$archive_dir/orchestra-sf-entra-package-receipt.json" \
+            --candidate "$SOURCE_REVISION" --sha256 "$observed"
+          printf '%s  %s\n' "$observed" "$filename" > "$archive_dir/SHA256SUMS"
 
-      - name: Upload distribution logs
-        id: upload
-        if: success()
+      - name: Select the release in a temporary installation root
+        env:
+          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+        run: |
+          set -euo pipefail
+          archive_dir="$RUNNER_TEMP/azure-entra-package"
+          vm="$RUNNER_TEMP/azure-entra-vm"
+          mkdir -m 0755 "$vm"
+          tarball=orchestra-sf-entra-linux-x64-baseline.tar.gz
+          receipt=orchestra-sf-entra-package-receipt.json
+          digest="$(jq -er '.archiveSha256' "$archive_dir/$receipt")"
+          sudo install -m 0644 "$archive_dir/$tarball" "$archive_dir/$receipt" "$vm/"
+          sudo python3 -B - "$PWD/sf/azure/vm/install-factory-distribution.py" "$vm" "$SOURCE_REVISION" "$digest" "$tarball" "$receipt" <<'PY'
+          from argparse import Namespace
+          from contextlib import redirect_stdout
+          import importlib.util
+          import io
+          import json
+          from pathlib import Path
+          import sys
+
+          source, vm, candidate, digest, artifact, receipt = sys.argv[1:]
+          root = Path(vm)
+          spec = importlib.util.spec_from_file_location("factory_installer", source)
+          installer = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(installer)
+          installer.RELEASES = root / "releases"
+          installer.CURRENT = root / "current"
+          installer.LOCK = root / "installer.lock"
+          # Hosted CI exercises activation on temporary paths with no systemd or Caddy.
+          installer.vm_preflight = lambda *args, **kwargs: None
+          args = Namespace(candidate=candidate, artifact=str(root / artifact), receipt=str(root / receipt),
+                           sha256=digest, fqdn="sf.example.test", apply=False, dry_run=True)
+          def invoke():
+              output = io.StringIO()
+              with redirect_stdout(output):
+                  installer.install(args)
+              print(output.getvalue().strip())
+              return json.loads(output.getvalue())
+          assert invoke()["result"] == "DRY_RUN_NO_WRITES"
+          assert not installer.RELEASES.exists() and not installer.CURRENT.is_symlink() and not installer.LOCK.exists()
+          args.apply, args.dry_run = True, False
+          result = invoke()
+          assert result["result"] == "INSTALLED_NOT_STARTED_CADDY_STILL_503" and not result["idempotent"]
+          assert installer.CURRENT.readlink() == installer.RELEASES / candidate
+          assert invoke()["idempotent"]
+          PY
+          cmp apps/cli/dist/cli-linux-x64-baseline/bin/orchestra "$vm/current/bin/orchestra"
+
+      - name: Exercise installed Entra ingress on loopback
+        env:
+          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+        run: |
+          set -euo pipefail
+          export CI_RUNTIME="$RUNNER_TEMP/azure-entra-runtime"
+          mkdir -m 0700 "$CI_RUNTIME"
+          export CI_PORT
+          CI_PORT="$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1])')"
+          export CI_PROOF
+          CI_PROOF="$(openssl rand -hex 32)"
+          bun --eval '
+            import { mkdir, writeFile } from "node:fs/promises"
+            import { join } from "node:path"
+            import { prepareLocalConfiguration } from "./modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
+            const root = process.env.CI_RUNTIME
+            const directory = join(root, "installation")
+            const workspaceDirectory = join(root, "workspace")
+            const file = await prepareLocalConfiguration(directory)
+            await mkdir(workspaceDirectory, { mode: 0o700 })
+            const port = process.env.CI_PORT
+            await writeFile(file, JSON.stringify({
+              version: 1, deployment: "azure-https", authentication: "microsoft",
+              origin: "https://sf.example.test", listenerOrigin: "http://127.0.0.1:" + port,
+              ingressOrigin: "http://sf-ingress.example.test:" + port, mount: "/sucafina",
+              tenantId: "11111111-1111-4111-8111-111111111111", clientId: "22222222-2222-4222-8222-222222222222",
+              workspaceDirectory, groups: { dashboard: {}, planner: {}, procurement: {} }, grants: [], scanner: null,
+            }))
+            await writeFile(join(directory, "client-secret.txt"), "synthetic-ci-package", { mode: 0o600 })
+            await writeFile(join(directory, "ingress-secret.txt"), process.env.CI_PROOF, { mode: 0o600 })
+          '
+          installed="$RUNNER_TEMP/azure-entra-vm/current/bin"
+          config="$CI_RUNTIME/installation"
+          cd "$CI_RUNTIME/workspace"
+          env -i PATH="$PATH" HOME="$CI_RUNTIME" \
+            XDG_DATA_HOME="$config/host-data" XDG_CONFIG_HOME="$config/host-config" \
+            XDG_CACHE_HOME="$config/host-cache" XDG_STATE_HOME="$config/host-state" \
+            TMPDIR="$config/host-tmp" ORCHESTRA_CONFIG_DIR="$config/host-config" \
+            ORCHESTRA_CREDENTIAL_KEY_FILE="$config/host-credential.key" ORCHESTRA_DB="$config/host-data/orchestra.db" \
+            ORCHESTRA_INHERIT_CREDENTIALS=0 ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict \
+            SUCAFINA_MICROSOFT_CONFIG="$config/installation.json" \
+            "$installed/orchestra" serve --hostname 127.0.0.1 --port "$CI_PORT" --installation "$installed/local/entry.mjs" \
+            >"$CI_RUNTIME/server.log" 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
+          url="http://127.0.0.1:$CI_PORT/sucafina/dashboard"
+          host="Host: sf-ingress.example.test:$CI_PORT"
+          request() { curl --silent --show-error --max-time 2 --noproxy '*' -o /dev/null -w '%{http_code}' "$@"; }
+          for _ in {1..60}; do
+            if status="$(request "$url" -H "$host" 2>/dev/null)"; then break; fi
+            if ! kill -0 "$server" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          if [[ "$status" != 403 ]]; then
+            cat "$CI_RUNTIME/server.log"
+            printf 'Expected HTTP 403 without ingress proof, observed %s\n' "$status" >&2
+            exit 1
+          fi
+          test "$(request "$url" -H "$host" -H "x-sf-ingress-proof: invalid")" = 403
+          test "$(request "$url" -H "x-sf-ingress-proof: $CI_PROOF")" = 403
+          status="$(request "$url" -H "$host" -H "x-sf-ingress-proof: $CI_PROOF" -D "$CI_RUNTIME/headers")"
+          test "$status" = 303
+          tr -d '\r' <"$CI_RUNTIME/headers" | grep -ix 'location: /sucafina/auth/login'
+          printf '{"sourceSHA":"%s","temporaryInstall":true,"anonymousRedirect":303,"rejectedIngress":403,"liveTenantProof":false}\n' \
+            "$SOURCE_REVISION" >"$RUNNER_TEMP/azure-entra-package/ci-validation.json"
+
+      - name: Upload the validated package and receipt
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: orchestra-sf-linux-${{ steps.source.outputs.sha }}
-          path: distribution-logs
+          name: orchestra-sf-entra-linux-${{ steps.source.outputs.sha }}
+          path: ${{ runner.temp }}/azure-entra-package
           if-no-files-found: error
           retention-days: 7
+          compression-level: 0
