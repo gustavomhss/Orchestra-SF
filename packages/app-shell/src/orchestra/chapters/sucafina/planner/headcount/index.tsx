@@ -409,7 +409,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
       >
         <Show when={state.page}>
           {(page) => (
-            <div class="sf-u08" data-sf-surface="CAP20" data-sf-polish="planner" hidden={!!currentReview()}>
+            <div class="sf-u08" data-sf-surface="CAP20" data-sf-polish="planner" data-sf-wave="four" hidden={!!currentReview()}>
               <div class="sf-u08-toolbar">
                 <label>{t("sf.u08.version")}
                   <select value={page().data.selectedVersion?.id ?? ""}
@@ -627,7 +627,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
       </SfStatePanel>
       <Show when={state.error}><p role="status" class="sf-u08-message">{state.error}</p></Show>
       <Show when={currentReview()}>
-        {(current) => <div class="sf-u08-review" data-sf-polish="planner">
+        {(current) => <div class="sf-u08-review" data-sf-polish="planner" data-sf-wave="four">
           <p>{t("sf.u08.reviewChange")}</p>
           <Show when={current().kind === "sync"}><p>{t("sf.u08.noRoster")}</p></Show>
           <SfChangeReview

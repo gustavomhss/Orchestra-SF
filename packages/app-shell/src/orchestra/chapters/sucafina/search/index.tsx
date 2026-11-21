@@ -180,7 +180,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
       layout="reading"
       onLayoutMode={() => undefined}
     >
-      <div class="sf-search" data-sf-surface="UI31" data-sf-polish="planner">
+      <div class="sf-search" data-sf-surface="UI31" data-sf-polish="planner" data-sf-wave="four">
       <section class="sf-search-query" aria-labelledby="sf-u42-query">
         <h2 id="sf-u42-query">{t(key("sf.ui31.query"))}</h2>
         <Show when={owner.state().status === "ready" && !privateRouteReady()}>

@@ -499,7 +499,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
         onRetryRead={refresh}
         onBack={() => { setScreen("selected", null); setScreen("state", "ready") }}
       >
-        <div class="sf-n20-allocations" data-sf-surface="CAP21" data-sf-polish="planner">
+        <div class="sf-n20-allocations" data-sf-surface="CAP21" data-sf-polish="planner" data-sf-wave="four">
           <div class="sf-n20-reading" hidden={!!currentValue() || !!screen.intent || !!screen.selected}>
           <p>{language.t("sf.cap21.shared")}</p>
           <div class="sf-n20-toolbar">

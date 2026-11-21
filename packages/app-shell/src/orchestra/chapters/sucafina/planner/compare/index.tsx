@@ -198,7 +198,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
         onRetryRead={model.refresh}>
         <Show when={model.view.page}>
           {(inventory) => (
-            <section class="sf-u46-compare" data-sf-surface="CAP23-compare" data-sf-polish="planner">
+            <section class="sf-u46-compare" data-sf-surface="CAP23-compare" data-sf-polish="planner" data-sf-wave="four">
               <SfContextBar
                 state={model.view.state}
                 selection={[{ control: "year", optionId: year() === undefined ? null : String(year()) }]}

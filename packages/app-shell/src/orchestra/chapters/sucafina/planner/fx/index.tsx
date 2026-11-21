@@ -430,7 +430,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       density="comfortable" layout="work" onLayoutMode={() => undefined}
     >
       <SfStatePanel state={state()} messageKey={key(message())} onRetryRead={refresh}>
-        <div class="sf-n20-fx" data-sf-surface="CAP22" data-sf-polish="planner">
+        <div class="sf-n20-fx" data-sf-surface="CAP22" data-sf-polish="planner" data-sf-wave="four">
           <div class="sf-n20-fx-reading" hidden={!!currentValue() || !!screen.intent}>
           <div class="sf-n20-fx-toolbar">
             <label>

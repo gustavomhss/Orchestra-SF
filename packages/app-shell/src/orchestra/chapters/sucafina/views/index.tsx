@@ -339,7 +339,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
       layout="work"
       onLayoutMode={() => undefined}
     >
-      <div class="sf-saved-views" data-sf-surface="UI32" data-sf-polish="planner" data-sf-views-stage={reviewKind() ? "review" : screen.detail ? "editor" : "list"}>
+      <div class="sf-saved-views" data-sf-surface="UI32" data-sf-polish="planner" data-sf-wave="four" data-sf-views-stage={reviewKind() ? "review" : screen.detail ? "editor" : "list"}>
       <section class="sf-saved-view-collection" aria-labelledby="sf-u43-legacy">
         <h2 id="sf-u43-legacy">{t(key("sf.ui32.legacy"))}</h2>
         <p>{t(key("sf.ui32.legacyDescription"))}</p>

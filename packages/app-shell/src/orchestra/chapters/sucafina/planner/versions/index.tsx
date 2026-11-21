@@ -510,7 +510,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
         onRetryRead={model.refresh}>
         <Show when={page()}>
           {(loaded) => (
-            <section class="sf-u46" data-sf-surface="CAP23" data-sf-polish="planner" data-sf-version-stage={screen.review ? "review" : props.route.kind}>
+            <section class="sf-u46" data-sf-surface="CAP23" data-sf-polish="planner" data-sf-wave="four" data-sf-version-stage={screen.review ? "review" : props.route.kind}>
               <SfContextBar
                 state={model.view.state}
                 selection={[{ control: "year", optionId: year() === undefined ? null : String(year()) }]}
