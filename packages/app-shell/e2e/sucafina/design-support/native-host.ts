@@ -21,7 +21,7 @@ if (Object.keys(process.env).some((key) => key.startsWith("VITE_")))
   throw new Error("Native capture build must not inherit Vite server overrides")
 
 const secondWave = process.argv[3] === "two"
-const thirdWave = process.argv[3] === "three"
+const thirdWave = process.argv[3] === "three" || process.argv[3] === "four"
 const now = new Date()
 const year = now.getUTCFullYear()
 const month = now.getUTCMonth() + 1
