@@ -92,7 +92,7 @@ export function SfTeamWebApp() {
   })
 
   return (
-    <div class="mx-auto flex min-h-screen max-w-3xl flex-col gap-8 p-6"
+    <div class="mx-auto flex h-full w-full max-w-3xl flex-col gap-8 overflow-y-auto p-6"
       data-sf-teams-shell data-sf-teams-state={state().status}
       data-sf-team-selected={selected()?.profile.teamObjectId}>
       <header class="flex items-center justify-between gap-4">

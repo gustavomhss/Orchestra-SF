@@ -145,7 +145,7 @@ if (import.meta.env.VITE_SENTRY_DSN) {
 
 if (root instanceof HTMLElement) {
   void loadInitialLocale().then((locale) => {
-    if (isSucafinaBrand()) {
+    if (isSucafinaBrand() && document.documentElement.dataset.sfTeamWeb === "1") {
       clearAuthToken()
       render(() => (
         <PlatformProvider value={platform}>
