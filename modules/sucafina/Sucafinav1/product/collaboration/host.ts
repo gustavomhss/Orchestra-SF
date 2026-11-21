@@ -264,7 +264,13 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
         () => authority.readHistoricalSources(basis.evidenceRefs, context))
       if (!replayCurrent()) return false
       return batched ?? authorizeHistoricalBasis(basis, context)
-    }, human: input.human, fence: createCollaborationMutationFence(input.host), target: input.creationTarget, threadHistoryWrites: input.threadHistoryWrites }) : undefined
+    },
+    prepareEditReceipt: async (thread, basis, context, current) => {
+      const recipient = thread.recipientRef
+      if (!recipient || !current() || !await authority.readRecipient(recipient, context) || !current()) return undefined
+      return prepareReplyContinuity(basis.evidenceRefs, context, current)
+    },
+    human: input.human, fence: createCollaborationMutationFence(input.host), target: input.creationTarget, threadHistoryWrites: input.threadHistoryWrites }) : undefined
   const storageVersion = async (namespace: "threads" | "relations" | "confirmations", context: TrustedDomainContext): Promise<PortResult<number>> => {
     const request = input.host.requestFor(context)
     if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "collaboration-state-unavailable" }
