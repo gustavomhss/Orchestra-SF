@@ -379,7 +379,7 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
 }
 
 /** Observe transport only: never serialize headers, bodies, cookies or query values. */
-function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "review-agenda" | "review-report" | "review-read" | "review-download" = "review-agenda", method: "GET" | "POST" = "POST") {
+export function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "review-agenda" | "review-report" | "review-read" | "review-download" | "collaboration-answer-prepare-message" = "review-agenda", method: "GET" | "POST" = "POST") {
   const expected = new URL(app.dashboardURL)
   const started = Date.now()
   const entries: Record<string, unknown>[] = []
@@ -397,7 +397,7 @@ function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "rev
         samePath: url.pathname === expected.pathname,
         route: url.pathname === expected.pathname ? "dashboard" :
           /\/auth\/(?:login|logout|local)$/.test(url.pathname) ? "authentication" : "other",
-        mode: mode && mode.length <= 64 && /^review(?:-[a-z]+)*$/.test(mode) ? mode : mode === null ? "absent" : "other",
+        mode: mode && mode.length <= 64 && (/^(?:review|collaboration)(?:-[a-z]+)*$/.test(mode)) ? mode : mode === null ? "absent" : "other",
       }
     } catch { return { sameOrigin: false, samePath: false, route: "invalid", mode: "other" } }
   }
@@ -454,7 +454,7 @@ function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "rev
       }
       if (entries.some((entry) => entry.kind === "requestfailed"))
         console.info("SF_REPORTS_TRANSPORT_FAILURE", JSON.stringify(observation))
-      await info.attach(`reports-${mode.slice("review-".length)}-transport`, {
+      await info.attach(`reports-${mode.replace(/^review-/, "")}-transport`, {
         contentType: "application/json", body: JSON.stringify(observation, null, 2),
       }).catch(() => undefined)
     },

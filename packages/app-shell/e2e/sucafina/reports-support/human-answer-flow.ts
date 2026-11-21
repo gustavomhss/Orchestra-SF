@@ -6,7 +6,7 @@ import type { ReportsInstallation } from "./production-installation.ts"
 import type { ReportsCorpus } from "./corpus.ts"
 import { expectConfirmedReviewAnswer, expectCreatedReviewQuestion, expectEditedReviewAnswer, expectPreparedReviewAnswer, expectRepliedReviewQuestion, reportsCollaboration } from "./confirmation.ts"
 import type { ReportsCollaboration, ReviewAnswer, ReviewBasis, ReviewPin } from "./confirmation.ts"
-import { expectCapturedBudget } from "./review-flow.ts"
+import { expectCapturedBudget, observeReviewTransport } from "./review-flow.ts"
 import { recoverLostReplyResponse } from "./lost-reply-response.ts"
 import { recoverFailedEditRequest } from "./failed-edit-request.ts"
 import { recoverLostEditResponse } from "./lost-edit-response.ts"
@@ -85,8 +85,17 @@ export async function confirmSubmittedHumanAnswer(page: Page, app: ReportsInstal
   await expect(discussion.getByRole("status")).toHaveText("Reply saved in this preserved review.")
   const article = discussion.getByRole("article", { name: `Message ${message.id}`, exact: true })
   await expect(article).toContainText(message.body)
-  const prepared = await test.step("Prepare the exact human reply for inspection", () =>
-    submit(page, app, article.getByRole("button", { name: "Review this answer", exact: true }), "collaboration-answer-prepare-message"))
+  const prepared = await test.step("Prepare the exact human reply for inspection", async () => {
+    const mode = "collaboration-answer-prepare-message"
+    const transport = observeReviewTransport(page, app, mode)
+    const pending = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
+    try {
+      await article.getByRole("button", { name: "Review this answer", exact: true }).click()
+      return await observed(await Promise.race([pending, transport.failed]), mode)
+    } finally {
+      await transport.finish(info)
+    }
+  })
   expect(prepared.payload).toEqual({ questionId: question.id, messageId: message.id, incarnation: message.incarnation, version: message.version })
   const answer = expectPreparedReviewAnswer(question, message, prepared.value)
   expect(answer.projection).toEqual(captured)
@@ -122,7 +131,7 @@ export async function confirmSubmittedHumanAnswer(page: Page, app: ReportsInstal
   await expectConfirmedAnswerVisible(page, answer)
   await info.attach("human-answer-confirmation", { body: JSON.stringify({
     questionId: question.id, messageId: message.id, incarnation: message.incarnation, version: message.version,
-    reviewContext: pin, basis, answerRef: answer.answerRef, receipt: receipt.receipt,
+    reviewContext: pin, basis: question.basis, answerRef: answer.answerRef, receipt: receipt.receipt,
     route: "installed Review controls and authenticated collaboration producers",
     uiConfirmationButton: "executed against the exact displayed server observation",
     recipientScope: "the legitimately enrolled local operator",
