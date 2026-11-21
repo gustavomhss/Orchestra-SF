@@ -18,6 +18,7 @@ import { enumerateSfSources } from "../../../../product/integration/source-inven
 import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
 import { resolvePlannerScenarioBatch } from "../../../../product/planner/scenario-comparison-port.ts"
+import type { AssetPersistence } from "../../../../runtime/assets.ts"
 import { rows } from "../../../../runtime/contract.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
@@ -33,11 +34,18 @@ test("Finance uses the wired coverage pair and closes on revocation or source ch
   const at = "2027-02-02T00:00:00Z", period = { start: "2027-01-01", end: "2027-12-31" }
   const physical = new AsyncLocalStorage<boolean>()
   const control: { active: boolean; counts?: Counts; afterRoot?: () => Promise<void> } = { active: true }
-  const transaction = store.transaction, all = store.transactionAll, root = store.readSnapshotRoot
-  store.transaction = (surface, work, options) => {
+  const assets: AssetPersistence = store
+  const transaction = assets.transaction, all = store.transactionAll, root = store.readSnapshotRoot
+  const currentSnapshots = store.currentSnapshots
+  if (!all || !root || !currentSnapshots) {
+    await deadline.close()
+    throw new Error("Finance fixture requires multi-surface transactions and snapshot-root reads")
+  }
+  const observeTransaction: AssetPersistence["transaction"] = (surface, work, options) => {
     if (control.counts && !physical.getStore()) control.counts.physical++
     return transaction(surface, (...args) => physical.run(true, () => work(...args)), options)
   }
+  store.transaction = observeTransaction
   store.transactionAll = (work, options) => {
     if (control.counts && !physical.getStore()) control.counts.physical++
     return all((...args) => physical.run(true, () => work(...args)), options)
@@ -51,7 +59,7 @@ test("Finance uses the wired coverage pair and closes on revocation or source ch
     const after = control.afterRoot
     control.afterRoot = undefined
     if (after && control.counts) control.counts.afterClose = { root: control.counts.roots, work: control.counts.work,
-      outside: !physical.getStore() && store.currentSnapshots() === undefined }
+      outside: !physical.getStore() && currentSnapshots() === undefined }
     await after?.()
     return value
   }
@@ -60,15 +68,16 @@ test("Finance uses the wired coverage pair and closes on revocation or source ch
   const request = () => new Request("https://example.test/planner", { method: "POST", signal: deadline.signal, headers: { origin: "https://example.test" } })
   const identity = { installationId: "finance-installation", hostId: "host", projectId: "project",
     location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
+  const proposalCoverageWrites = new WeakSet<object>()
   const authority = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId, origin: "https://example.test",
-    policyVersion: "finance-policy", persistence, grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
+    policyVersion: "finance-policy", persistence, proposalCoverageWrites, grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
       operations: ["sf_scenario_simulate", "sf_evidence_get"], humanActions: [] }],
     authenticate: async (_request, scope) => control.active && scope ? { id: "person", canWrite: true,
       roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null,
     environment: async () => ({ at, id: randomUUID, directory: [] }), createId: randomUUID, now: Date.now,
     commandIdentity: async () => randomUUID(), inspectSession: async () => undefined, verifySelection: async () => false,
     verifySkillReceipt: async () => false, providerGeneration: async () => 1, authorizeDocument: async () => undefined })
-  const business = createSfBusinessServices({ authority, persistence })
+  const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
   deadline.own(() => business.dispose())
   try {
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
