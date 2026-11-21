@@ -333,8 +333,16 @@ export async function restoreBackup(
   confirmed: boolean,
   expectedVersion: number,
   at: string,
+  corporate?: {
+    retain: (current: Snapshot, checkpoint: Snapshot) => {
+      verifyBlobReplacement: (existing: Uint8Array | undefined, restored: Uint8Array) => void
+      apply: (data: Snapshot["data"]) => void
+    }
+    verifyCurrent: () => Promise<boolean>
+  },
 ) {
-  if (!actor.canWrite || !actor.roles.includes("admin")) return { ok: false as const, status: 403 }
+  if (!actor.canWrite || !actor.roles.includes("admin") || corporate && !await corporate.verifyCurrent())
+    return { ok: false as const, status: 403 }
   if (!confirmed) return { ok: false as const, status: 422 }
   const archive = await source.load(surface, id)
   if (!archive) return { ok: false as const, status: 404 }
@@ -348,15 +356,16 @@ export async function restoreBackup(
         value: {
           ok: false as const,
           status: 409,
-          stored: structuredClone(snapshot.data),
-          by: snapshot.versions.dataset?.by,
+          ...(corporate ? {} : { stored: structuredClone(snapshot.data), by: snapshot.versions.dataset?.by }),
         },
       }
+    const retention = corporate?.retain(snapshot, recovered)
     // Verify every retained blob's actual size and SHA; the adapter keeps all puts private until commit.
     for (const blob of manifest.blobs) {
       const bytes = await source.readBlob(surface, id, blob.key)
       if (!bytes || bytes.byteLength !== blob.bytes || createHash("sha256").update(bytes).digest("hex") !== blob.sha256)
         throw new Error("Missing or corrupt private backup blob")
+      if (retention) retention.verifyBlobReplacement(await blobs.get(blob.key), bytes)
       await blobs.put(blob.key, bytes, "application/octet-stream")
     }
     const previous = structuredClone(snapshot.data)
@@ -367,6 +376,7 @@ export async function restoreBackup(
     const jobState = snapshot.data.localJobState
     const currentStore = record(snapshot.data.store)
     snapshot.data = structuredClone(recovered.data)
+    retention?.apply(snapshot.data)
     delete snapshot.data.noticeDelivery
     delete snapshot.data.noticeClaims
     delete snapshot.data.noticeSchedule
@@ -408,10 +418,12 @@ export async function restoreBackup(
       who: actor.id,
       at,
       record: "dataset",
-      was: previous,
-      became: structuredClone(snapshot.data),
+      was: corporate ? { datasetVersion: expectedVersion } : previous,
+      became: corporate ? { datasetVersion: expectedVersion + 1 } : structuredClone(snapshot.data),
     })
     // Existing delivery history and pending notices are not replayed by restoring an older dataset.
+    if (corporate && !await corporate.verifyCurrent())
+      return { commit: false, value: { ok: false as const, status: 403 as const } }
     return { commit: true, value: { ok: true as const } }
   })
 }
