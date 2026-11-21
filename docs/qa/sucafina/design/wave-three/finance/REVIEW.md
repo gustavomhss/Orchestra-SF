@@ -164,3 +164,15 @@ CAP19 stopped on an incorrect test expectation, before its project editor. The o
 The English and Portuguese journey now verifies Not specified/Não informada and the two absent investment dates, including the disabled empty approval placeholder in the editor. It still changes only description, confirms the real original command, and freshly re-enters the native surface to verify the persisted description. The command's existing changed-field mapper omits untouched absent project fields rather than fabricating an approval or investment window.
 
 The sixth execution is required to verify the strengthened sticky-cell regression and complete CAP19's remaining project/line states and Portuguese capture. This run reached 30 of the 35 planned states; CAP05, CAP14, CAP17 and CAP18 account for 28 completed states, and CAP19 reached its monthly and project-list states before the assertion stopped the journey.
+
+
+## Sixth real Actions critique
+
+Run [44946398674](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44946398674), job 136974566786, passed the strengthened grid assertions: December was visible, line identity and currency occupied separate sticky columns, Home brought January outside both sticky boundaries, and focus stayed on the grid. Direct inspection of the dark December and light January captures confirmed opaque, legible metadata and intact monthly values. CAP19 then reached its desktop/narrow project cards and narrow project editor with the admitted approval/date absences correctly displayed.
+
+This run stopped on a test-matcher mismatch, before project confirmation. The log resolved the actual native option as <option value="" disabled>, but the generic toBeDisabled matcher reported enabled for that option. Both English and Portuguese assertions now inspect the native HTMLOptionElement.disabled property directly using toHaveJSProperty("disabled", true). The product markup and control behavior remain unchanged.
+
+Forty captures were emitted with no console or page errors. The remaining execution must still complete CAP19 description save/fresh read, line/spread review and pt-BR editor capture. There are no further pending product adjustments from the inspected states.
+
+
+Before the next run, the project-save response assertion was checked against the unchanged endpoint and transport: runtime/application.ts returns HTTP200 with top-level { ok: true, warnings?: ... } on an accepted domain command; SfDomainCommandCap19Save declares LegacyResult at POST {mount}/planner with fixed page CAPEX/action save; the client forwards that operation and the transport decodes its output without inventing a nested receipt. The browser assertion therefore checks response.ok() and the actual top-level ok:true, followed by an independent persisted-description read.
