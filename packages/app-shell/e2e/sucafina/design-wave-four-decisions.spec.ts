@@ -1,7 +1,6 @@
 import { expect, type Page, type Request, type TestInfo } from "@playwright/test"
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
-import { waveThreeData } from "./design-support/wave-three-data"
 import {
   waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop,
 } from "./design-support/wave-four"
@@ -157,8 +156,8 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await openScreen(page, owner, screens[1]!)
     const board = page.locator(".sf-decision-compare-board")
     await expect(board.locator("article")).toHaveCount(2)
-    await expect(board.getByRole("heading", { name: waveThreeData.planner.version, exact: true })).toBeVisible()
-    await expect(board.getByRole("heading", { name: waveThreeData.planner.comparison, exact: true })).toBeVisible()
+    await expect(board.getByRole("heading", { name: waveFourDecisionsData.plannerBaseline, exact: true })).toBeVisible()
+    await expect(board.getByRole("heading", { name: waveFourDecisionsData.plannerCandidate, exact: true })).toBeVisible()
     for (const alternative of source.alternatives) {
       const card = board.locator("article").filter({ has: page.getByRole("heading", { name: alternative.title, exact: true }) })
       await expect(card.locator(".sf-decision-amount")).toContainText(String(alternative.result.knownSubtotal))

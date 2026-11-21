@@ -37,13 +37,13 @@ The typed F02 transport owns identity for POST read operations and rejects an ex
 
 `seedWaveFourDecisions(installed, year): Promise<void>` runs after the native host starts. `installed.request` is the real authenticated original boundary. It uses:
 
-1. BI01 `bi-options` and `bi-data` to obtain emitted evidence from the existing wave-three Planner versions.
+1. BI01 `bi-options` and `bi-data` to obtain emitted evidence from two small canonical Planner versions in the isolated Decisions fixture.
 2. `sf_case_draft` to create two human-authored test cases.
 3. `decision-edit` to attach those sources and two explicitly open assumptions.
 4. `decision-coverage` to register pending categories, then `decision-promote` for two alternatives.
 5. `decision-criteria`, `decision-compare` and `decision-choose` to record a conditioned choice.
 
-No snapshot projection, authorization, model, source archive, choice request, prepared change or receipt is inserted directly. The two original Planner versions are read without changing their financial values.
+No snapshot projection, authorization, model, source archive, choice request, prepared change or receipt is inserted directly. The pre-start `seedWaveFourDecisionsPlanner` hook creates two empty versions through Versions/save and copy, then adds one USD service line through OPEX/save and closes month 1 through the producer. This is used only by `four-decisions`; the other wave-four journeys retain their richer Planner data.
 
 The executable Playwright journey covers all eight surfaces in dark and light desktop, 390px English and pt-BR desktop; 320px comparison and pt-BR question review are additional stress cases. It exercises:
 
@@ -59,7 +59,7 @@ Screenshots and source-count evidence are written by the shared Actions capture 
 
 ## Validation status and limits
 
-**Source reviewed; browser and type checks have not been executed by this child agent.** The repository/user workflow permits execution only through consolidated GitHub Actions, owned by the integration agent. Screenshots do not yet exist in this branch and visual approval is not claimed.
+**Source reviewed; Actions attempts reached the real producer setup, but browser qualification is still pending.** The repository/user workflow permits execution only through consolidated GitHub Actions, owned by the integration agent. Initial runs reached native-ready and successfully created sources/cases/alternatives; run 44956714182 then exceeded the fixture's 40-second request boundary at decision-compare against the large Planner demonstration. The fixture now uses the small, canonical service scenario also exercised by the existing C17 journey, without enlarging that timeout. Screenshots do not yet exist in this branch and visual approval is not claimed.
 
 This fixture does not provide an Atlas archive admitting current-choice recalculation. It does not prepare a domain application, so UI39 apply/recovery and UI40 populated receipt detail need a separate canonically admitted source setup for runtime qualification. These paths are preserved and styled, but are not marked browser-proven.
 

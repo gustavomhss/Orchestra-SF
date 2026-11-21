@@ -2,7 +2,9 @@ import { randomUUID } from "node:crypto"
 import type { BusinessEvidenceRef } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/business-context"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
 import type { DecisionCase } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
-import { waveThreeData } from "./wave-three-data"
+import type { Actor, Command, Environment, Snapshot } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract"
+import { rows } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract"
+import { PlannerModule } from "../../../../../modules/sucafina/Sucafinav1/runtime/planner"
 import { waveFourDecisionsData } from "./wave-four-decisions-data"
 
 type Installed = { request(pathname: string, init?: RequestInit): Promise<Response> }
@@ -36,6 +38,35 @@ async function responseBody(response: Response, mode: string) {
     console.error("Canonical Decisions seed response failed: " + mode + " HTTP " + response.status + " " +
       (error instanceof Error ? error.message : "unclassified response"))
     throw error
+  }
+}
+
+/**
+ * Pre-start hook for the isolated four-decisions fixture, instead of the larger
+ * Planner demonstration. The original domain creates both empty versions and
+ * accepts the one USD service line; no stored business record is manufactured.
+ */
+export function seedWaveFourDecisionsPlanner(snapshot: Snapshot, actor: Actor, environment: Environment, year: number): void {
+  if (rows(snapshot.data.versions).length) throw new Error("The canonical Decisions Planner seed requires an empty Planner")
+  const execute = (command: Command) => {
+    const result = PlannerModule.domain.execute(snapshot, actor, command, environment)
+    if (!result.ok) throw new Error("Canonical Decisions Planner rejected " + command.page + "/" + command.action +
+      " (" + result.status + ") " + (result.errors ?? []).join("; "))
+    return result.value
+  }
+  const revision = (key: string) => snapshot.versions[key]?.version ?? 0
+  const baseline = text(execute({ page: "Versions", action: "save", version: 0, values: {} }))
+  execute({ page: "Versions", action: "save", id: baseline, version: revision("versions:" + baseline),
+    values: { name: waveFourDecisionsData.plannerBaseline, year } })
+  const candidate = text(execute({ page: "Versions", action: "copy", id: baseline, version: revision("versions:" + baseline),
+    values: { name: waveFourDecisionsData.plannerCandidate } }))
+  for (const value of [{ id: baseline, monthly: 100, annual: "1200" }, { id: candidate, monthly: 200, annual: "2400" }]) {
+    execute({ page: "OPEX", action: "save", version: 0,
+      values: { versionId: value.id, collection: "lines", name: waveFourDecisionsData.plannerService,
+        el: "licenses", cur: "USD", owner: actor.id, annual: value.annual,
+        a: [value.monthly, ...Array(11).fill(null)], f: [null, ...Array(11).fill(value.monthly)] } })
+    execute({ page: "OPEX", action: "save", version: revision(value.id + ":closed"),
+      values: { versionId: value.id, closed: 1 } })
   }
 }
 
@@ -86,7 +117,7 @@ export async function seedWaveFourDecisions(installed: Installed, year: number):
   const options = object((await get("bi-options", parameters)).value)
   const versions = list(options.versions).map(object)
   const sources: RecordEvidence[] = []
-  const titles = [waveThreeData.planner.version, waveThreeData.planner.comparison]
+  const titles = [waveFourDecisionsData.plannerBaseline, waveFourDecisionsData.plannerCandidate]
   for (const title of titles) {
     const version = versions.find((entry) => typeof entry.label === "string" && entry.label.startsWith(title + " ("))
     if (!version) throw new Error("Canonical Decisions seed cannot find the installed Planner version " + title)

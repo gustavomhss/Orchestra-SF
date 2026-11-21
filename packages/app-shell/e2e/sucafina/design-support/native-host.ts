@@ -15,7 +15,7 @@ import { DashboardPortfolio } from "../../../../../modules/sucafina/Sucafinav1/r
 import { seedWaveThreeDashboard, seedWaveThreePlanner } from "./wave-three-seed"
 import { seedWaveFourPlanner } from "./wave-four-planner-seed"
 import { seedWaveFourProcurement } from "./wave-four-procurement-seed"
-import { seedWaveFourDecisions } from "./wave-four-decisions-seed"
+import { seedWaveFourDecisions, seedWaveFourDecisionsPlanner } from "./wave-four-decisions-seed"
 import { loadLocalConfiguration } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-configuration"
 
 const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../..")
@@ -175,8 +175,11 @@ const program = Effect.scoped(Effect.gen(function* () {
       if (thirdWave) await store.transaction("planner", async (snapshot) => {
         const actor: Actor = { id: actorId, roles: ["admin"], canWrite: true }
         const environment = { at: now.toISOString(), id: randomUUID, directory: [] }
-        seedWaveThreePlanner(snapshot, actor, environment, year)
-        if (fourthWave) seedWaveFourPlanner(snapshot, actor, environment, year)
+        if (decisionsWave) seedWaveFourDecisionsPlanner(snapshot, actor, environment, year)
+        else {
+          seedWaveThreePlanner(snapshot, actor, environment, year)
+          if (fourthWave) seedWaveFourPlanner(snapshot, actor, environment, year)
+        }
         return { commit: true, value: undefined }
       })
       process.stdout.write("SF_DESIGN_STAGE procurement-seed\n")

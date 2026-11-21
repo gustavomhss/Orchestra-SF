@@ -1,5 +1,8 @@
 /** Human-authored labels for records accepted by the original producers. */
 export const waveFourDecisionsData = {
+  plannerBaseline: "Design test data · Decision baseline plan",
+  plannerCandidate: "Design test data · Decision candidate plan",
+  plannerService: "Design test data · Regional service",
   objective: "Design test data · Compare regional operating plans with explicit cost uncertainties",
   editableObjective: "Design test data · Review regional sourcing intent and evidence",
   editedObjective: "Design test data · Review regional sourcing intent, ownership and evidence",

@@ -14,10 +14,14 @@ No individual PR is intended. The parent integrates these commits into `sf-desig
 
 ## Fixture hook
 
-In `design-support/native-host.ts`, import `seedWaveFourDecisions` from `./wave-four-decisions-seed`. After `withNativeInstallation(...)` yields `installed`, before publishing browser metadata:
+In `design-support/native-host.ts`, import both `seedWaveFourDecisionsPlanner` and `seedWaveFourDecisions` from `./wave-four-decisions-seed`.
+
+In the Planner transaction, use `seedWaveFourDecisionsPlanner(snapshot, actor, environment, year)` only for `four-decisions`, instead of the larger wave-three/four Planner seeds. It requires an empty Planner and uses only the original domain.execute boundary. The two minimal versions are created first, then each receives one USD service line and a producer-owned closed month.
+
+After `withNativeInstallation(...)` yields `installed`, before publishing browser metadata:
 
 ```ts
-if (fourthWave) yield* Effect.promise(() => seedWaveFourDecisions(installed, year))
+if (decisionsWave) yield* Effect.promise(() => seedWaveFourDecisions(installed, year))
 ```
 
 Required shape:
@@ -28,9 +32,9 @@ type Installed = {
 }
 ```
 
-Return type is `Promise<void>`. Requires the canonical wave-three Planner seed to have created the version names in `waveThreeData.planner.version` and `waveThreeData.planner.comparison`. IDs and source digests come from BI01 at runtime. There are no static reference IDs.
+Post-start return type is `Promise<void>`. The pre-start hook returns void and creates the version names in `waveFourDecisionsData.plannerBaseline` and `plannerCandidate`. IDs and source digests come from BI01 at runtime. There are no static reference IDs.
 
-The browser discovers case routes from the actual UI33 list, decodes them with the product route codec and verifies the original case projections.
+Keep `waveFourTest.use({ designWave: "four-decisions" })` in this spec; other journeys run the standard four fixture. The browser discovers case routes from the actual UI33 list, lets the native route decode them, reads the admitted source reference from UI34 and verifies the original case projections.
 
 ## Files
 

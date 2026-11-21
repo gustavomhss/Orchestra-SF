@@ -36,3 +36,12 @@ All capture filenames end with `test-data`. The harness attaches PNG files and e
 The coordinator should inspect the actual emitted images for hierarchy, one-ledger composition, readable labels, source-vs-edit distinction, quiet glass, token consistency, 44 px control targets, detail/review width, narrow wrapping, scroll reachability, Portuguese text and theme contrast. No numerical “premium” score is assigned before that inspection.
 
 Actual browser zoom at 200% is not measured by this viewport exercise. The 320 px reflow assertion is reported separately. Source failures, denied-role variants, bank-secret operations and lost-response recovery remain covered by their established suites, not fabricated screenshots.
+
+## Observed run: 44956710354
+
+- Runner: [Procurement run 44956710354](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44956710354), snapshot `7dc9978ecc51cad8a544be558b0d79d3fef88c8b`.
+- Canonical procurement seed completed. The native host reached readiness about 2.3 seconds later.
+- CAP24 source assertions and dark desktop, light desktop and light 320 px captures completed. The images show the admitted source total of USD 14,800 and distinguish an unavailable estimate from a recorded zero. Ledger horizontal scrolling remains inside its own region at 320 px.
+- Visual review found no page-wide horizontal overflow or illegible labels in those three captures. It did find the financial band and ledger touching: the 24 px gap was on the root, while `SfStatePanel` adds a content wrapper. The leaf stylesheet now applies the same grid gap to that actual content wrapper. That correction still requires the next browser capture.
+- Navigation into CAP25 stopped at the host's “Sucafina route not admitted” state, with discovery and provider ready but view denied. The overview navigation also omitted Requests and Approvals. There were no page or console errors. No business write was reached, so this run does not verify any of the eleven confirmation/readback journeys.
+- Admission and host composition are owned by the coordinator; leaf assertions have not been weakened or bypassed. Review of CAP25–CAP28 and pt-BR captures remains pending a complete run.
