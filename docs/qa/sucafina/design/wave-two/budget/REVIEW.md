@@ -1,6 +1,6 @@
 # CAP03 — Budget overview, second design wave
 
-Status: IMPLEMENTED, awaiting integrated Actions and real visual inspection. This document does not grant user acceptance or claim a render that has not happened.
+Status: VISUALLY_REVIEWED_AWAITING_USER. The integrated candidate was inspected in actual browser captures. User acceptance remains pending; this review does not establish a golden-image baseline or grant user approval.
 
 ## Source and scope
 
@@ -72,4 +72,28 @@ The candidate `8acf02ec07c6e2d88af27a81190b2496f60c14d3` was checked for CAP01 i
 
 A concrete disclosure edge was corrected: a closed native details element keeps its review DOM mounted. Composition selectors now require an **open** editor disclosure before expanding its panel or hiding the other annual panel/readout. Closing the disclosure therefore restores both annual values without unmounting either draft or review. Reopening returns to the same pending review. This is a CSS-only visibility correction; the root's CAP03 source-period reset remains untouched.
 
-Real browser evidence remains pending; this finding is based on the DOM and CSS interaction, not a claimed visual run.
+At this static-review checkpoint, real browser evidence was still pending. The finding above was based on the DOM and CSS interaction. The completed browser review is recorded below.
+
+## Final visual review — integrated candidate
+
+- Product candidate: `263e694ef565376cc1af61cae0dc9e44777075b8`.
+- Actual browser journey: [Actions run 44919606458](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44919606458), [job 136892554713](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44919606458/job/136892554713).
+- Evidence: the actual `SF_DESIGN_PREVIEW` JPEG captures emitted by that real-installation journey. No generated mockup or injected-data render was used for this review.
+- Verdict: visually reviewed; no additional concrete CAP03 visual defect found that warrants another patch. User acceptance is pending.
+
+The following six images were rendered and inspected individually:
+
+| Capture name | State inspected | Finding |
+| --- | --- | --- |
+| `CAP03-dark-desktop-annual-test-data` | Selected year, source absence, current month and annual revenue | One explicit financial absence explanation; month 6 and revenue 2,400,000 remain distinct, readable and aligned in balanced panels. |
+| `CAP03-dark-desktop-review-test-data` | Month review on desktop | Active review uses the full annual band; sibling editor does not compete. Original, current and proposed snapshots align; one saturated confirmation action. |
+| `CAP03-dark-320-review-test-data` | Month review at 320 CSS pixels | Snapshot rows and actions fit the narrow layout. Values, explanatory text and all three actions are visible without overlap or clipped labels. |
+| `CAP03-pt-BR-dark-desktop-test-data` | Source-period overview in Brazilian Portuguese | Localized titles, metric labels, currency note and reports link fit. Financial values and ledger align consistently. |
+| `CAP03-pt-BR-dark-desktop-editor-test-data` | Month editor in Brazilian Portuguese | Source month 6 and draft 7 are visually distinct; the input has a visible focus ring; review and discard controls remain readable. |
+| `CAP03-pt-BR-dark-desktop-review-test-data` | Month review in Brazilian Portuguese | Original/current/proposed content and full Portuguese action labels fit; Confirmar salvamento is the sole saturated action. |
+
+The compact source navigation integrated by root removes the earlier multi-row pill layout and its excess height. This review does not change that shared navigation.
+
+The completed real-installation journey also verifies the relevant behavior: close/reopen the month disclosure while preserving proposed 7; restore source month 6 and revenue 2,400,000 while the review is collapsed; cancel and discard month/revenue edits; return to Source period through canonical owner navigation. These runtime assertions are evidence from the linked Actions run, distinct from the image observations above.
+
+No additional implementation patch, local test, build, runtime or CI run was created for this final visual review. This is a review of the candidate above, not user acceptance or baseline approval. Narrow captures demonstrate 320 CSS-pixel reflow, not browser zoom.
