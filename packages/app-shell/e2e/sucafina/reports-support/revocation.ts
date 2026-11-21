@@ -42,9 +42,13 @@ export async function revokeReportsSession(input: {
       cleanup.push(pending.cleanup)
       return pending
     }
-    const [localPending, retainedPending] = await Promise.all([
+    const [local, remote] = await Promise.allSettled([
       retain(page, "logout"), retain(retained, "retained"),
     ])
+    if (local.status === "rejected") throw local.reason
+    if (remote.status === "rejected") throw remote.reason
+    const localPending = local.value
+    const retainedPending = remote.value
     expect(retainedPending.storageVersion).toBe(localPending.storageVersion)
     expect(retainedPending.key).not.toBe(localPending.key)
     const pendingLogout = page.waitForResponse((response) => response.url() === `${app.origin}${app.mount}/auth/logout` && response.request().method() === "POST")

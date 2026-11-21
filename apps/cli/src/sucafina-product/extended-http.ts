@@ -41,6 +41,7 @@ export function createSfExtendedHttp(input: {
   const reviewCycle = createSfExtendedReviewCycle(input)
   const decisionNavigation = createSfBiDecisionNavigation(input)
   const agendaHttp = input.reviewAgenda ? createSfReviewAgendaHttp({ authority, agenda: input.reviewAgenda, origin: input.origin }) : undefined
+  const loadingMeetings = new Map<string, number>()
   const handle = async (request: Request, surface: string): Promise<Response | undefined> => {
     const diagnosticMode = new URL(request.url).searchParams.get("sf")
     const diagnosticStamp = Date.now()
@@ -94,9 +95,24 @@ export function createSfExtendedHttp(input: {
     if (admitted.status !== "ok") return json(admitted, reviewRead ? readStatus(admitted.status) : 403)
     const call = admitted.value
     let validated = false
+    let loading: string | undefined
     try {
       if (!await authority.ui.validate(call, action, digest)) return json({ status: "denied", reason: "authority-unavailable" }, 403)
       validated = true
+      if (mode === "review" && bootstrap.reviewRef && request.method === "GET") {
+        const key = digestSfValue([call.binding.installationId, call.binding.projectId,
+          call.binding.principalRef, call.binding.accessRevision, bootstrap.reviewRef])
+        const destination = request.headers.get("sec-fetch-dest")
+        if (destination === "document" && request.headers.get("sec-fetch-mode") === "navigate") {
+          loading = key
+          loadingMeetings.set(key, (loadingMeetings.get(key) ?? 0) + 1)
+        }
+        // Chromium can keep the old page's interval alive while reload waits
+        // for the producer. Its background HTML read cannot delay this same
+        // authorized meeting's navigation and separate review-read.
+        if (destination === "empty" && loadingMeetings.has(key))
+          return json({ status: "unavailable", reason: "review-loading" }, 503)
+      }
       if (mode === "review-update") {
         const reference = url.searchParams.get("reviewRef")
         if (!reference || reference.length > 2048) return json({ status: "needs-input", reason: "invalid-review-reference" }, 400)
@@ -290,7 +306,14 @@ export function createSfExtendedHttp(input: {
       if (request.signal.aborted || authorized === false || validated && authority.ui.requestFor(call) !== request)
         return json({ status: "denied", reason: "authority-unavailable" }, 403)
       return json({ status: "unavailable", reason: "review-read-unavailable" }, 503)
-    } finally { authority.ui.finish(call) }
+    } finally {
+      if (loading) {
+        const remaining = (loadingMeetings.get(loading) ?? 1) - 1
+        if (remaining) loadingMeetings.set(loading, remaining)
+        else loadingMeetings.delete(loading)
+      }
+      authority.ui.finish(call)
+    }
   }
   return (request: Request, surface: string) => input.reviews?.readScope
     ? input.reviews.readScope.run(request, () => handle(request, surface)) : handle(request, surface)

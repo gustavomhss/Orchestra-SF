@@ -418,7 +418,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       const validity = { current: true }
       const bytesIdentity = snapshotDecoderCurrent() ? scope.root.bytesIdentity : undefined
       return { snapshots, identity, bytesIdentity, current: () => {
-        validity.current &&= active() && (!bytesIdentity || snapshotDecoderCurrent()) && [...absent].every((name) => !Object.hasOwn(Object.prototype, name))
+        validity.current &&= active() && (!scope.root.bytesIdentity || snapshotDecoderCurrent()) && [...absent].every((name) => !Object.hasOwn(Object.prototype, name))
         return validity.current
       } }
     },
@@ -863,7 +863,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       requireScope(scope)
       if (integrity.failed) return false
       const valid = context.getStore() === scope && (requirement !== "unpoisoned" || !scope.root.poisoned) && sameStore() &&
-        (!bytesIdentity || snapshotDecoderCurrent()) && absent.every((field) => Object.getOwnPropertyDescriptor(Object.prototype, field) === undefined)
+        (!scope.root.bytesIdentity || snapshotDecoderCurrent()) && absent.every((field) => Object.getOwnPropertyDescriptor(Object.prototype, field) === undefined)
       if (!valid) integrity.failed = true
       return valid
     }

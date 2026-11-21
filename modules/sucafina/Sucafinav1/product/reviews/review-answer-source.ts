@@ -62,14 +62,15 @@ export function createReviewAnswerSource(input: {
       // independently obtains the current root and runs the real authority.
       let sealedDigest: string | undefined
       const matchesStoredReview = () => {
-        if (!admitted) return digestSfValue(storedReview(input.host.persistence.currentSnapshots?.()?.dashboard,
+        if (!admitted?.bytesIdentity) return digestSfValue(storedReview(input.host.persistence.currentSnapshots?.()?.dashboard,
           basis.reviewContext.reviewRef)) === lease.reviewDigest
         if (input.host !== host || host.persistence !== persistence || host.requestFor(context) !== request || request.signal.aborted ||
           basis.reviewContext.reviewRef !== reviewRef || !atomic || !readDashboard || atomic.readSealed !== readSealed ||
           persistence.dashboardSourceFence !== atomic || atomic.currentSnapshot !== readDashboard ||
           !hasSfDashboardSourceFence(persistence) || !admitted.current()) return false
         const observed = readSealed?.call(atomic)
-        if (!observed || observed.identity !== admitted.identity || !observed.current()) return false
+        if (!observed || observed.identity !== admitted.identity || observed.bytesIdentity !== admitted.bytesIdentity ||
+          !observed.current()) return false
         sealedDigest ??= digestSfValue(storedReview(readDashboard.call(persistence, "dashboard"), reviewRef))
         return sealedDigest === lease.reviewDigest && observed.current() && admitted.current()
       }
