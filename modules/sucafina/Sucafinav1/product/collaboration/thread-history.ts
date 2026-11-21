@@ -159,12 +159,14 @@ export function createThreadHistory(input: {
         [...prior.messages, ...(prior.messageRevisions ?? [])].every((entry) => digestSfValue(threadMessageContext(prior, entry)) === basisDigest)) {
         if (!installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
         const continuity = await prepareEditReceipt(prior, basis, context, installedCurrent)
-        if (!installedCurrent() || !continuity) return { status: "denied", reason: "thread-access-unavailable" }
+        if (!installedCurrent() || !await revalidate.call(host, context) || !installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
+        if (!continuity) return { status: "unavailable", reason: "thread-receipt-unavailable" }
         if (continuity !== "reissue") {
           const confirmed = await captureReceipt({ questionId: id, threadDigest: digestSfValue(revised) }, async () =>
             installedCurrent() && continuity() && await reviewFence() && continuity() &&
             await revalidate.call(host, context) && installedCurrent(), request.signal)
-          if (!confirmed || !await revalidate.call(host, context) || !installedCurrent()) return { status: "stale", reason: "thread-content-changed" }
+          if (!await revalidate.call(host, context) || !installedCurrent()) return { status: "denied", reason: "thread-access-unavailable" }
+          if (!confirmed) return { status: "unavailable", reason: "thread-receipt-unavailable" }
           return { status: "ok", value: { id, messageId, version: saved.value } }
         }
       }
