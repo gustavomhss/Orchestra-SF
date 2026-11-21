@@ -159,17 +159,14 @@ export async function expectConfirmedReviewAnswer(api: ReportsCollaboration, ans
 }
 
 /** Calling this after page/context reopen verifies reuse without a new write. */
-export async function expectReusedReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer, expectedStorageVersion?: number) {
+export async function expectReusedReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer) {
   const before = await api.version()
   const reused = await api.ok("collaboration-answer-read", { questionId: answer.questionId })
   expect(reused).toEqual({
     answerRef: answer.answerRef, answer: answer.message.body, authorRef: answer.message.authorRef,
     observedVersion: answer.observedSourceVersion, reviewContext: answer.pin,
   })
-  const after = await api.version()
-  expect(after).toBe(before)
-  if (expectedStorageVersion !== undefined)
-    expect(after, "Logout and denied reconciliation must not submit either retained reply").toBe(expectedStorageVersion)
+  expect(await api.version()).toBe(before)
   return reused
 }
 

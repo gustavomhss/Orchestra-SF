@@ -107,14 +107,15 @@ export async function revokeReportsSession(input: {
     const control = await fresh.newPage()
     await test.step("Enroll a fresh real local-operator session", () => app.signIn(control))
     const current = reportsCollaboration(control.request, app.dashboardURL)
-    const [freshReview, download, freshThread] = await test.step("Read the same review, Office bytes and answer under fresh authority", () =>
+    const [freshReview, download] = await test.step("Read the same review, Office bytes and answer under fresh authority", () =>
       Promise.all([
         readReview(control.request, app.dashboardURL, saved.id),
         control.request.get(artifact.href, { maxRedirects: 0 }),
-        current.thread(answer.questionId),
-        expectReusedReviewAnswer(current, answer, storageVersion),
+        expectReusedReviewAnswer(current, answer),
       ]))
     expect(freshReview).toEqual(saved)
+    const [freshVersion, freshThread] = await Promise.all([current.version(), current.thread(answer.questionId)])
+    expect(freshVersion, "Logout and the fresh controls must not add a reply").toBe(storageVersion)
     expect(freshThread.messages).toEqual(beforeThread.messages)
     expect(localPending.writes).toEqual([localPending.serialized])
     expect(retainedPending.writes).toEqual([retainedPending.serialized])
