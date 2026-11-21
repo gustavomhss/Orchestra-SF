@@ -93,10 +93,10 @@ export function createThreadHistory(input: {
       const authorizeSources = input.authorizeSources
       const current = () => input.state === state && state.read === readState && state.transaction === transaction && input.host === host && host.requestFor === requestFor && host.revalidate === revalidate &&
         input.read === read && input.authorizeSources === authorizeSources && requestFor.call(host, context) === request && !request.signal.aborted
-      const releaseReceipt = async (version: number, replay = false): Promise<PortResult<{ id: string; messageId: string; version: number }>> => {
+      const releaseReceipt = async (version: number, installedReview = false): Promise<PortResult<{ id: string; messageId: string; version: number }>> => {
         const loaded = await load(id, context)
         if (loaded.status !== "ok") return loaded
-        if (!current() || !await revalidate.call(host, context) || !current() || replay && (input.replayCurrent !== framework || !framework?.()) || !sameThreadReadScope(prior, loaded.value.thread)) return { status: "denied", reason: "thread-access-unavailable" }
+        if (!current() || !await revalidate.call(host, context) || !current() || installedReview && (input.replayCurrent !== framework || !framework?.()) || !sameThreadReadScope(prior, loaded.value.thread)) return { status: "denied", reason: "thread-access-unavailable" }
         if (!loaded.value.thread.messages.some((entry) => entry.id === message.id && entry.incarnation === message.incarnation && entry.version === version && entry.body === selected.body)) return { status: "stale", reason: "thread-content-changed" }
         return { status: "ok", value: { id, messageId, version } }
       }
@@ -129,7 +129,9 @@ export function createThreadHistory(input: {
       })
       if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
       const work = async (state: SfProductState, authority: SfStateAuthority) => {
+        if (ownReview && (!current() || input.replayCurrent !== framework || !framework?.())) return { commit: false, value: 0 }
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.edit", selected) || basis.reviewContext && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence || prior.recipientRef && (input.checkReviewRecipientAtCommit !== checkReviewRecipient || !checkReviewRecipient || !checkReviewRecipient(prior.recipientRef, basis, context) || input.checkReviewRecipientAtCommit !== checkReviewRecipient)) || !input.fence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || message.version !== selected.expectedVersion || prior.state !== "open") return { commit: false, value: 0 }
+        if (ownReview && (!current() || input.replayCurrent !== framework || !framework?.())) return { commit: false, value: 0 }
         state.threads[id] = { ...prior, messages: prior.messages.map((entry) => entry.id === message.id ? { ...entry, body: selected.body, version: entry.version + 1, sourceContext: basis } : entry), messageRevisions: [...(prior.messageRevisions ?? []), message] }
         return { commit: true, value: message.version + 1 }
       }
@@ -139,7 +141,7 @@ export function createThreadHistory(input: {
       if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
       if ("reason" in saved) return saved
       if (!saved.value) return { status: "unavailable", reason: "thread-access-unavailable" }
-      return releaseReceipt(saved.value)
+      return releaseReceipt(saved.value, ownReview)
     },
     readVersion: async (id: string, messageId: string, incarnation: string, version: number, context: TrustedDomainContext): Promise<PortResult<{ message: Message } & ThreadSourceContext>> => {
       const request = input.host.requestFor(context)
