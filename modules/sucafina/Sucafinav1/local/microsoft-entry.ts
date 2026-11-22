@@ -12,7 +12,7 @@ import { createTeamProfileAccess, teamProfileInstallationId } from "../runtime/t
 import { createTeamProfileResolver } from "../runtime/team-profile-resolver.ts"
 import { createTeamProfileHttp } from "../runtime/team-profile-http.ts"
 import { createTeamSessionAdmission } from "../runtime/team-session-admission.ts"
-import { runTeamBusiness } from "../runtime/team-business.ts"
+import { readTeamBusinessContext, runTeamBusiness } from "../runtime/team-business.ts"
 import { teamBusinessRoute } from "../runtime/team-profile-selector.ts"
 import { esc } from "../src/screen-shell.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
@@ -88,6 +88,8 @@ export async function createMicrosoftInstallation(
       origin: config.origin, mount: config.mount, directory, tenantId: config.tenantId,
       enabledTeamIds: config.enabledTeamIds ?? [], prepare: identity.prepare, observeTeams: identity.observeTeams,
       profilePolicy: store.teamProfiles,
+      ...(nativeWeb ? { readBusinessContext: (request: Request, admission: Parameters<typeof readTeamBusinessContext>[0]["admission"]) =>
+        readTeamBusinessContext({ request, admission, identity, config, directory, now, teamCurrentChoice: context.teamCurrentChoice }) } : {}),
       ...(teamProfiles ? { observeAdministrator: (request: Request) => teamProfiles.administrator(request, { refreshSession: false }) } : {}),
     })
     if (nativeWeb && !teamAccess) throw new Error("Native Team Web admission is unavailable")
