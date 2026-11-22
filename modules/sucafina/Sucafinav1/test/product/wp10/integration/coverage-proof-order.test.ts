@@ -116,7 +116,7 @@ test("C08 no-op coverage retains the private producer order and closes on revoca
         const attributed: ScenarioResult = { ...prepared, costCoverage: { ...prepared.costCoverage, alternativeId, alternativeVersion: 1 } }
         const entries = ok(await proof.evidence.entries(attributed, coverage.assessment, call))
         const resolved = await proof.evidence.resolve(basis.sourceRefs, call)
-        expect(resolved.map((value) => value.ref)).toEqual(coverage.assessment.evaluatedSourceRefs)
+        expect(resolved.map((value) => value.ref)).toEqual([...coverage.assessment.evaluatedSourceRefs])
         const reassessed = await reassessScenarioCoverage({ scenario: attributed, basis,
           baseline: { ...coverage.assessment, evaluatedSourceRefs: [...coverage.assessment.evaluatedSourceRefs].reverse() },
           entries, resolveEvidence: (refs) => proof.evidence.resolve(refs, call), supports: proof.evidence.supports })
