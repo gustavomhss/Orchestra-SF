@@ -8,6 +8,8 @@ import { loadMicrosoftIngressAuthorizer } from "../runtime/microsoft-configurati
 import { microsoftRequest, prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 import type { EntraOptions, EntraTeamsSessionResult } from "../runtime/local-contract.ts"
 import { createTeamProfileAccess, teamProfileInstallationId } from "../runtime/team-profile-access.ts"
+import { createTeamProfileResolver } from "../runtime/team-profile-resolver.ts"
+import { createTeamProfileHttp } from "../runtime/team-profile-http.ts"
 import { runTeamBusiness } from "../runtime/team-business.ts"
 import { teamBusinessRoute } from "../runtime/team-profile-selector.ts"
 import { esc } from "../src/screen-shell.ts"
@@ -43,7 +45,13 @@ export async function createMicrosoftInstallation(
   const nativeWeb = environment.SUCAFINA_NATIVE_TEAM_WEB === "1"
   if (nativeWeb && config.teams !== "direct") throw new Error("Native Team Web requires Microsoft Teams admission")
   const authorize = await loadMicrosoftIngressAuthorizer(directory)
-  const store = await openLocalStore(path.join(directory, "business-microsoft"))
+  const installationId = teamProfileInstallationId({ origin: config.origin, mount: config.mount, directory })
+  const store = await openLocalStore(path.join(directory, "business-microsoft"), config.teams === "direct" ? {
+    teamProfilePolicy: {
+      binding: { installationId, tenantId: config.tenantId },
+      bootstrapEnabledTeamIds: config.enabledTeamIds ?? [],
+    },
+  } : {})
   try {
     const identity = prepared.createIdentity(store.secrets, nativeWeb)
     const now = overrides.now ?? (() => new Date())
@@ -57,9 +65,21 @@ export async function createMicrosoftInstallation(
       return createCorporateRecoveryHttp({ config, directory, identity, now, register })
     })()
     const readTeams = identity.teamDirectory
+    if (config.teams === "direct" && !store.teamProfiles) throw new Error("Microsoft Team policy is unavailable")
+    const teamProfiles = store.teamProfiles && identity.observeTeamProfileAdministrator && createTeamProfileResolver({
+      installationId, tenantId: config.tenantId, store: store.teamProfiles,
+      policy: async () => ({ teams: config.teams, supremeAdminGroupId: config.supremeAdminGroupId }),
+      observeAdministrator: identity.observeTeamProfileAdministrator, prepare: identity.prepare,
+      now: () => now().getTime(),
+    })
+    const profileHttp = teamProfiles && createTeamProfileHttp({
+      origin: config.origin, mount: config.mount, installationId, tenantId: config.tenantId, resolver: teamProfiles,
+    })
     const teamAccess = identity.observeTeams && createTeamProfileAccess({
       origin: config.origin, mount: config.mount, directory, tenantId: config.tenantId,
       enabledTeamIds: config.enabledTeamIds ?? [], prepare: identity.prepare, observeTeams: identity.observeTeams,
+      profilePolicy: store.teamProfiles,
+      ...(teamProfiles ? { observeAdministrator: (request: Request) => teamProfiles.administrator(request, { refreshSession: false }) } : {}),
     })
     if (nativeWeb && !teamAccess) throw new Error("Native Team Web admission is unavailable")
     const purchasePeriod = config.clawPurchasePeriod
@@ -82,7 +102,6 @@ export async function createMicrosoftInstallation(
     const htmlHeaders = { ...headers, "Content-Type": "text/html; charset=utf-8",
       "Content-Security-Policy": "default-src 'none'; frame-ancestors 'self'; base-uri 'none'" }
     const web = nativeWeb && teamAccess ? (() => {
-      const installationId = teamProfileInstallationId({ origin: config.origin, mount: config.mount, directory })
       const binding = Object.freeze({ installationId, projectId: installationId, hostId: randomUUID() })
       const runtime = Object.freeze({ nativeUiProducts: {
         currentBinding: () => binding,
@@ -118,6 +137,8 @@ export async function createMicrosoftInstallation(
         const auth = await identity.handle(request)
         if (auth) return auth
         if (web && url.pathname === config.mount + "/api/ui/context") return web.context.handle(request)
+        const profiles = await profileHttp?.(request)
+        if (profiles) return profiles
         const mcp = await purchaseMcp?.(request) ?? await supplierMcp?.(request) ?? await contractMcp?.(request)
         if (mcp) return mcp
         const recovered = await recovery?.(request)
