@@ -148,7 +148,16 @@ async function fixture() {
     const reference = ok(await records.issue({ page: "All Projects", recordType: "projects", recordId: "project", fields: ["name", "status"], period }, context))
     const draft = { kind: "clarification" as const, sourceRef: reference.refId, sourceIncarnation: reference.target.incarnation, observedVersion: reference.target.version, period, recipientRef: "recipient", body: "Please check the selected project.", evidenceRefs: [reference] }
     const mutation = { expectedStorageVersion: 0, idempotencyKey: "create-question" }
-    const thread = await withHuman("questioner", "collaboration.thread.create", { draft, mutation }, (call) => collaboration.threads.create(draft, mutation, call))
+    const thread = await withHuman("questioner", "collaboration.thread.create", { draft, mutation }, async (call) => {
+      const resolved = await records.resolve(reference.refId, call)
+      const projection = await records.read(reference.refId, call)
+      console.info("followup fixture preflight", JSON.stringify({ resolved: resolved.status, projection: projection.status, evidence: (await evidence.resolve(reference, call)).state,
+        sources: await collaboration.authority.sources([reference], call),
+        recipient: await collaboration.authority.recipient("recipient", call),
+        recipientSources: await collaboration.authority.recipientSources("recipient", [reference], call),
+        thread: await collaboration.authority.authorizeThread(draft, call, "write") }))
+      return collaboration.threads.create(draft, mutation, call)
+    })
     const version = ok(await collaboration.storageVersion("threads", await read("recipient")))
     const replyMutation = { expectedStorageVersion: version, idempotencyKey: "recipient-reply" }
     const replied = await withHuman("recipient", "collaboration.thread.reply", { id: thread.id, body: answer, mutation: replyMutation }, (call) => collaboration.recipientActions!.reply(thread.id, answer, replyMutation, call))
