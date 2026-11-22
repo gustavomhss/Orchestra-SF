@@ -1,7 +1,7 @@
 {
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
-  "source": "ef8d53e59c779e36bfddf0b375dbcf7c92541706",
-  "status": "Portfolio9 failed at original persistence proof; history and preview qualified. UI43/UI44 and final BI remain pending.",
+  "source": "6703cc5ba71709f0616b186383ab63f779c22dfb",
+  "status": "Portfolio10 failed at native preview wait after original selection registration and exact readback passed. UI43/UI44 remain unqualified. BI native1 functional pass had a precision defect; subsequent correction has separate evidence.",
   "originalSources": [
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u19.ts",
@@ -91,7 +91,7 @@
   "runtime": [
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx",
-      "blob": "d72825c63969315d3b17aaec37ca95880ceb25ea"
+      "blob": "658e49dd2dd76da7847b4917ca585465e13ead02"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/scenarios.css",
@@ -159,13 +159,13 @@
     }
   ],
   "ownedImplementationBranch": "sf-next-analytics",
-  "ownedImplementationHead": "6578f94e59dc709691b5863a6cbf1cf61c749f46",
+  "ownedImplementationHead": "f4b7609ce5e79e2797972a8ee6e1fcf88a238b53",
   "e2e": {
-    "spec": "30fa384f032e2e8e3d509c68d67954362cd3a314",
+    "spec": "17a5bb66e333a05d3080d9bcd85b44d17bca0660",
     "support": "c3f03a6553c83bae7b9665cec204c834bac20c46",
-    "sourcePreparation": "22245ef7d79206f2574633b1a8cad543bcc5f8c0",
-    "firstDeclarationSnapshot": "643a70c8de5e37bfff63b4cb56ae4a5b82c041fa",
-    "firstDeclarationBlob": "e0462be1eb0fba3e65cdab680e36e98ae1a7f51d"
+    "sourcePreparation": "0e5745f13e3eaacabd4e19bd3b64e0d0f7b4c5e9",
+    "firstDeclarationSnapshot": "5465fa8d29aa6db17d78b639be0c421cfbda1581",
+    "firstDeclarationBlob": "22dd75f6eb41123cec6a2ba841295e885607270f"
   },
   "limitations": [
     "This file records source identity, not a completed installed UI qualification or user design acceptance.",
@@ -174,17 +174,29 @@
     "No D01 broker URL composition was found in this checkout; browser transport is the runtime qualification target."
   ],
   "latestInstalledPortfolio": {
-    "source": "ef8d53e59c779e36bfddf0b375dbcf7c92541706",
-    "snapshot": "643a70c8de5e37bfff63b4cb56ae4a5b82c041fa",
-    "run": 44986981782,
-    "job": 137099585169,
+    "source": "6703cc5ba71709f0616b186383ab63f779c22dfb",
+    "snapshot": "5465fa8d29aa6db17d78b639be0c421cfbda1581",
+    "run": 44988453838,
+    "job": 137104076041,
     "conclusion": "failure",
-    "reason": "portfolio-proof-unavailable"
+    "reason": "first preview response not observed within60000ms; request emission not logged in this attempt",
+    "originalSelection": "registered once, exact original version1/case6/pair/criteria receipt and fresh controls/comparison readback matched"
   },
   "pendingComposition": {
+    "source": "d8faa155002f0a9f3df029d946a026462af65e69",
+    "authorityBlob": "34b2995d19249259789bba199cb5472a6e2363be",
+    "specBlob": "94c0de8e8e2016782156507256247a06b0c13ece",
+    "qualification": "Portfolio11 pending; criterion observation passed focused Actions run44990184354 with62 assertions plus CLI/E2E typechecks.",
+    "snapshot": "9b4863d87ecbb9cca0516db439e979321f3f53fb"
+  },
+  "biNative1": {
     "source": "6703cc5ba71709f0616b186383ab63f779c22dfb",
-    "scenarioBlob": "658e49dd2dd76da7847b4917ca585465e13ead02",
-    "specBlob": "e39da7921aade96fbeecd732c131836db3a8301e",
-    "qualification": "Pending corrected original selection preparation and fresh installed journey"
+    "snapshot": "9472494bd3fd208f7e80d3e76e500a11960c7d95",
+    "run": 44988337151,
+    "job": 137103725904,
+    "functional": "pass",
+    "visual": "changes-required: small nonzero age displayed as zero",
+    "evidence": "../reviews/bi-native-attempt-01/manifest.json",
+    "reviewOwner": "design_reviews;6 original images actually viewed;26 explicitly unreviewed"
   }
 }

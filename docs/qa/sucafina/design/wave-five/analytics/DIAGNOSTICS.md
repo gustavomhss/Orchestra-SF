@@ -30,3 +30,22 @@ A second focused run reached the operational source. BI06 returned HTTP 403 with
 | [44986224673](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44986224673), job `137097265867` | `a1334d5fd8b800fe6841536732df0f3730085dd5` | BI06 original 403 access-changed; BI05 control 200 / five values; later logger failure. [Artifact 14740356691](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44986224673/artifacts/14740356691), 2,185,481 bytes; SHA-256 `9a79c7b06ac0641f5f6932f7084a4b838d259eb2602b05069abc998c588c0156`. |
 
 These focused-run screenshots were not emitted for visual inspection here and are not approved or added to the reviewed gallery. [Machine-readable BI receipts](diagnostics/bi-07-08.json) preserve the exact status observations and artifacts. The original age-of-stage calculation and projection revalidation are under integration-owner investigation; equality, source availability and grants remain authoritative.
+
+## Criterion metric physical-read observation — focused Actions comparison
+
+After Portfolio10 registered the genuine human selection, its first preview did not return within the existing 60-second browser wait. Commit `77971245d51657866fbaa6478410315425d2d2e6` changes only the inner `readMetric` comparator call in `apps/cli/src/sucafina-product/portfolio-authority.ts` to use the existing `business.withPlannerObservation`. The observed pair, empty inner criteria, canonical readers, per-invocation observations, request/binding checks and final original result digests are preserved. The outer user-selected criterion is never removed. No comparison result is cached.
+
+[Run 44990184354](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44990184354), job `137109310652`, passed all three selected gates on snapshot `f7ffb5546cb09d2d6708cfc93d1c58f9154908df`, based on product `796c7f27634dca55e25087cb44d1a0fe45a06cf9`: CLI typecheck, E2E typecheck and the extended original Finance pair integration test. The latter passed one test group and 62 assertions, using real SQLite/C08 and scenarios produced by the original Planner.
+
+| Actual invocation | Result | Physical reads | Owned roots | Canonical scenario resolves | Elapsed ms |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Complete scalar producer | ok |2501|0|4|1435|
+| Grouped original reads | ok |118|2|4|1194|
+| Fresh repeated invocation | ok |118|2|4|1160|
+| Adapter without readSnapshotRoot | ok |2501|0|4|1366|
+| Access revoked after first root closes | denied |116|1|4|1128|
+| Source changed after first root closes | unavailable |118|2|4|1157|
+
+Positive values are exactly equal, including conditioned state, original known difference, unit, period and evidence. The repeated call performs all four canonical resolves again. The unsupported adapter runs the complete original producer. Revocation and source mutation reject the grouped result without replaying work. The original separate fresh egress root and fences remain unchanged. These durations describe this scoped fixture and do not establish the native preview latency.
+
+The receipt, exact changed blobs and measurements are in [criterion-observation.json](criterion-observation.json). Portfolio11 is the next original installed journey, with the same 60-second preview wait and direct request-emission/duration logs. It uses product `d8faa155002f0a9f3df029d946a026462af65e69` and snapshot `9b4863d87ecbb9cca0516db439e979321f3f53fb`.
