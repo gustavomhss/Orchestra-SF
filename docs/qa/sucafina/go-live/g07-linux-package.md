@@ -34,6 +34,16 @@ O recibo resultante é `sf-g07-package-v1`, status `PACKAGE_VERIFIED`, com candi
 
 Os pins antigos contidos nos corpos de #247 e #257 não substituem seus heads observados nem constituem confirmação da Release. Os comentários de 18/11 registram esses PRs como superseded pelo bundle antigo; por isso seus nomes não são aceites operacionais atuais. Em 22/11, outra frente Astra registrou em [#257](https://github.com/gustavomhss/Orchestra-SF/pull/257#issuecomment-7074525725) a reconciliação dos sourcemaps do empacotador genérico para o residual #349. Esta frente G07 preserva esse dono e não inicia um segundo escritor nesse recorte. Antes da geração final, registrar os dois ACKs — Migração e Release — para o mesmo SHA C e árvore T, a rota de execução, o compilador e os recibos de pré-requisitos. A aprovação da janela e o go/no-go de produção são decisões posteriores e específicas.
 
+## Rota produtora atual — reconciliação de 22/11
+
+Em `dev@37931c77eb07aecf01610bb0ee7d717276b85539`, árvore `a2fd28f1a16971a7cf89ea9722c5b70b815a0792`, o produtor integrado está em [`.github/workflows/g09-final.yml`](https://github.com/gustavomhss/Orchestra-SF/blob/37931c77eb07aecf01610bb0ee7d717276b85539/.github/workflows/g09-final.yml), job `teams-profile-artifact`. A leitura do contrato confirmou compatibilidade com o verificador G07 já integrado; não foi executada uma qualificação nova.
+
+A requisição futura deve observar `sourceProofFile:compile-provenance.json`, `buildInputsFile:g09-build-inputs.json` e `artifactName:orchestra-sf-entra-linux-<C>`. A proveniência v2 inclui os mapas CLI separados; os IDs, hashes e metadados restantes precisam vir do job produtor real.
+
+**A rota de disparo ainda precisa de confirmação da Release.** O workflow aceita somente push em `g09-final-review`, confere esse ref e exige fonte igual a `GITHUB_SHA`. A branch e o [run 44999398244](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44999398244) conservam o candidato histórico `edd15e422dd8b1008a1a32ff4c8d5108e8e2e3a2`. Reexecutá-lo produziria novamente aquele candidato. A Release deve reconciliar o disparo sobre C antes do pin, preservando o recibo histórico e o produtor existente. Esta frente não moveu a branch de G09 nem gerou outro tar.
+
+A toolchain observada é Node 24.15 e Bun 1.4.1 baseline, revisão `4661e494f052c83c80dade1318e5710238340be6`, arquivo SHA-256 `a8c9c6738202e2fced555dd860a953c56c0cd059f75041e7010ae81a32802646`. Isso descreve o workflow e continua sujeito à confirmação da Release para C. O pedido operacional está registrado em [7079656702](https://github.com/gustavomhss/Orchestra-SF/pull/247#issuecomment-7079656702).
+
 ## Reconciliação inicial das rotas — referência histórica
 
 | Rota no pin de triagem | Uso correto |
