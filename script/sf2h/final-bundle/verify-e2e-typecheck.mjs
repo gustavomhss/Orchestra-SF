@@ -20,7 +20,9 @@ const config = JSON.parse(readFileSync(configPath, "utf8"))
 const base = JSON.parse(readFileSync(path.join(app, "tsconfig.json"), "utf8"))
 const manifest = JSON.parse(readFileSync(new URL("./requests.json", import.meta.url), "utf8"))
 const nominal = ["operations", "decisions", "reports"].map((name) => `e2e/sucafina/${name}.spec.ts`)
-const includes = ["e2e/playwright.production.config.ts", "e2e/utils/flaky-reporter.ts",
+const desktopEnvironment = "../../apps/desktop/src/renderer/env.d.ts"
+const desktopEnvironmentBlob = "eb472d33abc340e4232465c9806ccb482fd8f1ab"
+const includes = [desktopEnvironment, "e2e/playwright.production.config.ts", "e2e/utils/flaky-reporter.ts",
   "e2e/sucafina/**/*.ts", "e2e/sucafina/**/*.tsx"]
 const runtimeRoots = [
   "e2e/utils/flaky-reporter.ts",
@@ -74,6 +76,10 @@ requireCheck(sources.length > 0, "EMPTY_INPUTS: Sucafina source tree is empty")
 for (const file of roots) requireCheck(isFile(file), `MISSING_INPUT: ${relative(file)}`)
 for (const file of runtimeRoots) requireCheck(roots.includes(path.join(app, file)) && isFile(path.join(app, file)),
   `MISSING_RUNTIME_ROOT: ${file}`)
+const desktopInput = path.join(app, desktopEnvironment)
+requireCheck(roots.includes(desktopInput) && isFile(desktopInput), "MISSING_RUNTIME_ROOT: original desktop environment")
+if (isFile(desktopInput)) requireCheck(digest(desktopInput).git_blob_sha === desktopEnvironmentBlob,
+  "AMBIENT_SOURCE_DRIFT: preserve the original desktop environment declaration")
 
 const observation = {
   schema: "sf2-e2e-typecheck-evidence-v1",

@@ -196,6 +196,10 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
   void captured.promise.catch(() => undefined)
   const observed: { active: boolean; request?: Request; networkId?: string; failure?: { error: unknown }; pending?: Promise<void> } = { active: false }
   const errors: unknown[] = []
+  // Event callbacks may record a failure during either awaited response phase.
+  const throwIfCommandFailed = () => {
+    if (observed.failure) throw observed.failure.error
+  }
   const fail = (error: unknown) => {
     observed.failure ??= { error }
     errors.push(error)
@@ -261,10 +265,10 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
     observed.active = true
     await button.click()
     const reply = await captured.promise
-    if (observed.failure) throw observed.failure.error
+    throwIfCommandFailed()
     outcome.value = await checkedReply({ mode: new URL(reply.url).searchParams.get("sf"), httpStatus: reply.status, contentType: reply.contentType },
       () => JSON.parse(reply.json), observations)
-    if (observed.failure) throw observed.failure.error
+    throwIfCommandFailed()
   } catch (error) {
     errors.push(error)
   } finally {
