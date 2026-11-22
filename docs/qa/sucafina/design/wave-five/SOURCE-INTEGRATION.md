@@ -46,7 +46,7 @@ The original confirmation reader called the source fence outside a grouped sourc
 
 ## Native portfolio routing
 
-The canonical portfolio input has no `surface` field, while its original transport route contains `{surface}`. The client now derives the dashboard transport destination only for the exact ten original `SfPortfolio` operations after decoding their unchanged closed input schema. It adds no field to the request body, route registry, grant or producer contract. Fourteen routing cases passed, including unrelated fixed routes, missing surface, excess fields and the actual installation origin/mount. The browser's remaining no-request failure is tracked separately and is not represented as fixed by those pure cases.
+The canonical portfolio input has no `surface` field, while its original transport route contains `{surface}`. The client now derives the dashboard transport destination only for the exact ten original `SfPortfolio` operations after decoding their unchanged closed input schema. It adds no field to the request body, route registry, grant or producer contract. Fourteen routing cases passed, including unrelated fixed routes, missing surface, excess fields and the actual installation origin/mount. The separate reactive-input correction below resolves the later no-request failure; the routing cases alone did not establish that behavior.
 
 ## Import progress and remaining qualification
 
@@ -55,3 +55,21 @@ The import owner exposes its actual scan, preview and source-read activity separ
 ## Incremental verification record
 
 `technical-attempts.json` retains attempts 1–8 with each exact product, snapshot, run, job, check scope and failure. Later focused checks do not relabel an earlier failed whole workflow. The 94 original source/readiness/routing regressions, 14 client routing cases and 8 native BI destination cases passed in their stated scopes. Seven generated palettes stayed byte-identical; all 357 existing English key/value literals stayed unchanged and all 46 new keys had explicit pt-BR in the recorded copy check. Browser qualification and final integration types remain distinct from those regression receipts.
+
+## Reactive portfolio inputs
+
+The closed operation schemas remain unchanged. Solid can retain reactive metadata in both the input itself and nested values. The native input boundary now unwraps and structured-clones its source object before passing the entire value to the original decoder. It does not pick known fields or drop malformed excess values. Eighteen browser-condition regression cases passed (147 assertions, Actions run 44986712960). The installed scenario journey then emitted original history and two preview responses with HTTP 200. Its subsequent persistence failure remains recorded separately until the original human-selection precondition is verified.
+
+## BI06 observation time
+
+Procurement age values derive from the original environment's observation time. Two live reads inside the same admitted BI06 invocation previously used different instants and failed the unchanged full-projection comparison. A private invocation scope now holds only the first original observation instant. Every source/environment call, authority revalidation and result comparison still runs. Each new admission observes a new instant, including reuse of the same Request object.
+
+The scope pins the original host, environment, Request, request digest, revalidator, input, binding and consumed UI intent. Provider replacement, abort, mutation, concurrency and escaped asynchronous work cannot publish a successful result. The original C16 admission and exact source-bootstrap intent remain required. This change wraps BI dispatch and original bi-source reads; it does not widen review parsing or cache a projection, grant or receipt.
+
+Seven original-host regression groups passed with 119 assertions in Actions run 44987754031. The original moving-clock control returns 403; the held observation reproduces the entire original projection at the captured instant. Original options, BI06 data and source-link HTTP reads return 200; invalid origin choices and changed source data remain refused. Browser captures remain a separate qualification.
+
+## Full import impact and bounded materialization
+
+UI55/UI56 show the original simulation, exact change list and a disclosure containing every original impact component, value and missing-source item before actions. The disclosure reduces the initial rendered content without truncating the source. Shared UI57/UI68 keep their existing presentation order. Two additional messages have explicit EN and pt-BR text; final catalog parity is rerun against the composed candidate.
+
+The large preview also exposed bounded snapshot memo eviction in the original store. [The correction and its limits](STORE-MATERIALIZATION.md) and [42-case SQLite receipt](store-materialization.json) record the measured cause, unchanged budget, exact-byte identity, independent copies and same-length replacement checks. The installed import journey must separately verify the original preview-reference reread and native result.
