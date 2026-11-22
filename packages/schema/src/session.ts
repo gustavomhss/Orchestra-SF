@@ -21,7 +21,7 @@ export interface Info extends Schema.Schema.Type<typeof Info> {}
 export const Info = Schema.Struct({
   id: ID,
   /** Server response label; mandatory at the corporate transport boundary, omitted only by technical mode. */
-  namespace: TeamProfile.SessionNamespace.pipe(optional),
+  namespace: TeamProfile.SessionNamespaceTransport.pipe(optional),
   parentID: ID.pipe(optional),
   projectID: Project.ID,
   agent: Agent.ID.pipe(optional),

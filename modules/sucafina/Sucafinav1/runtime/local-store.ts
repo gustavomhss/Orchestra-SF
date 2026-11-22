@@ -425,7 +425,8 @@ export async function openLocalStore(directory: string, options: {
       try {
         const result = await context.run(scope, work)
         requireScope(scope)
-        if (scope.root.poisoned || scope.root.readers) throw new Error("Private connection authority scope changed")
+        if (scope.root.poisoned) throw new Error("Nested local write attempted")
+        if (scope.root.readers) throw new Error("Nested local read still active")
         return result
       } finally { scope.open = false }
     },

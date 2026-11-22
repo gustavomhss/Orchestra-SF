@@ -51,7 +51,10 @@ jobs:
           node script/sf-ci/team-profile-scanner.mjs admit .ci-run.json
       - uses: ./.github/actions/setup-bun
       - name: Check candidate guards against origin dev
-        run: bun run check:guards --base origin/dev
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin dev:refs/remotes/origin/dev
+          bun run check:guards --base origin/dev
       - name: Typecheck Sucafina control composition
         working-directory: modules/sucafina
         run: bun typecheck
@@ -66,7 +69,7 @@ jobs:
           nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
           printf '%s\n' "$nonce" > teams-profile-scanner-evidence/omni-nonce.txt
           printf 'ORCHESTRA_OMNI_CONTROL_NONCE=%s\n' "$nonce" >> "$GITHUB_ENV"
-      - name: Execute seven original obligations and the real HTTP malformed file control
+      - name: Execute the exact legacy or expanded Microsoft Team selection
         id: tests
         run: |
           set -euo pipefail
@@ -75,13 +78,15 @@ jobs:
           git diff --exit-code
           git diff --cached --exit-code
           output="$GITHUB_WORKSPACE/teams-profile-scanner-evidence"
+          node script/sf-ci/team-profile-scanner.mjs arguments > "$output/arguments.txt"
+          mapfile -t selected < "$output/arguments.txt"
+          export G05_TEAM_RECEIPT="$output/g05-team-http.json"
+          export G05_SOURCE_TREE="$(git rev-parse 'HEAD^{tree}')"
+          printf 'G05_SOURCE_TREE=%s\n' "$G05_SOURCE_TREE" >> "$GITHUB_ENV"
           cd modules/sucafina
           set +e
-          GITHUB_ACTIONS=false bun test \
-            ./Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts \
-            ./Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts \
-            ./Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts \
-            --timeout 120000 --reporter=junit "--reporter-outfile=$output/report.xml" \
+          GITHUB_ACTIONS=false bun test "${selected[@]}" \
+            --reporter=junit "--reporter-outfile=$output/report.xml" \
             2>&1 | tee "$output/bun.log"
           status=${PIPESTATUS[0]}
           set -e
@@ -95,6 +100,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$G05_SOURCE_TREE" = "$(git rev-parse 'HEAD^{tree}')"
           evidence="$GITHUB_WORKSPACE/teams-profile-scanner-evidence"
           git status --porcelain=v1 --untracked-files=no > "$evidence/tracked-worktree-after.txt"
           git diff --exit-code > "$evidence/tracked-diff-after.txt"

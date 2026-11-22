@@ -156,6 +156,7 @@ export function createTeamSessionAdmission(input: Readonly<{
       })
       if (digestSfValue(await policy()) !== digestSfValue(actor.policy) ||
           (await input.profilePolicy.read()).configRevision !== catalog.configRevision || !await prove() ||
+          digestSfValue(await policy()) !== digestSfValue(actor.policy) ||
           !read.open || !read.store.hasCurrentSnapshots?.() || !valid(request, sealed))
         return undefined
       return {

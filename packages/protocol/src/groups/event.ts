@@ -29,7 +29,7 @@ const schema = <const Definitions extends ReadonlyArray<Definition>>(definitions
 
 const make = <const Definitions extends ReadonlyArray<Definition>>(definitions: Definitions) => {
   const EventSchema = schema(definitions)
-  const Transport = Schema.Union([EventSchema, Schema.Struct({ namespace: TeamProfile.SessionNamespace, event: EventSchema })])
+  const Transport = Schema.Union([EventSchema, Schema.Struct({ namespace: TeamProfile.SessionNamespaceTransport, event: EventSchema })])
     .annotate({ identifier: "V2EventTransport" })
   return {
     schema: EventSchema,

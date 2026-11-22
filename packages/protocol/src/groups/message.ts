@@ -29,7 +29,7 @@ export const MessageGroup = HttpApiGroup.make("server.message")
       query: SessionMessagesQuery,
       success: Schema.Struct({
         data: Schema.Array(SessionMessage.Message),
-        namespace: Schema.optional(TeamProfile.SessionNamespace),
+        namespace: Schema.optional(TeamProfile.SessionNamespaceTransport),
         cursor: Schema.Struct({
           previous: Schema.String.pipe(Schema.optional),
           next: Schema.String.pipe(Schema.optional),

@@ -1,6 +1,6 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { admitScanner, canonical, exactRequest, expectedCases, files, hash, parseScannerRequest, verifyScannerEvidence } from "./team-profile-scanner.mjs"
+import { admitScanner, canonical, exactRequest, expectedCases, files, hash, microsoftCases, microsoftFiles, parseScannerRequest, verifyScannerEvidence } from "./team-profile-scanner.mjs"
 
 // All observations below are synthetic inputs to the verifier. They are never
 // service evidence, a Teams tenant observation, or an actual G06 receipt.
@@ -194,4 +194,131 @@ test("truncated XLSX refusal preserves an observed scanner boundary without inve
   assert.equal(result.malformedApplicationFile.inputs[1].rejected_at, "admission")
   assert.equal(result.proofClass, "COMPONENT_REAL_CLAMD")
   assert.equal(result.installedTeamsProof, false)
+})
+
+function microsoftFixture() {
+  const f = fixture()
+  const request = exactRequest("controls-with-teams")
+  const envelope = { ...f.input.teamsProfileScanner, schema: "teams-profile-scanner-v2",
+    selection: "controls-with-teams", requestSha256: hash(canonical(request)) }
+  f.input = { ...request, teamsProfileScanner: envelope }
+  f.env.GITHUB_REF_NAME = "tp-scan-" + envelope.candidateSha.slice(0, 12) + envelope.requestSha256.slice(0, 12) + "1"
+  f.env.G05_SOURCE_TREE = "9".repeat(40)
+  f.evidence.admission = admitScanner(f.input, f.env)
+  f.evidence.setup.teamsProfile = envelope
+  f.evidence.summary.cases = microsoftCases.map(([file, name]) => ({ file, name, classname: "", failures: 0, errors: 0,
+    skipped: 0, todo_identified: 0, executed: 1, known_control_or_hook: 0, product_executed: 1 }))
+  Object.assign(f.evidence.summary.counts, { tests: microsoftCases.length, executed: microsoftCases.length, product_executed: microsoftCases.length })
+  const teams = ["44444444-4444-4444-8444-444444444444", "55555555-5555-4555-8555-555555555555"]
+  const transport = { protocol: "http:", listener: "127.0.0.1", port: 4000, requests: 50, loopbackPeers: 50, ingressRequests: 50 }
+  const durable = teams.map((teamObjectId) => ({ teamObjectId, before: "6".repeat(64), after: "6".repeat(64) }))
+  const accepted = (team) => ({ httpStatus: 200, bytes: 100, digest: "7".repeat(64), storedDigest: "7".repeat(64),
+    versionBefore: 1, versionAfter: 2, downloadStatus: 200, foreignDownloadStatus: 403,
+    otherTeam: { teamObjectId: teams.find((id) => id !== team), before: "6".repeat(64), after: "6".repeat(64) } })
+  const eicarDigest = hash(Buffer.from("WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=", "base64"))
+  for (const [index, id] of ["private-upload", "denied-owner", "scanner-outage"].entries()) {
+    const daemon = index === 2 ? f.evidence.service.error : f.evidence.service.main
+    const result = id === "private-upload"
+      ? { observations: teams.map((teamObjectId) => ({ teamObjectId, before: accepted(teamObjectId), after: accepted(teamObjectId),
+          rejected: { httpStatus: 422, bytes: 68, digest: eicarDigest, durable } })), mainCleanAfter: true }
+      : id === "denied-owner" ? { attempts: ["wrong-installation", "wrong-tenant", "selector-route-mismatch", "disabled-team", "revoked-membership"]
+          .map((kind) => ({ kind, httpStatus: 403, durable })), mainCleanAfter: true }
+      : { connectionRefused: true, attempts: teams.map((teamObjectId) => ({ teamObjectId, httpStatus: 422,
+          bytes: 100, digest: "8".repeat(64), durable })), mainCleanAfter: true }
+    const value = { schema: "orchestra.g06.microsoft-team-control/1", control: id, status: "PASS",
+      sourceSha: f.env.GITHUB_SHA, runId: f.env.GITHUB_RUN_ID, runAttempt: f.env.GITHUB_RUN_ATTEMPT,
+      proofClass: "COMPONENT_REAL_CLAMD", composition: "MICROSOFT_TEAM_FACTORY", identityProvider: "CONTROLLED_ENTRA_GRAPH",
+      runtimeFactory: "createMicrosoftInstallation", installedTeamsProof: false, finalCandidate: false,
+      scanner: { host: daemon.host, port: daemon.port, pid: daemon.pid },
+      binding: { installationId: String(index + 1).repeat(64), tenantId: "11111111-1111-4111-8111-111111111111",
+        principalObjectId: "33333333-3333-4333-8333-333333333333", teamObjectIds: teams },
+      transport, graphRequests: ["/v1.0/me/joinedTeams"], cleanup: { completed: true, directoryRemoved: true }, result }
+    f.evidence.log += "G06_MICROSOFT_TEAM_" + id.toUpperCase().replaceAll("-", "_") + " " + JSON.stringify(value) + "\n"
+  }
+  const ids = ["anonymous-denied", "signed-session-admitted", "team-a-write", "team-b-write", "team-read-isolation",
+    "wrong-installation-denied", "wrong-tenant-denied", "selector-route-mismatch-denied", "disabled-team-denied",
+    "revoked-membership-denied", "denied-writes-have-no-effect"]
+  f.evidence.g05 = { schema: "orchestra.g05.team-http/1", sourceSha: f.env.GITHUB_SHA, sourceTree: f.env.G05_SOURCE_TREE,
+    runId: f.env.GITHUB_RUN_ID, runAttempt: f.env.GITHUB_RUN_ATTEMPT, proofClass: "HTTP_LOOPBACK_MICROSOFT_COMPONENT",
+    identityProvider: "CONTROLLED_ENTRA_GRAPH", runtimeFactory: "createMicrosoftInstallation", installedTeamsProof: false,
+    finalCandidate: false, cleanup: { completed: true }, transport, graphRequests: ["/v1.0/me/joinedTeams"],
+    summary: { expected: 11, pass: 11, pending: 0 }, cases: ids.map((id) => ({ id, status: "pass" })),
+    durableComparison: { teams: durable } }
+  return f
+}
+function changeMicrosoft(evidence, id, mutate) {
+  const prefix = "G06_MICROSOFT_TEAM_" + id.toUpperCase().replaceAll("-", "_") + " "
+  evidence.log = evidence.log.split("\n").map((line) => {
+    if (!line.startsWith(prefix)) return line
+    const record = JSON.parse(line.slice(prefix.length))
+    mutate(record)
+    return prefix + JSON.stringify(record)
+  }).join("\n")
+}
+test("expanded selection preserves all eight legacy cases, adds three Microsoft cases and retains the original G05 case", () => {
+  const f = microsoftFixture()
+  assert.deepEqual(microsoftFiles.slice(0, files.length), files)
+  assert.deepEqual(microsoftCases.slice(0, expectedCases.length), expectedCases)
+  assert.equal(microsoftCases.length, 12)
+  assert.equal(admitScanner(f.input, f.env).envelope.schema, "teams-profile-scanner-v2")
+  const result = verifyScannerEvidence(f.evidence)
+  assert.equal(result.status, "PASS")
+  assert.deepEqual(result.legacyCases, expectedCases)
+  assert.deepEqual(result.cases, microsoftCases)
+  assert.equal(result.microsoftTeams.controls.length, 3)
+  assert.equal(result.microsoftTeams.g05Controls.length, 11)
+  assert.equal(result.microsoftTeams.installedTeamsProof, false)
+  assert.equal(result.microsoftTeams.teamsPrivateImportProof, false)
+  assert.equal(result.microsoftTeams.g06Closed, false)
+  assert.match(result.microsoftTeams.blocker, /import-admit\/import-preview/)
+  assert.equal(result.microsoftTeams.candidateSha, f.input.teamsProfileScanner.candidateSha)
+  assert.equal(result.microsoftTeams.snapshotSha, f.env.GITHUB_SHA)
+  assert.notEqual(result.microsoftTeams.candidateSha, result.microsoftTeams.snapshotSha)
+})
+for (const [name, mutate] of [
+  ["legacy schema with expanded selection", (f) => { f.input.teamsProfileScanner.schema = "teams-profile-scanner-v1" }],
+  ["unknown selection", (f) => { f.input.teamsProfileScanner.selection = "teams-only" }],
+  ["dropped legacy case file", (f) => { f.input.args.shift() }],
+  ["missing G05 selector", (f) => { f.input.args.splice(4, 1) }],
+  ["duplicated Teams selector", (f) => { f.input.args[4] = f.input.args[3] }],
+]) test("expanded admission rejects " + name, () => {
+  const f = microsoftFixture(); mutate(f)
+  assert.throws(() => admitScanner(f.input, f.env), /TEAMS_SCANNER_FAIL_CLOSED/)
+})
+for (const [name, mutate] of [
+  ["missing Microsoft marker", (e) => { e.log = e.log.split("\n").filter((line) => !line.startsWith("G06_MICROSOFT_TEAM_PRIVATE_UPLOAD ")).join("\n") }],
+  ["duplicated Microsoft marker", (e) => { e.log += "\n" + e.log.split("\n").find((line) => line.startsWith("G06_MICROSOFT_TEAM_PRIVATE_UPLOAD ")) }],
+  ["installed promotion", (e) => changeMicrosoft(e, "private-upload", (v) => { v.installedTeamsProof = true })],
+  ["real authority claim", (e) => changeMicrosoft(e, "private-upload", (v) => { v.identityProvider = "REAL_ENTRA" })],
+  ["substituted factory", (e) => changeMicrosoft(e, "private-upload", (v) => { v.runtimeFactory = "createOperationsInstallation" })],
+  ["stale run", (e) => changeMicrosoft(e, "private-upload", (v) => { v.runId = "1" })],
+  ["wrong scanner endpoint", (e) => changeMicrosoft(e, "private-upload", (v) => { v.scanner.port += 1 })],
+  ["wrong owned PID", (e) => changeMicrosoft(e, "scanner-outage", (v) => { v.scanner.pid -= 1 })],
+  ["direct handler transport", (e) => changeMicrosoft(e, "private-upload", (v) => { v.transport.protocol = "direct-handler" })],
+  ["missing real TCP peer", (e) => changeMicrosoft(e, "private-upload", (v) => { v.transport.loopbackPeers -= 1 })],
+  ["missing ingress traversal", (e) => changeMicrosoft(e, "private-upload", (v) => { v.transport.ingressRequests -= 1 })],
+  ["missing Graph admission", (e) => changeMicrosoft(e, "private-upload", (v) => { v.graphRequests = [] })],
+  ["incomplete cleanup", (e) => changeMicrosoft(e, "private-upload", (v) => { v.cleanup.completed = false })],
+  ["remaining directory", (e) => changeMicrosoft(e, "denied-owner", (v) => { v.cleanup.directoryRemoved = false })],
+  ["missing clean blob", (e) => changeMicrosoft(e, "private-upload", (v) => { v.result.observations[0].before.storedDigest = "0".repeat(64) })],
+  ["no positive version change", (e) => changeMicrosoft(e, "private-upload", (v) => { v.result.observations[0].before.versionAfter = 1 })],
+  ["foreign private download admitted", (e) => changeMicrosoft(e, "private-upload", (v) => { v.result.observations[0].before.foreignDownloadStatus = 200 })],
+  ["other Team changed on clean upload", (e) => changeMicrosoft(e, "private-upload", (v) => { v.result.observations[0].before.otherTeam.after = "0".repeat(64) })],
+  ["wrong EICAR payload", (e) => changeMicrosoft(e, "private-upload", (v) => { v.result.observations[0].rejected.digest = "0".repeat(64) })],
+  ["EICAR admitted", (e) => changeMicrosoft(e, "private-upload", (v) => { v.result.observations[0].rejected.httpStatus = 200 })],
+  ["EICAR durable change", (e) => changeMicrosoft(e, "private-upload", (v) => { v.result.observations[0].rejected.durable[0].after = "0".repeat(64) })],
+  ["missing owner refusal", (e) => changeMicrosoft(e, "denied-owner", (v) => { v.result.attempts.pop() })],
+  ["owner refusal changed a blob", (e) => changeMicrosoft(e, "denied-owner", (v) => { v.result.attempts[0].durable[1].after = "0".repeat(64) })],
+  ["missing owned outage", (e) => changeMicrosoft(e, "scanner-outage", (v) => { v.result.connectionRefused = false })],
+  ["missing second Team outage", (e) => changeMicrosoft(e, "scanner-outage", (v) => { v.result.attempts.pop() })],
+  ["main daemon unhealthy", (e) => changeMicrosoft(e, "scanner-outage", (v) => { v.result.mainCleanAfter = false })],
+  ["missing G05 receipt", (e) => { delete e.g05 }],
+  ["G05 different snapshot tree", (e) => { e.g05.sourceTree = "0".repeat(40) }],
+  ["G05 control omitted", (e) => { e.g05.cases.pop() }],
+  ["G05 control duplicated", (e) => { e.g05.cases[0] = e.g05.cases[1] }],
+  ["G05 cleanup incomplete", (e) => { e.g05.cleanup.completed = false }],
+  ["G05 denied durable write", (e) => { e.g05.durableComparison.teams[0].after = "0".repeat(64) }],
+]) test("expanded verifier rejects " + name, () => {
+  const { evidence } = microsoftFixture(); mutate(evidence)
+  assert.throws(() => verifyScannerEvidence(evidence), /TEAMS_SCANNER_FAIL_CLOSED/)
 })

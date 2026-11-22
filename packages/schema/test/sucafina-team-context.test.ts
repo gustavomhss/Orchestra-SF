@@ -18,7 +18,7 @@ const principal = {
 const revisions = { configRevision: 0, accessRevision: "authority-1" }
 const choice = { profile, displayName: "Finance" }
 const otherChoice = { profile: otherProfile, displayName: "Finance" }
-const selector = { contractRevision: "sf-team-profile/1", kind: "team", profile }
+const selector = { contractRevision: "sf-team-profile/1", kind: "team", profile } as const
 const authenticated = {
   contractRevision: "sf-team-profile/1",
   status: "authenticated",
@@ -27,7 +27,7 @@ const authenticated = {
   accessRevision: revisions.accessRevision,
   administration: { status: "denied" },
   teams: { status: "ready", choices: [choice], selected: profile, configRevision: revisions.configRevision },
-}
+} as const
 
 describe("Teams profile canonical contracts", () => {
 
@@ -129,8 +129,8 @@ describe("Teams profile canonical contracts", () => {
       { status: "no-teams" },
       { status: "unavailable", reason: "consent-required" },
       { status: "unavailable", reason: "timeout" },
-    ]) {
-      const input = { ...authenticated, administration: { status: "available" }, teams }
+    ] as const) {
+      const input = { ...authenticated, administration: { status: "available" as const }, teams }
       const decoded = Schema.decodeUnknownSync(TeamProfile.Projection)(input)
       expect(Schema.encodeSync(TeamProfile.Projection)(decoded)).toEqual(input)
     }

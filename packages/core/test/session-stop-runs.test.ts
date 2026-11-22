@@ -14,6 +14,7 @@ import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import type { LocationServices } from "@orchestra/core/location-services"
 import { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionRunCoordinator } from "@orchestra/core/session/run-coordinator"
+import { technicalLocationMap } from "./fixture/technical-location-map"
 import { testEffect } from "./lib/effect"
 
 const projects = Layer.succeed(
@@ -250,7 +251,7 @@ describe("SessionV2 stops runs on archive and remove", () => {
         Layer.effectContext<LocationServices, never, never>(Effect.sync(() => { locations++ }).pipe(
           Effect.andThen(Effect.die("A deleted Session must not acquire provider/tool services")),
         )),
-      ))
+      ).pipe(Effect.map(technicalLocationMap)))
       yield* Effect.gen(function* () {
         const session = yield* SessionV2.Service
         const runs = yield* SessionExecution.Service

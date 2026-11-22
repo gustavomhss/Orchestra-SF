@@ -102,7 +102,7 @@ const SessionHistoryLimit = PositiveInt.check(Schema.isLessThanOrEqualTo(100))
 /** Corporate stream wrapper. The event member is the unchanged durable codec. */
 export const SessionEventTransport = Schema.Union([
   SessionEvent.Durable,
-  Schema.Struct({ namespace: TeamProfile.SessionNamespace, event: SessionEvent.Durable }),
+  Schema.Struct({ namespace: TeamProfile.SessionNamespaceTransport, event: SessionEvent.Durable }),
 ]).annotate({ identifier: "SessionEventTransport" })
 export type SessionEventTransport = typeof SessionEventTransport.Type
 
@@ -146,7 +146,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
         query: SessionsQuery,
         success: Schema.Struct({
           data: Schema.Array(Session.Info),
-          namespace: Schema.optional(TeamProfile.SessionNamespace),
+          namespace: Schema.optional(TeamProfile.SessionNamespaceTransport),
           cursor: Schema.Struct({
             previous: SessionsCursor.pipe(Schema.optional),
             next: SessionsCursor.pipe(Schema.optional),
@@ -182,7 +182,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
     )
     .add(
       HttpApiEndpoint.get("session.active", "/api/session/active", {
-        success: Schema.Struct({ data: Schema.Record(Session.ID, SessionActive), namespace: Schema.optional(TeamProfile.SessionNamespace) }),
+        success: Schema.Struct({ data: Schema.Record(Session.ID, SessionActive), namespace: Schema.optional(TeamProfile.SessionNamespaceTransport) }),
       }).annotateMerge(
         OpenApi.annotations({
           identifier: "v2.session.active",
@@ -628,7 +628,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
         query: SessionHistoryQuery,
         success: Schema.Struct({
           data: Schema.Array(SessionEvent.Durable),
-          namespace: Schema.optional(TeamProfile.SessionNamespace),
+          namespace: Schema.optional(TeamProfile.SessionNamespaceTransport),
           hasMore: Schema.Boolean,
         }).annotate({ identifier: "SessionHistory" }),
         error: SessionNotFoundError,

@@ -1,4 +1,5 @@
 """Real filesystem/SQLite controls; these do not impersonate an installed Azure VM."""
+from datetime import datetime, timezone
 import hashlib
 import importlib.util
 import io
@@ -253,6 +254,78 @@ class CheckpointTests(unittest.TestCase):
             checkpoint.bind_releases({**reservation, "sourceRelease": wrong_source}, g07, source["sha"],
                                      {**installed, "archiveSha256": wrong_source["archiveSha256"]})
 
+    def clone_inputs(self, receipt, name):
+        # These are component inputs only, never an observation of an Azure VM.
+        vm = "/subscriptions/component/resourceGroups/component/providers/Microsoft.Compute/virtualMachines/" + name
+        reservation = {
+            "schema": "orchestra-sf.g10-reservation.v1", "action": "verify-clone",
+            "candidate": receipt["binding"]["candidate"], "archiveSha256": receipt["binding"]["archiveSha256"],
+            "sourceRelease": receipt["binding"]["sourceRelease"], "sourceVmResourceId": receipt["binding"]["vmResourceId"],
+            "vmResourceId": vm, "networkEgressFenced": True, "credentialsDisabled": True,
+        }
+        file = self.root / (name + "-reservation.json")
+        checkpoint.write_private(file, reservation)
+        observation = {
+            "vm": {"source": "AZURE_IMDS", "resourceId": vm.lower(),
+                   "observedAtUtc": datetime.now(timezone.utc).isoformat()},
+            "reservationSha256": hashlib.sha256(file.read_bytes()).hexdigest(),
+        }
+        return reservation, observation
+
+    def test_reserved_clone_records_its_own_VM_reservation_and_time_separately_from_source(self):
+        source_vm = "/subscriptions/component/resourcegroups/component/providers/microsoft.compute/virtualmachines/source"
+        reservation, _, _ = self.release_inputs()
+        binding = {**self.binding, "sourceRelease": reservation["sourceRelease"], "vmResourceId": source_vm}
+        archive, receipt = checkpoint.checkpoint_files(self.roots, self.destination, binding)
+        results = []
+        for name in ("clone-a", "clone-b"):
+            reserved, observed = self.clone_inputs(receipt, name)
+            destination = self.root / name
+            destination.mkdir(mode=0o700)
+            result = checkpoint.restore_reserved_clone(archive, receipt, destination, reserved, observed)
+            results.append(result)
+            self.assertEqual(result["schema"], "orchestra-sf.teams-clone-integrity.v3")
+            self.assertEqual(result["binding"], binding)
+            self.assertEqual(result["clone"]["vm"], observed["vm"])
+            self.assertNotEqual(result["clone"]["vm"]["resourceId"], source_vm)
+            self.assertEqual(result["clone"]["reservationSha256"], observed["reservationSha256"])
+            self.assertGreaterEqual(datetime.fromisoformat(result["clone"]["verifiedAtUtc"]),
+                                    datetime.fromisoformat(observed["vm"]["observedAtUtc"]))
+            self.assertEqual(result["clone"]["isolation"], {
+                "source": "OPERATOR_ATTESTATION", "networkEgressFenced": True, "credentialsDisabled": True,
+            })
+            self.assertFalse(result["releaseQualified"])
+            self.assertEqual(result["businessRecovery"], "NOT_RUN")
+            self.assertEqual((destination / "restored/configuration/runtime.env").read_bytes(), b"COMPONENT_FIXTURE_ONLY=1\n")
+        self.assertNotEqual(results[0]["clone"], results[1]["clone"])
+        self.assertNotEqual(results[0]["clone"]["reservationSha256"], results[1]["clone"]["reservationSha256"])
+        self.assertEqual(results[0]["sourceArchiveSha256"], results[1]["sourceArchiveSha256"])
+
+    def test_reserved_clone_refuses_missing_changed_or_source_VM_evidence_before_writing(self):
+        source_vm = "/subscriptions/component/resourcegroups/component/providers/microsoft.compute/virtualmachines/source"
+        source, _, _ = self.release_inputs()
+        archive, receipt = checkpoint.checkpoint_files(self.roots, self.destination, {
+            **self.binding, "sourceRelease": source["sourceRelease"], "vmResourceId": source_vm,
+        })
+        reserved, observed = self.clone_inputs(receipt, "clone")
+        cases = [
+            ("missing-observation", reserved, {}),
+            ("wrong-observed-VM", reserved, {**observed, "vm": {**observed["vm"], "resourceId": source_vm}}),
+            ("missing-VM-identity", reserved, {**observed, "vm": {**observed["vm"], "resourceId": ""}}),
+            ("attested-VM", reserved, {**observed, "vm": {**observed["vm"], "source": "OPERATOR_ATTESTATION"}}),
+            ("invalid-reservation-digest", reserved, {**observed, "reservationSha256": "invalid"}),
+            ("missing-observation-time", reserved, {**observed, "vm": {**observed["vm"], "observedAtUtc": ""}}),
+            ("source-reservation", {**reserved, "action": "checkpoint"}, observed),
+            ("same-source-VM", {**reserved, "vmResourceId": source_vm},
+             {**observed, "vm": {**observed["vm"], "resourceId": source_vm}}),
+            ("other-backup-source", {**reserved, "sourceVmResourceId": reserved["vmResourceId"]}, observed),
+            ("missing-isolation-attestation", {**reserved, "credentialsDisabled": False}, observed),
+        ]
+        for name, reservation, observation in cases:
+            with self.subTest(name=name), self.assertRaises(ValueError):
+                checkpoint.restore_reserved_clone(archive, receipt, self.clone, reservation, observation)
+            self.assertEqual(list(self.clone.iterdir()), [])
+
 
 if __name__ == "__main__":
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(CheckpointTests)
@@ -262,7 +335,9 @@ if __name__ == "__main__":
     if receipt_path:
         checkpoint.write_private(Path(receipt_path), {
             "schema": "orchestra-sf.g10-component-tests.v1", "proofClass": "FILESYSTEM_COMPONENT_CONTROLS",
-            "candidateSha": os.environ.get("GITHUB_SHA"), "runId": os.environ.get("GITHUB_RUN_ID"),
+            "candidateSha": os.environ.get("G10_COMPONENT_SOURCE_SHA", os.environ.get("GITHUB_SHA")),
+            "candidateTree": os.environ.get("G10_COMPONENT_SOURCE_TREE"),
+            "workflowSha": os.environ.get("GITHUB_SHA"), "runId": os.environ.get("GITHUB_RUN_ID"),
             "runAttempt": os.environ.get("GITHUB_RUN_ATTEMPT"), "expectedCases": expected,
             "caseInventorySha256": hashlib.sha256(checkpoint.canonical_json(expected)).hexdigest(),
             "executed": result.testsRun, "failures": len(result.failures), "errors": len(result.errors),

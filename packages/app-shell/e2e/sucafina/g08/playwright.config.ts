@@ -3,8 +3,13 @@ import path from "node:path"
 
 const root = process.env.SF_G08_PRIVATE_ROOT
 const inventory = process.env.SF_G08_LIST_ONLY === "1"
+const output = root ?? process.env.SF_G08_TOOLING_EVIDENCE
 if (!root && !inventory) throw new Error("G08_PRIVATE_PLAN_REQUIRED")
 if (root && inventory) throw new Error("G08_INVENTORY_MUST_NOT_ATTACH_PRIVATE_HOST")
+if (!output || !path.isAbsolute(output)) throw new Error("G08_EXPLICIT_OUTPUT_ROOT_REQUIRED")
+const workspace = process.env.GITHUB_WORKSPACE
+if (inventory && workspace && (output === workspace || output.startsWith(path.resolve(workspace) + path.sep)))
+  throw new Error("G08_TOOLING_OUTPUT_OUTSIDE_CHECKOUT_REQUIRED")
 
 export default defineConfig({
   testDir: import.meta.dirname,
@@ -17,9 +22,9 @@ export default defineConfig({
   timeout: 180_000,
   expect: { timeout: 30_000 },
   preserveOutput: "always",
-  outputDir: root ? path.join(root, "playwright-output") : path.resolve(import.meta.dirname, "../../../../../g08-tooling-evidence/list-output"),
+  outputDir: path.join(output, root ? "playwright-output" : "list-output"),
   reporter: [["json", {
-    outputFile: root ? path.join(root, "playwright.json") : path.resolve(import.meta.dirname, "../../../../../g08-tooling-evidence/list.json"),
+    outputFile: path.join(output, root ? "playwright.json" : "list.json"),
   }]],
   metadata: {
     candidateSha: process.env.SF_G08_CANDIDATE_SHA,
