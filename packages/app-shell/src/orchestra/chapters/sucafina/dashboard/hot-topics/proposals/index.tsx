@@ -14,6 +14,7 @@ import { SF_STATE_FALLBACK_KEY, sfCommonKey, useSfPresentation } from "../../../
 import type { SfCopyKey, SfUiState } from "../../../shared/frame/types"
 import { SF_U38_COPY } from "@/i18n/orchestra-chapters/sf-u38"
 import "../u38.css"
+import "../../../reviews/workflows.css"
 
 type Key = keyof typeof SF_U38_COPY
 const key = (text: Key): SfCopyKey => text as SfCopyKey
@@ -293,7 +294,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
 
   return <SfPageFrame titleKey={key("sf.ui54.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
-    <div class="sf-u38-page" data-sf-surface="UI54">
+    <div data-sf-wave="polish" class="sf-u38-page sf-workflow" data-sf-surface="UI54">
       <SfStatePanel state={readState()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[readState()])}
         onRetryRead={() => bump((count) => count + 1)}>
         <section class="sf-u38-section">

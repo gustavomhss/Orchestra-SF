@@ -22,6 +22,7 @@ import {
 } from "./model"
 import "./u18.css"
 import "../intent/decision.css"
+import "../../reviews/workflows.css"
 
 type View = {
   state: SfUiState
@@ -277,7 +278,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
       tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="comparison"
       onLayoutMode={() => undefined}
     >
-      <div class="sf-decision-page sf-decision-choice" data-sf-wave="four" data-sf-decision="UI38" data-sf-surface="UI38">
+      <div class="sf-decision-page sf-decision-choice sf-workflow" data-sf-wave="four" data-sf-decision="UI38" data-sf-surface="UI38">
       <SfStatePanel
         state={currentState()} messageKey={u18ErrorKey(currentState())}
         onRetryRead={view.outcome === "unknown" ? undefined : () => void read()}

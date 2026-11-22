@@ -13,6 +13,7 @@ import { sfDecisionControls, sfPortfolioReady, sfSensitivityEvaluate,
   type SfSensitivityRequest, type SfSensitivityUnits } from "../scenarios/producer"
 import type { SfCaseControls, SfSensitivityResultView } from "../scenarios/model"
 import "./sensitivity.css"
+import "../../reviews/workflows.css"
 
 const k = (key: keyof typeof SF_U19_COPY) => key as SfCopyKey
 const horizonLabel = (start: string, end: string, locale: string) => {
@@ -245,7 +246,7 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
       } : undefined}
       secondaryActions={[]}
     >
-      <section class="sf-u19-sensitivity" data-sf-sensitivity data-sf-surface="UI44">
+      <section data-sf-wave="polish" class="sf-u19-sensitivity sf-workflow" data-sf-sensitivity data-sf-surface="UI44">
         <SfStatePanel state={store.status} messageKey={k("sf.u19.case.missing")}
           onRetryRead={() => setRefresh((n) => n + 1)}>
           <Show when={store.message}><p role="status" class="sf-u19-message">{t(store.message!)}</p></Show>
@@ -268,10 +269,10 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
               onRetryRead={() => setRefresh((n) => n + 1)}>
               <Show when={selection()}>
                 {(current) => <>
-                  <header class="sf-u19-sensitivity-header"><h2>{current().objective}</h2>
+                  <header class="sf-u19-sensitivity-header sf-section-header"><h2>{current().objective}</h2>
                     <p>{current().currency} · {horizonLabel(current().horizon.start, current().horizon.end, language.intl())}</p></header>
                   <Show when={routeResult()} fallback={
-                    <section class="sf-u19-sensitivity-form">
+                    <section class="sf-u19-sensitivity-form sf-section sf-form">
                       <p>{t("sf.u19.sensitivity.choose")}</p>
                       <fieldset disabled={store.busy || store.outcomeUnknown}>
                         <legend>{t("sf.u19.sensitivity.choose")}</legend>
@@ -346,7 +347,7 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
                                   <div><dt>{t("sf.u19.sensitivity.thresholdValue")}</dt><dd>{store.operator} {store.criterionValue} {store.units?.resultUnit}</dd></div>
                                   <div><dt>{t("sf.u19.sensitivity.basis")}</dt><dd>{store.minimum} — {store.maximum} ({store.steps}) {store.units?.parameterUnit}</dd></div></dl>
                                 <p>{t("sf.u19.scenarios.notCalculated")}</p>
-                                <div class="sf-u19-buttons">
+                                <div class="sf-u19-buttons sf-form-actions">
                                   <button type="button" class="mx-btn primary" disabled={store.busy || store.outcomeUnknown || !request()}
                                     onClick={evaluate}>{t("sf.u19.sensitivity.confirm")}</button>
                                   <button type="button" class="mx-btn" onClick={() => set("review", false)}>{t("sf.u19.action.cancel")}</button>

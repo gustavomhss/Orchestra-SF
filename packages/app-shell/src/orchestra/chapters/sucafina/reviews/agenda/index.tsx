@@ -11,6 +11,7 @@ import { SfReviewUpdate } from "@orchestra/schema/sucafina/reviews"
 import type { Schema } from "effect"
 import { operationGranted, PeriodText } from "../labels"
 import "./agenda.css"
+import "../workflows.css"
 
 type Section = Schema.Schema.Type<typeof SfReviewUpdate>["items"][number]
 type Preview = Readonly<{
@@ -256,8 +257,8 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
         busy: store.phase === "previewing", onInvoke: () => { void preview() },
       }}
     >
-      <div class="sf-n28" data-sf-surface="UI47" data-phase={store.phase}>
-        <form class="sf-n28-form" onSubmit={(event) => { event.preventDefault(); void discover(store.sourcePage) }}>
+      <div data-sf-wave="polish" class="sf-n28 sf-workflow" data-sf-surface="UI47" data-phase={store.phase}>
+        <form class="sf-n28-form sf-form sf-fields" onSubmit={(event) => { event.preventDefault(); void discover(store.sourcePage) }}>
           <label for={uid + "-page"}>{t("sf.u25.source")}</label>
           <input id={uid + "-page"} class="mx-input" value={store.sourcePage}
             onInput={(event) => setStore("sourcePage", event.currentTarget.value)}
@@ -274,7 +275,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
             <input id={uid + "-filter"} type="search" value={store.filter}
               onInput={(event) => setStore("filter", event.currentTarget.value)} />
           </label>
-          <section aria-label={t("sf.u25.available")} class="sf-n28-section">
+          <section aria-label={t("sf.u25.available")} class="sf-n28-section sf-section">
             <h2>{t("sf.u25.available")}</h2>
             <ul class="sf-n28-items">
               <For each={store.available.filter((item) => item.topic.toLocaleLowerCase().includes(store.filter.toLocaleLowerCase()))}>
@@ -293,14 +294,14 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
           </section>
         </SfStatePanel>
         <Show when={store.selected.length > 0 && store.status !== "denied" && store.status !== "session-expired"}>
-          <section class="sf-n28-section" aria-label={t("sf.u25.selected")}>
+          <section class="sf-n28-section sf-section" aria-label={t("sf.u25.selected")}>
             <h2>{t("sf.u25.selected")}</h2>
             <p>{t("sf.u25.limit")}</p>
             <ol class="sf-n28-items" data-sf-agenda-order>
               <For each={store.selected}>{(item, index) => <li class="mx-card" data-section-id={item.id}>
                 <strong>{item.topic}</strong>
                 <p>{t("sf.u25.period")}: <PeriodText start={item.period.start} end={item.period.end} /></p>
-                <div class="sf-n28-actions">
+                <div class="sf-n28-actions sf-form-actions">
                   <button type="button" class="mx-btn" disabled={index() === 0 || store.phase === "submitting" || store.phase === "outcome-unknown"}
                     onClick={() => reorder(item.id, -1)} aria-label={t("sf.u25.up") + ": " + item.topic}>{t("sf.u25.up")}</button>
                   <button type="button" class="mx-btn" disabled={index() === store.selected.length - 1 || store.phase === "submitting" || store.phase === "outcome-unknown"}
@@ -314,7 +315,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
           </section>
         </Show>
         <Show when={store.phase === "reviewing" && store.preview && store.status === "ready"}>
-          <section class="sf-n28-section" data-sf-agenda-preview>
+          <section class="sf-n28-section sf-section" data-sf-agenda-preview>
             <h2>{t("sf.u25.previewTitle")}</h2>
             <p>{t("sf.u25.selection")}: {store.preview?.selectionRef}</p>
             <ol>
@@ -325,7 +326,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
               </li>}</For>
             </ol>
             <p>{t("sf.u25.coverage")}</p>
-            <div class="sf-n28-actions">
+            <div class="sf-n28-actions sf-form-actions">
               <button class="mx-btn primary" disabled={!mayPreserve()} type="button" onClick={() => { void confirm() }}>
                 {t("sf.u25.confirm")}</button>
               <button class="mx-btn" type="button" onClick={invalidatePreview}>{t("sf.u25.revise")}</button>

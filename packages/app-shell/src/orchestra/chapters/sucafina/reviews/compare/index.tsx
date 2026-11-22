@@ -10,6 +10,7 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import { comparableReviewSections, preservedComponentRows, preservedSectionHasChanges, preservedValueRows, readPreservedProjection, reviewReadState, sameSourceMaterial, type PreservedComponent, type PreservedReview, type PreservedSourceRef, type PreservedValue, type ReviewProjection } from "../preserved/model"
 import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
 import "../preserved/preserved.css"
+import "../workflows.css"
 
 const key = (value: string) => value as SfCopyKey
 
@@ -216,8 +217,8 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
         busy: store.busy, onInvoke: () => { void read() },
       }}
     >
-      <div class="sf-n28" data-sf-surface="UI49" data-sf-compare-state={store.state}>
-        <form class="sf-n28-form" onSubmit={(event) => { event.preventDefault(); void read() }}>
+      <div data-sf-wave="polish" class="sf-n28 sf-workflow" data-sf-surface="UI49" data-sf-compare-state={store.state}>
+        <form class="sf-n28-form sf-form sf-fields" onSubmit={(event) => { event.preventDefault(); void read() }}>
           <label class="sf-n28-field" for={uid + "-previous"}>{t("sf.u32.previous")}
             <input id={uid + "-previous"} required maxlength="2048" autocomplete="off"
               value={store.previousRef} onInput={(event) => setStore({ previousRef: event.currentTarget.value,
@@ -251,9 +252,9 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
                 <Show when={store.changedOrder}><p role="status">{t("sf.u32.orderChanged")}</p></Show>
                 <h3>{t("sf.u32.diff")}</h3>
                 <Show when={changed() || store.changedOrder} fallback={<p>{t("sf.u32.unchanged")}</p>}>
-                  <div class="sf-n28-section" data-sf-comparison-diff="authorized">
+                  <div class="sf-n28-section sf-section" data-sf-comparison-diff="authorized">
                     <Show when={reviewSourcesChanged()}>
-                      <section class="mx-card sf-n28-section">
+                      <section class="mx-card sf-n28-section sf-section">
                         <h4>{t("sf.u32.reviewSources")}</h4>
                         <div class="sf-n28-scroll" role="region" aria-label={t("sf.u32.reviewSources")} tabIndex={0}>
                           <table>
@@ -275,7 +276,7 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
                       const valueRows = () => after() ? preservedValueRows(before, after()!) : []
                       const componentRows = () => after() ? preservedComponentRows(before, after()!) : []
                       return <Show when={after() && preservedSectionHasChanges(before, after()!)}>
-                        <section class="mx-card sf-n28-section" data-section-id={before.id}>
+                        <section class="mx-card sf-n28-section sf-section" data-section-id={before.id}>
                           <h4>{before.title}</h4>
                           <div class="sf-n28-scroll" role="region" aria-label={before.title} tabIndex={0}>
                             <table>

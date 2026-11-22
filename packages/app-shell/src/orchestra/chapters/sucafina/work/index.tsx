@@ -14,6 +14,7 @@ import { SfPageFrame } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { SfDataTable, type SfColumn, type SfSort, type SfUiState, type SfCopyKey as SfTableCopyKey } from "../shared/table"
 import "./work.css"
+import "../reviews/workflows.css"
 
 type Listed = Extract<typeof SfCollaboration.operations["collaboration.work-list"]["output"]["Type"], { status: "ok" }>["value"]
 type WorkItem = Listed["items"][number]
@@ -398,7 +399,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
         busy: detailState() === "loading", onInvoke: () => { const next = selectedRef() ?? items()?.[0]?.actionRef; if (next) void selectWork(next) },
       } : undefined}
     >
-      <section class="sf-work" data-sf-surface="UI30" data-sf-polish="planner" data-sf-wave="four">
+      <section class="sf-work sf-workflow" data-sf-surface="UI30" data-sf-polish="planner" data-sf-wave="four">
         <Show when={owner.state().status === "ready"}>
           <form class="sf-work-filters" data-sf-work-period onSubmit={(event) => { event.preventDefault(); void loadWork() }}>
             <label>{t("sf.u41.start")}

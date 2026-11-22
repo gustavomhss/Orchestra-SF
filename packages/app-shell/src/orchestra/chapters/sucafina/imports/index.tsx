@@ -16,6 +16,7 @@ import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { readSfAuthorizedImportHistoryReference } from "./history"
 import "./imports.css"
+import "../reviews/workflows.css"
 
 type ImportSurface = "planner" | "dashboard"
 type TargetDiscovery = Readonly<{ surface: ImportSurface; start: string; end: string; owner: string }>
@@ -601,7 +602,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
         busy: state.busy, onInvoke: () => { void download() },
       } : undefined}
     >
-      <section class="sf-files" data-sf-leaf="u23" data-sf-surface={props.surfaceId}
+      <section data-sf-wave="polish" class="sf-files sf-workflow" data-sf-leaf="u23" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <SfStatePanel state={state.status} messageKey={key(message())}
           onRetryRead={state.phase === "unknown" ? undefined : () => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) {
@@ -758,7 +759,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   <p>{item.id} · {item.at} · {item.status} · {item.version}</p>}</For>
               </section>}
             </Show>
-            <div class="sf-files-actions">
+            <div class="sf-files-actions sf-form-actions">
               <Show when={isImport()}>
                 <button type="button" class="mx-btn" disabled={editLocked()}
                   onClick={cancelPreview}>{t("sf.u23.cancel")}</button>

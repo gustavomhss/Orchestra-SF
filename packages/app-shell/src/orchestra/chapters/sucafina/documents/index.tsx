@@ -13,6 +13,7 @@ import { SfPageFrame } from "../shared/frame"
 import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import "./documents.css"
+import "../reviews/workflows.css"
 
 type FileSurface = "dashboard" | "planner" | "procurement"
 type Requests = Extract<SfFilesOperationOutput<"files.document-requests">, { status: "ok" }>["value"]
@@ -560,7 +561,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   return (
     <SfPageFrame titleKey={key(title())} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}>
-      <section class="sf-files" data-sf-leaf="u24" data-sf-surface={props.surfaceId}
+      <section data-sf-wave="polish" class="sf-files sf-workflow" data-sf-leaf="u24" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <SfStatePanel state={state.status} messageKey={key(message())} onRetryRead={refresh}>
           <Show when={!catalog() || props.route.kind === "detail"}>

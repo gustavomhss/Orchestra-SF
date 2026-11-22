@@ -14,6 +14,7 @@ import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import "./analyses.css"
 import "../intent/decision.css"
+import "../../reviews/workflows.css"
 
 type Choices = Extract<typeof SfAnalyses.operations["intelligence.analysis.choices"]["output"]["Type"], { status: "ok" }>["value"]
 type Case = Choices["cases"][number]
@@ -381,7 +382,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     <SfPageFrame titleKey={k("sf.ui41.title")} density="comfortable" layout="work"
       context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       onLayoutMode={() => undefined}>
-      <section class="sf-analyses sf-decision-page sf-decision-analyses" data-sf-wave="four" data-sf-decision="UI41" data-sf-surface="UI41">
+      <section class="sf-analyses sf-decision-page sf-decision-analyses sf-workflow" data-sf-wave="four" data-sf-decision="UI41" data-sf-surface="UI41">
         <SfStatePanel state={viewState()} messageKey={k(message())}
           onRetryRead={() => { void loadChoices() }}>
           <div class="mx-card sf-decision-analysis-editor" hidden={view.phase === "reviewing" || view.phase === "starting"}>

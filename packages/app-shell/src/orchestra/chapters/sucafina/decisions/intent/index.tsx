@@ -10,6 +10,7 @@ import { SfCaseSourcesEditor } from "./sources"
 import { sfDecisionHref } from "../cases/route"
 import "../cases/n24.css"
 import "./decision.css"
+import "../../reviews/workflows.css"
 
 const k = (value: string) => value as SfCopyKey
 
@@ -50,7 +51,7 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
         busy: false, onInvoke: () => setUi({ editing: true, editorMounted: true }),
       }]}
     >
-      <div class="sf-n24 sf-decision-page sf-decision-intent" data-sf-wave="four" data-sf-decision="UI34" data-sf-surface="UI34" data-sf-case-ref={source()} data-sf-case-version={data()?.version}>
+      <div class="sf-n24 sf-decision-page sf-decision-intent sf-workflow" data-sf-wave="four" data-sf-decision="UI34" data-sf-surface="UI34" data-sf-case-ref={source()} data-sf-case-version={data()?.version}>
         <Show when={route() && back()}>
           <A class="mx-btn sf-decision-back" href={back()!}>{t("sf.ui33.return")}</A>
         </Show>

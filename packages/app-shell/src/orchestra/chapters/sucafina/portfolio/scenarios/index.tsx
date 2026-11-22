@@ -16,6 +16,7 @@ import { sfCandidateRef, sfDecisionControls, sfPortfolioEvaluate, sfPortfolioHis
 import type { SfCaseControls, SfPortfolioCombination, SfPortfolioHistory,
   SfPortfolioResultView, SfRecordedPortfolio } from "./model"
 import "./scenarios.css"
+import "../../reviews/workflows.css"
 
 const k = (key: keyof typeof SF_U19_COPY) => key as SfCopyKey
 const horizonLabel = (start: string, end: string, locale: string) => {
@@ -264,7 +265,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
       } : undefined}
       secondaryActions={[]}
     >
-      <section class="sf-u19-scenarios" data-sf-scenarios data-sf-surface={props.surfaceId}>
+      <section data-sf-wave="polish" class="sf-u19-scenarios sf-workflow" data-sf-scenarios data-sf-surface={props.surfaceId}>
         <SfStatePanel state={store.status} messageKey={k("sf.u19.case.missing")}
           onRetryRead={() => setRefresh((n) => n + 1)}>
           <Show when={store.message}><p role="status" class="sf-u19-message">{t(store.message!)}</p></Show>
@@ -285,7 +286,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
               onRetryRead={() => setRefresh((n) => n + 1)}>
               <Show when={selectedCase()}>
                 {(source) => <>
-                  <header class="sf-u19-case-head">
+                  <header class="sf-u19-case-head sf-section-header">
                     <h2>{source().objective}</h2>
                     <p>{source().currency} · {horizonLabel(source().horizon.start, source().horizon.end, language.intl())} · {t("sf.u19.case.version")} {source().caseRef.version}</p>
                     <button class="mx-btn" type="button" onClick={() => routeTo("list")}>{t("sf.u19.case.choose")}</button>
@@ -300,7 +301,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
                       </button>
                     </>}</Show>
                   }>
-                    <section class="sf-u19-picker">
+                    <section class="sf-u19-picker sf-section sf-form">
                       <h3>{t("sf.u19.scenarios.universe")}</h3>
                       <p>{t("sf.u19.scenarios.notCalculated")}</p>
                       <fieldset disabled={store.busy || store.outcomeUnknown}>
