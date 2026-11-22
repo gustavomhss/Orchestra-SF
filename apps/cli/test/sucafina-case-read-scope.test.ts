@@ -8,6 +8,7 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { createSfAnalysisHostServices } from "../src/sucafina-product/analysis-host-services.ts"
 import { createSfBusinessServices } from "../src/sucafina-product/business-services.ts"
 import { createSfProcurementCaseReadScope } from "../src/sucafina-product/procurement-case-read-scope.ts"
+import { createResidentAiBundle } from "../../../modules/sucafina/Sucafinav1/product/ai/resident.ts"
 import { createSfProductAuthority } from "../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { createSfSourcePersistence } from "../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
@@ -184,13 +185,25 @@ test("canonical Planner case remains readable after the original global Procurem
 
 test("analysis preparation distinguishes unavailable case evidence from a refused selection", async () => {
   await withFixture(async (fixture) => {
+    const root = path.resolve(import.meta.dir, "../../../modules/sucafina/Sucafinav1/product/ai")
+    const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
+    const selected = bundle.profiles.map((profile) => {
+      const skills = bundle.skills.filter((skill) => profile.allowedSkills.includes(skill.id))
+      return {
+        profile, skills, manifestDigest: bundle.manifestDigest,
+        operationIds: profile.allowedOperations.filter((operation) => skills.some((skill) => skill.allowedOperations.includes(operation))),
+      }
+    })
+    const finance = selected.find((entry) => entry.profile.id === "sf_finance")
+    const forecast = finance?.skills.find((skill) => skill.id === "sf-explicar-forecast")
+    if (!finance || !forecast) throw new Error("Finance forecast skill missing from fixture manifest")
     const analysis = createSfAnalysisHostServices({
-      business: fixture.business, authority: fixture.authority, selected: [], analysisSelectionWrites: new WeakSet<object>(),
+      business: fixture.business, authority: fixture.authority, selected, analysisSelectionWrites: new WeakSet<object>(),
     })
     const caseRef = { id: fixture.plannerCase.id, incarnation: fixture.plannerCase.incarnation, version: fixture.plannerCase.version }
     const request = {
-      caseRef, objective: "Inspect an unavailable case source", profileId: "sf_finance", profileVersion: "1",
-      skillId: "sf-explicar-forecast", skillVersion: "1", manifestDigest: "a".repeat(64),
+      caseRef, objective: "Inspect an unavailable case source", profileId: finance.profile.id, profileVersion: finance.profile.version,
+      skillId: forecast.id, skillVersion: forecast.version, manifestDigest: finance.manifestDigest,
       outputSchemaVersion: "sf-contribution-v1" as const, requestedOperationScope: [],
     }
     const prepare = (ref = caseRef) => {
