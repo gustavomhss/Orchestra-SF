@@ -257,30 +257,37 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     drawn: false,
   })
 
-  const rates = { currency: "USD", fxRates: [{ code: "EUR", rate: 1.08 }] }
+  const rates = { currency: "USD", fxRates: [{ code: "EUR", rate: 1.12 }] }
   const requests = [
     draft("a", "draft", undefined, undefined, { estAmount: 7 }),
     draft("b", "po_issued", {
       expenseType: "OPEX",
+      currency: "USD",
+      approvalBaseCurrency: "USD",
       lines: [{ qty: 2, unitPrice: 15 }],
     }),
     draft("c", "po_approved", {
-      expenseType: "opex",
+      expenseType: "OPEX",
+      currency: "USD",
+      approvalBaseCurrency: "USD",
       lines: [{ qty: 1, unitPrice: 99 }],
     }),
     draft("d", "cancelled"),
     draft(
       "e",
       "po_issued",
-      { expenseType: "CAPEX" },
-      { quotes: [{ id: "q1", total: 10, currency: "EUR" }], selectedId: "q1" },
+      { expenseType: "CAPEX", currency: "EUR", approvalBaseCurrency: "USD", fxRate: 1.08, lines: [{ qty: 2, unitPrice: 5 }] },
+      { quotes: [{ id: "q1", total: 12, currency: "EUR" }], selectedId: "q1" },
     ),
+    draft("unverifiable", "po_issued", { expenseType: "CAPEX", lines: [{ qty: 1, unitPrice: 91827 }] }),
   ]
   const board = procurementDashboard(requests, rates)
   expect(board.edits).toBe(false)
   expect(board.open).toBe(2)
   expect(board.issued.OPEX).toBe(30)
   expect(board.issued.CAPEX).toBe(10.8)
+  expect(board.approved.OPEX).toBe(99)
+  expect(board.unavailable).toEqual(["unverifiable"])
   expect(board.issued.OPEX).not.toBe(129)
   expect(procurementDashboardWrite()).toEqual({ ok: false })
   expect(requests[0].status).toBe("draft")
@@ -364,7 +371,7 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     requestValue(
       {
         ...draft("x", "draft"),
-        po: { lines: [{ qty: 0, unitPrice: 5 }] },
+        po: { currency: "USD", lines: [{ qty: 0, unitPrice: 5 }] },
         pr: { estAmount: 9 },
       },
       rates,
@@ -375,13 +382,7 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
 function draft(
   number: string,
   status: string,
-  po?: {
-    expenseType?: string
-    lines?: { qty: number; unitPrice: number }[]
-    number?: string
-    supplier?: string
-    iban?: string
-  },
+  po?: RequestView["po"],
   sourcing?: {
     quotes: { id: string; total: number; currency: string }[]
     selectedId: string

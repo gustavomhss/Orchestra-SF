@@ -9,40 +9,59 @@ import { createLocalInstallation } from "../local/entry.ts"
 
 test("All editor screens keep readable field widths and ordered configuration sections", async () => {
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "operator-browser-"))
-  const file = await prepareLocalConfiguration(root)
-  const access = await prepareOperatorAccess(file, true)
   const environment = {
     ORCHESTRA_DB: path.join(root, "host-data", "orchestra.db"), ORCHESTRA_INHERIT_CREDENTIALS: "0",
     ORCHESTRA_CONFIG_DIR: path.join(root, "host-config"), ORCHESTRA_CREDENTIAL_KEY_FILE: path.join(root, "host-credential.key"),
     TMPDIR: path.join(root, "host-tmp"), XDG_DATA_HOME: path.join(root, "host-data"), XDG_CONFIG_HOME: path.join(root, "host-config"),
     XDG_CACHE_HOME: path.join(root, "host-cache"), XDG_STATE_HOME: path.join(root, "host-state"),
   }
-  const installation = await createLocalInstallation({ origin: "http://localhost:4110" }, file, environment)
-  const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  const resources: {
+    installation?: Awaited<ReturnType<typeof createLocalInstallation>>
+    browser?: import("@playwright/test").Browser
+  } = {}
+  const server = Bun.serve({
+    hostname: "127.0.0.1", port: 0,
+    fetch: async (request) => await resources.installation?.handler(request) ?? new Response(null, { status: 404 }),
+  })
+  const origin = `http://127.0.0.1:${server.port}`
   const failures: string[] = []
   try {
-    const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
+    const file = await prepareLocalConfiguration(root, origin)
+    const access = await prepareOperatorAccess(file, true)
+    resources.installation = await createLocalInstallation({ origin }, file, environment)
+    const { chromium } = await import("@playwright/test")
+    resources.browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8000 })
+    const page = await resources.browser.newPage({ viewport: { width: 1440, height: 1000 } })
+    page.setDefaultTimeout(8000)
+    page.setDefaultNavigationTimeout(8000)
     page.on("pageerror", (error) => { failures.push(error.message) })
-    await page.goto(pathToFileURL(access.artifact).href)
-    await page.waitForURL("http://localhost:4110/sucafina/dashboard")
+    const [enrollment] = await Promise.all([
+      page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return url.origin === origin && url.pathname === "/sucafina/auth/local"
+      }),
+      page.goto(pathToFileURL(access.artifact).href),
+    ])
+    expect(enrollment.status()).toBe(303)
+    await page.waitForURL(`${origin}/sucafina/dashboard`)
     await mkdir(path.join(import.meta.dir, "artifacts"), { recursive: true })
     // Exercise populated planner layouts through the same durable command path as the UI.
     // This is isolated test data, never a write to the owner's installation.
-    const plan = await page.request.post("http://localhost:4110/sucafina/planner", {
-      headers: { Origin: "http://localhost:4110" },
+    const plan = await page.request.post(`${origin}/sucafina/planner`, {
+      headers: { Origin: origin },
       data: { page: "Versions", action: "save", version: 0, values: {} },
+      timeout: 8000,
     })
     expect(plan.ok()).toBe(true)
     expect(await plan.json()).toMatchObject({ ok: true })
-    const topic = await page.request.post("http://localhost:4110/sucafina/dashboard", {
-      headers: { Origin: "http://localhost:4110" },
+    const topic = await page.request.post(`${origin}/sucafina/dashboard`, {
+      headers: { Origin: origin },
       data: { page: "Hot Topics & Actions", action: "save", version: 0, values: { action: "Browser layout acceptance", owner: "", due: "2026-12-01", status: "open", priority: "normal", notes: "Temporary browser fixture" } },
+      timeout: 8000,
     })
     expect(topic.ok()).toBe(true)
     expect(await topic.json()).toMatchObject({ ok: true })
-    await page.goto("http://localhost:4110/sucafina/dashboard?page=Executive+Dashboard")
+    await page.goto(`${origin}/sucafina/dashboard?page=Executive+Dashboard`)
     await page.screenshot({ path: path.join(import.meta.dir, "artifacts", "forms-dashboard-desktop.png"), fullPage: true })
     const metrics = page.locator(".metric")
     const first = await metrics.nth(0).boundingBox()
@@ -63,7 +82,7 @@ test("All editor screens keep readable field widths and ordered configuration se
     for (const width of [1440, 1024, 390]) {
       await page.setViewportSize({ width, height: 1000 })
       for (const surface of ["dashboard", "planner", "procurement"]) {
-        await page.goto(`http://localhost:4110/sucafina/${surface}`)
+        await page.goto(`${origin}/sucafina/${surface}`)
         const hrefs = await page.locator("nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
         expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
         expect(new Set(hrefs).size).toBe(hrefs.length)
@@ -78,7 +97,7 @@ test("All editor screens keep readable field widths and ordered configuration se
         }
         await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `forms-${surface}-${width}.png`), fullPage: true })
         for (const href of hrefs) {
-          const response = await page.goto(new URL(href, `http://localhost:4110/sucafina/${surface}`).href)
+          const response = await page.goto(new URL(href, `${origin}/sucafina/${surface}`).href)
           expect(response?.status()).toBe(200)
           for (const summary of await page.locator('details.editor-panel > summary').all()) {
             if (await summary.locator('..').getAttribute('open') === null) await summary.click()
@@ -146,8 +165,14 @@ test("All editor screens keep readable field widths and ordered configuration se
     expect(failures).toEqual([])
   } finally {
     await server.stop(true)
-    await browser.close()
-    await installation.dispose()
-    await rm(root, { recursive: true, force: true })
+    try {
+      await resources.browser?.close()
+    } finally {
+      try {
+        await resources.installation?.dispose()
+      } finally {
+        await rm(root, { recursive: true, force: true })
+      }
+    }
   }
 }, 60000)

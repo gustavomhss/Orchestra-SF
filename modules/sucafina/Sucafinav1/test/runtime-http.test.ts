@@ -160,16 +160,21 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
   const page = await browser.newPage()
   const errors: string[] = []
   page.on("pageerror", (error) => errors.push(error.message))
+  page.setDefaultTimeout(8000)
+  page.setDefaultNavigationTimeout(8000)
   try {
     await page.goto(
       `http://127.0.0.1:${server.port}/sucafina/dashboard?page=IT%20Risks&year=2026&opsYear=2024&execYear=2027`,
     )
     console.info("browser phase: page loaded")
-    const form = page.locator('form[data-command="save"]').last()
+    await page.getByText("Add risk", { exact: true }).click()
+    const form = page.locator('form[data-command="save"][data-record=""]')
     await form.locator('[name="name"]').fill("Browser risk")
     await form.locator('[name="impact"]').selectOption("3")
     await form.locator('[name="probability"]').selectOption("2")
+    const created = page.waitForResponse((response) => response.request().method() === "POST")
     await form.locator('button[type="submit"]').click()
+    expect((await created).status()).toBe(200)
     await page.waitForFunction(
       () => document.querySelector('form[data-command="save"][data-record="record-1"]') !== null,
     )
