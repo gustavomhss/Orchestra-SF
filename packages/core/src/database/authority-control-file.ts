@@ -5,15 +5,19 @@ import { dirname } from "node:path"
 import { AuthorityGeneration } from "../session/authority-generation"
 
 /** The sibling control file is current authority, never part of a business-data restore. */
-export function open<A extends { close(): void }>(filename: string, connect: (filename: string) => A): A {
+export function open<A extends { close(): void }>(
+  filename: string, connect: (filename: string) => A, options: { create?: boolean } = {},
+): A {
   const fail = () => { throw new AuthorityGeneration.GenerationError("unavailable") }
   const parent = statSync(dirname(filename))
   if (!parent.isDirectory() || (parent.mode & 0o022) !== 0) return fail()
   let fd: number
   try {
-    fd = openSync(filename, constants.O_CREAT | constants.O_EXCL | constants.O_RDWR | constants.O_NOFOLLOW, 0o600)
+    fd = options.create === false
+      ? openSync(filename, constants.O_RDWR | constants.O_NOFOLLOW)
+      : openSync(filename, constants.O_CREAT | constants.O_EXCL | constants.O_RDWR | constants.O_NOFOLLOW, 0o600)
   } catch (error) {
-    if (!error || typeof error !== "object" || !("code" in error) || error.code !== "EEXIST") throw error
+    if (options.create === false || !error || typeof error !== "object" || !("code" in error) || error.code !== "EEXIST") throw error
     fd = openSync(filename, constants.O_RDWR | constants.O_NOFOLLOW)
   }
   let driver: A | undefined
