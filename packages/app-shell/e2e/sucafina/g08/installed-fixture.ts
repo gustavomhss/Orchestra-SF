@@ -5,8 +5,9 @@ import { randomUUID } from "node:crypto"
 import { Schema } from "effect"
 import { SfInstallationList, SfTeamContextResult } from "@orchestra/schema/sucafina/context"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { Session } from "@orchestra/schema/session"
 import { landing } from "./landing-contract.ts"
-import { canonicalAddress, cases, digest, privateText, readPlan, record, validateHost, validatePackage, writePrivate } from "../../../../../script/sf-ci/g08-private-evidence.mjs"
+import { canonicalAddress, cases, digest, privateText, readPlan, record, validateGrantProof, validateHost, validatePackage, writePrivate } from "../../../../../script/sf-ci/g08-private-evidence.mjs"
 
 export type Plan = Awaited<ReturnType<typeof readPlan>>
 export type Target = Plan["target"]
@@ -25,7 +26,7 @@ export async function requireBoundPeer(page: Page, response: Response) {
     throw new Error("G08_BROWSER_INGRESS_NOT_RESERVED_VM")
 }
 
-async function originalRequest(page: Page, url: string, method: "GET" | "POST" = "GET", body?: unknown) {
+async function originalRequest(page: Page, url: string, method: "GET" | "POST" | "DELETE" = "GET", body?: unknown, selector?: string) {
   const binding = contextBindings.get(page.context())
   if (!binding || new URL(page.url()).origin !== binding.origin || new URL(url).origin !== binding.origin)
     throw new Error("G08_ORIGINAL_BROWSER_ORIGIN_REQUIRED")
@@ -34,18 +35,22 @@ async function originalRequest(page: Page, url: string, method: "GET" | "POST" =
   const [response] = await Promise.all([
     page.waitForResponse((reply) => reply.url() === url && reply.request().method() === method &&
       reply.request().headers()[observationHeader] === nonce),
-    page.evaluate(async ({ requestURL, requestMethod, requestBody, requestNonce, header }) => {
+    page.evaluate(async ({ requestURL, requestMethod, requestBody, requestNonce, header, requestedSelector }) => {
       await fetch(requestURL, {
         method: requestMethod, credentials: "same-origin", redirect: "manual", cache: "no-store",
         signal: AbortSignal.timeout(30_000),
-        headers: { [header]: requestNonce, ...(requestMethod === "POST" ? { "content-type": "application/json" } : {}) },
+        headers: { [header]: requestNonce, ...(requestedSelector ? { "x-sf-team-profile": requestedSelector } : {}),
+          ...(requestMethod === "POST" ? { "content-type": "application/json" } : {}) },
         ...(requestMethod === "POST" ? { body: JSON.stringify(requestBody) } : {}),
       })
-    }, { requestURL: url, requestMethod: method, requestBody: body, requestNonce: nonce, header: observationHeader }),
+    }, { requestURL: url, requestMethod: method, requestBody: body, requestNonce: nonce, header: observationHeader, requestedSelector: selector }),
   ])
   // Read the original network Response after peer validation, never a body supplied by page JavaScript.
   if (method === "POST" && response.request().postData() !== JSON.stringify(body))
-    throw new Error("G08_ORIGINAL_ADMIN_COMMAND_CHANGED")
+    throw new Error("G08_ORIGINAL_COMMAND_CHANGED")
+  if (response.request().headers()["x-sf-team-profile"] !== selector ||
+    method === "DELETE" && response.request().postData() !== null)
+    throw new Error("G08_ORIGINAL_SESSION_SELECTOR_CHANGED")
   await requireBoundPeer(page, response)
   return response
 }
@@ -171,7 +176,9 @@ function adminURL(target: Target) {
   return url.href
 }
 export async function adminCatalog(page: Page, target: Target) {
-  const response = await originalRequest(page, adminURL(target))
+  return adminCatalogValue(await originalRequest(page, adminURL(target)), target)
+}
+async function adminCatalogValue(response: Response, target: Target) {
   if (response.status() !== 200 || response.headers()["cache-control"] !== "no-store")
     throw new Error("G08_REAL_ADMIN_ROUTE_NOT_AVAILABLE")
   const catalog = Schema.decodeUnknownSync(AdminCatalog, strict)(await response.json())
@@ -192,6 +199,150 @@ export async function configureTeam(page: Page, target: Target, action: "enable"
   if (!result.changed || result.configRevision === expectedRevision)
     throw new Error("G08_ADMIN_MUTATION_OUTCOME_REQUIRES_ORIGINAL_READ")
   return result
+}
+
+/** Observe the native #661 panel's own request and rendered rows, never a replacement API-only pass. */
+export async function openAdministration(page: Page, target: Target) {
+  const toggle = page.locator(landing.adminToggle)
+  await expect(toggle).toBeVisible()
+  const action = await toggle.getAttribute("aria-expanded") === "true"
+    ? () => page.locator(landing.adminRead).click()
+    : () => toggle.click()
+  const catalog = await adminCatalogValue(await uiReply(page, adminURL(target), "GET", action), target)
+  await expect(page.locator(landing.administration)).toHaveAttribute("data-sf-team-administration", "ready")
+  // The reserved fixture is intentionally bounded; no partial/paginated UI is promoted to the full catalog.
+  expect(catalog.profiles.length).toBeGreaterThan(0)
+  expect(catalog.profiles.length).toBeLessThanOrEqual(100)
+  await expect(page.locator(landing.adminRow)).toHaveCount(catalog.profiles.length)
+  for (const entry of catalog.profiles) {
+    const row = page.locator('[data-sf-admin-team="' + entry.profile.teamObjectId + '"]')
+    await expect(row).toBeVisible()
+    await expect(row.locator('[data-sf-admin-action="' + (entry.enabled ? "disable" : "enable") + '"]')).toBeEnabled()
+  }
+  return catalog
+}
+
+export async function configureTeamUI(page: Page, target: Target, action: "enable" | "disable", expectedRevision: TeamProfile.ConfigRevision) {
+  const command = { action, profile: teamRef(target), expectedRevision }
+  const control = page.locator('[data-sf-admin-team="' + target.teamObjectId + '"]')
+    .locator('[data-sf-admin-action="' + action + '"]')
+  const response = await uiReply(page, adminURL(target), "POST", () => control.click())
+  expect(response.request().postDataJSON()).toEqual(command)
+  if (response.status() !== 200 || response.headers()["cache-control"] !== "no-store")
+    throw new Error("G08_ADMIN_MUTATION_OUTCOME_REQUIRES_ORIGINAL_READ")
+  const result = Schema.decodeUnknownSync(AdminResult, strict)(await response.json())
+  if (!result.changed || result.configRevision === expectedRevision)
+    throw new Error("G08_ADMIN_MUTATION_OUTCOME_REQUIRES_ORIGINAL_READ")
+  return result
+}
+
+// Session.Info at the inspected producer carries this original namespace. Requiring it also
+// fails closed when an older producer serializes a technical-mode response without an owner.
+const InstalledSessionInfo = Session.Info.mapFields((fields) => ({ ...fields, namespace: TeamProfile.SessionNamespace }))
+const SessionReply = Schema.Struct({ data: InstalledSessionInfo })
+const SessionList = Schema.Struct({
+  data: Schema.Array(InstalledSessionInfo), namespace: TeamProfile.SessionNamespace,
+  cursor: Schema.Struct({ previous: Schema.optional(Schema.String), next: Schema.optional(Schema.String) }),
+})
+export type SessionInventory = {
+  namespace: TeamProfile.SessionNamespace
+  entries: readonly unknown[]
+}
+function sessionSelector(target: Target) {
+  return JSON.stringify(Schema.decodeUnknownSync(TeamProfile.Selector, strict)({
+    contractRevision: "sf-team-profile/1", kind: "team", profile: teamRef(target),
+  }))
+}
+function sessionOwner(namespace: TeamProfile.SessionNamespace, target: Target, principal: string) {
+  expect(namespace.owner.profile).toEqual(teamRef(target))
+  expect(namespace.owner.principal).toEqual({ tenantId: target.tenantId, principalObjectId: principal })
+}
+export async function sessionRequest(page: Page, target: Target, suffix = "", method: "GET" | "POST" | "DELETE" = "GET", body?: unknown, invocationId?: string) {
+  if (method === "DELETE" && (!invocationId || !/^[a-f0-9]{32}$/.test(invocationId) ||
+    !new RegExp("^/ses_g08_" + invocationId + "_[a-f0-9]{32}$").test(suffix)))
+    throw new Error("G08_ONLY_CURRENT_INVOCATION_CLEANUP_ALLOWED")
+  if (!/^$|^\/ses_g08_[a-f0-9_]+$/.test(suffix)) throw new Error("G08_ONLY_DISPOSABLE_SESSION_PATH_ALLOWED")
+  return originalRequest(page, new URL(target.mount + "/api/session" + suffix, target.publicOrigin).href,
+    method, body, sessionSelector(target))
+}
+async function sessionJSON(response: Response) {
+  if (response.status() !== 200 || response.headers()["cache-control"] !== "no-store" ||
+    !/^application\/json(?:;|$)/i.test(response.headers()["content-type"] ?? ""))
+    throw new Error("G08_ORIGINAL_SESSION_RESPONSE_REQUIRED")
+  return response.json()
+}
+export async function sessionValue(response: Response, target: Target, principal: string, id: string) {
+  const value = Schema.decodeUnknownSync(Schema.toCodecJson(SessionReply), strict)(await sessionJSON(response))
+  sessionOwner(value.data.namespace, target, principal)
+  expect(value.data.id).toBe(id)
+  return Schema.encodeSync(Schema.toCodecJson(InstalledSessionInfo))(value.data)
+}
+export async function sessionInventory(page: Page, target: Target, principal: string): Promise<SessionInventory> {
+  const entries: unknown[] = [], identifiers = new Set<string>(), cursors = new Set<string>()
+  let namespace: TeamProfile.SessionNamespace | undefined, cursor: string | undefined
+  for (let pageIndex = 0; pageIndex < 100; pageIndex++) {
+    const url = new URL(target.mount + "/api/session", target.publicOrigin)
+    url.search = new URLSearchParams(cursor ? { limit: "100", cursor } : {
+      limit: "100", includeArchived: "true", order: "asc",
+    }).toString()
+    const value = Schema.decodeUnknownSync(Schema.toCodecJson(SessionList), strict)(
+      await sessionJSON(await originalRequest(page, url.href, "GET", undefined, sessionSelector(target))))
+    sessionOwner(value.namespace, target, principal)
+    if (namespace) expect(value.namespace).toEqual(namespace)
+    else namespace = value.namespace
+    for (const entry of value.data) {
+      expect(entry.namespace).toEqual(namespace)
+      if (identifiers.has(entry.id)) throw new Error("G08_SESSION_INVENTORY_DUPLICATE")
+      identifiers.add(entry.id)
+      entries.push(Schema.encodeSync(Schema.toCodecJson(InstalledSessionInfo))(entry))
+    }
+    if (value.data.length === 0 || !value.cursor.next)
+      return { namespace, entries: entries.sort((a, b) => String(record(a).id).localeCompare(String(record(b).id))) }
+    if (cursors.has(value.cursor.next)) throw new Error("G08_SESSION_CURSOR_REPEATED")
+    cursors.add(value.cursor.next)
+    cursor = value.cursor.next
+  }
+  throw new Error("G08_SESSION_INVENTORY_INCOMPLETE")
+}
+export function chatHref(target: Target) {
+  const url = new URL("/orchestra/sf-sessions/new", target.publicOrigin)
+  url.search = ownerQuery(target).toString()
+  return url.href
+}
+/** The UI itself must fetch the original Session list after its original F02 action. */
+export async function chatAction(page: Page, target: Target, principal: string, action: () => Promise<unknown>) {
+  const url = new URL(target.mount + "/api/session", target.publicOrigin)
+  url.search = new URLSearchParams({ limit: "50", order: "desc" }).toString()
+  const response = await uiReply(page, url.href, "GET", () => switchTeam(page, target, principal, action))
+  if (response.request().headers()["x-sf-team-profile"] !== sessionSelector(target))
+    throw new Error("G08_NATIVE_CHAT_SELECTOR_CHANGED")
+  const value = Schema.decodeUnknownSync(Schema.toCodecJson(SessionList), strict)(await sessionJSON(response))
+  sessionOwner(value.namespace, target, principal)
+  for (const entry of value.data) expect(entry.namespace).toEqual(value.namespace)
+  await expect(page).toHaveURL(chatHref(target))
+  await expect(page.locator(landing.workspace)).toHaveAttribute("data-sf-session-state", "ready")
+  await expect(page.locator(landing.editor)).toBeEditable()
+  return value.namespace
+}
+
+export async function removeSessionFixture(page: Page, target: Target, principal: string, id: string, before: SessionInventory, invocationId: string) {
+  const current = await sessionInventory(page, target, principal)
+  expect(current.namespace).toEqual(before.namespace)
+  const found = current.entries.filter((entry) => record(entry).id === id)
+  if (found.length) {
+    expect(found).toHaveLength(1)
+    const removed = await sessionRequest(page, target, "/" + id, "DELETE", undefined, invocationId)
+    expect(removed.status()).toBe(204)
+    expect(removed.headers()["cache-control"]).toBe("no-store")
+    expect(await removed.body()).toHaveLength(0)
+  }
+  const after = await sessionInventory(page, target, principal)
+  expect(after).toEqual(before)
+  return after
+}
+export async function recordGrantProof(plan: Plan, value: unknown) {
+  const proof = validateGrantProof(value, plan)
+  await writePrivate(plan.scratchRoot, "session-grants.json", proof)
 }
 
 export async function expectUnauthenticated(reply: Response) {
@@ -237,6 +388,8 @@ type Harness = {
   plan: Plan
   page(actor?: Actor): Promise<Page>
   revocation: { attempted: boolean; restored: boolean }
+  grants: { attempted: boolean; cleaned: boolean }
+  administration: { observed: boolean }
 }
 export const installedTest = test.extend<{ harness: Harness }>({
   harness: async ({}, use, info) => {
@@ -257,9 +410,11 @@ export const installedTest = test.extend<{ harness: Harness }>({
     const responseChecks: Promise<void>[] = []
     const delivery = { resources: 0, cacheBypassPages: 0 }
     const revocation = { attempted: false, restored: false }
+    const grants = { attempted: false, cleaned: false }
+    const administration = { observed: false }
     try {
       await use({
-        plan, revocation,
+        plan, revocation, grants, administration,
         page: async (actor = "requester") => {
           const context = session.contexts[actor]
           if (!context) throw new Error("G08_ACTOR_CONTEXT_MISSING")
@@ -278,7 +433,7 @@ export const installedTest = test.extend<{ harness: Harness }>({
           delivery.cacheBypassPages++
           page.on("response", (response) => {
             const resource = response.request().resourceType()
-            if (!["document", "script", "stylesheet"].includes(resource)) return
+            if (!["document", "script", "stylesheet", "xhr", "fetch"].includes(resource)) return
             const check = (async () => {
               await requireBoundPeer(page, response)
               delivery.resources++
@@ -303,6 +458,7 @@ export const installedTest = test.extend<{ harness: Harness }>({
         boundDocuments: boundDocuments.size, ingressResources: delivery.resources, ingressErrors: ingressErrors.length,
         cacheBypassPages: delivery.cacheBypassPages,
         revocationAttempted: revocation.attempted, revocationRestored: revocation.restored,
+        grantMutationAttempted: grants.attempted, grantFixturesCleaned: grants.cleaned, nativeAdministrationObserved: administration.observed,
       })
       if (closed.some((result) => result.status === "rejected") || contextCount !== 4 || ingressErrors.length || boundDocuments.size !== pages.length)
         throw new Error("G08_PRIVATE_BROWSER_CLEANUP_INCOMPLETE")
