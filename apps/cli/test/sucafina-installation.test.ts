@@ -223,7 +223,9 @@ it.live.skipIf(process.platform === "win32")(
   "Sucafina mount retains the host fence and leaves neighboring paths unclaimed",
   serveInstallation(false, async (dispatch, origin) => {
     const denied = await dispatch("/sucafina/planner", { headers: { host: "different.example" } })
-    expect(denied.status).toBe(403)
+    // An unrelated hostname is rejected by the listener before the installation route.
+    expect(denied.status).toBe(421)
+    expect(await denied.text()).toBe("")
     for (const route of ["/sucafina-other", "/outside", "/sucafina-extra/dashboard"]) {
       expect((await dispatch(route, { redirect: "manual" })).status).toBe(404)
     }
