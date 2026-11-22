@@ -35,8 +35,9 @@ describe("A05 input admission from native Solid state", () => {
       const reactive = codec.decodeInput(state.input)
       console.info("SF_ANALYTICS_INPUT_ADMISSION " + JSON.stringify({
         operationId: id, fullPlain: Option.isSome(fullPlain), fullReactive: Option.isSome(fullReactive),
-        plainWire: plain.status, reactiveWire: reactive.status,
+        plainWire: plain.status, reactiveWire: reactive.status, reactiveProxy: state.input !== input,
       }))
+      expect(state.input).not.toBe(input)
       expect(plain.status).toBe("ok")
       expect(reactive.status).toBe("ok")
       if (plain.status !== "ok" || reactive.status !== "ok") return
