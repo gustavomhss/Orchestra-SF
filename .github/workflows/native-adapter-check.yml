@@ -1,0 +1,184 @@
+name: G08 original installed adapter controls
+on:
+  push:
+    branches: ["native-adapter-contract"]
+permissions:
+  contents: read
+concurrency:
+  group: g08-native-adapter-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  component:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      CI: "true"
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      ORCHESTRA_OMNI_CONTROL: declared
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+      ORCHESTRA_CHANNEL: prod
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "9991d8bb4df736f6d4abcab195a4f4138d7c339c"
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Bind exact source, strict historical contract and disposable workflow
+        run: |
+          set -euo pipefail
+          umask 077
+          adapter_out="$RUNNER_TEMP/g08-native-adapter-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          adapter_list="$RUNNER_TEMP/g08-native-list-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          mkdir "$adapter_out" "$adapter_list"
+          printf 'SF_NATIVE_CONTROLS=%s\nSF_NATIVE_LIST_PRIVATE=%s\n' "$adapter_out" "$adapter_list" >> "$GITHUB_ENV"
+          git rev-parse HEAD > "$adapter_out/source-sha.txt"
+          git rev-parse 'HEAD^{tree}' > "$adapter_out/source-tree.txt"
+          git rev-parse origin/dev > "$adapter_out/guard-base.txt"
+          git merge-base origin/dev HEAD > "$adapter_out/guard-merge-base.txt"
+          git diff --check
+          git diff --exit-code
+          python3 - <<'PY'
+          import os, json, subprocess, pathlib, hashlib
+          def git(*args): return subprocess.check_output(["git", *args], text=True).strip()
+          assert git("rev-parse","HEAD") == "9991d8bb4df736f6d4abcab195a4f4138d7c339c"
+          assert git("rev-parse","HEAD^{tree}") == "fe76ef383c9bc379a8fd75372cf190a8259252f9"
+          snapshot = os.environ["GITHUB_SHA"]
+          assert git("show","-s","--format=%P",snapshot) == "9991d8bb4df736f6d4abcab195a4f4138d7c339c"
+          assert git("diff-tree","--no-commit-id","--name-only","-r",snapshot) == ".github/workflows/native-adapter-check.yml"
+          assert git("rev-parse","HEAD:packages/app-shell/e2e/sucafina/native/fixture/manifest-contract.ts") == "122a31917565d2de51ba63e646cc20000c239670"
+          expected = {"script/sf2h/proofs/installed/register.ts":"c0211324b62acc0c8a14c56f22ec78ca5eff9ef4","script/sf-ci/g08-native-journeys.mjs":"a57386ee58bf9901bff00fb06dc879b00cfbdfbf","packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts":"3027bb63678ac6d64dea2756c87a0cd7dc442237","packages/app-shell/e2e/sucafina/native/fixture/journeys.ts":"20da0d86996ddb2e59708f471d103f6a28056977","packages/app-shell/e2e/sucafina/native/fixture/readiness.ts":"1499d19e9adb46162b89d80c54132288c56a28d3","packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts":"66269d83f2b32532863e8f160b59c96d712f4c98","packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts":"5f87a827f6a039650fc9f8150c38bbb3c5d7878f","packages/app-shell/e2e/sucafina/native/fixture/installed-host.ts":"5780041073deb2caf6055de8e59d212df8aa26b1","packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts":"5264220c97517baa66026fca4606bf5afbf605d5","packages/app-shell/e2e/sucafina/native/fixture/installed-operations.ts":"899a08e1736a0bac01c1811188eb67974a8195b6","packages/app-shell/e2e/sucafina/native/fixture.ts":"41d8f77a00cd7aab6ef64450c193d6ff3fb8270c","packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts":"02a6b80907b761a776866a54e35cf5c1a54c3dc2","packages/app-shell/e2e/sucafina/native/fixture/g08-manifest-contract.ts":"0da4dbe1077597a933d80ae7578b6831d8e219ae","packages/app-shell/e2e/sucafina/native/fixture/g08-readiness.ts":"8837433d2474dc8079dcb60d02b18b265bc7cf8f","script/sf2h/proofs/installed/host-adapter.ts":"967e4cd19620be36f667d2ffc5ee750c9dcc8800","script/sf2h/proofs/installed/execute-registration.ts":"70be98809e6bbc84824f47c3cf56cb3184515a18","packages/app-shell/test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts":"7b04d179fbcd9187211d659f65efb6f56eb90f52","script/sf2h/proofs/installed/host-adapter.test.ts":"780df6cd5f40a007838ff491291f055de96047c6","packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx":"3c44b835523e24c48f763f52643e1252614bbea1","packages/app-shell/test-browser/team-installed-registration.test.ts":"a60fa7f3816eb2d9fe63b1b3c437225a1392f2c5","packages/app-shell/e2e/sucafina/native/fixture/original-host-adapter.ts":"6a6cf83d212a2e1ff78bc7e8a7ea65a4219ec422","packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain-route.ts":"8d827d8efabd9302fa952ed27f88f690cd9d00d4","packages/app-shell/src/orchestra/chapters/sucafina/cross-links/contract.ts":"f158afe62031a150eabf362aa0146839894c5e3b","packages/app-shell/src/orchestra/chapters/sucafina/cross-links/index.ts":"39b280f45af23364e3b422e24bfda3cab3085ce9","packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/signals.ts":"c295463dd66295208a03359f5d907302a8825cbe"}
+          changed = git("diff","--name-only","9804ee30848580787cc7e556d4a26269b3960656","HEAD").splitlines()
+          assert sorted(changed) == sorted(expected)
+          for path, sha in expected.items():
+            assert git("rev-parse","HEAD:"+path) == sha, path
+          edits = [["packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",[["requireNativeInvocation(manifest: NativeManifest)","requireNativeInvocation(manifest: Pick<NativeManifest, \"candidateSha\" | \"invocation\">)"],["page: Page, manifest: NativeManifest, nativeChapter: Locator,","page: Page, manifest: Pick<NativeManifest, \"candidateSha\" | \"target\" | \"actors\">, nativeChapter: Locator,"]]],["packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",[["  manifest: NativeManifest\n","  manifest: Pick<NativeManifest, \"candidateSha\" | \"target\" | \"actors\">\n"]]],["packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",[["  manifest: NativeManifest","  manifest: Pick<NativeManifest, \"target\">"]]],["packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain-route.ts",[["import type { SfBudgetPeriod } from \"../navigation-state/budget-period\"","type SfBudgetPeriod = Readonly<Pick<typeof SfDomainReadSelection.Type, \"year\" | \"month\">>"]]],["packages/app-shell/src/orchestra/chapters/sucafina/cross-links/index.ts",[["import { createSfDomainClient } from \"@orchestra/client/sucafina/domain\"","import type { SfExecutiveRecord } from \"./contract\"\nimport { createSfDomainClient } from \"@orchestra/client/sucafina/domain\""],["export type SfExecutiveRecord = Readonly<{\n  kind: \"project\" | \"risk\" | \"stakeholder\" | \"topic\"\n  ref: string\n}>\n","export type { SfExecutiveRecord } from \"./contract\"\n"]]],["packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/signals.ts",[["import type { SfExecutiveRecord } from \"../../cross-links\"","import type { SfExecutiveRecord } from \"../../cross-links/contract\""]]]]
+          for path, replacements in edits:
+            original = subprocess.check_output(["git","show","9804ee30848580787cc7e556d4a26269b3960656:"+path], text=True)
+            for old, new in replacements:
+              assert original.count(old) == 1
+              original = original.replace(old,new)
+            assert pathlib.Path(path).read_text() == original, path
+          assert pathlib.Path("packages/app-shell/src/orchestra/chapters/sucafina/cross-links/contract.ts").read_text() == "export type SfExecutiveRecord = Readonly<{\n  kind: \"project\" | \"risk\" | \"stakeholder\" | \"topic\"\n  ref: string\n}>\n"
+          f04 = "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts"
+          old = subprocess.check_output(["git","show","9804ee30848580787cc7e556d4a26269b3960656:"+f04],text=True)
+          replacement = 'import { nativeContextURL } from "../../e2e/sucafina/native/fixture/readiness"\nimport { readG08NativeManifest as readNativeManifest } from "../../e2e/sucafina/native/fixture/g08-readiness"'
+          assert pathlib.Path(f04).read_text() == old.replace('import { nativeContextURL, readNativeManifest } from "../../e2e/sucafina/native/fixture/readiness"',replacement)
+          pathlib.Path(os.environ["RUNNER_TEMP"],"g08-adapter-sources.json").write_text(json.dumps(expected))
+          PY
+          adapter_nonce=$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')
+          printf 'ORCHESTRA_OMNI_CONTROL_NONCE=%s\n' "$adapter_nonce" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/setup-bun
+        id: runtime
+        with:
+          reuse-node: "true"
+      - name: Preserve original report refusal controls
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          bun --version > "$SF_NATIVE_CONTROLS/bun-version.txt"
+          node --version > "$SF_NATIVE_CONTROLS/node-version.txt"
+          node --test --test-reporter=tap script/sf-ci/g08-native-journeys.test.mjs 2>&1 | tee "$SF_NATIVE_CONTROLS/node.tap"
+      - name: Exercise original v2 and additive private registration boundaries
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: packages/app-shell
+        run: |
+          set -euo pipefail
+          bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts --reporter=junit --reporter-outfile "$SF_NATIVE_CONTROLS/controls.junit.xml" ./test/sucafina-native/installed-journeys.test.ts ./test-browser/sucafina-native/fixture/journeys.test.ts ./test-browser/sucafina-native/fixture/selection.test.ts ./test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts ../../script/sf2h/proofs/installed/host-adapter.test.ts 2>&1 | tee "$SF_NATIVE_CONTROLS/controls.log"
+      - name: Exercise real CAP14 edit navigation and preserved Team lifecycle controls
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: packages/app-shell
+        run: |
+          set -euo pipefail
+          bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts --timeout 15000 --reporter=junit --reporter-outfile "$SF_NATIVE_CONTROLS/dom.junit.xml" ./test-browser/team-installed-registration.test.ts ./test-browser/sucafina-team-domain.test.ts ./test-browser/team-domain-hooks.test.ts 2>&1 | tee "$SF_NATIVE_CONTROLS/dom.log"
+      - name: Typecheck the complete native executor and F04
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: packages/app-shell/e2e/sucafina/native
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$SF_NATIVE_CONTROLS/native-types.log"
+      - name: Typecheck the App Shell and original Client
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          (cd packages/app-shell && bun typecheck) 2>&1 | tee "$SF_NATIVE_CONTROLS/app-shell-types.log"
+          (cd packages/client && bun typecheck) 2>&1 | tee "$SF_NATIVE_CONTROLS/client-types.log"
+      - name: List all original installed6/22/22 without starting a host or browser
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: packages/app-shell
+        run: |
+          set -euo pipefail
+          bunx --no-install playwright test --config e2e/playwright.production.config.ts e2e/sucafina/native/journeys/u15.spec.ts e2e/sucafina/native/journeys/u39.spec.ts e2e/sucafina/native/journeys/u40.spec.ts --list --workers=1 --retries=0 --repeat-each=1 --reporter=json > "$SF_NATIVE_LIST_PRIVATE/list.json"
+          node ../../script/sf-ci/g08-native-journeys.mjs list ALL "$SF_NATIVE_LIST_PRIVATE/list.json" "$SF_NATIVE_CONTROLS/list-inventory.json"
+      - name: Check canonical guards with the observed base
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$SF_NATIVE_CONTROLS/guards.log"
+          git diff --check origin/dev...HEAD
+          git diff --exit-code
+      - name: Verify exact controls and publish component receipt
+        run: |
+          python3 - <<'PY'
+          import os, json, pathlib, xml.etree.ElementTree as ET
+          root = pathlib.Path(os.environ["SF_NATIVE_CONTROLS"])
+          expected = {"the public Team navigation seam preserves canonical domain deep links and drops record refs on owner change":"test-browser/team-domain-hooks.test.ts","the real Team shell preserves a closed CAP05 login return and admits its original leaf after F02":"test-browser/team-domain-hooks.test.ts","product links mount all three original Team leaves through the shell with fresh complete F02 reads":"test-browser/team-domain-hooks.test.ts","focus keeps the owner registry while Team picker cancellation retains drafts and confirmation drops old record intent":"test-browser/team-domain-hooks.test.ts","history hides a private leaf before consent and a cancelled traversal restores the same unsent draft":"test-browser/team-domain-hooks.test.ts","domain and real Chat navigation both honor the existing discard dialog without sending either draft":"test-browser/team-domain-hooks.test.ts","an uncertain domain POST survives focus without replay and logout retires the private owner":"test-browser/team-domain-hooks.test.ts","fresh revocation purges a domain draft and late old-Team page responses cannot publish in a replacement owner":"test-browser/team-domain-hooks.test.ts","Team domain URL intent reuses canonical refs and rejects partial, foreign, duplicate and invalid year selectors":"test-browser/sucafina-team-domain.test.ts","original CAP14 leaf renders Team data and product-resolved F01 links with no mutation":"test-browser/sucafina-team-domain.test.ts","original CAP04 leaf renders Team data and product-resolved F01 links with no mutation":"test-browser/sucafina-team-domain.test.ts","original CAP05 leaf renders Team data and product-resolved F01 links with no mutation":"test-browser/sucafina-team-domain.test.ts","CAP14 original review dispatches exact CAS/idempotency and rereads the confirmed Team projection":"test-browser/sucafina-team-domain.test.ts","same-owner refresh revalidates and restores an unsent CAP14 draft without dispatching it":"test-browser/sucafina-team-domain.test.ts","Team switch removes the old private draft and late old reads never populate the new leaf":"test-browser/sucafina-team-domain.test.ts","loss of the original write grant purges the retained private draft before remount":"test-browser/sucafina-team-domain.test.ts","a lost POST response survives refresh as unresolved and cannot dispatch a second command with a new key":"test-browser/sucafina-team-domain.test.ts","source version drift becomes a retained conflict, and old owner handles cannot mutate after Team replacement":"test-browser/sucafina-team-domain.test.ts","unadapted legacy consumers fail closed while the explicit readable hook preserves the real Team DTO":"test-browser/sucafina-team-domain.test.ts","original CAP14 Edit publishes a complete Team F01 URL and reopens that exact observed editor":"test-browser/team-installed-registration.test.ts","the navigation change does not expose Edit after the original current write grant is removed":"test-browser/team-installed-registration.test.ts"}
+          dom = ET.fromstring((root/"dom.junit.xml").read_text())
+          cases = list(dom.iter("testcase"))
+          assert len(cases) == len(expected) == 21
+          actual = {c.attrib["name"]:c.attrib.get("file","") for c in cases}
+          assert actual == expected, actual
+          assert not any(list(dom.iter(tag)) for tag in ["failure","error","skipped"])
+          controls = ET.fromstring((root/"controls.junit.xml").read_text())
+          assert len(list(controls.iter("testcase"))) == 42
+          assert not any(list(controls.iter(tag)) for tag in ["failure","error","skipped"])
+          PY
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict"
+          import { readFileSync, writeFileSync, readdirSync } from "node:fs"
+          import { digest } from "./script/sf-ci/g08-private-evidence.mjs"
+          import { verifyOmni, f04Titles, originalSource, normativeSource } from "./script/sf-ci/g08-native-journeys.mjs"
+          const root = process.env.SF_NATIVE_CONTROLS, read = (name) => readFileSync(root + "/" + name,"utf8")
+          const tap = read("node.tap")
+          for (const [name,count] of [["tests",40],["pass",40],["fail",0],["cancelled",0],["skipped",0],["todo",0]])
+            assert(new RegExp("^# " + name + " " + count + "$","m").test(tap), "NODE_INVENTORY_" + name)
+          const inventory = JSON.parse(read("list-inventory.json"))
+          assert.equal(inventory.inventory.length,50)
+          assert(inventory.inventory.every(item => item.state === "LISTED_NOT_RUN"))
+          const expected = JSON.parse(readFileSync(process.env.RUNNER_TEMP + "/g08-adapter-sources.json","utf8"))
+          const sources = Object.entries(expected).map(([path,blob]) => ({path,blob,sha256:digest(readFileSync(path))}))
+          const files = readdirSync(root).sort().map(path => ({path,sha256:digest(readFileSync(root+"/"+path))}))
+          const receipt = { schema:"sf-g08-native-adapter-controls-v1",status:"PASS",
+            source:{sha:read("source-sha.txt").trim(),tree:read("source-tree.txt").trim()},
+            base:"9804ee30848580787cc7e556d4a26269b3960656", sources, files,
+            run:{id:process.env.GITHUB_RUN_ID,attempt:process.env.GITHUB_RUN_ATTEMPT,workflowSha:process.env.GITHUB_WORKFLOW_SHA,snapshot:process.env.GITHUB_SHA},
+            guardBase:read("guard-base.txt").trim(),guardMergeBase:read("guard-merge-base.txt").trim(),
+            toolchain:{node:read("node-version.txt").trim(),bun:read("bun-version.txt").trim()},
+            omni:{controls:verifyOmni(read("controls.log"),process.env.ORCHESTRA_OMNI_CONTROL_NONCE),
+              dom:verifyOmni(read("dom.log"),process.env.ORCHESTRA_OMNI_CONTROL_NONCE)},
+            controls:{node:40,bun:42,dom:21,failures:0,skipped:0},originalSource,normativeSource,
+            groups:[{id:"U15",count:6,state:"LISTED_NOT_RUN"},{id:"U39",count:22,state:"LISTED_NOT_RUN"},{id:"U40",count:22,state:"LISTED_NOT_RUN"}],
+            f04:{count:3,titlesSha256:f04Titles.map(digest),state:"NOT_RUN",runtime:"BUN_HAPPYDOM_NO_CDP"},
+            installed:false,liveQualified:false,finalCandidate:false,g08Closed:false,productionCutover:false,
+            limits:["Only controlled contract, privacy, refusal, original DOM, types and inert inventory checks.",
+              "No original Microsoft context, Linux reservation, registration CLI or installed journey was executed in this hosted job.",
+              "Final candidate pin, verified tar, reserved host and independent execution/provenance remain required."] }
+          assert.equal(receipt.source.sha,"9991d8bb4df736f6d4abcab195a4f4138d7c339c")
+          assert.equal(receipt.source.tree,"fe76ef383c9bc379a8fd75372cf190a8259252f9")
+          writeFileSync(root+"/receipt.json",JSON.stringify(receipt,null,2)+"\n")
+          console.log("G08 adapter controls PASS; original50 and F04 still NOT_RUN")
+          NODE
+      - name: Preserve source-bound tooling evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g08-native-adapter-9991d8bb4df736f6d4abcab195a4f4138d7c339c-${{ github.run_attempt }}
+          path: ${{ env.SF_NATIVE_CONTROLS }}
+          if-no-files-found: error
+          retention-days: 30
