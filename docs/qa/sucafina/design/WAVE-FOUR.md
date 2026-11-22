@@ -1,10 +1,10 @@
 # Quarta rodada — vinte áreas nativas da Sucafina
 
-Status: **IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW**. [PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588), branch `sf-design-twenty`. O bloco está implementado e qualificado para revisão, sem merge ou aceite do usuário.
+Status: **MERGED_VERIFIED**. [PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588), implementado na branch `sf-design-twenty` e mesclado em `dev` no commit `f2a6c23551289ef8705baea03f8cec2425b8445a`. O usuário aprovou expressamente: “aprovado pra merge”. [Registro e recibo do merge](wave-four/MERGE.md).
 
 ## Entrega
 
-As próximas vinte áreas do inventário são CAP20–CAP28, UI30–UI32 e UI34–UI41. Elas abrangem **49 padrões de rota existentes**. Somadas às 21 áreas anteriores já mescladas, a campanha passa a **41 implementadas de 70**, com **29 restantes**. Os 20 itens atuais permanecem pendentes de revisão.
+As próximas vinte áreas do inventário são CAP20–CAP28, UI30–UI32 e UI34–UI41. Elas abrangem **49 padrões de rota existentes**. Somadas às 21 áreas anteriores já mescladas, a campanha passa a **41 implementadas de 70**, com **29 restantes**. Os 20 itens deste bloco estão aprovados e mesclados; as 41 áreas implementadas da campanha estão integradas.
 
 | Grupo | Áreas | Rotas existentes | Evidência |
 | --- | --- | ---: | --- |
@@ -37,8 +37,8 @@ A [auditoria de cópia](wave-four/copy-audit.json) preserva 574 textos ingleses 
 
 ## Integração anterior e aceite
 
-A outra sessão concluiu o PR #587, mesclado em `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`. Esta branch incorporou o merge real e, depois, 21 commits de dev com 80 caminhos distintos, em três composições. O único caminho sobreposto nas duas primeiras composições foi host-context.ts; as alterações de FSUtil e reviewer recall do upstream foram preservadas junto dos observadores nativos. A terceira composição copiou 18 caminhos por seus hashes exatos, sem sobreposição com o trabalho deste bloco. [Registro da composição](wave-four/DEV-COMPOSITION.md). Uma inspeção posterior encontrou o PR #607, limitado ao IPC de WSL do desktop e sem sobreposição; a base explicitamente qualificada permanece dev2eeb.
+A outra sessão concluiu o PR #587, mesclado em `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`. Esta branch incorporou o merge real e, depois, 21 commits de dev com 80 caminhos distintos, em três composições. O único caminho sobreposto nas duas primeiras composições foi host-context.ts; as alterações de FSUtil e reviewer recall do upstream foram preservadas junto dos observadores nativos. A terceira composição copiou 18 caminhos por seus hashes exatos, sem sobreposição com o trabalho deste bloco. [Registro da composição](wave-four/DEV-COMPOSITION.md). Na integração final, dev avançou até `ad47c1b804452f3a7a943a7d4dad75d74a6367e5`: dez commits posteriores a dev2eeb, em 13 caminhos de segurança/logging do processo principal do desktop, sem sobreposição com este bloco. A árvore real do merge coincide com a união exata desses blobs e do HEAD aprovado. As execuções nativas continuam atribuídas aos seus produtos e snapshots originais.
 
 Nenhuma branch da outra sessão foi alterada. O núcleo HuGR, o console legado branco/verde, workflows, guardrails e allowlists não foram modificados por este redesign. A execução ocorreu exclusivamente em snapshots do test-ci existente.
 
-O PR permanece em rascunho. A autorização anterior de merge cobre os blocos anteriores; o aceite destas vinte áreas continua pendente.
+O PR #588 está fechado e mesclado. O inventário registra 41 áreas mescladas e 29 restantes. A autorização usada foi a aprovação expressa deste bloco após a apresentação das telas.

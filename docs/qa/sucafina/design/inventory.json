@@ -1,21 +1,23 @@
 {
   "schemaVersion": 1,
   "repository": "gustavomhss/Orchestra-SF",
-  "date": "2026-11-22",
+  "date": "2026-11-21",
   "target": {
-    "branch": "sf-design-twenty",
+    "branch": "dev",
     "createdFrom": "dev",
     "baseCommit": "2a68bcb676ed0c159c5c48130c2413e0e5637a00",
     "nativeFrontendPresent": true,
     "nativeFrontendPresentInDevBase": true,
-    "latestDevInspected": "8bd7645767deb85b286b046a52a4e9f1db100262",
+    "latestDevInspected": "f2a6c23551289ef8705baea03f8cec2425b8445a",
     "latestDevNativeFrontendPresent": true,
-    "reviewedProductCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
-    "userAcceptance": "PENDING_USER_REVIEW",
+    "reviewedProductCommit": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+    "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
     "pullRequest": 588,
-    "latestDevInspectionScope": "Qualified base dev2eeb contains the actual PR587 merge plus 21 later upstream commits across 80 distinct paths composed in three stages. A subsequent exact comparison of PR607 (2 commits, 3 desktop WSL IPC paths) against 251 own paths found no overlap; it was not incorporated or attributed to qualified runs.",
-    "integrationBase": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
-    "integrationCandidate": "0550c4bb8fc3b4b4e68561777010ca03483e2391"
+    "latestDevInspectionScope": "PR588 merged after explicit user approval. Exact merged tree equals approved head plus 13 disjoint desktop-main paths from current dev (PR607/608/609); native app-shell, CLI, Sucafina, schemas and dependencies remain equal to qualified source.",
+    "integrationBase": "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+    "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+    "reviewedBranch": "sf-design-twenty",
+    "integrationMergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
   },
   "source": {
     "branch": "dev",
@@ -46,9 +48,9 @@
     "remainingAreaRouteScope": 47,
     "previouslyMergedAreas": 21,
     "areasInThisIntegration": 20,
-    "acceptedForIntegrationAreas": 21,
-    "implementedPendingUserReviewAreas": 20,
-    "mergedAreas": 21
+    "acceptedForIntegrationAreas": 41,
+    "implementedPendingUserReviewAreas": 0,
+    "mergedAreas": 41
   },
   "scope": "Only native Sucafina pages. HuGR Orchestra core and legacy HTML console excluded.",
   "firstWave": [
@@ -57,7 +59,7 @@
     "CAP01"
   ],
   "verification": {
-    "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+    "status": "MERGED_VERIFIED",
     "inventory": "70 areas, 165 registered route patterns, 15 chapters; 75 component references to 66 present files. This block covers 20 areas and 49 patterns; the route registry is unchanged.",
     "technical": {
       "status": "PASSED",
@@ -185,17 +187,19 @@
       "includedInThisWaveCaptureCount": false
     },
     "sourceAudit": "wave-four/source-audit.json",
-    "userAcceptance": "PENDING_USER_REVIEW",
-    "merge": "NOT_MERGED",
+    "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
+    "merge": "MERGED",
     "report": "wave-four/VALIDATION.md",
     "currentComposition": {
-      "product": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
-      "functionalProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31",
-      "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "status": "MERGED_TREE_VERIFIED",
+      "product": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+      "devBeforeMerge": "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+      "qualifiedNativeProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+      "technicalEvidenceProduct": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
       "technicalRun": 44972927162,
-      "browserDecisionsRun": 44972048219,
-      "status": "PASSED",
-      "laterDevObservation": "wave-four/DEV-COMPOSITION.md"
+      "decisionsRun": 44972048219,
+      "nativeSourceUnchanged": true,
+      "mergeReceipt": "wave-four/merge.json"
     },
     "originalPreparationCommands": {
       "decisions": {
@@ -262,6 +266,43 @@
       "allDocumentationOrEvidence": true,
       "productSourceUnchanged": true,
       "compareTruncated": false
+    },
+    "qualifiedComposition": {
+      "product": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+      "functionalProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+      "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "technicalRun": 44972927162,
+      "browserDecisionsRun": 44972048219,
+      "status": "PASSED",
+      "laterDevObservation": "wave-four/DEV-COMPOSITION.md"
+    },
+    "integrationReceipt": {
+      "status": "MERGED_VERIFIED",
+      "pullRequest": 588,
+      "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+      "mergeTree": "bbcda60c9d11477d474e7c88a3a6f4258ae644dc",
+      "mergedAt": "2026-11-22T02:21:24Z",
+      "head": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+      "parents": [
+        "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+        "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7"
+      ],
+      "baseAtMerge": "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+      "devObserved": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+      "expectedTree": "bbcda60c9d11477d474e7c88a3a6f4258ae644dc",
+      "treeMatches": true,
+      "userApproval": "aprovado pra merge",
+      "nativeFunctionalProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+      "technicalProduct": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+      "technicalRun": 44972927162,
+      "decisionsRun": 44972048219,
+      "upstreamCommitsSinceQualifiedBase": 10,
+      "upstreamPathsSinceQualifiedBase": 13,
+      "upstreamOnlyPrefix": "apps/desktop/src/main/",
+      "overlapPaths": [],
+      "preMergeHeadChecks": 0,
+      "preMergeStatusContexts": 0,
+      "nativeSourceUnchanged": true
     }
   },
   "surfaces": [
@@ -1306,9 +1347,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "planner",
         "branch": "sf-twenty-planner",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -1328,15 +1369,20 @@
         ],
         "captureCount": 9,
         "evidenceRun": 44961772161,
-        "finalQualificationRun": 44965221018
+        "finalQualificationRun": 44965221018,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 1,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -1367,9 +1413,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "planner",
         "branch": "sf-twenty-planner",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -1388,15 +1434,20 @@
         ],
         "captureCount": 8,
         "evidenceRun": 44961772161,
-        "finalQualificationRun": 44965221018
+        "finalQualificationRun": 44965221018,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 2,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -1419,9 +1470,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "planner",
         "branch": "sf-twenty-planner",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -1441,15 +1492,20 @@
         ],
         "captureCount": 8,
         "evidenceRun": 44961772161,
-        "finalQualificationRun": 44965221018
+        "finalQualificationRun": 44965221018,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 3,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -1489,9 +1545,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "planner",
         "branch": "sf-twenty-planner",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -1513,15 +1569,20 @@
         ],
         "captureCount": 15,
         "evidenceRun": 44961772161,
-        "finalQualificationRun": 44965221018
+        "finalQualificationRun": 44965221018,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 4,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -1544,9 +1605,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "procurement",
         "branch": "sf-twenty-procurement",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -1564,15 +1625,20 @@
         ],
         "captureCount": 5,
         "evidenceRun": 44965165654,
-        "finalQualificationRun": 44965165654
+        "finalQualificationRun": 44965165654,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 5,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -1633,9 +1699,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "procurement",
         "branch": "sf-twenty-procurement",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -1657,15 +1723,20 @@
         ],
         "captureCount": 14,
         "evidenceRun": 44965165654,
-        "finalQualificationRun": 44965165654
+        "finalQualificationRun": 44965165654,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 6,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -1701,9 +1772,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "procurement",
         "branch": "sf-twenty-procurement",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -1723,15 +1794,20 @@
         ],
         "captureCount": 8,
         "evidenceRun": 44965165654,
-        "finalQualificationRun": 44965165654
+        "finalQualificationRun": 44965165654,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 7,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -1766,9 +1842,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "procurement",
         "branch": "sf-twenty-procurement",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -1787,15 +1863,20 @@
         ],
         "captureCount": 9,
         "evidenceRun": 44965165654,
-        "finalQualificationRun": 44965165654
+        "finalQualificationRun": 44965165654,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 8,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -1818,9 +1899,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "procurement",
         "branch": "sf-twenty-procurement",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -1839,15 +1920,20 @@
         ],
         "captureCount": 7,
         "evidenceRun": 44965165654,
-        "finalQualificationRun": 44965165654
+        "finalQualificationRun": 44965165654,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 9,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -1903,9 +1989,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "work",
         "branch": "sf-twenty-work-finish",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -1926,15 +2012,20 @@
         ],
         "captureCount": 7,
         "evidenceRun": 44964988862,
-        "finalQualificationRun": 44965705732
+        "finalQualificationRun": 44965705732,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 10,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -1957,9 +2048,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "work",
         "branch": "sf-twenty-work-finish",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -1978,15 +2069,20 @@
         ],
         "captureCount": 6,
         "evidenceRun": 44964042218,
-        "finalQualificationRun": 44965705732
+        "finalQualificationRun": 44965705732,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 11,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -2017,9 +2113,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "work",
         "branch": "sf-twenty-work-finish",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -2043,15 +2139,20 @@
         ],
         "captureCount": 9,
         "evidenceRun": 44965705732,
-        "finalQualificationRun": 44965705732
+        "finalQualificationRun": 44965705732,
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 12,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -2111,9 +2212,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "decisions",
         "branch": "sf-twenty-decisions",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -2139,15 +2240,20 @@
         "finalQualificationRun": 44972048219,
         "limits": [
           "Source attachments are disclosed; no new evidence is invented."
-        ]
+        ],
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 13,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -2178,9 +2284,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "decisions",
         "branch": "sf-twenty-decisions",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -2205,15 +2311,20 @@
         "finalQualificationRun": 44972048219,
         "limits": [
           "The original producer does not admit current-choice preparation in this installation; no provenance, recalculation or promotion is fabricated."
-        ]
+        ],
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 14,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -2236,9 +2347,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "decisions",
         "branch": "sf-twenty-decisions",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -2264,15 +2375,20 @@
         "finalQualificationRun": 44972048219,
         "limits": [
           "Review does not confirm or mutate an assumption."
-        ]
+        ],
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 15,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -2295,9 +2411,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "decisions",
         "branch": "sf-twenty-decisions",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -2323,15 +2439,20 @@
         "finalQualificationRun": 44972048219,
         "limits": [
           "Preparation does not send or record a question. Optional cycle/recipient reads remain unavailable when unadmitted."
-        ]
+        ],
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 16,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -2354,9 +2475,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "decisions",
         "branch": "sf-twenty-decisions",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -2379,15 +2500,20 @@
         "finalQualificationRun": 44972048219,
         "limits": [
           "No source provenance or successful recalculation is fabricated."
-        ]
+        ],
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 17,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -2414,9 +2540,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "decisions",
         "branch": "sf-twenty-decisions",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -2438,15 +2564,20 @@
         "finalQualificationRun": 44972048219,
         "limits": [
           "Populated application/CAS/recovery paths are preserved but are not browser-qualified by this fixture."
-        ]
+        ],
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 18,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -2473,9 +2604,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "decisions",
         "branch": "sf-twenty-decisions",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -2498,15 +2629,20 @@
         "finalQualificationRun": 44972048219,
         "limits": [
           "No apply/recover request or receipt is invented; populated receipt detail remains unqualified."
-        ]
+        ],
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 19,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -2533,9 +2669,9 @@
       ],
       "presentInTargetDev": true,
       "visualVerification": "REAL_BROWSER_CAPTURE_REVIEWED_WITH_DOCUMENTED_LIMITS",
-      "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+      "status": "MERGED",
       "designWork": {
-        "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+        "status": "ACCEPTED_FOR_INTEGRATION",
         "group": "decisions",
         "branch": "sf-twenty-decisions",
         "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
@@ -2561,15 +2697,20 @@
         "finalQualificationRun": 44972048219,
         "limits": [
           "No provider credential, model, run or output is fabricated. Prepare/start/cancel/output require separately admitted source configuration."
-        ]
+        ],
+        "integrationStatus": "MERGED",
+        "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a"
       },
       "presentInCandidate": true,
       "fourthWaveOrder": 20,
-      "userAcceptance": "PENDING_USER_REVIEW",
+      "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
       "integration": {
-        "status": "NOT_MERGED",
+        "status": "MERGED",
         "pullRequest": 588,
-        "userAcceptance": "PENDING_USER_REVIEW"
+        "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+        "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+        "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
       }
     },
     {
@@ -3628,12 +3769,12 @@
     "portugueseCaptureCount": 11
   },
   "integration": {
-    "status": "REVIEW_READY_NOT_MERGED",
+    "status": "MERGED",
     "targetBranch": "dev",
-    "base": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
-    "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "base": "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+    "productCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
     "pullRequest": 588,
-    "userAcceptance": "PENDING_USER_REVIEW",
+    "userAcceptance": "ACCEPTED_FOR_INTEGRATION",
     "upstreamCommits": 21,
     "upstreamPaths": 80,
     "overlappingPaths": 1,
@@ -3742,8 +3883,28 @@
       "compareTruncated": false,
       "overlapPaths": [],
       "integrated": false,
-      "decision": "Retain the explicitly qualified base. Later PR607 is confined to desktop WSL IPC and its tests, has no overlap with this wave, and does not change native Sucafina or the browser/CLI paths qualified here."
-    }
+      "decision": "Retain the explicitly qualified base. Later PR607 is confined to desktop WSL IPC and its tests, has no overlap with this wave, and does not change native Sucafina or the browser/CLI paths qualified here.",
+      "observationScope": "HISTORICAL_PRE_APPROVAL",
+      "subsequentlyIncludedByMerge": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+      "qualifiedRunAttributionUnchanged": true
+    },
+    "qualificationBase": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+    "qualifiedProductCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "acceptedHead": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+    "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+    "mergeTree": "bbcda60c9d11477d474e7c88a3a6f4258ae644dc",
+    "mergedAt": "2026-11-22T02:21:24Z",
+    "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/588",
+    "postQualificationIntegration": {
+      "from": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "to": "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+      "commits": 10,
+      "paths": 13,
+      "prefix": "apps/desktop/src/main/",
+      "overlapPaths": [],
+      "prospectiveAndMergedTreesEqual": true
+    },
+    "receipt": "wave-four/merge.json"
   },
   "secondWaveVerifiedSnapshot": {
     "target": {
@@ -4300,11 +4461,11 @@
     "UI41"
   ],
   "fourthWaveDelivery": {
-    "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+    "status": "MERGED_VERIFIED",
     "appliedToProduct": true,
-    "appliedToBranch": "sf-design-twenty",
-    "productCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
-    "baseCommit": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+    "appliedToBranch": "dev",
+    "productCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+    "baseCommit": "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
     "workers": {
       "planner": "sf-twenty-planner",
       "procurement": "sf-twenty-procurement",
@@ -4316,7 +4477,7 @@
     "evidence": "wave-four/VALIDATION.md",
     "gallery": "wave-four/evidence/README.md",
     "scope": "wave-four/scope.json",
-    "acceptance": "PENDING_USER_REVIEW",
+    "acceptance": "ACCEPTED_FOR_INTEGRATION",
     "areas": [
       "CAP20",
       "CAP21",
@@ -4349,10 +4510,61 @@
     "implementedAreaRouteScope": 118,
     "remainingRouteScope": 47,
     "pullRequest": 588,
-    "integrationCandidate": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
-    "integrationBase": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
-    "merge": "NOT_MERGED",
+    "integrationCandidate": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+    "integrationBase": "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+    "merge": "MERGED",
     "technicalChecks": 15,
-    "regressionCases": 89
+    "regressionCases": 89,
+    "implementationBranch": "sf-design-twenty",
+    "qualifiedProductCommit": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+    "mergeTree": "bbcda60c9d11477d474e7c88a3a6f4258ae644dc",
+    "mergedAt": "2026-11-22T02:21:24Z",
+    "mergeRecord": "wave-four/MERGE.md",
+    "mergeReceipt": "wave-four/merge.json",
+    "mergedCampaignAreas": 41,
+    "pendingUserReviewAreas": 0
+  },
+  "fourthWaveReviewedSnapshot": {
+    "status": "HISTORICAL_BEFORE_USER_APPROVAL",
+    "head": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+    "technicalProduct": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "functionalProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "source": "https://github.com/gustavomhss/Orchestra-SF/tree/b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7"
+  },
+  "fourthWaveIntegratedSnapshot": {
+    "status": "MERGED_VERIFIED",
+    "pullRequest": 588,
+    "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+    "mergeTree": "bbcda60c9d11477d474e7c88a3a6f4258ae644dc",
+    "mergedAt": "2026-11-22T02:21:24Z",
+    "head": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+    "parents": [
+      "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+      "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7"
+    ],
+    "baseAtMerge": "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+    "devObserved": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+    "expectedTree": "bbcda60c9d11477d474e7c88a3a6f4258ae644dc",
+    "treeMatches": true,
+    "userApproval": "aprovado pra merge",
+    "nativeFunctionalProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "technicalProduct": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "technicalRun": 44972927162,
+    "decisionsRun": 44972048219,
+    "upstreamCommitsSinceQualifiedBase": 10,
+    "upstreamPathsSinceQualifiedBase": 13,
+    "upstreamOnlyPrefix": "apps/desktop/src/main/",
+    "overlapPaths": [],
+    "preMergeHeadChecks": 0,
+    "preMergeStatusContexts": 0,
+    "nativeSourceUnchanged": true
+  },
+  "integratedSource": {
+    "commit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+    "tree": "bbcda60c9d11477d474e7c88a3a6f4258ae644dc",
+    "nativeTree": "98050c0a6df0adb0b1f2ff9960f34ec5ffdaaa7f",
+    "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
+    "nativeSourceEquivalentTo": "e5494ff044ee46cdd80c1d754131c284538d4d31"
   }
 }
