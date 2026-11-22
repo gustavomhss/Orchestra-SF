@@ -1,15 +1,15 @@
 # Wave four — validation
 
-Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete browser journeys and visual review. Decisions11 stopped when real UI41 content disappeared. Its original case probe returned procurement-case-read-changed, while context and the four required operations remained available. The precise guard remains under investigation; the shared reason alone does not prove selection expiry. Failed journeys remain recorded and do not qualify later states.
+Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete browser journeys and visual review. The source refusal in Decisions is now diagnosed: an expired global Procurement selection was checked before case eligibility, vetoing an unrelated Planner read. The minimal correction has passed independent static review. Decisions14 is running on that correction; the scoped canonical regression is being completed.
 
 ## Candidate and scope
 
-- Product code: `218a5ee39935336c88abeb92b0a4d2cc980f21de`.
-- Incorporated dev: `699ad1a1f837ef4a918b73ba89b06aa9cc0a10db`.
+- Product code: `e5494ff044ee46cdd80c1d754131c284538d4d31`.
+- Incorporated dev: `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`.
 - Isolated branch: `sf-design-twenty`; [draft PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588).
 - Earlier block: PR #587 merged as `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`.
 - This block: 20 inventory areas, 49 registered route patterns. Recognition of a route is not independent qualification of every state.
-- All subsequent commits so far add documentation/evidence only. User acceptance of this block is pending; it has not been merged.
+- Browser and technical snapshots retain their exact parent commits below. User acceptance of this block is pending; it has not been merged.
 
 | Area | Native surface | Registered patterns | Evidence group |
 | --- | --- | ---: | --- |
@@ -36,7 +36,7 @@ Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete brows
 
 ## Hosted technical verification
 
-[Gate15 / run 44968622344](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968622344), job `137043220483`, snapshot `bf0ef86bb6f9e7e3d19ab5a1826bb9f188b0e004`, tested the product code above and passed **14 checks / 87 regression cases**.
+[Gate16 / run 44971393754](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44971393754), job `137051745585`, snapshot `1fe0927db37e63f6e9d70537c524ec5f6ead6ac0`, passed **14 checks / 87 regression cases** on product `d179d4abbc4c189d9135e5cc2d38487b6e4ba99c`, including the third upstream composition. The subsequent case-read correction and its new regression require the final technical gate.
 
 | Check | Result |
 | --- | --- |
@@ -68,6 +68,7 @@ The E2E project retains strict semantic checking and noEmit, with declaration em
 | Work/Search/Saved Views | [44965705732](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965705732) | `6bff36e3308c4ac205a59011827c8f19c06c5873` | `87a738830c83bf1fa9ee30c32b38fb1e297b30f8` | 3 passed; 1 view save/readback; 22 captures |
 | Decisions | [44966014444](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966014444) | `8cfd3eb141d31d18ee2b32dda629d67e7d44c10a` | `250e8faf80931c807a86c5f06c0e797de469adca` | Failed from UI41 light original-source coverage onward; followed by diagnostic Decisions11 |
 | Decisions diagnostic11 | [44968620170](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968620170) | `47cbbb5eb1f9b8518f3cada5838429fcb4d4a5ab` | `218a5ee39935336c88abeb92b0a4d2cc980f21de` | Failed on UI41 light real-content assertion; original503 reason identified; guard discriminator pending |
+| Decisions corrected journey14 | [44972048219](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219) | `58def9db4b3aa4c156a041eb86fbbd41de95bba7` | `e5494ff044ee46cdd80c1d754131c284538d4d31` | Running after the minimal case-read scope correction; includes focused UI35 comparison notice |
 | Previous six native areas | [44963871177](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44963871177) | `f6533b5856840c4722f38d3e5070204c8e4d4877` | `7c0caf8da905a03579379c35ce1cd49375a87509` | 2 passed; 67 complete previews; 6 representative JPEGs persisted |
 | Planner + previous six after dev composition | [44965221018](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965221018) | `fcd8c3099ecc04ae7fd47c3d323e889b4b1af0a8` | `331cafc50bee2112f6366ff428658de938c6f58e` | Workflow and Run tests step PASS; combined decoded log unavailable |
 
@@ -101,7 +102,15 @@ Saved Views edits an original V1 view, reviews/cancels/revises, confirms one sav
 
 ### Decisions — UI34–UI41
 
-Final complete qualification remains pending. Decisions11 / run44968620170 tested product218a5ee3 and stopped on missing real UI41 content. The original case probe returned HTTP503 / unavailable / procurement-case-read-changed; current-choice returned403 / denied / current-choice-case-unavailable. Context remained200 and all four required operations remained ready. The shared wrapper reason narrows the failure but alone does not establish which identity, selection, authority or persistence guard refused the read. Decisions10 failed in the diagnostic observer URL accessor itself and is not source-lifecycle evidence. Preserve the failed Decisions9 record and complete the diagnosis before claiming passing light/narrow/localized states. [A15 contract review](A15-REVIEW.md) is a separate static audit and does not substitute for runtime evidence.
+Complete qualification remains pending. The original Decisions11 case probe returned HTTP503 / unavailable / procurement-case-read-changed, followed by current-choice403 / current-choice-case-unavailable. Context remained200 and the four required operations remained ready.
+
+The disposable diagnostic [Decisions13](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44970679515) then identified the first false predicate: selection-expired on a global Procurement selection. Its log contains 63 global-origin observations and 10 expiry failures at transaction entry/egress, with no competing request, identity or exception failure. The original decision-controls reader creates that selection through an admitted sf_work_list using the case horizon, even for a Planner case. Its cleanup releases the collection reference and child lease, while the global period entry remains for five minutes. This establishes both the selection's real origin and the failing branch.
+
+The correction in procurement-case-read-scope.ts preserves common Request, signal, binding/input digests, authority and C08 actor/participant checks. It applies the original selection, reader and expiry checks after the unchanged C12 eligibility predicate and retains them through eligible Procurement egress. Noneligible cases return to the canonical reader outside the SQLite lock. TTL, original controls, source/authorization contracts and seed are unchanged. Independent static review passed; runtime and the new scoped regression remain pending. The regression will distinguish a canonical Planner positive from structural negative Procurement guard fixtures; no positive C12 preparation/application coverage is inferred.
+
+The original source and fixture instrumentation used for diagnosis is absent from the product. Decisions12 failed before startup because of a diagnostic forwarding syntax error and is explicitly not source evidence. The [diagnostic record](decisions-source-diagnostic.json) and [attempt ledger](attempts.json) retain these distinctions.
+
+The coordinator reviewed ten source-positive partial images from Decisions11 across all eight areas, finding no visual blocker. UI35's final journey adds a focused 320px capture of the original comparison limitation notice. Partial images from a failed journey do not qualify later light/narrow/Portuguese states. UI38 retains a Portuguese producer-provided reason in the English chrome; that original source copy is not rewritten as a catalog literal. [A15 contract review](A15-REVIEW.md) remains separate from runtime evidence.
 
 ## Implementation boundaries and corrective work
 

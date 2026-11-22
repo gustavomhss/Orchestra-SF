@@ -103,5 +103,40 @@
       "CI wrappers"
     ],
     "notRuntimeQualification": true
+  },
+  "thirdUpstreamComposition": {
+    "productHead": "d179d4abbc4c189d9135e5cc2d38487b6e4ba99c",
+    "base": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+    "reviewedBy": "coordinator",
+    "upstreamCommits": 7,
+    "upstreamPaths": 18,
+    "overlapPaths": [],
+    "allUpstreamBlobsCopiedExactly": true,
+    "ownDeltaPathsCompared": 249,
+    "ownComparisonTruncated": false,
+    "changesToNativeDecisionSources": false,
+    "notRuntimeQualification": true
+  },
+  "caseScopeCorrection": {
+    "worker": "4978956b0ceeceec66df7c8f942c7495e83fa3e6",
+    "product": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "productPath": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+    "testPath": "packages/app-shell/e2e/sucafina/design-wave-four-decisions.spec.ts",
+    "staticReview": "PASSED_COORDINATOR_AND_PROCUREMENT",
+    "sourceDiagnosisRun": 44970679515,
+    "runtimeRun": 44972048219,
+    "runtimeStatus": "RUNNING",
+    "changes": "Common fences retained before eligibility; original Procurement selection/reader/expiry fences retained after the unchanged C12 predicate and at eligible egress. Focused UI35comparison notice capture added.",
+    "unchanged": [
+      "TTL",
+      "decision-controls",
+      "selection setters",
+      "authorization",
+      "original seed",
+      "canonical producer",
+      "all seven A15 contracts"
+    ],
+    "temporaryDiagnosticFilesIntegrated": false,
+    "canonicalRegression": "PENDING"
   }
 }

@@ -1,18 +1,18 @@
 # Wave four — original browser evidence
 
-Status: **IN_PROGRESS**. Twelve areas are qualified; the final Decisions journey remains under source-lifecycle investigation. The existing galleries below contain **105 reviewed captures for this block**, plus six separately identified regression samples.
+Status: **IN_PROGRESS**. Twelve areas are qualified; Decisions14 is running after a proven original case-read scoping correction. The existing galleries below contain **105 reviewed captures for this block**, plus six separately identified regression samples.
 
 | Group | Areas | Captures persisted and reviewed | Source / qualification |
 | --- | ---: | ---: | --- |
 | [Planner](planner/README.md) | 4 | 40 | Planner9; Planner + previous six passed again after dev composition |
 | [Procurement](procurement/README.md) | 5 | 43 | Procurement10: 4 tests, 11 original POSTs and fresh readbacks |
 | [Work, Search, Saved Views](work/README.md) | 3 | 22 | Work10: all 3 tests passed; selected images retain exact original run identities |
-| Decisions | 8 | Pending final successful source states | Decisions11 stopped on missing real UI41 content; original case503 reason established, exact guard pending |
+| Decisions | 8 | Pending final successful source states | Decisions13 proved global selection expiry before case eligibility; corrected journey14 is running |
 | [Previous six regression](regression/README.md) | Earlier 6 | 6 representative JPEGs of 67 previews | Separate from this block's capture total |
 
 [Validation and scope limits](../VALIDATION.md) · [Exact area/route/state mapping](../scope.json) · [Technical verification](../technical-verification.json) · [Composition evidence](composition/manifest.json)
 
-The final technical gate on product `218a5ee39935336c88abeb92b0a4d2cc980f21de` passed **14 checks / 87 regression cases**, including application declarations, E2E semantics, full CLI types with zero diagnostics, exact-dev guards and seven-file palette parity. Technical success is separate from visual review and user acceptance.
+The latest completed technical gate on the third dev composition, product `d179d4abbc4c189d9135e5cc2d38487b6e4ba99c`, passed **14 checks / 87 regression cases**, including application declarations, E2E semantics, full CLI types with zero diagnostics, exact-dev guards and seven-file palette parity. That gate precedes the case-read correction, whose final gate is pending. Technical success is separate from visual review and user acceptance.
 
 ## Provenance and inspection
 

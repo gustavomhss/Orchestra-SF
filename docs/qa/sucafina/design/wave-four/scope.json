@@ -5,7 +5,7 @@
   "branch": "sf-design-twenty",
   "base": {
     "ref": "dev",
-    "sha": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db"
+    "sha": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b"
   },
   "previousWave": {
     "branch": "sf-design-fifteen",
@@ -1217,17 +1217,17 @@
   "verification": {
     "runtime": "IN_PROGRESS",
     "visual": "IN_PROGRESS",
-    "technical": "FOURTEEN_GATES_PASSED_AT_218A5EE3",
+    "technical": "FOURTEEN_GATES_PASSED_AT_D179D4AB",
     "regression": "FIRST_SIX_PASSED_AT_7C0CAF8D",
     "userAcceptance": "PENDING",
     "merge": "NOT_MERGED"
   },
   "technicalEvidence": {
-    "run": 44968622344,
-    "job": 137043220483,
-    "snapshot": "bf0ef86bb6f9e7e3d19ab5a1826bb9f188b0e004",
-    "productHead": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
-    "dev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+    "run": 44971393754,
+    "job": 137051745585,
+    "snapshot": "1fe0927db37e63f6e9d70537c524ec5f6ead6ac0",
+    "productHead": "d179d4abbc4c189d9135e5cc2d38487b6e4ba99c",
+    "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
     "checks": [
       {
         "name": "Application declarations",
@@ -1289,9 +1289,9 @@
     "regressionTests": 87,
     "includesOriginalInstalledHost": true,
     "guards": {
-      "base": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+      "base": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
       "rules": 78,
-      "files": 250,
+      "files": 252,
       "errors": 0,
       "warnings": 21,
       "approved": 0,
@@ -1299,7 +1299,7 @@
     },
     "fullCli": {
       "status": "PASSED",
-      "run": 44968622344,
+      "run": 44971393754,
       "diagnostics": 0,
       "previousBaseline": {
         "run": 44958162297,
@@ -1348,15 +1348,15 @@
     ],
     "resolution": "Exact upstream FSUtil dependency and outer service acquisition retained together with all native reading-health integration.",
     "status": "TECHNICAL_PASSED_DECISIONS_BROWSER_PENDING",
-    "technicalRun": 44968622344,
+    "technicalRun": 44971393754,
     "plannerAndPreviousSixRun": 44965221018,
     "procurementRun": 44965165654,
     "workRun": 44965705732,
-    "decisionsRun": 44968620170,
+    "decisionsRun": 44972048219,
     "plannerAndPreviousSixStatus": "PASSED",
     "procurementStatus": "PASSED",
     "workStatus": "PASSED",
-    "decisionsStatus": "FAILED_SOURCE_GUARD_UNDER_INVESTIGATION",
+    "decisionsStatus": "RUNNING",
     "followupDevComposition": {
       "prior": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
       "dev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
@@ -1376,6 +1376,27 @@
       },
       "technicalStatus": "PASSED",
       "technicalRun": 44968622344
-    }
+    },
+    "decisionsDiagnosticRun": 44970679515,
+    "decisionsDiagnosticStatus": "RUNNING_SNAPSHOT_ONLY",
+    "thirdDevComposition": {
+      "prior": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+      "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "head": "d179d4abbc4c189d9135e5cc2d38487b6e4ba99c",
+      "tree": "5cfa6cd22c4221be7cb96fd8720230744622dcbb",
+      "upstreamCommits": 7,
+      "upstreamPaths": 18,
+      "overlapPaths": [],
+      "resolution": "All18 upstream paths copied by their exact blob SHA; no own product overlap.",
+      "status": "TECHNICAL_PASSED_DECISIONS_CORRECTION_PENDING",
+      "technicalRun": 44971393754,
+      "decisionsDiagnosticSourceUnchanged": true,
+      "cumulativeFromPR587": {
+        "commits": 21,
+        "files": 80
+      },
+      "technicalStatus": "PASSED"
+    },
+    "currentProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31"
   }
 }

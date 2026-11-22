@@ -1,12 +1,12 @@
 # Technical verification and typechecks
 
-## Current composed candidate
+## Latest completed composed candidate
 
-[Gate15 / run 44968622344](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968622344) passed all **14 checks / 87 regression cases** on snapshot `bf0ef86bb6f9e7e3d19ab5a1826bb9f188b0e004`, product `218a5ee39935336c88abeb92b0a4d2cc980f21de`, after incorporating exact dev `699ad1a1f837ef4a918b73ba89b06aa9cc0a10db`. Application declarations, E2E semantics and the full CLI package typecheck each exited 0. Exact-dev guards passed with 78 rules, zero errors, 21 warnings and no approvals; seven generated palette files remained byte-identical.
+[Gate16 / run 44971393754](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44971393754) passed all **14 checks / 87 regression cases** on snapshot `1fe0927db37e63f6e9d70537c524ec5f6ead6ac0`, product `d179d4abbc4c189d9135e5cc2d38487b6e4ba99c`, after incorporating exact dev `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`. Application declarations, E2E semantics and full CLI types each exited 0. Exact-dev guards passed 78 rules with 0 errors, 21 warnings and 0 approvals; all 7 generated palette files remained byte-identical.
 
-Gate14 passed thirteen checks and all 87 regression cases, but its E2E typecheck caught a diagnostic-only method-access mistake: new URL received request.url instead of request.url(). Correcting that one accessor resolved the error; no type suppression or weakened compiler option was introduced. Gate15 includes the correction and final UI41 CSS.
+The subsequent case-read scoping correction at `e5494ff044ee46cdd80c1d754131c284538d4d31` and its forthcoming regression require the final technical gate. Gate16 is not relabeled as validation of later source edits.
 
-The historical CLI diagnostics below were corrected by incorporated upstream commits. They are preserved as history, not a current typecheck limitation.
+Gate14's diagnostic URL method-access mistake was corrected and verified by Gate15, which also included the final UI41 CSS. The historical CLI diagnostics below were corrected by incorporated upstream commits and remain history, not a current baseline limitation.
 
 ## E2E typecheck boundary
 

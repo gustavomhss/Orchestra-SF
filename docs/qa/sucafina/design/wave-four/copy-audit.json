@@ -106,7 +106,7 @@
       "extraPortuguese": []
     }
   ],
-  "verifiedUnchangedThrough": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+  "verifiedUnchangedThrough": "e5494ff044ee46cdd80c1d754131c284538d4d31",
   "unchangedVerification": {
     "method": "Exact GitHub comparisons0f762e71→250e8faf and250e8faf→218a5ee3 contain none of the ten audited catalog paths.",
     "comparedAt": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
@@ -127,5 +127,22 @@
     },
     "method": "Exact GitHub comparison from audited product to final code; all ten audited catalog paths unchanged."
   },
-  "validThrough": "218a5ee39935336c88abeb92b0a4d2cc980f21de"
+  "validThrough": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+  "thirdCompositionCarryForward": {
+    "from": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+    "through": "d179d4abbc4c189d9135e5cc2d38487b6e4ba99c",
+    "upstream": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+    "upstreamPaths": 18,
+    "changedAuditedCatalogPaths": [],
+    "method": "All subsequent own changes were documentation; third composition has18nonoverlapping exact upstream blobs, none among the10audited catalogs."
+  },
+  "caseScopeCarryForward": {
+    "from": "d179d4abbc4c189d9135e5cc2d38487b6e4ba99c",
+    "through": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "changedPaths": [
+      "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "packages/app-shell/e2e/sucafina/design-wave-four-decisions.spec.ts"
+    ],
+    "changedAuditedCatalogPaths": []
+  }
 }

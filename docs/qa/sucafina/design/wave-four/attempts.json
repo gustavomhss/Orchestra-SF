@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedThrough": "2026-11-22 01:09:52 UTC",
+  "updatedThrough": "2026-11-22 01:38:18 UTC",
   "note": "Historical attempts include failures and incomplete journeys. Only a final passing run qualifies its stated coverage.",
   "attempts": [
     {
@@ -1139,6 +1139,147 @@
       "passedChecks": 14,
       "regressionTests": 87,
       "fullCliTypecheck": "passed"
+    },
+    {
+      "group": "decisions",
+      "attempt": 12,
+      "head": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+      "productParent": "10bf005c5126c6c6176a3649aa8af234be31fa01",
+      "diagnosticCommit": "05fa231a25874f97a3c82cae8b176228368ec307",
+      "snapshot": "a73d8ff8ab8c01fd3520e0b4421d49f91ae86f68",
+      "branch": "ci-run-sf20decisions12",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-decisions.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+      "status": "failed",
+      "purpose": "SNAPSHOT_ONLY_ORIGINAL_GUARD_DIAGNOSTIC",
+      "diagnosticPaths": [
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+        "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "packages/app-shell/e2e/sucafina/design-support/installation.ts"
+      ],
+      "peerReview": "Procurement and coordinator static review passed. Original conditions/order/authcalls/returns/TTL and full browser spec preserved; only safe finite branch enums forwarded.",
+      "integrateDiagnostic": false,
+      "run": 44970274302,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44970274302",
+      "job": 137048322436,
+      "classification": "INVALID_DIAGNOSTIC_STARTUP",
+      "cause": "Snapshot-only native-installation stdout forwarding had one surplus closing parenthesis; Bun parse failed before host/source execution. No product source inference accepted. Corrected by2926f050."
+    },
+    {
+      "group": "decisions",
+      "attempt": 13,
+      "head": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+      "productParent": "10bf005c5126c6c6176a3649aa8af234be31fa01",
+      "diagnosticCommit": "2926f050dfcd5e1e6bacf96c7bac0098a6453a27",
+      "snapshot": "7f49e5597c29f95f8f432a8ce0875d55a6aeef9e",
+      "branch": "ci-run-sf20decisions13",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-decisions.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+      "status": "failed",
+      "purpose": "SNAPSHOT_ONLY_ORIGINAL_GUARD_DIAGNOSTIC",
+      "diagnosticPaths": [
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+        "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "packages/app-shell/e2e/sucafina/design-support/installation.ts"
+      ],
+      "correction": "Exactly one surplus parenthesis removed from the diagnostic forwarding callback; original source behavior and fullspec unchanged.",
+      "integrateDiagnostic": false,
+      "run": 44970679515,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44970679515",
+      "job": 137049552677,
+      "classification": "VALID_SNAPSHOT_DIAGNOSTIC_OF_ORIGINAL_SOURCE_REFUSAL",
+      "cause": "Global Procurement selection is present; first false condition is selection-expired at transaction-entry and transaction-egress before case eligibility. No request/identity/exception refusal observed. Minimal scoping correction follows; diagnostic files remain outside product.",
+      "sourceEnumCounts": {
+        "origin:none": 1,
+        "fallback:no-selection": 4,
+        "origin:global": 63,
+        "current:selection-expired": 10,
+        "changed:transaction-entry": 5,
+        "changed:transaction-egress": 5
+      }
+    },
+    {
+      "group": "technical",
+      "attempt": 16,
+      "head": "d179d4abbc4c189d9135e5cc2d38487b6e4ba99c",
+      "snapshot": "1fe0927db37e63f6e9d70537c524ec5f6ead6ac0",
+      "branch": "ci-run-sf20gates16",
+      "request": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "300000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "status": "passed",
+      "cause": "All14 checks and87cases passed on the exact dev2eeb third composition. App/E2E/fullCLI types, pinned guards, palette and original installedhost passed. Decisions wrapper correction remains separate.",
+      "run": 44971393754,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44971393754",
+      "job": 137051745585,
+      "checks": 14,
+      "passedChecks": 14,
+      "regressionTests": 87,
+      "fullCliTypecheck": "passed"
+    },
+    {
+      "group": "decisions",
+      "attempt": 14,
+      "head": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+      "snapshot": "58def9db4b3aa4c156a041eb86fbbd41de95bba7",
+      "branch": "ci-run-sf20decisions14",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-decisions.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "status": "running",
+      "cause": "Minimal Procurement case-read eligibility scoping fix; original common and eligible Procurement fences preserved. Full source-positive journey unchanged plusfocused UI35comparison qualification capture. No snapshot diagnostic source logging.",
+      "diagnosticSourceLogging": false,
+      "run": 44972048219,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219"
     }
   ]
 }

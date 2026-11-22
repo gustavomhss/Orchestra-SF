@@ -1,6 +1,6 @@
-# Composition with dev699ad1a1
+# Composition with dev2eeb1142
 
-Status: **TECHNICAL_PASS; DECISIONS_SOURCE_GUARD_UNDER_INVESTIGATION**. Product `218a5ee39935336c88abeb92b0a4d2cc980f21de` incorporates upstream dev `699ad1a1f837ef4a918b73ba89b06aa9cc0a10db`. Composition commit `cb5b92074c64b7087abeeba75a1effe52b01eff5` retains that upstream head as a parent. Since the actual PR #587 merge `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`, fourteen upstream commits changed 65 distinct paths in two stages. Counts below distinguish the stages from the cumulative set.
+Status: **TECHNICAL_COMPOSITION_PASSED; CASE_SCOPE_CORRECTION_QUALIFICATION_PENDING**. Current product `e5494ff044ee46cdd80c1d754131c284538d4d31` incorporates upstream dev `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b` through composition `d179d4abbc4c189d9135e5cc2d38487b6e4ba99c`. Since the actual PR #587 merge `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`, twenty-one upstream commits changed 80 distinct paths in three stages. Stage counts below are not added as distinct-file counts because some paths recur.
 
 ## Stage one — dev3ce1acd0
 
@@ -30,24 +30,40 @@ Four further upstream commits changed 26 paths. Twenty-five non-overlapping path
 | feat(sf): add read-only contract review Gateway pack (#603) | [505698c9](https://github.com/gustavomhss/Orchestra-SF/commit/505698c9b7ce0a25d4327d46a2866a0e49b4c282) |
 | fix(sf): autorizar recall do reviewer pela seleção humana (#594) | [699ad1a1](https://github.com/gustavomhss/Orchestra-SF/commit/699ad1a1f837ef4a918b73ba89b06aa9cc0a10db) |
 
-No workflow, guard, allowlist or permission mechanism was edited for this reconciliation. Repository work used GitHub MCP; executable verification uses disposable test-ci snapshots only.
+## Stage three — dev2eeb1142
+
+Seven further upstream commits changed 18 paths. The current candidate's 249-path delta from dev699ad1a1 had no intersection with those 18 paths; the comparison was not truncated. All 18 paths were copied by exact upstream blob SHA. This preserves the upstream purchase Gateway QA mount support, session adoption/scheduled receipt checks and desktop Live IPC sender validation. No native Decision case source was changed by this stage.
+
+| Upstream change | Commit |
+| --- | --- |
+| fix(sf): support the QA mount in the purchase Gateway (#604) | [721c4247](https://github.com/gustavomhss/Orchestra-SF/commit/721c42478a61185a92eade55d8390227904de522) |
+| fix(core): enforce session adoption identity | [653100ff](https://github.com/gustavomhss/Orchestra-SF/commit/653100ff0bd58bfd0b5621bf96c33f4f8d43a3df) |
+| fix(core): require exact scheduled prompt receipts | [149572ef](https://github.com/gustavomhss/Orchestra-SF/commit/149572ef27bf44d2f92e0cf5bfd4144e635dbb00) |
+| fix(core): reject conflicting scheduled run retries | [1f4701af](https://github.com/gustavomhss/Orchestra-SF/commit/1f4701afb115d1c39bfb3ae4e4438c82bc7267bb) |
+| Merge pull request #605 from gustavomhss/session-adoption | [9effb3cb](https://github.com/gustavomhss/Orchestra-SF/commit/9effb3cbc91f87bcca6c8e76705f5fb8e856e43e) |
+| fix(desktop): validate Live IPC senders | [5f40d11e](https://github.com/gustavomhss/Orchestra-SF/commit/5f40d11e0795c4103f4b238c359decb652431752) |
+| Merge pull request #606 from gustavomhss/live-ipc-sender | [2eeb1142](https://github.com/gustavomhss/Orchestra-SF/commit/2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b) |
+
+No workflow, guard, allowlist or permission mechanism was changed by the redesign. The upstream changes above were preserved by exact blob or exact hunk composition. Repository work used GitHub MCP; executable verification uses disposable test-ci snapshots only.
 
 ## Hosted verification
 
 | Scope | Run | State |
 | --- | --- | --- |
-| Application/E2E/full CLI types, exact-dev guards, palette parity and 87 regressions | [44968622344](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968622344) | PASS; 14 checks / 87 regression cases; product218a5ee3 / dev699ad1a1 |
+| Application/E2E/full CLI types, exact-dev guards, palette parity and 87 regressions | [44971393754](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44971393754) | PASS; 14 checks / 87 regression cases; product d179d4ab / dev2eeb1142 |
 | Planner and previous six native areas | [44965221018](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965221018) | Workflow and Run tests step PASS; combined log unavailable |
 | Procurement five-area journey | [44965165654](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965165654) | PASS; 4 original journeys, 11 POSTs/readbacks |
 | Work, Search and Saved Views | [44965705732](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965705732) | PASS; 3 original journeys |
-| Decisions | [44968620170](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968620170) | Failed on UI41 real-content assertion; original503/procurement-case-read-changed isolated; exact guard pending |
+| Decisions corrected journey | [44972048219](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219) | Running on product e5494ff0 after the minimal case-read scoping correction |
 
 The combined Planner/previous-six workflow on the first composition (dev3ce1acd0) completed successfully, including the original test step and evidence upload. Two MCP attempts to retrieve its decoded log returned Transport closed. We do not infer a combined test/capture/write/error count. The [composition manifest](evidence/composition/manifest.json) records artifact identity and the exact selected specs; separately read Planner9 and Regression2 evidence retains its own source snapshots.
 
-Gate15 tests the complete second composition, the final UI41 layout adjustment and the corrected diagnostic URL accessor. Application declarations, E2E semantics, full CLI types, exact-dev guards, palette parity and all 87 regression cases passed. The earlier Gate14 failure was confined to the new E2E diagnostic passing a URL method instead of calling it; the one-line correction is verified by Gate15.
+Gate16 passed the complete third composition before the case-scope correction. That later correction requires its final technical gate and the running Decisions14 journey. The temporary diagnostic source edits from Decisions12/13 were never integrated.
+
+Historically, Gate15 tested the complete second composition, the final UI41 layout adjustment and the corrected diagnostic URL accessor. Application declarations, E2E semantics, full CLI types, exact-dev guards, palette parity and all 87 regression cases passed. The earlier Gate14 failure was confined to the new E2E diagnostic passing a URL method instead of calling it; the one-line correction is verified by Gate15.
 
 The current composed full CLI typecheck passed with zero diagnostics. Its earlier seven diagnostics belonged to the previous dev baseline and were fixed by the incorporated upstream commits. No suppression or compiler flag change was used to accept them. Historical failures remain in [attempts.json](attempts.json).
 
-The copy audit remains valid through product `218a5ee39935336c88abeb92b0a4d2cc980f21de`: none of its ten catalog paths changed after the audited `0f762e71` source. The ten catalogs preserve 574 existing English literals, add 9 English literals with explicit Portuguese, and contain 583 current keys with no missing Portuguese literal. Other source paths are not counted by this catalog audit.
+The copy audit remains valid through product `e5494ff044ee46cdd80c1d754131c284538d4d31`: none of its ten catalog paths changed after the audited `0f762e71` source. The ten catalogs preserve 574 existing English literals, add 9 English literals with explicit Portuguese, and contain 583 current keys with no missing Portuguese literal. Other source paths are not counted by this catalog audit.
 
 The candidate is not merged and has no user acceptance for this block. Final qualification belongs in [VALIDATION.md](VALIDATION.md).
