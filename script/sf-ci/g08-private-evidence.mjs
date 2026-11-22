@@ -12,7 +12,9 @@ export const cases = Object.freeze([
   { id: "aba-two-windows", title: "An explicit A B A Team switch leaves the sibling window on its own Team" },
   { id: "account-without-team", title: "An authenticated account without Team access cannot open the original business chapter" },
   { id: "foreign-deep-link-reload", title: "A foreign installation deep link and reload cannot inherit the current Team selection" },
-  { id: "admin-api-without-team", title: "Original Microsoft administration works without granting Team business access" },
+  { id: "admin-without-team", title: "A Microsoft configuration administrator without Teams cannot acquire business access" },
+  { id: "narrow-keyboard-draft", title: "Keyboard navigation opens a new Team chat draft on narrow Web without changing owner" },
+  { id: "draft-cancel-discard", title: "A Team switch keeps a canceled chat draft and discards it only on confirmation" },
   { id: "real-revoke-restore", title: "Real administration revokes a disposable Team and restores its original configuration" },
   { id: "logout-original-context", title: "Logout invalidates the original Microsoft browser context and preserves the other account" },
 ])
@@ -22,8 +24,9 @@ export const preservedTeams = Object.freeze([
 ])
 export const completeMappings = Object.freeze({
   "aba-two-windows": "aba-two-windows", "account-without-team": "account-without-team",
-  "foreign-deep-link-reload": "foreign-deep-link-reload", "real-revoke-restore": "real-revoke-restore",
-  "logout-original-context": "logout-original-context",
+  "foreign-deep-link-reload": "foreign-deep-link-reload", "admin-without-team": "admin-without-team",
+  "narrow-keyboard-draft": "narrow-keyboard-draft", "draft-cancel-discard": "draft-cancel-discard",
+  "real-revoke-restore": "real-revoke-restore", "logout-original-context": "logout-original-context",
 })
 export const obligationPath = "packages/app-shell/e2e/sucafina/g08/obligations.json"
 export const pendingGroups = Object.freeze(["U15", "U39", "U40", "F04", "AZ02"])
@@ -31,6 +34,9 @@ export const productContractPaths = Object.freeze([
   "packages/app-shell/src/context/team-profile-navigation.ts",
   "modules/sucafina/Sucafinav1/runtime/team-profile-http.ts",
   "modules/sucafina/Sucafinav1/runtime/team-profile-store.ts",
+  "packages/app-shell/src/components/team-profile-administration.tsx",
+  "packages/app-shell/src/pages/team-session.tsx",
+  "packages/app-shell/src/context/team-sessions.ts",
 ])
 export const sourcePaths = Object.freeze([
   ".github/workflows/g08-private-preflight.yml", "script/sf-ci/g08-private-evidence.mjs", obligationPath,
@@ -366,7 +372,10 @@ export function coverageLedger(value, executed = false) {
     // Full mappings are versioned here. The list of passing cases cannot promote unmapped obligations.
     const complete = Object.entries(completeMappings).find(([id]) => id === entry.id)
     assert(!!complete === (entry.coverage === "complete"), "G08_UNSUPPORTED_OBLIGATION_CLAIM")
-    assert(entry.id !== "narrow-keyboard-draft" || entry.coverage === "none", "G08_LANDING_IS_NOT_A_CHAT_DRAFT")
+    if (entry.id === "same-team-distinct-grants") assert(entry.coverage === "partial" &&
+      entry.blocker === "BLOCKED_BY_PRODUCT_GRANTS_NOT_PUBLISHED" &&
+      JSON.stringify(entry.implementedCases) === JSON.stringify(["same-team-principal-binding"]),
+      "G08_DISTINCT_GRANTS_REMAIN_UNPROVEN")
     if (entry.coverage !== "complete") assert(text(entry.blocker).startsWith("BLOCKED_BY_PRODUCT_"), "G08_PRODUCT_BLOCKER_REQUIRED")
     else assert(entry.blocker === null && complete && JSON.stringify(entry.implementedCases) === JSON.stringify([complete[1]]), "G08_COMPLETE_MAPPING_INVALID")
     return { id: entry.id, status: executed && entry.coverage === "complete" ? "PASS" :
@@ -415,7 +424,7 @@ async function main() {
   const command = process.argv[2]
   if (command === "verify-list") {
     const inventory = verifyReport(JSON.parse(await readFile(process.argv[3], "utf8")), false)
-    const receipt = { schema: "sf-g08-executor-inventory-v2", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
+    const receipt = { schema: "sf-g08-executor-inventory-v3", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
       candidate: { sha: process.env.SF_G08_CANDIDATE_SHA, tree: process.env.SF_G08_CANDIDATE_TREE },
       cases: inventory, coverage: await readCoverage(false), sources: await sourceInventory(), installed: false, g08Closed: false, pendingGroups, productionCutover: false }
     const output = text(process.env.SF_G08_TOOLING_EVIDENCE), workspace = process.env.GITHUB_WORKSPACE
@@ -469,12 +478,13 @@ async function main() {
   }
   const archive = record(receipt.archive)
   const publicReceipt = {
-    schema: "sf-g08-current-installed-v2", status: "CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED", proofScope: "current-teams-subset",
+    schema: "sf-g08-current-installed-v3", status: "CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED", proofScope: "current-teams-subset",
     candidate: plan.candidate, archive: { file: archive.file, sha256: archive.sha256, bytes: archive.bytes },
     packageReceiptSha256: plan.packageReceiptSha256, invocation: plan.invocation, cases: inventory, coverage: await readCoverage(true), sources,
     evidence: { reportSha256: digest(reportText), hostBeforeSha256: digest(beforeText), hostAfterSha256: digest(afterText), cleanup },
     installed: true, g08Closed: false, pendingGroups, productionCutover: false,
-    limits: ["Seven current-contract controls only; distinct business grants, native administration UI, chat/draft and U15/U39/U40/F04/AZ02 remain mandatory.",
+    limits: ["Nine current-contract Teams scenarios only; distinct business grants and U15/U39/U40/F04/AZ02 remain unproven.",
+      "The two draft scenarios send no POST and do not qualify model dispatch, personal provider credentials or completion.",
       "Logout proves original context invalidation, not raw token replay or Entra global sign-out.",
       "Reservation and actor references are operator-supplied authorization metadata, never inferred role grants."],
   }

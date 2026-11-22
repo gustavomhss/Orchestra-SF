@@ -1,14 +1,14 @@
 {
   "schema": "sf-g08-obligations-v1",
-  "scope": "Required G08 obligations preserved; seven executable current-contract controls are a subset, with integration prerequisites.",
+  "scope": "Required G08 obligations preserved; nine executable Teams scenarios map eight obligations completely and distinct grants partially. No installed result is asserted.",
   "plan": {
     "commit": "736a5087c223629be4d73c8a4535d615fcafd96a",
     "path": "docs/architecture/teams-profile-test-plan.json",
     "gate": "G08-NATIVE-TEAMS"
   },
   "inspectedCandidate": {
-    "sha": "37931c77eb07aecf01610bb0ee7d717276b85539",
-    "note": "Read-only contract reconciliation, not a final candidate or installed acceptance."
+    "sha": "7a28c5eefece4cae5de0e376ad3bafbe5290a928",
+    "note": "Product-contract adaptation only; not a final pin, installed acceptance or LIVE proof."
   },
   "originalTeams": {
     "source": {
@@ -27,11 +27,11 @@
         ],
         "coverage": "partial",
         "blocker": "BLOCKED_BY_PRODUCT_GRANTS_NOT_PUBLISHED",
-        "detail": "The observed integrated producer still publishes no business destinations. Different original principals are preserved but do not establish different business grants.",
+        "detail": "The inspected producer publishes empty destinations/availability. Two original principals and reloads prove identity binding only; the original different-grants assertion remains pending until a real projection exists.",
         "sourcePath": "modules/sucafina/Sucafinav1/runtime/team-profile-access.ts",
         "sourceLines": [
-          88,
-          104
+          192,
+          204
         ],
         "state": "NOT_RUN"
       },
@@ -44,7 +44,7 @@
         ],
         "coverage": "complete",
         "blocker": null,
-        "detail": "Requires the observed #654 navigation contract in the actual installed C: original action F02 A/B/A, sibling A unchanged and preserved by reload.",
+        "detail": "Original action F02 A/B/A, exact canonical URLs, sibling A unchanged after reload, and the original before/after grant fingerprint equality. Equality of empty arrays is not proof of distinct grants.",
         "sourcePath": "packages/app-shell/src/pages/team-profile.tsx",
         "sourceLines": [
           58,
@@ -106,52 +106,66 @@
         "title": "A Microsoft configuration administrator without Teams cannot acquire business access",
         "required": true,
         "implementedCases": [
-          "admin-api-without-team"
+          "admin-without-team"
         ],
-        "coverage": "partial",
-        "blocker": "BLOCKED_BY_PRODUCT_ADMINISTRATION_UI_NOT_COMPOSED",
-        "detail": "The integrated API can prove administration available without Team and business403 using the original admin actor. The earlier scenario also opened a native administration UI that #654/#655 do not compose; do not replace that UI assertion silently.",
-        "sourcePath": "modules/sucafina/Sucafinav1/runtime/team-profile-access.ts",
+        "coverage": "complete",
+        "blocker": null,
+        "detail": "The original administrator without Teams opens the actual root administration toggle; its UI GET catalog and ready controls agree with an independent original read. No Chat/dashboard is available and explicit Team business remains 403.",
+        "sourcePath": "packages/app-shell/src/pages/team-profile.tsx",
         "sourceLines": [
-          79,
-          104
+          406,
+          427
         ],
         "state": "NOT_RUN",
         "contractSource": {
-          "commit": "295eb0f01777657608cdceff2180f5efb7d8646b",
-          "path": "modules/sucafina/Sucafinav1/runtime/team-profile-access.ts",
-          "blob": "2b89cc8e0cacb241fd8fd173a48e25bd8a3f864e"
+          "commit": "7a28c5eefece4cae5de0e376ad3bafbe5290a928",
+          "path": "packages/app-shell/src/pages/team-profile.tsx",
+          "blob": "989d0903bd4db1b1a227f1f2327a23cd6ce654ac"
         }
       },
       {
         "id": "narrow-keyboard-draft",
         "title": "Keyboard navigation opens a new Team chat draft on narrow Web without changing owner",
         "required": true,
-        "implementedCases": [],
-        "coverage": "none",
-        "blocker": "BLOCKED_BY_PRODUCT_TEAM_CHAT_NOT_COMPOSED",
-        "detail": "The current landing has no Team chat. Preserve opening a native Team chat draft by keyboard on narrow Web; no directory/git substitution.",
-        "sourcePath": "packages/app-shell/src/pages/team-profile.tsx",
-        "sourceLines": [
-          100,
-          139
+        "implementedCases": [
+          "narrow-keyboard-draft"
         ],
-        "state": "NOT_RUN"
+        "coverage": "complete",
+        "blocker": null,
+        "detail": "At 390x844, keyboard Enter opens the actual new Chat with exactly five versioned owner-query fields. Original F02/list/SSE, canonical namespace and editable empty composer retain the same owner; the whole scenario observes zero POST. New inside the ready workspace is local and does not invent another F02.",
+        "sourcePath": "packages/app-shell/src/pages/team-session.tsx",
+        "sourceLines": [
+          97,
+          202
+        ],
+        "state": "NOT_RUN",
+        "contractSource": {
+          "commit": "7a28c5eefece4cae5de0e376ad3bafbe5290a928",
+          "path": "packages/app-shell/src/pages/team-session.tsx",
+          "blob": "358ab7e83ee77c158d742d44ab54edfd5718f5df"
+        }
       },
       {
         "id": "draft-cancel-discard",
         "title": "A Team switch keeps a canceled chat draft and discards it only on confirmation",
         "required": true,
-        "implementedCases": [],
-        "coverage": "none",
-        "blocker": "BLOCKED_BY_PRODUCT_DRAFT_DISCARD_NOT_COMPOSED",
-        "detail": "The current landing has no draft editor/discard dialog. Preserve cancel retaining A/draft and confirmation discarding before B; no empty-landing substitute.",
+        "implementedCases": [
+          "draft-cancel-discard"
+        ],
+        "coverage": "complete",
+        "blocker": null,
+        "detail": "The actual native dialog keeps A and its unsent text on cancel; confirmation changes to B with a ready but empty composer. Returning to A rereads F02/list/SSE and cannot resurrect the discarded text. Original response namespaces remain bound and no POST is sent.",
         "sourcePath": "packages/app-shell/src/pages/team-profile.tsx",
         "sourceLines": [
-          100,
-          139
+          237,
+          255
         ],
-        "state": "NOT_RUN"
+        "state": "NOT_RUN",
+        "contractSource": {
+          "commit": "7a28c5eefece4cae5de0e376ad3bafbe5290a928",
+          "path": "packages/app-shell/src/pages/team-profile.tsx",
+          "blob": "989d0903bd4db1b1a227f1f2327a23cd6ce654ac"
+        }
       },
       {
         "id": "real-revoke-restore",
@@ -162,7 +176,7 @@
         ],
         "coverage": "complete",
         "blocker": null,
-        "detail": "Requires original admin observer and mounted durable policy route from295eb. Observe opaque CAS, exact catalog rereads, original F02 revocation and business403 for both actors, unchanged B, real restore and cleanup. Never accept manual status as proof.",
+        "detail": "Original administrator uses one disable and, when the original reread proves it necessary, one enable with the exact opaque CAS tokens. Catalog, F02 revocation/business403 for both actors, unaffected B and restored admission remain required. Canonical shared documents for A/B are read before and after and must be identical; the global revision is never rewound.",
         "sourcePath": "modules/sucafina/Sucafinav1/local/microsoft-entry.ts",
         "sourceLines": [
           107,
@@ -184,7 +198,7 @@
         ],
         "coverage": "complete",
         "blocker": null,
-        "detail": "Original UI POST204, original F02 unauthenticated401 and stale window reload, with holder authority preserved. Raw token replay/global sign-out/restart remain AZ02 obligations.",
+        "detail": "Original UI POST 204, original F02 unauthenticated 401 and stale-window reload, with the holder's owner and original grant fingerprint preserved. Empty fingerprint equality is not distinct-grant proof. Raw token replay/global sign-out/restart remain separate AZ02 obligations.",
         "sourcePath": "packages/app-shell/src/pages/team-profile.tsx",
         "sourceLines": [
           59,
@@ -393,7 +407,22 @@
       "observedHead": "bf7cbeb579130b3a83b910306121105b26652d70",
       "integrationSource": "295eb0f01777657608cdceff2180f5efb7d8646b",
       "contract": "authenticated no-teams/revoked principal; installed original admin observer/HTTP route; durable opaque CAS policy"
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/661",
+      "observedHead": "6c96110aea248594f47e92cfd569e97867f72396",
+      "contract": "original administrator UI without Team; mounted catalog read and no business admission"
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/664",
+      "observedHead": "f62debd60ace38d667d0a3ed0bf5769ee7215d0f",
+      "contract": "shared configuration editor/read contract; this executor never saves or provisions configuration"
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/667",
+      "observedHead": "b663dd0865fa91c705f732c88975473de8d49c50",
+      "contract": "native Team Chat, versioned URLs, server namespace, local drafts and explicit discard"
     }
   ],
-  "integrationStatus": "SOURCE_CONTRACT_OBSERVED_IN_OTHER_WRITERS_NOT_FINAL_CANDIDATE"
+  "integrationStatus": "PRODUCT_CONTRACTS_PRESENT_AT_INSPECTED_SHA_NOT_INSTALLED_ACCEPTANCE"
 }

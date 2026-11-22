@@ -188,6 +188,16 @@ for (const [name, change] of [
   ["lookalike spec", (value) => { value.suites[0].specs[0].file = "foreign-teams-installed.spec.ts" }],
 ]) test("refuses report " + name, () => { const value = report(); change(value); assert.throws(() => verifyReport(value, true)) })
 
+test("a previous seven-case report cannot attest the two actual draft scenarios", () => {
+  const value = report()
+  value.suites[0].specs = value.suites[0].specs.filter((entry) =>
+    !cases.filter((item) => ["narrow-keyboard-draft", "draft-cancel-discard"].includes(item.id))
+      .some((item) => item.title === entry.title))
+  value.stats.expected = 7
+  assert.throws(() => verifyReport(value, false), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
+  assert.throws(() => verifyReport(value, true), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
+})
+
 test("private files are exclusive, bounded, owner-only and reject links", async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), "g08-refusal-"))
   try {
@@ -214,16 +224,19 @@ test("digest preserves exact bytes including trailing newline", () => {
 })
 
 const obligations = JSON.parse(await readFile(new URL("../../" + obligationPath, import.meta.url), "utf8"))
-test("original nine Teams obligations and 50 business registrations remain separate from seven current-contract controls", () => {
+test("nine current scenarios preserve eight complete mappings, partial distinct grants and all separate G08 groups", () => {
   const list = coverageLedger(obligations, false), executed = coverageLedger(obligations, true)
-  assert.equal(cases.length, 7)
+  assert.equal(cases.length, 9)
   assert.equal(preservedTeams.length, 9)
   assert.deepEqual(list.originalTeams.map((entry) => entry.id), preservedTeams)
   assert(list.originalTeams.every((entry) => entry.status === "NOT_RUN"))
-  assert.equal(executed.originalTeams.filter((entry) => entry.status === "PASS").length, 5)
-  assert.equal(executed.originalTeams.find((entry) => entry.id === "narrow-keyboard-draft").status, "NOT_RUN")
+  assert.equal(executed.originalTeams.filter((entry) => entry.status === "PASS").length, 8)
+  assert.equal(executed.originalTeams.find((entry) => entry.id === "narrow-keyboard-draft").status, "PASS")
+  assert.equal(executed.originalTeams.find((entry) => entry.id === "draft-cancel-discard").status, "PASS")
   assert.equal(executed.originalTeams.find((entry) => entry.id === "same-team-distinct-grants").status, "PARTIAL")
-  assert.equal(executed.originalTeams.find((entry) => entry.id === "admin-without-team").status, "PARTIAL")
+  assert.equal(executed.originalTeams.find((entry) => entry.id === "admin-without-team").status, "PASS")
+  assert(executed.groups.every((entry) => entry.status === "NOT_RUN"))
+  assert.equal(executed.complete, false)
   assert.deepEqual(executed.groups.map((entry) => entry.id), pendingGroups)
   assert.deepEqual(executed.groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 32])
   assert.throws(() => requireCompleteGate(list), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
@@ -232,11 +245,13 @@ test("original nine Teams obligations and 50 business registrations remain separ
 for (const [name, change] of [
   ["deleted original Teams case", (value) => { value.originalTeams.obligations.pop() }],
   ["renamed original Teams case", (value) => { value.originalTeams.obligations[0].id = "principal-only" }],
-  ["landing keyboard claimed as chat", (value) => { value.originalTeams.obligations[5].coverage = "complete" }],
+  ["landing keyboard substituted for Chat", (value) => { value.originalTeams.obligations[5].implementedCases = ["aba-two-windows"] }],
   ["different grants claimed from principals", (value) => { value.originalTeams.obligations[0].coverage = "complete" }],
-  ["native admin UI claimed from HTTP", (value) => { value.originalTeams.obligations[4].coverage = "complete" }],
+  ["principal-only control substituted for native admin UI", (value) => { value.originalTeams.obligations[4].implementedCases = ["same-team-principal-binding"] }],
+  ["draft discard omitted", (value) => { value.originalTeams.obligations[6].implementedCases = [] }],
   ["fake manual revoke PASS", (value) => { value.originalTeams.obligations[7].state = "PASS" }],
-  ["missing product blocker", (value) => { value.originalTeams.obligations[4].blocker = null }],
+  ["missing distinct-grants blocker", (value) => { value.originalTeams.obligations[0].blocker = null }],
+  ["principal case removed from partial mapping", (value) => { value.originalTeams.obligations[0].implementedCases = [] }],
   ["wrong complete mapping", (value) => { value.originalTeams.obligations[7].implementedCases = ["aba-two-windows"] }],
   ["missing required group", (value) => { value.groups.pop() }],
   ["renamed required group", (value) => { value.groups[0].id = "legacy-U15" }],
