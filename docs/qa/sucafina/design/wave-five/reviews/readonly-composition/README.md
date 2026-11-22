@@ -1,51 +1,46 @@
-# Canonical readonly composition — candidate review
+# Canonical readonly composition — limited integration review
 
-## Status and provenance
+## Decision and results
 
-**Qualification: PENDING. Not an installed UI or latency qualification.**
+**Recommend the exact five-file integration, followed by one clean original journey with unchanged budgets. Installed and latency qualification remain PENDING.** Root integrated these exact blobs in `2d3abae061c9d4be188540433b9d34c4bfaf2b24`, tree `63b9ed2901def792362a7aa8678f895d0cbac791`; final GitHub readback confirmed all five identities.
 
-The joint workflow completed with **failure**; its Linux test job failed and cleanup succeeded. The regression result is **53 passed, 2 skipped, 1 failed, 974 assertions**. All ten new groups passed; the existing C17 ancestry case reached its original cooperative 105-second deadline during reopened ancestry resolution. No value/source assertion failed before that deadline. CLI and E2E typechecks passed. The guard also rejected the previously integrated raw `portfolio-metric-batch/attempt-01.log`; root owns its removal and the Actions-provenance replacement, without a guard exception or rename. This is not an all-green gate. The pre-correction C17 control remains separate; no causal latency claim follows.
+The [combined gate 45006460499](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45006460499/job/137159049164) remains **FAILED**: 53 passed, 2 skipped, 1 failed, 974 assertions. All ten new groups, original LocalStore, Finance, CLI types and E2E types passed. C17 reached its original 105000ms cooperative deadline during reopened ancestry resolution, without a value/source assertion failing first. Its later cycle/revocation phases were not reached. The initial guard also rejected a previously integrated raw QA log.
 
-| Identifier | Exact value |
+The [pre-correction C17 control](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45007654887/job/137162737147) on the unchanged audited base reproduced that deadline in the same phase, with identical completed inner/outer canonical read counts (14/1952). This establishes a pre-existing limit, **not** a C17 pass or performance equivalence. Separate hosted jobs and differing surrounding test selections are not a benchmark. [Control receipt](https://github.com/gustavomhss/Orchestra-SF/blob/223b41a7472ab199cdc6987d05562d8d33ac7431/docs/qa/sucafina/design/wave-five/collab/c17-precorrection-control-01/receipt.json), blob `9a8b81874c93de309cd2145180c5fff4bd008705`.
+
+The [guard-only gate 45007665762](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45007665762/job/137162771489) passed after the raw-log cleanup: 78 rules, 669 files, 36 warnings, zero gates/errors/approvals, `touchesGuards:false`. Original guard rules remained intact. Both control and guard cleanup jobs passed. This does not change the combined gate's failed conclusion.
+
+## Exact provenance
+
+| Identifier | Value |
 | --- | --- |
 | Audited base | `5882179a3fea2bbbec465821ffd5a13c06deda4b` |
-| Private provenance candidate | `74364b8f1313270e96d0d5e7e517e1e1a966f6c0` |
-| Child-scope consumer candidate | `5bf37fc96c0d42cff073eee754bdc9a5543d85fa` |
+| Private-query candidate | `74364b8f1313270e96d0d5e7e517e1e1a966f6c0` |
+| Child-scope candidate | `5bf37fc96c0d42cff073eee754bdc9a5543d85fa` |
 | Joint source with tests | `a5dbf5f712136d73bb752f3fb84aa812d4332dff` |
-| CI snapshot | `37417cdeda06111bec608e4839d458e49b39ae25` |
-| Workflow | [45006460499](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45006460499) |
-| Linux test job | `137159049164` — failure |
-| Cleanup job | `137160221040` — success |
+| Combined CI snapshot | `37417cdeda06111bec608e4839d458e49b39ae25` |
+| C17 control snapshot | `ef04ad162e2d8802c62c8f46298b5c737eb9d4c5` |
+| Guard-only snapshot | `ffb12c38b322b0936b9d589976f37abac0ebd331` |
 
-Workflow metadata was read directly through GitHub MCP. Detailed runtime logs and the final result interpretation are owned by the root/analytics receipt.
+## Correction and preserved boundaries
 
-## Why the capability was lost
+Source lifecycle reached CurrentChoice's wrapper, while LocalStore's private readonly registry recognized only its original store object. That lost capability retained full-copy/full-hash fallback inside genuine readonly roots.
 
-The installed source lifecycle uses the exact persistence object emitted by CurrentChoice, while LocalStore registers readonly readers against its own original store object. The generic source reader reached the CurrentChoice object, missed that private registration, and retained the full-copy/full-hash fallback even inside a genuine readonly root. The earlier presence recognizer proves lexical presence through function provenance; it does not supply equivalent readonly authority data.
+A query-only private WeakMap now recognizes only the exact factory-emitted persistence object and delegates to the original LocalStore reader. Unknown spreads, proxies and opaque drivers cannot register a reader. It pins plain objects, `input.persistence`, `fence.persistence`, driver/wrapper identities and seven original own data-function methods on both objects: `currentSnapshots`, `currentSnapshot`, `hasCurrentSnapshots`, `transaction`, `transactionAll`, `readSnapshotRoot`, `currentSnapshotScope`. Observations also pin their CurrentChoice ALS scope and validate its parents; invalidity is sticky.
 
-The correction adds a **query-only private WeakMap**, registered solely inside the CurrentChoice factory and keyed by its exact persistence object. It delegates to the original LocalStore readonly reader. Unknown spreads, proxies and opaque drivers cannot register a reader.
+LocalStore alone decides readonly eligibility. Writer/preimage authority is not promoted through the broader `observeAuthority`. Original closed/aborted errors, scope tokens and `unpoisoned` requirements remain intact.
 
-It pins plain-object/proxy checks, `input.persistence`, `fence.persistence`, the driver/wrapper identities, and seven original own data-function properties on both objects: `currentSnapshots`, `currentSnapshot`, `hasCurrentSnapshots`, `transaction`, `transactionAll`, `readSnapshotRoot`, and `currentSnapshotScope`. Each observation also pins its CurrentChoice ALS scope and validates that scope and its parents. Invalidity remains sticky; original LocalStore closed/aborted errors propagate.
+Legal nested transactions create child lexical scopes sharing a physical root. The calculation consumer obtains a fresh canonical proof in that child, requiring the original root identity, identical bytes identity and fresh `current()`. False/exception is sticky; admitted sealed paths cannot fall back to `live`. Initially opaque providers keep their original path. Raw scope equality remains strict and checks ancestral closure/abort.
 
-## Readonly, child scopes and preserved checks
+Original transactions, CurrentChoice publication/guards, both source-fence revalidations, Planner preparation/two authorizations/projector/egress, and C08 reader provenance remain. The source transaction sealed branch at base line 614 is unchanged. This reactivates existing pure digest reuse under immutable-root proof; it adds no authorization, result or projection cache.
 
-LocalStore alone decides readonly eligibility. Its strict reader requires a real readonly root; the broader `observeAuthority` path can also admit an active writer preimage and is deliberately not substituted. Original scope tokens and the `unpoisoned` requirement pass through unchanged.
+## Coverage limits
 
-A legal nested transaction creates a child lexical scope sharing the physical root. The calculation consumer therefore reobserves a **fresh canonical proof in the active child**, requiring the original root identity, identical bytes identity and fresh `current()`. Failure or exception is sticky; an admitted sealed path never falls back to `live`. Initially opaque providers keep their original path. Raw LocalStore scope equality remains strict, and `requireScope` checks parent closure and abort.
+Six LocalStore groups and four composition groups cover original SQLite/C08/Planner, child reads, guards, opaque fallback, drift after awaits, poison, abort and escaped continuations. The integration projector counter differs from `installedDashboardProjector`, leaving that Dashboard identity optimization ineligible. Nested `Choice.run` was reviewed statically, not explicitly exercised. The second-root negative uses an already closed owner; it proves non-revival despite equal defined bytes identity, not an isolated token-comparator test. No installed preview budget or latency improvement is claimed.
 
-No original transaction, CurrentChoice publication/guard, source authorization, projector, selector, request validation or fence is replaced. Source-fence reads retain both revalidations. Prepared Planner reads retain preparation, both authorization callbacks, projection and egress checks. The original transaction sealed branch at base line 614 is unchanged.
+## Five-path boundary
 
-The C08 read-scope consumer retains original reader provenance and all namespace/authentication/environment/fence observations. This reactivates existing pure digest reuse under a proven immutable root; it adds no authorization, result or projection cache.
-
-## Tests and limits
-
-Ten new groups comprise six LocalStore groups and four composition groups. They exercise original SQLite, C08 admission, Planner sources, legal child reads, active guards, full-copy fallback, method/owner drift after awaits, poison, abort and escaped continuations.
-
-The integration projector counter intentionally differs from `installedDashboardProjector`; Dashboard projector identity optimization is therefore ineligible. These fixtures do not qualify every installed Dashboard path. Nested CurrentChoice execution was reviewed statically; an explicit nested `Choice.run` is not asserted. The second-root negative proves that an owner-closed descendant cannot revive despite equal defined bytes identity; it does not isolate root-token comparison from owner closure. No installed result, preview budget or latency improvement is claimed.
-
-## Exact changed-path boundary
-
-[Source-to-base comparison](https://github.com/gustavomhss/Orchestra-SF/compare/5882179a3fea2bbbec465821ffd5a13c06deda4b...a5dbf5f712136d73bb752f3fb84aa812d4332dff) reports exactly these five paths. No workflow, script, schema or admission-descriptor path changed.
+The [source-to-base comparison](https://github.com/gustavomhss/Orchestra-SF/compare/5882179a3fea2bbbec465821ffd5a13c06deda4b...a5dbf5f712136d73bb752f3fb84aa812d4332dff) contains exactly these paths; no workflow, script, schema or admission-descriptor path changed.
 
 | Path | Blob |
 | --- | --- |

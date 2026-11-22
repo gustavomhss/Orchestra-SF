@@ -1,5 +1,7 @@
 # Native source integration — wave five
 
+This is a chronological integration record. Earlier checkpoint outcomes remain historical; the final readonly-composition section states the current integrated product and unresolved qualifications. Exact tested snapshots and failed outcomes are retained.
+
 The UI42–UI56 presentation work uses the existing native shell, route registry, original services and access authority. These corrections were required by the installed browser journeys.
 
 ## Exact operation readiness
@@ -150,7 +152,7 @@ Run44998959512 passed the clean UI55/UI56 journey on84c85b406f55dbb9c4f62e7ded29
 
 The collaboration reviewer inspected all21 clean import JPEGs. Root independently inspected five and verified the archived bytes match the complete original121 log chunks for those images. Narrow captures use390px; no320px or browser-zoom qualification is inferred. The combined collaboration/import gallery now contains45 actual clean captures,10 independently viewed by root.
 
-Technical attempt17 passed app/CLI types,15 A04/readiness contracts with64 assertions and the original guard report:78rules,590files,36warnings,zeroerrors,zeroapprovals,no guard modifications. Permanent E2E types passed in attempt16 with the exact current spec/helper. Twelve of the fifteen areas now have qualified installed journeys. UI42/UI43/UI44 remain pending; accepted and merged inventory remains41.
+Technical attempt17 passed app/CLI types,15 A04/readiness contracts with64 assertions and the original guard report:78rules,590files,36warnings,zeroerrors,zeroapprovals,no guard modifications. Permanent E2E types passed in attempt16 with the then-current spec/helper. The later exact GET waiter correction passed the permanent E2E type gate in run 45006460499. Twelve of the fifteen areas now have qualified installed journeys. UI42/UI43/UI44 remain pending; accepted and merged inventory remains41.
 
 ## Measured portfolio observation limits
 
@@ -164,3 +166,26 @@ The non-overlapping physical-root intervals cover265396ms; metric intervals cove
 The metric consumer now forwards the original resolveMany capability through resolvePlannerScenarioBatch when the producer already exposes it. The original comparator still performs two independent phases. Results retain their original order, cardinality and detached values; a local map keeps the last observed baseline/candidate for the existing checks. The scalar fallback remains four original scalar calls when that capability is absent. Planner product, scenario owner and both method identities are pinned before awaits and checked before/after reads and after final authority revalidation. A replacement cannot be executed or replay the work.
 
 Run45000105434 passed CLI types and the original Finance/criterion integration group with145 assertions, including the previous109. The group compares complete original results between batch and scalar capability paths, checks two batches/four references versus four scalar calls, and retains all source/authority/late-egress refusals. Method/owner substitution is refused after one original batch without invoking the replacement; truncated original batch output is rejected. These are integration measurements on a same-historical-version fixture. Native timing and the three remaining area journeys are still pending.
+
+## Portfolio diagnostic 17 and isolated sensitivity boundary
+
+Run 45002137493 used the original batch capability: 68 batches, 136 references and no scalar metric reads. The original A04 GETs, criterion registration, comparison, human selection and exact readbacks completed. The single portfolio preview still failed the unchanged 60-second expectation; extended observation of that same request ended with the original 403 decision-authority-changed response at approximately 300 seconds. No explicit evaluation was submitted by the diagnostic.
+
+The profile retained 3,503 records (one start, 3,501 aggregates, one summary), zero dropped aggregate buckets and zero pending spans. Its lower interval export dropped 103,297 intervals, so those interval unions cannot be used. Counts and inclusive timers remain available, and nested categories must not be added. The 116,502 calculation calls took 2,458 ms inclusive; monthly-array or version-selection changes were not selected. Source-fence observation, original case checks and Planner source resolution dominate the measured work. No installed speedup is inferred from static analysis.
+
+The independent clean UI44 run 45003432183 passed original source preparation and A04 units/rule/source assertions, native editor, review and cancellation. Its one sensitivity-evaluate POST had no observed response within the unchanged 120-second budget. The original failure capture shows a connection-loss banner and the disabled confirmation still in review. This does not establish a persisted result or a 403 response. Result/readback/sample/threshold, focus and Portuguese result stages were not reached. Nine original JPEGs are archived in collab/sensitivity-isolated-01; all were reviewed by the collaboration agent and three independently by root, whose archived bytes match the original log chunks.
+
+
+## Exact readonly composition and current verification boundary
+
+Product 2d3abae061c9d4be188540433b9d34c4bfaf2b24 integrates exactly the three runtime and two test blobs reviewed and tested in candidate a5dbf5f712136d73bb752f3fb84aa812d4332dff. CurrentChoice now exposes readonly data only for its exact factory-owned forwarding object, using the original LocalStore proof. It pins both owners and all seven original methods, preserves lexical scope checks and sticky invalidation, and leaves opaque providers and mutable roots on their existing path. Source lifecycle consumes that proof at its existing read sites; transaction publication and source-fence checks remain intact.
+
+The Planner calculation root retains the original physical root and bytes identities. A legal nested transaction has its own lexical scope, so the consumer asks that active scope for a fresh canonical proof of the same physical root. A closed, poisoned, replaced or aborted proof refuses without replay. LocalStore and CurrentChoice retain their strict lexical checks; no authority, result or projection cache is added.
+
+[Candidate run 45006460499](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45006460499/job/137159049164) passed all ten new groups, original Finance, the remaining original LocalStore cases, CLI types and permanent E2E types. The regression selection recorded 53 pass, one fail, two original UID-dependent skips and 974 expect calls. Its overall result remains FAILURE: original C17 reached its cooperative 105,000 ms deadline during reopened ancestry, and the original agent-scratch guard rejected a raw job transcript.
+
+The raw transcript was removed from the product, retaining structured receipts and official Actions links. [The original guard-only rerun](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45007665762/job/137162771489), with the exact five candidate blobs, passed 78 rules over 669 files, with 36 warnings, zero gates/errors/approvals and no guard modifications.
+
+[The unchanged-source C17 control](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45007654887/job/137162737147) reproduced the same deadline on product 5882179a before this correction. Both executions completed 14 inner and 1,952 outer canonical result reads, then aborted reopened ancestry at 105,002 ms. C17 remains failed; later persisted-cycle and recovery/revocation phases were not reached. Separate jobs and surrounding selections do not establish a performance improvement or regression. The structured comparison is in collab/c17-precorrection-control-01/receipt.json.
+
+Integration is limited to the reviewed correction and its explicit evidence boundary. The original clean UI42–UI44 journey remains required, with its existing preparation, producers, assertions, screenshots and request budgets. Twelve areas are qualified, three remain pending, and 41 areas remain accepted and merged. User visual approval and merge are pending.

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "status": "TECHNICAL_GATES_RECORDED_BROWSER_QUALIFICATION_IN_PROGRESS",
+  "status": "TARGETED_EVIDENCE_RECORDED_ORIGINAL_C17_FAILURE_INSTALLED_ANALYTICS_PENDING",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "sf-design-next",
-  "product": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+  "product": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "environment": {
     "runtime": "existing test-ci",
@@ -171,6 +171,36 @@
       "approved": 0,
       "touchesGuards": false,
       "report": "technical-attempts/17-guard-report.json"
+    },
+    {
+      "name": "CLI and permanent E2E types with exact readonly composition candidate",
+      "status": "PASSED",
+      "run": 45006460499,
+      "job": 137159049164,
+      "product": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
+      "snapshot": "37417cdeda06111bec608e4839d458e49b39ae25",
+      "analyticsSpec": "f4eb9a534b7a22fcf79e7ccb20bbfd9f8251ae74",
+      "limitation": "The combined workflow failed separately on C17 and the raw-log guard. These two type gates passed; no whole-run success is claimed."
+    },
+    {
+      "name": "Original guards after removal of raw job transcript",
+      "status": "PASSED_WITH_RECORDED_WARNINGS",
+      "run": 45007665762,
+      "job": 137162771489,
+      "cleanupJob": 137163084504,
+      "productQaBase": "079590dca92d8eeecf97abd0b8bd6d2db25223ac",
+      "runtimeCandidate": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
+      "snapshot": "ffb12c38b322b0936b9d589976f37abac0ebd331",
+      "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+      "rules": 78,
+      "files": 669,
+      "warnings": 36,
+      "gates": 0,
+      "errors": 0,
+      "approved": 0,
+      "touchesGuards": false,
+      "report": "technical-attempts/19-guard-report.json",
+      "scope": "Original guard-only rerun with exact five candidate blobs. No tests or types repeated."
     }
   ],
   "focusedRegressions": [
@@ -323,6 +353,52 @@
         }
       ],
       "scope": "Full original metric/comparison equality, fresh two-phase batches, absent-capability scalar fallback, source/authority changes, late reader/owner replacement and invalid batch cardinality.145assertions include previous109."
+    },
+    {
+      "name": "Exact CurrentChoice readonly authority bridge and Planner physical-root continuity",
+      "status": "PARTIAL_FAILURE_RECORDED",
+      "run": 45006460499,
+      "job": 137159049164,
+      "cleanupJob": 137160221040,
+      "product": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
+      "snapshot": "37417cdeda06111bec608e4839d458e49b39ae25",
+      "counts": {
+        "passed": 53,
+        "failed": 1,
+        "skipped": 2,
+        "expectCallsReported": 974
+      },
+      "passed": [
+        "All ten new groups: six LocalStore and four real source/Planner composition groups",
+        "Original Finance group, 145 assertions",
+        "Remaining original LocalStore cases except two existing UID-dependent skips"
+      ],
+      "failed": "Original C17 cooperative 105000 ms deadline during reopened ancestry.",
+      "limitations": [
+        "Counts include prior suites and must not be added to earlier totals.",
+        "C17 later persisted-cycle and recovery/revocation phases were not reached.",
+        "The projectScope-instrumented composition fixture does not qualify every installed DashboardProjector fast path."
+      ],
+      "receipt": "analytics/readonly-authority/attempt-01.json",
+      "integration": "analytics/readonly-authority/integration-review.json"
+    },
+    {
+      "name": "Unchanged-source causal control of original C17 deadline",
+      "status": "FAILURE_REPRODUCED_BEFORE_CORRECTION",
+      "run": 45007654887,
+      "job": 137162737147,
+      "cleanupJob": 137163356272,
+      "product": "5882179a3fea2bbbec465821ffd5a13c06deda4b",
+      "snapshot": "ef04ad162e2d8802c62c8f46298b5c737eb9d4c5",
+      "passed": 0,
+      "failed": 1,
+      "expectCallsReported": 8,
+      "deadlineMs": 105000,
+      "observedAbortElapsedMs": 105002,
+      "innerCanonicalReads": 14,
+      "outerCanonicalReads": 1952,
+      "receipt": "collab/c17-precorrection-control-01/receipt.json",
+      "interpretation": "Same original boundary reproduced before the correction. C17 remains failed. This is neither delivery qualification nor a performance benchmark."
     }
   ],
   "installedEvidence": [
@@ -405,10 +481,13 @@
         44992841677,
         44992968102,
         44996623210,
-        44998750010
+        44998750010,
+        45002137493,
+        45003432183
       ],
-      "limitation": "Latest clean preview60s failure remains. Diagnostic16 used43 original read roots with35 completed metrics/140 scalar resolves before the same original request returned403 decision-authority-changed at300s. UI43/UI44 remain unreached. A separate batch-forwarding candidate awaits focused CI and installed timing.",
-      "evidence": "analytics/attempt-12/README.md"
+      "limitation": "Portfolio diagnostic 17 retains the original 60-second preview failure and observes that same POST returning 403 at about 300 seconds. Isolated UI44 passes original A04/units/rule/source, editor/review/cancel, but its single evaluate POST has no observed response in the original 120 seconds. The readonly correction is now integrated; a clean original UI42–UI44 journey is the next qualification step.",
+      "evidence": "analytics/attempt-14/README.md",
+      "isolatedSensitivityEvidence": "collab/sensitivity-isolated-01/README.md"
     }
   ],
   "references": {
@@ -422,18 +501,31 @@
   "merged": false,
   "inventoryAcceptedAndMergedAreas": 41,
   "pendingDelta": {
-    "status": "FOCUSED_CLI_AND_ORIGINAL_INTEGRATION_PASSED_INSTALLED_QUALIFICATION_PENDING",
-    "candidate": "ad5ed29c582752b72ee91ddd03bb2622bff7299a",
+    "status": "READONLY_CORRECTION_INTEGRATED_INSTALLED_QUALIFICATION_PENDING_ORIGINAL_C17_FAILURE_RECORDED",
+    "integratedAt": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+    "candidate": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
     "files": [
       {
-        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
-        "blob": "3404aa793a7c73f370a750c4dadc9f6410379706"
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "blob": "a76473e700d62774d8e068cf69fa1d2123812024"
       },
       {
-        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
-        "blob": "b11a8727790131190664d21d4e230a59b74ae453"
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "blob": "c3715380830df6bad1b320e1f1bb00b15959654f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "blob": "e292f539b03bf6d0aa5268cca33a0a5fdf004479"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+        "blob": "b67a3fd90eefc5ebf880528d22be2afcdc25c3c8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+        "blob": "6c836317f08ea0f36b734bcd26c7ab0c4e5350bb"
       }
     ],
-    "scope": "Native metric forwards existing original resolveMany; no installed latency claim."
+    "scope": "Only original exact-owner readonly evidence is forwarded; Planner root consumer asks each actual lexical child for fresh evidence of the same physical root. No authority, result or projection cache; original guards and budgets unchanged."
   }
 }

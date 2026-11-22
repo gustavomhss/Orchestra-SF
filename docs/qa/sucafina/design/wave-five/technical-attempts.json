@@ -1771,6 +1771,177 @@
         "localTests": false
       },
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44998893684"
+    },
+    {
+      "attempt": 18,
+      "name": "Readonly composition targeted checks",
+      "product": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
+      "snapshot": "37417cdeda06111bec608e4839d458e49b39ae25",
+      "run": 45006460499,
+      "job": 137159049164,
+      "cleanupJob": 137160221040,
+      "cleanupStatus": "success",
+      "checks": {
+        "total": 4,
+        "passed": 2,
+        "failed": 2
+      },
+      "conclusion": "failure",
+      "commands": [
+        {
+          "gate": "fetch pinned guard base",
+          "command": [
+            "git",
+            "fetch",
+            "--no-tags",
+            "--depth=1",
+            "origin",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "resolve pinned guard base",
+          "command": [
+            "git",
+            "rev-parse",
+            "--verify",
+            "refs/remotes/origin/dev^{commit}"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "guardrails",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "check:guards",
+            "--base",
+            "origin/dev",
+            "--json"
+          ],
+          "cwd": ".",
+          "exitCode": 1,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "app-shell e2e typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck:e2e"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "CLI native host typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "apps/cli",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "CurrentChoice readonly storage and nested calculation composition",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/local-store.test.ts",
+            "./test/product/wp10/integration/current-choice-readonly.test.ts",
+            "./test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+            "./test/product/wp10/integration/finance-pair-observation.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 1,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      ],
+      "regression": {
+        "pass": 53,
+        "fail": 1,
+        "skip": 2,
+        "expectCallsReported": 974,
+        "newGroupsPassed": 10
+      },
+      "failures": [
+        "Original C17 105000 ms cooperative deadline during reopened ancestry",
+        "Original agent-scratch gate rejected the raw portfolio metric job transcript"
+      ],
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      },
+      "receipt": "analytics/readonly-authority/attempt-01.json",
+      "followup": "The original C17 failure was reproduced on the unchanged source; the raw transcript was removed and the original guard-only rerun passed. The initial combined run remains failed."
+    },
+    {
+      "attempt": 19,
+      "name": "Original guards after evidence cleanup",
+      "productQaBase": "079590dca92d8eeecf97abd0b8bd6d2db25223ac",
+      "runtimeCandidate": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
+      "snapshot": "ffb12c38b322b0936b9d589976f37abac0ebd331",
+      "run": 45007665762,
+      "job": 137162771489,
+      "cleanupJob": 137163084504,
+      "cleanupStatus": "success",
+      "checks": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      "conclusion": "success",
+      "scope": "Only original guards rerun, with the exact five runtime/test candidate blobs. No previous passing tests or type checks repeated.",
+      "guards": {
+        "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+        "rules": 78,
+        "files": 669,
+        "warnings": 36,
+        "gates": 0,
+        "errors": 0,
+        "approved": 0,
+        "touchesGuards": false,
+        "report": "technical-attempts/19-guard-report.json"
+      },
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      },
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45007665762",
+      "receipt": "evidence-guard-correction.json"
+    }
+  ],
+  "causalControls": [
+    {
+      "name": "Original C17 before readonly correction",
+      "product": "5882179a3fea2bbbec465821ffd5a13c06deda4b",
+      "snapshot": "ef04ad162e2d8802c62c8f46298b5c737eb9d4c5",
+      "run": 45007654887,
+      "job": 137162737147,
+      "cleanupJob": 137163356272,
+      "conclusion": "failure",
+      "receipt": "collab/c17-precorrection-control-01/receipt.json",
+      "interpretation": "Same original deadline reproduced before the correction; C17 remains failed. Not a delivery gate or performance benchmark."
     }
   ]
 }
