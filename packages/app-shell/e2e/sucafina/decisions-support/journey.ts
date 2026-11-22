@@ -190,38 +190,94 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
   const origin = new URL(page.url()).origin
   const session = await page.context().newCDPSession(page)
   const captured = Promise.withResolvers<{ url: string; status: number; contentType: string; json: string }>()
-  session.once("Fetch.requestPaused", async (event: PausedCommand) => {
-    try {
-      const url = new URL(event.request.url)
-      expect(url.origin).toBe(origin)
-      expect(url.pathname).toBe("/sucafina/dashboard")
-      expect(url.searchParams.get("sf")).toBe(mode)
-      expect(event.request.method).toBe(method)
-      const status = event.responseStatusCode
-      if (typeof status !== "number") throw new Error("Missing original command HTTP status")
-      const headers = event.responseHeaders ?? []
-      const contentType = headers.find((header) => header.name.toLowerCase() === "content-type")?.value ?? ""
-      const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId })
-      const bytes = raw.base64Encoded ? Buffer.from(raw.body, "base64") : Buffer.from(raw.body, "utf8")
-      await session.send("Fetch.fulfillRequest", { requestId: event.requestId, responseCode: status,
-        responseHeaders: headers, body: bytes.toString("base64") })
-      captured.resolve({ url: event.request.url, status, contentType, json: bytes.toString("utf8") })
-    } catch (error) {
-      try { await session.send("Fetch.failRequest", { requestId: event.requestId, errorReason: "Failed" }) }
-      catch { /* Already released by the browser; surface original error below. */ }
-      captured.reject(error)
-    }
-  })
-  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=${mode}*`, requestStage: "Response" }] })
+  // The original request can fail while the click itself is still awaiting navigation.
+  // Its rejection is consumed below; this handler only prevents an unhandled rejection.
+  void captured.promise.catch(() => undefined)
+  const observed: { active: boolean; request?: Request; failure?: { error: unknown }; pending?: Promise<void> } = { active: false }
+  const cleanupErrors: unknown[] = []
+  const fail = (error: unknown) => {
+    observed.failure ??= { error }
+    captured.reject(observed.failure.error)
+  }
+  const onRequest = (request: Request) => {
+    if (!observed.active || !isCommand(request, mode, method) || new URL(request.url()).origin !== origin) return
+    if (observed.request && observed.request !== request) return fail(new Error("More than one original Decisions command was sent"))
+    observed.request = request
+  }
+  const onRequestFailed = (request: Request) => {
+    if (request !== observed.request) return
+    const failure = request.failure()?.errorText ?? ""
+    const code = /^net::ERR_[A-Z_]+$/.test(failure) ? failure : "transport failure"
+    fail(new Error("Original Decisions command failed: " + code))
+  }
+  const onClose = () => fail(new Error("The page closed before the original Decisions command completed"))
+  const onPaused = (event: PausedCommand) => {
+    observed.pending = (async () => {
+      try {
+        const url = new URL(event.request.url)
+        expect(url.origin).toBe(origin)
+        expect(url.pathname).toBe("/sucafina/dashboard")
+        expect(url.searchParams.get("sf")).toBe(mode)
+        expect(event.request.method).toBe(method)
+        if (!observed.request) throw new Error("Original Decisions command request was not observed")
+        expect(event.request.url).toBe(observed.request.url())
+        expect(event.request.method).toBe(observed.request.method())
+        const status = event.responseStatusCode
+        if (typeof status !== "number") throw new Error("Missing original command HTTP status")
+        const headers = event.responseHeaders ?? []
+        const contentType = headers.find((header) => header.name.toLowerCase() === "content-type")?.value ?? ""
+        const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId })
+        const bytes = raw.base64Encoded ? Buffer.from(raw.body, "base64") : Buffer.from(raw.body, "utf8")
+        await session.send("Fetch.fulfillRequest", { requestId: event.requestId, responseCode: status,
+          responseHeaders: headers, body: bytes.toString("base64") })
+        captured.resolve({ url: event.request.url, status, contentType, json: bytes.toString("utf8") })
+      } catch (error) {
+        fail(error)
+        try { await session.send("Fetch.failRequest", { requestId: event.requestId, errorReason: "Failed" }) }
+        catch (cleanupError) { cleanupErrors.push(cleanupError) }
+      }
+    })()
+  }
+  const outcome: { value?: Record<string, unknown>; failure?: { error: unknown } } = {}
   try {
+    page.on("request", onRequest)
+    page.on("requestfailed", onRequestFailed)
+    page.on("close", onClose)
+    session.once("Fetch.requestPaused", onPaused)
+    await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=${mode}*`, requestStage: "Response" }] })
+    observed.active = true
     await button.click()
     const reply = await captured.promise
-    return checkedReply({ mode: new URL(reply.url).searchParams.get("sf"), httpStatus: reply.status, contentType: reply.contentType },
+    if (observed.failure) throw observed.failure.error
+    outcome.value = await checkedReply({ mode: new URL(reply.url).searchParams.get("sf"), httpStatus: reply.status, contentType: reply.contentType },
       () => JSON.parse(reply.json), observations)
+    if (observed.failure) throw observed.failure.error
+  } catch (error) {
+    outcome.failure = { error }
   } finally {
-    await session.send("Fetch.disable")
-    await session.detach()
+    observed.active = false
+    // Each owned listener and CDP resource is released even if another release fails.
+    for (const release of [
+      () => page.off("request", onRequest),
+      () => page.off("requestfailed", onRequestFailed),
+      () => page.off("close", onClose),
+      () => session.off("Fetch.requestPaused", onPaused),
+      () => session.send("Fetch.disable"),
+      () => session.detach(),
+      async () => { await observed.pending },
+    ]) {
+      try { await release() }
+      catch (error) { cleanupErrors.push(error) }
+    }
   }
+  const errors = [...new Set([
+    ...(observed.failure ? [observed.failure.error] : []),
+    ...(outcome.failure ? [outcome.failure.error] : []),
+    ...cleanupErrors,
+  ])]
+  if (errors.length === 1) throw errors[0]
+  if (errors.length > 1) throw new AggregateError(errors, "Decisions command observation or cleanup failed")
+  return outcome.value!
 }
 
 export async function readReply(response: Response, observations: Record<string, unknown>[]) {
