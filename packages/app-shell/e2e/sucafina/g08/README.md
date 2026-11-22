@@ -1,67 +1,85 @@
-# G08 — executor privado, produto atual e obrigações preservadas
+# G08 — executor privado da UI atual, grants e rascunhos
 
-## Recorte desta adaptação
+## Escopo e estado
 
-Este executor mantém os nove IDs/títulos originais de Teams e os quatro atores Microsoft originais. A adaptação anterior ao [produto 7a28c5](https://github.com/gustavomhss/Orchestra-SF/tree/7a28c5eefece4cae5de0e376ad3bafbe5290a928) acrescenta os dois cenários de rascunho, abre a administração pela UI montada e verifica que revogar/restaurar acesso preserva os documentos compartilhados de A e B.
+Este é o mesmo executor privado introduzido na #644 e reconciliado na #659. A adaptação usa o painel administrativo real da #661, a autorização privada de Session da #663 e o Chat nativo da #667, compostos pela frente de produto na #665. Nenhum desses produtores é reimplementado aqui.
 
-Esta revisão completa o oráculo de `same-team-distinct-grants` com a projeção real de páginas/ACL do [produtor F02 0d4876dd](https://github.com/gustavomhss/Orchestra-SF/commit/0d4876dd457da3ddf7d8dc4b122215eb772a14dc). Há **nove cenários executáveis com os nove mapeamentos integrais de contrato**. Isso não declara nove obrigações aprovadas: todos os registros permanecem `NOT_RUN` até uma execução instalada válida. A comparação exige destinos canônicos realmente distintos entre dois atores do mesmo Team; principal, accessRevision e availability não substituem páginas/permissões. O produtor conserva availability e ações vazias quando não há binding real.
+Os **nove controles Teams** estão mapeados aos nove IDs originais. Isso descreve a implementação do executor e suas dependências, não um resultado instalado: **todas as obrigações e grupos permanecem NOT_RUN** até a execução original no ambiente reservado e no mesmo tar G07. U15, U39, U40, F04 e AZ02 continuam obrigatórios, em invocações separadas. Não há skip nem redução do inventário para aparentar fechamento.
 
-[obligations.json](./obligations.json) preserva ainda U15=6, U39=22, U40=22, F04=3 e as seis fases AZ02. Seus IDs, títulos, fontes, contagens e estados não foram requalificados por esta adaptação. Nenhuma nova lane, flag de aprovação, configuração, credencial ou autoridade é criada.
+Fontes imutáveis consultadas:
 
-Fontes dos contratos usados:
+- Base integrada [dev ad6d245](https://github.com/gustavomhss/Orchestra-SF/tree/ad6d245119ef2d69fb96471edd62dd6413ae185f), merge da [#657](https://github.com/gustavomhss/Orchestra-SF/pull/657): navegação, projeção autenticada no-teams/revoked, administração HTTP e política.
+- Painel [#661@6c96110](https://github.com/gustavomhss/Orchestra-SF/blob/6c96110aea248594f47e92cfd569e97867f72396/packages/app-shell/src/components/team-profile-administration.tsx): catálogo real, comandos UI, CAS opaco e invalidação por geração/principal.
+- Produtor privado [#663](https://github.com/gustavomhss/Orchestra-SF/pull/663), observado em [eaa9f126](https://github.com/gustavomhss/Orchestra-SF/blob/eaa9f126c71dccbeec195cdcb47d6d44fdb69343/modules/sucafina/Sucafinav1/runtime/team-session-admission.ts): grants explícitos por operação, Microsoft atual, mesmo Request original e namespace por owner. [HTTP Session canônico](https://github.com/gustavomhss/Orchestra-SF/blob/eaa9f126c71dccbeec195cdcb47d6d44fdb69343/packages/server/src/session-http.ts).
+- Chat [#667@b663dd0](https://github.com/gustavomhss/Orchestra-SF/blob/b663dd0865fa91c705f732c88975473de8d49c50/packages/app-shell/src/pages/team-profile.tsx) e [composer nativo](https://github.com/gustavomhss/Orchestra-SF/blob/b663dd0865fa91c705f732c88975473de8d49c50/packages/app-shell/src/pages/team-session.tsx): PromptInputV2 original, rascunho em memória, diálogo real, troca de Team e novo endereço de Chat.
+- Integração [#665@7a28c5e](https://github.com/gustavomhss/Orchestra-SF/tree/7a28c5eefece4cae5de0e376ad3bafbe5290a928): fonte proposta da composição atual, não ACK final de Migração/Release.
+- [Plano obrigatório736a](https://github.com/gustavomhss/Orchestra-SF/blob/736a5087c223629be4d73c8a4535d615fcafd96a/docs/architecture/teams-profile-test-plan.json), gate G08-NATIVE-TEAMS; [cenários anteriores #644](https://github.com/gustavomhss/Orchestra-SF/blob/aa928b6ae4a5944e5dad4b5bd206d5c123d2238e/packages/app-shell/e2e/sucafina/g08/teams-installed.spec.ts).
 
-- [Plano obrigatório 736a](https://github.com/gustavomhss/Orchestra-SF/blob/736a5087c223629be4d73c8a4535d615fcafd96a/docs/architecture/teams-profile-test-plan.json), G08-NATIVE-TEAMS, e [nove cenários originais](https://github.com/gustavomhss/Orchestra-SF/blob/aa928b6ae4a5944e5dad4b5bd206d5c123d2238e/packages/app-shell/e2e/sucafina/g08/teams-installed.spec.ts).
-- [Shell/navegação 7a28](https://github.com/gustavomhss/Orchestra-SF/blob/7a28c5eefece4cae5de0e376ad3bafbe5290a928/packages/app-shell/src/pages/team-profile.tsx): seletor nativo, URLs fechadas, toggle administrativo, Chat e confirmação de descarte.
-- [Workspace Chat 7a28](https://github.com/gustavomhss/Orchestra-SF/blob/7a28c5eefece4cae5de0e376ad3bafbe5290a928/packages/app-shell/src/pages/team-session.tsx) e [Client Sessions 7a28](https://github.com/gustavomhss/Orchestra-SF/blob/7a28c5eefece4cae5de0e376ad3bafbe5290a928/packages/client/src/sucafina/sessions.ts): composer nativo, lista/SSE, namespace completo e aposentadoria da sessão.
-- [Administração 7a28](https://github.com/gustavomhss/Orchestra-SF/blob/7a28c5eefece4cae5de0e376ad3bafbe5290a928/packages/app-shell/src/components/team-profile-administration.tsx) e [HTTP privado 7a28](https://github.com/gustavomhss/Orchestra-SF/blob/7a28c5eefece4cae5de0e376ad3bafbe5290a928/modules/sucafina/Sucafinav1/runtime/team-profile-http.ts): catálogo administrativo e leitura de configuração por identidade atual.
-- [F02/eligibilidade 0d4876dd](https://github.com/gustavomhss/Orchestra-SF/blob/0d4876dd457da3ddf7d8dc4b122215eb772a14dc/modules/sucafina/Sucafinav1/runtime/team-business.ts): projeção de páginas admitidas pela aplicação original com roles Microsoft e ACL da partição Team; principal autenticado em no-teams/revoked; administração não concede negócio. A mesma resposta associa destinos ao owner atual, sem promover availability ou ações sem binding.
-- [Store 7a28](https://github.com/gustavomhss/Orchestra-SF/blob/7a28c5eefece4cae5de0e376ad3bafbe5290a928/modules/sucafina/Sucafinav1/runtime/team-profile-store.ts): revisão global opaca e documentos compartilhados persistidos. Não existe contrato cliente de +1/+2.
+A #659 comprovou controles de ferramenta e DOM em seu próprio SHA, com sete casos listados e nenhuma execução instalada. Seus cinco mapeamentos integrais, dois parciais e dois ausentes são o registro histórico daquela versão. Nesta versão, os contratos de UI/grants/chat foram encontrados e adaptados; a existência deles em PR aberta não prova integração, instalação, autoridade Microsoft ou aprovação de G08.
 
-O SHA inspecionado é uma referência de implementação, não um ACK de candidato final. Os contratos precisam estar no C/T efetivamente instalado. O preflight recusa arquivos necessários ausentes antes de conectar o browser; presença de arquivo continua insuficiente para provar montagem ou autoridade.
+## Matriz de equivalência
 
-## Nove obrigações e seus oráculos
+A cobertura abaixo exige os contratos citados no **C realmente instalado**. Até lá, o estado é NOT_RUN.
 
-| Obrigação original | Oráculo atual | Limite |
+| Obrigação original | Controle atual e oráculo |
+| --- | --- |
+| same-team-distinct-grants | Dois contexts e principals Microsoft distintos no mesmo Team. Cada ator lê seu próprio namespace Session. O requester cria um único registro de ID aleatório, relê o efeito e tem o inventário exato esperado. A criação pelo holder recebe 401, seu inventário completo permanece igual e a leitura e o F02 continuam admitidos. Cleanup elimina somente os IDs dessa execução e relê ambos os inventários. |
+| aba-two-windows | A UI emite F02 original na troca A→B→A. URLs e owners correspondem ao Team escolhido; a janela irmã permanece em A e conserva o owner após reload. |
+| account-without-team | F02 selection identifica o principal original no-teams. Team explícito retorna revoked sem owner/dados; a rota original de negócio recebe 403 sem corpo. Um 403 isolado não identifica o ator. |
+| foreign-deep-link-reload | Deep link próprio e reload são admitidos. Instalação estrangeira permanece na URL, mostra invalid e não emite F02 de Team. Reload conserva essa recusa; o link próprio volta a funcionar. |
+| admin-without-team | O administrador original sem Team abre o painel nativo pelo toggle. O GET da própria UI e o catálogo renderizado concordam. F02 administrativo é available, mas o Team explícito e a rota de negócio continuam recusados. O painel permanece utilizável no contexto revogado. API positiva sozinha não satisfaz o caso. |
+| narrow-keyboard-draft | Em 320px, Tab alcança o novo Chat e Enter abre o workspace real. F02 e lista Session emitidos pela UI vinculam o mesmo owner; o PromptInputV2 recebe texto sem submit. Controles permanecem alcançáveis, o inventário não muda e nenhum POST Session ocorre. |
+| draft-cancel-discard | O diálogo nativo bloqueia a troca para B enquanto A possui rascunho. Cancelar preserva owner, URL e texto, sem leitura de navegação. Confirmar gera F02/lista Session originais para B e descarta o texto; retornar a A não o ressuscita. Inventários de A/B intactos e nenhuma submissão de prompt. |
+| real-revoke-restore | O painel real emite uma única operação disable com CAS exatamente observado. Catálogo relido, F02 revogado e 403 de ambos os atores comprovam o corte; B permanece intacto. Restore usa uma única operação original com o CAS atual e comprova catálogo e admissão restaurados. |
+| logout-original-context | POST original 204, mesmo contexto 401, janela irmã 401 após reload e holder original ainda admitido. Não implica logout global Entra, replay bruto ou restart, que pertencem a AZ02. |
+
+O admin atual é um painel na landing autenticada, não a rota histórica independente /orchestra/sf-home/administration. O oráculo foi adaptado ao painel existente mantendo a obrigação positiva de UI. O CAS preserva ConfigRevision exatamente, inclusive string ou número zero; não há cálculo de +1.
+
+### O que constitui grants distintos
+
+Identidades diferentes, destinations vazios, um 403 genérico ou a recusa de acessar a sessão pessoal do outro ator não bastam. O controle usa a mesma operação create, o mesmo Team e cada namespace pessoal original:
+
+1. GET completo e autorizado para ambos os atores, com namespace e linhas estritamente decodificados.
+2. POST create do requester com um ID novo da execução; GET e inventário comprovam exatamente o registro criado.
+3. POST create do holder com outro ID novo recebe 401; GET completo e F02 posteriores continuam positivos e o inventário permanece byte a byte equivalente à projeção original.
+4. Limpeza somente dos dois IDs aleatórios, por seus owners originais, seguida de igualdade dos inventários com a linha de base.
+
+Isso prova autorização efetiva distinta para uma operação concreta. Não publica nem infere listas privadas de grants, grupos Entra, provider bindings ou credenciais. Não afirma que todos os recursos de negócio possuam a mesma matriz.
+
+Os registros não recebem prompt, não executam modelo, ferramenta ou shell e não usam dados de produção. DELETE só pode visar IDs ses_g08 gerados pela invocação atual. Resultado incerto é reconciliado por leitura; nenhuma mutação é repetida automaticamente. Se um registro inesperado não puder ser removido, a execução falha e a reserva conserva a pendência para o operador. Não há recibo de sucesso com cleanup incompleto.
+
+O transcript de grants fica em session-grants.json no diretório privado, com as projeções reais antes/depois. O verificador exige proveniência da execução inteira, relatório exato e cleanup, valida o vínculo de owner/Team/invocação, o efeito positivo, a ausência de efeito da recusa e a restauração. O recibo público recebe apenas seu hash. Esse arquivo é produzido pelo teste; não é uma declaração manual de permissão aceita como prova.
+
+## Grupos obrigatórios separados
+
+| Grupo | Inventário preservado | Dependência e prova necessária |
 | --- | --- | --- |
-| `same-team-distinct-grants` | Dois contexts/principals originais no mesmo Team; destinos canônicos realmente distintos; resposta F02 da UI igual ao GET independente por ator, antes e depois dos dois reloads, com owner preservado. | Diferença de identidade, revisão, availability ou ordem não é diferença de grants. Ambos vazios falham. |
-| `aba-two-windows` | F02 da ação em A→B→A, URLs exatas, janela irmã em A após reload e igualdade do fingerprint original antes/depois. | Igualdade de projeções vazias não prova grants distintos. |
-| `account-without-team` | F02 identifica o ator no-teams; Team explícito revoked sem owner/dados/Chat; rota original de negócio 403 sem body. |403 isolado não identifica o ator. |
-| `foreign-deep-link-reload` | Link válido + reload; instalação estrangeira mantém URL, UI invalid, nenhum F02 Team e nenhum fallback. | A URL é intenção, nunca autoridade. |
-| `admin-without-team` | Ator original sem Team abre o toggle real; GET da UI e reread independente do catálogo coincidem; controles prontos, sem dashboard/Chat; Team explícito permanece403. | Não monta a antiga rota administrativa nem substitui UI por API. |
-| `narrow-keyboard-draft` | Web 390×844, Enter no botão real, URL completa, F02/lista/SSE originais, namespace canônico, composer editável vazio e zero POST. | O botão Novo dentro do workspace já pronto é local; não se inventa outro F02. |
-| `draft-cancel-discard` | Cancelar conserva A e o texto; confirmar muda para B com composer pronto e vazio; voltar a A não ressuscita texto. F02/lista/SSE e namespace são reobservados. | O caso inteiro observa zero POST; não há criação de sessão nem prompt. |
-| `real-revoke-restore` | Disable/enable únicos com CAS observado, catálogo relido, revogação/403 para ambos os atores, B intacto e admissão restaurada. Documentos de A/B devem permanecer iguais. | A revisão global avança e nunca é rebobinada para fingir restauração. |
-| `logout-original-context` | POST original 204, mesmo contexto 401, outra janela 401 após reload, holder com owner e fingerprint preservados. | Não prova replay bruto, logout global Entra ou restart; esses pertencem a AZ02. |
+| U15 / CAP14 | 6 títulos originais | Capítulo admitido e bundle list/editable/denied/stale/lost; segundo editor Microsoft na mesma versão CAS; dados isolados e cleanup do produtor. |
+| U39 / CAP04/2026 | 22 títulos originais | Bundle entry/empty/source/readonly/denied/revoked/stale/late; revogador real e segundo escritor; fonte e oráculos originais. |
+| U40 / CAP05/2026 | 22 títulos originais | Contrato completo por caso em invocação CAP05 própria. Não colapsar 22 casos em um cenário de entrada. |
+| F04 | 3 controles originais | Guest no ingresso real; selector moderno malformado recusado; cliente real com geração vencida produz zero rede. Invocação Bun/Happy DOM com manifest instalado, sem inferir positivo CDP. |
+| AZ02 | preflight 14, actors 11, producer 2, after-revoke 2, logout 2, after-restart 1 | Tenant/Team/host/revisões modernos; CAS409/422 com estado intacto; revogação observada; cookies/replay; restart real do mesmo C/T/tar. |
 
-O primeiro cenário compara exclusivamente `capabilityId/surface/page/canRead/allowedActionIds`, ordenando destinos e ações e recusando duplicatas. Após cada reload, o F02 originalmente consumido pela UI e a leitura independente precisam conservar o owner e a projeção daquele ator; as duas projeções ainda precisam diferir. As leituras não criam permissões e não alteram a configuração dos atores.
+[obligations.json](./obligations.json) conserva todos os IDs, títulos, fontes/blobs e contagens. Os 50 registros de U15/U39/U40 não são 50 execuções. Esses grupos continuam NOT_RUN; esta adaptação não porta journeys antigos nem ressuscita o console legado. Sua composição técnica e os respectivos produtores de casos ainda precisam de execução e recibos próprios.
 
-A UI pode representar Team explicitamente revogado como unavailable. O executor exige F02 revoked original, ausência de owner/destinations/availability e de controles de negócio, mais o403 original. Não inventa um alerta de uma UI histórica.
+O agregado do plano também conserva o papel de recovery/G09 com seu dono. Este executor não o assume nem emite seu recibo. G01–G04/pool, #349 e G09/#588 permanecem fora desta escrita.
 
-Os dois casos de rascunho registram as esperas da lista e do stream antes da ação. Conferem os peers HTTPS 443 reservados, status/cabeçalhos originais, selector fechado sem principal/grants e namespace retornado. O Client real valida a lista inteira e cada frame; o teste só aceita workspace pronto, stream aberto e composer editável. Não há `page.route`, resposta substituída, cookie copiado, `storageState` ou POST do executor para abrir o rascunho.
+## Reserva e admissão instalada
 
-No caso de revogação, os documentos canônicos de A/B são lidos antes da mutação e novamente após restaurar acesso. A leitura final deve corresponder à revisão atual do catálogo; o conteúdo inteiro dos dois documentos deve ser igual. Se o disable tiver resultado incerto, uma leitura original distingue catálogo intacto do estado desabilitado esperado. Não há retry, token CAS coercionado ou restore para um estado não observado. Falha de restauração impede recibo.
+Somente o job manual installed-teams-current de [g08-private-preflight.yml](../../../../../.github/workflows/g08-private-preflight.yml) conecta o browser. Requisitos cumulativos:
 
-## Recibos
+1. C/T final confirmado por Migração e Release, recibo G07 original PACKAGE_VERIFIED, ZIP/tar/manifest/factory imutáveis e instalação desses bytes. Esta entrega não preenche ACK final.
+2. Navegação, admin UI/HTTP, projeção autenticada, Session HTTP privado, grants e Chat/rascunhos integrados nesse mesmo C. O preflight recusa arquivos ausentes; presença de arquivo não prova montagem. As ações e respostas originais continuam obrigatórias.
+3. Reserva exclusiva QA com dono, VM ID, janela e referência original. Autorizações devem cobrir os quatro atores, logout, disable/restore temporário do Team A e criação/remoção dos registros Session descartáveis. Label de runner ou environment não é reserva; referência de autorização não concede grant.
+4. Quatro BrowserContexts Microsoft originais, distintos e identificados pelo F02 atual: requester e holder admitidos em A, requester também em B; denied sem Team; dashboardAdmin com administração e sem negócio. Para este caso de grants, requester precisa de read/create/write e holder de read sem create, efetivamente observados pelo produtor. Não se criam contexts, logins, sessões clonadas ou storageState.
+5. Root privado 0700, arquivos regulares 0600, mesmo UID, sem symlink/hardlink, fora do checkout. plan.json canônico, recibo G07 exato e browser-endpoint.txt loopback. Nenhum segredo no repositório.
+6. Witness antes/depois: instalador real, bytes/modos, current source, PID/exe/argv/factory/config, listener do PID, IMDS da VM, Caddy ativo e discovery loopback/HTTPS com mesmo hostId. installation:null do empacotador não satisfaz isso.
+7. Cache/SW bypass e respostas originais ligadas ao frame/peer HTTPS 443 da VM reservada, inclusive XHR/fetch. O fetch do browser usa o cookie jar original; o nonce apenas correlaciona a observação.
+8. Páginas próprias fechadas, attach desconectado, nenhum contexto criado, ingresso sem erros, mesmos processo/binding antes/depois, catálogo restaurado e fixtures Session removidas. Audit/CAS avançado não é apagado.
 
-- `sf-g08-executor-inventory-v4 / CURRENT_CONTRACT_INVENTORY_VERIFIED`: nove registros `LISTED_NOT_RUN`, `installed:false`.
-- `sf-g08-current-installed-v4 / CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED`: somente após os nove resultados reais no host reservado e no mesmo tar G07, `installed:true`.
-- Ambos mantêm `proofScope:"current-teams-subset"`, `g08Closed:false` e `productionCutover:false`.
+O plano conserva sf-g08-private-plan-v1 e seus campos originais:
 
-O formato v4 diferencia o oráculo de destinos reais dos sete controles v2 e do inventário v3 com nove cenários e grants parciais. Recibos históricos continuam vinculados aos próprios SHAs e não são reescritos. Tanto o relatório antigo de sete casos quanto o relatório de nove com o título principal-only são recusados. Uma execução instalada válida pode produzir nove PASS de Teams; todos os grupos separados continuam NOT_RUN. `require-closed-gate` continua recusando o subconjunto com `G08_REQUIRED_OBLIGATIONS_NOT_PROVEN`.
-
-## Limite operacional
-
-Somente o job manual existente `installed-teams-current` conecta o browser. A implementação dos produtores de pacote/inventário é independente dos insumos LIVE abaixo; esta adaptação não atesta a presença nem a ausência deles em uma reserva futura.
-
-São necessários C/T final confirmado pelas fontes de Migração e Release, recibo G07 original `PACKAGE_VERIFIED`, tar/manifest/factory imutáveis, instalação desses bytes e witness antes/depois. Reserva exclusiva QA exige responsável, VM ID, janela e referências de autorização dos atores, logout e disable/restore temporário de A. Runner label ou ambiente protegido não substituem reserva; metadados de autorização não são grants.
-
-Os quatro BrowserContexts Microsoft originais devem corresponder a requester, holder, denied e dashboardAdmin distintos. Requester/holder precisam de A; requester também de B; denied e dashboardAdmin não têm Team; o administrador deve ter a autoridade administrativa real. Cada contexto é identificado pelo F02 atual, nunca por etiqueta manual. Requester e holder precisam ter projeções de páginas/permissões realmente diferentes em A, já estabelecidas pelos produtores e pela política existentes; o executor não atribui roles nem modifica ACL para fabricar essa diferença.
-
-Para abrir os dois drafts, requester precisa da concessão privada real de leitura de sessões em A/B, dos documentos compartilhados já preparados pelo operador e da persistência/Core/controle privado já inicializados pela migração explícita. O executor não cria banco, ativa geração, provisiona configuração ou instala segredo. **Os dois casos sem POST não exigem chave pessoal ativa de provider e não qualificam dispatch ou conclusão de modelo.**
-
-Root privado 0700 e arquivos 0600 devem pertencer ao runner, sem symlinks/hardlinks, fora do checkout. O plano continua `sf-g08-private-plan-v1` com os mesmos campos fechados:
-
-```text
+~~~text
 candidate: { sha: C completo, tree: T completo }
 packageReceiptSha256: digest do recibo original G07
 reservation: { reference, owner, startsAt, endsAt, vmId, environment: qa-isolated, exclusive: true }
@@ -71,50 +89,37 @@ target/teamB/foreignInstallation: { serverKey, discoveryOrigin, shellOrigin, pub
   installationId, tenantId, teamObjectId, projectId, hostId, mount, chapterHref }
 actors: { requester, holder, denied, dashboardAdmin }
 scratchRoot: diretório privado absoluto
-```
+~~~
 
-A/B pertencem à mesma instalação/tenant/host, com IDs distintos. O target negativo muda apenas installationId. `chapterHref` admite somente `/`, `/orchestra/sf-home` ou `/orchestra/sf-home/context`, com os cinco campos `contractRevision/server/installationId/tenantId/teamObjectId` correspondentes ao target. A URL `/orchestra/sf-sessions/new` é derivada desses valores; não amplia a allowlist do plano.
+A/B usam a mesma instalação/tenant/host e Teams distintos. O negativo muda somente installationId. chapterHref admite as três entradas de contexto originais e seu query fechado; o executor abre o Chat existente pelo controle nativo e observa /orchestra/sf-sessions/new. Não trata URL, pasta ou Project ID como autoridade.
 
-A sequência continua `admit → host-before → Playwright → host-after → verify`. Não instala, reinicia, clona sessão nem fabrica consentimento. Cache/SW são contornados nas páginas próprias; respostas são vinculadas ao frame e aos IPs HTTPS da VM. Cleanup fecha as páginas criadas, desconecta o attach, exige os mesmos processos/bindings e conserva o avanço legítimo do CAS. O recibo público contém apenas C/T, digests, IDs estáveis, contagens e cobertura; corpos, URLs, CDP, cookies e erros brutos permanecem privados.
+Sem reserva e esses insumos, não despachar instalado. A sequência admit → host-before → Playwright → host-after → verify não instala, reinicia serviço, clona sessão ou fabrica consentimento. G08/G10 podem qualificar o mesmo tar em reservas separadas autorizadas; produção exige decisão de go/no-go e janela próprias.
 
-## Validação focal no workflow existente
+## CI, composição e recibos
 
-Usar `mode=controls` em [g08-private-preflight.yml](../../../../../.github/workflows/g08-private-preflight.yml), sobre o commit integrado. Os comandos abaixo pertencem ao job Actions existente; não são execução local ou LIVE.
+Os controles hosted Linux executam Node para admissão/recusas, Python para o witness somente leitura, Bun/Happy DOM para a landing/painel/Chat reais com transporte controlado, typecheck do pacote isolado, Playwright --list e guards canônicos contra origin/dev. Outputs ficam em RUNNER_TEMP, fora do checkout. Não há exceção ao guard nem teste local.
 
-Na raiz:
+Quando o produto está pendente de integração, a branch de teste teams-admin-check pode ser composta explicitamente sobre o source original do integrador, com somente os nove blobs desta frente sobrepostos. A PR e o recibo devem declarar separadamente a base dev D, a fonte de produto S e o commit/tree C da composição. Um teste nessa composição não é teste do dev ainda não integrado. Após integração, é necessário qualificar o candidato final real.
 
-```sh
-node --test script/sf-ci/g08-private-evidence.test.mjs
-python3 script/sf-ci/test_g08_installed_preflight.py
-bash -n script/sf-ci/g08-private-run.sh
-```
+- sf-g08-executor-inventory-v3 / CURRENT_CONTRACT_INVENTORY_VERIFIED: nove registros LISTED_NOT_RUN, installed:false e todas as obrigações NOT_RUN.
+- sf-g08-current-installed-v3 / CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED: apenas após os nove resultados reais no host e tar reservados. As nove obrigações Teams passam somente no alcance observado; grupos separados continuam NOT_RUN.
+- Ambos mantêm proofScope:current-teams-subset, g08Closed:false e productionCutover:false. O subconjunto refere-se ao gate inteiro, incluindo seus cinco grupos obrigatórios.
+- require-closed-gate recusa a conclusão enquanto qualquer grupo estiver pendente. Inventários vazios, incompletos, duplicados, desconhecidos ou contagens forjadas também são recusados.
 
-Em `packages/app-shell/e2e/sucafina/g08`:
+O controle de DOM usa os mesmos seletores do executor e componentes/clientes de produto, com somente a rede controlada. Isso demonstra compatibilidade do oráculo, sem provar Entra, instalação ou autorização real. A contagem exata é nove, workers 1/retries 0, sem filtros, shards, skips, flake, falhas ou resultados ausentes.
 
-```sh
-bun typecheck
-```
+Somente digests, C/T, IDs estáveis, contagens e estados de cobertura são públicos. Cookies, CDP, URLs privadas, env, claims, corpos, transcripts Session, vídeos e screenshots ficam fora do recibo público. A política da reserva governa retenção dos dados privados.
 
-Em `packages/app-shell`, com as variáveis/nonce omni e o diretório privado de evidências preparados pelo mesmo workflow:
+## Fechamento
 
-```sh
-bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts --reporter=junit --reporter-outfile "$SF_G08_TOOLING_EVIDENCE/landing-dom.junit.xml" ./e2e/sucafina/g08/landing-contract.test.ts
-bunx --no-install playwright test --config e2e/sucafina/g08/playwright.config.ts --list
-```
+G08 requer os nove cenários Teams, U15/U39/U40 completos em suas invocações, F04 e todas as fases AZ02, mesmo candidato/tar G07, atores/grants reais, autorização das mutações e cleanup observado. A composição de ferramenta ou nove casos listados não satisfaz essa condição.
 
-Novamente na raiz:
+A prova 222 (2) continua 4/4 no QA original atestado pelo handoff; seu backlink/SHA/tar não foi recuperado nesta frente e não é promovido ao candidato atual. Ver a [matriz de preparação](../../../../../docs/qa/sucafina/go-live/g08-teams-qa.md) e o [ledger](../../../../../docs/qa/sucafina/go-live/status.json). Evidências anteriores conservam seus SHAs e escopos.
 
-```sh
-node script/sf-ci/g08-private-evidence.mjs verify-list "$SF_G08_TOOLING_EVIDENCE/list.json"
-bun run check:guards --base origin/dev
-```
+## Reconciliação do executor com a integração privada
 
-Os controles Node recusam omissão/substituição das obrigações, relatório antigo, retry/skip/filtro e promoção indevida de grants ou grupos. O controle DOM renderiza a página/leitor reais com transporte controlado e verifica inclusive administração sem Team e refresh único. Os testes de produto Chat/composer continuam na suíte existente `test-browser/team-session-page.test.ts`; não são duplicados nem substituídos por este inventário.
+A composição preserva os controles complementares de #672 e #678: as nove obrigações têm mapeamento implementado, inclusive diferença de ações Session observada com dois principals no mesmo Team e cleanup restrito à invocação. A navegação de Chat espera lista e SSE originais antes da ação, decodifica toda a lista e seus owners e exige stream aberto. O administrador sem Team abre a configuração pela UI; o documento, a revisão e os campos são comparados com leitura independente. Disable/restore conserva os documentos dos Teams A e B e observa a revisão corrente sem rebobinar o CAS. Os dois controles de rascunho continuam em 320 px, sem POST. Os oito controles DOM originais são preservados.
 
-Um `--list` verde só prova carregamento dos nove cenários. Somente relatório inteiro, workers 1/retries 0, nove resultados originais, exit 0, witnesses íntegros e cleanup completo podem produzir o recibo instalado v4. A execução instalada segue dependendo da reserva autorizada; nenhum comando instalado foi executado nesta adaptação.
+Esta reconciliação qualifica o executor. Todos os resultados instalados e os grupos U15/U39/U40/recuperação permanecem NOT_RUN até suas execuções próprias no tar e nos ambientes reservados. Os recibos anteriores pertencem às fontes em que foram produzidos.
 
-## Obrigações fora deste recorte
-
-U15/U39/U40, F04 e todas as fases AZ02 continuam obrigatórios e separados, conforme fontes e contagens de [obligations.json](./obligations.json). Esta escrita não altera sua matriz, seus produtores nem seu estado. O fechamento global também exige a diferença real de grants, o mesmo candidato/tar G07 e os demais papéis próprios do gate.
-
-Ver [G08](../../../../../docs/qa/sucafina/go-live/g08-teams-qa.md) e [status global](../../../../../docs/qa/sucafina/go-live/status.json). Seus resultados históricos permanecem vinculados aos próprios SHAs e alcances. Este executor continua recusando declarar G08 fechado.
+O avanço #686 também é preservado: a mesma obrigação exige agora a diferença de destinos/permissões de negócio observada no F02 da UI e na releitura independente, estável nas duas recargas, além das ações Session reais. Os três controles unitários do oráculo F02 continuam; diferença apenas de identidade, revisão, ordenação ou disponibilidade é recusada. Essa composição não concede roles, ACL ou configuração aos atores.

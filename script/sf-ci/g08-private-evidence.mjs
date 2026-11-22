@@ -12,7 +12,7 @@ export const cases = Object.freeze([
   { id: "aba-two-windows", title: "An explicit A B A Team switch leaves the sibling window on its own Team" },
   { id: "account-without-team", title: "An authenticated account without Team access cannot open the original business chapter" },
   { id: "foreign-deep-link-reload", title: "A foreign installation deep link and reload cannot inherit the current Team selection" },
-  { id: "admin-without-team", title: "A Microsoft configuration administrator without Teams cannot acquire business access" },
+  { id: "admin-without-team", title: "Native Microsoft administration remains usable without Team business access" },
   { id: "narrow-keyboard-draft", title: "Keyboard navigation opens a new Team chat draft on narrow Web without changing owner" },
   { id: "draft-cancel-discard", title: "A Team switch keeps a canceled chat draft and discards it only on confirmation" },
   { id: "real-revoke-restore", title: "Real administration revokes a disposable Team and restores its original configuration" },
@@ -23,21 +23,26 @@ export const preservedTeams = Object.freeze([
   "admin-without-team", "narrow-keyboard-draft", "draft-cancel-discard", "real-revoke-restore", "logout-original-context",
 ])
 export const completeMappings = Object.freeze({
-  "same-team-distinct-grants": "same-team-distinct-grants",
-  "aba-two-windows": "aba-two-windows", "account-without-team": "account-without-team",
-  "foreign-deep-link-reload": "foreign-deep-link-reload", "admin-without-team": "admin-without-team",
+  "same-team-distinct-grants": "same-team-distinct-grants", "admin-without-team": "admin-without-team",
   "narrow-keyboard-draft": "narrow-keyboard-draft", "draft-cancel-discard": "draft-cancel-discard",
-  "real-revoke-restore": "real-revoke-restore", "logout-original-context": "logout-original-context",
+  "aba-two-windows": "aba-two-windows", "account-without-team": "account-without-team",
+  "foreign-deep-link-reload": "foreign-deep-link-reload", "real-revoke-restore": "real-revoke-restore",
+  "logout-original-context": "logout-original-context",
 })
 export const obligationPath = "packages/app-shell/e2e/sucafina/g08/obligations.json"
 export const pendingGroups = Object.freeze(["U15", "U39", "U40", "F04", "AZ02"])
 export const productContractPaths = Object.freeze([
   "packages/app-shell/src/context/team-profile-navigation.ts",
-  "modules/sucafina/Sucafinav1/runtime/team-profile-http.ts",
-  "modules/sucafina/Sucafinav1/runtime/team-profile-store.ts",
   "packages/app-shell/src/components/team-profile-administration.tsx",
   "packages/app-shell/src/pages/team-session.tsx",
   "packages/app-shell/src/context/team-sessions.ts",
+  "packages/client/src/sucafina/sessions.ts",
+  "packages/client/src/sucafina/team-profile.ts",
+  "modules/sucafina/Sucafinav1/runtime/team-session-admission.ts",
+  "apps/cli/src/sucafina-product/team-session-http.ts",
+  "packages/server/src/session-http.ts",
+  "modules/sucafina/Sucafinav1/runtime/team-profile-http.ts",
+  "modules/sucafina/Sucafinav1/runtime/team-profile-store.ts",
 ])
 export const sourcePaths = Object.freeze([
   ".github/workflows/g08-private-preflight.yml", "script/sf-ci/g08-private-evidence.mjs", obligationPath,
@@ -320,6 +325,71 @@ export function validateHost(value, plan, receipt) {
     observed < Date.parse(plan.reservation.endsAt), "G08_HOST_OUTSIDE_WINDOW")
   return host
 }
+
+/** Original browser transcript reduced only after strict corporate response decoding.
+ * The CLI reads this file solely after the exact installed Playwright run and cleanup pass.
+ * It is not an operator-supplied grant declaration and cannot substitute for that provenance.
+ * @param {unknown} value @param {ReturnType<typeof validatePlan>} plan
+ */
+export function validateGrantProof(value, plan) {
+  const proof = record(value)
+  exact(proof, ["schema", "invocationId", "profile", "fixtureIds", "requester", "holder", "cleanup"])
+  assert(proof.schema === "sf-g08-session-grants-v1" && proof.invocationId === plan.invocation.id,
+    "G08_GRANT_PROOF_INVOCATION_REQUIRED")
+  const profile = { installationId: plan.target.installationId, tenantId: plan.target.tenantId,
+    teamObjectId: plan.target.teamObjectId }
+  assert.deepEqual(proof.profile, profile, "G08_GRANT_PROFILE_REQUIRED")
+  const fixtures = record(proof.fixtureIds), requester = record(proof.requester), holder = record(proof.holder)
+  const cleanup = record(proof.cleanup)
+  exact(fixtures, ["requester", "holder"]); exact(cleanup, ["requester", "holder"])
+  assert(fixtures.requester !== fixtures.holder, "G08_DISTINCT_FIXTURE_IDS_REQUIRED")
+  for (const entry of Object.values(fixtures))
+    assert(new RegExp("^ses_g08_" + plan.invocation.id + "_[a-f0-9]{32}$").test(text(entry)), "G08_DISPOSABLE_SESSION_ID_REQUIRED")
+  exact(requester, ["namespace", "before", "created", "observed", "afterCreate", "createStatus", "readStatus"])
+  exact(holder, ["namespace", "before", "afterDenial", "deniedStatus", "readStatus"])
+  assert(requester.createStatus === 200 && requester.readStatus === 200 &&
+    holder.readStatus === 200 && holder.deniedStatus === 401, "G08_DIFFERENT_EFFECTIVE_GRANTS_NOT_OBSERVED")
+  /** @param {unknown} value @param {"requester" | "holder"} actor */
+  function namespace(value, actor) {
+    const item = record(value)
+    exact(item, ["version", "owner", "authorityGeneration"])
+    assert(item.version === 1 && Number.isSafeInteger(item.authorityGeneration) && Number(item.authorityGeneration) > 0,
+      "G08_ORIGINAL_SESSION_NAMESPACE_REQUIRED")
+    assert.deepEqual(item.owner, { profile, principal: {
+      tenantId: plan.target.tenantId, principalObjectId: plan.actors[actor],
+    } }, "G08_ORIGINAL_SESSION_OWNER_REQUIRED")
+    return item
+  }
+  /** @param {unknown} value @param {Record<string, unknown>} owner */
+  function entries(value, owner) {
+    assert(Array.isArray(value) && value.length <= 10_000, "G08_COMPLETE_SESSION_INVENTORY_REQUIRED")
+    const rows = value.map(record), ids = rows.map((entry) => text(entry.id))
+    assert.equal(new Set(ids).size, rows.length, "G08_SESSION_INVENTORY_DUPLICATE")
+    assert.deepEqual(ids, [...ids].sort((a, b) => a.localeCompare(b)), "G08_SESSION_INVENTORY_ORDER_REQUIRED")
+    for (const row of rows) assert.deepEqual(row.namespace, owner, "G08_SESSION_ROW_OWNER_REQUIRED")
+    return rows
+  }
+  const requesterOwner = namespace(requester.namespace, "requester"), holderOwner = namespace(holder.namespace, "holder")
+  const before = entries(requester.before, requesterOwner), holderBefore = entries(holder.before, holderOwner)
+  assert(!before.some((entry) => entry.id === fixtures.requester) &&
+    !holderBefore.some((entry) => entry.id === fixtures.holder), "G08_FIXTURE_MUST_BE_NEW")
+  const created = record(requester.created)
+  assert(created.id === fixtures.requester, "G08_CREATED_SESSION_ID_CHANGED")
+  assert.deepEqual(created.namespace, requesterOwner, "G08_CREATED_SESSION_OWNER_CHANGED")
+  assert.deepEqual(requester.observed, created, "G08_SESSION_EFFECT_NOT_REREAD")
+  assert.deepEqual(entries(requester.afterCreate, requesterOwner),
+    [...before, created].sort((a, b) => String(a.id).localeCompare(String(b.id))), "G08_SESSION_CREATE_EFFECT_NOT_EXACT")
+  assert.deepEqual(entries(holder.afterDenial, holderOwner), holderBefore, "G08_DENIED_SESSION_CHANGED_STATE")
+  for (const actor of ["requester", "holder"]) {
+    const item = record(cleanup[actor]), original = actor === "requester" ? before : holderBefore
+    const expectedOwner = actor === "requester" ? requesterOwner : holderOwner
+    exact(item, ["namespace", "entries"])
+    assert.deepEqual(item.namespace, expectedOwner, "G08_SESSION_CLEANUP_OWNER_CHANGED")
+    assert.deepEqual(entries(item.entries, expectedOwner), original, "G08_SESSION_FIXTURE_CLEANUP_REQUIRED")
+  }
+  return proof
+}
+
 /** @param {unknown} value */
 export function reportSpecs(value) {
   const report = record(value)
@@ -447,7 +517,7 @@ async function main() {
   const command = process.argv[2]
   if (command === "verify-list") {
     const inventory = verifyReport(JSON.parse(await readFile(process.argv[3], "utf8")), false)
-    const receipt = { schema: "sf-g08-executor-inventory-v4", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
+    const receipt = { schema: "sf-g08-executor-inventory-v3", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
       candidate: { sha: process.env.SF_G08_CANDIDATE_SHA, tree: process.env.SF_G08_CANDIDATE_TREE },
       cases: inventory, coverage: await readCoverage(false), sources: await sourceInventory(), installed: false, g08Closed: false, pendingGroups, productionCutover: false }
     const output = text(process.env.SF_G08_TOOLING_EVIDENCE), workspace = process.env.GITHUB_WORKSPACE
@@ -495,19 +565,24 @@ async function main() {
       value.boundDocuments === value.openedPages && value.cacheBypassPages === value.openedPages &&
       value.ingressErrors === 0 && Number(value.ingressResources) >= Number(value.openedPages),
       "G08_CLEANUP_OR_BROWSER_INGRESS_NOT_OBSERVED")
+    if (item.id === "same-team-distinct-grants")
+      assert(value.grantMutationAttempted === true && value.grantFixturesCleaned === true, "G08_SESSION_FIXTURE_CLEANUP_REQUIRED")
+    if (item.id === "admin-without-team" || item.id === "real-revoke-restore")
+      assert(value.nativeAdministrationObserved === true, "G08_NATIVE_ADMINISTRATION_REQUIRED")
     if (item.id === "real-revoke-restore")
       assert(value.revocationAttempted === true && value.revocationRestored === true, "G08_REVOCATION_RESTORATION_REQUIRED")
     cleanup.push({ caseId: item.id, sha256: digest(raw) })
   }
+  const grantsText = await privateText(root, "session-grants.json", 25_000_000)
+  validateGrantProof(JSON.parse(grantsText), plan)
   const archive = record(receipt.archive)
   const publicReceipt = {
-    schema: "sf-g08-current-installed-v4", status: "CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED", proofScope: "current-teams-subset",
+    schema: "sf-g08-current-installed-v3", status: "CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED", proofScope: "current-teams-subset",
     candidate: plan.candidate, archive: { file: archive.file, sha256: archive.sha256, bytes: archive.bytes },
     packageReceiptSha256: plan.packageReceiptSha256, invocation: plan.invocation, cases: inventory, coverage: await readCoverage(true), sources,
-    evidence: { reportSha256: digest(reportText), hostBeforeSha256: digest(beforeText), hostAfterSha256: digest(afterText), cleanup },
+    evidence: { reportSha256: digest(reportText), hostBeforeSha256: digest(beforeText), hostAfterSha256: digest(afterText), grantProofSha256: digest(grantsText), cleanup },
     installed: true, g08Closed: false, pendingGroups, productionCutover: false,
-    limits: ["Nine current-contract Teams scenarios only; distinct business grants and U15/U39/U40/F04/AZ02 remain unproven.",
-      "The two draft scenarios send no POST and do not qualify model dispatch, personal provider credentials or completion.",
+    limits: ["Nine current-contract Teams controls, including native administration, effective Session grants and native drafts; U15/U39/U40/F04/AZ02 remain mandatory.",
       "Logout proves original context invalidation, not raw token replay or Entra global sign-out.",
       "Reservation and actor references are operator-supplied authorization metadata, never inferred role grants."],
   }
