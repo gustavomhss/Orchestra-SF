@@ -49,3 +49,41 @@ test("private-session-policy: duplicate principals, unknown roles and nonimmutab
   expect(() => teamSessionPolicy({ groups: { dashboard: {}, planner: {} }, grants: [grant] })).toThrow()
   expect(() => teamSessionPolicy({ groups: { ...groups, teams: {} }, grants: [grant] })).toThrow()
 })
+
+test("private-session-policy: minimal checkpoint and recovery grants remain independent and confer no Session or business authority", () => {
+  const scenarios = [
+    { input: ["checkpoint"], expected: ["checkpoint"] },
+    { input: ["recover"], expected: ["recover"] },
+    { input: ["recover", "checkpoint"], expected: ["checkpoint", "recover"] },
+  ] as const
+  for (const scenario of scenarios) {
+    const policy = teamSessionPolicy({ groups, grants: [{
+      principalRef: principalId, migrationActions: scenario.input,
+    }] })
+    const actual = policy.grants[0]
+    expect(actual).toEqual({
+      principalRef: principalId, namespaces: [], operations: [], humanActions: [],
+      sessionActions: [], referenceActions: [], migrationActions: scenario.expected,
+      connectionActions: [], connectionResources: [], providerBindings: [],
+    })
+    expect(Object.isFrozen(actual)).toBe(true)
+    for (const key of ["namespaces", "operations", "humanActions", "sessionActions", "referenceActions",
+      "migrationActions", "connectionActions", "connectionResources", "providerBindings"] as const)
+      expect(Object.isFrozen(actual?.[key])).toBe(true)
+  }
+  expect(teamSessionPolicy({ groups, grants: [{ principalRef: principalId }] }).grants)
+    .toEqual(teamSessionPolicy({ groups, grants: [grant] }).grants)
+})
+
+test("private-session-policy: checkpoint aliases and malformed optional authority remain rejected", () => {
+  const minimal = { principalRef: principalId, migrationActions: ["checkpoint"] }
+  const invalid: readonly [string, unknown][] = [
+    ["migrationActions", ["checkpoint", "checkpoint"]], ["migrationActions", ["Checkpoint"]],
+    ["migrationActions", ["backup"]], ["migrationActions", ["*"]], ["migrationActions", null],
+    ["namespaces", null], ["namespaces", "documents"], ["namespaces", ["documents", "documents"]],
+    ["operations", null], ["operations", "sf_import_apply"], ["operations", ["*"]],
+    ["sessionActions", ["checkpoint"]], ["humanActions", ["checkpoint"]],
+  ]
+  for (const [key, value] of invalid)
+    expect(() => teamSessionPolicy({ groups, grants: [{ ...minimal, [key]: value }] })).toThrow()
+})
