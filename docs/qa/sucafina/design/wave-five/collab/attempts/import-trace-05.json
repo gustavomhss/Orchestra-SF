@@ -1,0 +1,21 @@
+{
+  "kind": "import-context-stage-diagnostic",
+  "source": "2a73ad159e3c5529425f11b94b71677cef7dd1bb",
+  "snapshot": "45f2fbcf80b27bae7bc1e97991147d556da71934",
+  "parent": "ef024a77d7ed21884755f830ed60200493d491c2",
+  "branch": "ci-run-sf5importtrace5",
+  "run": 44985603549,
+  "job": 137095362889,
+  "cleanupJob": 137096065650,
+  "status": "failed-before-preview",
+  "failure": "Playwright response.json for the observed original import-targets GET could not retrieve Chromium response bytes: Network.getResponseBody, No data found for resource with given identifier.",
+  "observations": {
+    "previewReached": false,
+    "contextBeforePreview": "Both operational passes and original admissions complete around 1.3 seconds before failure.",
+    "consoleErrors": [],
+    "pageErrors": []
+  },
+  "instrumentationLimit": "stdout console.info corrected the trace4 logger channel. Individual health stage labels still contained uppercase letters and dots and were rejected by the existing static forwarding filter. Trace6 normalizes only diagnostic labels.",
+  "correction": "The permanent browser spec now performs an independent authenticated original GET for target evidence and verifies that the actual native option has the same original source reference before selecting it. It never supplies data to the page or replays mutation requests.",
+  "boundary": "No post-preview timing, UI55 review, UI56 or full import success claimed. No changes to product behavior, source guards, workflows or authority."
+}

@@ -79,13 +79,19 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
     await surface.getByRole("button", { name: "Find destinations", exact: true }).click()
     const response = await targetsResponse
     expect(response.status()).toBe(200)
-    const targetResult = await response.json() as { status: string; value: Destination[] }
+    // Qualify the native options with a fresh authenticated original read.
+    // Chromium may release observed response bytes; no target data is injected.
+    const originalTargets = await page.context().request.get(response.url(), { maxRetries: 0, timeout: 40_000 })
+    expect(originalTargets.status()).toBe(200)
+    const targetResult = await originalTargets.json() as { status: string; value: Destination[] }
     expect(targetResult.status).toBe("ok")
     const targets = targetResult.value.filter((entry) => entry.label === waveThreeData.planner.version && entry.surface === "planner")
     expect(targets).toHaveLength(1)
     const target = targets[0]!
     expect(target.formats).toContain("xlsx")
-    await surface.getByRole("combobox", { name: "Destination", exact: true }).selectOption(target.selectionRef)
+    const destination = surface.getByRole("combobox", { name: "Destination", exact: true })
+    await expect(destination.getByRole("option", { name: target.label, exact: true })).toHaveAttribute("value", target.selectionRef)
+    await destination.selectOption(target.selectionRef)
     const versionParts = target.selectionRef.split(":")
     expect(versionParts[0]).toBe("planner-version")
     expect(versionParts).toHaveLength(4)
