@@ -1,0 +1,24 @@
+{
+  "schema": "sf-design-wave-five-a04-response-observer-review-v1",
+  "source": "afe16ab7822b894bb22307a7f8dced9727728c23",
+  "originalSpec": "1c9aaeeb88dd319d834e09bdc545a05a3f02c238",
+  "helper": "ebbab2a37b7f1fe5b65bbe4595dbc4b12347ae02",
+  "foundBy": "design_collaboration",
+  "independentlyConfirmedBy": [
+    "root",
+    "design_analytics"
+  ],
+  "problem": "The UI44 waiter simultaneously required GET and isOperation(...), whose original helper requires POST. No response could satisfy it.",
+  "change": "Use the already parsed URL and exact GET, original owner origin/mount, sf=decision-controls, format=json and the original case/scenario/baseline/parameter tuple.",
+  "unchanged": [
+    "Original 60000ms response budget",
+    "All six query parameters asserted after response",
+    "No POST body",
+    "Exact native case/decision/selection, complete original units and rule version assertions",
+    "Original source preparation helper581",
+    "Production handlers, schemas and runtime",
+    "Original POST operation helper for other requests"
+  ],
+  "runtimeQualification": "PENDING. No installed UI44 pass is claimed by this static correction.",
+  "diagnostic17": "Unchanged; it terminates before this UI44 section."
+}

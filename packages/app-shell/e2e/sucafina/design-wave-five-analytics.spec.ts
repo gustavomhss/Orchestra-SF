@@ -150,7 +150,8 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
     baseline: sourceText(baseline!.ref), parameter: prepared.parameterRef }
   const unitsResponse = page.waitForResponse((response) => {
     const request = response.request(), url = new URL(request.url())
-    return request.method() === "GET" && isOperation(request, "decision-controls") &&
+    return request.method() === "GET" && url.origin === owner.publicOrigin && url.pathname === owner.mount + "/dashboard" &&
+      url.searchParams.get("sf") === "decision-controls" && url.searchParams.get("format") === "json" &&
       Object.entries(unitQuery).every(([key, value]) => url.searchParams.get(key) === value)
   }, { timeout: 60_000 }).then(async (response) => ({ response, body: object(await response.json()) }))
   await sensitivity.getByRole("button", { name: "Unit", exact: true }).click()
