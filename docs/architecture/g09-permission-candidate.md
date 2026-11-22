@@ -6,9 +6,24 @@ The source of candidate 14722264806 contains the PermissionV2 implementation tha
 
 The inspected dedicated Microsoft/Team C17 composition does not mount the generic server routes or create the local native host that consumes PermissionV2. This investigation did not demonstrate a Microsoft Team authorization bypass through C17. Conversely, a successful C17 or TUI-bootstrap boundary case cannot certify that the retained generic Core implementation is free of this defect.
 
-Do not describe this as an established failure of the already-observed C17, an observed failing regression on the candidate, or a harmless out-of-scope change. The exact source defect and its presence in the producer's source index are confirmed; runtime reachability beyond the inspected composition and candidate regression results remain separate questions.
+The two focused regressions were subsequently reproduced against the unchanged candidate source in Actions run 44964767854. Both failed with `Expected: deny` and `Received: allow`. This confirms the source behavior; it does not establish a failure of the already-observed C17 or an installed-ELF Team authorization bypass. The issue should not be described as a harmless naming-only change.
 
-This document is an independent static investigation. No product, test, build, workflow or deployment was executed for it. No G09 IDs were classified.
+The composition investigation below is static. The candidate-source regression observation is recorded separately below. No ELF was rebuilt, no deployment occurred, and no G09 IDs were classified.
+
+## Observed candidate-source regression
+
+[Run 44964767854, attempt 1, job 137031173967](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964767854/job/137031173967), workflow `36e5c15fa14fca1149b125e286923f15facba74a`, executed the exact PR test bytes against the frozen source:
+
+| Selected test | Observed result |
+|---|---|
+| denies calls without resources even under configured and saved allows | Failed: expected `deny`, received `allow` |
+| enforces recorded Session denies while keeping order within each configured ruleset | Failed: expected `deny`, received `allow` |
+
+The log records two selected tests, zero passing, two failing and three assertions. The second case first passed its agent-level denial assertion and then failed the recorded-Session denial assertion. This is not a preload/import failure or a run with no matching tests. The focused Omni control reported `not applicable`; this run supplies no Omni-spawn evidence.
+
+The workflow verified the old PermissionV2 SHA-256 before and after, verified the PR test SHA-256 before copying it to a new temporary test path, checked all tracked source files remained unchanged, preserved the actual Bun exit code, and removed only its owned test copy. The artifact is [14731740025](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964767854/artifacts/14731740025), ZIP SHA-256 `afcd6d539588f9ffb60f5f5199cb590a5e205e2a21e1825067cd105ff57d365b`.
+
+These are candidate-source tests. The installed ELF was not executed by this case, and no Team bypass is asserted.
 
 ## Exact identities
 
@@ -76,7 +91,7 @@ The GitHub API reports [run 44956890174](https://github.com/gustavomhss/Orchestr
 
 This investigation independently checked the run's status and head SHA, not every test log. It did not rerun those tests and does not transfer that corrected-source success to candidate 3ef84d or to the old ELF.
 
-## Minimal independent Actions diagnostic, if needed
+## Reproducing the focused Actions diagnostic
 
 Use the exact test file from a90fcb86b2909249a54adbc8a23d5c4d4ee104d8 with the unchanged product source at 3ef84da65d6b8ad7cd3250412bbcabdf90924172. Do not cherry-pick the implementation fix into the candidate and then claim to have tested the old source.
 
@@ -85,7 +100,7 @@ The two exact case names are:
 1. denies calls without resources even under configured and saved allows
 2. enforces recorded Session denies while keeping order within each configured ruleset
 
-Both use the real PermissionV2 service, SessionStore and test SQLite fixture already in the repository. The first expected mismatch in the old source is evaluate(empty) returning allow instead of deny. In the second case the initial README.md denial is supplied by the agent; the next assertion expects the recorded Session deny for src/private/secret.ts, which the old configured function omits. These are predictions from the inspected code, not observed candidate test failures.
+Both use the real PermissionV2 service, SessionStore and test SQLite fixture already in the repository. The first mismatch in the old source is evaluate(empty) returning allow instead of deny. In the second case the initial README.md denial is supplied by the agent; the next assertion expects the recorded Session deny for src/private/secret.ts, which the old configured function omits. These failure points were predicted by the static review and then observed at test lines 344 and 377 in run 44964767854.
 
 ### Placement without editing product files
 

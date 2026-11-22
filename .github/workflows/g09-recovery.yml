@@ -188,6 +188,26 @@ jobs:
           bun "$G09_HARNESS/.github/ci/g09-recover-solid.mjs" "$SF_G09_SOURCE_DIR" \
             "$RUNNER_TEMP/g09-input" "$RUNNER_TEMP/g09-out/solid" 2>&1 | tee "$RUNNER_TEMP/g09-out/solid-recovery.log"
 
+      - name: Run supplementary AST origin negative controls
+        id: origin_controls
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          bun test "$G09_HARNESS/.github/ci/g09-solid-origin.test.mjs" \
+            2>&1 | tee "$RUNNER_TEMP/g09-out/solid-origin-controls.log"
+
+      - name: Examine exact structural origins without changing map criteria
+        id: origin
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' && steps.inputs.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          bun "$G09_HARNESS/.github/ci/g09-solid-origin.mjs" "$SF_G09_SOURCE_DIR" \
+            "$RUNNER_TEMP/g09-input" "$RUNNER_TEMP/g09-out/solid" "$RUNNER_TEMP/g09-out/solid-origin" \
+            2>&1 | tee "$RUNNER_TEMP/g09-out/solid-origin.log"
+
       - name: Run controls of the published diagnostic scanner
         id: scanner_controls
         if: ${{ !cancelled() && steps.parser.outcome == 'success' }}
