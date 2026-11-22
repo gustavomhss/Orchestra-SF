@@ -1,0 +1,239 @@
+name: G09 exact installed TUI journeys
+
+on:
+  push:
+    branches: [g09-closeout-bc4418]
+    paths:
+      - .github/workflows/g09-tui-journeys.yml
+      - .github/ci/g09-generic-tui.py
+      - .github/ci/g09-tui-journeys.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: g09-tui-journeys-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tui-journeys:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      SOURCE_REVISION: 3ef84da65d6b8ad7cd3250412bbcabdf90924172
+      SOURCE_TREE: 48d57887656fd2e325dee97a7c066bcb8e84bbc8
+    steps:
+      - name: Bind execution identity
+        id: identity
+        shell: bash
+        env:
+          G09_ACTUAL_JOB_ID: ${{ job.check_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$G09_ACTUAL_JOB_ID" =~ ^[1-9][0-9]*$ ]]
+          printf 'G09_CHECK_RUN_ID=%s\nCHECK_RUN_ID=%s\n' "$G09_ACTUAL_JOB_ID" "$G09_ACTUAL_JOB_ID" >> "$GITHUB_ENV"
+          mkdir -m 0700 "$RUNNER_TEMP/g09-out"
+
+      - name: Checkout current probe
+        id: harness
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          path: harness
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Checkout frozen input verifiers
+        id: recovery
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 65c6cfa0084cc0dc0b190c6d0bda103c1c189ec2
+          path: recovery
+          persist-credentials: false
+
+      - name: Checkout frozen candidate installer
+        id: candidate
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 3ef84da65d6b8ad7cd3250412bbcabdf90924172
+          path: candidate
+          persist-credentials: false
+
+      - name: Install pinned guard runtime
+        id: bun
+        shell: bash
+        run: |
+          set -euo pipefail
+          g09_bun_zip="$RUNNER_TEMP/g09-bun.zip"
+          curl --fail --location --retry 3 \
+            https://github.com/oven-sh/bun/releases/download/bun-v1.4.1/bun-linux-x64-baseline.zip \
+            --output "$g09_bun_zip"
+          printf '%s  %s\n' a8c9c6738202e2fced555dd860a953c56c0cd059f75041e7010ae81a32802646 "$g09_bun_zip" | sha256sum --check
+          unzip -q "$g09_bun_zip" -d "$RUNNER_TEMP/g09-bun"
+          g09_bun_dir="$RUNNER_TEMP/g09-bun/bun-linux-x64-baseline"
+          test "$("$g09_bun_dir/bun" --revision)" = 1.4.1+4661e494f
+          printf '%s\n' "$g09_bun_dir" >> "$GITHUB_PATH"
+
+      - name: Check unchanged guard rules
+        id: guards
+        working-directory: harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev | tee "$RUNNER_TEMP/g09-out/guards.log"
+
+      - name: Verify and install preserved bytes in temporary fixture
+        id: inputs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir "$RUNNER_TEMP/g09-input" "$RUNNER_TEMP/g09-release"
+          g09_input="$RUNNER_TEMP/g09-input"
+          test "$(git -C candidate rev-parse HEAD)" = "$SOURCE_REVISION"
+          test "$(git -C candidate rev-parse HEAD^{tree})" = "$SOURCE_TREE"
+          test "$(git -C recovery rev-parse HEAD)" = 65c6cfa0084cc0dc0b190c6d0bda103c1c189ec2
+          gh api repos/gustavomhss/Orchestra-SF/actions/artifacts/14722264806 > "$g09_input/artifact.json"
+          gh api repos/gustavomhss/Orchestra-SF/actions/runs/44944208924/attempts/1 > "$g09_input/producer-run.json"
+          gh api repos/gustavomhss/Orchestra-SF/actions/artifacts/14722264806/zip > "$g09_input/original.zip"
+          python3 -B recovery/.github/ci/g09-preserved-inputs.py "$g09_input" "$RUNNER_TEMP/g09-out/preserved-inputs.json"
+          python3 -B candidate/sf/azure/vm/install-factory-distribution.py verify \
+            --artifact "$g09_input/orchestra-sf-entra-linux-x64-baseline.tar.gz" \
+            --receipt "$g09_input/orchestra-sf-entra-package-receipt.json" \
+            --candidate "$SOURCE_REVISION" \
+            --sha256 dc11455bbcce4565b24cdca53ce3e5ab05f883757f6c0765910a0e4c98147d83
+          tar -xzf "$g09_input/orchestra-sf-entra-linux-x64-baseline.tar.gz" -C "$RUNNER_TEMP/g09-release"
+          python3 -B recovery/.github/ci/g09-installation-modes.py \
+            "$RUNNER_TEMP/g09-release" "$g09_input/orchestra-sf-entra-package-receipt.json" \
+            "$GITHUB_WORKSPACE/candidate/sf/azure/vm/install-factory-distribution.py" \
+            "$RUNNER_TEMP/g09-out/installation-modes.json"
+          cp "$g09_input/artifact.json" "$g09_input/producer-run.json" "$RUNNER_TEMP/g09-out/"
+
+      - name: Index preserved saved-permission references
+        id: source_references
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B - <<'PY'
+          import hashlib, json, os, re, subprocess
+          from pathlib import Path
+          root = Path('candidate')
+          assert subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], text=True).strip() == os.environ['SOURCE_REVISION']
+          paths = subprocess.check_output(['git', '-C', str(root), 'ls-files', '-z']).decode().split('\0')
+          pattern = re.compile(r'PermissionSaved|permission\.refresh|useData|context/data')
+          matches, inspected = [], 0
+          for path in paths:
+              file = root / path
+              if not path or file.suffix not in ('.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs') or file.is_symlink():
+                  continue
+              raw = file.read_bytes()
+              inspected += 1
+              try:
+                  lines = raw.decode('utf-8').splitlines()
+              except UnicodeDecodeError:
+                  continue
+              hits = [{'line': n, 'text': line} for n, line in enumerate(lines, 1) if pattern.search(line)]
+              if hits:
+                  matches.append({'path': path, 'sha256': hashlib.sha256(raw).hexdigest(), 'matches': hits})
+          value = {'schema': 'g09-source-reference-index-v1', 'sourceSHA': os.environ['SOURCE_REVISION'],
+                   'status': 'NAVIGATION_ONLY', 'formalG09Pass': False, 'inspectedTrackedScripts': inspected,
+                   'patterns': pattern.pattern, 'files': matches,
+                   'limitation': 'Text search locates references; absence is not proof of semantic dead code or an approved disposition.'}
+          out = Path(os.environ['RUNNER_TEMP']) / 'g09-out' / 'saved-permission-references.json'
+          out.write_text(json.dumps(value, indent=2) + '\n')
+          print(json.dumps({'file': out.name, 'inspectedTrackedScripts': inspected, 'matchingFiles': len(matches),
+                            'tuiMatches': [item for item in matches if item['path'].startswith('packages/tui/')]}, sort_keys=True))
+          PY
+
+      - name: Run eight exact installed TUI journeys in isolated loopback namespace
+        id: tui
+        shell: bash
+        run: |
+          set -euo pipefail
+          g09_uid="$(id -u)"
+          g09_gid="$(id -g)"
+          test "$g09_uid" != 0
+          sudo --preserve-env=GITHUB_ACTIONS,GITHUB_REPOSITORY,GITHUB_RUN_ID,GITHUB_RUN_ATTEMPT,GITHUB_SHA,CHECK_RUN_ID,RUNNER_TEMP,RUNNER_ARCH \
+            unshare --net --pid --fork --kill-child=SIGKILL --mount-proc -- /bin/bash -ceu '
+              ip link set lo up
+              exec setpriv --reuid="$1" --regid="$2" --clear-groups --no-new-privs \
+                --bounding-set=-all --inh-caps=-all --ambient-caps=-all \
+                python3 -B "$3" --binary "$4" --archive "$5" --runtime-dir "$6" --output-dir "$7"
+            ' g09-loopback "$g09_uid" "$g09_gid" \
+            "$GITHUB_WORKSPACE/harness/.github/ci/g09-tui-journeys.py" \
+            "$RUNNER_TEMP/g09-release/bin/orchestra" \
+            "$RUNNER_TEMP/g09-input/orchestra-sf-entra-linux-x64-baseline.tar.gz" \
+            "$RUNNER_TEMP/g09-journey-runtime" "$RUNNER_TEMP/g09-out/tui" \
+            2>&1 | tee "$RUNNER_TEMP/g09-out/tui-journeys.log"
+
+      - name: Preserve outcomes and evidence identities
+        id: manifest
+        if: ${{ always() }}
+        shell: bash
+        env:
+          G09_STEP_RESULTS: ${{ toJSON(steps) }}
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          set -euo pipefail
+          python3 -B - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          output = Path(os.environ['RUNNER_TEMP']) / 'g09-out'
+          output.mkdir(exist_ok=True)
+          files = []
+          for file in sorted(output.rglob('*')):
+              if file.is_file() and not file.is_symlink():
+                  with file.open('rb') as stream:
+                      sha = hashlib.file_digest(stream, 'sha256').hexdigest()
+                  files.append({'path': str(file.relative_to(output)), 'sha256': sha, 'bytes': file.stat().st_size})
+          value = {
+              'schema': 'g09-tui-journeys-execution-v1', 'formalG09Pass': False,
+              'candidateRebuilt': False, 'inheritedSignatures': 0,
+              'classifiedOccurrenceIds': [], 'classifiedFindingIds': [],
+              'sourceSHA': os.environ['SOURCE_REVISION'], 'sourceTreeSHA': os.environ['SOURCE_TREE'],
+              'artifactId': '14722264806', 'workflowSHA': os.environ['GITHUB_SHA'],
+              'runId': os.environ['GITHUB_RUN_ID'], 'runAttempt': os.environ['GITHUB_RUN_ATTEMPT'],
+              'jobId': os.environ['CHECK_RUN_ID'],
+              'steps': {key: {'outcome': item['outcome'], 'conclusion': item['conclusion']}
+                        for key, item in json.loads(os.environ['G09_STEP_RESULTS']).items()},
+              'files': files,
+              'scope': 'Eight named real-PTY generic TUI journeys on the exact preserved ELF; no inherited dispositions or Microsoft authorization claim',
+          }
+          (output / 'execution-manifest.json').write_text(json.dumps(value, indent=2) + '\n')
+          evidence = output / 'tui' / 'tui-journeys-proof.json'
+          if evidence.is_file() and not evidence.is_symlink():
+              receipt = json.loads(evidence.read_bytes())
+              print(json.dumps({'file': 'tui-journeys-proof.json', 'evidence': receipt}, sort_keys=True))
+              for folder in sorted((output / 'tui').glob('[0-9][0-9]')):
+                  case_file = folder / 'case.json'
+                  if not case_file.is_file():
+                      continue
+                  case = json.loads(case_file.read_bytes())
+                  if case['status'] != 'pass':
+                      for name in ('final-screen.txt', 'keyboard-actions.json', 'tui.network.json'):
+                          file = folder / name
+                          if file.is_file() and not file.is_symlink():
+                              print(json.dumps({'file': str(file.relative_to(output)), 'redactedDiagnosticTail': file.read_bytes()[-32768:].decode('utf-8', errors='replace')}))
+          if value['steps'].get('tui', {}).get('outcome') != 'success':
+              file = output / 'tui' / 'server.log'
+              if file.is_file() and not file.is_symlink():
+                  print(json.dumps({'file': 'server.log', 'redactedDiagnosticTail': file.read_bytes()[-16384:].decode('utf-8', errors='replace')}))
+
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('## G09 exact installed TUI journeys\n\n')
+              summary.write('Supplementary execution evidence. Formal G09 remains unqualified.\n\n')
+              for key, item in value['steps'].items():
+                  summary.write('- ' + key + ': ' + item['outcome'] + '\n')
+          PY
+
+      - name: Upload evidence including failure diagnostics
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g09-tui-journeys-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/g09-out
+          if-no-files-found: error
+          retention-days: 30
