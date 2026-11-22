@@ -322,3 +322,14 @@ All seven original images were actually viewed: six list/configuration stages ar
 The single original preview request had no observed response within the unchanged 60-second wait. No second preview, explicit evaluation, UI43 or native UI44 stage was reached. Do not import a later 403 from a prior diagnostic. This clean run has no internal hit/miss or phase instrumentation, so it does not establish whether readonly recognition was used or attribute a remaining cost.
 
 All seven original JPEGs were actually viewed and remotely byte-verified: six readable list/configuration stages and one diagnostic pending-preview image. The latter shows Running, disabled inputs, Preview is not yet available and empty history, without a connection banner. [Receipt and visual review](attempt-15/README.md), [manifest](attempt-15/manifest.json) and [structured source events](attempt-15/source-events.json) preserve the failed outcome. No raw transcript is committed. The wave remains 12/15; UI42–44 are pending.
+
+
+## Attempt 16 — Portfolio19 partial readonly diagnostic, incomplete acquisition
+
+[Run 45013832359](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45013832359), snapshot `46792e9d945a8d27802ec2ae7c05b1a6ce7b5068` over QA/product source `82076e542b03825ca9cbfb21dae4a86fabd0ca88` (runtime `2d3abae`), preserved the first permanent f4eb preview through line 84 and the unchanged 581/ebbab/32b helpers. Test `137181760072` failed at the original 60-second preview wait; cleanup `137184430073` passed. There was one native preview request, no observed response, no replay and no extended wait.
+
+Original A04/rule preparation and exact selection readbacks passed; comparisons took 84,804/82,207 ms and selection registration 56,681 ms. History sequence 1 was 200/ok. Sequence 2 had HTTP 200 with body acquisition unavailable in the passive observer; its separate request-failed record is retained and its body is not relabeled ok.
+
+Profiler acquisition is **incomplete**: ten valid scalar records comprise one started event and nine root markers, with zero periodic/final snapshots and zero bucket records. Five sealed callback entries and four exits were observed; the fifth has no exit. No hit/miss totals, drops, pending counts or cost attribution to line 619 can be inferred. Missing snapshots do not mean zero activity. The candidate change to 619 was not included.
+
+All seven original JPEGs were actually viewed: six readable list/configuration states and one pending-preview failure image. [Receipt and visual review](attempt-16/README.md), [manifest](attempt-16/manifest.json), [actual profile records](attempt-16/profile.json) and [source events](attempt-16/source-events.json) preserve this failed diagnostic. No full UI42–44 qualification is added; wave status remains 12/15.
