@@ -140,6 +140,7 @@ export function sfCanonicalCloneTree(value: unknown): unknown[] | undefined {
   if (!value || typeof value !== "object" || !has(ordinary, value) || !environmentCurrent()) return undefined
   const memo = new native.WeakMap<object, Encoded>()
   const visiting = new native.WeakSet<object>()
+  const refusal = {}
   let nodes = 0, properties = 0
 
   const visit = (input: unknown, depth: number): Encoded | undefined => {
@@ -172,27 +173,27 @@ export function sfCanonicalCloneTree(value: unknown): unknown[] | undefined {
       typeof length.value !== "number" || keys.length !== length.value + 1)) return undefined
     if (!array) native.apply(native.sort, keys, [])
     const count = array ? length!.value as number : keys.length
-    const children: unknown[] = []
+    // ownKeys creates a private dense array. For input arrays, keep only the
+    // iteration count: the callback still checks each original numeric index.
+    if (array) keys.length = count
     let height = 0, expansion = 1, units = 16
     add(visiting, input)
-    for (let index = 0; index < count; index++) {
-      const key = array ? index : keys[index]!
+    const children = native.apply(native.map, keys, [(_key: PropertyKey, index: number) => {
+      const key = array ? index : _key
       const property = native.property(input, key)
-      if (!property || !native.own(property, "value") || !property.enumerable) return undefined
+      if (!property || !native.own(property, "value") || !property.enumerable) throw refusal
       const child = visit(property.value, depth + 1)
-      if (!child) return undefined
+      if (!child) throw refusal
       const keyUnits = array ? 1 : 8 + (key as string).length * 6
       if (expansion > maximumExpansion - child.expansion ||
-        units > maximumUnits - child.units - keyUnits) return undefined
+        units > maximumUnits - child.units - keyUnits) throw refusal
       expansion += child.expansion
       units += child.units + keyUnits
       if (child.height + 1 > height) height = child.height + 1
-      // Null-prototype descriptors avoid inherited get/set, and direct definition
-      // avoids inherited numeric setters on the fresh tagged arrays.
-      const descriptor = { __proto__: null, value: array ? child.tree : [key, child.tree],
-        enumerable: true, configurable: true, writable: true }
-      native.define(children, index, descriptor)
-    }
+      // Native map defines own output indices without inherited setters. A
+      // private refusal stops it immediately and reaches the original fallback.
+      return array ? child.tree : [key, child.tree]
+    }]) as unknown[]
     native.apply(native.weakDelete, visiting, [input])
     const encoded: Encoded = { tree: [array ? "array" : "object", children], height, expansion, units }
     native.apply(native.memoSet, memo, [input, encoded])

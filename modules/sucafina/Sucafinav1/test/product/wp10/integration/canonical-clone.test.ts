@@ -174,6 +174,13 @@ test("sparse arrays and own map, constructor and species changes retain the orig
   expect(canonicalSfValue(sparse)).toBe(canonicalSfValue(oracle))
   expect(canonicalSfValue(sparse)).not.toBe(canonicalSfValue([1, undefined, 3]))
 
+  // A named key can hide a hole from a cardinality-only shape check.
+  const hiddenHole = clone([1, 2])
+  remove(hiddenHole, "0")
+  define(hiddenHole, "extra", descriptor({ value: 3, enumerable: true, configurable: true, writable: true }))
+  expect(sfCanonicalCloneTree(hiddenHole)).toBeUndefined()
+  expect(canonicalSfValue(hiddenHole)).toBe(canonicalSfValue(nativeClone(hiddenHole)))
+
   const copied = clone([1, 2]), expected = canonicalSfValue(nativeClone([1, 2]))
   let mapCalls = 0
   const ownMap = new Proxy(nativeMap, { apply(target, receiver, args) {
