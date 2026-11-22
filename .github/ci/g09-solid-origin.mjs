@@ -44,6 +44,28 @@ function parserCompatibility(node, fields) {
   return values
 }
 
+function projectedField(node, key, value, parentNode, parentField) {
+  if (key === "importKind" && ["ImportDeclaration", "ImportSpecifier"].includes(node.type)) {
+    check(value === null || ["value", "type", "typeof"].includes(value), "G09_ORIGIN_IMPORT_KIND_INVALID")
+    return value === null ? "value" : value
+  }
+  if (key === "exportKind" && node.type === "ExportNamedDeclaration") {
+    check(value === null || ["value", "type"].includes(value), "G09_ORIGIN_EXPORT_KIND_INVALID")
+    return value === null ? "value" : value
+  }
+  if (key === "attributes" && node.type === "ImportDeclaration") {
+    check(value === null || Array.isArray(value), "G09_ORIGIN_IMPORT_ATTRIBUTES_INVALID")
+    return value === null ? [] : value
+  }
+  if (key === "tail" && node.type === "TemplateElement") {
+    check(typeof node.tail === "boolean" && typeof value === "boolean", "G09_ORIGIN_TEMPLATE_TAIL_TYPE")
+    if (parentNode?.type === "TemplateLiteral" && parentField === "quasis" &&
+      parentNode.quasis.length === 1 && parentNode.expressions.length === 0 && parentNode.quasis[0] === node)
+      return true
+  }
+  return value
+}
+
 export function semanticTree(root, nodeFields) {
   const nodes = new Map()
   function visit(value, at, parentNode = null, parentField = null) {
@@ -87,10 +109,12 @@ export function semanticTree(root, nodeFields) {
     check(value.errors == null || (Array.isArray(value.errors) && value.errors.length === 0), "G09_ORIGIN_PARSE_ERRORS")
     if (value._blockHoist != null) check(Number.isFinite(value._blockHoist), "G09_ORIGIN_HOIST_INVALID")
     if (value._compact != null) check(typeof value._compact === "boolean", "G09_ORIGIN_COMPACT_INVALID")
+    if (value.type === "TemplateLiteral") check(Array.isArray(value.quasis) && Array.isArray(value.expressions) &&
+      value.quasis.length === value.expressions.length + 1, "G09_ORIGIN_TEMPLATE_ARITY_INVALID")
     nodes.set(JSON.stringify(at), { path: at, node: value })
     const semanticFields = Object.keys(fields).filter((key) => !metadata.has(key)).sort().map((key) => {
       const field = value[key] === undefined ? fields[key].default : value[key]
-      return [key, visit(field, [...at, key], value, key)]
+      return [key, visit(projectedField(value, key, field, parentNode, parentField), [...at, key], value, key)]
     })
     for (const key of Object.keys(compatibility).sort())
       semanticFields.push(["@parser:" + key, visit(compatibility[key], [...at, key], value, key)])
@@ -199,15 +223,16 @@ async function main() {
     runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT,
     jobId: process.env.G09_JOB_ID ?? process.env.CHECK_RUN_ID,
     harnessSha256: sha256(await readFile(fileURLToPath(import.meta.url))),
-    method: "whole-semantic-tree-equality-and-exact-structural-path-to-transform-origin",
+    method: "documented-semantic-projection-v2-and-exact-structural-path-to-transform-origin",
     formalG09Pass: false, reviewDisposition: "not-assigned", existingExactEndCriterionChanged: false,
     inputs: {}, files: [], semanticDifferences: [], occurrences: [],
     limits: [
       "Supplementary origin metadata from the same pinned transform, not an independent compiler validation.",
+      "Equality applies to the documented semantic projection; literal identity of the raw ASTs is not claimed.",
       "No original or supplementary source-map point is created, interpolated, or changed.",
       "The existing requirement for 33 exact Babel end anchors remains unchanged.",
       "Every endOfBunSpan stays not-proven; every tuiExecution stays not-observed.",
-      "AST equality may fail closed on unsupported formatting metadata or semantic differences; no approximate matching is used.",
+      "Projection equality may fail closed on unsupported formatting metadata or semantic differences; no approximate matching is used.",
     ],
   }
   try {
@@ -246,7 +271,8 @@ async function main() {
     receipt.toolchain = { bun: Bun.version, bunRevision: Bun.revision, core: toolchain.babel.version,
       types: typesVersion, generator: generatorVersion, parser: parserVersion,
       dependenciesResolvedFrom: "effective @babel/core module", lockfileSha256: pins.lock }
-    receipt.semanticProjection = { fields: "All @babel/types.NODE_FIELDS with their declared defaults; sorted field names; array order preserved",
+    receipt.semanticProjection = { version: "g09-solid-origin-projection-v2",
+      fields: "All @babel/types.NODE_FIELDS with declared defaults and the five enumerated contextual equivalences; sorted field names; array order preserved",
       omittedNodeMetadata: [...metadata].sort(), allowedExtraMetadata: [...extraMetadata].sort(),
       parserCompatibility: {
         topLevelAwait: "Required boolean on module Program.extra only; preserved in the semantic projection without a guessed default",
@@ -256,6 +282,27 @@ async function main() {
       },
       identifierParentheses: "Reject parenthesized Identifier in AssignmentExpression.left or AssignmentPattern.left before projection.",
       unknownNodeOrFieldOrExtra: "reject", numbers: "finite; negative zero distinct" }
+    receipt.semanticProjection.equivalences = [
+      { nodeType: "ImportDeclaration", field: "importKind", rule: "null/value -> value; type and typeof retained; all other values reject" },
+      { nodeType: "ImportSpecifier", field: "importKind", rule: "null/value -> value; type and typeof retained; all other values reject" },
+      { nodeType: "ExportNamedDeclaration", field: "exportKind", rule: "null/value -> value; type retained; all other values reject" },
+      { nodeType: "ImportDeclaration", field: "attributes", rule: "null/empty array -> empty array; nonempty arrays preserved with contents and order; nonarrays reject" },
+      { nodeType: "TemplateElement", field: "tail", rule: "boolean false/true -> true only as the sole quasi of a TemplateLiteral with zero expressions; raw/cooked and every other field retained; orphan/interpolated tail remains exact; nonboolean tail rejects" },
+    ]
+    receipt.semanticProjection.sourceReview = {
+      babelCommit: "4fba7541180bf5f58256d8e358b544e3831ad090",
+      parserTypescriptBlob: "f55b65f8dac4a6cee913909a041a21e4920f4fb4",
+      parserStatementBlob: "89a80e554e0e9148febcbd244fd9b7e33b8f409f",
+      typesCoreBlob: "836cc3607999d9783ed01a764d8c786a01f301c4",
+      schemaDefaultsBlob: "feadf51e229493f1eaab2954abf5ced64a1627f5",
+      generatorModulesBlob: "7cfe462c52c749c083d77cf9c132eda2597b8b8a",
+      generatorTemplatesBlob: "08961645b4daa968798dd63c802490b53d29a219",
+      templateBuilderBlob: "aa68ce95e0aed73116c14c2feb3d2051884c3916",
+      motivatingRunId: "44967045960", motivatingReceiptSha256: "d3e05e373fa3f155b6d8f92e0cd678274e1715d21c2a99c9a0d6c3547e1ad341",
+      completeDifferenceInventorySha256: "7f464ed89837d19aa741f6a5ca0e8cb56434e7baf34d6ad3df42676e1653c7e1",
+      observedDifferences: 101, observedGroupCounts: [37, 45, 3, 11, 5],
+      pluginSourceLimit: "Release source explains a builder call; its npm tarball/SRI was not separately verified during source review. Rule support uses the preserved projections and pinned Babel generator.",
+    }
     const cases = targetIds.map((id) => {
       const rows = fixture.solid.filter((row) => row.id === id)
       const observations = preceding.occurrences.filter((row) => row.id === id)
@@ -298,7 +345,8 @@ async function main() {
         const rawIdentifiers = parseIdentifiers(toolchain.babel, rawText, true)
         const intermediateIdentifiers = parseIdentifiers(toolchain.babel, intermediateText)
         receipt.files.push({ repositoryPath, codeAndMapByteIdentical: true, semanticTreeSha256: link.transformed.sha256,
-          semanticNodeCount: link.transformed.nodes.size, omittedMetadataOnly: true })
+          semanticNodeCount: link.transformed.nodes.size, comparison: "g09-solid-origin-projection-v2",
+          projectedTreesEqual: true, literalAstIdentityClaimed: false })
         for (const row of group) {
           try {
             const original = identifierSpan(raw, rawIdentifiers, row.gitOffset, row.seed)
@@ -330,10 +378,11 @@ async function main() {
           existingBabelEndAnchor: "not-proven", endOfBunSpan: "not-proven", tuiExecution: "not-observed" })
       }
     }
-    receipt.summary = { exactSemanticTrees: receipt.files.length, occurrences: receipt.occurrences.length,
+    receipt.summary = { equalProjectedTrees: receipt.files.length, projectionVersion: "g09-solid-origin-projection-v2",
+      literalAstIdentityClaimed: false, occurrences: receipt.occurrences.length,
       originCandidates: receipt.occurrences.filter((row) => row.status === "supplementary-origin-candidate-for-review").length,
-      originalMapEndsAdded: 0, existingCriteriaChanged: 0, tuiCasesExecuted: 0 }
-    check(receipt.summary.exactSemanticTrees === 3 && receipt.summary.occurrences === 5 && receipt.summary.originCandidates === 5,
+      originalMapEndsAdded: 0, originalExactEndCriteriaChanged: false, tuiCasesExecuted: 0 }
+    check(receipt.summary.equalProjectedTrees === 3 && receipt.summary.occurrences === 5 && receipt.summary.originCandidates === 5,
       "G09_ORIGIN_SUPPLEMENT_INCOMPLETE")
     verifyHash(await readFile(path.join(evidence, "orchestra")), pins.elf, "elf-after-origin-inspection")
     receipt.status = "supplementary-origin-evidence-ready-for-review"

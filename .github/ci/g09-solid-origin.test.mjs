@@ -10,7 +10,7 @@ const coreRequire = createRequire(require.resolve("@babel/core"))
 const fields = coreRequire("@babel/types").NODE_FIELDS
 const parse = (text) => toolchain.babel.parseSync(text, { configFile: false, babelrc: false, sourceType: "module" })
 
-test("semantic equality ignores locations and declared formatting metadata only", () => {
+test("ordinary rvalue parentheses preserve the projected structure", () => {
   const left = parse("const object = (alpha)")
   const right = parse("const object = alpha")
   expect(() => linkSemanticTrees(left, right, fields)).not.toThrow()
@@ -76,6 +76,103 @@ test("legacy shorthand metadata must agree with the compared property flag", () 
   const wrongType = parse("const object = { projectID }")
   wrongType.program.body[0].declarations[0].init.properties[0].extra.shorthand = "true"
   expect(() => semanticTree(wrongType, fields)).toThrow("G09_ORIGIN_LEGACY_SHORTHAND_DIFFER")
+})
+
+test("ordinary module kind has only the three documented value/null equivalences", () => {
+  const source = 'import { item } from "pkg"; export const value = item'
+  const left = parse(source)
+  const right = parse(source)
+  left.program.body[0].importKind = "value"
+  left.program.body[0].specifiers[0].importKind = "value"
+  left.program.body[1].exportKind = "value"
+  expect(() => linkSemanticTrees(left, right, fields)).not.toThrow()
+  for (const kind of ["type", "typeof"]) {
+    for (const specifier of [false, true]) {
+      const item = parse(source)
+      const node = specifier ? item.program.body[0].specifiers[0] : item.program.body[0]
+      node.importKind = kind
+      expect(() => linkSemanticTrees(item, parse(source), fields)).toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+    }
+  }
+  const typeExport = parse(source)
+  typeExport.program.body[1].exportKind = "type"
+  expect(() => linkSemanticTrees(typeExport, parse(source), fields)).toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+  const invalidImport = parse(source)
+  invalidImport.program.body[0].importKind = false
+  expect(() => semanticTree(invalidImport, fields)).toThrow("G09_ORIGIN_IMPORT_KIND_INVALID")
+  const invalidExport = parse(source)
+  invalidExport.program.body[1].exportKind = "typeof"
+  expect(() => semanticTree(invalidExport, fields)).toThrow("G09_ORIGIN_EXPORT_KIND_INVALID")
+})
+
+test("module normalization does not extend to other node types or fields", () => {
+  const all = parse('export * from "pkg"')
+  all.program.body[0].exportKind = "value"
+  expect(() => linkSemanticTrees(all, parse('export * from "pkg"'), fields)).toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+  const specifier = parse("const item = 1; export { item }")
+  specifier.program.body[1].specifiers[0].exportKind = "value"
+  expect(() => linkSemanticTrees(specifier, parse("const item = 1; export { item }"), fields))
+    .toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+  const named = parse("export const item = 1")
+  named.program.body[0].attributes = null
+  expect(() => linkSemanticTrees(named, parse("export const item = 1"), fields)).toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+  const wrongNode = parse("const item = 1")
+  wrongNode.program.body[0].declarations[0].importKind = "value"
+  expect(() => semanticTree(wrongNode, fields)).toThrow("G09_ORIGIN_UNKNOWN_FIELD")
+})
+
+test("only empty ImportDeclaration attributes are equivalent to null", () => {
+  const source = 'import data from "pkg"'
+  const empty = parse(source)
+  empty.program.body[0].attributes = null
+  expect(() => linkSemanticTrees(empty, parse(source), fields)).not.toThrow()
+  expect(() => linkSemanticTrees(parse(source), parse('import data from "pkg" with { type: "json" }'), fields))
+    .toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+  const invalid = parse(source)
+  invalid.program.body[0].attributes = "empty"
+  expect(() => semanticTree(invalid, fields)).toThrow("G09_ORIGIN_IMPORT_ATTRIBUTES_INVALID")
+})
+
+test("module source, aliases, and specifier order remain exact", () => {
+  for (const [left, right] of [
+    ['import { item } from "one"', 'import { item } from "two"'],
+    ['import { item as first } from "pkg"', 'import { item as second } from "pkg"'],
+    ['import { first, second } from "pkg"', 'import { second, first } from "pkg"'],
+  ]) expect(() => linkSemanticTrees(parse(left), parse(right), fields)).toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+})
+
+test("singleton template tail equivalence preserves raw/cooked and requires a boolean", () => {
+  const source = "const text = `same text`"
+  const left = parse(source)
+  left.program.body[0].declarations[0].init.quasis[0].tail = false
+  expect(() => linkSemanticTrees(left, parse(source), fields)).not.toThrow()
+  for (const field of ["raw", "cooked"]) {
+    const changed = parse(source)
+    changed.program.body[0].declarations[0].init.quasis[0].value[field] = "different text"
+    expect(() => linkSemanticTrees(changed, parse(source), fields)).toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+  }
+  for (const value of [undefined, null, "true", 1]) {
+    const invalid = parse(source)
+    invalid.program.body[0].declarations[0].init.quasis[0].tail = value
+    expect(() => semanticTree(invalid, fields)).toThrow("G09_ORIGIN_TEMPLATE_TAIL_TYPE")
+  }
+})
+
+test("interpolated, orphan, and malformed template contexts cannot borrow singleton equivalence", () => {
+  const source = "const text = `before ${value} after`"
+  for (const index of [0, 1]) {
+    const item = parse(source)
+    const quasi = item.program.body[0].declarations[0].init.quasis[index]
+    quasi.tail = !quasi.tail
+    expect(() => linkSemanticTrees(item, parse(source), fields)).toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+  }
+  const one = parse("const text = `same text`").program.body[0].declarations[0].init.quasis[0]
+  const two = parse("const text = `same text`").program.body[0].declarations[0].init.quasis[0]
+  one.tail = false
+  expect(() => linkSemanticTrees(one, two, fields)).toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+  const malformed = parse("const text = `same text`")
+  malformed.program.body[0].declarations[0].init.expressions.push(parse("value").program.body[0].expression)
+  expect(() => semanticTree(malformed, fields)).toThrow("G09_ORIGIN_TEMPLATE_ARITY_INVALID")
 })
 
 test("parenthesized assignment identifiers are outside the supported semantic projection", () => {
