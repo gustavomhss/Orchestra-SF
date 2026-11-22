@@ -4,7 +4,6 @@ import assert from "node:assert/strict"
 import { randomBytes } from "node:crypto"
 import { constants } from "node:fs"
 import { open, readFile, mkdir, writeFile } from "node:fs/promises"
-import { spawnSync } from "node:child_process"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import az02 from "../../sf/azure/identity/az02-proof.cjs"
@@ -405,26 +404,68 @@ export async function finalizeExecution(status, operations) {
   try { await operations.persist(status) } catch (error) { failures.push(error) }
   if (failures.length) throw new AggregateError(failures, "G08_ORIGINAL_FINALIZATION_FAILED")
 }
-async function command(root, name, executable, args, env, cwd = process.cwd()) {
+// Operational Bun imports stay out of the Node-only validation boundary.
+async function processRuntime() {
+  const [{ AppProcess }, { LayerNode }, { Cause, Effect, Exit, Stream }, { ChildProcess }] = await Promise.all([
+    import("@orchestra/core/process"), import("@orchestra/core/effect/layer-node"),
+    import("effect"), import("effect/unstable/process"),
+  ])
+  return { AppProcess, LayerNode, Cause, Effect, Exit, Stream, ChildProcess }
+}
+/** Stream original bytes through the admitted spawner. This grants no installed authority. */
+export async function streamPrivateCommand(handle, executable, args, env, cwd = process.cwd()) {
+  const { AppProcess, LayerNode, Cause, Effect, Exit, Stream, ChildProcess } = await processRuntime()
+  const terminal = await Effect.runPromise(Effect.scoped(Effect.provide(Effect.gen(function* () {
+    const processes = yield* AppProcess.Service
+    const child = yield* processes.spawn(ChildProcess.make(executable, args, {
+      cwd, env, extendEnv: false, stdin: "ignore", stdout: "pipe", stderr: "pipe",
+    }))
+    const [, result] = yield* Effect.all([
+      Stream.runForEach(child.all, (chunk) => Effect.tryPromise(() => handle.writeFile(chunk))),
+      // Keep draining after a terminal signal/error; a sink failure still interrupts the scope.
+      Effect.exit(child.exitCode),
+    ], { concurrency: "unbounded" })
+    return result
+  }), LayerNode.compile(AppProcess.node))))
+  if (Exit.isFailure(terminal)) throw Cause.squash(terminal.cause)
+  return terminal.value
+}
+/** Open once, finish the process/drain, then independently flush and close the private log. */
+export async function runPrivateCommand(root, name, executable, args, env, cwd = process.cwd()) {
   const handle = await open(path.join(root, name), constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600)
-  try {
-    const result = spawnSync(executable, args, { env, cwd, stdio: ["ignore", handle.fd, handle.fd] })
-    return { exit: result.status ?? 125, signal: result.signal ?? (result.error ? "SPAWN_ERROR" : null) }
-  } finally { await finishCommandOutput(handle) }
+  const failures = []
+  let exit = 125
+  try { exit = await streamPrivateCommand(handle, executable, args, env, cwd) }
+  catch (error) { failures.push(error) }
+  try { await finishCommandOutput(handle) } catch (error) { failures.push(error) }
+  if (failures.length) throw new AggregateError(failures, "G08_PRIVATE_COMMAND_FAILED")
+  return { exit, signal: null }
+}
+async function observeCheckoutGit(args) {
+  const { AppProcess, LayerNode, Effect, ChildProcess } = await processRuntime()
+  const result = await Effect.runPromise(Effect.scoped(Effect.provide(Effect.gen(function* () {
+    const processes = yield* AppProcess.Service
+    return yield* processes.run(ChildProcess.make("git", args, {
+      cwd: process.cwd(), env: process.env, extendEnv: false, stdin: "ignore", stdout: "pipe", stderr: "pipe",
+    }), { maxOutputBytes: 1_048_576, maxErrorBytes: 1_048_576 })
+  }), LayerNode.compile(AppProcess.node))))
+  // Preserve the previous synchronous Git capture limit; truncated observations never qualify.
+  return { status: result.exitCode, signal: null, stdout: result.stdout.toString("utf8"),
+    error: result.stdoutTruncated || result.stderrTruncated }
 }
 async function runInstalled(kind) {
   assert(installedKinds.includes(kind), "G08_EXACT_GROUP_REQUIRED")
   const root = process.env.SF_G08_PRIVATE_ROOT
   await privateRoot(root)
-  const git = (args) => {
-    const result = spawnSync("git", args, { encoding: "utf8" })
-    assert(result.status === 0 && !result.signal, "G08_CHECKOUT_OBSERVATION_FAILED")
+  const git = async (args) => {
+    const result = await observeCheckoutGit(args)
+    assert(result.status === 0 && !result.signal && !result.error, "G08_CHECKOUT_OBSERVATION_FAILED")
     return result.stdout.trim()
   }
-  process.env.SF_G08_CANDIDATE_SHA = git(["rev-parse", "HEAD"])
-  process.env.SF_G08_CANDIDATE_TREE = git(["rev-parse", "HEAD^{tree}"])
+  process.env.SF_G08_CANDIDATE_SHA = await git(["rev-parse", "HEAD"])
+  process.env.SF_G08_CANDIDATE_TREE = await git(["rev-parse", "HEAD^{tree}"])
   assert(process.env.SF_G08_CANDIDATE_SHA === process.env.GITHUB_SHA &&
-    git(["status", "--porcelain", "--untracked-files=no"]) === "", "G08_EXACT_CLEAN_CHECKOUT_REQUIRED")
+    await git(["status", "--porcelain", "--untracked-files=no"]) === "", "G08_EXACT_CLEAN_CHECKOUT_REQUIRED")
   const plan = await readPlan(root), env = candidateEnvironment(plan)
   const planRaw = await privateText(root, "plan.json", 65536)
   const packageRaw = await privateText(root, "package-receipt.json")
@@ -440,7 +481,7 @@ async function runInstalled(kind) {
     startedAt: new Date().toISOString(), finishedAt: "", commandExit: 125, registrationExit: 0,
     hostBeforeExit: 125, hostAfterExit: 125, trackedDiffExit: 125, stagedDiffExit: 125, signal: null }
   const capture = async (name, executable, args, cwd) => {
-    const result = await command(root, name, executable, args, env, cwd)
+    const result = await runPrivateCommand(root, name, executable, args, env, cwd)
     if (result.signal) status.signal = result.signal
     return result.exit
   }
@@ -525,11 +566,11 @@ export function verifyAggregateCheckout(candidate, observations) {
   return { candidate: { sha: candidate.sha, tree: candidate.tree }, trackedClean: true }
 }
 /** Read-only Git observations. The real aggregation never accepts an injected command adapter. */
-export function observeAggregateCheckout(candidate) {
+export async function observeAggregateCheckout(candidate) {
   const observations = {
-    sha: spawnSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }),
-    tree: spawnSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }),
-    tracked: spawnSync("git", ["status", "--porcelain", "--untracked-files=no"], { encoding: "utf8" }),
+    sha: await observeCheckoutGit(["rev-parse", "HEAD"]),
+    tree: await observeCheckoutGit(["rev-parse", "HEAD^{tree}"]),
+    tracked: await observeCheckoutGit(["status", "--porcelain", "--untracked-files=no"]),
   }
   return { ...verifyAggregateCheckout(candidate, observations), observedAt: new Date().toISOString() }
 }
@@ -542,7 +583,7 @@ async function aggregateInstalled(root) {
   assert(input.schema === "sf-g08-aggregate-input-v1" && Array.isArray(input.proofs), "G08_AGGREGATE_INPUT_REQUIRED")
   same(input.proofs.map((item) => item.kind), installedKinds, "G08_EXACT_ALL_GROUPS_REQUIRED")
   assert(input.candidate?.sha === process.env.GITHUB_SHA, "G08_AGGREGATE_ORIGINAL_CHECKOUT_REQUIRED")
-  const checkoutBefore = observeAggregateCheckout(input.candidate)
+  const checkoutBefore = await observeAggregateCheckout(input.candidate)
   const items = []
   const { verifyOriginalProducer, verifyDatasetCleanupAuthority, verifyAggregateExecution } = await import("./g08-proof-provenance.mjs")
   for (const proof of input.proofs) {
@@ -565,7 +606,7 @@ async function aggregateInstalled(root) {
     completedAt, reference: input.cleanup.reference })
   const admission = await verifyAggregateExecution({ plan: items[0].plan, planRaw: items[0].planRaw,
     archiveSha256: items[0].packageReceipt.archive.sha256 })
-  const checkoutAfter = observeAggregateCheckout(input.candidate)
+  const checkoutAfter = await observeAggregateCheckout(input.candidate)
   const receipt = { schema: "sf-g08-installed-complete-v1", status: "INSTALLED_OBLIGATIONS_AND_PROVENANCE_VERIFIED",
     candidate: input.candidate, archive: items[0].receipt.archive, packageReceiptSha256: items[0].plan.packageReceiptSha256,
     reservationSha256: items[0].receipt.bindings.reservationSha256, vmIdSha256: items[0].receipt.bindings.vmIdSha256,
