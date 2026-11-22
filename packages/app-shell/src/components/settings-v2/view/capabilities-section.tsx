@@ -7,8 +7,9 @@ import { ServerConnection } from "@/context/server"
 import { useServerSync } from "@/context/server-sync"
 import { useTabs } from "@/context/tabs"
 import { agentRoster } from "@/orchestra/chapters/agents-roster"
-import { MxBadge, MxToggle } from "@/orchestra/chapters/kit"
+import { MxBadge } from "@/orchestra/chapters/kit"
 import { showToast } from "@/utils/toast"
+import { SettingsMcpAction } from "./settings-mcp-action"
 import { SettingsSec } from "./settings-sec"
 
 // Marks copied from the mock's capability icons.
@@ -127,7 +128,7 @@ const mcpStatus = {
   pending: "orchestra.settings.mcp.status.pending",
 } as const
 
-// Server editing and tool inspection live on the MCP page; Settings lists servers and toggles them.
+// Server editing and tool inspection live on the MCP page; Settings lists servers and offers their connection actions.
 export function McpSection(props: { directory: string }) {
   const language = useLanguage()
   const serverSync = useServerSync()
@@ -204,11 +205,13 @@ export function McpSection(props: { directory: string }) {
                       {language.t("orchestra.settings.mcp.tools")}
                     </button>
                   </div>
-                  <MxToggle
-                    checked={status.status === "connected"}
-                    label={language.t("orchestra.settings.mcp.enable", { name })}
-                    disabled={!store().mcp_ready || status.status === "pending" || !!pending[name]}
-                    onChange={() => toggle(name)}
+                  <SettingsMcpAction
+                    status={status.status}
+                    busy={!store().mcp_ready || !!pending[name]}
+                    authenticateLabel={language.t("orchestra.mcp.authenticate")}
+                    retryLabel={language.t("orchestra.mcp.tryAgain")}
+                    toggleLabel={language.t("orchestra.settings.mcp.enable", { name })}
+                    onAction={() => toggle(name)}
                   />
                 </footer>
               </article>
