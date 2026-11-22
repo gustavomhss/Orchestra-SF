@@ -5,6 +5,7 @@ import { basename, join } from "node:path"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import { initializeAbsentSfProductState, inspectSfProductRestoreFrontier } from "../product/host-binding/state-provider.ts"
 import type { Snapshot } from "../runtime/contract.ts"
+import type { BlobTransaction } from "../runtime/assets.ts"
 import { BackupAuthorityError, createLocalBackups } from "../runtime/local-backups.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { microsoftHttpFixture } from "./fixture/microsoft-http.ts"
@@ -34,7 +35,7 @@ async function seed(f: Fixture, team = f.teamA) {
   const store = await openLocalStore(teamDirectory(f, team))
   try {
     await initializeAbsentSfProductState(store, () => "checkpoint-" + team)
-    await store.transaction("dashboard", async (snapshot, blobs) => {
+    await store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
       const key = "fixture-attachment-" + team
       const bytes = new TextEncoder().encode("synthetic isolated attachment " + team)
       snapshot.data.marker = team
