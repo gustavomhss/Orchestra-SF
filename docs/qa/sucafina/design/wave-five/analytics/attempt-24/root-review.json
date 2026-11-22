@@ -1,0 +1,422 @@
+{
+  "schema": "sf-root-archive-review-v1",
+  "reviewer": "/root",
+  "attempt": "Portfolio27",
+  "recordedAt": "2026-11-22 16:49:08 UTC",
+  "run": 45042950403,
+  "job": 137271221351,
+  "snapshot": "e3062c97b3b32bcf28a1005cb6a0fd0f6fa6d951",
+  "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+  "source": "Completed original test-job logs and GitHub QA files at 85b8ca151a3f373e954526b30ef5263741d8d45f",
+  "eventsExact": {
+    "profile": true,
+    "nativeEvents": true,
+    "originalPayloadTimestampsAndSourceLines": true
+  },
+  "counts": {
+    "profile": 271,
+    "nativeEvents": 81,
+    "previewChunks": 33,
+    "totalStructuredEmissionLines": 385
+  },
+  "imageChunks": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "sha": "e116c37aac408d38d81f7b44776d24472013a393",
+      "complete": true,
+      "parts": 5,
+      "bytes": 80599,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": false
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "sha": "da384136842e949503ceeea7c1d54eb84a20c591",
+      "complete": true,
+      "parts": 5,
+      "bytes": 85846,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": false
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "sha": "3398e72e6d1b3d12f5a64b4e721a510537423128",
+      "complete": true,
+      "parts": 2,
+      "bytes": 28650,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": false
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "sha": "c74f5d7532886d175e433ecf23053d35f7514c32",
+      "complete": true,
+      "parts": 2,
+      "bytes": 27453,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": false
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "sha": "a0c65ec44fbb532d94a15a3ff6cf411c17cca5e7",
+      "complete": true,
+      "parts": 6,
+      "bytes": 97767,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": false
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "sha": "da8b9a2d3f0f4adfcff8ce804a38c8641b2381eb",
+      "complete": true,
+      "parts": 6,
+      "bytes": 106137,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": true
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "sha": "82c74c7716c032b4b4a5170472c192d511f252e2",
+      "complete": true,
+      "parts": 7,
+      "bytes": 109963,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": true
+    }
+  ],
+  "totalJpegBytes": 536415,
+  "rootActuallyViewed": [
+    "da8b9a2d3f0f4adfcff8ce804a38c8641b2381eb",
+    "82c74c7716c032b4b4a5170472c192d511f252e2"
+  ],
+  "workerReview": "All seven original images were separately inspected by /root/root_cost; root viewed only the two named frames.",
+  "profileReview": {
+    "pass": true,
+    "records": 271,
+    "started": 1,
+    "buckets": 265,
+    "snapshots": 5,
+    "keysPerSnapshot": 53,
+    "lastMs": 50001,
+    "finalObserved": false,
+    "audits": [
+      {
+        "snapshot": 1,
+        "elapsedMs": 10000,
+        "keys": 53,
+        "complete": true,
+        "balanced": true,
+        "pendingExact": true,
+        "monotone": true,
+        "lossless": true
+      },
+      {
+        "snapshot": 2,
+        "elapsedMs": 20000,
+        "keys": 53,
+        "complete": true,
+        "balanced": true,
+        "pendingExact": true,
+        "monotone": true,
+        "lossless": true
+      },
+      {
+        "snapshot": 3,
+        "elapsedMs": 30000,
+        "keys": 53,
+        "complete": true,
+        "balanced": true,
+        "pendingExact": true,
+        "monotone": true,
+        "lossless": true
+      },
+      {
+        "snapshot": 4,
+        "elapsedMs": 40000,
+        "keys": 53,
+        "complete": true,
+        "balanced": true,
+        "pendingExact": true,
+        "monotone": true,
+        "lossless": true
+      },
+      {
+        "snapshot": 5,
+        "elapsedMs": 50001,
+        "keys": 53,
+        "complete": true,
+        "balanced": true,
+        "pendingExact": true,
+        "monotone": true,
+        "lossless": true
+      }
+    ],
+    "declaredDigestLabels": 21,
+    "emittedDigestLabels": 18,
+    "absentDigestLabels": [
+      "bcs.capture.snapshots",
+      "bcs.capture.extras",
+      "bcs.capture.captures"
+    ],
+    "absentSpans": [
+      "bcs.capture.stable"
+    ],
+    "digestPopulations": [
+      {
+        "surface": "unlabelled",
+        "calls": 82289,
+        "settled": 82289,
+        "pending": 0,
+        "inclusiveMs": 1937
+      },
+      {
+        "surface": "principal.direct",
+        "calls": 153763,
+        "settled": 153763,
+        "pending": 0,
+        "inclusiveMs": 1684
+      },
+      {
+        "surface": "source.scope-validation",
+        "calls": 99496,
+        "settled": 99496,
+        "pending": 0,
+        "inclusiveMs": 499
+      },
+      {
+        "surface": "source.other",
+        "calls": 60038,
+        "settled": 60038,
+        "pending": 0,
+        "inclusiveMs": 2547
+      },
+      {
+        "surface": "canonical.evidence-ref",
+        "calls": 11797,
+        "settled": 11797,
+        "pending": 0,
+        "inclusiveMs": 108
+      },
+      {
+        "surface": "planner.source.role-map",
+        "calls": 43000,
+        "settled": 43000,
+        "pending": 0,
+        "inclusiveMs": 331
+      },
+      {
+        "surface": "planner.source.selector",
+        "calls": 42960,
+        "settled": 42960,
+        "pending": 0,
+        "inclusiveMs": 98
+      },
+      {
+        "surface": "planner.source.projection",
+        "calls": 5390,
+        "settled": 5390,
+        "pending": 0,
+        "inclusiveMs": 221
+      },
+      {
+        "surface": "planner.source.envelope",
+        "calls": 10740,
+        "settled": 10740,
+        "pending": 0,
+        "inclusiveMs": 443
+      },
+      {
+        "surface": "planner.evidence.projection",
+        "calls": 6858,
+        "settled": 6858,
+        "pending": 0,
+        "inclusiveMs": 267
+      },
+      {
+        "surface": "bcs.planner.projection-period",
+        "calls": 1962,
+        "settled": 1962,
+        "pending": 0,
+        "inclusiveMs": 3
+      },
+      {
+        "surface": "bcs.planner.expected-period",
+        "calls": 1962,
+        "settled": 1962,
+        "pending": 0,
+        "inclusiveMs": 3
+      },
+      {
+        "surface": "bcs.planner.source-ref",
+        "calls": 308034,
+        "settled": 308034,
+        "pending": 0,
+        "inclusiveMs": 1912
+      },
+      {
+        "surface": "bcs.planner.expected-ref",
+        "calls": 308034,
+        "settled": 308034,
+        "pending": 0,
+        "inclusiveMs": 2019
+      },
+      {
+        "surface": "bcs.capture.sources",
+        "calls": 979,
+        "settled": 979,
+        "pending": 0,
+        "inclusiveMs": 5182
+      },
+      {
+        "surface": "source.run-fence",
+        "calls": 291,
+        "settled": 291,
+        "pending": 0,
+        "inclusiveMs": 120
+      },
+      {
+        "surface": "finance.other",
+        "calls": 705,
+        "settled": 705,
+        "pending": 0,
+        "inclusiveMs": 356
+      },
+      {
+        "surface": "finance.current",
+        "calls": 748,
+        "settled": 748,
+        "pending": 0,
+        "inclusiveMs": 2
+      }
+    ],
+    "digestTotal": {
+      "calls": 1139046,
+      "inclusiveMs": 17732
+    },
+    "canonicalDirect": {
+      "request": 1,
+      "phase": "bucket",
+      "snapshot": 5,
+      "snapshotPhase": "periodic",
+      "elapsedMs": 50001,
+      "trigger": "settled-span",
+      "dueMs": 50000,
+      "name": "canonical.direct",
+      "origin": "none",
+      "surface": "none",
+      "calls": 1917,
+      "settled": 1917,
+      "pending": 0,
+      "inclusiveMs": 489
+    },
+    "pending": [
+      {
+        "request": 1,
+        "phase": "bucket",
+        "snapshot": 5,
+        "snapshotPhase": "periodic",
+        "elapsedMs": 50001,
+        "trigger": "settled-span",
+        "dueMs": 50000,
+        "name": "http.preview",
+        "origin": "none",
+        "surface": "none",
+        "calls": 1,
+        "settled": 0,
+        "pending": 1,
+        "inclusiveMs": 0
+      },
+      {
+        "request": 1,
+        "phase": "bucket",
+        "snapshot": 5,
+        "snapshotPhase": "periodic",
+        "elapsedMs": 50001,
+        "trigger": "settled-span",
+        "dueMs": 50000,
+        "name": "authority.principal",
+        "origin": "none",
+        "surface": "none",
+        "calls": 51255,
+        "settled": 51254,
+        "pending": 1,
+        "inclusiveMs": 10884
+      },
+      {
+        "request": 1,
+        "phase": "bucket",
+        "snapshot": 5,
+        "snapshotPhase": "periodic",
+        "elapsedMs": 50001,
+        "trigger": "settled-span",
+        "dueMs": 50000,
+        "name": "state.read.total",
+        "origin": "none",
+        "surface": "none",
+        "calls": 1548,
+        "settled": 1547,
+        "pending": 1,
+        "inclusiveMs": 4469
+      }
+    ],
+    "bcsPlanner": {
+      "referenceLoop": {
+        "calls": 616068,
+        "inclusiveMs": 3931
+      },
+      "periodPair": {
+        "calls": 3924,
+        "inclusiveMs": 6
+      },
+      "allFourSites": {
+        "calls": 619992,
+        "inclusiveMs": 3937
+      }
+    },
+    "contextSources": {
+      "calls": 979,
+      "inclusiveMs": 5182
+    },
+    "principalPartialSample": {
+      "calls": 51255,
+      "settled": 51254,
+      "pending": 1,
+      "directHashes": 153763,
+      "interpretation": "The aggregate direct-hash count equals 3 times settled principal entries plus 1. It must not be compared with 3 times all started entries as if each had completed; aggregates do not establish per-object joins."
+    }
+  },
+  "qualification": "FAILED original 60000 ms preview response wait; diagnostic prefix only; no qualification or global count increment.",
+  "visualFindings": [
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "findings": [
+        "Case version 6, selected candidate version 1 and selected constraint version 2; exploration limit 4 has visible focus outline.",
+        "Preview action is available before submission; history has no recorded results."
+      ],
+      "scope": "configuration only"
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "findings": [
+        "Preview action remains Running and form controls are dimmed.",
+        "Preview is not yet available with placeholders; history has no recorded results."
+      ],
+      "scope": "pending preview at timeout; no completed producer response inferred"
+    }
+  ],
+  "limitations": [
+    "Inclusive durations overlap across bucket families and are not a total CPU or wall-time decomposition.",
+    "The 21 declared digest labels produce 18 observed populations in this prefix. Missing labels and bcs.capture.stable are absent observations, not complete-request measurements of zero.",
+    "Direct-caller labels do not describe complete ancestry; 82289 unlabelled digest calls / 1937 inclusive ms remain unattributed at the last checkpoint.",
+    "The context-source population measures 979 calls / 5182 inclusive ms; these measurements alone establish neither a qualifying product change nor saved time.",
+    "The three pending entries can be nested. There is no final snapshot or evidence of complete backend unwind.",
+    "Additional literal-label checks and the stable span add diagnostic overhead. Cross-run differences do not establish causal performance improvement.",
+    "The native journey did not reach completed preview, UI43 result or UI44 sensitivity readbacks.",
+    "This internal evidence review is not user visual acceptance."
+  ],
+  "preparatoryHistory": {
+    "sequence1": "HTTP 200/status ok at line 1195; 420 ms",
+    "sequence2": "HTTP 200/status ok at line 1231; 810 ms",
+    "preview": "Sequence 3 POST at line 1229, 2026-11-22T16:24:55.4113636Z; no corresponding response"
+  }
+}
