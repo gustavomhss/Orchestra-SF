@@ -1,0 +1,298 @@
+{
+  "schema": "sucafina-canonical-clones-guard-receipt-v1",
+  "attempt": "guard-01",
+  "classification": "original-guard-only-pass",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "product": "9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0",
+    "productTree": "5537fb6a8a9f4079ed981fa74727cfbf3d76812b",
+    "qaHead": "2b8cf6e0783c28eb293176657a2433ad35164485",
+    "qaTree": "56330b69916ef12becfd9c29f63a3bc489ddb256",
+    "snapshot": "bf9cdc1527db1b528aba4ebcfe10928bbac17421",
+    "snapshotTree": "de3544deb8dca067bd1e9824d76b690f9bce4d06",
+    "snapshotParent": "2b8cf6e0783c28eb293176657a2433ad35164485",
+    "guardBase": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+    "request": {
+      "path": ".ci-run.json",
+      "sha": "a9207a036327372ccfcc28b222058cb4fa2cbe51",
+      "value": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "360000",
+          "-t",
+          "guardrails"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      }
+    },
+    "wrapper": {
+      "path": "apps/cli/test/sucafina-design-verification.test.ts",
+      "sha": "f28bdc1b08fe74eeb7937c1b1fd2fe948677c413",
+      "unchangedOriginal": true,
+      "appendedGates": 0
+    },
+    "snapshotDelta": [
+      "add .ci-run.json",
+      "add apps/cli/test/sucafina-design-verification.test.ts"
+    ],
+    "workflow": {
+      "path": ".github/workflows/test-ci.yml",
+      "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "unchanged": true
+    },
+    "coveredQaFiles": [
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/README.md",
+        "sha": "ddcb372bce8e3a4283659c99c2d54bf83feb3053"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/README.md",
+        "sha": "ffe2238e3a089bc9870fe09174b5e2ff79ae21c8"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/gallery/FAILED-native-wave-three-test-data.jpg",
+        "sha": "4b5108bfe4dc1bcbc52f8a6c74a128558f4ad524"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/gallery/UI42-configure-focused-candidate-test-data.jpg",
+        "sha": "c6b094afd9c7b3af11b5b6602606515555537860"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/gallery/UI42-empty-authorized-case-test-data.jpg",
+        "sha": "f09a4fc19d8cfcc01e4d7d40e3614ff1f0db11ba"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/gallery/UI42-list-dark-390-test-data.jpg",
+        "sha": "4e1757ddfce7a7191d3c78969fbb9e59b044ba6a"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/gallery/UI42-list-dark-desktop-test-data.jpg",
+        "sha": "d9c40541d6081c9238d8b37d1d3d32c01aeb4938"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/gallery/UI42-list-light-320-test-data.jpg",
+        "sha": "0cc553ea638a1fed97143baa14d2d84e13553884"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/gallery/UI42-list-light-desktop-test-data.jpg",
+        "sha": "8fa6bb77414bdfeae0bff108dda8d0caf7c58996"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/manifest.json",
+        "sha": "0b0d542024ebc43d1c058cd717a6215affa973ad"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/receipt.json",
+        "sha": "ff770ae21e833ed16bd900348677ac36ccc855bd"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/root-review.json",
+        "sha": "7e7fb17b8403004f99c587af9618babc975d202e"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/source-events.json",
+        "sha": "f41af557edcae06abd7dc50ee626199927ae2fea"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/root-review.json",
+        "sha": "9016350c4a9ee71a8da8fd77d4914eb97b823c94"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/source-review.json",
+        "sha": "3bdcab11c940a65a4a8ccf8a127d0065e3e35518"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/technical-01/receipt.json",
+        "sha": "0bcde94195730ab13a8ed85dc7ec2f1ea12186c0"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/technical-01/verification.json",
+        "sha": "231d1c6688dd0389dcf82a19c15e0aef3fc5a847"
+      }
+    ],
+    "productDeltaSinceTechnical01": {
+      "from": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+      "to": "9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+      "sha": "6e816722f84445545e66b91c55eb690d00cb6a55",
+      "change": "Explanatory comment inside the optional origin-metadata catch; no executable expression or deadline changed."
+    }
+  },
+  "actions": {
+    "run": 45052663805,
+    "runAttempt": 1,
+    "event": "push",
+    "branch": "ci-run-sf5cloneguard",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-22T18:01:12Z",
+    "updatedAt": "2026-11-22T18:02:25Z",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45052663805",
+    "runner": "ubuntu-24.04",
+    "environment": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "jobs": [
+      {
+        "id": 137300997312,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-22T18:01:14Z",
+        "completedAt": "2026-11-22T18:02:19Z",
+        "selectedSteps": [
+          {
+            "number": 21,
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T18:02:13Z",
+            "completedAt": "2026-11-22T18:02:17Z"
+          },
+          {
+            "number": 23,
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T18:02:17Z",
+            "completedAt": "2026-11-22T18:02:17Z"
+          }
+        ]
+      },
+      {
+        "id": 137301315429,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-22T18:02:21Z",
+        "completedAt": "2026-11-22T18:02:25Z",
+        "selectedSteps": [
+          {
+            "number": 2,
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T18:02:22Z",
+            "completedAt": "2026-11-22T18:02:23Z"
+          }
+        ]
+      }
+    ],
+    "artifacts": {
+      "query": "GET /repos/gustavomhss/Orchestra-SF/actions/runs/45052663805/artifacts",
+      "items": []
+    },
+    "cleanup": {
+      "job": 137301315429,
+      "conclusion": "success",
+      "deleteSnapshotBranchStep": "success",
+      "remoteRefReadbackPerformed": false
+    },
+    "newExecutionRequestedByThisArchive": false,
+    "rerun": false
+  },
+  "budgetsMs": {
+    "requestBunTimeout": 360000,
+    "guardCommand": 180000,
+    "guardGate": 300000,
+    "fetchPinnedBase": 60000,
+    "resolvePinnedBase": 30000,
+    "originalBudgetsChanged": false
+  },
+  "results": {
+    "selectedGates": 1,
+    "wrapper": {
+      "passed": 1,
+      "failed": 0,
+      "filtered": 18,
+      "expectCalls": 5,
+      "files": 1,
+      "durationMs": 3480,
+      "gateDurationMs": 3222.05
+    },
+    "guard": {
+      "rules": 78,
+      "files": 1046,
+      "findings": 37,
+      "warningsByRule": {
+        "test-timeout-raised": 36,
+        "test-globalthis": 1
+      },
+      "errors": [],
+      "approved": [],
+      "bootstrap": false,
+      "touchesGuards": false
+    },
+    "omni": {
+      "status": "pass",
+      "declaredTests": 1,
+      "spawns": 3,
+      "delegated": 0,
+      "controlValueOmitted": true
+    },
+    "warningComparison": {
+      "priorRun": 45048665481,
+      "priorWarnings": 38,
+      "currentWarnings": 37,
+      "allCurrentFindingsMatchPriorExactly": true,
+      "removedRule": "js-empty-catch",
+      "addedFindings": 0
+    }
+  },
+  "evidence": {
+    "source": "GitHub MCP final completed-job logs and metadata",
+    "testJob": 137300997312,
+    "testLogCharacters": 79068,
+    "testLogSplitLines": 792,
+    "cleanupJob": 137301315429,
+    "cleanupLogCharacters": 2286,
+    "sourceLines": "1-based in the complete decoded test-job log; original payloads exclude only the GitHub timestamp prefix.",
+    "verification": "verification.json",
+    "rawLogsCommitted": false,
+    "controlValueCommitted": false
+  },
+  "qualification": {
+    "guardOnly": true,
+    "technicalSuitesReplayed": false,
+    "typechecksReplayed": false,
+    "installedUiJourneyExecuted": false,
+    "visualQualification": false,
+    "ui42": "not qualified by this run",
+    "ui43": "not qualified by this run",
+    "ui44": "not qualified by this run",
+    "priorTechnicalResultScope": {
+      "run": 45048665481,
+      "product": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+      "snapshot": "c18b97d8a316992b95abcbb57ef9b6c6754b1518",
+      "unchangedByThisReceipt": true
+    },
+    "causalPerformanceGainEstablished": false,
+    "globalCountChanges": false,
+    "futureProductRevisionCovered": false,
+    "postRunEvidenceFilesNotCoveredByThisGuard": [
+      "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/guard-01/receipt.json",
+      "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/guard-01/verification.json"
+    ]
+  },
+  "archive": {
+    "qaOnly": true,
+    "baseHead": "2b8cf6e0783c28eb293176657a2433ad35164485",
+    "baseTree": "56330b69916ef12becfd9c29f63a3bc489ddb256",
+    "paths": [
+      "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/guard-01/receipt.json",
+      "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/guard-01/verification.json"
+    ],
+    "runtimeOrTestChanges": false,
+    "commitCreated": false,
+    "refUpdated": false
+  }
+}

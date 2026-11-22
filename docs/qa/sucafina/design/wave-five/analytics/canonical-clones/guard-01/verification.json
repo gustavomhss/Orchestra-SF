@@ -1,0 +1,664 @@
+{
+  "schema": "sucafina-canonical-clones-guard-verification-v1",
+  "attempt": "guard-01",
+  "testedProduct": "9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0",
+  "testedQaHead": "2b8cf6e0783c28eb293176657a2433ad35164485",
+  "testedSnapshot": "bf9cdc1527db1b528aba4ebcfe10928bbac17421",
+  "run": 45052663805,
+  "evidenceSource": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "job": 137300997312,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45052663805/job/137300997312",
+    "finalJobStatus": "completed",
+    "finalJobConclusion": "success",
+    "lineConvention": "1-based; timestamp and originalPayload are copied from the final decoded log.",
+    "rawLogStored": false,
+    "controlValueStored": false
+  },
+  "bun": {
+    "sourceLine": 740,
+    "timestamp": "2026-11-22T18:02:13.5949172Z",
+    "originalPayload": "bun test v1.3.14 (0d9b296a)"
+  },
+  "identity": {
+    "sourceLine": 743,
+    "timestamp": "2026-11-22T18:02:13.8671011Z",
+    "originalPayload": "{\"verification\":\"sf-design-wave-five\",\"candidate\":\"bf9cdc1527db1b528aba4ebcfe10928bbac17421\",\"run\":\"45052663805\",\"guardBase\":\"d3ccea42b5f8409c8d6c68e4909f7b868b50322c\"}",
+    "payload": {
+      "verification": "sf-design-wave-five",
+      "candidate": "bf9cdc1527db1b528aba4ebcfe10928bbac17421",
+      "run": "45052663805",
+      "guardBase": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c"
+    }
+  },
+  "guardSetupCommands": [
+    {
+      "sourceLine": 744,
+      "timestamp": "2026-11-22T18:02:14.2466961Z",
+      "originalPayload": "{\"gate\":\"fetch pinned guard base\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--depth=1\",\"origin\",\"d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev\"],\"cwd\":\".\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "payload": {
+        "gate": "fetch pinned guard base",
+        "command": [
+          "git",
+          "fetch",
+          "--no-tags",
+          "--depth=1",
+          "origin",
+          "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "sourceLine": 748,
+      "timestamp": "2026-11-22T18:02:14.2497041Z",
+      "originalPayload": "{\"gate\":\"resolve pinned guard base\",\"command\":[\"git\",\"rev-parse\",\"--verify\",\"refs/remotes/origin/dev^{commit}\"],\"cwd\":\".\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "payload": {
+        "gate": "resolve pinned guard base",
+        "command": [
+          "git",
+          "rev-parse",
+          "--verify",
+          "refs/remotes/origin/dev^{commit}"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    }
+  ],
+  "resolvedGuardBase": {
+    "sourceLine": 749,
+    "timestamp": "2026-11-22T18:02:14.2497834Z",
+    "originalPayload": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c"
+  },
+  "guardCommand": {
+    "sourceLine": 751,
+    "timestamp": "2026-11-22T18:02:17.0749435Z",
+    "originalPayload": "{\"gate\":\"guardrails\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"check:guards\",\"--base\",\"origin/dev\",\"--json\"],\"cwd\":\".\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "payload": {
+      "gate": "guardrails",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  },
+  "guardReport": {
+    "sourceLine": 752,
+    "timestamp": "2026-11-22T18:02:17.0801974Z",
+    "originalPayload": "{\"base\":\"d3ccea42b5f8409c8d6c68e4909f7b868b50322c\",\"bootstrap\":false,\"rules\":78,\"files\":1046,\"findings\":[{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":13,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  analyticsTest.setTimeout(780_000)\",\"match\":[16,34]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":14,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":72,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-portfolio-preview\\\"), { timeout: 60_000 })\",\"match\":[124,143]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":89,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const repeatedPreview = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-portfolio-preview\\\"), { timeout: 60_000 })\",\"match\":[124,143]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":98,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const recordedResponse = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-portfolio-evaluate\\\"), { timeout: 60_000 })\",\"match\":[126,145]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":156,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  }, { timeout: 60_000 }).then(async (response) => ({ response, body: object(await response.json()) }))\",\"match\":[5,24]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":203,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-sensitivity-evaluate\\\"), { timeout: 120_000 })\",\"match\":[129,149]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":438,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const response = page.waitForResponse((entry) => new URL(entry.url()).searchParams.get(\\\"sf\\\") === \\\"bi-options\\\", { timeout: 60_000 })\",\"match\":[113,132]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":444,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  analyticsTest.setTimeout(660_000)\",\"match\":[16,34]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":445,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":471,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const financialResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\\\"sf\\\") === \\\"bi-data\\\", { timeout: 60_000 })\",\"match\":[125,144]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":486,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const readData = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\\\"sf\\\") === \\\"bi-data\\\", { timeout: 60_000 })\",\"match\":[116,135]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":527,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"    const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\\\"sf\\\") === \\\"bi-source\\\", { timeout: 60_000 })\",\"match\":[126,145]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":613,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(\",\"match\":[5,24]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":663,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(\",\"match\":[5,24]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":20,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  collabTest.setTimeout(900_000)\",\"match\":[13,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":21,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":103,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      \\\"/api/ui/pages/CAP18?\\\" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })\",\"match\":[109,128]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":142,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      expect(surface).toHaveAttribute(\\\"data-sf-phase\\\", \\\"reviewing\\\", { timeout: 90_000 }),\",\"match\":[68,87]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":263,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  waveFourTest.setTimeout(600_000)\",\"match\":[15,33]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":264,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":66,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  }, { timeout: 40_000 }).then(async (response) => {\",\"match\":[5,24]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":79,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      const reread = await page.request.fetch(response.request(), { timeout: 40_000 })\",\"match\":[66,85]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":101,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(root.locator(\\\".sf-state-panel\\\").first()).toHaveAttribute(\\\"data-sf-state\\\", selected.state, { timeout: 40_000 })\",\"match\":[105,124]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":113,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"    await expect(root.locator(\\\".sf-state-panel\\\").first()).toHaveAttribute(\\\"data-sf-state\\\", \\\"ready\\\", { timeout: 40_000 })\",\"match\":[100,119]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":124,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(preview).toBeVisible({ timeout: 40_000 })\",\"match\":[36,55]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":128,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(confirmed).toBeVisible({ timeout: 40_000 })\",\"match\":[38,57]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":135,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  waveFourTest.setTimeout(420_000)\",\"match\":[15,33]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":136,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(15_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":153,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(initialSource).not.toHaveAttribute(\\\"data-sf-state\\\", \\\"loading\\\", { timeout: 40_000 })\",\"match\":[78,97]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":218,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  waveFourTest.setTimeout(720_000)\",\"match\":[15,33]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":219,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(15_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":237,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(page.locator(\\\"[data-sf-agenda-preview]\\\")).toBeVisible({ timeout: 40_000 })\",\"match\":[69,88]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":326,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"        await expect(page.locator(\\\"[data-sf-comparison-compatibility]\\\")).toHaveAttribute(\\\"data-sf-comparison-compatibility\\\", \\\"compatible\\\", { timeout: 40_000 })\",\"match\":[139,158]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":405,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      await expect(page.locator(\\\"[data-sf-comparison-compatibility]\\\")).toBeVisible({ timeout: 40_000 })\",\"match\":[83,102]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":437,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"        await expect(localized.locator(\\\"[data-sf-comparison-compatibility]\\\")).toBeVisible({ timeout: 40_000 })\",\"match\":[90,109]},{\"rule\":\"test-globalthis\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/g08/landing-contract.test.ts\",\"line\":90,\"message\":\"Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.\",\"excerpt\":\"  const transport: typeof globalThis.fetch = Object.assign((\",\"match\":[26,45]}],\"errors\":[],\"approved\":[],\"touchesGuards\":false}",
+    "payload": {
+      "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+      "bootstrap": false,
+      "rules": 78,
+      "files": 1046,
+      "findings": [
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 13,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  analyticsTest.setTimeout(780_000)",
+          "match": [
+            16,
+            34
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 14,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 72,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+          "match": [
+            124,
+            143
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 89,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const repeatedPreview = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+          "match": [
+            124,
+            143
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 98,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const recordedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-evaluate\"), { timeout: 60_000 })",
+          "match": [
+            126,
+            145
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 156,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 60_000 }).then(async (response) => ({ response, body: object(await response.json()) }))",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 203,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-sensitivity-evaluate\"), { timeout: 120_000 })",
+          "match": [
+            129,
+            149
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 438,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const response = page.waitForResponse((entry) => new URL(entry.url()).searchParams.get(\"sf\") === \"bi-options\", { timeout: 60_000 })",
+          "match": [
+            113,
+            132
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 444,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  analyticsTest.setTimeout(660_000)",
+          "match": [
+            16,
+            34
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 445,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 471,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const financialResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+          "match": [
+            125,
+            144
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 486,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const readData = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+          "match": [
+            116,
+            135
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 527,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "    const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-source\", { timeout: 60_000 })",
+          "match": [
+            126,
+            145
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 613,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 663,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 20,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  collabTest.setTimeout(900_000)",
+          "match": [
+            13,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 21,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 103,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      \"/api/ui/pages/CAP18?\" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })",
+          "match": [
+            109,
+            128
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 142,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      expect(surface).toHaveAttribute(\"data-sf-phase\", \"reviewing\", { timeout: 90_000 }),",
+          "match": [
+            68,
+            87
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 263,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(600_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 264,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 66,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 40_000 }).then(async (response) => {",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 79,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      const reread = await page.request.fetch(response.request(), { timeout: 40_000 })",
+          "match": [
+            66,
+            85
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 101,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", selected.state, { timeout: 40_000 })",
+          "match": [
+            105,
+            124
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 113,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "    await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", \"ready\", { timeout: 40_000 })",
+          "match": [
+            100,
+            119
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 124,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(preview).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            36,
+            55
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 128,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(confirmed).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            38,
+            57
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 135,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(420_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 136,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(15_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 153,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(initialSource).not.toHaveAttribute(\"data-sf-state\", \"loading\", { timeout: 40_000 })",
+          "match": [
+            78,
+            97
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 218,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(720_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 219,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(15_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 237,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(page.locator(\"[data-sf-agenda-preview]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            69,
+            88
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 326,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "        await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toHaveAttribute(\"data-sf-comparison-compatibility\", \"compatible\", { timeout: 40_000 })",
+          "match": [
+            139,
+            158
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 405,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            83,
+            102
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 437,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "        await expect(localized.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            90,
+            109
+          ]
+        },
+        {
+          "rule": "test-globalthis",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/g08/landing-contract.test.ts",
+          "line": 90,
+          "message": "Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.",
+          "excerpt": "  const transport: typeof globalThis.fetch = Object.assign((",
+          "match": [
+            26,
+            45
+          ]
+        }
+      ],
+      "errors": [],
+      "approved": [],
+      "touchesGuards": false
+    },
+    "warningClassification": {
+      "total": 37,
+      "severity": "warn",
+      "byRule": {
+        "test-timeout-raised": 36,
+        "test-globalthis": 1
+      }
+    },
+    "comparison": {
+      "priorRun": 45048665481,
+      "priorSnapshot": "c18b97d8a316992b95abcbb57ef9b6c6754b1518",
+      "priorProduct": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+      "priorReportLine": 737,
+      "priorFindings": 38,
+      "currentFindings": 37,
+      "added": [],
+      "removed": [
+        {
+          "rule": "js-empty-catch",
+          "severity": "warn",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+          "line": 94,
+          "message": "Empty catch swallows the error. Handle it, log it, or put a comment inside saying why ignoring it is safe.",
+          "excerpt": "    try { if (trusted && environmentCurrent()) rememberClone(copied) } catch {}",
+          "match": [
+            71,
+            79
+          ]
+        }
+      ],
+      "allCurrentFindingsMatchPriorExactly": true
+    }
+  },
+  "guardScriptInvocation": {
+    "sourceLine": 753,
+    "timestamp": "2026-11-22T18:02:17.0842468Z",
+    "originalPayload": "$ bun run script/guards/run.ts --base origin/dev --json"
+  },
+  "wrapper": {
+    "passed": 1,
+    "failed": 0,
+    "filtered": 18,
+    "expectCalls": 5,
+    "files": 1,
+    "durationMs": 3480,
+    "gateDurationMs": 3222.05,
+    "records": [
+      {
+        "sourceLine": 755,
+        "timestamp": "2026-11-22T18:02:17.0843137Z",
+        "originalPayload": "(pass) the composed candidate passes guardrails from the exact dev base [3222.05ms]"
+      },
+      {
+        "sourceLine": 757,
+        "timestamp": "2026-11-22T18:02:17.0843528Z",
+        "originalPayload": " 1 pass"
+      },
+      {
+        "sourceLine": 758,
+        "timestamp": "2026-11-22T18:02:17.0843714Z",
+        "originalPayload": " 18 filtered out"
+      },
+      {
+        "sourceLine": 759,
+        "timestamp": "2026-11-22T18:02:17.0843920Z",
+        "originalPayload": " 0 fail"
+      },
+      {
+        "sourceLine": 760,
+        "timestamp": "2026-11-22T18:02:17.0844113Z",
+        "originalPayload": " 5 expect() calls"
+      },
+      {
+        "sourceLine": 761,
+        "timestamp": "2026-11-22T18:02:17.0844361Z",
+        "originalPayload": "Ran 1 test across 1 file. [3.48s]"
+      }
+    ]
+  },
+  "omni": {
+    "sourceLine": 762,
+    "timestamp": "2026-11-22T18:02:17.0845036Z",
+    "status": "pass",
+    "declaredTests": 1,
+    "declaredFile": "test/sucafina-design-verification.test.ts",
+    "omniSpawns": 3,
+    "delegated": 0,
+    "originalPayloadStored": false,
+    "redaction": "The control value is omitted. Only the verdict, declared file/test count and spawn counters are preserved."
+  },
+  "cleanup": {
+    "job": 137301315429,
+    "status": "completed",
+    "conclusion": "success",
+    "deleteSnapshotBranchStep": "success",
+    "remoteRefReadbackPerformed": false
+  },
+  "interpretation": [
+    "Only the original guardrails selector ran. The unchanged wrapper registered other checks, which remained filtered out; this run did not repeat typechecks, CurrentChoice/C17/Finance, immutable-context, canonical or Portfolio tests.",
+    "The guard scanned the pinned QA snapshot based on product 9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0 and the 17 already archived QA files on 2b8cf6e0783c28eb293176657a2433ad35164485, with exactly the original request and wrapper overlays.",
+    "All 37 current findings exactly match entries from the prior technical run 45048665481. Its sole extra finding, js-empty-catch on canonical-clone.ts, is absent after the explanatory-comment change.",
+    "A passing guard does not qualify UI42, UI43 or UI44 and does not establish a causal performance gain.",
+    "The eight technical PASS results remain attributed to d6bce5d81d0fd578a190b9bacac2a1a4250109a1/c18b97d8a316992b95abcbb57ef9b6c6754b1518. They are not relabeled as executions of the later product.",
+    "These two post-run evidence documents were created after the tested snapshot and are not among the 17 QA files scanned by this guard.",
+    "The cleanup job and delete-branch step succeeded. No separate remote-ref readback is claimed."
+  ]
+}
