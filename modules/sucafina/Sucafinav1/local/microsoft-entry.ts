@@ -19,6 +19,7 @@ type InstallationContext = {
   teamCurrentChoice?: SfTeamCurrentChoice
   loadTeamPurchaseMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamPurchaseMcp>
   loadTeamSupplierMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamSupplierMcp>
+  loadTeamContractMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamContractMcp>
 }
 
 export default function installation(context: InstallationContext) {
@@ -72,6 +73,11 @@ export async function createMicrosoftInstallation(
       const createSupplierMcp = await context.loadTeamSupplierMcp()
       return createSupplierMcp({ config, directory, identity, authorizeTeam: teamAccess, now })
     })() : undefined
+    const contractMcp = config.clawContractReview ? await (async () => {
+      if (!teamAccess || !context.loadTeamContractMcp) throw new Error("Contract MCP requires the Microsoft Team host")
+      const createContractMcp = await context.loadTeamContractMcp()
+      return createContractMcp({ config, directory, identity, authorizeTeam: teamAccess, now })
+    })() : undefined
     const headers = { "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" }
     const htmlHeaders = { ...headers, "Content-Type": "text/html; charset=utf-8",
       "Content-Security-Policy": "default-src 'none'; frame-ancestors 'self'; base-uri 'none'" }
@@ -112,7 +118,7 @@ export async function createMicrosoftInstallation(
         const auth = await identity.handle(request)
         if (auth) return auth
         if (web && url.pathname === config.mount + "/api/ui/context") return web.context.handle(request)
-        const mcp = await purchaseMcp?.(request) ?? await supplierMcp?.(request)
+        const mcp = await purchaseMcp?.(request) ?? await supplierMcp?.(request) ?? await contractMcp?.(request)
         if (mcp) return mcp
         const recovered = await recovery?.(request)
         if (recovered) return recovered

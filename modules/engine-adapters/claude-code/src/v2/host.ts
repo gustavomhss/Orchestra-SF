@@ -57,6 +57,7 @@ const QUESTION_DISMISSED = "The owner dismissed this question."
 /** A finished background task's process stays up this long waiting for the task to report; then it is let go. */
 const BACKGROUND_PATIENCE = Duration.minutes(30)
 const UNCHECKED = "Orchestra could not check this call, so it is refused."
+const NO_RESOURCE = "This call does not name its resource, so Orchestra refuses it. Send the command, path, pattern, or query as text."
 /** Claude Code defers MCP tools behind this one; it only loads their schemas, so every call to it is allowed. */
 const TOOL_SEARCH = "ToolSearch"
 /**
@@ -236,11 +237,15 @@ export const make = Effect.gen(function* () {
                 }
                 if (turn.agent.id === "maestro" && !PERMISSIONS[tool] && !MAESTRO_BOOKKEEPING.has(tool))
                   return { allow: false, reason: UNMAPPED }
+                // A mapped call with no string resource is a denial. Authorizing `*` would allow it, and an empty
+                // command would pass ToolSafety while Claude Code still ran the original input.
+                const grant = permission(tool, input, turn.session.location.directory)
+                if (!grant) return { allow: false, reason: NO_RESOURCE }
                 return Effect.runPromise(
                   turn.authorize({
                     callID: toolUseID,
                     tool,
-                    ...permission(tool, input, turn.session.location.directory),
+                    ...grant,
                     safety: safetyCall(tool, input),
                   }).pipe(
                     Effect.map((authorization): Decision => ({ allow: true, input: replacements(tool, authorization) })),
@@ -780,7 +785,7 @@ function questions(input: Record<string, unknown>) {
 function safetyCall(tool: string, input: Record<string, unknown>) {
   const text = (key: string) => (typeof input[key] === "string" ? input[key] : undefined)
   const file = text("file_path") ?? text("notebook_path")
-  if (tool === "Bash") return { tool: "bash", args: { command: text("command") ?? "" } }
+  if (tool === "Bash") return { tool: "bash", args: { command: text("command") } }
   if (tool === "Write") return { tool: "write", args: { filePath: file } }
   if (tool === "Edit" || tool === "MultiEdit" || tool === "NotebookEdit") return { tool: "edit", args: { filePath: file } }
   if (tool === "Read") return { tool: "read", args: { filePath: file, limit: input.limit, offset: input.offset } }
@@ -798,8 +803,9 @@ function replacements(tool: string, authorization: ExecutionHost.Authorization |
 
 export function permission(tool: string, input: Record<string, unknown>, directory: string) {
   const rule = PERMISSIONS[tool]
-  const value = rule ? input[rule.field] : undefined
-  if (!rule || typeof value !== "string") return { action: tool.toLowerCase(), resources: ["*"] }
+  if (!rule) return { action: tool.toLowerCase(), resources: ["*"] }
+  const value = input[rule.field]
+  if (typeof value !== "string") return undefined
   if (!rule.path || !path.isAbsolute(value)) return { action: rule.action, resources: [value] }
   const relative = path.relative(directory, value)
   const outside = relative === ".." || relative.startsWith(".." + path.sep) || path.isAbsolute(relative)

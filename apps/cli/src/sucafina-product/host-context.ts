@@ -59,6 +59,8 @@ import { createSfWorkHttp } from "./work-http.ts"
 import { materialSelection } from "./memory-selection.ts"
 import { createSfResidentReviewReaders } from "./review-resident-readers.ts"
 import type { createSfContributionReader } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
+import { createSfReviewerRecall, reviewerRecallSkill } from "./reviewer-recall.ts"
+import type { SfReviewerRecallRun } from "./reviewer-recall.ts"
 import { createSfAnalysisHostServices } from "./analysis-host-services.ts"
 import { createSfAnalysisHttp } from "./analysis-http.ts"
 import { createSfForecastInputAdapter } from "./forecast-input-adapter.ts"
@@ -165,6 +167,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const requests = new Map<string, Request>()
   const commandReadOperations = new Map<string, string>()
   const admittedInputs = new Map<string, SfAdmittedAnalysisInput>()
+  const reviewerRuns = new Map<string, SfReviewerRecallRun>()
   const replayContexts = new WeakMap<TrustedDomainContext, string>()
   const alternativeCaptures = new Map<string, Map<string, AlternativeCapabilityProvenance>>()
   const alternativeBindings = new Map<string, TrustedExecutionBinding>()
@@ -285,6 +288,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const documents = createSfDocumentServices({ runtime: input, authority })
   const questionContributions: { read?: ReturnType<typeof createSfContributionReader> } = {}
   const business = createSfBusinessServices({ authority, persistence: input.persistence, proposalCoverageWrites, procurementEvidenceWrites, dashboardHostWrites, caseSelectionWrites, threadHistoryWrites,
+    reviewerRecall: createSfReviewerRecall({ host: authority.host, run: (runRef) => reviewerRuns.get(runRef) }),
     currentChoicePreparing: (call, baseRef): boolean => currentChoice?.isPreparing(call, baseRef) ?? false,
     readQuestionContribution: (request, call) => questionContributions.read?.(request, call) ?? Promise.resolve({ status: "unavailable", reason: "contribution-reader-unavailable" }),
     documentRead: documents?.documents.reader, documentEvidenceList: documents?.documents.list,
@@ -657,6 +661,16 @@ export const createSfHostRuntimeWithRoutineNative = async (
               selection: selectedRuntime, model: actualModel, skillId: skill.id, objective: baseRequest.objective, contextFingerprint: fingerprint, createdAt: at, updatedAt: at, state: "preparing", ...(reviewTarget ? { reviewTarget } : {}) }
             const location = identity()?.location
             if (!location) return { status: "unavailable", reason: "analysis-host-unavailable" }
+            if (selectedRuntime.profile.id === "sf_reviewer" && skill.id === reviewerRecallSkill) {
+              const selection = decodeSfSkillInput("DecisionRecallInput", verifiedInput)
+              if (!selection.ok) return { status: "unavailable", reason: "analysis-source-unavailable" }
+              reviewerRuns.set(runRef, {
+                selection: structuredClone(selection.value),
+                withSelection: (read) => withRunContext(runRef, (human) => human.kind === "ui"
+                  ? analysisServices.withReviewerSelection(selection.value, baseRequest, human, () => read(human))
+                  : Promise.resolve({ status: "denied", reason: "recall-human-selection-unavailable" })),
+              })
+            }
             requests.set(runRef, request)
             admittedInputs.set(runRef, { request: structuredClone(fullRequest), input: structuredClone(verifiedInput),
               ...(alternativeSelection?.status === "ok" ? { alternativeSelection: structuredClone(alternativeSelection.value) } : {}) })
@@ -716,6 +730,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
         executions.delete(runRef)
         requests.delete(runRef)
         admittedInputs.delete(runRef)
+        reviewerRuns.delete(runRef)
         alternativeCaptures.delete(runRef)
         alternativeBindings.delete(runRef)
         if (marker && identity()) {
@@ -974,7 +989,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
         executions.clear()
         routineRuntime.dispose(); routineGovernance.dispose()
         stopped.forEach((entry) => clearTimeout(entry.timer)); stopped.clear()
-        state.identity = undefined; state.store = undefined; state.models = undefined; state.verifyGovernedLoad = undefined; requests.clear(); admittedInputs.clear(); observed.clear(); alternativeCaptures.clear(); alternativeBindings.clear(); liveNativeBindings.clear(); invalidNativeGenerations.clear(); decisionDomain.dispose(); business.dispose(); extended.dispose(); documents?.dispose()
+        state.identity = undefined; state.store = undefined; state.models = undefined; state.verifyGovernedLoad = undefined; requests.clear(); admittedInputs.clear(); reviewerRuns.clear(); observed.clear(); alternativeCaptures.clear(); alternativeBindings.clear(); liveNativeBindings.clear(); invalidNativeGenerations.clear(); decisionDomain.dispose(); business.dispose(); extended.dispose(); documents?.dispose()
       }))
     })),
   })

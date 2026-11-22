@@ -2,37 +2,38 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 import type { AuthorizedCaseProjection } from "../contracts/business-context.ts"
 import type { DecisionCasePort, DomainPortHost } from "../contracts/ports.ts"
-import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import type { TrustedCallContext, TrustedDomainContext, TrustedUiContext } from "../contracts/sf-execution.ts"
 import type { createSfAtlasMemory, rankSfAtlasRecall } from "../host-binding/atlas-memory.ts"
 import type { DecisionRecallInput } from "../contracts/skill-inputs.ts"
+import type { CaseRecall } from "../contracts/outputs.ts"
 import type { RecallFeatures } from "./recall.ts"
 
 type CaseRef = { id: string; incarnation: string }
 type ScopedRecall = Pick<DecisionRecallInput, "query" | "recallScope">
 type RankInput = Parameters<typeof rankSfAtlasRecall>[0]
-export type SfRecallCandidateAccess = {
-  cases: Pick<DecisionCasePort, "read">
-  memory: ReturnType<typeof createSfAtlasMemory>
-  /** Candidate callbacks must use the same scoped readers as the bundle. */
-  featuresForCase?: RankInput["featuresForCase"]
-  proveContinuity?: RankInput["proveContinuity"]
-}
+type RecallRequest = { caseRef: CaseRef & { version?: number }; limit: number; scope?: ScopedRecall }
+type RecallResult = ({ status: "ok" } & CaseRecall) | { status: "unavailable" }
+
+/** Run the canonical read under fresh, private authority for the exact human selection. */
+export type SfRecallCandidateAccess = (
+  selection: { caseRef: RecallRequest["caseRef"]; scope: ScopedRecall },
+  call: TrustedCallContext,
+  read: (human: TrustedUiContext) => Promise<RecallResult>,
+) => Promise<RecallResult | undefined>
 
 /** Host callbacks select candidates under business authority; case IDs alone never grant access. */
 export function createSfCaseRecall(input: {
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
   cases: DecisionCasePort
   memory: ReturnType<typeof createSfAtlasMemory>
-  /** Host-only, bound to this exact recall selection and current authority. Both readers
-   * reauthorize each call; a native case binding is never rewritten for a precedent. */
-  candidateAccess?: (selection: { caseRef: CaseRef & { version?: number }; scope: ScopedRecall }, call: TrustedDomainContext) => Promise<SfRecallCandidateAccess | undefined>
+  candidateAccess?: SfRecallCandidateAccess
   selectCandidates: (source: AuthorizedCaseProjection, call: TrustedDomainContext, scope?: ScopedRecall) => Promise<readonly CaseRef[] | undefined>
   featuresForCase: (value: AuthorizedCaseProjection, call: TrustedDomainContext) => Promise<RecallFeatures | undefined>
   runtimeVersions: RankInput["runtimeVersions"]
   proveContinuity: RankInput["proveContinuity"]
   rank: typeof rankSfAtlasRecall
 }) {
-  return async (request: { caseRef: CaseRef & { version?: number }; limit: number; scope?: ScopedRecall }, call: TrustedDomainContext) => {
+  const recall = async (request: RecallRequest, call: TrustedDomainContext): Promise<RecallResult> => {
     try {
       const wanted = structuredClone(request)
       const requestDigest = digestSfValue(wanted)
@@ -41,10 +42,17 @@ export function createSfCaseRecall(input: {
       const nativeBinding = call.kind === "native" ? call.binding : undefined
       if (!source || source.signal.aborted || !wanted.caseRef.id || !wanted.caseRef.incarnation || !Number.isSafeInteger(wanted.limit) || wanted.limit < 1 || wanted.limit > 50 || !await input.host.revalidate(call)) return { status: "unavailable" as const }
       if (nativeBinding && (wanted.caseRef.id !== nativeBinding.caseId || wanted.caseRef.incarnation !== nativeBinding.caseIncarnation || (wanted.caseRef.version !== undefined && wanted.caseRef.version !== nativeBinding.caseVersion))) return { status: "unavailable" as const }
-      const access = wanted.scope && input.candidateAccess ? await input.candidateAccess({ caseRef: wanted.caseRef, scope: wanted.scope }, call) : undefined
-      if (wanted.scope && input.candidateAccess && !access) return { status: "unavailable" as const }
-      const candidateCases = access?.cases ?? input.cases
-      const memory = access?.memory ?? input.memory
+      const scope = wanted.scope
+      if (call.kind === "native" && scope && scope.recallScope.cases.some((ref) =>
+        ref.id !== call.binding.caseId || ref.incarnation !== call.binding.caseIncarnation)) {
+        const result = await input.candidateAccess?.({ caseRef: wanted.caseRef, scope }, call, (human) => recall(wanted, human))
+        if (!result || result.status !== "ok" || result.accessRevision !== call.binding.accessRevision ||
+          result.matches.some((match) => !scope.recallScope.cases.some((ref) => digestSfValue(ref) === digestSfValue(match.caseRef))) ||
+          !await input.host.revalidate(call) || input.host.requestFor(call) !== source || source.signal.aborted ||
+          digestSfValue([call.kind, call.binding]) !== binding || digestSfValue(request) !== requestDigest ||
+          digestSfValue(wanted) !== requestDigest) return { status: "unavailable" }
+        return result
+      }
       const read = async () => {
         const current = await input.cases.read({ caseRef: encodeCaseRef(wanted.caseRef) }, call)
         if (current.status !== "ok" || !sameAuthority(current.value, call) || current.value.case.id !== wanted.caseRef.id || current.value.case.incarnation !== wanted.caseRef.incarnation || (wanted.caseRef.version !== undefined && current.value.case.version !== wanted.caseRef.version)) return undefined
@@ -52,9 +60,9 @@ export function createSfCaseRecall(input: {
         const features = await input.featuresForCase(current.value, call)
         const refs = await input.selectCandidates(current.value, call, wanted.scope)
         if (!features || !refs || refs.some((ref) => !ref.id || !ref.incarnation) || new Set(refs.map((ref) => JSON.stringify([ref.id, ref.incarnation]))).size !== refs.length) return undefined
-        if (nativeBinding && refs.some((ref) => ref.id !== nativeBinding.caseId || ref.incarnation !== nativeBinding.caseIncarnation) && !access) return undefined
+        if (nativeBinding && refs.some((ref) => ref.id !== nativeBinding.caseId || ref.incarnation !== nativeBinding.caseIncarnation)) return undefined
         for (const ref of refs) {
-          const candidate = await candidateCases.read({ caseRef: encodeCaseRef(ref) }, call)
+          const candidate = await input.cases.read({ caseRef: encodeCaseRef(ref) }, call)
           if (candidate.status !== "ok" || candidate.value.case.id !== ref.id || candidate.value.case.incarnation !== ref.incarnation || !sameAuthority(candidate.value, call)) return undefined
           if (wanted.scope && !wanted.scope.recallScope.cases.some((allowed) => allowed.id === ref.id && allowed.incarnation === ref.incarnation && allowed.version === candidate.value.case.version)) return undefined
         }
@@ -62,7 +70,7 @@ export function createSfCaseRecall(input: {
       }
       const selected = await read()
       if (!selected || source.signal.aborted || !await input.host.revalidate(call)) return { status: "unavailable" as const }
-      const rankInput: RankInput = { memory, caseRefs: selected.refs, features: selected.features, featuresForCase: access?.featuresForCase ?? input.featuresForCase, runtimeVersions: input.runtimeVersions, call, proveContinuity: access?.proveContinuity ?? input.proveContinuity, revalidate: input.host.revalidate }
+      const rankInput: RankInput = { memory: input.memory, caseRefs: selected.refs, features: selected.features, featuresForCase: input.featuresForCase, runtimeVersions: input.runtimeVersions, call, proveContinuity: input.proveContinuity, revalidate: input.host.revalidate }
       const ranked = await input.rank(rankInput)
       if (ranked.status !== "ok") return { status: "unavailable" as const }
       const eligible = ranked.cases.filter((item) => wanted.scope?.recallScope.includeHistorical !== false || !item.sourceStates.includes("historical"))
@@ -70,7 +78,7 @@ export function createSfCaseRecall(input: {
       const matches = []
       for (const match of eligible.slice(0, wanted.limit)) {
         if (!selected.refs.some((ref) => ref.id === match.candidateCaseRef.id && ref.incarnation === match.candidateCaseRef.incarnation)) return { status: "unavailable" as const }
-        const recalled = await memory.recall(match.candidateCaseRef, call)
+        const recalled = await input.memory.recall(match.candidateCaseRef, call)
         if (recalled.status !== "ok") return { status: "unavailable" as const }
         const records = recalled.records.filter((record) => record.recordDigest === match.atlasTrace.recordDigest)
         if (records.length !== 1) return { status: "unavailable" as const }
@@ -84,6 +92,7 @@ export function createSfCaseRecall(input: {
       return { status: "unavailable" as const }
     }
   }
+  return recall
 }
 
 function sameAuthority(projection: AuthorizedCaseProjection, call: TrustedDomainContext) {
