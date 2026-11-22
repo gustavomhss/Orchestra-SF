@@ -72,7 +72,7 @@ jobs:
         run: |
           set -euo pipefail
           export ORCHESTRA_OMNI_CONTROL_NONCE="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
-          bun test --timeout 60000 --reporter=junit --reporter-outfile "$SF_G08_FACTORY_EVIDENCE/client.junit.xml" ./test/sucafina-team-domain.test.ts 2>&1 | tee "$SF_G08_FACTORY_EVIDENCE/client.log"
+          bun test --preload ../../script/test-omni-control.ts --timeout 60000 --reporter=junit --reporter-outfile "$SF_G08_FACTORY_EVIDENCE/client.junit.xml" ./test/sucafina-team-domain.test.ts 2>&1 | tee "$SF_G08_FACTORY_EVIDENCE/client.log"
       - name: Exercise native factory and signed Microsoft HTTP paths
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: modules/sucafina/Sucafinav1
