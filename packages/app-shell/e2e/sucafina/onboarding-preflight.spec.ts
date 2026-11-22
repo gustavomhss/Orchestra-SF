@@ -1,6 +1,7 @@
 import { expect, test, type Locator } from "@playwright/test"
 import { stat } from "node:fs/promises"
-import { authenticateDesignInstallation, withDesignInstallation } from "./design-support/installation"
+import { withDesignInstallation } from "./design-support/installation"
+import { authenticateRecordingInstallation } from "./design-support/recording-installation"
 
 // Recording-only artifact. Publish on an isolated ci-run branch, never product dev.
 // The original fixture owns the real installation, seed, enrollment and teardown.
@@ -29,7 +30,11 @@ test("record current native Sucafina availability without simulated responses", 
     })
     // Redeem enrollment through the existing non-logged original handler before
     // opening a page. No trace, headers, cookies or authentication URL are attached.
-    const owner = await authenticateDesignInstallation(context, installation).catch(async (error: unknown) => {
+    const owner = await authenticateRecordingInstallation(context, installation, async (diagnostic) => {
+      await info.attach("discovery-" + diagnostic.selector, {
+        body: JSON.stringify(diagnostic, null, 2), contentType: "application/json",
+      })
+    }).catch(async (error: unknown) => {
       await context.close()
       throw error
     })
@@ -82,14 +87,22 @@ test("record current native Sucafina availability without simulated responses", 
         const shown = (element: Element) => element instanceof HTMLElement &&
           element.getClientRects().length > 0 && getComputedStyle(element).visibility !== "hidden"
         const text = (element: Element) => (element.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 180)
+        const box = (element: Element) => {
+          const value = element.getBoundingClientRect()
+          return { x: value.x, y: value.y, width: value.width, height: value.height }
+        }
         return {
           title: document.title,
-          headings: [...document.querySelectorAll("h1,h2,h3")].filter(shown).map((element) => ({ level: element.tagName, text: text(element) })).slice(0, 80),
+          headings: [...document.querySelectorAll("h1,h2,h3")].filter(shown).map((element) => ({ level: element.tagName, text: text(element), box: box(element) })).slice(0, 80),
           controls: [...document.querySelectorAll("button,a,[role=button],[role=tab],select")].filter(shown).map((element) => ({
             tag: element.tagName, role: element.getAttribute("role"),
             name: element.getAttribute("aria-label") ?? text(element),
             disabled: element.hasAttribute("disabled") || element.getAttribute("aria-disabled") === "true",
+            box: box(element),
           })).slice(0, 160),
+          labels: [...document.querySelectorAll("label,[role=status],dt")].filter(shown).map((element) => ({
+            tag: element.tagName, text: text(element), box: box(element),
+          })).slice(0, 100),
           nativeStates: [...document.querySelectorAll("[data-sf-host]")].map((element) => ({
             discovery: element.getAttribute("data-sf-discovery-state"),
             provider: element.getAttribute("data-sf-provider-state"),
