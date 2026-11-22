@@ -44,6 +44,8 @@ jobs:
           git rev-parse HEAD > "$proof_output/source.sha"
           git rev-parse 'HEAD^{tree}' > "$proof_output/source.tree"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD:modules/sucafina/Sucafinav1/runtime/application.ts)" = "27c21e4c1df0ee4748f762a324f52ff1a02f7105"
+          git rev-list --parents -n 1 HEAD > "$proof_output/source.parents"
       - uses: ./.github/actions/setup-bun
         id: install
         with:
@@ -89,7 +91,7 @@ jobs:
           root = Path(os.environ["GITHUB_WORKSPACE"])
           output = Path(os.environ["SF_G08_DOMAIN_EVIDENCE"])
           suites = [
-              ("producer", "apps/cli/test/team-native-domain.test.ts", 10),
+              ("producer", "apps/cli/test/team-native-domain.test.ts", 13),
               ("client", "packages/client/test/sucafina-team-domain.test.ts", 11),
           ]
           reports = []
@@ -121,6 +123,11 @@ jobs:
               "source": {"sha": (output / "source.sha").read_text().strip(),
                   "tree": (output / "source.tree").read_text().strip()},
               "run": {"id": os.environ["GITHUB_RUN_ID"], "attempt": os.environ["GITHUB_RUN_ATTEMPT"]},
+              "composition": {"parents": (output / "source.parents").read_text().split()[1:],
+                  "integrationBase": "287b08b2afb4f9aeb4442b800d620fbd5ddf9204",
+                  "originalPrivatePostPort": {"commit": "70a3a4aa70da9ed44acec5ade1a7f0c562cc727e",
+                      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+                      "blob": "27c21e4c1df0ee4748f762a324f52ff1a02f7105"}},
               "files": [{"path": name, "sha256": hashlib.sha256((root / name).read_bytes()).hexdigest()} for name in paths],
               "reports": reports,
               "proofScope": ["original Application/Domain HTTP Request/Response and SQLite", "controlled browser wire/lifecycle"],

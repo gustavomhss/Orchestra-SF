@@ -47,6 +47,46 @@ export type SfTeamNativeDomainInput = Readonly<{
   current: () => Promise<boolean>
 }>
 
+export type SfTeamNativeDomainBindings = Readonly<{
+  accessRevision: string
+  destinations: SfTeamContext["destinations"]
+  availability: SfTeamContext["availability"]
+}>
+
+/**
+ * F02 composition hook for its already-held original readSnapshotRoot. The
+ * opaque identity is scope metadata, never authority. This calls the canonical
+ * inherited transaction port so wrappers keep their guards; it creates no root,
+ * connection or SQL transaction and accepts no caller-supplied snapshot.
+ */
+export async function readSfTeamNativeDomainBindings(input: Readonly<
+  Pick<SfTeamNativeDomainInput, "request" | "handler" | "binding" | "profile" | "current"> & {
+    principalObjectId: string
+    heldRoot: object
+  }
+>): Promise<SfTeamNativeDomainBindings | undefined> {
+  const source = readSfApplicationSource(input.handler)
+  const scopeCurrent = () => {
+    const scope = source?.application.persistence.currentSnapshotScope?.()
+    return !!scope && scope.identity === input.heldRoot && scope.readOnly && !scope.poisoned && !input.request.signal.aborted
+  }
+  if (!source || !Schema.is(SfTeamInstallationDescriptor)(input.binding) || !Schema.is(TeamProfile.Ref)(input.profile) ||
+    input.binding.authMode !== "microsoft" || !validOrigin(input.binding.publicOrigin) ||
+    new URL(input.request.url).origin !== input.binding.publicOrigin ||
+    input.profile.installationId !== input.binding.installationId || input.profile.tenantId !== input.binding.tenantId ||
+    source.mount !== input.binding.mount + "/teams/" + input.profile.teamObjectId || !scopeCurrent()) return
+  const environment = await source.application.environment(input.request)
+  if (!scopeCurrent() || !await input.current().catch(() => false) || !scopeCurrent()) return
+  const observed = await source.application.persistence.transaction("dashboard", async (snapshot) => {
+    const value = scopeCurrent()
+      ? await authority(source.application, input.request, input.principalObjectId, snapshot, environment) : undefined
+    return { commit: false, value: scopeCurrent() ? value : undefined }
+  }, { signal: input.request.signal })
+  if (!observed || !scopeCurrent()) return
+  return Object.freeze({ accessRevision: digestSfValue(observed),
+    destinations: observed.destinations, availability: observed.availability })
+}
+
 export function createSfTeamNativeDomain(input: SfTeamNativeDomainInput) {
   const source = readSfApplicationSource(input.handler)
   const authorities = new WeakMap<SfTeamContext, string>()
@@ -75,28 +115,27 @@ export function createSfTeamNativeDomain(input: SfTeamNativeDomainInput) {
     const environment = await source.application.environment(input.request)
     const observe = (environment: Environment) => source.application.persistence.transaction("dashboard", async (snapshot) => ({
       commit: false,
-      value: await authority(source.application, input.request, first.value, snapshot, environment),
+      value: await authority(source.application, input.request, first.value.stamp.principalRef, snapshot, environment),
     }), { signal: input.request.signal })
     const before = await observe(environment)
     if (!before) return denied()
     const fresh = await base()
     if (fresh.status !== "ok" || !fresh.value.stamp.team) return fresh
     if (digestSfValue(first.value.stamp) !== digestSfValue(fresh.value.stamp)) return unavailable()
-    const after = await observe(await source.application.environment(input.request))
-    if (!after || digestSfValue(before) !== digestSfValue(after) || !await current()) return denied()
-    const accessRevision = digestSfValue({
-      team: fresh.value.stamp.team, authority: after, hostId: fresh.value.stamp.hostId,
-    })
-    const value = Schema.decodeUnknownSync(SfTeamContext, { onExcessProperty: "error" })({
-      ...fresh.value,
-      stamp: { ...fresh.value.stamp, accessRevision,
-        team: { ...fresh.value.stamp.team, revisions: { ...fresh.value.stamp.team.revisions, accessRevision } } },
-      profile: { ...fresh.value.profile, accessRevision },
-      destinations: after.destinations,
-      availability: after.availability,
-    })
-    authorities.set(value, digestSfValue(after))
-    return { status: "ok", value }
+    const afterEnvironment = await source.application.environment(input.request)
+    if (!await current()) return denied()
+    const after = await observe(afterEnvironment)
+    if (!after || digestSfValue(before) !== digestSfValue(after)) return denied()
+    // The original F02 is the single revision producer. Require its installed
+    // three bindings to agree with a new original Application observation; never
+    // replace other families or manufacture a second context revision here.
+    const destinations = capabilities.map((id) => fresh.value.destinations.filter((item) => item.capabilityId === id))
+    const availability = capabilities.map((id) => fresh.value.availability.filter((item) => item.family === "domain-read" && item.resource === id))
+    if (destinations.some((items) => items.length !== 1) || availability.some((items) => items.length !== 1) ||
+      digestSfValue(destinations.flat()) !== digestSfValue(after.destinations) ||
+      digestSfValue(availability.flat()) !== digestSfValue(after.availability)) return unavailable()
+    authorities.set(fresh.value, digestSfValue(after))
+    return fresh
   }
   const handle = async (): Promise<Response | undefined> => {
     const url = new URL(input.request.url)
@@ -170,7 +209,7 @@ export function createSfTeamNativeDomain(input: SfTeamNativeDomainInput) {
     if (!Number.isFinite(time.getTime())) return resultResponse(unavailable())
     const year = selection.year ?? sidebarYear(), month = selection.month ?? time.getMonth() + 1
     const projected = await source.application.persistence.transaction("dashboard", async (snapshot) => {
-      const admitted = await authority(source.application, input.request, context.value, snapshot, environment)
+      const admitted = await authority(source.application, input.request, context.value.stamp.principalRef, snapshot, environment)
       const actor = admitted?.actor
       const page = admitted?.destinations.find((item) => item.capabilityId === cap)
       const producer = source.application.domains.dashboard.find((item) => item.pages.includes(SF_DOMAIN_PAGES[cap]))
@@ -195,7 +234,7 @@ export function createSfTeamNativeDomain(input: SfTeamNativeDomainInput) {
     if (!await current()) return resultResponse(denied())
     const stable = await source.application.persistence.transaction("dashboard", async (snapshot) => ({
       commit: false, value: digestSfValue(snapshot.versions) === projected.fence &&
-        digestSfValue(await authority(source.application, input.request, refreshed.value, snapshot, finalEnvironment)) === authorities.get(refreshed.value),
+        digestSfValue(await authority(source.application, input.request, refreshed.value.stamp.principalRef, snapshot, finalEnvironment)) === authorities.get(refreshed.value),
     }), { signal: input.request.signal })
     if (!stable) return Response.json({ status: "stale", reason: "domain-source-changed" }, { status: 409, headers })
     const outputSchema: Schema.Top = pageOperations[cap].output
@@ -224,11 +263,11 @@ function resultResponse(result: SfTeamContextResult) {
     "X-SF-Contract-Revision": result.value.contractRevision, "X-SF-Access-Revision": result.value.stamp.accessRevision,
   } : {}) } })
 }
-async function authority(application: Application, request: Request, context: SfTeamContext, snapshot: Snapshot, environment: Environment) {
+async function authority(application: Application, request: Request, principalRef: string, snapshot: Snapshot, environment: Environment) {
   const principal = await application.authenticate(request, {
     surface: "dashboard", roleMap: application.rolePolicy?.("dashboard") ?? roleMap(snapshot, "dashboard"),
   })
-  if (!principal?.id || principal.id.startsWith("local:") || principal.id !== context.stamp.principalRef || request.signal.aborted) return
+  if (!principal?.id || principal.id.startsWith("local:") || principal.id !== principalRef || request.signal.aborted) return
   const roles = principal.roles.filter((row) => row.surface === "dashboard").map((row) => row.role)
   const access = object(object(snapshot.data.access)[principal.id])
   const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"),

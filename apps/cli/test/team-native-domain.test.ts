@@ -13,7 +13,12 @@ import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/loc
 import { createTeamProfileAccess, teamProfileInstallationId } from "../../../modules/sucafina/Sucafinav1/runtime/team-profile-access.ts"
 import { emptyMap } from "../../../modules/sucafina/Sucafinav1/src/identity.ts"
 import { digestSfValue } from "../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import { createSfTeamNativeDomain } from "../src/sucafina-product/team-native-domain.ts"
+import { createSfTeamNativeDomain, readSfTeamNativeDomainBindings } from "../src/sucafina-product/team-native-domain.ts"
+import type { SfTeamNativeDomainBindings } from "../src/sucafina-product/team-native-domain.ts"
+import { readSfApplicationContext, readSfApplicationSource } from "../../../modules/sucafina/Sucafinav1/runtime/application.ts"
+import type { TransactionOptions } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { sfContextDestinationsFromPages } from "../src/sucafina-product/native-ui/live-context.ts"
+import { createSfContextHandler } from "../src/sucafina-product/native-ui/context.ts"
 
 // Real Application, Domain.view/execute, HTTP Request/Response, CAS and SQLite.
 // Only the Microsoft observation boundary is controlled; no installed/tenant claim.
@@ -36,15 +41,58 @@ async function createFixture() {
     publicOrigin: origin, mount, contractRevision: "sf-team-profile/1", authMode: "microsoft",
   })
   const state: {
-    authenticated: boolean; active: boolean; role: "admin" | "viewer"; teams: string[];
-    originals: Request[]; writerRequests: Request[]; environmentCalls: number; contextCalls: number;
+    authenticated: boolean; active: boolean; policyCurrent: boolean; role: "admin" | "viewer"; teams: string[];
+    originals: Request[]; writerRequests: Request[]; environmentCalls: number; contextCalls: number; currentCalls: number;
+    rootCalls: number; rootDepth: number; maxRootDepth: number; businessDepth: number; maxBusinessDepth: number;
+    rootReads: { identity: object; readOnly: boolean; poisoned: boolean; reads: object[] }[];
     environmentHook?: () => Promise<void>; contextHook?: (request: Request) => Promise<void>;
     currentHook?: () => Promise<void>;
-  } = { authenticated: true, active: true, role: "admin", teams: [...teams],
-    originals: [], writerRequests: [], environmentCalls: 0, contextCalls: 0 }
+  } = { authenticated: true, active: true, policyCurrent: true, role: "admin", teams: [...teams],
+    originals: [], writerRequests: [], environmentCalls: 0, contextCalls: 0, currentCalls: 0,
+    rootCalls: 0, rootDepth: 0, maxRootDepth: 0, businessDepth: 0, maxBusinessDepth: 0, rootReads: [] }
   const valid = (request: Request) => state.authenticated && request.headers.get("cookie") === "component-session=original"
   const accessReader = createTeamProfileAccess({
     origin, mount, directory, tenantId, enabledTeamIds: teams, prepare: async () => {},
+    readBusinessContext: async (request, admission) => {
+      state.businessDepth++
+      state.maxBusinessDepth = Math.max(state.maxBusinessDepth, state.businessDepth)
+      try {
+        const index = profiles.findIndex((profile) => profile.teamObjectId === admission.profile.teamObjectId)
+        const handler = handlers[index]
+        if (!handler) return undefined
+        const source = readSfApplicationSource(handler)!
+        const observe = async () => {
+          const captured: { native?: SfTeamNativeDomainBindings } = {}
+          const observed = await readSfApplicationContext(handler, request, admission.principalObjectId, async () => {
+            if (!await admission.verifyCurrent()) return false
+            const heldRoot = source.application.persistence.currentSnapshotScope?.()
+            if (!heldRoot?.readOnly || heldRoot.poisoned) return false
+            captured.native = await readSfTeamNativeDomainBindings({
+              request, handler, binding, profile: admission.profile, principalObjectId: admission.principalObjectId,
+              current: async () => await admission.verifyCurrent() && state.policyCurrent, heldRoot: heldRoot.identity,
+            })
+            return !!captured.native
+          })
+          if (!observed || !captured.native) return undefined
+          const original = sfContextDestinationsFromPages(observed.pages)
+          if (!original) return undefined
+          const nativeIds = new Set(captured.native.destinations.map((item) => item.capabilityId))
+          return {
+            accessRevision: digestSfValue({ original: observed.accessRevision, native: captured.native.accessRevision }),
+            destinations: [...original.filter((item) => !nativeIds.has(item.capabilityId)), ...captured.native.destinations],
+            availability: captured.native.availability,
+          }
+        }
+        const first = await observe()
+        if (!first) return undefined
+        return { ...first, owner: { profile: admission.profile,
+          principal: { tenantId, principalObjectId: admission.principalObjectId } },
+          verifyCurrent: async () => {
+            const current = await observe()
+            return !!current && digestSfValue(current) === digestSfValue(first)
+          } }
+      } finally { state.businessDepth-- }
+    },
     observeTeams: async (request) => {
       state.originals.push(request)
       const eligible = [...state.teams]
@@ -58,11 +106,28 @@ async function createFixture() {
   const profiles = teams.map((teamObjectId) => Schema.decodeUnknownSync(TeamProfile.Ref)({ installationId, tenantId, teamObjectId }))
   const stores = await Promise.all(profiles.map((profile) => openLocalStore(path.join(directory, "business-teams", digestSfValue(profile)))))
   const handlers = stores.map((persistence) => createModule(mount + "/teams/" + profiles[stores.indexOf(persistence)]!.teamObjectId, {
-    persistence, maxJsonBytes: 2 * 1024 * 1024,
+    persistence: {
+      ...persistence,
+      readSnapshotRoot: <T>(work: () => Promise<T>, options?: TransactionOptions) => {
+        state.rootCalls++
+        return persistence.readSnapshotRoot!(async () => {
+          state.rootDepth++
+          state.maxRootDepth = Math.max(state.maxRootDepth, state.rootDepth)
+          const scope = persistence.currentSnapshotScope!()!
+          state.rootReads.push({ ...scope, reads: [] })
+          try { return await work() } finally { state.rootDepth-- }
+        }, options)
+      },
+      transaction: (surface, work, options) => persistence.transaction(surface, async (snapshot, blobs) => {
+        const scope = persistence.currentSnapshotScope?.()
+        if (scope && state.rootDepth) state.rootReads.at(-1)!.reads.push(scope.identity)
+        return work(snapshot, blobs)
+      }, options),
+    }, maxJsonBytes: 2 * 1024 * 1024,
     authenticate: async (request) => {
       state.originals.push(request)
       return valid(request) ? { id: principalId, canWrite: state.role === "admin",
-        roles: emptyMap().filter((row) => row.surface === "dashboard" && row.role === state.role) } : null
+        roles: emptyMap().filter((row) => row.role === state.role) } : null
     },
     environment: async () => {
       state.environmentCalls++
@@ -75,9 +140,11 @@ async function createFixture() {
     await state.contextHook?.(request)
     return accessReader.readContext(request, query, binding)
   }
+  const runtime = { nativeUiProducts: { currentBinding: () => binding, teamTenantId: tenantId, readTeamContext: originalRead } }
+  const f02 = createSfContextHandler({ origin, mount, runtime: () => runtime })
   const bridge = (request: Request, team = 0, handler = handlers[team]!) => createSfTeamNativeDomain({
     request, handler, binding, profile: profiles[team]!, readContext: originalRead,
-    current: async () => { await state.currentHook?.(); return state.active },
+    current: async () => { state.currentCalls++; await state.currentHook?.(); return state.active },
   })
   const request = (suffix: string, init: RequestInit = {}, team = 0) => new Request(origin + mount + suffix, {
     ...init, headers: { Cookie: "component-session=original", ...Object.fromEntries(new Headers(init.headers)),
@@ -119,7 +186,7 @@ async function createFixture() {
     await rm(directory, { recursive: true, force: true })
     await expect(access(directory)).rejects.toMatchObject({ code: "ENOENT" })
   }
-  return { directory, state, profiles, stores, handlers, binding, bridge, request, contextRequest, context, command, read, snapshot, close }
+  return { directory, state, profiles, stores, handlers, binding, bridge, request, contextRequest, context, command, read, snapshot, close, f02 }
 }
 
 test("original Team reader publishes current CAP authority without legacy context or projected private state", async () => fixture(async (f) => {
@@ -127,8 +194,10 @@ test("original Team reader publishes current CAP authority without legacy contex
   expect(Schema.is(SfTeamContext)(ctx)).toBe(true)
   expect(ctx.contractRevision).toBe("sf-team-profile/1")
   expect(ctx.stamp.team?.owner.profile).toEqual(f.profiles[0])
-  expect(ctx.destinations.map((item) => item.capabilityId)).toEqual(["CAP14", "CAP04", "CAP05"])
-  expect(ctx.destinations.every((item) => item.canRead && item.allowedActionIds.includes("save"))).toBe(true)
+  expect(ctx.destinations.filter((item) => ["CAP14", "CAP04", "CAP05"].includes(item.capabilityId))
+    .map((item) => item.capabilityId)).toEqual(["CAP14", "CAP04", "CAP05"])
+  expect(ctx.destinations.filter((item) => ["CAP14", "CAP04", "CAP05"].includes(item.capabilityId))
+    .every((item) => item.canRead && item.allowedActionIds.includes("save"))).toBe(true)
   expect(ctx.availability.every((item) => item.operations.every((operation) => operation.operational))).toBe(true)
   expect(JSON.stringify(ctx)).not.toMatch(/component-session|roleMap|snapshot|business-teams/)
   const request = f.contextRequest()
@@ -194,8 +263,8 @@ test("a role change alters effective revision even when the original Team catalo
 
 test("a role revoked during page IO hides the already admitted projection", async () => fixture(async (f) => {
   expect((await f.command("CAP14", { vendor: "Never leak after revocation", amount: 1 })).response.status).toBe(200)
-  f.state.environmentCalls = 0
-  f.state.environmentHook = async () => { if (f.state.environmentCalls === 3) f.state.role = "viewer" }
+  f.state.currentCalls = 0
+  f.state.currentHook = async () => { if (f.state.currentCalls === 6) f.state.role = "viewer" }
   const result = await f.read("CAP14")
   expect([403, 409]).toContain(result.response.status)
   expect(await result.response.text()).not.toContain("Never leak after revocation")
@@ -265,13 +334,13 @@ test("command response uses the exact original Request and never authorizes a mi
 test("business authority revoked during the last private fence cannot publish an already projected page", async () => fixture(async (f) => {
   expect((await f.command("CAP14", { vendor: "Final fence private vendor", amount: 45 })).response.status).toBe(200)
   const before = await f.context(), snapshot = await f.snapshot()
-  f.state.environmentCalls = 0
+  f.state.currentCalls = 0
   let revoked = 0
-  // The first five observations serve the initial/renewed F02 and page; the
-  // sixth environment belongs to the final source transaction. The private
-  // current fence deliberately remains true while business authority changes.
+  // The bridge invokes eleven private checkpoints for its two F02 observations
+  // and projection; the twelfth is its final source fence. The private fence
+  // deliberately remains true while independent business authority changes.
   f.state.currentHook = async () => {
-    if (f.state.environmentCalls !== 6 || revoked) return
+    if (f.state.currentCalls !== 12 || revoked) return
     revoked++
     f.state.role = "viewer"
   }
@@ -284,4 +353,73 @@ test("business authority revoked during the last private fence cannot publish an
   expect(await f.snapshot()).toEqual(snapshot)
   f.state.currentHook = undefined
   expect((await f.context()).stamp.accessRevision).not.toBe(before.stamp.accessRevision)
+}))
+
+test("original F02 composes one held root per observation and preserves other native families without recursion", async () => fixture(async (f) => {
+  const request = f.contextRequest()
+  const result = await f.f02.handle(request)
+  expect(result.status).toBe(200)
+  const live = Schema.decodeUnknownSync(SfTeamContextResult)(await result.json())
+  if (live.status !== "ok") throw new Error("Original F02 unavailable")
+  expect(live.value.destinations.some((item) => item.capabilityId === "CAP25" && item.canRead)).toBe(true)
+  expect(new Set(live.value.destinations.map((item) => item.capabilityId)).size).toBe(live.value.destinations.length)
+  expect(live.value.availability.map((item) => item.resource)).toEqual(["CAP14", "CAP04", "CAP05"])
+  expect(f.state.rootCalls).toBe(2)
+  expect(f.state.maxRootDepth).toBe(1)
+  expect(f.state.maxBusinessDepth).toBe(1)
+  expect(f.state.rootReads).toHaveLength(2)
+  for (const held of f.state.rootReads) {
+    expect(held.readOnly).toBe(true)
+    expect(held.poisoned).toBe(false)
+    expect(held.reads).toHaveLength(4)
+    expect(held.reads.every((identity) => identity === held.identity)).toBe(true)
+  }
+  expect(f.state.originals.every((original) => original === request)).toBe(true)
+  const bridged = await f.bridge(request).readContext()
+  expect(bridged).toEqual(live)
+  const malformed = new Request(request.url + "&hostId=" + f.binding.hostId, request)
+  expect((await f.f02.handle(malformed)).status).toBe(400)
+}))
+
+test("native binding hook requires the original held root and F02 rejects its current-policy fence lost during observation", async () => fixture(async (f) => {
+  const request = f.contextRequest()
+  expect(await readSfTeamNativeDomainBindings({
+    request, handler: f.handlers[0]!, binding: f.binding, profile: f.profiles[0]!,
+    principalObjectId: principalId, current: async () => true, heldRoot: {},
+  })).toBeUndefined()
+  f.state.environmentHook = async () => { f.state.policyCurrent = false }
+  const result = await f.f02.handle(request)
+  expect(result.status).toBe(503)
+  const value = await result.json()
+  expect(value.status).toBe("unavailable")
+  expect(value).not.toHaveProperty("value")
+  expect(f.state.maxRootDepth).toBe(1)
+  expect(f.state.maxBusinessDepth).toBe(1)
+}))
+
+test("internal POST authority observation retains Request/body and HTTP F02 remains a read-only route", async () => fixture(async (f) => {
+  const request = f.request("/teams/" + teams[0] + "/dashboard?page=Vendor%20Contracts", {
+    method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: "{unconsumed bytes",
+  })
+  const before = await f.snapshot()
+  f.state.originals.length = 0
+  const observed = await readSfApplicationContext(f.handlers[0]!, request, principalId, async () => f.state.active)
+  expect(observed?.principalRef).toBe(principalId)
+  expect(f.state.originals.length).toBeGreaterThan(0)
+  expect(f.state.originals.every((original) => original === request)).toBe(true)
+  expect(request.bodyUsed).toBe(false)
+  expect(await f.snapshot()).toEqual(before)
+  expect(await readSfApplicationContext(f.handlers[0]!, request, principalId)).toBeUndefined()
+  expect(await readSfApplicationContext(f.handlers[0]!, request, principalId, async () => false)).toBeUndefined()
+  const wrongMethod = new Request(request.url, { method: "DELETE", headers: request.headers })
+  expect(await readSfApplicationContext(f.handlers[0]!, wrongMethod, principalId, async () => true)).toBeUndefined()
+  const controller = new AbortController()
+  const aborted = new Request(request, { signal: controller.signal })
+  controller.abort()
+  expect(await readSfApplicationContext(f.handlers[0]!, aborted, principalId, async () => true)).toBeUndefined()
+  expect(request.bodyUsed).toBe(false)
+  const f02 = new Request(f.contextRequest(), { method: "POST", body: "{unconsumed F02 bytes" })
+  expect((await f.f02.handle(f02)).status).toBe(400)
+  expect(f02.bodyUsed).toBe(false)
+  expect(await f.snapshot()).toEqual(before)
 }))
