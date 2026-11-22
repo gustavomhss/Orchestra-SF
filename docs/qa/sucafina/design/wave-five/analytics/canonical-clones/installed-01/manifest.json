@@ -37,8 +37,16 @@
   "byteIdentityVerification": {
     "method": "SHA-1 of the Git blob header plus original JPEG bytes was computed independently and compared with the SHA returned by GitHub create_blob. Every image matched; SHA-256 is also recorded.",
     "gitContentAddressMatches": 7,
-    "separateBinaryReadbackCompleted": false,
-    "separateBinaryReadbackLimitation": "The GitHub Fetch connector rejected the Git Data blob endpoint with HTTP 400: GitHub Fetch only accepts UTF-8 text. No auxiliary commit or ref was created."
+    "separateBinaryReadbackCompleted": true,
+    "priorStagingLimitation": "The GitHub Fetch connector rejected the Git Data blob endpoint with HTTP 400: GitHub Fetch only accepts UTF-8 text. No auxiliary commit or ref was created.",
+    "rootReadback": {
+      "reviewer": "/root",
+      "commit": "1edd09262363a50625d0ed128c506b2970bafa3f",
+      "method": "GitHub fetch_file with explicit base64 encoding; stripped transport whitespace and compared exact base64 with original completed-log chunks.",
+      "images": 7,
+      "totalBytes": 537102,
+      "allExact": true
+    }
   },
   "images": [
     {

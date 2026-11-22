@@ -646,8 +646,16 @@
     "profilerPresent": false,
     "controlNonceArchived": false,
     "binaryContentAddressesVerified": true,
-    "separateBinaryReadbackCompleted": false,
-    "binaryReadbackLimitation": "GitHub Fetch accepts UTF-8 text only; original bytes are preserved in JPEG blobs and all source preview payloads, with independent Git blob SHA and SHA-256 checks."
+    "separateBinaryReadbackCompleted": true,
+    "priorStagingLimitation": "GitHub Fetch accepts UTF-8 text only; original bytes are preserved in JPEG blobs and all source preview payloads, with independent Git blob SHA and SHA-256 checks.",
+    "rootBinaryReadback": {
+      "reviewer": "/root",
+      "commit": "1edd09262363a50625d0ed128c506b2970bafa3f",
+      "method": "GitHub fetch_file with explicit base64 encoding; stripped transport whitespace and compared exact base64 with original completed-log chunks.",
+      "images": 7,
+      "totalBytes": 537102,
+      "allExact": true
+    }
   },
   "separatelyScopedTechnicalVerification": {
     "path": "../technical-01/receipt.json",
@@ -689,6 +697,8 @@
     "rootReviewChanged": false,
     "commitCreated": false,
     "refUpdated": false,
-    "newCiExecution": false
+    "newCiExecution": false,
+    "stage": "Immutable eleven-file staging tree before root integration; final root integration is documented separately.",
+    "laterIntegration": "root-review.json"
   }
 }

@@ -52,7 +52,7 @@ The failure frame keeps candidate v1, constraint v2 and limit 4 selected, with d
 
 The JPEG bytes were not resized, recompressed, cropped or annotated. Base64 round-trips, JPEG boundaries, chunk cardinalities, SHA-256 values and Git blob SHA-1 identities were checked. All seven independently computed Git blob IDs match the IDs returned by GitHub on creation.
 
-A separate binary readback was unavailable: the GitHub Fetch connector rejected the Git Data blob endpoint with `HTTP 400: GitHub Fetch only accepts UTF-8 text`. No auxiliary commit or ref was created to bypass that boundary. Original JPEG bytes and all original chunk payloads remain available for a later readback after the parent integrates the tree.
+The initial text-only Git Data blob fetch could not read the JPEGs. After creating the evidence commit `1edd09262363a50625d0ed128c506b2970bafa3f`, `/root` used the GitHub file connector's explicit base64 mode and independently reread **all seven JPEGs**. Their blob IDs and complete base64 payloads match the original completed-log chunks exactly. This confirms byte preservation; the Actions ZIP was not downloaded.
 
 The prior [eight-gate technical PASS](../technical-01/receipt.json) belongs to run `45048665481`, product `d6bce5d81d0fd578a190b9bacac2a1a4250109a1` and snapshot `c18b97d8a316992b95abcbb57ef9b6c6754b1518`. It is separately scoped and was not rerun by this installed attempt.
 
