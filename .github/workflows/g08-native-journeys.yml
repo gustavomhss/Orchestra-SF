@@ -1,8 +1,8 @@
-name: g08-native-journeys
+name: native-fault-controls
 
 on:
   push:
-    branches: ["native-journeys"]
+    branches: ["native-fault-ci"]
   workflow_dispatch:
 
 permissions:
@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: ${{ github.sha }}
+          ref: d1b5110ff94ed1c95af7002aaa208dcf6569de00
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
@@ -95,7 +95,7 @@ jobs:
           assert.equal(inventory.inventory.length, 50)
           assert(inventory.inventory.every((item) => item.state === "LISTED_NOT_RUN"))
           const source = { sha: read("source-sha.txt").trim(), tree: read("source-tree.txt").trim() }
-          assert.equal(source.sha, process.env.GITHUB_SHA)
+          assert.equal(source.sha, "d1b5110ff94ed1c95af7002aaa208dcf6569de00")
           const paths = ["packages/app-shell/e2e/sucafina/native/fixture.ts","packages/app-shell/e2e/sucafina/native/fixture/case-contract.ts","packages/app-shell/e2e/sucafina/native/fixture/browser-transport.ts","packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts","packages/app-shell/e2e/sucafina/native/fixture/installed-host.ts","packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts","packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts","packages/app-shell/e2e/sucafina/native/fixture/installed-operations.ts","packages/app-shell/e2e/sucafina/native/fixture/isolated-installation.ts","packages/app-shell/e2e/sucafina/native/fixture/journeys.ts","packages/app-shell/e2e/sucafina/native/fixture/readiness.ts","packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts","packages/app-shell/e2e/sucafina/native/fixture/manifest-contract.ts","packages/app-shell/e2e/sucafina/native/fixture/selection.ts","packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts","packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts","packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts","packages/app-shell/e2e/sucafina/native/package.json","packages/app-shell/e2e/sucafina/native/tsconfig.json","packages/app-shell/e2e/playwright.production.config.ts","packages/app-shell/test/sucafina-native/installed-journeys.test.ts","packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts","packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts","packages/app-shell/test-browser/sucafina-native/fixture/response-faults.test.ts","sf/azure/identity/az02-proof.cjs","packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts","script/sf2h/proofs/installed/register.ts","script/sf2h/proofs/installed/consume.ts","script/sf2h/proofs/installed/README.md","script/sf-ci/g08-native-journeys.mjs","script/sf-ci/g08-native-journeys.test.mjs",".github/workflows/g08-native-journeys.yml","packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain-route.ts","packages/client/src/sucafina/team-domain.ts","packages/schema/src/sucafina/context.ts","packages/schema/src/sucafina/team-profile.ts","script/sf-ci/g08-private-evidence.mjs","script/sf-ci/g08-installed-preflight.py"]
           const sources = paths.map((path) => ({ path, sha256: digest(readFileSync(path)) }))
           const files = readdirSync(root).sort().map((path) => ({ path, sha256: digest(readFileSync(root + "/" + path)) }))
@@ -118,7 +118,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: g08-native-controls-${{ github.sha }}-${{ github.run_attempt }}
+          name: g08-native-fault-controls-d1b5110ff94ed1c95af7002aaa208dcf6569de00-${{ github.run_attempt }}
           path: ${{ env.SF_NATIVE_CONTROLS }}
           if-no-files-found: error
           retention-days: 30
