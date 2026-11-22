@@ -1,7 +1,7 @@
 import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
 
 export type TeamSessionRetirement =
-  | "refresh" | "stream" | "profile-change" | "logout" | "revoked" | "principal-change" | "dispose"
+  | "refresh" | "stream" | "unverified" | "profile-change" | "logout" | "revoked" | "principal-change" | "dispose"
 
 /** An equality fence for previously observed UI context, never an admission grant. */
 export function sameTeamSessionContext(left: SfContextStamp, right: SfContextStamp): boolean {

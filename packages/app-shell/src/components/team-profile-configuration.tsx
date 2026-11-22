@@ -1,5 +1,5 @@
 import { createUniqueId, onCleanup, onMount, Show } from "solid-js"
-import { createStore, reconcile } from "solid-js/store"
+import { createStore, reconcile, unwrap } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { SfTeamContext, SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
@@ -94,7 +94,7 @@ export function TeamProfileConfiguration(props: Readonly<{
       document: { version: 1, settings: {
         model: ui.model.trim(),
         ...(ui.agent.trim() ? { default_agent: ui.agent.trim() } : {}),
-        ...(view.document?.settings.agents ? { agents: view.document.settings.agents } : {}),
+        ...(view.document?.settings.agents ? { agents: structuredClone(unwrap(view.document.settings.agents)) } : {}),
       } },
     })
     if (Option.isNone(decoded)) { setUi("invalid", true); return }

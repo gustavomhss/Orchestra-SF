@@ -46,15 +46,17 @@ test("unsupported Web Locks creates distinct ephemeral windows without using cop
   })
 
 test("copied sessionStorage cannot acquire a window identity already held by another document", async () => {
-  const held = new Set<string>()
+  const held = new Set<string>(), released: Promise<void>[] = []
   async function request<T>(name: string, options: LockOptions | ((lock: Lock | null) => T | PromiseLike<T>),
     callback?: (lock: Lock | null) => T | PromiseLike<T>): Promise<T> {
     const accept = typeof options === "function" ? options : callback
     if (!accept) throw new Error("Lock callback required")
     const lock = held.has(name) ? null : { name, mode: "exclusive" as const }
     if (lock) held.add(name)
+    const finished = Promise.withResolvers<void>()
+    released.push(finished.promise)
     try { return await accept(lock) }
-    finally { if (lock) held.delete(name) }
+    finally { if (lock) held.delete(name); finished.resolve() }
   }
   const locks: Pick<LockManager, "request"> = { request }
   const aStorage = storage(), bStorage = storage()
@@ -73,6 +75,6 @@ test("copied sessionStorage cannot acquire a window identity already held by ano
     expect(aStorage.values.get("orchestra.team.window.v1")).toBe(a?.id)
     expect(bStorage.values.get("orchestra.team.window.v1")).toBe(b?.id)
   } finally { a?.dispose(); b?.dispose(); aLife.abort(); bLife.abort() }
-  await Promise.resolve()
+  await Promise.all(released)
   expect(held.size).toBe(0)
 })

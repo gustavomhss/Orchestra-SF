@@ -112,6 +112,10 @@ export function createTeamSessionsWorkspace(input: Readonly<{
   })
   const [state, setState] = createStore<State>({ ...initial(), generation: 0 })
   const prompt = createStore<PromptInputV2PersistedState>(emptyPrompt())
+  const publishPrompt = (draft: PromptInputV2PersistedState) => prompt[1]({
+    // Native editing skips its own input notification. Replacing the collection makes later clears observable.
+    prompt: [...draft.prompt], context: { items: [...draft.context.items] }, cursor: draft.cursor, model: draft.model,
+  })
   let active: Scope | undefined, quarantine: Quarantine | undefined
   let drafts = new Map<string, PromptInputV2PersistedState>()
   const hints = new Map<string, typeof Hints.Type>()
@@ -175,12 +179,13 @@ export function createTeamSessionsWorkspace(input: Readonly<{
       hints.clear(); lastOwner = undefined
     }
     drafts = new Map()
-    batch(() => { prompt[1](reconcile(emptyPrompt())); setState(reconcile({ ...initial(), generation: state.generation + 1 })) })
+    batch(() => { publishPrompt(emptyPrompt()); setState(reconcile({ ...initial(), generation: state.generation + 1 })) })
   }
   const invalidate = (scope: Scope, reason: SfTeamSessionFailure | "stream") => {
     if (active !== scope) return
-    // A disconnected stream retires IO/content, but cannot prove that an in-flight write did not apply.
-    retire(reason === "stream" ? "stream" : "revoked")
+    // Invalid response labels or a lost stream retire IO/content, without proving that a dispatched write did not apply.
+    const authorityLost = reason === "unauthenticated" || reason === "denied"
+    retire(authorityLost ? "revoked" : reason === "stream" ? "stream" : "unverified")
     setState({ status: "unavailable", reason })
     input.notice(reason === "stream" ? "sf.teams.chatUpdatesStopped" : "sf.teams.chatUnavailable")
     if (reason === "unauthenticated") input.unauthenticated()
@@ -315,7 +320,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
             sameTeamSessionOwner(quarantine.namespace.owner, namespace.owner) &&
             quarantine.namespace.authorityGeneration === namespace.authorityGeneration) {
           drafts = quarantine.drafts
-          prompt[1](reconcile(drafts.get(draftKey()) ?? emptyPrompt()))
+          publishPrompt(drafts.get(draftKey()) ?? emptyPrompt())
         }
         else if ([...quarantine.drafts.values()].some((draft) => (promptText(draft) ?? "").trim()))
           input.notice("sf.teams.chatDraftsRemoved")
@@ -339,7 +344,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
     saveDraft()
     if (!id) {
       setState("active", undefined)
-      prompt[1](reconcile(drafts.get("new") ?? emptyPrompt()))
+      publishPrompt(drafts.get("new") ?? emptyPrompt())
       return true
     }
     const parsed = Schema.decodeUnknownOption(SessionID)(id)
@@ -356,7 +361,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
       batch(() => {
         setState({ active: id, tabs: [...state.tabs.filter((tab) => tab.id !== id), info],
           closed: state.closed.filter((tab) => tab !== id) })
-        prompt[1](reconcile(drafts.get(id) ?? emptyPrompt()))
+        publishPrompt(drafts.get(id) ?? emptyPrompt())
       })
       await readMessages(scope, parsed.value)
       check(scope)
@@ -466,7 +471,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
       !!(quarantine && [...quarantine.drafts.values()].some((draft) => !!(promptText(draft) ?? "").trim())),
     discardDrafts() {
       if (unresolved()) { input.notice("sf.teams.pending"); return false }
-      quarantine = undefined; drafts.clear(); prompt[1](reconcile(emptyPrompt())); return true
+      quarantine = undefined; drafts.clear(); publishPrompt(emptyPrompt()); return true
     },
     async closeTab(id: string, discard = false) {
       const scope = active
@@ -479,7 +484,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
       setState("threads", produce((threads) => { delete threads[id] }))
       setState({ tabs: state.tabs.filter((item) => item.id !== id),
         closed: [id, ...state.closed.filter((item) => item !== id)].slice(0, 24) })
-      if (state.active === id) { setState("active", undefined); prompt[1](reconcile(drafts.get("new") ?? emptyPrompt())) }
+      if (state.active === id) { setState("active", undefined); publishPrompt(drafts.get("new") ?? emptyPrompt()) }
       persist(scope)
       return true
     },
@@ -531,7 +536,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
         pending(scope, operation)
         // Dispatch retires this text as an unsent draft. Unknown outcomes retain
         // IDs for read-only reconciliation and are never converted into a retry.
-        drafts.delete(id); prompt[1](reconcile(emptyPrompt()))
+        drafts.delete(id); publishPrompt(emptyPrompt())
         const admitted = await scope.client.prompt({ sessionID: id, id: messageID, text })
         check(scope); settled(scope, operation); operation = undefined
         scope.receipts = [...scope.receipts.filter((value) => value.messageID !== messageID), { sessionID: id, messageID }].slice(-64)
