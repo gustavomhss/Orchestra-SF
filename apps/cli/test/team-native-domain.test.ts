@@ -223,7 +223,8 @@ test("foreign Team intent, host revision, cross-site and duplicate selection can
   expect((await f.command("CAP14", { vendor: "Private A", amount: 1 })).response.status).toBe(200)
   const forged = f.request("/api/ui/pages/CAP14", {}, 1)
   expect((await f.bridge(forged, 0).handle())!.status).toBe(403)
-  expect((await f.read("CAP14", 0, "?year=2026&year=2027")).response.status).toBe(400)
+  // The original Team selector rejects duplicate raw topics before page parsing.
+  expect((await f.read("CAP14", 0, "?year=2026&year=2027")).response.status).toBe(403)
   const foreign = f.request("/api/ui/pages/CAP14", { headers: { Origin: "https://other.invalid" } })
   expect((await f.bridge(foreign).handle())!.status).toBe(403)
   const context = f.contextRequest()

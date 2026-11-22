@@ -45,31 +45,37 @@ jobs:
           git rev-parse 'HEAD^{tree}' > "$proof_output/source.tree"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
       - uses: ./.github/actions/setup-bun
+        id: install
         with:
           reuse-node: "true"
       - name: Exercise original Application Domain CAS and durable Team partitions
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: apps/cli
         run: |
           set -euo pipefail
           export ORCHESTRA_OMNI_CONTROL_NONCE="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
           bun test --timeout 30000 --reporter=junit --reporter-outfile "$SF_G08_DOMAIN_EVIDENCE/producer.junit.xml" ./test/team-native-domain.test.ts 2>&1 | tee "$SF_G08_DOMAIN_EVIDENCE/producer.log"
       - name: Exercise browser wire ownership and ambiguous-result fences
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: packages/client
         run: |
           set -euo pipefail
           export ORCHESTRA_OMNI_CONTROL_NONCE="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
           bun test --preload ../../script/test-omni-control.ts --timeout 10000 --reporter=junit --reporter-outfile "$SF_G08_DOMAIN_EVIDENCE/client.junit.xml" ./test/sucafina-team-domain.test.ts 2>&1 | tee "$SF_G08_DOMAIN_EVIDENCE/client.log"
       - name: Typecheck Client through its package command
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: packages/client
         run: |
           set -euo pipefail
           bun typecheck 2>&1 | tee "$SF_G08_DOMAIN_EVIDENCE/client-types.log"
       - name: Typecheck the original CLI composition through its package command
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: apps/cli
         run: |
           set -euo pipefail
           bun typecheck 2>&1 | tee "$SF_G08_DOMAIN_EVIDENCE/cli-types.log"
       - name: Check guards against origin dev
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           set -euo pipefail
           bun run check:guards --base origin/dev 2>&1 | tee "$SF_G08_DOMAIN_EVIDENCE/guards.log"
@@ -98,7 +104,7 @@ jobs:
               if any(x.find(tag) is not None for x in cases for tag in ("failure", "error", "skipped")):
                   raise SystemExit("G08_DOMAIN_NON_PASS_CASE")
               logs = (output / (name + ".log")).read_text()
-              if not re.search(r'omni positive control:.*(?:pass|not applicable)', logs):
+              if len(re.findall(r'omni positive control \[[0-9a-f]{32}\]: (?:pass|not applicable)', logs)) != 1:
                   raise SystemExit("G08_DOMAIN_OMNI_CONTROL_MISSING")
               reports.append({"suite": name, "tests": len(cases), "failures": 0, "skips": 0,
                   "source": source, "junitSha256": hashlib.sha256(report.read_bytes()).hexdigest()})
