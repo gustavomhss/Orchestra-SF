@@ -172,3 +172,48 @@ Anchoring table captures at the caption exposes the heading and source limitatio
 | [UI46 source action after exact request](attempt-04/UI46-source-request-links-filtered.jpg) | Original response received; destination filtered from link list |
 
 UI43, UI44, a completed UI46 source journey and the final Portuguese states remain unqualified after this failed attempt. The next composed production run must exercise the fixes and retain these failed receipts.
+
+## Attempt 5 — exact source links and remaining original rejections
+
+- Source composition: `825fb6254cee8a1408c7209184fc39b28e469fbc`.
+- Test snapshot: `5646eed44121265aec67065b2931f7df5da0645a`; branch `ci-run-sf5analytics6`.
+- [Run 44984280433](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44984280433), job `137091317825`, attempt 1, no retries.
+- Existing production Playwright configuration and workflow, strict omni control and production channel.
+- [Canonical artifact 14739635418](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44984280433/artifacts/14739635418): `playwright-ubuntu-24.04-1`, 29,910,253 bytes, SHA-256 `aa547e26c573178486d1daedaed2d00da00209f6e126dd3204b340e544a27201`.
+- Result: both grouped journeys failed. Twenty-seven captures were produced; nine were emitted as images, inspected and persisted. The manifest marks the other captures unreviewed and available in the canonical artifact. UI42 emitted no page/console errors. BI emitted one HTTP 403 console error and no page errors.
+
+### Portfolio evidence and unresolved pre-request failure
+
+Original parameter preparation and controls readback succeeded. Both required context diagnostics reopened the actual installed endpoint with the authenticated APIRequestContext, returned HTTP 200 / ok and matched the exact owner binding. All seven targeted portfolio operations were ready and operational. Campaign/results resources remained partial for their genuinely unavailable sibling operations.
+
+UI42 displayed both real cases in all four modes, admitted a disabled Preview combinations action for the empty case, and retained the chosen original candidate and exploration limit in its native editor. Preview then produced no observed portfolio HTTP request. The original warning and unavailable preview remained visible; the strict HTTP assertion timed out. The warning text is a generic branch for any failed preview/history result and does not by itself establish that a source revision changed. History likewise did not produce a portfolio response. No portfolio or sensitivity result was fabricated or displayed.
+
+The client route correction is present in this source. A focused follow-up is comparing the original full schema decoder with the original wire codec on plain inputs and real browser Solid store proxies to locate the remaining pre-request rejection. The first input-probe snapshot `a301c8d7ffa5bba7574b687bd32f867bacdcf828` ([run 44985680214](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44985680214), job `137095599457`) failed in runner argument splitting before executing tests: the separately supplied `--preload` lost its value. It is not a decoder result. Its replacement uses the already established hosted AppProcess wrapper and the unchanged workflow.
+
+### Financial source identity now proved
+
+The UI46 financial projection again matched all thirty-six original row identities, fourteen numeric values and twenty-two missing observations. Its source did not specify currency, so the native view retained that limitation.
+
+Two genuinely published values shared the same source reference: `budget:2026-01:effective` and `budget:2026-01:actual`. Each native source action sent its own original value ID and digest in the installed `bi-source` request. Both original responses returned HTTP 200 and their source link. The rendered native link preserved the producer's `/orchestra/sf-dashboard/budget?year=2026` path/filter and added only the exact current server/project/installation owner tuple. The independent test oracle did not import the new destination helper. The original projection remained mounted after both actions.
+
+The two link screenshots have identical JPEG bytes because both values legitimately resolve to the same original Budget Overview destination. They are retained separately by action identity; they do not represent two different destinations.
+
+The next original BI06 data request returned HTTP 403. This attempt did not capture its response body, so no precise refusal reason is claimed here. The grouped test stopped with its positive source assertion intact. A focused original-source diagnostic is collecting that body before choosing any correction or accepting a genuine unavailable state. No source equality check, permission or status was weakened.
+
+### Corrected table inspection
+
+The caption, headings, source limitations and financial values are now readable in both desktop themes. At 390px dark and 320px light, short words no longer split within letters and the full value `58,000.00 unspecified` stays together. The table retains local horizontal overflow and its keyboard-accessible named region; opaque source references remain breakable. This table-wrapping correction changes no chart scale or numerical calculation.
+
+| Inspected image | Observed state |
+| --- | --- |
+| [UI42 selected candidate](attempt-05/UI42-configure-focused-candidate.jpg) | Original candidate and limit retained; history warning visible |
+| [UI42 unavailable preview](attempt-05/UI42-preview-unavailable-no-request.jpg) | No observed portfolio request; exact failed state retained |
+| [UI46 dark desktop table](attempt-05/UI46-table-heading-dark-desktop.jpg) | Caption, source limits and intact financial values |
+| [UI46 light desktop table](attempt-05/UI46-table-heading-light-desktop.jpg) | Same source rows, intact words and units |
+| [UI46 dark 390px table](attempt-05/UI46-table-heading-dark-390.jpg) | Local scroll; full value remains intact |
+| [UI46 light 320px table](attempt-05/UI46-table-heading-light-320.jpg) | Narrow whole-word correction verified |
+| [UI46 first exact source action](attempt-05/UI46-original-source-first-value.jpg) | Original Budget Overview source link for effective value |
+| [UI46 second exact source action](attempt-05/UI46-original-source-second-value.jpg) | Same genuine destination resolved with actual value's exact identity |
+| [UI46 original operational refusal](attempt-05/UI46-operational-original-refusal.jpg) | Original BI06 request rejected; no operational plot supplied |
+
+UI43, UI44, the operational BI result, BI11 empty context and final Portuguese states remain unqualified after this failed attempt. Financial source navigation and table corrections have direct evidence; that partial success does not turn the grouped failure into a pass.
