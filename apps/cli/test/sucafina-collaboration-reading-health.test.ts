@@ -284,9 +284,9 @@ test("each call reads every original namespace twice without retaining phase obs
   const context = await fixture()
   let reads = 0
   context.hooks.read = async (surface) => { if (surface === "dashboard") reads++ }
-  expect((await context.observe()).map((entry) => entry.operationId)).toEqual(operations)
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual([...operations])
   expect(reads).toBe(6)
-  expect((await context.observe()).map((entry) => entry.operationId)).toEqual(operations)
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual([...operations])
   expect(reads).toBe(12)
   expect(context.admitted).toHaveLength(operations.length * 2)
   context.terminal()

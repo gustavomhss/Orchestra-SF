@@ -1,6 +1,6 @@
 # Collaboration and import presentation — wave five
 
-This handoff covers UI51, UI52, UI53, UI55 and UI56. It is a progress record, not final acceptance: the clean Actions run proves the three collaboration journeys, while the import preview read remains under investigation.
+This handoff covers UI51, UI52, UI53, UI55 and UI56. It is a progress record, not final acceptance: clean Actions evidence proves the three collaboration journeys and now the original UI55 simulation and cancellation. UI56 route readiness still requires qualification after the remaining native context read cost is resolved.
 
 ## Implemented composition
 
@@ -14,7 +14,7 @@ This handoff covers UI51, UI52, UI53, UI55 and UI56. It is a progress record, no
 
 The presentation uses the established native shell, quiet glass tokens, maximum content width and responsive gutters. New copy is bilingual. Existing English catalog keys and values are preserved. Forty pre-existing pt-BR import values received language corrections with root approval; some of those translations are also used by UI57.
 
-The real full-year import manifest contains 1,564 values. UI55/56 therefore place the proposed changes before a native disclosure containing the complete original impact, including all components, values and missing inputs. Nothing is truncated. Original issue messages stay visible outside that disclosure. The two new disclosure messages are bilingual; UI57/68 retain their original content order and markup. This scoped presentation change is pending the first successful preview capture.
+The real full-year import manifest contains 1,564 values. UI55/56 therefore place the proposed changes before a native disclosure containing the complete original impact, including all components, values and missing inputs. Nothing is truncated. Original issue messages stay visible outside that disclosure. The two new disclosure messages are bilingual; UI57/68 retain their original content order and markup. Clean import attempt 2 now captures this scoped composition in dark/light desktop and 390 px modes, and asserts the complete original impact row count and last field. UI56 and pt-BR preview capture remain pending.
 
 The only shared collaboration renderer change is a bounded correction for the two existing observed-kind messages that contain the legacy single-brace `{kind}` placeholder. It uses the typed value and a replacement callback for those exact keys, leaving the translation catalogs and other interpolation behavior intact.
 
@@ -24,10 +24,13 @@ The new collaboration reading observer follows installed product identity, origi
 
 Root owns two shared integration changes: the type-only observer ID union and the native context composition. The type union is not an authorization list. Root also repaired the confirmation read scope: only the existing readSelection manifest/source fences execute inside the installed read-only transaction. The two original comparisons, expiry and write fence remain unchanged. The clean UI53 journey verifies prepare, current material, explicit review, original receipt and fresh validity.
 
+The current collaboration observer also groups the same namespace metadata reads into two separate phases, after each original action has been admitted individually. Each operation retains its exact source, lease, revalidation and comparison. Promises never cross the phase or invocation boundary. This reduces physical C08 reads from 22 to 6 per observer invocation (44 to 12 in the two-pass native context). Six new negative/isolation cases extend the genuine SQLite suite to 24. All 24 passed with 304 assertions in [batch qualification](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44988767940); the complete import journey is still awaiting clean run 44988782004.
+
 ## Qualification evidence
 
 | Evidence | Result and limits |
 | --- | --- |
+| [Clean import attempt 2](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987863383) | Source `74be68770c958a720c3a34fa5b8e71b779c77e44`, snapshot `3a021f025cedad0e2058df443f7bbc721939ef08`: UI55 original admission, preview, independent reference read, simulation, complete-impact disclosure and cancel retention succeeded. UI56 failed the unchanged 10 s provider readiness assertion. This is partial evidence, not a passing import journey. [Record and gallery](attempts/import-fixed-02.json). |
 | [Technical gates](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44981671317) | All 12 gates passed on source `b69429f5632cd15d524ef3df3527714a2ab8c13e`: CLI/app/E2E typing, 94 regression cases including 18 collaboration observer cases, guardrails, palette parity and English catalog preservation. Later progress-copy and observed-kind renderer changes still require a current composed gate. |
 | [Clean browser attempt 6](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44982724904) | Source `7a9e0696ff353d9352938abd2c5527d76f0a47b1`, snapshot `456c19e5cfce9d1692b0fe5b6a85104706f55cf4`: collaboration test passed; independent import test failed. See [exact record](attempts/06.json). |
 | UI51 | Dark/light desktop and 390px, removal review/cancel/reopen/focus, explicit editor/review/cancel with raw draft retained, case-alias empty and pt-BR. The visually observed legacy placeholder was corrected afterward and needs a fresh capture. |
@@ -61,3 +64,7 @@ Before final qualification:
 4. Run current composed technical gates and update this handoff, parity record and gallery.
 
 No import apply, external reply, email or notification was requested by these browser journeys. No human visual acceptance or browser zoom qualification is claimed.
+
+## Original snapshot materialization follow-up
+
+Root's pure decoder memo correction keeps the same 8 Mi UTF-16-unit budget, exact SQL bytes identity, SHA-256 observation, clone isolation, ACL handling and fallback decoder. It avoids retaining both a large encoded envelope and the normalized copy. The genuine SQLite suite passed 42 cases with 2 existing skips and 512 assertions in [store2](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987840434); the source/runtime used by clean import attempt 2 is identical to that correction. Attempt 2 now reaches original readback and the actual native simulation. It also exposes a residual approximately 18 s native context cost after the preview. The collaboration batching candidate targets its measured duplicate full-state reads without changing authorization, selector allowlists, persistence boundaries or readiness timeouts.

@@ -1161,6 +1161,97 @@
           "stderrTruncated": false
         }
       ]
+    },
+    {
+      "attempt": 11,
+      "product": "edcd24396fbcfa971b7dad04c2d5a74e0c928ea9",
+      "snapshot": "a832de8e506323a1f7cc576788b76174d7a6d2f3",
+      "run": 44989049311,
+      "job": 137105874054,
+      "cleanupJob": 137106163956,
+      "checks": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "notRerun": 14
+      },
+      "failures": [
+        "CLI test-only TS2769: two original operation array assertions passed a readonly tuple to the matcher overload for mutable arrays."
+      ],
+      "resolution": "The expected nine original IDs are copied with [...operations]; values/order and production runtime are unchanged. Follow-up type gate pending.",
+      "guards": {
+        "rules": 78,
+        "files": 341,
+        "errors": 0,
+        "approved": 0,
+        "warnings": 36,
+        "touchesGuards": false
+      },
+      "commands": [
+        {
+          "gate": "fetch pinned guard base",
+          "command": [
+            "git",
+            "fetch",
+            "--no-tags",
+            "--depth=1",
+            "origin",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "resolve pinned guard base",
+          "command": [
+            "git",
+            "rev-parse",
+            "--verify",
+            "refs/remotes/origin/dev^{commit}"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "guardrails",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "check:guards",
+            "--base",
+            "origin/dev",
+            "--json"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "CLI native host typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "apps/cli",
+          "exitCode": 2,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      ],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44989049311",
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      }
     }
   ]
 }

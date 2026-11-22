@@ -1,0 +1,41 @@
+{
+  "kind": "clean-import-qualification",
+  "source": "74be68770c958a720c3a34fa5b8e71b779c77e44",
+  "snapshot": "0408601b84f85a63ca731e64c92069c67b46d9ed",
+  "branch": "ci-run-sf5importfixed1",
+  "run": 44987448714,
+  "job": 137101038906,
+  "cleanupJob": 137101837683,
+  "status": "failed-in-temporary-test-snapshot-before-import",
+  "failure": {
+    "type": "ReferenceError",
+    "message": "looks is not defined",
+    "stage": "UI55 initial setup capture",
+    "reason": "The temporary import-only snapshot mistakenly removed the common looks helper located after the independent collaboration test. The permanent production spec contains the helper."
+  },
+  "observations": {
+    "nativeSetupReached": true,
+    "bytesAdmitted": false,
+    "previewProduced": false,
+    "consoleErrors": [],
+    "pageErrors": []
+  },
+  "artifacts": [
+    {
+      "id": 14740308799,
+      "name": "playwright-ubuntu-24.04-1",
+      "size": 2240124,
+      "digest": "sha256:639d43a3dcc5379b65934d54de6f4982684f16db67ec9b8e14bfcbaf3a9973be",
+      "expires": "2026-11-29T05:03:25Z"
+    }
+  ],
+  "scope": "Product source includes the bounded pure snapshot materialization candidate and the staged complete-impact UI. No diagnostic runtime trace overlays.",
+  "correction": {
+    "source": "74be68770c958a720c3a34fa5b8e71b779c77e44",
+    "snapshot": "3a021f025cedad0e2058df443f7bbc721939ef08",
+    "branch": "ci-run-sf5importfixed2",
+    "run": 44987863383,
+    "change": "Exclude only the independent collaboration test declaration; preserve the original UI55/UI56 test and exact 743-byte looks footer from permanent spec56680de."
+  },
+  "boundary": "This attempt provides no post-preview evidence about the materialization correction and no successful UI55/56 claim. No product, original source, authorization, guard, timeout or workflow was changed to repair the temporary snapshot."
+}
