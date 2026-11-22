@@ -2,6 +2,8 @@ import { Option, Schema } from "effect"
 import { Session } from "@orchestra/schema/session"
 import type { SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { readSfTeamDomainIntent } from "../orchestra/chapters/sucafina/host/team-domain-route"
+import { sfNativeRouteSpecs } from "../orchestra/chapters/sucafina/route-registry"
 
 type TeamNavigationIntent = Extract<TeamProfile.Selector, { kind: "selection" | "team" }>
 const paths = ["/", "/orchestra/sf-home", "/orchestra/sf-home/context"]
@@ -17,6 +19,8 @@ function sessionPath(url: URL): { sessionID?: Session.ID } | undefined {
 
 /** Decode navigation intent only. Discovery and the current Microsoft context remain authoritative. */
 export function readTeamNavigationIntent(url: URL, binding: SfTeamInstallationDescriptor): TeamNavigationIntent | undefined {
+  const domain = readSfTeamDomainIntent(url, binding)
+  if (domain) return domain.selector
   const session = sessionPath(url)
   if (url.protocol !== "https:" || url.origin !== binding.publicOrigin || url.username || url.password || url.hash ||
       (!paths.includes(url.pathname) && !session) || /%(?![\da-fA-F]{2})/.test(url.search)) return
@@ -51,9 +55,18 @@ export function readTeamNavigationIntent(url: URL, binding: SfTeamInstallationDe
 export function teamNavigationURL(url: URL, binding: SfTeamInstallationDescriptor, profile: TeamProfile.Ref) {
   if (!readTeamNavigationIntent(url, binding)) return
   const result = new URL(url.href)
+  const domain = readSfTeamDomainIntent(url, binding)
+  // Preserve an admitted deep link only within its Team. A picker change starts
+  // the same canonical page without carrying the previous Team's record ref.
+  if (domain && domain.selector.profile.teamObjectId !== profile.teamObjectId) {
+    const entry = sfNativeRouteSpecs.find((route) => route.surfaceId === domain.candidate.surfaceId && route.kind === "entry")
+    if (!entry) return
+    result.pathname = entry.pattern
+  }
   result.search = new URLSearchParams({
     contractRevision: binding.contractRevision, server: binding.publicOrigin,
     installationId: profile.installationId, tenantId: profile.tenantId, teamObjectId: profile.teamObjectId,
+    ...(domain?.query.year === undefined ? {} : { year: String(domain.query.year) }),
   }).toString()
   return readTeamNavigationIntent(result, binding)?.kind === "team" ? result : undefined
 }

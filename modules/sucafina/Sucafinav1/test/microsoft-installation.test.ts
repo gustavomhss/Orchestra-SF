@@ -1770,78 +1770,6 @@ for (const revoked of ["roles", "membership", "logout"] as const) {
   })
 }
 
-test("Corporate native login preserves closed Team domain routes without granting membership", async () => {
-  const f = await nativeNavigationFixture()
-  try {
-    const contracts = "/orchestra/sf-procurement/contracts?" + new URLSearchParams({ ...f.selection, teamObjectId })
-    await f.signIn(contracts, contracts, "//foreign.example.test/replace")
-    for (const pathname of ["/orchestra/sf-dashboard/opex", "/orchestra/sf-dashboard/capex"]) {
-      for (const year of ["2024", "2026", "2027"]) {
-        const returnTo = pathname + "?" + new URLSearchParams({ ...f.selection, teamObjectId, year })
-        await f.signIn(returnTo, returnTo, "/orchestra/sf-home?principalRef=foreign")
-      }
-    }
-    f.membership.teams = []
-    const cookie = await f.signIn(contracts)
-    await expectRevokedTeamContext(await f.context(teamObjectId, cookie))
-    expect((await f.installation.handler(ingress("/teams/" + teamObjectId + "/dashboard", { cookie })))?.status).toBe(403)
-  } finally { await f.close() }
-})
-
-test("Corporate native domain return rejects incomplete, duplicate, legacy and out-of-range intent after signed OIDC", async () => {
-  const f = await nativeNavigationFixture()
-  try {
-    for (const pathname of ["/orchestra/sf-procurement/contracts", "/orchestra/sf-dashboard/opex", "/orchestra/sf-dashboard/capex"]) {
-      const budget = pathname !== "/orchestra/sf-procurement/contracts"
-      const selection = { ...f.selection, teamObjectId, ...(budget ? { year: "2026" } : {}) }
-      const query = new URLSearchParams(selection).toString()
-      for (const returnTo of [
-        pathname,
-        pathname + "?" + new URLSearchParams({ ...f.selection, ...(budget ? { year: "2026" } : {}) }),
-        pathname + "?" + query + "&teamObjectId=" + secondTeamId,
-        pathname + "?" + query + "&%74eamObjectId=" + teamObjectId,
-        pathname + "?" + query + "&principalRef=" + oid,
-        pathname + "?" + query + "&accessRevision=claimed",
-        pathname + "?" + query + "&projectId=technical-placement",
-        pathname + "?" + query + "&hostId=technical-host",
-        pathname + "?" + new URLSearchParams({ ...selection, server: "https://foreign.example.test" }),
-        pathname + "?" + new URLSearchParams({ ...selection, contractRevision: "sf-native-ui/1" }),
-        pathname + "/extra?" + query,
-        pathname + "?" + query + "#replaced",
-      ]) await f.signIn(returnTo, mount + "/dashboard")
-      if (budget) {
-        await f.signIn(pathname + "?" + new URLSearchParams({ ...f.selection, teamObjectId }), mount + "/dashboard")
-        await f.signIn(pathname + "?" + query + "&year=2026", mount + "/dashboard")
-        for (const year of ["", "2023", "2028", "02026", "2026.0", "-2026", "2026suffix"])
-          await f.signIn(pathname + "?" + new URLSearchParams({ ...selection, year }), mount + "/dashboard")
-      } else {
-        await f.signIn(pathname + "?" + query + "&year=2026", mount + "/dashboard")
-      }
-    }
-  } finally { await f.close() }
-})
-
-test("Corporate native login preserves canonical original detail and edit references without authority", async () => {
-  const f = await nativeNavigationFixture()
-  try {
-    for (const base of ["/orchestra/sf-procurement/contracts", "/orchestra/sf-dashboard/opex", "/orchestra/sf-dashboard/capex"]) {
-      const query = new URLSearchParams({ ...f.selection, teamObjectId,
-        ...(base.endsWith("/contracts") ? {} : { year: "2026" }) })
-      // r_Y2Fmw6k is the original UTF-8 opaque reference "café"; it grants no record access.
-      for (const suffix of ["/new", "/r_YQ", "/r_Y2Fmw6k", "/r_Y2Fmw6k/edit"]) {
-        const returnTo = base + suffix + "?" + query
-        await f.signIn(returnTo, returnTo, "/orchestra/sf-home?principalRef=" + oid)
-        await f.signIn(base + suffix, mount + "/dashboard")
-        await f.signIn(returnTo + "&principalRef=" + oid, mount + "/dashboard")
-      }
-      for (const suffix of ["/new/edit", "/r_", "/r_A", "/r_YR", "/r__w", "/r_YQ==",
-        "/r_%59Q", "/r_YQ/extra", "/r_YQ/edit/extra", "/r_YQ/", "//r_YQ"]) {
-        await f.signIn(base + suffix + "?" + query, mount + "/dashboard")
-      }
-    }
-  } finally { await f.close() }
-})
-
 for (const boundary of ["roles-before", "grants-before", "invalid-before", "roles-during", "grants-during"] as const) {
   test("Corporate Team context reads the actual private policy at " + boundary, async () => {
     const group = "75555555-5555-4555-8555-555555555555"
@@ -1950,3 +1878,75 @@ for (const boundary of ["roles-before", "grants-before", "invalid-before", "role
     }
   })
 }
+
+test("Corporate native login preserves closed Team domain routes without granting membership", async () => {
+  const f = await nativeNavigationFixture()
+  try {
+    const contracts = "/orchestra/sf-procurement/contracts?" + new URLSearchParams({ ...f.selection, teamObjectId })
+    await f.signIn(contracts, contracts, "//foreign.example.test/replace")
+    for (const pathname of ["/orchestra/sf-dashboard/opex", "/orchestra/sf-dashboard/capex"]) {
+      for (const year of ["2024", "2026", "2027"]) {
+        const returnTo = pathname + "?" + new URLSearchParams({ ...f.selection, teamObjectId, year })
+        await f.signIn(returnTo, returnTo, "/orchestra/sf-home?principalRef=foreign")
+      }
+    }
+    f.membership.teams = []
+    const cookie = await f.signIn(contracts)
+    await expectRevokedTeamContext(await f.context(teamObjectId, cookie))
+    expect((await f.installation.handler(ingress("/teams/" + teamObjectId + "/dashboard", { cookie })))?.status).toBe(403)
+  } finally { await f.close() }
+})
+
+test("Corporate native domain return rejects incomplete, duplicate, legacy and out-of-range intent after signed OIDC", async () => {
+  const f = await nativeNavigationFixture()
+  try {
+    for (const pathname of ["/orchestra/sf-procurement/contracts", "/orchestra/sf-dashboard/opex", "/orchestra/sf-dashboard/capex"]) {
+      const budget = pathname !== "/orchestra/sf-procurement/contracts"
+      const selection = { ...f.selection, teamObjectId, ...(budget ? { year: "2026" } : {}) }
+      const query = new URLSearchParams(selection).toString()
+      for (const returnTo of [
+        pathname,
+        pathname + "?" + new URLSearchParams({ ...f.selection, ...(budget ? { year: "2026" } : {}) }),
+        pathname + "?" + query + "&teamObjectId=" + secondTeamId,
+        pathname + "?" + query + "&%74eamObjectId=" + teamObjectId,
+        pathname + "?" + query + "&principalRef=" + oid,
+        pathname + "?" + query + "&accessRevision=claimed",
+        pathname + "?" + query + "&projectId=technical-placement",
+        pathname + "?" + query + "&hostId=technical-host",
+        pathname + "?" + new URLSearchParams({ ...selection, server: "https://foreign.example.test" }),
+        pathname + "?" + new URLSearchParams({ ...selection, contractRevision: "sf-native-ui/1" }),
+        pathname + "/extra?" + query,
+        pathname + "?" + query + "#replaced",
+      ]) await f.signIn(returnTo, mount + "/dashboard")
+      if (budget) {
+        await f.signIn(pathname + "?" + new URLSearchParams({ ...f.selection, teamObjectId }), mount + "/dashboard")
+        await f.signIn(pathname + "?" + query + "&year=2026", mount + "/dashboard")
+        for (const year of ["", "2023", "2028", "02026", "2026.0", "-2026", "2026suffix"])
+          await f.signIn(pathname + "?" + new URLSearchParams({ ...selection, year }), mount + "/dashboard")
+      } else {
+        await f.signIn(pathname + "?" + query + "&year=2026", mount + "/dashboard")
+      }
+    }
+  } finally { await f.close() }
+})
+
+test("Corporate native login preserves canonical original detail and edit references without authority", async () => {
+  const f = await nativeNavigationFixture()
+  try {
+    for (const base of ["/orchestra/sf-procurement/contracts", "/orchestra/sf-dashboard/opex", "/orchestra/sf-dashboard/capex"]) {
+      const query = new URLSearchParams({ ...f.selection, teamObjectId,
+        ...(base.endsWith("/contracts") ? {} : { year: "2026" }) })
+      // r_Y2Fmw6k is the original UTF-8 opaque reference "café"; it grants no record access.
+      for (const suffix of ["/new", "/r_YQ", "/r_Y2Fmw6k", "/r_Y2Fmw6k/edit"]) {
+        const returnTo = base + suffix + "?" + query
+        await f.signIn(returnTo, returnTo, "/orchestra/sf-home?principalRef=" + oid)
+        await f.signIn(base + suffix, mount + "/dashboard")
+        await f.signIn(returnTo + "&principalRef=" + oid, mount + "/dashboard")
+      }
+      for (const suffix of ["/new/edit", "/r_", "/r_A", "/r_YR", "/r__w", "/r_YQ==",
+        "/r_%59Q", "/r_YQ/extra", "/r_YQ/edit/extra", "/r_YQ/", "//r_YQ"]) {
+        await f.signIn(base + suffix + "?" + query, mount + "/dashboard")
+      }
+    }
+  } finally { await f.close() }
+})

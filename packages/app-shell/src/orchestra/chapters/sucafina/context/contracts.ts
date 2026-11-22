@@ -117,4 +117,3 @@ export type SfContextHandle<Context extends SfReadableContext = SfContext> = Rea
     returnRoute: SfResolvedRoute<"UI29">
   }>) => boolean
 }>
-
