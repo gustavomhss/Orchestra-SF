@@ -1,5 +1,5 @@
 import { types } from "node:util"
-import { digestSfValue } from "../contracts/canonical.ts"
+import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
 
 // This preparation only removes unused serialization of one context result.
 // It retains no authorization and never replaces the live comparison's digest.
@@ -63,7 +63,7 @@ function unchangedRuntime() {
       if (current[position] !== field.key || !sameDescriptor(descriptor(pin.owner, field.key), field.expected)) return false
     }
   }
-  return true
+  return sfCanonicalSerializerUnhooked()
 }
 
 const opaque = Symbol("opaque-context-identity")
@@ -93,7 +93,7 @@ function capture(value: unknown): { value: unknown } | undefined {
       if (typeof length !== "number" || names.length !== length + 1) return opaque
       // Sparse or inherited slots retain the original Array.map behavior.
       for (let index = 0; index < length; index++)
-        if (!fields[index] || !own(fields[index]!, "value")) return opaque
+        if (!own(fields, index) || !own(fields[index]!, "value")) return opaque
     }
     const copied: object = array ? [] : create(parent)
     active.add(item)

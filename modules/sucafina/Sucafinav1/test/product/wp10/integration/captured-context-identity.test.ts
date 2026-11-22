@@ -256,6 +256,40 @@ test("prototype toJSON and species hooks retain eager canonical observation", ()
   expect(result.matches).toBe(true)
 })
 
+
+test("a toJSON hook present before module loading keeps canonical admission eager", async () => {
+  for (const [name, owner] of [["object", Object.prototype], ["array", Array.prototype]] as const) {
+    const saved = property(owner, "toJSON")
+    const source = { values: [1, 2], absent: undefined }
+    let calls = 0
+    let observed: { distinct: boolean; canonical: number; preparation: number; comparison: number; matches: boolean } | undefined
+    define(owner, "toJSON", { configurable: true, value: function(this: unknown) { calls++; return this } })
+    try {
+      const url = new URL("../../../../product/host-binding/captured-context-identity.ts", import.meta.url)
+      url.searchParams.set("preexisting-tojson", name)
+      const fresh: typeof import("../../../../product/host-binding/captured-context-identity.ts") = await import(url.href)
+      calls = 0
+      digestSfValue(source)
+      const canonical = calls
+      calls = 0
+      const same = fresh.prepareSfCapturedContextIdentity(source)
+      const preparation = calls
+      calls = 0
+      const matches = same(source)
+      observed = { distinct: fresh.prepareSfCapturedContextIdentity !== prepareSfCapturedContextIdentity,
+        canonical, preparation, comparison: calls, matches }
+    } finally {
+      if (saved) define(owner, "toJSON", saved)
+      else remove(owner, "toJSON")
+    }
+    expect(observed?.distinct).toBe(true)
+    expect(observed?.canonical).toBeGreaterThan(0)
+    expect(observed?.preparation).toBe(observed?.canonical)
+    expect(observed?.comparison).toBe(observed?.canonical)
+    expect(observed?.matches).toBe(true)
+  }
+})
+
 test("a hasher hook present at preparation is invoked immediately by the original path", () => {
   let constructors = 0
   const replacement = new Proxy(Bun.CryptoHasher, { construct(target, args) {
