@@ -325,6 +325,7 @@ test("CurrentChoice readonly calculation roots close escaped parent and child co
       await fixture.persistence.readSnapshotRoot!(async () => {
         const secondScope = currentSfReadonlySnapshotScope(fixture.persistence)
         expect(firstScope?.identity).toBeDefined()
+        expect(firstScope?.bytesIdentity).toBeDefined()
         expect(secondScope?.identity).not.toBe(firstScope?.identity)
         expect(secondScope?.bytesIdentity).toBe(firstScope?.bytesIdentity)
         expect(secondScope?.current()).toBe(true)
