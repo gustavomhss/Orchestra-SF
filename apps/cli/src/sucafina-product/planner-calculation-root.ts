@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic, countSfReadonlyDiagnostic, recordSfReadonlyRoot } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import { currentSfReadonlySnapshotScope, hasSfLocalSnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
@@ -14,6 +15,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
   const unavailable = () => ({ status: "unavailable", reason: "calculation-read-root-unavailable" } as const)
   const prepare = async (call: TrustedDomainContext, initialize: () => Promise<boolean | "unsupported">,
     unchanged: () => boolean, ownerCurrent: () => boolean = unchanged): Promise<Prepared | undefined> => {
+    const measured = beginSfReadonlyDiagnostic("root.prepare")
     try {
       let used = false
       const once = (run: Prepared["run"]): Prepared => ({ run: async <Value>(work: () => Promise<PortResult<Value>>) => {
@@ -23,6 +25,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       } })
       const parent = roots.getStore()
       if (parent) {
+        countSfReadonlyDiagnostic("root.prepare.descendant")
         if (!parent.current(call) || !unchanged()) return undefined
         return once(async (work) => {
           // The root is already prepared. This descendant executes its complete
@@ -30,6 +33,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
           if (!parent.current(call) || !unchanged()) return unavailable()
           parent.children++
           try {
+            countSfReadonlyDiagnostic("root.descendant.work")
             const result = await work()
             return parent.current(call) && unchanged() ? result : unavailable()
           } finally { parent.children-- }
@@ -39,7 +43,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       const root = persistence.readSnapshotRoot, snapshots = persistence.currentSnapshots
       // Older adapters keep the complete original producer, without preparation
       // or a claim that an owned root protected its observation.
-      if (!root || !snapshots) return once((work) => work())
+      if (!root || !snapshots) { countSfReadonlyDiagnostic("root.prepare.unsupported-adapter"); return once((work) => work()) }
       const transaction = persistence.transaction, transactionAll = persistence.transactionAll
       const snapshotScope = persistence.currentSnapshotScope
       const requestFor = host.requestFor, revalidate = host.revalidate
@@ -66,6 +70,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       const inherited = local === undefined ? snapshots.call(persistence) : undefined
       const present = () => hasSfLocalSnapshotScope(persistence) ?? snapshots.call(persistence) !== undefined
       if (local === true || inherited !== undefined) {
+        countSfReadonlyDiagnostic("root.prepare.inherited")
         // A pre-existing C08 owner (including Memory preflight/commit) keeps its
         // original route. Do not prepare sources, open a root or borrow ownership.
         if (local !== true && (!inherited || typeof inherited !== "object")) return undefined
@@ -84,6 +89,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         if (!await healthy()) return undefined
         return once(async (work) => {
           if (!await healthy()) return unavailable()
+          countSfReadonlyDiagnostic("root.inherited.work")
           const result = await work()
           return await healthy() ? result : unavailable()
         })
@@ -93,6 +99,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       if (initialized !== true && initialized !== "unsupported") return undefined
       if (!current() || present()) return undefined
       if (initialized === "unsupported") {
+        countSfReadonlyDiagnostic("root.prepare.unsupported-source")
         // Eligibility was inspected without opening a root or warming sources.
         // Preserve the full producer only while these exact observations live.
         return once(async (work) => {
@@ -101,6 +108,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
           return current() && !present() && await revalidate.call(host, call) && current() && !present() ? result : unavailable()
         })
       }
+      countSfReadonlyDiagnostic("root.prepare.owned")
       // The caller opens its original full C08/source witness only after this
       // preparation returns. No prepared observation is accepted as evidence.
       return once(async <Value>(work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
@@ -108,21 +116,30 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         let invocations = 0, completed = false
         let staged: PortResult<Value> | undefined
         const accepted = await root.call(persistence, async () => {
+          const measured = beginSfReadonlyDiagnostic("root.physical.callback")
+          let diagnosticIdentity: object | undefined
+          countSfReadonlyDiagnostic("root.physical.enter")
+          try {
           invocations++
           if (invocations !== 1 || !current()) return false
           const observed = currentSfReadonlySnapshotScope(persistence)
           const sealed = observed && { identity: observed.identity, bytesIdentity: observed.bytesIdentity }
+          diagnosticIdentity = sealed?.identity
+          recordSfReadonlyRoot(sealed ? "physical-sealed" : "physical-unsealed", diagnosticIdentity)
+          countSfReadonlyDiagnostic(sealed ? "root.physical.sealed" : "root.physical.unsealed")
           const integrity = { failed: false }
           // A legal nested transaction has its own lexical scope. Ask that live
           // scope for a fresh proof of this exact physical root, never the parent's current().
           const healthy = sealed ? () => {
-            if (integrity.failed) return false
+            if (integrity.failed) { countSfReadonlyDiagnostic("root.health.sticky-invalid"); return false }
             try {
               const fresh = currentSfReadonlySnapshotScope(persistence)
               const valid = !!fresh && fresh.identity === sealed.identity && fresh.bytesIdentity === sealed.bytesIdentity && fresh.current()
+              countSfReadonlyDiagnostic(valid ? "root.health.valid" : "root.health.invalid")
               if (!valid) integrity.failed = true
               return valid
             } catch (error) {
+              countSfReadonlyDiagnostic("root.health.error")
               integrity.failed = true
               throw error
             }
@@ -143,15 +160,20 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
               return true
             })
           } finally { owner.open = false }
+          } finally {
+            endSfReadonlyDiagnostic(measured)
+            recordSfReadonlyRoot("physical-exit", diagnosticIdentity)
+          }
         }, { signal: request.signal })
         if (accepted !== true || !completed || invocations !== 1 || !staged || !current() ||
           present()) return unavailable()
         return staged
       })
     } catch {
+      countSfReadonlyDiagnostic("root.prepare.error")
       // Poison, abort or adapter refusal never selects an alternative path.
       return undefined
-    }
+    } finally { endSfReadonlyDiagnostic(measured) }
   }
   return {
     prepare,

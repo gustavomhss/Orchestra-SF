@@ -1,3 +1,4 @@
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic, countSfReadonlyDiagnostic } from "../portfolio/diagnostic-timing.ts"
 import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
 import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, observeLocalSnapshotStability } from "../../runtime/local-store.ts"
 import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
@@ -269,7 +270,13 @@ const currentChoiceReadonlyReaders = new WeakMap<object, <S extends Surface>(sur
 
 /** Query only the exact forwarding object emitted by this factory. */
 export function currentChoiceReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
-  return currentChoiceReadonlyReaders.get(owner)?.(surfaces)
+  const diagnostic = beginSfReadonlyDiagnostic("choice.query")
+  try {
+    const reader = currentChoiceReadonlyReaders.get(owner)
+    if (!reader) { countSfReadonlyDiagnostic("choice.reader-unregistered"); return undefined }
+    countSfReadonlyDiagnostic("choice.reader-registered")
+    return reader(surfaces)
+  } finally { endSfReadonlyDiagnostic(diagnostic) }
 }
 
 /** Prove that the factory's original wrappers still delegate to this driver. */
@@ -498,20 +505,24 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
     if (originals.every(({ base, wrapped }) => !!base && Object.hasOwn(base, "value") && typeof base.value === "function" &&
       !!wrapped && Object.hasOwn(wrapped, "value") && typeof wrapped.value === "function") && pinned()) {
       currentChoiceReadonlyReaders.set(persistence, <S extends Surface>(surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined => {
-        if (!pinned()) return undefined
+        if (!pinned()) { countSfReadonlyDiagnostic("choice.pins-refused"); return undefined }
+        countSfReadonlyDiagnostic("choice.pins-current")
         const scope = scopes.getStore()
         // Keep LocalStore's error for a known closed or aborted scope. Unknown
         // drivers and mutable roots retain the original, unsupported path.
         const observed = currentLocalReadonlyAuthorityData(driver, surfaces)
-        if (!observed) return undefined
+        if (!observed) { countSfReadonlyDiagnostic("choice.raw-unavailable"); return undefined }
+        countSfReadonlyDiagnostic("choice.raw-observed")
         const integrity = { failed: false }
         const current = (requirement?: "unpoisoned") => {
           const valid = observed.current(requirement) && !integrity.failed && pinned() && scopes.getStore() === scope &&
             (!scope || currentScope(scope))
+          countSfReadonlyDiagnostic(valid ? "choice.current-valid" : "choice.current-refused")
           if (!valid) integrity.failed = true
           return valid
         }
-        if (!current()) throw denied()
+        if (!current()) { countSfReadonlyDiagnostic("choice.initial-current-denied"); throw denied() }
+        countSfReadonlyDiagnostic("choice.result-observed")
         return { ...observed, current }
       })
     }

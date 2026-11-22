@@ -6,6 +6,7 @@ import type { StoredDecisionResult } from "../../../../modules/sucafina/Sucafina
 import type { createScenarioRequestStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
 import { isSfProductStateReader } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { currentSfReadonlyAuthorityData, currentSfReadonlySnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic, countSfReadonlyDiagnostic } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 
 type StoredScenario = Extract<StoredDecisionResult, { kind: "scenario" }>
@@ -31,6 +32,7 @@ export function createSfPlannerCalculationReadScope(input: {
     // This is only the authenticated store selector. The producer still reads
     // and validates the canonical request and result twice before issuance.
     const found = await input.state.read(request, "cases", (state, actor) => {
+      countSfReadonlyDiagnostic("read-scope.c08.select.cases", "dashboard")
       if (!sameAuthority(actor, call) || !current()) return undefined
       const stored = state.decisionResults?.[runId]
       const decision = stored && state.cases[stored.caseRef.id]
@@ -42,6 +44,7 @@ export function createSfPlannerCalculationReadScope(input: {
     if (found.status !== "ok" || !found.value) return { status: "unavailable", reason: "scenario-request-unavailable" }
     const selected = found.value
     const preferences = await input.state.read(request, "preferences", (state, actor) => {
+      countSfReadonlyDiagnostic("read-scope.c08.select.preferences", "dashboard")
       if (!sameAuthority(actor, call) || !current()) return undefined
       const stored = state.decisionResults?.[runId], decision = state.cases[selected.caseRef.id]
       const bound = state.preferences[requestKey(runId)]
@@ -82,6 +85,8 @@ export function createSfPlannerCalculationReadScope(input: {
         const sealed = sfCanonicalSerializerUnhooked() ? currentSfReadonlySnapshotScope(persistence) : undefined
         const acl = sealed && currentSfReadonlyAuthorityData(persistence, ["planner"])
         const stateSeal = sealed && reader?.persistence === persistence ? sealed : undefined
+        countSfReadonlyDiagnostic(!sealed ? "read-scope.sealed.absent" : !reader ? "read-scope.reader.absent"
+          : !stateSeal ? "read-scope.reader.persistence-mismatch" : "read-scope.state-seal.matched", "dashboard")
         const locked = acl ? undefined : persistence.currentSnapshots?.()
         const sources = input.lockedSourceFences()
         const planner = acl?.snapshots.planner ?? locked?.planner
@@ -102,11 +107,19 @@ export function createSfPlannerCalculationReadScope(input: {
         let stateDigest: string
         if (stateSeal) {
           if (!reader || input.state !== reader.port || input.host.persistence !== persistence || !sfCanonicalSerializerUnhooked() ||
-            !stateSeal.current() || !isSfProductStateReader(reader.port, persistence)) return undefined
+            !stateSeal.current() || !isSfProductStateReader(reader.port, persistence)) {
+            countSfReadonlyDiagnostic("read-scope.memo.guard-refused", "dashboard")
+            return undefined
+          }
           const identity = stateSeal.bytesIdentity ?? stateSeal.identity
-          stateDigest = sealedStateDigests.get(identity) ?? digestSfValue(state)
+          const sfDiagnosticMemo = sealedStateDigests.get(identity)
+          countSfReadonlyDiagnostic((sfDiagnosticMemo ?? null) === null ? "read-scope.memo.miss" : "read-scope.memo.hit", "dashboard")
+          stateDigest = sfDiagnosticMemo ?? digestSfValue(state)
           sealedStateDigests.set(identity, stateDigest)
-        } else stateDigest = digestSfValue(state)
+        } else {
+          countSfReadonlyDiagnostic("read-scope.digest.unsealed", "dashboard")
+          stateDigest = digestSfValue(state)
+        }
         // Full C08 includes originals, captures, receipts, ledger, preferences
         // and grants; source fences alone intentionally exclude __sfProductV1.
         return digestSfValue({ stateDigest, sources, principal, environment: after, request: headers, binding, selected: captured })
@@ -116,37 +129,48 @@ export function createSfPlannerCalculationReadScope(input: {
       const read = (namespace: "preferences" | "cases") => {
         const port = input.state, persistence = input.host.persistence
         const reader = isSfProductStateReader(port, persistence) ? { port, persistence } : undefined
-        return port.read(request, namespace, (state, actor) => observe(state, actor, reader))
+        return port.read(request, namespace, (state, actor) => {
+          countSfReadonlyDiagnostic(namespace === "preferences" ? "read-scope.c08.snapshot.preferences" : "read-scope.c08.snapshot.cases", "dashboard")
+          return observe(state, actor, reader)
+        })
       }
       const preferences = await read("preferences")
       const cases = await read("cases")
       return current() && preferences.status === "ok" && cases.status === "ok" && preferences.value && preferences.value === cases.value
         ? cases.value : undefined
     }
-    const baseline = await snapshot()
-    if (!baseline) return undefined
-    return {
-      current,
-      request(value: StoredRequest) {
-        if (!current() || value.resultRef !== runId || digestSfValue(value) !== digestSfValue(captured.request) || requests.length >= 2) { invalid = true; return }
-        requests.push(structuredClone(value))
-      },
-      result(value: StoredScenario) {
-        if (!current() || value.resultRef !== runId || digestSfValue(value) !== digestSfValue(captured.stored) || results.length >= 2) { invalid = true; return }
-        results.push(structuredClone(value))
-      },
-      completed(): SfCalculationObservedReads | undefined {
-        if (!current() || requests.length !== 2 || results.length !== 2 || digestSfValue(requests[0]) !== digestSfValue(requests[1]) ||
-          digestSfValue(results[0]) !== digestSfValue(results[1])) return undefined
-        return { request: structuredClone(requests[1]!), stored: structuredClone(results[1]!) }
-      },
-      async verify() {
-        const latest = await snapshot()
-        if (!latest || latest !== baseline || !current()) { invalid = true; return false }
-        return true
-      },
-      close() { closed = true; requests.length = 0; results.length = 0 },
-    }
+    const sfDiagnosticOpen = beginSfReadonlyDiagnostic("read-scope.snapshot.open", "dashboard")
+    try {
+      const baseline = await snapshot()
+      endSfReadonlyDiagnostic(sfDiagnosticOpen)
+      if (!baseline) return undefined
+      return {
+        current,
+        request(value: StoredRequest) {
+          if (!current() || value.resultRef !== runId || digestSfValue(value) !== digestSfValue(captured.request) || requests.length >= 2) { invalid = true; return }
+          requests.push(structuredClone(value))
+        },
+        result(value: StoredScenario) {
+          if (!current() || value.resultRef !== runId || digestSfValue(value) !== digestSfValue(captured.stored) || results.length >= 2) { invalid = true; return }
+          results.push(structuredClone(value))
+        },
+        completed(): SfCalculationObservedReads | undefined {
+          if (!current() || requests.length !== 2 || results.length !== 2 || digestSfValue(requests[0]) !== digestSfValue(requests[1]) ||
+            digestSfValue(results[0]) !== digestSfValue(results[1])) return undefined
+          return { request: structuredClone(requests[1]!), stored: structuredClone(results[1]!) }
+        },
+        async verify() {
+          const sfDiagnosticVerify = beginSfReadonlyDiagnostic("read-scope.snapshot.verify", "dashboard")
+          try {
+            const latest = await snapshot()
+            endSfReadonlyDiagnostic(sfDiagnosticVerify)
+            if (!latest || latest !== baseline || !current()) { invalid = true; return false }
+            return true
+          } finally { endSfReadonlyDiagnostic(sfDiagnosticVerify) }
+        },
+        close() { closed = true; requests.length = 0; results.length = 0 },
+      }
+    } finally { endSfReadonlyDiagnostic(sfDiagnosticOpen) }
   }
   return { select, open }
 }

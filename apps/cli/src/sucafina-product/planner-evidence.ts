@@ -1,3 +1,4 @@
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -13,7 +14,10 @@ export function createSfPlannerEvidence(input: { host: DomainPortHost; sources: 
     const request = input.host.requestFor(call)
     if (!request || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period || !await input.host.revalidate(call))
       return { status: "denied", reason: "planner-source-authority-unavailable" }
+    const sfDiagnosticPlannerSource1 = beginSfReadonlyDiagnostic("planner-evidence.source1", "planner")
+    try {
     const first = await input.sources.resolveForecastSource(ref.refId, call)
+    endSfReadonlyDiagnostic(sfDiagnosticPlannerSource1)
     if (first.status !== "ok") return first
     if (digestSfValue(first.value.evidence) !== digestSfValue(ref)) return { status: "stale", reason: "planner-source-changed" }
     const period = selected?.period ?? ref.target.period
@@ -32,15 +36,33 @@ export function createSfPlannerEvidence(input: { host: DomainPortHost; sources: 
       return { commit: false, value: projectPlannerSource(snapshot, { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"),
         assigned: strings(access.assigned), domains: strings(access.domains) }, first.value.versionId) }
     }, { signal: request.signal })
+    const sfDiagnosticPlannerRead1 = beginSfReadonlyDiagnostic("planner-evidence.read1", "planner")
+    try {
     const projection = await read()
+    endSfReadonlyDiagnostic(sfDiagnosticPlannerRead1)
     if (!projection || digestSfValue(Object.keys(projection).sort()) !== digestSfValue([...ref.target.fields].sort()) ||
       digestSfValue({ versionId: ref.target.recordId, projection }) !== ref.target.projectionDigest || projection.year !== Number(period.start.slice(0, 4)))
       return { status: "stale", reason: "planner-source-changed" }
+    const sfDiagnosticPlannerFinancial = beginSfReadonlyDiagnostic("planner-evidence.financial-build", "planner")
+    try {
     const result = buildPlannerFinancialProjection({ projection, ref, period, binding: call, at: environment.at })
-    const latest = await read(), second = await input.sources.resolveForecastSource(ref.refId, call)
+    endSfReadonlyDiagnostic(sfDiagnosticPlannerFinancial)
+    const sfDiagnosticPlannerRead2 = beginSfReadonlyDiagnostic("planner-evidence.read2", "planner")
+    try {
+    const latest = await read()
+    endSfReadonlyDiagnostic(sfDiagnosticPlannerRead2)
+    const sfDiagnosticPlannerSource2 = beginSfReadonlyDiagnostic("planner-evidence.source2", "planner")
+    try {
+    const second = await input.sources.resolveForecastSource(ref.refId, call)
+    endSfReadonlyDiagnostic(sfDiagnosticPlannerSource2)
     if (!latest || digestSfValue(latest) !== digestSfValue(projection) || second.status !== "ok" || digestSfValue(second.value.evidence) !== digestSfValue(ref) ||
       request.signal.aborted || !await input.host.revalidate(call)) return { status: "stale", reason: "planner-source-changed" }
     return { status: "ok", value: result }
+    } finally { endSfReadonlyDiagnostic(sfDiagnosticPlannerSource2) }
+    } finally { endSfReadonlyDiagnostic(sfDiagnosticPlannerRead2) }
+    } finally { endSfReadonlyDiagnostic(sfDiagnosticPlannerFinancial) }
+    } finally { endSfReadonlyDiagnostic(sfDiagnosticPlannerRead1) }
+    } finally { endSfReadonlyDiagnostic(sfDiagnosticPlannerSource1) }
   }
   // Only the host composition supplies this full reader. It retains the source and
   // projection checks above so BCS does not repeat the same source envelope.

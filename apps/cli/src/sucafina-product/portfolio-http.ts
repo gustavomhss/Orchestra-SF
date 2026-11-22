@@ -1,3 +1,4 @@
+import { withSfReadonlyDiagnostic } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -47,6 +48,7 @@ export function createSfPortfolioHttp(input: {
     if (!valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" })
     const admitted = await input.authority.human.admit(request, actions[mode], payload)
     if (admitted.status !== "ok") return reply(admitted)
+    return withSfReadonlyDiagnostic(request, mode, async () => {
     try {
       const call = admitted.value
       const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
@@ -78,6 +80,7 @@ export function createSfPortfolioHttp(input: {
       return reply(result)
     } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
     finally { input.authority.human.finish(admitted.value) }
+    })
   }
 }
 

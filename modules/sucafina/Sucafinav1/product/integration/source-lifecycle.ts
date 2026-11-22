@@ -2,6 +2,7 @@ import { types } from "node:util"
 import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads } from "../../runtime/local-store.ts"
 import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
 import { currentChoiceReadonlyAuthorityData } from "../decisions/current-choice-preview.ts"
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic, countSfReadonlyDiagnostic, enterSfReadonlyDiagnostic, leaveSfReadonlyDiagnostic } from "../portfolio/diagnostic-timing.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import type { HoldTargetPreimage, Persistence, SealedSnapshotRead, Snapshot, SnapshotAuthorityRead, TransactionOptions } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
@@ -121,7 +122,15 @@ const authorityMethods = ["currentSnapshots", "currentSnapshot", "hasCurrentSnap
 const sourceAuthorityReaders = new WeakMap<object, { base: object; current: (owner: object) => boolean }>()
 
 function currentDriverReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]) {
-  return currentLocalReadonlyAuthorityData(owner, surfaces) ?? currentChoiceReadonlyAuthorityData(owner, surfaces)
+  const raw = currentLocalReadonlyAuthorityData(owner, surfaces)
+  if (raw !== undefined && raw !== null) {
+    countSfReadonlyDiagnostic("source.driver.raw-hit")
+    return raw
+  }
+  countSfReadonlyDiagnostic("source.driver.raw-miss")
+  const choice = currentChoiceReadonlyAuthorityData(owner, surfaces)
+  countSfReadonlyDiagnostic(choice ? "source.driver.choice-hit" : "source.driver.choice-miss")
+  return choice
 }
 
 /** Read lexical presence without copying data for a registered local adapter. */
@@ -149,11 +158,20 @@ export function currentSfReadonlyAuthorityData<S extends Surface>(owner: object,
   const descriptor = Object.getOwnPropertyDescriptor(owner, "currentSnapshots")
   const registered = descriptor && Object.hasOwn(descriptor, "value") && typeof descriptor.value === "function" ?
     sourceAuthorityReaders.get(descriptor.value) : undefined
-  if (!registered) return currentDriverReadonlyAuthorityData(owner, surfaces)
+  if (!registered) {
+    const diagnosticOrigin = enterSfReadonlyDiagnostic("authority")
+    try {
+      countSfReadonlyDiagnostic("source.authority.direct")
+      return currentDriverReadonlyAuthorityData(owner, surfaces)
+    } finally { leaveSfReadonlyDiagnostic(diagnosticOrigin) }
+  }
   const root = Object.getOwnPropertyDescriptor(owner, "readSnapshotRoot")
   if (!root || !Object.hasOwn(root, "value") || typeof root.value !== "function" || !registered.current(owner)) return undefined
   // A caller may bracket the root callback. The admitted snapshot methods
   // and the actual underlying LocalStore scope still determine its data.
+  const diagnosticOrigin = enterSfReadonlyDiagnostic("authority")
+  try {
+    countSfReadonlyDiagnostic("source.authority.registered")
   const observation = currentDriverReadonlyAuthorityData(registered.base, surfaces)
   if (!observation) return undefined
   const integrity = { failed: false }
@@ -164,6 +182,7 @@ export function currentSfReadonlyAuthorityData<S extends Surface>(owner: object,
     if (!valid) integrity.failed = true
     return valid
   } }
+  } finally { leaveSfReadonlyDiagnostic(diagnosticOrigin) }
 }
 
 /** A known read root seals the full snapshot set while its live callbacks run. */
@@ -240,23 +259,34 @@ export function createSfSourcePersistence(input: {
     return true
   }
   const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, sourceRoot?: object, plannerAcl?: ReadonlyAuthorityData<"planner">) => {
+    let diagnosticAuthorize: ReturnType<typeof beginSfReadonlyDiagnostic>
+    let diagnosticProject: ReturnType<typeof beginSfReadonlyDiagnostic>
+    let diagnosticEgress: ReturnType<typeof beginSfReadonlyDiagnostic>
+    try {
     const checking = scopedSourceChecks.getStore()
     if (checking) {
       requireSourceChecks(checking)
       admitSourceChecks(checking)
       requireSourceChecks(checking)
     }
-    if (!sourceRoot) requireSourceIdentities(snapshot)
+    if (!sourceRoot) {
+      const diagnosticMetadata = beginSfReadonlyDiagnostic("source.observe.metadata", surface)
+      try { requireSourceIdentities(snapshot) } finally { endSfReadonlyDiagnostic(diagnosticMetadata) }
+    }
     const scope = structuredClone(requested)
     if (![scope.principalRef, scope.accessRevision, scope.policyVersion, scope.recordType, scope.recordId].every((value) => typeof value === "string" && value.trim())) throw new Error("SF_SOURCE_SCOPE_INVALID")
     if (!input.projectScope) throw new Error("SF_SOURCE_SCOPE_PROJECTOR_UNAVAILABLE")
     const protectedAcl = surface === "dashboard" && checking && admitSourceChecks(checking) && dashboardAclReaders.has(authorize) && authorityCurrent()
       ? readAuthority?.(["dashboard"]) : undefined
     if (sourceRoot && (!protectedAcl || protectedAcl.identity !== sourceRoot || !dashboardProjectorCurrent())) throw new Error("SF_DASHBOARD_SOURCE_ROOT_CHANGED")
-    if (sourceRoot) requireObservationSources(snapshot, protectedAcl?.bytesIdentity ?? sourceRoot)
+    if (sourceRoot) {
+      const diagnosticMetadata = beginSfReadonlyDiagnostic("source.observe.metadata", surface)
+      try { requireObservationSources(snapshot, protectedAcl?.bytesIdentity ?? sourceRoot) } finally { endSfReadonlyDiagnostic(diagnosticMetadata) }
+    }
     const detachedAcl = protectedAcl ? undefined : detachedDashboardAcl(surface, snapshot, authorize)
     const before = protectedAcl || detachedAcl || plannerAcl ? undefined : digestSfValue(snapshot)
     const authenticate = () => {
+      countSfReadonlyDiagnostic("source.observe.authenticate")
       if (plannerAcl) {
         if (!plannerAcl.current()) return Promise.resolve(false)
         return authorize({ data: structuredClone(plannerAcl.snapshots.planner.data), versions: {}, sequences: {}, audit: [], notices: [] })
@@ -268,20 +298,31 @@ export function createSfSourcePersistence(input: {
       const data = protectedAcl?.snapshots.dashboard.data ?? detachedAcl!
       return authorize({ data: structuredClone(data), versions: {}, sequences: {}, audit: [], notices: [] })
     }
+    diagnosticAuthorize = beginSfReadonlyDiagnostic("source.observe.authentication", surface)
     if (!await authenticate()) return undefined
+    endSfReadonlyDiagnostic(diagnosticAuthorize)
     if (checking) requireSourceChecks(checking)
+    diagnosticProject = beginSfReadonlyDiagnostic("source.observe.projector", surface)
     const projectorSnapshot = detachedAcl ? dashboardDomainView(snapshot) : snapshot
     const projection = sourceRoot && protectedAcl?.current() && dashboardProjectorCurrent() && dashboardProjector
       ? dashboardProjector(surface, projectorSnapshot, structuredClone(scope), protectedAcl.bytesIdentity ?? sourceRoot)
       : input.projectScope(surface, structuredClone(projectorSnapshot), structuredClone(scope))
+    endSfReadonlyDiagnostic(diagnosticProject)
     const source = sourceRoot ? readSourceIdentity(snapshot, scope.recordType, scope.recordId) : sfSourceIdentity(snapshot, scope.recordType, scope.recordId)
+    diagnosticEgress = beginSfReadonlyDiagnostic("source.observe.egress-gate", surface)
     if (projection === undefined || !source || !await authenticate()) return undefined
+    endSfReadonlyDiagnostic(diagnosticEgress)
     if (checking) requireSourceChecks(checking)
     if (protectedAcl ? !protectedAcl.current() || !authorityCurrent() || sourceRoot && !dashboardProjectorCurrent()
       : detachedAcl ? !authorityCurrent() || !dashboardProjectorCurrent()
       : plannerAcl ? !plannerAcl.current() : digestSfValue(snapshot) !== before)
       throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
     return { scope, projection, source, inputDigest: digestSfValue(projection) }
+    } finally {
+      endSfReadonlyDiagnostic(diagnosticAuthorize)
+      endSfReadonlyDiagnostic(diagnosticProject)
+      endSfReadonlyDiagnostic(diagnosticEgress)
+    }
   }
   const readScopedSnapshot = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, sourceRoot?: object, plannerAcl?: ReadonlyAuthorityData<"planner">) => {
     const checkScope = scopedSourceChecks.getStore()
@@ -309,9 +350,17 @@ export function createSfSourcePersistence(input: {
     return { commit: digestSfValue(prior) !== digestSfValue(entry), value: { projection: structuredClone(projection), incarnation: entry.incarnation, version: entry.version, inputDigest } }
   }
   const guard = (surface: Surface, snapshot: Snapshot, sealedPreimage?: () => Snapshot | undefined) => {
+    let diagnosticSources: ReturnType<typeof beginSfReadonlyDiagnostic>
+    let diagnosticAudit: ReturnType<typeof beginSfReadonlyDiagnostic>
+    try {
+    countSfReadonlyDiagnostic(sealedPreimage ? "source.guard.sealed" : "source.guard.full")
+    diagnosticSources = sealedPreimage ? undefined : beginSfReadonlyDiagnostic("source.guard.sources-digest", surface)
     const before = sealedPreimage ? undefined : digestSfValue(snapshot.sfSources)
+    endSfReadonlyDiagnostic(diagnosticSources)
     const auditStart = snapshot.audit.length
+    diagnosticAudit = sealedPreimage ? undefined : beginSfReadonlyDiagnostic("source.guard.audit-digest", surface)
     const auditPrefix = sealedPreimage ? undefined : digestSfValue(snapshot.audit)
+    endSfReadonlyDiagnostic(diagnosticAudit)
     const productState = input.purpose === "business-restore" ? structuredClone(snapshot.data.__sfProductV1) : undefined
     const reserved = new Map<string, { incarnation: string; inputDigest: string }>()
     const previous = creationBinders.get(snapshot)
@@ -369,6 +418,10 @@ export function createSfSourcePersistence(input: {
         if (previous) creationBinders.set(snapshot, previous)
         else creationBinders.delete(snapshot)
       },
+    }
+    } finally {
+      endSfReadonlyDiagnostic(diagnosticSources)
+      endSfReadonlyDiagnostic(diagnosticAudit)
     }
   }
   const readCheckScope = () => {
@@ -527,16 +580,26 @@ export function createSfSourcePersistence(input: {
       const driver = input.persistence
       const method = surface === "planner" && !types.isProxy(driver) && Object.getOwnPropertyDescriptor(driver, "transaction")
       return driver.transaction(surface, async (snapshot) => {
+        let diagnosticOrigin: ReturnType<typeof enterSfReadonlyDiagnostic>
+        let diagnosticPrepare: ReturnType<typeof beginSfReadonlyDiagnostic>
+        try {
         if (checking) requireSourceChecks(checking)
-        requireSourceIdentities(snapshot)
+        const diagnosticMetadata = beginSfReadonlyDiagnostic("source.prepared.metadata", surface)
+        try { requireSourceIdentities(snapshot) } finally { endSfReadonlyDiagnostic(diagnosticMetadata) }
         const active = method && Object.getOwnPropertyDescriptor(driver, "transaction")
         const provider = !types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype &&
           Object.getOwnPropertyDescriptor(input, "persistence")
+        diagnosticOrigin = enterSfReadonlyDiagnostic("prepared")
         const owned = method && Object.hasOwn(method, "value") && active && Object.hasOwn(active, "value") &&
           active.value === method.value && provider && Object.hasOwn(provider, "value") && provider.value === driver ?
           currentDriverReadonlyAuthorityData(driver, ["planner"]) : undefined
+        leaveSfReadonlyDiagnostic(diagnosticOrigin)
+        diagnosticOrigin = undefined
+        countSfReadonlyDiagnostic(owned ? "source.prepared.owned" : "source.prepared.unowned")
         // Preparation receives an isolated view before source authorization.
+        diagnosticPrepare = beginSfReadonlyDiagnostic("source.prepared.prepare", surface)
         const prepared = await prepare(structuredClone(snapshot))
+        endSfReadonlyDiagnostic(diagnosticPrepare)
         if (checking) requireSourceChecks(checking)
         if (!prepared) return { commit: false, value: undefined }
         const acl = owned && plannerAclReaders.has(prepared.authorize) ? {
@@ -547,8 +610,16 @@ export function createSfSourcePersistence(input: {
               current.value === driver && owned.current()
           },
         } : undefined
-        if (acl && !acl.current()) return { commit: false, value: undefined }
+        if (acl && !acl.current()) {
+          countSfReadonlyDiagnostic("source.prepared.acl-invalid")
+          return { commit: false, value: undefined }
+        }
+        countSfReadonlyDiagnostic(acl ? "source.prepared.acl" : "source.prepared.acl-fallback")
         return readScopedSnapshot(surface, snapshot, prepared.scope, prepared.authorize, undefined, acl)
+        } finally {
+          leaveSfReadonlyDiagnostic(diagnosticOrigin)
+          endSfReadonlyDiagnostic(diagnosticPrepare)
+        }
       }, options)
     },
     ...(input.persistence.currentSnapshots ? { checkScopedSource: async (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => {
@@ -583,14 +654,21 @@ export function createSfSourcePersistence(input: {
       const driver = input.persistence
       const method = !types.isProxy(driver) && Object.getOwnPropertyDescriptor(driver, "transaction")
       return driver.transaction(surface, async (snapshot, blobs) => {
+        let diagnosticOrigin: ReturnType<typeof enterSfReadonlyDiagnostic>
+        let diagnosticWork: ReturnType<typeof beginSfReadonlyDiagnostic>
+        try {
         if (checking) requireSourceChecks(checking)
         const seal = options?.sealedRead && input.purpose !== "business-restore" && authorityCurrent() && readAuthority?.([])
         if (seal && seal.current()) {
+          countSfReadonlyDiagnostic("source.transaction.seal-used")
           // Only the Dashboard snapshot covered by the held durable preimage
           // can reuse its pure source-metadata validation.
           const identity = surface === "dashboard" && sealedDigestsCurrent() ? seal.bytesIdentity ?? seal.identity : undefined
-          requireObservationSources(snapshot, identity)
+          const diagnosticMetadata = beginSfReadonlyDiagnostic("source.transaction.sealed-metadata", surface)
+          try { requireObservationSources(snapshot, identity) } finally { endSfReadonlyDiagnostic(diagnosticMetadata) }
+          diagnosticWork = beginSfReadonlyDiagnostic("source.transaction.sealed-callback", surface)
           const result = await work(snapshot, blobs)
+          endSfReadonlyDiagnostic(diagnosticWork)
           if (result.commit) {
             if (checking && admitSourceChecks(checking)) checking.failed = true
             // Let LocalStore reject the write and poison an inherited root.
@@ -600,6 +678,7 @@ export function createSfSourcePersistence(input: {
           if (!seal.current() || !authorityCurrent() || identity && !sealedDigestsCurrent()) throw new Error("SF_SEALED_READ_CHANGED")
           return result
         }
+        countSfReadonlyDiagnostic(seal ? "source.transaction.seal-invalid" : "source.transaction.seal-absent")
         // A Team can predate the source catalog. Regular business reads remain
         // read-only; its first authorized write enrolls the sources atomically.
         if (snapshot.sfSources === undefined && input.bootstrapOnWrite) {
@@ -611,16 +690,23 @@ export function createSfSourcePersistence(input: {
           }
           return result
         }
-        requireSourceIdentities(snapshot)
+        const diagnosticMetadata = beginSfReadonlyDiagnostic("source.transaction.raw-metadata", surface)
+        try { requireSourceIdentities(snapshot) } finally { endSfReadonlyDiagnostic(diagnosticMetadata) }
         const active = method && Object.getOwnPropertyDescriptor(driver, "transaction")
         // A writable or opaque driver still needs the full preflight before work.
+        diagnosticOrigin = enterSfReadonlyDiagnostic("guard")
         const sealed = input.purpose !== "business-restore" && method && Object.hasOwn(method, "value") &&
           active && Object.hasOwn(active, "value") && active.value === method.value ?
           currentLocalReadonlyAuthorityData(driver, []) : undefined
+        leaveSfReadonlyDiagnostic(diagnosticOrigin)
+        diagnosticOrigin = undefined
+        countSfReadonlyDiagnostic(sealed ? "source.transaction.raw-hit" : "source.transaction.raw-miss")
         const sealedPreimage = sealed ? () => sealed.current() ? driver.currentSnapshot?.(surface) : undefined : undefined
         const guarded = guard(surface, snapshot, sealedPreimage)
         try {
+          diagnosticWork = beginSfReadonlyDiagnostic("source.transaction.raw-callback", surface)
           const result = await work(snapshot, blobs)
+          endSfReadonlyDiagnostic(diagnosticWork)
           if (result.commit && sealed) {
             if (checking && admitSourceChecks(checking)) checking.failed = true
           } else {
@@ -629,6 +715,10 @@ export function createSfSourcePersistence(input: {
           if (result.commit) guarded.finish()
           return result
         } finally { guarded.dispose() }
+        } finally {
+          leaveSfReadonlyDiagnostic(diagnosticOrigin)
+          endSfReadonlyDiagnostic(diagnosticWork)
+        }
       }, options)
     },
     ...(input.persistence.transactionAll ? { transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {

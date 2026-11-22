@@ -1,3 +1,4 @@
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -24,6 +25,8 @@ export function createSfScenarioOperationAccess(input: {
   externalOperation: (request: { caseRef: { id: string; incarnation: string; version: number }; draftRef: string; operation: ScenarioOperation }, call: TrustedDomainContext) => Promise<PortResult<{ operationDigest: string; sourceRefs: readonly BusinessEvidenceRef[] }>>
 }) {
   return async (value: DecisionCase, call: TrustedDomainContext): Promise<boolean> => {
+    const sfDiagnosticOpsTotal = beginSfReadonlyDiagnostic("operations.total")
+    try {
     const request = input.host.requestFor(call)
     const binding = digestSfValue([call.kind, call.binding])
     const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
@@ -34,7 +37,10 @@ export function createSfScenarioOperationAccess(input: {
     const original = digestSfValue(captured)
     const selected = [...captured.alternatives, ...captured.choices].filter((item) => item.scenario.operations.length)
     if (!selected.length) return digestSfValue(value) === original && await input.host.revalidate(call) && currentAuthority()
+    const sfDiagnosticOpsFencesBefore = beginSfReadonlyDiagnostic("operations.fences.before")
+    try {
     const fences = await input.readSourceFences(call)
+    endSfReadonlyDiagnostic(sfDiagnosticOpsFencesBefore)
     if (!fences) return false
     const caseRef = { id: captured.id, incarnation: captured.incarnation, version: captured.version }
     const groupKey = (item: (typeof selected)[number]) => digestSfValue({ scenario: item.scenario, result: item.result })
@@ -91,7 +97,10 @@ export function createSfScenarioOperationAccess(input: {
       const external = domain.filter((operation) => operation.targetRef.startsWith("sf-procurement:"))
       if (external.length && !await authorizeSfCompositeProcurementOperations({ host: input.host, resolve: input.resolveProcurementEvidence }, captured, item, call)) return false
       const plannerOperations = domain.filter((operation) => !operation.targetRef.startsWith("sf-procurement:"))
+      const sfDiagnosticOpsSourceBefore = beginSfReadonlyDiagnostic("operations.source.before", "planner")
+      try {
       const source = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
+      endSfReadonlyDiagnostic(sfDiagnosticOpsSourceBefore)
       if (source.status !== "ok") {
         if (source.status !== "stale" || !input.recordedPlanner || !await input.recordedPlanner(captured, item, call)) return false
         continue
@@ -101,7 +110,10 @@ export function createSfScenarioOperationAccess(input: {
       // This guard authorizes component selectors against the real domain
       // projection. Comparing a forecast with itself also reopens its coverage,
       // which can recursively revisit this same case during every case read.
+      const sfDiagnosticOpsProject = beginSfReadonlyDiagnostic("operations.project", "planner")
+      try {
       const current = await input.projectPlanner(source.value.evidence, call, { period: item.result.horizon, currency: item.result.currency })
+      endSfReadonlyDiagnostic(sfDiagnosticOpsProject)
       if (current.status !== "ok" || current.value.engineVersion !== "planner-runtime-v1" || current.value.version !== source.value.evidence.target.version ||
         current.value.context.installationId !== call.binding.installationId || current.value.context.projectId !== call.binding.projectId ||
         current.value.context.principalRef !== call.binding.principalRef || current.value.context.accessRevision !== call.binding.accessRevision ||
@@ -127,14 +139,28 @@ export function createSfScenarioOperationAccess(input: {
             operation.period !== undefined && digestSfValue(operation.period) !== digestSfValue(replacement.value.period)) return false
         }
       }
+      const sfDiagnosticOpsSourceAfter = beginSfReadonlyDiagnostic("operations.source.after", "planner")
+      try {
       const again = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
+      endSfReadonlyDiagnostic(sfDiagnosticOpsSourceAfter)
       if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(source.value.evidence)) return false
+      } finally { endSfReadonlyDiagnostic(sfDiagnosticOpsSourceAfter) }
+      } finally { endSfReadonlyDiagnostic(sfDiagnosticOpsProject) }
+      } finally { endSfReadonlyDiagnostic(sfDiagnosticOpsSourceBefore) }
     }
-    if (digestSfValue(value) !== original || digestSfValue(await input.readSourceFences(call)) !== digestSfValue(fences) || !await input.host.revalidate(call) || !currentAuthority()) return false
+    if (digestSfValue(value) !== original) return false
+    const sfDiagnosticOpsFencesAfter = beginSfReadonlyDiagnostic("operations.fences.after")
+    try {
+    const sfObservedSourceFences = await input.readSourceFences(call)
+    endSfReadonlyDiagnostic(sfDiagnosticOpsFencesAfter)
+    if (digestSfValue(sfObservedSourceFences) !== digestSfValue(fences) || !await input.host.revalidate(call) || !currentAuthority()) return false
     if (!proofs.size) return true
     const final = await scope!.snapshot()
     return final.kind === "sf-scenario-procurement-fence" && [...proofs.values()].every((proof) => proof === final.digest) && scope!.current() && currentAuthority()
+    } finally { endSfReadonlyDiagnostic(sfDiagnosticOpsFencesAfter) }
     } finally { scope?.close(); proofs.clear() }
+    } finally { endSfReadonlyDiagnostic(sfDiagnosticOpsFencesBefore) }
+    } finally { endSfReadonlyDiagnostic(sfDiagnosticOpsTotal) }
   }
 }
 

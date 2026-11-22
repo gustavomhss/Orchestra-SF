@@ -1,3 +1,4 @@
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic, countSfReadonlyDiagnostic } from "../product/portfolio/diagnostic-timing.ts"
 import { Database } from "bun:sqlite"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { createHash, randomUUID } from "node:crypto"
@@ -50,7 +51,13 @@ export function hasLocalSnapshotScope(owner: object): boolean | undefined {
 }
 
 export function currentLocalReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
-  return readonlyAuthorityReaders.get(owner)?.(surfaces)
+  const diagnostic = beginSfReadonlyDiagnostic("local.query")
+  try {
+    const reader = readonlyAuthorityReaders.get(owner)
+    if (!reader) { countSfReadonlyDiagnostic("local.owner-unregistered"); return undefined }
+    countSfReadonlyDiagnostic("local.owner-registered")
+    return reader(surfaces)
+  } finally { endSfReadonlyDiagnostic(diagnostic) }
 }
 
 type LocalTransactionAbort = {
@@ -872,26 +879,31 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   })
   readonlyAuthorityReaders.set(store, <S extends Surface>(surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined => {
     const scope = context.getStore()
-    if (!scope) return undefined
+    if (!scope) { countSfReadonlyDiagnostic("local.scope-absent"); return undefined }
+    countSfReadonlyDiagnostic("local.scope-present")
     // Match currentSnapshots exactly: an ended/aborted known scope is an error,
     // not an unsupported optimization. Poison and dispose retain their original
     // transaction/root egress checks and do not suppress authentication callbacks.
     requireScope(scope)
-    if (!Object.hasOwn(scope.root, "readOnly") || scope.root.readOnly !== true || !sameStore()) return undefined
+    countSfReadonlyDiagnostic("local.scope-active")
+    if (!Object.hasOwn(scope.root, "readOnly")) { countSfReadonlyDiagnostic("local.root-not-readonly"); return undefined }
+    if (scope.root.readOnly !== true) { countSfReadonlyDiagnostic("local.root-not-readonly"); return undefined }
+    if (!sameStore()) { countSfReadonlyDiagnostic("local.method-pins-refused"); return undefined }
+    countSfReadonlyDiagnostic("local.readonly-admitted")
     const fields = ["roleMap", "access"] as const
     const observed = surfaces.map((surface) => {
       const snapshot = scope.root.snapshots[surface]
       if (!snapshot) throw new Error("Local transaction snapshots unavailable")
       const data = snapshot.data
-      if (Object.getPrototypeOf(data) !== Object.prototype) return undefined
+      if (Object.getPrototypeOf(data) !== Object.prototype) { countSfReadonlyDiagnostic("local.acl-nonplain"); return undefined }
       const descriptors = fields.map((field) => Object.getOwnPropertyDescriptor(data, field))
       // A getter inherited by an absent field would observe the full data
       // receiver. Keep that path on full copies, without invoking the getter here.
       if (descriptors.some((descriptor, index) => descriptor ? !(Object.hasOwn(descriptor, "value")) :
-        Object.getOwnPropertyDescriptor(Object.prototype, fields[index]!) !== undefined)) return undefined
+        Object.getOwnPropertyDescriptor(Object.prototype, fields[index]!) !== undefined)) { countSfReadonlyDiagnostic("local.acl-descriptor-refused"); return undefined }
       return { surface, data, descriptors }
     })
-    if (observed.some((entry) => !entry)) return undefined
+    if (observed.some((entry) => !entry)) { countSfReadonlyDiagnostic("local.acl-unavailable"); return undefined }
     const admitted = observed.filter((entry) => entry !== undefined)
     // The private graph cannot be mutated by callbacks. Retain only absence
     // names for inherited-property drift; no data/descriptor value survives in
@@ -901,9 +913,10 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     const bytesIdentity = snapshotDecoderCurrent() ? scope.root.bytesIdentity : undefined
     const current = (requirement?: "unpoisoned") => {
       requireScope(scope)
-      if (integrity.failed) return false
+      if (integrity.failed) { countSfReadonlyDiagnostic("local.current-sticky-refused"); return false }
       const valid = context.getStore() === scope && (requirement !== "unpoisoned" || !scope.root.poisoned) && sameStore() &&
         (!scope.root.bytesIdentity || snapshotDecoderCurrent()) && absent.every((field) => Object.getOwnPropertyDescriptor(Object.prototype, field) === undefined)
+      countSfReadonlyDiagnostic(valid ? "local.current-valid" : "local.current-refused")
       if (!valid) integrity.failed = true
       return valid
     }
@@ -915,9 +928,12 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         return descriptor ? [[field, copyValue(descriptor.value, new Set())]] : []
       })),
     }])) as Record<S, Pick<Snapshot, "data">>
-    return surfaces.length === 0
-      ? { snapshots, current, scope: { identity: scope.root.identity, bytesIdentity } }
-      : { snapshots, current }
+    if (surfaces.length === 0) {
+      countSfReadonlyDiagnostic("local.result-with-scope")
+      return { snapshots, current, scope: { identity: scope.root.identity, bytesIdentity } }
+    }
+    countSfReadonlyDiagnostic("local.result-acl-only")
+    return { snapshots, current }
   })
   return store
 }
