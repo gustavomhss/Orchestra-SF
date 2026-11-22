@@ -122,6 +122,7 @@ test("UI53 displays the exact native C06 payload and preserves its original retr
     expect(fingerprint).toBe(value.observation.scopeFingerprint)
     expect(version).toBe("0")
     expect(dependencies).toEqual(value.scope.materialDependencies)
+    expect([...view.host.querySelectorAll("[data-sf-confirm-dependency]")].map((node) => getComputedStyle(node).whiteSpace)).toEqual(["pre-wrap"])
     expect(view.host.textContent).toContain(SF_U44_COPY["sf.u44.fingerprint"])
     setLocale("pt-BR")
     expect(view.host.textContent).toContain(SF_U44_COPY_BR["sf.u44.storageVersion"])

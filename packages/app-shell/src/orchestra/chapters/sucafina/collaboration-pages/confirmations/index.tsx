@@ -324,7 +324,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
               </dl>
               <Show when={scope()!.materialDependencies.length > 0} fallback={<p data-sf-confirm-no-dependencies>{t("sf.u44.noDependencies")}</p>}>
                 <ul data-sf-confirm-dependencies><For each={scope()!.materialDependencies}>
-                  {(dependency) => <li><pre data-sf-confirm-dependency>{JSON.stringify(dependency, null, 2)}</pre></li>}
+                  {(dependency) => <li><pre data-sf-confirm-dependency style={{ "white-space": "pre-wrap" }}>{JSON.stringify(dependency, null, 2)}</pre></li>}
                 </For></ul>
               </Show>
               <h3>{t("sf.u44.materialValues")}</h3>
