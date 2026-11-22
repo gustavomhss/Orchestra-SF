@@ -188,8 +188,9 @@ export function createTeamSessionsWorkspace(input: Readonly<{
   }
   const invalidate = (scope: Scope, reason: SfTeamSessionFailure | "stream") => {
     if (active !== scope) return
-    // A disconnected stream retires IO/content, but cannot prove that an in-flight write did not apply.
-    retire(reason === "stream" ? "stream" : "revoked")
+    // Invalid response labels or a lost stream retire IO/content, without proving that a dispatched write did not apply.
+    const authorityLost = reason === "unauthenticated" || reason === "denied"
+    retire(authorityLost ? "revoked" : reason === "stream" ? "stream" : "unverified")
     setState({ status: "unavailable", reason })
     input.notice(reason === "stream" ? "sf.teams.chatUpdatesStopped" : "sf.teams.chatUnavailable")
     if (reason === "unauthenticated") input.unauthenticated()

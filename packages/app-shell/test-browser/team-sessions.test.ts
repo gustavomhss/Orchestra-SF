@@ -436,3 +436,71 @@ test("a stream failure after POST dispatch preserves only operation IDs until fr
     expect([...f.storage.values()].join("")).not.toContain("submitted text is not a retry")
   } finally { release.resolve(); f.close() }
 })
+
+for (const reason of ["protocol", "namespace"] as const) {
+  test(reason + " failure after a retained POST keeps opaque operation IDs for the original owner until read-only reconciliation", async () => {
+    const f = fixture({ persistent: reason === "protocol" }), id = Session.ID.create()
+    f.rows.set(id, f.info(id, "Private session title"))
+    const entered = gate<void>(), release = gate<void>()
+    let messageID: string | undefined
+    try {
+      await f.workspace.open(id)
+      await eventually(() => f.workspace.state.stream === "open")
+      f.setHook(async (request) => {
+        if (!new URL(request.url).pathname.endsWith("/prompt")) return undefined
+        const body = Schema.decodeUnknownSync(Schema.Struct({
+          id: SessionMessage.ID, prompt: Schema.Struct({ text: Schema.String }),
+        }), { onExcessProperty: "error" })(await request.json())
+        messageID = body.id
+        f.history.set(id, [Schema.encodeSync(SessionEvent.PromptAdmitted)(Schema.decodeUnknownSync(SessionEvent.PromptAdmitted)({
+          id: "evt_uncertain_" + body.id, type: "session.next.prompt.admitted",
+          durable: { aggregateID: id, seq: 1, version: 1 },
+          data: { timestamp: 10, sessionID: id, messageID: body.id, prompt: body.prompt, delivery: "queue" },
+        }))])
+        entered.resolve()
+        await release.promise
+        const receipt = { data: { id: body.id, sessionID: id, admittedSeq: 1, timeCreated: 10,
+          prompt: body.prompt, delivery: "queue" } }
+        // The write already exists, but a response without no-store cannot be admitted by the Client.
+        return reason === "protocol" ? Response.json(receipt) : json(receipt)
+      })
+      f.draft("private admitted text")
+      const posting = f.workspace.submit()
+      await entered.promise
+      if (reason === "protocol") release.resolve()
+      else f.emit({ id: "evt_foreign_pending", type: "server.connected", data: {} }, {
+        ...f.namespace(), owner: { profile, principal: { ...principal,
+          principalObjectId: "22222222-2222-4222-8222-222222222222" } },
+      })
+      await eventually(() => f.workspace.state.status === "unavailable")
+      expect(f.workspace.state.reason).toBe(reason)
+      expect(f.workspace.state.threads).toEqual({})
+      expect(f.workspace.state.recent).toEqual([])
+      expect(f.workspace.state.pending).toEqual([])
+      expect(f.workspace.prompt[0].prompt).toEqual([])
+      expect(f.workspace.hasPendingRequests()).toBe(true)
+      expect(f.workspace.discardDrafts()).toBe(false)
+      expect(f.unauthenticated()).toBe(0)
+      expect([...f.storage.values()].join("")).not.toMatch(/private admitted text|Private session title/)
+      release.resolve()
+      expect(await posting).toBe(false)
+      f.setHook(undefined)
+      f.refresh(context(), 2)
+      await f.workspace.open(id)
+      const operation = f.workspace.state.pending[0]
+      expect(operation).toMatchObject({ action: "prompt", sessionID: id, messageID })
+      if (!operation) throw new Error("Expected retained uncertain operation")
+      expect(f.workspace.prompt[0].prompt).toEqual([])
+      f.draft("new operation must wait")
+      expect(await f.workspace.submit()).toBe(false)
+      expect(f.workspace.discardDrafts()).toBe(false)
+      const before = f.calls.length
+      expect(await f.workspace.confirmPending(operation)).toBe(true)
+      expect(f.calls.slice(before).every((request) => request.method === "GET")).toBe(true)
+      expect(f.workspace.state.pending).toEqual([])
+      expect(f.workspace.state.threads[id]?.queue[0]?.text).toBe("private admitted text")
+      expect(f.calls.filter((request) => request.method === "POST")).toHaveLength(1)
+      expect([...f.storage.values()].join("")).not.toMatch(/private admitted text|new operation must wait|Private session title/)
+    } finally { release.resolve(); f.close() }
+  })
+}
