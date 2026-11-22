@@ -37,3 +37,46 @@ The unchanged `four-decisions` fixture promotes source-only scenarios with no op
 The journey selects the newly published scenario by the original result reference and alternative identity, and selects its original parameter reference. The original seed remains unchanged. Empty authorized cases still receive their real no-units state. The final sensitivity assertion reads the persisted threshold proof and compares its actual sampled interval or unavailable reason with the UI. Pending coverage remains conditioned and no exact threshold or complete total is inferred.
 
 Requalification must include both strict omni control and `ORCHESTRA_CHANNEL=prod`, using the composed integration source and the original installed endpoints.
+
+## Attempt 2 — production channel, source admission and route diagnostics
+
+- Source composition: `096224f666ed44974478e25ac227455aa4c81e99`.
+- Test snapshot: `a24ad03151646a9a1bc8e50d130b8f427e217a2b`.
+- Branch: `ci-run-sf5analytics3`.
+- [Run 44979219065](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44979219065), failed test job `137075803565`, attempt 1, no retries.
+- Existing production Playwright configuration, one worker, both `ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict` and `ORCHESTRA_CHANNEL=prod`.
+- [Canonical artifact 14737690500](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44979219065/artifacts/14737690500): `playwright-ubuntu-24.04-1`, 14,418,014 bytes, SHA-256 `d1841c5ba6986558dd16afd7aaac667b538201928171a342b75a5f2601dfc629`.
+- Result: both grouped tests failed. No page or console errors were observed. This is partial runtime evidence, not a completed five-surface qualification.
+
+### Original source reached
+
+The original Planner parameter source read returned HTTP 200 / `ok`. Original `decision-promote` then issued one parameterized scenario using the confirmed February 2026 component, USD currency and exact source amount. Reopened original controls returned the new alternative, scenario and parameter identities. No source-only scenario was retroactively patched, and no portfolio or sensitivity result was inserted.
+
+UI42 displayed two original authorized cases and the current source versions, including the main case at version 6 after the real promotion. All four list modes completed. The empty case correctly displayed no eligible scenarios, but the native Preview combinations button was absent and the history adapter displayed its failure message. The unchanged assertion expected the admitted preview action to exist and be disabled for an empty selection; it failed rather than relabeling absent access as a pass. Integration inspection identified missing native observations for the installed portfolio HTTP operations; the parent is correcting that composition under the original admission. No completed preview, portfolio result or sensitivity sample is claimed by this attempt.
+
+UI45 rendered the eleven original questions, completed both desktop themes and 390px/320px modes, selected the original authorized BI01 context and loaded its original BI data. The first contextual UI46 navigation then failed native route recognition because the test passed a plain `BI01` path segment. The frozen route parser requires every parameter to use the existing `encodeSfRouteRef` codec. The owned test now imports that original codec for BI01/BI06/BI11, including Portuguese navigation; no route was added or relaxed.
+
+### Actual image inspection and concrete correction
+
+All twelve preserved JPEGs below were emitted as image output and visually inspected. The UI42 list has a restrained title and two balanced case rows at desktop; narrow layouts stack both full objectives, version labels and open actions without horizontal spill. The empty-case capture is legible and retains the source warning, empty candidates and history; it demonstrates the admission failure, not a successful workflow.
+
+The UI45 desktop catalog groups eleven questions into three aligned native panels. In light mode, question text and borders remain distinct; at 390px/320px the groups become one column and labels wrap within their controls. Context selection groups the analysis and period controls in one band, with the authorized selection and original metadata below.
+
+The BI result capture shows the source's partial-coverage header, but its plot and rows are below the shell's scrollable viewport. A full-page screenshot does not expand that internal viewport. The next specification retains context captures and explicitly scrolls to the actual plot and table for dark/light desktop and narrow evidence. It also reaches the named scroll regions through keyboard Tab/Shift+Tab before checking their focus outline. No screenshot has been edited or reassembled.
+
+| Capture | Observed state | Limit |
+| --- | --- | --- |
+| [UI42 dark desktop list](attempt-02/UI42-list-dark-desktop.jpg) | Two original cases | List only |
+| [UI42 light desktop list](attempt-02/UI42-list-light-desktop.jpg) | Same source versions | List only |
+| [UI42 dark 390px list](attempt-02/UI42-list-dark-390.jpg) | Stacked full objectives | List only |
+| [UI42 light 320px list](attempt-02/UI42-list-light-320.jpg) | Narrow reflow, visible open actions | List only |
+| [UI42 empty case](attempt-02/UI42-empty-case-no-preview.jpg) | No eligible scenarios; history warning | Missing portfolio admission |
+| [UI45 dark desktop catalog](attempt-02/UI45-catalog-dark-desktop.jpg) | Eleven original questions | Grouped test failed later |
+| [UI45 light desktop catalog](attempt-02/UI45-catalog-light-desktop.jpg) | Original catalog | Grouped test failed later |
+| [UI45 dark 390px catalog](attempt-02/UI45-catalog-dark-390.jpg) | One-column question groups | Grouped test failed later |
+| [UI45 light 320px catalog](attempt-02/UI45-catalog-light-320.jpg) | Wrapped questions, no visible spill | Grouped test failed later |
+| [UI45 authorized context](attempt-02/UI45-authorized-financial-context.jpg) | BI01 and original selection | Before read |
+| [UI45 financial result header](attempt-02/UI45-financial-result-header.jpg) | Actual partial-coverage panel | Plot and rows outside viewport |
+| [UI46 rejected unencoded route](attempt-02/UI46-invalid-unencoded-route.jpg) | Original invalid-link state | Test route corrected with original codec |
+
+The next attempt must retain exact native context stamp checks, source-issued identities, original readback comparisons and the unchanged operation assertions. Runtime qualification of UI43/UI44/UI46 remains outstanding after this attempt.
