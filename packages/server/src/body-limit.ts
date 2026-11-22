@@ -38,10 +38,12 @@ export const withLimit = (override?: (request: HttpServerRequest.HttpServerReque
         cancelUnreadWebBody(request)
         return tooLarge(limit)
       }
-      const bounded = boundedWebRequest(request, limit)
+      const observed: { text?: string } = {}
+      const bounded = observeTextRead(boundedWebRequest(request, limit), observed)
       return yield* effect.pipe(
+        Effect.catch((error) => exceeded(error) ? Effect.succeed(tooLarge(limit)) : Effect.fail(error)),
         // The API reads its payload with `orDie`, and JSON syntax failures also arrive as defects.
-        Effect.catchDefect((defect) => (exceeded(defect) ? Effect.succeed(tooLarge(limit)) : malformedJson(bounded, defect))),
+        Effect.catchDefect((defect) => (exceeded(defect) ? Effect.succeed(tooLarge(limit)) : malformedJson(bounded, observed.text, defect))),
         Effect.provideService(HttpServerRequest.HttpServerRequest, bounded),
         Effect.provideService(HttpServerRequest.MaxBodySize, FileSystem.Size(limit)),
       )
@@ -66,21 +68,30 @@ function exceeded(defect: unknown) {
   )
 }
 
-function malformedJson(request: HttpServerRequest.HttpServerRequest, defect: unknown) {
-  const contentType = request.headers["content-type"]?.split(";", 1)[0]?.trim().toLowerCase()
-  if (!(defect instanceof SyntaxError) || contentType !== "application/json") return Effect.die(defect)
-  // The API has already cached this bounded text. Confirm syntax so a handler's own SyntaxError stays a 500.
-  return Effect.flatMap(Effect.orDie(request.text), (text) => {
-    // HttpApiBuilder Json accepts an empty body before JSON.parse in the pinned producer.
-    if (text === "") return Effect.die(defect)
-    try { JSON.parse(text) } catch (error) {
-      if (error instanceof SyntaxError) return Effect.succeed(HttpServerResponse.jsonUnsafe(
-        { _tag: "InvalidRequestError", message: "Invalid JSON request body", kind: "Payload" },
-        { status: 400 },
-      ))
-    }
-    return Effect.die(defect)
+/** Only a completed read can tie a SyntaxError to request JSON. The catch path never starts IO. */
+function observeTextRead(request: HttpServerRequest.HttpServerRequest, observed: { text?: string }): HttpServerRequest.HttpServerRequest {
+  return new Proxy(request, {
+    get(target, property, receiver) {
+      if (property === "text") return Effect.tap(target.text, (value) => Effect.sync(() => { observed.text = value }))
+      if (property === "modify") return (options: Parameters<HttpServerRequest.HttpServerRequest["modify"]>[0]) =>
+        observeTextRead(target.modify(options), observed)
+      return Reflect.get(target, property, receiver)
+    },
   })
+}
+
+function malformedJson(request: HttpServerRequest.HttpServerRequest, text: string | undefined, defect: unknown) {
+  const contentType = request.headers["content-type"]?.split(";", 1)[0]?.trim().toLowerCase()
+  if (!(defect instanceof SyntaxError) || contentType !== "application/json" || text === undefined || text === "")
+    return Effect.die(defect)
+  // The original decoder consumed this bounded text before failing. A payload-free handler cannot supply it.
+  try { JSON.parse(text) } catch (error) {
+    if (error instanceof SyntaxError) return Effect.succeed(HttpServerResponse.jsonUnsafe(
+      { _tag: "InvalidRequestError", message: "Invalid JSON request body", kind: "Payload" },
+      { status: 400 },
+    ))
+  }
+  return Effect.die(defect)
 }
 
 function tooLarge(limit: number) {

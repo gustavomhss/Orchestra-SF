@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { NodeServices } from "@effect/platform-node"
-import { Effect, Fiber, Layer, Schema } from "effect"
-import { HttpRouter, HttpServer, HttpServerRequest } from "effect/unstable/http"
+import { Effect, Fiber, Layer, Schema, Stream } from "effect"
+import { HttpRouter, HttpServer, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder, HttpApiEndpoint, HttpApiGroup } from "effect/unstable/httpapi"
 import { BodyLimit } from "../src/body-limit"
 import { boundedWebRequest } from "../src/web-body-limit"
@@ -146,4 +146,48 @@ test("declared Web overflow cancels the untouched source before decoding or invo
     expect(f.state).toEqual({ pulls: 0, cancelled: 1 })
     expect(http.calls).toEqual([])
   } finally { await http.dispose() }
+})
+
+test("typed Web stream overflow returns 413 and cancels the original body through a modified view", async () => {
+  const f = suppliedBody([new Uint8Array(5), new Uint8Array(5)])
+  const original = new Request("http://localhost/api/stream", { method: "POST", body: f.body })
+  const consume = Effect.gen(function* () {
+    const request = yield* HttpServerRequest.HttpServerRequest
+    const modified = request.modify({ url: request.url })
+    expect(request.source).toBe(original)
+    expect(modified.source).toBe(original)
+    // Deliberately retain the typed failure channel; no orDie hides the missing middleware boundary.
+    yield* Stream.runCollect(modified.stream)
+    return HttpServerResponse.empty()
+  })
+  const routes = Layer.mergeAll(HttpRouter.add("POST", "/api/stream", consume), BodyLimit.withLimit(() => 4))
+    .pipe(Layer.provide(HttpServer.layerServices))
+  const http = HttpRouter.toWebHandler(routes, { disableLogger: true })
+  try {
+    expect(original.headers.has("content-length")).toBe(false)
+    const response = await http.handler(original)
+    expect(response.status).toBe(413)
+    expect(await response.json()).toMatchObject({ _tag: "PayloadTooLargeError" })
+    expect(f.state).toEqual({ pulls: 1, cancelled: 1 })
+  } finally { await http.dispose() }
+})
+
+test("a payload-free handler SyntaxError neither reads nor reclassifies malformed request bytes", async () => {
+  const http = webApi()
+  const f = suppliedBody([new TextEncoder().encode("{invalid")])
+  const original = new Request("http://localhost/api/empty-defect", {
+    method: "POST", body: f.body, headers: { "content-type": "application/json" },
+  })
+  try {
+    const response = await http.handler(original)
+    expect(response.status).toBe(500)
+    await response.text()
+    expect(http.calls).toEqual(["emptyDefect"])
+    expect(http.originals).toEqual([original])
+    expect(original.bodyUsed).toBe(false)
+    expect(f.state).toEqual({ pulls: 0, cancelled: 0 })
+  } finally {
+    await original.body?.cancel()
+    await http.dispose()
+  }
 })
