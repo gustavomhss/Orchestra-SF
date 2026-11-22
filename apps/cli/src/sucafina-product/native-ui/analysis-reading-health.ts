@@ -26,7 +26,7 @@ export async function observeSfAnalysisReadingHealth(input: {
   const observed = await Promise.allSettled(candidates.map(async (candidate) => {
     const metadata = SfOperationRegistry[candidate.id]
     if (!sfHasOperationalResource(candidate.id) || metadata.method !== "POST" || metadata.effect !== "read" ||
-      metadata.pathTemplate !== "{mount}/{surface}" || metadata.fixedQuery.sf !== "workbench-analysis" ||
+      metadata.pathTemplate !== "{mount}/dashboard" || metadata.fixedQuery.sf !== "workbench-analysis" ||
       metadata.responseMode !== "json" || metadata.fixedBodyDiscriminator.action !== candidate.action) return undefined
     const source = sourceFor(candidate.id)
     if (!source || typeof source.producer !== "function" || !source.dependencies.length ||
