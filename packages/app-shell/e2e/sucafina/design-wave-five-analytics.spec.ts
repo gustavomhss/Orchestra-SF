@@ -388,8 +388,13 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     if (await disclosure.getAttribute("open") === null) await disclosure.locator("summary").click()
     await expect(sourceAction).toBeVisible()
     const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-source", { timeout: 60_000 })
+      .then(async (response) => ({ response, body: await response.json().then(
+        (value: unknown) => ({ status: "ok" as const, value }),
+        () => ({ status: "unavailable" as const }),
+      ) }))
     await sourceAction.click()
-    const originalSourceResponse = await sourceResponse
+    const acquiredSource = await sourceResponse
+    const originalSourceResponse = acquiredSource.response
     expect(originalSourceResponse.status()).toBe(200)
     const requested = new URL(originalSourceResponse.url())
     expect(requested.origin).toBe(owner.publicOrigin)
@@ -398,7 +403,23 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     expect(requested.searchParams.get("selectionRef")).toBe(originalSelection)
     expect(requested.searchParams.get("valueId")).toBe(selected.valueId)
     expect(requested.searchParams.get("referenceDigest")).toBe(selected.referenceDigest)
-    const sourceLinks = array(object(await originalSourceResponse.json()).links).map(object)
+    expect(originalSourceResponse.request().method()).toBe("GET")
+    expect(requested.searchParams.get("sf")).toBe("bi-source")
+    expect(new Set(requested.searchParams.keys()).size).toBe(requested.searchParams.size)
+    // A CDP body can be evicted during compact-layout paint. Reopen only this
+    // exact authenticated original GET after checking its binding and identity.
+    const acquiredBody = acquiredSource.body.status === "ok" ? acquiredSource.body.value : await (async () => {
+      const readback = await page.request.get(requested.href)
+      expect(readback.url()).toBe(requested.href)
+      expect(readback.status()).toBe(originalSourceResponse.status())
+      return readback.json()
+    })()
+    console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({
+      operation: "bi-source-body-acquisition", selectedValueId: selected.valueId,
+      http: originalSourceResponse.status(), acquisition: acquiredSource.body.status === "ok"
+        ? "native-response" : "authenticated-original-readback",
+    }))
+    const sourceLinks = array(object(acquiredBody).links).map(object)
     expect(sourceLinks.length).toBeGreaterThan(0)
     console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({
       operation: "bi-source-original-destinations", selectedValueId: selected.valueId,

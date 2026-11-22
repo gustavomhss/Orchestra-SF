@@ -595,6 +595,40 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     }).toString()
   }
 
+  // Preserve every original projection item. The designed pages stage it
+  // after the proposed changes; the other import routes keep their original DOM.
+  const OriginalImpact = () => <>
+    <For each={state.manifest!.commands}>{(command) => <article class="mx-card">
+      <p>{command.preview.engineVersion} · {t("sf.u23.version")} {command.preview.version}</p>
+      <dl>
+        <For each={command.preview.components}>{(item) => <>
+          <dt>{item.id}</dt><dd>{item.amount === null ? t("sf.common.unknown") : item.amount} · {item.currency} · {item.evidenceState}</dd>
+        </>}</For>
+        <For each={command.preview.values}>{(item) => <>
+          <dt>{item.id}</dt><dd>{item.value === null ? t("sf.common.unknown") : String(item.value)} · {item.unit ?? ""} · {item.evidenceState}</dd>
+        </>}</For>
+        <For each={command.preview.missing}>{(item) => <>
+          <dt>{item.field}</dt><dd>{item.reason}</dd>
+        </>}</For>
+      </dl>
+    </article>}</For>
+  </>
+  const DomainImpact = () => (
+    <section class="sf-files-section" aria-label={t("sf.u23.context")}>
+      <h2>{t("sf.u23.context")}</h2>
+      <Show when={designed()} fallback={<OriginalImpact />}>
+        <details class="sf-files-impact">
+          <summary>{t("sf.u23.fullImpact")}</summary>
+          <p class="sf-files-impact-help">{t("sf.u23.fullImpactHelp")}</p>
+          <OriginalImpact />
+        </details>
+      </Show>
+      <For each={state.manifest!.issues}>{(issue) =>
+        <p role="status">{t("sf.u23.issues")}: {t("sf.u23.row")} {issue.row} · {issue.field} · {issue.reason}</p>
+      }</For>
+    </section>
+  )
+
   return (
     <SfPageFrame titleKey={key(title())} subtitleKey={designed() ? key(isImport() ? "sf.u23.importSubtitle" : "sf.u23.previewSubtitle") : undefined} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}
@@ -766,26 +800,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 </>}</For>
               </dl>
             </section>
-            <section class="sf-files-section" aria-label={t("sf.u23.context")}>
-              <h2>{t("sf.u23.context")}</h2>
-              <For each={state.manifest!.commands}>{(command) => <article class="mx-card">
-                <p>{command.preview.engineVersion} · {t("sf.u23.version")} {command.preview.version}</p>
-                <dl>
-                  <For each={command.preview.components}>{(item) => <>
-                    <dt>{item.id}</dt><dd>{item.amount === null ? t("sf.common.unknown") : item.amount} · {item.currency} · {item.evidenceState}</dd>
-                  </>}</For>
-                  <For each={command.preview.values}>{(item) => <>
-                    <dt>{item.id}</dt><dd>{item.value === null ? t("sf.common.unknown") : String(item.value)} · {item.unit ?? ""} · {item.evidenceState}</dd>
-                  </>}</For>
-                  <For each={command.preview.missing}>{(item) => <>
-                    <dt>{item.field}</dt><dd>{item.reason}</dd>
-                  </>}</For>
-                </dl>
-              </article>}</For>
-              <For each={state.manifest!.issues}>{(issue) =>
-                <p role="status">{t("sf.u23.issues")}: {t("sf.u23.row")} {issue.row} · {issue.field} · {issue.reason}</p>
-              }</For>
-            </section>
+            <Show when={!designed()}><DomainImpact /></Show>
             <section class="sf-files-section" aria-label={t("sf.u23.changes")}>
               <h2>{t("sf.u23.changes")}</h2>
               <Show when={designed()}><dl class="sf-files-change-summary">
@@ -810,6 +825,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 </details>}
               </For>
             </section>
+            <Show when={designed()}><DomainImpact /></Show>
             <Show when={state.reference?.receipt}>
               {(receipt) => <section class="sf-files-section" data-sf-receipt="producer">
                 <h2>{receipt().outcome === "rejected" ? t("sf.u23.rejectedReceipt") : t("sf.u23.recorded")}</h2>
