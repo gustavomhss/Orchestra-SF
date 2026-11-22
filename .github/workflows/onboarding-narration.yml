@@ -1,0 +1,89 @@
+name: Onboarding neural narration
+on:
+  push:
+    branches: [onboarding-recording]
+    paths:
+      - '.github/workflows/onboarding-narration.yml'
+      - 'scripts/onboarding-media/narration/**'
+  workflow_dispatch:
+    inputs:
+      source:
+        description: Narration source JSON
+        required: true
+        default: audition
+        type: choice
+        options: [audition, chapters]
+      export_models:
+        description: Include verified model files for later media reuse
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: onboarding-narration-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  narration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      NARRATION_DIR: scripts/onboarding-media/narration
+      NARRATION_SOURCE: ${{ inputs.source || 'audition' }}
+      ONNX_PROVIDER: CPUExecutionProvider
+      OMP_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+    steps:
+      - name: Checkout recording branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4, resolved 2026-11-22
+        with:
+          persist-credentials: false
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5, resolved 2026-11-22
+        with:
+          python-version: '3.12'
+      - name: Install pinned CPU media dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p media-output media-assets
+          python -m venv .venv-media
+          .venv-media/bin/python -m pip install --require-hashes --only-binary=:all: --report media-output/install-report.json -r "$NARRATION_DIR/requirements-cpu.txt"
+          .venv-media/bin/python -m pip check
+          .venv-media/bin/python -m pip freeze > media-output/requirements-resolved.txt
+      - name: Generate numbered WAV clips and timing manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$NARRATION_SOURCE" in
+            audition|chapters) ;;
+            *) exit 2 ;;
+          esac
+          .venv-media/bin/python "$NARRATION_DIR/generate_narration.py" --input "$NARRATION_DIR/$NARRATION_SOURCE.json" --output media-output --assets media-assets --voice af_heart --speed 1.0
+          cp "$NARRATION_DIR/$NARRATION_SOURCE.json" media-output/narration-source.json
+          cp "$NARRATION_DIR/requirements-cpu.txt" media-output/
+          cp "$NARRATION_DIR/dependency-sources.json" media-output/
+          cp "$NARRATION_DIR/SOURCES.md" media-output/
+          cp "$NARRATION_DIR/SOURCES.md" media-assets/
+          cp "$NARRATION_DIR/LICENSE-KOKORO-MODEL.txt" media-assets/
+          cp "$NARRATION_DIR/LICENSE-KOKORO-ONNX.txt" media-output/
+      - name: Upload narration and provenance
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4, resolved 2026-11-22
+        with:
+          name: onboarding-narration-${{ github.sha }}
+          path: media-output/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload verified models for media reuse
+        if: github.event_name == 'push' || inputs.export_models
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4, resolved 2026-11-22
+        with:
+          name: kokoro-models-v1.0-verified
+          path: media-assets/
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 14
+
