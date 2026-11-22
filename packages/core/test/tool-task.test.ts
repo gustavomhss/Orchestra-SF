@@ -43,6 +43,7 @@ import { ToolRegistry } from "@orchestra/core/tool/registry"
 import { Cause, Context, DateTime, Deferred, Effect, Exit, Fiber, Layer, LayerMap, Schema, Stream } from "effect"
 import { asc, eq } from "drizzle-orm"
 import { Board } from "@orchestra/schema/board"
+import { technicalLocationMap } from "./fixture/technical-location-map"
 import { testEffect } from "./lib/effect"
 import { settleTool } from "./lib/tool"
 import { tmpdir } from "./fixture/tmpdir"
@@ -206,7 +207,7 @@ const taskLayer = (location: Location.Interface, resolve: ProjectV2.Interface["r
   }))],
   [LocationServiceMap.node, Layer.effect(LocationServiceMap.Service,
     LayerMap.make((_ref: Location.Ref) =>
-      Layer.effectContext<LocationServices, never, never>(Effect.die("Unexpected hook Location acquisition"))))],
+      Layer.effectContext<LocationServices, never, never>(Effect.die("Unexpected hook Location acquisition"))).pipe(Effect.map(technicalLocationMap)))],
   [SessionExecution.node, execution],
   [TaskGovernance.node, governance],
   [ExecutionHost.node, Layer.succeed(ExecutionHost.Service, ExecutionHost.of([host]))],
