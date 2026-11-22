@@ -1,0 +1,28 @@
+{
+  "source": "b486fd1e76bdb2dc7c48cb070ba67a744358131a",
+  "sourceTree": "47eb2a1783a6f57e9bfd1e07448c41cc88d2cc64",
+  "snapshot": "498bd8b6fb82a36b062c21d2cf3d201b73ae98e5",
+  "tree": "bfc9f0d69c2592622ca71848af05e610b218208a",
+  "branch": "ci-run-sf5collabclean7",
+  "request": {
+    "package": "app",
+    "packageSelector": "@orchestra/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-collab.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "fullSpecBlob": "56680de04159b0539b6afc405cb3a557fda2ed40",
+  "overlayPaths": [
+    ".ci-run.json",
+    "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts"
+  ],
+  "notes": "Clean root integration; select only UI51–53 declaration, preserve all permanent helpers and looks. The permanent spec retains both independent declarations. No trace/timeout/source changes.",
+  "status": "running clean UI51–53"
+}

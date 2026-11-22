@@ -1,0 +1,28 @@
+{
+  "source": "1de7171efe8bf6fc908fff102955012c6da2d2da",
+  "sourceTree": "308630ee33cdebdaacba5a58cab13c742587740f",
+  "snapshot": "8ae7be04f4abfbcf62c3bd372fe1395950f55425",
+  "tree": "c4cee4e0cb2e1a14b0f675355786caace5836ca2",
+  "branch": "ci-run-sf5importfixed4",
+  "request": {
+    "package": "app",
+    "packageSelector": "@orchestra/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-collab.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "overlayPaths": [
+    ".ci-run.json",
+    "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts"
+  ],
+  "notes": "Clean original product; only import-only spec selection plus existing test-ci request. No diagnostic code, timeout change, source substitution or workflow changes.",
+  "run": 44992688529,
+  "status": "running clean import-only"
+}
