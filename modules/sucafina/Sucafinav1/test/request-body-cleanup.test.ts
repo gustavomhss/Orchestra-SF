@@ -109,11 +109,11 @@ test.each([
 test("abort of a pending read settles as 400 and closes the source despite release failure", async () => {
   const controller = new AbortController()
   const f = fixture({ pending: true, brokenRelease: true })
-  const rejected = expect(readRequestBody(request(f.source, { signal: controller.signal }), 8))
-    .rejects.toMatchObject({ name: "RequestBodyError", status: 400 })
+  const pending = readRequestBody(request(f.source, { signal: controller.signal }), 8)
+  void pending.catch(() => undefined)
   await f.started
   controller.abort()
-  await rejected
+  await expect(pending).rejects.toMatchObject({ name: "RequestBodyError", status: 400 })
   expect(f.state.pulls).toBe(1)
   expect(f.state.cancellationAttempts).toBe(1)
   expect(f.state.sourceCancellations).toBe(1)
@@ -122,11 +122,11 @@ test("abort of a pending read settles as 400 and closes the source despite relea
 
 test("a source error remains a body rejection while reader cleanup still runs", async () => {
   const f = fixture({ pending: true, brokenRelease: true })
-  const rejected = expect(readRequestBody(request(f.source), 8))
-    .rejects.toMatchObject({ name: "RequestBodyError", status: 400 })
+  const pending = readRequestBody(request(f.source), 8)
+  void pending.catch(() => undefined)
   await f.started
   f.state.controller!.error(new Error("controlled upstream failure must not be public"))
-  await rejected
+  await expect(pending).rejects.toMatchObject({ name: "RequestBodyError", status: 400 })
   expect(f.state.releases).toBe(1)
   expect(f.state.cancellationAttempts).toBe(1)
   expect(await f.state.closed).toBe("errored")
