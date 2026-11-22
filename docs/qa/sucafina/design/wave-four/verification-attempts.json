@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "updatedThrough": "2026-11-21T23:55:00Z",
-  "note": "Historical attempts include failures and incomplete journeys. Only a final passing run qualifies its stated coverage.",
+  "note": "Historical snapshot of the first 46 attempts. Running states reflect that earlier capture time, not current run status. Current results and later attempts are in attempts.json; no failed attempt is erased.",
   "attempts": [
     {
       "group": "technical",
@@ -631,5 +631,7 @@
       "cause": "Exact baseline comparison preserved all seven file/code/message diagnostics; no new CLI errors. Previous fixture diagnostics fixed with exact types and original-method guards.",
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44963827656"
     }
-  ]
+  ],
+  "status": "SUPERSEDED_HISTORICAL_SNAPSHOT",
+  "supersededBy": "attempts.json"
 }
