@@ -2,6 +2,7 @@ import { For, Show, createEffect, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useSfContext } from "../../context"
 import { safeBiDestination } from "../safe-destination"
+import { sfBiNativeDestinationRequest } from "../source-destination"
 import type { SfSurfaceProps } from "../../context/contracts"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
 import type {
@@ -295,7 +296,8 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     const state = context.state()
     if (state.status !== "ready" || !context.ready()) return []
     return links.flatMap((link) => {
-      const href = safeBiDestination(link.url, state.binding)
+      const href = safeBiDestination(link.url, state.binding) ??
+        sfBiNativeDestinationRequest(link.url, state.binding, state.selection)
       return href ? [{ label: link.label, href }] : []
     })
   }
