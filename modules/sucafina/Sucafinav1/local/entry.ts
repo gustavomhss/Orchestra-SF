@@ -289,7 +289,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
           } }, request, stamp),
           observeSfPoHealth({ source: () => {
             const authority = runtime?.services?.()
-            return authority && runtime?.identity() ? { routes: files, authority } : undefined
+            return authority && files && runtime?.identity() ? { routes: files, authority } : undefined
           } }, request, stamp),
           observeSfHome(runtime?.services?.(), request, stamp),
           observeSfWorkHealth({ source: () => {
