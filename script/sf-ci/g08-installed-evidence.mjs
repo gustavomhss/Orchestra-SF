@@ -99,6 +99,36 @@ export function verifyInstalledHostPair(kind, plan, receipt, beforeInput, afterI
   return { before, after }
 }
 
+
+/** Bind the final observer's restart sidecar back to the unchanged original private byte chain. */
+export function verifyRestartBinding(after, plan, packageReceipt, bytes) {
+  const restart = record(after.restart)
+  exact(restart, ["schema", "status", "candidate", "archiveSha256", "invocation", "planSha256",
+    "hostBeforeSha256", "releaseReceiptSha256", "az02PhaseSha256", "az02PrivateSha256",
+    "producerSourceSha256", "oldHostId", "newHostId", "before", "after", "cookieSha256",
+    "requiresOriginalWorkflowChain", "liveQualified"])
+  assert(restart.schema === "sf-g08-az02-restart-v1" &&
+    restart.status === "AZ02_PROCESS_AND_HOST_TRANSITION_REOBSERVED" &&
+    restart.requiresOriginalWorkflowChain === true && restart.liveQualified === false,
+    "G08_FINAL_RESTART_OBSERVER_REQUIRED")
+  same(restart.candidate, plan.candidate, "G08_RESTART_CANDIDATE_CHANGED")
+  same(restart.invocation, plan.invocation, "G08_RESTART_INVOCATION_CHANGED")
+  assert(restart.archiveSha256 === packageReceipt.archive.sha256 &&
+    restart.releaseReceiptSha256 === after.releaseReceiptSha256, "G08_RESTART_INSTALLED_BYTES_CHANGED")
+  for (const [field, name] of [["planSha256","plan.json"], ["hostBeforeSha256","host-before.json"],
+    ["az02PhaseSha256","az02-phase.json"], ["az02PrivateSha256","az02-private.json"],
+    ["producerSourceSha256","producer"]])
+    assert.equal(restart[field], digest(bytes[name]), "G08_RESTART_ORIGINAL_BYTES_CHANGED")
+  assert(restart.oldHostId === plan.target.hostId &&
+    restart.newHostId === after.binding.descriptor.hostId && restart.newHostId !== restart.oldHostId,
+    "G08_RESTART_DESCRIPTOR_CHANGED")
+  same(after.target, { ...plan.target, hostId: restart.newHostId }, "G08_RESTART_TARGET_CHANGED")
+  const detail = parse(bytes["az02-private.json"]).details[0]
+  same(restart.before, detail.before, "G08_RESTART_BEFORE_CHANGED")
+  same(restart.after, detail.after, "G08_RESTART_AFTER_CHANGED")
+  assert.equal(restart.cookieSha256, detail.cookieSha256, "G08_RESTART_COOKIE_CHANGED")
+}
+
 /** Parse only original executor results. Manual PASS, controlled transport, omitted or additional cases fail. */
 export function verifyAz02Phase(kind, plan, packageReceipt, planRaw, proof, privateProof, privateRaw, configInput) {
   const phase = kind.replace(/^AZ02-/, "")
@@ -231,6 +261,9 @@ export async function inspectInstalledGroup(root, kind) {
     inventory = verifyAz02Phase(kind, plan, packageReceipt, planRaw, proof, privatePhase, privateRaw, await json("az02-config.json"))
   }
   const pair = verifyInstalledHostPair(kind, plan, packageReceipt, before, after, privatePhase)
+  if (kind === "AZ02-after-restart")
+    verifyRestartBinding(after, plan, packageReceipt, { ...Object.fromEntries(files),
+      producer: await readFile("sf/azure/identity/az02-proof.cjs") })
   verifyExecutionStatus(status, plan, kind, before, after)
   const authorization = await json("authorization.json")
   await text("execution-authorization.json")
@@ -296,12 +329,35 @@ export function verifyInstalledChain(items) {
   return coverage
 }
 
+/** Try flushing and closing independently, preserving evidence failure instead of emitting success. */
+export async function finishCommandOutput(handle) {
+  const failures = []
+  try { await handle.sync() } catch (error) { failures.push(error) }
+  try { await handle.close() } catch (error) { failures.push(error) }
+  if (failures.length) throw new AggregateError(failures, "G08_PRIVATE_COMMAND_OUTPUT_FAILED")
+}
+/** Every finalizer and the failure status are attempted even after an observer/logging error. */
+export async function finalizeExecution(status, operations) {
+  const failures = []
+  for (const [field, operation] of [
+    ["hostAfterExit", operations.hostAfter],
+    ["trackedDiffExit", operations.trackedDiff],
+    ["stagedDiffExit", operations.stagedDiff],
+  ]) {
+    if (!operation) continue
+    try { status[field] = await operation() }
+    catch (error) { status[field] = 125; status.signal ??= "FINALIZER_ERROR"; failures.push(error) }
+  }
+  status.finishedAt = new Date().toISOString()
+  try { await operations.persist(status) } catch (error) { failures.push(error) }
+  if (failures.length) throw new AggregateError(failures, "G08_ORIGINAL_FINALIZATION_FAILED")
+}
 async function command(root, name, executable, args, env, cwd = process.cwd()) {
   const handle = await open(path.join(root, name), constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600)
   try {
     const result = spawnSync(executable, args, { env, cwd, stdio: ["ignore", handle.fd, handle.fd] })
     return { exit: result.status ?? 125, signal: result.signal ?? (result.error ? "SPAWN_ERROR" : null) }
-  } finally { await handle.sync(); await handle.close() }
+  } finally { await finishCommandOutput(handle) }
 }
 async function runInstalled(kind) {
   assert(installedKinds.includes(kind), "G08_EXACT_GROUP_REQUIRED")
@@ -383,14 +439,17 @@ async function runInstalled(kind) {
         }
       }
     }
+  } catch (error) {
+    status.signal ??= "EXECUTION_EXCEPTION"
+    throw error
   } finally {
-    if (kind !== "TEAMS")
-      status.hostAfterExit = await capture("host-after.log", "python3",
-        ["script/sf-ci/g08-installed-preflight.py", kind === "AZ02-after-restart" ? "after-restart" : "after"])
-    status.trackedDiffExit = await capture("tracked-group-diff.log", "git", ["diff", "--exit-code"])
-    status.stagedDiffExit = await capture("staged-group-diff.log", "git", ["diff", "--cached", "--exit-code"])
-    status.finishedAt = new Date().toISOString()
-    await writePrivate(root, "execution-status.json", status)
+    await finalizeExecution(status, {
+      hostAfter: kind === "TEAMS" ? undefined : () => capture("host-after.log", "python3",
+        ["script/sf-ci/g08-installed-preflight.py", kind === "AZ02-after-restart" ? "after-restart" : "after"]),
+      trackedDiff: () => capture("tracked-group-diff.log", "git", ["diff", "--exit-code"]),
+      stagedDiff: () => capture("staged-group-diff.log", "git", ["diff", "--cached", "--exit-code"]),
+      persist: (observed) => writePrivate(root, "execution-status.json", observed),
+    })
   }
   const observed = await inspectInstalledGroup(root, kind)
   await writePrivate(root, "group-receipt.json", observed.receipt)

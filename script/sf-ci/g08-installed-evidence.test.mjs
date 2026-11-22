@@ -4,7 +4,7 @@ import assert from "node:assert/strict"
 import az02 from "../../sf/azure/identity/az02-proof.cjs"
 import { digest, validatePlan, validatePackage } from "./g08-private-evidence.mjs"
 import { installedKinds, verifyInstalledHostPair, verifyAz02Phase, verifyExecutionStatus,
-  verifyInstalledChain } from "./g08-installed-evidence.mjs"
+  verifyInstalledChain, verifyRestartBinding, finishCommandOutput, finalizeExecution } from "./g08-installed-evidence.mjs"
 const uuid = (last) => "00000000-0000-4000-8000-" + String(last).padStart(12, "0")
 function scope(installationId = "synthetic-installation", teamObjectId = uuid(2)) {
   const result = { serverKey: "https://qa.example.invalid", discoveryOrigin: "https://qa.example.invalid",
@@ -248,4 +248,85 @@ for (const [name, change] of [
   ["UI after restart", (v) => { v[0].receipt.execution.finishedAt = "2026-01-01T01:59:00Z" }],
 ]) test("complete join refuses " + name, () => {
   const value = chain(); change(value); assert.throws(() => verifyInstalledChain(value))
+})
+
+function restartBindingFixture() {
+  const p = validatePlan(plan()), pkg = packageReceipt(), v = restartPair()
+  const bytes = { "plan.json": JSON.stringify(p) + "\n", "host-before.json": JSON.stringify(v.before) + "\n",
+    "az02-phase.json": JSON.stringify({ schema: "CONTROL_ONLY_PHASE_BYTES" }) + "\n",
+    "az02-private.json": JSON.stringify(v.private) + "\n", producer: "CONTROL_ONLY_SOURCE_BYTES" }
+  v.after.target = { ...p.target, hostId: v.after.binding.descriptor.hostId }
+  v.after.restart = { schema: "sf-g08-az02-restart-v1", status: "AZ02_PROCESS_AND_HOST_TRANSITION_REOBSERVED",
+    candidate: p.candidate, archiveSha256: pkg.archive.sha256, invocation: p.invocation,
+    releaseReceiptSha256: v.after.releaseReceiptSha256, oldHostId: p.target.hostId,
+    newHostId: v.after.binding.descriptor.hostId, before: v.private.details[0].before, after: v.private.details[0].after,
+    cookieSha256: v.private.details[0].cookieSha256, requiresOriginalWorkflowChain: true, liveQualified: false }
+  for (const [field, name] of [["planSha256","plan.json"], ["hostBeforeSha256","host-before.json"],
+    ["az02PhaseSha256","az02-phase.json"], ["az02PrivateSha256","az02-private.json"], ["producerSourceSha256","producer"]])
+    v.after.restart[field] = digest(bytes[name])
+  return { p, pkg, after: v.after, bytes }
+}
+test("restart final observer binds every original private byte source without promoting LIVE", () => {
+  const v = restartBindingFixture()
+  assert.doesNotThrow(() => verifyRestartBinding(v.after, v.p, v.pkg, v.bytes))
+  assert.equal(v.after.restart.liveQualified, false)
+})
+for (const [name, change] of [
+  ["manual input-only status", (v) => { v.after.restart.status = "AZ02_TRANSITION_INPUTS_BOUND_NOT_LIVE" }],
+  ["manual LIVE promotion", (v) => { v.after.restart.liveQualified = true }],
+  ["manual removal of workflow provenance", (v) => { v.after.restart.requiresOriginalWorkflowChain = false }],
+  ["plan bytes", (v) => { v.bytes["plan.json"] += " " }],
+  ["host bytes", (v) => { v.bytes["host-before.json"] += " " }],
+  ["phase bytes", (v) => { v.bytes["az02-phase.json"] += " " }],
+  ["private bytes", (v) => { v.bytes["az02-private.json"] += " " }],
+  ["producer source", (v) => { v.bytes.producer += " " }],
+  ["foreign target", (v) => { v.after.target.teamObjectId = uuid(99) }],
+  ["another cookie", (v) => { v.after.restart.cookieSha256 = "0".repeat(64) }],
+  ["another process", (v) => { v.after.restart.after = { ...v.after.restart.after, pid: 999 } }],
+  ["another release receipt", (v) => { v.after.restart.releaseReceiptSha256 = "0".repeat(64) }],
+]) test("restart binding refuses " + name, () => {
+  const v = restartBindingFixture(); change(v)
+  assert.throws(() => verifyRestartBinding(v.after, v.p, v.pkg, v.bytes))
+})
+
+test("command output closes its real handle even when fsync fails", async () => {
+  const attempts = []
+  await assert.rejects(finishCommandOutput({
+    sync: async () => { attempts.push("sync"); throw new Error("CONTROLLED_FSYNC_FAILURE") },
+    close: async () => { attempts.push("close") },
+  }), /G08_PRIVATE_COMMAND_OUTPUT_FAILED/)
+  assert.deepEqual(attempts, ["sync", "close"])
+})
+test("command output retains both independent flush and close errors", async () => {
+  await assert.rejects(finishCommandOutput({
+    sync: async () => { throw new Error("CONTROLLED_FSYNC_FAILURE") },
+    close: async () => { throw new Error("CONTROLLED_CLOSE_FAILURE") },
+  }), (error) => error instanceof AggregateError && error.errors.length === 2)
+})
+test("finalization attempts every check and preserves failure status after host log IO fails", async () => {
+  const attempts = [], observed = status()
+  await assert.rejects(finalizeExecution(observed, {
+    hostAfter: async () => { attempts.push("host"); throw new Error("CONTROLLED_HOST_LOG_FAILURE") },
+    trackedDiff: async () => { attempts.push("tracked"); return 0 },
+    stagedDiff: async () => { attempts.push("staged"); return 0 },
+    persist: async (value) => {
+      attempts.push("persist")
+      assert.equal(value.hostAfterExit, 125)
+      assert.equal(value.signal, "FINALIZER_ERROR")
+      assert.equal(value.trackedDiffExit, 0)
+      assert.equal(value.stagedDiffExit, 0)
+    },
+  }), /G08_ORIGINAL_FINALIZATION_FAILED/)
+  assert.deepEqual(attempts, ["host", "tracked", "staged", "persist"])
+})
+test("all finalizer failures retain attempts and never claim a positive receipt", async () => {
+  const attempts = [], observed = status()
+  await assert.rejects(finalizeExecution(observed, Object.fromEntries(
+    ["hostAfter", "trackedDiff", "stagedDiff", "persist"].map((name) => [name, async () => {
+      attempts.push(name); throw new Error("CONTROLLED_" + name)
+    }]))), (error) => error instanceof AggregateError && error.errors.length === 4)
+  assert.deepEqual(attempts, ["hostAfter", "trackedDiff", "stagedDiff", "persist"])
+  assert.equal(observed.hostAfterExit, 125)
+  assert.equal(observed.trackedDiffExit, 125)
+  assert.equal(observed.stagedDiffExit, 125)
 })
