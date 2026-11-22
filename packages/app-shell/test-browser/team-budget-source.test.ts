@@ -141,6 +141,8 @@ function fixture(cap: Cap = "CAP03", options: Readonly<{ detail?: boolean; perio
     close() { dispose(); host.remove(); fetch.mockRestore(); window.location.href = originalHref },
   }
 }
+// Match English Intl presentation while preserving the exact producer numbers in every assertion.
+const displayedAmount = (value: number) => new Intl.NumberFormat("en", { maximumFractionDigits: 2 }).format(value)
 const revenue = (view: ReturnType<typeof fixture>) => view.budget()?.querySelector('[data-sf-metric="revenue"]')?.textContent ?? ""
 async function budgetReady(view: ReturnType<typeof fixture>) {
   await eventually(() => !!view.budget()?.querySelector(".sf-budget-period select"))
@@ -201,7 +203,7 @@ for (const cap of ["CAP04", "CAP05"] as const) {
         contractRevision: binding.contractRevision, server: binding.publicOrigin,
         installationId: binding.installationId, tenantId: binding.tenantId, teamObjectId: a, year: "2026",
       })
-      expect(revenue(view)).toContain("101,001")
+      expect(revenue(view)).toContain(displayedAmount(101001))
       expect(view.budget()?.querySelector(".sf-budget-edit")).toBeNull()
       expect(view.reads()).toHaveLength(1)
       const index = view.requests.indexOf(view.reads()[0]!)
@@ -224,10 +226,10 @@ test("CAP03 login return, focus and Team change preserve the canonical month wit
     view.focus(); await budgetReady(view)
     expect(new URL(window.location.href).searchParams.get("month")).toBe("11")
     view.choose(b)
-    await eventually(() => revenue(view).includes("202,002"))
+    await eventually(() => revenue(view).includes(displayedAmount(202002)))
     expect(new URL(window.location.href).searchParams.get("teamObjectId")).toBe(b)
     expect(new URL(window.location.href).searchParams.get("month")).toBe("11")
-    expect(revenue(view)).not.toContain("101,001")
+    expect(revenue(view)).not.toContain(displayedAmount(101001))
   } finally { view.close() }
 }, 15000)
 
@@ -235,7 +237,7 @@ test("the original CAP03 period selector and reset commit only public selection 
   const view = fixture("CAP03", { period: { year: 2026, month: 11 } })
   try {
     await budgetReady(view); changeYear(view, "2025")
-    await eventually(() => new URL(window.location.href).searchParams.get("year") === "2025" && revenue(view).includes("101,001"))
+    await eventually(() => new URL(window.location.href).searchParams.get("year") === "2025" && revenue(view).includes(displayedAmount(101001)))
     expect(new URL(window.location.href).searchParams.get("month")).toBe("11")
     changeYear(view, "")
     await eventually(() => !!view.budget()?.querySelector(".sf-budget-ledger"))
@@ -244,7 +246,7 @@ test("the original CAP03 period selector and reset commit only public selection 
     expect(url.searchParams.has("month")).toBe(false)
     expect(url.searchParams.get("teamObjectId")).toBe(a)
     expect(new URL(view.reads().at(-1)!.url).search).toBe("")
-    expect(view.budget()?.querySelector('[data-sf-metric="budget"]')?.textContent).toContain("777,001")
+    expect(view.budget()?.querySelector('[data-sf-metric="budget"]')?.textContent).toContain(displayedAmount(777001))
     expect(view.budget()?.querySelector(".sf-budget-edit")).toBeNull()
     expect(view.requests.every((request) => request.method === "GET")).toBe(true)
   } finally { view.close() }
@@ -256,7 +258,7 @@ test("a superseded CAP03 period signal cannot commit its URL after the navigatio
   try {
     await budgetReady(view)
     batch(() => { changeYear(view, "2025"); changeYear(view, "2027") })
-    await eventually(() => new URL(window.location.href).searchParams.get("year") === "2027" && revenue(view).includes("101,001"))
+    await eventually(() => new URL(window.location.href).searchParams.get("year") === "2027" && revenue(view).includes(displayedAmount(101001)))
     const committed = push.mock.calls.map((call) => String(call[2]))
     expect(committed.some((href) => new URL(href, binding.publicOrigin).searchParams.get("year") === "2025")).toBe(false)
     expect(committed.some((href) => new URL(href, binding.publicOrigin).searchParams.get("year") === "2027")).toBe(true)
@@ -267,10 +269,10 @@ test("a superseded CAP03 period signal cannot commit its URL after the navigatio
 test("fresh CAP03 read revocation removes its private values without borrowing another domain destination", async () => {
   const view = fixture()
   try {
-    await budgetReady(view); expect(revenue(view)).toContain("101,001")
+    await budgetReady(view); expect(revenue(view)).toContain(displayedAmount(101001))
     view.revokeBudget(); view.focus()
     await eventually(() => view.state() === "authenticated" && view.host.querySelector('[data-sf-team-domain-page="CAP03"]') === null)
-    expect(view.host.textContent).not.toContain("101,001")
+    expect(view.host.textContent).not.toContain(displayedAmount(101001))
     expect(new URL(window.location.href).searchParams.get("teamObjectId")).toBe(a)
     expect(view.requests.every((request) => request.method === "GET")).toBe(true)
   } finally { view.close() }
@@ -287,11 +289,11 @@ test("late Team A CAP03 bytes cannot populate the original budget leaf after Tea
   try {
     await started.promise
     view.choose(b)
-    await eventually(() => revenue(view).includes("202,002"))
+    await eventually(() => revenue(view).includes(displayedAmount(202002)))
     release.resolve(); await tick(); await tick()
     expect(new URL(window.location.href).searchParams.get("teamObjectId")).toBe(b)
-    expect(revenue(view)).toContain("202,002")
-    expect(view.host.textContent).not.toContain("101,001")
+    expect(revenue(view)).toContain(displayedAmount(202002))
+    expect(view.host.textContent).not.toContain(displayedAmount(101001))
     expect(view.requests.every((request) => request.method === "GET")).toBe(true)
   } finally { release.resolve(); view.close() }
 }, 15000)
