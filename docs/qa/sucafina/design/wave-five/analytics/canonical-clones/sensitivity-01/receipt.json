@@ -1,0 +1,521 @@
+{
+  "schema": "sucafina-canonical-clones-sensitivity-receipt-v1",
+  "attempt": "sensitivity-01",
+  "classification": "original-ui44-evaluation-timeout-no-qualification",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "product": "9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0",
+    "productTree": "5537fb6a8a9f4079ed981fa74727cfbf3d76812b",
+    "snapshot": "34612b8ee430bb9964f558883286ef40b36fe2b7",
+    "snapshotTree": "44407841b14f5ed291d406ab7f2b29bec5dbd3e0",
+    "snapshotParentIsProduct": true,
+    "request": {
+      "path": ".ci-run.json",
+      "sha": "03c8f5c84391add25fdd11165eb1af6549c2e301",
+      "value": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-five-sensitivity.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      }
+    },
+    "spec": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-sensitivity.spec.ts",
+      "sha": "0df7e844d4f0419dc13249e87c2ad5766403b1c3",
+      "nonTrailingLines": 205,
+      "fullDeclarationPreserved": true,
+      "originalSnapshot": "9a89ca88b1971ed3397dfb03dfa8b7fa2d9804bb",
+      "originalSpecBytesEqual": true,
+      "originalRequestBytesEqual": true
+    },
+    "permanentAnalyticsSpec": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "sha": "f4eb9a534b7a22fcf79e7ccb20bbfd9f8251ae74",
+      "modifiedBySnapshot": false
+    },
+    "snapshotDelta": [
+      "add .ci-run.json",
+      "add packages/app-shell/e2e/sucafina/design-wave-five-sensitivity.spec.ts"
+    ],
+    "workflow": {
+      "path": ".github/workflows/test-ci.yml",
+      "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "unchanged": true
+    },
+    "originalBudgetsMs": {
+      "test": 780000,
+      "defaultAction": 20000,
+      "unitsResponse": 60000,
+      "evaluationResponse": 120000,
+      "changed": false
+    }
+  },
+  "actions": {
+    "workflow": "test-ci",
+    "runner": "ubuntu-24.04",
+    "branch": "ci-run-sf5clonesens",
+    "run": 45052940386,
+    "runAttempt": 1,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-22T18:04:07Z",
+    "updatedAt": "2026-11-22T18:16:28Z",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45052940386",
+    "jobs": [
+      {
+        "id": 137301845700,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-22T18:04:09Z",
+        "completedAt": "2026-11-22T18:16:17Z",
+        "selectedSteps": [
+          {
+            "number": 21,
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "failure",
+            "startedAt": "2026-11-22T18:05:13Z",
+            "completedAt": "2026-11-22T18:16:13Z"
+          },
+          {
+            "number": 23,
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T18:16:13Z",
+            "completedAt": "2026-11-22T18:16:15Z"
+          }
+        ]
+      },
+      {
+        "id": 137305441267,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-22T18:16:20Z",
+        "completedAt": "2026-11-22T18:16:27Z",
+        "selectedSteps": [
+          {
+            "number": 2,
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T18:16:21Z",
+            "completedAt": "2026-11-22T18:16:25Z"
+          }
+        ]
+      }
+    ],
+    "environment": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "artifacts": {
+      "query": "GET /repos/gustavomhss/Orchestra-SF/actions/runs/45052940386/artifacts",
+      "items": [
+        {
+          "id": 14766805641,
+          "name": "playwright-ubuntu-24.04-1",
+          "size_in_bytes": 9052395,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14766805641",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14766805641/zip",
+          "expired": false,
+          "created_at": "2026-11-22T18:16:14Z",
+          "expires_at": "2026-11-29T18:16:13Z",
+          "updated_at": "2026-11-22T18:16:14Z",
+          "digest": "sha256:f837e16a83e98c05bfd8331f60fcd62e5ab1ac87edf1b60f3080eb1cfef6574f",
+          "workflow_run": {
+            "id": 45052940386,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "ci-run-sf5clonesens",
+            "head_sha": "34612b8ee430bb9964f558883286ef40b36fe2b7"
+          }
+        }
+      ],
+      "downloadPerformed": false,
+      "contentsVerified": false
+    },
+    "cleanup": {
+      "job": 137305441267,
+      "conclusion": "success",
+      "deleteSnapshotBranchStep": "success",
+      "finalLogErrorsObserved": false,
+      "remoteRefReadbackPerformed": false
+    },
+    "rerun": false
+  },
+  "result": {
+    "tests": 1,
+    "failed": 1,
+    "passed": 0,
+    "testTitle": "wave five sensitivity: native units, evaluation and recorded samples",
+    "testDeclaration": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-sensitivity.spec.ts",
+      "line": 11,
+      "column": 1
+    },
+    "unitsGet": {
+      "evidence": {
+        "sourceLine": 1199,
+        "timestamp": "2026-11-22T18:14:06.8644484Z",
+        "marker": "SF_ANALYTICS_SOURCE",
+        "originalPayload": "{\"operation\":\"decision-controls-sensitivity-units\",\"method\":\"GET\",\"http\":200,\"selection\":{\"scenarioRef\":\"decision-result:3d331c432c63aa06aa5a3103144259b71c23e0cbb4a217a7f25298fe2753bb19\",\"baselineRef\":\"decision-result:a802b84533afc9213f0b5ddbee6a6e330fde2599d998eb24bad3f39ef751430a\",\"parameterRef\":\"59d85a18-ff34-4add-848b-e26847accdf7:2\"},\"units\":{\"baselineRef\":\"decision-result:a802b84533afc9213f0b5ddbee6a6e330fde2599d998eb24bad3f39ef751430a\",\"parameterRef\":\"59d85a18-ff34-4add-848b-e26847accdf7:2\",\"parameterUnit\":\"USD\",\"resultUnit\":\"USD\",\"engineVersion\":\"planner-runtime-v1\",\"sourceRefs\":[{\"schema\":\"sf-evidence-v1\",\"kind\":\"record\",\"refId\":\"planner-version:39a44cdd-d661-4fc7-99ee-b29230290bdf:75b645f9-74dd-466e-a8c2-dd7852245a84:1\",\"installationId\":\"2ed9e680-c038-4ac4-9c05-53991736f574\",\"projectId\":\"global\",\"refDigest\":\"1158424e98b0977ad43ef8ac1b2557718fde79239327328a9c12d6446e57ee17\",\"evidenceLevel\":\"observed\",\"target\":{\"surface\":\"planner\",\"recordType\":\"planner-version\",\"recordId\":\"39a44cdd-d661-4fc7-99ee-b29230290bdf\",\"incarnation\":\"75b645f9-74dd-466e-a8c2-dd7852245a84\",\"version\":1,\"fields\":[\"id\",\"name\",\"year\",\"locked\",\"closed\",\"hc\",\"lists\",\"lines\",\"projects\",\"fx\",\"summary\",\"hr\",\"restrictedHr\",\"fteInputsKnown\",\"hrMonthStates\",\"sharedEntities\",\"sharedAllocations\"],\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"projectionDigest\":\"e340153f4f5a377aec960f79b0b45a3f4cf0820da83455c5d8c77f5ffb743f08\"}},{\"schema\":\"sf-evidence-v1\",\"kind\":\"record\",\"refId\":\"planner-version:703ad544-72c8-4ce9-a7ed-bdf28cbe7af9:485f2875-0e90-445d-8f1f-6d70d25b93a3:1\",\"installationId\":\"2ed9e680-c038-4ac4-9c05-53991736f574\",\"projectId\":\"global\",\"refDigest\":\"b9e5b4d0788f6201756b3b4d227d4e4fee738942a367eb74a2d099751c076f4e\",\"evidenceLevel\":\"observed\",\"target\":{\"surface\":\"planner\",\"recordType\":\"planner-version\",\"recordId\":\"703ad544-72c8-4ce9-a7ed-bdf28cbe7af9\",\"incarnation\":\"485f2875-0e90-445d-8f1f-6d70d25b93a3\",\"version\":1,\"fields\":[\"id\",\"name\",\"year\",\"locked\",\"closed\",\"hc\",\"lists\",\"lines\",\"projects\",\"fx\",\"summary\",\"hr\",\"restrictedHr\",\"fteInputsKnown\",\"hrMonthStates\",\"sharedEntities\",\"sharedAllocations\"],\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"projectionDigest\":\"07ef97df9ab7414e1fad366e0d5b9a708c24ab99981cf916fcf2c67eebc70880\"}}]},\"acquisition\":\"native-original-get-body\"}",
+        "value": {
+          "operation": "decision-controls-sensitivity-units",
+          "method": "GET",
+          "http": 200,
+          "selection": {
+            "scenarioRef": "decision-result:3d331c432c63aa06aa5a3103144259b71c23e0cbb4a217a7f25298fe2753bb19",
+            "baselineRef": "decision-result:a802b84533afc9213f0b5ddbee6a6e330fde2599d998eb24bad3f39ef751430a",
+            "parameterRef": "59d85a18-ff34-4add-848b-e26847accdf7:2"
+          },
+          "units": {
+            "baselineRef": "decision-result:a802b84533afc9213f0b5ddbee6a6e330fde2599d998eb24bad3f39ef751430a",
+            "parameterRef": "59d85a18-ff34-4add-848b-e26847accdf7:2",
+            "parameterUnit": "USD",
+            "resultUnit": "USD",
+            "engineVersion": "planner-runtime-v1",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "planner-version:39a44cdd-d661-4fc7-99ee-b29230290bdf:75b645f9-74dd-466e-a8c2-dd7852245a84:1",
+                "installationId": "2ed9e680-c038-4ac4-9c05-53991736f574",
+                "projectId": "global",
+                "refDigest": "1158424e98b0977ad43ef8ac1b2557718fde79239327328a9c12d6446e57ee17",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "planner",
+                  "recordType": "planner-version",
+                  "recordId": "39a44cdd-d661-4fc7-99ee-b29230290bdf",
+                  "incarnation": "75b645f9-74dd-466e-a8c2-dd7852245a84",
+                  "version": 1,
+                  "fields": [
+                    "id",
+                    "name",
+                    "year",
+                    "locked",
+                    "closed",
+                    "hc",
+                    "lists",
+                    "lines",
+                    "projects",
+                    "fx",
+                    "summary",
+                    "hr",
+                    "restrictedHr",
+                    "fteInputsKnown",
+                    "hrMonthStates",
+                    "sharedEntities",
+                    "sharedAllocations"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "e340153f4f5a377aec960f79b0b45a3f4cf0820da83455c5d8c77f5ffb743f08"
+                }
+              },
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "planner-version:703ad544-72c8-4ce9-a7ed-bdf28cbe7af9:485f2875-0e90-445d-8f1f-6d70d25b93a3:1",
+                "installationId": "2ed9e680-c038-4ac4-9c05-53991736f574",
+                "projectId": "global",
+                "refDigest": "b9e5b4d0788f6201756b3b4d227d4e4fee738942a367eb74a2d099751c076f4e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "planner",
+                  "recordType": "planner-version",
+                  "recordId": "703ad544-72c8-4ce9-a7ed-bdf28cbe7af9",
+                  "incarnation": "485f2875-0e90-445d-8f1f-6d70d25b93a3",
+                  "version": 1,
+                  "fields": [
+                    "id",
+                    "name",
+                    "year",
+                    "locked",
+                    "closed",
+                    "hc",
+                    "lists",
+                    "lines",
+                    "projects",
+                    "fx",
+                    "summary",
+                    "hr",
+                    "restrictedHr",
+                    "fteInputsKnown",
+                    "hrMonthStates",
+                    "sharedEntities",
+                    "sharedAllocations"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "07ef97df9ab7414e1fad366e0d5b9a708c24ab99981cf916fcf2c67eebc70880"
+                }
+              }
+            ]
+          },
+          "acquisition": "native-original-get-body"
+        }
+      },
+      "http": 200,
+      "method": "GET",
+      "bodyAcquisition": "native-original-get-body",
+      "sourceRefCount": 2,
+      "parameterUnit": "USD",
+      "resultUnit": "USD",
+      "note": "The source event preserves the issued units body and selections. Assertions before this emission in the original spec check the owner URL/query, status, exact selection, units and rule version; this step is separate from evaluation completion."
+    },
+    "evaluation": {
+      "request": {
+        "sourceLine": 1263,
+        "timestamp": "2026-11-22T18:14:10.6560195Z",
+        "marker": "SF_ANALYTICS_SOURCE",
+        "originalPayload": "{\"operation\":\"decision-sensitivity-evaluate\",\"phase\":\"native-request\",\"sequence\":1,\"method\":\"POST\",\"ownerBinding\":\"exact\"}",
+        "value": {
+          "operation": "decision-sensitivity-evaluate",
+          "phase": "native-request",
+          "sequence": 1,
+          "method": "POST",
+          "ownerBinding": "exact"
+        }
+      },
+      "operation": "decision-sensitivity-evaluate",
+      "sequence": 1,
+      "method": "POST",
+      "matchingResponseObservedInFinalLog": false,
+      "matchingRequestFailedEventObservedInFinalLog": false,
+      "failure": {
+        "name": "TimeoutError",
+        "message": "page.waitForResponse: Timeout 120000ms exceeded while waiting for event \"response\"",
+        "waiterMs": 120000,
+        "sourceLocation": {
+          "line": 115,
+          "column": 34
+        },
+        "evidence": [
+          {
+            "sourceLine": 1277,
+            "timestamp": "2026-11-22T18:16:13.2038023Z",
+            "originalPayload": "    TimeoutError: page.waitForResponse: Timeout 120000ms exceeded while waiting for event \"response\""
+          },
+          {
+            "sourceLine": 1281,
+            "timestamp": "2026-11-22T18:16:13.2043581Z",
+            "originalPayload": "    > 115 |   const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-sensitivity-evaluate\"), { timeout: 120_000 })"
+          },
+          {
+            "sourceLine": 1286,
+            "timestamp": "2026-11-22T18:16:13.2050239Z",
+            "originalPayload": "        at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-wave-five-sensitivity.spec.ts:115:34"
+          },
+          {
+            "sourceLine": 1333,
+            "timestamp": "2026-11-22T18:16:13.3374776Z",
+            "originalPayload": "  1 failed"
+          },
+          {
+            "sourceLine": 1335,
+            "timestamp": "2026-11-22T18:16:13.3582095Z",
+            "originalPayload": "error: script \"test:e2e:local\" exited with code 1"
+          },
+          {
+            "sourceLine": 1336,
+            "timestamp": "2026-11-22T18:16:13.3654569Z",
+            "originalPayload": "##[error]Process completed with exit code 1."
+          }
+        ]
+      },
+      "laterOperationOutcomeObserved": false
+    },
+    "stages": {
+      "count": 46,
+      "first": {
+        "sourceLine": 1045,
+        "timestamp": "2026-11-22T18:06:18.6264206Z",
+        "marker": "SF_DESIGN_STAGE",
+        "originalPayload": "build",
+        "value": "build"
+      },
+      "last": {
+        "sourceLine": 1135,
+        "timestamp": "2026-11-22T18:08:31.7400396Z",
+        "marker": "SF_DESIGN_STAGE",
+        "originalPayload": "decisions-ready",
+        "value": "decisions-ready"
+      },
+      "buildProgressEvidence": [
+        {
+          "sourceLine": 1045,
+          "timestamp": "2026-11-22T18:06:18.6264206Z",
+          "marker": "SF_DESIGN_STAGE",
+          "originalPayload": "build",
+          "value": "build"
+        },
+        {
+          "sourceLine": 1047,
+          "timestamp": "2026-11-22T18:07:17.0090336Z",
+          "marker": "SF_DESIGN_STAGE",
+          "originalPayload": "installation",
+          "value": "installation"
+        },
+        {
+          "sourceLine": 1059,
+          "timestamp": "2026-11-22T18:07:20.3040454Z",
+          "marker": "SF_DESIGN_STAGE",
+          "originalPayload": "native-ready",
+          "value": "native-ready"
+        }
+      ]
+    },
+    "diagnostics": [
+      {
+        "sourceLine": 1265,
+        "timestamp": "2026-11-22T18:16:10.6384006Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "originalPayload": "{\"kind\":\"wave-three-failure\",\"consoleErrors\":[],\"pageErrors\":[]}",
+        "value": {
+          "kind": "wave-three-failure",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "sourceLine": 1267,
+        "timestamp": "2026-11-22T18:16:10.6969805Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "originalPayload": "{\"kind\":\"native-view\",\"state\":{\"discovery\":\"ready\",\"provider\":\"ready\",\"view\":\"ready\",\"text\":\"Context and access⁨127.0.0.1:34255⁩ · SensitivitySensitivityChoose a caseAuthorized casesChoose a caseDesign test data · Review regional sourcing intent and evidence · Case version 2Design test data · Compare regional operating plans with explicit cost uncertainties · Case version 6Design test data · Compare regional operating plans with explicit cost uncertaintiesUSD · Jan 1, 2026 — Dec 31, 2026Select a case and approved unitsScenarioChoose a caseDesign test data · Decision baseline plan · revisão 1Design test data · Decision candidate plan · revisão 1Design test data · Regional monthly amount hypothesis · revisão 1BaselineChoose a caseDesign test data · Decision baseline plan · revisão 1Design test data · Decision candidate plan · revisão 1Design test data · Regional monthly amount hypothesis · revisão 1ParameterChoose a caseSubstituição 1 · 200 USD · 2026-02-01 a 2026-02-28UnitUnit: USD / USDEvidence references: 2CriterionCriterionChoose a case264c97ae-3c5a-416b-a15d-77d61eead499 · v2Operator≤≥=Criterion valueMinimumMaximumStepsReview sensitivity requestScenariodecision-result:3d331c432c63aa06aa5a3103144259b71c23e0cbb4a217a7f25298fe2753bb19Parameter59d85a18-ff34-4add-848b-e26847accdf7:2Criterion valuelte 2000 USDBasis200 — 2200 (2) USDNo client-side feasibility, coverage or cost evaluation is performed.Confirm sensitivity evaluationCancel review\"}}",
+        "value": {
+          "kind": "native-view",
+          "state": {
+            "discovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "text": "Context and access⁨127.0.0.1:34255⁩ · SensitivitySensitivityChoose a caseAuthorized casesChoose a caseDesign test data · Review regional sourcing intent and evidence · Case version 2Design test data · Compare regional operating plans with explicit cost uncertainties · Case version 6Design test data · Compare regional operating plans with explicit cost uncertaintiesUSD · Jan 1, 2026 — Dec 31, 2026Select a case and approved unitsScenarioChoose a caseDesign test data · Decision baseline plan · revisão 1Design test data · Decision candidate plan · revisão 1Design test data · Regional monthly amount hypothesis · revisão 1BaselineChoose a caseDesign test data · Decision baseline plan · revisão 1Design test data · Decision candidate plan · revisão 1Design test data · Regional monthly amount hypothesis · revisão 1ParameterChoose a caseSubstituição 1 · 200 USD · 2026-02-01 a 2026-02-28UnitUnit: USD / USDEvidence references: 2CriterionCriterionChoose a case264c97ae-3c5a-416b-a15d-77d61eead499 · v2Operator≤≥=Criterion valueMinimumMaximumStepsReview sensitivity requestScenariodecision-result:3d331c432c63aa06aa5a3103144259b71c23e0cbb4a217a7f25298fe2753bb19Parameter59d85a18-ff34-4add-848b-e26847accdf7:2Criterion valuelte 2000 USDBasis200 — 2200 (2) USDNo client-side feasibility, coverage or cost evaluation is performed.Confirm sensitivity evaluationCancel review"
+          }
+        }
+      },
+      {
+        "sourceLine": 1273,
+        "timestamp": "2026-11-22T18:16:10.8160896Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "originalPayload": "{\"kind\":\"wave-three-page-closed\",\"consoleErrors\":[],\"pageErrors\":[]}",
+        "value": {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    ],
+    "recordedResultReadbackReached": false,
+    "thresholdChecksReached": false,
+    "sampleChecksReached": false,
+    "recordedSamplesCaptured": false,
+    "recordedTableKeyboardCheckReached": false,
+    "portugueseResultCheckReached": false,
+    "finalScopeMarkerObserved": false,
+    "finalVisualState": {
+      "image": "gallery/FAILED-native-wave-three-test-data.jpg",
+      "reviewer": "root_cost",
+      "reviewStageRemainsVisible": true,
+      "connectionBanner": "Lost connection to the server. Retrying...",
+      "retryAction": "Retry now",
+      "confirmationButton": "visibly dimmed",
+      "cancelReview": "visible near bottom",
+      "evaluationResultVisible": false
+    }
+  },
+  "evidence": {
+    "source": "GitHub MCP final completed-job logs and metadata",
+    "testLogCharacters": 935208,
+    "testLogSplitLines": 1396,
+    "cleanupLogCharacters": 2285,
+    "cleanupLogSplitLines": 40,
+    "structuredEmissions": 115,
+    "nativeRecords": 78,
+    "previewChunkRecords": 37,
+    "counts": {
+      "SF_DESIGN_STAGE": 46,
+      "SF_ANALYTICS_SOURCE": 21,
+      "SF_DESIGN_PREVIEW": 37,
+      "SF_ANALYTICS_CAPTURE": 8,
+      "SF_DESIGN_DIAGNOSTICS": 3
+    },
+    "parseErrors": [],
+    "contextRecordsEmitted": 0,
+    "profilerRecordsEmitted": 0,
+    "eventFile": "source-events.json",
+    "manifest": "manifest.json",
+    "images": 9,
+    "imageBytes": 607895,
+    "allImagesIndividuallyViewedBy": "root_cost",
+    "rootVisualReviewAttributed": false,
+    "originalPayloadLocatorsVerified": 115,
+    "rawLogsArchived": false,
+    "nonceArchived": false
+  },
+  "separatelyScopedTechnicalVerification": {
+    "run": 45048665481,
+    "product": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+    "snapshot": "c18b97d8a316992b95abcbb57ef9b6c6754b1518",
+    "gatesPassed": 8,
+    "replayedByThisRun": false,
+    "scopeUnchanged": true
+  },
+  "separatelyScopedGuardVerification": {
+    "run": 45052663805,
+    "snapshot": "bf9cdc1527db1b528aba4ebcfe10928bbac17421",
+    "qaHead": "2b8cf6e0783c28eb293176657a2433ad35164485",
+    "qaFilesCovered": 17,
+    "passed": true,
+    "coversThisPostRunArchive": false
+  },
+  "qualification": {
+    "ui44Qualified": false,
+    "ui42QualifiedByThisRun": false,
+    "ui43QualifiedByThisRun": false,
+    "completeDeclarationPassed": false,
+    "visualQualification": false,
+    "globalCountsChanged": false,
+    "causalPerformanceGainEstablished": false,
+    "userAcceptanceEstablished": false
+  },
+  "limits": [
+    "The original units GET and its captured body establish the source-issued units step. They do not establish completion of the later evaluation POST.",
+    "The evaluation waiter failed before the result stage, original sensitivity-result readback, sample/threshold checks, recorded-result captures, keyboard-focus check, pt-BR result checks and final scope assertions.",
+    "The final screenshot shows a lost-connection/retrying banner and the review state. It does not establish why the response waiter timed out, a server crash, subsequent reconnection, unwind, cancellation or persistence outcome.",
+    "The two mobile editor captures show only the upper viewport; the entire criterion editor is not visible in those images.",
+    "This clean installed run contains no profiler or timing attribution. No causal performance gain is inferred from elapsed wall times or comparisons with earlier runs.",
+    "JPEG bytes are preserved exactly as emitted. The artifact ZIP and original PNG attachments are metadata-only in this archive.",
+    "Independent binary content readback is deferred to a later composed commit; this immutable-object stage verifies each Git content address against the original decoded JPEG bytes."
+  ],
+  "archive": {
+    "qaOnly": true,
+    "baseCommit": "eb1c438cbdbaead15a8cecbb8245cc4f020b5b1c",
+    "baseTree": "dfa36c5ef43bb1158debf64b45f86e65ef6a85fc",
+    "scope": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/sensitivity-01/",
+    "newFiles": 13,
+    "rawLogsCommitted": false,
+    "nonceCommitted": false,
+    "productChanges": false,
+    "topReadmeChanged": false,
+    "rootReviewChanged": false,
+    "commitCreated": false,
+    "refUpdated": false,
+    "newCiExecution": false
+  }
+}

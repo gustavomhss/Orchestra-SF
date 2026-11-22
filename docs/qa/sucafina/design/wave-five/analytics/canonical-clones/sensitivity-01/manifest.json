@@ -1,0 +1,690 @@
+{
+  "schema": "sucafina-canonical-clones-sensitivity-manifest-v1",
+  "attempt": "sensitivity-01",
+  "runId": 45052940386,
+  "jobId": 137301845700,
+  "qaBase": {
+    "commit": "eb1c438cbdbaead15a8cecbb8245cc4f020b5b1c",
+    "tree": "dfa36c5ef43bb1158debf64b45f86e65ef6a85fc"
+  },
+  "classification": "original-ui44-evaluation-timeout-no-qualification",
+  "recordCounts": {
+    "SF_DESIGN_STAGE": 46,
+    "SF_ANALYTICS_SOURCE": 21,
+    "SF_DESIGN_PREVIEW": 37,
+    "SF_ANALYTICS_CAPTURE": 8,
+    "SF_DESIGN_DIAGNOSTICS": 3
+  },
+  "structuredEmissionCount": 115,
+  "allOriginalPayloadsPreservedIn": "source-events.json",
+  "rawLogArchived": false,
+  "nonceArchived": false,
+  "imageSource": "Original JPEG bytes from SF_DESIGN_PREVIEW emissions; no conversion, recompression, resizing, crop or annotation",
+  "chunkAudit": {
+    "images": 9,
+    "bytes": 607895,
+    "records": 37,
+    "indexing": "1-based",
+    "completeImages": 9,
+    "missingParts": [],
+    "duplicateParts": [],
+    "inconsistentPartTotals": [],
+    "allOriginalEmissionOrdersSequential": true,
+    "base64SyntaxAndRoundtrip": true,
+    "jpegStartAndEndMarkers": true,
+    "parseErrors": []
+  },
+  "byteIdentityVerification": {
+    "method": "SHA-1 of the Git blob header plus original JPEG bytes was computed independently and compared with the SHA returned by GitHub create_blob. Every image matched; SHA-256 is also recorded.",
+    "gitContentAddressMatches": 9,
+    "separateBinaryReadbackCompleted": false,
+    "separateBinaryReadbackScope": "No commit or ref is created by this archive. Binary content readback is left for the root after composition into a commit; no such later readback is claimed here."
+  },
+  "images": [
+    {
+      "name": "UI44-no-source-scenarios-test-data",
+      "path": "gallery/UI44-no-source-scenarios-test-data.jpg",
+      "bytes": 86317,
+      "sha256": "4b2c526621f5e941df8476e7ecf11da8893b10701289f050c1a1994cc88247db",
+      "expectedGitBlobSha": "3787957169138e952d15dce27862c54ecf78a950",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 115092,
+      "declaredParts": 5,
+      "receivedParts": 5,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "firstChunkAt": "2026-11-22T18:13:36.2990022Z",
+      "lastChunkAt": "2026-11-22T18:13:36.4947717Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "e58db920390ddea121050339c4de890e85822ef4ac7eadef65d81629d499258c",
+          "sourceLine": 1175,
+          "timestamp": "2026-11-22T18:13:36.2990022Z"
+        },
+        {
+          "part": 2,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "3b7bdf6466cf3957efffe3f7624211137044a13e289dd1238238d63c2ca729ac",
+          "sourceLine": 1177,
+          "timestamp": "2026-11-22T18:13:36.3608241Z"
+        },
+        {
+          "part": 3,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "6a71f90817741bfa0aaeaaf49c8be410c4ea57596100e411e2f3b5088632b8b2",
+          "sourceLine": 1179,
+          "timestamp": "2026-11-22T18:13:36.4212655Z"
+        },
+        {
+          "part": 4,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "e39451334bea0276867b7125322ae3cfa87d8afc69f4cc7f6d71d6284885e6e7",
+          "sourceLine": 1181,
+          "timestamp": "2026-11-22T18:13:36.4613313Z"
+        },
+        {
+          "part": 5,
+          "parts": 5,
+          "base64Characters": 19092,
+          "base64Sha256": "1489a77b8874549911c6c9e6b39a5a27ba1e5b0129c9ee526b7e217bc35adeec",
+          "sourceLine": 1183,
+          "timestamp": "2026-11-22T18:13:36.4947717Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "3787957169138e952d15dce27862c54ecf78a950",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Dark desktop Sensitivity view shows the regional-sourcing case and its USD / Jan 1–Dec 31, 2026 context.",
+          "Scenario, Baseline and Parameter controls display Choose a case; the Unit button is dimmed.",
+          "A visible notice says the producer has not issued authorized sensitivity units; no evaluation editor or result is displayed."
+        ],
+        "limits": [
+          "This is the displayed no-units state for this capture, not evidence of a completed evaluation."
+        ]
+      }
+    },
+    {
+      "name": "UI44-original-source-selection-test-data",
+      "path": "gallery/UI44-original-source-selection-test-data.jpg",
+      "bytes": 89416,
+      "sha256": "bd71248c68dbd3dc54fb97a3c391fee9c52f8a467bd7260406145c6eba074887",
+      "expectedGitBlobSha": "e1c97671302887a93229f1e5df219d0ffab8b147",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 119224,
+      "declaredParts": 5,
+      "receivedParts": 5,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "firstChunkAt": "2026-11-22T18:13:47.7992243Z",
+      "lastChunkAt": "2026-11-22T18:13:47.9416437Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "87b7fd498edd2f979dfba0558b9a267844529b248e88a636f245fbeb1b29550f",
+          "sourceLine": 1187,
+          "timestamp": "2026-11-22T18:13:47.7992243Z"
+        },
+        {
+          "part": 2,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "7ef0fc6b600cf32d5dd9ff504e1b1b450965abddbb9bcad1f22d0a9e707b2846",
+          "sourceLine": 1189,
+          "timestamp": "2026-11-22T18:13:47.8434643Z"
+        },
+        {
+          "part": 3,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "954e781c78a4b83e4a7e80bfee0f2f2929cd0550b932d7f676821468c4bc4983",
+          "sourceLine": 1191,
+          "timestamp": "2026-11-22T18:13:47.8749729Z"
+        },
+        {
+          "part": 4,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "498bf75d9afbf9b646b43e781579160000f939bd4137fef89136d44a1712b83e",
+          "sourceLine": 1193,
+          "timestamp": "2026-11-22T18:13:47.9079415Z"
+        },
+        {
+          "part": 5,
+          "parts": 5,
+          "base64Characters": 23224,
+          "base64Sha256": "07aee61f8eb97174a9515374bab7d2c9ed1fd34e8b3b9993192ad5f924def206",
+          "sourceLine": 1195,
+          "timestamp": "2026-11-22T18:13:47.9416437Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "e1c97671302887a93229f1e5df219d0ffab8b147",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Dark desktop view shows the operating-plans case selected.",
+          "The collapsed selectors show the regional monthly amount hypothesis, Decision baseline plan revisão 1, and Substituição 1 / 200 USD for February 2026.",
+          "The Unit button is visible; the lower area does not yet show the issued-units editor or an evaluation result. Long selected labels are clipped inside their native controls."
+        ],
+        "limits": [
+          "The capture shows selections, while the exact reference and units-body evidence is recorded separately in source event line 1199."
+        ]
+      }
+    },
+    {
+      "name": "UI44-issued-units-editor-dark-desktop-test-data",
+      "path": "gallery/UI44-issued-units-editor-dark-desktop-test-data.jpg",
+      "bytes": 106342,
+      "sha256": "b0557003417204dfa1ee1155bd9e23a6092051a45b796df63eac22c12050d6fe",
+      "expectedGitBlobSha": "4e137e0293239b808031440811fe93778116aca2",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 141792,
+      "declaredParts": 6,
+      "receivedParts": 6,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "firstChunkAt": "2026-11-22T18:14:07.7130527Z",
+      "lastChunkAt": "2026-11-22T18:14:07.9366271Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "e721a9bd2c45e58cc3ab03cb098285ec93378e6a0b7519a0bd91ddb3d6894fed",
+          "sourceLine": 1201,
+          "timestamp": "2026-11-22T18:14:07.7130527Z"
+        },
+        {
+          "part": 2,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "59ed6bc68f11c8422bd400446e47de22d39c997d3371114189ed4bac0c10b884",
+          "sourceLine": 1203,
+          "timestamp": "2026-11-22T18:14:07.7462668Z"
+        },
+        {
+          "part": 3,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "bd89a6626b195563e8bdc85539900f9ed1594c7264e221d57911ba671f695c7d",
+          "sourceLine": 1205,
+          "timestamp": "2026-11-22T18:14:07.7875839Z"
+        },
+        {
+          "part": 4,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "ce1a7c299b856088b0d78bfe0bce23f89344a10af20c673cb3065ac9039bbb8f",
+          "sourceLine": 1207,
+          "timestamp": "2026-11-22T18:14:07.8435972Z"
+        },
+        {
+          "part": 5,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "3964f1670f9bc929ee1b815c1603fda21d481f5f9ac9a6bf61de07dc60582635",
+          "sourceLine": 1209,
+          "timestamp": "2026-11-22T18:14:07.9030642Z"
+        },
+        {
+          "part": 6,
+          "parts": 6,
+          "base64Characters": 21792,
+          "base64Sha256": "0a371e6a7e1b532e4f942ba43c5d52ae21faa5cc09292b8936b1d1716f5d7bc1",
+          "sourceLine": 1211,
+          "timestamp": "2026-11-22T18:14:07.9366271Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "4e137e0293239b808031440811fe93778116aca2",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Dark desktop editor displays Unit: USD / USD and Evidence references: 2.",
+          "Criterion controls show operator ≤ and value 2000; Minimum is 200, Maximum is 2200, and Steps is 2 with a visible focus outline.",
+          "Evaluate sensitivity is visible at the upper right. The source-selection controls remain populated; no evaluation result is displayed."
+        ],
+        "limits": [
+          "The populated editor is an intermediate state before the evaluation response and recorded-result checks."
+        ]
+      }
+    },
+    {
+      "name": "UI44-issued-units-editor-light-desktop-test-data",
+      "path": "gallery/UI44-issued-units-editor-light-desktop-test-data.jpg",
+      "bytes": 108528,
+      "sha256": "31e3f7ffdbfd696d99a0679125e03ee5d69caeae62ffdee3d662a1574d80ddee",
+      "expectedGitBlobSha": "d5f4e8f697706b0beb392fa72d7f2fb79652e304",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 144704,
+      "declaredParts": 7,
+      "receivedParts": 7,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "firstChunkAt": "2026-11-22T18:14:08.5197609Z",
+      "lastChunkAt": "2026-11-22T18:14:08.8091030Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "a713acfec4f3ae0b021853d892a05e3252cb63f99c71ee6d4b7eb26334a4308a",
+          "sourceLine": 1215,
+          "timestamp": "2026-11-22T18:14:08.5197609Z"
+        },
+        {
+          "part": 2,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "84cf3508233fb85f198fcdfe435e8f22814013e323bc2d81f184b0700d270ef5",
+          "sourceLine": 1217,
+          "timestamp": "2026-11-22T18:14:08.5519415Z"
+        },
+        {
+          "part": 3,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "f3c7db49d56d02d321bb5271d769bae0df775243f976ff6aa81538ca8bcf1f04",
+          "sourceLine": 1219,
+          "timestamp": "2026-11-22T18:14:08.5904219Z"
+        },
+        {
+          "part": 4,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "f57824c7142d3e9cb5d5787be1015aa7cb2f8edc711daca9c53ef40aecffd4d8",
+          "sourceLine": 1221,
+          "timestamp": "2026-11-22T18:14:08.6404962Z"
+        },
+        {
+          "part": 5,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "1155718d5cfb08669f0d5ab35a4b3106d1027669d6e864936f393f6769de29c0",
+          "sourceLine": 1223,
+          "timestamp": "2026-11-22T18:14:08.7110655Z"
+        },
+        {
+          "part": 6,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "89684b6a22c1e3bcee2b182b8f0786f1c414d33eef9a4aaeaa0fe41f8491efae",
+          "sourceLine": 1225,
+          "timestamp": "2026-11-22T18:14:08.7850184Z"
+        },
+        {
+          "part": 7,
+          "parts": 7,
+          "base64Characters": 704,
+          "base64Sha256": "2e97b80ee35bfa05f6a1fcd1e4d3ffc98e7dfc13aa9de639e474bf20dd94e4ec",
+          "sourceLine": 1227,
+          "timestamp": "2026-11-22T18:14:08.8091030Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "d5f4e8f697706b0beb392fa72d7f2fb79652e304",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Light desktop view preserves the same populated source selectors and issued-unit summary: USD / USD and two evidence references.",
+          "Criterion ≤ 2000, Minimum 200, Maximum 2200 and Steps 2 are visible within the editor card.",
+          "Evaluate sensitivity remains visible at the upper right; the capture contains no completed evaluation result."
+        ],
+        "limits": [
+          "Theme appearance does not establish successful evaluation, result readback or the later pt-BR check."
+        ]
+      }
+    },
+    {
+      "name": "UI44-issued-units-editor-dark-390-test-data",
+      "path": "gallery/UI44-issued-units-editor-dark-390-test-data.jpg",
+      "bytes": 36779,
+      "sha256": "b9e869376f7ad52fefa1f9c8aab806ca8da2a80ae7b1d3b81ea25e1533f09683",
+      "expectedGitBlobSha": "86ad6d9e5f8254b22f8c285a1ef35fafdb8c0164",
+      "width": 390,
+      "height": 844,
+      "base64Characters": 49040,
+      "declaredParts": 3,
+      "receivedParts": 3,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3
+      ],
+      "firstChunkAt": "2026-11-22T18:14:08.9439045Z",
+      "lastChunkAt": "2026-11-22T18:14:09.0344381Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 3,
+          "base64Characters": 24000,
+          "base64Sha256": "846c02248091726b26328e289e6ec831b66513b6ff1f5576dc30f039d0a3cfd5",
+          "sourceLine": 1231,
+          "timestamp": "2026-11-22T18:14:08.9439045Z"
+        },
+        {
+          "part": 2,
+          "parts": 3,
+          "base64Characters": 24000,
+          "base64Sha256": "502d5d02a46d61f49630fc9e43f6c464a636d867c8867117fbde4b70c9f575ea",
+          "sourceLine": 1233,
+          "timestamp": "2026-11-22T18:14:08.9967741Z"
+        },
+        {
+          "part": 3,
+          "parts": 3,
+          "base64Characters": 1040,
+          "base64Sha256": "7d046dbfdac54d9a02faad4e1015909715b05f6f1f59c99495d9d276a02830b9",
+          "sourceLine": 1235,
+          "timestamp": "2026-11-22T18:14:09.0344381Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "86ad6d9e5f8254b22f8c285a1ef35fafdb8c0164",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Dark 390×844 capture shows a single-column Sensitivity layout with Evaluate sensitivity near the top.",
+          "The operating-plans case title wraps inside the content column; the case, Scenario and Baseline controls remain within the visible width.",
+          "The Parameter control begins at the bottom edge. The criterion fields and issued-unit summary are below the captured viewport; long native-select values are clipped within the controls."
+        ],
+        "limits": [
+          "This image does not show the entire mobile editor, review actions or any result."
+        ]
+      }
+    },
+    {
+      "name": "UI44-issued-units-editor-light-320-test-data",
+      "path": "gallery/UI44-issued-units-editor-light-320-test-data.jpg",
+      "bytes": 31123,
+      "sha256": "0dbb7b5345dee00103852e4a5467f8071bbfe8eecbc3e4b9b6c0eda4371d5a4b",
+      "expectedGitBlobSha": "83b19b884318e7122b2296ff9404aa498d204e11",
+      "width": 320,
+      "height": 800,
+      "base64Characters": 41500,
+      "declaredParts": 2,
+      "receivedParts": 2,
+      "originalEmissionOrder": [
+        1,
+        2
+      ],
+      "firstChunkAt": "2026-11-22T18:14:09.4140372Z",
+      "lastChunkAt": "2026-11-22T18:14:09.4453049Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 2,
+          "base64Characters": 24000,
+          "base64Sha256": "fb02faa10e03bdad7590948a6632e9093cbbe3f0d61c2e7b5a826407f652e20f",
+          "sourceLine": 1239,
+          "timestamp": "2026-11-22T18:14:09.4140372Z"
+        },
+        {
+          "part": 2,
+          "parts": 2,
+          "base64Characters": 17500,
+          "base64Sha256": "8dcff02c28335ea4bd6d66b347a4107b00c28fa70c10cbd29baff0e418c8d86d",
+          "sourceLine": 1241,
+          "timestamp": "2026-11-22T18:14:09.4453049Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "83b19b884318e7122b2296ff9404aa498d204e11",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Light 320×800 capture shows the Sensitivity heading, Evaluate sensitivity button, case selector and wrapped operating-plans case title.",
+          "Scenario and Baseline are stacked within the visible column; their long selected values are clipped inside the native selects.",
+          "Only the Parameter label is visible at the bottom. The remaining parameter control, unit summary and criterion editor are outside this captured viewport."
+        ],
+        "limits": [
+          "This viewport capture cannot qualify the complete mobile editor or any evaluation result."
+        ]
+      }
+    },
+    {
+      "name": "UI44-dark-desktop-review-test-data",
+      "path": "gallery/UI44-dark-desktop-review-test-data.jpg",
+      "bytes": 89146,
+      "sha256": "7ba1ff10316ccb0d768ddeaa8f5e8397dc648da4fcf20ba9e8cc8a031f17f5c5",
+      "expectedGitBlobSha": "bc060534a21098eae4c9fb694172d1834867dce0",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 118864,
+      "declaredParts": 5,
+      "receivedParts": 5,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "firstChunkAt": "2026-11-22T18:14:10.3270455Z",
+      "lastChunkAt": "2026-11-22T18:14:10.4760766Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "aa350ccf58026510a6566096c9080bca1f57e1b9e6da0afc6177c0fff55537de",
+          "sourceLine": 1245,
+          "timestamp": "2026-11-22T18:14:10.3270455Z"
+        },
+        {
+          "part": 2,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "27e5aa8ee08d83bd9a205d1918396d31d47d1cface595f8554f5ce4bad363639",
+          "sourceLine": 1247,
+          "timestamp": "2026-11-22T18:14:10.3645393Z"
+        },
+        {
+          "part": 3,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "8fed0249040fa8aa44fca7b352e7113dcc78a583fd5f1ff39ab149cd60688866",
+          "sourceLine": 1249,
+          "timestamp": "2026-11-22T18:14:10.4009082Z"
+        },
+        {
+          "part": 4,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "7eb4a000cf46768154fe9d1be3d398349be10bbca702a1cc36fbb3f4bbe0d392",
+          "sourceLine": 1251,
+          "timestamp": "2026-11-22T18:14:10.4364530Z"
+        },
+        {
+          "part": 5,
+          "parts": 5,
+          "base64Characters": 22864,
+          "base64Sha256": "105766eb424a10d15669bfbced5a92a2194b5470e2d7c0fcdac4d584176d220b",
+          "sourceLine": 1253,
+          "timestamp": "2026-11-22T18:14:10.4760766Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "bc060534a21098eae4c9fb694172d1834867dce0",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Dark desktop review card displays the scenario reference and parameter reference, with the long scenario reference wrapped inside its column.",
+          "The summary shows Criterion value lte 2000 USD and Basis 200 — 2200 (2) USD.",
+          "Confirm sensitivity evaluation and Cancel review are both visible beneath the review explanation. No evaluation output is shown."
+        ],
+        "limits": [
+          "This is the confirmation state before the captured evaluation POST, not a recorded result."
+        ]
+      }
+    },
+    {
+      "name": "UI44-dark-320-review-actions-test-data",
+      "path": "gallery/UI44-dark-320-review-actions-test-data.jpg",
+      "bytes": 29344,
+      "sha256": "31d4987e2515c8ac56780086ab9fb912e8d2ad996d28cc39bd8e764f62bfb91b",
+      "expectedGitBlobSha": "869377196700ff5d51390994db15bb23f0d319df",
+      "width": 320,
+      "height": 800,
+      "base64Characters": 39128,
+      "declaredParts": 2,
+      "receivedParts": 2,
+      "originalEmissionOrder": [
+        1,
+        2
+      ],
+      "firstChunkAt": "2026-11-22T18:14:10.6157028Z",
+      "lastChunkAt": "2026-11-22T18:14:10.6414066Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 2,
+          "base64Characters": 24000,
+          "base64Sha256": "4428304862e4d5335dbac92b7500d53f93d0dc3bd34e78ba411d2078105183cc",
+          "sourceLine": 1257,
+          "timestamp": "2026-11-22T18:14:10.6157028Z"
+        },
+        {
+          "part": 2,
+          "parts": 2,
+          "base64Characters": 15128,
+          "base64Sha256": "13c11aea6925457a9e31053aa583b6b952f41d7c27e320a0d2d78a8e1452edd1",
+          "sourceLine": 1259,
+          "timestamp": "2026-11-22T18:14:10.6414066Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "869377196700ff5d51390994db15bb23f0d319df",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Dark 320×800 review capture shows the summary in one column, with the scenario and parameter references wrapped across lines.",
+          "Criterion value lte 2000 USD and Basis 200 — 2200 (2) USD are visible.",
+          "Confirm sensitivity evaluation and Cancel review are stacked, fully visible and contained within the review card."
+        ],
+        "limits": [
+          "The image records visible confirmation actions; it does not establish the result of submitting them."
+        ]
+      }
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+      "bytes": 30900,
+      "sha256": "c48513c713a77d449f2bfed8495b93f5d92abd191d6ef6a807180bd047fb5f20",
+      "expectedGitBlobSha": "7b6c966161e7e75577d5a373d9297278ffc92ed2",
+      "width": 320,
+      "height": 800,
+      "base64Characters": 41200,
+      "declaredParts": 2,
+      "receivedParts": 2,
+      "originalEmissionOrder": [
+        1,
+        2
+      ],
+      "firstChunkAt": "2026-11-22T18:16:10.7675059Z",
+      "lastChunkAt": "2026-11-22T18:16:10.8073906Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 2,
+          "base64Characters": 24000,
+          "base64Sha256": "5574663ba9a269861d730be43f6286ab346ee0cc250c24d28b336d0897e7b685",
+          "sourceLine": 1269,
+          "timestamp": "2026-11-22T18:16:10.7675059Z"
+        },
+        {
+          "part": 2,
+          "parts": 2,
+          "base64Characters": 17200,
+          "base64Sha256": "cf3fbd7c88ce43c0a46e6a164356c31e410205bcfcfa5fad7751734ddb7675ae",
+          "sourceLine": 1271,
+          "timestamp": "2026-11-22T18:16:10.8073906Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "7b6c966161e7e75577d5a373d9297278ffc92ed2",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "The final dark 320×800 capture still shows Review sensitivity request with the same scenario, parameter, lte 2000 USD criterion and 200 — 2200 (2) USD basis.",
+          "A top banner says Lost connection to the server. Retrying... and includes Retry now.",
+          "Confirm sensitivity evaluation is visibly dimmed; Cancel review remains visible near the bottom. No result, recorded samples or threshold output is shown."
+        ],
+        "limits": [
+          "The banner records the visible connection state at capture time. It does not establish the cause of the timeout, a server crash, later reconnection, unwind or persistence outcome."
+        ]
+      }
+    }
+  ],
+  "visualReview": {
+    "reviewer": "root_cost",
+    "allNineImagesIndividuallyViewed": true,
+    "rootVisualReviewAttributed": false,
+    "qualification": false
+  },
+  "limitations": [
+    "The original units GET and its captured body establish the source-issued units step. They do not establish completion of the later evaluation POST.",
+    "The evaluation waiter failed before the result stage, original sensitivity-result readback, sample/threshold checks, recorded-result captures, keyboard-focus check, pt-BR result checks and final scope assertions.",
+    "The final screenshot shows a lost-connection/retrying banner and the review state. It does not establish why the response waiter timed out, a server crash, subsequent reconnection, unwind, cancellation or persistence outcome.",
+    "The two mobile editor captures show only the upper viewport; the entire criterion editor is not visible in those images.",
+    "This clean installed run contains no profiler or timing attribution. No causal performance gain is inferred from elapsed wall times or comparisons with earlier runs.",
+    "JPEG bytes are preserved exactly as emitted. The artifact ZIP and original PNG attachments are metadata-only in this archive.",
+    "Independent binary content readback is deferred to a later composed commit; this immutable-object stage verifies each Git content address against the original decoded JPEG bytes."
+  ]
+}
