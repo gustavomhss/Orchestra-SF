@@ -116,12 +116,19 @@ describe("A05 original portfolio route selection", () => {
     expect(sfOperationUrl(binding, metadata, { caseRef, surface: "planner" }, id)).toBeUndefined()
   })
 
-  test("unrelated operations retain their own explicit route selector", () => {
-    const id = "decisions.controls.read"
-    const metadata = SfOperationRegistry[id]
-    expect(sfPortfolioSourceSurface(id, { caseRef })).toBeUndefined()
-    expect(sfOperationUrl(binding, metadata, undefined, id)).toBeUndefined()
-    expect(sfOperationUrl(binding, metadata, { surface: "planner" }, id))
-      .toBe(binding.publicOrigin + binding.mount + "/planner?sf=decision-controls&format=json")
+  test("unrelated fixed and selected source routes retain their original behavior", () => {
+    const fixed = "decisions.controls.read"
+    expect(SfOperationRegistry[fixed].pathTemplate).toBe("{mount}/dashboard")
+    expect(sfPortfolioSourceSurface(fixed, { caseRef })).toBeUndefined()
+    expect(sfOperationUrl(binding, SfOperationRegistry[fixed], undefined, fixed))
+      .toBe(binding.publicOrigin + binding.mount + "/dashboard?sf=decision-controls&format=json")
+    const selected = "files.asset.link"
+    expect(SfOperationRegistry[selected].pathTemplate).toBe("{mount}/{surface}")
+    expect(sfPortfolioSourceSurface(selected, { assetId: "structural-asset" })).toBeUndefined()
+    expect(sfOperationUrl(binding, SfOperationRegistry[selected], { assetId: "structural-asset" }, selected))
+      .toBeUndefined()
+    expect(sfOperationUrl(binding, SfOperationRegistry[selected],
+      { surface: "planner", assetId: "structural-asset" }, selected))
+      .toBe(binding.publicOrigin + binding.mount + "/planner?asset-link=structural-asset")
   })
 })
