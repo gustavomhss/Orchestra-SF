@@ -1,0 +1,116 @@
+name: http-body-bounds-replay
+
+on:
+  push:
+    branches: [body-bounds-replay]
+
+permissions:
+  contents: read
+
+jobs:
+  controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: "true"
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+      ORCHESTRA_OMNI_CONTROL: declared
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "33ba3d151bf523b17767e7030e7e6c0670d4b361"
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Bind exact source and preserve integrated wrapper
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(git rev-parse HEAD)" = "33ba3d151bf523b17767e7030e7e6c0670d4b361"
+          test "$(git rev-parse 'HEAD^{tree}')" = "271bce30b5694c96eac4b9d96a888a23104ba64c"
+          test "$(git show -s --format=%P "$GITHUB_SHA")" = "33ba3d151bf523b17767e7030e7e6c0670d4b361"
+          mkdir -m700 "$RUNNER_TEMP/body-bounds"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/body-bounds/source.refs"
+          printf '%s\n' "$GITHUB_SHA" > "$RUNNER_TEMP/body-bounds/workflow.sha"
+          git diff --name-only 0fa4778b559963e0f3e7c60051060844d362e796 HEAD > "$RUNNER_TEMP/body-bounds/changed-paths.txt"
+          git diff --exit-code 0fa4778b559963e0f3e7c60051060844d362e796 HEAD -- packages/server/src/web-body-limit.ts packages/server/test/body-limit.test.ts packages/server/test/session-owner-http.test.ts packages/server/test/session-owner-events.test.ts packages/server/test/session-owner-technical-http.test.ts apps/cli/test/team-session-factory.test.ts
+          git diff --check "$(git merge-base HEAD origin/dev)" HEAD 2>&1 | tee "$RUNNER_TEMP/body-bounds/whitespace.log"
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+      - name: Exercise original Node Web owner and stream boundaries
+        working-directory: packages/server
+        run: |
+          set -euo pipefail
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
+          printf '%s\n' "$ORCHESTRA_OMNI_CONTROL_NONCE" > "$RUNNER_TEMP/body-bounds/server.nonce"
+          bun test ./test/body-limit.test.ts ./test/web-body-limit.test.ts ./test/session-owner-http.test.ts ./test/session-owner-events.test.ts ./test/session-owner-technical-http.test.ts --timeout 120000 --reporter=junit "--reporter-outfile=$RUNNER_TEMP/body-bounds/server.xml" 2>&1 | tee "$RUNNER_TEMP/body-bounds/server.log"
+      - name: Exercise the original CLI factory and actual Omni lifetime
+        working-directory: apps/cli
+        run: |
+          set -euo pipefail
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
+          printf '%s\n' "$ORCHESTRA_OMNI_CONTROL_NONCE" > "$RUNNER_TEMP/body-bounds/cli.nonce"
+          bun test ./test/team-session-factory.test.ts --timeout 120000 --reporter=junit "--reporter-outfile=$RUNNER_TEMP/body-bounds/cli.xml" 2>&1 | tee "$RUNNER_TEMP/body-bounds/cli.log"
+      - name: Typecheck Server
+        working-directory: packages/server
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/body-bounds/server-types.log"
+      - name: Typecheck CLI
+        working-directory: apps/cli
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/body-bounds/cli-types.log"
+      - name: Canonical guards
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/body-bounds/guards.log"
+      - name: Verify all original and regression controls
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import collections,hashlib,json,os,pathlib,re,subprocess,xml.etree.ElementTree as ET
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"body-bounds"
+          inventory=json.loads("{\"packages/server/test/body-limit.test.ts\":[\"a body inside the limit is read\",\"a body declared over the default limit is refused with 413 before it is read\",\"a body over the default limit but inside the upload limit is read on an upload route only\",\"a body declared over the upload limit is refused with 413 on an upload route\",\"a chunked body with no declared length is cut off at the limit with 413\",\"malformed JSON inside the body limit is a declared 400\",\"a handler SyntaxError with valid JSON remains a server defect\"],\"packages/server/test/web-body-limit.test.ts\":[\"bounded Web views share original bytes through text, json, arrayBuffer and modify\",\"aborting the original Web Request cancels a pending bounded read\",\"interrupting the Effect cancels the original pending Web reader\",\"real Web HttpApi preserves empty JSON semantics and distinguishes parsing from handler defects\",\"declared Web overflow cancels the untouched source before decoding or invoking a handler\",\"typed Web stream overflow returns 413 and cancels the original body through a modified view\",\"a payload-free handler SyntaxError neither reads nor reclassifies malformed request bytes\"],\"packages/server/test/session-owner-http.test.ts\":[\"installed HTTP preserves the server's original Request and records real owned CRUD at the configured placement\",\"two Teams and two people sharing placement have separate SQL pages and uniform denials before payload decoding\",\"Basic, query credentials and public owner labels cannot replace a private admission\",\"Session action denials precede execution and references stay closed without their source ACL producer\",\"caller placement and body/query owner labels cannot retarget an owned Session\",\"owner pagination cursors reject another Team, person, purpose, generation, revision and tampered bytes\",\"revocation while Project resolution waits prevents SQL creation and releases every writer permit\",\"a private resource exclusion filters SQL before pagination and lookup\",\"Origin, cross-site and Host denials happen before private admission\",\"the prefixed production adapter preserves declared JSON and upload body limits\",\"response namespaces carry the full owner and current generation without changing durable event bytes\",\"the original prefixed Web adapter cuts actual JSON bytes without trusting Content-Length\"],\"packages/server/test/session-owner-events.test.ts\":[\"real HTTP SSE subscribers filter by their captured owner independently of the publisher's scope\",\"owner filtering precedes serialization and a publisher cannot forge the connected exception\",\"revocation closes the original HTTP SSE stream on a late foreign event and refuses reconnect\",\"idle corporate SSE rechecks its retained authority on the existing 15-second heartbeat\",\"SSE burst order and HTTP history preserve canonical payloads without leaking private owner records\"],\"packages/server/test/session-owner-technical-http.test.ts\":[\"the real technical host retains Basic, unwrapped Session collections and SSE without creating a corporate control file\",\"the compiled generic host refuses a marked corporate database even with valid Basic\"],\"apps/cli/test/team-session-factory.test.ts\":[\"the real CLI Team Session factory starts, owns its SSE lifetime, disposes and reopens private fixture storage\"]}")
+          reports=[]
+          for suite,prefix,count in [("server","packages/server/",33),("cli","apps/cli/",1)]:
+              selected=[p for p in inventory if p.startswith(prefix)]
+              expected=[name for p in selected for name in inventory[p]]
+              assert len(expected)==count and len(set(expected))==count
+              for p in selected:
+                  source=pathlib.Path(p).read_text()
+                  assert all(name in source for name in inventory[p]),p
+              cases=list(ET.parse(root/(suite+".xml")).getroot().iter("testcase"))
+              assert collections.Counter(case.attrib["name"] for case in cases)==collections.Counter(expected),(suite,len(cases))
+              assert not any(case.find(tag) is not None for case in cases for tag in ["failure","error","skipped"])
+              nonce=(root/(suite+".nonce")).read_text().strip()
+              verdict=[line for line in (root/(suite+".log")).read_text().splitlines() if "omni positive control ["+nonce+"]:" in line]
+              assert len(verdict)==1
+              if suite=="cli":
+                  assert ": pass " in verdict[0] and "1 omni spawn(s), 0 delegated." in verdict[0],verdict
+              else:
+                  assert ": not applicable " in verdict[0] and "no omni spawn" in verdict[0],verdict
+              reports.append({"suite":suite,"tests":len(cases),"failures":0,"skips":0,"names":expected,"omni":verdict[0]})
+          assert set((root/"changed-paths.txt").read_text().splitlines())=={"packages/server/src/body-limit.ts","packages/server/test/web-body-limit.test.ts"}
+          sources=[{"path":p,"sha256":hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest(),"gitBlob":subprocess.check_output(["git","rev-parse","HEAD:"+p],text=True).strip()} for p in ["packages/server/src/body-limit.ts","packages/server/src/web-body-limit.ts","packages/server/src/session-http.ts","packages/server/test/body-limit.test.ts","packages/server/test/web-body-limit.test.ts","packages/server/test/session-owner-http.test.ts","packages/server/test/session-owner-events.test.ts","packages/server/test/session-owner-technical-http.test.ts","apps/cli/test/team-session-factory.test.ts","packages/server/test/fixture/session-http.ts"]]
+          receipt={"schema":"sf-web-body-boundary-controls-v2","source":{"sha":"33ba3d151bf523b17767e7030e7e6c0670d4b361","tree":"271bce30b5694c96eac4b9d96a888a23104ba64c"},"base":"0fa4778b559963e0f3e7c60051060844d362e796",
+            "workflowSha":os.environ["GITHUB_SHA"],"run":{"id":os.environ["GITHUB_RUN_ID"],"attempt":os.environ["GITHUB_RUN_ATTEMPT"]},
+            "tests":34,"reports":reports,"sources":sources,"originalRequest":True,"adapter":"ORIGINAL_PREFIXED_SESSION_WEB_AND_NODE",
+            "identity":"CONTROLLED_COMPONENT","installedTar":False,"finalCandidate":False,"g05Closed":False,
+            "historicalRun":45047341648,"inheritedWrapperProofRun":45046979320,
+            "hashes":{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in root.iterdir() if p.is_file()}}
+          (root/"receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
+          print(json.dumps({"tests":34,"source":receipt["source"],"installedTar":False}))
+          PY
+      - name: Preserve evidence including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: http-body-bounds-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: ${{ runner.temp }}/body-bounds/
