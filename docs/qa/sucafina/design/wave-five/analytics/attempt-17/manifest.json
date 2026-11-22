@@ -1,0 +1,457 @@
+{
+  "schema": "sf-wave-five-analytics-attempt-v1",
+  "attempt": 17,
+  "label": "Portfolio20",
+  "kind": "partial-installed-readonly-diagnostic",
+  "outcome": "failure",
+  "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+  "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+  "snapshot": "cad315298856419c6da18f561e593688d38ec982",
+  "tree": "9c19365f035a5d306f927e4fb43248a8f5fc533e",
+  "run": {
+    "id": 45015314625,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45015314625",
+    "branch": "ci-run-sf5portfolio20",
+    "workflow": "test-ci",
+    "attempt": 1,
+    "createdBy": "root",
+    "test": {
+      "id": 137186259049,
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45015314625/job/137186259049"
+    },
+    "cleanup": {
+      "id": 137188589158,
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45015314625/job/137188589158"
+    }
+  },
+  "preflight": {
+    "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+    "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+    "snapshot": "cad315298856419c6da18f561e593688d38ec982",
+    "tree": "9c19365f035a5d306f927e4fb43248a8f5fc533e",
+    "parentVerified": "46792e9d945a8d27802ec2ae7c05b1a6ce7b5068",
+    "comparePathsExact": true,
+    "fileCount": 14,
+    "overlays": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d5394221bba0d35431cea4d33ac1916c9221c641"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "31e4942032999c47b5267090670900941594e8b1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8d93385b5e50859c01065ded8b99b98c55986dcd"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "537a9bcb2be38f5a7e93f63c814f563b3c28ea11"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2d12eff52699a7b5024e6336e50668a3d1ca5bf8"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "57f1a4975365cc81605f011cde42eafc3e154e52"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8b6f21705da20fb00a54dde9559d0c32d893f57a"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6abc79de5d6d68caa59743e6aa84e89b37ad26d1"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0af8a1635133a3abc6f8fb9020d683cb415d65ab"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d744933bcce8de0266cece2150f45c8037b61119"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8e90cb8394c15b95af1bde110687726585b8fca8"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "00f26bde1ab4ccd624a627dde36a9dd7ac011505"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "81792fc1fba96de5b4cc0b93a2213862a2d2bc2a"
+      },
+      {
+        "path": ".ci-run.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a11922821a47594d76397582be38f9b7940177ca"
+      }
+    ],
+    "spec": {
+      "originalBlob": "f4eb9a534b7a22fcf79e7ccb20bbfd9f8251ae74",
+      "overlayBlob": "00f26bde1ab4ccd624a627dde36a9dd7ac011505",
+      "throughOriginalLine": 84,
+      "exactBody": true,
+      "onlyTitleChanged": true,
+      "originalPreviewTimeoutMs": 60000,
+      "defaultTimeoutMs": 20000,
+      "testTimeoutMs": 780000,
+      "postFirstPreviewActions": 0,
+      "diagnosticOnlyEvenIfPass": true
+    },
+    "preserved": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics-source.ts",
+        "sha": "581ac6c7f506c9ef7e46c633e70139edebddcfdd"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "sha": "ebbab2a37b7f1fe5b65bbe4595dbc4b12347ae02"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-seed.ts",
+        "sha": "32b39933bf81c220729d3af910809e7d7b88910f"
+      },
+      {
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "sha": "9724c9412a19fdbcf45ebe55873e49501c63639a"
+      }
+    ],
+    "buckets": {
+      "limit": 256,
+      "conservativeEstimate": 226,
+      "physicalRootOrdinalInKey": false,
+      "notes": [
+        "authority combines direct/registered raw/Choice observations; subtype counters are not paired events",
+        "inclusiveMs includes only settled spans; pending reported separately",
+        "snapshots cumulative; nested category intervals overlap"
+      ]
+    },
+    "ciCreated": true,
+    "ci": {
+      "createdBy": "root",
+      "branch": "ci-run-sf5portfolio20",
+      "runId": 45015314625,
+      "attempt": 1,
+      "workflow": "test-ci",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45015314625",
+      "status": "completed",
+      "outcome": "failure"
+    },
+    "immediateParent": "46792e9d945a8d27802ec2ae7c05b1a6ce7b5068",
+    "collector": {
+      "schema": "sf-portfolio-readonly-v2",
+      "onlyDeltaAgainst19": "helper",
+      "checkpointModes": [
+        "timer",
+        "settled-span"
+      ],
+      "periodicThresholdsMs": [
+        10000,
+        20000,
+        30000,
+        40000,
+        50000
+      ],
+      "windowMs": 60000,
+      "maximumPeriodicObservations": 5,
+      "skippedThresholdsExplicit": true,
+      "noAdditionalDomainQueries": true,
+      "originalEndTimestampReused": true
+    }
+  },
+  "failure": {
+    "file": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "line": 72,
+    "type": "TimeoutError",
+    "operation": "decision-portfolio-preview",
+    "sequence": 3,
+    "originalTimeoutMs": 60000,
+    "nativeRequestAt": "2026-11-22T11:10:18.6021079Z",
+    "responseObserved": false,
+    "http": null,
+    "status": null,
+    "body": null,
+    "secondPreview": false,
+    "explicitPortfolioEvaluation": false,
+    "sensitivityEvaluation": false,
+    "internalPersistence": "unknown"
+  },
+  "preparation": {
+    "originalHelper": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+    "complete": true,
+    "caseVersion": 6,
+    "criterionVersion": 2,
+    "humanSelectionVersion": 1,
+    "originalUnitsReadbackMatched": true,
+    "originalAlternativePairMatched": true,
+    "originalCriteriaMatched": true,
+    "comparisonsMs": [
+      60126,
+      60338
+    ],
+    "selectionRegistrationMs": 40406,
+    "ruleRegistrationMs": 1428
+  },
+  "nativeHistory": [
+    {
+      "sequence": 1,
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 448
+    },
+    {
+      "sequence": 2,
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 780
+    }
+  ],
+  "profiler": {
+    "file": "profile.json",
+    "aggregates": "aggregates.json",
+    "acquisition": "five-complete-periodic-snapshots-final-unobserved",
+    "records": 533,
+    "periodicSnapshots": 5,
+    "finalSnapshots": 0,
+    "bucketRecords": 510,
+    "uniqueBucketsPerSnapshot": 102,
+    "lastSnapshotElapsedMs": 50000,
+    "lastSnapshotPendingSpans": 4,
+    "skippedThresholds": 0,
+    "drops": 0,
+    "errors": 0,
+    "rootsEnteredAtLastSnapshot": 7,
+    "callbackExitsAtLastSnapshot": 6,
+    "allRootEntries": 9,
+    "allRootExits": 8,
+    "partial": true
+  },
+  "visual": {
+    "allEmittedViewed": true,
+    "emittedImages": 7,
+    "originalChunks": 33,
+    "decodedJpegBytes": 537154,
+    "source": "unchanged existing capture helper log chunks",
+    "resampled": false,
+    "images": [
+      {
+        "name": "UI42-list-dark-desktop-test-data",
+        "file": "UI42-list-dark-desktop-test-data.jpg",
+        "partCount": 5,
+        "bytes": 80647,
+        "firstTimestamp": "2026-11-22T11:09:56.6863067Z",
+        "lastTimestamp": "2026-11-22T11:09:56.7944585Z",
+        "viewed": true,
+        "surface": "UI42",
+        "stage": "list",
+        "width": 1440,
+        "finding": "Viewed: two authorized case cards, original version2/version6 labels and Open case actions are readable; native dark frame and compact Context access remain coherent. This is the list stage only.",
+        "visualOutcome": "readable-partial-stage",
+        "sha": "00f7a8e0c3e6dbe30eb393b18f16e20bacb69ec5",
+        "remoteBytesVerified": true,
+        "path": "gallery/UI42-list-dark-desktop-test-data.jpg"
+      },
+      {
+        "name": "UI42-list-light-desktop-test-data",
+        "file": "UI42-list-light-desktop-test-data.jpg",
+        "partCount": 5,
+        "bytes": 85900,
+        "firstTimestamp": "2026-11-22T11:09:57.1543018Z",
+        "lastTimestamp": "2026-11-22T11:09:57.2738304Z",
+        "viewed": true,
+        "surface": "UI42",
+        "stage": "list",
+        "width": 1440,
+        "finding": "Viewed: light-theme cards, heading and original case-version labels remain legible; no overlap or cut-off is visible. This does not qualify preview or results.",
+        "visualOutcome": "readable-partial-stage",
+        "sha": "422050c6ffa8cfb1b406737c301411aa0ce060cb",
+        "remoteBytesVerified": true,
+        "path": "gallery/UI42-list-light-desktop-test-data.jpg"
+      },
+      {
+        "name": "UI42-list-dark-390-test-data",
+        "file": "UI42-list-dark-390-test-data.jpg",
+        "partCount": 2,
+        "bytes": 28689,
+        "firstTimestamp": "2026-11-22T11:09:57.3480568Z",
+        "lastTimestamp": "2026-11-22T11:09:57.3651447Z",
+        "viewed": true,
+        "surface": "UI42",
+        "stage": "list",
+        "width": 390,
+        "finding": "Viewed: the two authorized cards stack within390px; titles wrap and both Open case actions stay visible with no visible horizontal clipping.",
+        "visualOutcome": "readable-partial-stage",
+        "sha": "ef564297b53f614b50a9a9f182dc824a64364ede",
+        "remoteBytesVerified": true,
+        "path": "gallery/UI42-list-dark-390-test-data.jpg"
+      },
+      {
+        "name": "UI42-list-light-320-test-data",
+        "file": "UI42-list-light-320-test-data.jpg",
+        "partCount": 2,
+        "bytes": 27477,
+        "firstTimestamp": "2026-11-22T11:09:57.6981346Z",
+        "lastTimestamp": "2026-11-22T11:09:57.7138557Z",
+        "viewed": true,
+        "surface": "UI42",
+        "stage": "list",
+        "width": 320,
+        "finding": "Viewed: light320px layout stacks both case cards, wraps original titles and keeps Context access and Open case actions inside the viewport; no visible text clipping.",
+        "visualOutcome": "readable-partial-stage",
+        "sha": "f458db1164b281d1059381d7808d7a2bab57ef8c",
+        "remoteBytesVerified": true,
+        "path": "gallery/UI42-list-light-320-test-data.jpg"
+      },
+      {
+        "name": "UI42-empty-authorized-case-test-data",
+        "file": "UI42-empty-authorized-case-test-data.jpg",
+        "partCount": 6,
+        "bytes": 97892,
+        "firstTimestamp": "2026-11-22T11:10:06.2683682Z",
+        "lastTimestamp": "2026-11-22T11:10:06.4307971Z",
+        "viewed": true,
+        "surface": "UI42",
+        "stage": "configure",
+        "width": 1440,
+        "finding": "Viewed: original empty authorized case explicitly reports no eligible scenarios and no recorded results; Preview combinations is disabled. Scenario and constraint panels remain readable.",
+        "visualOutcome": "readable-partial-stage",
+        "sha": "1116fad9a92e5cefed9ca91fb7ecbf63a9d71f8f",
+        "remoteBytesVerified": true,
+        "path": "gallery/UI42-empty-authorized-case-test-data.jpg"
+      },
+      {
+        "name": "UI42-configure-focused-candidate-test-data",
+        "file": "UI42-configure-focused-candidate-test-data.jpg",
+        "partCount": 6,
+        "bytes": 106374,
+        "firstTimestamp": "2026-11-22T11:10:18.4576086Z",
+        "lastTimestamp": "2026-11-22T11:10:18.5877407Z",
+        "viewed": true,
+        "surface": "UI42",
+        "stage": "configure",
+        "width": 1440,
+        "finding": "Viewed: one original candidate and version2 criterion are selected, the monthly hypothesis remains unselected, exploration limit4 has a visible focus outline, and Preview combinations is enabled; history stays empty.",
+        "visualOutcome": "readable-partial-stage",
+        "sha": "cd71b3bc34b05c137d096c65c84a0648921ee716",
+        "remoteBytesVerified": true,
+        "path": "gallery/UI42-configure-focused-candidate-test-data.jpg"
+      },
+      {
+        "name": "FAILED-native-wave-three-test-data",
+        "file": "FAILED-native-wave-three-test-data.jpg",
+        "partCount": 7,
+        "bytes": 110175,
+        "firstTimestamp": "2026-11-22T11:11:19.0205914Z",
+        "lastTimestamp": "2026-11-22T11:11:19.1808804Z",
+        "viewed": true,
+        "surface": "UI42",
+        "stage": "failure",
+        "width": 1440,
+        "finding": "Viewed: the original preview remains Running with inputs disabled, the Preview is not yet available skeleton and empty history visible. No result, receipt or connection banner appears. Diagnostic pending state only.",
+        "visualOutcome": "diagnostic-only",
+        "sha": "8cc51b0f8b4f8feb6d8d3955b18a4f01b04c3d5b",
+        "remoteBytesVerified": true,
+        "path": "gallery/FAILED-native-wave-three-test-data.jpg"
+      }
+    ],
+    "plannedConditionedPreviewCapture": "UI42-preview-condition-preserved-test-data",
+    "conditionedPreviewCaptureReached": false,
+    "missingFullJourneyStages": [
+      "UI42 confirmed preview and persistence",
+      "UI43 result detail",
+      "UI44 native evaluation/readback and result states",
+      "Portfolio and sensitivity pt-BR result captures"
+    ],
+    "remoteBytesVerified": true,
+    "captureCommit": "02d84f49c23a935d7346753fa387c4b39e46076d"
+  },
+  "artifact": {
+    "id": 14751976530,
+    "node_id": "MDg6QXJ0aWZhY3QxNDc1MTk3NjUzMA==",
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 8835915,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14751976530",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14751976530/zip",
+    "expired": false,
+    "digest": "sha256:cb49658a2078ecd3d0b6b6f29bc8a3193818eb44f91dd4569afad3b8563b8a23",
+    "created_at": "2026-11-22T11:11:23Z",
+    "updated_at": "2026-11-22T11:11:23Z",
+    "expires_at": "2026-11-29T11:11:21Z",
+    "workflow_run": {
+      "id": 45015314625,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf5portfolio20",
+      "head_sha": "cad315298856419c6da18f561e593688d38ec982"
+    }
+  },
+  "qualification": {
+    "waveCompleted": 12,
+    "waveTotal": 15,
+    "approvedInventory": 41,
+    "ui42": "pending",
+    "ui43": "pending",
+    "ui44": "pending",
+    "ui45": "previously-qualified; unchanged",
+    "ui46": "previously-qualified; unchanged",
+    "thisDiagnosticAddsQualifiedAreas": 0
+  },
+  "limitations": [
+    "Each of the five periodic samples contains exactly its102 declared unique bucket rows. Calls equal settled plus pending; pending sums agree.",
+    "All samples were emitted at settled-span boundaries. No timer-triggered or final snapshot was observed.",
+    "The last cumulative sample is at50000ms, not at request completion. Its inclusiveMs values contain settled spans only.",
+    "Do not add the cumulative snapshots or overlapping parent/child durations. No wall-time residual is obtained by subtraction.",
+    "Later root markers extend to58314ms; they are separate from the last bucket sample and do not update its counts.",
+    "The source.guard digest sum951ms includes ineligible paths and is not a predicted saving from candidate619.",
+    "The C08 read-scope probes have no observed bucket in this prefix; no memo failure is inferred from a callback not reached."
+  ],
+  "preservation": {
+    "noWorkflowChange": true,
+    "noProducerOrPermissionChangeInProduct": true,
+    "diagnosticOverlaysExcludedFromProduct": true,
+    "noReplay": true,
+    "noExtendedObservation": true,
+    "noAutomaticRerun": true,
+    "noRawTranscriptCommitted": true
+  },
+  "candidate619": {
+    "included": false,
+    "promoted": false,
+    "executed": false,
+    "reason": "Measured guard digests do not support treating619 as the dominant cost;951ms through50s includes ineligible paths."
+  }
+}
