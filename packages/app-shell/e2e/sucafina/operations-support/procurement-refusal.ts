@@ -45,7 +45,7 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   expect(saved.status).toBe(200)
   expect(saved.body).toMatchObject({ ok: true })
   await expect(sourcingStage(page)).toHaveText("Stage: sourcing")
-  expect(await sourcingSourceVersion(page)).toBe(String(saveVersion + 1))
+  expect(await sourcingSourceVersion(page, saveVersion + 1)).toBe(String(saveVersion + 1))
   await expect(page.getByRole("textbox", { name: "Selection justification", exact: true })).toHaveValue("Selected quotation still requires a configured FX rate")
   const quoteId = ((await page.locator("fieldset.sf-u12-quote legend").first().innerText()).split(" · ")[1] ?? "").trim()
   expect(quoteId).not.toBe("")

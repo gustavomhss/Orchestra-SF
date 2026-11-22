@@ -2881,6 +2881,18 @@
       "hypothesis": "A finalized Bun subprocess with extra Playwright stdio may close a recycled descriptor. This is consistent with the preceding direct launch and the upstream reports; effects on SQLite remain unproved until Actions.",
       "behavior": "Two browser fixtures use the existing Node/AppProcess bridge with installed Chrome and the original 30000 ms acquisition ceiling; all case deadlines and assertions are retained. Caller-specific expectSpawn is declared in each active test. Strict Node/Chromium/Unix transport closure remains mandatory. Local browser retains its independent Linux PID/UID/PGID/generation census and refuses pending or failed driver cleanup.",
       "qualification": "No product change. No new pass claimed; existing pool206 remains scoped to C532a."
+    },
+    "operationsReadback": {
+      "status": "PENDING_FOCAL",
+      "failureRunId": 45038699571,
+      "jobId": 137258101503,
+      "case": "OP-PROC-03",
+      "paths": [
+        "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+        "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts"
+      ],
+      "evidence": "The save command used version 3 and returned 200/ok. The immediate helper observed version 3; the failure screenshot already displayed Source version: 4. The existing DOM expectation now awaits exactly saveVersion + 1 within the unchanged 10000 ms expectation deadline.",
+      "boundaries": "No version assertion removed. No retry, second command, product admission or source identity fallback."
     }
   }
 }

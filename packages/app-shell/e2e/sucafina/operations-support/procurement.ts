@@ -9,12 +9,12 @@ export function sourcingStage(page: Page) {
   return page.locator(".sf-u12-heading .sf-u12-stage")
 }
 
-export async function sourcingSourceVersion(page: Page) {
+export async function sourcingSourceVersion(page: Page, expected?: number) {
   const source = page.locator(".sf-u12-heading details.sf-procurement-source")
   await expect(source).toHaveCount(1)
   if (await source.getAttribute("open") === null) await source.locator("summary").click()
   const line = source.locator("p")
-  await expect(line).toHaveText(/^Source version: [1-9]\d*$/)
+  await expect(line).toHaveText(expected === undefined ? /^Source version: [1-9]\d*$/ : `Source version: ${expected}`)
   return (await line.innerText()).replace("Source version: ", "")
 }
 
