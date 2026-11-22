@@ -4,7 +4,8 @@ import assert from "node:assert/strict"
 import az02 from "../../sf/azure/identity/az02-proof.cjs"
 import { digest, validatePlan, validatePackage } from "./g08-private-evidence.mjs"
 import { installedKinds, verifyInstalledHostPair, verifyAz02Phase, verifyExecutionStatus,
-  verifyInstalledChain, verifyRestartBinding, finishCommandOutput, finalizeExecution, verifyOriginalRegistration } from "./g08-installed-evidence.mjs"
+  verifyInstalledChain, verifyRestartBinding, finishCommandOutput, finalizeExecution, verifyOriginalRegistration,
+  verifyAggregateCheckout } from "./g08-installed-evidence.mjs"
 const uuid = (last) => "00000000-0000-4000-8000-" + String(last).padStart(12, "0")
 function scope(installationId = "synthetic-installation", teamObjectId = uuid(2)) {
   const result = { serverKey: "https://qa.example.invalid", discoveryOrigin: "https://qa.example.invalid",
@@ -376,3 +377,47 @@ for (const [name, change] of [
   const v = registrationFixture("U15"); change(v)
   assert.throws(() => verifyOriginalRegistration(v.kind, v.value, v.manifest, v.p, v.bytes))
 })
+
+function checkoutControl() {
+  const candidate = plan().candidate
+  const result = (stdout) => ({ status: 0, signal: null, stdout })
+  return { candidate, observations: { sha: result(candidate.sha + "\n"), tree: result(candidate.tree + "\n"), tracked: result("") } }
+}
+test("aggregate checkout controls bind SHA and tree without granting installed authority", () => {
+  const c = checkoutControl(), value = verifyAggregateCheckout(c.candidate, c.observations)
+  assert.deepEqual(value, { candidate: c.candidate, trackedClean: true })
+  assert(!Object.hasOwn(value, "installed"))
+  c.candidate.sha = "9".repeat(40)
+  assert.equal(value.candidate.sha, "a".repeat(40))
+})
+for (const [name, change] of [
+  ["another HEAD", (c) => { c.observations.sha.stdout = "9".repeat(40) + "\n" }],
+  ["another tree with unchanged HEAD", (c) => { c.observations.tree.stdout = "9".repeat(40) + "\n" }],
+  ["unstaged tracked changes", (c) => { c.observations.tracked.stdout = " M script/sf-ci/g08-installed-evidence.mjs\n" }],
+  ["staged tracked changes", (c) => { c.observations.tracked.stdout = "M  script/sf-ci/g08-installed-evidence.mjs\n" }],
+  ["unmerged tracked changes", (c) => { c.observations.tracked.stdout = "UU script/sf-ci/g08-installed-evidence.mjs\n" }],
+  ["missing candidate tree", (c) => { delete c.candidate.tree }],
+  ["malformed candidate tree", (c) => { c.candidate.tree = "dev" }],
+  ["extra candidate fields", (c) => { c.candidate.installed = true }],
+  ["missing tracked observation", (c) => { delete c.observations.tracked }],
+  ["caller promotion in observations", (c) => { c.observations.installed = true }],
+]) test("aggregate checkout refuses " + name, () => {
+  const c = checkoutControl(); change(c)
+  assert.throws(() => verifyAggregateCheckout(c.candidate, c.observations))
+})
+for (const command of ["sha", "tree", "tracked"]) for (const [name, change] of [
+  ["failed command", (value) => { value.status = 1 }],
+  ["signalled command", (value) => { value.signal = "SIGTERM" }],
+  ["spawn error with claimed zero status", (value) => { value.error = new Error("CONTROL_SPAWN_FAILURE") }],
+  ["missing original stdout", (value) => { delete value.stdout }],
+]) test("aggregate checkout refuses " + command + " " + name, () => {
+  const c = checkoutControl(); change(c.observations[command])
+  assert.throws(() => verifyAggregateCheckout(c.candidate, c.observations), /G08_AGGREGATE_CHECKOUT_OBSERVATION_FAILED/)
+})
+for (const command of ["sha", "tree", "tracked"])
+  test("aggregate checkout re-observation refuses " + command + " drift after a valid initial observation", () => {
+    const c = checkoutControl(), before = verifyAggregateCheckout(c.candidate, c.observations)
+    assert.equal(before.trackedClean, true)
+    c.observations[command].stdout = command === "tracked" ? " M tracked-file\n" : "9".repeat(40) + "\n"
+    assert.throws(() => verifyAggregateCheckout(c.candidate, c.observations), /G08_AGGREGATE_EXACT_CLEAN_CHECKOUT_REQUIRED/)
+  })

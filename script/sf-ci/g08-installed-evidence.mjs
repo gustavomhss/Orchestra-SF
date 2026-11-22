@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url"
 import az02 from "../../sf/azure/identity/az02-proof.cjs"
 import {
   cases, preservedTeams, pendingGroups, record, digest, privateText, privateRoot, writePrivate,
-  validatePlan, readPlan, requireInvocation, validatePackage, validateHost, sourcePaths,
+  validatePlan, readPlan, requirePrivateActionsRunner, validatePackage, validateHost, sourcePaths,
   coverageLedger, requireCompleteGate, inspectCurrentEvidence, obligationPath,
 } from "./g08-private-evidence.mjs"
 import {
@@ -511,17 +511,40 @@ async function runInstalled(kind) {
   console.log("G08_ORIGINAL_GROUP_OBSERVATIONS_VERIFIED_" + kind + "_AGGREGATE_STILL_REQUIRED")
 }
 
+/** Validate actual command results without granting provenance or installed authority. */
+export function verifyAggregateCheckout(candidate, observations) {
+  exact(candidate, ["sha", "tree"])
+  assert([candidate.sha, candidate.tree].every((value) => typeof value === "string" && /^[0-9a-f]{40}$/.test(value)),
+    "G08_AGGREGATE_CANDIDATE_REQUIRED")
+  exact(observations, ["sha", "tree", "tracked"])
+  for (const result of Object.values(observations))
+    assert(result && result.status === 0 && !result.signal && !result.error && typeof result.stdout === "string",
+      "G08_AGGREGATE_CHECKOUT_OBSERVATION_FAILED")
+  assert(observations.sha.stdout.trim() === candidate.sha && observations.tree.stdout.trim() === candidate.tree &&
+    observations.tracked.stdout.trim() === "", "G08_AGGREGATE_EXACT_CLEAN_CHECKOUT_REQUIRED")
+  return { candidate: { sha: candidate.sha, tree: candidate.tree }, trackedClean: true }
+}
+/** Read-only Git observations. The real aggregation never accepts an injected command adapter. */
+export function observeAggregateCheckout(candidate) {
+  const observations = {
+    sha: spawnSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }),
+    tree: spawnSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }),
+    tracked: spawnSync("git", ["status", "--porcelain", "--untracked-files=no"], { encoding: "utf8" }),
+  }
+  return { ...verifyAggregateCheckout(candidate, observations), observedAt: new Date().toISOString() }
+}
+
 async function aggregateInstalled(root) {
+  requirePrivateActionsRunner()
   await privateRoot(root)
   const input = parse(await privateText(root, "aggregate.json"))
   exact(input, ["schema", "candidate", "proofs", "cleanup"])
   assert(input.schema === "sf-g08-aggregate-input-v1" && Array.isArray(input.proofs), "G08_AGGREGATE_INPUT_REQUIRED")
   same(input.proofs.map((item) => item.kind), installedKinds, "G08_EXACT_ALL_GROUPS_REQUIRED")
-  const git = spawnSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" })
-  assert(git.status === 0 && git.stdout.trim() === input.candidate.sha &&
-    input.candidate.sha === process.env.GITHUB_SHA, "G08_AGGREGATE_ORIGINAL_CHECKOUT_REQUIRED")
+  assert(input.candidate?.sha === process.env.GITHUB_SHA, "G08_AGGREGATE_ORIGINAL_CHECKOUT_REQUIRED")
+  const checkoutBefore = observeAggregateCheckout(input.candidate)
   const items = []
-  const { verifyOriginalProducer, verifyDatasetCleanupAuthority } = await import("./g08-proof-provenance.mjs")
+  const { verifyOriginalProducer, verifyDatasetCleanupAuthority, verifyAggregateExecution } = await import("./g08-proof-provenance.mjs")
   for (const proof of input.proofs) {
     exact(proof, ["kind", "root", "producer"])
     const item = await inspectInstalledGroup(proof.root, proof.kind)
@@ -540,15 +563,21 @@ async function aggregateInstalled(root) {
   const cleanupAuthority = await verifyDatasetCleanupAuthority({ plans: items.map(({ plan, planRaw }) => ({ plan, planRaw })),
     archiveSha256: items[0].packageReceipt.archive.sha256, receiptSha256: cleanupSha256,
     completedAt, reference: input.cleanup.reference })
+  const admission = await verifyAggregateExecution({ plan: items[0].plan, planRaw: items[0].planRaw,
+    archiveSha256: items[0].packageReceipt.archive.sha256 })
+  const checkoutAfter = observeAggregateCheckout(input.candidate)
   const receipt = { schema: "sf-g08-installed-complete-v1", status: "INSTALLED_OBLIGATIONS_AND_PROVENANCE_VERIFIED",
     candidate: input.candidate, archive: items[0].receipt.archive, packageReceiptSha256: items[0].plan.packageReceiptSha256,
     reservationSha256: items[0].receipt.bindings.reservationSha256, vmIdSha256: items[0].receipt.bindings.vmIdSha256,
+    aggregation: { mode: "RETROSPECTIVE_READ_ONLY", requiresNewActiveReservation: false,
+      currentJobIsInstalledProducer: false, admission, checkout: { before: checkoutBefore, after: checkoutAfter } },
     coverage, groups: items.map((item) => ({ kind: item.receipt.kind, receiptSha256: item.receiptSha256,
       invocation: item.plan.invocation, bindings: item.receipt.bindings, provenance: item.provenance })),
     cleanup: { receiptSha256: cleanupSha256, authority: cleanupAuthority,
       evidenceClass: "ORIGINAL_OPERATOR_ATTESTATION_BOUND_TO_PRIVATE_RECEIPT" },
     installed: true, g08Closed: true, finalCandidate: true, productionCutover: false,
     limits: ["Qualification of the verified tar in the approved isolated QA reservation only.",
+      "Aggregation only re-reads completed original executions and cleanup; it creates no new authorization or active reservation requirement.",
       "Dataset cleanup is attributed to its original operator attestation and private receipt, not inferred from report parsing.",
       "G05/G06/G07/G10 and the specific production window/go-no-go retain their independent approval requirements."] }
   await writePrivate(root, "aggregate-receipt.json", receipt)
