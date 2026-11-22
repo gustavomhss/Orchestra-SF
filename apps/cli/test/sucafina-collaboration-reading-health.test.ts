@@ -4,7 +4,10 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import type { TrustedUiContext } from "../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { digestSfValue } from "../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import { createSfProductState } from "../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+import { isInstalledSfStateTransaction, createSfProductState } from "../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+import { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions } from "../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+import { enumerateSfSources } from "../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
+import { createSfSourceScopeProjector } from "../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
 import { createSfSourcePersistence } from "../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { createSfUiAuthority } from "../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
 import type { BlobTransaction } from "../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
@@ -67,8 +70,6 @@ async function fixture() {
   if (typeof transactionAll !== "function") throw new Error("Original SQLite snapshot transaction required")
   const snapshotDigest = () => transactionAll(async (snapshots) => ({ commit: false, value: digestSfValue(snapshots) }))
   let ids = 0
-  const persistence = createSfSourcePersistence({ persistence: driver, enumerate: () => [], createId: () => "source-" + ++ids })
-  for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   const controller = new AbortController()
   const request = new Request("https://collaboration-health.example/sucafina/api/ui/context", { signal: controller.signal })
   const identity = () => controls.allowed ? {
@@ -94,6 +95,38 @@ async function fixture() {
       finished.push(context); originalUi.finish(context); hooks.finish?.()
     },
   }
+  // Assemble the same owned SQLite -> current-choice -> source lifecycle chain
+  // used by the installed local product. A callable transaction is insufficient.
+  const currentChoiceFence = createCurrentChoiceFence({
+    persistence: driver,
+    host: () => ({
+      requestFor: (call) => call.kind === "ui" ? originalUi.requestFor(call) : undefined,
+      revalidate: (call) => call.kind === "ui" ? originalUi.revalidate(call) : Promise.resolve(false),
+    }),
+    identity: () => controls.allowed ? { installationId: stamp.installationId, projectId: stamp.projectId } : undefined,
+    operationIdentity: (call) => call.kind === "ui" ? originalUi.operationIdentity(call) : undefined,
+  })
+  expect(currentChoiceOwnsSnapshotTransactions(currentChoiceFence, driver)).toBe(true)
+  const projectScope = createSfSourceScopeProjector(() => "2026-11-22T12:00:00.000Z")
+  const sourcePersistence = createSfSourcePersistence({
+    persistence: currentChoiceFence.persistence, enumerate: enumerateSfSources, projectScope,
+    createId: () => "source-" + ++ids, observeAuthority: driver.observeAuthority,
+    holdTargetPreimage: driver.holdTargetPreimage, hasSnapshotRoot: driver.hasSnapshotRoot,
+    installedDashboardProjector: projectScope,
+  })
+  if (!sourcePersistence.transactionAll || !driver.holdTargetPreimage)
+    throw new Error("Original source lifecycle snapshot transaction and SQLite preimage capability required")
+  const persistence = { ...driver, ...currentChoiceFence.persistence, ...sourcePersistence,
+    dashboardSourceFence: Object.freeze({
+      transaction: sourcePersistence.transaction, transactionAll: sourcePersistence.transactionAll,
+      currentSnapshots: sourcePersistence.currentSnapshots, currentSnapshot: sourcePersistence.currentSnapshot,
+      observeAuthority: sourcePersistence.observeAuthority, readSealed: sourcePersistence.readSealed,
+      hasSnapshotRoot: sourcePersistence.hasSnapshotRoot, readDashboardAuthority: sourcePersistence.readDashboardAuthority,
+      holdTargetPreimage: driver.holdTargetPreimage,
+      current: () => currentChoiceOwnsSnapshotTransactions(currentChoiceFence, driver),
+    }),
+  }
+  for (const surface of ["dashboard", "planner", "procurement"] as const) await sourcePersistence.initializeSources(surface)
   const state = createSfProductState({
     persistence, createId: () => "state-" + ++ids, resolveTarget: async () => ({ incarnation: "health-workspace" }),
     authorize: async (original, _snapshot, namespace) => {
@@ -101,6 +134,7 @@ async function fixture() {
       return actor && { principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
     },
   })
+  expect(isInstalledSfStateTransaction(state.read, state.transaction)).toBe(true)
   const initialized = await state.transaction(request, {
     namespace: "preferences", expectedStorageVersion: 0, targetRef: "health-workspace",
     targetIncarnation: "health-workspace", idempotencyKey: "initialize-collaboration-health",

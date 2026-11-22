@@ -188,7 +188,24 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "sensitivity-threshold-readback",
     comparisonStatus: actualSensitivity.comparisonStatus, exactThreshold: actualSensitivity.threshold,
     thresholdEvidence }))
-  await expect(sensitivity.locator(".sf-u19-table-scroll tbody tr")).toHaveCount(array(actualSensitivity.evaluated).length)
+  expect(storedSensitivity.caseRef).toEqual(caseRef)
+  expect(actualSensitivity.scenarioRef).toBe(prepared.scenarioRef)
+  expect(actualSensitivity.parameterRef).toBe(prepared.parameterRef)
+  expect(actualSensitivity.bounds).toEqual({ minimum: prepared.parameterValue, maximum: prepared.parameterValue + 2000, steps: 2 })
+  const originalSamples = array(actualSensitivity.evaluated).map(object)
+  const renderedSamples = sensitivity.locator(".sf-u19-table-scroll tbody tr")
+  await expect(renderedSamples).toHaveCount(originalSamples.length)
+  for (const [index, sample] of originalSamples.entries()) {
+    const cells = renderedSamples.nth(index).locator("td")
+    await expect(cells.nth(0)).toHaveText(String(sample.parameterValue) + " " + sourceText(actualSensitivity.parameterUnit))
+    await expect(cells.nth(1)).toHaveText(sample.value === null ? "Unknown result" : String(sample.value) + " " + sourceText(actualSensitivity.unit))
+    await expect(cells.nth(2)).toHaveText(sourceText(sample.resultRef))
+  }
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "sensitivity-sample-readback",
+    sampleCount: originalSamples.length, bounds: actualSensitivity.bounds,
+    parameterUnit: actualSensitivity.parameterUnit, resultUnit: actualSensitivity.unit,
+    values: originalSamples.map((sample) => ({ parameterValue: sample.parameterValue, value: sample.value })),
+    binding: "exact-case-scenario-parameter" }))
   const sensitivityWrite = writes.find((request) => isOperation(request, "decision-sensitivity-evaluate"))!
   expect(object(sensitivityWrite.postDataJSON()).caseRef).toEqual(caseRef)
   expect(writes.filter((request) => isOperation(request, "decision-sensitivity-evaluate"))).toHaveLength(1)
@@ -239,8 +256,19 @@ async function assertBiSource(page: Page, url: string, view: string) {
   const valueIds = series.flatMap((entry) => array(entry.valueIds))
   await expect(page.locator(".sf-chart-table tbody tr")).toHaveCount(valueIds.length)
   const numeric = values.filter((entry) => valueIds.includes(entry.id) && entry.evidenceState !== "absent" && typeof entry.value === "number")
-  for (const value of numeric.slice(0, 3))
+  const expectedRows = series.flatMap((entry) => array(entry.valueIds).map((id) => String(entry.id) + ":" + String(id)))
+  expect(await page.locator(".sf-chart-table tbody tr").evaluateAll((rows) => rows.map((row) => row.getAttribute("data-sf-row")))).toEqual(expectedRows)
+  for (const value of numeric)
     await expect(page.locator(".sf-chart-table")).toContainText(new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value.value as number))
+  const expectedPoints = series.flatMap((entry) => array(entry.valueIds).map((id) => {
+    const value = values.find((value) => value.id === id)!
+    expect(value).toBeDefined()
+    return { id: String(id), evidence: String(value.evidenceState),
+      kind: value.evidenceState !== "absent" && typeof value.value === "number" && Number.isFinite(value.value) ? "known" : "missing" }
+  }))
+  expect(await page.locator(".sf-bi-series [data-sf-value-id]").evaluateAll((points) => points.map((point) => ({
+    id: point.getAttribute("data-sf-value-id"), evidence: point.getAttribute("data-sf-evidence"), kind: point.getAttribute("data-sf-value-kind"),
+  })))).toEqual(expectedPoints)
   console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-readback", view,
     http: response.status(), rows: valueIds.length, numericValues: numeric.length, missing: values.filter((entry) => entry.value === null || entry.evidenceState === "absent").length }))
   return values
