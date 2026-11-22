@@ -221,8 +221,13 @@ jobs:
             request.args.length === 1 && request.args[0] === 'e2e/sucafina/operations.spec.ts'
           const args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', filesPair ? 'off' : 'retain-on-failure']
           const listed = spawnSync('bun', [...args, '--list', '--reporter=json'], { cwd, env, encoding: 'utf8' })
-          if (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)
-          writeFileSync('test-ci-evidence/playwright-selection.json', listed.stdout)
+          // Recording-branch diagnostics: preserve the original listing failure;
+          // the same selection guard and all validation remain mandatory.
+          writeFileSync('test-ci-evidence/playwright-selection.json', listed.stdout ?? '')
+          if (listed.error || listed.status !== 0) {
+            writeFileSync('test-ci-evidence/playwright-selection.stderr.txt', listed.stderr ?? '')
+            throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)
+          }
           const report = JSON.parse(listed.stdout)
           const hasTests = (suite) => suite.specs?.some((spec) => spec.tests?.length > 0) || (suite.suites ?? []).some(hasTests)
           validateSelection(request.args.map((file) => path.resolve(cwd, file)),

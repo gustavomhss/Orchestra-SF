@@ -2,7 +2,7 @@ import { expect, type BrowserContext, type Locator, type Page, type TestInfo } f
 import { stat } from "node:fs/promises"
 import type { DesignInstallation } from "./installation"
 import type { authenticateRecordingInstallation } from "./recording-installation"
-import plan from "./capture-plan.json"
+import plan from "./capture-plan.json" with { type: "json" }
 
 export type FilmOwner = Awaited<ReturnType<typeof authenticateRecordingInstallation>>
 export type CueId = keyof typeof plan
