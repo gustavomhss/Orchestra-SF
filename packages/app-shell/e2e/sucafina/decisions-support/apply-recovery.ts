@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page, type Request } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { asRecord, caseIdentity, clickCommand, isCommand, openInstalledWorkbenchCase, readReply } from "./journey"
+import { asRecord, caseIdentity, clickCommand, decisionsChapterURL, isCommand, openInstalledWorkbenchCase, readReply } from "./journey"
 import { loseClosureResponse } from "./closure-response"
 
 /** Consume the published C12 path only after the caller proves a compatible domain approval. */
@@ -174,7 +174,7 @@ function procurementCommand(request: Request, origin: string, action: string) {
 async function openRequest(page: Page, origin: string, id: string) {
   expect(id).toMatch(/^PR-\d{4}-\d+$/)
   const encoded = encodeSfRouteRef(id)
-  await page.goto(new URL(`/orchestra/sf-procurement/requests/${encoded}`, origin).href)
+  await page.goto(decisionsChapterURL(page, origin, `/orchestra/sf-procurement/requests/${encoded}`).href)
   await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === `/orchestra/sf-procurement/requests/${encoded}`)
   const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
   await expect(detail).toHaveCount(1)

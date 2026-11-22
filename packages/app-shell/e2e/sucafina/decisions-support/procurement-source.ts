@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { asRecord } from "./journey"
+import { asRecord, decisionsChapterURL } from "./journey"
 
 const requestPattern = /^PR-\d{4}-\d+$/
 const stages = [
@@ -11,11 +11,12 @@ const stages = [
 ] as const
 
 export async function createRequisition(page: Page, origin: string, observations: Record<string, unknown>[]) {
-  const entry = await page.goto(new URL("/orchestra/sf-procurement/requests/new", origin).href)
+  const entry = await page.goto(decisionsChapterURL(page, origin, "/orchestra/sf-procurement/requests/new").href)
   // Regression: a fresh installation must serve a functional Requests form,
   // not the previously observed 503 swallowed as a missing form.
   expect(entry?.status()).toBe(200)
-  await expect(page.getByRole("heading", { name: "Requests", exact: true }), "The real Procurement chapter must own the form").toBeVisible()
+  const chapter = page.locator('[data-component="sf-requests-pr-po"]')
+  await expect(chapter.getByRole("heading", { name: "Requests", exact: true }), "The real Procurement chapter must own the form").toBeVisible()
   await expect(page.locator(".mx-heading").getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
   const article = page.locator("article.sf-u11-detail")
   const form = article.locator('form[data-command="create"][data-page="Requests"]')
@@ -57,7 +58,7 @@ export async function approveExactRequisition(page: Page, origin: string, review
     expect(fields, "The domain preview must identify the same finite amount selected by the human").toHaveLength(1)
     expect(operation.currency).toBe("USD")
     const encoded = encodeSfRouteRef(requestId)
-    await page.goto(new URL(`/orchestra/sf-procurement/approvals/${encoded}`, origin).href)
+    await page.goto(decisionsChapterURL(page, origin, `/orchestra/sf-procurement/approvals/${encoded}`).href)
     await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === `/orchestra/sf-procurement/approvals/${encoded}`)
     const approval = page.locator("section.sf-u13-remaining-detail")
     await expect(approval).toHaveCount(1)
@@ -102,7 +103,7 @@ export async function approveExactRequisition(page: Page, origin: string, review
 export async function openRequisition(page: Page, origin: string, id: string) {
   expect(id).toMatch(requestPattern)
   const encoded = encodeSfRouteRef(id)
-  await page.goto(new URL(`/orchestra/sf-procurement/requests/${encoded}`, origin).href)
+  await page.goto(decisionsChapterURL(page, origin, `/orchestra/sf-procurement/requests/${encoded}`).href)
   await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === `/orchestra/sf-procurement/requests/${encoded}`)
   const row = page.locator(`tr[data-sf-row="${id}"]`)
   await expect(row).toHaveCount(1)

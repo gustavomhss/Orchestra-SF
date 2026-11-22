@@ -4,6 +4,19 @@ import { Schema } from "effect"
 import { SfProjectionCase } from "@orchestra/schema/sucafina/decisions"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 
+const chapterOwners = new WeakMap<ReturnType<Page["context"]>, { origin: string; project: string; installation: string }>()
+
+export function decisionsChapterURL(page: Page, origin: string, path: string) {
+  const owner = chapterOwners.get(page.context())
+  const url = new URL(path, origin)
+  if (!owner || owner.origin !== origin || url.origin !== origin || !url.pathname.startsWith("/orchestra/"))
+    throw new Error("Decisions requires the authenticated native chapter on its installed owner")
+  url.searchParams.set("server", origin)
+  url.searchParams.set("project", owner.project)
+  url.searchParams.set("installation", owner.installation)
+  return url
+}
+
 export const draft = {
   objective: "CI Decisions — annual service decision",
   horizon: { start: "2027-01-01", end: "2027-12-31" },
@@ -48,18 +61,28 @@ export async function withInstallation(page: Page, info: TestInfo,
   page.on("request", listener)
   const diagnostics: string[] = []
   const onConsole = (message: { type: () => string; text: () => string }) => { if (message.type() === "error") diagnostics.push(receiptDiagnostic(`console.error: ${message.text()}`)) }
+  const onResponse = (response: Response) => {
+    const url = new URL(response.url())
+    if (url.origin === installation.origin && (url.pathname.startsWith("/sucafina/api/ui/") ||
+        url.pathname === "/sucafina/planner" || url.pathname === "/sucafina/procurement"))
+      diagnostics.push(`http ${response.request().method()} ${url.pathname} ${response.status()}`)
+  }
   const onPageError = (error: Error) => diagnostics.push(receiptDiagnostic(`pageerror: ${error.message}`))
   const onNavigated = (frame: { page: () => unknown }) => { if (frame.page() === page) diagnostics.push(receiptDiagnostic(`navigated: ${page.url()}`)) }
   page.on("console", onConsole)
+  page.on("response", onResponse)
   page.on("pageerror", onPageError)
   page.on("framenavigated", onNavigated)
   try {
-    await installation.signIn(page)
+    const { binding } = await installation.signIn(page)
+    chapterOwners.set(page.context(), { origin: binding.publicOrigin, project: binding.projectId, installation: binding.installationId })
     await action(installation, observations)
     body.completed = true
   } finally {
+    chapterOwners.delete(page.context())
     page.off("request", listener)
     page.off("console", onConsole)
+    page.off("response", onResponse)
     page.off("pageerror", onPageError)
     page.off("framenavigated", onNavigated)
     // Never retain cookies, authorization headers, enrollment URLs or arbitrary response bodies.
@@ -81,10 +104,18 @@ function receiptDiagnostic(value: string) {
 
 export async function enterWorkbench(page: Page, origin: string) {
   expect(origin, "Native Decisions must use the shell served by its installation CLI").toBe(decisionsInstallationOrigin)
-  const response = await page.goto(new URL("/orchestra/sf-decisions", origin).href)
-  expect(response?.status()).toBe(200)
-  await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === "/orchestra/sf-decisions")
-  await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
+  // The installed Planner shell owns the logout control. Observe it in
+  // a sibling tab without ending the session used by the native case.
+  const session = await page.context().newPage()
+  try {
+    const planner = new URL("/sucafina/planner", origin)
+    expect((await session.goto(planner.href))?.status()).toBe(200)
+    await expect(session).toHaveURL(planner.href)
+    await expect(session.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
+  } finally { await session.close() }
+  const destination = decisionsChapterURL(page, origin, "/orchestra/sf-decisions")
+  expect((await page.goto(destination.href))?.status()).toBe(200)
+  await expect(page).toHaveURL(destination.href)
   await expect(page.getByRole("heading", { name: "Decisions", exact: true })).toBeVisible()
   await expect(page.getByRole("button", { name: "New case", exact: true })).toBeEnabled()
 }

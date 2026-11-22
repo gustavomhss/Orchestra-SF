@@ -1,30 +1,30 @@
 import { expect, type Locator, type Page } from "@playwright/test"
-import { asRecord } from "./journey"
+import { asRecord, decisionsChapterURL } from "./journey"
 
 export const sourceNames = { baseline: "Decisions baseline plan", candidate: "Decisions candidate plan", line: "Decision annual service" }
 
 /** Build the financial source records through the installed Planner controls. */
 export async function createPlannerSources(page: Page, origin: string, actorId: string, observations: Record<string, unknown>[]) {
   const planner = (name: string, version?: string) => {
-    const url = new URL(name === "OPEX" ? "/orchestra/sf-planner/opex" : "/orchestra/sf-planner/versions", origin)
+    const url = decisionsChapterURL(page, origin, name === "OPEX" ? "/orchestra/sf-planner/opex" : "/orchestra/sf-planner/versions")
     if (version) url.searchParams.set("version", version)
     return url.href
   }
-  const versionRow = (id: string) => page.locator(`tr[data-sf-row="${id}"]`)
+  const versionRows = page.locator('[data-sf-surface="CAP23"] tr[data-sf-row]')
+  const versionRow = (id: string) => versionRows.and(page.locator(`tr[data-sf-row="${id}"]`))
   const detail = page.locator("[data-sf-record-detail]")
-  const installed = await page.goto(new URL("/orchestra/sf-planner/versions/new", origin).href)
+  const installed = await page.goto(decisionsChapterURL(page, origin, "/orchestra/sf-planner/versions/new").href)
   expect(installed?.status(), "Original Planner Versions route must be installed").toBe(200)
   await expect(page.getByRole("heading", { name: "Versions", exact: true })).toBeVisible()
-  await confirmVersion(page, page.locator('[data-sf-surface="CAP23"]').getByRole("button", { name: "Create first version", exact: true }), "save", observations)
-  await expect(detail).toHaveCount(1)
-  const baseline = await versionIdentity(detail)
+  const first = await confirmVersion(page, page.locator('[data-sf-surface="CAP23"]').getByRole("button", { name: "Create first version", exact: true }), "save", observations)
+  const baseline = await openPublishedVersion(page, detail, versionRows, first, { count: 1 })
   const versionName = detail.locator("#sf-u46-name")
   const year = detail.locator("#sf-u46-year")
   await expect(versionName).toBeEnabled()
   await versionName.fill(sourceNames.baseline)
   await expect(year).toBeEnabled()
   await year.fill("2027")
-  await confirmVersion(page, detail.getByRole("button", { name: "Save", exact: true }), "save", observations)
+  await confirmVersion(page, detail.getByRole("button", { name: "Save", exact: true }), "save", observations, baseline)
   await expect(detail.getByRole("heading", { name: sourceNames.baseline, exact: true })).toBeVisible()
   await expect(detail.locator('[data-sf-field="year"]')).toContainText("2027")
   await detail.getByRole("button", { name: "Back", exact: true }).click()
@@ -62,18 +62,18 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   await expect(created.getByRole("cell", { name: "USD", exact: true })).toHaveCount(1)
   await expect(created.locator('[data-sf-field="annual"]')).toHaveText("1200")
 
-  expect((await page.goto(new URL("/orchestra/sf-planner/versions?year=2027", origin).href))?.status(), "Original Planner Versions route must remain admitted").toBe(200)
+  expect((await page.goto(decisionsChapterURL(page, origin, "/orchestra/sf-planner/versions?year=2027").href))?.status(), "Original Planner Versions route must remain admitted").toBe(200)
   await versionRow(baseline).getByRole("button", { name: "Open record", exact: true }).click()
   await expect(detail).toHaveCount(1)
-  await confirmVersion(page, detail.getByRole("button", { name: "copy", exact: true }), "copy", observations)
+  const copied = await confirmVersion(page, detail.getByRole("button", { name: "copy", exact: true }), "copy", observations, baseline)
   const copiedName = `${sourceNames.baseline} — Copy`
+  const candidate = await openPublishedVersion(page, detail, versionRows, copied, { count: 2, copyName: copiedName })
   await expect(detail.getByRole("heading", { name: copiedName, exact: true })).toBeVisible()
-  const candidate = await versionIdentity(detail)
   expect(candidate).not.toBe(baseline)
   await expect(detail.locator('[data-sf-field="year"]')).toContainText("2027")
   await expect(detail.locator("#sf-u46-name")).toBeEnabled()
   await detail.locator("#sf-u46-name").fill(sourceNames.candidate)
-  await confirmVersion(page, detail.getByRole("button", { name: "Save", exact: true }), "save", observations)
+  await confirmVersion(page, detail.getByRole("button", { name: "Save", exact: true }), "save", observations, candidate)
   await expect(detail.getByRole("heading", { name: sourceNames.candidate, exact: true })).toBeVisible()
   expect(await versionIdentity(detail)).toBe(candidate)
   await detail.getByRole("button", { name: "Back", exact: true }).click()
@@ -114,7 +114,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
 
 /** A real source revision, independent of the saved ChoiceRecord. */
 export async function changePlannerSource(page: Page, origin: string, versionId: string, annualBudget: number, observations: Record<string, unknown>[]) {
-  await page.goto(new URL(`/orchestra/sf-planner/opex?${new URLSearchParams({ version: versionId })}`, origin).href)
+  await page.goto(decisionsChapterURL(page, origin, `/orchestra/sf-planner/opex?${new URLSearchParams({ version: versionId })}`).href)
   const row = lineRow(page)
   await expect(row).toHaveCount(1)
   await expect(row.locator('[data-sf-field="annual"]')).toHaveText("2400")
@@ -141,7 +141,7 @@ export async function changePlannerSource(page: Page, origin: string, versionId:
   observations.push({ stage: "planner-source-revised-through-ui", versionId, previousAnnualInput: 2400, annualInput: annualBudget, currency: "USD", previousRevision, revision })
 }
 
-async function confirmVersion(page: Page, opener: Locator, action: string, observations: Record<string, unknown>[]) {
+async function confirmVersion(page: Page, opener: Locator, action: "save" | "copy", observations: Record<string, unknown>[], versionId?: string) {
   await expect(opener).toBeEnabled()
   await opener.click()
   const review = page.locator('[data-component="sf-change-review"]')
@@ -156,8 +156,31 @@ async function confirmVersion(page: Page, opener: Locator, action: string, obser
   expect(response.headers()["content-type"]).toContain("application/json")
   const result = asRecord(await response.json())
   expect(result.ok).toBe(true)
-  observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok })
+  const sent = asRecord(response.request().postDataJSON())
+  expect(sent).toMatchObject({ page: "Versions", action, confirmed: true, version: expect.any(Number) })
+  expect(sent.id).toBe(versionId)
+  if (!versionId) expect(sent.version).toBe(0)
+  observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok, version: sent.version })
   return result
+}
+
+/** A successful Versions command can return only ok/warnings. Follow the authorized list in that case. */
+async function openPublishedVersion(page: Page, detail: Locator, rows: Locator, reply: Record<string, unknown>, expected: { count: number; copyName?: string }) {
+  if (typeof reply.value === "string" && reply.value.trim()) {
+    await expect(detail).toHaveCount(1)
+    expect(await versionIdentity(detail)).toBe(reply.value)
+    return reply.value
+  }
+  await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-planner/versions")
+  await expect(rows).toHaveCount(expected.count)
+  const target = expected.copyName ? rows.filter({ has: page.getByRole("cell", { name: expected.copyName, exact: true }) }) : rows
+  await expect(target).toHaveCount(1)
+  const ref = await target.getAttribute("data-sf-row")
+  expect(ref).toBeTruthy()
+  await target.getByRole("button", { name: "Open record", exact: true }).click()
+  await expect(detail).toHaveCount(1)
+  expect(await versionIdentity(detail)).toBe(ref)
+  return ref!
 }
 
 async function versionIdentity(detail: Locator) {
