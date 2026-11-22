@@ -1,0 +1,886 @@
+{
+  "schema": "sf-design-diagnostic-manifest-v1",
+  "label": "Portfolio26",
+  "archiveAttempt": "attempt-23",
+  "runId": 45040443689,
+  "jobId": 137263467188,
+  "qaBase": "3ea2ba60f6ce0271a252b752bbb39661a6d1bdb2",
+  "classification": "diagnostic-only; not qualification",
+  "recordCounts": {
+    "profiler": 236,
+    "source": 25,
+    "context": 2,
+    "capture": 6,
+    "stage": 46,
+    "diagnostics": 3,
+    "previewChunks": 33,
+    "jpegs": 7,
+    "totalStructuredEmissionLines": 351
+  },
+  "allStructuredRecordsPreserved": true,
+  "rawLogArchived": false,
+  "preservation": {
+    "profile": "All 236 profiler payloads retained without value changes, with originalPayload, timestamp and sourceLine.",
+    "sourceEvents": "All 82 source/context/capture/stage/diagnostic payloads retained in original emission order, with originalPayload, timestamp and sourceLine.",
+    "previewChunks": "All 33 chunk data payloads are recoverable by canonical base64 encoding the original JPEG bytes and splitting at the recorded base64Characters lengths in part order. Names, 1-based parts, declared totals, sourceLine, timestamps and chunk hashes are retained."
+  },
+  "profilerAudit": {
+    "records": 236,
+    "started": 1,
+    "bucketRecords": 230,
+    "periodicSummaries": 5,
+    "finalSummaries": 0,
+    "totalStructuredRecords": 351,
+    "scopeOrigin": "before-human-admit",
+    "canonicalDigestSurface": {
+      "meaning": "direct-caller-label",
+      "labels": [
+        "principal.direct",
+        "source.scope-validation",
+        "source.other",
+        "finance.current",
+        "finance.other",
+        "bcs.planner.projection-period",
+        "bcs.planner.expected-period",
+        "bcs.planner.source-ref",
+        "bcs.planner.expected-ref",
+        "canonical.evidence-ref",
+        "unlabelled"
+      ]
+    },
+    "canonicalDirect": "direct canonicalSfValue calls; internal digest canonicalization excluded",
+    "maximumObservedProfilerPayloadLength": 770,
+    "maximumObservedProfilerLineLength": 792,
+    "identicalKeyInventory": true,
+    "snapshotAudits": [
+      {
+        "snapshot": 1,
+        "elapsedMs": 10000,
+        "dueMs": 10000,
+        "trigger": "settled-span",
+        "observedKeys": 46,
+        "declaredBuckets": 46,
+        "uniqueKeys": 46,
+        "measuredPending": 2,
+        "declaredPending": 2,
+        "callsBalanced": true,
+        "cumulativeMonotonic": true,
+        "identicalKeyInventory": true,
+        "emittedMatchesRecordIndex": true,
+        "bucketDrops": 0,
+        "rootDrops": 0,
+        "lineDrops": 0,
+        "diagnosticErrors": 0,
+        "skippedPeriodicThresholds": 0,
+        "digestSurfaces": [
+          "unlabelled",
+          "principal.direct",
+          "source.scope-validation",
+          "source.other",
+          "canonical.evidence-ref",
+          "bcs.planner.projection-period",
+          "bcs.planner.expected-period",
+          "bcs.planner.source-ref",
+          "bcs.planner.expected-ref",
+          "finance.other",
+          "finance.current"
+        ],
+        "digestTotals": {
+          "calls": 112201,
+          "settled": 112201,
+          "pending": 0,
+          "inclusiveMs": 2856
+        },
+        "pendingBuckets": [
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 1,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 10000,
+            "trigger": "settled-span",
+            "dueMs": 10000,
+            "name": "http.preview",
+            "origin": "none",
+            "surface": "none",
+            "calls": 1,
+            "settled": 0,
+            "pending": 1,
+            "inclusiveMs": 0
+          },
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 1,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 10000,
+            "trigger": "settled-span",
+            "dueMs": 10000,
+            "name": "authority.principal",
+            "origin": "none",
+            "surface": "none",
+            "calls": 5072,
+            "settled": 5071,
+            "pending": 1,
+            "inclusiveMs": 2109
+          }
+        ]
+      },
+      {
+        "snapshot": 2,
+        "elapsedMs": 20000,
+        "dueMs": 20000,
+        "trigger": "settled-span",
+        "observedKeys": 46,
+        "declaredBuckets": 46,
+        "uniqueKeys": 46,
+        "measuredPending": 2,
+        "declaredPending": 2,
+        "callsBalanced": true,
+        "cumulativeMonotonic": true,
+        "identicalKeyInventory": true,
+        "emittedMatchesRecordIndex": true,
+        "bucketDrops": 0,
+        "rootDrops": 0,
+        "lineDrops": 0,
+        "diagnosticErrors": 0,
+        "skippedPeriodicThresholds": 0,
+        "digestSurfaces": [
+          "unlabelled",
+          "principal.direct",
+          "source.scope-validation",
+          "source.other",
+          "canonical.evidence-ref",
+          "bcs.planner.projection-period",
+          "bcs.planner.expected-period",
+          "bcs.planner.source-ref",
+          "bcs.planner.expected-ref",
+          "finance.other",
+          "finance.current"
+        ],
+        "digestTotals": {
+          "calls": 305382,
+          "settled": 305382,
+          "pending": 0,
+          "inclusiveMs": 6385
+        },
+        "pendingBuckets": [
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 2,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 20000,
+            "trigger": "settled-span",
+            "dueMs": 20000,
+            "name": "http.preview",
+            "origin": "none",
+            "surface": "none",
+            "calls": 1,
+            "settled": 0,
+            "pending": 1,
+            "inclusiveMs": 0
+          },
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 2,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 20000,
+            "trigger": "settled-span",
+            "dueMs": 20000,
+            "name": "authority.principal",
+            "origin": "none",
+            "surface": "none",
+            "calls": 13719,
+            "settled": 13718,
+            "pending": 1,
+            "inclusiveMs": 5195
+          }
+        ]
+      },
+      {
+        "snapshot": 3,
+        "elapsedMs": 30000,
+        "dueMs": 30000,
+        "trigger": "settled-span",
+        "observedKeys": 46,
+        "declaredBuckets": 46,
+        "uniqueKeys": 46,
+        "measuredPending": 2,
+        "declaredPending": 2,
+        "callsBalanced": true,
+        "cumulativeMonotonic": true,
+        "identicalKeyInventory": true,
+        "emittedMatchesRecordIndex": true,
+        "bucketDrops": 0,
+        "rootDrops": 0,
+        "lineDrops": 0,
+        "diagnosticErrors": 0,
+        "skippedPeriodicThresholds": 0,
+        "digestSurfaces": [
+          "unlabelled",
+          "principal.direct",
+          "source.scope-validation",
+          "source.other",
+          "canonical.evidence-ref",
+          "bcs.planner.projection-period",
+          "bcs.planner.expected-period",
+          "bcs.planner.source-ref",
+          "bcs.planner.expected-ref",
+          "finance.other",
+          "finance.current"
+        ],
+        "digestTotals": {
+          "calls": 454512,
+          "settled": 454512,
+          "pending": 0,
+          "inclusiveMs": 9617
+        },
+        "pendingBuckets": [
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 3,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 30000,
+            "trigger": "settled-span",
+            "dueMs": 30000,
+            "name": "http.preview",
+            "origin": "none",
+            "surface": "none",
+            "calls": 1,
+            "settled": 0,
+            "pending": 1,
+            "inclusiveMs": 0
+          },
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 3,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 30000,
+            "trigger": "settled-span",
+            "dueMs": 30000,
+            "name": "authority.principal",
+            "origin": "none",
+            "surface": "none",
+            "calls": 20467,
+            "settled": 20466,
+            "pending": 1,
+            "inclusiveMs": 7758
+          }
+        ]
+      },
+      {
+        "snapshot": 4,
+        "elapsedMs": 40000,
+        "dueMs": 40000,
+        "trigger": "settled-span",
+        "observedKeys": 46,
+        "declaredBuckets": 46,
+        "uniqueKeys": 46,
+        "measuredPending": 2,
+        "declaredPending": 2,
+        "callsBalanced": true,
+        "cumulativeMonotonic": true,
+        "identicalKeyInventory": true,
+        "emittedMatchesRecordIndex": true,
+        "bucketDrops": 0,
+        "rootDrops": 0,
+        "lineDrops": 0,
+        "diagnosticErrors": 0,
+        "skippedPeriodicThresholds": 0,
+        "digestSurfaces": [
+          "unlabelled",
+          "principal.direct",
+          "source.scope-validation",
+          "source.other",
+          "canonical.evidence-ref",
+          "bcs.planner.projection-period",
+          "bcs.planner.expected-period",
+          "bcs.planner.source-ref",
+          "bcs.planner.expected-ref",
+          "finance.other",
+          "finance.current"
+        ],
+        "digestTotals": {
+          "calls": 647524,
+          "settled": 647524,
+          "pending": 0,
+          "inclusiveMs": 13144
+        },
+        "pendingBuckets": [
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 4,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 40000,
+            "trigger": "settled-span",
+            "dueMs": 40000,
+            "name": "http.preview",
+            "origin": "none",
+            "surface": "none",
+            "calls": 1,
+            "settled": 0,
+            "pending": 1,
+            "inclusiveMs": 0
+          },
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 4,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 40000,
+            "trigger": "settled-span",
+            "dueMs": 40000,
+            "name": "authority.principal",
+            "origin": "none",
+            "surface": "none",
+            "calls": 29123,
+            "settled": 29122,
+            "pending": 1,
+            "inclusiveMs": 10819
+          }
+        ]
+      },
+      {
+        "snapshot": 5,
+        "elapsedMs": 50008,
+        "dueMs": 50000,
+        "trigger": "settled-span",
+        "observedKeys": 46,
+        "declaredBuckets": 46,
+        "uniqueKeys": 46,
+        "measuredPending": 1,
+        "declaredPending": 1,
+        "callsBalanced": true,
+        "cumulativeMonotonic": true,
+        "identicalKeyInventory": true,
+        "emittedMatchesRecordIndex": true,
+        "bucketDrops": 0,
+        "rootDrops": 0,
+        "lineDrops": 0,
+        "diagnosticErrors": 0,
+        "skippedPeriodicThresholds": 0,
+        "digestSurfaces": [
+          "unlabelled",
+          "principal.direct",
+          "source.scope-validation",
+          "source.other",
+          "canonical.evidence-ref",
+          "bcs.planner.projection-period",
+          "bcs.planner.expected-period",
+          "bcs.planner.source-ref",
+          "bcs.planner.expected-ref",
+          "finance.other",
+          "finance.current"
+        ],
+        "digestTotals": {
+          "calls": 788629,
+          "settled": 788629,
+          "pending": 0,
+          "inclusiveMs": 16246
+        },
+        "pendingBuckets": [
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 5,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 50008,
+            "trigger": "settled-span",
+            "dueMs": 50000,
+            "name": "http.preview",
+            "origin": "none",
+            "surface": "none",
+            "calls": 1,
+            "settled": 0,
+            "pending": 1,
+            "inclusiveMs": 0
+          }
+        ]
+      }
+    ],
+    "structuredParseErrors": [],
+    "issues": []
+  },
+  "chunkAudit": {
+    "partNumbering": "1-based",
+    "missingParts": 0,
+    "duplicateParts": 0,
+    "inconsistentPartTotals": 0,
+    "base64SyntaxErrors": 0,
+    "base64RoundTripExact": true,
+    "jpegBoundariesValidated": true,
+    "totalOriginalJpegBytes": 536652,
+    "allImagesIndividuallyViewed": true,
+    "allImageReadbacksMatchOriginalBase64": true,
+    "readbackCommit": "66f1e157f9436a037a3deaf6b587c07d50aca0b1",
+    "readbackCommitHasNoRef": true
+  },
+  "images": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "path": "gallery/UI42-list-dark-desktop-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 80513,
+      "sha256": "f7ad3561b863134b6b2e689e1721b8440eaf879bc821affbc107314a777c9db5",
+      "gitBlobSha": "ca2b973f7bc4405bfc06f99b121ac7e8a7ba5ce3",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 107352,
+      "declaredParts": 5,
+      "receivedParts": 5,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "firstChunkAt": "2026-11-22T15:58:58.1969722Z",
+      "lastChunkAt": "2026-11-22T15:58:58.4047577Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "004fb876effab5d19fdca58305f86d1975db6078d7ef246e8a65149dc65ff306",
+          "sourceLine": 1173,
+          "timestamp": "2026-11-22T15:58:58.1969722Z"
+        },
+        {
+          "part": 2,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "d13563cb1d88cd2ceac4bd7ad06ecf38a49054b1d9d4312f6f939c5fd464707f",
+          "sourceLine": 1175,
+          "timestamp": "2026-11-22T15:58:58.2348876Z"
+        },
+        {
+          "part": 3,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "7b2028dd2b832b67286c052e151fe89c8f857bd7591679630a94ced3a4651871",
+          "sourceLine": 1177,
+          "timestamp": "2026-11-22T15:58:58.2892208Z"
+        },
+        {
+          "part": 4,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "def9d22d9169a95a1bbd7724ef8f01209624aeb7c253a7a087d3b41d04d96972",
+          "sourceLine": 1179,
+          "timestamp": "2026-11-22T15:58:58.3611238Z"
+        },
+        {
+          "part": 5,
+          "parts": 5,
+          "base64Characters": 11352,
+          "base64Sha256": "3585f4ab438a2e51edee00983dc4bda278c5e16510b90720b7758262af7821b4",
+          "sourceLine": 1181,
+          "timestamp": "2026-11-22T15:58:58.4047577Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "path": "gallery/UI42-list-light-desktop-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 85798,
+      "sha256": "89dc5c2d050a71ed078f330804c66c5ec3d2e3a6130a67f4d5a87a08bbe1b9b3",
+      "gitBlobSha": "48a28fde8ea86c381e831f1cc83541b64d960cd2",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 114400,
+      "declaredParts": 5,
+      "receivedParts": 5,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "firstChunkAt": "2026-11-22T15:58:59.0151432Z",
+      "lastChunkAt": "2026-11-22T15:58:59.2614054Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "384f9974a7a985a7e9531b5342b0021660dd425bfdfe2ec73da9db43fe1c7927",
+          "sourceLine": 1185,
+          "timestamp": "2026-11-22T15:58:59.0151432Z"
+        },
+        {
+          "part": 2,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "abf02815247dad5dfeff9214f8ad77b9470ed19baf10a563ad12cb667676bfb3",
+          "sourceLine": 1187,
+          "timestamp": "2026-11-22T15:58:59.0560016Z"
+        },
+        {
+          "part": 3,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "f47392f9667e068d48b00e5a694d731fcbd75f8286762b77f2301daf93735c3b",
+          "sourceLine": 1189,
+          "timestamp": "2026-11-22T15:58:59.1084744Z"
+        },
+        {
+          "part": 4,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "d185ea9ae10bdcd1814c9f678004b57ff492fdcd8420f9e764e0d5f0b4f432b1",
+          "sourceLine": 1191,
+          "timestamp": "2026-11-22T15:58:59.1956460Z"
+        },
+        {
+          "part": 5,
+          "parts": 5,
+          "base64Characters": 18400,
+          "base64Sha256": "601ac18427c407f1852ea50a01f342dc0e1f84c023baf01c4fb8a9f251f73496",
+          "sourceLine": 1193,
+          "timestamp": "2026-11-22T15:58:59.2614054Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "path": "gallery/UI42-list-dark-390-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 28672,
+      "sha256": "abfe030efb25ffaf07ae4101ef1cc9886b6d0cd26225b8cea28c7c223d829618",
+      "gitBlobSha": "ea94ca8f13a9b2679a778000cf71e96d70ac9144",
+      "width": 390,
+      "height": 844,
+      "base64Characters": 38232,
+      "declaredParts": 2,
+      "receivedParts": 2,
+      "originalEmissionOrder": [
+        1,
+        2
+      ],
+      "firstChunkAt": "2026-11-22T15:58:59.5016701Z",
+      "lastChunkAt": "2026-11-22T15:58:59.5631466Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 2,
+          "base64Characters": 24000,
+          "base64Sha256": "f64b2c633b1a2299bdde153419c6bddf62d46dd474a0b6222dd71613e7880ed8",
+          "sourceLine": 1197,
+          "timestamp": "2026-11-22T15:58:59.5016701Z"
+        },
+        {
+          "part": 2,
+          "parts": 2,
+          "base64Characters": 14232,
+          "base64Sha256": "cfac84e998bde90a8bb9abf7affbd657e6c2d08f5f745dd4e98d3c7c17c79209",
+          "sourceLine": 1199,
+          "timestamp": "2026-11-22T15:58:59.5631466Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "path": "gallery/UI42-list-light-320-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 27434,
+      "sha256": "1c803d5ff57074381c0793eb7fdc4c45000773c87f4d742f6a6220603b57fb83",
+      "gitBlobSha": "0a7d71e99d0f8d7e5c253304e0722d3bbc09ea4c",
+      "width": 320,
+      "height": 800,
+      "base64Characters": 36580,
+      "declaredParts": 2,
+      "receivedParts": 2,
+      "originalEmissionOrder": [
+        1,
+        2
+      ],
+      "firstChunkAt": "2026-11-22T15:59:00.0969116Z",
+      "lastChunkAt": "2026-11-22T15:59:00.1529335Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 2,
+          "base64Characters": 24000,
+          "base64Sha256": "9b67ccc4a1ccc4aa47e08c2477ac11e1c653d5bab81e6ff7524b47e5a10f938c",
+          "sourceLine": 1203,
+          "timestamp": "2026-11-22T15:59:00.0969116Z"
+        },
+        {
+          "part": 2,
+          "parts": 2,
+          "base64Characters": 12580,
+          "base64Sha256": "ba4fe4f8bb3aa01f87fc423a7d820587b5b60b5615f688385f23549c0b0fd908",
+          "sourceLine": 1205,
+          "timestamp": "2026-11-22T15:59:00.1529335Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "path": "gallery/UI42-empty-authorized-case-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 97845,
+      "sha256": "b667c0fc29d36416c6c5078133367f4a8d8bcf62703d8103bdef9343a620a62a",
+      "gitBlobSha": "162d6bef6d0419084003f58457f22517b92409d4",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 130460,
+      "declaredParts": 6,
+      "receivedParts": 6,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "firstChunkAt": "2026-11-22T15:59:11.3083468Z",
+      "lastChunkAt": "2026-11-22T15:59:11.5481010Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "86ccfe67efaa40c3da13846423cbe9255d249bba5f9fd02c18158de5416e833e",
+          "sourceLine": 1217,
+          "timestamp": "2026-11-22T15:59:11.3083468Z"
+        },
+        {
+          "part": 2,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "eb085fcd5ae57bcdcc03e7bd8a74090fe85cbaeaf61892300674f2f06aa0ec1d",
+          "sourceLine": 1219,
+          "timestamp": "2026-11-22T15:59:11.3408198Z"
+        },
+        {
+          "part": 3,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "8bbbd57189cc11d8cfdb654c6886bedca4bc0562e1c3badb1879511326bd9fee",
+          "sourceLine": 1221,
+          "timestamp": "2026-11-22T15:59:11.3780428Z"
+        },
+        {
+          "part": 4,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "98397b3b8252ef60f7b466724f6db36c1e72ca9122a538109a22feafb6106376",
+          "sourceLine": 1223,
+          "timestamp": "2026-11-22T15:59:11.4408829Z"
+        },
+        {
+          "part": 5,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "59585a2905155150e652e800ba2903e52350ec0149d34f14d764b0b998b5e938",
+          "sourceLine": 1225,
+          "timestamp": "2026-11-22T15:59:11.5218145Z"
+        },
+        {
+          "part": 6,
+          "parts": 6,
+          "base64Characters": 10460,
+          "base64Sha256": "888f653d848a3b87e198fcc781dde6e98051d36c90cf1736766c30c3d71f99c1",
+          "sourceLine": 1227,
+          "timestamp": "2026-11-22T15:59:11.5481010Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "path": "gallery/UI42-configure-focused-candidate-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 106284,
+      "sha256": "7a8cccb008a3335828976253adaca38d39ab243f289afaa85acf16b9f464db0a",
+      "gitBlobSha": "592a908f7dd3ec13da3dd994f9883c62a35d4393",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 141712,
+      "declaredParts": 6,
+      "receivedParts": 6,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "firstChunkAt": "2026-11-22T15:59:25.3793411Z",
+      "lastChunkAt": "2026-11-22T15:59:25.7262201Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "42bbd3ccdd36276fd9a303a922f5bed478121b73dcd329c5ef9e745b578f4311",
+          "sourceLine": 1233,
+          "timestamp": "2026-11-22T15:59:25.3793411Z"
+        },
+        {
+          "part": 2,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "3a1098de50557acfc6966d471cf6f9ea2a8df6da175a004f2d671e2858ceb87f",
+          "sourceLine": 1235,
+          "timestamp": "2026-11-22T15:59:25.4600650Z"
+        },
+        {
+          "part": 3,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "cbfa0fe95a3585d05a52889a421f2bc8fb0acdfc9914fabb5db9a840eabce2b1",
+          "sourceLine": 1237,
+          "timestamp": "2026-11-22T15:59:25.5430273Z"
+        },
+        {
+          "part": 4,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "e14d726a1bb759273aea1a3f653387b71f441e933cf4fff492052d52c2d8b4ba",
+          "sourceLine": 1239,
+          "timestamp": "2026-11-22T15:59:25.6235440Z"
+        },
+        {
+          "part": 5,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "bf0e0f90caafdcbcc11c70e62dca47b8e4748e4d6efb7f3f5f037a05ad04a23d",
+          "sourceLine": 1241,
+          "timestamp": "2026-11-22T15:59:25.6914217Z"
+        },
+        {
+          "part": 6,
+          "parts": 6,
+          "base64Characters": 21712,
+          "base64Sha256": "577958b2b58b40302c87544a4c9c1d59d67e54ea153cfd818fa8e62b0bb272ce",
+          "sourceLine": 1243,
+          "timestamp": "2026-11-22T15:59:25.7262201Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 110106,
+      "sha256": "63a981ac28e791a4446ea16667d62d19690b668a9297ba35a134ee911c3c70f4",
+      "gitBlobSha": "09b43ff0bf01746b352bfc705a35b9a767d9f776",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 146808,
+      "declaredParts": 7,
+      "receivedParts": 7,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "firstChunkAt": "2026-11-22T16:00:26.1861398Z",
+      "lastChunkAt": "2026-11-22T16:00:26.4391659Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "e1ec8c7e3c0062a5f18a5b462413f82f301f948997963ceb851709c928403bb8",
+          "sourceLine": 1727,
+          "timestamp": "2026-11-22T16:00:26.1861398Z"
+        },
+        {
+          "part": 2,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "fadc8ec99a0377d6bd90a67852bcb55c7fd76edcdc34cf405d8fbea44788f16c",
+          "sourceLine": 1729,
+          "timestamp": "2026-11-22T16:00:26.2606600Z"
+        },
+        {
+          "part": 3,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "c7ef1d716cca5d4cc9d5bddca80fe2d86fca5e28d52567064f8193226e8ab83a",
+          "sourceLine": 1731,
+          "timestamp": "2026-11-22T16:00:26.3164981Z"
+        },
+        {
+          "part": 4,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "1b0b8d9b428f80a58a2c825e78653e13dc41231cef89596dec854ee4b669d764",
+          "sourceLine": 1733,
+          "timestamp": "2026-11-22T16:00:26.3516240Z"
+        },
+        {
+          "part": 5,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "f03daa9506407a7b39bcc11551b18e224f8674d7582e63273e897438f6e61b36",
+          "sourceLine": 1735,
+          "timestamp": "2026-11-22T16:00:26.3835925Z"
+        },
+        {
+          "part": 6,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "c0887cf9b7daac7d5adfe6854a95b58d9cb6ecc53f6099a120a3b43099b8bf3e",
+          "sourceLine": 1737,
+          "timestamp": "2026-11-22T16:00:26.4188485Z"
+        },
+        {
+          "part": 7,
+          "parts": 7,
+          "base64Characters": 2808,
+          "base64Sha256": "56e876f740ee3da0485b7a3c1d15396c8a2fb68c1fd3ccf104bdef6b6ca969c8",
+          "sourceLine": 1739,
+          "timestamp": "2026-11-22T16:00:26.4391659Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    }
+  ],
+  "limitations": [
+    "Diagnostic evidence only. The full original first declaration did not complete; no qualification or global counter increment is supported.",
+    "The collector starts before human.admit. Portfolio26 adds five direct-caller labels to Portfolio25 while preserving original hash sites and direct-canonical measurement. These observations do not establish a causal performance comparison with earlier attempts.",
+    "Bucket values are cumulative at an observed checkpoint. Inclusive durations overlap, are rounded to integer milliseconds, and must not be summed across bucket families or across snapshots into total CPU or wall time.",
+    "The eleven canonical.digest surfaces partition the recorded digestSfValue invocation population; only those same-name populations are summed for the digest total. Each invocation retains one digest span. Labels identify direct call sites, not complete ancestry, and unlabelled calls remain unattributed.",
+    "BCS retains two period hash sites when the period comparison is reached, followed by two reference hash sites for each value whose sourceRefs length guard passes. A settled-span checkpoint can fall between the source and expected-reference hashes. The observed 213005/213004 counts are a sampled-prefix difference, not proof of mismatch, a skipped comparison, memoization or completed value comparisons.",
+    "canonical.direct measures direct canonicalSfValue calls outside active digest canonicalization; internal digest canonicalization is excluded. Neither canonical bucket measures all serialization, all canonical work outside the frame, or all CPU work.",
+    "root.caller.* instruments PlannerCalculationServices only. It excludes the direct Finance caller. Missing caller buckets do not imply Root was unused or attribute every Root invocation to Finance.",
+    "state.read.identity-absent aggregates read namespaces and arbitrary callbacks. It is not a count of missed selectSfCaseIdentity opportunities.",
+    "The baseline-accessor rejection branch rejects an unsupported accessor before comparing getter/setter identities. That reason would not prove getter/setter equality. No such rejection bucket was observed in this prefix.",
+    "root.physical.callback counts callback entries, not independently identified physical roots, committed transactions, accepted roots, or completed requests.",
+    "The narrow and full clone spans include their original callback and await, not only cloning. Their populations differ, so their average durations are not a controlled clone benchmark.",
+    "Zero drops, diagnostic errors and skipped thresholds apply to the five emitted checkpoints. There is no final snapshot. The last http.preview span remains pending; the archive does not establish backend unwind or later completion.",
+    "Native history sequence 1 has a request-failed event and HTTP 200 with response-body-unavailable; its application-level body readback is not confirmed. Sequence 2 has HTTP 200/status ok. These events do not establish the cause of the preview timeout.",
+    "Absent buckets describe one diagnostic frame and emitted prefix only. Aggregate counters do not establish per-object joins or behavior outside the frame.",
+    "The diagnostic adds bookkeeping and output overhead without installing global intrinsic hooks, wrapping providers, or adding authority/provider queries. No product optimization is selected by this archive."
+  ]
+}
