@@ -17,7 +17,7 @@ U15 conserva leitura, edição com CAS, ator negado, segundo escritor original/4
 
 ## Fontes, escopo e composição
 
-A composição de preparação começa em dev `2fdc76d8b40cd62c2da4967a5b9533411af308df`, incluindo os hooks originais de #690/#688. Os helpers compartilhados e seus controles foram relidos em Migração `0001792ae7bb072f515b09af3c52b121cfa98108`. A branch da Migração não é movida por esta entrega. A configuração mantém o modo Decisions novo dessa fonte e acrescenta um modo native independente.
+A composição de preparação começa em dev `2fdc76d8b40cd62c2da4967a5b9533411af308df`, incluindo os hooks originais de #690/#688. Os helpers compartilhados e seus controles foram relidos em Migração `c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5`: os nove arquivos consultados são byte-idênticos a `0001792ae7bb072f515b09af3c52b121cfa98108`. A branch da Migração não é movida por esta entrega. A configuração mantém o modo Decisions novo dessa fonte e acrescenta um modo native independente.
 
 O transporte/UI consome os adapters originais de #681/#683; não define CRUD, ator ou autenticação substitutos. As rotas públicas conservam `/orchestra/sf-procurement/contracts`, `/orchestra/sf-dashboard/opex` e `/orchestra/sf-dashboard/capex`, com a query fechada `contractRevision, server, installationId, tenantId, teamObjectId`. CAP04/CAP05 incluem ano canônico 2024–2027; os casos originais usam 2026. CAP14 não aceita year. projectId e hostId são somente proveniência técnica.
 
@@ -25,11 +25,15 @@ Leituras usam os readers originais `/<mount>/api/ui/pages/CAP14|CAP04|CAP05` e o
 
 **Dependência concreta do cenário source:** as duas suítes Budget exigem o destino autorizado CAP03 e o clique original “View source” para `/orchestra/sf-dashboard/budget`, mantendo Team e year=2026. O bridge inicial de três CAPs não entregava CAP03. O cenário foi preservado e falha fechado enquanto a composição do candidato não entregar esse destino. Um link fabricado, um fallback projectId ou a exclusão do caso não resolvem a obrigação.
 
+### Compatibilidade da apresentação original
+
+A folha de detalhe atual preservada de #613 usa `[data-sf-opex-detail]` / `[data-sf-capex-detail]`. As jornadas abrem os painéis nativos `details.sf-opex-reference` e `details.sf-opex-annual-actions` pelos seus summaries, com a mesma igualdade exata `collection:id`, versão original, ações e CAS. Lista e detalhe são vistas distintas: o teste percorre Back antes de voltar à lista. A região mensal é “Monthly entries”; readonly não renderiza New. Os spans numéricos são comparados com a formatação original inglesa, e o atributo original da flag é comparado com seu código da fonte. Não se reintroduz markup histórico no produto nem se descarta a obrigação.
+
 ## Pré-requisitos do host
 
 A execução requer a reserva isolada autorizada, os dois Teams, quatro contextos Microsoft já autenticados, dados originais e o tar G07 instalado no mesmo C/T. O checkout do workflow, o recibo G07, a factory, o processo real e a reserva devem concordar.
 
-Cada invocação usa uma raiz privada diferente, real, pertencente ao UID do runner, mode0700; arquivos regulares privados mode0600, sem links. Os dados do plano e do registro ficam no host. Não publicar CDP, cookies, tokens, URLs privadas, GUIDs de atores, corpos do produto, relatório JSON bruto, screenshots, vídeo, traces, mensagens brutas de erro ou valores financeiros em artefatos públicos.
+Cada invocação usa uma raiz privada diferente, real, pertencente ao UID do runner, mode 0700; arquivos regulares privados mode 0600, sem links. Os dados do plano e do registro ficam no host. Não publicar CDP, cookies, tokens, URLs privadas, GUIDs de atores, corpos do produto, relatório JSON bruto, screenshots, vídeo, traces, mensagens brutas de erro ou valores financeiros em artefatos públicos.
 
 O plano original `sf-g08-private-plan-v1`, o recibo de pacote e o observador original `g08-installed-preflight.py` continuam obrigatórios. `readNativeInstalledHost` reutiliza seus validadores e observa novamente Linux x64: PID, start ticks, boot, UID não-root, unidade systemd, executável em C, argv da factory e bytes da factory. Não instala, reinicia ou altera serviços. Depois, o browser confirma peer HTTPS443/IP da reserva e rejeita Service Worker/redirect. O CDP apenas se anexa ao browser existente; caches e SW são bypassados nas páginas de teste. Não há launch, newContext, storageState ou cópia de autenticação.
 
@@ -56,6 +60,14 @@ O registro produz:
 
 A invocation inclui treeSha, runId, runAttempt, role, invocationId e archiveSha256. Cada seleção inclui caso, ator, target completo, URL/route F01 original, principal observador, intenção, stamp F02 e ref/CAS original. Valores serializados não substituem as leituras atuais. `consumeInstalledSuiteFromHost` e a fixture repetem F01/F02/source para cada escolha.
 
+### Planos por invocação e principais distintos
+
+O plano das nove obrigações Teams conserva seus quatro atores e o administrador sem Team. Ele não é reutilizado implicitamente para todas as jornadas. Cada U15/U39/U40 tem um plano e uma invocation próprios, vinculados à mesma reserva autorizada, C/T, tar e VM, com `approvals.actorsReference` explícito para os principais daquela invocação. O manifesto v2 continua com as quatro chaves originais e seus valores devem ser idênticos ao plano, além de observados em quatro contextos Microsoft originais distintos.
+
+U39/U40 exigem dois editores reais, um principal readonly e um principal negado. A revogação exige também autorização administrativa original. Uma composição possível, que o registro só aceita após observá-la, é requester e holder como editores, denied sem leitura e dashboardAdmin como administrador com leitura empresarial sem ações de mutação. O nome de qualquer chave não concede esses papéis. A autorização administrativa e a empresarial são verificadas separadamente. Se os quatro contextos autorizados não satisfizerem essa combinação, o registro falha; não cria um quinto ator, não troca um principal por metadata e não reutiliza o admin sem Team do grupo nove como readonly.
+
+O recibo inclui hashes dos bytes canônicos do plano e de `actorsReference`, além da seleção e do manifesto que vincula principal/owner/caso. O agregador deve conferir a referência de autorização original e a reserva comum entre invocações; a referência ou seu hash isolados não são aprovação nem prova de autenticação.
+
 ### Vazio real e isolamento
 
 DashboardBudget.view projeta a coleção autorizada completa; duas identidades diferentes não tornam uma coleção povoada vazia por si. Por isso somente `empty` seleciona a **Team B realmente autorizada na mesma reserva/C/T/tar/host**. A leitura original deve retornar zero rows, no registro e no consumo. Não se apaga, filtra ou fabrica dado. A Team A dos demais casos permanece explícita. No caso B, wrongTeam aponta para A; um owner nunca pode ser seu próprio negativo.
@@ -74,7 +86,7 @@ O cleanup registra somente páginas próprias e mudanças dos callbacks. Os caso
 
 ## Comandos originais após admissão
 
-Executar cada suíte separadamente, dentro de `packages/app-shell`, com o ambiente privado já registrado. A raiz do relatório deve ser0700 e o shell deve usar umask077.
+Executar cada suíte separadamente, dentro de `packages/app-shell`, com o ambiente privado já registrado. A raiz do relatório deve ser 0700 e o shell deve usar umask 077.
 
 ```sh
 bunx --no-install playwright test --config e2e/playwright.production.config.ts e2e/sucafina/native/journeys/u15.spec.ts --workers=1 --retries=0 --repeat-each=1 --reporter=json
@@ -82,7 +94,7 @@ bunx --no-install playwright test --config e2e/playwright.production.config.ts e
 bunx --no-install playwright test --config e2e/playwright.production.config.ts e2e/sucafina/native/journeys/u40.spec.ts --workers=1 --retries=0 --repeat-each=1 --reporter=json
 ```
 
-O modo native não inicia webServer, build ou fixture local; workers1/retries0/repeat1, sem traces/video/screenshots. `--list` é inerte e não exige manifesto nem browser. Não misturar native com Operations/Decisions na mesma invocação. Para execução, a configuração fixa também PLAYWRIGHT_JSON_OUTPUT_FILE no arquivo privado, inclusive quando o comando usa --reporter=json; um destino divergente ou only-failures é recusado. Essa variável é o contrato documentado do [JSON reporter original](https://playwright.dev/docs/test-reporters#json-reporter).
+O modo native não inicia webServer, build ou fixture local; workers=1/retries=0/repeat=1, sem traces/video/screenshots. `--list` é inerte e não exige manifesto nem browser. Não misturar native com Operations/Decisions na mesma invocação. Para execução, a configuração fixa também PLAYWRIGHT_JSON_OUTPUT_FILE no arquivo privado, inclusive quando o comando usa --reporter=json; um destino divergente ou only-failures é recusado. Essa variável é o contrato documentado do [JSON reporter original](https://playwright.dev/docs/test-reporters#json-reporter).
 
 F04 permanece um processo Bun/HappyDOM separado, sem CDP, com CI/GITHUB_ACTIONS, controle Omni declared/strict e nonce novo:
 
@@ -105,14 +117,14 @@ bun script/sf-ci/g08-native-journeys.mjs record U40 "$SF_G08_PRIVATE_ROOT"
 bun script/sf-ci/g08-native-journeys.mjs record-f04 "$SF_G08_PRIVATE_ROOT"
 ```
 
-`sf2h.native-report-observation.v2` vincula o relatório original, todos os casos, owner/caso, arquivo de detach, hash do pacote/host/reserva e a mesma invocation. `sf2h.f04-report-observation.v2` exige os três títulos/arquivo originais, propriedades Bun de C/run, exit0 e um único Omni fresco. Ambos mantêm **installed=false, liveQualified=false, g08Closed=false, finalCandidate=false**: um parser e arquivos de entrada não estabelecem a proveniência do job/artefato nem a cadeia LIVE.
+`sf2h.native-report-observation.v2` vincula o relatório original, todos os casos, owner/caso, arquivo de detach, hash do pacote/host/reserva e a mesma invocation. `sf2h.f04-report-observation.v2` exige os três títulos/arquivo originais, propriedades Bun de C/run, exit code 0 e um único Omni fresco. Ambos mantêm **installed=false, liveQualified=false, g08Closed=false, finalCandidate=false**: um parser e arquivos de entrada não estabelecem a proveniência do job/artefato nem a cadeia LIVE.
 
 O agregador final deve conferir a execução original do workflow/job, SHA/árvore, artefato bruto privado e hashes, serviço antes/depois, tar, reserva e cleanup do dataset. Deve rejeitar missing/extra/skip/retry e composições de C/T/tar diferentes. Esta entrega não altera `gate.mjs`, não inventa o modo normativo nele ainda ausente e não emite aprovação final. O coordenador integra esse contrato à cadeia original antes de aceitar LIVE.
 
-As nove obrigações Teams, as três jornadas, F04 e AZ02 continuam separadas. AZ02 preserva seus32 casos históricos e os cinco aditivos da composição moderna,37 no total; não é uma quinta suíte Playwright. A reunião desses grupos não fecha por si G01–G10 nem decide go/no-go.
+As nove obrigações Teams, as três jornadas, F04 e AZ02 continuam separadas. AZ02 preserva seus 32 casos históricos e os cinco aditivos da composição moderna, 37 no total; não é uma quinta suíte Playwright. A reunião desses grupos não fecha por si G01–G10 nem decide go/no-go.
 
 ## CI de preparação
 
-`.github/workflows/g08-native-journeys.yml` executa somente controles de metadata, arquivos privados, recusa de recibos, typecheck e listagem inerte. Seu recibo `sf-g08-native-controls-v1` fixa source C/T, run/tentativa/workflow, hashes de fontes/logs/inventário, controles Node/Bun, Omni e baseline origin/dev. Os50 casos ficam LISTED_NOT_RUN e F04 fica NOT_RUN. Não há tenant, sessão ou host instalado nesse job.
+`.github/workflows/g08-native-journeys.yml` executa somente controles de metadata, arquivos privados, recusa de recibos, typecheck e listagem inerte. Seu recibo `sf-g08-native-controls-v1` fixa source C/T, run/tentativa/workflow, hashes de fontes/logs/inventário, controles Node/Bun, Omni e baseline origin/dev. Os 50 casos ficam LISTED_NOT_RUN e F04 fica NOT_RUN. Não há tenant, sessão ou host instalado nesse job.
 
 Antes de execução instalada ainda faltam candidato final confirmado por Migração+Release, tar verificado desse SHA, reserva/host/contextos originais, adapter original de registro, CAP03 na composição, pré-requisitos reais por caso e a integração do agregador. Nenhuma dessas dependências é preenchida com prova de candidato anterior ou aprovação presumida.

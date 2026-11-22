@@ -160,7 +160,8 @@ async function main() {
     await writePrivate(root, "f04-report-observation.json", {
       schema: "sf2h.f04-report-observation.v2", status: "ORIGINAL_BUN_REPORT_VERIFIED",
       source: plan.candidate, invocation: manifest.invocation, runtime: "BUN_HAPPYDOM_NO_CDP", inventory, omni,
-      bindings: { packageReceiptSha256: host.packageSha256, hostBeforeSha256: host.hostSha256,
+      bindings: { planSha256: host.planSha256, actorsReferenceSha256: host.actorsReferenceSha256,
+        packageReceiptSha256: host.packageSha256, hostBeforeSha256: host.hostSha256,
         reservationSha256: digest(JSON.stringify(plan.reservation)) },
       files: [{ path: "f04.junit.xml", sha256: digest(junit) }, { path: "f04.log", sha256: digest(log) }],
       installed: false, liveQualified: false, g08Closed: false, finalCandidate: false, productionCutover: false,
@@ -192,7 +193,8 @@ async function main() {
   files.push({ path: "native-browser-detached.json", sha256: digest(detached) })
   verifyNativeObservations(manifest, selected, inventory, observations, JSON.parse(detached))
   const receipt = nativeReportReceipt({ suite, source: plan.candidate, invocation: manifest.invocation, inventory,
-    bindings: { packageReceiptSha256: host.packageSha256, hostBeforeSha256: host.hostSha256,
+    bindings: { planSha256: host.planSha256, actorsReferenceSha256: host.actorsReferenceSha256,
+        packageReceiptSha256: host.packageSha256, hostBeforeSha256: host.hostSha256,
       reservationSha256: digest(JSON.stringify(plan.reservation)), selectedSha256: digest(JSON.stringify(selected)) }, files })
   await writePrivate(root, "native-report-observation.json", receipt)
   console.log("Native original report verified; LIVE chain remains required")

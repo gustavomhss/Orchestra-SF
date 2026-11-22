@@ -1,6 +1,6 @@
 /** Reuse the original G07/G08 validators, then observe Linux again. Inputs are not LIVE proof. */
 import { readFile, readlink, realpath } from "node:fs/promises"
-import { digest, privateText, readPlan, validateHost, validatePackage } from "../../../../../../script/sf-ci/g08-private-evidence.mjs"
+import { digest, privateText, readPlan, validateHost, validatePackage, validatePlan } from "../../../../../../script/sf-ci/g08-private-evidence.mjs"
 import type { NativeManifest, NativeTarget } from "./manifest-contract.ts"
 
 function record(value: unknown): Record<string, unknown> {
@@ -9,6 +9,10 @@ function record(value: unknown): Record<string, unknown> {
 }
 export async function readNativeInstalledHost(root: string) {
   const plan = await readPlan(root)
+  const planRaw = await privateText(root, "plan.json", 65536)
+  if (JSON.stringify(JSON.parse(planRaw)) + "\n" !== planRaw ||
+    digest(JSON.stringify(validatePlan(JSON.parse(planRaw)))) !== digest(JSON.stringify(plan)))
+    throw new Error("F04_PRIVATE_PLAN_CHANGED_DURING_READ")
   const raw = await privateText(root, "package-receipt.json")
   if (digest(raw) !== plan.packageReceiptSha256) throw new Error("F04_ORIGINAL_G07_BYTES_CHANGED")
   const receipt = validatePackage(JSON.parse(raw), plan)
@@ -42,7 +46,8 @@ export async function readNativeInstalledHost(root: string) {
   const addresses = binding.ingressAddresses
   if (!Array.isArray(addresses) || !addresses.every((item): item is string => typeof item === "string"))
     throw new Error("F04_OBSERVED_INGRESS_REQUIRED")
-  return { plan, receipt, host, addresses, packageSha256: digest(raw), hostSha256: digest(hostRaw),
+  return { plan, receipt, host, addresses, planSha256: digest(planRaw),
+    actorsReferenceSha256: digest(plan.approvals.actorsReference), packageSha256: digest(raw), hostSha256: digest(hostRaw),
     proofClass: "CURRENT_PROCESS_AND_PACKAGE_PREREQUISITE_NOT_JOURNEY_PASS" as const }
 }
 export type NativeHost = Awaited<ReturnType<typeof readNativeInstalledHost>>

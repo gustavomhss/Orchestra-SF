@@ -59,9 +59,9 @@ export const nativeInstalledFixture = test.extend<{ nativeHarness: InstalledNati
     finally {
       attached.delete(session.browser)
       const contexts = Object.values(session.contexts)
-      if (contexts.some((context) => !session.browser.contexts().includes(context)))
-        throw new Error("F04_HOST_AUTHENTICATED_CONTEXT_WAS_DISPOSED")
+      const contextsPreserved = contexts.every((context) => session.browser.contexts().includes(context))
       await session.disconnect()
+      if (!contextsPreserved) throw new Error("F04_HOST_AUTHENTICATED_CONTEXT_WAS_DISPOSED")
       if (session.browser.isConnected()) throw new Error("F04_CDP_CLIENT_NOT_DISCONNECTED")
       await writeNativePrivate(session.manifest.scratchRoot, "native-browser-detached.json", {
         schema: "sf2h.native-browser-detached.v2", candidateSha: session.manifest.candidateSha,

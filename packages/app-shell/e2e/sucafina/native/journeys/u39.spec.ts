@@ -12,6 +12,8 @@ import type { InstalledNativeHarness } from "../fixture.ts"
 const surfaceId = "CAP04"
 const title = "OPEX Detail"
 const recordName = "Owner name"
+const detailSelector = "[data-sf-opex-detail]"
+const backButtonName = "Back to expense lines"
 
 /**
  * F04 is the only installed harness. Its private manifest is bound to the
@@ -113,7 +115,7 @@ nativeInstalledFixture.describe("N13 CAP04 · installed native Dashboard", () =>
     await expect(surface).toBeVisible()
     await expect(surface.getByRole("heading", { name: title })).toBeVisible()
     // A projection must reach a terminal state before making an empty-state claim.
-    await expect(surface.locator(".sf-state-panel").filter({ has: surface.locator(".sf-budget-owners") })).toBeVisible()
+    await expect(surface.locator(".sf-state-panel").filter({ has: page.locator(".sf-budget-owners") })).toBeVisible()
     const owners = surface.locator(".sf-budget-owners")
     const search = owners.getByRole("searchbox", { name: "Name" })
     await expect(search).toBeEnabled()
@@ -334,16 +336,54 @@ function ownerRow(surface: import("@playwright/test").Locator, name: string) {
   return surface.locator(".sf-budget-owners tbody tr[data-sf-row]").filter({ hasText: name })
 }
 
+/** Current original presentation: expand real panels; never manufacture DOM or rows. */
+async function openDetails(panel: import("@playwright/test").Locator) {
+  await expect(panel).toHaveCount(1)
+  if (await panel.getAttribute("open") === null) await panel.locator(":scope > summary").click()
+  await expect(panel).toHaveAttribute("open", "")
+}
+function sourceVersion(detail: import("@playwright/test").Locator) {
+  return detail.locator("details.sf-opex-reference dl > div")
+    .filter({ has: detail.page().locator("dt").filter({ hasText: /^Version$/ }) }).locator("dd")
+}
+async function showOwnerList(surface: import("@playwright/test").Locator) {
+  const detail = surface.locator(detailSelector)
+  if (await detail.isVisible()) await detail.getByRole("button", { name: backButtonName, exact: true }).click()
+  await expect(surface.locator(".sf-budget-owners")).toBeVisible()
+}
+async function openAnnualControls(detail: import("@playwright/test").Locator) {
+  await openDetails(detail.locator("details.sf-opex-annual-actions"))
+}
+async function clickAnnual(detail: import("@playwright/test").Locator, name: "Apply annual entry" | "Apply year amount") {
+  await openAnnualControls(detail)
+  await detail.getByRole("button", { name, exact: true }).click()
+}
+async function expectSourceAmount(cell: import("@playwright/test").Locator, value: unknown) {
+  if (value === null || value === undefined) {
+    await expect(cell.locator('[data-sf-value="missing"]')).toHaveCount(1)
+    await expect(cell.locator('[data-sf-value="missing"] .sf-opex-sr')).toHaveText("Not available")
+    await expect(cell.locator(".sf-budget-number")).toHaveCount(0)
+  } else {
+    expect(typeof value).toBe("number")
+    if (typeof value !== "number" || !Number.isFinite(value)) throw new Error("F04_ORIGINAL_NUMERIC_SOURCE_REQUIRED")
+    // Same locale/precision as the original English presentation; no derived financial value.
+    await expect(cell.locator(".sf-budget-number")).toHaveText(new Intl.NumberFormat("en", { maximumFractionDigits: 2 }).format(value))
+    await expect(cell.locator('[data-sf-value="missing"]')).toHaveCount(0)
+  }
+}
+
 async function openOwner(
   surface: import("@playwright/test").Locator, name: string, id: string,
 ) {
+  await showOwnerList(surface)
   const row = ownerRow(surface, name)
   await expect(row).toHaveCount(1)
   await expect(row).toHaveAttribute("data-sf-row", id)
   await row.locator('button[data-sf-action="select"]').click()
-  const detail = surface.locator(".sf-budget-detail [data-sf-record-detail]")
+  const detail = surface.locator(detailSelector)
   await expect(detail).toBeVisible()
-  await expect(detail.locator("[data-sf-detail-heading]")).toContainText(name)
+  await expect(detail.locator("[data-sf-detail-heading]")).toHaveText(name)
+  await openDetails(detail.locator("details.sf-opex-reference"))
   return detail
 }
 
@@ -365,6 +405,7 @@ async function createRealOwner(
   if (before.owners.some((owner) => owner.name === name)) {
     throw new Error("F04_" + surfaceId + "_RECORD_ALREADY_EXISTS_NO_REPLAY")
   }
+  await showOwnerList(surface)
   await surface.getByRole("button", { name: newButtonName, exact: true }).click()
   const form = surface.locator(".sf-budget-editor .sf-budget-form")
   await expect(form).toBeVisible()
@@ -435,7 +476,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · COMPLETE original-prod
     if (remaining.owners.length > 0) {
       await expect(surface.locator('[data-sf-state="empty"]')).toHaveCount(0)
     }
-    await expect(surface.locator(".sf-budget-detail [data-sf-record-detail]")).toHaveCount(0)
+    await expect(surface.locator(detailSelector)).toHaveCount(0)
   })
 
   nativeInstalledFixture("206-AC01 monthly entry create/edit preserves exact budget, actual, forecast, month and CAS", async ({ page, nativeHarness }) => {
@@ -493,7 +534,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · COMPLETE original-prod
     const detail = await openOwner(surface, name, id)
     const before = await originalPage(page, nativeHarness)
     const version = ownerVersion(before, id)
-    await detail.getByRole("button", { name: "Apply annual entry", exact: true }).click()
+    await clickAnnual(detail, "Apply annual entry")
     const form = surface.locator(".sf-budget-form")
     await form.getByRole("spinbutton", { name: "Annual Entry ÷12" }).fill("1200")
     await form.getByRole("combobox", { name: "Field" }).selectOption("budget")
@@ -517,7 +558,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · COMPLETE original-prod
     expect(exactOwner(source, id).budget).toBe(1200)
     expect(ownerVersion(source, id)).toBeGreaterThan(version)
     // A separate actual annual command must not overwrite forecast or create a Planner state.
-    await detail.getByRole("button", { name: "Apply annual entry", exact: true }).click()
+    await clickAnnual(detail, "Apply annual entry")
     await surface.locator(".sf-budget-form").getByRole("spinbutton", { name: "Annual Entry ÷12" }).fill("240")
     await surface.locator(".sf-budget-form").getByRole("combobox", { name: "Field" }).selectOption("actual")
     await reviewForm(surface)
@@ -537,7 +578,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · COMPLETE original-prod
     const id = await createRealOwner(page, nativeHarness, surface, name, "900")
     const detail = await openOwner(surface, name, id)
     const before = await originalPage(page, nativeHarness)
-    await detail.getByRole("button", { name: "Apply year amount", exact: true }).click()
+    await clickAnnual(detail, "Apply year amount")
     let form = surface.locator(".sf-budget-form")
     await form.getByRole("spinbutton", { name: "Year amount", exact: true }).fill("0")
     await reviewForm(surface)
@@ -552,7 +593,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · COMPLETE original-prod
       String(entry.ownerId ?? entry.projId ?? entry.projectId ?? "") === id &&
       entry.year === 2026)
     expect(beforeClear).toHaveLength(12)
-    await detail.getByRole("button", { name: "Apply year amount", exact: true }).click()
+    await clickAnnual(detail, "Apply year amount")
     form = surface.locator(".sf-budget-form")
     await expect(form.getByRole("spinbutton", { name: "Year amount", exact: true })).toHaveValue("0")
     await form.getByRole("spinbutton", { name: "Year amount", exact: true }).fill("")
@@ -647,10 +688,10 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     await expect(ownerRow(surface, name)).toHaveCount(1)
     const detail = await openOwner(surface, name, id)
     const source = await originalPage(page, nativeHarness)
-    const metadata = detail.locator('[data-sf-field="source-version"]')
+    const metadata = sourceVersion(detail)
     await expect(metadata).toContainText(String(ownerVersion(source, id)))
-    await expect(detail.locator(".sf-budget-source")).toContainText(sourceCollection + ":" + id)
-    await detail.getByRole("button", { name: "Back", exact: true }).click()
+    await expect(detail.locator("details.sf-opex-reference code")).toHaveText(sourceCollection + ":" + id)
+    await detail.getByRole("button", { name: backButtonName, exact: true }).click()
     await expect(search, "NAV-01 should retain filters across the original route ref").toHaveValue(name)
     await expect(ownerRow(surface, name)).toHaveCount(1)
     await search.fill("__N206_CANNOT_MATCH_ANY_ORIGINAL_SOURCE__")
@@ -706,7 +747,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     }
     const detail = await openOwner(surface, String(source.name), String(source.id))
     const originalRef = sourceCollection + ":" + String(source.id)
-    await expect(detail.locator(".sf-budget-source")).toContainText(originalRef)
+    await expect(detail.locator("details.sf-opex-reference code")).toHaveText(originalRef)
     const current = await observeNativeBinding(page, nativeHarness.manifest.target)
     const linked = current.destinations.find((destination) =>
       destination.capabilityId === "CAP03" && destination.canRead)
@@ -746,7 +787,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
       throw new Error("F04_REQUIRED_" + surfaceId + "_Genuine_READ_ONLY_PRINCIPAL")
     }
     const source = await originalPage(page, nativeHarness)
-    await expect(surface.getByRole("button", { name: newButtonName, exact: true })).toBeDisabled()
+    await expect(surface.getByRole("button", { name: newButtonName, exact: true })).toHaveCount(0)
     const rows = surface.locator(".sf-budget-owners tr[data-sf-row]")
     await expect(rows).toHaveCount(source.owners.length)
     await expect(rows.locator('button[data-sf-action="edit"]:not([disabled])')).toHaveCount(0)
@@ -897,7 +938,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     }
     page.on("request", monitor)
     try {
-      await detail.getByRole("button", { name: "Apply year amount", exact: true }).click()
+      await clickAnnual(detail, "Apply year amount")
       let form = surface.locator(".sf-budget-form")
       const amount = form.getByRole("spinbutton", { name: "Year amount" })
       await amount.fill("-1")
@@ -1048,16 +1089,19 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     const name = budgetScenario("a11y")
     const id = await createRealOwner(page, nativeHarness, surface, name, "505")
     const detail = await openOwner(surface, name, id)
-    const ownerRowId = detail.locator(".sf-budget-source")
-    await expect(ownerRowId).toContainText(sourceCollection + ":" + id)
-    const months = detail.getByRole("region", { name: "Annual Entry", exact: true })
+    const ownerRowId = detail.locator("details.sf-opex-reference code")
+    await expect(ownerRowId).toHaveText(sourceCollection + ":" + id)
+    const months = detail.getByRole("region", { name: "Monthly entries", exact: true })
     await expect(months).toHaveAttribute("tabindex", "0")
     await expect(months.locator("tr[data-sf-month]")).toHaveCount(12)
     for (const width of [320, 768, 1024, 1280, 1440]) {
       await page.setViewportSize({ width, height: 900 })
       await expect(surface.getByRole("heading", { name: title })).toBeVisible()
+      await showOwnerList(surface)
       await expect(surface.getByRole("button", { name: newButtonName, exact: true })).toBeEnabled()
       await expect(surface.locator(".sf-budget-owners").getByRole("searchbox", { name: "Name" })).toBeEditable()
+      await openOwner(surface, name, id)
+      await openAnnualControls(detail)
       for (const label of ["Edit", "Delete", "Apply annual entry", "Apply year amount"]) {
         await expect(detail.getByRole("button", { name: label, exact: true })).toBeEnabled()
       }
@@ -1098,16 +1142,17 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     await expect(form.getByRole("combobox", { name: "Flag" })).toBeEnabled()
     await expect(form.getByRole("textbox", { name: "Deviation notes" })).toBeEditable()
     await form.getByRole("button", { name: "Cancel" }).click()
-    await detail.getByRole("button", { name: "Apply annual entry" }).click()
+    await clickAnnual(detail, "Apply annual entry")
     form = surface.locator(".sf-budget-form")
     await expect(form.getByRole("spinbutton", { name: "Annual Entry ÷12" })).toBeEditable()
     await expect(form.getByRole("combobox", { name: "Field" })).toBeEnabled()
     await form.getByRole("button", { name: "Cancel" }).click()
-    await detail.getByRole("button", { name: "Apply year amount" }).click()
+    await clickAnnual(detail, "Apply year amount")
     form = surface.locator(".sf-budget-form")
     await expect(form.getByRole("spinbutton", { name: "Year amount" })).toBeEditable()
     await form.getByRole("button", { name: "Cancel" }).click()
 
+    await openAnnualControls(detail)
     for (const [width, fontSize] of [[768, "200%"], [320, "400%"]] as const) {
       await page.setViewportSize({ width, height: 900 })
       await page.evaluate((value) => { document.documentElement.style.fontSize = value }, fontSize)
@@ -1140,13 +1185,9 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · exact original read fi
       throw new Error("F04_REQUIRED_" + surfaceId + "_ORIGINAL_DISPLAY_NAME")
     }
     const detail = await openOwner(surface, owner.name, String(owner.id))
-    const metadata = detail.locator('[data-sf-field="budget"] dd')
-    if (owner.budget === null || owner.budget === undefined) {
-      await expect(metadata).toHaveText("Not available")
-    } else {
-      await expect(metadata).toHaveText(String(owner.budget))
-    }
-    await expect(detail.locator('[data-sf-field="source-version"] dd'))
+    const metadata = detail.locator(".sf-opex-annual-budget dd")
+    await expectSourceAmount(metadata, owner.budget)
+    await expect(sourceVersion(detail))
       .toHaveText(String(ownerVersion(original, String(owner.id))))
 
     const annualMonths = detail.locator(".sf-budget-months tr[data-sf-month]")
@@ -1160,20 +1201,29 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · exact original read fi
       const row = detail.locator(".sf-budget-months tr[data-sf-month='" + month + "']")
       for (const [index, field] of (["budget", "actual", "forecast"] as const).entries()) {
         const number = projected?.[field]
-        const rendered = number === null || number === undefined ? "Not available" : String(number)
-        await expect(row.locator("td").nth(index)).toHaveText(rendered)
+        await expectSourceAmount(row.locator("td").nth(index), number)
       }
       const deviation = asRecord(original.deviations[sourceKind + "-" + owner.id + "-2026-" + month])
-      await expect(row.locator("td").nth(3))
-        .toHaveText(deviation?.flag ? String(deviation.flag) : "Not available")
-      await expect(row.locator("td").nth(4))
-        .toHaveText(deviation?.text === null || deviation?.text === undefined
-          ? "Not available" : String(deviation.text))
+      const flag = row.locator(".sf-opex-flag")
+      if (deviation?.flag === undefined) {
+        await expect(flag).not.toHaveAttribute("data-sf-flag")
+        await expectSourceAmount(flag, undefined)
+      } else {
+        const sourceFlag = String(deviation.flag)
+        const labels: Readonly<Record<string, string>> = { "dev-green": "Green", "dev-amber": "Amber", "dev-red": "Red" }
+        await expect(flag).toHaveAttribute("data-sf-flag", sourceFlag)
+        await expect(flag).toHaveText(labels[sourceFlag] ?? sourceFlag)
+      }
+      const notes = row.locator("td").nth(4)
+      if (deviation?.text === null || deviation?.text === undefined) await expectSourceAmount(notes, undefined)
+      else await expect(notes.locator("bdi")).toHaveText(String(deviation.text))
     }
     const originalHint = asRecord(original.ytd["2026:" + String(owner.id)])
     if (originalHint) {
+      await openAnnualControls(detail)
       const hint = detail.locator(".sf-budget-hint")
-      await expect(hint).toContainText(String(originalHint.amount))
+      const amount = hint.locator("div").filter({ has: hint.page().locator("dt").filter({ hasText: /^Year amount$/ }) }).locator("dd")
+      await expectSourceAmount(amount, originalHint.amount)
       await expect(hint).toContainText(String(originalHint.months))
     } else {
       await expect(detail.locator(".sf-budget-hint")).toHaveCount(0)

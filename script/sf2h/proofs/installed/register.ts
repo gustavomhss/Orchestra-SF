@@ -1,8 +1,8 @@
 /** Host-only registration: actual existing contexts, original F01/F02 and source rows. No LIVE receipt. */
 import { lstat, unlink } from "node:fs/promises"
 import path from "node:path"
-import type { Browser, Page } from "@playwright/test"
-import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { Browser, Page } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts"
+import type { SfResolvedRoute } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts"
 import { privateText } from "../../../sf-ci/g08-private-evidence.mjs"
 import { attachHostedNativeBrowser, disconnectNativeBrowser, prepareNativePage } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts"
 import { registerNativeInstalledManifest } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts"
@@ -44,7 +44,7 @@ async function selectActor(manifest: NativeManifest, pages: LiveActors, suite: N
       caseId === "readonly" && grant.allowedActionIds.length !== 0) continue
     const admitted = await requireNativeJourney({ page, manifest, actor, capabilityId, intent,
       ...(suite === "U15" ? {} : { year: 2026 }) })
-    await requireOriginalNativeOperations({ page, manifest, capabilityId, ...admitted, intent })
+    await requireOriginalNativeOperations({ page, manifest, ...admitted, intent })
     if (caseId === "source" && !context.destinations.some((entry) => entry.capabilityId === "CAP03" && entry.canRead))
       throw new Error("F04_ORIGINAL_CAP03_SOURCE_LINK_NOT_AVAILABLE")
     return { actor, page }
@@ -109,7 +109,7 @@ export async function registerInstalledProofFromHost(input: Readonly<{
           if (!grant?.canRead || !grant.allowedActionIds.includes("save")) continue
           const current = await requireNativeJourney({ page: pages[actor], manifest: selectedManifest, actor, capabilityId,
             intent: "edit", ...(input.suite === "U15" ? {} : { year: 2026 }) })
-          await requireOriginalNativeOperations({ page: pages[actor], manifest: selectedManifest, capabilityId, ...current, intent: "edit" })
+          await requireOriginalNativeOperations({ page: pages[actor], manifest: selectedManifest, ...current, intent: "edit" })
           const other = await readOriginalNativeSource({ page: pages[actor], manifest: selectedManifest, capabilityId, recordId: first.recordId })
           if (other.version !== first.version || pages[actor].context() === page.context())
             throw new Error("F04_DISTINCT_SECOND_WRITER_SOURCE_MISMATCH")

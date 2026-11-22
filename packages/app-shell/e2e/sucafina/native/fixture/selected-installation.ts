@@ -18,6 +18,7 @@ import { observeNativeBinding, nativeTeamHeaders } from "./readiness.ts"
 import { nativeOriginalRequest } from "./browser-transport.ts"
 import { nativeTargetInReservation, requireNativeInstalledHost } from "./installed-host.ts"
 export type { NativeInstalledCase, NativeInstalledSuite } from "./case-contract.ts"
+export type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 
 type Row = Record<string, unknown>
 function record(value: unknown): value is Row { return !!value && typeof value === "object" && !Array.isArray(value) }
@@ -25,8 +26,11 @@ function need(value: unknown, reason: string): asserts value { if (!value) throw
 function same(left: unknown, right: unknown) { return digest(JSON.stringify(left)) === digest(JSON.stringify(right)) }
 const collections = { CAP14: "contracts", CAP04: "opexOwners", CAP05: "capexProjects" } as const
 const names = { CAP14: "Vendor Contracts", CAP04: "OPEX Detail", CAP05: "CAPEX Projects" } as const
-const outputs = { CAP14: SfDomain.operations["domain.page.CAP14"].output,
-  CAP04: SfDomain.operations["domain.page.CAP04"].output, CAP05: SfDomain.operations["domain.page.CAP05"].output } as const
+const decoders = {
+  CAP14: Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP14"].output, { onExcessProperty: "error" }),
+  CAP04: Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP04"].output, { onExcessProperty: "error" }),
+  CAP05: Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP05"].output, { onExcessProperty: "error" }),
+} as const
 function descriptor(target: NativeTarget) {
   return Schema.decodeUnknownSync(SfTeamInstallationDescriptor, { onExcessProperty: "error" })({
     contractRevision: "sf-team-profile/1", authMode: "microsoft", installationId: target.installationId,
@@ -90,7 +94,7 @@ export async function readOriginalNativePage(page: Page, manifest: NativeManifes
   if (capabilityId !== "CAP14") url.searchParams.set("year", "2026")
   const reply = await nativeOriginalRequest(page, url.href, "GET", undefined, nativeTeamHeaders(manifest.target))
   need(reply.status() === 200 && reply.headers()["cache-control"] === "no-store", "F04_ORIGINAL_SOURCE_HTTP_REQUIRED")
-  const output: unknown = Schema.decodeUnknownSync(outputs[capabilityId] as Schema.Top, { onExcessProperty: "error" })(await reply.json())
+  const output: unknown = decoders[capabilityId](await reply.json())
   need(record(output) && output.status === "ok" && same(output.context, live.stamp) && record(output.value) &&
     output.value.capabilityId === capabilityId && record(output.value.data) && record(output.value.versions) &&
     Array.isArray(output.value.allowedActionIds) && output.value.allowedActionIds.every((entry) => typeof entry === "string"), "F04_ORIGINAL_SOURCE_OWNER_OR_SCHEMA_CHANGED")
@@ -183,7 +187,7 @@ export async function registerNativeSelectedInstallation(input: Readonly<{
     const intent = nativeCaseIntent(row.caseId)
     const live = await requireNativeJourney({ page: row.page, manifest, actor: row.actor, capabilityId: cap,
       intent, ...(cap === "CAP14" ? {} : { year: 2026 }) })
-    const operations = await requireOriginalNativeOperations({ page: row.page, manifest, capabilityId: cap,
+    const operations = await requireOriginalNativeOperations({ page: row.page, manifest,
       ...live, intent })
     if (row.caseId === "readonly") need(!live.canSave &&
       operations.context.destinations.find((entry) => entry.capabilityId === cap)?.allowedActionIds.length === 0,
@@ -240,7 +244,7 @@ export async function consumeCurrentNativeSelection(input: Readonly<{
   const cap = nativeSuiteCapability[input.bundle.suite]
   const current = await requireNativeJourney({ page: input.page, manifest, actor: selected.actor, capabilityId: cap,
     intent: selected.intent, ...(cap === "CAP14" ? {} : { year: 2026 }) })
-  const operations = await requireOriginalNativeOperations({ page: input.page, manifest, capabilityId: cap, ...current, intent: selected.intent })
+  const operations = await requireOriginalNativeOperations({ page: input.page, manifest, ...current, intent: selected.intent })
   const routePage = input.routePage ?? input.page
   const routeLive = await observeNativeBinding(routePage, manifest.target)
   need(routeLive.stamp.principalRef === selected.routePrincipalRef, "F04_ORIGINAL_ROUTE_OBSERVER_CHANGED")

@@ -2,6 +2,7 @@
 import path from "node:path"
 import { chromium } from "@playwright/test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
+export type { Browser, Page } from "@playwright/test"
 import { privateText } from "../../../../../../script/sf-ci/g08-private-evidence.mjs"
 import { observeNativeBinding, readNativeManifest, requirePrivateNativeRoot } from "./readiness.ts"
 import type { NativeActor, NativeManifest } from "./manifest-contract.ts"

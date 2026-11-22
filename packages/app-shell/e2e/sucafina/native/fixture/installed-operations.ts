@@ -72,7 +72,7 @@ async function editName(page: Page, manifest: NativeManifest, cap: Budget, id: s
   await expect(selected).toHaveCount(1)
   await expect(selected).toHaveAttribute("data-sf-row", id)
   await selected.locator('button[data-sf-action="select"]').click()
-  const detail = surface.locator(".sf-budget-detail [data-sf-record-detail]")
+  const detail = surface.locator(cap === "CAP04" ? "[data-sf-opex-detail]" : "[data-sf-capex-detail]")
   await expect(detail).toBeVisible()
   await detail.getByRole("button", { name: "Edit", exact: true }).click()
   const form = surface.locator(".sf-budget-editor .sf-budget-form")
@@ -159,7 +159,7 @@ export function createNativeInstalledOperations(input: Readonly<{
         const grant = context.destinations.find((entry) => entry.capabilityId === cap)
         if (!grant?.canRead || !grant.allowedActionIds.includes("save")) continue
         const admission = await requireNativeJourney({ page, manifest: input.manifest, actor, capabilityId: cap, intent: "edit", year: 2026 })
-        await requireOriginalNativeOperations({ page, manifest: input.manifest, capabilityId: cap, ...admission, intent: "edit" })
+        await requireOriginalNativeOperations({ page, manifest: input.manifest, ...admission, intent: "edit" })
         need(page.context() !== input.page.context() && admission.principalRef !== input.manifest.actors[input.actor],
           "F04_DISTINCT_SECOND_ORIGINAL_WRITER_REQUIRED")
         editor = page
