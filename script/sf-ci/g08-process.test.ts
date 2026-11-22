@@ -116,7 +116,12 @@ for (const mode of ["nonzero", "signal", "missing"]) {
       expect(receipt.outcome.resolved).toBe(false)
       if (mode === "signal") {
         expect(receipt.omni.spawns).toBe(1)
-        expect(receipt.outcome.originalSignalFailure).toBe(true)
+        console.log(JSON.stringify({ control: "G08_ORIGINAL_SIGNAL_CAUSE", observed: receipt.outcome.originalProcessFailure }))
+        expect(receipt.outcome.originalProcessFailure).toEqual({
+          tag: "PlatformError", reasonTag: "Unknown", module: "ChildProcess", method: "exitCode",
+          pathOrDescriptor: process.execPath + ' -e await Bun.write(Bun.stdout, "before-signal\\n"); process.kill(process.pid, "SIGTERM")',
+          causeName: "Error", causeMessage: "Process interrupted due to receipt of signal: 'SIGTERM'", sameCause: true,
+        })
         expect(bytes.toString("utf8")).toBe("before-signal\n")
         return
       }

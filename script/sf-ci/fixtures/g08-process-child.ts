@@ -1,8 +1,13 @@
 // Isolated subprocess controls for the original G08 process path. No installed host or authority.
 import path from "node:path"
+import { createRequire } from "node:module"
+import { pathToFileURL } from "node:url"
 import { readdir, readlink, writeFile } from "node:fs/promises"
 import { Omni } from "../../../packages/core/src/omni.ts"
 import { captureOriginalCommand, observeAggregateCheckout } from "../g08-installed-evidence.mjs"
+
+const require = createRequire(new URL("../../../packages/core/package.json", import.meta.url))
+const { PlatformError, SystemError } = await import(pathToFileURL(require.resolve("effect/PlatformError")).href)
 
 const [mode, input] = process.argv.slice(2)
 const before = Omni.snapshot()
@@ -43,13 +48,24 @@ async function openLogHandles() {
   }))
   return targets.filter((target) => target === output).length
 }
+function originalProcessFailure(error: unknown) {
+  if (!(error instanceof PlatformError) || !(error.reason instanceof SystemError)) return null
+  return {
+    tag: error._tag, reasonTag: error.reason._tag,
+    module: error.reason.module, method: error.reason.method,
+    pathOrDescriptor: error.reason.pathOrDescriptor,
+    causeName: error.cause instanceof Error ? error.cause.name : null,
+    causeMessage: error.cause instanceof Error ? error.cause.message : null,
+    sameCause: error.cause === error.reason.cause,
+  }
+}
 const outcome = await exercise().then(
   (value) => ({ resolved: true, value }),
   (error: unknown) => ({
     resolved: false,
     errorName: error instanceof Error ? error.name : "UnknownError",
     errorCode: error && typeof error === "object" && "code" in error && typeof error.code === "string" ? error.code : null,
-    originalSignalFailure: String(error).includes("Process interrupted due to receipt of signal: 'SIGTERM'"),
+    originalProcessFailure: originalProcessFailure(error),
   }),
 )
 const after = Omni.snapshot()
