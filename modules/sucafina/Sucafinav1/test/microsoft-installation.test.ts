@@ -163,16 +163,24 @@ const ingress = (relative: string, headers?: Record<string, string>, init?: Pick
 })
 
 
+type NativeBusinessFixture = {
+  groups: LocalConfiguration["groups"]
+  actors: { id: string; groups: string[] }[]
+  beforeRoleRead?: (principalId: string) => Promise<void>
+}
+
 // Uses the installed HTTP handlers, encrypted login/session store and real RS256 verification.
 // Only the Microsoft HTTP transport is controlled; no identity or Team decision is stubbed.
 async function nativeNavigationFixture(options: {
   teams?: readonly string[]; enabledTeamIds?: readonly string[]; administrator?: boolean
+  business?: NativeBusinessFixture
   sessionGrants?: MicrosoftConfiguration["grants"]
   loadTeamSessionHttp?: Parameters<typeof createMicrosoftInstallation>[0]["loadTeamSessionHttp"]
 } = {}) {
   const keys = await generateKeyPair("RS256", { extractable: true })
   const jwk = await exportJWK(keys.publicKey)
-  const pending = new Map<string, { nonce: string; challenge: string }>()
+  const pending = new Map<string, { nonce: string; challenge: string; principalId: string }>()
+  const accessActors = new Map<string, string>()
   const teamLookups: string[] = []
   const membership = {
     teams: [...(options.teams ?? [teamObjectId, disabledTeamId])], reads: 0,
@@ -195,22 +203,39 @@ async function nativeNavigationFixture(options: {
       expect(form.get("client_secret")).toBe(secret)
       expect(form.get("redirect_uri")).toBe(origin + mount + "/auth/callback")
       expect(createHash("sha256").update(form.get("code_verifier") ?? "").digest("base64url")).toBe(authorization.challenge)
-      const idToken = await new SignJWT({ tid: tenantId, oid, nonce: authorization.nonce })
-        .setSubject("navigation-subject").setIssuer(authority + "/v2.0").setAudience(clientId)
+      const issuedToken = options.business ? accessToken + ":" + authorization.principalId : accessToken
+      accessActors.set(issuedToken, authorization.principalId)
+      const idToken = await new SignJWT({ tid: tenantId, oid: authorization.principalId, nonce: authorization.nonce })
+        .setSubject("navigation-subject-" + authorization.principalId).setIssuer(authority + "/v2.0").setAudience(clientId)
         .setIssuedAt(epoch).setExpirationTime(epoch + 3600)
         .setProtectedHeader({ alg: "RS256", kid: "navigation-test" }).sign(keys.privateKey)
       return Response.json({
-        access_token: accessToken, id_token: idToken, token_type: "Bearer", expires_in: 3600,
+        access_token: issuedToken, id_token: idToken, token_type: "Bearer", expires_in: 3600,
         scope: "User.Read Team.ReadBasic.All",
       })
     }
     if (url.origin === "https://graph.microsoft.com") {
-      expect(request.headers.get("authorization")).toBe("Bearer " + accessToken)
-      if (url.pathname === "/v1.0/me") return Response.json({ id: oid, displayName: "Verified navigator" })
+      const principalId = accessActors.get(request.headers.get("authorization")?.slice("Bearer ".length) ?? "")
+      if (!principalId) throw new Error("Expected a token issued by the signed navigation login")
+      if (!options.business) expect(request.headers.get("authorization")).toBe("Bearer " + accessToken)
+      if (url.pathname === "/v1.0/me") return Response.json({ id: principalId, displayName: "Verified navigator " + principalId })
       if (url.href === graph + "/me/checkMemberGroups") {
-        expect(await request.json()).toEqual({ groupIds: [grantPrincipal] })
         membership.groupReads++
-        return Response.json({ value: membership.administrator ? [grantPrincipal] : [] })
+        if (!options.business) {
+          expect(await request.json()).toEqual({ groupIds: [grantPrincipal] })
+          return Response.json({ value: membership.administrator ? [grantPrincipal] : [] })
+        }
+        const actor = options.business.actors.find((actor) => actor.id === principalId)
+        if (!actor) throw new Error("Unexpected business fixture principal")
+        const requested = Schema.decodeUnknownSync(Schema.Struct({ groupIds: Schema.Array(Schema.String) }),
+          { onExcessProperty: "error" })(await request.json()).groupIds
+        const configured = new Set([grantPrincipal, ...Object.values(options.business.groups).flatMap((surface) =>
+          Object.values(surface).flatMap((group) => typeof group === "string" ? [group.slice("group:".length)] : []))])
+        expect(requested.every((id) => configured.has(id))).toBe(true)
+        expect(new Set(requested).size).toBe(requested.length)
+        const value = requested.filter((id) => id === grantPrincipal ? membership.administrator : actor.groups.includes(id))
+        if (requested.some((id) => id !== grantPrincipal)) await options.business.beforeRoleRead?.(principalId)
+        return Response.json({ value })
       }
       const id = [teamObjectId, secondTeamId, disabledTeamId].find((id) => url.pathname === "/v1.0/teams/" + id)
       if (id) {
@@ -228,7 +253,7 @@ async function nativeNavigationFixture(options: {
       }
     }
     throw new Error("Unexpected navigation Microsoft request")
-  }, options.enabledTeamIds ?? [teamObjectId, secondTeamId], {
+  }, options.enabledTeamIds ?? [teamObjectId, secondTeamId], options.business?.groups ?? {
     dashboard: { viewer: "group:" + grantPrincipal }, planner: {}, procurement: {},
   }, undefined, { nativeWeb: true, sessionGrants: options.sessionGrants, loadTeamSessionHttp: options.loadTeamSessionHttp })
   try {
@@ -243,7 +268,7 @@ async function nativeNavigationFixture(options: {
       selection, binding, membership, teamLookups, close: f.close, reopen: f.reopen,
       directory: f.directory, file: f.file, prepared: f.prepared, writeGrants: f.writeGrants,
       get installation() { return f.installation },
-      async signIn(returnTo: string, expected = returnTo, callbackReturnTo?: string) {
+      async signIn(returnTo: string, expected = returnTo, callbackReturnTo?: string, principalId = oid) {
         const begin = await f.installation.handler(ingress("/auth/login?" + new URLSearchParams({ returnTo })))
         expect(begin?.status).toBe(303)
         const location = begin!.headers.get("location")!
@@ -259,7 +284,7 @@ async function nativeNavigationFixture(options: {
         })
         const state = authorize.searchParams.get("state")!
         pending.set(state, {
-          nonce: authorize.searchParams.get("nonce")!, challenge: authorize.searchParams.get("code_challenge")!,
+          nonce: authorize.searchParams.get("nonce")!, challenge: authorize.searchParams.get("code_challenge")!, principalId,
         })
         const challenge = begin!.headers.getSetCookie().find((value) => value.includes("_login="))!
         expect(challenge).toContain("; HttpOnly")
@@ -1572,3 +1597,142 @@ test("Microsoft private session readers detect changed grants and key bytes with
     expect(before.bytes).not.toEqual(new Uint8Array(32).fill(93))
   } finally { await f.close() }
 })
+
+test("Corporate Team contexts project the original per-principal pages and Team ACL without granting native actions", async () => {
+  const viewerGroup = "71111111-1111-4111-8111-111111111111"
+  const contributorGroup = "72222222-2222-4222-8222-222222222222"
+  const otherPrincipal = "73333333-3333-4333-8333-333333333333"
+  const viewer = { id: oid, groups: [viewerGroup] }
+  const business: NativeBusinessFixture = {
+    groups: { dashboard: { viewer: "group:" + viewerGroup, contributor: "group:" + contributorGroup }, planner: {}, procurement: {} },
+    actors: [viewer, { id: otherPrincipal, groups: [contributorGroup] }],
+  }
+  const f = await nativeNavigationFixture({
+    teams: [teamObjectId, secondTeamId], business,
+    sessionGrants: [{ principalRef: oid, namespaces: [], operations: [], sessionActions: ["read", "create"] }],
+  })
+  const profile = (id: string) => ({ installationId: f.selection.installationId, tenantId, teamObjectId: id })
+  const seed = async (id: string, summaries: string[], assigned: string[]) => {
+    const store = await openLocalStore(join(f.directory, "business-teams", digestSfValue(profile(id))))
+    try {
+      await store.transaction("dashboard", async (snapshot) => {
+        snapshot.data.summaries = summaries
+        snapshot.data.access = { [oid]: { assigned, domains: ["risks"] } }
+        return { commit: true, value: undefined }
+      })
+    } finally { await store.dispose() }
+  }
+  const read = async (id: string, cookie: string) => {
+    const response = await f.context(id, cookie)
+    expect(response?.status).toBe(200)
+    const result = Schema.decodeUnknownSync(SfTeamContextResult)(await response!.json())
+    if (result.status !== "ok") throw new Error("Expected a current original Team context")
+    expect(result.value.stamp.team?.owner.profile).toEqual(profile(id))
+    expect(result.value.destinations.every((destination) => destination.canRead && destination.allowedActionIds.length === 0)).toBe(true)
+    expect(result.value.availability).toEqual([])
+    return result.value
+  }
+  try {
+    await seed(teamObjectId, ["IT Risks"], ["risk-a"])
+    await seed(secondTeamId, ["Team Structure"], ["team-b"])
+    const viewerCookie = await f.signIn("/")
+    const contributorCookie = await f.signIn("/", "/", undefined, otherPrincipal)
+    const a = await read(teamObjectId, viewerCookie)
+    const other = await read(teamObjectId, contributorCookie)
+    expect(a.stamp.principalRef).toBe(oid)
+    expect(other.stamp.principalRef).toBe(otherPrincipal)
+    expect(a.destinations.map((item) => [item.capabilityId, item.page])).toEqual([
+      ["CAP01", "Executive Dashboard"], ["CAP13", "IT Risks"],
+    ])
+    expect(other.destinations.map((item) => item.page)).toEqual([
+      "Portfolio Dashboard", "All Projects", "IT Operations", "IT Security KPIs", "IT Risks", "Vendor Contracts",
+    ])
+    expect(other.destinations).not.toEqual(a.destinations)
+    const businessPage = (cookie: string, page: string) => f.installation.handler(ingress(
+      "/teams/" + teamObjectId + "/dashboard?" + new URLSearchParams({ page }), { cookie },
+    ))
+    expect((await businessPage(viewerCookie, "IT Risks"))?.status).toBe(200)
+    expect((await businessPage(viewerCookie, "IT Operations"))?.status).toBe(403)
+    expect((await businessPage(contributorCookie, "IT Operations"))?.status).toBe(200)
+    expect((await businessPage(contributorCookie, "Executive Dashboard"))?.status).toBe(403)
+    expect((await read(teamObjectId, viewerCookie)).destinations).toEqual(a.destinations)
+    expect((await read(teamObjectId, contributorCookie)).destinations).toEqual(other.destinations)
+
+    const b = await read(secondTeamId, viewerCookie)
+    expect(b.destinations.map((item) => [item.capabilityId, item.page])).toEqual([
+      ["CAP01", "Executive Dashboard"], ["CAP07", "Team Structure"],
+    ])
+    expect((await read(teamObjectId, viewerCookie)).destinations).toEqual(a.destinations)
+    await seed(teamObjectId, ["IT Risks"], ["risk-a", "changed-original-assignment"])
+    const changedAcl = await read(teamObjectId, viewerCookie)
+    expect(changedAcl.destinations).toEqual(a.destinations)
+    expect(changedAcl.stamp.accessRevision).not.toBe(a.stamp.accessRevision)
+    expect((await read(secondTeamId, viewerCookie)).stamp.accessRevision).toBe(b.stamp.accessRevision)
+
+    // Supreme administration and explicit Session actions remain independent of business roles.
+    viewer.groups = []
+    const sessionOnly = await read(teamObjectId, viewerCookie)
+    expect(sessionOnly.profile.administration.status).toBe("available")
+    expect(sessionOnly.destinations).toEqual([])
+    expect(sessionOnly.stamp.accessRevision).not.toBe(changedAcl.stamp.accessRevision)
+    expect((await businessPage(viewerCookie, "Executive Dashboard"))?.status).toBe(403)
+    const admin = await f.installation.handler(ingress("/api/ui/context?" + new URLSearchParams({
+      contractRevision: "sf-team-profile/1", installationId: f.selection.installationId, tenantId,
+      hostId: f.binding.hostId, kind: "administration",
+    }), { cookie: contributorCookie }))
+    expect(admin?.status).toBe(200)
+    const administration = Schema.decodeUnknownSync(SfTeamContextResult)(await admin!.json())
+    if (administration.status !== "ok") throw new Error("Expected an independent administrative context")
+    expect(administration.value.stamp.team).toBeUndefined()
+    expect(administration.value.destinations).toEqual([])
+    expect(administration.value.availability).toEqual([])
+    f.membership.teams = [secondTeamId]
+    await expectRevokedTeamContext(await f.context(teamObjectId, viewerCookie))
+  } finally { await f.close() }
+})
+
+for (const revoked of ["roles", "membership", "logout"] as const) {
+  test("Corporate Team context suppresses a late original business projection after " + revoked, async () => {
+    const group = "74444444-4444-4444-8444-444444444444"
+    const actor = { id: oid, groups: [group] }
+    const business: NativeBusinessFixture = {
+      groups: { dashboard: { viewer: "group:" + group }, planner: {}, procurement: {} }, actors: [actor],
+    }
+    const f = await nativeNavigationFixture({ business })
+    const entered = Promise.withResolvers<void>()
+    const release = Promise.withResolvers<void>()
+    try {
+      const cookie = await f.signIn("/")
+      const reads = { count: 0 }
+      business.beforeRoleRead = async () => {
+        if (++reads.count !== 1) return
+        entered.resolve()
+        await release.promise
+      }
+      const pending = f.context(teamObjectId, cookie)
+      await entered.promise
+      try {
+        if (revoked === "roles") actor.groups = []
+        if (revoked === "membership") f.membership.teams = [secondTeamId]
+        if (revoked === "logout") {
+          const logout = await f.installation.handler(ingress("/auth/logout", { cookie, origin }, { method: "POST" }))
+          expect(logout?.status).toBe(303)
+        }
+      } finally { release.resolve() }
+      const response = await pending
+      expect(response?.status).toBe(503)
+      const result = Schema.decodeUnknownSync(SfTeamContextResult)(await response!.json())
+      expect(result.status).toBe("unavailable")
+      expect("value" in result).toBe(false)
+      if (revoked === "logout") expect((await f.context(teamObjectId, cookie))?.status).toBe(401)
+      if (revoked === "membership") await expectRevokedTeamContext(await f.context(teamObjectId, cookie))
+      if (revoked === "roles") {
+        const current = await f.context(teamObjectId, cookie)
+        expect(current?.status).toBe(200)
+        const context = Schema.decodeUnknownSync(SfTeamContextResult)(await current!.json())
+        if (context.status !== "ok") throw new Error("Current Team must remain available without business roles")
+        expect(context.value.destinations).toEqual([])
+      }
+    } finally { release.resolve(); await f.close() }
+  })
+}
