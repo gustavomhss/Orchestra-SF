@@ -39,9 +39,21 @@ export const microsoftCases = Object.freeze([
   [microsoftFiles[3], "Microsoft Team private upload fails closed against the stopped owned real ClamD"],
   [microsoftFiles[4], "G05 loopback HTTP admits Teams and rejects wrong owners without cross-Team effects"],
 ].map(Object.freeze))
+export const importFiles = Object.freeze([
+  ...microsoftFiles,
+  "Sucafinav1/test/product/teams-scanner/private-import.check.ts",
+])
+export const importCases = Object.freeze([
+  ...microsoftCases,
+  [importFiles[5], "Microsoft Team private import admits clean bytes and rejects real EICAR with isolated staging"],
+  [importFiles[5], "Microsoft Team original import preview rejects benign malformed bytes after real clean staging"],
+  [importFiles[5], "Microsoft Team private import rejects foreign ownership missing grants and revoked membership"],
+  [importFiles[5], "Microsoft Team private import fails closed against the stopped owned real ClamD"],
+].map(Object.freeze))
 export function selectionInventory(selection = "controls") {
   if (selection === "controls") return { files, cases: expectedCases, schema: "teams-profile-scanner-v1" }
   if (selection === "controls-with-teams") return { files: microsoftFiles, cases: microsoftCases, schema: "teams-profile-scanner-v2" }
+  if (selection === "controls-with-imports") return { files: importFiles, cases: importCases, schema: "teams-profile-scanner-v3" }
   fail("unknown control selection")
 }
 export function exactRequest(selection = "controls") {
@@ -107,7 +119,14 @@ function criticalFor(selection) {
   selectionInventory(selection)
   return selection === "controls" ? criticalFiles : [...criticalFiles,
     "modules/sucafina/Sucafinav1/test/fixture/microsoft-http.ts",
-    ...microsoftFiles.slice(files.length).map((file) => "modules/sucafina/" + file),
+    ...selectionInventory(selection).files.slice(files.length).map((file) => "modules/sucafina/" + file),
+    ...(selection === "controls-with-imports" ? [
+      "apps/cli/src/sucafina-product/team-imports.ts",
+      "modules/sucafina/Sucafinav1/runtime/team-business.ts",
+      "apps/cli/src/sucafina-product/import-services.ts",
+      "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+    ] : []),
   ]
 }
 function fileAt(root, relative) {
@@ -238,8 +257,10 @@ export function verifyScannerEvidence(input) {
     .map((line) => JSON.parse(line.slice("G06_PRIVATE_CLEANUP ".length)))
   if (fixtureCleanup.length !== 4 || fixtureCleanup.some((item) => item.fixtures !== 1 || item.directories_removed !== true))
     fail("every real private HTTP fixture must be removed before a positive receipt")
-  const microsoftTeams = admission.envelope.selection === "controls-with-teams"
+  const microsoftTeams = admission.envelope.selection !== "controls"
     ? verifyMicrosoftTeamEvidence({ admission, env, service, log, g05: input.g05 }) : undefined
+  const microsoftImports = admission.envelope.selection === "controls-with-imports"
+    ? verifyMicrosoftImportEvidence({ admission, env, service, log }) : undefined
   const omni = controlVerdict({ name: "Teams scanner controls" }, "omni control nonce: " + nonce + "\n" + log)
   return {
     schema: "teams-profile-scanner-receipt-v1", status: "PASS", candidateSha: admission.envelope.candidateSha,
@@ -251,6 +272,7 @@ export function verifyScannerEvidence(input) {
     privateFixtureCleanup: { completed: fixtureCleanup.length, directoriesRemoved: true },
     finalCandidate: false, g06Closed: false,
     ...(microsoftTeams ? { microsoftTeams } : {}),
+    ...(microsoftImports ? { microsoftImports } : {}),
   }
 }
 
@@ -274,7 +296,7 @@ function actualTransport(value) {
     value.loopbackPeers === value.requests && value.ingressRequests === value.requests
 }
 export function verifyMicrosoftTeamEvidence({ admission, env, service, log, g05 }) {
-  if (admission.envelope.selection !== "controls-with-teams") fail("Microsoft selection required")
+  if (!["controls-with-teams", "controls-with-imports"].includes(admission.envelope.selection)) fail("Microsoft selection required")
   const controls = teamControlIds.map((id) =>
     productObservation(log, "G06_MICROSOFT_TEAM_" + id.toUpperCase().replaceAll("-", "_")))
   for (const [index, value] of controls.entries()) {
@@ -347,7 +369,84 @@ export function verifyMicrosoftTeamEvidence({ admission, env, service, log, g05 
     installedTeamsProof: false, finalCandidate: false, g06Closed: false,
     controls, g05Controls: g05ControlIds,
     teamsPrivateImportProof: false,
-    blocker: "Native private import-admit/import-preview is not mounted by runTeamBusiness; supplier uploads do not replace that obligation.",
+    blocker: "This upload receipt does not exercise native import-admit/import-preview; a separate private import receipt is required.",
+  }
+}
+
+const importControlIds = Object.freeze(["private-admission", "malformed-file", "denied-owner", "scanner-outage"])
+export function verifyMicrosoftImportEvidence({ admission, env, service, log }) {
+  if (admission.envelope.selection !== "controls-with-imports") fail("private import selection required")
+  const controls = importControlIds.map((id) =>
+    productObservation(log, "G06_MICROSOFT_IMPORT_" + id.toUpperCase().replaceAll("-", "_")))
+  for (const [index, value] of controls.entries()) {
+    const daemon = index === 3 ? service.error : service.main
+    const teams = value.binding?.teamObjectIds
+    if (value.schema !== "orchestra.g06.microsoft-team-import-control/1" || value.control !== importControlIds[index] ||
+        value.status !== "PASS" || value.sourceSha !== env.GITHUB_SHA || value.runId !== env.GITHUB_RUN_ID ||
+        value.runAttempt !== env.GITHUB_RUN_ATTEMPT || value.proofClass !== "COMPONENT_REAL_CLAMD" ||
+        value.composition !== "MICROSOFT_TEAM_NATIVE_IMPORT" || value.identityProvider !== "CONTROLLED_ENTRA_GRAPH" ||
+        value.runtimeFactory !== "createMicrosoftInstallation" || value.installedTeamsProof !== false || value.finalCandidate !== false ||
+        value.scanner?.host !== "127.0.0.1" || value.scanner.port !== daemon.port || value.scanner.pid !== daemon.pid ||
+        !digestValue(value.binding?.installationId) || !guid(value.binding?.tenantId) || !guid(value.binding?.principalObjectId) ||
+        !Array.isArray(teams) || teams.length !== 2 || !teams.every(guid) || new Set(teams).size !== 2 ||
+        !actualTransport(value.transport) || !value.graphRequests?.includes("/v1.0/me/joinedTeams") ||
+        value.cleanup?.completed !== true || value.cleanup.directoryRemoved !== true || value.result?.mainCleanAfter !== true)
+      fail("actual Microsoft private import composition, daemon, transport or cleanup missing")
+  }
+  if (new Set(controls.map((value) => value.binding.installationId)).size !== 4)
+    fail("four separately cleaned private import installations required")
+  const clean = (value, team, teams) => value?.httpStatus === 200 && digestValue(value.ref) &&
+    Number.isSafeInteger(value.bytes) && value.bytes > 0 && digestValue(value.digest) &&
+    value.storedDigest === value.digest && digestValue(value.proofDigest) && digestValue(value.catalogDigest) &&
+    value.otherTeam?.teamObjectId === teams.find((id) => id !== team) &&
+    digestValue(value.otherTeam?.before) && value.otherTeam.before === value.otherTeam.after
+  const admitted = controls[0]
+  const observations = admitted.result.observations
+  const eicarDigest = hash(Buffer.from("WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=", "base64"))
+  if (!Array.isArray(observations) || observations.length !== 2 ||
+      !isDeepStrictEqual(observations.map((value) => value.teamObjectId).sort(), [...admitted.binding.teamObjectIds].sort()) ||
+      observations.some((value) => !clean(value.before, value.teamObjectId, admitted.binding.teamObjectIds) ||
+        !clean(value.after, value.teamObjectId, admitted.binding.teamObjectIds) ||
+        value.refused?.httpStatus !== 403 || value.refused.bytes !== 68 || value.refused.digest !== eicarDigest ||
+        !sameDurable(value.refused.durable, admitted.binding.teamObjectIds)))
+    fail("both Teams require real clean/EICAR/clean private staging with unchanged foreign stores")
+  const malformed = controls[1]
+  const inputs = malformed.result.observations
+  if (!Array.isArray(inputs) || inputs.length !== 2 ||
+      !isDeepStrictEqual(inputs.map((value) => value.kind).sort(), ["format-mismatch", "truncated-xlsx"]) ||
+      inputs.some((value) => !digestValue(value.digest) || !Number.isSafeInteger(value.bytes) || value.bytes < 1 ||
+        !sameDurable(value.durable, malformed.binding.teamObjectIds) ||
+        !(value.scannerAccepted === true && value.staged === true && value.rejectedAt === "preview" &&
+          value.httpStatus === 400 && clean(value.admission, malformed.binding.teamObjectIds[0], malformed.binding.teamObjectIds) ||
+          value.kind === "truncated-xlsx" && value.scannerAccepted === false && value.staged === false &&
+          value.rejectedAt === "admission" && value.httpStatus === 403)) ||
+      !digestValue(malformed.result.truncatedSourceDigest) || malformed.result.truncatedRemovedBytes !== 22 ||
+      malformed.result.truncatedSourceBytes !== inputs.find((value) => value.kind === "truncated-xlsx")?.bytes + 22)
+    fail("private malformed files need a real clean staging and original parser refusal without preview effects")
+  const denied = controls[2]
+  if (!Array.isArray(denied.result.attempts) ||
+      !isDeepStrictEqual(denied.result.attempts.map((value) => value.kind).sort(),
+        ["wrong-installation", "wrong-tenant", "selector-route-mismatch", "revoked-membership"].sort()) ||
+      denied.result.attempts.some((value) => value.httpStatus !== 403 || !sameDurable(value.durable, denied.binding.teamObjectIds)) ||
+      denied.result.foreignReference?.httpStatus !== 503 || !sameDurable(denied.result.foreignReference.durable, denied.binding.teamObjectIds) ||
+      denied.result.missingGrant?.httpStatus !== 403 || denied.result.missingGrant.explicitGrants !== 0 ||
+      !digestValue(denied.result.missingGrant.binding) || controls.some((value) => value.binding.installationId === denied.result.missingGrant.binding) ||
+      denied.result.missingGrant.cleanupComplete !== true || !sameDurable(denied.result.missingGrant.durable, denied.binding.teamObjectIds))
+    fail("private importer must preserve owner, grant and membership refusal with independent complete-store equality")
+  const outage = controls[3]
+  if (outage.result.connectionRefused !== true || !Array.isArray(outage.result.attempts) || outage.result.attempts.length !== 2 ||
+      !isDeepStrictEqual(outage.result.attempts.map((value) => value.teamObjectId).sort(), [...outage.binding.teamObjectIds].sort()) ||
+      outage.result.attempts.some((value) => value.httpStatus !== 403 || !digestValue(value.digest) ||
+        !Number.isSafeInteger(value.bytes) || value.bytes < 1 || !sameDurable(value.durable, outage.binding.teamObjectIds)))
+    fail("owned real daemon outage must refuse private imports in both Teams without durable effects")
+  return {
+    schema: "teams-profile-scanner-microsoft-import-receipt-v1", status: "PASS",
+    candidateSha: admission.envelope.candidateSha, candidateTree: admission.envelope.candidateTree,
+    snapshotSha: env.GITHUB_SHA, snapshotTree: env.G05_SOURCE_TREE, requestSha256: admission.envelope.requestSha256,
+    run: env.GITHUB_RUN_ID, attempt: env.GITHUB_RUN_ATTEMPT, proofClass: "COMPONENT_REAL_CLAMD",
+    composition: "MICROSOFT_TEAM_NATIVE_IMPORT", identityProvider: "CONTROLLED_ENTRA_GRAPH",
+    componentPrivateImportProof: true, installedTeamsProof: false, finalCandidate: false, g06Closed: false,
+    controls,
   }
 }
 
@@ -387,15 +486,17 @@ async function cli() {
   if (!/^(0|[1-9][0-9]{0,2})$/.test(rawExit) || Number(rawExit) > 255) fail("actual test exit status required")
   const receipt = verifyScannerEvidence({
     admission, env: process.env, summary: read("summary.json"), report, log, exitCode: Number(rawExit),
-    ...(admission.envelope.selection === "controls-with-teams" ? { g05: read("g05-team-http.json") } : {}),
+    ...(admission.envelope.selection !== "controls" ? { g05: read("g05-team-http.json") } : {}),
     nonce: readFileSync(path.join(directory, "omni-nonce.txt"), "utf8").trim(),
     setup: daemon("setup.json"), service: daemon("service.json"), packageEvidence: daemon("package.json"),
     databases: daemon("databases.json"), daemonControls: daemon("daemon-controls.json"), cleanup: daemon("cleanup.json"),
     lock: JSON.parse(readFileSync(fileAt(root, "script/sf2h/operations-scanner/tools.lock.json"), "utf8")),
   })
   if (receipt.microsoftTeams) save(path.join(directory, "microsoft-teams-receipt.json"), receipt.microsoftTeams)
+  if (receipt.microsoftImports) save(path.join(directory, "microsoft-imports-receipt.json"), receipt.microsoftImports)
   receipt.evidence = ["report.xml", "summary.json", "bun.log", "exit-code.txt", "omni-nonce.txt", "admission.json", "arguments.txt",
-    ...(receipt.microsoftTeams ? ["g05-team-http.json", "microsoft-teams-receipt.json"] : [])]
+    ...(receipt.microsoftTeams ? ["g05-team-http.json", "microsoft-teams-receipt.json"] : []),
+    ...(receipt.microsoftImports ? ["microsoft-imports-receipt.json"] : [])]
     .map((name) => ({ path: name, sha256: hash(readFileSync(path.join(directory, name))) }))
   receipt.scannerEvidence = ["setup.json", "service.json", "package.json", "databases.json", "daemon-controls.json", "cleanup.json", "configuration.json", "tools.lock.json"]
     .map((name) => ({ path: name, sha256: hash(readFileSync(path.join(scanner, name))) }))
