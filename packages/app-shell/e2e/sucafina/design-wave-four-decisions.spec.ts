@@ -14,7 +14,7 @@ type SfCase = Pick<DecisionCase, "id" | "incarnation" | "version" | "objective" 
 waveFourTest.use({ designWave: "four-decisions" })
 
 type Owner = Parameters<typeof enter>[1]
-type Screen = { id: string; href: string; title: string; titleBr: string }
+type Screen = { id: string; href: string; title: string; titleBr: string; caseRef?: string }
 
 function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Expected original response object")
@@ -24,15 +24,43 @@ function action(request: Request, mode: string, operation?: string) {
   if (request.method() !== "POST" || new URL(request.url()).searchParams.get("sf") !== mode) return false
   return !operation || object(request.postDataJSON()).operation === operation
 }
-function observeDecisionReads(page: Page) {
+type ReadTrace = { operation: string; elapsedMs: number; status: number | "failed" }
+type ReadFailure = ReadTrace & { payload: Promise<{ status: string | null; reason: string | null }> }
+type ReadMonitor = {
+  startedAt: number
+  failures: ReadFailure[]
+  urls: Map<string, string>
+  reported: boolean
+}
+const readMonitors = new WeakMap<Page, ReadMonitor>()
+function resultCodes(value: unknown) {
+  const body = value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {}
+  // Emit producer codes only: never payloads, selectors, headers, tokens or proposals.
+  const code = (value: unknown) => typeof value === "string" && /^[a-z0-9][a-z0-9:._-]{0,119}$/i.test(value) ? value : null
+  return { status: code(body.status), reason: code(body.reason) }
+}
+function readOperation(request: Request) {
+  const url = new URL(request.url)
+  if (request.method() === "GET" && url.pathname.endsWith("/api/ui/projections/case")) return "projection.case"
+  if (request.method() === "GET" && url.searchParams.get("sf") === "current-choice") return "current-choice"
+  if (request.method() === "POST" && url.searchParams.get("sf") === "workbench-analysis") {
+    const selected = object(request.postDataJSON()).action
+    if (selected === "choices" || selected === "list") return "analysis." + selected
+  }
+  return undefined
+}
+function observeDecisionReads(page: Page, startedAt = Date.now()) {
   const pending = new Map<Request, { operation: string; started: number }>()
-  const completed: { operation: string; elapsedMs: number; status: number | "failed" }[] = []
+  const completed: ReadTrace[] = []
+  const monitor: ReadMonitor = { startedAt, failures: [], urls: new Map(), reported: false }
+  readMonitors.set(page, monitor)
   page.on("request", (request) => {
-    const mode = new URL(request.url()).searchParams.get("sf")
-    if (request.method() === "GET" && mode === "current-choice") {
-      pending.set(request, { operation: mode, started: performance.now() })
-      console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-read-start", operation: mode }))
-    }
+    const operation = readOperation(request)
+    if (!operation) return
+    pending.set(request, { operation, started: performance.now() })
+    if (request.method() === "GET") monitor.urls.set(operation, request.url())
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-read-start", operation,
+      elapsedSinceTestEntryMs: Date.now() - startedAt }))
   })
   page.on("response", (response) => {
     const read = pending.get(response.request())
@@ -40,7 +68,14 @@ function observeDecisionReads(page: Page) {
     pending.delete(response.request())
     const value = { operation: read.operation, elapsedMs: Math.round(performance.now() - read.started), status: response.status() }
     completed.push(value)
-    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-read", ...value }))
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-read", ...value,
+      elapsedSinceTestEntryMs: Date.now() - startedAt }))
+    if (!response.ok()) {
+      // Start body acquisition while this native page is still active. A failed
+      // CDP body is diagnosed separately; it never converts the HTTP failure to success.
+      const payload = response.json().then(resultCodes).catch(() => ({ status: null, reason: "response-body-unavailable" }))
+      monitor.failures.push({ ...value, payload })
+    }
   })
   page.on("requestfailed", (request) => {
     const read = pending.get(request)
@@ -48,15 +83,50 @@ function observeDecisionReads(page: Page) {
     pending.delete(request)
     const value = { operation: read.operation, elapsedMs: Math.round(performance.now() - read.started), status: "failed" as const }
     completed.push(value)
-    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-read", ...value }))
+    monitor.failures.push({ ...value, payload: Promise.resolve({ status: null, reason: "request-failed" }) })
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-read", ...value,
+      elapsedSinceTestEntryMs: Date.now() - startedAt }))
   })
   return completed
+}
+async function diagnoseDecisionSources(page: Page, owner: Owner, screen?: Screen) {
+  const monitor = readMonitors.get(page)
+  if (!monitor || monitor.reported) return
+  monitor.reported = true
+  console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-source-failure", screen: screen?.id ?? null,
+    testEnteredAt: new Date(monitor.startedAt).toISOString(), elapsedSinceTestEntryMs: Date.now() - monitor.startedAt,
+    timingOrigin: "test-entry-after-original-seed-and-enrollment" }))
+  for (const failure of monitor.failures) {
+    const { payload, ...read } = failure
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-original-refusal", operation: read.operation, elapsedMs: read.elapsedMs,
+      httpStatus: read.status, ...await payload }))
+  }
+  // These fresh authenticated GETs diagnose the original failure. They cannot
+  // retry the assertion, refresh the source, renew a selection or turn the test green.
+  const reads = new Map(monitor.urls)
+  if (screen?.caseRef) {
+    const url = new URL(owner.publicOrigin + owner.mount + "/api/ui/projections/case")
+    url.searchParams.set("caseRef", screen.caseRef)
+    reads.set("projection.case", url.href)
+  }
+  for (const [operation, url] of reads) {
+    const began = performance.now()
+    const observed = await page.request.get(url, { timeout: 40_000 }).then(async (response) => ({
+      httpStatus: response.status(), ...resultCodes(await response.json()),
+    })).catch(() => ({ httpStatus: null, status: null, reason: "diagnostic-read-unavailable" }))
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-source-probe", operation,
+      elapsedMs: Math.round(performance.now() - began), ...observed }))
+  }
+  await observeAvailability(page, owner).catch(() => {
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-availability-unavailable" }))
+  })
 }
 async function observeAvailability(page: Page, owner: Owner) {
   const query = new URLSearchParams({
     installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId,
   })
   const response = await page.request.get(owner.publicOrigin + owner.mount + "/api/ui/context?" + query)
+  console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-context-read", httpStatus: response.status() }))
   expect(response.status()).toBe(200)
   const body = object(await response.json())
   expect(body.status).toBe("ok")
@@ -79,22 +149,46 @@ async function observeAvailability(page: Page, owner: Owner) {
 }
 async function readCase(page: Page, origin: string, mount: string, caseRef: string) {
   const response = await page.request.get(origin + mount + "/api/ui/projections/case", { params: { caseRef } })
-  expect(response.status()).toBe(200)
   const body = object(await response.json())
+  if (!response.ok())
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "decision-original-refusal",
+      operation: "projection.case", httpStatus: response.status(), ...resultCodes(body) }))
+  expect(response.status()).toBe(200)
   expect(body.status).toBe("ok")
   return object(object(body.value).projection).case as SfCase
 }
 async function openScreen(page: Page, owner: Owner, screen: Screen, localized = false) {
-  // Current-choice options revalidate every authorized case before the selected choice.
-  await enter(page, owner, screen.href, localized ? screen.titleBr : screen.title,
-    screen.id === "UI35" || screen.id === "UI38" ? 40_000 : 10_000)
-  const root = page.locator('[data-sf-decision="' + screen.id + '"]')
-  await expect(root).toHaveAttribute("data-sf-wave", "four")
-  await expect(root).toBeVisible()
-  await expect(root.locator('[aria-busy="true"]')).toHaveCount(0)
-  const bounds = await root.boundingBox()
-  expect(bounds?.width).toBeLessThanOrEqual(1160)
-  await reflow(page)
+  try {
+    // Current-choice options revalidate every authorized case before the selected choice.
+    await enter(page, owner, screen.href, localized ? screen.titleBr : screen.title,
+      screen.id === "UI35" || screen.id === "UI38" ? 40_000 : 10_000)
+    const root = page.locator('[data-sf-decision="' + screen.id + '"]')
+    await expect(root).toHaveAttribute("data-sf-wave", "four")
+    await expect(root).toBeVisible()
+    await expect(root.locator('[aria-busy="true"]')).toHaveCount(0)
+    if (readMonitors.get(page)?.failures.length) throw new Error("An original decision source refused the current read")
+    // A mounted frame/title also exists for unavailable states. Require the
+    // actual source-backed content before every positive visual capture.
+    const content: Record<string, string> = {
+      UI34: ".sf-decision-brief",
+      UI35: "section.sf-n24-section",
+      UI36: ".sf-decision-assumptions-layout",
+      UI37: "[data-sf-question-composer]",
+      UI38: "[data-choice-id]",
+      UI39: ".sf-decision-change-ledger",
+      UI40: ".sf-decision-receipt-ledger",
+      UI41: ".sf-decision-analysis-history",
+    }
+    await expect(root.locator(content[screen.id]!)).toBeVisible()
+    if (screen.id === "UI41")
+      expect(await root.locator('select[aria-labelledby="sf-analysis-case-label"] option:not([value=""])').count()).toBeGreaterThan(0)
+    const bounds = await root.boundingBox()
+    expect(bounds?.width).toBeLessThanOrEqual(1160)
+    await reflow(page)
+  } catch (error) {
+    await diagnoseDecisionSources(page, owner, screen)
+    throw error
+  }
 }
 async function reviewViewport(page: Page, info: TestInfo, review: ReturnType<Page["locator"]>, name: string) {
   await review.scrollIntoViewIfNeeded()
@@ -114,7 +208,8 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   expect(info.project.metadata.bundle).toBe("production")
   expect(info.config.workers).toBe(1)
   const diagnostic = observePage(page)
-  const readTimes = observeDecisionReads(page)
+  const testEnteredAt = Date.now()
+  const readTimes = observeDecisionReads(page, testEnteredAt)
   const writes: Request[] = []
   page.on("request", (request) => {
     if (action(request, "decision-edit") || action(request, "workbench-command", "sf_question_prepare") ||
@@ -160,14 +255,14 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     return url.href
   }
   const screens: Screen[] = [
-    { id: "UI34", href: editable.href, title: "Case summary", titleBr: "Resumo do caso" },
-    { id: "UI35", href: href("/alternatives"), title: "Alternatives", titleBr: "Alternativas" },
-    { id: "UI36", href: href("/assumptions"), title: "Assumptions", titleBr: "Premissas" },
-    { id: "UI37", href: href("/questions"), title: "Questions", titleBr: "Perguntas" },
-    { id: "UI38", href: href("/choice"), title: "Current choice", titleBr: "Escolha atual" },
-    { id: "UI39", href: href("/changes"), title: "Prepared changes", titleBr: "Mudanças preparadas" },
-    { id: "UI40", href: href("/history"), title: "Application result", titleBr: "Resultado da aplicação" },
-    { id: "UI41", href: href("/analyses"), title: "Analysis", titleBr: "Análise" },
+    { id: "UI34", caseRef: editableRef, href: editable.href, title: "Case summary", titleBr: "Resumo do caso" },
+    { id: "UI35", caseRef: caseRef, href: href("/alternatives"), title: "Alternatives", titleBr: "Alternativas" },
+    { id: "UI36", caseRef: caseRef, href: href("/assumptions"), title: "Assumptions", titleBr: "Premissas" },
+    { id: "UI37", caseRef: caseRef, href: href("/questions"), title: "Questions", titleBr: "Perguntas" },
+    { id: "UI38", caseRef: caseRef, href: href("/choice"), title: "Current choice", titleBr: "Escolha atual" },
+    { id: "UI39", caseRef: caseRef, href: href("/changes"), title: "Prepared changes", titleBr: "Mudanças preparadas" },
+    { id: "UI40", caseRef: caseRef, href: href("/history"), title: "Application result", titleBr: "Resultado da aplicação" },
+    { id: "UI41", caseRef: caseRef, href: href("/analyses"), title: "Analysis", titleBr: "Análise" },
   ]
 
   await waveFourTest.step("UI34 reads and edits the exact case with retained review fields and CAS", async () => {
@@ -221,7 +316,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   await waveFourTest.step("UI35 reports an authorized case with no historical choice", async () => {
     const empty = new URL(editable.href)
     empty.pathname += "/alternatives"
-    await openScreen(page, owner, { ...screens[1]!, href: empty.href })
+    await openScreen(page, owner, { ...screens[1]!, href: empty.href, caseRef: editableRef })
     const current = await readCase(page, installation.origin, installation.mount, editableRef)
     expect(current.alternatives).toHaveLength(0)
     expect(current.choices).toHaveLength(0)
@@ -419,7 +514,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   const localized = await portuguese.newPage()
   localized.setDefaultTimeout(15_000)
   const localizedDiagnostic = observePage(localized)
-  const localizedReadTimes = observeDecisionReads(localized)
+  const localizedReadTimes = observeDecisionReads(localized, testEnteredAt)
   try {
     for (const screen of screens) {
       await openScreen(localized, owner, screen, true)
