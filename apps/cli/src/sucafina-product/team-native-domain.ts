@@ -83,8 +83,10 @@ export async function readSfTeamNativeDomainBindings(input: Readonly<
     return { commit: false, value: scopeCurrent() ? value : undefined }
   }, { signal: input.request.signal })
   if (!observed || !scopeCurrent()) return
+  const availability = Schema.decodeUnknownOption(SfTeamContext.fields.availability, { onExcessProperty: "error" })(observed.availability)
+  if (Option.isNone(availability)) return
   return Object.freeze({ accessRevision: digestSfValue(observed),
-    destinations: observed.destinations, availability: observed.availability })
+    destinations: observed.destinations, availability: availability.value })
 }
 
 export function createSfTeamNativeDomain(input: SfTeamNativeDomainInput) {

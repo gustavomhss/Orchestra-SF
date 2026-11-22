@@ -16,7 +16,7 @@ import { digestSfValue } from "../../../modules/sucafina/Sucafinav1/product/cont
 import { createSfTeamNativeDomain, readSfTeamNativeDomainBindings } from "../src/sucafina-product/team-native-domain.ts"
 import type { SfTeamNativeDomainBindings } from "../src/sucafina-product/team-native-domain.ts"
 import { readSfApplicationContext, readSfApplicationSource } from "../../../modules/sucafina/Sucafinav1/runtime/application.ts"
-import type { TransactionOptions } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import type { Snapshot, TransactionOptions } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { sfContextDestinationsFromPages } from "../src/sucafina-product/native-ui/live-context.ts"
 import { createSfContextHandler } from "../src/sucafina-product/native-ui/context.ts"
 
@@ -85,8 +85,8 @@ async function createFixture() {
         }
         const first = await observe()
         if (!first) return undefined
-        return { ...first, owner: { profile: admission.profile,
-          principal: { tenantId, principalObjectId: admission.principalObjectId } },
+        return { ...first, owner: Schema.decodeUnknownSync(TeamProfile.Owner)({ profile: admission.profile,
+          principal: { tenantId, principalObjectId: admission.principalObjectId } }),
           verifyCurrent: async () => {
             const current = await observe()
             return !!current && digestSfValue(current) === digestSfValue(first)
@@ -118,10 +118,10 @@ async function createFixture() {
           try { return await work() } finally { state.rootDepth-- }
         }, options)
       },
-      transaction: (surface, work, options) => persistence.transaction(surface, async (snapshot, blobs) => {
+      transaction: (surface, work, options) => persistence.transaction(surface, async (snapshot: Snapshot) => {
         const scope = persistence.currentSnapshotScope?.()
         if (scope && state.rootDepth) state.rootReads.at(-1)!.reads.push(scope.identity)
-        return work(snapshot, blobs)
+        return work(snapshot)
       }, options),
     }, maxJsonBytes: 2 * 1024 * 1024,
     authenticate: async (request) => {
