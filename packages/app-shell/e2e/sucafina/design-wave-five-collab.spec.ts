@@ -27,6 +27,17 @@ collabTest("UI51 UI52 UI53 UI55 UI56 · original relationships, unsent discussio
       "collaboration-confirmation-confirm", "import-admit", "import-preview", "import-apply"].includes(mode))
       mutations.push(mode)
   })
+  page.on("response", async (response) => {
+    if (!new URL(response.url()).pathname.endsWith("/api/ui/context") || response.status() !== 200) return
+    try {
+      const context = await response.json()
+      if (context.status !== "ok") return
+      const reads = ["collaboration.relation-read", "collaboration.thread-read", "collaboration.confirmation-project"]
+      console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "collaboration-route-source-health",
+        operations: context.value.availability.flatMap((resource: { operations: Array<{ operationId: string }> }) =>
+          resource.operations.filter((operation) => reads.includes(operation.operationId))) }))
+    } catch { /* A navigation can close an already superseded response. */ }
+  })
   const sourceRequest = async (pathname: string, init?: RequestInit) => {
     const headers = new Headers(init?.headers)
     if (init?.method === "POST") headers.set("Origin", installation.origin)
@@ -50,6 +61,99 @@ collabTest("UI51 UI52 UI53 UI55 UI56 · original relationships, unsent discussio
     await expect(surface.getByRole("button", { name: "Generate preview", exact: true })).toBeDisabled()
     await looks(page, info, "UI55-setup")
     expect(mutations).toEqual([])
+  })
+
+  let manifestId = ""
+  let sourceDigest = ""
+  await collabTest.step("UI55 admits actual scanned XLSX bytes and previews an original Planner line without applying", async () => {
+    await enter(page, owner, url("/orchestra/sf-imports/new"), "Import file")
+    const surface = page.locator('[data-sf-surface="UI55"]')
+    await surface.getByLabel("Period start", { exact: true }).fill(installation.year + "-01-01")
+    await surface.getByLabel("Period end", { exact: true }).fill(installation.year + "-12-31")
+    const targetsResponse = page.waitForResponse((response) => {
+      const selected = new URL(response.url())
+      return selected.origin === installation.origin && selected.searchParams.get("sf") === "import-targets" && response.request().method() === "GET"
+    })
+    await surface.getByRole("button", { name: "Find destinations", exact: true }).click()
+    const response = await targetsResponse
+    expect(response.status()).toBe(200)
+    const targetResult = await response.json() as { status: string; value: Destination[] }
+    expect(targetResult.status).toBe("ok")
+    const targets = targetResult.value.filter((entry) => entry.label === waveThreeData.planner.version && entry.surface === "planner")
+    expect(targets).toHaveLength(1)
+    const target = targets[0]!
+    expect(target.formats).toContain("xlsx")
+    await surface.getByRole("combobox", { name: "Destination", exact: true }).selectOption(target.selectionRef)
+    const versionParts = target.selectionRef.split(":")
+    expect(versionParts[0]).toBe("planner-version")
+    expect(versionParts).toHaveLength(4)
+    const versionId = decodeURIComponent(versionParts[1]!)
+    const gridResponse = await page.context().request.get(installation.origin + installation.mount +
+      "/api/ui/pages/CAP18?" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })
+    expect(gridResponse.status()).toBe(200)
+    const original = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP18"].output)(await gridResponse.json())
+    if (original.status !== "ok" || !original.value.data.grid) throw new Error("Original Planner grid unavailable")
+    const rows = original.value.data.grid.rows.filter((entry) => entry.label === waveThreeData.planner.opex)
+    expect(rows).toHaveLength(1)
+    const sourceRow = rows[0]!
+    const workbook = new Workbook()
+    workbook.addWorksheet("OPEX").addRows([
+      ["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Jan"],
+      [sourceRow.id, "Licenses", sourceRow.label, "USD", "Forecast", 11200],
+    ])
+    const bytes = Buffer.from(await workbook.xlsx.writeBuffer())
+    sourceDigest = createHash("sha256").update(bytes).digest("hex")
+    await surface.getByLabel("File", { exact: true }).setInputFiles({
+      name: "design-test-data-source-review.xlsx",
+      mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buffer: bytes,
+    })
+    await surface.locator(".sf-files-options > summary").click()
+    await expect(surface.getByLabel("Create a new Planner version", { exact: true })).not.toBeChecked()
+    await expect(surface.getByLabel("Remove records missing from supplied sheets", { exact: true })).not.toBeChecked()
+    await capture(page, info, "UI55-dark-desktop-selected-file-options")
+    const admission = page.waitForResponse(mode("import-admit"))
+    const preview = page.waitForResponse(mode("import-preview"))
+    await surface.getByRole("button", { name: "Generate preview", exact: true }).click()
+    const admitted = await admission
+    expect(admitted.status()).toBe(200)
+    expect(await admitted.json()).toMatchObject({ status: "ok", value: { digest: sourceDigest } })
+    const generated = await preview
+    expect(generated.status()).toBe(200)
+    const result = await generated.json() as { status: string; value: { id: string; domainApplied: boolean; state: string; sourceDigest: string } }
+    expect(result).toMatchObject({ status: "ok", value: { domainApplied: false, state: "preview", sourceDigest } })
+    manifestId = result.value.id
+    await expect(surface).toHaveAttribute("data-sf-phase", "reviewing")
+    await expect(surface.locator(".sf-files-setup")).toBeHidden()
+    await expect(surface.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
+    await capture(page, info, "UI55-dark-desktop-scanned-simulation")
+    await surface.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary").filter({ hasText: /^changed / }).click()
+    await expect(surface.getByText("11200", { exact: false }).first()).toBeVisible()
+    await capture(page, info, "UI55-dark-desktop-field-change")
+    await surface.locator(".sf-files-preview-heading").getByRole("button", { name: "Cancel preview", exact: true }).click()
+    await expect(surface.locator(".sf-files-setup")).toBeVisible()
+    expect(await surface.getByLabel("File", { exact: true }).evaluate((element) =>
+      element instanceof HTMLInputElement ? element.files?.[0]?.name : undefined)).toBe("design-test-data-source-review.xlsx")
+    await expect(surface.getByRole("combobox", { name: "Destination", exact: true })).toHaveValue(target.selectionRef)
+    await capture(page, info, "UI55-dark-desktop-cancel-retains-file")
+    expect(mutations.filter((value) => value === "import-apply")).toHaveLength(0)
+  })
+
+  const previewPath = "/orchestra/sf-imports/" + encodeSfRouteRef(manifestId) + "/preview"
+  await collabTest.step("UI56 reads the original preview and preserves its owner-bound review continuation", async () => {
+    await enter(page, owner, url(previewPath), "Import preview")
+    const surface = page.locator('[data-sf-surface="UI56"]')
+    await expect(surface).toHaveAttribute("data-sf-wave", "five")
+    await surface.getByRole("button", { name: "Refresh receipt", exact: true }).click()
+    await expect(surface.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
+    const continuation = surface.getByRole("link", { name: "Review impact", exact: true })
+    await expect(continuation).toHaveAttribute("href", new RegExp("/orchestra/sf-imports/" + encodeSfRouteRef(manifestId) + "/review\\?"))
+    await looks(page, info, "UI56-preview")
+    await surface.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary").filter({ hasText: /^changed / }).click()
+    await capture(page, info, "UI56-dark-desktop-field-provenance")
+    const read = await sourceRequest("/planner?" + new URLSearchParams({ sf: "import-reference", importPreviewRef: manifestId }))
+    expect(read.status).toBe(200)
+    expect(await read.json()).toMatchObject({ status: "ok", value: { manifest: { id: manifestId, sourceDigest, domainApplied: false, state: "preview" } } })
+    expect(mutations.filter((value) => value === "import-apply")).toHaveLength(0)
   })
 
   const seeded = await seedWaveFiveCollab({ actorId: installation.actorId, request: sourceRequest }, installation.year)
@@ -167,99 +271,6 @@ collabTest("UI51 UI52 UI53 UI55 UI56 · original relationships, unsent discussio
     await enter(page, owner, url("/orchestra/sf-work/confirmations/" + encodeSfRouteRef(confirmationId)), "Confirm no change")
     await expect(surface.locator("[data-sf-confirm-record-project]")).toContainText("Valid for the current source")
     await capture(page, info, "UI53-dark-desktop-recorded-validity")
-  })
-
-  let manifestId = ""
-  let sourceDigest = ""
-  await collabTest.step("UI55 admits actual scanned XLSX bytes and previews an original Planner line without applying", async () => {
-    await enter(page, owner, url("/orchestra/sf-imports/new"), "Import file")
-    const surface = page.locator('[data-sf-surface="UI55"]')
-    await surface.getByLabel("Period start", { exact: true }).fill(installation.year + "-01-01")
-    await surface.getByLabel("Period end", { exact: true }).fill(installation.year + "-12-31")
-    const targetsResponse = page.waitForResponse((response) => {
-      const selected = new URL(response.url())
-      return selected.origin === installation.origin && selected.searchParams.get("sf") === "import-targets" && response.request().method() === "GET"
-    })
-    await surface.getByRole("button", { name: "Find destinations", exact: true }).click()
-    const response = await targetsResponse
-    expect(response.status()).toBe(200)
-    const targetResult = await response.json() as { status: string; value: Destination[] }
-    expect(targetResult.status).toBe("ok")
-    const targets = targetResult.value.filter((entry) => entry.label === waveThreeData.planner.version && entry.surface === "planner")
-    expect(targets).toHaveLength(1)
-    const target = targets[0]!
-    expect(target.formats).toContain("xlsx")
-    await surface.getByRole("combobox", { name: "Destination", exact: true }).selectOption(target.selectionRef)
-    const versionParts = target.selectionRef.split(":")
-    expect(versionParts[0]).toBe("planner-version")
-    expect(versionParts).toHaveLength(4)
-    const versionId = decodeURIComponent(versionParts[1]!)
-    const gridResponse = await page.context().request.get(installation.origin + installation.mount +
-      "/api/ui/pages/CAP18?" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })
-    expect(gridResponse.status()).toBe(200)
-    const original = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP18"].output)(await gridResponse.json())
-    if (original.status !== "ok" || !original.value.data.grid) throw new Error("Original Planner grid unavailable")
-    const rows = original.value.data.grid.rows.filter((entry) => entry.label === waveThreeData.planner.opex)
-    expect(rows).toHaveLength(1)
-    const sourceRow = rows[0]!
-    const workbook = new Workbook()
-    workbook.addWorksheet("OPEX").addRows([
-      ["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Jan"],
-      [sourceRow.id, "Licenses", sourceRow.label, "USD", "Forecast", 11200],
-    ])
-    const bytes = Buffer.from(await workbook.xlsx.writeBuffer())
-    sourceDigest = createHash("sha256").update(bytes).digest("hex")
-    await surface.getByLabel("File", { exact: true }).setInputFiles({
-      name: "design-test-data-source-review.xlsx",
-      mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buffer: bytes,
-    })
-    await surface.locator(".sf-files-options > summary").click()
-    await expect(surface.getByLabel("Create a new Planner version", { exact: true })).not.toBeChecked()
-    await expect(surface.getByLabel("Remove records missing from supplied sheets", { exact: true })).not.toBeChecked()
-    await capture(page, info, "UI55-dark-desktop-selected-file-options")
-    const admission = page.waitForResponse(mode("import-admit"))
-    const preview = page.waitForResponse(mode("import-preview"))
-    await surface.getByRole("button", { name: "Generate preview", exact: true }).click()
-    const admitted = await admission
-    expect(admitted.status()).toBe(200)
-    expect(await admitted.json()).toMatchObject({ status: "ok", value: { digest: sourceDigest } })
-    const generated = await preview
-    expect(generated.status()).toBe(200)
-    const result = await generated.json() as { status: string; value: { id: string; domainApplied: boolean; state: string; sourceDigest: string } }
-    expect(result).toMatchObject({ status: "ok", value: { domainApplied: false, state: "preview", sourceDigest } })
-    manifestId = result.value.id
-    await expect(surface).toHaveAttribute("data-sf-phase", "reviewing")
-    await expect(surface.locator(".sf-files-setup")).toBeHidden()
-    await expect(surface.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
-    await capture(page, info, "UI55-dark-desktop-scanned-simulation")
-    await surface.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary").filter({ hasText: /^changed / }).click()
-    await expect(surface.getByText("11200", { exact: false }).first()).toBeVisible()
-    await capture(page, info, "UI55-dark-desktop-field-change")
-    await surface.locator(".sf-files-preview-heading").getByRole("button", { name: "Cancel preview", exact: true }).click()
-    await expect(surface.locator(".sf-files-setup")).toBeVisible()
-    expect(await surface.getByLabel("File", { exact: true }).evaluate((element) =>
-      element instanceof HTMLInputElement ? element.files?.[0]?.name : undefined)).toBe("design-test-data-source-review.xlsx")
-    await expect(surface.getByRole("combobox", { name: "Destination", exact: true })).toHaveValue(target.selectionRef)
-    await capture(page, info, "UI55-dark-desktop-cancel-retains-file")
-    expect(mutations.filter((value) => value === "import-apply")).toHaveLength(0)
-  })
-
-  const previewPath = "/orchestra/sf-imports/" + encodeSfRouteRef(manifestId) + "/preview"
-  await collabTest.step("UI56 reads the original preview and preserves its owner-bound review continuation", async () => {
-    await enter(page, owner, url(previewPath), "Import preview")
-    const surface = page.locator('[data-sf-surface="UI56"]')
-    await expect(surface).toHaveAttribute("data-sf-wave", "five")
-    await surface.getByRole("button", { name: "Refresh receipt", exact: true }).click()
-    await expect(surface.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
-    const continuation = surface.getByRole("link", { name: "Review impact", exact: true })
-    await expect(continuation).toHaveAttribute("href", new RegExp("/orchestra/sf-imports/" + encodeSfRouteRef(manifestId) + "/review\\?"))
-    await looks(page, info, "UI56-preview")
-    await surface.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary").filter({ hasText: /^changed / }).click()
-    await capture(page, info, "UI56-dark-desktop-field-provenance")
-    const read = await sourceRequest("/planner?" + new URLSearchParams({ sf: "import-reference", importPreviewRef: manifestId }))
-    expect(read.status).toBe(200)
-    expect(await read.json()).toMatchObject({ status: "ok", value: { manifest: { id: manifestId, sourceDigest, domainApplied: false, state: "preview" } } })
-    expect(mutations.filter((value) => value === "import-apply")).toHaveLength(0)
   })
 
   await collabTest.step("Every selected area has a real pt-BR native capture", async () => {

@@ -175,3 +175,12 @@
   .sf-files[data-sf-wave="five"] .sf-files-reference { grid-template-columns: minmax(0,1fr); }
   .sf-files[data-sf-wave="five"] .sf-files-preview-heading { flex-direction: column; align-items: stretch; }
 }
+
+/* Native disclosures retain a visible affordance after their flex layout. */
+.sf-files[data-sf-wave="five"] :is(.sf-files-options,.sf-files-section details) > summary { justify-content: space-between; gap: 12px; }
+.sf-files[data-sf-wave="five"] :is(.sf-files-options,.sf-files-section details) > summary::after {
+  content: ""; flex: none; inline-size: 7px; block-size: 7px;
+  margin-inline-end: 4px; border-inline-end: 1.5px solid currentColor;
+  border-block-end: 1.5px solid currentColor; transform: rotate(45deg);
+}
+.sf-files[data-sf-wave="five"] :is(.sf-files-options,.sf-files-section details)[open] > summary::after { transform: rotate(225deg); }
