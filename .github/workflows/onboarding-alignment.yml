@@ -71,7 +71,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          timeout --signal=TERM --kill-after=15s 720s .venv-alignment/bin/python "$ALIGNMENT_DIR/align_narration.py" --input "$ALIGNMENT_DIR/$ALIGNMENT_SOURCE" --audio-root alignment-input --word-map "$ALIGNMENT_DIR/$ALIGNMENT_WORD_MAP" --output alignment-output --model-cache alignment-model-cache --threads 4 --analysis-budget-seconds 600
+          timeout --signal=TERM --kill-after=15s 720s .venv-alignment/bin/python "$ALIGNMENT_DIR/align_narration.py" --input "$ALIGNMENT_DIR/$ALIGNMENT_SOURCE" --audio-root alignment-input --word-map "$ALIGNMENT_DIR/$ALIGNMENT_WORD_MAP" --output alignment-output --model-cache alignment-model-cache --expected-model-sha256 488fd4f16de84438ffc945334278c1b9fb9b7159a806c1080b16111a958c945d --threads 4 --analysis-budget-seconds 600
       - name: Preserve actual results and partial diagnostics
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # Existing narration workflow pin

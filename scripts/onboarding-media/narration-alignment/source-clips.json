@@ -1,356 +1,51 @@
 {
   "schema": "sf-narration-alignment-input-v1",
-  "purpose": "Align unchanged verified English narration; no speech or product changes.",
-  "missing_clip_ids": [
-    "06-chat-response"
-  ],
+  "purpose": "Align only actual replacement01/29 plus actual approved06. Reuse the unchanged31; no speech or product changes.",
+  "missing_clip_ids": [],
   "sources": [
     {
-      "folder": "stable",
-      "run_id": 45042278245,
-      "artifact_name": "onboarding-narration-d7117ac72f7618519dc99692a4897ed790fa2539"
+      "folder": "brand",
+      "run_id": 45063137785,
+      "head_sha": "ec145e3049ddc9c9a5ca35a7c11e79cd5e8e8a30",
+      "artifact_name": "onboarding-narration-ec145e3049ddc9c9a5ca35a7c11e79cd5e8e8a30"
     },
     {
-      "folder": "results",
-      "run_id": 45042972351,
-      "artifact_name": "onboarding-narration-9a7daf1819980a0b23e2e8ca5ad77dccc7156b36"
-    },
-    {
-      "folder": "visible-review",
-      "run_id": 45043272692,
-      "artifact_name": "onboarding-narration-01619a1b6654afa607a88e4ec5a7359052380447"
+      "folder": "chat-response",
+      "run_id": 45069109156,
+      "head_sha": "65635eeaf7b23de5109fae3c0269cb714fa803e5",
+      "artifact_name": "onboarding-narration-65635eeaf7b23de5109fae3c0269cb714fa803e5"
     }
   ],
   "clips": [
     {
       "id": "01-welcome",
-      "batch": "stable",
+      "batch": "brand",
       "file": "01_01-welcome.wav",
-      "text": "Welcome to Orchestra for Sucafina, part of Human Guardrail. Start on Today, then follow a regional I T review through A I assistance, planning and procurement. These are actual product screens with demonstration data.",
-      "display_text": "Welcome to Orchestra for Sucafina, part of HuGR. Start on Today, then follow a regional IT review through AI assistance, planning and procurement. These are actual product screens with demonstration data.",
-      "text_sha256": "a9a78d22d339f2f9a93e6cfe006a39c0642caea714209940064e5e1ae7e9f992",
-      "audio_sha256": "891def7a2e7560b0d6362e7ad679669cc0ded4eae940aef18a9211144feca00a",
-      "duration_seconds": 15.766667
-    },
-    {
-      "id": "02-context",
-      "batch": "results",
-      "file": "01_02-context.wav",
-      "text": "Context and access identifies the current installation. Today highlights priorities; Resume reopens the regional operating-plan case and the decision it asks us to review.",
-      "display_text": "Context and access identifies the current installation. Today highlights priorities; Resume reopens the regional operating-plan case and the decision it asks us to review.",
-      "text_sha256": "39d872a3ec86d0af045b8223960c908084cc1483ebb9bbae291329087cfc1a31",
-      "audio_sha256": "ff0cf00bc4ddde805f9daa4e81c12dceff598db082eca5a3ae3803caf18e6a41",
-      "duration_seconds": 12.623292
-    },
-    {
-      "id": "07-platform-agents",
-      "batch": "stable",
-      "file": "04_07-platform-agents.wav",
-      "text": "Agents shows the shared Orchestra team, led by Maestro. Open a card to inspect its purpose, model and tools, then explore its Skill tree. The configuration makes each role and its working method visible.",
-      "display_text": "Agents shows the shared Orchestra team, led by Maestro. Open a card to inspect its purpose, model and tools, then explore its Skill tree. The configuration makes each role and its working method visible.",
-      "text_sha256": "cc9436765a448b3437a29b7945ece5fddb509119e242d57038f3e1cb5699e59f",
-      "audio_sha256": "93d4e12ff47c4fb71cb10fc4625f2616ce8ab779e356db467b4cf3e9ae158549",
-      "duration_seconds": 14.799292
-    },
-    {
-      "id": "09-skills-catalog",
-      "batch": "stable",
-      "file": "05_09-skills-catalog.wav",
-      "text": "The Skills catalog includes eighteen Sucafina methods. Open one to inspect its purpose, source and full instructions. This makes the method reviewable: you can see what the agent is asked to do before using it.",
-      "display_text": "The Skills catalog includes eighteen Sucafina methods. Open one to inspect its purpose, source and full instructions. This makes the method reviewable: you can see what the agent is asked to do before using it.",
-      "text_sha256": "f67a6e2489e574828b24dbe1f75aafc670335e2a9e704fdee0aeb0c9e7151bf2",
-      "audio_sha256": "cde145afefca631041b356468c29bbc759f308b16a6f862a33658cbc24cc5b98",
-      "duration_seconds": 15.002667
-    },
-    {
-      "id": "04-chat-request",
-      "batch": "stable",
-      "file": "03_04-chat-request.wav",
-      "text": "We give Maestro the example staffing change from one to zero point nine full-time equivalent, plus context about three quotations. We ask for three bullets: a staffing review question, evidence needed for the selected quote, and the next human review step.",
-      "display_text": "We give Maestro the example staffing change from one to zero point nine full-time equivalent, plus context about three quotations. We ask for three bullets: a staffing review question, evidence needed for the selected quote, and the next human review step.",
-      "text_sha256": "85d59788ca8ee389b9405d1c0628dfe7ae59aec9d2be0a29f02a495cdb0c6df5",
-      "audio_sha256": "d6e8a60f8bfc7689fa955716033707b7b11d1360fef8c0f3e22c8ff28392e803",
-      "duration_seconds": 17.710667
-    },
-    {
-      "id": "10-native-residents",
-      "batch": "stable",
-      "file": "06_10-native-residents.wav",
-      "text": "Five installed profiles support Sucafina's business review. The Sucafina Maestro coordinates relevant specialists and prepares review questions. Finance, Portfolio, Procurement and Reviewer each have their own instructions, tools and skills, which we can inspect.",
-      "display_text": "Five installed profiles support Sucafina's business review. The Sucafina Maestro coordinates relevant specialists and prepares review questions. Finance, Portfolio, Procurement and Reviewer each have their own instructions, tools and skills, which we can inspect.",
-      "text_sha256": "98132195c6ff20f8375dafdb89b26b9c818b7856d3a8797f21aa61c3ac352679",
-      "audio_sha256": "191c52df3120e7005b2b4727dc9add64e3385b53e7a9499b5b9383c8c1378c56",
-      "duration_seconds": 18.504
-    },
-    {
-      "id": "11-finance-portfolio",
-      "batch": "stable",
-      "file": "07_11-finance-portfolio.wav",
-      "text": "Finance is configured to explain forecasts, compare scenarios and examine sensitivity through business calculation services. Portfolio examines dependencies and constraints. Their instructions and tools show how financial questions and delivery questions receive different specialist treatment.",
-      "display_text": "Finance is configured to explain forecasts, compare scenarios and examine sensitivity through business calculation services. Portfolio examines dependencies and constraints. Their instructions and tools show how financial questions and delivery questions receive different specialist treatment.",
-      "text_sha256": "4e5866bb8d15fb14516c2aa526d66794b057da3eac3c459a35cd529e71ba9ce6",
-      "audio_sha256": "75b27245929710d110960257f27dbea330a319dfc8edf9618a262c24c6a89cac",
-      "duration_seconds": 20.848
-    },
-    {
-      "id": "12-procurement-reviewer",
-      "batch": "stable",
-      "file": "08_12-procurement-reviewer.wav",
-      "text": "Procurement is configured to prepare a purchase dossier. Its instructions keep approval in native Sucafina. Reviewer has a separate mission: challenge the proposal and its evidence. We can inspect these responsibilities before asking either agent to work.",
-      "display_text": "Procurement is configured to prepare a purchase dossier. Its instructions keep approval in native Sucafina. Reviewer has a separate mission: challenge the proposal and its evidence. We can inspect these responsibilities before asking either agent to work.",
-      "text_sha256": "aba5b0fc515a1cd08b8793f385c0f7b10344ea7afc2c3dec63c8d83735b27791",
-      "audio_sha256": "c008354aeebdca39090cf6699b0dec66513f8ad228c973f4133301e592e826ec",
-      "duration_seconds": 17.849958
-    },
-    {
-      "id": "13-contribution-proof",
-      "batch": "stable",
-      "file": "09_13-contribution-proof.wav",
-      "text": "Open the quotation-comparison skill to inspect its method: examine the offers, compare their conditions and prepare an explanation for review. The role defines the purpose; the skill provides reusable instructions for carrying out that task.",
-      "display_text": "Open the quotation-comparison skill to inspect its method: examine the offers, compare their conditions and prepare an explanation for review. The role defines the purpose; the skill provides reusable instructions for carrying out that task.",
-      "text_sha256": "33476c5576f7619fd33c0c539d840d6f8a909decfc4d9234b2fe7484d0ff59df",
-      "audio_sha256": "ffc7ae4070b2841affb4f1652732847777fcb823e3557dc456ec181becf930bb",
-      "duration_seconds": 17.401958
-    },
-    {
-      "id": "14-executive-budget",
-      "batch": "stable",
-      "file": "10_14-executive-budget.wav",
-      "text": "Start the financial review in Executive Dashboard and Budget Overview. Open the infrastructure renewal project to inspect monthly budget, actual and forecast entries. Its recorded delivery note identifies a specific issue to investigate, connecting the headline view to the source detail.",
-      "display_text": "Start the financial review in Executive Dashboard and Budget Overview. Open the infrastructure renewal project to inspect monthly budget, actual and forecast entries. Its recorded delivery note identifies a specific issue to investigate, connecting the headline view to the source detail.",
-      "text_sha256": "5e40e47280461256a1a7c2f1b423e9fe4b6f4ed8d65f6f9e5521f9e9ab101896",
-      "audio_sha256": "6d24567e3478285c71e02d018318a51e330724d083c66c074b525d6b3941b65d",
-      "duration_seconds": 20.484
-    },
-    {
-      "id": "15-people-operations",
-      "batch": "stable",
-      "file": "11_15-people-operations.wav",
-      "text": "People connects the review to the team. Open Morgan Lee from Team Structure, then move to I T Operations. November's incident service-level figure is ninety-eight point four, with the ticket register and application heat map alongside it.",
-      "display_text": "People connects the review to the team. Open Morgan Lee from Team Structure, then move to IT Operations. November's incident service-level figure is 98.4, with the ticket register and application heat map alongside it.",
-      "text_sha256": "dbd6a8759b498f8d673f47d3c448d5740170a99103c85ce8d359d4b56f762861",
-      "audio_sha256": "2fd599ef2d26840e68e16abb26f276cbd63c4038d1c9ec90f7fc907c7e43a87d",
-      "duration_seconds": 16.496
-    },
-    {
-      "id": "16-portfolio-bi",
-      "batch": "stable",
-      "file": "12_16-portfolio-bi.wav",
-      "text": "From Portfolio, open the regional delivery programme in All Projects. Its detail shows the owner, schedule, budget and milestones. Then inspect the Analytics catalog: it groups business questions with reporting dates and a step for choosing their context.",
-      "display_text": "From Portfolio, open the regional delivery programme in All Projects. Its detail shows the owner, schedule, budget and milestones. Then inspect the Analytics catalog: it groups business questions with reporting dates and a step for choosing their context.",
-      "text_sha256": "9fb7d1da791be59a1a838adb812e93455619d603460b2a2195700b2fa743a5ab",
-      "audio_sha256": "7763d5d294817d254889514d7493349540196921c352a0e97982febd572d3f85",
-      "duration_seconds": 17.764625
-    },
-    {
-      "id": "17-decision-case",
-      "batch": "stable",
-      "file": "13_17-decision-case.wav",
-      "text": "The case asks us to compare regional operating plans with explicit cost uncertainties. It keeps the period, currency, criteria and sources together. The reviewer can see the required subtotal criterion alongside the cost coverage still needing examination.",
-      "display_text": "The case asks us to compare regional operating plans with explicit cost uncertainties. It keeps the period, currency, criteria and sources together. The reviewer can see the required subtotal criterion alongside the cost coverage still needing examination.",
-      "text_sha256": "e6b485a4814e68184c192b928d0b73ef4e07ffa725f7184059f480e0bdcde97f",
-      "audio_sha256": "8d0b575814a77fd68f6cb1f229d38b8c2069ab327bf2add84605cbafafa30b93",
-      "duration_seconds": 18.992
-    },
-    {
-      "id": "18-assumptions-options",
-      "batch": "stable",
-      "file": "14_18-assumptions-options.wav",
-      "text": "Assumptions keeps open questions visible: service scope, migration and exit costs. Select the two alternatives to compare their known subtotals: one thousand two hundred and two thousand four hundred U S dollars. Both remain conditioned because cost coverage is still pending.",
-      "display_text": "Assumptions keeps open questions visible: service scope, migration and exit costs. Select the two alternatives to compare their known subtotals: 1,200 and 2,400 USD. Both remain conditioned because cost coverage is still pending.",
-      "text_sha256": "cbbbcdeadbc5e698ebd1491894c27f33b76b6f2da172017f567ad52273236918",
-      "audio_sha256": "4a5de1601b9814541508d367b8147e2110acc3a0fb7afcd931ee57ab7a22c63c",
-      "duration_seconds": 19.418667
-    },
-    {
-      "id": "19-analysis-input",
-      "batch": "stable",
-      "file": "15_19-analysis-input.wav",
-      "text": "Analysis, business memory and recurring work depend on approved model and service connections. No model is enabled for this Analysis page in the recording, so we continue with the existing evidence and choice.",
-      "display_text": "Analysis, business memory and recurring work depend on approved model and service connections. No model is enabled for this Analysis page in the recording, so we continue with the existing evidence and choice.",
-      "text_sha256": "ed2b6233401679a036faab0dd2a4c82aeba86ca6b9261c57476b4008d50a9317",
-      "audio_sha256": "8ba7025fc3065a1384d66faaa3c675216a4c10390f6ac4f3655b360f0f34a25d",
-      "duration_seconds": 14.382667
-    },
-    {
-      "id": "20-analysis-result",
-      "batch": "stable",
-      "file": "16_20-analysis-result.wav",
-      "text": "Current choice shows the candidate already recorded, with a note to review its sources and cost coverage. The preference and its remaining conditions are visible together before the reviewer proceeds.",
-      "display_text": "Current choice shows the candidate already recorded, with a note to review its sources and cost coverage. The preference and its remaining conditions are visible together before the reviewer proceeds.",
-      "text_sha256": "c1f8c56f254fd23d627b805adc46c0a6ff5140ac90c236c074f8549d984b54b7",
-      "audio_sha256": "7327018ce2f1f7f9b06c7c3d54dc827fc4741f247c215f8ad157b0db5cd60850",
-      "duration_seconds": 13.36
-    },
-    {
-      "id": "21-planning-version",
-      "batch": "stable",
-      "file": "17_21-planning-version.wav",
-      "text": "Now let's make a real change in the planning example. Open Overview, then select the Operating plan in OPEX. Its year and version identify the plan, with headcount, expenses, capital investment, allocations and exchange rates organized within it.",
-      "display_text": "Now let's make a real change in the planning example. Open Overview, then select the Operating plan in OPEX. Its year and version identify the plan, with headcount, expenses, capital investment, allocations and exchange rates organized within it.",
-      "text_sha256": "c0d85429e8be190d0e814fcc05856ff2adda2b35d1e9cd2633858c941b63ed3f",
-      "audio_sha256": "31c0652cea089ae6bb86e70ff7b82e8edde017eb911c0ad9c99f973a2865f16d",
-      "duration_seconds": 18.010667
-    },
-    {
-      "id": "23-headcount-review",
-      "batch": "stable",
-      "file": "18_23-headcount-review.wav",
-      "text": "Open the regional infrastructure engineer position. Change its full-time equivalent from one to zero point nine, then open Review changes. Check the original and proposed values, the position and the selected version before confirming.",
-      "display_text": "Open the regional infrastructure engineer position. Change its FTE from 1.0 to 0.9, then open Review changes. Check the original and proposed values, the position and the selected version before confirming.",
-      "text_sha256": "0e4f20806802e6e1386e2b649c95f3b2bf514e346df821fe824011f02a6ea79c",
-      "audio_sha256": "9957ace7232b4bff90d1885a8a7dc74729fa6abdf5a9eb58396bfa026796dba3",
-      "duration_seconds": 16.982625
-    },
-    {
-      "id": "24-headcount-saved",
-      "batch": "stable",
-      "file": "19_24-headcount-saved.wav",
-      "text": "Confirm the proposed change, then return to Headcount and reopen the same position. The saved value is zero point nine full-time equivalent. The change is now part of this planning version.",
-      "display_text": "Confirm the proposed change, then return to Headcount and reopen the same position. The saved value is 0.9 FTE. The change is now part of this planning version.",
-      "text_sha256": "d720b5f8fb4cfd69de3e2f64f54f306f97156981e05bb0d97034a752f246126f",
-      "audio_sha256": "574b7d41ab769d8835fffc117a9cbcd2e6dbd0b17201bdcaf5e1871f0c5bafd7",
-      "duration_seconds": 13.668625
-    },
-    {
-      "id": "25-procurement-request",
-      "batch": "stable",
-      "file": "20_25-procurement-request.wav",
-      "text": "Open Requests and choose the regional support purchase. Its purpose, amount and current stage establish the review context. Three supplier quotations are already recorded. We keep this same request throughout the example, from the proposed edit to its source readback.",
-      "display_text": "Open Requests and choose the regional support purchase. Its purpose, amount and current stage establish the review context. Three supplier quotations are already recorded. We keep this same request throughout the example, from the proposed edit to its source readback.",
-      "text_sha256": "81f584fe394e309a0448f53a1cc92b8277852c40644539361219752dac6982e4",
-      "audio_sha256": "82b338729c0acd26923f3f616ba14b9c2471b514d5ce5b6d5e5c72fb29fe5bfd",
-      "duration_seconds": 18.606667
-    },
-    {
-      "id": "26-request-change",
-      "batch": "visible-review",
-      "file": "01_26-request-change.wav",
-      "text": "Check the quantities and unit prices, record the evaluator, then open Review changes. Inspect the proposed sourcing values and verify the request and quotation details before confirming.",
-      "display_text": "Check the quantities and unit prices, record the evaluator, then open Review changes. Inspect the proposed sourcing values and verify the request and quotation details before confirming.",
-      "text_sha256": "78fb32c7030bce419f5116fe3b579de52026e9ef020f24b7fe3163742c8b023c",
-      "audio_sha256": "53b1e4ee677e83e128ab5be70a29cbcc9a255d45bfbf8a77df785112d384941c",
-      "duration_seconds": 13.786667
-    },
-    {
-      "id": "27-sourcing",
-      "batch": "results",
-      "file": "02_27-sourcing.wav",
-      "text": "Confirm saves the sourcing change. Reopen the source to verify the evaluator and quotation values. Compare quotations brings the three offers, their quantities, currencies and technical eligibility together, ready for the native purchase review.",
-      "display_text": "Confirm saves the sourcing change. Reopen the source to verify the evaluator and quotation values. Compare quotations brings the three offers, their quantities, currencies and technical eligibility together, ready for the native purchase review.",
-      "text_sha256": "e7c956b51827cf2e719212a1f845a01414e703b775051c293b8457332c495484",
-      "audio_sha256": "720d4d000212e433046c135545edbbc4a770ed4ef338c37f43f129b30b5c84fd",
-      "duration_seconds": 17.604
-    },
-    {
-      "id": "28-purchase-approval",
-      "batch": "results",
-      "file": "03_28-purchase-approval.wav",
-      "text": "Submit the saved sourcing record and confirm the proposed transition. The request moves to sourcing approval. Open its review, record the human assessment, and check the proposed approval before confirming. Reopen the same request to verify the result: it is now a purchase-order draft, ready for further preparation.",
-      "display_text": "Submit the saved sourcing record and confirm the proposed transition. The request moves to sourcing approval. Open its review, record the human assessment, and check the proposed approval before confirming. Reopen the same request to verify the result: it is now a purchase-order draft, ready for further preparation.",
-      "text_sha256": "5ab2dd4a2f4806efc97c52cdbcee8f6d15390d83fa3eae287e961093b09dd3e3",
-      "audio_sha256": "a9644c1fdae927d0b4754447e0156b26e945955ea264668f5e88c5c9599f0aa3",
-      "duration_seconds": 21.973333
+      "text": "Welcome to Orchestra for Sucafina. Start on Today, then follow a regional I T review through A I assistance, planning and procurement. These are actual product screens with demonstration data.",
+      "display_text": "Welcome to Orchestra for Sucafina. Start on Today, then follow a regional IT review through AI assistance, planning and procurement. These are actual product screens with demonstration data.",
+      "text_sha256": "cc9a1ed47253dbac7ed743962e48d3a63880360b466bdca85a5453f875c579b8",
+      "audio_sha256": "acb5b2d3de7ed151aedfa46f77ace47d4c4a5d026a931e55561bff19cd1278a2",
+      "duration_seconds": 14.124
     },
     {
       "id": "29-claw-location",
-      "batch": "stable",
-      "file": "23_29-claw-location.wav",
-      "text": "Human Guardrail Claw connects this business context to an external agent gateway. We explain it over the actual quotation comparison screen. The gateway runs outside Orchestra and reads records within the paired user's authorized business context.",
+      "batch": "brand",
+      "file": "02_29-claw-location.wav",
+      "text": "H U G R Claw connects this business context to an external agent gateway. We explain it over the actual quotation comparison screen. The gateway runs outside Orchestra and reads records within the paired user's authorized business context.",
       "display_text": "HuGR Claw connects this business context to an external agent gateway. We explain it over the actual quotation comparison screen. The gateway runs outside Orchestra and reads records within the paired user's authorized business context.",
-      "text_sha256": "daafeaacfa20421cd79a54f54042eb8b796ab68cefb62ff0f6f599ca361ae743",
-      "audio_sha256": "b012dabc96c8f0367d79c284ba0a09004e159a775826fed8063ce92ad5b12ebd",
-      "duration_seconds": 17.518667
+      "text_sha256": "d7327116f43f48f285c97905bc92e6afb667e084f1910bcc27ea4290e8f7df23",
+      "audio_sha256": "cb805bd42f7ffb62bdf7263f1e79cd7cb276b27ab3dab1087ca936aedb05a8ac",
+      "duration_seconds": 17.988
     },
     {
-      "id": "30-claw-team",
-      "batch": "stable",
-      "file": "24_30-claw-team.wav",
-      "text": "The documented OpenClaw pilot has Maestro coordinating four read-only profiles: operations, planning, execution review and evidence. These external Gateway profiles are distinct from the platform roles and Sucafina's five business profiles. They examine the information made available to them.",
-      "display_text": "The documented OpenClaw pilot has Maestro coordinating four read-only profiles: operations, planning, execution review and evidence. These external Gateway profiles are distinct from the platform roles and Sucafina's five business profiles. They examine the information made available to them.",
-      "text_sha256": "b4ba84d124de4748bf74782519f4d242d59e13c6d70f5d5247f6cf24c630f870",
-      "audio_sha256": "c095b3e55acaef5a5460bc64bf3a660aa6c4401587e37178748b82d0c9faedde",
-      "duration_seconds": 21.36
-    },
-    {
-      "id": "31-claw-read-tools",
-      "batch": "stable",
-      "file": "25_31-claw-read-tools.wav",
-      "text": "Claw's read-only tools can look up recorded quotations, suppliers, contracts and pending work. Here we move from a quotation comparison to a supplier's original details and a separate contract example. Answers can point back to these native sources for human review.",
-      "display_text": "Claw's read-only tools can look up recorded quotations, suppliers, contracts and pending work. Here we move from a quotation comparison to a supplier's original details and a separate contract example. Answers can point back to these native sources for human review.",
-      "text_sha256": "89b44980c8db53eff0146ad1065999f21fb965a0db7fe5ba9b2cd9cf688b27cf",
-      "audio_sha256": "c5deb183397400021192831becf12c2758d3f74a5fc7ead9eeb34aa3ad63d40e",
-      "duration_seconds": 18.905333
-    },
-    {
-      "id": "32-claw-action-boundary",
-      "batch": "results",
-      "file": "04_32-claw-action-boundary.wav",
-      "text": "The native purchase-order screen now shows that draft for the same request. A person controls its next step. Claw's read-only gateway helps gather evidence; selection, approval and record changes stay in Sucafina.",
-      "display_text": "The native purchase-order screen now shows that draft for the same request. A person controls its next step. Claw's read-only gateway helps gather evidence; selection, approval and record changes stay in Sucafina.",
-      "text_sha256": "f3c2660f757e385a762239363832b235589d33f68445e9d3c6cf2176a50fcac7",
-      "audio_sha256": "487a6f1e93c034383a20f96865159055001542e836a090f017052348d0832204",
-      "duration_seconds": 15.596
-    },
-    {
-      "id": "35-documents",
-      "batch": "stable",
-      "file": "27_35-documents.wav",
-      "text": "Documents links supporting files to business records. Its form exposes classification, record identity, revision and scanning before attachment. Source selection and search sit below, keeping the file's business context visible.",
-      "display_text": "Documents links supporting files to business records. Its form exposes classification, record identity, revision and scanning before attachment. Source selection and search sit below, keeping the file's business context visible.",
-      "text_sha256": "29918abf61f8edb7e471b2e61c5dd3b0d496140b365bb8fe7bd801e8b7316144",
-      "audio_sha256": "d1c8ccee4a4387374d2fc7d04e4d2188eca1268ced2c4af8ff17fcba0b0cf585",
-      "duration_seconds": 16.697958
-    },
-    {
-      "id": "36-import-export",
-      "batch": "results",
-      "file": "05_36-import-export.wav",
-      "text": "Select source, period and destination. Exports has separate format and record choices. We inspect these entry points here; no import is applied or export downloaded.",
-      "display_text": "Select source, period and destination. Exports has separate format and record choices. We inspect these entry points here; no import is applied or export downloaded.",
-      "text_sha256": "7491b21ff5420a41933bccc6c4283ba42dfb73eaca7f25ddd3c4aa235bb66ef6",
-      "audio_sha256": "78942a103b6a03657a400ab5887c5f2adb297f9e1f9d11fd446437678df985ac",
-      "duration_seconds": 12.582
-    },
-    {
-      "id": "41-shared-workflows",
-      "batch": "stable",
-      "file": "29_41-shared-workflows.wav",
-      "text": "Workflows describes repeatable plans for Maestro, with an agent and checks at each step. This project is showing the template catalog; creating one requires a recognized Git repository. No workflow run is being shown.",
-      "display_text": "Workflows describes repeatable plans for Maestro, with an agent and checks at each step. This project is showing the template catalog; creating one requires a recognized Git repository. No workflow run is being shown.",
-      "text_sha256": "adabd952b294c7065ce3f4340aa59d195f240a29135af9ae31956ec907d6179d",
-      "audio_sha256": "ac36fd32739998e6f8ba2cec50eb6f348bc8391663c6f24d77a98e382884df05",
-      "duration_seconds": 16.197333
-    },
-    {
-      "id": "42-atlas",
-      "batch": "stable",
-      "file": "30_42-atlas.wav",
-      "text": "Atlas keeps project knowledge and agent memory close to their source. Here, we are viewing the Orchestra code project: it has no recorded claims or reads yet. The page exposes knowledge status and freshness.",
-      "display_text": "Atlas keeps project knowledge and agent memory close to their source. Here, we are viewing the Orchestra code project: it has no recorded claims or reads yet. The page exposes knowledge status and freshness.",
-      "text_sha256": "73f1afcddc59aa2504b9478fae4357318629cb844c83a37f80243e8982fe90d1",
-      "audio_sha256": "2c15ef9182ce67d84cfe970c0020afc791f539225314b78433871a201ef040c1",
-      "duration_seconds": 15.022667
-    },
-    {
-      "id": "43-connections",
-      "batch": "stable",
-      "file": "31_43-connections.wav",
-      "text": "Providers shows how this project reaches its models. Integrations separates accounts, targets and session access. This demonstration workspace has no external business accounts configured; an operational review needs its approved services connected.",
-      "display_text": "Providers shows how this project reaches its models. Integrations separates accounts, targets and session access. This demonstration workspace has no external business accounts configured; an operational review needs its approved services connected.",
-      "text_sha256": "4b52bbc46fefb9a3077aec596f7bae8c8e26deabe2a998b38512f3275c302ba0",
-      "audio_sha256": "20447d442c8d5911f97c55fa8ac1b08fb0c264468d5fb2ae623e9cdd6cc45fc4",
-      "duration_seconds": 18.000667
-    },
-    {
-      "id": "44-close",
-      "batch": "results",
-      "file": "06_44-close.wav",
-      "text": "We've saved the staffing change and followed sourcing approval into a purchase-order draft. These examples connect business context, explicit A I inputs and visible evidence to actions people can review, understand and verify.",
-      "display_text": "We've saved the staffing change and followed sourcing approval into a purchase-order draft. These examples connect business context, explicit AI inputs and visible evidence to actions people can review, understand and verify.",
-      "text_sha256": "7cb543fbea208a9f5e855861873c22a0e761dfbec237c534f26c62944f42ef33",
-      "audio_sha256": "bc8c34a6bf5956e14a0cd1b02c3927be9f7e72f87001514757b690742001b575",
-      "duration_seconds": 16.090667
+      "id": "06-chat-response",
+      "batch": "chat-response",
+      "file": "01_06-chat-response.wav",
+      "text": "Maestro highlights support coverage, requests missing quotation evidence, and proposes checks before approval. Treat this as a draft for human review. This example uses supplied facts with tool access denied.",
+      "display_text": "Maestro highlights support coverage, requests missing quotation evidence, and proposes checks before approval. Treat this as a draft for human review. This example uses supplied facts with tool access denied.",
+      "text_sha256": "c3722f08e3c2c3939ea0fa3bb54047265818589bf78a46b1f4e2d28c32fa5a22",
+      "audio_sha256": "59cd6b217a3bafba4c9a0cab2c1afd889ae96ac762b2a208a8ac8ecdc7b35360",
+      "duration_seconds": 15.25
     }
   ]
 }
