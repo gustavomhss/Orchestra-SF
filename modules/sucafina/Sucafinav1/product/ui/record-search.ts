@@ -9,7 +9,7 @@ export function recordSearchWidget(surface: string) {
 export const recordSearchScript = `
 ;(() => {
   const focusRecord = () => {
-    if (!location.hash) return
+    if (!root.isConnected || !location.hash) return
     const canonical = location.hash.startsWith('#record-')
     let id; try { id = decodeURIComponent(location.hash.slice(canonical ? 8 : 1)) } catch { return }
     const form = [...document.querySelectorAll('form[data-record]')].find((node) => node.dataset.record === id)
@@ -169,9 +169,13 @@ export const recordSearchScript = `
     mounted?.restore()
   }
   attach()
-  focusRecord()
   new MutationObserver(attach).observe(root, { childList: true })
-  addEventListener('hashchange', focusRecord)
+  addEventListener('pageshow', (event) => {
+    // The browser can override focus set before its initial fragment navigation.
+    // The shell revalidates cached pages before restoring any protected view.
+    if (!event.persisted) requestAnimationFrame(focusRecord)
+  })
+  addEventListener('hashchange', () => requestAnimationFrame(focusRecord))
   addEventListener('pagehide', () => mounted?.clear())
   addEventListener('sf-access-revoked', () => mounted?.clear())
 })();

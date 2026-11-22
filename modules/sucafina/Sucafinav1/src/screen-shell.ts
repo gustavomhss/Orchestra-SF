@@ -92,7 +92,16 @@ async function press(name) {
 }
 function attach() {
   const current = new URL(location.href)
-  const stateKeys = ["year", "execYear", "opsYear", "secYear", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"]
+  const surface = document.body.dataset.surface
+  const stateKeys = surface === "dashboard"
+    ? ["year", "execYear", "opsYear", "secYear", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"]
+    : surface === "planner" ? ["year", "version"] : []
+  const periodYear = surface === "dashboard" ? document.querySelector('main select[data-year="own"][data-query]')?.dataset.query : undefined
+  const periodMonth = { execYear: "executiveMonth", opsYear: "operationsMonth", secYear: "securityMonth" }[periodYear]
+  if (periodMonth) {
+    if (current.searchParams.has("own") && !current.searchParams.has(periodYear)) current.searchParams.set(periodYear, current.searchParams.get("own"))
+    if (current.searchParams.has("month") && !current.searchParams.has(periodMonth)) current.searchParams.set(periodMonth, current.searchParams.get("month"))
+  }
   document.querySelectorAll('nav a[href*="?page="]').forEach((anchor) => {
     const target = new URL(anchor.href)
     for (const key of stateKeys) if (current.searchParams.has(key)) target.searchParams.set(key, current.searchParams.get(key))
@@ -171,10 +180,23 @@ function attach() {
     const dialog = button.closest("td").querySelector("dialog")
     const form = dialog.querySelector("form[data-command]")
     button.dataset.editorKey = form ? JSON.stringify([form.dataset.page, form.dataset.command, form.dataset.record]) : ""
-    button.addEventListener("click", () => dialog.showModal())
+    dialog.id ||= "record-editor-" + crypto.randomUUID()
+    button.setAttribute("aria-controls", dialog.id)
+    button.setAttribute("aria-expanded", String(dialog.open))
+    button.addEventListener("click", () => {
+      dialog.showModal()
+      button.setAttribute("aria-expanded", "true")
+    })
+    dialog.addEventListener("close", () => {
+      if (dialog.open) return
+      button.setAttribute("aria-expanded", "false")
+      if (!pending.closed && button.isConnected && !document.querySelector("dialog[open]")) button.focus({ preventScroll: true })
+    })
     dialog.addEventListener("cancel", (event) => {
       const active = [...dialog.querySelectorAll("form[data-command]")].find((form) => outstandingCommand(form))
-      if (active) { event.preventDefault(); commandBlocked(active) }
+      if (active) { event.preventDefault(); commandBlocked(active); return }
+      // Escape dismisses the dialog before the queued close event.
+      button.setAttribute("aria-expanded", "false")
     })
     dialog.addEventListener("keydown", (event) => {
       if (event.key !== "Tab" || event.altKey || event.ctrlKey || event.metaKey) return

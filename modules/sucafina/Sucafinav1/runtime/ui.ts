@@ -51,7 +51,7 @@ export function table(headers: string[], data: string[][]): string {
   const action = (index: number) => ["Edit", "Delete", "Actions"].includes(headers[index] ?? "") ? ' class="table-action"' : ""
   return `<div class="table-scroll"><table><thead><tr>${headers.map((head, index) => `<th scope="col"${action(index)}>${esc(displayLabel(head))}</th>`).join("")}</tr></thead><tbody>${data.map((row) => `<tr>${row.map((cell, index) => {
     const editor = ["Edit", "Actions"].includes(headers[index] ?? "") && cell.includes("<form")
-    return `<td${action(index)}>${editor ? `<button type="button" data-open-editor>${headers[index] === "Edit" ? "Edit" : "Manage"}</button><dialog class="row-dialog" aria-label="${headers[index] === "Edit" ? "Edit record" : "Manage record"}"><header><h2>${headers[index] === "Edit" ? "Edit record" : "Manage record"}</h2><button type="button" data-close-editor aria-label="Close editor">×</button></header><p data-editor-status role="status" aria-live="polite"></p>${cell}</dialog>` : cell}</td>`
+    return `<td${action(index)}>${editor ? `<button type="button" data-open-editor aria-haspopup="dialog" aria-expanded="false">${headers[index] === "Edit" ? "Edit" : "Manage"}</button><dialog class="row-dialog" aria-label="${headers[index] === "Edit" ? "Edit record" : "Manage record"}"><header><h2>${headers[index] === "Edit" ? "Edit record" : "Manage record"}</h2><button type="button" data-close-editor aria-label="Close editor">×</button></header><p data-editor-status role="status" aria-live="polite"></p>${cell}</dialog>` : cell}</td>`
   }).join("")}</tr>`).join("")}</tbody></table>${data.length ? "" : '<p class="empty">No records.</p>'}</div>`
 }
 
