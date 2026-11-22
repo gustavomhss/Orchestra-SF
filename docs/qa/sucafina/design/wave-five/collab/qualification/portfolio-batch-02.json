@@ -1,0 +1,129 @@
+{
+  "source": "536a06dc32704ba87eb9b02964db1a70ee6248ea",
+  "sourceTree": "51444c1d1a1cf8a23ff952b8b23b060b06164d5e",
+  "base": "d4b9c4d5857755f2c8edee33690b91c453a7292a",
+  "entries": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/portfolio-reading-health.ts",
+      "sha": "f107a50dfa694d3680c351e3b6833e12c94af1e5",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "apps/cli/test/sucafina-portfolio-reading-health.test.ts",
+      "sha": "4ed364f8e83f6b61a9f498f607fd938dc65cc233",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.ts",
+      "sha": "e0b83d004fb9682254c9c81fe154fb2658354720",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
+      "sha": "d9d8b833f07378891dbf5b320f6969ac433b3496",
+      "mode": "100644",
+      "type": "blob"
+    }
+  ],
+  "unit": {
+    "source": "536a06dc32704ba87eb9b02964db1a70ee6248ea",
+    "sourceTree": "51444c1d1a1cf8a23ff952b8b23b060b06164d5e",
+    "base": "d4b9c4d5857755f2c8edee33690b91c453a7292a",
+    "entries": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/portfolio-reading-health.ts",
+        "sha": "f107a50dfa694d3680c351e3b6833e12c94af1e5",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/test/sucafina-portfolio-reading-health.test.ts",
+        "sha": "4ed364f8e83f6b61a9f498f607fd938dc65cc233",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.ts",
+        "sha": "e0b83d004fb9682254c9c81fe154fb2658354720",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
+        "sha": "d9d8b833f07378891dbf5b320f6969ac433b3496",
+        "mode": "100644",
+        "type": "blob"
+      }
+    ],
+    "tree": "f192dc880cfdd120dd294cd272c3b439b911d1c1",
+    "branch": "ci-run-sf5portfoliobatch2",
+    "request": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-operational-read-phase.test.ts",
+        "./test/sucafina-collaboration-reading-health.test.ts",
+        "./test/sucafina-portfolio-reading-health.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "snapshot": "33ce1c69b9371d5b874f3b81b2757a6762a085ec",
+    "result": "running",
+    "expectedCases": 71
+  },
+  "baseline": {
+    "source": "62e6d382d35d4d6b449b14b1915cb8924865371f",
+    "sourceTree": "92c2bc7db3a6ad6c338d0748fc9c7a52a107bbaa",
+    "tree": "962fc45e085474cc1277a6e1ff3f8216b7d23784",
+    "branch": "ci-run-sf5readerbaseline1",
+    "request": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-collaboration-reading-health.test.ts",
+        "./test/sucafina-portfolio-reading-health.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "expected": "Two new queued-reader replacement tests must fail on the original dynamic reader lookup; all earlier tests remain original.",
+    "testEntries": [
+      {
+        "path": "apps/cli/test/sucafina-portfolio-reading-health.test.ts",
+        "sha": "4ed364f8e83f6b61a9f498f607fd938dc65cc233",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
+        "sha": "d9d8b833f07378891dbf5b320f6969ac433b3496",
+        "mode": "100644",
+        "type": "blob"
+      }
+    ],
+    "snapshot": "272d07dc98aefad3cd452e919cf8affdfc7f0826",
+    "result": "running"
+  },
+  "review": {
+    "root": "Mode/namespace/phase sharing and lease fences reviewed; queued reader identity captured as requested.",
+    "peer": "Focal follow-up requested."
+  },
+  "implementation": "Only original per-phase namespace/mode metadata sharing and captured canonical reader identity. Each operation retains original admission, grant mode, source/version comparison and revalidation. No decoder, workflow, registry, schema, provider callback or grant change.",
+  "runtimeQualification": "Installed comparison and clean import pending."
+}
