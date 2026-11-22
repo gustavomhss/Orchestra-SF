@@ -1,3 +1,4 @@
+import { runSfOperationalReadPhase } from "../../../../apps/cli/src/sucafina-product/native-ui/operational-read-phase.ts"
 import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { SfReviewRoutes } from "@orchestra/schema/sucafina/reviews/routes"
 import path from "node:path"
@@ -275,7 +276,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
       const actions = createSfActionSource(nativeDependencies, nativeHandlers)
       nativeActions = actions.actions
       // Router construction above proves these exact handlers were installed.
-      nativeOperational = async (request, stamp) => {
+      nativeOperational = (request, stamp) => runSfOperationalReadPhase(store, request, async () => {
         const observed = await Promise.allSettled([
           observeSfPlannerPages(nativeApplication, request, stamp),
           observeSfDashboardPages(nativeApplication, request, stamp),
@@ -295,7 +296,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
           actions.operational(request, stamp),
         ])
         return observed.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
-      }
+      })
     }
     const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount, ...(recoveryDrill ? { recoveryDrill } : {}), ...(operator ? { operator: { id: `macos:${operator.installationId}:${operator.uid}`, name: operator.name } } : {}), schedule: !!operator })
     services.jobs = jobs
