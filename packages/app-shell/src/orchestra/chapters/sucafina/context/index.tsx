@@ -15,10 +15,15 @@ import type { SfInstallationDescriptor, SfOwnerKey, SfOwnerSelection } from "@or
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 
 const Context = createContext<SfContextHandle>()
+
+/** Accept only a live owner handle; the corporate adapter keeps its original Team DTO. */
+export function SfContextHandleProvider(props: Readonly<{ value: SfContextHandle; children: JSX.Element }>): JSX.Element {
+  return <Context.Provider value={props.value}>{props.children}</Context.Provider>
+}
 type Active = Readonly<{
   context: SfContext
   transport: SfTransport
-  drafts: ReturnType<typeof createSfOwnerDrafts>
+  drafts: ReturnType<typeof createSfOwnerDrafts<SfContext>>
 }>
 
 /**
@@ -471,3 +476,4 @@ export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
     </SfPageFrame>
   )
 }
+
