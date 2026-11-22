@@ -14,6 +14,7 @@ import { SF_STATE_FALLBACK_KEY, sfCommonKey, useSfPresentation } from "../../../
 import type { SfCopyKey, SfUiState } from "../../../shared/frame/types"
 import { SF_U38_COPY } from "@/i18n/orchestra-chapters/sf-u38"
 import "../u38.css"
+import "./proposals.css"
 
 type Key = keyof typeof SF_U38_COPY
 const key = (text: Key): SfCopyKey => text as SfCopyKey
@@ -293,10 +294,11 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
 
   return <SfPageFrame titleKey={key("sf.ui54.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
-    <div class="sf-u38-page" data-sf-surface="UI54">
+    <div class="sf-u38-page" data-sf-surface="UI54" data-sf-wave="five" data-sf-proposal-stage={store.review?.state === "planned" ? "review" : chosenDraft() ? "draft" : "source"}>
+      <header class="sf-proposal-intro"><h2>{t(key("sf.u38.proposalHeading"))}</h2><p>{t(key("sf.u38.proposalHint"))}</p></header>
       <SfStatePanel state={readState()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[readState()])}
         onRetryRead={() => bump((count) => count + 1)}>
-        <section class="sf-u38-section">
+        <section class="sf-u38-section sf-proposal-summary">
           <h2>{t(key("sf.u38.proposal"))}</h2>
           <dl class="sf-u38-meta">
             <div><dt>{t(key("sf.u38.proposalReference"))}</dt><dd><bdi>{reference()}</bdi></dd></div>
@@ -339,7 +341,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
             </dl>}
           </Show>
         </section>
-        <section class="sf-u38-section" aria-label={t(key("sf.u38.proposalReview"))}>
+        <section class="sf-u38-section sf-proposal-review" aria-label={t(key("sf.u38.proposalReview"))}>
           <h2>{t(key("sf.u38.proposalReview"))}</h2>
           <Show when={chosenChange() && store.review && store.review.state === "planned" &&
             store.workbench?.permissions.apply && isAdmitted("dashboard.dashboard-hot-topic-apply")}
@@ -370,7 +372,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
               onCancel={() => bump((count) => count + 1)} />
           </Show>
         </section>
-        <section class="sf-u38-section">
+        <section class="sf-u38-section sf-proposal-receipt">
           <h2>{t(key("sf.u38.proposalReceipt"))}</h2>
           <Show when={store.review?.receipt}
             fallback={<p role="status">{t(key("sf.u38.proposalNeedsReview"))}</p>}>

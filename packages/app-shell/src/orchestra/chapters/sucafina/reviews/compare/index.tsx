@@ -10,6 +10,7 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import { comparableReviewSections, preservedComponentRows, preservedSectionHasChanges, preservedValueRows, readPreservedProjection, reviewReadState, sameSourceMaterial, type PreservedComponent, type PreservedReview, type PreservedSourceRef, type PreservedValue, type ReviewProjection } from "../preserved/model"
 import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
 import "../preserved/preserved.css"
+import "../wave-five.css"
 
 const key = (value: string) => value as SfCopyKey
 
@@ -216,8 +217,12 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
         busy: store.busy, onInvoke: () => { void read() },
       }}
     >
-      <div class="sf-n28" data-sf-surface="UI49" data-sf-compare-state={store.state}>
-        <form class="sf-n28-form" onSubmit={(event) => { event.preventDefault(); void read() }}>
+      <div class="sf-n28" data-sf-surface="UI49" data-sf-wave="five" data-sf-compare-state={store.state}>
+        <header class="sf-review-intro">
+          <h2>{t("sf.u32.compareHeading")}</h2>
+          <p>{t("sf.u32.compareHint")}</p>
+        </header>
+        <form class="mx-card sf-n28-form sf-review-compare-form" onSubmit={(event) => { event.preventDefault(); void read() }}>
           <label class="sf-n28-field" for={uid + "-previous"}>{t("sf.u32.previous")}
             <input id={uid + "-previous"} required maxlength="2048" autocomplete="off"
               value={store.previousRef} onInput={(event) => setStore({ previousRef: event.currentTarget.value,

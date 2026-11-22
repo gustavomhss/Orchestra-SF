@@ -53,6 +53,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                   <strong>{rows()[0]?.label ?? t(series.label.key)}</strong>
                   <span class="sf-bi-unit">{rows()[0]?.unit}</span>
                 </figcaption>
+                <div class="sf-bi-plot-region" role="region" aria-label={t(sfBiKey(props.copy + ".axis"))} tabIndex={0}>
                 <svg viewBox={"0 0 700 " + Math.max(60, rows().length * 43 + 18)}
                   role="img" aria-label={t(sfBiKey(props.copy + ".axis"))}
                   class="sf-bi-svg" preserveAspectRatio="xMinYMin meet">
@@ -84,14 +85,18 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                     }}
                   </For>
                 </svg>
-                <div class="sf-bi-source-actions">
+                </div>
+                <details class="sf-bi-source-actions">
+                  <summary>{t(sfBiKey(props.copy + ".openSource"))}</summary>
+                  <div class="sf-bi-source-action-list">
                   <For each={rows().filter((row) => row.evidenceRef)}>
                     {(row) => <button class="mx-btn" type="button"
                       onClick={() => row.evidenceRef && props.onOpenSource(row.evidenceRef)}>
                       {t(sfBiKey(props.copy + ".openSource"))}: {row.label} · {row.period}
                     </button>}
                   </For>
-                </div>
+                  </div>
+                </details>
               </figure>
             )
           }}
@@ -103,7 +108,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
               <p role={plan().reconciliation === "reconciled" ? "status" : "alert"}>
                 {t(sfBiKey(props.copy + ".reconciliation." + plan().reconciliation))}
               </p>
-              <div class="sf-bi-waterfall-region">
+              <div class="sf-bi-waterfall-region" role="region" aria-label={t(sfBiKey(props.copy + ".waterfall"))} tabIndex={0}>
                 <table class="sf-bi-waterfall-table">
                   <caption>{t(sfBiKey(props.copy + ".waterfall"))}</caption>
                   <thead><tr>

@@ -100,6 +100,15 @@ export const SF_U32_COPY = {
   "sf.u32.discussionReconciled": "Discussion reconciled. Your drafts are retained; send an action explicitly.",
   "sf.u32.retainedAction": "Draft and original action retained. Reconcile before an explicit retry.",
   "sf.u32.draftRetained": "Your draft is retained.",
+  "sf.u32.readHeading": "Open the captured review",
+  "sf.u32.readHint": "Use an existing review reference to read its preserved sections under your current access.",
+  "sf.u32.openReview": "Open preserved review",
+  "sf.u32.compareHeading": "Choose the two revisions",
+  "sf.u32.compareHint": "Read both original reviews to inspect their values, periods and source lineage side by side.",
+  "sf.u32.meetingSummary": "Preserved review {{reference}} v{{version}} · {{createdAt}}",
+  "sf.u32.meetingPeriod": "{{start}} – {{end}} · {{count}} records",
+  "sf.u32.openSource": "Open source {{reference}}",
+  "sf.u32.presentationHint": "Move through the preserved sections. Source updates do not replace the captured review.",
 } as const
 
 export const SF_U32_COPY_BR: Readonly<Record<keyof typeof SF_U32_COPY, string>> = {
@@ -203,4 +212,13 @@ export const SF_U32_COPY_BR: Readonly<Record<keyof typeof SF_U32_COPY, string>> 
   "sf.u32.discussionReconciled": "Discussion reconciled. Your drafts are retained; send an action explicitly.",
   "sf.u32.retainedAction": "Draft and original action retained. Reconcile before an explicit retry.",
   "sf.u32.draftRetained": "Your draft is retained.",
+  "sf.u32.readHeading": "Abra a revisão preservada",
+  "sf.u32.readHint": "Use a referência de uma revisão existente para consultar suas seções preservadas com seu acesso atual.",
+  "sf.u32.openReview": "Abrir revisão preservada",
+  "sf.u32.compareHeading": "Escolha as duas revisões",
+  "sf.u32.compareHint": "Consulte as duas revisões originais para comparar valores, períodos e referências de origem lado a lado.",
+  "sf.u32.meetingSummary": "Revisão preservada {{reference}} v{{version}} · {{createdAt}}",
+  "sf.u32.meetingPeriod": "{{start}} – {{end}} · {{count}} registros",
+  "sf.u32.openSource": "Abrir origem {{reference}}",
+  "sf.u32.presentationHint": "Navegue pelas seções preservadas. As atualizações da origem não substituem a revisão preservada.",
 }
