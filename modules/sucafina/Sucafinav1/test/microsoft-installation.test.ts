@@ -1739,6 +1739,114 @@ for (const revoked of ["roles", "membership", "logout"] as const) {
   })
 }
 
+for (const boundary of ["roles-before", "grants-before", "invalid-before", "roles-during", "grants-during"] as const) {
+  test("Corporate Team context reads the actual private policy at " + boundary, async () => {
+    const group = "75555555-5555-4555-8555-555555555555"
+    const business: NativeBusinessFixture = {
+      groups: { dashboard: { viewer: "group:" + group }, planner: {}, procurement: {} },
+      actors: [{ id: oid, groups: [group] }],
+    }
+    const f = await nativeNavigationFixture({
+      teams: [teamObjectId, secondTeamId], business,
+      sessionGrants: [{ principalRef: oid, namespaces: [], operations: [], sessionActions: ["read"] }],
+    })
+    const entered = Promise.withResolvers<void>()
+    const release = Promise.withResolvers<void>()
+    const profile = (id: string) => Schema.decodeUnknownSync(TeamProfile.Ref)({
+      installationId: f.selection.installationId, tenantId, teamObjectId: id,
+    })
+    const directory = (id: string) => join(f.directory, "business-teams", digestSfValue(profile(id)))
+    const partitions = async () => Promise.all([teamObjectId, secondTeamId].map(async (id) => {
+      const store = await openLocalStore(directory(id))
+      try {
+        const snapshots = []
+        for (const surface of ["dashboard", "planner", "procurement"] as const)
+          snapshots.push(await store.transaction(surface, async (snapshot) => ({
+            commit: false, value: structuredClone(snapshot),
+          })))
+        return { teamObjectId: id, snapshots }
+      } finally { await store.dispose() }
+    }))
+    const read = async (cookie: string) => {
+      const response = await f.context(teamObjectId, cookie)
+      expect(response?.status).toBe(200)
+      const result = Schema.decodeUnknownSync(SfTeamContextResult)(await response!.json())
+      if (result.status !== "ok") throw new Error("Expected current private Team context")
+      expect(result.value.stamp.team?.owner.profile).toEqual(profile(teamObjectId))
+      expect(result.value.stamp.principalRef).toBe(oid)
+      expect(result.value.availability).toEqual([])
+      return result.value
+    }
+    try {
+      for (const id of [teamObjectId, secondTeamId]) {
+        const store = await openLocalStore(directory(id))
+        try {
+          await store.transaction("dashboard", async (snapshot) => {
+            snapshot.data.summaries = ["IT Risks"]
+            snapshot.data.access = { [oid]: { assigned: ["risk-" + id], domains: ["risks"] } }
+            return { commit: true, value: undefined }
+          })
+        } finally { await store.dispose() }
+      }
+      const cookie = await f.signIn("/")
+      const admitted = await read(cookie)
+      expect(admitted.destinations.map((destination) => [destination.capabilityId, destination.page])).toEqual([
+        ["CAP01", "Executive Dashboard"], ["CAP13", "IT Risks"],
+      ])
+      const before = await partitions()
+      const originalFile = await Bun.file(f.file).text()
+      const configuration = object(JSON.parse(originalFile))
+      const changedFile = boundary.startsWith("roles")
+        ? JSON.stringify({ ...configuration, groups: { dashboard: {}, planner: {}, procurement: {} } })
+        : boundary === "invalid-before" ? "{invalid-private-json"
+        : JSON.stringify({ ...configuration, grants: [] })
+      if (boundary.endsWith("-during")) {
+        let reads = 0
+        business.beforeRoleRead = async () => {
+          if (++reads !== 1) return
+          entered.resolve()
+          await release.promise
+        }
+        const pending = f.context(teamObjectId, cookie)
+        await entered.promise
+        try { await writeFile(f.file, changedFile, { mode: 0o600 }) }
+        finally { release.resolve() }
+        const response = await pending
+        expect(response?.status).toBe(503)
+        const denied = Schema.decodeUnknownSync(SfTeamContextResult)(await response!.json())
+        expect(denied.status).toBe("unavailable")
+        expect("value" in denied).toBe(false)
+        business.beforeRoleRead = undefined
+      } else {
+        await writeFile(f.file, changedFile, { mode: 0o600 })
+        if (boundary === "invalid-before") {
+          const response = await f.context(teamObjectId, cookie)
+          expect(response?.status).toBe(503)
+          const denied = Schema.decodeUnknownSync(SfTeamContextResult)(await response!.json())
+          expect(denied.status).toBe("unavailable")
+          expect("value" in denied).toBe(false)
+        }
+      }
+      if (boundary !== "invalid-before") {
+        const current = await read(cookie)
+        expect(current.stamp.accessRevision).not.toBe(admitted.stamp.accessRevision)
+        // Session grants do not confer or remove original business read roles.
+        expect(current.destinations).toEqual(boundary.startsWith("roles") ? [] : admitted.destinations)
+      }
+      expect(await partitions()).toEqual(before)
+      await writeFile(f.file, originalFile, { mode: 0o600 })
+      const restored = await read(cookie)
+      expect(restored.destinations).toEqual(admitted.destinations)
+      expect(restored.stamp.accessRevision).toBe(admitted.stamp.accessRevision)
+      expect(await partitions()).toEqual(before)
+    } finally {
+      release.resolve()
+      business.beforeRoleRead = undefined
+      await f.close()
+    }
+  })
+}
+
 test("Corporate native login preserves closed Team domain routes without granting membership", async () => {
   const f = await nativeNavigationFixture()
   try {

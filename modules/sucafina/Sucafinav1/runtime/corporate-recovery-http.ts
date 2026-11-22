@@ -17,14 +17,16 @@ const decodeBody = Schema.decodeUnknownOption(Schema.UnknownFromJsonString)
 const checkpointId = /^backup-[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/
 
 export function createCorporateRecoveryHttp(input: {
-  config: Pick<MicrosoftConfiguration, "origin" | "mount" | "tenantId" | "clientId" | "supremeAdminGroupId" | "grants">
+  config: Pick<MicrosoftConfiguration, "origin" | "mount" | "tenantId" | "clientId">
+  readPolicy: () => Promise<Pick<MicrosoftConfiguration, "teams" | "supremeAdminGroupId" | "grants">>
   directory: string
   identity: Pick<LocalIdentity, "prepare" | "observeCorporateRecoveryActor">
   register: Awaited<ReturnType<typeof openCorporateRecoveryRegister>>
   profilePolicy: Pick<TeamProfilePolicyStore, "read">
   now: () => Date
 }) {
-  const { config, directory, identity, register, profilePolicy, now } = input
+  const { config, readPolicy, directory, identity, register, profilePolicy, now } = input
+  if (typeof readPolicy !== "function") throw new Error("Corporate recovery requires current private policy")
   if (!profilePolicy || typeof profilePolicy.read !== "function") throw new Error("Corporate recovery requires current Team policy")
   const route = config.mount + "/api/ui/team-profile-migration/recover"
   const installationId = teamProfileInstallationId({ ...config, directory })
@@ -41,13 +43,16 @@ export function createCorporateRecoveryHttp(input: {
     if (url.origin !== config.origin || request.headers.get("origin") !== config.origin || url.search ||
         request.signal.aborted || request.headers.get("sec-fetch-site") === "cross-site") return respond(403)
     if (request.headers.get("content-type")?.split(";")[0]?.trim().toLowerCase() !== "application/json") return respond(415)
-    if (!config.supremeAdminGroupId || !identity.observeCorporateRecoveryActor) return respond(403)
+    if (!identity.observeCorporateRecoveryActor) return respond(403)
 
     try {
+      const policy = await readPolicy()
+      const groupId = policy.supremeAdminGroupId
+      if (policy.teams !== "direct" || !groupId) return respond(403)
       await identity.prepare(request)
-      const admission = await identity.observeCorporateRecoveryActor(request, config.supremeAdminGroupId)
+      const admission = await identity.observeCorporateRecoveryActor(request, groupId)
       if (!admission) return respond(403)
-      const grants = config.grants.filter((grant) => grant.principalRef === admission.principalId)
+      const grants = policy.grants.filter((grant) => grant.principalRef === admission.principalId)
       if (grants.length !== 1 || !Array.isArray(grants[0]?.migrationActions) ||
           !grants[0].migrationActions.includes("recover")) return respond(403)
 
@@ -62,7 +67,13 @@ export function createCorporateRecoveryHttp(input: {
       const verifyCurrent = async () => {
         if (request.signal.aborted || !await admission.verifyCurrent()) return false
         const current = await profilePolicy.read()
-        return !request.signal.aborted && current.configRevision === catalog.configRevision &&
+        // Read the private file again at the publication fence; startup grants never authorize a retry.
+        const currentPolicy = await readPolicy()
+        const currentGrants = currentPolicy.grants.filter((grant) => grant.principalRef === admission.principalId)
+        return !request.signal.aborted && currentPolicy.teams === "direct" &&
+          currentPolicy.supremeAdminGroupId === groupId && currentGrants.length === 1 &&
+          Array.isArray(currentGrants[0]?.migrationActions) && currentGrants[0].migrationActions.includes("recover") &&
+          current.configRevision === catalog.configRevision &&
           current.profiles.filter((entry) => entry.enabled && entry.profile.installationId === installationId &&
             entry.profile.tenantId === config.tenantId && entry.profile.teamObjectId === command.teamObjectId).length === 1
       }

@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { createHash, randomUUID } from "node:crypto"
-import { readFile, realpath } from "node:fs/promises"
+import { readFile, realpath, writeFile } from "node:fs/promises"
 import { createConnection } from "node:net"
 import { join, sep } from "node:path"
 import { Workbook } from "exceljs"
@@ -101,7 +101,8 @@ test("Microsoft Team private import rejects foreign ownership missing grants and
       } finally { await noGrant.http.close() }
     })()
     expect(noGrant.http.state.cleanupComplete).toBe(true)
-    return { attempts, foreignReference, missingGrant: { ...missingGrant, cleanupComplete: true },
+    const configurationRevocation = await configurationRevocations(f)
+    return { attempts, foreignReference, missingGrant: { ...missingGrant, cleanupComplete: true }, configurationRevocation,
       mainCleanAfter: await healthyMain() }
   })
 }, 120_000)
@@ -115,6 +116,87 @@ test("Microsoft Team private import fails closed against the stopped owned real 
     return { connectionRefused: true, attempts, mainCleanAfter: await healthyMain() }
   })
 }, 120_000)
+
+
+/** Mutate the actual private descriptor, including after the original HTTP body
+ * has been consumed. Only provider observation is controlled; storage and the
+ * scanner remain real, and the same Request crosses every authority fence. */
+async function configurationRevocations(f: Fixture) {
+  const file = join(f.http.directory, "installation.json")
+  const original = await readFile(file, "utf8")
+  const changed = (kind: "grants" | "roles") => {
+    const config = object(JSON.parse(original))
+    if (kind === "grants") config.grants = []
+    else {
+      const groups = object(config.groups)
+      config.groups = { ...groups, planner: {} }
+    }
+    return JSON.stringify(config)
+  }
+  const observations = []
+  const restored = async () => {
+    await writeFile(file, original, { mode: 0o600 })
+    const response = await call(f, f.http.teamA, { sf: "import-targets", surface: "planner" })
+    expect(response.status).toBe(200)
+    expect(object(await response.json()).status).toBe("ok")
+    return response.status
+  }
+  try {
+    for (const kind of ["grants", "roles"] as const) {
+      const before = f.http.durable()
+      await writeFile(file, changed(kind), { mode: 0o600 })
+      const response = await call(f, f.http.teamA, { sf: "import-targets", surface: "planner" })
+      expect(response.status).toBe(403)
+      await response.body?.cancel()
+      const durable = unchanged(f.http, before)
+      observations.push({ kind, boundary: "before-request", httpStatus: response.status,
+        originalBodyObserved: false, durable, restoredReadStatus: await restored() })
+    }
+    for (const kind of ["grants", "roles"] as const) {
+      const before = f.http.durable()
+      let originalRequest: Request | undefined
+      let revoked = false
+      f.http.state.observeRequest = (request) => {
+        if (new URL(request.url).searchParams.get("sf") === "import-admit") originalRequest = request
+      }
+      f.http.state.beforeGraphRequest = async () => {
+        if (revoked || !originalRequest?.bodyUsed) return
+        await writeFile(file, changed(kind), { mode: 0o600 })
+        revoked = true
+      }
+      try {
+        const response = await importFile(f, f.http.teamA, await workbook())
+        expect(revoked).toBe(true)
+        expect(originalRequest?.bodyUsed).toBe(true)
+        expect(response.status).toBe(403)
+        await response.body?.cancel()
+        const durable = unchanged(f.http, before)
+        delete f.http.state.observeRequest
+        delete f.http.state.beforeGraphRequest
+        observations.push({ kind, boundary: "after-request-body", httpStatus: response.status,
+          originalBodyObserved: true, durable, restoredReadStatus: await restored() })
+      } finally {
+        delete f.http.state.observeRequest
+        delete f.http.state.beforeGraphRequest
+        await writeFile(file, original, { mode: 0o600 })
+      }
+    }
+    const before = f.http.durable()
+    await writeFile(file, "{", { mode: 0o600 })
+    const invalid = await call(f, f.http.teamA, { sf: "import-targets", surface: "planner" })
+    expect(invalid.status).toBe(503)
+    await invalid.body?.cancel()
+    const durable = unchanged(f.http, before)
+    observations.push({ kind: "unavailable", boundary: "before-request", httpStatus: invalid.status,
+      originalBodyObserved: false, durable, restoredReadStatus: await restored() })
+    const cleanAfterRestore = await acceptedImport(f, f.http.teamA, await workbook())
+    return { source: "private-installation-file", observations, cleanAfterRestore }
+  } finally {
+    delete f.http.state.observeRequest
+    delete f.http.state.beforeGraphRequest
+    await writeFile(file, original, { mode: 0o600 })
+  }
+}
 
 async function ownedScanner(kind: "main" | "error") {
   const evidence = process.env.SF_OPERATIONS_SCANNER_EVIDENCE, temporary = process.env.RUNNER_TEMP
@@ -342,7 +424,7 @@ async function control(id: "private-admission" | "malformed-file" | "denied-owne
   expect(f.http.state.loopbackPeers).toBe(f.http.state.requests)
   expect(f.http.state.ingressRequests).toBe(f.http.state.requests)
   console.info("G06_MICROSOFT_IMPORT_" + id.toUpperCase().replaceAll("-", "_") + " " + JSON.stringify({
-    schema: "orchestra.g06.microsoft-team-import-control/1", control: id, status: "PASS",
+    schema: "orchestra.g06.microsoft-team-import-control/2", control: id, status: "PASS",
     sourceSha: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT,
     proofClass: "COMPONENT_REAL_CLAMD", composition: "MICROSOFT_TEAM_NATIVE_IMPORT",
     identityProvider: "CONTROLLED_ENTRA_GRAPH", runtimeFactory: "createMicrosoftInstallation",

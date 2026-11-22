@@ -25,17 +25,21 @@ export async function runTeamBusiness(input: {
   admission: Admission
   authorizeTeam: TeamAccess
   identity: LocalIdentity
-  config: MicrosoftConfiguration
+  readCurrentConfiguration: () => Promise<MicrosoftConfiguration>
   directory: string
   keys: { assets: Uint8Array; bank: Uint8Array }
   now: () => Date
   teamCurrentChoice?: SfTeamCurrentChoice
   decisionIntentions?: Pick<LocalStore, "transaction">
 }) {
-  const { request, route, admission, identity, config, keys } = input
-  const source = teamBusinessSource(input)
+  const { request, route, admission, identity, keys } = input
+  const policy = await readTeamBusinessPolicy(input).catch(() => undefined)
+  if (!policy) return Response.json({ status: "unavailable" }, { status: 503, headers: { "Cache-Control": "no-store" } })
+  const { config, configurationCurrent } = policy
+  const source = teamBusinessSource({ ...input, ...policy })
   const partition = source.partition
   const denied = () => new Response(null, { status: 403, headers: { "Cache-Control": "no-store" } })
+  if (config.teams !== "direct") return denied()
   const rolePolicy = source.rolePolicy
   const currentActor = (surface = route.surface) => source.currentActor(surface)
   const authorized: { actor?: ResolvedActor; committed: boolean; roster?: string } = { committed: false }
@@ -47,6 +51,7 @@ export async function runTeamBusiness(input: {
     })
   }
   const reauthorize = async (options?: { refreshSession?: boolean }) => {
+    if (!await configurationCurrent()) return false
     // Recheck the roster before the last authority read so a provider wait cannot extend that decision.
     if (authorized.roster !== undefined && rosterDigest(await readDirectory(admission)) !== authorized.roster) return false
     const [actor, current] = await Promise.all([
@@ -55,7 +60,7 @@ export async function runTeamBusiness(input: {
     ])
     if (!actor || !authorized.actor || digestSfValue(actor) !== digestSfValue(authorized.actor) ||
         current.status !== "allowed" || current.principalObjectId !== admission.principalObjectId) return false
-    return admission.verifyCurrent()
+    return await admission.verifyCurrent() && await configurationCurrent()
   }
   const storeDirectory = source.directory
   const currentChoice = input.teamCurrentChoice?.handles(request) ? input.teamCurrentChoice : undefined
@@ -92,7 +97,7 @@ export async function runTeamBusiness(input: {
         authenticate: (original, context) => original === request && context?.surface === "dashboard" ? currentActor() : Promise.resolve(null),
       })
     }
-    const sourceStore = await teamBusinessPersistence(input, store, route.surface)
+    const sourceStore = await teamBusinessPersistence({ ...input, config }, store, route.surface)
     const persistence: AssetPersistence = {
       transaction: (surface, work, options) => sourceStore.transaction(surface, async (snapshot, blobs) => {
         const result = await work(snapshot, blobs)
@@ -151,7 +156,7 @@ export async function runTeamBusiness(input: {
     const response = await business(request)
     // This request already proved Microsoft/Team admission. Revocation during the
     // first role/roster await is forbidden even when no actor reached the module.
-    if (response?.status === 401 && !await admission.verifyCurrent().catch(() => false)) return denied()
+    if (response?.status === 401 && (!await admission.verifyCurrent().catch(() => false) || !await configurationCurrent())) return denied()
     // Uncommitted conflicts and previews can include stored data too. Exports may
     // generate their bytes after the audit transaction, so they are checked again.
     if (response && authorized.actor && (!authorized.committed || request.method !== "POST") && !await reauthorize())
@@ -173,14 +178,17 @@ export async function readTeamBusinessContext(input: {
   request: Request
   admission: TeamBusinessContextAdmission
   identity: LocalIdentity
-  config: MicrosoftConfiguration
+  readCurrentConfiguration: () => Promise<MicrosoftConfiguration>
   directory: string
   now: () => Date
   teamCurrentChoice?: SfTeamCurrentChoice
 }): Promise<TeamBusinessContext | undefined> {
+  const policy = await readTeamBusinessPolicy(input).catch(() => undefined)
+  if (!policy || policy.config.teams !== "direct") return undefined
+  const { config, configurationCurrent } = policy
   const { readSfApplicationContext } = await import("./application.ts")
   const { sfContextDestinationsFromPages } = await import("../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts")
-  const source = teamBusinessSource(input)
+  const source = teamBusinessSource({ ...input, ...policy })
   const admittedOwner = Schema.decodeUnknownSync(TeamProfile.Owner)({
     profile: input.admission.profile,
     principal: { tenantId: input.admission.profile.tenantId, principalObjectId: input.admission.principalObjectId },
@@ -189,13 +197,15 @@ export async function readTeamBusinessContext(input: {
     profile: Object.freeze(admittedOwner.profile),
     principal: Object.freeze(admittedOwner.principal),
   })
+  const authorityCurrent = async () =>
+    await input.admission.verifyCurrent() && await configurationCurrent()
   const observe = async () => {
-    if (input.request.signal.aborted || !await input.admission.verifyCurrent()) return undefined
+    if (!await configurationCurrent() || !await authorityCurrent()) return undefined
     const store = await openLocalStore(source.directory)
     try {
-      const persistence = await teamBusinessPersistence(input, store)
+      const persistence = await teamBusinessPersistence({ ...input, config }, store)
       const application = createModule(source.mount, {
-        persistence, rolePolicy: source.rolePolicy, authMount: input.config.mount,
+        persistence, rolePolicy: source.rolePolicy, authMount: config.mount,
         authenticate: (request, context) => request === input.request && context
           ? source.currentActor(context.surface) : Promise.resolve(null),
         environment: async (request) => {
@@ -206,11 +216,13 @@ export async function readTeamBusinessContext(input: {
         maxJsonBytes: 2 * 1024 * 1024,
       })
       const observed = await readSfApplicationContext(application, input.request, input.admission.principalObjectId,
-        input.admission.verifyCurrent)
-      if (!observed || input.request.signal.aborted) return undefined
+        authorityCurrent)
+      if (!observed || !await authorityCurrent()) return undefined
       const destinations = sfContextDestinationsFromPages(observed.pages)
       if (!destinations) return undefined
-      return { accessRevision: digestSfValue({ owner, business: observed.accessRevision }), destinations }
+      return { accessRevision: digestSfValue({
+        owner, configuration: policy.configurationDigest, business: observed.accessRevision,
+      }), destinations }
     } finally { await store.dispose() }
   }
   const observed = await observe()
@@ -244,6 +256,7 @@ function teamBusinessSource(input: {
   admission: TeamBusinessContextAdmission
   identity: LocalIdentity
   config: MicrosoftConfiguration
+  configurationCurrent: () => Promise<boolean>
   directory: string
 }) {
   const partition = digestSfValue(input.admission.profile)
@@ -255,11 +268,29 @@ function teamBusinessSource(input: {
     mount: input.config.mount + "/teams/" + input.admission.profile.teamObjectId,
     rolePolicy,
     currentActor: async (surface: Surface) => {
-      if (!await input.admission.verifyCurrent()) return null
+      if (!await input.configurationCurrent() || !await input.admission.verifyCurrent()) return null
       const actor = await input.identity.authenticate(input.request, { surface, roleMap: rolePolicy(surface) })
-      return actor?.id === input.admission.principalObjectId && await input.admission.verifyCurrent() ? actor : null
+      return actor?.id === input.admission.principalObjectId &&
+        await input.admission.verifyCurrent() && await input.configurationCurrent() ? actor : null
     },
   }
+}
+
+/** One private policy snapshot per request, reread at every async authority fence. */
+async function readTeamBusinessPolicy(input: {
+  request: Request
+  readCurrentConfiguration: () => Promise<MicrosoftConfiguration>
+}) {
+  const config = await input.readCurrentConfiguration()
+  const configurationDigest = digestSfValue(config)
+  const configurationCurrent = async () => {
+    try {
+      const current = await input.readCurrentConfiguration()
+      return !input.request.signal.aborted && current.teams === "direct" &&
+        digestSfValue(current) === configurationDigest
+    } catch { return false }
+  }
+  return { config, configurationDigest, configurationCurrent }
 }
 
 function rosterDigest(people: readonly DirectoryPerson[]) {
