@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 1,
+  "status": "IN_PROGRESS_NOT_VERIFIED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-design-next",
+  "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+  "areaCount": 15,
+  "routePatternCount": 22,
+  "previouslyMerged": 41,
+  "remainingAfterThisBlock": 14,
+  "userRequest": "Otimo. Pegue um bloco de 15",
+  "groups": {
+    "analytics": {
+      "branch": "sf-next-analytics",
+      "areas": [
+        "UI42",
+        "UI43",
+        "UI44",
+        "UI45",
+        "UI46"
+      ]
+    },
+    "reviews": {
+      "branch": "sf-next-reviews",
+      "areas": [
+        "UI47",
+        "UI48",
+        "UI49",
+        "UI50",
+        "UI54"
+      ]
+    },
+    "collab": {
+      "branch": "sf-next-collab",
+      "areas": [
+        "UI51",
+        "UI52",
+        "UI53",
+        "UI55",
+        "UI56"
+      ]
+    }
+  },
+  "areas": [
+    {
+      "id": "UI42",
+      "label": "Cenários de portfólio — lista",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-portfolio/scenarios"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-portfolio/scenarios/:caseRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI43",
+      "label": "Cenário de portfólio — detalhe",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-portfolio/scenarios/:caseRef/results/:resultRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI44",
+      "label": "Sensibilidade",
+      "routes": [
+        {
+          "kind": "selection",
+          "pattern": "/orchestra/sf-portfolio/sensitivity"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-portfolio/sensitivity/:caseRef/:resultRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI45",
+      "label": "Catálogo de BI",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-bi"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI46",
+      "label": "Visão contextual de BI",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-bi/:viewId"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI47",
+      "label": "Agenda de revisão",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-reviews/agenda"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI48",
+      "label": "Revisões preservadas",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-reviews/reviews"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-reviews/reviews/:reviewRef"
+        },
+        {
+          "kind": "present",
+          "pattern": "/orchestra/sf-reviews/reviews/:reviewRef/present"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI49",
+      "label": "Comparação de revisões",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-reviews/compare"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI50",
+      "label": "Relatórios",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-reviews/reports"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-reviews/reports/:reviewRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI51",
+      "label": "Relações",
+      "routes": [
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-work/relations/new"
+        },
+        {
+          "kind": "case-alias",
+          "pattern": "/orchestra/sf-decisions/:caseRef/relations"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-work/relations/:relationRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI52",
+      "label": "Conversas e threads",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-work/threads/:threadRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI53",
+      "label": "Confirmações",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-work/confirmations/:selectionRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI54",
+      "label": "Propostas de hot topics",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-dashboard/hot-topics/proposals/:proposalRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI55",
+      "label": "Nova importação",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-imports/new"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    },
+    {
+      "id": "UI56",
+      "label": "Prévia da importação",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-imports/:manifestId/preview"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
+      ],
+      "status": "IN_PROGRESS_NOT_VERIFIED"
+    }
+  ],
+  "constraints": {
+    "native": true,
+    "githubMcpOnly": true,
+    "actionsOnly": true,
+    "preserveExistingEnglish": true,
+    "preserveCanonicalProducers": true,
+    "preserveShellAndPalettes": true,
+    "showRealCapturesBeforeMerge": true
+  },
+  "verification": {
+    "status": "NOT_RUN",
+    "captures": 0,
+    "userApproval": "PENDING",
+    "merged": false
+  }
+}

@@ -266,7 +266,7 @@ function MountedSurface(props: Readonly<{
   const polishedSurface = () => {
     const surface = current()?.surfaceId
     return surface !== undefined &&
-      (/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(surface) || /^UI(?:29|3[0-9]|4[01])$/.test(surface))
+      (/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(surface) || /^UI(?:29|[34][0-9]|5[0-6])$/.test(surface))
   }
   return (
     <>

@@ -376,3 +376,11 @@ The fourth wave covers CAP20–CAP28, UI30–UI32 and UI34–UI41: twenty invent
 All CAP01–CAP28 and UI29–UI41 destinations now share the established compact Context and access presentation. The source navigation strip admits only the original 28 capability destinations and their existing owner-bound links. Its explicit polished marker activates the same 1160px axis, gutters, 44px targets, underline selection and keyboard focus roles; resize/navigation reveals the active item. The presentation change does not alter route admission or source availability.
 
 Fourth-wave page roots opt into the existing frame using `data-sf-wave="four"`. Native fonts, role colors and quiet materials remain authoritative. Lists, details, editors and reviews use deliberate work stages; drafts stay mounted where existing controllers require them. Preserve absent source values, authorization, CAS, idempotency, recovery and confirmation semantics. Evidence, outstanding limitations and acceptance will be recorded after the grouped real installed journeys.
+
+## 14. Sucafina fifth-wave chapter presentation
+
+The fifth wave is scoped to UI42–UI56: fifteen native inventory areas and 22 existing route patterns. The isolated branch is `sf-design-next`; the scoped ownership and current verification state live in `docs/qa/sucafina/design/wave-five/scope.json`. Previous-wave user approval does not establish acceptance for these fifteen areas.
+
+Selected page roots opt into the existing `data-sf-wave="five"` geometry. The compact Context and access menu now applies to UI29–UI56 and the unchanged CAP01–CAP28 set. Original handlers, owner fences and access admission remain unchanged. The 1160px axis, 32/24/16px gutters, native type/material tokens and 44px controls are reused; no new global glass, palette, font or shell geometry is introduced.
+
+Scenario, sensitivity and BI presentation remains bounded by original result/model availability. Review, collaboration and import presentation preserves canonical source versions, retained drafts, explicit unavailable states and original confirmation ownership. Imports UI57/UI68 share code with this wave but remain outside its presentation scope. Real browser evidence and final visual details will be recorded after qualification.
