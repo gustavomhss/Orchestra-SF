@@ -4,7 +4,7 @@ import assert from "node:assert/strict"
 import { chmod, link, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
-import { cases, coverageLedger, digest, obligationPath, pendingGroups, preservedTeams, productContractPaths, requireCompleteGate, requireProductContracts, privateRoot, privateText, requireInvocation, target, validateHost, validatePackage, validatePlan, verifyReport, writePrivate } from "./g08-private-evidence.mjs"
+import { cases, coverageLedger, destinationGrants, digest, requireDistinctDestinationGrants, obligationPath, pendingGroups, preservedTeams, productContractPaths, requireCompleteGate, requireProductContracts, privateRoot, privateText, requireInvocation, target, validateHost, validatePackage, validatePlan, verifyReport, writePrivate } from "./g08-private-evidence.mjs"
 
 const uuid = (last) => "00000000-0000-4000-8000-" + String(last).padStart(12, "0")
 function scope(installationId = "synthetic-installation", teamObjectId = uuid(2)) {
@@ -83,6 +83,50 @@ function environment() {
     GITHUB_RUN_ID: value.invocation.runId, GITHUB_RUN_ATTEMPT: value.invocation.runAttempt,
     GITHUB_WORKFLOW_SHA: value.invocation.workflowSha, SF_G08_INVOCATION_ID: value.invocation.id }
 }
+
+function destinationControl() {
+  return { destinations: [
+    { capabilityId: "CAP01", surface: "dashboard", page: "synthetic-page-a", canRead: true,
+      allowedActionIds: ["synthetic-read", "synthetic-export"] },
+    { capabilityId: "CAP02", surface: "dashboard", page: "synthetic-page-b", canRead: true, allowedActionIds: [] },
+  ] }
+}
+test("distinct-grant oracle accepts actual destination page and permission differences", () => {
+  for (const change of [
+    (value) => { value.destinations.pop() },
+    (value) => { value.destinations[0].page = "synthetic-page-c" },
+    (value) => { value.destinations[0].canRead = false },
+    (value) => { value.destinations[0].allowedActionIds = ["synthetic-read"] },
+  ]) {
+    const requester = destinationControl(), holder = structuredClone(requester)
+    change(holder)
+    assert.doesNotThrow(() => requireDistinctDestinationGrants(requester, holder))
+  }
+})
+test("distinct-grant oracle refuses empty projections, metadata changes and ordering alone", () => {
+  const requester = { ...destinationControl(), stamp: { principalRef: "synthetic-requester", accessRevision: 1 }, availability: [] }
+  const holder = { ...destinationControl(), stamp: { principalRef: "synthetic-holder", accessRevision: 2 },
+    availability: [{ synthetic: "changed availability is not a grant" }] }
+  holder.destinations.reverse()
+  holder.destinations.forEach((entry) => entry.allowedActionIds.reverse())
+  assert.deepEqual(destinationGrants(requester), destinationGrants(holder))
+  assert.throws(() => requireDistinctDestinationGrants(requester, holder), /G08_DISTINCT_DESTINATION_GRANTS_REQUIRED/)
+  assert.throws(() => requireDistinctDestinationGrants({ ...requester, destinations: [] },
+    { ...holder, destinations: [] }), /G08_DISTINCT_DESTINATION_GRANTS_REQUIRED/)
+})
+test("distinct-grant oracle refuses ambiguous or malformed destination permissions", () => {
+  for (const change of [
+    (value) => { delete value.destinations },
+    (value) => { value.destinations[0].allowedActionIds.push("synthetic-read") },
+    (value) => { value.destinations.push(structuredClone(value.destinations[0])) },
+    (value) => { value.destinations[0].canRead = "true" },
+    (value) => { value.destinations[0].authority = "synthetic-extra" },
+  ]) {
+    const value = destinationControl()
+    change(value)
+    assert.throws(() => destinationGrants(value))
+  }
+})
 
 test("synthetic complete metadata validates without treating metadata as authority", () => {
   assert.equal(validatePlan(plan()).candidate.sha, plan().candidate.sha)
@@ -198,6 +242,13 @@ test("a previous seven-case report cannot attest the two actual draft scenarios"
   assert.throws(() => verifyReport(value, true), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
 })
 
+test("a previous principal-only nine-case report cannot attest distinct destination grants", () => {
+  const value = report()
+  value.suites[0].specs[0].title = "Two original Microsoft principals select the same Team without claiming different grants"
+  assert.throws(() => verifyReport(value, false), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
+  assert.throws(() => verifyReport(value, true), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
+})
+
 test("private files are exclusive, bounded, owner-only and reject links", async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), "g08-refusal-"))
   try {
@@ -224,16 +275,16 @@ test("digest preserves exact bytes including trailing newline", () => {
 })
 
 const obligations = JSON.parse(await readFile(new URL("../../" + obligationPath, import.meta.url), "utf8"))
-test("nine current scenarios preserve eight complete mappings, partial distinct grants and all separate G08 groups", () => {
+test("nine current scenarios preserve complete contract mappings without claiming installed G08 groups", () => {
   const list = coverageLedger(obligations, false), executed = coverageLedger(obligations, true)
   assert.equal(cases.length, 9)
   assert.equal(preservedTeams.length, 9)
   assert.deepEqual(list.originalTeams.map((entry) => entry.id), preservedTeams)
   assert(list.originalTeams.every((entry) => entry.status === "NOT_RUN"))
-  assert.equal(executed.originalTeams.filter((entry) => entry.status === "PASS").length, 8)
+  assert.equal(executed.originalTeams.filter((entry) => entry.status === "PASS").length, 9)
   assert.equal(executed.originalTeams.find((entry) => entry.id === "narrow-keyboard-draft").status, "PASS")
   assert.equal(executed.originalTeams.find((entry) => entry.id === "draft-cancel-discard").status, "PASS")
-  assert.equal(executed.originalTeams.find((entry) => entry.id === "same-team-distinct-grants").status, "PARTIAL")
+  assert.equal(executed.originalTeams.find((entry) => entry.id === "same-team-distinct-grants").status, "PASS")
   assert.equal(executed.originalTeams.find((entry) => entry.id === "admin-without-team").status, "PASS")
   assert(executed.groups.every((entry) => entry.status === "NOT_RUN"))
   assert.equal(executed.complete, false)
@@ -246,12 +297,12 @@ for (const [name, change] of [
   ["deleted original Teams case", (value) => { value.originalTeams.obligations.pop() }],
   ["renamed original Teams case", (value) => { value.originalTeams.obligations[0].id = "principal-only" }],
   ["landing keyboard substituted for Chat", (value) => { value.originalTeams.obligations[5].implementedCases = ["aba-two-windows"] }],
-  ["different grants claimed from principals", (value) => { value.originalTeams.obligations[0].coverage = "complete" }],
+  ["principal-only control substituted for distinct grants", (value) => { value.originalTeams.obligations[0].implementedCases = ["same-team-principal-binding"] }],
   ["principal-only control substituted for native admin UI", (value) => { value.originalTeams.obligations[4].implementedCases = ["same-team-principal-binding"] }],
   ["draft discard omitted", (value) => { value.originalTeams.obligations[6].implementedCases = [] }],
   ["fake manual revoke PASS", (value) => { value.originalTeams.obligations[7].state = "PASS" }],
-  ["missing distinct-grants blocker", (value) => { value.originalTeams.obligations[0].blocker = null }],
-  ["principal case removed from partial mapping", (value) => { value.originalTeams.obligations[0].implementedCases = [] }],
+  ["stale product blocker attached to a complete grant mapping", (value) => { value.originalTeams.obligations[0].blocker = "BLOCKED_BY_PRODUCT_GRANTS_NOT_PUBLISHED" }],
+  ["distinct-grants oracle omitted", (value) => { value.originalTeams.obligations[0].implementedCases = [] }],
   ["wrong complete mapping", (value) => { value.originalTeams.obligations[7].implementedCases = ["aba-two-windows"] }],
   ["missing required group", (value) => { value.groups.pop() }],
   ["renamed required group", (value) => { value.groups[0].id = "legacy-U15" }],
