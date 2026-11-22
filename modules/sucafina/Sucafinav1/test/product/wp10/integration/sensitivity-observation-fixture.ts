@@ -12,6 +12,7 @@ import { RENEWAL_TRANSITION_CATEGORIES } from "../../../../product/contracts/dec
 import type { CostCoverageBasis, CostCoverageEntry, DecisionCase } from "../../../../product/contracts/decisions.ts"
 import type { SensitivityRequest } from "../../../../product/contracts/operations.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
+import type { SfStateResult } from "../../../../product/contracts/state.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
@@ -139,7 +140,7 @@ export async function sensitivityObservationFixture(deadline: ReturnType<typeof 
     sources: [baseline, candidate], input, references }
 }
 
-export function sensitivityOk<Value>(result: PortResult<Value>): Value {
+export function sensitivityOk<Value>(result: PortResult<Value> | SfStateResult<Value>): Value {
   if (result.status !== "ok") throw new Error(JSON.stringify(result))
   return result.value
 }

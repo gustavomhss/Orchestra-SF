@@ -50,13 +50,16 @@ test("unscoped sensitivity publishes only after final authorization and rejects 
         return identity && await fixture.authority.host.revalidate(call) ? "publication:" + digestSfValue({ identity, digest }) : undefined
       },
       decisions: fixture.portfolio.mutations,
-      createReceipt: (call, operation, digest, result) => fixture.business.receipt(call, operation, digest, result),
+      createReceipt: async (call, operation, digest, result) => fixture.business.receipt(call, operation, digest, result),
       candidateCoverageRefFor: async () => ({ status: "unavailable", reason: "unused-portfolio-candidate" }),
       revalidateAnalysis: async () => false,
       units, sensitivityPreview: preview, exactThreshold: (request, resolved, call) => threshold(request, resolved.baselineRef, call),
       // The current native composition has no sensitivityReadScope. Pending
       // training also makes the optional complete-coverage interval unavailable.
     })
+    const replay = (bound: CriterionResultBinding, result: typeof stored) =>
+      fixture.business.withCase(fixture.call, fixture.caseRef, {}, async () =>
+        ({ status: "ok" as const, value: await verifier.verifySensitivity(bound, result, fixture.call) }))
     const hasGrant = () => fixture.persistence.transaction("planner", async (snapshot) =>
       ({ commit: false, value: verifier.verifySnapshot(snapshot, binding, fixture.call) }))
     const duringAuthorization: boolean[] = []
@@ -64,8 +67,7 @@ test("unscoped sensitivity publishes only after final authorization and rejects 
       expect(allowed).toBe(true)
       duringAuthorization.push(await hasGrant())
     }
-    expect(await deadline.phase("positive-recertification", () => fixture.business.withCase(fixture.call, fixture.caseRef, {}, () =>
-      verifier.verifySensitivity(binding, stored, fixture.call)))).toBe(true)
+    expect(sensitivityOk(await deadline.phase("positive-recertification", () => replay(binding, stored)))).toBe(true)
     const authorizationCalls = observation.calls
     expect(authorizationCalls).toBeGreaterThan(0)
     expect(duringAuthorization.every((visible) => !visible)).toBe(true)
@@ -73,8 +75,7 @@ test("unscoped sensitivity publishes only after final authorization and rejects 
     // A rejected new attempt invalidates the previous grant immediately, while
     // that positive grant is still within its thirty-second lifetime.
     const invalid = { ...structuredClone(stored), requestDigest: "f".repeat(64) }
-    expect(await fixture.business.withCase(fixture.call, fixture.caseRef, {}, () =>
-      verifier.verifySensitivity(binding, invalid, fixture.call))).toBe(false)
+    expect(sensitivityOk(await replay(binding, invalid))).toBe(false)
     expect(await hasGrant()).toBe(false)
 
     for (const fault of ["stored", "binding"] as const) {
@@ -89,9 +90,8 @@ test("unscoped sensitivity publishes only after final authorization and rejects 
         if (fault === "stored") borrowedStored.requestDigest = "f".repeat(64)
         else borrowedBinding.request.parameterBounds.maximum++
       }
-      expect(await deadline.phase("late-" + fault + "-mutation", () =>
-        fixture.business.withCase(fixture.call, fixture.caseRef, {}, () =>
-          verifier.verifySensitivity(borrowedBinding, borrowedStored, fixture.call)))).toBe(false)
+      expect(sensitivityOk(await deadline.phase("late-" + fault + "-mutation", () =>
+        replay(borrowedBinding, borrowedStored)))).toBe(false)
       expect(injected.count).toBe(1)
       expect(await hasGrant()).toBe(false)
     }
