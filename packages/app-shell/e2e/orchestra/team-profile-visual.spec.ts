@@ -77,6 +77,16 @@ async function namedControl(control: Locator, name: string) {
 async function capture(page: Page, info: TestInfo, state: string, scheme: "dark" | "light") {
   await expect(page.locator("html")).toHaveAttribute("data-color-scheme", scheme)
   await expect(page.locator("body")).toHaveAttribute("data-new-layout", /.*/)
+  const logo = page.locator('[data-sf-logo-scheme="' + scheme + '"]')
+  await expect(page.getByRole("img", { name: "Sucafina", exact: true })).toBeVisible()
+  await expect(logo).toBeVisible()
+  await expect(page.locator('[data-sf-logo-scheme="' + (scheme === "dark" ? "light" : "dark") + '"]')).toBeHidden()
+  const brandAsset = "/brand/sucafina/lockup-" + (scheme === "dark" ? "inverse" : "primary") + ".svg"
+  await expect(logo).toHaveAttribute("src", brandAsset)
+  await expect.poll(() => logo.evaluate((image) => {
+    const asset = image as HTMLImageElement
+    return asset.complete && asset.naturalWidth > 0
+  }), { message: "The theme-selected existing brand asset loads" }).toBe(true)
   await page.evaluate(() => document.fonts.ready.then(() => undefined))
   const evidence = await layoutEvidence(page)
   expect(evidence.pageOverflow, state + " does not overflow the page horizontally").toBeLessThanOrEqual(1)
@@ -95,7 +105,7 @@ async function capture(page: Page, info: TestInfo, state: string, scheme: "dark"
       classification: "COMPONENT VISUAL / not Microsoft live",
       bundle: info.config.metadata.bundle,
       sourceCommit: process.env.ORCHESTRA_E2E_SOURCE_SHA ?? process.env.GITHUB_SHA ?? "See CI run commit",
-      viewport, scheme, state, ...evidence,
+      viewport, scheme, state, brandAsset, ...evidence,
     }, null, 2),
   })
 }
@@ -344,6 +354,7 @@ for (const scheme of ["dark", "light"] as const) for (const mode of modes) {
         await fixture.finishEventStreams()
         await expect(workspace).toHaveAttribute("data-sf-session-state", "unavailable")
         await expect(workspace.getByRole("alert")).toContainText("Chat updates stopped. Refresh access before continuing.")
+        await expect(shell.getByText("Chat updates stopped. Refresh access before continuing.", { exact: true })).toHaveCount(1)
         await expect(workspace.locator('[data-component="prompt-input-v2"]')).toHaveCount(0)
         await namedControl(workspace.getByRole("button", { name: "Try again", exact: true }), "Try again")
         await capture(page, info, "chat-updates-stopped", scheme)
