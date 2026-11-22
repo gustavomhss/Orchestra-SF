@@ -41,7 +41,7 @@ function initializeCaptureRuntime(): SfCanonicalCaptureRuntime | undefined {
       captureDescriptor(objectPrototype, "toJSON") || captureDescriptor(arrayPrototype, "toJSON")) return undefined
     const loader = captureDescriptor(process, "getBuiltinModule")
     if (!loader || !captureOwn(loader, "value") || typeof loader.value !== "function") return undefined
-    // Optional backend lookup, without a static Node dependency in this contract.
+    // Optional lookup for this capture proof; a missing or accessor loader keeps it unavailable.
     const proxyTypes: unknown = process.getBuiltinModule("node:util/types")
     if (!proxyTypes || typeof proxyTypes !== "object") return undefined
     const proxy = captureDescriptor(proxyTypes, "isProxy")
