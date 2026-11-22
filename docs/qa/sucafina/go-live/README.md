@@ -2,7 +2,7 @@
 
 **CAP03, jornadas nativas/F04, observador de restart, registro Microsoft, proveniência e agregador completo já estão integrados em dev. Os cinco gates finais continuam abertos.** Faltam a composição de produto qualificada, o candidato C/T confirmado, os ACKs originais, o tar verificado e as execuções nas reservas isoladas.
 
-Observação desta edição: **22/11/2026 às 16:01:12 em America/Sao_Paulo (22/11/2026 às 19:01:12 UTC)**. Último dev observado: `b7776698e61934ed2cb820658408ff8a8207ec62`, árvore `364344c376a4feb35245d8089bde1941d025ebf9`. Essa identidade é uma composição entregue; **não é o candidato final aprovado**.
+Observação desta edição: **22/11/2026 às 16:18:45 em America/Sao_Paulo (22/11/2026 às 19:18:45 UTC)**. Último dev observado: `f2b129b1610a218b7104dbc2c4bf6b07befae5af`, árvore `ca3c05964718b20e96561102dc6b07b0207bf856`. A documentação integrada pelo [#702](https://github.com/gustavomhss/Orchestra-SF/pull/702) é a base preservada deste follow-up no [#704](https://github.com/gustavomhss/Orchestra-SF/pull/704). Essa identidade ainda **não é o candidato final confirmado**.
 
 O [registro estruturado](status.json) contém dono, SHA/árvore, artefato, recibo e bloqueio por gate. O [registro de execução](execution-2026-11-22.md) conserva os resultados anteriores, inclusive tentativas negativas, e separa cada prova por fonte. O [runbook instalado de G08](g08-installed-execution.md) descreve a rota concreta entregue pela #698.
 
@@ -40,6 +40,16 @@ As contagens acima não devem ser somadas como prova de um candidato final. #691
 
 As entregas anteriores #665/#677/#685/#688/#689/#690/#692/#695 e seus recibos permanecem no ledger. As fronteiras HTTP já corrigidas, a política persistente corrente, Imports privados, decoder/checkpoint e a rota de release não são pendências de implementação.
 
+## Atualização após o #702
+
+O [#703](https://github.com/gustavomhss/Orchestra-SF/pull/703) resolveu a admissão do próprio agregador G08. O merge `f5132fabfa265ba6bef17b0e0aa2ebe2c2beafdc` conserva exatamente a árvore `4462e8f53b3fca019d9c5f5fbbf71cb4c04f56b4` da fonte revisada. O [focal 45058460020](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45058460020) passou **490/490 controles** e os guards; ZIP, CRC, relatórios e fontes foram conferidos. A agregação continua retrospectiva: observa seu checkout e job atuais e relê as onze provas originais, sem exigir nova reserva ativa para essa leitura. Isso não executa nem fecha G08 instalado.
+
+O [seletivo do #613](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7084208298) terminou **7/8**, na fonte separada `a7b4281`. O C17 original completou todas as fases em **101,270 s**, dentro dos 105 s; o controle de carregamento de módulo falhou porque o import com query reutilizou o export. A [revisão independente](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7084196985) encontrou ainda possível aceitação indevida sob um hook stateful anterior ao helper. A fonte permanece bloqueada para promoção. O head do #613 continua `0a1247d`, **12/15 áreas**, com UI42–UI44 pendentes na instalação.
+
+A Migração mantém como último focal recebido o 9612, com Decisions **3/5**. As correções de tipos e do observador foram revisadas estaticamente no head `44334fe`; o [run diagnóstico 45059200284](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45059200284) foi iniciado sobre um snapshot separado, e seu resultado ainda não foi recebido nesta observação. Os cinco casos, os prazos originais e retries zero permanecem. Reports conserva os **11 oráculos originais** reutilizáveis, mas seus consumidores mudaram: os 11 casos precisam de replay no candidato efetivo após a composição, incluindo #613.
+
+O primeiro head documental do #704 (`21d43e8`) recebeu revisão e [guards verdes](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45059194082), mas se sobrepôs ao #702 integrado. Esse resultado fica histórico. Esta composição preserva o #702 e exige revisão e CI próprios. C/T final, ACKs, tar, reservas e aceites continuam nulos; **0/5, NOT_READY**, sem decisão de produção.
+
 ## Estado por gate
 
 | Gate | Dono | Entrega disponível | C/T, artefato e recibo finais | Bloqueio para fechamento |
@@ -52,7 +62,9 @@ As entregas anteriores #665/#677/#685/#688/#689/#690/#692/#695 e seus recibos pe
 
 G08 exige **Teams 9 + U15(6) + U39(22) + U40(22) + F04(3) + AZ02(37)**. AZ02 conserva32 IDs históricos e cinco adições, em fases 16/14/2/2/2/1; não é uma suíte Playwright. F04 é Bun/HappyDOM em processo separado após o registro. Todas as99 obrigações permanecem **NOT_RUN na instalação**.
 
-## Migração e design: últimas provas recebidas
+## Migração e design: provas anteriores preservadas
+
+As provas desta seção pertencem ao corte anterior do #702. O seletivo a7 e o diagnóstico posterior estão discriminados acima; nenhum resultado é transferido entre fontes.
 
 A [#673](https://github.com/gustavomhss/Orchestra-SF/pull/673) compôs dev19fbe e teardown no head `9612e7db0319c41ea0161e3924f332d9d76b0f9b`, T `b1dc4bdc3b4a73667e9ee8011667616565d2f9bc`. O [run 45055109181](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055109181) terminou com Decisions 3/5 (dois timeouts originais de 180 s) e dois diagnósticos na inclusão E2E: resultado de page.route incompatível com Promise<void> e declaração original de Window.api fora do tsconfig SF. A recepção independente conferiu os quatro ZIPs e delimitou os reparos para o writer da Migração. Os guards preservam47/69 avisos nas duas bases. #699/#700 não corrigem esses dois paths. Nenhum resultado parcial é promovido a ACK final.
 

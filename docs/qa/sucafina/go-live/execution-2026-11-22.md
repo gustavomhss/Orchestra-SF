@@ -517,3 +517,48 @@ A coordenação e execução de Release pertencem a Astra. O ator GitHub observa
 |G10 | Astra go-live | Nulos | Reserva/clone/R/chave/observador e ensaio real de backup/corte/retomada/rollback |
 
 **0/5 gates finais; NOT_READY; decisão de produção nula.** Os componentes entregues não são reabertos como lacunas de código. Compras 222 (2) conserva 4/4 no QA original. G08/G10 podem executar em paralelo após G07 nas reservas isoladas autorizadas. A virada de produção ainda exige a janela específica e a decisão de Gustavo.
+
+## Atualização coordenada após o #702 — 2026-11-22T19:18:45Z
+
+A base integrada desta observação é `f2b129b1610a218b7104dbc2c4bf6b07befae5af` / T `ca3c05964718b20e96561102dc6b07b0207bf856`, merge documental do #702 sobre o #703. Os oito arquivos e registros do #702 são preservados. A sobreposição dos três documentos do #704 foi recebida em [7084239845](https://github.com/gustavomhss/Orchestra-SF/pull/704#issuecomment-7084239845); o caminho único de follow-up foi registrado em [#628/7084241639](https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7084241639).
+
+### Admissão do agregador G08
+
+O #703 entrou em dev pelo merge `f5132fabfa265ba6bef17b0e0aa2ebe2c2beafdc`, com árvore idêntica à fonte `b6c643546c57fca820a8e4db935815a64f2af58c` / T `4462e8f53b3fca019d9c5f5fbbf71cb4c04f56b4`. Revisões técnicas 6013881242 e 6013911106, [recebimento 7084117853](https://github.com/gustavomhss/Orchestra-SF/pull/703#issuecomment-7084117853), [fechamento 7084150856](https://github.com/gustavomhss/Orchestra-SF/pull/703#issuecomment-7084150856).
+
+Run 45058460020, tentativa 1, job 137318837279, driver `8ca8e72e9f1a738ee09a550df341cf44bd6369ef`: **280 Node + 5 Bun adapters + 205 proveniência = 490**, sem falhas/skips; 387 controles anteriores preservados. Guards: 78 regras, seis paths, zero gate/warn/error. ZIP 14768532152, 20.246 bytes, SHA-256 `0ed89a6942a40d1c4b0fdce6967f4146d7b9f7bc37da8afa80e78c84aefe1e53`; CRC dos 16 membros, 15 hashes internos e sete fontes Git/SHA-256 conferidos. Recibo `42ff6208f8d0431167a65afdb58168316ecaa6b6e5780d6e49ab4e2abaa85a51`. Roundtrip ZIP 14768083611, 218 bytes, SHA-256 `2a51da2d7a49c008a388722a384b33d5ee8e53936c93588942941bb561658b2f`, CRC e recibo conferidos. O workflow instalado permanece no blob `6035b60476c4fce49b83ce7503ef03367ffc2d28`.
+
+O agregador observa seu próprio checkout, árvore, limpeza tracked, contexto Actions, evento, run/attempt/job, runner e cadeia original de steps. A leitura é retrospectiva e não cria nova autorização ou reserva ativa. Os produtores originais preservam suas próprias janelas, autorizações e limpeza. Flags do focal: instalado, candidato final, fechamento G08 e produção **false**.
+
+### #613: C17 completo e seletivo ainda reprovado
+
+[Recibo primário 7084208298](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7084208298): fonte `a7b428197efe7ccf45381d04ba03f233b392fbf3` / T `f353769b1d4ec3ac2336dfda4760544860f22a96`; snapshot `5e6f8dc3625cdb7f2f84306679cf038c205b9499` / T `e28df9a637c20ec7985a7fd232e2d63747f62c10`. Run 45058938554, principal 137320282399 FAILURE, cleanup 137321456133 SUCCESS; sem artefatos. Log primário conferido: 106.486 bytes UTF-8 com BOM, SHA-256 `0cf50d47173a332cd2c1b91cfe3ec0ff304e2ae36b1ebb7917422328b0f7e4b5`; subprocessos sem truncamento.
+
+| Gate seletivo | Resultado na fonte a7 |
+| --- | --- |
+| Identidade | PASS |
+| Captura e bytes canônicos | FAIL, 17/18, 141 assertions; import com query não estabeleceu módulo distinto |
+| Seleção C08 e proof-order | PASS, 15/15, 175 assertions |
+| Autoridade e integridade | PASS, 27/27, 221 assertions |
+| C17 original | PASS, 1/1, 19 assertions, 101.269,75 ms dentro de 105 s |
+| CLI types | PASS |
+| Sucafina types | PASS |
+| Guards reais origin/dev | PASS, 78 regras, 787 paths, 38 warnings, zero erros/waivers |
+
+C17 completou 1.952/1.952 leituras externas em 71.736 ms, reopen em 19 ms, ancestry em 27.905 ms, recusa do ciclo em 13 ms e recuperação/revogação em 440 ms, sem abort. Esse PASS pertence à fonte a7. O dev observado nos guards foi `f2b129b1610a218b7104dbc2c4bf6b07befae5af`, merge-base `4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc`; Omni: oito controles, 14 spawns, zero delegados.
+
+O [finding estático 7084196985](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7084196985) impede a promoção: um map stateful instalado antes do helper pode ser tratado como baseline, permitindo convergência dos dois digests tardios para dados alterados. A próxima fonte precisa de admissão ancorada antes do hook e de prova real da ordem de carregamento. Não houve relaxamento do prazo ou de assertions. O #613 permanece no head 0a, 12/15, com UI42–UI44 pendentes.
+
+A aquisição independente anterior do perfil CPU255 também permanece válida somente como diagnóstico: [7083761451](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7083761451), ZIP 14766639145 `75217788b017b726545282f834f0dc5a94bc705e7dfeee103cfd9f052c48584d`, recibo `4321d62be17b9df3598b1de588fdb89ec7cdbaba1b480346cc099bfeec054609`, perfil `4e94ab96920709e4c0cefcf4e45085089cca888d10429aadaae03b8f56627096`. A observação metadata-only do #702 permanece histórica; o perfil não prova ganho causal, contagem de chamadas ou qualificação.
+
+### Migração e reuso das provas
+
+Último focal recebido permanece 9612/45055109181, Decisions 3/5 e estático reprovado. O head 44334 contém reparos de tipos e observador revisados em 6013904225. O diagnóstico 45059200284 foi iniciado sobre P `8f6f3a02a83f466be76bce88bb93ed97a83a88e2` / T `400d3d0bb8f2d292439463abbf42286257152225`, com driver `96ec9b7601abe993bb091f6fa5632da98635100f`; [plano 7084165666](https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7084165666). Seu resultado ainda não foi recebido nesta observação. O overlay adiciona logs e um await de observação no HTTP, preservando a ordem das operações, cinco casos, prazos de 180 s/10 s e retries zero. Não é recibo de qualificação.
+
+Os 11 casos Reports do run 44987301540 mantêm especificação, manifesto e 16 support blobs; porém local/entry.ts, runtime/local-store.ts e runtime/request-body.ts mudaram na composição 9612. Reutilizam-se os oráculos, e os 11 originais serão executados no candidato efetivo após a composição de #613. Nenhum PASS histórico é transferido.
+
+### Validação documental anterior e limites finais
+
+A primeira fonte do #704, `21d43e8aa943151a98caabc0f829432d0571e309` / T `c83c93f435e8b601184a202e929c41d19828a1f3`, recebeu revisão 6013916319 e run 45059194082/job 137321074779 SUCCESS. Driver `69eb98a8fc4912e9489b2b10825971ac3b4fce8d`, dev efetivamente observado `f2b129b1610a218b7104dbc2c4bf6b07befae5af`, merge-base b777. Guards: 78 regras, três paths, zero gate/warn/error. ZIP 14768239633, 1.478 bytes, SHA-256 `89c94bc9487171e5b67978c21faf10924cdab0ab3f7dbf322803fc0395686a0c`; sete CRC e três hashes de documento/Git blobs conferidos. Essa fonte não foi integrada por se sobrepor ao #702. Seu CI não qualifica a nova composição.
+
+Não há alteração de candidato final, ACKs, operador, tar, reservas, aceites ou decisão de produção. As 99 obrigações em 11 produtores continuam NOT_RUN na instalação. **0/5 gates finais; NOT_READY.** A virada continua condicionada ao aval explícito de Gustavo após go/no-go e janela propostos com recibos completos.
