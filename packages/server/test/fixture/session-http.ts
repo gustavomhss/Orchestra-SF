@@ -11,6 +11,7 @@ import { AppProcess } from "@orchestra/core/process"
 import { SessionV2 } from "@orchestra/core/session"
 import { SessionProcess } from "@orchestra/core/session-process"
 import { SessionOwner } from "@orchestra/core/session/owner"
+import { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionSubagentModels } from "@orchestra/core/session/subagent-models"
 import { TaskBackground } from "@orchestra/core/tool/task-background"
 import { Session } from "@orchestra/schema/session"
@@ -30,7 +31,7 @@ export const decode = <A>(response: Response, schema: Schema.Decoder<A>) =>
   Effect.promise(() => response.json()).pipe(Effect.map(Schema.decodeUnknownSync(Schema.toCodecJson(schema))))
 
 const runtimeServices = LayerNode.group([
-  Database.node, EventV2.node, LocationServiceMap.node, ClaudeCodeAccount.node, SessionV2.node, SessionOwner.node,
+  Database.node, EventV2.node, LocationServiceMap.node, ClaudeCodeAccount.node, SessionV2.node, SessionOwner.node, SessionExecution.node,
   SessionSubagentModels.node, SessionProcess.node, AppProcess.node, FSUtil.node, MoveSession.node, TaskBackground.node,
 ])
 type Services = LayerNode.Output<typeof runtimeServices>

@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { existsSync } from "node:fs"
 import path from "node:path"
-import { Layer, Schema } from "effect"
+import { Context, Layer, Schema } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { Database } from "@orchestra/core/database/database"
 import { Global } from "@orchestra/core/global"
@@ -22,7 +22,7 @@ async function server(directory: string, filename: string) {
       ],
     }],
   }).pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true })
-  const listener = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: (request) => web.handler(request) })
+  const listener = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: (request) => web.handler(request, Context.makeUnsafe<unknown>(new Map())) })
   const headers = ServerAuth.headers({ username: "orchestra", password: "technical-http-component" })
   return {
     request: (pathname: string, init: RequestInit = {}) => fetch(new URL(pathname, listener.url), { headers, ...init }),
