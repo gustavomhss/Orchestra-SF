@@ -73,7 +73,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       authorizeView: createSfPersonalViewAuthority({ authority }) })
     const services = { ...authority, personalViews } as SfHostServices
     const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-    const app = createModule("/sucafina", { persistence: store, authenticate, environment, product, maxJsonBytes: 100000 })
+    const app = createModule("/sucafina", { persistence: store, authenticate, environment, product, personalViewsAvailable: () => services.personalViews === personalViews, maxJsonBytes: 100000 })
     routing.handle = async (request) => {
       // Reserve before an await: two concurrent reads must not both claim the gate.
       const candidate = hold.nextList && request.method === "POST" && new URL(request.url).searchParams.get("sf") === "workbench-views"
