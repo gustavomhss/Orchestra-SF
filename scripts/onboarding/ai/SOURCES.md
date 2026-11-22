@@ -56,3 +56,25 @@ Model readiness and configuration are not proof of an AI answer. Only the comple
 Use the video label **“Local demonstration model”**. This is a small model demonstrating real inference through Orchestra. It does not establish production model quality, Microsoft tenant access, business-data retrieval, skill execution, Teams readiness, or a successful HuGR Claw connector action. The prompt explicitly supplies example staffing and quotation inputs, then requests three review questions or checks. It forbids tools, writes and claims to have inspected the business system. The example inputs are entered by the demonstrator, not retrieved by the model.
 
 CPU latency and the full agent system-context size still need measurement in recording CI. The fixture allows a 120-second server-load deadline; the recording test should allow several minutes for setup and an initial response. If a wait is shortened during editing, mark it. A context or inference failure is a failed recording attempt; no substitute text is permitted.
+
+## Focused AI3 follow-up
+
+The [actual AI3 recording](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45039502239) observed all five SF profiles, all eighteen SF skills, the shared Maestro catalog (103 advertised tools and 67 skills), Connections, and the real empty Atlas store. Those original cuts are retained. The local model loaded and the provider was admitted with unchanged policy. No Chat prompt was submitted: the first take incorrectly looked for the session-only permission footer on the new-session draft.
+
+The focused follow-up uses two separate original installations: real Chat in its private workspace, and the useful draft Workflow in the job's existing Git checkout. It does not repeat the catalog footage. The draft contains the actual model selector and Send button. `OrchestraComposeTools` renders the untouched Ask/auto-accept control only after a session exists; the follow-up records that real control after the answer. The actual assistant turn supplies its focus box.
+
+### Context and memory
+
+The official Qwen model card documents a 32,768-token context. The follow-up preserves all Maestro instructions and all permission-filtered tools and uses that full supported server context. The verified GGUF's `/v1/models` metadata must report `meta.n_ctx_train >= 32768`; the read-only `/props` response must report `default_generation_settings.n_ctx === 32768` and one slot. No metadata, tokenizer, prompt, or tool schema is rewritten.
+
+The CPU's default F16 key/value cache estimate is 28 layers × 8 KV heads × 128 dimensions × key/value × two bytes × 32,768 tokens = 3.5 GiB. Before starting, the helper records actual runner total/free RAM and requires free RAM for that cache, the verified 639,446,688-byte model and an additional 1 GiB. It records free RAM again after load. These are capacity checks, not claims about inference speed or model quality.
+
+The public custom-provider API accepts model names but does not expose model limits. The follow-up therefore retains supported API keys only and reports the catalog's actual `limit` fields alongside the verified server capacity. It does not write private configuration files or modify product schemas.
+
+Additional exact-base source contracts:
+
+- `packages/app-shell/src/pages/session/composer/orchestra-compose-tools.tsx`: actual session-only permission control; no toggle is clicked.
+- `packages/app-shell/src/pages/session/timeline/orchestra-turn.tsx`: actual assistant turn and body selectors.
+- `packages/app-shell/src/utils/server-compat.ts`: project.current resolves through GET `/api/location`.
+- `packages/server/src/handlers/location.ts`: resolving that directory records its project before a Session exists. Workflow joins the catalog using this actual returned ID, rather than inferring Git status from a missing catalog row.
+- `packages/app-shell/src/orchestra/relay/chapter.tsx`: the original global-project refusal remains intact; no workflow is created if the actual resolver still returns global.

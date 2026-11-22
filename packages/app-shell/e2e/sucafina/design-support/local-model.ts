@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 import { chmod, mkdir, mkdtemp, open, readdir, realpath, rm, stat } from "node:fs/promises"
 import { createServer } from "node:net"
-import { tmpdir } from "node:os"
+import { freemem, totalmem, tmpdir } from "node:os"
 import path from "node:path"
 import type { APIRequestContext } from "@playwright/test"
 import type { ChildProcessHandle } from "effect/unstable/process/ChildProcessSpawner"
@@ -13,6 +13,7 @@ const sourceBase = "55d332a2451d2146e825d494b87878875d63b1c7"
 const providerId = "onboarding-local"
 const modelId = "qwen3-demo"
 const modelName = "Qwen3-0.6B · local demo"
+const contextTokens = 32_768
 const assets = {
   server: {
     file: "llama-b12632-bin-ubuntu-x64.tar.gz",
@@ -77,6 +78,13 @@ export async function withLocalModel<T>(
   const owned: { child?: ChildProcessHandle } = {}
   const timingLines: string[] = []
   const startupLines: string[] = []
+  // The observed AI3 Maestro exposes 103 tools and 67 skills. Preserve all
+  // instructions/schemas and use a supported context, with explicit RAM room.
+  const memoryBeforeLoad = { totalBytes: totalmem(), freeBytes: freemem() }
+  const estimatedF16KVBytes = 28 * 8 * 128 * 2 * 2 * contextTokens
+  const requiredFreeBytes = estimatedF16KVBytes + assets.model.bytes + 1024 ** 3
+  if (memoryBeforeLoad.freeBytes < requiredFreeBytes)
+    throw new Error("Runner lacks measured RAM for the full 32768-token local context: free=" + memoryBeforeLoad.freeBytes + ", required=" + requiredFreeBytes)
   let stage = "download"
   let modelReady = false
   return Effect.runPromise(Effect.scoped(Effect.gen(function* () {
@@ -124,7 +132,7 @@ export async function withLocalModel<T>(
     const modelOrigin = "http://127.0.0.1:" + port
     const args = [
       "-m", modelFile, "--alias", modelId, "--host", "127.0.0.1", "--port", String(port),
-      "-ngl", "0", "-t", "2", "-tb", "2", "-c", "8192", "-np", "1", "-n", "256",
+      "-ngl", "0", "-t", "2", "-tb", "2", "-c", String(contextTokens), "-np", "1", "-n", "256",
       "--jinja", "--chat-template-kwargs", '{"enable_thinking":false}', "--reasoning", "off",
       "--temp", "0.7", "--top-k", "20", "--top-p", "0.8", "--min-p", "0", "--presence-penalty", "1.5",
       "--metrics",
@@ -157,6 +165,7 @@ export async function withLocalModel<T>(
     ))
     if (!(yield* child.isRunning)) throw new Error("Local model stopped after readiness")
     modelReady = true
+    const capacity = yield* Effect.promise(() => modelCapacity(modelOrigin))
     stage = "configure-provider"
 
     return yield* Effect.promise(async () => {
@@ -211,8 +220,11 @@ export async function withLocalModel<T>(
         provider: { id: providerId, modelId, modelName, endpoint: "owned loopback /v1", credentialsRequired: false },
         agent: { id: agentId, name: agentName, engine: agent.engine ?? "orchestra (default)", mode: agent.mode },
         policyUnchanged: true, policySha256: originalPolicy,
-        server: { cpuOnly: true, threads: 2, context: 8192, parallel: 1, maximumDefaultOutputTokens: 256, thinking: false },
-        catalog: { providerPresent: true, modelEnabled: true, defaultMatches: true },
+        server: { cpuOnly: true, threads: 2, context: contextTokens, parallel: 1, maximumDefaultOutputTokens: 256, thinking: false,
+          observedContext: capacity.context, modelTrainingContext: capacity.trainingContext },
+        memory: { ...memoryBeforeLoad, estimatedF16KVBytes, requiredFreeBytes, freeAfterLoadBytes: freemem() },
+        catalog: { providerPresent: true, modelEnabled: true, defaultMatches: true,
+          reportedLimit: object(model.limit), limitsConfiguredViaAPI: false },
         baselineMetrics,
       })
       stage = "actual-chat"
@@ -404,6 +416,24 @@ async function waitForModel(origin: string) {
     await new Promise((resolve) => setTimeout(resolve, 500))
   }
   throw new Error("Pinned local model did not become ready before the CI deadline")
+}
+
+async function modelCapacity(origin: string) {
+  // Read public server metadata, never a completion/warm-up or a rewritten prompt.
+  const [modelsResponse, propsResponse] = await Promise.all([
+    fetch(origin + "/v1/models", { signal: AbortSignal.timeout(5_000) }),
+    fetch(origin + "/props", { signal: AbortSignal.timeout(5_000) }),
+  ])
+  if (!modelsResponse.ok || !propsResponse.ok) throw new Error("Actual model capacity metadata unavailable")
+  const model = rows(object(await modelsResponse.json()).data).find((value) => value.id === modelId)
+  const trainingContext = object(model?.meta).n_ctx_train
+  const props = object(await propsResponse.json())
+  const context = object(props.default_generation_settings).n_ctx
+  if (typeof trainingContext !== "number" || trainingContext < contextTokens)
+    throw new Error("Pinned GGUF metadata does not support the requested 32768-token context")
+  if (context !== contextTokens || props.total_slots !== 1)
+    throw new Error("Owned model server did not report the requested single-slot context")
+  return { context, trainingContext }
 }
 
 async function metrics(origin: string) {
