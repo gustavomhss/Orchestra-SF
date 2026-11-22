@@ -90,7 +90,7 @@ A edição, a colagem de valores, a distribuição e a revisão usam as regras d
 
 ### Headcount
 
-Os custos mensais e anuais mostram a moeda da tabela de custos recebida da fonte. O resumo identifica a moeda quando todas as tabelas informadas usam o mesmo código. Se a fonte não informar uma moeda única, a tela indica essa ausência; os valores continuam na unidade fornecida, sem conversão para USD. Um valor zero permanece zero e um valor ausente aparece como **Não informado**.
+O custo mensal de cada posição e o orçamento total de pessoal são calculados pelo Planner em USD, usando as taxas de câmbio da versão selecionada. A tela mantém esses valores em USD. O valor anual de uma tabela de custos permanece na moeda original dessa tabela. Se essa moeda não estiver informada, o valor anual mostra **Moeda não especificada na fonte**. Zero e **Não informado** continuam distintos.
 
 A seleção de ano e versão define o planejamento exibido. **Ainda não há registros** indica uma leitura autorizada vazia; **Você não tem acesso a este conteúdo** indica acesso recusado e oculta os dados.
 

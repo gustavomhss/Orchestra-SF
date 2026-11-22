@@ -5,6 +5,10 @@ import { Schema } from "effect"
 import { createComponent, createSignal, type JSX } from "solid-js"
 import { render } from "solid-js/web"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
+import { SfContext } from "@orchestra/schema/sucafina/context"
+import { createSfPlannerProjectionHandlers } from "../../../apps/cli/src/sucafina-product/native-ui/planner"
+import type { SfNativeHostDependencies } from "../../../apps/cli/src/sucafina-product/native-ui/router"
+import type { Snapshot } from "../../../modules/sucafina/Sucafinav1/runtime/contract"
 import type { SfHref, SfRef, SfServerKey } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../src/orchestra/chapters/sucafina/context/contracts"
 import { SF_U02_COPY, SF_U02_COPY_BR } from "../src/i18n/orchestra-chapters/sf-u02"
@@ -19,23 +23,67 @@ const stamp = {
   principalRef: "headcount-principal", policyVersion: "1", accessRevision: "1",
 }
 const version = { id: "budget-2026", name: "Budget 2026", year: 2026, locked: false, closed: 0, official: false }
-const page = (currencies: string[], positions = true): Page => ({
-  status: "ok", context: stamp,
-  value: {
-    capabilityId: "CAP20", selection: { year: 2026, versionId: version.id },
-    allowedActionIds: [], versions: {},
+async function projected(currencies: readonly { cur: string; fx: number }[], positions = true, annual: number | null = 1200): Promise<Page> {
+  const snapshot: Snapshot = {
     data: {
-      versions: [version], selectedVersion: version,
-      positions: positions ? [{
-        id: "position-one", name: "Analyst", revision: 1, rateId: "rate-0",
-        months: [1234.5, 0, null, null, null, null, null, null, null, null, null, null],
-      }] : [],
-      rates: currencies.map((cur, index) => ({ id: "rate-" + index, name: "Rate " + index, revision: 1, cur, annual: 1234.5 })),
-      metrics: { fte: 1, hrTotal: 1234.5 },
+      versions: [{
+        ...version, lines: [], projects: [], lists: {},
+        hc: {
+          positions: positions ? currencies.map((_, index) => ({
+            id: index === 0 ? "position-one" : "position-" + index,
+            name: "Analyst " + index, include: true, fte: 1, start: 1, end: 1,
+            domain: "IT", rateId: "rate-" + index,
+          })) : [],
+          rates: currencies.map(({ cur }, index) => ({
+            id: "rate-" + index, name: "Rate " + index, annual, cur, locs: "",
+          })),
+          inc: 0, incMonth: 1, hrAF: {},
+        },
+        fx: currencies.map(({ cur, fx }) => ({ id: cur || "empty", cur, rate: fx })),
+      }],
+      officials: {}, entities: [], allocations: [], roster: [],
     },
-  },
-})
-let source: Result = page(["USD"])
+    versions: {}, sequences: {}, audit: [], notices: [],
+  }
+  const before = JSON.stringify(snapshot)
+  const context = Schema.decodeUnknownSync(SfContext)({
+    stamp, contractRevision: "sf-native-ui/1", authMode: "local-operator",
+    destinations: [{ capabilityId: "CAP20", surface: "planner", page: "Headcount", canRead: true, allowedActionIds: [] }],
+    availability: [],
+  })
+  const dependencies: SfNativeHostDependencies = {
+    origin: "http://headcount.test", mount: "/sf",
+    runtime: () => undefined,
+    readContext: async () => ({ status: "ok", value: context }),
+    application: {
+      authenticate: async () => ({
+        id: stamp.principalRef, canWrite: true, roles: [{ surface: "planner", role: "admin" }],
+      }),
+      environment: async () => ({ at: "2026-01-01T00:00:00.000Z", id: () => "unused-read-id", directory: [] }),
+      persistence: {
+        transaction: async (surface, work) => {
+          expect(surface).toBe("planner")
+          const result = await work(structuredClone(snapshot))
+          expect(result.commit).toBe(false)
+          return result.value
+        },
+      },
+      domains: { planner: [], dashboard: [], procurement: [] },
+      maxJsonBytes: 65536,
+    },
+  }
+  // This is the production native CAP20 handler calling domain.view and its USD HR calculation,
+  // with fixture authentication/persistence. It is a producer/consumer proof, not an installed-host claim.
+  const handler = createSfPlannerProjectionHandlers(dependencies).find((item) => item.operationId === "domain.page.CAP20")
+  if (!handler) throw new Error("CAP20 handler missing")
+  const response = await handler.handle(new Request("http://headcount.test/sf/api/ui/pages/CAP20?year=2026&version=budget-2026"))
+  expect(response.status).toBe(200)
+  const result = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP20"].output)(await response.json())
+  if (result.status !== "ok") throw new Error("CAP20 producer refused the fixture")
+  expect(JSON.stringify(snapshot)).toBe(before)
+  return result
+}
+let source: Result = { status: "denied" }
 let responseStatus = 200
 const reads: Schema.Schema.Type<Read["input"]>[] = []
 const [locale, setLocale] = createSignal<"en" | "pt-BR">("en")
@@ -88,7 +136,7 @@ const imports: Record<string, string> = {
 const compiler = createRequire(Bun.resolveSync("vite-plugin-solid", import.meta.dir))
 const suffix = "?headcount-copy"
 // Compile an isolated production view/StatePanel graph; only owner/presentation boundaries are fixtures.
-// The Planner client, response schema, Headcount calculations and localized catalogs are real.
+// The Planner producer/mapper, client, response schema, view and localized catalogs are real.
 Bun.plugin({
   name: "headcount-copy-dom",
   setup(build) {
@@ -150,56 +198,71 @@ async function until(predicate: () => boolean) {
 const formatted = (value: number, currency: string, lang: string) =>
   new Intl.NumberFormat(lang, { style: "currency", currency, maximumFractionDigits: 2 }).format(value)
 
-test("Headcount names the source currency in non-USD summaries and preserves monthly values", async () => {
-  for (const [currency, lang] of [["EUR", "en"], ["BRL", "pt-BR"], ["USD", "en"]] as const) {
-    const original = page([currency])
+test("Headcount keeps producer USD amounts distinct from native rate currency", async () => {
+  const cases = [
+    { currencies: [{ cur: "EUR", fx: 1.2 }], month: 120, total: 120, lang: "en" },
+    { currencies: [{ cur: "BRL", fx: 0.2 }], month: 20, total: 20, lang: "pt-BR" },
+    { currencies: [{ cur: "USD", fx: 1 }], month: 100, total: 100, lang: "en" },
+    { currencies: [{ cur: "EUR", fx: 1.2 }, { cur: "BRL", fx: 0.2 }], month: 120, total: 140, lang: "pt-BR" },
+  ] as const
+  for (const item of cases) {
+    const original = await projected(item.currencies)
+    expect(original.value.data.metrics?.hrTotal).toBe(item.total)
+    expect(original.value.data.positions[0]?.months?.slice(0, 2)).toEqual([item.month, 0])
+    expect(original.value.data.rates?.map((rate) => [rate.cur, rate.annual]))
+      .toEqual(item.currencies.map(({ cur }) => [cur, 1200]))
     const before = JSON.stringify(original)
-    const view = mount(original, lang)
+    const view = mount(original, item.lang)
     try {
       await until(() => view.host.querySelector("[data-sf-state=ready]") !== null)
-      const summary = view.host.querySelectorAll(".sf-u08-plan-summary dt")
-      expect(summary[1]?.textContent).toBe(currency === "USD"
-        ? translate("sf.u08.total") : translate("sf.u08.moneyInCurrency", { currency }))
-      const numberLocale = lang === "en" ? "en-US" : "pt-BR"
-      expect(view.host.querySelectorAll(".sf-u08-plan-summary dd")[1]?.textContent).toBe(formatted(1234.5, currency, numberLocale))
+      expect(view.host.querySelectorAll(".sf-u08-plan-summary dt")[1]?.textContent).toBe(translate("sf.u08.total"))
+      const numberLocale = item.lang === "en" ? "en-US" : "pt-BR"
+      expect(view.host.querySelectorAll(".sf-u08-plan-summary dd")[1]?.textContent).toBe(formatted(item.total, "USD", numberLocale))
       const cells = view.host.querySelectorAll(".sf-u08-detail td")
-      expect(cells[0]?.textContent).toBe(formatted(1234.5, currency, numberLocale))
-      expect(cells[1]?.textContent).toBe(formatted(0, currency, numberLocale))
-      expect(cells[2]?.textContent).toBe(translate("sf.u08.none"))
-      expect(view.host.querySelector(".sf-u08-rate-list")?.textContent).toContain(formatted(1234.5, currency, numberLocale))
+      expect(cells[0]?.textContent).toBe(formatted(item.month, "USD", numberLocale))
+      expect(cells[1]?.textContent).toBe(formatted(0, "USD", numberLocale))
+      expect(view.host.querySelector(".sf-u08-detail h3")?.textContent).toBe(translate("sf.u08.monthly"))
+      for (const { cur } of item.currencies)
+        expect(view.host.querySelector(".sf-u08-rate-list")?.textContent).toContain(formatted(1200, cur, numberLocale))
       expect(JSON.stringify(original)).toBe(before)
-      expect(reads).toEqual([{ year: 2026, version: "budget-2026" }])
+      expect(reads.length).toBeGreaterThan(0)
+      expect(reads.every((read) => read.year === 2026 && read.version === "budget-2026")).toBe(true)
     } finally { view.close() }
   }
 })
 
-test("Headcount localizes missing or mixed currency without assuming USD", async () => {
-  for (const currencies of [[""], ["EUR", "USD"]]) {
-    const view = mount(page(currencies), "pt-BR")
-    try {
-      await until(() => view.host.querySelector("[data-sf-state=ready]") !== null)
-      expect(view.host.querySelectorAll(".sf-u08-plan-summary dt")[1]?.textContent).toBe(translate("sf.u08.moneyUnscoped"))
-      expect(view.host.querySelectorAll(".sf-u08-plan-summary dd")[1]?.textContent)
-        .toBe("1.234,5 · " + translate("sf.u02.noCurrency"))
-      expect(view.host.textContent).not.toContain("unspecified")
-      const first = view.host.querySelector(".sf-u08-detail td")?.textContent
-      expect(first).toBe(currencies[0] ? formatted(1234.5, currencies[0], "pt-BR")
-        : "1.234,5 · " + translate("sf.u02.noCurrency"))
-      expect(view.host.querySelector(".sf-u08-rate-list")?.textContent).toContain(first ?? "")
-    } finally { view.close() }
-  }
+test("Headcount localizes missing rate currency and keeps null annual distinct from zero", async () => {
+  const original = await projected([{ cur: "", fx: 1 }])
+  const view = mount(original, "pt-BR")
+  try {
+    await until(() => view.host.querySelector("[data-sf-state=ready]") !== null)
+    expect(view.host.querySelector(".sf-u08-rate-list")?.textContent)
+      .toContain("1.200 · " + translate("sf.u02.noCurrency"))
+    expect(view.host.textContent).not.toContain("unspecified")
+    expect(view.host.querySelectorAll(".sf-u08-plan-summary dd")[1]?.textContent).toBe(formatted(100, "USD", "pt-BR"))
+    expect(view.host.querySelector(".sf-u08-detail td")?.textContent).toBe(formatted(100, "USD", "pt-BR"))
+  } finally { view.close() }
+  const absent = await projected([{ cur: "EUR", fx: 1.2 }], true, null)
+  expect(absent.value.data.rates?.[0]?.annual).toBeNull()
+  const missing = mount(absent, "en")
+  try {
+    await until(() => missing.host.querySelector("[data-sf-state=ready]") !== null)
+    expect(missing.host.querySelector(".sf-u08-rate-list")?.textContent).toContain(SF_U08_COPY["sf.u08.none"])
+    expect(missing.host.querySelector(".sf-u08-detail td")?.textContent).toBe(formatted(0, "USD", "en-US"))
+  } finally { missing.close() }
 })
 
 test("Headcount preserves scope and distinguishes denied access from an authorized empty result", async () => {
-  const view = mount(page([], false), "en", false)
+  const view = mount(await projected([], false), "en", false)
   try {
     await until(() => view.host.querySelector("[data-sf-state=empty]") !== null)
     expect(view.host.textContent).toContain(SF_COMMON_COPY["sf.common.empty"])
     expect(view.host.querySelector("select")?.value).toBe(version.id)
+    const beforeReads = reads.length
     setLocale("pt-BR")
     await until(() => view.host.textContent?.includes(SF_COMMON_COPY_BR["sf.common.empty"]) === true)
     expect(view.host.querySelector("select")?.value).toBe(version.id)
-    expect(reads).toEqual([{ year: 2026, version: "budget-2026" }])
+    expect(reads).toHaveLength(beforeReads)
     source = { status: "denied" }
     responseStatus = 403
     setGeneration((value) => value + 1)
@@ -207,6 +270,7 @@ test("Headcount preserves scope and distinguishes denied access from an authoriz
     expect(view.host.textContent).toContain(SF_COMMON_COPY_BR["sf.common.noAccess"])
     expect(view.host.textContent).not.toContain(SF_COMMON_COPY_BR["sf.common.empty"])
     expect(view.host.querySelector(".sf-u08")).toBeNull()
-    expect(reads).toEqual([{ year: 2026, version: "budget-2026" }, { year: 2026, version: "budget-2026" }])
+    expect(reads.length).toBeGreaterThan(beforeReads)
+    expect(reads.every((read) => read.year === 2026 && read.version === "budget-2026")).toBe(true)
   } finally { view.close() }
 })

@@ -61,12 +61,6 @@ const money = (value: number | null | undefined, currency: string | null | undef
     return new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value) + " " + code
   }
 }
-const soleRateCurrency = (rates: ReadonlyArray<{ cur: string }> | undefined) => {
-  if (!rates || rates.length === 0) return null
-  const codes = rates.map((rate) => rate.cur.trim())
-  if (codes.some((code) => !code) || new Set(codes).size !== 1) return null
-  return codes[0]
-}
 const numerically = (v: string) => v.trim() && Number.isFinite(Number(v)) ? Number(v) : undefined
 
 export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Element {
@@ -74,13 +68,6 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
   const t = (s: string, params?: Record<string, string | number>) =>
     language.t(s as Parameters<typeof language.t>[0], params)
   const missingCurrency = () => t("sf.u02.noCurrency")
-  const hrTotalLabel = (rates: ReadonlyArray<{ cur: string }> | undefined) => {
-    const code = soleRateCurrency(rates)?.trim() ?? ""
-    const iso = /^[A-Za-z]{3}$/.test(code) ? code.toUpperCase() : ""
-    if (iso === "USD") return t("sf.u08.total")
-    if (iso) return t("sf.u08.moneyInCurrency", { currency: iso })
-    return t("sf.u08.moneyUnscoped")
-  }
   const owner = useSfContext()
   const [state, setState] = createStore({
     phase: "loading" as SfUiState,
@@ -446,8 +433,9 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                 <dl class="sf-u08-summary">
                   <div><dt>{t("sf.u08.fte")}</dt><dd>{page().data.metrics?.fte === undefined || page().data.metrics?.fte === null
                     ? t("sf.u08.none") : page().data.metrics?.fte}</dd></div>
+                  {/* CAP20 projects calculated() HR totals in USD; rate cards retain their source currency. */}
                   <Show when={page().data.rates !== undefined && page().data.metrics?.hrTotal !== undefined}>
-                    <div><dt>{hrTotalLabel(page().data.rates)}</dt><dd>{money(page().data.metrics?.hrTotal, soleRateCurrency(page().data.rates), language.intl(), missingCurrency()) ?? t("sf.u08.none")}</dd></div>
+                    <div><dt>{t("sf.u08.total")}</dt><dd>{money(page().data.metrics?.hrTotal, "USD", language.intl(), missingCurrency()) ?? t("sf.u08.none")}</dd></div>
                   </Show>
                 </dl>
               </section>
@@ -550,7 +538,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                           <h3>{t("sf.u08.monthly")}</h3>
                           <table><thead><tr><For each={months()}>{(_, index) => <th>{index() + 1}</th>}</For></tr></thead>
                             <tbody><tr><For each={months()}>{(amount) =>
-                              <td>{money(amount, page().data.rates?.find((rate) => rate.id === selected().rateId)?.cur, language.intl(), missingCurrency()) ?? t("sf.u08.none")}</td>}</For></tr></tbody>
+                              <td>{money(amount, "USD", language.intl(), missingCurrency()) ?? t("sf.u08.none")}</td>}</For></tr></tbody>
                           </table>
                         </div>
                       )}
