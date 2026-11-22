@@ -2,7 +2,7 @@ import { expect, type Page, type Request } from "@playwright/test"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
 import {
   analyticsTest, array, object, sourceText, controls, readPortfolio, isOperation,
-  enter, ready, observePage, reflow, scheme, scrollPageTop,
+  enter, ready, observePage,
   captureAnalytics, captureModes, withPortuguese,
 } from "./design-support/wave-five-analytics"
 
@@ -196,6 +196,24 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   }))
 })
 
+async function assertBiSource(page: Page, url: string, view: string) {
+  const response = await page.request.get(url)
+  expect(response.status()).toBe(200)
+  const body = object(await response.json())
+  expect(object(body.request).viewId).toBe(view)
+  const projection = object(body.projection)
+  const values = array(projection.values).map(object)
+  const series = array(object(body.presentation).series).map(object)
+  const valueIds = series.flatMap((entry) => array(entry.valueIds))
+  await expect(page.locator(".sf-chart-table tbody tr")).toHaveCount(valueIds.length)
+  const numeric = values.filter((entry) => valueIds.includes(entry.id) && entry.evidenceState !== "absent" && typeof entry.value === "number")
+  for (const value of numeric.slice(0, 3))
+    await expect(page.locator(".sf-chart-table")).toContainText(new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value.value as number))
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-readback", view,
+    http: response.status(), rows: valueIds.length, numericValues: numeric.length, missing: values.filter((entry) => entry.value === null || entry.evidenceState === "absent").length }))
+  return values
+}
+
 async function chooseBi(page: Page, year: number) {
   await page.locator('[data-sf-field="start"]').fill(year + "-01-01")
   await page.locator('[data-sf-field="end"]').fill(year + "-12-31")
@@ -249,8 +267,11 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   await catalog.locator('[data-sf-field="selection"]').selectOption({ index: 1 })
   const readData = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data", { timeout: 60_000 })
   await catalog.getByRole("button", { name: "View data", exact: true }).click()
-  expect((await readData).status()).toBe(200)
+  const originalDataResponse = await readData
+  expect(originalDataResponse.status()).toBe(200)
   await expect(catalog.locator('[data-sf-bi-view="BI01"]')).toBeVisible()
+  const financialValues = await assertBiSource(page, originalDataResponse.url(), "BI01")
+  expect(financialValues.length).toBeGreaterThan(0)
   await captureModes(page, info, "UI46-financial-original-values")
   const tableRegion = catalog.locator(".sf-chart-table-region")
   await tableRegion.focus()
@@ -273,8 +294,10 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   if (await operationsSelection.isVisible()) await operationsSelection.selectOption({ index: 1 })
   const operationalResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data", { timeout: 60_000 })
   await catalog.getByRole("button", { name: "View data", exact: true }).click()
-  expect((await operationalResponse).status()).toBe(200)
+  const originalOperationsResponse = await operationalResponse
+  expect(originalOperationsResponse.status()).toBe(200)
   await expect(catalog.locator('[data-sf-bi-view="BI06"]')).toBeVisible()
+  await assertBiSource(page, originalOperationsResponse.url(), "BI06")
   await captureAnalytics(page, info, "UI46-operations-original-coverage-test-data")
   await page.setViewportSize({ width: 320, height: 800 })
   await captureAnalytics(page, info, "UI46-operations-dark-320-test-data")
