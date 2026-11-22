@@ -52,14 +52,14 @@ async function fixture() {
   const identityFor = (id: string | null, snapshot: Snapshot) => {
     if (!people.some((person) => person.id === id)) return undefined
     const roles = roleMap(snapshot, "dashboard")
-    const principal = resolve(id!, roles, (group) => group === "admins:" + id)
+    const principal = resolve(id!, roles, (group) => group === "admins")
     if (!principal.roles.some((role) => role.surface === "dashboard" && role.role === "admin") || !Object.hasOwn(object(snapshot.data.access), id!)) return undefined
     return { installationId: "installation", projectId: "project", principalRef: id!, accessRevision: digestSfValue({ roles, access: snapshot.data.access }), policyVersion: "policy" }
   }
   const identity = (candidate: Request, snapshot: Snapshot) => identityFor(candidate.headers.get("actor"), snapshot)
   for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   await persistence.transaction("dashboard", async (snapshot) => {
-    snapshot.data.roleMap = people.map((person) => ({ surface: "dashboard", role: "admin", entra: "admins:" + person.id, version: 1, by: "questioner" }))
+    snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admins", version: 1, by: "questioner" }]
     snapshot.data.access = Object.fromEntries(people.map((person) => [person.id, { assigned: [], domains: [] }]))
     return { commit: true, value: undefined }
   })
@@ -79,7 +79,7 @@ async function fixture() {
     persistence,
     authenticate: async (candidate, options) => {
       const id = candidate.headers.get("actor")
-      return people.some((person) => person.id === id) && options ? resolve(id!, [...options.roleMap], (group) => group === "admins:" + id) : null
+      return people.some((person) => person.id === id) && options ? resolve(id!, [...options.roleMap], (group) => group === "admins") : null
     },
     environment: async () => ({ at, id: randomUUID, directory: people }),
     requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined,
@@ -149,13 +149,9 @@ async function fixture() {
     const draft = { kind: "clarification" as const, sourceRef: reference.refId, sourceIncarnation: reference.target.incarnation, observedVersion: reference.target.version, period, recipientRef: "recipient", body: "Please check the selected project.", evidenceRefs: [reference] }
     const mutation = { expectedStorageVersion: 0, idempotencyKey: "create-question" }
     const thread = await withHuman("questioner", "collaboration.thread.create", { draft, mutation }, async (call) => {
-      const resolved = await records.resolve(reference.refId, call)
-      const projection = await records.read(reference.refId, call)
-      console.info("followup fixture preflight", JSON.stringify({ resolved: resolved.status, projection: projection.status, evidence: (await evidence.resolve(reference, call)).state,
-        sources: await collaboration.authority.sources([reference], call),
-        recipient: await collaboration.authority.recipient("recipient", call),
-        recipientSources: await collaboration.authority.recipientSources("recipient", [reference], call),
-        thread: await collaboration.authority.authorizeThread(draft, call, "write") }))
+      expect((await records.resolve(reference.refId, call)).status).toBe("ok")
+      expect((await evidence.resolve(reference, call)).state).toBe("fresh")
+      expect(await collaboration.authority.recipientSources("recipient", [reference], call)).toBe(true)
       return collaboration.threads.create(draft, mutation, call)
     })
     const version = ok(await collaboration.storageVersion("threads", await read("recipient")))
@@ -172,7 +168,9 @@ async function fixture() {
   }
   return { store, persistence, records, state, collaboration, read, create, answerRead, availability, mutate,
     revoke: () => persistence.transaction("dashboard", async (snapshot) => {
-      snapshot.data.roleMap = roleMap(snapshot, "dashboard").filter((entry) => entry.entra !== "admins:recipient")
+      const access = object(snapshot.data.access)
+      delete access.recipient
+      snapshot.data.access = access
       return { commit: true, value: undefined }
     }),
     dispose: async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) },
@@ -209,7 +207,7 @@ test("diagnostic 9: an actual source resolver outage remains unavailable without
   } finally { await f.dispose() }
 }, 120_000)
 
-test("diagnostic 9: persisted recipient-role revocation invalidates an admitted answer read", async () => {
+test("diagnostic 9: persisted recipient-access revocation invalidates an admitted answer read", async () => {
   const f = await fixture()
   try {
     const selected = await f.create()
