@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto"
-import { readFile, writeFile } from "node:fs/promises"
+import { readFile, realpath, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { AppProcess } from "@orchestra/core/process"
@@ -219,8 +219,11 @@ const program = Effect.scoped(Effect.gen(function* () {
   if (destination.origin !== installed.origin || destination.pathname !== installed.mount + "/auth/local" ||
       destination.searchParams.size !== 1 || !/^[a-f0-9]{64}$/.test(destination.searchParams.get("code") ?? ""))
     throw new Error("Native enrollment destination does not match this installation")
+  // The local factory registers its runtime workspace separately from private host state.
+  // Resolve the workspace it already created; do not create a second registration.
+  const directory = yield* Effect.promise(() => realpath(path.join(installed.root, "workspace")))
   const metadata = {
-    root: installed.root, origin: installed.origin, mount: installed.mount, actorId: installed.actorId,
+    root: installed.root, directory, origin: installed.origin, mount: installed.mount, actorId: installed.actorId,
     signIn, serverPassword, year, month, topicName, opexName, riskName, projectName,
   }
   yield* Effect.promise(() => writeFile(path.join(privateRoot, "installation.json"), JSON.stringify(metadata), { mode: 0o600, flag: "wx" }))
