@@ -288,10 +288,11 @@ test("Finance and criterion metrics use original pair reads and close on revocat
     const comparisonPair = { scenarioRefs: [results[0]!.reference, results[1]!.reference], criteria: ["cost"] }
     const makeObservation = business.createPlannerCriteriaObservation
     const measureComparison = async (route: "alternatives" | "scenarios", grouped: boolean,
-      afterRoot?: (current: ReturnType<typeof createSfPortfolioAuthority>) => Promise<void>) => {
+      afterRoot?: (current: ReturnType<typeof createSfPortfolioAuthority>) => Promise<void>, afterRootAt = 1) => {
       const counts: Counts = { physical: 0, roots: 0, work: 0 }
       const call = ok(await authority.ui.admit(request(), "sf_scenario_simulate", admissionDigest))
       const resolve = scenarios.resolve, readRoot = persistence.readSnapshotRoot
+      const lookup = business.scenarioLookup, businessHost = business.host, ownerHost = authority.host
       let ruleReads = 0
       scenarios.resolve = async (reference, binding) => {
         counts.work++
@@ -308,7 +309,11 @@ test("Finance and criterion metrics use original pair reads and close on revocat
         expect(await authority.ui.validate(call, "sf_scenario_simulate", admissionDigest)).toBe(true)
         const result = await business.withCase(call, ref, {}, async () => {
           control.counts = counts
-          control.afterRoot = afterRoot ? () => afterRoot(current) : undefined
+          const after = async () => {
+            if (counts.roots === afterRootAt) await afterRoot?.(current)
+            else control.afterRoot = after
+          }
+          control.afterRoot = afterRoot ? after : undefined
           try {
             if (route === "alternatives") {
               const value = await current.compare(comparisonRequest, call)
@@ -316,7 +321,7 @@ test("Finance and criterion metrics use original pair reads and close on revocat
               expect(value.value.request).toEqual(comparisonPair)
               return { status: "ok" as const, value: value.value.comparison }
             }
-            return current.planner.compareScenarios(comparisonPair, call)
+            return await current.planner.compareScenarios(comparisonPair, call)
           } finally { control.counts = undefined; control.afterRoot = undefined }
         })
         console.info("SF_CRITERION_COMPARISON_OBSERVATION", JSON.stringify({ route, grouped,
@@ -325,6 +330,9 @@ test("Finance and criterion metrics use original pair reads and close on revocat
       } finally {
         scenarios.resolve = resolve
         business.createPlannerCriteriaObservation = makeObservation
+        business.scenarioLookup = lookup
+        business.host = businessHost
+        authority.host = ownerHost
         persistence.readSnapshotRoot = readRoot
         authority.ui.finish(call)
       }
@@ -384,6 +392,19 @@ test("Finance and criterion metrics use original pair reads and close on revocat
     expect(replacedRuleReader.result.status).not.toBe("ok")
     expect(replacedRuleReader.counts.work).toBe(directComparison.counts.work)
     expect(replacedRuleReader.counts.afterClose).toEqual({ root: 1, work: directComparison.counts.work, outside: true })
+    const changedLookupAtEgress = await measureComparison("alternatives", true, async () => {
+      const lookup = business.scenarioLookup
+      business.scenarioLookup = (...args) => lookup(...args)
+    }, 2)
+    expect(changedLookupAtEgress.result.status).not.toBe("ok")
+    expect(changedLookupAtEgress.counts.work).toBe(groupedComparison.counts.work)
+    expect(changedLookupAtEgress.counts.afterClose).toEqual({ root: 2, work: groupedComparison.counts.work, outside: true })
+    const changedOwnerAtEgress = await measureComparison("scenarios", true, async () => {
+      business.host = { ...business.host }
+    }, 2)
+    expect(changedOwnerAtEgress.result.status).not.toBe("ok")
+    expect(changedOwnerAtEgress.counts.work).toBe(directComparison.counts.work)
+    expect(changedOwnerAtEgress.counts.afterClose).toEqual({ root: 2, work: directComparison.counts.work, outside: true })
     const changedRule = await measureComparison("scenarios", true, async () => { await registerRule(1, 1) })
     expect(changedRule.result.status).not.toBe("ok")
     expect(changedRule.counts.work).toBe(directComparison.counts.work)

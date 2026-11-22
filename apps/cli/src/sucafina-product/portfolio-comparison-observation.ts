@@ -18,9 +18,10 @@ export function createSfPortfolioComparisonObservation(input: {
   rules: ReturnType<typeof createCriterionRuleRegistry>
 }) {
   const { authority, business, rules } = input
+  const host = authority.host
   const resolve = rules.resolve, evaluate = rules.evaluate
   const rulesCurrent = () => input.authority === authority && input.business === business &&
-    input.rules === rules && rules.resolve === resolve && rules.evaluate === evaluate
+    authority.host === host && business.host === host && input.rules === rules && rules.resolve === resolve && rules.evaluate === evaluate
   const observe = business.createPlannerCriteriaObservation({
     current: rulesCurrent,
     resolve: async (caseRef, ids, call) => {
@@ -46,7 +47,7 @@ export function createSfPortfolioComparisonObservation(input: {
     try {
       // Preserve the existing criteria-free route before any additional read.
       if (!Array.isArray(incoming.criteria) || !incoming.criteria.length || call.kind !== "ui") return work()
-      const host = authority.host, persistence = host.persistence
+      const persistence = host.persistence
       const readRoot = persistence.readSnapshotRoot, snapshots = persistence.currentSnapshots
       if (!readRoot || !snapshots || snapshots.call(persistence)) return work()
       const source = host.requestFor(call)
@@ -92,13 +93,14 @@ export function createSfPortfolioComparisonObservation(input: {
       const pair = { scenarioRefs, criteria: request.criteria }
       // Only this read-only comparator is inside the owned root. Selection,
       // analysis, result persistence and binding writes remain outside it.
-      return observe(pair, call, async () => {
+      const observed = await observe(pair, call, async () => {
         if (!current()) return unavailable()
         const result = await work()
         if (!current() || (result.status === "ok" && digestSfValue(result.value.request) !== digestSfValue(pair)))
           return unavailable()
         return result
       })
+      return current() ? observed : unavailable()
     } catch { return unavailable() }
   }
   return { scenarios, alternatives }
