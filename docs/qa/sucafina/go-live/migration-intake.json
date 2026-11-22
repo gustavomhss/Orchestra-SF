@@ -3884,7 +3884,35 @@
         "jsonAndHttpAssertions": true,
         "omni": true
       },
-      "limitation": "Observer completion only; no claim that the server/CDP Compare cause is fixed and no qualification result."
+      "limitation": "Observer completion only; no claim that the server/CDP Compare cause is fixed and no qualification result.",
+      "correlationFollowup": {
+        "status": "STATIC_REVIEW_ACK_EXECUTION_PENDING",
+        "commit": "7191f7244e609126d2e7fc7c9127132419bd9258",
+        "tree": "dac800c0f9db32321fe1c466d965d9de78fb868e",
+        "beforeBlob": "6aa80703af55c0e4c51f94a905db6a7be41d99bf",
+        "afterBlob": "f885c4a94ea8e2a97822477608a71f33b2605935",
+        "reviewer": "teams_product",
+        "findingsResolved": [
+          "URL/method alone did not exclude a response belonging to an earlier request. A fresh CDP session now observes Network.requestWillBeSent in the armed window and requires the matching Fetch.requestPaused.networkId before reading or fulfilling bytes; a second distinct id or absent/mismatched id refuses the observation.",
+          "A late callback failure induced by cleanup could precede the original click/assertion error. All observed, main-path and cleanup failures now enter one chronological list; final reference deduplication preserves that order."
+        ],
+        "preserved": "The original Playwright Request remains the requestfailed identity; response-stage Fetch, original payload/status/headers/bytes, one click, zero retries, deadlines, callbacks and assertions are retained. Network observation is enabled before Fetch/click and disabled in independent cleanup.",
+        "primaryProtocolSources": [
+          {
+            "repository": "ChromeDevTools/devtools-protocol",
+            "path": "pdl/domains/Fetch.pdl",
+            "blob": "69852c2dc0e2b56ccf65d345feb5562a8e1cccf5",
+            "contract": "Fetch.requestPaused.networkId equals its corresponding Network.requestWillBeSent.requestId when available."
+          },
+          {
+            "repository": "ChromeDevTools/devtools-protocol",
+            "path": "pdl/domains/Network.pdl",
+            "blob": "ef53b19defac3bbefdc42dd06f8c7645e616f91b",
+            "contract": "Network.enable begins event delivery; requestWillBeSent observes the request before sending."
+          }
+        ],
+        "limitation": "Static review only. No installed result, no server-cause conclusion and no gate acceptance."
+      }
     }
   },
   "focalHistory": [
@@ -4457,8 +4485,8 @@
   ],
   "composition": {
     "status": "COMPOSED_NOT_QUALIFIED",
-    "sourceSha": "dae386091963bc2b4e777d4247dbe40ae84ea77d",
-    "treeSha": "ebefcb71bcf7516365e15eef87cfe0bd821594d6",
+    "sourceSha": "7191f7244e609126d2e7fc7c9127132419bd9258",
+    "treeSha": "dac800c0f9db32321fe1c466d965d9de78fb868e",
     "codeMergeSha": "53d83a3e65913f10db4554257aaf45b8fc3fa802",
     "codeMergeTreeSha": "0104f9fc1b7b2caf719a178c176db69d077bbbfa",
     "parents": [
