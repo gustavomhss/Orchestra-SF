@@ -119,7 +119,7 @@ export async function startPlannerInstallation(info: TestInfo) {
     // never appears in a Playwright action, trace or assertion failure. The browser
     // receives only the session actually issued by the production identity handler.
     const admitted = await fetch(enrollment, { redirect: "manual", signal: AbortSignal.timeout(10_000) })
-    if (admitted.status !== 303 || admitted.headers.get("location") !== "/")
+    if (admitted.status !== 303 || admitted.headers.get("location") !== "/sucafina/dashboard")
       throw new Error(`Production local enrollment failed with HTTP ${admitted.status}`)
     const cookie = { ...readOperatorSessionCookie(admitted.headers), domain: new URL(origin).hostname }
     state.secrets.push(cookie.value)
