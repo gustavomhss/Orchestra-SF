@@ -46,28 +46,34 @@ export const captureWorkflowState: WorkflowCapture = async (page, info, checkpoi
       variants: ["dark-desktop", "light-desktop", "dark-320"],
     }, null, 2),
   })
-  try {
-    for (const variant of [
-      { scheme: "dark", width: 1440, height: 1100, name: "dark-desktop" },
-      { scheme: "light", width: 1440, height: 1100, name: "light-desktop" },
-      { scheme: "dark", width: 320, height: 800, name: "dark-320" },
-    ] as const) {
-      await page.setViewportSize({ width: variant.width, height: variant.height })
-      await scheme(page, variant.scheme)
-      await verify()
-      await reflow(page)
-      await scrollPageTop(page)
-      if (checkpoint.focus) {
-        const focus = surface.locator(checkpoint.focus)
-        await expect(focus).toHaveCount(1)
-        await expect(focus).toBeVisible()
-        await focus.scrollIntoViewIfNeeded()
-      }
-      await capture(page, info, name + "-" + variant.name)
-    }
-  } finally {
-    if (originalViewport) await page.setViewportSize(originalViewport)
-    if (originalScheme === "dark" || originalScheme === "light") await scheme(page, originalScheme)
+  const desktop = { width: 1440, height: 1100 }
+  for (const variant of [
+    { scheme: "dark", width: 1440, height: 1100, name: "dark-desktop" },
+    { scheme: "light", width: 1440, height: 1100, name: "light-desktop" },
+    { scheme: "dark", width: 320, height: 800, name: "dark-320" },
+  ] as const) {
+    // The original theme control lives in the wide titlebar. Choose the theme
+    // there before narrowing; mobile has Navigation/Home/New session instead.
+    if ((page.viewportSize()?.width ?? desktop.width) < 768) await page.setViewportSize(desktop)
+    await scheme(page, variant.scheme)
+    await page.setViewportSize({ width: variant.width, height: variant.height })
+    await verify()
+    await reflow(page)
     await scrollPageTop(page)
+    if (checkpoint.focus) {
+      const focus = surface.locator(checkpoint.focus)
+      await expect(focus).toHaveCount(1)
+      await expect(focus).toBeVisible()
+      await focus.scrollIntoViewIfNeeded()
+    }
+    await capture(page, info, name + "-" + variant.name)
   }
+  // Restore only after a successful checkpoint. On failure, retain the exact
+  // failing presentation for afterEach evidence and preserve the original error.
+  if (originalScheme === "dark" || originalScheme === "light") {
+    if ((page.viewportSize()?.width ?? desktop.width) < 768) await page.setViewportSize(desktop)
+    await scheme(page, originalScheme)
+  }
+  if (originalViewport) await page.setViewportSize(originalViewport)
+  await scrollPageTop(page)
 }
