@@ -135,7 +135,14 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       return source.observe(scope, context)
     }
     const fence: ConfirmationObserver<T>["fence"] = async (scope, observation, context) => await source.fenceManifest(scope, context) && await source.fence(scope, observation, context)
-    const observations = createConfirmationObservationReceipts<T>({ host: input.host, observe, fence, now: () => Date.parse(input.now()) })
+    // Selection rereads do not own a C08 mutation transaction. Run only their
+    // read-only source fence inside the canonical persistence snapshot.
+    const readFence: ConfirmationObserver<T>["fence"] = async (scope, observation, context) => {
+      const transaction = input.host.persistence.transactionAll
+      if (!transaction) return false
+      return transaction(async () => ({ commit: false, value: await fence(scope, observation, context) }))
+    }
+    const observations = createConfirmationObservationReceipts<T>({ host: input.host, observe, fence: readFence, now: () => Date.parse(input.now()) })
     const port = createConfirmationPort<T>({ host: input.host, state: input.state, creationTarget: input.creationTarget, human: input.human, observe, fence, verifyObserved: observations.verifyObserved, createId: input.createId, now: input.now })
     const work = async (id: string, context: TrustedDomainContext): Promise<PortResult<ConfirmationWork>> => {
       const request = input.host.requestFor(context)
