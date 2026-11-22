@@ -32,6 +32,9 @@ function ok<T>(result: PortResult<T>): T {
 
 // The actual SQLite driver is never instrumented or replaced in the positive
 // fixture. Source identities, C08 state and UI leases come from their originals.
+// The projectScope counter differs from installedDashboardProjector, so the
+// Dashboard projector identity optimization is intentionally ineligible here.
+// This fixture qualifies Planner/readonly provenance, not every Dashboard fast path.
 async function withChain<T>(opaque: boolean, work: (fixture: Awaited<ReturnType<typeof createChain>>) => Promise<T>) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-current-choice-readonly-"))
   const store = await openLocalStore(path.join(directory, "store"))
@@ -325,6 +328,8 @@ test("CurrentChoice readonly calculation roots close escaped parent and child co
         expect(secondScope?.identity).not.toBe(firstScope?.identity)
         expect(secondScope?.bytesIdentity).toBe(firstScope?.bytesIdentity)
         expect(secondScope?.current()).toBe(true)
+        // This proves that an owner-closed child cannot revive in another real
+        // root; it does not isolate the identity comparator from owner closure.
         if (!escapedChild) throw new Error("No original descendant was retained")
         expect(await escapedChild.run(async () => { throw new Error("A new root must not admit an old child") }))
           .toEqual({ status: "unavailable", reason: "calculation-read-root-unavailable" })
