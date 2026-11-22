@@ -1,9 +1,10 @@
 import { expect, type Page, type Request } from "@playwright/test"
+import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
 import { prepareParameterizedScenario } from "./design-support/wave-five-analytics-source"
 import {
   analyticsTest, array, object, sourceText, controls, readPortfolio, isOperation,
-  enter, ready, observePage,
+  enter, ready, observePage, observeAnalyticsContext,
   captureAnalytics, captureModes, withPortuguese,
 } from "./design-support/wave-five-analytics"
 
@@ -13,6 +14,7 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   expect(info.project.metadata.bundle).toBe("production")
   expect(info.config.workers).toBe(1)
   const diagnostics = observePage(page)
+  const contextReads = observeAnalyticsContext(page, owner)
   const writes: Request[] = []
   page.on("request", (request) => {
     if (isOperation(request, "decision-portfolio-evaluate") || isOperation(request, "decision-sensitivity-evaluate")) writes.push(request)
@@ -36,10 +38,12 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   const scenarios = page.locator('[data-sf-scenarios]')
   await expect(scenarios).toHaveAttribute("data-sf-wave", "five")
   await expect(scenarios.locator(".sf-u19-case-list > li")).toHaveCount(cases.length)
+  await contextReads("UI42-list")
   await captureModes(page, info, "UI42-list")
   await scenarios.locator(".sf-u19-case-list > li").filter({ hasText: waveFourDecisionsData.editableObjective }).getByRole("button").click()
   await ready(page, "Portfolio scenarios", 40_000)
   await expect(scenarios.getByText("No eligible scenarios in the authorized case.", { exact: true })).toBeVisible()
+  await contextReads("UI42-empty-case")
   await expect(page.getByRole("button", { name: "Preview combinations", exact: true })).toBeDisabled()
   await captureAnalytics(page, info, "UI42-empty-authorized-case-test-data")
   await scenarios.getByRole("button", { name: "Choose a case", exact: true }).click()
@@ -285,7 +289,7 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   await expect(catalog.locator(".sf-bi-catalog-entry")).toHaveCount(11)
   await expect(catalog.locator(".sf-chart-frame")).toHaveCount(0)
 
-  await enter(page, owner, installation.origin + "/orchestra/sf-bi/BI01", "Analysis details", 40_000)
+  await enter(page, owner, installation.origin + "/orchestra/sf-bi/" + encodeSfRouteRef("BI01"), "Analysis details", 40_000)
   await expect(catalog.locator('[data-sf-field="view"]')).toBeDisabled()
   await chooseBi(page, installation.year)
   await catalog.locator('[data-sf-field="selection"]').selectOption({ index: 1 })
@@ -312,7 +316,7 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   await expect(catalog.locator(".sf-chart-frame")).toHaveCount(0)
   await expect(catalog.getByRole("navigation", { name: "Authorized source links", exact: true })).toHaveCount(0)
 
-  await enter(page, owner, installation.origin + "/orchestra/sf-bi/BI06", "Analysis details", 40_000)
+  await enter(page, owner, installation.origin + "/orchestra/sf-bi/" + encodeSfRouteRef("BI06"), "Analysis details", 40_000)
   await chooseBi(page, installation.year)
   const operationsSelection = catalog.locator('[data-sf-field="selection"]')
   if (await operationsSelection.isVisible()) await operationsSelection.selectOption({ index: 1 })
@@ -327,7 +331,7 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   await captureAnalytics(page, info, "UI46-operations-dark-320-test-data")
   await page.setViewportSize({ width: 1440, height: 1100 })
 
-  await enter(page, owner, installation.origin + "/orchestra/sf-bi/BI11", "Analysis details", 40_000)
+  await enter(page, owner, installation.origin + "/orchestra/sf-bi/" + encodeSfRouteRef("BI11"), "Analysis details", 40_000)
   await chooseBi(page, installation.year)
   // This fixture has no persisted sensitivity evaluation. Preserve the source's
   // empty selection catalog; a view title is not evidence of a recorded result.
@@ -347,7 +351,7 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     await enter(localized, owner, installation.origin + "/orchestra/sf-bi", "Análises", 40_000)
     await expect(localized.locator(".sf-bi-catalog-entry")).toHaveCount(11)
     await captureAnalytics(localized, info, "UI45-pt-BR-dark-desktop-catalog-test-data")
-    await enter(localized, owner, installation.origin + "/orchestra/sf-bi/BI01", "Detalhe da análise", 40_000)
+    await enter(localized, owner, installation.origin + "/orchestra/sf-bi/" + encodeSfRouteRef("BI01"), "Detalhe da análise", 40_000)
     await localized.locator('[data-sf-field="start"]').fill(installation.year + "-01-01")
     await localized.locator('[data-sf-field="end"]').fill(installation.year + "-12-31")
     const options = localized.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-options")
