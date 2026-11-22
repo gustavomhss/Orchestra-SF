@@ -1,0 +1,64 @@
+name: go-live-docs-guards
+
+on:
+  push:
+    branches: [go-live-docs]
+
+permissions:
+  contents: read
+
+jobs:
+  documentation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      DOCUMENT_SHA: "db18aa7882f7e3a87ac04c51ce450338fe69f7ee"
+      DOCUMENT_TREE: "b7093972be62252da76526e020bf6d82b65cf53d"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact documentation source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "db18aa7882f7e3a87ac04c51ce450338fe69f7ee"
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Bun for canonical repository guards
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: "1.3.14"
+      - name: Observe exact source and guard base
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$DOCUMENT_SHA"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$DOCUMENT_TREE"
+          test -z "$(git status --porcelain)"
+          mkdir -p "$RUNNER_TEMP/go-live-docs-evidence"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/go-live-docs-evidence/refs.txt"
+          git merge-base HEAD origin/dev > "$RUNNER_TEMP/go-live-docs-evidence/merge-base.txt"
+          git diff --name-only "$(git merge-base HEAD origin/dev)" HEAD > "$RUNNER_TEMP/go-live-docs-evidence/changed-paths.txt"
+          cat "$RUNNER_TEMP/go-live-docs-evidence/refs.txt"
+          cat "$RUNNER_TEMP/go-live-docs-evidence/merge-base.txt"
+          cat "$RUNNER_TEMP/go-live-docs-evidence/changed-paths.txt"
+      - name: Canonical guards on exact documentation source
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/go-live-docs-evidence/guards.log"
+      - name: Record documentation guard receipt
+        run: |
+          set -euo pipefail
+          jq -n --arg sourceSha "$DOCUMENT_SHA" --arg sourceTree "$DOCUMENT_TREE" \
+            --arg workflowSha "$GITHUB_SHA" --arg runId "$GITHUB_RUN_ID" --arg runAttempt "$GITHUB_RUN_ATTEMPT" \
+            --arg baseSha "$(git rev-parse origin/dev)" --arg mergeBaseSha "$(git merge-base HEAD origin/dev)" \
+            --arg guardLogSha256 "$(sha256sum "$RUNNER_TEMP/go-live-docs-evidence/guards.log" | cut -d ' ' -f 1)" \
+            '{schema:"orchestra-sf.go-live-docs-guards.v1",proofClass:"DOCUMENTATION_GUARDS",status:"PASS",sourceSha:$sourceSha,sourceTree:$sourceTree,workflowSha:$workflowSha,runId:$runId,runAttempt:$runAttempt,baseSha:$baseSha,mergeBaseSha:$mergeBaseSha,guardLogSha256:$guardLogSha256,finalCandidate:false,productionCutover:false}' \
+            > "$RUNNER_TEMP/go-live-docs-evidence/receipt.json"
+      - name: Preserve guard evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: go-live-docs-guards-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/go-live-docs-evidence/
+          if-no-files-found: error
+          retention-days: 30
