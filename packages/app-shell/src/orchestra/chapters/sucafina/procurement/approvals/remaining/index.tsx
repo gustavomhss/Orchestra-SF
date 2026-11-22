@@ -1,6 +1,7 @@
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
+import { procurementStatusLabel } from "../../presentation"
 import { useSfContext } from "../../../context"
 import type { SfEditScopeKey, SfSurfaceProps } from "../../../context/contracts"
 import type { SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
@@ -250,7 +251,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
   const reviewFields=(source:PendingApproval):SfReviewField[]=>{
     const request=source.request
     return [
-      {path:"status",label:m("sf.u13.remaining.stage"),value:fv(request.status)},
+      {path:"status",label:m("sf.u13.remaining.stage"),value:fv(procurementStatusLabel(request.status, language.t))},
       {path:"requestRef",label:m("sf.u13.remaining.ref"),value:fv(source.requestRef)},
       {path:"holder",label:m("sf.u13.remaining.owner"),value:fv(source.holderName??source.holderId)},
       {path:"submittedAmount",label:m("sf.u13.remaining.amount"),
@@ -271,7 +272,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     kind:"draft",intentRef:review.intentRef,sourceRef:review.source.requestRef as SfRef,
     sourceVersion:review.source.version,
     fields:[
-      {path:"decision",label:m("sf.u13.remaining.submitted"),value:fv(review.decision)},
+      {path:"decision",label:m("sf.u13.remaining.submitted"),value:fv(t(review.decision === "approve" ? "sf.u13.remaining.approve" : "sf.u13.remaining.reject"))},
       {path:"reason",label:m(review.decision==="reject"?"sf.u13.remaining.reason":"sf.u13.remaining.comment"),
         value:fv(review.note)},
     ],
@@ -282,7 +283,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
       return {kind:"blocked",labelKey:k("sf.u13.remaining.readOnly"),
         reasons:[m("sf.u13.remaining.readOnly")]} as const
     return {
-      kind:"admitted",labelKey:k("sf.u13.remaining.confirm"),purpose:intent.decision,
+      kind:"admitted",labelKey:k(intent.decision === "approve" ? "sf.u13.remaining.approve" : "sf.u13.remaining.reject"),purpose:intent.decision,
       binding:{kind:"catalog-command",
         operationId:intent.decision==="approve"?"domain.command.CAP26.approve" as const:
           "domain.command.CAP26.reject" as const,
@@ -434,14 +435,18 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
       </section>}>
         <section>
           <h3>{t("sf.u13.remaining.offers")}</h3>
-          <p>{t("sf.u13.remaining.selectedQuote")}: {record.sourcing?.selectedId??t("sf.u13.remaining.missing")}</p>
+          <p title={record.sourcing?.selectedId ?? undefined}>{t("sf.u13.remaining.selectedQuote")}: {record.sourcing?.quotes?.find((quote) => quote.id === record.sourcing?.selectedId)?.supplier ?? record.sourcing?.selectedId ?? t("sf.u13.remaining.missing")}</p>
           <ul><For each={record.sourcing?.quotes??[]}>{(quote)=>
             <li>{quote.supplier??quote.id??t("sf.u13.remaining.missing")} ·
               {String(quote.total??t("sf.u13.remaining.missing"))} {quote.currency??""}</li>
           }</For></ul>
           <p>{t("sf.u13.remaining.noRank")}</p>
-          <p>{t("sf.u13.remaining.fx")}: {record.sourcing?.fxSnapshot?
-            JSON.stringify(record.sourcing.fxSnapshot):t("sf.u13.remaining.fxMissing")}</p>
+          <Show when={record.sourcing?.fxSnapshot} fallback={<p>{t("sf.u13.remaining.fxMissing")}</p>}>
+            <details class="sf-procurement-source">
+              <summary>{t("sf.u13.remaining.fx")}</summary>
+              <pre class="sf-u13-source-snapshot">{JSON.stringify(record.sourcing?.fxSnapshot, null, 2)}</pre>
+            </details>
+          </Show>
         </section>
       </Show>
       <p>{t("sf.u13.remaining.noFinancialApproval")}</p>
@@ -505,11 +510,11 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
         <Show when={ui.phase!=="outcome-unknown"&&ui.phase!=="source-changed"}>
         <Show when={!ui.review} fallback={<SfChangeReview
           operation={{ref:(ui.review?.intentRef??"CAP26:unknown") as SfOperationRef,
-            label:m("sf.u13.remaining.review"),scope:d(ui.review?.source.requestRef??"")}}
+            label:m(ui.review?.decision === "approve" ? "sf.u13.remaining.approve" : "sf.u13.remaining.reject"),scope:d(ui.review?.source.requestRef??"")}}
           base={ui.review?snapshot(ui.review.source):null}
           current={ui.review?snapshot(ui.review.source):null}
           proposed={ui.review?proposed(ui.review):{kind:"not-provided",reason:m("sf.u13.remaining.unavailable")}}
-          effects={[{id:"decision",domain:"procurement",title:d(ui.review?.decision??""),
+          effects={[{id:"decision",domain:"procurement",title:d(t(ui.review?.decision === "approve" ? "sf.u13.remaining.approve" : "sf.u13.remaining.reject")),
             state:"proposed",details:[]}]}
           coverage={{state:ui.review?.source.baseCurrency?"complete":"partial",
             summary:m("sf.u13.remaining.coverage"),reasons:ui.review?.source.baseCurrency?[]:

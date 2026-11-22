@@ -52,3 +52,7 @@
   .sf-u08-toolbar > *, .sf-u08-actions > * { inline-size: 100%; }
   .sf-u08-rate-list .mx-btn { align-items: start; flex-direction: column; gap: 4px; }
 }
+
+.sf-u08-source-note { margin: 0; padding: 12px 16px; border-inline-start: 2px solid var(--mx-line); border-radius: var(--orchestra-radius-sm); background: var(--mx-soft); color: var(--mx-dim); }
+.sf-u08-fields label { min-inline-size: 0; }
+.sf-u08-detail :is(input, select, textarea) { max-inline-size: 100%; }

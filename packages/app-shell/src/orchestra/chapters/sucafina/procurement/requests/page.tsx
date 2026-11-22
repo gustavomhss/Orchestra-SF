@@ -2,6 +2,7 @@ import { createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "
 import { Dynamic } from "solid-js/web"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
+import { procurementStatusLabel } from "../presentation"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../context/contracts"
@@ -604,7 +605,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       render: (row) => <span>{row.pr?.title ?? "—"}</span> },
     { id: "status", labelKey: tableKey("sf.u11.remaining.status"), sortKey: "status",
       align: "start", widthPolicy: { kind: "content", minPx: 110, maxPx: 180 },
-      render: (row) => <span>{row.status}</span> },
+      render: (row) => <span title={row.status}>{procurementStatusLabel(row.status, language.t)}</span> },
     { id: "requester", labelKey: tableKey("sf.u11.remaining.requester"), sortKey: "requester",
       align: "start", widthPolicy: { kind: "content", minPx: 110, maxPx: 170 },
       render: (row) => <span>{row.requesterName ?? row.createdBy}</span> },
@@ -642,7 +643,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       coverage={{ state: "complete", summary: message("sf.u11.remaining.reviewSummary"),
         reasons: [], knownCount: fields.length, expectedCount: fields.length }}
       blockingReasons={[]}
-      confirmation={{ kind: "admitted", labelKey: tableKey("sf.u11.remaining.confirm"),
+      confirmation={{ kind: "admitted", labelKey: tableKey(actionKey[intent.action]),
         purpose, binding: { kind: "catalog-command", operationId,
           version: { kind: "record", expectedVersion: intent.version },
           confirmation: "presentation-only" } }}
@@ -676,7 +677,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         <h2>{creating() ? t("sf.u11.remaining.new") : current?.pr?.title ?? ref}</h2>
         <Show when={!creating() && ref}>
           <p>{t("sf.u11.remaining.identity")}: {ref}</p>
-          <p>{t("sf.u11.remaining.status")}: {current?.status}</p>
+          <p title={current?.status}>{t("sf.u11.remaining.status")}: {procurementStatusLabel(current?.status ?? "", language.t)}</p>
           <p>{t("sf.u11.remaining.version")}: {version() ?? "—"}</p>
           <Show when={current?.requestSummary}>
             <p data-request-summary={ref}>{current?.requestSummary}</p>
@@ -774,7 +775,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       </Show>
       <Show when={current && stage() === "po"}>
         <section class="sf-u11-stage" data-stage="po">
-          <h3>{t("sf.u11.remaining.po")}</h3>
+          <Show when={!canPo() || !activePo()}><h3>{t("sf.u11.remaining.po")}</h3></Show>
           <Show when={poConflict()}>
             <div data-draft-conflict="po"><p role="alert">{language.t("sf.common.conflict")}</p>
               <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown || poPending()}
