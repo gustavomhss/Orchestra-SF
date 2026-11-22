@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "qualification": "failed-partial",
+  "source": "096224f666ed44974478e25ac227455aa4c81e99",
+  "snapshot": "a24ad03151646a9a1bc8e50d130b8f427e217a2b",
+  "runId": 44979219065,
+  "jobId": 137075803565,
+  "workflow": ".github/workflows/test-ci.yml",
+  "channel": "prod",
+  "bundle": "production",
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+    "ORCHESTRA_CHANNEL": "prod"
+  },
+  "artifact": {
+    "id": 14737690500,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 14418014,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14737690500",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14737690500/zip",
+    "expired": false,
+    "created_at": "2026-11-22T03:16:40Z",
+    "expires_at": "2026-11-29T03:16:38Z",
+    "updated_at": "2026-11-22T03:16:40Z",
+    "digest": "sha256:d1841c5ba6986558dd16afd7aaac667b538201928171a342b75a5f2601dfc629",
+    "workflow_run": {
+      "id": 44979219065,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf5analytics3",
+      "head_sha": "a24ad03151646a9a1bc8e50d130b8f427e217a2b"
+    }
+  },
+  "sourceOperations": [
+    {
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "operation": "parameter-source-read",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "operation": "decision-promote-parameter",
+      "http": 200,
+      "status": "ok",
+      "parameterPeriod": {
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "parameterUnit": "USD"
+    },
+    {
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    }
+  ],
+  "captures": [
+    {
+      "path": "attempt-02/UI42-list-dark-desktop.jpg",
+      "blob": "807f0a58ff9271726d87cdc7299dbc8e4cf5c9fa",
+      "originalCapture": "UI42-list-dark-desktop-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "completed capture before later grouped failure"
+    },
+    {
+      "path": "attempt-02/UI42-list-light-desktop.jpg",
+      "blob": "2ce4149bf5526516c752b22efafa4f1916e7cef6",
+      "originalCapture": "UI42-list-light-desktop-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "completed capture before later grouped failure"
+    },
+    {
+      "path": "attempt-02/UI42-list-dark-390.jpg",
+      "blob": "247c1852a0692547a0719ab3b98ed4d0aea17042",
+      "originalCapture": "UI42-list-dark-390-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "completed capture before later grouped failure"
+    },
+    {
+      "path": "attempt-02/UI42-list-light-320.jpg",
+      "blob": "576960d0d88b7e11c3e0f0fd6e21db0055c82453",
+      "originalCapture": "UI42-list-light-320-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "completed capture before later grouped failure"
+    },
+    {
+      "path": "attempt-02/UI42-empty-case-no-preview.jpg",
+      "blob": "752d6299fe433831889224f49a0575cd7598b8fd",
+      "originalCapture": "FAILED-native-wave-three-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "failure diagnostic"
+    },
+    {
+      "path": "attempt-02/UI45-catalog-dark-desktop.jpg",
+      "blob": "0f9fa94f3b0c1024c69624a0e12536429adb4345",
+      "originalCapture": "UI45-question-catalog-dark-desktop-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "completed capture before later grouped failure"
+    },
+    {
+      "path": "attempt-02/UI45-catalog-light-desktop.jpg",
+      "blob": "a416d572e15a0780b0004c548293f2ad47a7d5c3",
+      "originalCapture": "UI45-question-catalog-light-desktop-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "completed capture before later grouped failure"
+    },
+    {
+      "path": "attempt-02/UI45-catalog-dark-390.jpg",
+      "blob": "1530919c2647963a47ec6ccd5cf3e667b986eb25",
+      "originalCapture": "UI45-question-catalog-dark-390-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "completed capture before later grouped failure"
+    },
+    {
+      "path": "attempt-02/UI45-catalog-light-320.jpg",
+      "blob": "df14ec2bf677b129a407904dbd4809478654ad2a",
+      "originalCapture": "UI45-question-catalog-light-320-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "completed capture before later grouped failure"
+    },
+    {
+      "path": "attempt-02/UI45-authorized-financial-context.jpg",
+      "blob": "c1c8238fd7caa03352b45ba66bc2f01bb4a805cf",
+      "originalCapture": "UI45-authorized-financial-context-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "completed capture before later grouped failure"
+    },
+    {
+      "path": "attempt-02/UI45-financial-result-header.jpg",
+      "blob": "7df31e894f192c32ac197f5a8e11cdb1cc59daa4",
+      "originalCapture": "UI45-financial-source-values-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "result header only"
+    },
+    {
+      "path": "attempt-02/UI46-invalid-unencoded-route.jpg",
+      "blob": "c6b0271a5552fa2cc32d13fb298d275bf1daa4be",
+      "originalCapture": "FAILED-native-wave-three-test-data",
+      "visuallyInspected": true,
+      "originalBytesUnmodified": true,
+      "scope": "failure diagnostic"
+    }
+  ],
+  "notReached": [
+    "UI42 preview/evaluate",
+    "UI43 recorded portfolio result",
+    "UI44 sensitivity",
+    "UI46 contextual BI"
+  ],
+  "correctionHead": "b7a508350b8de7db0ffb6d972c51912ca725a78e"
+}

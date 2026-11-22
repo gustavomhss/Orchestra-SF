@@ -905,6 +905,212 @@
           "stderrTruncated": false
         }
       ]
+    },
+    {
+      "attempt": 9,
+      "product": "6703cc5ba71709f0616b186383ab63f779c22dfb",
+      "snapshot": "8c9b9ee96b33321412458690978ecf935c443a08",
+      "run": 44987972780,
+      "job": 137102610667,
+      "cleanupJob": 137103091523,
+      "checks": {
+        "total": 6,
+        "passed": 5,
+        "failed": 1,
+        "notRerun": 10
+      },
+      "failures": [
+        "CLI package typecheck: TS2769 in sucafina-bi-observation.test.ts:238; an optional HTTP response status was passed to an assertion requiring a number."
+      ],
+      "resolution": "Added an explicit missing-response rejection before the original refusal-status assertion. Production source unchanged; follow-up package typecheck pending.",
+      "guards": {
+        "rules": 78,
+        "files": 264,
+        "errors": 0,
+        "approved": 0,
+        "warnings": 35,
+        "touchesGuards": false
+      },
+      "palettes": {
+        "files": 7,
+        "changed": []
+      },
+      "copy": {
+        "preservedEnglishKeys": 357,
+        "newExplicitBilingualKeys": 48
+      },
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987972780",
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      },
+      "commands": [
+        {
+          "gate": "app-shell typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "typecheck"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "fetch pinned guard base",
+          "command": [
+            "git",
+            "fetch",
+            "--no-tags",
+            "--depth=1",
+            "origin",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "resolve pinned guard base",
+          "command": [
+            "git",
+            "rev-parse",
+            "--verify",
+            "refs/remotes/origin/dev^{commit}"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "guardrails",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "check:guards",
+            "--base",
+            "origin/dev",
+            "--json"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "palette generation",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "script/orchestra-palettes.ts"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "app-shell e2e typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck:e2e"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "CLI native host typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "apps/cli",
+          "exitCode": 2,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "read pinned English source sf-u23",
+          "command": [
+            "git",
+            "show",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "read pinned English source sf-u25",
+          "command": [
+            "git",
+            "show",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "read pinned English source sf-u32",
+          "command": [
+            "git",
+            "show",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "read pinned English source sf-u33",
+          "command": [
+            "git",
+            "show",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "read pinned English source sf-u38",
+          "command": [
+            "git",
+            "show",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "read pinned English source sf-u44",
+          "command": [
+            "git",
+            "show",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      ]
     }
   ]
 }

@@ -55,6 +55,14 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   const candidate = scenarios.locator(".sf-u19-candidates").getByRole("checkbox", { name: waveFourDecisionsData.plannerCandidate + " · v1", exact: true })
   await expect(candidate).toBeVisible()
   await candidate.check()
+  const constraintControls = prepared.portfolioCriteria.map((criterion) => {
+    const rules = array(source.rules).map(object).filter((rule) => rule.id === criterion)
+    expect(rules).toHaveLength(1)
+    expect(Number.isSafeInteger(rules[0]!.expectedVersion)).toBe(true)
+    return scenarios.getByRole("group", { name: "Constraints", exact: true })
+      .getByRole("checkbox", { name: criterion + " · v" + rules[0]!.expectedVersion, exact: true })
+  })
+  for (const constraint of constraintControls) await constraint.check()
   const limit = scenarios.getByLabel("Exploration limit", { exact: true })
   await limit.fill("4")
   await limit.focus()
@@ -62,7 +70,9 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   await captureAnalytics(page, info, "UI42-configure-focused-candidate-test-data")
   const previewResponse = page.waitForResponse((response) => isOperation(response.request(), "decision-portfolio-preview"), { timeout: 60_000 })
   await page.getByRole("button", { name: "Preview combinations", exact: true }).click()
-  expect((await previewResponse).status()).toBe(200)
+  const originalPreview = await previewResponse
+  expect(originalPreview.status()).toBe(200)
+  expect(object(object(originalPreview.request().postDataJSON()).request).constraints).toEqual(prepared.portfolioCriteria)
   await expect(scenarios).toHaveAttribute("data-sf-stage", "preview")
   await expect(scenarios.locator(".sf-u19-picker")).toBeHidden()
   await expect(scenarios.locator("[data-sf-eligibility]")).toHaveCount(1)
@@ -73,6 +83,7 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   await captureAnalytics(page, info, "UI42-preview-condition-preserved-test-data")
   await scenarios.getByRole("button", { name: "Back to scenarios", exact: true }).click()
   await expect(candidate).toBeChecked()
+  for (const constraint of constraintControls) await expect(constraint).toBeChecked()
   await expect(limit).toHaveValue("4")
   const repeatedPreview = page.waitForResponse((response) => isOperation(response.request(), "decision-portfolio-preview"), { timeout: 60_000 })
   await page.getByRole("button", { name: "Preview combinations", exact: true }).click()
@@ -251,10 +262,13 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   }))
 })
 
-async function assertBiSource(page: Page, url: string, view: string) {
-  const response = await page.request.get(url)
-  expect(response.status()).toBe(200)
-  const body = object(await response.json())
+async function assertBiSource(page: Page, url: string, view: string, captured?: { http: number; body: unknown }) {
+  const received = captured ?? await (async () => {
+    const response = await page.request.get(url)
+    return { http: response.status(), body: await response.json() as unknown }
+  })()
+  expect(received.http).toBe(200)
+  const body = object(received.body)
   expect(object(body.request).viewId).toBe(view)
   const projection = object(body.projection)
   const values = array(projection.values).map(object)
@@ -296,7 +310,7 @@ async function assertBiSource(page: Page, url: string, view: string) {
     id: point.getAttribute("data-sf-value-id"), evidence: point.getAttribute("data-sf-evidence"), kind: point.getAttribute("data-sf-value-kind"),
   })))).toEqual(expectedPoints)
   console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-readback", view,
-    http: response.status(), rows: valueIds.length, numericValues: numeric.length, missing: values.filter((entry) => entry.value === null || entry.evidenceState === "absent").length }))
+    http: received.http, rows: valueIds.length, numericValues: numeric.length, missing: values.filter((entry) => entry.value === null || entry.evidenceState === "absent").length }))
   return values
 }
 
@@ -475,24 +489,110 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   await chooseBi(page, installation.year)
   const operationsSelection = catalog.locator('[data-sf-field="selection"]')
   if (await operationsSelection.isVisible()) await operationsSelection.selectOption({ index: 1 })
-  const operationalResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data", { timeout: 60_000 })
+  const operationalResponse = page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.searchParams.get("sf") === "bi-data" && url.searchParams.get("viewId") === "BI06"
+  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(
+    (value: unknown) => ({ status: "ok" as const, value }), () => ({ status: "unavailable" as const }),
+  ) }))
   await catalog.getByRole("button", { name: "View data", exact: true }).click()
-  const originalOperationsResponse = await operationalResponse
-  if (originalOperationsResponse.status() !== 200) {
-    console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({
-      operation: "bi-data-original-refusal", view: "BI06", http: originalOperationsResponse.status(),
-      body: await originalOperationsResponse.json(),
-    }))
-  }
+  const operationsAcquired = await operationalResponse
+  const originalOperationsResponse = operationsAcquired.response
+  const operationsUrl = new URL(originalOperationsResponse.url())
+  expect(operationsUrl.origin).toBe(owner.publicOrigin)
+  expect(operationsUrl.pathname).toBe(owner.mount + "/dashboard")
+  expect(operationsUrl.searchParams.get("selectionRef")).toBe(await operationsSelection.inputValue())
+  const operationsBody = operationsAcquired.body.status === "ok" ? operationsAcquired.body.value : await (async () => {
+    const reread = await page.request.get(operationsUrl.href)
+    expect(reread.url()).toBe(operationsUrl.href)
+    expect(reread.status()).toBe(originalOperationsResponse.status())
+    return reread.json() as Promise<unknown>
+  })()
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-original-acquisition", view: "BI06",
+    http: originalOperationsResponse.status(), acquisition: operationsAcquired.body.status === "ok"
+      ? "native-response" : "authenticated-original-readback",
+    ...(originalOperationsResponse.status() !== 200 ? { refusal: operationsBody } : {}) }))
   expect(originalOperationsResponse.status()).toBe(200)
   await expect(catalog.locator('[data-sf-bi-view="BI06"]')).toBeVisible()
-  await assertBiSource(page, originalOperationsResponse.url(), "BI06")
+  const operationalValues = await assertBiSource(page, operationsUrl.href, "BI06",
+    { http: originalOperationsResponse.status(), body: operationsBody })
+  const ages = operationalValues.filter((value) => sourceText(value.id).endsWith(":ageDays"))
+  expect(ages.filter((value) => typeof value.value === "number").length).toBeGreaterThan(0)
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi06-original-ages", request: object(operationsBody).request,
+    ages: ages.map((value) => ({ id: value.id, value: value.value, unit: value.unit, period: value.period, evidenceState: value.evidenceState })) }))
   await catalog.locator(".sf-chart-visual").scrollIntoViewIfNeeded()
   await captureAnalytics(page, info, "UI46-operations-original-coverage-test-data")
+  await captureModes(page, info, "UI46-operations-original-table", catalog.locator(".sf-chart-table-region"))
   await page.setViewportSize({ width: 320, height: 800 })
   await catalog.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()
   await captureAnalytics(page, info, "UI46-operations-dark-320-test-data")
   await page.setViewportSize({ width: 1440, height: 1100 })
+
+  const operationalValue = ages.find((value) => value.drilldown &&
+    typeof object(value.drilldown).refDigest === "string")
+  expect(operationalValue).toBeDefined()
+  const operationalPointer = object(operationalValue!.drilldown)
+  const operationalAction = catalog.locator(".sf-bi-source-action-list button[data-sf-source-value-id=" +
+    JSON.stringify(sourceText(operationalValue!.id)) + "]")
+  await expect(operationalAction).toHaveCount(1)
+  const operationalDisclosure = operationalAction.locator("xpath=ancestor::details[1]")
+  if (await operationalDisclosure.getAttribute("open") === null) await operationalDisclosure.locator("summary").click()
+  const operationalSource = page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.searchParams.get("sf") === "bi-source" &&
+      url.searchParams.get("viewId") === "BI06"
+  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(
+    (value: unknown) => ({ status: "ok" as const, value }), () => ({ status: "unavailable" as const }),
+  ) }))
+  await operationalAction.click()
+  const operationsSourceAcquired = await operationalSource
+  expect(operationsSourceAcquired.response.status()).toBe(200)
+  const operationsSourceUrl = new URL(operationsSourceAcquired.response.url())
+  expect(operationsSourceUrl.origin).toBe(owner.publicOrigin)
+  expect(operationsSourceUrl.pathname).toBe(owner.mount + "/dashboard")
+  expect(operationsSourceUrl.searchParams.get("selectionRef")).toBe(operationsUrl.searchParams.get("selectionRef"))
+  expect(operationsSourceUrl.searchParams.get("valueId")).toBe(operationalValue!.id)
+  expect(operationsSourceUrl.searchParams.get("referenceDigest")).toBe(operationalPointer.refDigest)
+  const operationsSourceBody = operationsSourceAcquired.body.status === "ok" ? operationsSourceAcquired.body.value : await (async () => {
+    const reread = await page.request.get(operationsSourceUrl.href)
+    expect(reread.url()).toBe(operationsSourceUrl.href)
+    expect(reread.status()).toBe(operationsSourceAcquired.response.status())
+    return reread.json() as Promise<unknown>
+  })()
+  const operationsLinks = array(object(operationsSourceBody).links).map(object)
+  expect(operationsLinks.length).toBeGreaterThan(0)
+  const operationsNavigation = catalog.getByRole("navigation", { name: "Authorized source links", exact: true })
+  await expect(operationsNavigation.getByRole("link")).toHaveCount(operationsLinks.length)
+  for (const [index, link] of operationsLinks.entries()) {
+    const renderedLink = operationsNavigation.getByRole("link").nth(index)
+    await expect(renderedLink).toHaveText(sourceText(link.label))
+    const published = new URL(sourceText(link.url), owner.publicOrigin + owner.mount + "/dashboard")
+    const rendered = new URL(sourceText(await renderedLink.getAttribute("href")), page.url())
+    expect(published.pathname).toBe("/orchestra/sf-procurement/requests")
+    expect(rendered.origin).toBe(published.origin)
+    expect(rendered.pathname).toBe(published.pathname)
+    const ownerKeys = ["server", "project", "installation"]
+    expect([...published.searchParams.keys()].some((key) => ownerKeys.includes(key))).toBe(false)
+    expect([...rendered.searchParams.entries()].filter(([key]) => !ownerKeys.includes(key)))
+      .toEqual([...published.searchParams.entries()])
+    expect(rendered.searchParams.size).toBe(published.searchParams.size + ownerKeys.length)
+    expect(rendered.searchParams.get("server")).toBe(sourceText(new URL(page.url()).searchParams.get("server")))
+    expect(rendered.searchParams.get("project")).toBe(owner.projectId)
+    expect(rendered.searchParams.get("installation")).toBe(owner.installationId)
+  }
+  await operationsNavigation.scrollIntoViewIfNeeded()
+  await captureAnalytics(page, info, "UI46-operations-resolved-original-source-test-data")
+  const outsideOperationsSource = new URL(operationsSourceUrl)
+  outsideOperationsSource.searchParams.set("referenceDigest", "f".repeat(64))
+  const outsideOperationsResponse = await page.request.get(outsideOperationsSource.href)
+  expect(outsideOperationsResponse.status()).toBe(403)
+  const outsideOperationsBody = object(await outsideOperationsResponse.json())
+  expect(outsideOperationsBody).toMatchObject({ status: "denied", reason: "bi-source-outside-selected-value" })
+  await expect(operationsNavigation.getByRole("link")).toHaveCount(operationsLinks.length)
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi06-original-source-resolution",
+    http: operationsSourceAcquired.response.status(), acquisition: operationsSourceAcquired.body.status === "ok"
+      ? "native-response" : "authenticated-original-readback", valueId: operationalValue!.id,
+    links: operationsLinks, negativeHttp: outsideOperationsResponse.status(), negative: outsideOperationsBody }))
 
   await enter(page, owner, installation.origin + "/orchestra/sf-bi/" + encodeSfRouteRef("BI11"), "Analysis details", 40_000)
   await chooseBi(page, installation.year)
@@ -530,6 +630,23 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     await localized.setViewportSize({ width: 320, height: 800 })
     await localized.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()
     await captureAnalytics(localized, info, "UI46-pt-BR-dark-320-values-test-data")
+    await localized.setViewportSize({ width: 1440, height: 1100 })
+    await enter(localized, owner, installation.origin + "/orchestra/sf-bi/" + encodeSfRouteRef("BI06"), "Detalhe da análise", 40_000)
+    await localized.locator('[data-sf-field="start"]').fill(installation.year + "-01-01")
+    await localized.locator('[data-sf-field="end"]').fill(installation.year + "-12-31")
+    const operationalOptions = localized.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-options")
+    await localized.getByRole("button", { name: "Escolher contexto", exact: true }).click()
+    expect((await operationalOptions).status()).toBe(200)
+    await localized.locator('[data-sf-field="selection"]').selectOption({ index: 1 })
+    const operationalData = localized.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data")
+    await localized.getByRole("button", { name: "Ver dados", exact: true }).click()
+    expect((await operationalData).status()).toBe(200)
+    await expect(localized.locator('[data-sf-bi-view="BI06"]')).toBeVisible()
+    await localized.locator(".sf-chart-visual").scrollIntoViewIfNeeded()
+    await captureAnalytics(localized, info, "UI46-pt-BR-dark-desktop-operations-test-data")
+    await localized.setViewportSize({ width: 320, height: 800 })
+    await localized.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()
+    await captureAnalytics(localized, info, "UI46-pt-BR-dark-320-operations-test-data")
     expect(localizedDiagnostics.pageErrors).toEqual([])
     expect(localizedDiagnostics.consoleErrors).toEqual([])
   })
@@ -539,7 +656,8 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   expect(writeOperations.filter((mode) => mode !== "bi-decision")).toEqual([])
   console.info("SF_ANALYTICS_SCOPE " + JSON.stringify({
     surfaces: ["UI45", "UI46"], catalogViews: 11, originalFinancialRead: true,
-    originalOperationalRead: true, originalSourceResolution: true, originalSensitivityChoices: originalChoices.length,
+    originalOperationalRead: true, originalSourceResolution: true, originalOperationalSourceResolution: true,
+    originalOperationalSourceNegative: outsideOperationsBody.reason, originalSensitivityChoices: originalChoices.length,
     invalidatedOnPeriodChange: true, fabricatedResult: false,
   }))
 })
