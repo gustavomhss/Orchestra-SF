@@ -7,7 +7,8 @@ import { admittedContext, connectNativeInstalledBrowser, prepareNativePage } fro
 import type { InstalledBrowserSession } from "./fixture/installed-browser.ts"
 import { proveNativeWebReadiness } from "./fixture/readiness.ts"
 import type { NativeWebObservation } from "./fixture/readiness.ts"
-import type { NativeActor, NativeManifest } from "./fixture/manifest-contract.ts"
+import type { NativeActor } from "./fixture/manifest-contract.ts"
+import type { InstalledNativeManifest as NativeManifest } from "./fixture/g08-manifest-contract.ts"
 import { requireNativeJourney } from "./fixture/journeys.ts"
 import type { NativeJourney, NativeJourneyIntent } from "./fixture/journeys.ts"
 import { consumeCurrentNativeSelection, nativeManifestForTarget, nativeSuiteFromChapter,
@@ -18,7 +19,8 @@ import { createNativeInstalledOperations } from "./fixture/installed-operations.
 
 export { createNativeScratch } from "./fixture/isolated-installation.ts"
 export { registerNativeInstalledManifest } from "./fixture/installed-manifest.ts"
-export { readNativeManifest, observeNativeBinding, proveNativeWebReadiness, nativeTeamHeaders } from "./fixture/readiness.ts"
+export { observeNativeBinding, proveNativeWebReadiness, nativeTeamHeaders } from "./fixture/readiness.ts"
+export { readG08NativeManifest as readNativeManifest } from "./fixture/g08-readiness.ts"
 export { nativeTeamRef, nativeOwnerQuery } from "./fixture/manifest-contract.ts"
 export { attachHostedNativeBrowser, connectNativeInstalledBrowser, admittedContext, prepareNativePage } from "./fixture/installed-browser.ts"
 export { nativeOriginalRequest, requireNativePeer, nativeUIResponse } from "./fixture/browser-transport.ts"
@@ -28,7 +30,8 @@ export { registerNativeSelectedInstallation, readNativeSelectedInstallation, con
   nativeSuiteFromChapter, u15RegisteredEnvironment } from "./fixture/selected-installation.ts"
 export { armLostResponse, armHeldResponse, requestRealRevocation } from "./fixture/response-faults.ts"
 export { nativeSelectedCase } from "./fixture/case-contract.ts"
-export type { NativeManifest, NativeActor, NativeTarget, NativeLiveBinding } from "./fixture/readiness.ts"
+export type { NativeActor, NativeTarget, NativeLiveBinding } from "./fixture/readiness.ts"
+export type { InstalledNativeManifest as NativeManifest } from "./fixture/g08-manifest-contract.ts"
 export type { NativeJourney, NativeJourneyIntent } from "./fixture/journeys.ts"
 export type { NativeInstalledSuite, NativeInstalledCase, NativeSelectedInstallation,
   NativeSuiteSelection, NativeSourceVersion } from "./fixture/selected-installation.ts"
