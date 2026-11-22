@@ -1,5 +1,5 @@
 {
-  "workerSource": "a1f96b5500b58c285f38fd6763e0dd45fca32b03",
+  "workerSource": "1b096bfed1c00109cb9084d9d72409f51da10336",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "purpose": "Exact current blobs for root composition; compose only owned paths, not the complete pinned worker tree.",
   "files": [
@@ -53,11 +53,11 @@
     },
     {
       "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.ts",
-      "sha": "98cc21d4e9db6ec81c2b36c525be7946563908d9"
+      "sha": "eb405fac33b6a34a9d4a3fb68fff2877a4659cb7"
     },
     {
       "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
-      "sha": "839e64c59ce4f9a36782f379cd333059d312955e"
+      "sha": "e34ed981336ea58bc0daf6a47c429f679b531ed4"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
@@ -92,6 +92,17 @@
       "job": 137086555249,
       "collaboration": "passed UI51/52/53 original journeys and pt-BR; observed-kind renderer correction awaits new capture",
       "import": "failed: original valid preview persisted, then all native context health observers slow down; reference handler is never entered before test timeout. Diagnostic trace6 confirms stage timing; trace7 measures original snapshot materialization."
+    },
+    "observerBatch": {
+      "status": "implemented; Actions qualification pending",
+      "cases": 24,
+      "physicalNamespaceReadsPerObserver": {
+        "before": 22,
+        "after": 6
+      },
+      "twoPhases": true,
+      "individualOriginalAdmissions": true,
+      "retainedObservationAcrossCalls": false
     }
   },
   "excluded": [

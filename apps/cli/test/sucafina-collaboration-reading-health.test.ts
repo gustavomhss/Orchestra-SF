@@ -279,3 +279,73 @@ test("missing original product state remains unavailable without initializing it
   expect(await context.snapshotDigest()).toBe(before)
   context.terminal()
 })
+
+test("each call reads every original namespace twice without retaining phase observations", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async (surface) => { if (surface === "dashboard") reads++ }
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual(operations)
+  expect(reads).toBe(6)
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual(operations)
+  expect(reads).toBe(12)
+  expect(context.admitted).toHaveLength(operations.length * 2)
+  context.terminal()
+})
+
+test("a denied individual action cannot inherit another operation's namespace proof", async () => {
+  const context = await fixture()
+  context.controls.deniedOperation = "sf-human:" + human["collaboration.thread-reply"]
+  expect((await context.observe()).map((entry) => entry.operationId))
+    .toEqual(operations.filter((id) => id !== "collaboration.thread-reply"))
+  expect(context.admitted).toHaveLength(operations.length - 1)
+  context.terminal()
+})
+
+test("shared namespace reads still revalidate each exact source dependency", async () => {
+  const context = await fixture()
+  context.hooks.read = async () => {
+    const source = context.sources.get("collaboration.relation-read")!
+    context.sources.set("collaboration.relation-read", { ...source, dependencies: [...source.dependencies.slice(0, -1), {}] })
+  }
+  expect((await context.observe()).map((entry) => entry.operationId))
+    .toEqual(operations.filter((id) => id !== "collaboration.relation-read"))
+  context.terminal()
+})
+
+test("a replaced original producer cannot inherit a shared namespace proof", async () => {
+  const context = await fixture()
+  context.hooks.read = async () => {
+    const source = context.sources.get("collaboration.thread-read")!
+    const replacement = async () => { throw new Error("Replacement producer must not be invoked") }
+    context.sources.set("collaboration.thread-read", { ...source, producer: replacement })
+  }
+  expect((await context.observe()).map((entry) => entry.operationId))
+    .toEqual(operations.filter((id) => id !== "collaboration.thread-read"))
+  context.terminal()
+})
+
+test("revocation between namespace phases invalidates every admitted operation", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async (surface) => {
+    if (surface === "dashboard" && ++reads > 3) context.controls.revision = "revoked-between-phases"
+  }
+  expect(await context.observe()).toEqual([])
+  expect(reads).toBeGreaterThan(3)
+  expect(context.admitted).toHaveLength(operations.length)
+  context.terminal()
+})
+
+test("changed namespace versions between phases reject only dependent operations", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async (surface, snapshot) => {
+    if (surface !== "dashboard" || ++reads <= 3) return
+    const versions = object(object(snapshot.data.__sfProductV1).versions)
+    versions.relations = Number(versions.relations) + 1
+  }
+  expect((await context.observe()).map((entry) => entry.operationId))
+    .toEqual(operations.filter((id) => !id.startsWith("collaboration.relation-") && id !== "collaboration.storage-version"))
+  expect(reads).toBe(6)
+  context.terminal()
+})
