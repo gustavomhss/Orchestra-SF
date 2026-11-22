@@ -20,7 +20,7 @@ import { Effect } from "effect"
 import { OpenApi } from "effect/unstable/httpapi"
 import { array, check, data, isRecord, locationData, object } from "./assertions"
 import { controlledPtyInput, cursor, http, route } from "./dsl"
-import { cleanupExercisePaths, exerciseConfigDirectory, exerciseDataDirectory, exerciseGlobalRoot } from "./environment"
+import { cleanupExercisePaths, exerciseConfigDirectory, exerciseDataDirectory, exerciseGlobalRoot, exerciseProbeDirectory } from "./environment"
 import { color, printHeader, printResults, writeReceipt } from "./report"
 import { coverageResult, parseOptions, routeKey, routeKeys, selectedScenarios } from "./routing"
 import { runScenario } from "./runner"
@@ -604,6 +604,11 @@ export function main(args: string[]) {
         try {
           await shared.auth?.dispose()
           await cleanupExercisePaths()
+          const { lstat } = await import("node:fs/promises")
+          for (const owned of [exerciseProbeDirectory, ...(!process.env.ORCHESTRA_HTTPAPI_EXERCISE_GLOBAL ? [exerciseGlobalRoot] : [])])
+            await lstat(owned).then(() => { throw new Error("HttpApi owned temporary storage cleanup incomplete") }, (error: unknown) => {
+              if (!(error instanceof Error && "code" in error && error.code === "ENOENT")) throw error
+            })
           evidence.cleanupComplete = true
         } finally {
           await writeReceipt(options, apiRoutes, scenarios, evidence.results, missing, extra, evidence.cleanupComplete)
