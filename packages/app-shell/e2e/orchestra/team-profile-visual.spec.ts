@@ -100,6 +100,96 @@ async function capture(page: Page, info: TestInfo, state: string, scheme: "dark"
   })
 }
 
+async function composerGeometry(page: Page) {
+  return page.evaluate(() => {
+    const workspace = document.querySelector<HTMLElement>("[data-sf-session-workspace]")
+    if (!workspace) throw new Error("Native Team session workspace missing")
+    const viewport = { width: innerWidth, height: innerHeight }
+    const targets = [
+      ["editor", '[data-component="prompt-input-v2"] [data-component="prompt-input"]'],
+      ["submit", '[data-action="prompt-submit"]'],
+    ] as const
+    return {
+      viewport,
+      targets: targets.map(([name, selector]) => {
+        const element = workspace.querySelector<HTMLElement>(selector)
+        if (!element) throw new Error("Native composer " + name + " missing")
+        const box = element.getBoundingClientRect()
+        const rect = { left: box.left, right: box.right, top: box.top, bottom: box.bottom }
+        const ancestors = []
+        for (let current = element.parentElement; current; current = current.parentElement) {
+          const style = getComputedStyle(current), bounds = current.getBoundingClientRect()
+          ancestors.push({
+            tag: current.tagName,
+            className: current.className,
+            component: current.getAttribute("data-component"),
+            isShell: current.hasAttribute("data-sf-teams-shell"),
+            overflowY: style.overflowY,
+            scrollTop: current.scrollTop,
+            scrollHeight: current.scrollHeight,
+            clientHeight: current.clientHeight,
+            rect: { left: bounds.left, right: bounds.right, top: bounds.top, bottom: bounds.bottom },
+            userScrollable: /^(auto|scroll)$/.test(style.overflowY) && current.scrollHeight > current.clientHeight + 1,
+            clipsTarget: /^(hidden|clip|auto|scroll)$/.test(style.overflowY) &&
+              (rect.top < bounds.top - 1 || rect.bottom > bounds.bottom + 1),
+          })
+        }
+        return {
+          name, rect, ancestors,
+          visible: rect.top >= 0 && rect.bottom <= viewport.height && rect.left >= 0 &&
+            rect.right <= viewport.width && !ancestors.some((ancestor) => ancestor.clipsTarget),
+        }
+      }),
+    }
+  })
+}
+
+async function reachComposerNormally(page: Page, info: TestInfo, scheme: "dark" | "light") {
+  const workspace = page.locator("[data-sf-session-workspace]")
+  const editor = workspace.locator('[data-component="prompt-input-v2"] [data-component="prompt-input"]')
+  const submit = workspace.locator('[data-action="prompt-submit"]')
+  await expect(editor).toHaveCount(1)
+  await expect(submit).toHaveCount(1)
+  await expect(submit).toHaveAccessibleName(/\S/)
+  const initial = await composerGeometry(page)
+  const needsScroll = initial.targets.some((target) => !target.visible)
+  if (needsScroll) {
+    const candidates = initial.targets.flatMap((target) => target.ancestors).filter((ancestor) =>
+      ancestor.userScrollable && ancestor.rect.bottom > 0 && ancestor.rect.top < initial.viewport.height)
+    const scroller = candidates.find((ancestor) => ancestor.isShell) ?? candidates[0]
+    expect(scroller, "A clipped composer must have a native vertical scroll path before focus or fill").toBeDefined()
+    if (!scroller) throw new Error("Composer is clipped behind non-scrollable ancestors")
+    // Wheel over the scroller's visible padding, not over the editor. Neither focus,
+    // fill nor scrollIntoView may supply the missing scroll path under test.
+    const x = Math.max(4, Math.min(initial.viewport.width - 4, scroller.rect.left + 4))
+    const y = Math.max(4, Math.min(initial.viewport.height - 4,
+      Math.max(scroller.rect.top + 8, Math.min(scroller.rect.bottom - 8, initial.viewport.height / 2))))
+    await page.mouse.move(x, y)
+    await page.mouse.wheel(0, Math.max(initial.viewport.height,
+      ...initial.targets.map((target) => target.rect.bottom - initial.viewport.height + 64)))
+  }
+  await expect(editor).toBeInViewport({ ratio: 1 })
+  await expect(submit).toBeInViewport({ ratio: 1 })
+  const reached = await composerGeometry(page)
+  expect(reached.targets.map((target) => target.visible), "Editor and submit are visible before focus").toEqual([true, true])
+  await editor.focus()
+  await expect(editor).toBeFocused()
+  await expect(editor).toBeEditable()
+  const focused = await composerGeometry(page)
+  for (let index = 0; index < reached.targets.length; index++)
+    expect(Math.abs(focused.targets[index]!.rect.top - reached.targets[index]!.rect.top),
+      "Focus must not rescue an offscreen composer").toBeLessThanOrEqual(1)
+  await info.attach("COMPONENT-VISUAL-Teams-composer-native-scroll", {
+    contentType: "application/json",
+    body: JSON.stringify({
+      classification: "COMPONENT VISUAL / not Microsoft live",
+      input: needsScroll ? "mouse.wheel before editor focus" : "already fully visible",
+      initial, reached, focused,
+    }, null, 2),
+  })
+  await capture(page, info, "chat-composer-reachable", scheme)
+}
+
 async function attachFixtureEvidence(info: TestInfo, fixture: Awaited<ReturnType<typeof installTeamsVisual>>) {
   expect(fixture.unexpected, "No unmodeled HTTP traffic, auth navigation or writes").toEqual([])
   expect([...fixture.assets].some((path) => path.endsWith(".js")), "Original production JavaScript was served").toBe(true)
@@ -208,8 +298,10 @@ for (const scheme of ["dark", "light"] as const) for (const mode of modes) {
         await expect(editor).toBeEditable()
         await expect(editor).toHaveText("")
         await capture(page, info, "chat-empty-stream-connecting", scheme)
+        await reachComposerNormally(page, info, scheme)
 
         await editor.fill("Component visual: keep this unsent Team draft.")
+        await expect(workspace.locator('[data-action="prompt-submit"]')).toBeEnabled()
         const picker = shell.getByRole("combobox", { name: "Team", exact: true })
         const requestsBefore = fixture.requests.length
         await picker.selectOption(teamsVisualTeams[1].id)
