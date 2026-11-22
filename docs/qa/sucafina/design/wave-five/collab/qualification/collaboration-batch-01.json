@@ -1,0 +1,69 @@
+{
+  "kind": "existing-test-ci-canonical-source-unit-qualification",
+  "result": "passed",
+  "source": "c6f50789ce4f9d3265172c47274f5754b06975b2",
+  "sourceTree": "07955fc467aff9d8ef69c59e65af4ecf9653fe64",
+  "snapshot": "67f9379a93a5d79feb2973f8776c755544001570",
+  "tree": "a62b36f5a044a5edb7e2877adbc270f32f53a51c",
+  "branch": "ci-run-sf5collabbatch1",
+  "request": {
+    "package": "cli",
+    "packageSelector": "@orchestra/cli",
+    "directory": "apps/cli",
+    "runner": "bun",
+    "args": [
+      "./test/sucafina-collaboration-reading-health.test.ts",
+      "--timeout",
+      "300000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "run": 44988767940,
+  "job": 137105026147,
+  "cleanupJob": 137105286457,
+  "workerCodeCommit": "6d74ea574d9eb0f80ec0aeb1a424e6aec25bfa2a",
+  "code": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.ts",
+      "sha": "eb405fac33b6a34a9d4a3fb68fff2877a4659cb7"
+    },
+    {
+      "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
+      "sha": "e34ed981336ea58bc0daf6a47c429f679b531ed4"
+    }
+  ],
+  "tests": {
+    "passed": 24,
+    "failed": 0,
+    "assertions": 304
+  },
+  "originalProofsPreserved": [
+    "Exact installed source and function dependencies",
+    "Original individual human action admission and mutation authority",
+    "Original per-namespace request-authorized canonical C08 reader",
+    "Two distinct metadata observations and version/incarnation/aggregate comparison",
+    "Per-operation request, access revision and source revalidation",
+    "Original lease finish once, including denied, failed, aborted and disposed observations"
+  ],
+  "additionalCases": [
+    "Exactly six namespace reads per call; two calls perform twelve fresh reads",
+    "Denied individual action does not inherit another operation's proof",
+    "Source dependency replacement excludes only the affected action",
+    "Producer replacement cannot inherit a shared namespace proof",
+    "Revocation between phases invalidates every action",
+    "Namespace version divergence rejects dependent actions and storage-version"
+  ],
+  "changedBoundaries": [
+    "Only new collaboration observer and its focused test"
+  ],
+  "unchangedBoundaries": [
+    "Original state provider and opaque callback cloning",
+    "Authorization, operation registry and namespace selector allowlists",
+    "Persistence transaction ownership and fences",
+    "Native readiness timeouts"
+  ],
+  "runtimeImportQualification": "Run44988782004: original UI55 passed; UI56 failed the unchanged10-second readiness assertion. Further original readonly-phase qualification is recorded separately."
+}

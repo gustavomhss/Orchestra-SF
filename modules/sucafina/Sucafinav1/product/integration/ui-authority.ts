@@ -1,3 +1,5 @@
+import { types } from "node:util"
+import { digestSfValue } from "../contracts/canonical.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { SfBindingRegistry, SfDomainValidation } from "../contracts/runtime.ts"
 import type { BoundCapabilityReceipt, TrustedDomainContext, TrustedUiContext, TrustedUiLease } from "../contracts/sf-execution.ts"
@@ -9,6 +11,86 @@ type UiAdmission = { request: Request; operation: string; inputDigest: string; c
 const identityFields = ["installationId", "projectId", "principalRef", "policyVersion", "accessRevision"] as const
 const ttl = 5 * 60 * 1000
 const validTime = (at: number) => Number.isFinite(new Date(at).getTime())
+
+export type SfUiContextIntegrity = Readonly<{ digest: string; current: () => boolean }>
+
+// These are structural observations of factory-owned immutable data, not grants.
+// As with the existing canonical/readonly guards, module loading trusts the host's
+// original intrinsics. Later replacements select the original digest path.
+const ownDescriptor = Object.getOwnPropertyDescriptor
+const ownKeys = Reflect.ownKeys
+const prototypeOf = Object.getPrototypeOf
+const extensible = Object.isExtensible
+const owns = Object.hasOwn
+const proxy = types.isProxy
+const freezeObservation = Object.freeze
+const objectPrototype = Object.prototype, arrayPrototype = Array.prototype, arraySpecies = Symbol.species
+const immutableUiContexts = new WeakMap<object, object>()
+const immutableUiContextFor = immutableUiContexts.get.bind(immutableUiContexts)
+const rememberImmutableUiContext = immutableUiContexts.set.bind(immutableUiContexts)
+const bindingFields = [...identityFields, "requestId", "expiresAt"] as const
+const integrityPins: readonly (readonly [object, PropertyKey])[] = [
+  [globalThis, "Object"], [globalThis, "Array"], [globalThis, "JSON"], [globalThis, "Bun"],
+  [Object, "prototype"], [Object, "keys"], [Object, "getPrototypeOf"],
+  [Array, "prototype"], [Array, "isArray"], [arrayPrototype, "map"], [arrayPrototype, "sort"],
+  [arrayPrototype, "includes"], [arrayPrototype, "constructor"], [Array, arraySpecies],
+  [JSON, "stringify"], [Bun, "CryptoHasher"], [Bun.CryptoHasher, "prototype"],
+  [Bun.CryptoHasher.prototype, "update"], [Bun.CryptoHasher.prototype, "digest"],
+]
+const integrityDescriptors = integrityPins.map(([owner, key]) => ownDescriptor(owner, key))
+function integrityEnvironmentCurrent() {
+  if (prototypeOf(objectPrototype) !== null || prototypeOf(arrayPrototype) !== objectPrototype ||
+      ownDescriptor(objectPrototype, "toJSON") || ownDescriptor(arrayPrototype, "toJSON")) return false
+  for (let index = 0; index < integrityPins.length; index++) {
+    const pin = integrityPins[index]!, expected = integrityDescriptors[index]
+    const actual = ownDescriptor(pin[0], pin[1])
+    if (!actual || !expected || actual.enumerable !== expected.enumerable || actual.configurable !== expected.configurable ||
+        owns(actual, "value") !== owns(expected, "value")) return false
+    if (owns(expected, "value")) {
+      if (actual.value !== expected.value || actual.writable !== expected.writable) return false
+    } else if (pin[1] !== arraySpecies || actual.get !== expected.get || actual.set !== expected.set) return false
+  }
+  return true
+}
+function immutableRecord(value: unknown, fields: readonly string[], strings = false) {
+  if (!value || typeof value !== "object" || proxy(value) || prototypeOf(value) !== objectPrototype || extensible(value) ||
+      ownKeys(value).length !== fields.length) return false
+  for (let index = 0; index < fields.length; index++) {
+    const descriptor = ownDescriptor(value, fields[index]!)
+    if (!descriptor || !owns(descriptor, "value") || descriptor.writable !== false || descriptor.configurable !== false ||
+        (strings && typeof descriptor.value !== "string")) return false
+  }
+  return true
+}
+function rememberUiContextIntegrity(context: TrustedUiContext) {
+  // Inspect the actual returned objects after the factory's asynchronous work.
+  // A replaced freeze, accessor, extra key, symbol or nested value stays legacy.
+  if (immutableRecord(context, ["kind", "binding", "lease"]) && context.kind === "ui" &&
+      immutableRecord(context.binding, bindingFields, true)) rememberImmutableUiContext(context, {})
+}
+function immutableUiContextIdentity(context: TrustedDomainContext) {
+  const identity = immutableUiContextFor(context)
+  return identity && integrityEnvironmentCurrent() ? identity : undefined
+}
+
+/** Capture integrity only; callers must retain every live authority observation. */
+export function observeSfUiContextIntegrity(context: TrustedDomainContext,
+  captured?: Pick<TrustedDomainContext, "binding">): SfUiContextIntegrity {
+  // Keep the original argument reads before the hasher constructor, including
+  // getters on opaque/native contexts. Eligibility inspection invokes no getter.
+  const value = [context.kind, captured ? captured.binding : context.binding]
+  const eligible = immutableUiContextIdentity(context)
+  const before = eligible && value[1] === context.binding ? eligible : undefined
+  const digest = digestSfValue(value)
+  const after = immutableUiContextIdentity(context)
+  const identity = before && before === after ? before : undefined
+  return freezeObservation({ digest, current: () => {
+    const actual = [context.kind, context.binding]
+    // An observation captured under a hook never adopts a later attestation.
+    if (identity && immutableUiContextIdentity(context) === identity) return true
+    return digestSfValue(actual) === digest
+  } })
+}
 
 /** UI admission retains the authenticated Request privately; serialized objects never recover a lease. */
 export function createSfUiAuthority(input: {
@@ -80,6 +162,7 @@ export function createSfUiAuthority(input: {
         admissions.delete(context)
         return { status: "denied", reason: "ui-authority-changed" }
       }
+      rememberUiContextIntegrity(context)
       return { status: "ok", value: context }
     },
     async validate(context: TrustedUiContext, operation: string, inputDigest: string) {

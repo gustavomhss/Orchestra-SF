@@ -61,7 +61,7 @@ export function createSfPortfolioServices(input: {
   })
   const mutations: typeof rawMutations = input.preparation ? rawMutations : { ...rawMutations,
     addAlternative: (request, call) => composed.runPromotion(request, call, () => rawMutations.addAlternative(request, call)) }
-  const scenarios = business.plannerProduct.scenarios
+  const scenarios = registries.observedScenarios ?? business.plannerProduct.scenarios
   const idempotencyKey: Parameters<typeof createPortfolioProduct>[0]["idempotencyKey"] = async (digest, call) => {
     const identity = business.operationIdentity(call)
     return identity && await authority.host.revalidate(call) ? `extended:${digestSfValue({ identity, digest })}` : undefined
@@ -105,6 +105,18 @@ export function createSfPortfolioServices(input: {
     idempotencyKey, exactThreshold, resolveCoverageAuthority, reconciliation: { readPortfolio: reconciliation.readPortfolio },
   }) : undefined
   const product = rawProduct ? { ...rawProduct, http: { ...rawProduct.http,
+    preview: (request: Parameters<Product["http"]["preview"]>[0], caseRef: Parameters<Product["http"]["preview"]>[1], call: Parameters<Product["http"]["preview"]>[2]) =>
+      registries.withComparisonObservation(call, () => rawProduct.http.preview(request, caseRef, call)),
+    evaluate: (request: Parameters<Product["http"]["evaluate"]>[0], caseRef: Parameters<Product["http"]["evaluate"]>[1], call: Parameters<Product["http"]["evaluate"]>[2]) =>
+      registries.withComparisonObservation(call, () => rawProduct.http.evaluate(request, caseRef, call)),
+    read: (reference: Parameters<Product["http"]["read"]>[0], caseRef: Parameters<Product["http"]["read"]>[1], call: Parameters<Product["http"]["read"]>[2]) =>
+      registries.withComparisonObservation(call, () => rawProduct.http.read(reference, caseRef, call)),
+    sensitivity: (request: Parameters<Product["http"]["sensitivity"]>[0], caseRef: Parameters<Product["http"]["sensitivity"]>[1], call: Parameters<Product["http"]["sensitivity"]>[2]) =>
+      registries.withComparisonObservation(call, () => rawProduct.http.sensitivity(request, caseRef, call)),
+    readSensitivity: (reference: Parameters<Product["http"]["readSensitivity"]>[0], caseRef: Parameters<Product["http"]["readSensitivity"]>[1], call: Parameters<Product["http"]["readSensitivity"]>[2]) =>
+      registries.withComparisonObservation(call, () => rawProduct.http.readSensitivity(reference, caseRef, call)),
+    sensitivityUnits: (request: Parameters<Product["http"]["sensitivityUnits"]>[0], call: Parameters<Product["http"]["sensitivityUnits"]>[1]) =>
+      registries.withComparisonObservation(call, () => rawProduct.http.sensitivityUnits(request, call)),
     prepare: (request: Parameters<Product["http"]["prepare"]>[0], call: Parameters<Product["http"]["prepare"]>[1]) =>
       composed.handoff.run("decisions.prepare-portfolio", request, call, () => rawProduct.http.prepare(request, call), mutations.replayPortfolio),
     promote: (request: Parameters<Product["http"]["promote"]>[0], call: Parameters<Product["http"]["promote"]>[1]) =>

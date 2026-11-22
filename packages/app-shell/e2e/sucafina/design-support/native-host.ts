@@ -8,6 +8,7 @@ import { Effect } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 import { withNativeInstallation } from "../../../../../apps/cli/test/fixture/sucafina-native-installation"
 import { prepareOperatorAccess } from "../../../../../modules/sucafina/Sucafinav1/local/enroll"
+import { prepareSfLocalWorkspace } from "../../../../../modules/sucafina/Sucafinav1/local/workspace"
 import type { Actor, Command, Domain } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract"
 import { DashboardBudget } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-budget"
 import { DashboardPeople } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-people"
@@ -17,6 +18,7 @@ import { seedWaveFourPlanner } from "./wave-four-planner-seed"
 import { seedWaveFourProcurement } from "./wave-four-procurement-seed"
 import { seedWaveFourDecisions, seedWaveFourDecisionsPlanner } from "./wave-four-decisions-seed"
 import { loadLocalConfiguration } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-configuration"
+import { scanLocalFile } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-scanner"
 
 const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../..")
 const privateRoot = process.argv[2]
@@ -26,7 +28,8 @@ if (Object.keys(process.env).some((key) => key.startsWith("VITE_")))
 
 const secondWave = process.argv[3] === "two"
 const decisionsWave = process.argv[3] === "four-decisions"
-const fourthWave = process.argv[3] === "four" || decisionsWave
+const filesWave = process.argv[3] === "four-files"
+const fourthWave = process.argv[3] === "four" || decisionsWave || filesWave
 const thirdWave = process.argv[3] === "three" || fourthWave
 const now = new Date()
 const year = now.getUTCFullYear()
@@ -59,10 +62,21 @@ const program = Effect.scoped(Effect.gen(function* () {
   }), { timeout: 120_000, maxOutputBytes: 64 * 1024, maxErrorBytes: 64 * 1024 })
   if (bundle.exitCode !== 0)
     throw new Error("Native Web build failed (" + bundle.exitCode + "): " + bundle.stderr.toString("utf8").slice(-4000))
+  // The parent owns the real ClamD service. The original INSTREAM adapter
+  // must admit an actual clean probe before this isolated installation uses it.
+  const scanner = filesWave ? { host: "127.0.0.1" as const, port: 3310 } : undefined
+  if (scanner) {
+    process.stdout.write("SF_DESIGN_STAGE scanner-probe\n")
+    const clean = yield* Effect.promise(() => scanLocalFile(
+      new TextEncoder().encode("SF_DESIGN_FILES_CLEAN_PROBE\n"), scanner,
+    ))
+    if (!clean) throw new Error("Files design fixture requires a ready real ClamD scanner")
+  }
   const serverPassword = randomUUID()
   let configuration: string | undefined
   process.stdout.write("SF_DESIGN_STAGE installation\n")
   const installed = yield* withNativeInstallation({
+    ...(scanner ? { scanner } : {}),
     webRoot,
     serverPassword,
     seed: async ({ config, store, actorId }) => {
@@ -110,7 +124,8 @@ const program = Effect.scoped(Effect.gen(function* () {
         })
         execute(DashboardPeople.domain, {
           page: "Hot Topics & Actions", action: "save", version: 0,
-          values: { action: topicName, owner: "Design test operator", due: year + "-12-15", status: "progress", priority: "high" },
+          values: { action: topicName, owner: "Design test operator", due: year + "-12-15", status: "progress", priority: "high",
+            notes: "Design test data · Source evidence for the sourcing review." },
         })
         execute(DashboardPortfolio.domain, {
           page: "IT Risks", action: "save", version: 0,
@@ -192,6 +207,7 @@ const program = Effect.scoped(Effect.gen(function* () {
       process.stdout.write("SF_DESIGN_STAGE seed-complete\n")
     },
   })
+  const workspace = yield* Effect.promise(() => prepareSfLocalWorkspace(installed.root))
   process.stdout.write("SF_DESIGN_STAGE native-ready\n")
   if (decisionsWave) {
     process.stdout.write("SF_DESIGN_STAGE decisions-seed\n")
@@ -220,7 +236,7 @@ const program = Effect.scoped(Effect.gen(function* () {
       destination.searchParams.size !== 1 || !/^[a-f0-9]{64}$/.test(destination.searchParams.get("code") ?? ""))
     throw new Error("Native enrollment destination does not match this installation")
   const metadata = {
-    root: installed.root, origin: installed.origin, mount: installed.mount, actorId: installed.actorId,
+    root: installed.root, workspace, origin: installed.origin, mount: installed.mount, actorId: installed.actorId,
     signIn, serverPassword, year, month, topicName, opexName, riskName, projectName,
   }
   yield* Effect.promise(() => writeFile(path.join(privateRoot, "installation.json"), JSON.stringify(metadata), { mode: 0o600, flag: "wx" }))

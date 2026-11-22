@@ -31,6 +31,12 @@ export const SF_U25_COPY = {
   "sf.u25.coverage": "Only the sections and record counts returned by the producer are displayed.",
   "sf.u25.limit": "An agenda accepts one to thirty authorized sections.",
   "sf.u25.created": "The producer confirmed that the review was preserved.",
+  "sf.u25.confirmedHeading": "Review preserved",
+  "sf.u25.prepareHeading": "Build the meeting sequence",
+  "sf.u25.prepareHint": "Choose a source page, add its authorized sections, then review the order and periods before preservation.",
+  "sf.u25.selectionEmpty": "Your agenda starts here",
+  "sf.u25.selectionHint": "Add sections from the source to arrange the meeting.",
+  "sf.u25.previewHint": "Check this source selection before confirming the preserved review.",
 } as const
 
 export const SF_U25_COPY_BR: Readonly<Record<keyof typeof SF_U25_COPY, string>> = {
@@ -65,4 +71,10 @@ export const SF_U25_COPY_BR: Readonly<Record<keyof typeof SF_U25_COPY, string>> 
   "sf.u25.coverage": "Somente as seções e contagens retornadas pelo produtor são exibidas.",
   "sf.u25.limit": "Uma pauta aceita de uma a trinta seções autorizadas.",
   "sf.u25.created": "O produtor confirmou a preservação da revisão.",
+  "sf.u25.confirmedHeading": "Revisão preservada",
+  "sf.u25.prepareHeading": "Organize a sequência da reunião",
+  "sf.u25.prepareHint": "Escolha uma página de origem, adicione as seções autorizadas e revise a ordem e os períodos antes de preservar.",
+  "sf.u25.selectionEmpty": "Sua pauta começa aqui",
+  "sf.u25.selectionHint": "Adicione seções da origem para organizar a reunião.",
+  "sf.u25.previewHint": "Confira esta seleção de origem antes de confirmar a revisão preservada.",
 }

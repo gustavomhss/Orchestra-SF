@@ -1,0 +1,177 @@
+{
+  "schema": "sf-design-root-diagnostic-review-v1",
+  "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+  "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+  "run": 45013832359,
+  "test": 137181760072,
+  "cleanup": 137184430073,
+  "snapshot": "46792e9d945a8d27802ec2ae7c05b1a6ce7b5068",
+  "testConclusion": "FAILURE",
+  "cleanupConclusion": "SUCCESS",
+  "preflight": {
+    "snapshot": "46792e9d945a8d27802ec2ae7c05b1a6ce7b5068",
+    "tree": "169a55ac1b936ab8130db16baaeee1ee58223000",
+    "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+    "parentExact": true,
+    "matching14ReviewedBlobs": true,
+    "helpersUnchanged": true,
+    "blobs": {
+      ".ci-run.json": "a11922821a47594d76397582be38f9b7940177ca",
+      "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts": "2d12eff52699a7b5024e6336e50668a3d1ca5bf8",
+      "apps/cli/src/sucafina-product/planner-calculation-root.ts": "57f1a4975365cc81605f011cde42eafc3e154e52",
+      "apps/cli/src/sucafina-product/source-fence-read.ts": "537a9bcb2be38f5a7e93f63c814f563b3c28ea11",
+      "apps/cli/src/sucafina-product/portfolio-http.ts": "0af8a1635133a3abc6f8fb9020d683cb415d65ab",
+      "apps/cli/test/fixture/sucafina-native-installation.ts": "d744933bcce8de0266cece2150f45c8037b61119",
+      "packages/app-shell/e2e/sucafina/design-support/installation.ts": "8e90cb8394c15b95af1bde110687726585b8fca8",
+      "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts": "00f26bde1ab4ccd624a627dde36a9dd7ac011505",
+      "modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts": "384c88f8a68111e7a47bccd97703bbdfd1df5fa3",
+      "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts": "d5394221bba0d35431cea4d33ac1916c9221c641",
+      "modules/sucafina/Sucafinav1/runtime/local-store.ts": "8d93385b5e50859c01065ded8b99b98c55986dcd",
+      "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts": "31e4942032999c47b5267090670900941594e8b1",
+      "apps/cli/src/sucafina-product/scenario-operation-access.ts": "8b6f21705da20fb00a54dde9559d0c32d893f57a",
+      "apps/cli/src/sucafina-product/planner-evidence.ts": "6abc79de5d6d68caa59743e6aa84e89b37ad26d1"
+    },
+    "status": "PASS",
+    "bucketConservativeBound": 226,
+    "bucketLimit": 256,
+    "originalPreviewTimeoutMs": 60000,
+    "raw619Unchanged": true,
+    "guard619CandidateExcluded": true,
+    "inlineOnly": true,
+    "noWorkflowChanges": true,
+    "environment": {
+      "workflow": "test-ci",
+      "os": "Linux",
+      "channel": "prod",
+      "omni": "strict"
+    },
+    "ciStarted": true,
+    "branch": "ci-run-sf5portfolio19"
+  },
+  "recordParity": {
+    "profile": {
+      "records": 10,
+      "exact": true
+    },
+    "sourceAndCaptures": {
+      "count": 33,
+      "exact": true
+    }
+  },
+  "images": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "sha": "0b25831038ac2a28d7c1b6c74fd7fc3a4f7139d7",
+      "bytes": 80641,
+      "exact": true,
+      "rootViewed": false
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "sha": "f24d87f0d177169e07dd926896c65f4ce0735b44",
+      "bytes": 85917,
+      "exact": true,
+      "rootViewed": false
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "sha": "875a1b1ecad8bbbdc13f3bf77dca417865dbba43",
+      "bytes": 28693,
+      "exact": true,
+      "rootViewed": false
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "sha": "1d79efcb003937d785fb641182daa82c5eec46c4",
+      "bytes": 27469,
+      "exact": true,
+      "rootViewed": false
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "sha": "e1cb5f8fa17a7ac482a103b2cf987a14fa8c39e0",
+      "bytes": 97884,
+      "exact": true,
+      "rootViewed": false
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "sha": "02ac5ed18a3b144fbbbbc072a9abd0b4725e1680",
+      "bytes": 106350,
+      "exact": true,
+      "rootViewed": true
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "sha": "77b5547e328bc296c757fdadb80b4daac004dae2",
+      "bytes": 110120,
+      "exact": true,
+      "rootViewed": true
+    }
+  ],
+  "visual": {
+    "rootViewed": 2,
+    "agentViewed": 7,
+    "configure": "Original candidate and v2 criterion selected, limit4 focus outline visible; readable native stage.",
+    "failure": "Running with disabled controls, pending-preview skeleton and empty history; no connection banner or result.",
+    "fullJourneyQualified": false
+  },
+  "observation": {
+    "status": "FAILED_ORIGINAL60S_AND_NO_COUNTER_SNAPSHOTS",
+    "profileRecords": 10,
+    "periodicSnapshots": 0,
+    "finalSnapshots": 0,
+    "buckets": 0,
+    "counterDataAvailable": false,
+    "drops": "UNKNOWN_NOT_EMITTED",
+    "rootPairs": [
+      {
+        "ordinal": 1,
+        "enterMs": 8217,
+        "exitMs": 23184,
+        "callbackMs": 14967
+      },
+      {
+        "ordinal": 2,
+        "enterMs": 23189,
+        "exitMs": 23382,
+        "callbackMs": 193
+      },
+      {
+        "ordinal": 3,
+        "enterMs": 27225,
+        "exitMs": 41965,
+        "callbackMs": 14740
+      },
+      {
+        "ordinal": 4,
+        "enterMs": 41969,
+        "exitMs": 42143,
+        "callbackMs": 174
+      },
+      {
+        "ordinal": 5,
+        "enterMs": 46566
+      }
+    ],
+    "rootInterpretation": "Callback markers only; sealed proof observed at five entries, not final provider acceptance",
+    "cleanup": 137184430073,
+    "cleanupStatus": "SUCCESS",
+    "artifact": {
+      "id": 14751500792,
+      "size": 8814386,
+      "sha256": "02088bf9fb45d0de88ed61defbc95395e915825d2fcc79e9b5ee9199bf01f85a"
+    }
+  },
+  "peer": {
+    "reviewer": "/root/design_reviews",
+    "result": "Same10records, no snapshots; bridges have no phase filter; absence cause not proven."
+  },
+  "qualifiedAreasAdded": 0,
+  "acceptedAreas": 41,
+  "pendingAreas": [
+    "UI42",
+    "UI43",
+    "UI44"
+  ]
+}

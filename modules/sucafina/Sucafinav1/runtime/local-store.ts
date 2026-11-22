@@ -182,15 +182,16 @@ export async function openLocalStore(directory: string, options: {
   } => {
     const prior = materializations.get(surface)
     const codecCurrent = snapshotDecoderCurrent()
-    const fingerprint = codecCurrent && payload !== undefined && payload.length > SNAPSHOT_MATERIALIZATION_UNITS &&
+    const fingerprint = codecCurrent && payload !== undefined && payload.length > SNAPSHOT_MATERIALIZATION_UNITS / 2 &&
       payload.length <= SNAPSHOT_MATERIALIZATION_UNITS * 4
       ? createHash("sha256").update(payload, "utf16le").digest("hex") : undefined
     if (payload !== undefined && prior && codecCurrent &&
         (prior.payload === payload || fingerprint !== undefined && prior.fingerprint === fingerprint && prior.payloadUnits === payload.length)) {
-      const materialize = () => materializeSnapshot(prior, payload)
+      const materialize = prior.fingerprint && prior.copy
+        ? fingerprintSnapshotCopy(prior) : () => materializeSnapshot(prior, payload)
       const acl = prior.acl
       return { materialize, bytesIdentity: prior.identity,
-        ...(prior.fingerprint ? {} : { copy: materialize }),
+        ...(!prior.fingerprint || prior.copy ? { copy: materialize } : {}),
         ...(acl === undefined ? {} : { copyAcl: () => aclCodecCurrent() ? decodeSnapshot(acl).data : undefined }) }
     }
     materializations.delete(surface)
@@ -210,7 +211,8 @@ export async function openLocalStore(directory: string, options: {
       materializations.set(surface, plan)
     }
     return { materialize: () => snapshot, bytesIdentity: plan?.identity,
-      ...(plan && !plan.fingerprint ? { freshPlan: { units: plan.units, copy: () => materializeSnapshot(plan, payload) } } : {}),
+      ...(plan && (!plan.fingerprint || plan.copy) ? { freshPlan: { units: plan.units,
+        copy: plan.fingerprint ? fingerprintSnapshotCopy(plan) : () => materializeSnapshot(plan, payload) } } : {}),
     }
   }
   const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
@@ -1092,11 +1094,13 @@ export function encodeSnapshot(snapshot: Snapshot): string {
 // the available space for fresh plans. Its copy factories are cleared on exit.
 // The bound counts string content, not decoded graphs, overhead or total heap.
 // A plan without room for a copy uses the original decoder. A larger SQL
-// value can retain a SHA-256 fingerprint and its small ACL representation
-// without retaining the value itself. Each root hashes its own observed bytes.
-// Never retain an oversized SQL value in the memo or in a root copy plan.
-// Active roots use the original decoder and independently detach their copies.
-// No persisted format or acceptance limit changes.
+// value uses its SHA-256 fingerprint once the payload exceeds half the budget,
+// leaving room for the other surfaces instead of retaining the envelope twice.
+// Its complete JSON copy is retained only when it fits the same budget. Those
+// copy factories close over the plan alone; they never retain observed SQL text
+// or use large-string offsets. Each root hashes its own observed SQL bytes.
+// A copy that exceeds the byte, node or depth bounds uses the original decoder.
+// Every materialization is detached. No format or acceptance limit changes.
 const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024
 const snapshotAclFields = ["roleMap", "access"] as const
 const aclCodec = { stringify: JSON.stringify, parse: JSON.parse, map: Array.prototype.map }
@@ -1131,7 +1135,7 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string, finger
   const missing: string[] = []
   const largeStrings: string[] = []
   const path: string[] = []
-  const budget = { units: payload.length + 4, nodes: 0 }
+  const budget = { units: (fingerprint?.length ?? payload.length) + 4, nodes: 0 }
   const append = (text: string) => {
     budget.units += text.length
     if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) return false
@@ -1155,9 +1159,9 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string, finger
     if (value === null || typeof value !== "object") {
       const encoded = JSON.stringify(value)
       if (typeof encoded !== "string") return false
-      // Large immutable file strings already live in the retained SQLite
-      // payload. Index that exact JSON literal instead of retaining it twice.
-      if (typeof value === "string" && encoded.length >= 64 * 1024 && largeStrings.length < 16) {
+      // Large immutable file strings can use offsets only when this plan
+      // retains the exact SQLite payload. A fingerprint plan must be complete.
+      if (!fingerprint && typeof value === "string" && encoded.length >= 64 * 1024 && largeStrings.length < 16) {
         const offset = payload.indexOf(encoded)
         if (offset >= 0) {
           const escaped = encoded.length !== value.length + 2
@@ -1186,7 +1190,7 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string, finger
   }
   // Exact stored bytes can still identify independently observed roots when
   // a second JSON representation would exceed the copy-plan budget.
-  const copy = !fingerprint && visit(snapshot) ? {
+  const copy = visit(snapshot) ? {
     json: parts.join(""), missing: "[" + missing.join(",") + "]",
     largeStrings: "[" + largeStrings.join(",") + "]",
   } : undefined
@@ -1201,6 +1205,11 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string, finger
     ...(acl && units + acl.length <= SNAPSHOT_MATERIALIZATION_UNITS
       ? { acl, units: units + acl.length } : { units }),
   })
+}
+
+/** Fingerprint plans contain complete JSON and retain no observed SQL payload. */
+function fingerprintSnapshotCopy(plan: SnapshotMaterialization) {
+  return () => materializeSnapshot(plan, "")
 }
 
 function materializeSnapshot(plan: SnapshotMaterialization, payload: string): Snapshot {

@@ -1,0 +1,135 @@
+{
+  "schema": "sf-root-archive-review-v1",
+  "reviewer": "/root",
+  "attempt": "sensitivity3",
+  "source": "completed original test-job logs and remote QA branch files",
+  "eventsExact": {
+    "source": true,
+    "captures": true,
+    "diagnostics": true
+  },
+  "parseErrors": 0,
+  "excludedNonEventSourceExcerpts": [
+    {
+      "timestamp": "2026-11-22T13:57:00.1380775Z",
+      "kind": "failure source excerpt, not emitted event"
+    }
+  ],
+  "imageChunks": [
+    {
+      "name": "UI44-no-source-scenarios-test-data",
+      "sha": "3f44fd76bad0fe5bb68d04932a241799f94d6407",
+      "complete": true,
+      "parts": 5,
+      "bytes": 86338,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": null
+    },
+    {
+      "name": "UI44-original-source-selection-test-data",
+      "sha": "cd6f074886ec9aa11037757ccfeb266d7077e9e1",
+      "complete": true,
+      "parts": 5,
+      "bytes": 89397,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": null
+    },
+    {
+      "name": "UI44-issued-units-editor-dark-desktop-test-data",
+      "sha": "2f7b61c2ac25b3228b831a26ce9f2da80f2f23e8",
+      "complete": true,
+      "parts": 6,
+      "bytes": 106198,
+      "manifestBytesMatch": true,
+      "viewedByRoot": true,
+      "remoteOriginalBytesEqual": true
+    },
+    {
+      "name": "UI44-issued-units-editor-light-desktop-test-data",
+      "sha": "8a391c93942c31ec293718d986f092018984691b",
+      "complete": true,
+      "parts": 7,
+      "bytes": 108456,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": null
+    },
+    {
+      "name": "UI44-issued-units-editor-dark-390-test-data",
+      "sha": "4edfff68cc58de935df9f4cc7084f6b0f47b2951",
+      "complete": true,
+      "parts": 3,
+      "bytes": 36769,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": null
+    },
+    {
+      "name": "UI44-issued-units-editor-light-320-test-data",
+      "sha": "0c0b89098126a879fab2ed092e1112e55f928264",
+      "complete": true,
+      "parts": 2,
+      "bytes": 31092,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": null
+    },
+    {
+      "name": "UI44-dark-desktop-review-test-data",
+      "sha": "eb3d7468cd29a77231e3ded254be3a12918e19ef",
+      "complete": true,
+      "parts": 5,
+      "bytes": 89261,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": null
+    },
+    {
+      "name": "UI44-dark-320-review-actions-test-data",
+      "sha": "374737afd60223e63a3f1113d884d30f76eea7a6",
+      "complete": true,
+      "parts": 2,
+      "bytes": 29676,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": null
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "sha": "5c3fcf719bdc2264190e3cd16e6b323119e06f24",
+      "complete": true,
+      "parts": 2,
+      "bytes": 31029,
+      "manifestBytesMatch": true,
+      "viewedByRoot": true,
+      "remoteOriginalBytesEqual": true
+    }
+  ],
+  "totalJpegBytes": 608216,
+  "rootActuallyViewed": [
+    "2f7b61c2ac25b3228b831a26ce9f2da80f2f23e8",
+    "5c3fcf719bdc2264190e3cd16e6b323119e06f24"
+  ],
+  "workerReview": "All9 images separately inspected by root_cost; root subset explicitly recorded",
+  "qualification": "FAILED original120000ms response wait; partial observations only; no global count change",
+  "visualFindings": [
+    {
+      "name": "UI44-issued-units-editor-dark-desktop-test-data",
+      "findings": [
+        "USD/USD, two evidence references, criterion≤2000 and bounds200–2200 with2steps are visible.",
+        "Steps field has a visible focus outline; the native shell and source form are legible."
+      ],
+      "scope": "editor only; exact source identities come from original readbacks"
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "findings": [
+        "Connection retry banner is visible above retained review.",
+        "Confirmation action is disabled and no result is visible; cancel action extends below the captured fold."
+      ],
+      "scope": "cause and internal persistence unknown"
+    }
+  ]
+}

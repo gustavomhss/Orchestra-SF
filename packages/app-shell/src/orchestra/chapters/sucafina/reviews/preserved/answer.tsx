@@ -1,14 +1,14 @@
 import { For, Show, createEffect, on, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
-import { SF_U32_COPY } from "@/i18n/orchestra-chapters/sf-u32"
+import { useLanguage } from "@/context/language"
+import type { SF_U32_COPY } from "@/i18n/orchestra-chapters/sf-u32"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
 import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
 import { useSfContext } from "../../context"
 import { bindReviewLocation, preservedRecordSources, preservedSourceBasis, reviewLocationBinding, type PreservedReview } from "./model"
 
-const copy = SF_U32_COPY
 type Message = { id: string; incarnation: string; version: number; authorRef: string; body: string; createdAt: string }
 type Thread = { id: string; messages: Message[] }
 type Recipient = { id: string; name: string }
@@ -43,6 +43,8 @@ function asThread(value: unknown): Thread | undefined {
 /** Installed review discussion. Every mutation is an admitted collaboration producer call. */
 export function SfPreservedAnswer(props: { review: PreservedReview }) {
   const owner = useSfContext()
+  const language = useLanguage()
+  const copy = (key: keyof typeof SF_U32_COPY) => language.t(key)
   const [ui, setUi] = createStore({
     sectionId: "",
     sourceRef: "",
@@ -199,7 +201,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
       bindReviewLocation({ reviewThread: thread.id })
       setUi({ thread, question: "", prepared: undefined })
       await readConfirmed(client, thread.id, signal)
-      setUi("status", copy["sf.u32.questionSaved"])
+      setUi("status", copy("sf.u32.questionSaved"))
       return
     }
     if (current.kind === "reply") {
@@ -211,7 +213,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
       if (!thread) throw new Error("Review discussion unavailable")
       setUi({ thread, reply: "", prepared: undefined })
       await readConfirmed(client, thread.id, signal)
-      setUi("status", copy["sf.u32.replySaved"])
+      setUi("status", copy("sf.u32.replySaved"))
       return
     }
     if (current.kind === "edit") {
@@ -236,7 +238,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
         createdAt: original?.createdAt ?? "",
       }, thread.id)
       await readConfirmed(client, thread.id, signal)
-      setUi("status", copy["sf.u32.answerEdited"])
+      setUi("status", copy("sf.u32.answerEdited"))
       return
     }
     const prepared = ui.prepared
@@ -245,7 +247,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
       throw new Error("Answer confirmation unavailable")
     setUi("prepared", undefined)
     await readConfirmed(client, current.threadId ?? "", signal)
-    setUi("status", copy["sf.u32.answerConfirmed"])
+    setUi("status", copy("sf.u32.answerConfirmed"))
   }
 
   const submitIntent = async () => {
@@ -269,7 +271,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     const message = error instanceof Error ? error.message : "Review discussion unavailable"
     setUi({
       suspended: true,
-      status: `${message}${intent ? ` ${copy["sf.u32.retainedAction"]}` : ` ${copy["sf.u32.draftRetained"]}`}`,
+      status: `${message}${intent ? ` ${copy("sf.u32.retainedAction")}` : ` ${copy("sf.u32.draftRetained")}`}`,
     })
   }
 
@@ -410,7 +412,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
       setUi("thread", thread)
     }
     current.reconciled = true
-    setUi({ suspended: false, reconciled: true, status: copy["sf.u32.actionReconciled"] })
+    setUi({ suspended: false, reconciled: true, status: copy("sf.u32.actionReconciled") })
   }
 
   const reconcileDiscussion = async () => {
@@ -424,7 +426,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
     const thread = asThread(read.body.value)
     if (!thread || thread.id !== id) throw new Error("Review discussion unavailable")
-    setUi({ thread, suspended: false, status: copy["sf.u32.discussionReconciled"] })
+    setUi({ thread, suspended: false, status: copy("sf.u32.discussionReconciled") })
   }
 
   const readHistory = async () => {
@@ -441,44 +443,44 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     }, { signal: abort.signal })
     if (abort.signal.aborted) return
     if (result.kind !== "response" || result.body.status !== "ok") throw new Error("Original answer unavailable")
-    setUi({ historyText: result.body.value.message.body, status: copy["sf.u32.originalOpened"] })
+    setUi({ historyText: result.body.value.message.body, status: copy("sf.u32.originalOpened") })
   }
 
   return (
-    <section class="sf-n28-section" aria-label={copy["sf.u32.discussion"]} ref={(element) => { discussion = element }}>
-      <h2>{copy["sf.u32.discussion"]}</h2>
+    <section class="sf-n28-section" aria-label={copy("sf.u32.discussion")} ref={(element) => { discussion = element }}>
+      <h2>{copy("sf.u32.discussion")}</h2>
       <p role="status">{ui.status}</p>
-      <label>{copy["sf.u32.reviewSection"]}
-        <select aria-label={copy["sf.u32.reviewSection"]} value={selected()?.id ?? ""} disabled={locked()}
+      <label>{copy("sf.u32.reviewSection")}
+        <select aria-label={copy("sf.u32.reviewSection")} value={selected()?.id ?? ""} disabled={locked()}
           onChange={(event) => { if (!intent) setUi({ sectionId: event.currentTarget.value, sourceRef: "", question: "" }) }}>
           <For each={sections()}>{(section) => <option value={section.id}>{section.title}</option>}</For>
         </select>
       </label>
-      <label>{copy["sf.u32.reviewSource"]}
-        <select aria-label={copy["sf.u32.reviewSource"]} value={sourceRef()} disabled={locked()}
+      <label>{copy("sf.u32.reviewSource")}
+        <select aria-label={copy("sf.u32.reviewSource")} value={sourceRef()} disabled={locked()}
           onChange={(event) => { if (!intent) setUi({ sourceRef: event.currentTarget.value, question: "" }) }}>
           <For each={sources()}>{(source) => <option value={source.refId}>{source.target.surface} · {source.target.recordId} · version {source.target.version}</option>}</For>
         </select>
       </label>
-      <label>{copy["sf.u32.recipient"]}
-        <select aria-label={copy["sf.u32.recipient"]} value={recipientRef()} disabled={locked()}
+      <label>{copy("sf.u32.recipient")}
+        <select aria-label={copy("sf.u32.recipient")} value={recipientRef()} disabled={locked()}
           onChange={(event) => { if (!intent) setUi({ recipientRef: event.currentTarget.value, question: "" }) }}>
           <For each={ui.recipients}>{(person) => <option value={person.id}>{person.name}</option>}</For>
         </select>
       </label>
-      <label>{copy["sf.u32.question"]}
-        <textarea aria-label={copy["sf.u32.question"]} rows={3} readOnly={ui.hasIntent} value={ui.question}
+      <label>{copy("sf.u32.question")}
+        <textarea aria-label={copy("sf.u32.question")} rows={3} readOnly={ui.hasIntent} value={ui.question}
           onInput={(event) => setUi("question", event.currentTarget.value)} />
       </label>
-      <button type="button" class="mx-btn" disabled={locked() || !recipientRef()} onClick={() => void run(false, ask)}>{copy["sf.u32.ask"]}</button>
+      <button type="button" class="mx-btn" disabled={locked() || !recipientRef()} onClick={() => void run(false, ask)}>{copy("sf.u32.ask")}</button>
       <Show when={ui.hasIntent}>
-        <button type="button" data-review-recovery="true" disabled={ui.busy} onClick={() => void run(true, reconcileAction)}>{copy["sf.u32.reconcileAction"]}</button>
+        <button type="button" data-review-recovery="true" disabled={ui.busy} onClick={() => void run(true, reconcileAction)}>{copy("sf.u32.reconcileAction")}</button>
       </Show>
       <Show when={ui.reconciled}>
-        <button type="button" data-review-recovery="true" disabled={ui.busy} onClick={() => void run(true, submitIntent)}>{copy["sf.u32.retryAction"]}</button>
+        <button type="button" data-review-recovery="true" disabled={ui.busy} onClick={() => void run(true, submitIntent)}>{copy("sf.u32.retryAction")}</button>
       </Show>
       <Show when={ui.suspended && !ui.hasIntent}>
-        <button type="button" data-review-recovery="true" disabled={ui.busy} onClick={() => void run(true, reconcileDiscussion)}>{copy["sf.u32.reconcileDiscussion"]}</button>
+        <button type="button" data-review-recovery="true" disabled={ui.busy} onClick={() => void run(true, reconcileDiscussion)}>{copy("sf.u32.reconcileDiscussion")}</button>
       </Show>
       <Show when={ui.thread}>
         {(thread) => <>
@@ -486,48 +488,48 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
             <p>{message.authorRef} · version {message.version} · {message.createdAt}</p>
             <p>{message.body}</p>
             <Show when={index() > 0}>
-              <button type="button" class="mx-btn" disabled={locked()} onClick={() => void run(false, () => prepare(message))}>{copy["sf.u32.reviewAnswer"]}</button>
+              <button type="button" class="mx-btn" disabled={locked()} onClick={() => void run(false, () => prepare(message))}>{copy("sf.u32.reviewAnswer")}</button>
             </Show>
             <Show when={index() > 0 && message.authorRef === actor()}>
-              <label>{copy["sf.u32.editedAnswer"]}
-                <textarea aria-label={copy["sf.u32.editedAnswer"]} rows={3} readOnly={ui.hasIntent}
+              <label>{copy("sf.u32.editedAnswer")}
+                <textarea aria-label={copy("sf.u32.editedAnswer")} rows={3} readOnly={ui.hasIntent}
                   value={ui.edits[editKey(thread().id, message)] ?? message.body}
                   onInput={(event) => setUi("edits", editKey(thread().id, message), event.currentTarget.value)} />
               </label>
-              <button type="button" class="mx-btn" disabled={locked()} onClick={() => void run(false, () => saveEdit(message))}>{copy["sf.u32.saveEdit"]}</button>
+              <button type="button" class="mx-btn" disabled={locked()} onClick={() => void run(false, () => saveEdit(message))}>{copy("sf.u32.saveEdit")}</button>
             </Show>
           </article>}</For>
-          <label>{copy["sf.u32.reply"]}
-            <textarea aria-label={copy["sf.u32.reply"]} rows={3} readOnly={ui.hasIntent} value={ui.reply}
+          <label>{copy("sf.u32.reply")}
+            <textarea aria-label={copy("sf.u32.reply")} rows={3} readOnly={ui.hasIntent} value={ui.reply}
               onInput={(event) => setUi("reply", event.currentTarget.value)} />
           </label>
-          <button type="button" class="mx-btn" disabled={locked() || !ui.reply.trim()} onClick={() => void run(false, reply)}>{copy["sf.u32.sendReply"]}</button>
+          <button type="button" class="mx-btn" disabled={locked() || !ui.reply.trim()} onClick={() => void run(false, reply)}>{copy("sf.u32.sendReply")}</button>
         </>}
       </Show>
       <Show when={ui.prepared}>
-        {(prepared) => <section aria-label={copy["sf.u32.confirmation"]}>
-          <h3>{copy["sf.u32.confirmation"]}</h3>
+        {(prepared) => <section aria-label={copy("sf.u32.confirmation")}>
+          <h3>{copy("sf.u32.confirmation")}</h3>
           <p>{prepared().answer}</p>
           <details>
-            <summary>{copy["sf.u32.inspectSource"]}</summary>
-            <pre aria-label={copy["sf.u32.observedProjection"]}>{JSON.stringify(prepared().projection, null, 2)}</pre>
-            <pre aria-label={copy["sf.u32.reviewContext"]}>{JSON.stringify(prepared().reviewContext, null, 2)}</pre>
+            <summary>{copy("sf.u32.inspectSource")}</summary>
+            <pre aria-label={copy("sf.u32.observedProjection")}>{JSON.stringify(prepared().projection, null, 2)}</pre>
+            <pre aria-label={copy("sf.u32.reviewContext")}>{JSON.stringify(prepared().reviewContext, null, 2)}</pre>
           </details>
-          <button type="button" class="mx-btn primary" disabled={locked()} onClick={() => void run(false, confirm)}>{copy["sf.u32.confirmAnswer"]}</button>
+          <button type="button" class="mx-btn primary" disabled={locked()} onClick={() => void run(false, confirm)}>{copy("sf.u32.confirmAnswer")}</button>
         </section>}
       </Show>
-      <section aria-label={copy["sf.u32.confirmed"]}>
-        <Show when={ui.confirmed} fallback={<p>{copy["sf.u32.noConfirmed"]}</p>}>
+      <section aria-label={copy("sf.u32.confirmed")}>
+        <Show when={ui.confirmed} fallback={<p>{copy("sf.u32.noConfirmed")}</p>}>
           {(confirmed) => <>
-            <h3>{copy["sf.u32.confirmed"]}</h3>
+            <h3>{copy("sf.u32.confirmed")}</h3>
             <p>{confirmed().answer}</p>
             <p>{`Author ${confirmed().authorRef} · preserved source version ${confirmed().observedVersion}`}</p>
           </>}
         </Show>
       </section>
-      <section aria-label={copy["sf.u32.history"]}>
+      <section aria-label={copy("sf.u32.history")}>
         <Show when={ui.history.reviewMessage}>
-          <button type="button" disabled={locked()} onClick={() => void run(false, readHistory)}>{copy["sf.u32.readOriginal"]}</button>
+          <button type="button" disabled={locked()} onClick={() => void run(false, readHistory)}>{copy("sf.u32.readOriginal")}</button>
         </Show>
         <Show when={ui.historyText}><p>{ui.historyText}</p></Show>
       </section>

@@ -12,6 +12,7 @@ import { operationGranted } from "../../collaboration/grant"
 import { SfPeriodText } from "../../collaboration/labels"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel, type SfUiState } from "../../shared/states"
+import "../presentation.css"
 import "./threads.css"
 
 type Thread = Extract<typeof SfCollaboration.operations["collaboration.thread-read"]["output"]["Type"], { status: "ok" }>["value"]
@@ -189,12 +190,17 @@ export function SfThreadView(props: SfSurfaceProps<"UI52">) {
       context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => undefined}
     >
-      <section class="sf-u44-thread" data-sf-surface="UI52" data-sf-thread-ref={ref()}>
+      <section class="sf-u44-thread" data-sf-surface="UI52" data-sf-wave="five" data-sf-thread-ref={ref()}>
         <SfStatePanel state={effectiveState()} messageKey={stateKey(effectiveState())}
           onRetryRead={() => void load()}>
           <Show when={projection()}>
             {(thread) => (
               <>
+                <dl class="sf-u44-thread-summary">
+                  <div><dt>{t("sf.u44.sourceRef")}</dt><dd><code>{thread().sourceRef}</code></dd></div>
+                  <div><dt>{t("sf.u44.period")}</dt><dd><SfPeriodText start={thread().period.start} end={thread().period.end} /></dd></div>
+                  <div><dt>{t("sf.u44.sourceMessages")}</dt><dd>{new Intl.NumberFormat(language.intl()).format(messages().length)}</dd></div>
+                </dl>
                 <SfThread
                   threadRef={ref() as SfRef}
                   incarnation={thread().sourceIncarnation}

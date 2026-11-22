@@ -1,0 +1,75 @@
+{
+  "area": "UI55",
+  "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+  "snapshot": "456c19e5cfce9d1692b0fe5b6a85104706f55cf4",
+  "run": 44982724904,
+  "job": 137086555249,
+  "status": "setup-captured; complete import journey failed",
+  "captures": [
+    {
+      "name": "UI55-setup-dark-desktop",
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/attempt-06-UI55-setup-dark-desktop.jpg",
+      "blob": "ed463b8998156561177dcda8951ff9b857284c30",
+      "timestamp": "2026-11-22T03:57:59.5695724Z",
+      "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+      "run": 44982724904,
+      "job": 137086555249,
+      "origin": "Actual Playwright JPEG from original GitHub Actions log chunks; visually inspected without image editing."
+    },
+    {
+      "name": "UI55-setup-light-desktop",
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/attempt-06-UI55-setup-light-desktop.jpg",
+      "blob": "e1e9a00be2bee314359c8076cdf89f736d4aca2f",
+      "timestamp": "2026-11-22T03:58:00.3392291Z",
+      "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+      "run": 44982724904,
+      "job": 137086555249,
+      "origin": "Actual Playwright JPEG from original GitHub Actions log chunks; visually inspected without image editing."
+    },
+    {
+      "name": "UI55-setup-light-390",
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/attempt-06-UI55-setup-light-390.jpg",
+      "blob": "449085407a90535c5f09b89f50f627adfd7214f6",
+      "timestamp": "2026-11-22T03:58:00.5188068Z",
+      "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+      "run": 44982724904,
+      "job": 137086555249,
+      "origin": "Actual Playwright JPEG from original GitHub Actions log chunks; visually inspected without image editing."
+    },
+    {
+      "name": "UI55-setup-dark-390",
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/attempt-06-UI55-setup-dark-390.jpg",
+      "blob": "7fc8f8f0526ad4cab478d471246a5a0fa1afb4dd",
+      "timestamp": "2026-11-22T03:58:00.8078767Z",
+      "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+      "run": 44982724904,
+      "job": 137086555249,
+      "origin": "Actual Playwright JPEG from original GitHub Actions log chunks; visually inspected without image editing."
+    },
+    {
+      "name": "UI55-dark-desktop-selected-file-options",
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/attempt-06-UI55-dark-desktop-selected-file-options.jpg",
+      "blob": "f0a0398dc48bcaea77e0fb41b3a0ba0490a2c461",
+      "timestamp": "2026-11-22T03:58:11.7600157Z",
+      "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+      "run": 44982724904,
+      "job": 137086555249,
+      "origin": "Actual Playwright JPEG from original GitHub Actions log chunks; visually inspected without image editing."
+    }
+  ],
+  "visualReview": {
+    "inspected": [
+      "UI55-setup-dark-desktop",
+      "UI55-setup-light-desktop",
+      "UI55-setup-light-390",
+      "UI55-setup-dark-390",
+      "UI55-dark-desktop-selected-file-options"
+    ],
+    "findings": [
+      "Desktop separates source/period/destination from native file/options and shows the actual current step.",
+      "At 390px the steps and form sections stack. Period controls, destination and source selection remain readable within the native viewport.",
+      "Selected file/options state shows the genuine XLSX FileList, original destination and period, with destructive options unchecked and an explicit Generate preview action."
+    ],
+    "limits": "These images establish setup presentation only. No successful UI55 simulation review or UI56 preview is claimed. Narrow captures show the first viewport, with file/options continuing below the fold. The source response and pending context diagnostic are recorded separately."
+  }
+}

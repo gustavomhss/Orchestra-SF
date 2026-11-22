@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { observeSfUiContextIntegrity } from "../../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import { currentSfReadonlySnapshotScope, hasSfLocalSnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -46,13 +46,13 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       const authenticate = host.authenticate, environment = host.environment
       const request = requestFor.call(host, call), binding = call.binding, lease = call.lease
       if (!request || request.signal.aborted) return undefined
-      const identity = digestSfValue([call.kind, binding]), headers = plannerRequestIdentity(request)
+      const identity = observeSfUiContextIntegrity(call, { binding }), headers = plannerRequestIdentity(request)
       const pinned = () => input.host === host && host.persistence === persistence &&
         persistence.readSnapshotRoot === root && persistence.currentSnapshots === snapshots &&
         persistence.transaction === transaction && persistence.transactionAll === transactionAll &&
         persistence.currentSnapshotScope === snapshotScope && host.requestFor === requestFor &&
         host.revalidate === revalidate && host.authenticate === authenticate && host.environment === environment &&
-        call.binding === binding && call.lease === lease && digestSfValue([call.kind, call.binding]) === identity &&
+        call.binding === binding && call.lease === lease && identity.current() &&
         !request.signal.aborted && requestFor.call(host, call) === request && plannerRequestIdentity(request) === headers && ownerCurrent()
       const current = () => pinned() && unchanged()
       const live = () => {
@@ -110,7 +110,23 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         const accepted = await root.call(persistence, async () => {
           invocations++
           if (invocations !== 1 || !current()) return false
-          const healthy = currentSfReadonlySnapshotScope(persistence)?.current ?? live
+          const observed = currentSfReadonlySnapshotScope(persistence)
+          const sealed = observed && { identity: observed.identity, bytesIdentity: observed.bytesIdentity }
+          const integrity = { failed: false }
+          // A legal nested transaction has its own lexical scope. Ask that live
+          // scope for a fresh proof of this exact physical root, never the parent's current().
+          const healthy = sealed ? () => {
+            if (integrity.failed) return false
+            try {
+              const fresh = currentSfReadonlySnapshotScope(persistence)
+              const valid = !!fresh && fresh.identity === sealed.identity && fresh.bytesIdentity === sealed.bytesIdentity && fresh.current()
+              if (!valid) integrity.failed = true
+              return valid
+            } catch (error) {
+              integrity.failed = true
+              throw error
+            }
+          } : live
           if (!healthy()) return false
           const owner: Root = { open: true, children: 0, current: (candidate) =>
             candidate === call && owner.open && roots.getStore() === owner && pinned() && healthy() }

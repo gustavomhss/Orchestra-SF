@@ -1,0 +1,103 @@
+{
+  "scope": "Focused native portfolio input tests only; no installed browser journey or source evaluation is claimed.",
+  "environment": {
+    "workflow": ".github/workflows/test-ci.yml",
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+    "ORCHESTRA_CHANNEL": "prod"
+  },
+  "attempts": [
+    {
+      "branch": "ci-run-sf5inputs1",
+      "snapshot": "a301c8d7ffa5bba7574b687bd32f867bacdcf828",
+      "source": "a96a9fbac7710c3e30a9b3ebda95fd7dc139f3c3",
+      "run": 44985680214,
+      "job": 137095599457,
+      "conclusion": "failure",
+      "testsExecuted": 0,
+      "reason": "Runner split --preload from its value before Bun tests began"
+    },
+    {
+      "branch": "ci-run-sf5inputs2",
+      "snapshot": "99d376c616817262d0da79927352732fdb827e64",
+      "source": "eae568545b09026508ba4d4d92a694737bfbe499",
+      "run": 44986038617,
+      "job": 137096700700,
+      "conclusion": "failure",
+      "testsExecuted": 2,
+      "observed": [
+        {
+          "operationId": "portfolio.decision-portfolio-results",
+          "fullPlainBeforeProxy": true,
+          "fullReactive": false,
+          "plainWireAfterProxy": "invalid",
+          "reactiveWire": "invalid",
+          "reactiveProxy": true
+        },
+        {
+          "operationId": "portfolio.decision-portfolio-preview",
+          "fullPlainBeforeProxy": true,
+          "fullReactive": false,
+          "plainWireAfterProxy": "invalid",
+          "reactiveWire": "invalid",
+          "reactiveProxy": true
+        }
+      ]
+    },
+    {
+      "branch": "ci-run-sf5inputs3",
+      "snapshot": "311c4db9e704fbe5aa4146ba87209a8fccaf7af2",
+      "source": "6578f94e59dc709691b5863a6cbf1cf61c749f46",
+      "run": 44986712960,
+      "job": 137098765694,
+      "conclusion": "success",
+      "testsExecuted": 18,
+      "testsPassed": 18,
+      "assertions": 147,
+      "omni": {
+        "verdict": "pass",
+        "declaredTests": 1,
+        "spawns": 1,
+        "delegated": 0
+      },
+      "command": [
+        "bun",
+        "test",
+        "--conditions=browser",
+        "--preload",
+        "./happydom.ts",
+        "./test-browser/sucafina-portfolio-input.test.ts"
+      ],
+      "originalDecoderObservations": [
+        {
+          "operationId": "portfolio.decision-portfolio-results",
+          "fullReactive": false,
+          "rawAfterProxy": false,
+          "reactiveProxy": true
+        },
+        {
+          "operationId": "portfolio.decision-portfolio-preview",
+          "fullReactive": false,
+          "rawAfterProxy": false,
+          "reactiveProxy": true
+        },
+        {
+          "operationId": "portfolio.decision-sensitivity-units",
+          "fullReactive": false,
+          "rawAfterProxy": false,
+          "reactiveProxy": true
+        },
+        {
+          "operationId": "portfolio.decision-sensitivity-evaluate",
+          "fullReactive": false,
+          "rawAfterProxy": false,
+          "reactiveProxy": true
+        }
+      ],
+      "blobs": {
+        "helper": "1e479e87f4cbf3e52658cb66a8ddcddfe836e1db",
+        "producer": "16f7ce59dea1ec16eb5ff0146e299b8a935dd2ee",
+        "regression": "490b3d3dca07980be6c126851685ec24190880c1"
+      }
+    }
+  ]
+}

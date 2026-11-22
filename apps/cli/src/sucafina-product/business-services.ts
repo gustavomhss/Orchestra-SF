@@ -1,4 +1,5 @@
 import { createSfProcurementScenarioServices } from "./procurement-scenario-services.ts"
+import { createSfBiObservationScope } from "./bi-observation-scope.ts"
 import { createSfProcurementCompositePlanner } from "./procurement-composite-planner.ts"
 import { randomUUID } from "node:crypto"
 import { AsyncLocalStorage } from "node:async_hooks"
@@ -26,6 +27,7 @@ import { createDashboardRecordEvidenceHost, createDashboardSourceHost } from "..
 import { createDashboardRecordSourceIssuer, createDashboardSourceIssuer } from "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts"
 import { createDashboardCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts"
 import { createDecisionCasePort, encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import { selectSfCaseIdentity } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { createSfDecisionResultStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
 import { createDecisionScenarioLookup } from "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts"
 import { createDecisionCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/decisions/capabilities.ts"
@@ -49,6 +51,7 @@ import { createSfDashboardDecisions } from "./dashboard-decisions.ts"
 import { createSfPlannerEvidence } from "./planner-evidence.ts"
 import { createSfPlannerCalculationServices } from "./planner-calculation-services.ts"
 import { createSfFinancePairObservation } from "./finance-pair-observation.ts"
+import { observeSfUiContextIntegrity, type SfUiContextIntegrity } from "../../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
 import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
 import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
@@ -71,6 +74,11 @@ import { createProcurementQueuePageView, procurementQueueIntent } from "../../..
 import { prepareSourcingDossier, type ProcurementPreparation } from "../../../../modules/sucafina/Sucafinav1/product/routines/dossier.ts"
 import { resolveSfDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
+
+const BindingWitnessMap = WeakMap
+const bindingWitnessApply = Reflect.apply
+const bindingWitnessGet = WeakMap.prototype.get
+const bindingWitnessSet = WeakMap.prototype.set
 
 export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites?: WeakSet<object>; procurementEvidenceWrites?: WeakSet<object>; caseSelectionWrites?: WeakSet<object>; threadHistoryWrites?: WeakSet<object>; readQuestionContribution?: ReturnType<typeof createSfContributionReader>; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; procurementRequest?: Readonly<{ request: Request; period: Period }>; reviewerRecall?: ReturnType<typeof createSfReviewerRecall> }) {
   const host = input.authority.host
@@ -119,7 +127,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     const selected = await registry.resolveRequestSource(ref, call)
     return selected.status === "unavailable" && selected.reason === "Request unavailable" ? individual.resolve(ref, call) : selected
   }
-  const procurementHost = { ...host, ...registry,
+  const biObservation = createSfBiObservationScope(input.authority)
+  const procurementHost = { ...host, ...registry, environment: biObservation.environment,
     resolveRequestSource: resolveProcurement,
     isCurrentRequestSource: (snapshot: Snapshot, evidence: Extract<BusinessEvidenceRef, { kind: "record" }>) => registry.isCurrentRequestSource(snapshot, evidence) || individual.isCurrent(snapshot, evidence),
     resolveSupplierSource: individual.resolve, isCurrentSupplierSource: individual.isCurrent,
@@ -242,9 +251,18 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   type CaseRef = { id: string; incarnation: string; version: number }
   type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number; historical?: boolean }
   const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()
-  const callBindingDigest = (call: TrustedDomainContext) => digestSfValue([call.kind, call.binding])
+  const bindingWitnesses = new BindingWitnessMap<TrustedDomainContext, SfUiContextIntegrity>()
+  const callBindingDigest = (call: TrustedDomainContext) => {
+    const observed = observeSfUiContextIntegrity(call)
+    bindingWitnessApply(bindingWitnessSet, bindingWitnesses, [call, observed])
+    return observed.digest
+  }
+  const currentCaseBinding = (call: TrustedDomainContext, expected: string) => {
+    const observed: SfUiContextIntegrity | undefined = bindingWitnessApply(bindingWitnessGet, bindingWitnesses, [call])
+    return observed?.digest === expected ? observed.current() : digestSfValue([call.kind, call.binding]) === expected
+  }
   const currentCaseAuthority = (call: TrustedDomainContext, request: Request, bindingDigest: string) =>
-    host.requestFor(call) === request && !request.signal.aborted && callBindingDigest(call) === bindingDigest
+    host.requestFor(call) === request && !request.signal.aborted && currentCaseBinding(call, bindingDigest)
   const releaseCaseScope = (call: TrustedDomainContext, scope: CaseScope) => {
     scope.retainers--
     if (scope.retainers === 0 && caseBindings.get(call) === scope) caseBindings.delete(call)
@@ -260,12 +278,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     if (!selected || !request || (call.kind === "ui" && (!scope || scope.request !== request || scope.bindingDigest !== binding)) ||
       !await host.revalidate(call) || !currentCaseAuthority(call, request, binding)) return { status: "unavailable", reason: "case-selection-unavailable" }
     const captured = structuredClone(selected)
-    const current = await input.authority.state.read(request, "cases", (state, actor) => {
-      const value = state.cases[captured.id]
-      return value && value.incarnation === captured.incarnation && value.version === captured.version && value.participants.includes(actor.principalRef) &&
-        actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
-        ? { id: value.id, incarnation: value.incarnation, version: value.version } : undefined
-    })
+    const current = await input.authority.state.read(request, "cases", selectSfCaseIdentity(captured, call))
     const valid = await host.revalidate(call)
     const again = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)?.selected
     return current.status === "ok" && current.value && digestSfValue(current.value) === digestSfValue(captured) && digestSfValue(again) === digestSfValue(captured) &&
@@ -458,7 +471,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
   plannerHolder.current = planner
   const plannerSources = product.sources
-  const withPlannerObservation = createSfFinancePairObservation({
+  const plannerObservationInput: Parameters<typeof createSfFinancePairObservation>[0] = {
     host, state: input.authority.state, lockedSourceFences,
     selectedScope: (call) => {
       const scope = caseBindings.get(call)
@@ -473,7 +486,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       ...[cases, product.scenarios, product.planner, plannerSources, results, context, evidence.current,
         decisionDomain.current?.proposalCoverage, baselineCoverage].flatMap((reader) =>
         reader ? [reader, ...Object.entries(reader).flat()] : [reader])],
-  })
+  }
+  const withPlannerObservation = createSfFinancePairObservation(plannerObservationInput)
+  const createPlannerCriteriaObservation = (criteria: NonNullable<Parameters<typeof createSfFinancePairObservation>[0]["criteria"]>) =>
+    createSfFinancePairObservation({ ...plannerObservationInput, criteria })
   const documentScenarios = input.documentRead ? createSfDocumentScenarios({ host, product, evidence: context, reader: input.documentRead,
     sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
     authorize: (request, call) => input.authority.human.authorize(call, "planner.preview", request) }) : undefined
@@ -767,7 +783,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }) }
   return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementScenarios, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
-    withMemoryObservation, withPlannerObservation,
+    withMemoryObservation, withPlannerObservation, createPlannerCriteriaObservation, biObservation,
+    plannerReaderIdentities: plannerObservationInput.readerIdentities,
     bindReviewCollaboration: reviewCollaboration.bind,
     bindWorkBridge: (bridge: WorkBridge) => {
       if (workBridge.current) throw new Error("SF_WORK_BRIDGE_ALREADY_BOUND")

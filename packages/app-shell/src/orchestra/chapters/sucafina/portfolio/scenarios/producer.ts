@@ -1,4 +1,5 @@
 import { Option, Schema } from "effect"
+import { sfPortfolioDecodeInput } from "./source-input"
 import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import { SfPortfolio } from "@orchestra/schema/sucafina/portfolio"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -44,17 +45,14 @@ export type SfRecordedPortfolioProjection = Readonly<{
 export type SfRecordedSensitivityProjection = Readonly<{
   resultRef: string; caseRef: SfCaseVersionRef; result: SfSensitivityResultView
 }>
-export type SfSensitivityUnits = Readonly<{
-  caseRef: SfCaseVersionRef
-  scenarioRef: string
-  baselineRef: string
-  parameterRef: string
-  parameterUnit: string
-  resultUnit: string
-  unit: string
-  engineVersion: string
-  sourceRefs: readonly string[]
-}>
+type SfControlsProjection = Extract<
+  Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.controls.read"]["output"]>,
+  { status: "ok" }
+>["value"]
+export type SfSensitivityUnits = NonNullable<NonNullable<SfControlsProjection["selected"]>["units"]> &
+  Readonly<{ ref: string; caseRef: SfCaseVersionRef; scenarioRef: string }>
+type SfSensitivitySelection = Pick<SfSensitivityUnits, "ref" | "caseRef" | "scenarioRef" | "baselineRef" | "parameterRef">
+type SfSensitivityStamp = Pick<SfContext["stamp"], "installationId" | "projectId" | "accessRevision">
 
 function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value)
@@ -65,9 +63,9 @@ const string = (value: unknown): value is string => typeof value === "string"
  * Public routing, successful URL parsing, or a remembered case never confers
  * a grant. Selection/readers are still fenced by the host on each call.
  */
-export function sfPortfolioReady(context: SfContext, operationId: string, family: "portfolio" | "decisions"): boolean {
+export function sfPortfolioReady(context: Pick<SfContext, "availability">, operationId: string, family: "portfolio" | "decisions"): boolean {
   return context.availability.some((resource) =>
-    resource.family === family && resource.state === "ready" &&
+    resource.family === family && (resource.state === "ready" || resource.state === "partial") &&
     resource.operations.some((op) => op.operationId === operationId &&
       op.state === "ready" && op.operational))
 }
@@ -118,7 +116,7 @@ export async function sfPortfolioHistory(
 ): Promise<OpResult<SfPortfolioHistory>> {
   const id = "portfolio.decision-portfolio-results"
   if (!sfPortfolioReady(context, id, "portfolio")) return fail("portfolio-results-not-admitted", "denied")
-  const input = Schema.decodeUnknownOption(SfPortfolio[id].input)({ caseRef })
+  const input = sfPortfolioDecodeInput(SfPortfolio[id].input, { caseRef })
   if (Option.isNone(input)) return fail("portfolio-results-input-mismatch")
   const result = transportResult(await createSfPortfolioClient(transport)[id](input.value, { signal }))
   if (result.status !== "ok") return result
@@ -131,7 +129,7 @@ export async function sfPortfolioRecorded(
 ): Promise<OpResult<SfRecordedPortfolioProjection>> {
   const id = "portfolio.decision-portfolio-read"
   if (!sfPortfolioReady(context, id, "portfolio")) return fail("portfolio-read-not-admitted", "denied")
-  const input = Schema.decodeUnknownOption(SfPortfolio[id].input)({ caseRef, resultRef })
+  const input = sfPortfolioDecodeInput(SfPortfolio[id].input, { caseRef, resultRef })
   if (Option.isNone(input)) return fail("portfolio-read-input-mismatch")
   const result = transportResult(await createSfPortfolioClient(transport)[id](input.value, { signal }))
   if (result.status !== "ok") return result
@@ -150,7 +148,7 @@ export async function sfPortfolioPreviewRequest(
 ): Promise<OpResult<SfPortfolioPreview>> {
   const id = "portfolio.decision-portfolio-preview"
   if (!sfPortfolioReady(context, id, "portfolio")) return fail("portfolio-preview-not-admitted", "denied")
-  const input = Schema.decodeUnknownOption(SfPortfolio[id].input)({ caseRef, request })
+  const input = sfPortfolioDecodeInput(SfPortfolio[id].input, { caseRef, request })
   if (Option.isNone(input)) return fail("portfolio-preview-input-mismatch", "invalid")
   const result = transportResult(await createSfPortfolioClient(transport)[id](input.value, { signal }))
   if (result.status !== "ok") return result
@@ -172,7 +170,7 @@ export async function sfPortfolioEvaluate(
 ): Promise<OpResult<SfRecordedPortfolioProjection>> {
   const id = "portfolio.decision-portfolio-evaluate"
   if (!sfPortfolioReady(context, id, "portfolio")) return fail("portfolio-evaluate-not-admitted", "denied")
-  const input = Schema.decodeUnknownOption(SfPortfolio[id].input)({ caseRef, request })
+  const input = sfPortfolioDecodeInput(SfPortfolio[id].input, { caseRef, request })
   if (Option.isNone(input)) return fail("portfolio-evaluate-input-mismatch", "invalid")
   const result = transportResult(await createSfPortfolioClient(transport)[id](input.value, { signal, idempotencyKey }), true)
   if (result.status !== "ok") return result
@@ -184,32 +182,49 @@ export async function sfPortfolioEvaluate(
     fail("portfolio-evaluate-result-mismatch")
 }
 export async function sfSensitivityUnitsForSelection(
-  transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef,
+  transport: SfTransport, context: Pick<SfContext, "availability" | "stamp">,
+  reference: string, caseRef: SfCaseVersionRef,
   scenarioRef: string, baselineRef: string, parameterRef: string, signal: AbortSignal,
 ): Promise<OpResult<SfSensitivityUnits>> {
-  const id = "portfolio.decision-sensitivity-units"
-  if (!sfPortfolioReady(context, id, "portfolio")) return fail("sensitivity-units-not-admitted", "denied")
-  const input = Schema.decodeUnknownOption(SfPortfolio[id].input)({
-    caseRef, scenarioRef, baselineRef, parameterRef,
+  const id = "decisions.controls.read"
+  if (!sfPortfolioReady(context, id, "decisions")) return fail("sensitivity-units-not-admitted", "denied")
+  const input = Schema.decodeUnknownOption(Schema.toType(SfDecisions.operations[id].input), { onExcessProperty: "error" })({
+    case: reference, scenario: scenarioRef, baseline: baselineRef, parameter: parameterRef,
   })
-  if (Option.isNone(input)) return fail("sensitivity-units-input-mismatch", "invalid")
-  const result = transportResult(await createSfPortfolioClient(transport)[id](input.value, { signal }))
+  if (Option.isNone(input) || scenarioRef === baselineRef) return fail("sensitivity-units-input-mismatch", "invalid")
+  const result = transportResult(await createSfDecisionsClient(transport)[id](input.value, { signal }))
   if (result.status !== "ok") return result
-  const raw = result.value
-  if (!record(raw) || !record(raw.caseRef) || raw.caseRef.id !== caseRef.id ||
-      raw.caseRef.incarnation !== caseRef.incarnation || raw.caseRef.version !== caseRef.version ||
-      !record(raw.units) || !string(raw.units.parameterUnit) || !string(raw.units.resultUnit) ||
-      !string(raw.units.engineVersion) || !string(raw.units.baselineRef) ||
-      raw.units.baselineRef !== baselineRef || raw.units.parameterRef !== parameterRef ||
-      !Array.isArray(raw.units.sourceRefs)) return fail("sensitivity-units-projection-mismatch")
-  const sources: string[] = []
-  for (const source of raw.units.sourceRefs) {
-    if (!record(source) || !string(source.refId)) return fail("sensitivity-units-source-mismatch")
-    sources.push(source.refId)
-  }
-  return { status: "ok", value: { caseRef, scenarioRef, baselineRef, parameterRef,
-    parameterUnit: raw.units.parameterUnit, resultUnit: raw.units.resultUnit,
-    unit: raw.units.resultUnit, engineVersion: raw.units.engineVersion, sourceRefs: sources } }
+  const value = sfReadSensitivityUnits(result.value,
+    { ref: reference, caseRef, scenarioRef, baselineRef, parameterRef }, context.stamp)
+  return value ? { status: "ok", value } : fail("sensitivity-units-projection-mismatch")
+}
+/** The original A04 controls read issues units without creating an evaluation binding or rule. */
+export function sfReadSensitivityUnits(
+  value: unknown, selection: SfSensitivitySelection, stamp: SfSensitivityStamp,
+): SfSensitivityUnits | null {
+  const decoded = Schema.decodeUnknownOption(
+    Schema.toType(SfDecisions.operations["decisions.controls.read"].output), { onExcessProperty: "error" },
+  )({ status: "ok", value })
+  if (Option.isNone(decoded) || decoded.value.status !== "ok") return null
+  const source = decoded.value.value
+  const selected = source.selected
+  const units = selected?.units
+  const chosen = selected?.unitSelection
+  if (!selected || !units || !chosen || selected.ref !== selection.ref ||
+    source.accessRevision !== stamp.accessRevision ||
+    source.cases.filter((entry) => entry.ref === selection.ref && entry.version === selection.caseRef.version).length !== 1 ||
+    selected.caseRef.id !== selection.caseRef.id || selected.caseRef.incarnation !== selection.caseRef.incarnation ||
+    selected.caseRef.version !== selection.caseRef.version || selected.decision.id !== selected.caseRef.id ||
+    selected.decision.incarnation !== selected.caseRef.incarnation || selected.decision.version !== selected.caseRef.version ||
+    chosen.scenarioRef !== selection.scenarioRef || chosen.baselineRef !== selection.baselineRef ||
+    chosen.parameterRef !== selection.parameterRef || units.baselineRef !== chosen.baselineRef ||
+    units.parameterRef !== chosen.parameterRef || chosen.scenarioRef === chosen.baselineRef ||
+    selected.scenarios.filter((entry) => entry.ref === chosen.baselineRef).length !== 1 ||
+    selected.scenarios.filter((entry) => entry.ref === chosen.scenarioRef &&
+      entry.parameters.filter((parameter) => parameter.ref === chosen.parameterRef).length === 1).length !== 1 ||
+    !units.sourceRefs.length || units.sourceRefs.some((source) =>
+      source.installationId !== stamp.installationId || source.projectId !== stamp.projectId)) return null
+  return { ...units, ref: selected.ref, caseRef: selected.caseRef, scenarioRef: chosen.scenarioRef }
 }
 export async function sfSensitivityRecorded(
   transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef,
@@ -217,7 +232,7 @@ export async function sfSensitivityRecorded(
 ): Promise<OpResult<SfRecordedSensitivityProjection>> {
   const id = "portfolio.decision-sensitivity-read"
   if (!sfPortfolioReady(context, id, "portfolio")) return fail("sensitivity-read-not-admitted", "denied")
-  const input = Schema.decodeUnknownOption(SfPortfolio[id].input)({ caseRef, resultRef })
+  const input = sfPortfolioDecodeInput(SfPortfolio[id].input, { caseRef, resultRef })
   if (Option.isNone(input)) return fail("sensitivity-read-input-mismatch")
   const result = transportResult(await createSfPortfolioClient(transport)[id](input.value, { signal }))
   if (result.status !== "ok") return result
@@ -235,7 +250,7 @@ export async function sfSensitivityEvaluate(
 ): Promise<OpResult<SfRecordedSensitivityProjection>> {
   const id = "portfolio.decision-sensitivity-evaluate"
   if (!sfPortfolioReady(context, id, "portfolio")) return fail("sensitivity-evaluate-not-admitted", "denied")
-  const input = Schema.decodeUnknownOption(SfPortfolio[id].input)({ caseRef, request })
+  const input = sfPortfolioDecodeInput(SfPortfolio[id].input, { caseRef, request })
   if (Option.isNone(input)) return fail("sensitivity-evaluate-input-mismatch", "invalid")
   const result = transportResult(await createSfPortfolioClient(transport)[id](input.value, { signal, idempotencyKey }))
   if (result.status !== "ok") return result

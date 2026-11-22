@@ -1,0 +1,363 @@
+{
+  "attempt": 4,
+  "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+  "snapshot": "fc7e2584abbf9a9f647b58f38c98415a284a3d94",
+  "run": 44982724281,
+  "job": 137086553639,
+  "conclusion": "failure",
+  "productionBundle": true,
+  "productionChannel": true,
+  "strictOmni": true,
+  "artifact": {
+    "id": 14738631409,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 20224029,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14738631409",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14738631409/zip",
+    "expired": false,
+    "created_at": "2026-11-22T04:01:52Z",
+    "expires_at": "2026-11-29T04:01:50Z",
+    "updated_at": "2026-11-22T04:01:52Z",
+    "digest": "sha256:95a47f76dbc963879f3131f72ec274ce9de8b961bf38ce841ce2e7007b1de3b4",
+    "workflow_run": {
+      "id": 44982724281,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf5analytics5",
+      "head_sha": "fc7e2584abbf9a9f647b58f38c98415a284a3d94"
+    }
+  },
+  "nativeContext": [
+    {
+      "stage": "UI42-list",
+      "http": 200,
+      "status": "ok",
+      "ownerBinding": "exact",
+      "resources": [
+        {
+          "family": "decisions",
+          "resource": "case-intent",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "decisions",
+          "resource": "assumptions",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "campaign",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "results",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "sensitivity",
+          "state": "ready",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-sensitivity-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-units",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "UI42-list",
+      "http": 200,
+      "acquisitionFailure": "native-context-body-unavailable"
+    }
+  ],
+  "scope": {
+    "UI42": "list and genuine parameter preparation; context diagnostic failed",
+    "UI43": "not reached",
+    "UI44": "not reached",
+    "UI45": "catalog, source context and financial result captured",
+    "UI46": "financial rows/plot/table and first exact source request passed; native destination filtered, full journey failed"
+  },
+  "captureReviewMethod": "Original helper JPEG bytes emitted through functions image output and visually inspected; no editing or generated UI.",
+  "captures": [
+    {
+      "index": 0,
+      "name": "FAILED-native-wave-three-test-data",
+      "jpegBytes": 80548,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI42-context-diagnostic-failure.jpg",
+      "blob": "9977bf47889806e02324c59e4f78b5345a036214"
+    },
+    {
+      "index": 1,
+      "name": "UI45-question-catalog-dark-desktop-test-data",
+      "jpegBytes": 99604,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI45-catalog-dark-desktop.jpg",
+      "blob": "a85ffd2a522c12194056ec238bfca711b4b6d3ec"
+    },
+    {
+      "index": 2,
+      "name": "UI45-question-catalog-light-desktop-test-data",
+      "jpegBytes": 104924,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 3,
+      "name": "UI45-question-catalog-dark-390-test-data",
+      "jpegBytes": 34339,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI45-catalog-dark-390.jpg",
+      "blob": "d847231ea3e5bfc6724fd42bb9db3cad1dfebc95"
+    },
+    {
+      "index": 4,
+      "name": "UI45-question-catalog-light-320-test-data",
+      "jpegBytes": 27960,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI45-catalog-light-320.jpg",
+      "blob": "59fb801077ab0839d82ed9dcb3152c2fa426dc5a"
+    },
+    {
+      "index": 5,
+      "name": "UI45-authorized-financial-context-test-data",
+      "jpegBytes": 89102,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 6,
+      "name": "UI45-financial-source-values-test-data",
+      "jpegBytes": 104798,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 7,
+      "name": "UI46-financial-selected-context-test-data",
+      "jpegBytes": 104716,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 8,
+      "name": "UI46-financial-original-values-dark-desktop-test-data",
+      "jpegBytes": 107595,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-plot-dark-desktop.jpg",
+      "blob": "473f41b6688071975664e873356a458acfda214d"
+    },
+    {
+      "index": 9,
+      "name": "UI46-financial-original-values-light-desktop-test-data",
+      "jpegBytes": 111736,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-plot-light-desktop.jpg",
+      "blob": "e3c234efa07212fb313e0fbd4736ddca0383055f"
+    },
+    {
+      "index": 10,
+      "name": "UI46-financial-original-values-dark-390-test-data",
+      "jpegBytes": 27029,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 11,
+      "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+      "jpegBytes": 22303,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-plot-values-dark-390.jpg",
+      "blob": "896eeffb655e1068f456697383198218dadba05b"
+    },
+    {
+      "index": 12,
+      "name": "UI46-financial-original-values-light-320-test-data",
+      "jpegBytes": 25245,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 13,
+      "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+      "jpegBytes": 20480,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-plot-values-light-320.jpg",
+      "blob": "c59fedac501deaed3da2b89c201599a0f1eb6b46"
+    },
+    {
+      "index": 14,
+      "name": "UI46-financial-source-table-dark-desktop-test-data",
+      "jpegBytes": 130961,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-table-heading-dark-desktop.jpg",
+      "blob": "e736a6b0fa611410b0e1822d6c7eb9b7815aae2f"
+    },
+    {
+      "index": 15,
+      "name": "UI46-financial-source-table-light-desktop-test-data",
+      "jpegBytes": 134528,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-table-heading-light-desktop.jpg",
+      "blob": "b92d5794553482a4bdfae3436d2d25c3da63d09f"
+    },
+    {
+      "index": 16,
+      "name": "UI46-financial-source-table-dark-390-test-data",
+      "jpegBytes": 38396,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-table-heading-dark-390.jpg",
+      "blob": "dc6412e409895f2fdd0c08ad33d4c0d348a2cde4"
+    },
+    {
+      "index": 17,
+      "name": "UI46-financial-source-table-light-320-test-data",
+      "jpegBytes": 32169,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-table-heading-light-320.jpg",
+      "blob": "6010d03fd173cef0f11dc5f4d6de78aa7a97fe88"
+    },
+    {
+      "index": 18,
+      "name": "FAILED-native-wave-three-test-data",
+      "jpegBytes": 141573,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-source-request-links-filtered.jpg",
+      "blob": "23eed8883a405fd793b80c54f5fcfa4120c7d0c8"
+    }
+  ]
+}

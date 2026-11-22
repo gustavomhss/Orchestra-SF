@@ -7,6 +7,7 @@ import { expect, test } from "bun:test"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
+import { createSfPortfolioAuthority } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-authority.ts"
 import { createSfPortfolioCoverageAuthority } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-coverage-authority.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
@@ -25,7 +26,7 @@ import { compositionTestDeadline } from "./composition-test-deadline.ts"
 
 type Counts = { physical: number; roots: number; work: number; afterClose?: { root: number; work: number; outside: boolean } }
 
-test("Finance uses the wired coverage pair and closes on revocation or source change", async () => {
+test("Finance and criterion metrics use original pair reads and close on revocation or source change", async () => {
   const deadline = compositionTestDeadline("finance-pair-observation")
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-finance-pair-"))
   deadline.own(() => rm(directory, { recursive: true, force: true }))
@@ -71,7 +72,7 @@ test("Finance uses the wired coverage pair and closes on revocation or source ch
   const proposalCoverageWrites = new WeakSet<object>()
   const authority = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId, origin: "https://example.test",
     policyVersion: "finance-policy", persistence, proposalCoverageWrites, grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
-      operations: ["sf_scenario_simulate", "sf_evidence_get"], humanActions: [] }],
+      operations: ["sf_scenario_simulate", "sf_evidence_get"], humanActions: ["decisions.criteria"] }],
     authenticate: async (_request, scope) => control.active && scope ? { id: "person", canWrite: true,
       roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null,
     environment: async () => ({ at, id: randomUUID, directory: [] }), createId: randomUUID, now: Date.now,
@@ -110,7 +111,7 @@ test("Finance uses the wired coverage pair and closes on revocation or source ch
       } } }
     })
     const decision: DecisionCase = { ...ref, state: "comparing", objective: "Compare forecasts", horizon: period, currency: "USD",
-      criteria: [], participants: ["person"], sourceRefs: basis.sourceRefs, alternatives: [], costCoverageBases: [basis],
+      criteria: [{ id: "cost", description: "Known subtotal difference", required: true }], participants: ["person"], sourceRefs: basis.sourceRefs, alternatives: [], costCoverageBases: [basis],
       assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
     const seed = await authority.state.transaction(request(), { namespace: "cases", expectedStorageVersion: 0,
       targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
@@ -231,20 +232,283 @@ test("Finance uses the wired coverage pair and closes on revocation or source ch
     } finally { business.cases.read = readCase }
     const restored = await measure(false)
     expect(ok(restored.result).map((entry) => ok(entry).result)).toEqual(value.map((entry) => ok(entry).result))
-    const revoked = await measure(true, async () => { control.active = false })
-    expect(revoked.result.status).not.toBe("ok")
-    expect(revoked.counts.work).toBe(1)
-    expect(revoked.counts.afterClose).toEqual({ root: 1, work: 1, outside: true })
+    // Exercise the real criterion consumer with the same published scenarios.
+    // Mode "scalar" disables only the physical root. Capability "absent" exercises
+    // the actual scalar resolver fallback. Both delegate to original producers;
+    // no successful result or source is stubbed. Metric/comparison counts.work
+    // counts scenario references; scenarioReads distinguishes scalar and batch calls.
+    const portfolio = createSfPortfolioAuthority({ authority, business, proposalCoverageWrites, proof: () => undefined })
+    const metricRequest = { caseRef: ref, criterionId: "cost", ruleRef: "fixture-rule", ruleVersion: 1,
+      metricRef: "planner:known-subtotal-difference", baselineRef: results[0]!.reference, scenarioRef: results[1]!.reference }
+    const metricPair = { scenarioRefs: [metricRequest.baselineRef, metricRequest.scenarioRef], criteria: [] }
+    const measureMetric = async (mode: "scalar" | "grouped" | "unsupported", afterRoot?: () => Promise<void>,
+      batch: "original" | "absent" | "short" = "original", afterBatch?: () => void) => {
+      const counts: Counts = { physical: 0, roots: 0, work: 0 }
+      const reads = { scalar: 0, batch: 0, references: 0 }
+      const phases: string[][] = []
+      const call = ok(await authority.ui.admit(request(), "sf_scenario_simulate", admissionDigest))
+      const resolve = scenarios.resolve, resolveMany = scenarios.resolveMany, readRoot = persistence.readSnapshotRoot
+      const plannerProduct = business.plannerProduct
+      let observations = 0
+      const started = performance.now()
+      scenarios.resolve = async (reference, binding) => {
+        reads.scalar++
+        reads.references++
+        counts.work++
+        return resolve.call(scenarios, reference, binding)
+      }
+      scenarios.resolveMany = batch !== "absent" && resolveMany ? async (references, binding) => {
+        reads.batch++
+        reads.references += references.length
+        counts.work += references.length
+        phases.push([...references])
+        const value = await resolveMany.call(scenarios, references, binding)
+        afterBatch?.()
+        // Negative specimen derives from original results; it issues no source.
+        return batch === "short" ? value.slice(0, -1) : value
+      } : undefined
+      business.withPlannerObservation = (incoming, binding, work) => {
+        observations++
+        expect(incoming).toEqual(metricPair)
+        expect(binding).toBe(call)
+        return mode === "scalar" ? work() : observe(incoming, binding, work)
+      }
+      if (mode === "unsupported") persistence.readSnapshotRoot = undefined
+      try {
+        expect(await authority.ui.validate(call, "sf_scenario_simulate", admissionDigest)).toBe(true)
+        const result = await business.withCase(call, ref, {}, async () => {
+          control.counts = counts
+          control.afterRoot = afterRoot
+          try { return await portfolio.readMetric(metricRequest, call) }
+          finally { control.counts = undefined; control.afterRoot = undefined }
+        })
+        const elapsedMs = Math.round(performance.now() - started)
+        console.info("SF_METRIC_OBSERVATION", JSON.stringify({ mode, batch, status: result.status, elapsedMs,
+          observations, scenarioReads: reads, phases, ...counts }))
+        return { result, counts, observations, reads, phases }
+      } finally {
+        scenarios.resolve = resolve
+        scenarios.resolveMany = resolveMany
+        business.plannerProduct = plannerProduct
+        business.withPlannerObservation = observe
+        persistence.readSnapshotRoot = readRoot
+        authority.ui.finish(call)
+      }
+    }
+    const metricScalar = await measureMetric("scalar")
+    const metricGrouped = await measureMetric("grouped")
+    const metricValue = ok(metricScalar.result)
+    expect(metricValue).toMatchObject({ ...metricRequest, state: "conditioned", unit: "USD", period,
+      value: results[1]!.alternative.result.knownSubtotal! - results[0]!.alternative.result.knownSubtotal! })
+    expect(ok(metricGrouped.result)).toEqual(metricValue)
+    expect(metricScalar.reads).toEqual({ scalar: 0, batch: 2, references: 4 })
+    expect(metricGrouped.reads).toEqual(metricScalar.reads)
+    expect(metricScalar.phases).toEqual([metricPair.scenarioRefs, metricPair.scenarioRefs])
+    expect(metricGrouped.phases).toEqual(metricScalar.phases)
+    expect(metricScalar.observations).toBe(1)
+    expect(metricGrouped.observations).toBe(1)
+    expect(metricScalar.counts.roots).toBe(0)
+    expect(metricGrouped.counts.roots).toBe(2)
+    expect(metricGrouped.counts.work).toBeGreaterThan(0)
+    expect(metricGrouped.counts.work).toBe(metricScalar.counts.work)
+    expect(metricGrouped.counts.physical).toBeLessThan(metricScalar.counts.physical)
+    const metricRepeated = await measureMetric("grouped")
+    expect(ok(metricRepeated.result)).toEqual(metricValue)
+    expect(metricRepeated.counts).toEqual(metricGrouped.counts)
+    expect(metricRepeated.reads).toEqual(metricGrouped.reads)
+    const metricUnsupported = await measureMetric("unsupported")
+    expect(ok(metricUnsupported.result)).toEqual(metricValue)
+    expect(metricUnsupported.observations).toBe(1)
+    expect(metricUnsupported.counts.roots).toBe(0)
+    expect(metricUnsupported.counts.work).toBe(metricScalar.counts.work)
+    expect(metricUnsupported.counts.physical).toBe(metricScalar.counts.physical)
+    expect(metricUnsupported.reads).toEqual(metricScalar.reads)
+    const metricWithoutBatch = await measureMetric("scalar", undefined, "absent")
+    expect(ok(metricWithoutBatch.result)).toEqual(metricValue)
+    expect(metricWithoutBatch.reads).toEqual({ scalar: 4, batch: 0, references: 4 })
+    expect(metricWithoutBatch.phases).toEqual([])
+    expect(metricScalar.counts.physical).toBeLessThan(metricWithoutBatch.counts.physical)
+    const nativeBatch = scenarios.resolveMany
+    if (!nativeBatch) throw new Error("Original sibling resolver unavailable")
+    let replacementCalls = 0
+    const replacement = async (...args: Parameters<NonNullable<typeof nativeBatch>>) => {
+      replacementCalls++
+      return nativeBatch.call(scenarios, ...args)
+    }
+    const replacedBatch = await measureMetric("scalar", undefined, "original", () => {
+      scenarios.resolveMany = replacement
+    })
+    expect(replacedBatch.result.status).not.toBe("ok")
+    expect(replacedBatch.reads).toEqual({ scalar: 0, batch: 1, references: 2 })
+    expect(replacementCalls).toBe(0)
+    const replacedOwner = await measureMetric("scalar", undefined, "original", () => {
+      business.plannerProduct = { ...business.plannerProduct, scenarios: { ...scenarios, resolveMany: replacement } }
+    })
+    expect(replacedOwner.result.status).not.toBe("ok")
+    expect(replacedOwner.reads).toEqual({ scalar: 0, batch: 1, references: 2 })
+    expect(replacementCalls).toBe(0)
+    const shortBatch = await measureMetric("scalar", undefined, "short")
+    expect(shortBatch.result).toEqual({ status: "unavailable", reason: "scenario-batch-invalid" })
+    expect(shortBatch.reads).toEqual({ scalar: 0, batch: 1, references: 2 })
+    // The public comparison keeps the real required criterion. Only the
+    // persistence adapter changes for the scalar control; all outputs come
+    // from the original rules, scenario lookup, comparator and stored results.
+    const comparisonRequest = { caseRef: ref, baselineAlternativeId: "baseline",
+      alternativeId: "candidate", criteria: ["cost"] }
+    const comparisonPair = { scenarioRefs: [results[0]!.reference, results[1]!.reference], criteria: ["cost"] }
+    const makeObservation = business.createPlannerCriteriaObservation
+    const measureComparison = async (route: "alternatives" | "scenarios", grouped: boolean,
+      afterRoot?: (current: ReturnType<typeof createSfPortfolioAuthority>) => Promise<void>, afterRootAt = 1) => {
+      const counts: Counts = { physical: 0, roots: 0, work: 0 }
+      const reads = { scalar: 0, batch: 0, references: 0 }
+      const call = ok(await authority.ui.admit(request(), "sf_scenario_simulate", admissionDigest))
+      const resolve = scenarios.resolve, resolveMany = scenarios.resolveMany, readRoot = persistence.readSnapshotRoot
+      const lookup = business.scenarioLookup, businessHost = business.host, ownerHost = authority.host
+      let ruleReads = 0
+      scenarios.resolve = async (reference, binding) => {
+        reads.scalar++
+        reads.references++
+        counts.work++
+        return resolve.call(scenarios, reference, binding)
+      }
+      scenarios.resolveMany = resolveMany ? async (references, binding) => {
+        reads.batch++
+        reads.references += references.length
+        counts.work += references.length
+        return resolveMany.call(scenarios, references, binding)
+      } : undefined
+      business.createPlannerCriteriaObservation = (criteria) => makeObservation({
+        ...criteria,
+        resolve: async (...args) => { ruleReads++; return criteria.resolve(...args) },
+      })
+      if (!grouped) persistence.readSnapshotRoot = undefined
+      const current = createSfPortfolioAuthority({ authority, business, proposalCoverageWrites, proof: () => undefined })
+      const started = performance.now()
+      try {
+        expect(await authority.ui.validate(call, "sf_scenario_simulate", admissionDigest)).toBe(true)
+        const result = await business.withCase(call, ref, {}, async () => {
+          control.counts = counts
+          const after = async () => {
+            if (counts.roots === afterRootAt) await afterRoot?.(current)
+            else control.afterRoot = after
+          }
+          control.afterRoot = afterRoot ? after : undefined
+          try {
+            if (route === "alternatives") {
+              const value = await current.compare(comparisonRequest, call)
+              if (value.status !== "ok") return value
+              expect(value.value.request).toEqual(comparisonPair)
+              return { status: "ok" as const, value: value.value.comparison }
+            }
+            return await current.planner.compareScenarios(comparisonPair, call)
+          } finally { control.counts = undefined; control.afterRoot = undefined }
+        })
+        console.info("SF_CRITERION_COMPARISON_OBSERVATION", JSON.stringify({ route, grouped,
+          status: result.status, elapsedMs: Math.round(performance.now() - started), ruleReads, scenarioReads: reads, ...counts }))
+        return { result, counts, ruleReads, reads }
+      } finally {
+        scenarios.resolve = resolve
+        scenarios.resolveMany = resolveMany
+        business.createPlannerCriteriaObservation = makeObservation
+        business.scenarioLookup = lookup
+        business.host = businessHost
+        authority.host = ownerHost
+        persistence.readSnapshotRoot = readRoot
+        authority.ui.finish(call)
+      }
+    }
+    const missingScalar = await measureComparison("scenarios", false)
+    const missingGrouped = await measureComparison("scenarios", true)
+    expect(ok(missingGrouped.result)).toEqual(ok(missingScalar.result))
+    expect(ok(missingGrouped.result).criterionResults).toEqual([{ criterionId: "cost", state: "unknown",
+      reason: "criterion-rule-unavailable" }])
+    expect(missingGrouped.counts.work).toBe(missingScalar.counts.work)
+    expect(missingGrouped.reads).toEqual({ scalar: 0, batch: 3, references: 6 })
+    expect(missingGrouped.reads).toEqual(missingScalar.reads)
+    expect(missingGrouped.counts.roots).toBe(0)
+
+    const ruleInput = { caseRef: ref, criterionId: "cost", metricRef: "planner:known-subtotal-difference",
+      operator: "lte" as const, value: 0, unit: "USD", period, evidenceRefs: basis.sourceRefs, expectedRuleVersion: 0 }
+    const registerRule = async (expectedRuleVersion: number, value: number) => {
+      const payload = { ...ruleInput, expectedRuleVersion, value }
+      const operation = "sf-human:decisions.criteria", digest = digestSfValue(payload)
+      const call = ok(await authority.ui.admit(request(), operation, digest))
+      try {
+        expect(await authority.ui.validate(call, operation, digest)).toBe(true)
+        const saved = ok(await business.withCase(call, ref, {}, () => portfolio.rules.register(payload, call)))
+        const resolved = ok(await business.withCase(call, ref, {}, () => portfolio.rules.resolve({
+          caseRef: ref, criterionId: "cost" }, call)))
+        expect(resolved).toMatchObject({ ...saved, caseRef: ref, criterionId: "cost", value,
+          evidenceRefs: basis.sourceRefs, version: expectedRuleVersion + 1 })
+        return saved
+      } finally { authority.ui.finish(call) }
+    }
+    await registerRule(0, 0)
+    const originalComparison = await measureComparison("alternatives", false)
+    const groupedComparison = await measureComparison("alternatives", true)
+    const comparison = ok(originalComparison.result)
+    expect(comparison).toMatchObject({ baselineResultRef: results[0]!.reference,
+      alternativeResultRef: results[1]!.reference,
+      knownDifference: results[1]!.alternative.result.knownSubtotal! - results[0]!.alternative.result.knownSubtotal! })
+    expect(ok(groupedComparison.result)).toEqual(comparison)
+    expect(groupedComparison.counts.roots).toBe(2)
+    expect(groupedComparison.counts.work).toBe(originalComparison.counts.work)
+    expect(groupedComparison.reads).toEqual({ scalar: 0, batch: 7, references: 14 })
+    expect(groupedComparison.reads).toEqual(originalComparison.reads)
+    expect(groupedComparison.counts.physical).toBeLessThan(originalComparison.counts.physical)
+    expect(groupedComparison.ruleReads).toBeGreaterThan(1)
+    const directComparison = await measureComparison("scenarios", true)
+    expect(ok(directComparison.result)).toEqual(comparison)
+    expect(directComparison.counts.roots).toBe(2)
+    expect(directComparison.reads).toEqual(groupedComparison.reads)
+    const repeatedComparison = await measureComparison("scenarios", true)
+    expect(ok(repeatedComparison.result)).toEqual(comparison)
+    expect(repeatedComparison.counts).toEqual(directComparison.counts)
+    expect(repeatedComparison.reads).toEqual(directComparison.reads)
+    expect(repeatedComparison.ruleReads).toBe(directComparison.ruleReads)
+    const revokedComparison = await measureComparison("scenarios", true, async () => { control.active = false })
+    expect(revokedComparison.result.status).not.toBe("ok")
+    expect(revokedComparison.counts.work).toBe(directComparison.counts.work)
+    expect(revokedComparison.counts.afterClose).toEqual({ root: 1, work: directComparison.counts.work, outside: true })
     control.active = true
-    const changed = await measure(true, async () => {
+    const replacedRuleReader = await measureComparison("scenarios", true, async (current) => {
+      const resolve = current.rules.resolve
+      current.rules.resolve = (...args) => resolve(...args)
+    })
+    expect(replacedRuleReader.result.status).not.toBe("ok")
+    expect(replacedRuleReader.counts.work).toBe(directComparison.counts.work)
+    expect(replacedRuleReader.counts.afterClose).toEqual({ root: 1, work: directComparison.counts.work, outside: true })
+    const changedLookupAtEgress = await measureComparison("alternatives", true, async () => {
+      const lookup = business.scenarioLookup
+      business.scenarioLookup = (...args) => lookup(...args)
+    }, 2)
+    expect(changedLookupAtEgress.result.status).not.toBe("ok")
+    expect(changedLookupAtEgress.counts.work).toBe(groupedComparison.counts.work)
+    expect(changedLookupAtEgress.counts.afterClose).toEqual({ root: 2, work: groupedComparison.counts.work, outside: true })
+    const changedOwnerAtEgress = await measureComparison("scenarios", true, async () => {
+      business.host = { ...business.host }
+    }, 2)
+    expect(changedOwnerAtEgress.result.status).not.toBe("ok")
+    expect(changedOwnerAtEgress.counts.work).toBe(directComparison.counts.work)
+    expect(changedOwnerAtEgress.counts.afterClose).toEqual({ root: 2, work: directComparison.counts.work, outside: true })
+    const changedRule = await measureComparison("scenarios", true, async () => { await registerRule(1, 1) })
+    expect(changedRule.result.status).not.toBe("ok")
+    expect(changedRule.counts.work).toBe(directComparison.counts.work)
+    expect(changedRule.counts.afterClose).toEqual({ root: 1, work: directComparison.counts.work, outside: true })
+    const revoked = await measureMetric("grouped", async () => { control.active = false })
+    expect(revoked.result.status).not.toBe("ok")
+    expect(revoked.counts.work).toBe(metricGrouped.counts.work)
+    expect(revoked.counts.afterClose).toEqual({ root: 1, work: metricGrouped.counts.work, outside: true })
+    control.active = true
+    const changed = await measureMetric("grouped", async () => {
       await persistence.transaction("planner", async (snapshot) => {
         baselineAmounts(snapshot.data)[0] = 999
         return { commit: true, value: undefined }
       })
     })
     expect(changed.result.status).not.toBe("ok")
-    expect(changed.counts.work).toBe(1)
-    expect(changed.counts.afterClose).toEqual({ root: 1, work: 1, outside: true })
+    expect(changed.counts.work).toBe(metricGrouped.counts.work)
+    expect(changed.counts.afterClose).toEqual({ root: 1, work: metricGrouped.counts.work, outside: true })
     expect(await persistence.transaction("planner", async (snapshot) => ({
       commit: false, value: baselineAmounts(snapshot.data)[0],
     }))).toBe(999)

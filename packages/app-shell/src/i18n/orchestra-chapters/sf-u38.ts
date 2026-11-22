@@ -72,7 +72,9 @@ export const SF_U38_COPY = {
   "sf.u38.unsaved": "Unsaved topic changes",
   "sf.u38.confirmDiscard": "Discard these unsaved edits?",
   "sf.u38.confirmRisk": "Review scope and version before confirming.",
-  "sf.u38.relate": "Relate action by reference"
+  "sf.u38.relate": "Relate action by reference",
+  "sf.u38.proposalHeading": "Review the proposed follow-up",
+  "sf.u38.proposalHint": "Check the source evidence and proposed fields before confirming an authorized change.",
 } as const
 
 export const SF_U38_COPY_BR: Readonly<Record<keyof typeof SF_U38_COPY, string>> = {
@@ -148,5 +150,7 @@ export const SF_U38_COPY_BR: Readonly<Record<keyof typeof SF_U38_COPY, string>> 
   "sf.u38.unsaved": "Alterações de tópico não salvas",
   "sf.u38.confirmDiscard": "Descartar estas alterações não salvas?",
   "sf.u38.confirmRisk": "Revise escopo e versão antes de confirmar.",
-  "sf.u38.relate": "Relacionar ação por referência"
+  "sf.u38.relate": "Relacionar ação por referência",
+  "sf.u38.proposalHeading": "Revise o encaminhamento proposto",
+  "sf.u38.proposalHint": "Confira as evidências de origem e os campos propostos antes de confirmar uma mudança autorizada.",
 }

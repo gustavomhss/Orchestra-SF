@@ -1,0 +1,311 @@
+{
+  "attempt": 8,
+  "group": "UI42–UI44 only",
+  "source": "d8faa155002f0a9f3df029d946a026462af65e69",
+  "snapshot": "9b4863d87ecbb9cca0516db439e979321f3f53fb",
+  "branch": "ci-run-sf5portfolio11",
+  "run": 44990498105,
+  "job": 137110279816,
+  "cleanupJob": 137112053274,
+  "conclusion": "failure",
+  "productionBundle": true,
+  "productionChannel": true,
+  "strictOmni": true,
+  "spec": {
+    "permanentBlob": "94c0de8e8e2016782156507256247a06b0c13ece",
+    "isolatedBlob": "2c9fde9f7ffcfa74dcd6e3077387350156059635",
+    "sourcePreparationBlob": "0e5745f13e3eaacabd4e19bd3b64e0d0f7b4c5e9",
+    "supportBlob": "ebbab2a37b7f1fe5b65bbe4595dbc4b12347ae02",
+    "isolation": "Only second declaration removed; first remained byte-identical."
+  },
+  "artifact": {
+    "id": 14741482763,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 8807370,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14741482763",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14741482763/zip",
+    "expired": false,
+    "created_at": "2026-11-22T05:49:54Z",
+    "expires_at": "2026-11-29T05:49:52Z",
+    "updated_at": "2026-11-22T05:49:54Z",
+    "digest": "sha256:167be4e671dd2776a317ce92e2055a183a58c5bed437c3baf96764ea355a7f69",
+    "workflow_run": {
+      "id": 44990498105,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf5portfolio11",
+      "head_sha": "9b4863d87ecbb9cca0516db439e979321f3f53fb"
+    }
+  },
+  "originalSourceEvidence": [
+    {
+      "at": "2026-11-22T05:45:30.4194578",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "at": "2026-11-22T05:45:35.4095949",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "at": "2026-11-22T05:45:41.5753452",
+      "operation": "parameter-source-read",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "at": "2026-11-22T05:45:43.9772532",
+      "operation": "decision-promote-parameter",
+      "http": 200,
+      "status": "ok",
+      "parameterPeriod": {
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "parameterUnit": "USD"
+    },
+    {
+      "at": "2026-11-22T05:45:50.6846016",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "at": "2026-11-22T05:45:50.6902582",
+      "operation": "decision-compare",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T05:46:16.4855681",
+      "operation": "decision-compare",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 25795
+    },
+    {
+      "at": "2026-11-22T05:46:16.4890332",
+      "operation": "portfolio-selection-fixture-basis",
+      "initialVersion": 0,
+      "basis": "new-isolated-fixture-with-no-prior-registration",
+      "caseVersion": 6,
+      "criteriaCount": 1
+    },
+    {
+      "at": "2026-11-22T05:46:16.4892170",
+      "operation": "decision-select-portfolio",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T05:47:35.1036849",
+      "operation": "decision-select-portfolio",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 78614
+    },
+    {
+      "at": "2026-11-22T05:47:42.1638758",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "at": "2026-11-22T05:47:42.1715455",
+      "operation": "decision-compare",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T05:48:09.2248928",
+      "operation": "decision-compare",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 27053
+    },
+    {
+      "at": "2026-11-22T05:48:09.2279150",
+      "operation": "portfolio-selection-registered-readback",
+      "status": "ok",
+      "selectionVersion": 1,
+      "caseVersion": 6,
+      "originalAlternativePairMatched": true,
+      "originalCriteriaMatched": true,
+      "currentComparisonUnchanged": true,
+      "acquisition": "original-register-canonical-read-then-controls-and-comparison"
+    },
+    {
+      "at": "2026-11-22T05:48:31.2717594",
+      "operation": "decision-portfolio-results",
+      "phase": "native-request",
+      "sequence": 1,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T05:48:31.7043460",
+      "operation": "decision-portfolio-results",
+      "phase": "native-response",
+      "sequence": 1,
+      "ownerBinding": "exact",
+      "elapsedMs": 425,
+      "http": 200,
+      "status": "ok",
+      "reason": null,
+      "valueShape": "array"
+    },
+    {
+      "at": "2026-11-22T05:48:48.4925818",
+      "operation": "decision-portfolio-results",
+      "phase": "native-request",
+      "sequence": 2,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T05:48:49.2677443",
+      "operation": "decision-portfolio-results",
+      "phase": "native-response",
+      "sequence": 2,
+      "ownerBinding": "exact",
+      "elapsedMs": 774,
+      "http": 200,
+      "status": "ok",
+      "reason": null,
+      "valueShape": "array"
+    },
+    {
+      "at": "2026-11-22T05:48:49.8530256",
+      "operation": "decision-portfolio-preview",
+      "phase": "native-request",
+      "sequence": 3,
+      "method": "POST",
+      "ownerBinding": "exact"
+    }
+  ],
+  "scope": {
+    "UI42": "Original explicit human selection and unchanged comparison readback passed. Native original history returned200/ok. Exactly one preview POST was observed to the exact installed owner/dashboard endpoint; no response arrived before the unchanged60000ms wait expired.",
+    "UI43": "Not reached",
+    "UI44": "Not reached",
+    "UI45": "Not part of this isolated journey",
+    "UI46": "Not part of this isolated journey"
+  },
+  "timing": {
+    "kind": "Direct elapsedMs from authenticated source request start to decoded original response; native request/response timing from Playwright event identities.",
+    "comparisonBeforeMs": 25795,
+    "registrationMs": 78614,
+    "comparisonAfterMs": 27053,
+    "nativeHistoryMs": [
+      425,
+      774
+    ],
+    "previewWaitMs": 60000,
+    "previewRequestEmitted": true,
+    "previewRequestOwnerBinding": "exact",
+    "previewResponseObserved": false
+  },
+  "captureReviewMethod": "Original helper JPEG bytes persisted without editing. Only index6 was actually emitted and visually inspected; other six explicitly unreviewed in this attempt.",
+  "captures": [
+    {
+      "index": 0,
+      "name": "UI42-list-dark-desktop-test-data",
+      "reviewed": false,
+      "persisted": true,
+      "file": "UI42-list-dark-desktop.jpg",
+      "blob": "496ef6edb080189d5eeb12a9ff8559df09248fc5",
+      "jpegBytes": 80572
+    },
+    {
+      "index": 1,
+      "name": "UI42-list-light-desktop-test-data",
+      "reviewed": false,
+      "persisted": true,
+      "file": "UI42-list-light-desktop.jpg",
+      "blob": "7e8221a0239f8bb44a6fec9120339d431c507ced",
+      "jpegBytes": 85860
+    },
+    {
+      "index": 2,
+      "name": "UI42-list-dark-390-test-data",
+      "reviewed": false,
+      "persisted": true,
+      "file": "UI42-list-dark-390.jpg",
+      "blob": "0b02d8c176dfff9a4e56fb1a9f23ffd08d513615",
+      "jpegBytes": 28654
+    },
+    {
+      "index": 3,
+      "name": "UI42-list-light-320-test-data",
+      "reviewed": false,
+      "persisted": true,
+      "file": "UI42-list-light-320.jpg",
+      "blob": "35017ce1c2f8cb26875270c13d66153995d2d99e",
+      "jpegBytes": 27440
+    },
+    {
+      "index": 4,
+      "name": "UI42-empty-authorized-case-test-data",
+      "reviewed": false,
+      "persisted": true,
+      "file": "UI42-empty-authorized-case.jpg",
+      "blob": "41cce0209574c055c342138d5d3868f6636978f9",
+      "jpegBytes": 97852
+    },
+    {
+      "index": 5,
+      "name": "UI42-configure-focused-candidate-test-data",
+      "reviewed": false,
+      "persisted": true,
+      "file": "UI42-configured-original-selection.jpg",
+      "blob": "1d660c12920128185c1642509069b76351d1a3d4",
+      "jpegBytes": 106273
+    },
+    {
+      "index": 6,
+      "name": "FAILED-native-wave-three-test-data",
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI42-preview-pending-after-60000ms.jpg",
+      "blob": "285be1d95b2fa9b4548984a54394120f788dac7d",
+      "jpegBytes": 110029
+    }
+  ],
+  "nextDiagnostic": {
+    "source": "d8faa155002f0a9f3df029d946a026462af65e69",
+    "snapshot": "ed96d0f667d6d2ed4516ca73115b6f3d165d4ab8",
+    "run": 44991578651,
+    "scope": "Snapshot-only first preview. Retains original60000ms failure and observes same already-emitted request for up to360000ms additional. Logs bounded aggregate timers inside original readMetric/compare/selection/proofs bodies, never reassigns published methods. No HTTP replay or explicit evaluation. All four overlays are diagnostics only and must not integrate.",
+    "overlays": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d457c752d3e85597a1ca5f147fee86e6442570a4"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "35ab4bb1aa9d1c3147c20b94023a1bf21ec71be0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cbef885b4295cb70b0d8315bb8878741b32a7d98"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "76821088259ed401e0b27720aebc867c8fe944c1"
+      }
+    ]
+  }
+}

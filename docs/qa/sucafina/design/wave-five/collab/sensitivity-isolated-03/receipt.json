@@ -1,0 +1,310 @@
+{
+  "schema": "sucafina-design-qualification-attempt-v1",
+  "surface": "UI44",
+  "attempt": "sensitivity-isolated-03",
+  "classification": "clean original-source attempt; FAILED, partial observations only",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+    "snapshot": "79a3e22f5d2b44533a55b2cb66a253443016a4f8",
+    "tree": "a2eb549d73480a1b37b881e4e4c83dcbce0d00a7",
+    "specPath": "packages/app-shell/e2e/sucafina/design-wave-five-sensitivity.spec.ts",
+    "specBlob": "0df7e844d4f0419dc13249e87c2ad5766403b1c3",
+    "combinedSpecBlob": "f4eb9a534b7a22fcf79e7ccb20bbfd9f8251ae74",
+    "sourceFixtureBlob": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+    "analyticsHelperBlob": "ebbab2a37b7f1fe5b65bbe4595dbc4b12347ae02",
+    "productionConfigBlob": "9724c9412a19fdbcf45ebe55873e49501c63639a",
+    "requestBlob": "03c8f5c84391add25fdd11165eb1af6549c2e301",
+    "snapshotChanges": [
+      "new standalone spec copied from the original UI44 block with explicit viewport/theme",
+      "new .ci-run.json"
+    ],
+    "productFixtureHelpersUnchanged": true,
+    "profiler": false
+  },
+  "actions": {
+    "branch": "ci-run-sf5sensitivity3",
+    "run": 45029259117,
+    "runAttempt": 1,
+    "testJob": 137228983031,
+    "testConclusion": "failure",
+    "testJobStartedAt": "2026-11-22T13:46:41Z",
+    "testJobCompletedAt": "2026-11-22T13:57:03Z",
+    "cleanupJob": 137231749847,
+    "cleanupConclusion": "success",
+    "reportedTestDuration": "6.4m",
+    "reportedResult": "1 failed",
+    "workflow": ".github/workflows/test-ci.yml",
+    "config": "e2e/playwright.production.config.ts",
+    "environment": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "replay": false,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45029259117",
+    "artifact": {
+      "id": 14757775207,
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 9058561,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14757775207",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14757775207/zip",
+      "expired": false,
+      "created_at": "2026-11-22T13:57:01Z",
+      "expires_at": "2026-11-29T13:57:00Z",
+      "updated_at": "2026-11-22T13:57:01Z",
+      "digest": "sha256:444cfa91940ba0ac1e0a4d6fc302040d88949d618f1fdc16d6451d4ba392645e",
+      "workflow_run": {
+        "id": 45029259117,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-sf5sensitivity3",
+        "head_sha": "79a3e22f5d2b44533a55b2cb66a253443016a4f8"
+      }
+    }
+  },
+  "outcome": {
+    "qualified": false,
+    "globalQualificationCountChanged": false,
+    "failure": "page.waitForResponse timed out at the original 120000ms budget",
+    "location": "design-wave-five-sensitivity.spec.ts:115:34",
+    "requestAt": "2026-11-22T13:54:57.8314329Z",
+    "requestOperation": "decision-sensitivity-evaluate",
+    "requestMethod": "POST",
+    "requestOwnerBinding": "exact",
+    "responseObserved": false,
+    "responseStatus": null,
+    "responseBody": null,
+    "mutationPersistence": "unknown; no evaluation response or authenticated result readback was reached",
+    "observedNativeEvaluateRequests": {
+      "portfolio": 0,
+      "sensitivity": 1
+    },
+    "finalOperationCountAssertions": "not reached",
+    "finalScopeFooterObserved": false,
+    "observedCaptureStages": [
+      "configure",
+      "review"
+    ],
+    "resultStageObserved": false,
+    "completedChecks": [
+      "original fixture parameter promotion, rule version and units readbacks",
+      "original human portfolio selection registration and unchanged comparison readbacks in the unchanged fixture",
+      "three alternatives, one choice, conditioned comparisons and absent totals",
+      "empty case honest units absence",
+      "native A04 GET exact origin, mount, method, query, body absence, case/scenario/baseline/parameter bindings, units and rule version",
+      "editor populated using the original source parameter, units and rule",
+      "review hides editor and shows parameter and requested bounds",
+      "cancel preserves minimum and steps",
+      "review reopened and native confirmation clicked once"
+    ],
+    "notReached": [
+      "evaluation HTTP response and status assertion",
+      "result-stage assertions",
+      "authenticated decision-sensitivity-read",
+      "persisted source, bounds, sample and threshold checks",
+      "result/table captures and keyboard focus assertions",
+      "pt-BR UI44 reads and captures",
+      "final page-error assertions, operation-count assertions and SF_ANALYTICS_SCOPE footer"
+    ],
+    "visibleFailure": {
+      "at": "2026-11-22T13:56:57.9103551Z",
+      "message": "Lost connection to the server. Retrying...",
+      "stage": "review",
+      "confirmButton": "visually disabled",
+      "resultDisplayed": false,
+      "cause": "not established by the image or timeout"
+    },
+    "nativeViewAtFailure": {
+      "at": "2026-11-22T13:56:57.8403860Z",
+      "kind": "native-view",
+      "state": {
+        "discovery": "ready",
+        "provider": "ready",
+        "view": "ready",
+        "text": "Context and access⁨127.0.0.1:37399⁩ · SensitivitySensitivityChoose a caseAuthorized casesChoose a caseDesign test data · Review regional sourcing intent and evidence · Case version 2Design test data · Compare regional operating plans with explicit cost uncertainties · Case version 6Design test data · Compare regional operating plans with explicit cost uncertaintiesUSD · Jan 1, 2026 — Dec 31, 2026Select a case and approved unitsScenarioChoose a caseDesign test data · Decision baseline plan · revisão 1Design test data · Decision candidate plan · revisão 1Design test data · Regional monthly amount hypothesis · revisão 1BaselineChoose a caseDesign test data · Decision baseline plan · revisão 1Design test data · Decision candidate plan · revisão 1Design test data · Regional monthly amount hypothesis · revisão 1ParameterChoose a caseSubstituição 1 · 200 USD · 2026-02-01 a 2026-02-28UnitUnit: USD / USDEvidence references: 2CriterionCriterionChoose a casecdba714e-c10c-4854-ae09-13bb13adcd16 · v2Operator≤≥=Criterion valueMinimumMaximumStepsReview sensitivity requestScenariodecision-result:221969491015742a0fdcc77048eb09dba9209fb4235de3a41ed728e939acdb0bParameter3a43c566-af90-41b2-ad1d-d868176031c0:2Criterion valuelte 2000 USDBasis200 — 2200 (2) USDNo client-side feasibility, coverage or cost evaluation is performed.Confirm sensitivity evaluationCancel review"
+      }
+    },
+    "cleanupDiagnostics": [
+      {
+        "at": "2026-11-22T13:56:57.8300849Z",
+        "kind": "wave-three-failure",
+        "consoleErrors": [],
+        "pageErrors": []
+      },
+      {
+        "at": "2026-11-22T13:56:57.9441869Z",
+        "kind": "wave-three-page-closed",
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    ],
+    "fixtureRule": {
+      "at": "2026-11-22T13:51:25.2475868Z",
+      "operation": "sensitivity-rule-fixture-registered-readback",
+      "status": "ok",
+      "caseVersion": 6,
+      "criterionId": "cdba714e-c10c-4854-ae09-13bb13adcd16",
+      "ruleRef": "criterion-rule:e957f421179408775654bbed88cc6bcb753d2f44f2b9f9bf56dd8634fc7b013f",
+      "previousVersion": 1,
+      "ruleVersion": 2,
+      "baselineRef": "decision-result:c84ea2c8611643581957b4ecfc07d5f2f6a6917755294ebf4b3143dca40467e9",
+      "scenarioRef": "decision-result:221969491015742a0fdcc77048eb09dba9209fb4235de3a41ed728e939acdb0b",
+      "parameterRef": "3a43c566-af90-41b2-ad1d-d868176031c0:2",
+      "parameterUnit": "USD",
+      "resultUnit": "USD",
+      "engineVersion": "planner-runtime-v1",
+      "sourceReferences": [
+        {
+          "refId": "planner-version:3463e608-3d75-43d8-a8cd-9801a64f8c06:48a0240b-58b8-482f-93d3-08ac51d4e183:1",
+          "refDigest": "917ca7f187b7cd200d68567948f425c2ab4f6f19752aaaa76e58fcfd20419be8"
+        },
+        {
+          "refId": "planner-version:61f24a1f-f390-4bfa-bd71-53157ab60ddc:1e024a5d-5b65-4283-ab5c-0df46eab12d8:1",
+          "refDigest": "57698c80fa550975b9b668c878d29deb43e8094b61023253e12b81c4e39e4ee5"
+        }
+      ],
+      "originalCaseUnchanged": true,
+      "originalUnitsReadbackMatched": true,
+      "acquisition": "original-register-canonical-resolve-then-controls-units-and-version"
+    },
+    "nativeUnits": {
+      "at": "2026-11-22T13:54:55.1708190Z",
+      "operation": "decision-controls-sensitivity-units",
+      "method": "GET",
+      "http": 200,
+      "selection": {
+        "scenarioRef": "decision-result:221969491015742a0fdcc77048eb09dba9209fb4235de3a41ed728e939acdb0b",
+        "baselineRef": "decision-result:c84ea2c8611643581957b4ecfc07d5f2f6a6917755294ebf4b3143dca40467e9",
+        "parameterRef": "3a43c566-af90-41b2-ad1d-d868176031c0:2"
+      },
+      "units": {
+        "baselineRef": "decision-result:c84ea2c8611643581957b4ecfc07d5f2f6a6917755294ebf4b3143dca40467e9",
+        "parameterRef": "3a43c566-af90-41b2-ad1d-d868176031c0:2",
+        "parameterUnit": "USD",
+        "resultUnit": "USD",
+        "engineVersion": "planner-runtime-v1",
+        "sourceRefs": [
+          {
+            "schema": "sf-evidence-v1",
+            "kind": "record",
+            "refId": "planner-version:3463e608-3d75-43d8-a8cd-9801a64f8c06:48a0240b-58b8-482f-93d3-08ac51d4e183:1",
+            "installationId": "1e5ab3b7-ee8b-4050-bba5-07405925898c",
+            "projectId": "global",
+            "refDigest": "917ca7f187b7cd200d68567948f425c2ab4f6f19752aaaa76e58fcfd20419be8",
+            "evidenceLevel": "observed",
+            "target": {
+              "surface": "planner",
+              "recordType": "planner-version",
+              "recordId": "3463e608-3d75-43d8-a8cd-9801a64f8c06",
+              "incarnation": "48a0240b-58b8-482f-93d3-08ac51d4e183",
+              "version": 1,
+              "fields": [
+                "id",
+                "name",
+                "year",
+                "locked",
+                "closed",
+                "hc",
+                "lists",
+                "lines",
+                "projects",
+                "fx",
+                "summary",
+                "hr",
+                "restrictedHr",
+                "fteInputsKnown",
+                "hrMonthStates",
+                "sharedEntities",
+                "sharedAllocations"
+              ],
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-12-31"
+              },
+              "projectionDigest": "a3ba993a6c0bb58d7a47de546decfac2da954e0e27e5c60e7f2b033a5214b4ff"
+            }
+          },
+          {
+            "schema": "sf-evidence-v1",
+            "kind": "record",
+            "refId": "planner-version:61f24a1f-f390-4bfa-bd71-53157ab60ddc:1e024a5d-5b65-4283-ab5c-0df46eab12d8:1",
+            "installationId": "1e5ab3b7-ee8b-4050-bba5-07405925898c",
+            "projectId": "global",
+            "refDigest": "57698c80fa550975b9b668c878d29deb43e8094b61023253e12b81c4e39e4ee5",
+            "evidenceLevel": "observed",
+            "target": {
+              "surface": "planner",
+              "recordType": "planner-version",
+              "recordId": "61f24a1f-f390-4bfa-bd71-53157ab60ddc",
+              "incarnation": "1e024a5d-5b65-4283-ab5c-0df46eab12d8",
+              "version": 1,
+              "fields": [
+                "id",
+                "name",
+                "year",
+                "locked",
+                "closed",
+                "hc",
+                "lists",
+                "lines",
+                "projects",
+                "fx",
+                "summary",
+                "hr",
+                "restrictedHr",
+                "fteInputsKnown",
+                "hrMonthStates",
+                "sharedEntities",
+                "sharedAllocations"
+              ],
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-12-31"
+              },
+              "projectionDigest": "cb8bfe781b1b339e54cbc3a25a362accb1ff54ad4fa0673886204eca60f86726"
+            }
+          }
+        ]
+      },
+      "acquisition": "native-original-get-body"
+    }
+  },
+  "evidence": {
+    "sourceEvents": 21,
+    "normalCaptureEvents": 8,
+    "diagnosticEvents": 3,
+    "jpegCount": 9,
+    "originalPreviewChunks": 37,
+    "chunkIndexBase": 1,
+    "allChunksComplete": true,
+    "duplicateChunks": 0,
+    "jsonParseErrors": 0,
+    "totalJpegBytes": 608216,
+    "imageAcquisition": "Original SF_DESIGN_PREVIEW JPEG chunks; no conversion, resize or replay.",
+    "visualInspection": {
+      "reviewer": "root_cost",
+      "count": 9,
+      "images": [
+        "UI44-no-source-scenarios-test-data",
+        "UI44-original-source-selection-test-data",
+        "UI44-issued-units-editor-dark-desktop-test-data",
+        "UI44-issued-units-editor-light-desktop-test-data",
+        "UI44-issued-units-editor-dark-390-test-data",
+        "UI44-issued-units-editor-light-320-test-data",
+        "UI44-dark-desktop-review-test-data",
+        "UI44-dark-320-review-actions-test-data",
+        "FAILED-native-wave-three-test-data"
+      ],
+      "method": "Every complete original JPEG was emitted as an image and inspected."
+    },
+    "remoteImageBytesMatchOriginalChunks": true,
+    "readbackMethod": "GitHub fetch_file with encoding base64, compared against each complete 1-based original chunk assembly.",
+    "rawLogArchived": false,
+    "sourceEventsFile": "source-events.json",
+    "captureManifest": "capture-manifest.json",
+    "visualReview": "visual-review.json"
+  },
+  "noRuntimeChange": true,
+  "noFixtureChange": true,
+  "noNewExecutionAfterFailure": true
+}

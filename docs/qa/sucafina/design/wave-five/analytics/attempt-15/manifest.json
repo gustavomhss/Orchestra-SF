@@ -1,0 +1,839 @@
+{
+  "schema": "sucafina-analytics-native-attempt-v1",
+  "area": [
+    "UI42",
+    "UI43",
+    "UI44"
+  ],
+  "attempt": 15,
+  "execution": "Portfolio18",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+  "snapshot": "5b31da8839f2738995fc5b07cdb4b05212188eab",
+  "tree": "0c63eb561b9fb2cb2c602890293073cd48623a07",
+  "branch": "ci-run-sf5portfolio18",
+  "run": 45008412557,
+  "testJob": 137165052929,
+  "cleanupJob": 137167295350,
+  "runAttempt": 1,
+  "conclusion": "failure",
+  "cleanupConclusion": "success",
+  "executionCount": 1,
+  "retries": 0,
+  "workflow": ".github/workflows/test-ci.yml",
+  "config": "packages/app-shell/e2e/playwright.production.config.ts",
+  "request": {
+    "package": "app",
+    "packageSelector": "@orchestra/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-analytics.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "requestBlob": "a11922821a47594d76397582be38f9b7940177ca",
+  "permanentSpec": "f4eb9a534b7a22fcf79e7ccb20bbfd9f8251ae74",
+  "isolatedSpec": "db1d7f4f0d770e5eed811070b0814c0363083c62",
+  "sourcePreparation": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+  "captureHelper": "ebbab2a37b7f1fe5b65bbe4595dbc4b12347ae02",
+  "originalSeed": "32b39933bf81c220729d3af910809e7d7b88910f",
+  "overlays": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "db1d7f4f0d770e5eed811070b0814c0363083c62"
+    },
+    {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a11922821a47594d76397582be38f9b7940177ca"
+    }
+  ],
+  "sourceEquivalence": {
+    "sourceRef": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+    "permanentSpecPath": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "permanentSpecBlob": "f4eb9a534b7a22fcf79e7ccb20bbfd9f8251ae74",
+    "operation": "Remove only the second analyticsTest declaration through end of file; retain the entire preceding prefix.",
+    "firstDeclarationStartLine": 12,
+    "firstDeclarationEndLine": 291,
+    "removedSecondDeclarationStartLine": 443,
+    "originalChars": 57192,
+    "overlayChars": 30401,
+    "removedChars": 26791,
+    "originalUtf8Bytes": 57204,
+    "overlayUtf8Bytes": 30410,
+    "removedUtf8Bytes": 26794,
+    "firstDeclarationChars": 20486,
+    "firstDeclarationUtf8Bytes": 20495,
+    "importsExact": true,
+    "firstDeclarationExact": true,
+    "localHelpersExact": true,
+    "prefixExact": true,
+    "declarationsRemaining": 1,
+    "retainedBudgets": {
+      "declaration": 780000,
+      "default": 20000,
+      "preview": 60000,
+      "repeatPreview": 60000,
+      "portfolioEvaluate": 60000,
+      "unitsGet": 60000,
+      "sensitivityEvaluate": 120000
+    },
+    "supportBlobs": {
+      "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics-source.ts": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+      "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts": "ebbab2a37b7f1fe5b65bbe4595dbc4b12347ae02",
+      "packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-seed.ts": "32b39933bf81c220729d3af910809e7d7b88910f"
+    },
+    "sourceTree": "63b9ed2901def792362a7aa8678f895d0cbac791",
+    "helpersContentComparedTo": "5882179a3fea2bbbec465821ffd5a13c06deda4b",
+    "helpers": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics-source.ts",
+        "sha": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+        "contentExactlyEqual": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "sha": "ebbab2a37b7f1fe5b65bbe4595dbc4b12347ae02",
+        "contentExactlyEqual": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-seed.ts",
+        "sha": "32b39933bf81c220729d3af910809e7d7b88910f",
+        "contentExactlyEqual": true
+      }
+    ],
+    "verificationPhase": "Before CI branch creation; committed content was read back exactly."
+  },
+  "clean": true,
+  "diagnosticInstrumentation": false,
+  "addedReplay": false,
+  "producerOrBudgetModification": false,
+  "result": {
+    "tests": {
+      "pass": 0,
+      "fail": 1,
+      "reportedDuration": "5.1m"
+    },
+    "fixture": "Original installation/enrollment and complete helper581 preparation passed: real parameter promotion, A04 units reads, one observed-version rule registration, original comparisons, explicit portfolio selection and exact readbacks.",
+    "preparation": {
+      "caseVersion": 6,
+      "criterionPreviousVersion": 1,
+      "criterionVersion": 2,
+      "selectionVersion": 1,
+      "unitsReadAcquisition": "original A04 preparation GET, not the unreached native UI44 GET",
+      "completeStoredRuleReadEndpointClaimed": false,
+      "operationDurations": [
+        {
+          "operation": "decision-criteria",
+          "http": 200,
+          "status": "ok",
+          "elapsedMs": 1464
+        },
+        {
+          "operation": "decision-compare",
+          "http": 200,
+          "status": "ok",
+          "elapsedMs": 61445
+        },
+        {
+          "operation": "decision-select-portfolio",
+          "http": 200,
+          "status": "ok",
+          "elapsedMs": 39907
+        },
+        {
+          "operation": "decision-compare",
+          "http": 200,
+          "status": "ok",
+          "elapsedMs": 58947
+        }
+      ]
+    },
+    "nativeHistory": [
+      {
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "timestamp": "2026-11-22T09:44:42.0673667",
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 1,
+        "ownerBinding": "exact",
+        "elapsedMs": 449,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      },
+      {
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "timestamp": "2026-11-22T09:44:54.8412002",
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 2,
+        "ownerBinding": "exact",
+        "elapsedMs": 908,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      }
+    ],
+    "preview": {
+      "requests": 1,
+      "sequence": 3,
+      "requestTimestamp": "2026-11-22T09:44:54.6797245",
+      "method": "POST",
+      "ownerBinding": "exact",
+      "originalWaitMs": 60000,
+      "responseObserved": false,
+      "http": null,
+      "status": null,
+      "reason": null,
+      "failure": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\"",
+      "specLine": 72,
+      "observedUntil": "page closed at 2026-11-22T09:45:55.2644238Z",
+      "persistence": "unknown; original preview may perform its own internal persistence/binding"
+    },
+    "explicitPortfolioEvaluateRequests": 0,
+    "explicitSensitivityEvaluateRequests": 0,
+    "reached": [
+      "original source preparation",
+      "UI42 authorized case list",
+      "UI42 authorized empty case",
+      "UI42 candidate/constraint configuration",
+      "first native preview request"
+    ],
+    "notReached": [
+      "completed preview",
+      "back-and-repeat preview",
+      "portfolio review/evaluate",
+      "persisted result/readback/UI43",
+      "native UI44 A04 GET/editor/review/evaluate/result",
+      "sample/threshold readback",
+      "pt-BR routes",
+      "final scope and error assertions"
+    ],
+    "hooksReportedNoPageOrConsoleErrors": true,
+    "finalPageErrorAssertionsExecuted": false,
+    "interpretation": "The integrated readonly correction did not complete this clean journey within the original preview wait. No measured hit/miss profile or causal performance attribution exists in this run."
+  },
+  "contextReadbacks": [
+    {
+      "prefix": "SF_ANALYTICS_CONTEXT",
+      "timestamp": "2026-11-22T09:44:33.2732884",
+      "stage": "UI42-list",
+      "http": 200,
+      "status": "ok",
+      "acquisition": "authenticated-original-readback",
+      "ownerBinding": "exact",
+      "resources": [
+        {
+          "family": "decisions",
+          "resource": "case-intent",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "decisions",
+          "resource": "assumptions",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "campaign",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "results",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "sensitivity",
+          "state": "ready",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-sensitivity-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-units",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "SF_ANALYTICS_CONTEXT",
+      "timestamp": "2026-11-22T09:44:43.0123994",
+      "stage": "UI42-empty-case",
+      "http": 200,
+      "status": "ok",
+      "acquisition": "authenticated-original-readback",
+      "ownerBinding": "exact",
+      "resources": [
+        {
+          "family": "decisions",
+          "resource": "case-intent",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "decisions",
+          "resource": "assumptions",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "campaign",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "results",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "sensitivity",
+          "state": "ready",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-sensitivity-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-units",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "pageDiagnostics": [
+    {
+      "timestamp": "2026-11-22T09:45:54.7416171",
+      "kind": "wave-three-failure",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "timestamp": "2026-11-22T09:45:54.7510582",
+      "kind": "native-view",
+      "state": {
+        "discovery": "ready",
+        "provider": "ready",
+        "view": "ready",
+        "text": "Context and access⁨127.0.0.1:36971⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1Constraints17120907-1e56-4aa8-a004-43254b6b3d70 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+      }
+    },
+    {
+      "timestamp": "2026-11-22T09:45:55.2644238",
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  ],
+  "artifact": {
+    "id": 14748539261,
+    "name": "playwright-ubuntu-24.04-1",
+    "bytes": 8819283,
+    "digest": "sha256:d9da46a48c2894b3cbf11e0fcfdfdc22cfabc45a211f4e754794bcfcefcd5086",
+    "expiresAt": "2026-11-29T09:45:57Z",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45008412557/artifacts/14748539261"
+  },
+  "captureLedger": {
+    "plannedSuccessCaptures": 33,
+    "actualEncodedImages": 7,
+    "actualStageCaptures": 6,
+    "actualFailureCaptures": 1,
+    "emittedParts": 33,
+    "base64Characters": 715412,
+    "decodedBytes": 536552,
+    "allChunksComplete": true,
+    "allRemoteBytesVerified": true,
+    "allActuallyViewed": true,
+    "originalPngs": "Original full PNG attachments remain in the canonical Actions artifact; repository JPEGs are the unchanged existing helper previews.",
+    "absentPlannedCaptures": [
+      "UI43-recorded-conditioned-dark-desktop-test-data",
+      "UI43-recorded-conditioned-light-desktop-test-data",
+      "UI43-recorded-conditioned-dark-390-test-data",
+      "UI43-recorded-conditioned-light-320-test-data",
+      "UI44-issued-units-editor-dark-desktop-test-data",
+      "UI44-issued-units-editor-light-desktop-test-data",
+      "UI44-issued-units-editor-dark-390-test-data",
+      "UI44-issued-units-editor-light-320-test-data",
+      "UI44-recorded-samples-dark-desktop-test-data",
+      "UI44-recorded-samples-light-desktop-test-data",
+      "UI44-recorded-samples-dark-390-test-data",
+      "UI44-recorded-samples-light-320-test-data",
+      "UI44-recorded-sample-table-dark-desktop-test-data",
+      "UI44-recorded-sample-table-light-desktop-test-data",
+      "UI44-recorded-sample-table-dark-390-test-data",
+      "UI44-recorded-sample-table-light-320-test-data",
+      "UI42-preview-condition-preserved-test-data",
+      "UI42-dark-390-confirm-evaluation-test-data",
+      "UI43-source-restrictions-disclosure-test-data",
+      "UI44-no-source-scenarios-test-data",
+      "UI44-original-source-selection-test-data",
+      "UI44-dark-desktop-review-test-data",
+      "UI44-dark-320-review-actions-test-data",
+      "UI42-pt-BR-dark-desktop-test-data",
+      "UI43-pt-BR-dark-desktop-test-data",
+      "UI44-pt-BR-dark-desktop-test-data",
+      "UI44-pt-BR-dark-320-recorded-test-data"
+    ]
+  },
+  "images": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "index": 0,
+      "parts": 5,
+      "base64Chars": 107412,
+      "firstTimestamp": "2026-11-22T09:44:33.7792576",
+      "viewed": true,
+      "viewedBy": "/root/design_analytics",
+      "verdict": "approve-captured-stage-only",
+      "finding": "Dark desktop: two authorized cases, complete titles, versions and open actions are legible; compact Context and access remains separate.",
+      "blob": "ef2cef68092e7d874ba5a229edfe487054b4e2b2",
+      "file": "UI42-list-dark-desktop-test-data.jpg",
+      "remoteBytesVerified": true,
+      "decodedBytes": 80557,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "surface": "UI42",
+      "stage": "list",
+      "originalName": "UI42-list-dark-desktop-test-data",
+      "sourceEvent": {
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "timestamp": "2026-11-22T09:44:33.9202049",
+        "name": "UI42-list-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "index": 1,
+      "parts": 5,
+      "base64Chars": 114464,
+      "firstTimestamp": "2026-11-22T09:44:34.3700410",
+      "viewed": true,
+      "viewedBy": "/root/design_analytics",
+      "verdict": "approve-captured-stage-only",
+      "finding": "Light desktop: hierarchy and controls remain legible on the native light material; no clipping in the authorized-case cards.",
+      "blob": "71c7cc5368bc8c9ff48fed66008161d0cc5a6940",
+      "file": "UI42-list-light-desktop-test-data.jpg",
+      "remoteBytesVerified": true,
+      "decodedBytes": 85848,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "light",
+      "surface": "UI42",
+      "stage": "list",
+      "originalName": "UI42-list-light-desktop-test-data",
+      "sourceEvent": {
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "timestamp": "2026-11-22T09:44:34.5071982",
+        "name": "UI42-list-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "index": 2,
+      "parts": 2,
+      "base64Chars": 38196,
+      "firstTimestamp": "2026-11-22T09:44:34.5757509",
+      "viewed": true,
+      "viewedBy": "/root/design_analytics",
+      "verdict": "approve-captured-stage-only",
+      "finding": "390px dark: cards stack in one column; full case labels wrap and both actions remain in frame.",
+      "blob": "36cebe9700677cbcb173b7cb39fbc0eaf395fa81",
+      "file": "UI42-list-dark-390-test-data.jpg",
+      "remoteBytesVerified": true,
+      "decodedBytes": 28645,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "theme": "dark",
+      "surface": "UI42",
+      "stage": "list",
+      "originalName": "UI42-list-dark-390-test-data",
+      "sourceEvent": {
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "timestamp": "2026-11-22T09:44:34.6075454",
+        "name": "UI42-list-dark-390-test-data",
+        "width": 390,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "index": 3,
+      "parts": 2,
+      "base64Chars": 36552,
+      "firstTimestamp": "2026-11-22T09:44:34.8942800",
+      "viewed": true,
+      "viewedBy": "/root/design_analytics",
+      "verdict": "approve-captured-stage-only",
+      "finding": "320px light: title and long case names remain readable; cards and actions stay within the narrow frame.",
+      "blob": "36d116c83689fa24240db2d2cb553bd1682bc255",
+      "file": "UI42-list-light-320-test-data.jpg",
+      "remoteBytesVerified": true,
+      "decodedBytes": 27414,
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "theme": "light",
+      "surface": "UI42",
+      "stage": "list",
+      "originalName": "UI42-list-light-320-test-data",
+      "sourceEvent": {
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "timestamp": "2026-11-22T09:44:34.9272629",
+        "name": "UI42-list-light-320-test-data",
+        "width": 320,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "index": 4,
+      "parts": 6,
+      "base64Chars": 130460,
+      "firstTimestamp": "2026-11-22T09:44:43.3714952",
+      "viewed": true,
+      "viewedBy": "/root/design_analytics",
+      "verdict": "approve-captured-stage-only",
+      "finding": "Authorized empty case: explicit no-eligible-scenarios message, disabled preview and genuinely empty history are visible; original criteria remain shown.",
+      "blob": "23e106b280b9bba95e9b2132450ce0f498607412",
+      "file": "UI42-empty-authorized-case-test-data.jpg",
+      "remoteBytesVerified": true,
+      "decodedBytes": 97843,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "surface": "UI42",
+      "stage": "configure",
+      "originalName": "UI42-empty-authorized-case-test-data",
+      "sourceEvent": {
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "timestamp": "2026-11-22T09:44:43.5083323",
+        "name": "UI42-empty-authorized-case-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      }
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "index": 5,
+      "parts": 6,
+      "base64Chars": 141624,
+      "firstTimestamp": "2026-11-22T09:44:54.5502647",
+      "viewed": true,
+      "viewedBy": "/root/design_analytics",
+      "verdict": "approve-captured-stage-only",
+      "finding": "Configuration: the real candidate and v2 constraint are selected, all three published scenarios are visible, exploration limit4 retains a clear keyboard focus ring.",
+      "blob": "9eac915f5a0462fbba1073bbe98dd485db38209c",
+      "file": "UI42-configure-focused-candidate-test-data.jpg",
+      "remoteBytesVerified": true,
+      "decodedBytes": 106217,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "surface": "UI42",
+      "stage": "configure",
+      "originalName": "UI42-configure-focused-candidate-test-data",
+      "sourceEvent": {
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "timestamp": "2026-11-22T09:44:54.6796207",
+        "name": "UI42-configure-focused-candidate-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      }
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "index": 6,
+      "parts": 7,
+      "base64Chars": 146704,
+      "firstTimestamp": "2026-11-22T09:45:55.1018047",
+      "viewed": true,
+      "viewedBy": "/root/design_analytics",
+      "verdict": "diagnostic-only-unqualified",
+      "finding": "Failure diagnostic: the same configuration remains disabled while Preview combinations shows Running; Preview is not yet available and a skeleton are visible above empty history. No completed preview/result is visible, and no connection banner appears in this image.",
+      "blob": "29eae4b4a60024e7769622b40fd3341bdad4f7ba",
+      "file": "FAILED-native-wave-three-test-data.jpg",
+      "remoteBytesVerified": true,
+      "decodedBytes": 110028,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "surface": "UI42",
+      "stage": "configure-pending-preview",
+      "originalName": "FAILED-native-wave-three-test-data",
+      "sourceEvent": null
+    }
+  ],
+  "visualScope": "All 7 JPEGs were emitted through image output and manually inspected. Six captured list/configuration stages are readable. The pending-preview failure image is diagnostic only; no full UI42/UI43/UI44 qualification follows.",
+  "qualified": false,
+  "waveQualifiedCount": 12,
+  "acceptedMergedCount": 41
+}

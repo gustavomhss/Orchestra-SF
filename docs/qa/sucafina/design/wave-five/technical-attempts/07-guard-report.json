@@ -1,0 +1,431 @@
+{
+  "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+  "bootstrap": false,
+  "rules": 78,
+  "files": 82,
+  "findings": [
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 12,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  analyticsTest.setTimeout(780_000)",
+      "match": [
+        16,
+        34
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 13,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  page.setDefaultTimeout(20_000)",
+      "match": [
+        7,
+        31
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 63,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+      "match": [
+        124,
+        143
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 77,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  const repeatedPreview = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+      "match": [
+        124,
+        143
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 86,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  const recordedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-evaluate\"), { timeout: 60_000 })",
+      "match": [
+        126,
+        145
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 132,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  const unitsResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-sensitivity-units\"), { timeout: 60_000 })",
+      "match": [
+        122,
+        141
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 159,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-sensitivity-evaluate\"), { timeout: 120_000 })",
+      "match": [
+        129,
+        149
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 301,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  const response = page.waitForResponse((entry) => new URL(entry.url()).searchParams.get(\"sf\") === \"bi-options\", { timeout: 60_000 })",
+      "match": [
+        113,
+        132
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 307,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  analyticsTest.setTimeout(660_000)",
+      "match": [
+        16,
+        34
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 308,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  page.setDefaultTimeout(20_000)",
+      "match": [
+        7,
+        31
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 334,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  const financialResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+      "match": [
+        125,
+        144
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 349,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  const readData = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+      "match": [
+        116,
+        135
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 390,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "    const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-source\", { timeout: 60_000 })",
+      "match": [
+        126,
+        145
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 452,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  const operationalResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+      "match": [
+        127,
+        146
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "line": 19,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  collabTest.setTimeout(900_000)",
+      "match": [
+        13,
+        31
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "line": 20,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  page.setDefaultTimeout(20_000)",
+      "match": [
+        7,
+        31
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "line": 94,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "      \"/api/ui/pages/CAP18?\" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })",
+      "match": [
+        109,
+        128
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "line": 128,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "      expect(surface).toHaveAttribute(\"data-sf-phase\", \"reviewing\", { timeout: 90_000 }),",
+      "match": [
+        68,
+        87
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "line": 216,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  waveFourTest.setTimeout(600_000)",
+      "match": [
+        15,
+        33
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "line": 217,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  page.setDefaultTimeout(20_000)",
+      "match": [
+        7,
+        31
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 68,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", selected.state, { timeout: 40_000 })",
+      "match": [
+        105,
+        124
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 80,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "    await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", \"ready\", { timeout: 40_000 })",
+      "match": [
+        100,
+        119
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 91,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  await expect(preview).toBeVisible({ timeout: 40_000 })",
+      "match": [
+        36,
+        55
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 95,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  await expect(confirmed).toBeVisible({ timeout: 40_000 })",
+      "match": [
+        38,
+        57
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 102,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  waveFourTest.setTimeout(420_000)",
+      "match": [
+        15,
+        33
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 103,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  page.setDefaultTimeout(15_000)",
+      "match": [
+        7,
+        31
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 111,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "    new URL(response.url()).searchParams.get(\"sf\") === \"dashboard-workbench\", { timeout: 40_000 })",
+      "match": [
+        78,
+        97
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 121,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  await expect(initialSource).not.toHaveAttribute(\"data-sf-state\", \"loading\", { timeout: 40_000 })",
+      "match": [
+        78,
+        97
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 132,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "    new URL(response.url()).searchParams.get(\"sf\") === \"dashboard-workbench\", { timeout: 40_000 })",
+      "match": [
+        78,
+        97
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 189,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  waveFourTest.setTimeout(720_000)",
+      "match": [
+        15,
+        33
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 190,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  page.setDefaultTimeout(15_000)",
+      "match": [
+        7,
+        31
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 208,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "  await expect(page.locator(\"[data-sf-agenda-preview]\")).toBeVisible({ timeout: 40_000 })",
+      "match": [
+        69,
+        88
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 297,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "        await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toHaveAttribute(\"data-sf-comparison-compatibility\", \"compatible\", { timeout: 40_000 })",
+      "match": [
+        139,
+        158
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 376,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "      await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+      "match": [
+        83,
+        102
+      ]
+    },
+    {
+      "rule": "test-timeout-raised",
+      "severity": "warn",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "line": 408,
+      "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+      "excerpt": "        await expect(localized.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+      "match": [
+        90,
+        109
+      ]
+    }
+  ],
+  "errors": [],
+  "approved": [],
+  "touchesGuards": false
+}

@@ -1,16 +1,19 @@
 import { For, Show, createEffect, createUniqueId, onCleanup, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
+import { useNavigate } from "@solidjs/router"
 import { useLanguage } from "@/context/language"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
+import { encodeSfRouteRef } from "../../navigation-state"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfReviewUpdate } from "@orchestra/schema/sucafina/reviews"
 import type { Schema } from "effect"
 import { operationGranted, PeriodText } from "../labels"
 import "./agenda.css"
+import "../wave-five.css"
 
 type Section = Schema.Schema.Type<typeof SfReviewUpdate>["items"][number]
 type Preview = Readonly<{
@@ -34,6 +37,7 @@ function stateOf(result: { kind: "transport-error"; reason: string } | { kind: "
 export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   const owner = useSfContext()
   const language = useLanguage()
+  const navigate = useNavigate()
   const uid = createUniqueId()
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const [store, setStore] = createStore({
@@ -42,7 +46,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     filter: "",
     available: [] as Section[],
     selected: [] as Section[],
-    status: "loading" as SfUiState,
+    status: "empty" as SfUiState,
     phase: "selecting" as Phase,
     preview: undefined as Preview | undefined,
     preserved: undefined as Preserved | undefined,
@@ -51,6 +55,16 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   let sourceAbort: AbortController | undefined
   let commandAbort: AbortController | undefined
   const ready = () => owner.ready()
+  const openPreserved = () => {
+    if (!ready() || !store.preserved) return
+    const query = new URLSearchParams({
+      server: props.route.ownerSelection.serverKey,
+      project: props.route.ownerSelection.projectId,
+    })
+    if (props.route.ownerSelection.installationId)
+      query.set("installation", props.route.ownerSelection.installationId)
+    navigate("/orchestra/sf-reviews/reviews/" + encodeSfRouteRef(store.preserved.id) + "?" + query)
+  }
   const authorized = (operationId: string) => operationGranted(ready()?.context, operationId, { family: "reviews", resource: "agenda" })
   const mayPreview = () => authorized("dashboard.dashboard-agenda")
   const mayPreserve = () => authorized("dashboard.dashboard-review-preserve")
@@ -123,7 +137,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       return
     }
     if (store.ownerKey !== state.ownerKey) {
-      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [], available: [], preview: undefined, preserved: undefined, phase: "selecting" })
+      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [], available: [], preview: undefined, preserved: undefined, phase: "selecting", status: "empty" })
       return
     }
     const source = untrack(() => store.sourcePage)
@@ -249,15 +263,20 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       density="comfortable"
       layout="work"
       onLayoutMode={() => undefined}
-      primaryAction={{
+      primaryAction={store.phase === "reviewing" || store.phase === "confirmed" || store.phase === "outcome-unknown" ? undefined : {
         id: "preview", labelKey: key("sf.u25.preview"), tone: "primary",
-        disabled: !mayPreview() || !store.selected.length || store.phase === "submitting" ||
-          store.phase === "outcome-unknown" || store.phase === "previewing" || store.phase === "confirmed",
+        disabled: !mayPreview() || !store.selected.length || store.phase === "submitting" || store.phase === "previewing",
         busy: store.phase === "previewing", onInvoke: () => { void preview() },
       }}
     >
-      <div class="sf-n28" data-sf-surface="UI47" data-phase={store.phase}>
-        <form class="sf-n28-form" onSubmit={(event) => { event.preventDefault(); void discover(store.sourcePage) }}>
+      <div class="sf-n28" data-sf-surface="UI47" data-sf-wave="five" data-phase={store.phase}>
+        <header class="sf-review-intro">
+          <h2>{t(store.phase === "confirmed" ? "sf.u25.confirmedHeading" : store.phase === "reviewing" ? "sf.u25.previewTitle" : "sf.u25.prepareHeading")}</h2>
+          <p>{t(store.phase === "confirmed" ? "sf.u25.created" : store.phase === "reviewing" ? "sf.u25.previewHint" : "sf.u25.prepareHint")}</p>
+        </header>
+        <div class="sf-review-workbench" hidden={store.phase === "reviewing" || store.phase === "confirmed"}>
+        <section class="mx-card sf-review-source">
+        <form class="sf-n28-form sf-review-source-form" onSubmit={(event) => { event.preventDefault(); void discover(store.sourcePage) }}>
           <label for={uid + "-page"}>{t("sf.u25.source")}</label>
           <input id={uid + "-page"} class="mx-input" value={store.sourcePage}
             onInput={(event) => setStore("sourcePage", event.currentTarget.value)}
@@ -267,8 +286,8 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
         <SfStatePanel
           state={displayState()}
           messageKey={key(displayState() === "filtered-empty" ? "sf.u25.noMatching"
-            : store.message || (store.status === "empty" ? "sf.u25.noSections" : "sf.common.unavailable"))}
-          onRetryRead={store.phase !== "outcome-unknown" ? () => { void discover(store.sourcePage) } : undefined}
+            : store.message || (store.status === "empty" ? store.sourcePage ? "sf.u25.noSections" : "sf.u25.sourceNeeded" : "sf.common.unavailable"))}
+          onRetryRead={store.sourcePage.trim() && store.phase !== "outcome-unknown" ? () => { void discover(store.sourcePage) } : undefined}
         >
           <label class="sf-n28-field" for={uid + "-filter"}>{t("sf.u25.filter")}
             <input id={uid + "-filter"} type="search" value={store.filter}
@@ -292,7 +311,9 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
             </Show>
           </section>
         </SfStatePanel>
-        <Show when={store.selected.length > 0 && store.status !== "denied" && store.status !== "session-expired"}>
+        </section>
+        <aside class="mx-card sf-review-selection">
+        <Show when={store.selected.length > 0 && store.status !== "denied" && store.status !== "session-expired"} fallback={<div class="sf-review-empty"><h2>{t("sf.u25.selectionEmpty")}</h2><p>{t("sf.u25.selectionHint")}</p></div>}>
           <section class="sf-n28-section" aria-label={t("sf.u25.selected")}>
             <h2>{t("sf.u25.selected")}</h2>
             <p>{t("sf.u25.limit")}</p>
@@ -313,8 +334,10 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
             </ol>
           </section>
         </Show>
+        </aside>
+        </div>
         <Show when={store.phase === "reviewing" && store.preview && store.status === "ready"}>
-          <section class="sf-n28-section" data-sf-agenda-preview>
+          <section class="mx-card sf-n28-section sf-review-stage" data-sf-agenda-preview>
             <h2>{t("sf.u25.previewTitle")}</h2>
             <p>{t("sf.u25.selection")}: {store.preview?.selectionRef}</p>
             <ol>
@@ -333,12 +356,13 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
           </section>
         </Show>
         <Show when={store.phase === "confirmed" && store.preserved}>
-          <section role="status" class="mx-card" data-sf-preserved-confirmed>
-            <p>{t("sf.u25.created")}</p>
-            <dl>
-              <dt>{t("sf.u25.result")}</dt><dd>{store.preserved?.id}</dd>
-              <dt>{t("sf.u25.version")}</dt><dd>{store.preserved?.version}</dd>
+          <section class="mx-card sf-n28-section sf-review-stage" data-sf-preserved-confirmed>
+            <dl class="sf-n28-summary">
+              <div><dt>{t("sf.u25.result")}</dt><dd>{store.preserved?.id}</dd></div>
+              <div><dt>{t("sf.u25.version")}</dt><dd>{store.preserved?.version}</dd></div>
             </dl>
+            <div class="sf-n28-actions"><button class="mx-btn primary" type="button"
+              disabled={!ready()} onClick={openPreserved}>{t("sf.u32.openReview")}</button></div>
           </section>
         </Show>
         <Show when={store.phase === "outcome-unknown"}>

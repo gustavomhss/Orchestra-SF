@@ -1,0 +1,1066 @@
+{
+  "branch": "ci-run-sf5binative3",
+  "snapshot": "fa6b988e79c820886ad80f32e66a3ed664ad83c4",
+  "tree": "de75443116b80e8e77fc9999ccfba30d3a43d329",
+  "parent": "01ced03042f396941902820487db67cf469336c4",
+  "parentTree": "3eb5cd02e1101531209ba4db083b1c75df84491a",
+  "base": "22f0eae12c4bb42684cc28b35d10f35ac3243b71",
+  "fullSpec": "7d4af62590e256ed9f034fd8a00bbce5694f1c25",
+  "overlaySpec": "ca59b5b232445687df3169f29c1466989426a484",
+  "helper": "ebbab2a37b7f1fe5b65bbe4595dbc4b12347ae02",
+  "runtime": "identical to native2",
+  "scope": [
+    {
+      "surfaces": [
+        "UI46"
+      ],
+      "view": "BI06",
+      "originalOperationalRead": true,
+      "originalOperationalSourceResolution": true,
+      "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+      "focusedMobileCapture": true,
+      "fabricatedResult": false
+    }
+  ],
+  "run": 44990477521,
+  "testJob": 137110210773,
+  "cleanupJob": 137111188106,
+  "workflowConclusion": "success",
+  "testConclusion": "success",
+  "testSummary": "1 passed (3.2m)",
+  "visualOutcome": "approved selected BI06 images; exact set below",
+  "artifact": {
+    "id": 14741114781,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 12520247,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14741114781",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14741114781/zip",
+    "expired": false,
+    "created_at": "2026-11-22T05:45:49Z",
+    "expires_at": "2026-11-29T05:45:48Z",
+    "updated_at": "2026-11-22T05:45:49Z",
+    "digest": "sha256:48e8b3677bed1e256f53c148887acd19304ca7feca583c57a366d3f0d5c0c577",
+    "workflow_run": {
+      "id": 44990477521,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf5binative3",
+      "head_sha": "fa6b988e79c820886ad80f32e66a3ed664ad83c4"
+    }
+  },
+  "captureOrigin": "Original wave-three JPEG helper, quality78; complete SF_DESIGN_PREVIEW chunks",
+  "data": "Original installed producer test data",
+  "sourceBodyAcquisition": "native-response throughout; no fallback used",
+  "sources": [
+    {
+      "operation": "bi-data-original-acquisition",
+      "view": "BI06",
+      "http": 200,
+      "acquisition": "native-response"
+    },
+    {
+      "operation": "bi-source-binding-readback",
+      "view": "BI06",
+      "selectedValueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+      "referenceId": "fe62a494-385d-4c4b-b025-121a291ff192",
+      "valueBindingCount": 17,
+      "distinctReferenceDigests": 1,
+      "bindings": [
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:status",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:holder",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:approvalStage",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:stageEnteredAt",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:baseAmount",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:submittedAmount",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:submittedCurrency",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:submittedFxRate",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:originalAmount",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:originalCurrency",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:fxRate",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:fxSource",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:monetaryState",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:subject",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:reason",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:nextStep",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        }
+      ]
+    },
+    {
+      "operation": "bi-original-scalar-dom",
+      "locale": "en-US",
+      "observations": [
+        {
+          "id": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+          "original": 0.0014994675925925926,
+          "table": 0.00149947,
+          "plot": 0.00149947,
+          "unit": "days"
+        },
+        {
+          "id": "PR-2026-0005:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+          "original": 0.0014994675925925926,
+          "table": 0.00149947,
+          "plot": 0.00149947,
+          "unit": "days"
+        },
+        {
+          "id": "PR-2026-0006:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+          "original": 0.0014994675925925926,
+          "table": 0.00149947,
+          "plot": 0.00149947,
+          "unit": "days"
+        }
+      ]
+    },
+    {
+      "operation": "bi-data-readback",
+      "view": "BI06",
+      "http": 200,
+      "rows": 3,
+      "numericValues": 3,
+      "missing": 1
+    },
+    {
+      "operation": "bi06-original-ages",
+      "request": {
+        "viewId": "BI06",
+        "selectionRef": "62a971ba-7e72-4cea-b692-1e74d9871f8f",
+        "period": {
+          "start": "2026-01-01",
+          "end": "2026-12-31"
+        }
+      },
+      "ages": [
+        {
+          "id": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+          "value": 0.0014994675925925926,
+          "unit": "days",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "evidenceState": "confirmed"
+        },
+        {
+          "id": "PR-2026-0005:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+          "value": 0.0014994675925925926,
+          "unit": "days",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "evidenceState": "confirmed"
+        },
+        {
+          "id": "PR-2026-0006:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+          "value": 0.0014994675925925926,
+          "unit": "days",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "evidenceState": "confirmed"
+        }
+      ]
+    },
+    {
+      "operation": "bi06-original-source-resolution",
+      "http": 200,
+      "acquisition": "native-response",
+      "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+      "links": [
+        {
+          "label": "procurement · PR-2026-0003 · v1 · 2026-01-01 a 2026-12-31",
+          "url": "http://127.0.0.1:46281/orchestra/sf-procurement/requests?request=PR-2026-0003"
+        }
+      ],
+      "negativeHttp": 403,
+      "negative": {
+        "status": "denied",
+        "reason": "bi-source-outside-selected-value"
+      }
+    },
+    {
+      "operation": "bi-data-original-acquisition",
+      "view": "BI06",
+      "locale": "pt-BR",
+      "http": 200,
+      "acquisition": "native-response"
+    },
+    {
+      "operation": "bi-source-binding-readback",
+      "view": "BI06",
+      "selectedValueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+      "referenceId": "1761e496-ee41-48b4-a223-61055b04e96b",
+      "valueBindingCount": 17,
+      "distinctReferenceDigests": 1,
+      "bindings": [
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:status",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:holder",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:approvalStage",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:stageEnteredAt",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:baseAmount",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:submittedAmount",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:submittedCurrency",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:submittedFxRate",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:originalAmount",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:originalCurrency",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:fxRate",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:fxSource",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:monetaryState",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:subject",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:reason",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:nextStep",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        }
+      ]
+    },
+    {
+      "operation": "bi-original-scalar-dom",
+      "locale": "pt-BR",
+      "observations": [
+        {
+          "id": "PR-2026-0003:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+          "original": 0.0016391550925925927,
+          "table": 0.00163916,
+          "plot": 0.00163916,
+          "unit": "days"
+        },
+        {
+          "id": "PR-2026-0005:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+          "original": 0.0016391550925925927,
+          "table": 0.00163916,
+          "plot": 0.00163916,
+          "unit": "days"
+        },
+        {
+          "id": "PR-2026-0006:4832528c-6647-45c2-8574-06b3f7dd9c90:ageDays",
+          "original": 0.0016391550925925927,
+          "table": 0.00163916,
+          "plot": 0.00163916,
+          "unit": "days"
+        }
+      ]
+    },
+    {
+      "operation": "bi-data-readback",
+      "view": "BI06",
+      "http": 200,
+      "rows": 3,
+      "numericValues": 3,
+      "missing": 1
+    }
+  ],
+  "diagnostics": [
+    {
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  ],
+  "captures": [
+    {
+      "name": "UI46-operations-original-coverage-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-original-coverage-test-data.jpg",
+      "blob": "fd59fb20a15a205c826ca3526fbd8020fb179350",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-operations-original-values-dark-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-original-values-dark-desktop-test-data.jpg",
+      "blob": "fd59fb20a15a205c826ca3526fbd8020fb179350",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-operations-original-values-light-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-original-values-light-desktop-test-data.jpg",
+      "blob": "703109ef766460006285c32c7a8a38c7cbb256d7",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-operations-original-values-dark-390-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-original-values-dark-390-test-data.jpg",
+      "blob": "3e4196e4c867c0669a22d1c8a8149f0a246fa82b",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-operations-original-values-dark-390-scrolled-values-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-original-values-dark-390-scrolled-values-test-data.jpg",
+      "blob": "e169ad6a4b53d404eb962b521c94c28565063b98",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": true,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "approved"
+      }
+    },
+    {
+      "name": "UI46-operations-original-values-light-320-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-original-values-light-320-test-data.jpg",
+      "blob": "9ecf1c14505779dc08afe9356a30f2143cfed533",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-operations-original-values-light-320-scrolled-values-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-original-values-light-320-scrolled-values-test-data.jpg",
+      "blob": "66d693967416084402b83e660840da152a79662b",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": true,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "approved"
+      }
+    },
+    {
+      "name": "UI46-operations-original-table-dark-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-original-table-dark-desktop-test-data.jpg",
+      "blob": "3c8f2067f85565ed84ae2df776fdae90956d33f6",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 7,
+      "received": 7,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-operations-original-table-light-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-original-table-light-desktop-test-data.jpg",
+      "blob": "19da60e8c368617bb914d816c951cca6e520bfb0",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 7,
+      "received": 7,
+      "manuallyViewed": true,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "approved"
+      }
+    },
+    {
+      "name": "UI46-operations-original-table-dark-390-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-original-table-dark-390-test-data.jpg",
+      "blob": "c4fb7b90aa36f93d96652b43806443a92b85931f",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-operations-original-table-light-320-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-original-table-light-320-test-data.jpg",
+      "blob": "860825901a06381e0fdf5c08d74a03551793fcc6",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-operations-dark-320-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-dark-320-test-data.jpg",
+      "blob": "c85993328265b19fc20ca559cf7f91600667c509",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-operations-resolved-original-source-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-operations-resolved-original-source-test-data.jpg",
+      "blob": "326720ff4226882264915bd92d9de2c594f071b4",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 7,
+      "received": 7,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-pt-BR-dark-desktop-operations-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-pt-BR-dark-desktop-operations-test-data.jpg",
+      "blob": "b2e5bef4632c36971b4661edd551748410d56cba",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-pt-BR-dark-320-operations-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-pt-BR-dark-320-operations-test-data.jpg",
+      "blob": "4b057379ce1bb89b009c75d4b63e52aa1b626096",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "not-manually-viewed"
+      }
+    },
+    {
+      "name": "UI46-pt-BR-dark-320-operations-scrolled-values-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-pt-BR-dark-320-operations-scrolled-values-test-data.jpg",
+      "blob": "42bebc3ce4dfdea0f490b521a1b3174faa42fc2e",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": true,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "approved"
+      }
+    },
+    {
+      "name": "UI46-pt-BR-dark-320-operations-scrolled-units-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-03/UI46-pt-BR-dark-320-operations-scrolled-units-test-data.jpg",
+      "blob": "b3f5a06c9ab9b8c2a7558d7da50467e026a312bc",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": true,
+      "manualReview": {
+        "reviewer": "design_reviews",
+        "outcome": "approved"
+      }
+    }
+  ]
+}

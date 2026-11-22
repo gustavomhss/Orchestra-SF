@@ -184,7 +184,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
               <Show when={presentation().waterfall}>
                 {(waterfall) => <>
                   <p>{t("sf.u22.chart.reconciliation")}: {waterfall().reconciliation}</p>
-                  <div class="sf-u22-table-scroll">
+                  <div class="sf-u22-table-scroll" role="region" aria-label={t("sf.u22.bi09.question")} tabIndex={0}>
                     <table>
                       <caption>{t("sf.u22.bi09.question")}</caption>
                       <thead><tr>
@@ -255,7 +255,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
                       <dt>{t("sf.u22.chart.thresholdEvidence")}</dt>
                       <dd>{thresholdEvidence(current.thresholdEvidence)}</dd>
                     </dl>
-                    <div class="sf-u22-table-scroll">
+                    <div class="sf-u22-table-scroll" role="region" aria-label={t("sf.u22.bi11.question")} tabIndex={0}>
                       <table>
                         <caption>{t("sf.u22.bi11.question")}</caption>
                         <thead><tr>

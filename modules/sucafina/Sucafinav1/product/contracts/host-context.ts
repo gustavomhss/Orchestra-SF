@@ -122,7 +122,14 @@ export type CreateSfHostRuntime = (input: {
     | "decisions.choice.read" | "decisions.command.sf_question_prepare"
     | "intelligence.analysis.choices" | "intelligence.analysis.list"
     | "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover"
-    | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision", producer: object) => object | undefined
+    | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision"
+    | "collaboration.relation-read" | "collaboration.relation-create" | "collaboration.relation-remove"
+    | "collaboration.thread-read" | "collaboration.thread-reply"
+    | "collaboration.confirmation-prepare" | "collaboration.confirmation-project" | "collaboration.confirmation-confirm"
+    | "collaboration.storage-version"
+    | "portfolio.decision-portfolio-results" | "portfolio.decision-portfolio-read" | "portfolio.decision-portfolio-preview"
+    | "portfolio.decision-portfolio-evaluate" | "portfolio.decision-sensitivity-units"
+    | "portfolio.decision-sensitivity-read" | "portfolio.decision-sensitivity-evaluate", producer: object) => object | undefined
   nativeActions?: (request: Request, stamp: import("@orchestra/schema/sucafina/context").SfContextStamp,
     pages: readonly Readonly<{ surface: "dashboard" | "planner" | "procurement"; page: string }>[]) =>
     Promise<readonly Readonly<{ surface: "dashboard" | "planner" | "procurement"; page: string; allowedActionIds: readonly string[] }>[]>

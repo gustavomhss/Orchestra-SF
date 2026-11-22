@@ -39,6 +39,7 @@ type View = {
   preview: SfPortfolioPreview | null
   previewRequestKey: string | null
   previewState: SfUiState
+  expandedCombination: SfRef | null
   selected: readonly string[]
   constraints: readonly string[]
   priorities: readonly string[]
@@ -58,7 +59,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
   const [refresh, setRefresh] = createSignal(0)
   const [store, set] = createStore<View>({
     status: "loading", controls: null, caseState: "loading", history: [], recorded: null,
-    preview: null, previewRequestKey: null, previewState: "empty",
+    preview: null, previewRequestKey: null, previewState: "empty", expandedCombination: null,
     selected: [], constraints: [], priorities: [], explorationLimit: "32",
     review: false, busy: false, outcomeUnknown: false, message: null,
   })
@@ -88,7 +89,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
     set({ status: status === "ready" ? "loading" : status === "denied" ? "denied" :
       status === "unauthenticated" ? "session-expired" : "unavailable",
       controls: null, caseState: "loading", history: [], recorded: null,
-      preview: null, previewRequestKey: null, previewState: "empty", selected: [],
+      preview: null, previewRequestKey: null, previewState: "empty", expandedCombination: null, selected: [],
       constraints: [], priorities: [], review: false, busy: false, outcomeUnknown: false, message: null })
     if (!current || status !== "ready") return
     if (current.context.stamp.projectId !== props.route.ownerSelection.projectId ||
@@ -156,7 +157,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
     if (store.busy) return
     const items = store[field]
     set(field, include ? [...items, value] : items.filter((item) => item !== value))
-    set({ preview: null, previewRequestKey: null, review: false })
+    set({ preview: null, previewRequestKey: null, review: false, expandedCombination: null })
   }
   const preview = () => {
     const current = active(), currentCase = selectedCase(), request = preparedRequest()
@@ -166,7 +167,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
     const scope = currentCase.caseRef
     const key = JSON.stringify(request)
     const controller = new AbortController()
-    set({ preview: null, previewState: "loading", busy: true, message: null, review: false })
+    set({ preview: null, previewState: "loading", busy: true, message: null, review: false, expandedCombination: null })
     void sfPortfolioPreviewRequest(current.transport, current.context, scope, request, controller.signal)
       .then((result) => {
         if (owner.generation() !== epoch || selectedCase()?.caseRef.version !== scope.version) return
@@ -225,15 +226,21 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
   ]
   const renderResults = (value: SfPortfolioResultView): JSX.Element =>
     <section class="sf-u19-results" aria-label={t("sf.u19.results.combinations")}>
-      <p>{t("sf.u19.results.conditional")}</p>
-      <p>{t("sf.u19.results.noCompleteTotal")}</p>
+      <div class="sf-u19-result-notes"><p>{t("sf.u19.results.conditional")}</p>
+        <p>{t("sf.u19.results.noCompleteTotal")}</p></div>
       <SfDataTable rows={value.combinations} getRowKey={(row) => row.id as SfRef}
         columns={tableCols} sort={{ kind: "none" }} page={{ kind: "none", total: value.combinations.length }}
-        onSort={() => undefined} onPage={() => undefined} onSelect={() => undefined}
+        onSort={() => undefined} onPage={() => undefined} selectedKey={store.expandedCombination ?? undefined}
+        onSelect={(ref) => set("expandedCombination", ref)}
         rowActions={() => []} onRowAction={() => undefined} captionKey={kt("sf.u19.results.combinations")}
         density="comfortable" state={value.combinations.length ? "ready" : "empty"} />
       <For each={value.combinations}>{(entry) =>
-        <details class="sf-u19-combination">
+        <details class="sf-u19-combination" data-sf-combination={entry.id}
+          open={store.expandedCombination === entry.id}
+          onToggle={(event) => {
+            if (event.currentTarget.open) set("expandedCombination", entry.id as SfRef)
+            else if (store.expandedCombination === entry.id) set("expandedCombination", null)
+          }}>
           <summary>{entry.id} — {entry.eligibility} / {entry.comparisonStatus}</summary>
           <dl class="sf-u19-facts">
             <div><dt>{t("sf.u19.results.sources")}</dt><dd><ul>
@@ -257,24 +264,26 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
     <SfPageFrame titleKey={k(props.surfaceId === "UI42" ? "sf.ui42.title" : "sf.ui43.title")}
       context={[]} tabs={[]} activeTab={null} density="comfortable" layout="split"
       onLayoutMode={() => undefined}
-      primaryAction={props.surfaceId === "UI42" && routedCase() && can("portfolio.decision-portfolio-preview") ? {
+      primaryAction={props.surfaceId === "UI42" && routedCase() && !store.preview && can("portfolio.decision-portfolio-preview") ? {
         id: "preview", labelKey: k("sf.u19.scenarios.preview"), tone: "primary",
         disabled: !preparedRequest() || store.busy || store.outcomeUnknown,
         busy: store.busy, onInvoke: preview,
       } : undefined}
       secondaryActions={[]}
     >
-      <section class="sf-u19-scenarios" data-sf-scenarios data-sf-surface={props.surfaceId}>
+      <section class="sf-u19-scenarios" data-sf-scenarios data-sf-surface={props.surfaceId} data-sf-wave="five"
+        data-sf-stage={props.surfaceId === "UI43" ? "result" : !routedCase() ? "list" : store.preview ? "preview" : "configure"}>
         <SfStatePanel state={store.status} messageKey={k("sf.u19.case.missing")}
           onRetryRead={() => setRefresh((n) => n + 1)}>
           <Show when={store.message}><p role="status" class="sf-u19-message">{t(store.message!)}</p></Show>
           <Show when={!routedCase() && props.surfaceId === "UI42"}>
-            <section>
-              <h2>{t("sf.u19.case.list")}</h2>
+            <section class="sf-u19-collection">
+              <header class="sf-u19-section-head"><h2>{t("sf.u19.case.list")}</h2><span>{listed().length}</span></header>
+              <p class="sf-u19-intro">{t("sf.u19.action.ready")}</p>
               <ul class="sf-u19-case-list">
                 <For each={listed()}>{(item) =>
                   <li><button class="mx-btn" type="button" onClick={() => routeTo("scenarios", { caseRef: item.ref })}>
-                    <span>{item.title}</span> <small>{t("sf.u19.case.version")} {item.version}</small>
+                    <strong>{item.title}</strong><span class="sf-u19-case-meta"><small>{t("sf.u19.case.version")} {item.version}</small><span>{t("sf.u19.case.select")}</span></span>
                   </button></li>
                 }</For>
               </ul>
@@ -287,23 +296,27 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
                 {(source) => <>
                   <header class="sf-u19-case-head">
                     <h2>{source().objective}</h2>
-                    <p>{source().currency} · {horizonLabel(source().horizon.start, source().horizon.end, language.intl())} · {t("sf.u19.case.version")} {source().caseRef.version}</p>
+                    <dl class="sf-u19-case-facts">
+                      <div><dt>{t("sf.u19.scenarios.currency")}</dt><dd>{source().currency}</dd></div>
+                      <div><dt>{t("sf.u19.scenarios.horizon")}</dt><dd>{horizonLabel(source().horizon.start, source().horizon.end, language.intl())}</dd></div>
+                      <div><dt>{t("sf.u19.case.version")}</dt><dd>{source().caseRef.version}</dd></div>
+                    </dl>
                     <button class="mx-btn" type="button" onClick={() => routeTo("list")}>{t("sf.u19.case.choose")}</button>
                   </header>
                   <Show when={props.surfaceId === "UI42"} fallback={
                     <Show when={store.recorded}>{(recorded) => <>
-                      <h2>{t("sf.u19.results.recorded")}</h2>
-                      <p><bdi>{recorded().resultRef}</bdi></p>
+                      <header class="sf-u19-section-head"><h2>{t("sf.u19.results.recorded")}</h2></header>
+                      <details class="sf-u19-source"><summary>{t("sf.u19.results.resultRef")}</summary><p><bdi>{recorded().resultRef}</bdi></p></details>
                       {renderResults(recorded().result)}
                       <button class="mx-btn" type="button" onClick={() => routeTo("scenarios", { caseRef: source().ref })}>
                         {t("sf.u19.action.back")}
                       </button>
                     </>}</Show>
                   }>
-                    <section class="sf-u19-picker">
-                      <h3>{t("sf.u19.scenarios.universe")}</h3>
-                      <p>{t("sf.u19.scenarios.notCalculated")}</p>
-                      <fieldset disabled={store.busy || store.outcomeUnknown}>
+                    <section class="sf-u19-picker" hidden={!!store.preview}>
+                      <header class="sf-u19-picker-head"><h3>{t("sf.u19.scenarios.universe")}</h3>
+                        <p>{t("sf.u19.scenarios.notCalculated")}</p></header>
+                      <fieldset class="sf-u19-candidates" disabled={store.busy || store.outcomeUnknown}>
                         <legend>{t("sf.u19.scenarios.candidates")}</legend>
                         <For each={candidates()}>{(item) =>
                           <label class="sf-u19-check">
@@ -338,7 +351,11 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
                     <Show when={store.previewState !== "empty"}>
                       <SfStatePanel state={store.previewState} messageKey={k("sf.u19.scenarios.noPreview")}>
                         <Show when={store.preview}>
-                          <h3>{t("sf.u19.scenarios.preview")}</h3>
+                          <header class="sf-u19-section-head"><h3>{t("sf.u19.scenarios.preview")}</h3>
+                            <button type="button" class="mx-btn" disabled={store.busy || store.outcomeUnknown}
+                              onClick={() => set({ preview: null, previewRequestKey: null, previewState: "empty", review: false })}>
+                              {t("sf.u19.action.back")}
+                            </button></header>
                           {renderResults(store.preview!.portfolio)}
                           <Show when={can("portfolio.decision-portfolio-evaluate")}>
                             <label class="sf-u19-check"><input type="checkbox" checked={store.review}
@@ -352,13 +369,16 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
                         </Show>
                       </SfStatePanel>
                     </Show>
-                    <section class="sf-u19-history">
+                    <section class="sf-u19-history" hidden={!!store.preview}>
                       <h3>{t("sf.u19.results.history")}</h3>
                       <Show when={store.history.length !== 0} fallback={<p>{t("sf.u19.action.noHistoricalResult")}</p>}>
                         <ul><For each={store.history}>{(entry) => <li>
                           <button type="button" class="mx-btn" onClick={() => routeTo("portfolio-result", {
                             caseRef: source().ref, resultRef: entry.resultRef,
-                          })}>{entry.createdAt} · {entry.resultRef}</button>
+                          })}><time dateTime={entry.createdAt}>{Number.isFinite(Date.parse(entry.createdAt))
+                            ? new Intl.DateTimeFormat(language.intl(), { dateStyle: "medium", timeStyle: "short" }).format(new Date(entry.createdAt))
+                            : entry.createdAt}</time><span>{t("sf.u19.results.open")}</span></button>
+                          <details class="sf-u19-source"><summary>{t("sf.u19.results.resultRef")}</summary><bdi>{entry.resultRef}</bdi></details>
                         </li>}</For></ul>
                       </Show>
                     </section>

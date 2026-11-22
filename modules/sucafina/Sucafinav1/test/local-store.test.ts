@@ -3,8 +3,8 @@ import { Database } from "bun:sqlite"
 import { chmod, chown, link, mkdir, mkdtemp, realpath, rename, rm, stat, symlink, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { observeLocalSnapshotStability, openLocalStore } from "../runtime/local-store.ts"
-import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
+import { currentLocalReadonlyAuthorityData, encodeSnapshot, observeLocalSnapshotStability, openLocalStore } from "../runtime/local-store.ts"
+import { createCurrentChoiceFence, currentChoiceReadonlyAuthorityData } from "../product/decisions/current-choice-preview.ts"
 import type { TrustedDomainContext } from "../product/contracts/sf-execution.ts"
 import type { LocalStore } from "../runtime/local-contract.ts"
 import type { BlobTransaction } from "../runtime/assets.ts"
@@ -114,6 +114,255 @@ test("CurrentChoice rejects replacing the snapshot driver during reauthorization
     await expect(fence.run(call, () => fence.persistence.transaction("planner", async () => ({
       commit: false, value: "candidate",
     })))).rejects.toThrow("SF_CURRENT_CHOICE_FENCE_CHANGED")
+  })
+})
+
+
+function readonlyChoice(store: LocalStore, signal?: AbortSignal) {
+  const request = new Request("https://example.invalid/current-choice-readonly", { signal })
+  const identity = { installationId: "readonly-installation", projectId: "readonly-project" }
+  // The same bounded CurrentChoice context fixture as the original driver test.
+  // Integration below uses the original product admission instead.
+  const call = Object.freeze({ kind: "ui", binding: Object.freeze(identity), lease: Object.freeze({}) }) as TrustedDomainContext
+  const control = { revalidations: 0, authorized: true }
+  const host = { requestFor: () => request, revalidate: async () => {
+    control.revalidations++
+    return control.authorized
+  } }
+  const input = { persistence: store, host: () => host, operationIdentity: () => "readonly-boundary", identity: () => identity }
+  return { input, fence: createCurrentChoiceFence(input), call, request, control }
+}
+
+test("CurrentChoice readonly exposes only the original live root and detached ACL fields", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    if (!store.readSnapshotRoot) throw new Error("Real readonly root required")
+    const selected = readonlyChoice(store)
+    const roleMap = [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "fixture" }]
+    const access = { person: { versions: ["published-v1"], nested: { active: true } } }
+    await store.transaction("planner", async (snapshot) => {
+      snapshot.data = { roleMap, access, sourcePayload: { privateAmount: 2000 } }
+      return { commit: true, value: undefined }
+    })
+    expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])).toBeUndefined()
+    await store.readSnapshotRoot(async () => {
+      const raw = currentLocalReadonlyAuthorityData(store, [])
+      const forwarded = currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])
+      expect(raw?.current()).toBe(true)
+      expect(forwarded?.current()).toBe(true)
+      expect(forwarded?.scope?.identity).toBe(raw?.scope?.identity)
+      expect(forwarded?.scope?.identity).toBe(store.currentSnapshotScope?.()?.identity)
+      expect(forwarded?.scope?.bytesIdentity).toBe(raw?.scope?.bytesIdentity)
+      expect(forwarded?.snapshots).toEqual({})
+      const first = currentChoiceReadonlyAuthorityData(selected.fence.persistence, ["planner"])
+      const second = currentChoiceReadonlyAuthorityData(selected.fence.persistence, ["planner"])
+      expect(first?.snapshots.planner.data).toEqual({ roleMap, access })
+      expect(first?.snapshots.planner.data).not.toHaveProperty("sourcePayload")
+      expect(first?.scope).toBeUndefined()
+      expect(first?.snapshots.planner.data).not.toBe(second?.snapshots.planner.data)
+      if (!first || !second) throw new Error("CurrentChoice did not retain real readonly ACL authority")
+      first.snapshots.planner.data.roleMap = []
+      first.snapshots.planner.data.access = { changed: true }
+      expect(second.snapshots.planner.data).toEqual({ roleMap, access })
+      expect(store.currentSnapshot?.("planner")?.data).toEqual({ roleMap, access, sourcePayload: { privateAmount: 2000 } })
+      expect(first.current()).toBe(true)
+      expect(second.current()).toBe(true)
+      expect(currentChoiceReadonlyAuthorityData({ ...selected.fence.persistence }, ["planner"])).toBeUndefined()
+      expect(currentChoiceReadonlyAuthorityData(new Proxy(selected.fence.persistence, {
+        get() { throw new Error("Unknown proxy must not be consulted") },
+      }), ["planner"])).toBeUndefined()
+    })
+  })
+})
+
+test("CurrentChoice readonly keeps mutable roots, writer preimages and opaque drivers on their original paths", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    if (!store.readSnapshotRoot || !store.transactionAll || !store.holdTargetPreimage)
+      throw new Error("Real readonly and writer boundaries required")
+    const selected = readonlyChoice(store)
+    await store.transaction("dashboard", async () => {
+      expect(currentLocalReadonlyAuthorityData(store, [])).toBeUndefined()
+      expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])).toBeUndefined()
+      return { commit: false, value: undefined }
+    })
+    await store.transactionAll(async () => {
+      expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, ["planner"])).toBeUndefined()
+      return { commit: false, value: undefined }
+    })
+    const preimage = store.holdTargetPreimage()
+    try {
+      await store.transaction("dashboard", async () => {
+        expect(store.observeAuthority?.(["dashboard"])).toBeDefined()
+        expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])).toBeUndefined()
+        await selected.fence.persistence.transaction("planner", async () => {
+          expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, ["planner"])).toBeUndefined()
+          return { commit: false, value: undefined }
+        })
+        return { commit: false, value: undefined }
+      }, { targetPreimageCurrent: preimage.current })
+    } finally { preimage.release() }
+    const opaque = readonlyChoice({ ...store })
+    await store.readSnapshotRoot(async () => {
+      expect(currentLocalReadonlyAuthorityData(store, ["planner"])).toBeDefined()
+      expect(currentChoiceReadonlyAuthorityData(opaque.fence.persistence, ["planner"])).toBeUndefined()
+      expect<Snapshot | undefined>(await opaque.fence.persistence.transaction("planner", async (snapshot) => ({
+        commit: false, value: structuredClone(snapshot),
+      }))).toEqual(store.currentSnapshot?.("planner"))
+    })
+  })
+})
+
+test("CurrentChoice readonly invalidates every captured provider method after await without invoking its replacement", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    if (!store.readSnapshotRoot) throw new Error("Real readonly root required")
+    const selected = readonlyChoice(store)
+    const names = ["currentSnapshots", "currentSnapshot", "hasCurrentSnapshots", "transaction", "transactionAll", "readSnapshotRoot", "currentSnapshotScope"] as const
+    const root = store.readSnapshotRoot
+    for (const owner of [store, selected.fence.persistence]) {
+      for (const name of names) {
+        await root(async () => {
+          const observed = currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])
+          expect(observed?.current()).toBe(true)
+          const descriptor = Object.getOwnPropertyDescriptor(owner, name)
+          if (!descriptor || !Object.hasOwn(descriptor, "value")) throw new Error("Original provider method missing: " + name)
+          let replacementCalls = 0
+          await Promise.resolve()
+          Object.defineProperty(owner, name, { ...descriptor, value: () => { replacementCalls++; throw new Error("Replacement invoked") } })
+          try {
+            expect(observed?.current()).toBe(false)
+            expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])).toBeUndefined()
+            expect(replacementCalls).toBe(0)
+          } finally { Object.defineProperty(owner, name, descriptor) }
+          expect(observed?.current()).toBe(false)
+          expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])?.current()).toBe(true)
+        })
+      }
+    }
+    await root(async () => {
+      const observed = currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])
+      await Promise.resolve()
+      selected.input.persistence = { ...store }
+      expect(observed?.current()).toBe(false)
+      expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])).toBeUndefined()
+      selected.input.persistence = store
+      expect(observed?.current()).toBe(false)
+    })
+    for (const owner of [selected.input, store, selected.fence.persistence]) {
+      await root(async () => {
+        const observed = currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])
+        await Promise.resolve()
+        Object.setPrototypeOf(owner, null)
+        try {
+          expect(observed?.current()).toBe(false)
+          expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])).toBeUndefined()
+        } finally { Object.setPrototypeOf(owner, Object.prototype) }
+        expect(observed?.current()).toBe(false)
+      })
+    }
+  })
+})
+
+test("CurrentChoice readonly preserves active transaction guards and live reauthorization", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    if (!store.readSnapshotRoot) throw new Error("Real readonly root required")
+    const selected = readonlyChoice(store)
+    let guards = 0
+    const accepted = await selected.fence.run(selected.call, () => store.readSnapshotRoot!(async () => {
+      selected.fence.observe(selected.call, (snapshots) => {
+        guards++
+        expect(snapshots.planner.data).toEqual({})
+        snapshots.planner.data.guardMutation = true
+        return true
+      })
+      return selected.fence.persistence.transaction("planner", async () => {
+        expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, ["planner"])?.current()).toBe(true)
+        expect(store.currentSnapshot?.("planner")?.data.guardMutation).toBeUndefined()
+        return { commit: false, value: "accepted" }
+      })
+    }))
+    expect(accepted).toBe("accepted")
+    expect(guards).toBeGreaterThan(0)
+    expect(selected.control.revalidations).toBeGreaterThan(0)
+    let guardedWork = 0
+    await expect(selected.fence.run(selected.call, () => store.readSnapshotRoot!(async () => {
+      selected.fence.observe(selected.call, () => false)
+      return selected.fence.persistence.transaction("planner", async () => {
+        guardedWork++
+        expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])?.current()).toBe(true)
+        return { commit: false, value: "must not publish" }
+      })
+    }))).rejects.toThrow("SF_CURRENT_CHOICE_FENCE_CHANGED")
+    expect(guardedWork).toBe(1)
+    selected.control.authorized = false
+    await expect(selected.fence.run(selected.call, () => store.readSnapshotRoot!(async () =>
+      selected.fence.persistence.transaction("planner", async () => ({ commit: false, value: "must not publish" }))
+    ))).rejects.toThrow("SF_CURRENT_CHOICE_FENCE_CHANGED")
+  })
+})
+
+test("CurrentChoice readonly keeps lexical observations strict while fresh child observations retain the same root", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    if (!store.readSnapshotRoot) throw new Error("Real readonly root required")
+    const selected = readonlyChoice(store)
+    const closed = await store.readSnapshotRoot(async () => {
+      const parent = currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])
+      if (!parent?.scope) throw new Error("Original root identity missing")
+      const rootIdentity = parent.scope.identity
+      await selected.fence.persistence.transaction("dashboard", async () => {
+        expect(parent.current()).toBe(false)
+        const child = currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])
+        expect(child?.scope?.identity).toBe(rootIdentity)
+        expect(child?.current()).toBe(true)
+        await selected.fence.persistence.transaction("planner", async () => {
+          expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])?.scope?.identity).toBe(rootIdentity)
+          expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, ["planner"])?.current()).toBe(true)
+          return { commit: false, value: undefined }
+        })
+        expect(child?.current()).toBe(true)
+        return { commit: false, value: undefined }
+      })
+      // An observation already invalidated in a different lexical continuation
+      // cannot be rehabilitated merely by returning to its original callback.
+      expect(parent.current()).toBe(false)
+      const fresh = currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])
+      expect(fresh?.scope?.identity).toBe(rootIdentity)
+      expect(fresh?.current()).toBe(true)
+      return fresh
+    })
+    expect(() => closed?.current()).toThrow("Local transaction scope has ended")
+    expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])).toBeUndefined()
+  })
+})
+
+test("CurrentChoice readonly propagates abort and poison without granting a writer or reviving a closed observation", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    if (!store.readSnapshotRoot) throw new Error("Real readonly root required")
+    const selected = readonlyChoice(store)
+    const abort = new AbortController()
+    const reason = new Error("readonly boundary aborted")
+    await expect(store.readSnapshotRoot(async () => {
+      const observed = currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])
+      expect(observed?.current()).toBe(true)
+      abort.abort(reason)
+      expect(() => observed?.current()).toThrow(reason.message)
+      expect(() => currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])).toThrow(reason.message)
+    }, { signal: abort.signal })).rejects.toThrow(reason.message)
+    await expect(store.readSnapshotRoot(async () => {
+      const observed = currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])
+      expect(observed?.current("unpoisoned")).toBe(true)
+      await expect(selected.fence.persistence.transaction("planner", async () => ({
+        commit: true, value: "nested write must be refused",
+      }))).rejects.toThrow("Nested local writes are forbidden")
+      expect(observed?.current()).toBe(true)
+      expect(observed?.current("unpoisoned")).toBe(false)
+      expect(observed?.current()).toBe(false)
+    })).rejects.toThrow("Nested local write attempted")
+    expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])).toBeUndefined()
   })
 })
 
@@ -250,6 +499,67 @@ test("fingerprints oversized SQLite rows without accepting a same-length replace
     const second = await store.readSnapshotRoot(() => inspect("2"))
     expect(first === second).toBe(false)
     expect(await store.readSnapshotRoot(() => inspect("2"))).toBe(second)
+  })
+})
+
+test("large structured snapshots keep detached byte identities across all three surfaces", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const observed = "A".repeat(80)
+    const records = Array.from({ length: 24_000 }, (_, id) => ({ id, observed, source: "original-source" }))
+    await store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.records = records
+      snapshot.data.edge = { optional: undefined, negativeZero: -0, sentinel: ["undefined"] }
+      const encodedUnits = encodeSnapshot(snapshot).length
+      const normalizedUnits = JSON.stringify(snapshot).length
+      // Exercise the measured full-year import range, with a complete copy that
+      // fits alone but would evict other surfaces if the SQL envelope survived.
+      expect(encodedUnits).toBeGreaterThan(4 * 1024 * 1024)
+      expect(encodedUnits + normalizedUnits).toBeLessThan(8 * 1024 * 1024)
+      expect(encodedUnits + normalizedUnits + 1_800_000).toBeGreaterThan(8 * 1024 * 1024)
+      return { commit: true, value: undefined }
+    })
+    for (const surface of ["planner", "procurement"] as const) {
+      await store.transaction(surface, async (snapshot) => {
+        snapshot.data.material = surface.repeat(100_000)
+        return { commit: true, value: undefined }
+      })
+    }
+    await store.dispose()
+
+    const reopened = await open()
+    if (!reopened.readSnapshotRoot) throw new Error("LocalStore must provide a read snapshot root")
+    const inspect = (expected: string) => reopened.readSnapshotRoot!(async () => {
+      const identity = reopened.currentSnapshotScope?.()?.bytesIdentity
+      const first = reopened.currentSnapshot?.("dashboard")
+      if (!identity || !first || !Array.isArray(first.data.records)) throw new Error("Structured source unavailable")
+      expect(first.data.records).toHaveLength(records.length)
+      expect(first.data.records[0]).toEqual({ id: 0, observed: expected, source: "original-source" })
+      expect(first.data.records.at(-1)).toEqual(records.at(-1))
+      expect(first.data.edge).toEqual({ optional: undefined, negativeZero: -0, sentinel: ["undefined"] })
+      first.data.records[0].observed = "detached"
+      first.data.edge = null
+      const second = reopened.currentSnapshot?.("dashboard")
+      if (!second || !Array.isArray(second.data.records)) throw new Error("Independent source unavailable")
+      expect(second.data.records[0].observed).toBe(expected)
+      expect(second.data.edge).toEqual({ optional: undefined, negativeZero: -0, sentinel: ["undefined"] })
+      for (const surface of ["planner", "procurement"] as const)
+        expect(reopened.currentSnapshot?.(surface)?.data.material).toBe(surface.repeat(100_000))
+      return identity
+    })
+    const first = await inspect(observed)
+    // Reopening SQL roots must retain all three exact byte identities, rather
+    // than evicting and rebuilding the large structured plan on every read.
+    expect(await inspect(observed)).toBe(first)
+    const replacement = "B".repeat(observed.length)
+    await reopened.transaction("dashboard", async (snapshot) => {
+      if (!Array.isArray(snapshot.data.records)) throw new Error("Stored records unavailable")
+      snapshot.data.records[0].observed = replacement
+      return { commit: true, value: undefined }
+    })
+    const changed = await inspect(replacement)
+    expect(changed === first).toBe(false)
+    expect(await inspect(replacement)).toBe(changed)
   })
 })
 

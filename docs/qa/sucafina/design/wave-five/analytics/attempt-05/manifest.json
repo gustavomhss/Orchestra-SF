@@ -1,0 +1,609 @@
+{
+  "attempt": 5,
+  "source": "825fb6254cee8a1408c7209184fc39b28e469fbc",
+  "snapshot": "5646eed44121265aec67065b2931f7df5da0645a",
+  "run": 44984280433,
+  "job": 137091317825,
+  "conclusion": "failure",
+  "productionBundle": true,
+  "productionChannel": true,
+  "strictOmni": true,
+  "artifact": {
+    "id": 14739635418,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 29910253,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14739635418",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14739635418/zip",
+    "expired": false,
+    "created_at": "2026-11-22T04:25:05Z",
+    "expires_at": "2026-11-29T04:25:02Z",
+    "updated_at": "2026-11-22T04:25:05Z",
+    "digest": "sha256:aa547e26c573178486d1daedaed2d00da00209f6e126dd3204b340e544a27201",
+    "workflow_run": {
+      "id": 44984280433,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf5analytics6",
+      "head_sha": "5646eed44121265aec67065b2931f7df5da0645a"
+    }
+  },
+  "nativeContext": [
+    {
+      "stage": "UI42-list",
+      "http": 200,
+      "status": "ok",
+      "acquisition": "authenticated-original-readback",
+      "ownerBinding": "exact",
+      "resources": [
+        {
+          "family": "decisions",
+          "resource": "case-intent",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "decisions",
+          "resource": "assumptions",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "campaign",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "results",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "sensitivity",
+          "state": "ready",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-sensitivity-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-units",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "UI42-empty-case",
+      "http": 200,
+      "status": "ok",
+      "acquisition": "authenticated-original-readback",
+      "ownerBinding": "exact",
+      "resources": [
+        {
+          "family": "decisions",
+          "resource": "case-intent",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "decisions",
+          "resource": "assumptions",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "campaign",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "results",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "sensitivity",
+          "state": "ready",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-sensitivity-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-units",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "originalSourceEvidence": [
+    {
+      "operation": "bi-data-readback",
+      "view": "BI01",
+      "http": 200,
+      "rows": 36,
+      "numericValues": 14,
+      "missing": 22
+    },
+    {
+      "operation": "bi-source-original-destinations",
+      "selectedValueId": "budget:2026-01:effective",
+      "installedOrigin": "http://127.0.0.1:39649",
+      "installedMount": "/sucafina",
+      "links": [
+        {
+          "label": "dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31",
+          "url": "http://127.0.0.1:39649/orchestra/sf-dashboard/budget?year=2026"
+        }
+      ]
+    },
+    {
+      "operation": "bi-source-original-destinations",
+      "selectedValueId": "budget:2026-01:actual",
+      "installedOrigin": "http://127.0.0.1:39649",
+      "installedMount": "/sucafina",
+      "links": [
+        {
+          "label": "dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31",
+          "url": "http://127.0.0.1:39649/orchestra/sf-dashboard/budget?year=2026"
+        }
+      ]
+    },
+    {
+      "operation": "bi-source-identity-regression",
+      "selectedValues": [
+        "budget:2026-01:effective",
+        "budget:2026-01:actual"
+      ],
+      "samePublishedReference": true,
+      "exactValueAndDigestQueries": 2,
+      "originalProjectionRetained": true
+    }
+  ],
+  "scope": {
+    "UI42": "real cases, empty case and native selected-candidate editor; preview never emitted HTTP and remained unavailable",
+    "UI43": "not reached",
+    "UI44": "not reached",
+    "UI45": "catalog, authorized context and financial source result passed",
+    "UI46": "all financial values, actual table/chart modes and two exact original source links passed; original BI06 403 blocked group before operations/BI11/pt-BR"
+  },
+  "captureReviewMethod": "Original helper JPEG bytes emitted through functions image output and visually inspected; no editing or generated UI.",
+  "captures": [
+    {
+      "index": 0,
+      "name": "UI42-list-dark-desktop-test-data",
+      "jpegBytes": 80652,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 1,
+      "name": "UI42-list-light-desktop-test-data",
+      "jpegBytes": 85936,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 2,
+      "name": "UI42-list-dark-390-test-data",
+      "jpegBytes": 28696,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 3,
+      "name": "UI42-list-light-320-test-data",
+      "jpegBytes": 27471,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 4,
+      "name": "UI42-empty-authorized-case-test-data",
+      "jpegBytes": 102013,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 5,
+      "name": "UI42-configure-focused-candidate-test-data",
+      "jpegBytes": 110701,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI42-configure-focused-candidate.jpg",
+      "blob": "5d9342322bea79e695906a06a0cd9306c168ab42"
+    },
+    {
+      "index": 6,
+      "name": "FAILED-native-wave-three-test-data",
+      "jpegBytes": 113154,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI42-preview-unavailable-no-request.jpg",
+      "blob": "25b7c12f3ecf64645a9b9c39678aefa36ed11b5e"
+    },
+    {
+      "index": 7,
+      "name": "UI45-question-catalog-dark-desktop-test-data",
+      "jpegBytes": 99586,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 8,
+      "name": "UI45-question-catalog-light-desktop-test-data",
+      "jpegBytes": 104879,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 9,
+      "name": "UI45-question-catalog-dark-390-test-data",
+      "jpegBytes": 34269,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 10,
+      "name": "UI45-question-catalog-light-320-test-data",
+      "jpegBytes": 27974,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 11,
+      "name": "UI45-authorized-financial-context-test-data",
+      "jpegBytes": 89116,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 12,
+      "name": "UI45-financial-source-values-test-data",
+      "jpegBytes": 104777,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 13,
+      "name": "UI46-financial-selected-context-test-data",
+      "jpegBytes": 104718,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 14,
+      "name": "UI46-financial-original-values-dark-desktop-test-data",
+      "jpegBytes": 107565,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 15,
+      "name": "UI46-financial-original-values-light-desktop-test-data",
+      "jpegBytes": 111743,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 16,
+      "name": "UI46-financial-original-values-dark-390-test-data",
+      "jpegBytes": 27029,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 17,
+      "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+      "jpegBytes": 22303,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 18,
+      "name": "UI46-financial-original-values-light-320-test-data",
+      "jpegBytes": 25245,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 19,
+      "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+      "jpegBytes": 20480,
+      "reviewed": false,
+      "persisted": false
+    },
+    {
+      "index": 20,
+      "name": "UI46-financial-source-table-dark-desktop-test-data",
+      "jpegBytes": 131061,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-table-heading-dark-desktop.jpg",
+      "blob": "fb00086de80b22a8086ea6f6f2e694993c7cb102"
+    },
+    {
+      "index": 21,
+      "name": "UI46-financial-source-table-light-desktop-test-data",
+      "jpegBytes": 134531,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-table-heading-light-desktop.jpg",
+      "blob": "40184bb3fd35cc891306e7fd2437d5f6d70f680b"
+    },
+    {
+      "index": 22,
+      "name": "UI46-financial-source-table-dark-390-test-data",
+      "jpegBytes": 33033,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-table-heading-dark-390.jpg",
+      "blob": "124f05f1df3b96cf1ad77e1ec0f99b37181103c9"
+    },
+    {
+      "index": 23,
+      "name": "UI46-financial-source-table-light-320-test-data",
+      "jpegBytes": 28257,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-table-heading-light-320.jpg",
+      "blob": "6599b35b0f592a97caa7c7d0613d4e54f0f97042"
+    },
+    {
+      "index": 24,
+      "name": "UI46-resolved-original-source-1-test-data",
+      "jpegBytes": 131055,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-original-source-first-value.jpg",
+      "blob": "7d3f9f6ab05d22e2039be3b532eac97178cdaccd"
+    },
+    {
+      "index": 25,
+      "name": "UI46-resolved-original-source-2-test-data",
+      "jpegBytes": 131055,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-original-source-second-value.jpg",
+      "blob": "7d3f9f6ab05d22e2039be3b532eac97178cdaccd"
+    },
+    {
+      "index": 26,
+      "name": "FAILED-native-wave-three-test-data",
+      "jpegBytes": 82468,
+      "reviewed": true,
+      "persisted": true,
+      "file": "UI46-operational-original-refusal.jpg",
+      "blob": "d00dfb8c3bdfa5e94f465a6c811d4c0bd878d7f8"
+    }
+  ]
+}

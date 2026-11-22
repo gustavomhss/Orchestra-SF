@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED_IN_RECORDED_SCOPE",
+  "repository": "gustavomhss/Orchestra-SF",
+  "runtimeCommit": "74be68770c958a720c3a34fa5b8e71b779c77e44",
+  "productCommit": "394002e808b57613635c69d95c15a4c50486b9cd",
+  "snapshot": "8715b763e5f68cf5c30caf875e0041f8c139a01a",
+  "run": 44987840434,
+  "job": 137102205105,
+  "cleanupJob": 137102457799,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987840434",
+  "environment": {
+    "workflow": "test-ci",
+    "os": "ubuntu-24.04",
+    "channel": "prod",
+    "omni": "strict",
+    "localExecution": false
+  },
+  "gate": {
+    "file": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+    "passed": 42,
+    "failed": 0,
+    "skipped": 2,
+    "assertions": 512,
+    "reasonForSkips": "Existing foreign-UID directory/database fixtures require root privileges; this hosted runner does not supply them.",
+    "wrapperPassed": 1,
+    "omniPositiveControl": true
+  },
+  "firstAttempt": {
+    "snapshot": "679f61d347851fbd764d385ceaa6821731d727f6",
+    "run": 44987329392,
+    "job": 137100662036,
+    "passed": 41,
+    "failed": 1,
+    "skipped": 2,
+    "assertions": 491,
+    "reason": "The new 22,000-record fixture did not cross the fingerprint threshold. Its byte-identity assertion failed under the expected eviction pressure. Runtime stayed unchanged; the second fixture uses 24,000 records and asserts its three size preconditions inside Actions."
+  },
+  "scope": [
+    "Real SQLite persistence and reopen",
+    "Fresh detached copies across dashboard/planner/procurement",
+    "Exact same-length byte replacement changes identity",
+    "Undefined, negative zero and tagged-looking values",
+    "CAS, rollback, abort, locking, corrupt state, source driver replacement and private capabilities"
+  ],
+  "limits": [
+    "No import browser success inferred from storage tests",
+    "The retained-string budget is not a total-process heap guarantee",
+    "No changes to SQL format, decoder acceptance, authority, grants or original source digest"
+  ]
+}

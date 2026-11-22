@@ -1,0 +1,414 @@
+{
+  "schemaVersion": 1,
+  "run": 44998750010,
+  "job": 137135382143,
+  "cleanupJob": 137138020487,
+  "source": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
+  "snapshot": "4d6fff306524812513cc2214c4339394f23fcc18",
+  "status": "DIAGNOSTIC_ORIGINAL60S_FAILURE_PRESERVED",
+  "sameRequestOutcome": {
+    "http": 403,
+    "status": "denied",
+    "reason": "decision-authority-changed",
+    "specElapsedMs": 300126,
+    "diagnosticElapsedMs": 300007
+  },
+  "rootAnalysis": {
+    "eventCount": 1507,
+    "reportedEmitted": 1506,
+    "suppressed": 0,
+    "unmatched": 0,
+    "stats": {
+      "selection.read": {
+        "count": 2,
+        "sumRoundedMs": 86926,
+        "unionRoundedMs": 86926,
+        "first": 3061,
+        "last": 90394,
+        "overlapDifferenceMs": 0
+      },
+      "compare.canonical": {
+        "count": 4,
+        "sumRoundedMs": 86883,
+        "unionRoundedMs": 86882,
+        "first": 3074,
+        "last": 90391,
+        "overlapDifferenceMs": 0
+      },
+      "alternatives.read-case": {
+        "count": 4,
+        "sumRoundedMs": 1478,
+        "unionRoundedMs": 1479,
+        "first": 3074,
+        "last": 69219,
+        "overlapDifferenceMs": 0
+      },
+      "alternatives.scenario-lookup": {
+        "count": 8,
+        "sumRoundedMs": 8434,
+        "unionRoundedMs": 8432,
+        "first": 3422,
+        "last": 71322,
+        "overlapDifferenceMs": 0
+      },
+      "pair.rules-preflight": {
+        "count": 15,
+        "sumRoundedMs": 2777,
+        "unionRoundedMs": 2781,
+        "first": 5535,
+        "last": 297361,
+        "overlapDifferenceMs": 0
+      },
+      "root.physical": {
+        "count": 43,
+        "sumRoundedMs": 265394,
+        "unionRoundedMs": 265396,
+        "first": 5713,
+        "last": 300007,
+        "overlapDifferenceMs": 0
+      },
+      "pair.witness": {
+        "count": 65,
+        "sumRoundedMs": 7071,
+        "unionRoundedMs": 7066,
+        "first": 5715,
+        "last": 300006,
+        "overlapDifferenceMs": 0
+      },
+      "metric": {
+        "count": 35,
+        "sumRoundedMs": 146601,
+        "unionRoundedMs": 146601,
+        "first": 12006,
+        "last": 296430,
+        "overlapDifferenceMs": 0
+      },
+      "metric.historical": {
+        "count": 35,
+        "sumRoundedMs": 3481,
+        "unionRoundedMs": 3472,
+        "first": 12006,
+        "last": 292111,
+        "overlapDifferenceMs": 0
+      },
+      "metric.scalar-resolve": {
+        "count": 140,
+        "sumRoundedMs": 129469,
+        "unionRoundedMs": 129475,
+        "first": 12079,
+        "last": 296128,
+        "overlapDifferenceMs": 0
+      },
+      "scenarios.direct": {
+        "count": 15,
+        "sumRoundedMs": 221780,
+        "unionRoundedMs": 221778,
+        "first": 7677,
+        "last": 300007,
+        "overlapDifferenceMs": 0
+      }
+    },
+    "fallbackExistingInsideObservedPhysicalRoot": 32,
+    "fallbackExistingCount": 32,
+    "facades": [
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      },
+      {
+        "originalResolveMany": true,
+        "forwardedResolveMany": false
+      }
+    ],
+    "selectionIntervals": [
+      {
+        "id": 2,
+        "span": "selection.read",
+        "start": 3061,
+        "end": 46593,
+        "duration": 43532
+      },
+      {
+        "id": 79,
+        "span": "selection.read",
+        "start": 47000,
+        "end": 90394,
+        "duration": 43394
+      }
+    ],
+    "lastIntervals": [
+      {
+        "id": 620,
+        "span": "root.canonical-work",
+        "start": 297363,
+        "end": 300007,
+        "duration": 2644
+      },
+      {
+        "id": 619,
+        "span": "root.physical",
+        "start": 297361,
+        "end": 300007,
+        "duration": 2645
+      },
+      {
+        "id": 614,
+        "span": "pair",
+        "start": 297174,
+        "end": 300007,
+        "duration": 2833,
+        "criteria": 1,
+        "criteriaObserver": true
+      },
+      {
+        "id": 613,
+        "span": "scenarios.direct",
+        "start": 297174,
+        "end": 300007,
+        "duration": 2833
+      },
+      {
+        "id": 1,
+        "span": "http.preview",
+        "start": 0,
+        "end": 300007,
+        "duration": 300007
+      },
+      {
+        "id": 623,
+        "span": "pair.witness",
+        "start": 300002,
+        "end": 300006,
+        "duration": 5
+      },
+      {
+        "id": 622,
+        "span": "pair.canonical-work",
+        "start": 297507,
+        "end": 300002,
+        "duration": 2494
+      },
+      {
+        "id": 621,
+        "span": "pair.witness",
+        "start": 297363,
+        "end": 297507,
+        "duration": 144
+      },
+      {
+        "id": 618,
+        "span": "pair.rules-preflight",
+        "start": 297176,
+        "end": 297361,
+        "duration": 185
+      },
+      {
+        "id": 617,
+        "span": "root.initialize",
+        "start": 297176,
+        "end": 297361,
+        "duration": 186
+      },
+      {
+        "id": 615,
+        "span": "root.prepare",
+        "start": 297174,
+        "end": 297361,
+        "duration": 187
+      },
+      {
+        "id": 616,
+        "span": "root.prepare-authority",
+        "start": 297174,
+        "end": 297175,
+        "duration": 1
+      }
+    ]
+  },
+  "limits": [
+    "Intervals are rounded and inclusive; nested categories are not additive.",
+    "All32 existing-snapshot fallback markers fall inside exactly one original physical-root interval.",
+    "42 roots accepted/completed; last root refused at original lease expiry.",
+    "The current run used the old fixture15; it does not qualify the later A04 sensitivity fixture.",
+    "The original35facades exposed resolveMany but did not forward it.",
+    "No installed gain is attributed to the candidate before its qualification."
+  ],
+  "candidate": {
+    "commit": "ad5ed29c582752b72ee91ddd03bb2622bff7299a",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "blob": "3404aa793a7c73f370a750c4dadc9f6410379706"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+        "blob": "b11a8727790131190664d21d4e230a59b74ae453"
+      }
+    ],
+    "rootStaticReview": "PASSED",
+    "peerStaticReview": "PASSED",
+    "focusedCi": "PASSED",
+    "installedLatencyClaim": false,
+    "receipt": {
+      "run": 45000105434,
+      "job": 137139546983,
+      "cleanupJob": 137140053936,
+      "product": "ad5ed29c582752b72ee91ddd03bb2622bff7299a",
+      "snapshot": "e2f0c197c39302b04fc3151a762e23fa3c037210",
+      "base": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+      "status": "PASSED",
+      "gates": [
+        "CLI types",
+        "original Finance and criterion integration"
+      ],
+      "testGroups": 1,
+      "assertions": 145,
+      "includesPriorAssertions": 109,
+      "rootReadLogs": true,
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict"
+      },
+      "latencyClaim": "None; Finance fixture uses shared historical case version unlike installed fixture15."
+    },
+    "notes": [
+      "The original producer capability is forwarded through the consumer; producer code, schema, grants, source metadata and leases remain unchanged.",
+      "Original scalar/batch reference counts are now reported separately; prior scalar-only8 is not a total resolver count.",
+      "Installed historical case revisions differ, so the integration fixture's sharing and timing cannot establish the native deadline."
+    ]
+  }
+}

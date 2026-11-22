@@ -1,7 +1,8 @@
 import { For, Show, createMemo } from "solid-js"
 import type { SfBiFigureProps, SfBiOwnedView } from "./model"
-import { sfBiChartModel, sfBiEvidenceRef, sfBiKey, sfBiPeriodLabel } from "./model"
+import { sfBiChartModel, sfBiKey, sfBiPeriodLabel, sfBiValueSource } from "./model"
 import { SfChartFrame } from "../../shared/frame"
+import { sfBiScalarLabel } from "./scalar"
 import { useSfPresentation } from "../../shared/frame/presentation"
 import "./figure.css"
 
@@ -9,8 +10,10 @@ import "./figure.css"
 export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly<{ copy: "sf.u20" | "sf.u21" }>) {
   const { t, locale } = useSfPresentation()
   const model = createMemo(() => sfBiChartModel(props.viewId, props.projection, props.copy, locale()))
-  const fmt = (n: number | null) => n === null ? t(sfBiKey(props.copy + ".missing")) :
-    new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(n)
+  const fmt = (n: number | null, unit?: string) => n === null ? t(sfBiKey(props.copy + ".missing")) :
+    unit !== undefined && unit !== props.projection.projection.context.currency
+      ? sfBiScalarLabel(n, locale())
+      : new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(n)
   const assigned = () => new Map(props.projection.projection.values.map((value) => [value.id, value]))
   const waterfall = () => props.viewId === "BI02" ? props.projection.presentation.waterfall : undefined
   const timeline = () => props.viewId === "BI08" ? props.projection.presentation.timeline : undefined
@@ -31,8 +34,12 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
       series={model().series}
       table={model().table}
       selection={props.selection}
+      selectionRowId={model().rows.find((row) => row.id === props.selectedValueId)?.tableRowId}
       state={model().state}
-      onSelect={props.onSelect}
+      onSelect={(reference, rowId) => {
+        const source = model().rows.find((row) => row.tableRowId === rowId)?.source
+        if (source?.refId === reference) props.onSelect(reference, source)
+      }}
       onOpenSource={props.onOpenSource}
     >
       <div class="sf-bi-figure" data-sf-bi-view={props.viewId} data-sf-bi-state={model().state}>
@@ -53,6 +60,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                   <strong>{rows()[0]?.label ?? t(series.label.key)}</strong>
                   <span class="sf-bi-unit">{rows()[0]?.unit}</span>
                 </figcaption>
+                <div class="sf-bi-plot-region" role="region" aria-label={t(sfBiKey(props.copy + ".axis"))} tabIndex={0}>
                 <svg viewBox={"0 0 700 " + Math.max(60, rows().length * 43 + 18)}
                   role="img" aria-label={t(sfBiKey(props.copy + ".axis"))}
                   class="sf-bi-svg" preserveAspectRatio="xMinYMin meet">
@@ -64,7 +72,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                       return (
                         <g data-sf-value-id={row.id} data-sf-evidence={row.evidence}
                           data-sf-value-kind={row.value === null ? "missing" : "known"}>
-                          <title>{row.label + " · " + row.period + " · " + fmt(row.value) + " " + row.unit}</title>
+                          <title>{row.label + " · " + row.period + " · " + fmt(row.value, row.unit) + " " + row.unit}</title>
                           <text x="6" y={index() * 43 + 31} class="sf-bi-axis-label">{row.period}</text>
                           <Show when={row.value !== null} fallback={
                             <text x="360" y={index() * 43 + 31} class="sf-bi-axis-label">
@@ -77,21 +85,25 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                             <text x={row.value !== null && row.value < 0 ? 350 - magnitude() - 6 : 358 + magnitude()}
                               y={index() * 43 + 29}
                               text-anchor={row.value !== null && row.value < 0 ? "end" : "start"}
-                              class="sf-bi-axis-value">{fmt(row.value)}</text>
+                              class="sf-bi-axis-value">{fmt(row.value, row.unit)}</text>
                           </Show>
                         </g>
                       )
                     }}
                   </For>
                 </svg>
-                <div class="sf-bi-source-actions">
+                </div>
+                <details class="sf-bi-source-actions">
+                  <summary>{t(sfBiKey(props.copy + ".openSource"))}</summary>
+                  <div class="sf-bi-source-action-list">
                   <For each={rows().filter((row) => row.evidenceRef)}>
-                    {(row) => <button class="mx-btn" type="button"
-                      onClick={() => row.evidenceRef && props.onOpenSource(row.evidenceRef)}>
+                    {(row) => <button class="mx-btn" type="button" data-sf-source-value-id={row.id}
+                      onClick={() => row.source && props.onOpenSource(row.source.refId, row.source)}>
                       {t(sfBiKey(props.copy + ".openSource"))}: {row.label} · {row.period}
                     </button>}
                   </For>
-                </div>
+                  </div>
+                </details>
               </figure>
             )
           }}
@@ -103,7 +115,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
               <p role={plan().reconciliation === "reconciled" ? "status" : "alert"}>
                 {t(sfBiKey(props.copy + ".reconciliation." + plan().reconciliation))}
               </p>
-              <div class="sf-bi-waterfall-region">
+              <div class="sf-bi-waterfall-region" role="region" aria-label={t(sfBiKey(props.copy + ".waterfall"))} tabIndex={0}>
                 <table class="sf-bi-waterfall-table">
                   <caption>{t(sfBiKey(props.copy + ".waterfall"))}</caption>
                   <thead><tr>
@@ -136,7 +148,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                     const start = () => assigned().get(segment.startValueId)
                     const amount = () => assigned().get(segment.componentValueId)
                     const end = () => assigned().get(segment.endValueId)
-                    const ref = () => amount() ? sfBiEvidenceRef(amount()!) : undefined
+                    const ref = () => amount() ? sfBiValueSource(amount()!) : undefined
                     return (
                       <li data-sf-step={segment.componentValueId}>
                         <strong>{segment.label}</strong>
@@ -144,7 +156,8 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                         <span>{t(sfBiKey(props.copy + ".waterfall.delta"))}: {fmt(amount()?.evidenceState !== "absent" && typeof amount()?.value === "number" ? amount()!.value as number : null)}</span>
                         <span>{t(sfBiKey(props.copy + ".waterfall.end"))}: {fmt(end()?.evidenceState !== "absent" && typeof end()?.value === "number" ? end()!.value as number : null)}</span>
                         <Show when={ref()}>{(reference) =>
-                          <button class="mx-btn" type="button" onClick={() => props.onSelect(reference())}>
+                          <button class="mx-btn" type="button" data-sf-source-value-id={reference().valueId}
+                            onClick={() => props.onSelect(reference().refId, reference())}>
                             {t(sfBiKey(props.copy + ".selectComponent"))}
                           </button>}
                         </Show>
@@ -171,9 +184,9 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                       <strong>{item.label}</strong>
                       <span>{observedDate() ?? t(sfBiKey(props.copy + ".missingDate"))}</span>
                       <span>{t(sfBiKey(props.copy + ".milestone." + (observedDate() ? item.state : "unknown")))}</span>
-                      <Show when={date() && sfBiEvidenceRef(date()!)}>
-                        {(reference) => <button class="mx-btn" type="button"
-                          onClick={() => props.onOpenSource(reference())}>
+                      <Show when={date() && sfBiValueSource(date()!)}>
+                        {(source) => <button class="mx-btn" type="button" data-sf-source-value-id={source().valueId}
+                          onClick={() => props.onOpenSource(source().refId, source())}>
                           {t(sfBiKey(props.copy + ".openSource"))}
                         </button>}
                       </Show>

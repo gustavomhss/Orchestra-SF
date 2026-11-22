@@ -65,9 +65,14 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
   const selection = () => store.controls?.selected ?? null
   const scenarios = () => selection()?.scenarios ?? []
   const parameters = () => scenarios().find((entry) => entry.ref === store.scenarioRef)?.parameters ?? []
-  const unitsCurrent = () => !!store.units && !!selection() && store.units.caseRef.version === selection()!.caseRef.version &&
-    store.units.scenarioRef === store.scenarioRef && store.units.baselineRef === store.baselineRef &&
-    store.units.parameterRef === store.parameterRef && store.scenarioRef !== store.baselineRef
+  const unitsCurrent = () => {
+    const units = store.units, selected = selection()
+    return !!units && !!selected && units.ref === selected.ref &&
+      units.caseRef.id === selected.caseRef.id && units.caseRef.incarnation === selected.caseRef.incarnation &&
+      units.caseRef.version === selected.caseRef.version && units.scenarioRef === store.scenarioRef &&
+      units.baselineRef === store.baselineRef && units.parameterRef === store.parameterRef &&
+      store.scenarioRef !== store.baselineRef
+  }
   const invalidateUnits = () => set({ units: null, unitsState: "empty", review: false })
   const routeTo = (target: "sensitivity-selection" | "sensitivity-result", caseRef?: string, resultRef?: string) => {
     const href = sfDecisionHref(props.route, target, { caseRef, resultRef })
@@ -139,20 +144,23 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
   })
   const issue = () => {
     const current = active(), selected = selection()
-    if (!current || !selected || !admitted("portfolio.decision-sensitivity-units") ||
+    if (!current || !selected || !admitted("decisions.controls.read") ||
       !scenarios().some((item) => item.ref === store.scenarioRef) ||
       !scenarios().some((item) => item.ref === store.baselineRef) ||
       store.scenarioRef === store.baselineRef ||
       !parameters().some((item) => item.ref === store.parameterRef) ||
       store.busy) return
-    const epoch = owner.generation(), caseRef = selected.caseRef
+    const epoch = owner.generation(), reference = selected.ref, caseRef = { ...selected.caseRef }
     const scenario = store.scenarioRef, baseline = store.baselineRef, parameter = store.parameterRef
     const controller = new AbortController()
     set({ busy: true, units: null, unitsState: "loading", review: false, message: null })
-    void sfSensitivityUnitsForSelection(current.transport, current.context, caseRef,
+    void sfSensitivityUnitsForSelection(current.transport, current.context, reference, caseRef,
       scenario, baseline, parameter, controller.signal).then((result) => {
-      if (owner.generation() !== epoch || selection()?.caseRef.version !== caseRef.version ||
-        store.scenarioRef !== scenario || store.baselineRef !== baseline || store.parameterRef !== parameter) return
+      const selected = selection()
+      if (owner.generation() !== epoch || selected?.ref !== reference ||
+        selected.caseRef.id !== caseRef.id || selected.caseRef.incarnation !== caseRef.incarnation ||
+        selected.caseRef.version !== caseRef.version || store.scenarioRef !== scenario ||
+        store.baselineRef !== baseline || store.parameterRef !== parameter) return
       if (result.status !== "ok") { set("unitsState", result.state); return }
       set({ units: result.value, unitsState: "ready" })
     }).catch(() => {
@@ -200,7 +208,7 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
         <div><dt>{t("sf.u19.results.coverage")}</dt><dd>{result.costCoverageRefs.length} {t("sf.u19.results.sources")}</dd></div>
       </dl>
       <h3>{t("sf.u19.sensitivity.table")}</h3>
-      <div class="sf-u19-table-scroll"><table>
+      <div class="sf-u19-table-scroll" role="region" aria-label={t("sf.u19.sensitivity.table")} tabIndex={0}><table>
         <thead><tr><th scope="col">{t("sf.u19.sensitivity.parameterValue")}</th>
           <th scope="col">{t("sf.u19.sensitivity.resultValue")}</th>
           <th scope="col">{t("sf.u19.results.resultRef")}</th></tr></thead>
@@ -238,19 +246,20 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
   return (
     <SfPageFrame titleKey={k("sf.ui44.title")} context={[]} tabs={[]} activeTab={null}
       density="comfortable" layout="split" onLayoutMode={() => undefined}
-      primaryAction={!routeResult() && store.units && admitted("portfolio.decision-sensitivity-evaluate") ? {
+      primaryAction={!routeResult() && !store.review && store.units && admitted("portfolio.decision-sensitivity-evaluate") ? {
         id: "sensitivity-evaluate", labelKey: k("sf.ui44.primary"), tone: "primary",
         disabled: !request() || store.busy || store.outcomeUnknown,
         busy: store.busy, onInvoke: () => set("review", true),
       } : undefined}
       secondaryActions={[]}
     >
-      <section class="sf-u19-sensitivity" data-sf-sensitivity data-sf-surface="UI44">
+      <section class="sf-u19-sensitivity" data-sf-sensitivity data-sf-surface="UI44" data-sf-wave="five"
+        data-sf-stage={routeResult() ? "result" : store.review ? "review" : "configure"}>
         <SfStatePanel state={store.status} messageKey={k("sf.u19.case.missing")}
           onRetryRead={() => setRefresh((n) => n + 1)}>
           <Show when={store.message}><p role="status" class="sf-u19-message">{t(store.message!)}</p></Show>
           <Show when={!routeResult()}>
-            <section>
+            <section class="sf-u19-case-selection" hidden={store.review}>
               <h2>{t("sf.u19.case.choose")}</h2>
               <label class="sf-u19-sensitivity-field">{t("sf.u19.case.list")}
                 <select value={wanted() ?? ""} disabled={store.busy || !!routeCase()}
@@ -271,9 +280,8 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
                   <header class="sf-u19-sensitivity-header"><h2>{current().objective}</h2>
                     <p>{current().currency} · {horizonLabel(current().horizon.start, current().horizon.end, language.intl())}</p></header>
                   <Show when={routeResult()} fallback={
-                    <section class="sf-u19-sensitivity-form">
-                      <p>{t("sf.u19.sensitivity.choose")}</p>
-                      <fieldset disabled={store.busy || store.outcomeUnknown}>
+                    <section class="sf-u19-sensitivity-form" data-review={store.review}>
+                      <fieldset class="sf-u19-unit-selection" hidden={store.review} disabled={store.busy || store.outcomeUnknown}>
                         <legend>{t("sf.u19.sensitivity.choose")}</legend>
                         <label class="sf-u19-sensitivity-field">{t("sf.u19.sensitivity.scenario")}
                           <select value={store.scenarioRef} onChange={(event) => {
@@ -299,16 +307,17 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
                             <For each={parameters()}>{(item) => <option value={item.ref}>{item.label}</option>}</For>
                           </select>
                         </label>
-                        <button class="mx-btn" type="button" disabled={!admitted("portfolio.decision-sensitivity-units") ||
+                        <button class="mx-btn" type="button" disabled={!admitted("decisions.controls.read") ||
                           !store.scenarioRef || !store.baselineRef || store.scenarioRef === store.baselineRef ||
                           !store.parameterRef || store.busy} onClick={issue}>{t("sf.u19.sensitivity.unit")}</button>
                       </fieldset>
+                      <Show when={!scenarios().length && !store.review}><p class="sf-u19-unavailable" role="status">{t("sf.u19.sensitivity.noUnits")}</p></Show>
                       <Show when={store.unitsState !== "empty"}>
                         <SfStatePanel state={store.unitsState} messageKey={k("sf.u19.sensitivity.noUnits")}>
                           <Show when={unitsCurrent()}>
-                            <p>{t("sf.u19.sensitivity.unit")}: {store.units!.parameterUnit} / {store.units!.resultUnit}</p>
-                            <p>{t("sf.u19.results.sources")}: {store.units!.sourceRefs.length}</p>
-                            <fieldset class="sf-u19-criterion" disabled={store.busy || store.outcomeUnknown}>
+                            <div class="sf-u19-unit-summary" hidden={store.review}><p>{t("sf.u19.sensitivity.unit")}: {store.units!.parameterUnit} / {store.units!.resultUnit}</p>
+                            <p>{t("sf.u19.results.sources")}: {store.units!.sourceRefs.length}</p></div>
+                            <fieldset class="sf-u19-criterion" hidden={store.review} disabled={store.busy || store.outcomeUnknown}>
                               <legend>{t("sf.u19.sensitivity.criterion")}</legend>
                               <label class="sf-u19-sensitivity-field">{t("sf.u19.sensitivity.criterion")}
                                 <select value={store.ruleId} onChange={(event) => { set("ruleId", event.currentTarget.value); set("review", false) }}>
@@ -359,7 +368,7 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
                     </section>
                   }>
                     <Show when={store.result}>{(record) => <>
-                      <p>{t("sf.u19.results.resultRef")}: <bdi>{record().resultRef}</bdi></p>
+                      <details class="sf-u19-source"><summary>{t("sf.u19.results.resultRef")}</summary><p><bdi>{record().resultRef}</bdi></p></details>
                       {render(record().value)}
                       <button class="mx-btn" type="button" onClick={() => routeTo("sensitivity-selection")}>
                         {t("sf.u19.action.clear")}

@@ -1,0 +1,391 @@
+{
+  "schemaVersion": 1,
+  "status": "PARTIALLY_VERIFIED_PENDING_COMPLETION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-design-next",
+  "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+  "areaCount": 15,
+  "routePatternCount": 22,
+  "previouslyMerged": 41,
+  "remainingAfterThisBlock": 14,
+  "userRequest": "Otimo. Pegue um bloco de 15",
+  "groups": {
+    "analytics": {
+      "branch": "sf-next-analytics",
+      "areas": [
+        "UI42",
+        "UI43",
+        "UI44",
+        "UI45",
+        "UI46"
+      ]
+    },
+    "reviews": {
+      "branch": "sf-next-reviews",
+      "areas": [
+        "UI47",
+        "UI48",
+        "UI49",
+        "UI50",
+        "UI54"
+      ]
+    },
+    "collab": {
+      "branch": "sf-next-collab",
+      "areas": [
+        "UI51",
+        "UI52",
+        "UI53",
+        "UI55",
+        "UI56"
+      ]
+    }
+  },
+  "areas": [
+    {
+      "id": "UI42",
+      "label": "Cenários de portfólio — lista",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-portfolio/scenarios"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-portfolio/scenarios/:caseRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx"
+      ],
+      "status": "FULL_JOURNEY_QUALIFICATION_PENDING"
+    },
+    {
+      "id": "UI43",
+      "label": "Cenário de portfólio — detalhe",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-portfolio/scenarios/:caseRef/results/:resultRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx"
+      ],
+      "status": "FULL_JOURNEY_QUALIFICATION_PENDING"
+    },
+    {
+      "id": "UI44",
+      "label": "Sensibilidade",
+      "routes": [
+        {
+          "kind": "selection",
+          "pattern": "/orchestra/sf-portfolio/sensitivity"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-portfolio/sensitivity/:caseRef/:resultRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/index.tsx"
+      ],
+      "status": "FULL_JOURNEY_QUALIFICATION_PENDING"
+    },
+    {
+      "id": "UI45",
+      "label": "Catálogo de BI",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-bi"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
+    },
+    {
+      "id": "UI46",
+      "label": "Visão contextual de BI",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-bi/:viewId"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
+    },
+    {
+      "id": "UI47",
+      "label": "Agenda de revisão",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-reviews/agenda"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
+    },
+    {
+      "id": "UI48",
+      "label": "Revisões preservadas",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-reviews/reviews"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-reviews/reviews/:reviewRef"
+        },
+        {
+          "kind": "present",
+          "pattern": "/orchestra/sf-reviews/reviews/:reviewRef/present"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
+    },
+    {
+      "id": "UI49",
+      "label": "Comparação de revisões",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-reviews/compare"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
+    },
+    {
+      "id": "UI50",
+      "label": "Relatórios",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-reviews/reports"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-reviews/reports/:reviewRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
+    },
+    {
+      "id": "UI51",
+      "label": "Relações",
+      "routes": [
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-work/relations/new"
+        },
+        {
+          "kind": "case-alias",
+          "pattern": "/orchestra/sf-decisions/:caseRef/relations"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-work/relations/:relationRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
+    },
+    {
+      "id": "UI52",
+      "label": "Conversas e threads",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-work/threads/:threadRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
+    },
+    {
+      "id": "UI53",
+      "label": "Confirmações",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-work/confirmations/:selectionRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
+    },
+    {
+      "id": "UI54",
+      "label": "Propostas de hot topics",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-dashboard/hot-topics/proposals/:proposalRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
+    },
+    {
+      "id": "UI55",
+      "label": "Nova importação",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-imports/new"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW",
+      "qualification": {
+        "run": 44998959512,
+        "snapshot": "0833a6ea23b8db551f36a5d0406085112028708d",
+        "product": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+        "rootViewedCaptures": 2,
+        "rootReviewedCaptureNames": [
+          "UI55-dark-desktop-field-change",
+          "UI55-dark-390-selected-file-options"
+        ]
+      }
+    },
+    {
+      "id": "UI56",
+      "label": "Prévia da importação",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-imports/:manifestId/preview"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW",
+      "qualification": {
+        "run": 44998959512,
+        "snapshot": "0833a6ea23b8db551f36a5d0406085112028708d",
+        "product": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+        "rootViewedCaptures": 3,
+        "rootReviewedCaptureNames": [
+          "UI56-dark-desktop-field-provenance",
+          "UI56-preview-light-390",
+          "UI56-pt-BR-dark-desktop"
+        ]
+      }
+    }
+  ],
+  "constraints": {
+    "native": true,
+    "githubMcpOnly": true,
+    "actionsOnly": true,
+    "preserveExistingEnglish": true,
+    "preserveCanonicalProducers": true,
+    "preserveShellAndPalettes": true,
+    "showRealCapturesBeforeMerge": true
+  },
+  "verification": {
+    "status": "PARTIALLY_VERIFIED",
+    "technicalEvidence": "technical-verification.json",
+    "qualifiedAreas": 12,
+    "blockFullyQualified": false,
+    "userApproval": "PENDING",
+    "merged": false,
+    "inventoryAcceptedAndMergedAreas": 41,
+    "pendingFinalTestTypes": [],
+    "latestTechnicalAttempt": 23,
+    "latestInstalledFailures": {
+      "portfolioDiagnostic": 45019357466,
+      "isolatedSensitivity": 45029259117,
+      "cleanPortfolio": 45029253108
+    },
+    "latestInstalledImportRun": 44998959512,
+    "originalC17Failure": {
+      "candidateRun": 45006460499,
+      "preCorrectionControlRun": 45007654887,
+      "status": "HISTORICAL_FAILURE_FOLLOWED_BY_COMPLETE_PASS_ON_CONTEXT_CANDIDATE",
+      "historicalStatus": "FAILED_BEFORE_AND_AFTER_CHANGE",
+      "currentPass": {
+        "run": 45028131990,
+        "snapshot": "0e62f4e66dc000bddf4f73cbc2bf4de7ffbab7d5",
+        "reportedDurationMs": 102717.47,
+        "deadlineMs": 105000,
+        "allSevenPhases": true,
+        "limitation": "One observed pass; no causal speedup or stable margin claim."
+      }
+    },
+    "readonlyComposition": {
+      "integratedProduct": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+      "targetedRun": 45006460499,
+      "guardRun": 45007665762,
+      "installedQualification": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED"
+    },
+    "latestInstalledDiagnosticEvidence": "analytics/attempt-18/README.md",
+    "latestDiagnostic": {
+      "label": "Portfolio21",
+      "status": "FAILED_ORIGINAL60S_FIVE_COMPLETE_PARTIAL_SAMPLES",
+      "run": 45019357466,
+      "job": 137198592243,
+      "cleanupJob": 137201120833,
+      "cleanupStatus": "SUCCESS",
+      "snapshot": "27499e0b3f81bed868dfe2d4724b295fd5aab9c6",
+      "samples": 5,
+      "lastSampleMs": 50015,
+      "finalObserved": false,
+      "qualificationAdded": 0
+    },
+    "contextIntegrity": {
+      "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+      "technicalRuns": [
+        45028131990,
+        45029061059
+      ],
+      "technicalEvidence": "analytics/context-integrity/integration-review.json",
+      "allSelectedGatesHavePassingEvidence": true,
+      "singleAllGreenSixGateRun": false,
+      "installedQualification": "FAILED_ORIGINAL_WAITERS",
+      "checkpointGuard": {
+        "run": 45032261331,
+        "snapshot": "ae98de00a9b49ee74b47aca83a8d36a808b86dc2",
+        "qa": "b17cb0b20251fe485db79ab3e8de80b7aa560e4b",
+        "rules": 78,
+        "files": 782,
+        "warnings": 36,
+        "gates": 0,
+        "errors": 0,
+        "approved": 0
+      }
+    },
+    "latestInstalledEvidence": {
+      "portfolio": "analytics/attempt-19/README.md",
+      "sensitivity": "collab/sensitivity-isolated-03/README.md"
+    }
+  }
+}

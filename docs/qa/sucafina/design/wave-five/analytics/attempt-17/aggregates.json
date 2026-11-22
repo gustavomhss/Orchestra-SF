@@ -1,0 +1,1223 @@
+{
+  "schema": "sf-portfolio-readonly-last-snapshot-v1",
+  "runId": 45015314625,
+  "snapshot": "cad315298856419c6da18f561e593688d38ec982",
+  "selection": {
+    "request": 1,
+    "snapshot": 5,
+    "elapsedMs": 50000,
+    "trigger": "settled-span",
+    "cumulative": true,
+    "completedRequest": false
+  },
+  "summaries": [
+    {
+      "timestamp": "2026-11-22T11:10:28.5549799Z",
+      "request": 1,
+      "phase": "snapshot",
+      "snapshot": 1,
+      "snapshotPhase": "periodic",
+      "elapsedMs": 10002,
+      "trigger": "settled-span",
+      "dueMs": 10000,
+      "periodicSnapshots": 1,
+      "skippedPeriodicThresholds": 0,
+      "nextPeriodicDueMs": 20000,
+      "buckets": 102,
+      "pending": 2,
+      "bucketDrops": 0,
+      "rootDrops": 0,
+      "lineDrops": 0,
+      "diagnosticErrors": 0,
+      "emitted": 104,
+      "semantics": "cumulative; nested inclusive durations overlap; pending is not completion"
+    },
+    {
+      "timestamp": "2026-11-22T11:10:38.5619753Z",
+      "request": 1,
+      "phase": "snapshot",
+      "snapshot": 2,
+      "snapshotPhase": "periodic",
+      "elapsedMs": 20001,
+      "trigger": "settled-span",
+      "dueMs": 20000,
+      "periodicSnapshots": 2,
+      "skippedPeriodicThresholds": 0,
+      "nextPeriodicDueMs": 30000,
+      "buckets": 102,
+      "pending": 2,
+      "bucketDrops": 0,
+      "rootDrops": 0,
+      "lineDrops": 0,
+      "diagnosticErrors": 0,
+      "emitted": 211,
+      "semantics": "cumulative; nested inclusive durations overlap; pending is not completion"
+    },
+    {
+      "timestamp": "2026-11-22T11:10:48.5569310Z",
+      "request": 1,
+      "phase": "snapshot",
+      "snapshot": 3,
+      "snapshotPhase": "periodic",
+      "elapsedMs": 30001,
+      "trigger": "settled-span",
+      "dueMs": 30000,
+      "periodicSnapshots": 3,
+      "skippedPeriodicThresholds": 0,
+      "nextPeriodicDueMs": 40000,
+      "buckets": 102,
+      "pending": 6,
+      "bucketDrops": 0,
+      "rootDrops": 0,
+      "lineDrops": 0,
+      "diagnosticErrors": 0,
+      "emitted": 314,
+      "semantics": "cumulative; nested inclusive durations overlap; pending is not completion"
+    },
+    {
+      "timestamp": "2026-11-22T11:10:58.5548398Z",
+      "request": 1,
+      "phase": "snapshot",
+      "snapshot": 4,
+      "snapshotPhase": "periodic",
+      "elapsedMs": 40001,
+      "trigger": "settled-span",
+      "dueMs": 40000,
+      "periodicSnapshots": 4,
+      "skippedPeriodicThresholds": 0,
+      "nextPeriodicDueMs": 50000,
+      "buckets": 102,
+      "pending": 2,
+      "bucketDrops": 0,
+      "rootDrops": 0,
+      "lineDrops": 0,
+      "diagnosticErrors": 0,
+      "emitted": 421,
+      "semantics": "cumulative; nested inclusive durations overlap; pending is not completion"
+    },
+    {
+      "timestamp": "2026-11-22T11:11:08.5557255Z",
+      "request": 1,
+      "phase": "snapshot",
+      "snapshot": 5,
+      "snapshotPhase": "periodic",
+      "elapsedMs": 50000,
+      "trigger": "settled-span",
+      "dueMs": 50000,
+      "periodicSnapshots": 5,
+      "skippedPeriodicThresholds": 0,
+      "nextPeriodicDueMs": null,
+      "buckets": 102,
+      "pending": 4,
+      "bucketDrops": 0,
+      "rootDrops": 0,
+      "lineDrops": 0,
+      "diagnosticErrors": 0,
+      "emitted": 528,
+      "semantics": "cumulative; nested inclusive durations overlap; pending is not completion"
+    }
+  ],
+  "integrity": [
+    {
+      "snapshot": 1,
+      "rows": 102,
+      "expected": 102,
+      "unique": 102,
+      "callsIdentity": true,
+      "pendingSum": 2,
+      "pendingExpected": 2,
+      "complete": true
+    },
+    {
+      "snapshot": 2,
+      "rows": 102,
+      "expected": 102,
+      "unique": 102,
+      "callsIdentity": true,
+      "pendingSum": 2,
+      "pendingExpected": 2,
+      "complete": true
+    },
+    {
+      "snapshot": 3,
+      "rows": 102,
+      "expected": 102,
+      "unique": 102,
+      "callsIdentity": true,
+      "pendingSum": 6,
+      "pendingExpected": 6,
+      "complete": true
+    },
+    {
+      "snapshot": 4,
+      "rows": 102,
+      "expected": 102,
+      "unique": 102,
+      "callsIdentity": true,
+      "pendingSum": 2,
+      "pendingExpected": 2,
+      "complete": true
+    },
+    {
+      "snapshot": 5,
+      "rows": 102,
+      "expected": 102,
+      "unique": 102,
+      "callsIdentity": true,
+      "pendingSum": 4,
+      "pendingExpected": 4,
+      "complete": true
+    }
+  ],
+  "latestBuckets": [
+    {
+      "name": "http.preview",
+      "origin": "none",
+      "surface": "none",
+      "calls": 1,
+      "settled": 0,
+      "pending": 1,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.transaction.seal-absent",
+      "origin": "none",
+      "surface": "none",
+      "calls": 6568,
+      "settled": 6568,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.transaction.raw-metadata",
+      "origin": "none",
+      "surface": "dashboard",
+      "calls": 181,
+      "settled": 181,
+      "pending": 0,
+      "inclusiveMs": 6
+    },
+    {
+      "name": "local.query",
+      "origin": "guard",
+      "surface": "none",
+      "calls": 6568,
+      "settled": 6568,
+      "pending": 0,
+      "inclusiveMs": 5
+    },
+    {
+      "name": "local.owner-unregistered",
+      "origin": "guard",
+      "surface": "none",
+      "calls": 6568,
+      "settled": 6568,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.transaction.raw-miss",
+      "origin": "none",
+      "surface": "none",
+      "calls": 6568,
+      "settled": 6568,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.guard.full",
+      "origin": "none",
+      "surface": "none",
+      "calls": 6856,
+      "settled": 6856,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.guard.sources-digest",
+      "origin": "none",
+      "surface": "dashboard",
+      "calls": 277,
+      "settled": 277,
+      "pending": 0,
+      "inclusiveMs": 37
+    },
+    {
+      "name": "source.guard.audit-digest",
+      "origin": "none",
+      "surface": "dashboard",
+      "calls": 277,
+      "settled": 277,
+      "pending": 0,
+      "inclusiveMs": 139
+    },
+    {
+      "name": "source.transaction.raw-callback",
+      "origin": "none",
+      "surface": "dashboard",
+      "calls": 181,
+      "settled": 181,
+      "pending": 0,
+      "inclusiveMs": 1076
+    },
+    {
+      "name": "source.authority.registered",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 6380,
+      "settled": 6380,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.query",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 12760,
+      "settled": 12760,
+      "pending": 0,
+      "inclusiveMs": 18
+    },
+    {
+      "name": "local.owner-unregistered",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 6380,
+      "settled": 6380,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.driver.raw-miss",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 6380,
+      "settled": 6380,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.query",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 6380,
+      "settled": 6380,
+      "pending": 0,
+      "inclusiveMs": 42
+    },
+    {
+      "name": "choice.reader-registered",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 6380,
+      "settled": 6380,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.pins-current",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 6380,
+      "settled": 6380,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.owner-registered",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 6380,
+      "settled": 6380,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.scope-present",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 667,
+      "settled": 667,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.scope-active",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 667,
+      "settled": 667,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.root-not-readonly",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 72,
+      "settled": 72,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.raw-unavailable",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 5785,
+      "settled": 5785,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.driver.choice-miss",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 5785,
+      "settled": 5785,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.scope-absent",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 5713,
+      "settled": 5713,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.transaction.seal-used",
+      "origin": "none",
+      "surface": "none",
+      "calls": 1467,
+      "settled": 1467,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.transaction.sealed-metadata",
+      "origin": "none",
+      "surface": "dashboard",
+      "calls": 1467,
+      "settled": 1467,
+      "pending": 0,
+      "inclusiveMs": 1
+    },
+    {
+      "name": "source.transaction.sealed-callback",
+      "origin": "none",
+      "surface": "dashboard",
+      "calls": 1467,
+      "settled": 1467,
+      "pending": 0,
+      "inclusiveMs": 4382
+    },
+    {
+      "name": "source.transaction.raw-metadata",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 6387,
+      "settled": 6387,
+      "pending": 0,
+      "inclusiveMs": 91
+    },
+    {
+      "name": "source.guard.sources-digest",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 6483,
+      "settled": 6483,
+      "pending": 0,
+      "inclusiveMs": 140
+    },
+    {
+      "name": "source.guard.audit-digest",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 6483,
+      "settled": 6483,
+      "pending": 0,
+      "inclusiveMs": 447
+    },
+    {
+      "name": "source.transaction.raw-callback",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 6387,
+      "settled": 6387,
+      "pending": 0,
+      "inclusiveMs": 759
+    },
+    {
+      "name": "planner-evidence.source1",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 2201,
+      "settled": 2201,
+      "pending": 0,
+      "inclusiveMs": 7256
+    },
+    {
+      "name": "source.prepared.metadata",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 10341,
+      "settled": 10341,
+      "pending": 0,
+      "inclusiveMs": 152
+    },
+    {
+      "name": "local.query",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 20682,
+      "settled": 20682,
+      "pending": 0,
+      "inclusiveMs": 116
+    },
+    {
+      "name": "local.owner-unregistered",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 10341,
+      "settled": 10341,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.driver.raw-miss",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 10341,
+      "settled": 10341,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.query",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 10341,
+      "settled": 10341,
+      "pending": 0,
+      "inclusiveMs": 206
+    },
+    {
+      "name": "choice.reader-registered",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 10341,
+      "settled": 10341,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.pins-current",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 10341,
+      "settled": 10341,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.owner-registered",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 10341,
+      "settled": 10341,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.scope-present",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 10341,
+      "settled": 10341,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.scope-active",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 10341,
+      "settled": 10341,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.root-not-readonly",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 1276,
+      "settled": 1276,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.raw-unavailable",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 1276,
+      "settled": 1276,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.driver.choice-miss",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 1276,
+      "settled": 1276,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.prepared.unowned",
+      "origin": "none",
+      "surface": "none",
+      "calls": 1276,
+      "settled": 1276,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.prepared.prepare",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 10341,
+      "settled": 10341,
+      "pending": 0,
+      "inclusiveMs": 1732
+    },
+    {
+      "name": "source.prepared.acl-fallback",
+      "origin": "none",
+      "surface": "none",
+      "calls": 1276,
+      "settled": 1276,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.observe.metadata",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 10340,
+      "settled": 10340,
+      "pending": 0,
+      "inclusiveMs": 117
+    },
+    {
+      "name": "source.observe.authentication",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 10340,
+      "settled": 10340,
+      "pending": 0,
+      "inclusiveMs": 636
+    },
+    {
+      "name": "source.observe.authenticate",
+      "origin": "none",
+      "surface": "none",
+      "calls": 20680,
+      "settled": 20680,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.observe.projector",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 10340,
+      "settled": 10340,
+      "pending": 0,
+      "inclusiveMs": 2074
+    },
+    {
+      "name": "source.observe.egress-gate",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 10340,
+      "settled": 10340,
+      "pending": 0,
+      "inclusiveMs": 672
+    },
+    {
+      "name": "planner-evidence.read1",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 2201,
+      "settled": 2201,
+      "pending": 0,
+      "inclusiveMs": 986
+    },
+    {
+      "name": "planner-evidence.financial-build",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 2201,
+      "settled": 2201,
+      "pending": 0,
+      "inclusiveMs": 134
+    },
+    {
+      "name": "planner-evidence.read2",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 2201,
+      "settled": 2201,
+      "pending": 0,
+      "inclusiveMs": 955
+    },
+    {
+      "name": "planner-evidence.source2",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 2201,
+      "settled": 2201,
+      "pending": 0,
+      "inclusiveMs": 7274
+    },
+    {
+      "name": "operations.total",
+      "origin": "none",
+      "surface": "none",
+      "calls": 314,
+      "settled": 313,
+      "pending": 1,
+      "inclusiveMs": 7938
+    },
+    {
+      "name": "operations.fences.before",
+      "origin": "none",
+      "surface": "none",
+      "calls": 314,
+      "settled": 314,
+      "pending": 0,
+      "inclusiveMs": 968
+    },
+    {
+      "name": "fence.read",
+      "origin": "none",
+      "surface": "none",
+      "calls": 627,
+      "settled": 627,
+      "pending": 0,
+      "inclusiveMs": 1947
+    },
+    {
+      "name": "fence.observe",
+      "origin": "none",
+      "surface": "none",
+      "calls": 647,
+      "settled": 647,
+      "pending": 0,
+      "inclusiveMs": 20
+    },
+    {
+      "name": "fence.observe.no-readonly-proof",
+      "origin": "none",
+      "surface": "none",
+      "calls": 96,
+      "settled": 96,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "fence.read.legacy",
+      "origin": "none",
+      "surface": "none",
+      "calls": 96,
+      "settled": 96,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "fence.legacy.transaction-all",
+      "origin": "none",
+      "surface": "none",
+      "calls": 96,
+      "settled": 96,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.guard.sources-digest",
+      "origin": "none",
+      "surface": "procurement",
+      "calls": 96,
+      "settled": 96,
+      "pending": 0,
+      "inclusiveMs": 13
+    },
+    {
+      "name": "source.guard.audit-digest",
+      "origin": "none",
+      "surface": "procurement",
+      "calls": 96,
+      "settled": 96,
+      "pending": 0,
+      "inclusiveMs": 175
+    },
+    {
+      "name": "fence.calculate",
+      "origin": "none",
+      "surface": "none",
+      "calls": 97,
+      "settled": 97,
+      "pending": 0,
+      "inclusiveMs": 115
+    },
+    {
+      "name": "operations.source.before",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 314,
+      "settled": 313,
+      "pending": 1,
+      "inclusiveMs": 1160
+    },
+    {
+      "name": "operations.project",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 313,
+      "settled": 313,
+      "pending": 0,
+      "inclusiveMs": 2800
+    },
+    {
+      "name": "operations.source.after",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 313,
+      "settled": 313,
+      "pending": 0,
+      "inclusiveMs": 1126
+    },
+    {
+      "name": "operations.fences.after",
+      "origin": "none",
+      "surface": "none",
+      "calls": 313,
+      "settled": 313,
+      "pending": 0,
+      "inclusiveMs": 983
+    },
+    {
+      "name": "root.prepare",
+      "origin": "none",
+      "surface": "none",
+      "calls": 7,
+      "settled": 7,
+      "pending": 0,
+      "inclusiveMs": 820
+    },
+    {
+      "name": "root.prepare.owned",
+      "origin": "none",
+      "surface": "none",
+      "calls": 7,
+      "settled": 7,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "root.physical.callback",
+      "origin": "none",
+      "surface": "none",
+      "calls": 7,
+      "settled": 6,
+      "pending": 1,
+      "inclusiveMs": 32503
+    },
+    {
+      "name": "root.physical.enter",
+      "origin": "none",
+      "surface": "none",
+      "calls": 7,
+      "settled": 7,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.readonly-admitted",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 595,
+      "settled": 595,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.result-with-scope",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 595,
+      "settled": 595,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.raw-observed",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 595,
+      "settled": 595,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.current-valid",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 595,
+      "settled": 595,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.current-valid",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 595,
+      "settled": 595,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.result-observed",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 595,
+      "settled": 595,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.driver.choice-hit",
+      "origin": "authority",
+      "surface": "none",
+      "calls": 595,
+      "settled": 595,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "root.physical.sealed",
+      "origin": "none",
+      "surface": "none",
+      "calls": 7,
+      "settled": 7,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.current-valid",
+      "origin": "none",
+      "surface": "none",
+      "calls": 37907,
+      "settled": 37907,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.current-valid",
+      "origin": "none",
+      "surface": "none",
+      "calls": 37907,
+      "settled": 37907,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "root.health.valid",
+      "origin": "none",
+      "surface": "none",
+      "calls": 37,
+      "settled": 37,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "fence.locked",
+      "origin": "none",
+      "surface": "none",
+      "calls": 20,
+      "settled": 20,
+      "pending": 0,
+      "inclusiveMs": 4
+    },
+    {
+      "name": "fence.observe.recognized",
+      "origin": "none",
+      "surface": "none",
+      "calls": 551,
+      "settled": 551,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "fence.sealed.lookup",
+      "origin": "none",
+      "surface": "none",
+      "calls": 551,
+      "settled": 551,
+      "pending": 0,
+      "inclusiveMs": 7
+    },
+    {
+      "name": "fence.current.valid",
+      "origin": "none",
+      "surface": "none",
+      "calls": 1614,
+      "settled": 1614,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "fence.memo.miss",
+      "origin": "none",
+      "surface": "none",
+      "calls": 1,
+      "settled": 1,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.readonly-admitted",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 9065,
+      "settled": 9065,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.result-acl-only",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 9065,
+      "settled": 9065,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.raw-observed",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 9065,
+      "settled": 9065,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "local.current-valid",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 9065,
+      "settled": 9065,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.current-valid",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 9065,
+      "settled": 9065,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "choice.result-observed",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 9065,
+      "settled": 9065,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.driver.choice-hit",
+      "origin": "prepared",
+      "surface": "none",
+      "calls": 9065,
+      "settled": 9065,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.prepared.owned",
+      "origin": "none",
+      "surface": "none",
+      "calls": 9065,
+      "settled": 9065,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "source.prepared.acl",
+      "origin": "none",
+      "surface": "none",
+      "calls": 9064,
+      "settled": 9064,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "fence.memo.hit",
+      "origin": "none",
+      "surface": "none",
+      "calls": 550,
+      "settled": 550,
+      "pending": 0,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "fence.read.sealed-accepted",
+      "origin": "none",
+      "surface": "none",
+      "calls": 531,
+      "settled": 531,
+      "pending": 0,
+      "inclusiveMs": 0
+    }
+  ],
+  "pending": [
+    {
+      "name": "http.preview",
+      "origin": "none",
+      "surface": "none",
+      "calls": 1,
+      "settled": 0,
+      "pending": 1,
+      "inclusiveMs": 0
+    },
+    {
+      "name": "operations.total",
+      "origin": "none",
+      "surface": "none",
+      "calls": 314,
+      "settled": 313,
+      "pending": 1,
+      "inclusiveMs": 7938
+    },
+    {
+      "name": "operations.source.before",
+      "origin": "none",
+      "surface": "planner",
+      "calls": 314,
+      "settled": 313,
+      "pending": 1,
+      "inclusiveMs": 1160
+    },
+    {
+      "name": "root.physical.callback",
+      "origin": "none",
+      "surface": "none",
+      "calls": 7,
+      "settled": 6,
+      "pending": 1,
+      "inclusiveMs": 32503
+    }
+  ],
+  "rootCallbackIntervals": [
+    {
+      "ordinal": 1,
+      "enteredMs": 5898,
+      "exitedMs": 16579,
+      "callbackDurationMs": 10681,
+      "exitBeforeLastSnapshot": true,
+      "complete": true
+    },
+    {
+      "ordinal": 2,
+      "enteredMs": 16582,
+      "exitedMs": 16709,
+      "callbackDurationMs": 127,
+      "exitBeforeLastSnapshot": true,
+      "complete": true
+    },
+    {
+      "ordinal": 3,
+      "enteredMs": 19507,
+      "exitedMs": 30274,
+      "callbackDurationMs": 10767,
+      "exitBeforeLastSnapshot": true,
+      "complete": true
+    },
+    {
+      "ordinal": 4,
+      "enteredMs": 30277,
+      "exitedMs": 30404,
+      "callbackDurationMs": 127,
+      "exitBeforeLastSnapshot": true,
+      "complete": true
+    },
+    {
+      "ordinal": 5,
+      "enteredMs": 33462,
+      "exitedMs": 44129,
+      "callbackDurationMs": 10667,
+      "exitBeforeLastSnapshot": true,
+      "complete": true
+    },
+    {
+      "ordinal": 6,
+      "enteredMs": 44132,
+      "exitedMs": 44266,
+      "callbackDurationMs": 134,
+      "exitBeforeLastSnapshot": true,
+      "complete": true
+    },
+    {
+      "ordinal": 7,
+      "enteredMs": 46954,
+      "exitedMs": 57552,
+      "callbackDurationMs": 10598,
+      "exitBeforeLastSnapshot": false,
+      "complete": true
+    },
+    {
+      "ordinal": 8,
+      "enteredMs": 57555,
+      "exitedMs": 57682,
+      "callbackDurationMs": 127,
+      "exitBeforeLastSnapshot": false,
+      "complete": true
+    },
+    {
+      "ordinal": 9,
+      "enteredMs": 58314,
+      "exitedMs": null,
+      "callbackDurationMs": null,
+      "exitBeforeLastSnapshot": false,
+      "complete": false
+    }
+  ],
+  "rootCounts": {
+    "atLastSnapshot": {
+      "entered": 7,
+      "exited": 6
+    },
+    "allObservedMarkers": {
+      "entered": 9,
+      "exited": 8
+    }
+  },
+  "interpretation": [
+    "Each of the five periodic samples contains exactly its102 declared unique bucket rows. Calls equal settled plus pending; pending sums agree.",
+    "All samples were emitted at settled-span boundaries. No timer-triggered or final snapshot was observed.",
+    "The last cumulative sample is at50000ms, not at request completion. Its inclusiveMs values contain settled spans only.",
+    "Do not add the cumulative snapshots or overlapping parent/child durations. No wall-time residual is obtained by subtraction.",
+    "Later root markers extend to58314ms; they are separate from the last bucket sample and do not update its counts.",
+    "The source.guard digest sum951ms includes ineligible paths and is not a predicted saving from candidate619.",
+    "The C08 read-scope probes have no observed bucket in this prefix; no memo failure is inferred from a callback not reached."
+  ]
+}

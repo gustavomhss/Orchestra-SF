@@ -2,6 +2,7 @@ import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+import type { CriterionRule } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
 import type { ScenarioCompareRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { SfProductState, SfProductStatePort } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
@@ -25,6 +26,12 @@ export function createSfFinancePairObservation(input: {
   selectedScope: (call: TrustedDomainContext) => { ref: CaseRef; current: () => boolean } | undefined
   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
   readerIdentities: () => readonly unknown[]
+  /** A separate private instance may observe the original rule readers too.
+   * The ordinary Finance pair instance retains its criteria-free eligibility. */
+  criteria?: {
+    resolve: (caseRef: CaseRef, ids: readonly string[], call: TrustedDomainContext) => Promise<readonly CriterionRule[] | undefined>
+    current: () => boolean
+  }
 }) {
   const root = createSfPlannerCalculationRoot({ host: input.host })
   const unsupported = { kind: "unsupported" as const }
@@ -36,7 +43,7 @@ export function createSfFinancePairObservation(input: {
       if (!root.allows(call)) return unavailable()
       const host = input.host, persistence = host.persistence
       const parsed = decodeSfOperationInput("sf_scenario_compare", incoming)
-      if (call.kind !== "ui" || !parsed.ok || parsed.value.criteria.length || parsed.value.scenarioRefs.length !== 2 ||
+      if (call.kind !== "ui" || !parsed.ok || (parsed.value.criteria.length > 0 && !input.criteria) || parsed.value.scenarioRefs.length !== 2 ||
         parsed.value.scenarioRefs[0] === parsed.value.scenarioRefs[1] ||
         digestSfValue(parsed.value) !== digestSfValue(incoming) ||
         !persistence.readSnapshotRoot || !persistence.currentSnapshots || persistence.currentSnapshots()) return await work()
@@ -48,7 +55,18 @@ export function createSfFinancePairObservation(input: {
       const pairDigest = digestSfValue(incoming), caseDigest = digestSfValue(selection.ref)
       const readState = input.state.read, lockedFences = input.lockedSourceFences, readers = input.readerIdentities
       const identities = [...readers()]
-      const current = () => selection.current() && digestSfValue(selection.ref) === caseDigest &&
+      const criteria = parsed.value.criteria.length ? input.criteria : undefined
+      const resolveCriteria = criteria?.resolve, criteriaCurrent = criteria?.current
+      let initialRules: readonly CriterionRule[] | undefined, rulesDigest: string | undefined
+      let unsupportedCriteria = false
+      const rulesCurrent = () => !criteria || (input.criteria === criteria && criteria.resolve === resolveCriteria &&
+        criteria.current === criteriaCurrent && criteriaCurrent?.() === true)
+      const readRules = async () => {
+        if (!criteria || !resolveCriteria || !rulesCurrent()) return undefined
+        const value = await resolveCriteria(selection.ref, parsed.value.criteria, call)
+        return rulesCurrent() && value ? structuredClone(value) : undefined
+      }
+      const current = () => rulesCurrent() && selection.current() && digestSfValue(selection.ref) === caseDigest &&
         input.host === host && host.persistence === persistence && host.requestFor(call) === request && !request.signal.aborted &&
         digestSfValue(incoming) === pairDigest && input.state.read === readState && input.lockedSourceFences === lockedFences &&
         input.readerIdentities === readers && sameReaders(readers(), identities)
@@ -64,7 +82,7 @@ export function createSfFinancePairObservation(input: {
             decision.version !== selection.ref.version || !decision.participants.includes(actor.principalRef) ||
             actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
             actor.policyVersion !== call.binding.policyVersion) return undefined
-          const refs = closedPair(decision, state, parsed.value.scenarioRefs)
+          const refs = closedPlannerScenarios(decision, state, parsed.value.scenarioRefs, initialRules)
           const snapshots = persistence.currentSnapshots?.(), sources = lockedFences()
           if (!snapshots || !sources) return undefined
           if (!refs) return unsupported
@@ -74,6 +92,12 @@ export function createSfFinancePairObservation(input: {
           if (!before || !principal || principal.id !== actor.principalRef || !current()) return undefined
           if (principal.id.startsWith("local:")) return unsupported
           if (!refs.every((ref) => plannerRecordMaterialized(ref, call, snapshots.planner, principal))) return unsupported
+          // The original resolver independently authorizes preferences. The case
+          // witness never substitutes for that namespace's permission.
+          if (criteria) {
+            const rules = await readRules()
+            if (!rules || !current() || rulesDigest === undefined || digestSfValue(rules) !== rulesDigest) return undefined
+          }
           if (!await host.revalidate(call) || !current()) return undefined
           const after = await environment()
           const again = await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") })
@@ -87,8 +111,21 @@ export function createSfFinancePairObservation(input: {
         const closed = await environment()
         return current() && closed === observed.value.environment ? observed.value : undefined
       }
-      const prepared = await root.prepare(call, async () => true, current)
+      const prepared = await root.prepare(call, async () => {
+        if (!criteria) return true
+        // prepare pins the original host and persistence before this first await.
+        if (!current()) return false
+        const rules = await readRules()
+        if (!current()) return false
+        if (!rules) { unsupportedCriteria = true; return "unsupported" }
+        initialRules = rules
+        rulesDigest = digestSfValue(rules)
+        return true
+      }, current)
       if (!prepared) return unavailable()
+      // Missing rules retain the original comparator's unknown outcome. This
+      // branch runs before any comparison and opens no owned read root.
+      if (unsupportedCriteria) return prepared.run(work)
       const grouped = await prepared.run(async (): Promise<PortResult<typeof unsupported | {
         kind: "observed"; witness: string; result: PortResult<Value>
       }>> => {
@@ -120,7 +157,7 @@ function sameReaders(current: readonly unknown[], pinned: readonly unknown[]) {
 }
 
 /** Admit only the historical Planner-only closure. Other domain routes keep their own readers. */
-function closedPair(decision: DecisionCase, state: Readonly<SfProductState>, references: readonly string[]) {
+export function closedPlannerScenarios(decision: DecisionCase, state: Readonly<SfProductState>, references: readonly string[], rules?: readonly CriterionRule[]) {
   const alternatives = [...decision.alternatives, ...decision.choices]
   if (decision.preparedChanges.length || decision.receipts.length || alternatives.some((item) => item.scenario.operations.some((operation) =>
     operation.replacementRef !== undefined || operation.targetRef.startsWith("sf-procurement:") ||
@@ -138,7 +175,7 @@ function closedPair(decision: DecisionCase, state: Readonly<SfProductState>, ref
     }
     return Object.values(item).every(visit)
   }
-  if (!visit(decision) || !found.size) return undefined
+  if (!visit(decision) || (rules && !visit(rules)) || !found.size) return undefined
   const bases = new Set([...found.values()].map((ref) => ref.refId))
   if (!alternatives.every((alternative) => bases.has(alternative.scenario.baseRef))) return undefined
   const pair = references.map((ref) => {
@@ -150,7 +187,8 @@ function closedPair(decision: DecisionCase, state: Readonly<SfProductState>, ref
         digestSfValue(item.result) === stored.resultDigest)
       : []
   })
-  return pair[0]?.length === 1 && pair[1]?.length === 1 && pair[0][0]!.id !== pair[1][0]!.id ? [...found.values()] : undefined
+  return pair.length > 0 && pair.every((alternatives) => alternatives.length === 1) &&
+    new Set(pair.map((alternatives) => alternatives[0]!.id)).size === pair.length ? [...found.values()] : undefined
 }
 
 function plannerRecordMaterialized(ref: PlannerRecord, call: TrustedDomainContext, snapshot: Snapshot, principal: Principal) {

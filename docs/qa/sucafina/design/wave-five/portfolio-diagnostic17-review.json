@@ -1,0 +1,64 @@
+{
+  "source": "6acd67a926c664c696df3ae1c0791599ef58e811",
+  "initialSnapshot": "ededafe75f1ee7ee0c395b68b88bf6a32345ca04",
+  "initialTree": "d57409e3787c96b58a1c0998181bb154435724a7",
+  "paths": 15,
+  "spec": {
+    "permanentSha": "1c9aaeeb88dd319d834e09bdc545a05a3f02c238",
+    "diagnosticSha": "d457c752d3e85597a1ca5f147fee86e6442570a4",
+    "entireFilePrefixEqual": false,
+    "allowedHeaderDifferences": [
+      "unused type/import removal in diagnostic",
+      "diagnostic test declaration name"
+    ],
+    "bodyBeforePreviewCharacters": 3714,
+    "bodyBeforePreviewByteEqual": true,
+    "originalTimeoutMilliseconds": 60000,
+    "sameRequestExtendedObservationMilliseconds": 420000,
+    "explicitEvaluationAfterDeadline": false
+  },
+  "rootReviewed": [
+    "HTTP admission/final revalidation/human finish",
+    "physical root invocation and accepted/staged counters",
+    "synchronous projectPlannerSource/domain.view/calculated timers",
+    "metric batch forwarding and scalar fallback",
+    "source helper existing GET timing only",
+    "bounded stdout bridges",
+    "aggregation logger"
+  ],
+  "peerReviewed": {
+    "agent": "design_reviews",
+    "files": [
+      "case-port:d3d960e681e2a3e75dc42fc56666afb1f0397692",
+      "scenario-operation-access:73c635c11aa1869c864820e0879050e33a29b57c",
+      "planner-evidence:3c47a44d2fb8205007b5fc2e25e4a664415343cf",
+      "portfolio-authority:8d76796b05c1f40068c9ea7d5422c621e679e650",
+      "portfolio-comparison-observation:3b56e9ecc4ecb2d0220c7e9b03ff5873fa985710"
+    ],
+    "verdict": "Original arguments, source/authority guards, order, short circuits and catches preserved."
+  },
+  "requiredFix": "RESOLVED: lower intervals <=190000 and absolute cap <=200000; per-bucket dropped counts retained.",
+  "qualification": false,
+  "status": "PREFLIGHT_REVIEW_COMPLETE",
+  "limitations": [
+    "No provider read added or substituted.",
+    "No production integration of diagnostic files.",
+    "Inclusive categories/parents overlap; bucket unions are not additive across nested categories.",
+    "Diagnostic timings include instrumentation overhead; original clean deadline remains verdict."
+  ],
+  "correctedSnapshot": "9ec17019b555606c5e3a47cf6dd7602ff5f65ac0",
+  "correctedTree": "01a8fc6a28b37dd316901eb6253ad3fe7a7cf484",
+  "correctedLogger": "722fb43a9665ec2cc34e36d8f5d4fa6202be6d86",
+  "run": 45002137493,
+  "job": 137145783704,
+  "executionOutcomeClaim": "None. This receipt records source review before execution; consult the separate Actions result.",
+  "productCodeChanged": false,
+  "runtimeIntegrated": false,
+  "hardLimits": {
+    "buckets": 8192,
+    "intervalsTotal": 200000,
+    "lowerPriorityIntervals": 190000,
+    "stdoutLineCharacters": 8192
+  },
+  "extendedWaitPurpose": "Observe the same original request after its unchanged failure; no retries or explicit evaluation after the deadline."
+}

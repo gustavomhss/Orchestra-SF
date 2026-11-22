@@ -1,0 +1,1659 @@
+{
+  "branch": "ci-run-sf5binative1",
+  "snapshot": "9472494bd3fd208f7e80d3e76e500a11960c7d95",
+  "tree": "af582de0e73efc8c6a91bc88082a3b4332062fb5",
+  "parent": "6703cc5ba71709f0616b186383ab63f779c22dfb",
+  "fullSpec": "daadc138d3a207d506dc61beb4e01dbd16f8f4be",
+  "overlaySpec": "8414018a96331adf9069355cc73ed9ad21881829",
+  "worker": "28b09e213b85d660b261458009022da3942b5407",
+  "run": 44988337151,
+  "testJob": 137103725904,
+  "cleanupJob": 137105018246,
+  "workflowConclusion": "success",
+  "testConclusion": "success",
+  "testSummary": "1 passed (4.6m)",
+  "visualOutcome": "changes-required",
+  "artifact": {
+    "id": 14740533334,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 32595431,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14740533334",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14740533334/zip",
+    "expired": false,
+    "created_at": "2026-11-22T05:17:30Z",
+    "expires_at": "2026-11-29T05:17:28Z",
+    "updated_at": "2026-11-22T05:17:30Z",
+    "digest": "sha256:1c0a901f3105f2bb36fd3739fe94b256176a427aed37319db1c2effdbbd35e5f",
+    "workflow_run": {
+      "id": 44988337151,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf5binative1",
+      "head_sha": "9472494bd3fd208f7e80d3e76e500a11960c7d95"
+    }
+  },
+  "captureOrigin": "Original wave-three capture helper, JPEG quality 78, normalized SF_DESIGN_PREVIEW chunks; PNG originals in workflow artifact.",
+  "data": "Original installed producer test data; not a production customer result.",
+  "sourceBodyAcquisition": "native-response throughout; no fallback used",
+  "sources": [
+    {
+      "operation": "bi-source-binding-readback",
+      "view": "BI01",
+      "selectedValueId": "budget:2026-01:effective",
+      "referenceId": "sf-source:72e19961-6adb-4a10-b5b0-04928ad112f6:1",
+      "valueBindingCount": 48,
+      "distinctReferenceDigests": 1,
+      "bindings": [
+        {
+          "valueId": "budget:2026-01:basis",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-01-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-01:effective",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-01-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-01:actual",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-01-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-01:forecast",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-01-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-02:basis",
+          "period": {
+            "start": "2026-02-01",
+            "end": "2026-02-28"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-02:effective",
+          "period": {
+            "start": "2026-02-01",
+            "end": "2026-02-28"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-02:actual",
+          "period": {
+            "start": "2026-02-01",
+            "end": "2026-02-28"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-02:forecast",
+          "period": {
+            "start": "2026-02-01",
+            "end": "2026-02-28"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-03:basis",
+          "period": {
+            "start": "2026-03-01",
+            "end": "2026-03-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-03:effective",
+          "period": {
+            "start": "2026-03-01",
+            "end": "2026-03-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-03:actual",
+          "period": {
+            "start": "2026-03-01",
+            "end": "2026-03-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-03:forecast",
+          "period": {
+            "start": "2026-03-01",
+            "end": "2026-03-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-04:basis",
+          "period": {
+            "start": "2026-04-01",
+            "end": "2026-04-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-04:effective",
+          "period": {
+            "start": "2026-04-01",
+            "end": "2026-04-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-04:actual",
+          "period": {
+            "start": "2026-04-01",
+            "end": "2026-04-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-04:forecast",
+          "period": {
+            "start": "2026-04-01",
+            "end": "2026-04-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-05:basis",
+          "period": {
+            "start": "2026-05-01",
+            "end": "2026-05-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-05:effective",
+          "period": {
+            "start": "2026-05-01",
+            "end": "2026-05-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-05:actual",
+          "period": {
+            "start": "2026-05-01",
+            "end": "2026-05-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-05:forecast",
+          "period": {
+            "start": "2026-05-01",
+            "end": "2026-05-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-06:basis",
+          "period": {
+            "start": "2026-06-01",
+            "end": "2026-06-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-06:effective",
+          "period": {
+            "start": "2026-06-01",
+            "end": "2026-06-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-06:actual",
+          "period": {
+            "start": "2026-06-01",
+            "end": "2026-06-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-06:forecast",
+          "period": {
+            "start": "2026-06-01",
+            "end": "2026-06-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-07:basis",
+          "period": {
+            "start": "2026-07-01",
+            "end": "2026-07-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-07:effective",
+          "period": {
+            "start": "2026-07-01",
+            "end": "2026-07-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-07:actual",
+          "period": {
+            "start": "2026-07-01",
+            "end": "2026-07-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-07:forecast",
+          "period": {
+            "start": "2026-07-01",
+            "end": "2026-07-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-08:basis",
+          "period": {
+            "start": "2026-08-01",
+            "end": "2026-08-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-08:effective",
+          "period": {
+            "start": "2026-08-01",
+            "end": "2026-08-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-08:actual",
+          "period": {
+            "start": "2026-08-01",
+            "end": "2026-08-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-08:forecast",
+          "period": {
+            "start": "2026-08-01",
+            "end": "2026-08-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-09:basis",
+          "period": {
+            "start": "2026-09-01",
+            "end": "2026-09-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-09:effective",
+          "period": {
+            "start": "2026-09-01",
+            "end": "2026-09-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-09:actual",
+          "period": {
+            "start": "2026-09-01",
+            "end": "2026-09-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-09:forecast",
+          "period": {
+            "start": "2026-09-01",
+            "end": "2026-09-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-10:basis",
+          "period": {
+            "start": "2026-10-01",
+            "end": "2026-10-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-10:effective",
+          "period": {
+            "start": "2026-10-01",
+            "end": "2026-10-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-10:actual",
+          "period": {
+            "start": "2026-10-01",
+            "end": "2026-10-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-10:forecast",
+          "period": {
+            "start": "2026-10-01",
+            "end": "2026-10-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-11:basis",
+          "period": {
+            "start": "2026-11-01",
+            "end": "2026-11-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-11:effective",
+          "period": {
+            "start": "2026-11-01",
+            "end": "2026-11-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-11:actual",
+          "period": {
+            "start": "2026-11-01",
+            "end": "2026-11-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-11:forecast",
+          "period": {
+            "start": "2026-11-01",
+            "end": "2026-11-30"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-12:basis",
+          "period": {
+            "start": "2026-12-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-12:effective",
+          "period": {
+            "start": "2026-12-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-12:actual",
+          "period": {
+            "start": "2026-12-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "budget:2026-12:forecast",
+          "period": {
+            "start": "2026-12-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        }
+      ]
+    },
+    {
+      "operation": "bi-data-readback",
+      "view": "BI01",
+      "http": 200,
+      "rows": 36,
+      "numericValues": 14,
+      "missing": 22
+    },
+    {
+      "operation": "bi-source-body-acquisition",
+      "selectedValueId": "budget:2026-01:effective",
+      "http": 200,
+      "acquisition": "native-response"
+    },
+    {
+      "operation": "bi-source-original-destinations",
+      "selectedValueId": "budget:2026-01:effective",
+      "installedOrigin": "http://127.0.0.1:39285",
+      "installedMount": "/sucafina",
+      "links": [
+        {
+          "label": "dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31",
+          "url": "http://127.0.0.1:39285/orchestra/sf-dashboard/budget?year=2026"
+        }
+      ]
+    },
+    {
+      "operation": "bi-source-body-acquisition",
+      "selectedValueId": "budget:2026-01:actual",
+      "http": 200,
+      "acquisition": "native-response"
+    },
+    {
+      "operation": "bi-source-original-destinations",
+      "selectedValueId": "budget:2026-01:actual",
+      "installedOrigin": "http://127.0.0.1:39285",
+      "installedMount": "/sucafina",
+      "links": [
+        {
+          "label": "dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31",
+          "url": "http://127.0.0.1:39285/orchestra/sf-dashboard/budget?year=2026"
+        }
+      ]
+    },
+    {
+      "operation": "bi-source-identity-regression",
+      "selectedValues": [
+        "budget:2026-01:effective",
+        "budget:2026-01:actual"
+      ],
+      "samePublishedReference": true,
+      "exactValueAndDigestQueries": 2,
+      "originalProjectionRetained": true
+    },
+    {
+      "operation": "bi-data-original-acquisition",
+      "view": "BI06",
+      "http": 200,
+      "acquisition": "native-response"
+    },
+    {
+      "operation": "bi-source-binding-readback",
+      "view": "BI06",
+      "selectedValueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:ageDays",
+      "referenceId": "0cfabe87-d304-47e2-abc8-cb07bcf60b09",
+      "valueBindingCount": 17,
+      "distinctReferenceDigests": 1,
+      "bindings": [
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:status",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:holder",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:approvalStage",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:stageEnteredAt",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:ageDays",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:baseAmount",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:submittedAmount",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:submittedCurrency",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:submittedFxRate",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:originalAmount",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:originalCurrency",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:fxRate",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:fxSource",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:monetaryState",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:subject",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:reason",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        },
+        {
+          "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:nextStep",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "sourceKeys": [
+            "evidenceLevel",
+            "installationId",
+            "kind",
+            "projectId",
+            "refDigest",
+            "refId",
+            "schema",
+            "target"
+          ]
+        }
+      ]
+    },
+    {
+      "operation": "bi-data-readback",
+      "view": "BI06",
+      "http": 200,
+      "rows": 3,
+      "numericValues": 3,
+      "missing": 1
+    },
+    {
+      "operation": "bi06-original-ages",
+      "request": {
+        "viewId": "BI06",
+        "selectionRef": "839ca861-05c1-4b75-941f-9af168a0089b",
+        "period": {
+          "start": "2026-01-01",
+          "end": "2026-12-31"
+        }
+      },
+      "ages": [
+        {
+          "id": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:ageDays",
+          "value": 0.002088888888888889,
+          "unit": "days",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "evidenceState": "confirmed"
+        },
+        {
+          "id": "PR-2026-0005:447743b3-0f69-4186-8ba2-4a4070ec1f3f:ageDays",
+          "value": 0.002088888888888889,
+          "unit": "days",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "evidenceState": "confirmed"
+        },
+        {
+          "id": "PR-2026-0006:447743b3-0f69-4186-8ba2-4a4070ec1f3f:ageDays",
+          "value": 0.002088888888888889,
+          "unit": "days",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "evidenceState": "confirmed"
+        }
+      ]
+    },
+    {
+      "operation": "bi06-original-source-resolution",
+      "http": 200,
+      "acquisition": "native-response",
+      "valueId": "PR-2026-0003:447743b3-0f69-4186-8ba2-4a4070ec1f3f:ageDays",
+      "links": [
+        {
+          "label": "procurement · PR-2026-0003 · v1 · 2026-01-01 a 2026-12-31",
+          "url": "http://127.0.0.1:39285/orchestra/sf-procurement/requests?request=PR-2026-0003"
+        }
+      ],
+      "negativeHttp": 403,
+      "negative": {
+        "status": "denied",
+        "reason": "bi-source-outside-selected-value"
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  ],
+  "captures": [
+    {
+      "name": "UI45-question-catalog-dark-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI45-question-catalog-dark-desktop-test-data.jpg",
+      "blob": "f29a4f245c2394110eeec3c49c29a6dc3772a881",
+      "width": 1440,
+      "surface": "UI45",
+      "stage": "catalog",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": true
+    },
+    {
+      "name": "UI45-question-catalog-light-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI45-question-catalog-light-desktop-test-data.jpg",
+      "blob": "67e35edf63314c0579b470fd68592bc57fc27c9a",
+      "width": 1440,
+      "surface": "UI45",
+      "stage": "catalog",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI45-question-catalog-dark-390-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI45-question-catalog-dark-390-test-data.jpg",
+      "blob": "93137d0219437b7130a5aa905796740bb50a6720",
+      "width": 390,
+      "surface": "UI45",
+      "stage": "catalog",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI45-question-catalog-light-320-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI45-question-catalog-light-320-test-data.jpg",
+      "blob": "7ae5fd93033f8fb01d41df41fad6164c6c909b9f",
+      "width": 320,
+      "surface": "UI45",
+      "stage": "catalog",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI45-authorized-financial-context-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI45-authorized-financial-context-test-data.jpg",
+      "blob": "410fe660aaba45a081cb2bbe479cb2574eb2655c",
+      "width": 1440,
+      "surface": "UI45",
+      "stage": "context",
+      "parts": 5,
+      "received": 5,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI45-financial-source-values-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI45-financial-source-values-test-data.jpg",
+      "blob": "11d3bb40ec5b39223686aea614cca8bbec724cd8",
+      "width": 1440,
+      "surface": "UI45",
+      "stage": "result",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-financial-selected-context-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-financial-selected-context-test-data.jpg",
+      "blob": "37b598fc11fa97ad4c3a225bc2f5f937b21e4019",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-financial-original-values-dark-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-financial-original-values-dark-desktop-test-data.jpg",
+      "blob": "4ca6d60aff8266049eaf05410eb2f5dd64e2dea5",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": true
+    },
+    {
+      "name": "UI46-financial-original-values-light-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-financial-original-values-light-desktop-test-data.jpg",
+      "blob": "21f8c8ac7325a9e65abaf9f813972fc28f9cdb19",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 7,
+      "received": 7,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-financial-original-values-dark-390-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-financial-original-values-dark-390-test-data.jpg",
+      "blob": "7af764dba5b232d601a1ef854e3a0974c83b43c1",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-financial-original-values-dark-390-scrolled-values-test-data.jpg",
+      "blob": "896eeffb655e1068f456697383198218dadba05b",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-financial-original-values-light-320-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-financial-original-values-light-320-test-data.jpg",
+      "blob": "d6789de433a170b60604bf86ea7dfda44a5bba42",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-financial-original-values-light-320-scrolled-values-test-data.jpg",
+      "blob": "c59fedac501deaed3da2b89c201599a0f1eb6b46",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-financial-source-table-dark-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-financial-source-table-dark-desktop-test-data.jpg",
+      "blob": "226f0f78859b65b89bd4d725a80fe33330849a2e",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 8,
+      "received": 8,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-financial-source-table-light-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-financial-source-table-light-desktop-test-data.jpg",
+      "blob": "46a036c36b302f72f0c596061ab958c7ef2623f9",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 8,
+      "received": 8,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-financial-source-table-dark-390-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-financial-source-table-dark-390-test-data.jpg",
+      "blob": "c287de9836f610a8145f228aa6fd09e477d93b0b",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-financial-source-table-light-320-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-financial-source-table-light-320-test-data.jpg",
+      "blob": "b0a8b982f64f4ba0597d7d615693ef82cfb63526",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-resolved-original-source-1-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-resolved-original-source-1-test-data.jpg",
+      "blob": "d1f4c596366f543c4f98a1f3d99af59a69e10686",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 8,
+      "received": 8,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-resolved-original-source-2-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-resolved-original-source-2-test-data.jpg",
+      "blob": "d1f4c596366f543c4f98a1f3d99af59a69e10686",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 8,
+      "received": 8,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-operations-original-coverage-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-operations-original-coverage-test-data.jpg",
+      "blob": "eaeffca38b424f5d7992ef00ee796e9f53ec1e39",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": true
+    },
+    {
+      "name": "UI46-operations-original-table-dark-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-operations-original-table-dark-desktop-test-data.jpg",
+      "blob": "74f3642a99bbd8bbe06593af28d40d597567509d",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 7,
+      "received": 7,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-operations-original-table-light-desktop-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-operations-original-table-light-desktop-test-data.jpg",
+      "blob": "f0954bdaf2068e803b5b47cfbb2bccd297dce82c",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 7,
+      "received": 7,
+      "manuallyViewed": true
+    },
+    {
+      "name": "UI46-operations-original-table-dark-390-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-operations-original-table-dark-390-test-data.jpg",
+      "blob": "29cd9e944587498b7120f38750c50f4c3fdd1c68",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-operations-original-table-light-320-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-operations-original-table-light-320-test-data.jpg",
+      "blob": "b8671b4d9eff4133e583320071b1b973ec22896a",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-operations-dark-320-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-operations-dark-320-test-data.jpg",
+      "blob": "f615f4b0bd48bd1627da074e07ec58ba0d7333c8",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": true
+    },
+    {
+      "name": "UI46-operations-resolved-original-source-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-operations-resolved-original-source-test-data.jpg",
+      "blob": "4d6a76780702f8ef5c1ddefad02ef73a3e7df26c",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 7,
+      "received": 7,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-source-empty-sensitivity-catalog-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-source-empty-sensitivity-catalog-test-data.jpg",
+      "blob": "49ffddffb5d7f843a8c7dea0c0523235eb1ab4a3",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "context",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI45-pt-BR-dark-desktop-catalog-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI45-pt-BR-dark-desktop-catalog-test-data.jpg",
+      "blob": "62bec73596a29f91c88f45ae1705861d475c7b74",
+      "width": 1440,
+      "surface": "UI45",
+      "stage": "catalog",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-pt-BR-dark-desktop-values-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-pt-BR-dark-desktop-values-test-data.jpg",
+      "blob": "c0d7221aabcf39e5ef82ec27d4f602d4a912253f",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 7,
+      "received": 7,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-pt-BR-dark-320-values-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-pt-BR-dark-320-values-test-data.jpg",
+      "blob": "4d63571d5c3671750af1e50f7e0828757b28272c",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": false
+    },
+    {
+      "name": "UI46-pt-BR-dark-desktop-operations-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-pt-BR-dark-desktop-operations-test-data.jpg",
+      "blob": "ce14768b24d6ffe0d7442a169e9fed97199d3ccd",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 6,
+      "received": 6,
+      "manuallyViewed": true
+    },
+    {
+      "name": "UI46-pt-BR-dark-320-operations-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/reviews/bi-native-attempt-01/UI46-pt-BR-dark-320-operations-test-data.jpg",
+      "blob": "748fe689bf859f9c155be5d9241b0c5aefde93d8",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result",
+      "parts": 2,
+      "received": 2,
+      "manuallyViewed": true
+    }
+  ]
+}
