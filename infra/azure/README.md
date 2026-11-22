@@ -16,13 +16,88 @@ Este guia prepara a fundação cloud do Orchestra-SF para qualificação: um gru
 
 O workflow dispara só com `workflow_dispatch`. Actions fixas: `actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5`, `actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020`, `azure/login@7184910d9eb2b1c5e48f7073824a90609bb9b6d6`. Preview e apply compilam o mesmo ARM JSON com o Bicep de `infra/azure/tools.json`: versão `v0.49.2`, arquivo `bicep-linux-x64`, SHA-256 `0ab9de90c2493f206f8281bae74f9ee2d5ed3605548dab1adf41fef185e1f7c5`. Não há pipeline de release da aplicação nem login do produto implementados aqui.
 
-`deploy.sh` recebe só inputs de infra, por ambiente: `OPERATION`, `VM_SIZE`, `IMAGE_VERSION`, `CONFIRM`, `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP` e `AZURE_VM_SSH_PUBLIC_KEY`. Não são flags da aplicação. O preflight monta o JSON de parâmetros em Python, sem interpolar entrada no shell. O job `validate` não chama `deploy.sh`. O deployment de grupo chama-se `orchsf-foundation`.
+O caminho padrão de `deploy.sh` recebe os inputs de infra, por ambiente: `OPERATION`, `VM_SIZE`, `IMAGE_VERSION`, `CONFIRM`, `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP` e `AZURE_VM_SSH_PUBLIC_KEY`. Os perfis QA abaixo acrescentam três inputs opcionais de rede. Não são flags da aplicação. O preflight monta o JSON de parâmetros em Python, sem interpolar entrada no shell. O job `validate` não chama `deploy.sh`. O deployment de grupo chama-se `orchsf-foundation`.
+
+
+## Perfis de rede para G08 e G10
+
+O perfil padrão `mvp` preserva as três regras originais e os seis parâmetros serializados pelo wrapper. Os perfis de qualificação reutilizam a mesma fundação, sem modificar o bootstrap, criar um segundo provisionador ou alterar a instalação e os recibos do produto. Compilar o ARM ou passar os smokes não comprova isolamento no Azure.
+
+| Perfil | Grupo permitido pelo wrapper | Entrada durante a qualificação | Saída |
+| --- | --- | --- | --- |
+| `mvp` | Alvo original; nos três grupos abaixo, somente um grupo vazio | TCP 80/443 da Internet, como antes | Padrões existentes do Azure |
+| `g08-qa` | `orchestra-sf-g08-qa` | Somente TCP 443 dos IPv4 `/32` observados | Padrões existentes do Azure; não é a cerca do clone |
+| `g10-source` | `orchestra-sf-g10-source` | Somente TCP 443 dos IPv4 `/32` observados | Padrões existentes do Azure; não é a cerca do clone |
+| `g10-clone` | `orchestra-sf-g10-clone` | Nenhuma regra de permissão de entrada | TCP 443 somente para os IPv4 públicos `/32` administrativos observados, negação explícita de `AzurePlatformDNS` e negação de toda outra saída sujeita ao NSG |
+
+Os perfis G08/origem fecham também a porta 80 depois da preparação do TLS. O clone não recebe uma regra SSH nem uma permissão ampla `Internet`, `AzureCloud` ou `VirtualNetwork`. As negações de prioridade 4096 precedem as regras padrão do NSG. O vínculo subnet → NSG permanece o mesmo. Os grupos novos não reutilizam a VM, o disco, o IP, a rede nem o piloto de Compras do grupo atual.
+
+### Entradas do wrapper
+
+Além dos inputs de infra já existentes, `deploy.sh` aceita:
+
+| Variável de ambiente | Parâmetro ARM | Padrão | Validação antes de qualquer chamada Azure |
+| --- | --- | --- | --- |
+| `NETWORK_PROFILE` | `networkProfile` | `mvp` | Enum fechado e correspondência exata, sem distinguir maiúsculas/minúsculas do RG, com a tabela acima |
+| `QA_HTTPS_INGRESS_CIDRS` | `qaHttpsIngressCidrs` | `[]` | Array JSON de IPv4 `/32` canônicos; obrigatório e não vazio só em G08/origem |
+| `CLONE_ADMIN_EGRESS_CIDRS` | `cloneAdminEgressCidrs` | `[]` | Array JSON de IPv4 públicos `/32` canônicos; obrigatório e não vazio só no clone para a rota administrativa atual |
+
+Cada lista tem no máximo 32 entradas, sem duplicatas. O ingresso admite endereços privados unicast quando um observador real está nesse caminho. O egress administrativo exige endereços públicos. Máscaras mais largas, IPv6, endereço sem `/32`, tags, URLs, curingas, valores não textuais, loopback, multicast, broadcast, endereços reservados, link-local e a rede 0/8 são recusados. Os dois `/1` que cobririam a Internet também são recusados. O perfil `mvp` recusa listas não vazias; G08/origem recusam a lista administrativa; o clone recusa a lista de ingresso.
+
+Nenhum IP de exemplo deste repositório constitui uma allowlist operacional. Os IPv4 reais precisam vir da observação dos validadores, observadores e endpoints administrativos da janela. Sintaxe válida não prova propriedade, autorização, exclusividade nem alcance do endpoint.
+
+Quando o alvo é um dos três RGs de QA, `mvp` exige que `az resource list` devolva exatamente zero recursos. Os perfis QA exigem o deployment `orchsf-foundation` e a VM `orchsf-vm` existentes, ambos com `provisioningState=Succeeded`. Consulta indisponível, resposta vazia ou deployment parcial bloqueiam o procedimento antes do what-if/create. Um grupo parcialmente provisionado não é retomado com a rede aberta de `mvp`; exige revisão do estado e um plano explícito. Estado `Succeeded` não substitui a observação do cloud-init, do disco montado, do Caddy e do canal administrativo.
+
+### Rota operacional: Owner no Cloud Shell e o mesmo wrapper
+
+A rota de QA é o operador Owner já autorizado, no Cloud Shell efêmero do próprio portal, executando `deploy.sh` da revisão exata aprovada no CI. O Cloud Shell pode funcionar sem conta de armazenamento; sua disponibilidade e o registro de `Microsoft.CloudShell` precisam ser observados antes do uso. Os recursos das três fundações, sua região, a cota e o custo precisam de autorização operacional específica. A identidade Actions permanece Reader: esta rota não cria credencial federada, atribuição de papel ou grant Microsoft.
+
+O operador confere a conta, a assinatura e o tenant ativos com `az account show`, sem imprimir tokens. O wrapper não faz login nem escolhe o principal por `AZURE_CLIENT_ID`: esse input continua sendo o UUID de configuração já existente e não atesta a identidade do operador. A autorização vem da sessão Owner efetivamente observada; o wrapper compara assinatura e tenant com essa sessão. O Bicep local usado pelo wrapper tem de corresponder ao pin exato de `tools.json`; o próprio wrapper verifica seu SHA-256 antes de compilar.
+
+Para QA, invocar o wrapper é obrigatório. O ARM compilado possui o enum e os limites de tamanho, mas não valida sozinho a relação RG/perfil, a natureza dos IPs ou a condição de grupo vazio. Importar o ARM cru em Custom Deployment e editar seus parâmetros contornaria essas verificações e não é a rota qualificada. Não há `assert` experimental, recurso fictício de trava ou política Azure adicional.
+
+Sequência operacional, sem dados privados antes da cerca:
+
+1. Confirmar três grupos dedicados novos, a disponibilidade/cota do SKU e a região aprovada. Criá-los vazios é ação separada do wrapper. Não reaplicar a fundação no grupo ou nas VMs atuais.
+2. Executar `mvp` em cada grupo vazio, usando a versão exata da imagem, a chave SSH pública e os inputs já previstos. Esse estado serve somente ao bootstrap vazio: ainda não é homologação ou ensaio.
+3. Confirmar os critérios existentes de bootstrap, volume, Caddy 503 e TLS. Preparar as ferramentas e observar os endpoints administrativos necessários sem inserir backup, dados da aplicação, cookies, segredos ou identidades de negócio. Não repetir o bootstrap depois da ativação.
+4. Guardar a observação dos IPs e executar `preview` com o perfil correspondente. Revisar o what-if. Executar `apply` com os mesmos inputs e `CONFIRM='APPLY <RG-exato>'`. O wrapper repete what-if e envia o mesmo ARM e arquivo de parâmetros ao create em modo Incremental.
+5. Conferir as regras efetivas no NIC/subnet e a conectividade real, incluindo a recusa de origens/destinos fora das listas. Encerrar conexões de bootstrap anteriores à cerca: NSGs são stateful e regras novas não encerram conexões já estabelecidas. Só depois admitir material privado para G08 ou G10.
+6. No clone, comprovar o canal administrativo ainda funcional depois da cerca e antes de transferir o backup. DNS geral está negado; a administração precisa de resolução restrita e endpoints efetivamente observados ou de um canal alternativo comprovado. Uma lista `/32` ou exit 0 do deployment não prova esse canal. Não liberar `AzureCloud` ou `Internet` para fazer a prova passar.
+
+Exemplo de invocação G08, depois de configurar os inputs existentes e selecionar o grupo correspondente. As sentinelas abaixo são intencionalmente inválidas até substituição por observações reais:
+
+```bash
+OPERATION=preview CONFIRM=PREVIEW \
+NETWORK_PROFILE=g08-qa \
+QA_HTTPS_INGRESS_CIDRS='<REQUIRES_INPUT_JSON_ARRAY_OF_OBSERVED_IPV4_32>' \
+CLONE_ADMIN_EGRESS_CIDRS='[]' \
+bash infra/azure/deploy.sh
+```
+
+A compilação operacional do wrapper não é build do produto. Os smokes, guards, empacotamento e qualificação do tar continuam em Actions. O workflow `azure-mvp.yml`, seu environment e o caminho padrão não foram substituídos por este contrato.
+
+### Limites da cerca
+
+A negação explícita de `AzurePlatformDNS` é necessária porque o tráfego DNS da plataforma não é bloqueado por um deny genérico. IMDS permanece acessível para a prova real da identidade da VM; a VM deste modelo não recebe identidade gerida. A comunicação WireServer do agente com o host Azure também tem tratamento de plataforma fora do NSG. Esse desenho não é um air gap nem isolamento contra todos os serviços do hipervisor.
+
+TLS deve estar preparado antes do perfil QA. A renovação ACME não é garantida com 80 fechado e 443 restrito; a validade do certificado precisa cobrir a janela de qualificação. Nenhuma condição de rede cria os quatro contextos Microsoft, registra runner, instala o tar, desabilita credenciais de produção ou substitui o observador e os recibos reais de G08/G10.
+
+A validação em Actions preserva os 14 smokes originais, compila com o Bicep pinado, inspeciona as regras e o vínculo real no ARM e exercita o wrapper com `az` simulado. A captura lê os bytes de ARM e parâmetros que o wrapper de fato entrega a what-if/create antes de limpar os temporários. No CI, o smoke pode retê-los em um diretório absoluto indicado por `AZURE_NETWORK_EVIDENCE_DIR`, com diagnósticos que distinguem o wrapper canônico da mutação negativa de confirmação. Esses arquivos contêm apenas fixtures de teste, não uma allowlist operacional ou um recibo instalado. Eles comprovam o contrato do código, sem aplicar recursos ou afirmar conectividade Azure.
+
+Fontes desta extensão:
+
+- [Cloud Shell efêmero](https://learn.microsoft.com/en-us/azure/cloud-shell/get-started/ephemeral)
+- [Autenticação do Cloud Shell](https://learn.microsoft.com/en-us/azure/cloud-shell/features)
+- [Regras NSG e considerações de plataforma](https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview)
+- [DNS e WireServer em 168.63.129.16](https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16)
+- [Recursos experimentais no Bicep v0.49.2](https://github.com/Azure/bicep/blob/v0.49.2/docs/experimental-features.md)
 
 ## Valores que ainda exigem input
 
 Não inventar nem commitar: assinatura, tenant, nome do registro da pipeline, `appId`, objectId do service principal, nome da credencial federada, grupo de recursos, região, SKU, versão exata da imagem, chave SSH pública, domínio ou URL, grupos, `guestObjectId`, `homeTenantId`, atribuição, consentimentos e limite de custo. O arquivo de exemplo usa sentinelas `REQUIRES_INPUT_*`, inexecutáveis até substituição e validação. Literais estáveis do contrato: usuário `sfadmin` e disco de dados de 64 GiB (mínimo 32, máximo 1024). SKUs admitidas, sem valor de desempenho: `Standard_D2as_v5` e `Standard_D4as_v5`.
 
-A VM não tem identidade gerida nem senha. O NSG da sub-rede permite TCP 80 e 443 a partir da Internet e não tem regra SSH. O disco de dados usa LUN 0, cache `None` e `deleteOption` `Detach`. O subject OIDC verificado desta fundação é `repo:gustavomhss@228147811/Orchestra-SF@1455724710:environment:azure-mvp`.
+A VM não tem identidade gerida nem senha. No perfil `mvp`, o NSG da sub-rede permite TCP 80 e 443 a partir da Internet e não tem regra SSH. O disco de dados usa LUN 0, cache `None` e `deleteOption` `Detach`. O subject OIDC verificado desta fundação é `repo:gustavomhss@228147811/Orchestra-SF@1455724710:environment:azure-mvp`.
 
 ## Três identidades separadas
 
