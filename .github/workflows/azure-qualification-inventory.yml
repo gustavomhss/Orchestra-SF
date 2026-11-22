@@ -130,18 +130,95 @@ jobs:
           set -euo pipefail
           umask 077
           python3 - <<'PY'
-          import datetime, json, os, pathlib, subprocess
+          import datetime, hashlib, json, os, pathlib, re, subprocess, urllib.parse
           root = pathlib.Path(os.environ["INVENTORY_DIR"])
           group = os.environ["AZURE_RESOURCE_GROUP"]
+          def metadata_hash(value):
+              return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")).hexdigest()
+          def minimize_tags(tags):
+              if tags is None:
+                  return {"present": False, "count": 0, "entries": []}
+              if not isinstance(tags, dict) or any(not isinstance(key, str) or not isinstance(value, str) for key, value in tags.items()):
+                  raise ValueError("Unexpected tag shape")
+              environments = {"qa", "isolated-qa", "qa-isolated", "test", "dev", "staging", "prod", "production"}
+              enums = {
+                  "environment": environments, "env": environments,
+                  "purpose": {"g08", "g08-qa", "g10", "g10-source", "g10-clone", "qa", "test", "clone", "production"},
+                  "gate": {"g08", "g10"},
+                  "reservationstate": {"reserved", "available", "expired"},
+                  "leasestate": {"reserved", "available", "expired"},
+              }
+              references = {"owner", "operator", "custodian", "observer", "reservationref", "leaseref",
+                  "reservedby", "reservedfor", "windowstart", "windowend", "expiresat"}
+              entries = []
+              for key, value in sorted(tags.items()):
+                  name = key.casefold()
+                  entry = {"name": name if name in enums or name in references else "other",
+                      "nameSha256": metadata_hash(key), "valuePresent": bool(value), "valueSha256": metadata_hash(value)}
+                  if value.casefold() in enums.get(name, set()):
+                      entry["enum"] = value.casefold()
+                  entries.append(entry)
+              return {"present": bool(tags), "count": len(tags), "sha256": metadata_hash(tags), "entries": entries}
+          def scoped_network_reference(value, kind, subscription, resource_group):
+              if value is None:
+                  return {"present": False}
+              if not isinstance(value, str) or kind not in {"virtualNetworks", "subnets", "networkSecurityGroups", "routeTables", "natGateways"}:
+                  raise ValueError("Unexpected network reference")
+              expected = ["", "subscriptions", subscription, "resourceGroups", resource_group, "providers", "Microsoft.Network"]
+              expected += ["virtualNetworks", None, "subnets", None] if kind == "subnets" else [kind, None]
+              parts = value.split("/")
+              scoped = len(parts) == len(expected) and all(
+                  re.fullmatch(r"[A-Za-z0-9_.()-]{1,80}", actual) if wanted is None else actual.casefold() == wanted.casefold()
+                  for actual, wanted in zip(parts, expected))
+              if not scoped:
+                  return {"present": True, "scope": "OUTSIDE_SCOPE_OR_UNEXPECTED_ID", "sha256": metadata_hash(value)}
+              return {"present": True, "scope": "CONFIGURED_RESOURCE_GROUP", "id": value}
+          def minimize_network_bindings(value, subscription, resource_group):
+              if not isinstance(value, list):
+                  raise ValueError("Unexpected virtual network shape")
+              networks = []
+              for network in value:
+                  network_ref = scoped_network_reference(network["id"], "virtualNetworks", subscription, resource_group)
+                  if network_ref.get("scope") != "CONFIGURED_RESOURCE_GROUP" or not isinstance(network.get("subnets"), list):
+                      raise ValueError("Virtual network was outside the requested scope")
+                  subnets = []
+                  for subnet in network["subnets"]:
+                      subnet_ref = scoped_network_reference(subnet["id"], "subnets", subscription, resource_group)
+                      if subnet_ref.get("scope") != "CONFIGURED_RESOURCE_GROUP" or "/".join(subnet["id"].split("/")[:9]).casefold() != network["id"].casefold():
+                          raise ValueError("Subnet did not belong to the observed virtual network")
+                      subnets.append({"id": subnet_ref["id"],
+                          "networkSecurityGroup": scoped_network_reference(subnet.get("nsgId"), "networkSecurityGroups", subscription, resource_group),
+                          "routeTable": scoped_network_reference(subnet.get("routeTableId"), "routeTables", subscription, resource_group),
+                          "natGateway": scoped_network_reference(subnet.get("natGatewayId"), "natGateways", subscription, resource_group)})
+                  networks.append({"id": network_ref["id"], "subnets": subnets})
+              return networks
+          def minimize_permissions(value):
+              if not isinstance(value, dict) or not isinstance(value.get("value"), list):
+                  raise ValueError("Unexpected permission response")
+              entries = []
+              for permission in value["value"]:
+                  if not isinstance(permission, dict):
+                      raise ValueError("Unexpected permission entry")
+                  entry = {}
+                  for name in ("actions", "notActions", "dataActions", "notDataActions"):
+                      actions = permission.get(name)
+                      if actions is not None and (not isinstance(actions, list) or any(
+                          not isinstance(action, str) or not re.fullmatch(r"(?:\*|[A-Za-z0-9.*_-]+(?:/[A-Za-z0-9.*_-]+)+)", action) for action in actions)):
+                          raise ValueError("Unexpected permission action")
+                      entry[name] = actions
+                  entries.append(entry)
+              next_page = value.get("nextLink")
+              return {"permissions": entries, "nextPagePresent": next_page is not None and next_page != "",
+                  "pageLimit": 1, "nextLinkFollowed": False, "authorizationInferred": False}
           observations = {}
-          def read(name, args, query):
+          def read(name, args, query, project=lambda value: value):
               try:
                   result = subprocess.run(["az", *args, "--only-show-errors", "--output", "json", "--query", query],
                       capture_output=True, text=True, timeout=90, check=False)
                   if result.returncode:
                       observations[name] = {"status": "NOT_OBSERVABLE", "exitCode": result.returncode}
                       return None
-                  value = json.loads(result.stdout)
+                  value = project(json.loads(result.stdout))
                   observations[name] = {"status": "OBSERVED", "value": value}
                   return value
               except Exception as error:
@@ -161,18 +238,29 @@ jobs:
               save()
               raise SystemExit("Authenticated Azure account did not match the configured scope")
           resource_group = read("resourceGroup", ["group", "show", "--name", group],
-              "{id:id,name:name,location:location,provisioningState:properties.provisioningState}")
+              "{id:id,name:name,location:location,provisioningState:properties.provisioningState,tags:tags}",
+              lambda value: {**value, "tags": minimize_tags(value.get("tags"))})
           if not resource_group:
               save()
               raise SystemExit("Configured resource group could not be observed")
           read("virtualMachines", ["vm", "list", "--resource-group", group, "--show-details"],
-              "[].{id:id,name:name,location:location,vmSize:hardwareProfile.vmSize,powerState:powerState,provisioningState:provisioningState,osDiskId:storageProfile.osDisk.managedDisk.id,dataDisks:storageProfile.dataDisks[].{id:managedDisk.id,lun:lun,caching:caching,deleteOption:deleteOption},nics:networkProfile.networkInterfaces[].id,identityType:identity.type}")
+              "[].{id:id,name:name,location:location,vmSize:hardwareProfile.vmSize,powerState:powerState,provisioningState:provisioningState,osDiskId:storageProfile.osDisk.managedDisk.id,dataDisks:storageProfile.dataDisks[].{id:managedDisk.id,lun:lun,caching:caching,deleteOption:deleteOption},nics:networkProfile.networkInterfaces[].id,identityType:identity.type,tags:tags}",
+              lambda values: [{**value, "tags": minimize_tags(value.get("tags"))} for value in values])
           read("publicAddresses", ["network", "public-ip", "list", "--resource-group", group],
               "[].{id:id,name:name,ipAddress:ipAddress,fqdn:dnsSettings.fqdn,provisioningState:provisioningState}")
           read("networkInterfaces", ["network", "nic", "list", "--resource-group", group],
               "[].{id:id,name:name,vmId:virtualMachine.id,nsgId:networkSecurityGroup.id,forwarding:enableIPForwarding,subnets:ipConfigurations[].subnet.id,publicAddresses:ipConfigurations[].publicIPAddress.id}")
           read("networkSecurityGroups", ["network", "nsg", "list", "--resource-group", group],
               "[].{id:id,name:name,rules:securityRules[].{name:name,priority:priority,access:access,direction:direction,protocol:protocol,source:sourceAddressPrefix,destination:destinationAddressPrefix,sourcePort:sourcePortRange,destinationPort:destinationPortRange}}")
+          read("networkBindings", ["network", "vnet", "list", "--resource-group", group],
+              "[].{id:id,subnets:subnets[].{id:id,nsgId:networkSecurityGroup.id,routeTableId:routeTable.id,natGatewayId:natGateway.id}}",
+              lambda value: minimize_network_bindings(value, os.environ["AZURE_SUBSCRIPTION_ID"], group))
+          # The fixed caller endpoint is read once; no nextLink is followed or published.
+          permissions_url = "https://management.azure.com/subscriptions/" + os.environ["AZURE_SUBSCRIPTION_ID"] + "/resourceGroups/" + urllib.parse.quote(group, safe="") + "/providers/Microsoft.Authorization/permissions?api-version=2022-04-01"
+          permissions = read("callerPermissions", ["rest", "--method", "get", "--url", permissions_url],
+              "{value:value[].{actions:actions,notActions:notActions,dataActions:dataActions,notDataActions:notDataActions},nextLink:nextLink}", minimize_permissions)
+          if permissions and permissions["nextPagePresent"]:
+              observations["callerPermissions"]["status"] = "PARTIAL"
           read("disks", ["disk", "list", "--resource-group", group],
               "[].{id:id,name:name,managedBy:managedBy,diskSizeGB:diskSizeGb,diskState:diskState,provisioningState:provisioningState,encryptionType:encryption.type}")
           read("snapshots", ["snapshot", "list", "--resource-group", group],
