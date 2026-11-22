@@ -1,5 +1,6 @@
 import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
-import { hasLocalSnapshotScope, observeLocalSnapshotStability } from "../../runtime/local-store.ts"
+import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, observeLocalSnapshotStability } from "../../runtime/local-store.ts"
+import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ChoiceRecord, DecisionCase, ScenarioResult } from "../contracts/decisions.ts"
 import type { ScenarioRequest } from "../contracts/operations.ts"
@@ -264,6 +265,12 @@ export type CurrentChoiceFence = {
 }
 const currentChoiceFences = new WeakSet<object>()
 const currentChoiceStorage = new WeakMap<CurrentChoiceFence, () => CurrentChoicePersistence | undefined>()
+const currentChoiceReadonlyReaders = new WeakMap<object, <S extends Surface>(surfaces: readonly S[]) => ReadonlyAuthorityData<S> | undefined>()
+
+/** Query only the exact forwarding object emitted by this factory. */
+export function currentChoiceReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
+  return currentChoiceReadonlyReaders.get(owner)?.(surfaces)
+}
 
 /** Prove that the factory's original wrappers still delegate to this driver. */
 export function currentChoiceOwnsSnapshotTransactions(fence: CurrentChoiceFence, driver: CurrentChoicePersistence) {
@@ -465,5 +472,49 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
     })
     return exact ? driver : undefined
   })
+  // This separate attestation cannot register an external callback or promote a
+  // writer's preimage. LocalStore alone decides whether its real root is readonly.
+  const readonlyMethods = ["currentSnapshots", "currentSnapshot", "hasCurrentSnapshots", "transaction", "transactionAll", "readSnapshotRoot", "currentSnapshotScope"] as const
+  const plain = () => [input, driver, persistence, fence].every((owner) =>
+    !types.isProxy(owner) && Object.getPrototypeOf(owner) === Object.prototype)
+  if (plain()) {
+    const originals = readonlyMethods.map((name) => ({
+      base: Object.getOwnPropertyDescriptor(driver, name),
+      wrapped: Object.getOwnPropertyDescriptor(persistence, name),
+    }))
+    const pinned = () => {
+      if (!plain()) return false
+      const provider = Object.getOwnPropertyDescriptor(input, "persistence")
+      const forwarding = Object.getOwnPropertyDescriptor(fence, "persistence")
+      return !!provider && Object.hasOwn(provider, "value") && provider.value === driver &&
+        !!forwarding && Object.hasOwn(forwarding, "value") && forwarding.value === persistence &&
+        readonlyMethods.every((name, index) => {
+          const base = Object.getOwnPropertyDescriptor(driver, name)
+          const wrapped = Object.getOwnPropertyDescriptor(persistence, name)
+          return !!base && Object.hasOwn(base, "value") && typeof base.value === "function" && base.value === originals[index]?.base?.value &&
+            !!wrapped && Object.hasOwn(wrapped, "value") && typeof wrapped.value === "function" && wrapped.value === originals[index]?.wrapped?.value
+        })
+    }
+    if (originals.every(({ base, wrapped }) => !!base && Object.hasOwn(base, "value") && typeof base.value === "function" &&
+      !!wrapped && Object.hasOwn(wrapped, "value") && typeof wrapped.value === "function") && pinned()) {
+      currentChoiceReadonlyReaders.set(persistence, <S extends Surface>(surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined => {
+        if (!pinned()) return undefined
+        const scope = scopes.getStore()
+        // Keep LocalStore's error for a known closed or aborted scope. Unknown
+        // drivers and mutable roots retain the original, unsupported path.
+        const observed = currentLocalReadonlyAuthorityData(driver, surfaces)
+        if (!observed) return undefined
+        const integrity = { failed: false }
+        const current = (requirement?: "unpoisoned") => {
+          const valid = observed.current(requirement) && !integrity.failed && pinned() && scopes.getStore() === scope &&
+            (!scope || currentScope(scope))
+          if (!valid) integrity.failed = true
+          return valid
+        }
+        if (!current()) throw denied()
+        return { ...observed, current }
+      })
+    }
+  }
   return Object.freeze(fence)
 }
