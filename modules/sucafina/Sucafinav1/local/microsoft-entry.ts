@@ -75,6 +75,10 @@ export async function createMicrosoftInstallation(
     const profileHttp = teamProfiles && createTeamProfileHttp({
       origin: config.origin, mount: config.mount, installationId, tenantId: config.tenantId, resolver: teamProfiles,
     })
+    const checkpoint = config.teams === "direct" && store.teamProfiles ? await (async () => {
+      const { createCorporateCheckpointHttp } = await import("../runtime/corporate-checkpoint-http.ts")
+      return createCorporateCheckpointHttp({ config, directory, identity, profilePolicy: store.teamProfiles!, now })
+    })() : undefined
     const teamAccess = identity.observeTeams && createTeamProfileAccess({
       origin: config.origin, mount: config.mount, directory, tenantId: config.tenantId,
       enabledTeamIds: config.enabledTeamIds ?? [], prepare: identity.prepare, observeTeams: identity.observeTeams,
@@ -141,6 +145,8 @@ export async function createMicrosoftInstallation(
         if (profiles) return profiles
         const mcp = await purchaseMcp?.(request) ?? await supplierMcp?.(request) ?? await contractMcp?.(request)
         if (mcp) return mcp
+        const captured = await checkpoint?.(request)
+        if (captured) return captured
         const recovered = await recovery?.(request)
         if (recovered) return recovered
         const route = teamAccess ? teamBusinessRoute(url.pathname, config.mount) : undefined
