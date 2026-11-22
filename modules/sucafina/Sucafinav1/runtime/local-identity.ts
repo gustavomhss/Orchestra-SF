@@ -433,6 +433,7 @@ function nativeTeamReturn(value: string | null, origin: string) {
     sessionSegment !== undefined && Schema.is(NativeSession.ID)(sessionSegment)
   const domain = nativeTeamDomainPath(url.pathname)
   const budgetRoute = domain === "budget"
+  const overviewRoute = domain === "overview"
   const domainRoute = domain !== undefined
   if (url.origin !== origin || url.username || url.password || url.hash ||
       !sessionRoute && !domainRoute && !["/", "/orchestra/sf-home", "/orchestra/sf-home/context"].includes(url.pathname)) return
@@ -442,12 +443,17 @@ function nativeTeamReturn(value: string | null, origin: string) {
   const required = ["contractRevision", "server", "installationId", "tenantId",
     ...(sessionRoute || domainRoute ? ["teamObjectId"] : []), ...(budgetRoute ? ["year"] : [])]
   if (new Set(keys).size !== keys.length || required.some((key) => !parameters.has(key)) ||
-      keys.some((key) => !required.includes(key) && key !== "teamObjectId") ||
+      keys.some((key) => !required.includes(key) && key !== "teamObjectId" &&
+        !(overviewRoute && (key === "year" || key === "month"))) ||
       parameters.get("server") !== origin) return
-  if (budgetRoute) {
+  if (budgetRoute || overviewRoute && parameters.has("year")) {
     const year = parameters.get("year")!
-    // The Team budget URL requires a year; its allowed values remain the original domain codec.
+    // Detail routes require a year; source selection may omit it. Both use the original codec.
     if (!/^[0-9]{4}$/.test(year) || !Schema.is(SfDomainReadSelection)({ year: Number(year) })) return
+  }
+  if (overviewRoute && parameters.has("month")) {
+    const month = parameters.get("month")!
+    if (!/^(?:[1-9]|1[0-2])$/.test(month) || !Schema.is(SfDomainReadSelection)({ month: Number(month) })) return
   }
   const installationId = parameters.get("installationId")
   const tenantId = parameters.get("tenantId")
@@ -461,6 +467,7 @@ function nativeTeamReturn(value: string | null, origin: string) {
 
 /** The original native route registry's closed entry/new/detail/edit syntax. */
 function nativeTeamDomainPath(pathname: string) {
+  if (pathname === "/orchestra/sf-dashboard/budget") return "overview"
   const match = /^\/orchestra\/(sf-procurement\/contracts|sf-dashboard\/(?:opex|capex))(?:\/(new|r_[A-Za-z0-9_-]+)(\/edit)?)?$/.exec(pathname)
   if (!match) return
   const [, base, reference, edit] = match

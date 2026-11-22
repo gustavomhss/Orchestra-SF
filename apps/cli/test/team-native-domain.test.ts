@@ -8,6 +8,7 @@ import { Schema } from "effect"
 import { SfTeamContext, SfTeamContextResult, SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import type { SfTeamContextQuery } from "@orchestra/schema/sucafina/context"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import { createModule } from "../../../modules/sucafina/Sucafinav1/index.ts"
 import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import { createTeamProfileAccess, teamProfileInstallationId } from "../../../modules/sucafina/Sucafinav1/runtime/team-profile-access.ts"
@@ -176,7 +177,7 @@ async function createFixture() {
     state.writerRequests.push(req)
     return { request: req, response: (await bridge(req, team).handle())! }
   }
-  const read = async (cap: Capability, team = 0, search = "?year=2026") => {
+  const read = async (cap: Capability | "CAP03", team = 0, search = "?year=2026") => {
     const req = request("/api/ui/pages/" + cap + search, {}, team)
     return { request: req, response: (await bridge(req, team).handle())! }
   }
@@ -198,7 +199,16 @@ test("original Team reader publishes current CAP authority without legacy contex
     .map((item) => item.capabilityId)).toEqual(["CAP14", "CAP04", "CAP05"])
   expect(ctx.destinations.filter((item) => ["CAP14", "CAP04", "CAP05"].includes(item.capabilityId))
     .every((item) => item.canRead && item.allowedActionIds.includes("save"))).toBe(true)
-  expect(ctx.availability.every((item) => item.operations.every((operation) => operation.operational))).toBe(true)
+  expect(ctx.availability.filter((item) => item.resource !== "CAP03")
+    .every((item) => item.operations.every((operation) => operation.operational))).toBe(true)
+  expect(ctx.destinations.find((item) => item.capabilityId === "CAP03")).toEqual({
+    capabilityId: "CAP03", surface: "dashboard", page: "Budget Overview", canRead: true, allowedActionIds: [],
+  })
+  expect(ctx.availability.find((item) => item.resource === "CAP03")?.operations.map((item) =>
+    [item.operationId, item.state, item.operational])).toEqual([
+      ["domain.page.CAP03", "ready", true], ["domain.command.CAP03.save-month", "denied", false],
+      ["domain.command.CAP03.save-revenue", "denied", false],
+    ])
   expect(JSON.stringify(ctx)).not.toMatch(/component-session|roleMap|snapshot|business-teams/)
   const request = f.contextRequest()
   f.state.originals.length = 0
@@ -363,7 +373,7 @@ test("original F02 composes one held root per observation and preserves other na
   if (live.status !== "ok") throw new Error("Original F02 unavailable")
   expect(live.value.destinations.some((item) => item.capabilityId === "CAP25" && item.canRead)).toBe(true)
   expect(new Set(live.value.destinations.map((item) => item.capabilityId)).size).toBe(live.value.destinations.length)
-  expect(live.value.availability.map((item) => item.resource)).toEqual(["CAP14", "CAP04", "CAP05"])
+  expect(live.value.availability.map((item) => item.resource)).toEqual(["CAP14", "CAP04", "CAP05", "CAP03"])
   expect(f.state.rootCalls).toBe(2)
   expect(f.state.maxRootDepth).toBe(1)
   expect(f.state.maxBusinessDepth).toBe(1)
@@ -422,4 +432,78 @@ test("internal POST authority observation retains Request/body and HTTP F02 rema
   expect((await f.f02.handle(f02)).status).toBe(400)
   expect(f02.bodyUsed).toBe(false)
   expect(await f.snapshot()).toEqual(before)
+}))
+
+test("Budget source projects original OPEX and CAPEX totals with selected periods and isolated Teams", async () => fixture(async (f) => {
+  expect((await f.command("CAP04", { name: "Original OPEX A", budget: 120 })).response.status).toBe(200)
+  expect((await f.command("CAP05", { name: "Original CAPEX A", budget: 80 })).response.status).toBe(200)
+  expect((await f.command("CAP04", { name: "Original OPEX B", budget: 37 }, { team: 1 })).response.status).toBe(200)
+  const before = await Promise.all([f.snapshot(), f.snapshot(1)])
+  for (const [search, period] of [
+    ["", { year: 2026, month: 11 }],
+    ["?year=2025", { year: 2025, month: 11 }],
+    ["?month=2", { year: 2026, month: 2 }],
+    ["?year=2027&month=12", { year: 2027, month: 12 }],
+  ] as const) {
+    const read = await f.read("CAP03", 0, search)
+    expect(read.response.status).toBe(200)
+    const body = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP03"].output)(await read.response.json())
+    if (body.status !== "ok") throw new Error("Original budget projection unavailable")
+    expect(body.context.team?.owner.profile).toEqual(f.profiles[0])
+    expect(body.value.selection).toEqual(period)
+    expect(body.value.allowedActionIds).toEqual([])
+    // The original producer sums twelve monthly owner/project budgets.
+    expect(body.value.data.totals).toEqual({
+      opexBudget: 1440, opexActual: 0, opexForecast: 0,
+      capexBudget: 960, capexActual: 0, capexForecast: 0,
+      totalBudget: 2400, totalActual: 0, totalForecast: 0,
+    })
+    expect(body.value.data.budgetCurrentMonth).toEqual({})
+    expect(body.value.data.revenueByYear).toEqual({})
+    expect(body.value.versions.budgetCurrentMonth).toBe(0)
+    expect(body.value.versions.revenueByYear).toBe(0)
+    expect(Object.values(body.value.versions).every((version) => Number.isSafeInteger(version) && version >= 0)).toBe(true)
+  }
+  const other = await f.read("CAP03", 1, "")
+  const body = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP03"].output)(await other.response.json())
+  if (body.status !== "ok") throw new Error("Original second Team budget projection unavailable")
+  expect(body.context.team?.owner.profile).toEqual(f.profiles[1])
+  expect(body.value.data.totals?.totalBudget).toBe(444)
+  expect(await Promise.all([f.snapshot(), f.snapshot(1)])).toEqual(before)
+}))
+
+test("Budget source rejects invalid selection and both native mutations before body consumption without effects", async () => fixture(async (f) => {
+  const context = await f.context()
+  const before = await Promise.all([f.snapshot(), f.snapshot(1)])
+  for (const selection of ["?year=2023", "?year=2028", "?month=0", "?month=13", "?month=1&month=2", "?principalRef=claimed"]) {
+    const read = await f.read("CAP03", 0, selection)
+    expect(read.response.status).toBe(400)
+    expect(await read.response.json()).toEqual({ status: "needs-input", reason: "invalid-page-selection" })
+  }
+  for (const action of ["save-month", "save-revenue"] as const) {
+    for (const body of [
+      "{unconsumed invalid bytes",
+      JSON.stringify({ page: "Budget Overview", action, version: 0,
+        values: action === "save-month" ? { year: 2026, month: 2 } : { year: 2026, revenue: 100 } }),
+    ]) {
+      const request = f.request("/teams/" + teams[0] + "/dashboard?page=Budget%20Overview", {
+        method: "POST", body, headers: {
+          Origin: origin, "Content-Type": "application/json", "Idempotency-Key": randomUUID(),
+          "X-SF-Access-Revision": context.stamp.accessRevision,
+          "X-SF-Native-Owner": Buffer.from(JSON.stringify({
+            installationId: context.stamp.installationId, projectId: context.stamp.projectId,
+            hostId: context.stamp.hostId, principalRef: context.stamp.principalRef,
+          })).toString("base64url"),
+        },
+      })
+      expect((await f.bridge(request).handle())!.status).toBe(403)
+      expect(request.bodyUsed).toBe(false)
+    }
+  }
+  expect(await Promise.all([f.snapshot(), f.snapshot(1)])).toEqual(before)
+  f.state.role = "viewer"
+  const revoked = await f.read("CAP03", 0, "")
+  expect(revoked.response.status).toBe(403)
+  expect(await revoked.response.json()).toEqual({ status: "denied" })
+  expect(await Promise.all([f.snapshot(), f.snapshot(1)])).toEqual(before)
 }))

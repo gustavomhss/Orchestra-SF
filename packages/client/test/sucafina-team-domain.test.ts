@@ -47,9 +47,9 @@ async function browser(work: () => Promise<void>) {
   try { await work() }
   finally { if (previous) Object.defineProperty(globalThis, "window", previous); else Reflect.deleteProperty(globalThis, "window") }
 }
-function fixture(fetch: SfTransportFetch) {
+function fixture(fetch: SfTransportFetch, observed: SfTeamContext = context) {
   let generation = 1
-  let current: SfTeamContext | undefined = context
+  let current: SfTeamContext | undefined = observed
   const transport = createSfTeamDomainTransport({ binding, context: () => current, generation,
     currentGeneration: () => generation, fetch })
   return { transport, retire: () => { generation++ }, context: (value: SfTeamContext | undefined) => { current = value } }
@@ -214,4 +214,80 @@ test("invalid JSON/status and post-response authorization failure cannot create 
   expect(await f.transport.execute(save, values, { ...call(), idempotencyKey: "revoked-after" })).toEqual({
     kind: "transport-error", reason: "outcome-unknown",
   })
+}))
+
+test("Budget source transport preserves optional period selection and accepts only the original Team stamped read", async () => browser(async () => {
+  const current = Schema.decodeUnknownSync(SfTeamContext)({
+    ...context,
+    destinations: [...context.destinations, {
+      capabilityId: "CAP03", surface: "dashboard", page: "Budget Overview", canRead: true, allowedActionIds: [],
+    }],
+    availability: [...context.availability, { family: "domain-read", resource: "CAP03", state: "partial", operations: [
+      { operationId: "domain.page.CAP03", state: "ready", reason: null, operational: true },
+      { operationId: "domain.command.CAP03.save-month", state: "denied", reason: "current-business-authority-denied", operational: false },
+      { operationId: "domain.command.CAP03.save-revenue", state: "denied", reason: "current-business-authority-denied", operational: false },
+    ] }],
+  })
+  const observed: Request[] = []
+  const f = fixture(async (url, init) => {
+    const request = new Request(url, init)
+    observed.push(request)
+    if (new URL(request.url).pathname.endsWith("/context")) return json({ status: "ok", value: current })
+    const parameters = new URL(request.url).searchParams
+    return json({ status: "ok", context: current.stamp, value: {
+      capabilityId: "CAP03", selection: {
+        year: parameters.has("year") ? Number(parameters.get("year")) : 2026,
+        month: parameters.has("month") ? Number(parameters.get("month")) : 11,
+      },
+      data: { budgetCurrentMonth: {}, revenueByYear: {} },
+      versions: { budgetCurrentMonth: 0, revenueByYear: 0 }, allowedActionIds: [],
+    } })
+  }, current)
+  for (const selection of [{}, { year: 2025 }, { month: 1 }, { year: 2027, month: 12 }]) {
+    const start = observed.length
+    const result = await f.transport.execute(SfDomain.operations["domain.page.CAP03"], selection, call())
+    expect(result).toMatchObject({ kind: "response", status: 200, body: {
+      status: "ok", context: current.stamp, value: { capabilityId: "CAP03", allowedActionIds: [] },
+    } })
+    const requests = observed.slice(start)
+    expect(requests).toHaveLength(3)
+    expect(requests.every((request) => request.method === "GET")).toBe(true)
+    const pageRequest = requests[1]!
+    expect(new URL(pageRequest.url).pathname).toBe(binding.mount + "/api/ui/pages/CAP03")
+    expect(Object.fromEntries(new URL(pageRequest.url).searchParams)).toEqual(
+      Object.fromEntries(Object.entries(selection).map(([key, value]) => [key, String(value)])))
+    expect(JSON.parse(pageRequest.headers.get("x-sf-team-profile")!)).toEqual({
+      contractRevision: "sf-team-profile/1", kind: "team", profile,
+    })
+  }
+  const count = observed.length
+  expect(await f.transport.execute(SfDomain.operations["domain.page.CAP03"], { year: 2023 }, call()))
+    .toMatchObject({ kind: "transport-error", reason: "contract-mismatch" })
+  expect(await f.transport.execute(SfDomain.operations["domain.page.CAP03"], { month: 13 }, call()))
+    .toMatchObject({ kind: "transport-error", reason: "contract-mismatch" })
+  expect(observed).toHaveLength(count)
+}))
+
+test("Budget source transport rejects original CAP03 commands before IO even when a DTO advertises mutation grants", async () => browser(async () => {
+  const forged = Schema.decodeUnknownSync(SfTeamContext)({
+    ...context,
+    destinations: [...context.destinations, {
+      capabilityId: "CAP03", surface: "dashboard", page: "Budget Overview", canRead: true,
+      allowedActionIds: ["save-month", "save-revenue"],
+    }],
+    availability: [...context.availability, {
+      family: "domain-read", resource: "CAP03", state: "ready",
+      operations: ["domain.page.CAP03", "domain.command.CAP03.save-month", "domain.command.CAP03.save-revenue"]
+        .map((operationId) => ({ operationId, state: "ready", reason: null, operational: true })),
+    }],
+  })
+  let requests = 0
+  const f = fixture(async () => { requests++; return json({ ok: true }) }, forged)
+  expect(await f.transport.execute(SfDomain.operations["domain.command.CAP03.save-month"],
+    { version: 0, values: { year: 2026, month: 2 } }, { ...call(), idempotencyKey: "budget-month-key" }))
+    .toEqual({ kind: "transport-error", reason: "contract-unavailable" })
+  expect(await f.transport.execute(SfDomain.operations["domain.command.CAP03.save-revenue"],
+    { version: 0, values: { year: 2026, revenue: 100 } }, { ...call(), idempotencyKey: "budget-revenue-key" }))
+    .toEqual({ kind: "transport-error", reason: "contract-unavailable" })
+  expect(requests).toBe(0)
 }))

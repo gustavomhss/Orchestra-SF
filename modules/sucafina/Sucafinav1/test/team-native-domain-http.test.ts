@@ -16,6 +16,7 @@ const operations = {
   CAP14: SfDomain.operations["domain.page.CAP14"],
   CAP04: SfDomain.operations["domain.page.CAP04"],
   CAP05: SfDomain.operations["domain.page.CAP05"],
+  CAP03: SfDomain.operations["domain.page.CAP03"],
 } as const
 type Capability = keyof typeof pages
 
@@ -68,7 +69,7 @@ async function openFixture(nativeWeb: boolean) {
       return result.value
     }
     const headers = (team = f.teamA) => ({ cookie, "x-sf-team-profile": f.selector(f.profile(team)) })
-    const page = (capability: Capability | "CAP25", team = f.teamA, extra: Record<string, string> = {}) =>
+    const page = (capability: Capability | "CAP03" | "CAP25", team = f.teamA, extra: Record<string, string> = {}) =>
       f.request("/api/ui/pages/" + capability + (capability === "CAP04" || capability === "CAP05" ? "?year=2026" : ""),
         { ...headers(team), ...extra })
     const command = async (capability: Capability, values: Record<string, unknown>, options: {
@@ -102,28 +103,34 @@ async function openFixture(nativeWeb: boolean) {
   } catch (error) { await f.close(); throw error }
 }
 
-test("Microsoft factory F02 binds all three native capabilities and preserves original Procurement authority", async () => fixture("native-readers", async (f) => {
+test("Microsoft factory F02 binds all four native capabilities and preserves original Procurement authority", async () => fixture("native-readers", async (f) => {
   const current = await f.context()
-  const capabilities = ["CAP14", "CAP04", "CAP05"]
+  const capabilities = ["CAP14", "CAP04", "CAP05", "CAP03"]
   const native = current.destinations.filter((item) => capabilities.includes(item.capabilityId))
   expect<unknown>(native.map((item) => item.capabilityId)).toEqual(capabilities)
   expect(native.map((item) => [item.canRead, item.allowedActionIds])).toEqual([
     [true, ["save", "delete"]],
     [true, ["save", "delete", "save-entry", "save-deviation", "annual-entry", "year-amount", "import"]],
     [true, ["save", "delete", "save-entry", "save-deviation", "annual-entry", "year-amount"]],
+    [true, []],
   ])
   expect(current.destinations.some((item) => item.capabilityId === "CAP25" && item.canRead)).toBe(true)
   expect(new Set(current.destinations.map((item) => item.capabilityId)).size).toBe(current.destinations.length)
   expect<unknown>(current.availability.map((item) => item.resource)).toEqual(capabilities)
   for (const available of current.availability) {
     expect(available.family).toBe("domain-read")
-    expect(available.state).toBe("ready")
+    expect(available.state).toBe(available.resource === "CAP03" ? "partial" : "ready")
     const operations = Object.keys(SfOperationRegistry).filter((id) =>
       id === "domain.page." + available.resource || id.startsWith("domain.command." + available.resource + "."))
     expect<unknown>(available.operations.map((item) => item.operationId)).toEqual(operations)
-    expect(available.operations.every((item) => item.state === "ready" && item.operational && item.reason === null)).toBe(true)
+    for (const item of available.operations) {
+      const ready = available.resource !== "CAP03" || item.operationId === "domain.page.CAP03"
+      expect(item.state).toBe(ready ? "ready" : "denied")
+      expect(item.operational).toBe(ready)
+      expect(item.reason).toBe(ready ? null : "current-business-authority-denied")
+    }
   }
-  for (const cap of ["CAP14", "CAP04", "CAP05"] as const) {
+  for (const cap of ["CAP14", "CAP04", "CAP05", "CAP03"] as const) {
     const response = await f.page(cap)
     expect(response.status).toBe(200)
     const output: Schema.Top = operations[cap].output
@@ -227,12 +234,12 @@ test("Microsoft native F02 and writers reread current private grants and remove 
     const revoked = await f.context()
     expect(revoked.profile.administration.status).toBe("available")
     expect(revoked.destinations.map((item) => [item.capabilityId, item.canRead, item.allowedActionIds])).toEqual([
-      ["CAP14", false, []], ["CAP04", false, []], ["CAP05", false, []],
+      ["CAP14", false, []], ["CAP04", false, []], ["CAP05", false, []], ["CAP03", false, []],
     ])
-    expect(revoked.availability).toHaveLength(3)
+    expect(revoked.availability).toHaveLength(4)
     expect(revoked.availability.every((item) => item.state === "denied" &&
       item.operations.every((op) => op.state === "denied" && !op.operational))).toBe(true)
-    for (const cap of ["CAP14", "CAP04", "CAP05", "CAP25"] as const) {
+    for (const cap of ["CAP14", "CAP04", "CAP05", "CAP03", "CAP25"] as const) {
       const read = await f.page(cap)
       expect(read.status).toBe(403)
       await read.body?.cancel()
@@ -339,7 +346,7 @@ test("Microsoft native routing preserves original F02 method and raw-query guard
 
 test("Microsoft native page routes and discovery remain disabled in the original default fixture", async () => fixture("native-opt-in", async (f) => {
   expect(f.binding).toBeUndefined()
-  for (const cap of ["CAP14", "CAP04", "CAP05", "CAP25"] as const) {
+  for (const cap of ["CAP14", "CAP04", "CAP05", "CAP03", "CAP25"] as const) {
     const response = await f.page(cap)
     expect(response.status).toBe(404)
     await response.body?.cancel()
@@ -348,3 +355,68 @@ test("Microsoft native page routes and discovery remain disabled in the original
   expect(legacy.status).toBe(200)
   expect(await legacy.text()).toContain('name="person" value="' + f.principalId + '"')
 }, false))
+
+test("Microsoft HTTP Budget source reads original period totals and denies native overview writes with no Team effects", async () => fixture("budget-source", async (f) => {
+  for (const [cap, name, budget, team] of [
+    ["CAP04", "Budget source OPEX A", 120, f.teamA],
+    ["CAP05", "Budget source CAPEX A", 80, f.teamA],
+    ["CAP04", "Budget source OPEX B", 37, f.teamB],
+  ] as const) {
+    const created = await f.command(cap, { name, budget }, { team })
+    expect(created.status).toBe(200)
+    expect(await created.json()).toMatchObject({ ok: true })
+  }
+  const before = f.durable()
+  const held = await f.context()
+  expect<unknown>(held.destinations.find((item) => item.capabilityId === "CAP03")).toEqual({
+    capabilityId: "CAP03", surface: "dashboard", page: "Budget Overview", canRead: true, allowedActionIds: [],
+  })
+  for (const [search, period] of [
+    ["", { year: 2026, month: 11 }],
+    ["?year=2025", { year: 2025, month: 11 }],
+    ["?month=2", { year: 2026, month: 2 }],
+    ["?year=2027&month=12", { year: 2027, month: 12 }],
+  ] as const) {
+    const response = await f.request("/api/ui/pages/CAP03" + search, f.headers())
+    expect(response.status).toBe(200)
+    const result = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP03"].output)(await response.json())
+    if (result.status !== "ok") throw new Error("Original Microsoft budget source unavailable")
+    expect<unknown>(result.context).toEqual(held.stamp)
+    expect<unknown>(result.value.selection).toEqual(period)
+    expect<unknown>(result.value.allowedActionIds).toEqual([])
+    expect(result.value.data.totals).toEqual({
+      opexBudget: 1440, opexActual: 0, opexForecast: 0,
+      capexBudget: 960, capexActual: 0, capexForecast: 0,
+      totalBudget: 2400, totalActual: 0, totalForecast: 0,
+    })
+    expect(result.value.versions.budgetCurrentMonth).toBe(0)
+    expect(result.value.versions.revenueByYear).toBe(0)
+  }
+  const other = await f.page("CAP03", f.teamB)
+  const result = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP03"].output)(await other.json())
+  if (result.status !== "ok") throw new Error("Original second Team budget source unavailable")
+  expect<unknown>(result.context.team?.owner.profile).toEqual(f.profile(f.teamB))
+  expect(result.value.data.totals?.totalBudget).toBe(444)
+  for (const action of ["save-month", "save-revenue"] as const) {
+    const response = await f.request("/teams/" + f.teamA + "/dashboard?page=Budget%20Overview", {
+      ...f.headers(), origin: f.origin, "content-type": "application/json", "idempotency-key": randomUUID(),
+      "x-sf-access-revision": held.stamp.accessRevision,
+      "x-sf-native-owner": Buffer.from(JSON.stringify({
+        installationId: held.stamp.installationId, projectId: held.stamp.projectId,
+        hostId: held.stamp.hostId, principalRef: held.stamp.principalRef,
+      })).toString("base64url"),
+    }, { method: "POST", body: JSON.stringify({ page: "Budget Overview", action, version: 0,
+      values: action === "save-month" ? { year: 2026, month: 2 } : { year: 2026, revenue: 100 } }) })
+    expect(response.status).toBe(403)
+    expect(await response.json()).toEqual({ ok: false, status: 403 })
+  }
+  for (const query of ["year=2023", "month=0", "month=13", "month=1&month=2"]) {
+    const response = await f.request("/api/ui/pages/CAP03?" + query, f.headers())
+    expect(response.status).toBe(400)
+    expect(await response.json()).toEqual({ status: "needs-input", reason: "invalid-page-selection" })
+  }
+  const unauthenticated = await f.request("/api/ui/pages/CAP03?year=invalid", { ...f.headers(), cookie: "" })
+  expect(unauthenticated.status).toBe(401)
+  await unauthenticated.body?.cancel()
+  expect(f.durable()).toEqual(before)
+}))

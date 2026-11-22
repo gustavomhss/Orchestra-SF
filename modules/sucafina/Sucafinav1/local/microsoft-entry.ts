@@ -228,7 +228,7 @@ export async function createMicrosoftInstallation(
         if (captured) return captured
         const recovered = await recovery?.(request)
         if (recovered) return recovered
-        const nativePage = web && ["CAP14", "CAP04", "CAP05", "CAP25"].find((id) =>
+        const nativePage = web && ["CAP14", "CAP04", "CAP05", "CAP03", "CAP25"].find((id) =>
           url.pathname === config.mount + "/api/ui/pages/" + id)
         if (nativePage && teamAccess && web) {
           if (request.method !== "GET")
