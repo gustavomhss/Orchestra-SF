@@ -1,7 +1,8 @@
 /** Reuse the original G07/G08 validators, then observe Linux again. Inputs are not LIVE proof. */
 import { readFile, readlink, realpath } from "node:fs/promises"
 import { digest, privateText, readPlan, validateHost, validatePackage, validatePlan } from "../../../../../../script/sf-ci/g08-private-evidence.mjs"
-import type { NativeManifest, NativeTarget } from "./manifest-contract.ts"
+import type { NativeTarget } from "./manifest-contract.ts"
+import type { InstalledNativeManifest as NativeManifest } from "./g08-manifest-contract.ts"
 
 function record(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("F04_INSTALLED_OBSERVATION_REQUIRED")

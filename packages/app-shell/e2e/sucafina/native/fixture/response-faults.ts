@@ -114,7 +114,7 @@ export async function armHeldResponse(page: Page, target: NativeFaultTarget) {
  */
 export async function requestRealRevocation(input: Readonly<{
   page: Page
-  manifest: NativeManifest
+  manifest: Pick<NativeManifest, "target">
   capabilityId: string
   revokeViaProducer: () => Promise<{ committed: boolean }>
 }>) {

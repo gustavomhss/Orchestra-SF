@@ -55,7 +55,7 @@ export function verifyNativeReport(value, suite, executed = false) {
     titleSha256: digest(item.title), state: executed ? "REPORT_PASS_REQUIRES_HOST_CHAIN" : "LISTED_NOT_RUN" }))
 }
 export function verifyNativeObservations(manifest, selected, inventory, observations, detached) {
-  assert(manifest.schema === "sf2h.native-installed-manifest.v2" &&
+  assert(["sf2h.native-installed-manifest.v2", "sf-g08-native-installed-v1"].includes(manifest.schema) &&
     selected.schema === "sf2h.native-selected-installation.v2" &&
     selected.manifestSha256 === digest(JSON.stringify(manifest)) &&
     selected.candidateSha === manifest.candidateSha, "F04_PRIVATE_SELECTION_BINDING")
@@ -149,7 +149,7 @@ async function main() {
   if (mode === "record-f04") {
     assert(suite && !file && !output, "F04_PRIVATE_ROOT_ARGUMENT_REQUIRED")
     const root = suite, plan = await readPlan(root)
-    const { readNativeManifest } = await import("../../packages/app-shell/e2e/sucafina/native/fixture/readiness.ts")
+    const { readG08NativeManifest: readNativeManifest } = await import("../../packages/app-shell/e2e/sucafina/native/fixture/g08-readiness.ts")
     const { requireNativeInstalledHost } = await import("../../packages/app-shell/e2e/sucafina/native/fixture/installed-host.ts")
     const manifest = await readNativeManifest(), host = await requireNativeInstalledHost(manifest)
     assert.equal(manifest.scratchRoot, root, "F04_ORIGINAL_PRIVATE_ROOT_REQUIRED")
@@ -172,7 +172,7 @@ async function main() {
   }
   assert(mode === "record" && groups.includes(suite) && file && !output, "F04_MODE_REQUIRED")
   const root = file, plan = await readPlan(root)
-  const { readNativeManifest } = await import("../../packages/app-shell/e2e/sucafina/native/fixture/readiness.ts")
+  const { readG08NativeManifest: readNativeManifest } = await import("../../packages/app-shell/e2e/sucafina/native/fixture/g08-readiness.ts")
   const { readNativeSelectedInstallation } = await import("../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts")
   const { requireNativeInstalledHost } = await import("../../packages/app-shell/e2e/sucafina/native/fixture/installed-host.ts")
   const manifest = await readNativeManifest()
