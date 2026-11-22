@@ -3,7 +3,7 @@ import { Database } from "bun:sqlite"
 import { chmod, chown, link, mkdir, mkdtemp, realpath, rename, rm, stat, symlink, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { observeLocalSnapshotStability, openLocalStore } from "../runtime/local-store.ts"
+import { encodeSnapshot, observeLocalSnapshotStability, openLocalStore } from "../runtime/local-store.ts"
 import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
 import type { TrustedDomainContext } from "../product/contracts/sf-execution.ts"
 import type { LocalStore } from "../runtime/local-contract.ts"
@@ -257,10 +257,17 @@ test("large structured snapshots keep detached byte identities across all three 
   await fixture(async (_directory, open) => {
     const store = await open()
     const observed = "A".repeat(80)
-    const records = Array.from({ length: 22_000 }, (_, id) => ({ id, observed, source: "original-source" }))
+    const records = Array.from({ length: 24_000 }, (_, id) => ({ id, observed, source: "original-source" }))
     await store.transaction("dashboard", async (snapshot) => {
       snapshot.data.records = records
       snapshot.data.edge = { optional: undefined, negativeZero: -0, sentinel: ["undefined"] }
+      const encodedUnits = encodeSnapshot(snapshot).length
+      const normalizedUnits = JSON.stringify(snapshot).length
+      // Exercise the measured full-year import range, with a complete copy that
+      // fits alone but would evict other surfaces if the SQL envelope survived.
+      expect(encodedUnits).toBeGreaterThan(4 * 1024 * 1024)
+      expect(encodedUnits + normalizedUnits).toBeLessThan(8 * 1024 * 1024)
+      expect(encodedUnits + normalizedUnits + 1_800_000).toBeGreaterThan(8 * 1024 * 1024)
       return { commit: true, value: undefined }
     })
     for (const surface of ["planner", "procurement"] as const) {
