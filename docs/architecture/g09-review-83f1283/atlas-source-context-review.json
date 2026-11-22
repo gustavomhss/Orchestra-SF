@@ -1,0 +1,2292 @@
+{
+  "schema": "sf-g09-v2-atlas-source-context-review-v1",
+  "status": "SOURCE_CONTEXT_OBSERVED_RUNTIME_BINDING_OPEN",
+  "formalG09Pass": false,
+  "authenticatedReview": false,
+  "assignedDispositions": 0,
+  "sourceReportSha256": "211422a64e4c713e4e3f96b5a88489fba76e099d26ea6d8001794ce019e7ff34",
+  "binding": {
+    "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+    "catalogSha256": "5780a2f9cafec15d16d87b0b31b1465d162e2caf3f4551448586f5ce15d3082b",
+    "inventorySha256": "67d69a7c4c3a13b30ff5dfee35838a0fd27e9eb0fdd9464c747aee1a849970e1",
+    "occurrencesSha256": "c6ea8f9a337fecdce5436884b5df2086bb02c9a7dc1f8fdbd163471e5b2a425a",
+    "graphSha256": "8906caad49eefcd479d508c2c94f9e4ef456a1ba16b2f919c0d6b34e2351fce7",
+    "gapsSha256": "f9aacdaa58b8152b1ab13dd78c668c1bc94f5d016bc91b9f754d21d8f3cc5a92"
+  },
+  "identities": {
+    "schema": "sf-g09-review-navigation-input-v1",
+    "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+    "workflowSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "runId": "44983358294",
+    "runAttempt": "1",
+    "diagnosticJobId": "137091279832",
+    "producerJobId": "137088492396",
+    "producerCheckRunId": "137088492396",
+    "reportArtifactId": "14738453502",
+    "reportArtifactDigest": "sha256:2d25388879050ce5c943bc7324f0b98162d1e6a7fc5277caf994c5f41c5e7bfd",
+    "producerArtifactId": "14738902174",
+    "producerArtifactDigest": "sha256:f080447b290086cc2b4fa0229204568876ee76f4cba5a98e608e0ba0aa1312a9"
+  },
+  "navigationManifestGitBlob": "c2a3efb8439d5046422d93a4d059218a7cb6882e",
+  "allFindingIdsIndexGitBlob": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c",
+  "atlasTree": {
+    "path": "modules/atlas",
+    "gitTree": "1652c45f4a861e13dbdad9bc230f4f84bb61ae4b",
+    "observedAtSources": [
+      "63beecc4011bd2695f0ecca23ed4a5f390a5a2b7",
+      "83f1283f8e39cd5863d9806b9a48f0573f44eaff"
+    ],
+    "doesNotTransferArtifactOrReviewBinding": true
+  },
+  "counts": {
+    "occurrences": 688,
+    "findings": 2540,
+    "plainAtlasPackageImports": 1890,
+    "fixtureSubpathImports": 1,
+    "vitestImports": 593,
+    "vitestConfigImports": 1,
+    "fastCheckImports": 31,
+    "nonliteralDynamicImports": 8,
+    "tsconfigExtends": 16,
+    "staticEdges": 2513,
+    "dynamicEdges": 11,
+    "exactSourceStatementContexts": 55
+  },
+  "packageOrganization": {
+    "modules/atlas/.claude": {
+      "files": 1,
+      "occurrences": 8,
+      "findings": 0
+    },
+    "modules/atlas/.gitignore": {
+      "files": 1,
+      "occurrences": 4,
+      "findings": 0
+    },
+    "modules/atlas/BENCHMARKS.md": {
+      "files": 1,
+      "occurrences": 7,
+      "findings": 0
+    },
+    "modules/atlas/README.md": {
+      "files": 1,
+      "occurrences": 1,
+      "findings": 0
+    },
+    "modules/atlas/boundary": {
+      "files": 16,
+      "occurrences": 111,
+      "findings": 2
+    },
+    "modules/atlas/docs": {
+      "files": 71,
+      "occurrences": 156,
+      "findings": 0
+    },
+    "modules/atlas/harness": {
+      "files": 47,
+      "occurrences": 84,
+      "findings": 31
+    },
+    "modules/atlas/packages/adapter-io": {
+      "files": 298,
+      "occurrences": 198,
+      "findings": 972
+    },
+    "modules/atlas/packages/cli": {
+      "files": 140,
+      "occurrences": 15,
+      "findings": 419
+    },
+    "modules/atlas/packages/contracts": {
+      "files": 3,
+      "occurrences": 3,
+      "findings": 1
+    },
+    "modules/atlas/packages/e2e-blackbox": {
+      "files": 61,
+      "occurrences": 6,
+      "findings": 94
+    },
+    "modules/atlas/packages/e2e": {
+      "files": 11,
+      "occurrences": 1,
+      "findings": 69
+    },
+    "modules/atlas/packages/genesis": {
+      "files": 55,
+      "occurrences": 15,
+      "findings": 202
+    },
+    "modules/atlas/packages/grounding": {
+      "files": 22,
+      "occurrences": 1,
+      "findings": 59
+    },
+    "modules/atlas/packages/index": {
+      "files": 44,
+      "occurrences": 27,
+      "findings": 102
+    },
+    "modules/atlas/packages/kernel": {
+      "files": 27,
+      "occurrences": 0,
+      "findings": 53
+    },
+    "modules/atlas/packages/knowledge": {
+      "files": 78,
+      "occurrences": 9,
+      "findings": 196
+    },
+    "modules/atlas/packages/mcp-server": {
+      "files": 12,
+      "occurrences": 0,
+      "findings": 56
+    },
+    "modules/atlas/packages/memory": {
+      "files": 22,
+      "occurrences": 1,
+      "findings": 44
+    },
+    "modules/atlas/packages/persist": {
+      "files": 38,
+      "occurrences": 5,
+      "findings": 84
+    },
+    "modules/atlas/packages/retrieval": {
+      "files": 20,
+      "occurrences": 19,
+      "findings": 49
+    },
+    "modules/atlas/packages/tools": {
+      "files": 39,
+      "occurrences": 0,
+      "findings": 105
+    },
+    "modules/atlas/scripts": {
+      "files": 3,
+      "occurrences": 17,
+      "findings": 1
+    },
+    "modules/atlas/vitest.config.ts": {
+      "files": 1,
+      "occurrences": 0,
+      "findings": 1
+    }
+  },
+  "scannerMechanism": {
+    "source": {
+      "path": "script/sf-ci/team-profile-residue.mjs",
+      "gitBlob": "10ae99ab085821f0e312ee05479cad3fb723c7b0"
+    },
+    "observed": "buildReachability reads workspaces only from root package.json and admits matching package manifests. Root includes modules/atlas/boundary; modules/atlas/packages/* is declared only by nested Atlas package.json. Inherited tsconfig options are not merged. Graph is explicitly conservative; absence of a path is not proof of dead code."
+  },
+  "resolutionSources": {
+    "nestedWorkspace": {
+      "path": "modules/atlas/package.json",
+      "gitBlob": "49cf8584beca5e4c4a4a79e7f5e5468c506817d4",
+      "bytes": 1670
+    },
+    "nestedLock": {
+      "path": "modules/atlas/package-lock.json",
+      "gitBlob": "52385ecfa7a9ee21c5ce3918790029687cddfcd0",
+      "bytes": 93193
+    },
+    "boundary": {
+      "path": "modules/atlas/boundary/package.json",
+      "gitBlob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7",
+      "bytes": 2030
+    },
+    "builder": {
+      "path": "modules/atlas/boundary/script/build.ts",
+      "gitBlob": "69d8473a2dd08704d7aaf8bf36a2930cb8de3e31",
+      "bytes": 10780
+    },
+    "declarationConfig": {
+      "path": "modules/atlas/boundary/script/tsconfig.json",
+      "gitBlob": "966c9920ac613a90e84dda1129fc7f55b2b2b06f",
+      "bytes": 669
+    },
+    "vitest": {
+      "path": "modules/atlas/vitest.config.ts",
+      "gitBlob": "e59214d9ce2afa286449d3858226df4c101e3d1b",
+      "bytes": 2133
+    }
+  },
+  "aliases": [
+    {
+      "specifier": "@atlas/contracts",
+      "findingCount": 385,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/contracts/package.json",
+        "gitBlob": "4e89aca093bd8cd739fbd12f107d01fb5220268e",
+        "bytes": 332
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/contracts/src/index.ts",
+        "gitBlob": "d1b18f2a66e2e37b908cdb11d2cae8557dac8331",
+        "bytes": 409
+      },
+      "nestedWorkspaceDefaultExport": "./dist/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    },
+    {
+      "specifier": "@atlas/kernel",
+      "findingCount": 366,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/kernel/package.json",
+        "gitBlob": "1799fc90de0718d074ea15e054ab3d4ea280e213",
+        "bytes": 398
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/kernel/src/index.ts",
+        "gitBlob": "e0872c05d52259577d73b82db44a78d0f6ebd9e0",
+        "bytes": 1539
+      },
+      "nestedWorkspaceDefaultExport": "./dist/src/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    },
+    {
+      "specifier": "@atlas/knowledge",
+      "findingCount": 359,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/knowledge/package.json",
+        "gitBlob": "0e706f1c80b6481c92520ca0e7d2870adb990fe5",
+        "bytes": 481
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/knowledge/src/index.ts",
+        "gitBlob": "46624da628ba989ed3ea6786f88d339df40b8d02",
+        "bytes": 5218
+      },
+      "nestedWorkspaceDefaultExport": "./dist/src/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    },
+    {
+      "specifier": "@atlas/index",
+      "findingCount": 213,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/index/package.json",
+        "gitBlob": "e4b2304524e68731eb396e5efd8ee6fa1600122b",
+        "bytes": 423
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/index/src/index.ts",
+        "gitBlob": "7f0675dda08ea7ae1f69a6f8e22fc02979dbd747",
+        "bytes": 2748
+      },
+      "nestedWorkspaceDefaultExport": "./dist/src/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    },
+    {
+      "specifier": "@atlas/adapter-io",
+      "findingCount": 141,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/adapter-io/package.json",
+        "gitBlob": "a18f668a4aa10741bc8d9244425cf2c210423336",
+        "bytes": 749
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/adapter-io/src/index.ts",
+        "gitBlob": "848c74b926f3e412587e011e19e260e3a4b1b1d3",
+        "bytes": 24377
+      },
+      "nestedWorkspaceDefaultExport": "./dist/src/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    },
+    {
+      "specifier": "@atlas/genesis",
+      "findingCount": 135,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/genesis/package.json",
+        "gitBlob": "7a2a4b5d55d149d988a34e32f010df65a4ca8c8e",
+        "bytes": 505
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/genesis/src/index.ts",
+        "gitBlob": "d8fdab0ab2c23a4fa1093ddf67a829dd9e984b07",
+        "bytes": 3381
+      },
+      "nestedWorkspaceDefaultExport": "./dist/src/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    },
+    {
+      "specifier": "@atlas/tools",
+      "findingCount": 128,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/tools/package.json",
+        "gitBlob": "9d0d62b42e43f56afb1352c6ae31450ca2aab060",
+        "bytes": 563
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/tools/src/index.ts",
+        "gitBlob": "cda8e26708608fe25c2020c7fb557e7419f8a193",
+        "bytes": 5702
+      },
+      "nestedWorkspaceDefaultExport": "./dist/src/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    },
+    {
+      "specifier": "@atlas/grounding",
+      "findingCount": 57,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/grounding/package.json",
+        "gitBlob": "5e4d273e2b29e1ba719ffb4af899506b12227803",
+        "bytes": 452
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/grounding/src/index.ts",
+        "gitBlob": "8f39067c7d26b73be5f789f3fa17f5effa7ade03",
+        "bytes": 1773
+      },
+      "nestedWorkspaceDefaultExport": "./dist/src/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    },
+    {
+      "specifier": "@atlas/memory",
+      "findingCount": 56,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/memory/package.json",
+        "gitBlob": "2a8781c17f14b1a3f951e10d2cd9e87e44e4d22c",
+        "bytes": 482
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/memory/src/index.ts",
+        "gitBlob": "a5266e5cf448cb73945cff165758d7253f01a807",
+        "bytes": 2253
+      },
+      "nestedWorkspaceDefaultExport": "./dist/src/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    },
+    {
+      "specifier": "@atlas/retrieval",
+      "findingCount": 25,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/retrieval/package.json",
+        "gitBlob": "f59d414ae65ceec9b744d84b487aad260a08c7fa",
+        "bytes": 481
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/retrieval/src/index.ts",
+        "gitBlob": "eca52eeb4da83e9269c85dfb138af61849aff20e",
+        "bytes": 2468
+      },
+      "nestedWorkspaceDefaultExport": "./dist/src/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    },
+    {
+      "specifier": "@atlas/persist",
+      "findingCount": 24,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/persist/package.json",
+        "gitBlob": "9c4c657b599d6e067247e63259230033e9354100",
+        "bytes": 425
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/persist/src/index.ts",
+        "gitBlob": "f0937e04ce53031fce101c7457914ca8dbfdb142",
+        "bytes": 2378
+      },
+      "nestedWorkspaceDefaultExport": "./dist/src/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    },
+    {
+      "specifier": "@atlas/cli",
+      "findingCount": 1,
+      "findingIdsIn": "a721f9ea43482ce3c41fb26dd2000c20b6d1925c/specifiers",
+      "manifest": {
+        "path": "modules/atlas/packages/cli/package.json",
+        "gitBlob": "a7fe61cdbb50429cd107b55c6f2458013fae0902",
+        "bytes": 744
+      },
+      "sourceEntry": {
+        "path": "modules/atlas/packages/cli/src/index.ts",
+        "gitBlob": "3e3fea14e8d9cb15898277e1565c2d1c85d49041",
+        "bytes": 1126
+      },
+      "nestedWorkspaceDefaultExport": "./dist/src/index.js",
+      "boundaryBuilderRule": "@atlas/<name> -> modules/atlas/packages/<name>/src/index.ts",
+      "qualificationLimit": "This identifies two actual governing resolution contexts. It does not assert the edge was visited by the product builder or is reachable at runtime."
+    }
+  ],
+  "testToolDependencies": {
+    "scope": "Declared and locked source dependencies; no assertion they were executed in product CI.",
+    "manifest": {
+      "path": "modules/atlas/package.json",
+      "gitBlob": "49cf8584beca5e4c4a4a79e7f5e5468c506817d4",
+      "bytes": 1670
+    },
+    "lock": {
+      "path": "modules/atlas/package-lock.json",
+      "gitBlob": "52385ecfa7a9ee21c5ce3918790029687cddfcd0",
+      "bytes": 93193
+    },
+    "vitest": {
+      "version": "4.1.12",
+      "resolved": "https://registry.npmjs.org/vitest/-/vitest-4.1.12.tgz",
+      "integrity": "sha512-5eWdz2yb3ajxWF3C8C4TjkXl7FGm3n2E/VlazALrQHzK7nYMSGFnCZto0bbPNl77AwkOZVLk0YnBAejUu0NiWA==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "@vitest/expect": "4.1.12",
+        "@vitest/mocker": "4.1.12",
+        "@vitest/pretty-format": "4.1.12",
+        "@vitest/runner": "4.1.12",
+        "@vitest/snapshot": "4.1.12",
+        "@vitest/spy": "4.1.12",
+        "@vitest/utils": "4.1.12",
+        "es-module-lexer": "^2.0.0",
+        "expect-type": "^1.3.0",
+        "magic-string": "^0.30.21",
+        "obug": "^2.1.1",
+        "pathe": "^2.0.3",
+        "picomatch": "^4.0.3",
+        "std-env": "^4.0.0-rc.1",
+        "tinybench": "^2.9.0",
+        "tinyexec": "^1.0.2",
+        "tinyglobby": "^0.2.15",
+        "tinyrainbow": "^3.1.0",
+        "vite": "^6.0.0 || ^7.0.0 || ^8.0.0",
+        "why-is-node-running": "^2.3.0"
+      },
+      "bin": {
+        "vitest": "vitest.mjs"
+      },
+      "engines": {
+        "node": "^20.0.0 || ^22.0.0 || >=24.0.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/vitest"
+      },
+      "peerDependencies": {
+        "@edge-runtime/vm": "*",
+        "@opentelemetry/api": "^1.9.0",
+        "@types/node": "^20.0.0 || ^22.0.0 || >=24.0.0",
+        "@vitest/browser-playwright": "4.1.12",
+        "@vitest/browser-preview": "4.1.12",
+        "@vitest/browser-webdriverio": "^4.1.11",
+        "@vitest/coverage-istanbul": "4.1.12",
+        "@vitest/coverage-v8": "4.1.12",
+        "@vitest/ui": "4.1.12",
+        "happy-dom": "*",
+        "jsdom": "*",
+        "vite": "^6.0.0 || ^7.0.0 || ^8.0.0"
+      },
+      "peerDependenciesMeta": {
+        "@edge-runtime/vm": {
+          "optional": true
+        },
+        "@opentelemetry/api": {
+          "optional": true
+        },
+        "@types/node": {
+          "optional": true
+        },
+        "@vitest/browser-playwright": {
+          "optional": true
+        },
+        "@vitest/browser-preview": {
+          "optional": true
+        },
+        "@vitest/browser-webdriverio": {
+          "optional": true
+        },
+        "@vitest/coverage-istanbul": {
+          "optional": true
+        },
+        "@vitest/coverage-v8": {
+          "optional": true
+        },
+        "@vitest/ui": {
+          "optional": true
+        },
+        "happy-dom": {
+          "optional": true
+        },
+        "jsdom": {
+          "optional": true
+        },
+        "vite": {
+          "optional": false
+        }
+      }
+    },
+    "fastCheck": {
+      "version": "3.23.2",
+      "resolved": "https://registry.npmjs.org/fast-check/-/fast-check-3.23.2.tgz",
+      "integrity": "sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A==",
+      "dev": true,
+      "funding": [
+        {
+          "type": "individual",
+          "url": "https://github.com/sponsors/dubzzz"
+        },
+        {
+          "type": "opencollective",
+          "url": "https://opencollective.com/fast-check"
+        }
+      ],
+      "license": "MIT",
+      "dependencies": {
+        "pure-rand": "^6.1.0"
+      },
+      "engines": {
+        "node": ">=8.0.0"
+      }
+    },
+    "testConfiguration": {
+      "unitIncludes": [
+        "packages/*/test/**/*.test.ts",
+        "packages/*/src/**/*.test.ts",
+        "harness/**/*.test.mjs"
+      ],
+      "unitExcludes": [
+        "**/node_modules/**",
+        "**/dist/**",
+        "packages/e2e-blackbox/test/**"
+      ],
+      "blackboxIncludes": [
+        "packages/e2e-blackbox/test/**/*.test.ts"
+      ]
+    }
+  },
+  "generator": {
+    "entryPairs": [
+      [
+        "boundary",
+        "retrieval/src/host-context.ts"
+      ],
+      [
+        "materialize",
+        "retrieval/src/own-snapshot.ts"
+      ],
+      [
+        "native-header",
+        "adapter-io/src/native-header.ts"
+      ],
+      [
+        "native-memory",
+        "adapter-io/src/native-bound.ts"
+      ],
+      [
+        "business-memory-ports",
+        "modules/atlas/boundary/src/business-memory-entry.ts"
+      ],
+      [
+        "surface",
+        "adapter-io/src/surface/index.ts"
+      ],
+      [
+        "mine",
+        "cli/src/surface-mine.ts"
+      ],
+      [
+        "context",
+        "adapter-io/src/context-log.ts"
+      ],
+      [
+        "record",
+        "persist/src/host-adapter.ts"
+      ],
+      [
+        "record-log",
+        "adapter-io/src/record-log.ts"
+      ]
+    ],
+    "bunBuildCount": 9,
+    "esbuildBuildCount": 1,
+    "external": [
+      "web-tree-sitter"
+    ],
+    "esbuildScannerReplacement": "./scanner.js only from adapter-io/src/memory-emit.ts -> external @orchestra/atlas-boundary/native-memory; admitBusinessBundle requires exactly one edge and validates native surface",
+    "outputContract": "--check compares all 20 JS/declaration output contents byte-for-byte with the committed files and rejects missing/stale output.",
+    "generatedSources": [
+      {
+        "path": "modules/atlas/boundary/src/generated/boundary.d.ts",
+        "gitBlob": "dfe902e6ac336f1b2aac92ebf5015677b4c07f92",
+        "bytes": 4454
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/boundary.js",
+        "gitBlob": "4f75bdd2fbc7a8ed3dbac123977c04a17d9cbaa3",
+        "bytes": 32016
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/business-memory-ports.d.ts",
+        "gitBlob": "7331e839a166dd9690610b99ec6b595aec50c6e5",
+        "bytes": 22568
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/business-memory-ports.js",
+        "gitBlob": "cfc144ffec16c1eec41b7350ae8c8d47452088c0",
+        "bytes": 24176
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/context.d.ts",
+        "gitBlob": "3ca74ee7da9b2e1f4c5498130249e32f4aaeb454",
+        "bytes": 2463
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/context.js",
+        "gitBlob": "d4bb55c44a60d2df94861291694b66344a7a6cba",
+        "bytes": 22119
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/materialize.d.ts",
+        "gitBlob": "ce07ef12646233714c000838ebe40a79aba0404e",
+        "bytes": 14665
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/materialize.js",
+        "gitBlob": "f93908cc6f224b8e598d8e4986b13f2fe58ff526",
+        "bytes": 22099
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/mine.d.ts",
+        "gitBlob": "501415204750e0ceae57587987f0e5f6e8dcf1c5",
+        "bytes": 968
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/mine.js",
+        "gitBlob": "89fe59a95c20e06549febf16e9c2da25a6fcb993",
+        "bytes": 386203
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/native-header.d.ts",
+        "gitBlob": "a158e98765ffbcd8d98eccdccd75be18e92393e1",
+        "bytes": 9534
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/native-header.js",
+        "gitBlob": "8951eb418e8ea88053b047b11156c1d4594b665f",
+        "bytes": 47036
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/native-memory.d.ts",
+        "gitBlob": "bc73667c5513e622ff2b5f4f553605fb3532b395",
+        "bytes": 26363
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/native-memory.js",
+        "gitBlob": "820a3010be24a817edae7ff26299919d448ad4bf",
+        "bytes": 49187
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/record-log.d.ts",
+        "gitBlob": "110a7aa147b4b82e3c53e7f889efcf713a8ec62d",
+        "bytes": 7449
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/record-log.js",
+        "gitBlob": "c2eb7566ca6982282adfaf571fc0922b1bf49e0e",
+        "bytes": 27684
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/record.d.ts",
+        "gitBlob": "bcfac54ce03a2f32efbe64451433893882a6aaf9",
+        "bytes": 10023
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/record.js",
+        "gitBlob": "e9baec2ee018c444ff8eedd4f4f43b513bc8abb2",
+        "bytes": 8443
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/surface.d.ts",
+        "gitBlob": "7614ff6a04ff82b76ed68836a843d7232fa8cd43",
+        "bytes": 21840
+      },
+      {
+        "path": "modules/atlas/boundary/src/generated/surface.js",
+        "gitBlob": "a7a19f97045de3c767dc15edb2c2bc72d10ebdf7",
+        "bytes": 532360
+      }
+    ],
+    "generatorExecutedInCurrentProductRun": false,
+    "generatorExecutionObservation": "No generation execution is established by these source reads; root found no Atlas build/closure line in producer job137088492396.",
+    "toolchainCaution": "Root packageManager declares bun1.3.14; current product compiler is pinned Bun1.4.1. A regeneration observation must report its actual toolchain and compare bytes, not assume equivalence."
+  },
+  "sourceStatements": [
+    {
+      "findingId": "0dd7a9e9596a2d10edc7f952a182f9f3ba14a1469b92849e73a119b331591e78",
+      "fileId": 1010,
+      "path": "modules/atlas/harness/gates/layer-guard.mjs",
+      "fileSha256": "4dbbe5e81389553594348e34d8d8bd2ad4ace9fc7c4708c5b1ec868ad3573f69",
+      "edgeId": "6fe97fcbc10e0758f54172510ddcbb1ca16d0a553691e2e20cdc424518bcde87",
+      "kind": "dynamic-import-or-require",
+      "specifier": null,
+      "start": 21847,
+      "end": 21901,
+      "statement": "import(join(PKGS, \"tools\", \"dist\", \"src\", \"index.js\"))",
+      "contextBefore": "he surface pin calls it read-only. Do NOT weaken this to \"not in\n  // WRITE_PATHS\": the contract this kind documents is specifically \"reads off atlas-query\", not merely\n  // \"reads off something that isn't a write door\" — a THIRD read-ish Tool added later must not silently\n  // qualify either.\n  const command = cmdLeg?.get(bare)\n  if (command === \"atlas-query\" && (legs ?? new Set()).has(command)) return true\n  return false\n}\n\nasync function checkSurface(legs) {\n  let mod\n  try {\n    mod = await ",
+      "contextAfter": "\n  } catch {\n    note(\"ARCH-5 cannot import the built tool surface (packages/tools/dist) — run `npm run typecheck` first\")\n    return\n  }\n\n  const governance = [...(mod.GOVERNANCE_SURFACE ?? [])]\n  const write = [...(mod.WRITE_PATHS ?? [])]\n  // READ_SURFACE absent ⇒ empty, so the checks below hold vacuously until the constant lands (WP-10.A5.TOOLS\n  // landed it — 6 members, three binding kinds, see `boundReadDoor`).\n  const read = [...(mod.READ_SURFACE ?? [])]\n  // `boundComposeFields`/`comman",
+      "sourceGitBlob": "ab7e33215405e7df51ca66df210f0dc9e8bec765"
+    },
+    {
+      "findingId": "c64c034f0804f1c0765e55d4ca328044a8585ed921cbb0753a6a19da276148f7",
+      "fileId": 1073,
+      "path": "modules/atlas/packages/adapter-io/src/governed-emit-negation.ts",
+      "fileSha256": "583d63f8910680cc1285c0a8c9eaf7ba22ed91ee340a994bbe0a20a06ec952ae",
+      "edgeId": "cb85dba098d41a49aa42dd9d81c35e4bcaa81df916aa8c2dd00a238a325973ba",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/kernel",
+      "start": 4478,
+      "end": 4524,
+      "statement": "import type { CasObject } from \"@atlas/kernel\"",
+      "sourceGitBlob": "c04eefc8034cac0f616dbec90e54b62a96f9c1be"
+    },
+    {
+      "findingId": "179eddb1a48c17304cd8ca1108752639e4ecd24bf6b263ce80c3aa99c54c1c10",
+      "fileId": 1073,
+      "path": "modules/atlas/packages/adapter-io/src/governed-emit-negation.ts",
+      "fileSha256": "583d63f8910680cc1285c0a8c9eaf7ba22ed91ee340a994bbe0a20a06ec952ae",
+      "edgeId": "9938f660e5b0edbadde6d2cf39efe5715b586f650fde0b429ef539805f04a9c3",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/contracts",
+      "start": 4525,
+      "end": 4584,
+      "statement": "import type { Hash, NodeKey, Tier } from \"@atlas/contracts\"",
+      "sourceGitBlob": "c04eefc8034cac0f616dbec90e54b62a96f9c1be"
+    },
+    {
+      "findingId": "af2d799e37813db4ebad8e224ec0db0369c4f7d1326be0b36613e06aa058a436",
+      "fileId": 1073,
+      "path": "modules/atlas/packages/adapter-io/src/governed-emit-negation.ts",
+      "fileSha256": "583d63f8910680cc1285c0a8c9eaf7ba22ed91ee340a994bbe0a20a06ec952ae",
+      "edgeId": "6a19af958d19142bd62319fe12b4142285e38199e356e99b2ec03eba71ca2b0f",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/knowledge",
+      "start": 4585,
+      "end": 4730,
+      "statement": "import {\n  upsert,\n  route,\n  stage,\n  ratify,\n  isTier,\n  isScope,\n  negationKey,\n  isKnownRelationKind,\n  isGrounded,\n} from \"@atlas/knowledge\"",
+      "sourceGitBlob": "c04eefc8034cac0f616dbec90e54b62a96f9c1be"
+    },
+    {
+      "findingId": "a2d132e2d5dbe56dc9c041577a47f94cb7a7c265ef7fc0e8fe0d3d7752e25ac4",
+      "fileId": 1073,
+      "path": "modules/atlas/packages/adapter-io/src/governed-emit-negation.ts",
+      "fileSha256": "583d63f8910680cc1285c0a8c9eaf7ba22ed91ee340a994bbe0a20a06ec952ae",
+      "edgeId": "6559a42f733078c03d136a71231dc46d4da25983b30f6f75702289f93c460377",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/knowledge",
+      "start": 4731,
+      "end": 4899,
+      "statement": "import type {\n  Candidate,\n  CurrentNode,\n  NegationNode,\n  AbstainedRecord,\n  RelationKind,\n  RatifyToken,\n  StoreProjection,\n  WriteRequest,\n} from \"@atlas/knowledge\"",
+      "sourceGitBlob": "c04eefc8034cac0f616dbec90e54b62a96f9c1be"
+    },
+    {
+      "findingId": "4fa3180a56ca7e96347f36d6f451fb097d5798f0ca4de0bc0e8a3924b699e337",
+      "fileId": 1073,
+      "path": "modules/atlas/packages/adapter-io/src/governed-emit-negation.ts",
+      "fileSha256": "583d63f8910680cc1285c0a8c9eaf7ba22ed91ee340a994bbe0a20a06ec952ae",
+      "edgeId": "88018329c99d7bd0ad5dafd993644e5b1400e8721086d60a5805f7f0bff2eebd",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/index",
+      "start": 4900,
+      "end": 4944,
+      "statement": "import { isLocalSymbol } from \"@atlas/index\"",
+      "sourceGitBlob": "c04eefc8034cac0f616dbec90e54b62a96f9c1be"
+    },
+    {
+      "findingId": "08175cadf75f31dc24626790eacfd058fcdd1a1f39492b44d659015200b3cfd9",
+      "fileId": 1073,
+      "path": "modules/atlas/packages/adapter-io/src/governed-emit-negation.ts",
+      "fileSha256": "583d63f8910680cc1285c0a8c9eaf7ba22ed91ee340a994bbe0a20a06ec952ae",
+      "edgeId": "c9aa996b51fff02faea3d56e43bb7935275743e09a5848a11b255a595057346e",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/index",
+      "start": 4945,
+      "end": 5014,
+      "statement": "import type { Axes, IndexNode, SymbolReverseApi } from \"@atlas/index\"",
+      "sourceGitBlob": "c04eefc8034cac0f616dbec90e54b62a96f9c1be"
+    },
+    {
+      "findingId": "e4d2cd20a53a167553160ea9fc6e6e10c74c682fc30df46d6e29256ebde292df",
+      "fileId": 1073,
+      "path": "modules/atlas/packages/adapter-io/src/governed-emit-negation.ts",
+      "fileSha256": "583d63f8910680cc1285c0a8c9eaf7ba22ed91ee340a994bbe0a20a06ec952ae",
+      "edgeId": "ec701100df6b029adf06f966521a6e4d65bab8f6a0ba085517fca09ab7c7bec1",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/grounding",
+      "start": 5015,
+      "end": 5064,
+      "statement": "import { resolveCurrent } from \"@atlas/grounding\"",
+      "sourceGitBlob": "c04eefc8034cac0f616dbec90e54b62a96f9c1be"
+    },
+    {
+      "findingId": "240bfc8bea601d654d40884288a2355b276223881c36cf72b52688ecdef97e5a",
+      "fileId": 1073,
+      "path": "modules/atlas/packages/adapter-io/src/governed-emit-negation.ts",
+      "fileSha256": "583d63f8910680cc1285c0a8c9eaf7ba22ed91ee340a994bbe0a20a06ec952ae",
+      "edgeId": "49f22cf99f6a2bc20e792292a3b4f8b53416cfdfd2741c0d78993501e75b6f90",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/grounding",
+      "start": 5065,
+      "end": 5114,
+      "statement": "import type { Grounding } from \"@atlas/grounding\"",
+      "sourceGitBlob": "c04eefc8034cac0f616dbec90e54b62a96f9c1be"
+    },
+    {
+      "findingId": "12b8e01a74678936d6920a7b8bb8308719fe4ef0115a8ae2575497435e6ba585",
+      "fileId": 1073,
+      "path": "modules/atlas/packages/adapter-io/src/governed-emit-negation.ts",
+      "fileSha256": "583d63f8910680cc1285c0a8c9eaf7ba22ed91ee340a994bbe0a20a06ec952ae",
+      "edgeId": "971f74f3a088dcfb71f3394cca80be97f1397f78da70939bfcd89d2f4d7050b1",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/tools",
+      "start": 5115,
+      "end": 5158,
+      "statement": "import type { EmitOut } from \"@atlas/tools\"",
+      "sourceGitBlob": "c04eefc8034cac0f616dbec90e54b62a96f9c1be"
+    },
+    {
+      "findingId": "9d02e4ad3bb4ff22744be5ee7a9c7d6aec70ff1c92ecd5c2aab8d885941aa7a3",
+      "fileId": 1012,
+      "path": "modules/atlas/harness/gates/own-snapshot-guard.mjs",
+      "fileSha256": "c1d348e8dd41c2c0427acf1c01f2d48f41b7b34b57a21e6f34cbf6a8cb089cb7",
+      "edgeId": "68380dea20edef182d1edad5fbae5bd64a37d1025d3007edecf1a490836ee567",
+      "kind": "dynamic-import-or-require",
+      "specifier": null,
+      "start": 3405,
+      "end": 3447,
+      "statement": "import(pathToFileURL(IMPLEMENTATION).href)",
+      "contextBefore": "IST = argv.length === 2 ? resolve(process.cwd(), argv[1]) : undefined\n\nfunction regularFile(path) {\n  try {\n    return lstatSync(join(ROOT, path)).isFile()\n  } catch {\n    return false\n  }\n}\n\nif (!existsSync(SNAPSHOT)) fail([`missing ${SNAPSHOT_REL}; no static Own projection oracle exists`])\nif (!existsSync(IMPLEMENTATION))\n  fail([\n    `missing compiled Own snapshot contract: ${relative(ROOT, IMPLEMENTATION)}; run npm run typecheck before this gate`,\n  ])\n\nlet contract\ntry {\n  contract = await ",
+      "contextAfter": "\n} catch (error) {\n  fail([`cannot load compiled Own snapshot contract: ${error instanceof Error ? error.message : String(error)}`])\n}\n\nconst snapshot = contract.parseOwnSnapshot(readFileSync(SNAPSHOT, \"utf8\"))\nif (snapshot === undefined) fail([`${SNAPSHOT_REL} is malformed, empty, or has invalid units/source blobs`])\nif (!/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(snapshot.sourceRevision))\n  fail([`snapshot sourceRevision is not an immutable lowercase full Git OID: ${snapshot.sourceRevision}`])\n\nif",
+      "sourceGitBlob": "ee783fab4bc348ebd79afc7848ef645f1e9e1f6e"
+    },
+    {
+      "findingId": "fde6ff87ee526b682bf68a99d6b70aae08320638fe96829d660c127251778bc9",
+      "fileId": 1917,
+      "path": "modules/atlas/scripts/materialize-own-snapshot.mjs",
+      "fileSha256": "9cce6186628ae9eb9b6f5a99a3c7b8ddc936a857fee4b8400f00e22683c71397",
+      "edgeId": "e40feeb3308626e0baab336ab089731818e604ced835ddc31b15aa65da16e195",
+      "kind": "dynamic-import-or-require",
+      "specifier": null,
+      "start": 4552,
+      "end": 4594,
+      "statement": "import(pathToFileURL(IMPLEMENTATION).href)",
+      "contextBefore": "s.argv[2]\n  const lexicalInput = isAbsolute(inputArg) ? resolve(inputArg) : resolve(ROOT, inputArg)\n  if (containsAtlasDirectory(lexicalInput)) fail(\"refusing snapshot input inside .atlas\")\n\n  let input\n  try {\n    input = realpathSync(lexicalInput)\n  } catch (error) {\n    fail(`cannot read snapshot input: ${error instanceof Error ? error.message : String(error)}`)\n  }\n  if (containsAtlasDirectory(input)) fail(\"refusing snapshot input inside .atlas\")\n\n  let contract\n  try {\n    contract = await ",
+      "contextAfter": "\n  } catch (error) {\n    fail(`cannot load compiled Own snapshot contract: ${error instanceof Error ? error.message : String(error)}`)\n  }\n  if (\n    typeof contract.parseOwnSnapshot !== \"function\" ||\n    typeof contract.exportOwnSnapshot !== \"function\" ||\n    typeof contract.materializeStaticOwnSnapshot !== \"function\"\n  ) {\n    fail(\"compiled Own snapshot contract lacks required exports\")\n  }\n\n  let inputBytes\n  try {\n    inputBytes = readFileSync(input, \"utf8\")\n  } catch (error) {\n    fail(`ca",
+      "sourceGitBlob": "c2419fbf8a6b25deb6119a060484bd862bfeaa28"
+    },
+    {
+      "findingId": "a42400ece49e8060c99bba74907b0b655934d976026cd589644ac45d492a3927",
+      "fileId": 1903,
+      "path": "modules/atlas/packages/tools/test/wp-10.a5-tools.test.ts",
+      "fileSha256": "8234689fa0153d92a5b9b00e6ce69d4024af1d1b80f7f3f1b272409f9c7757e5",
+      "edgeId": "c621c7e1d4e614d42428962475b36caeedb088a948bc8dd693c26f88be041b8b",
+      "kind": "static-import-or-reexport",
+      "specifier": "vitest",
+      "start": 1413,
+      "end": 1458,
+      "statement": "import { describe, it, expect } from \"vitest\"",
+      "sourceGitBlob": "5b3b7b82211c0c1885951dd77c1d52e9213b411b"
+    },
+    {
+      "findingId": "93e37217d8bcc3d467f0f1fc07e2c93589faf0c3b83e1dba0c2568ec62616875",
+      "fileId": 1903,
+      "path": "modules/atlas/packages/tools/test/wp-10.a5-tools.test.ts",
+      "fileSha256": "8234689fa0153d92a5b9b00e6ce69d4024af1d1b80f7f3f1b272409f9c7757e5",
+      "edgeId": "84a065f264bff21e5b2e25da7bf067ba71689b1948ac80f1bfbe74175df404d5",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/contracts",
+      "start": 1459,
+      "end": 1503,
+      "statement": "import type { Hash } from \"@atlas/contracts\"",
+      "sourceGitBlob": "5b3b7b82211c0c1885951dd77c1d52e9213b411b"
+    },
+    {
+      "findingId": "ba916a66a2ee8d78bab200310b8f8d4c48144468f8f3729c2ccb36d9bb934595",
+      "fileId": 1903,
+      "path": "modules/atlas/packages/tools/test/wp-10.a5-tools.test.ts",
+      "fileSha256": "8234689fa0153d92a5b9b00e6ce69d4024af1d1b80f7f3f1b272409f9c7757e5",
+      "edgeId": "428c1cb7e36ff7f8ce830443974c78137747b4c99ebcfb99955ebdc634e455f1",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/knowledge",
+      "start": 1504,
+      "end": 1556,
+      "statement": "import type { GroundedFact } from \"@atlas/knowledge\"",
+      "sourceGitBlob": "5b3b7b82211c0c1885951dd77c1d52e9213b411b"
+    },
+    {
+      "findingId": "825b882875345826636deca42a000db377ab182c3ebbd0621f4feb1833afd8cd",
+      "fileId": 1903,
+      "path": "modules/atlas/packages/tools/test/wp-10.a5-tools.test.ts",
+      "fileSha256": "8234689fa0153d92a5b9b00e6ce69d4024af1d1b80f7f3f1b272409f9c7757e5",
+      "edgeId": "35b2e4e7bfa4d573079bb355212aeeda319774187a30d735c140a28229cd400f",
+      "kind": "dynamic-import-or-require",
+      "specifier": null,
+      "start": 3578,
+      "end": 3606,
+      "statement": "import(WRITE_SPY_STORE_PATH)",
+      "contextBefore": "\"cli\", \"test\", \"write-spy-store.js\"].join(\"/\")\ninterface WriteCall {\n  readonly door: \"put\" | \"persistProjection\" | \"commitProjection\" | \"commitStaging\"\n}\ninterface DiskStoreLike {\n  get(h: Hash): unknown\n  loadProjection(): unknown\n  put(obj: unknown): Hash\n}\ninterface WriteSpyHarnessLike {\n  readonly spy: DiskStoreLike\n  readonly seed: DiskStoreLike\n  calls(): readonly WriteCall[]\n  census(): ReadonlyMap<string, string>\n  dispose(): void\n}\nconst { createWriteSpyStore, seedSomeBytes } = (await ",
+      "contextAfter": ") as {\n  createWriteSpyStore: () => WriteSpyHarnessLike\n  seedSomeBytes: (seed: DiskStoreLike) => Hash\n}\n\n// ── the frozen oracle — byte-for-byte the values ADR-0003/0004/0005 pin FOR THIS CAMPAIGN (WP-10.A5,\n//    six-member READ_SURFACE); WP-11.W8 (CAMPAIGN-11) later grew all three constants — `atlas-memory-emit`\n//    into GOVERNANCE_SURFACE/WRITE_PATHS, four memory read doors into READ_SURFACE. This suite's own SCOPE\n//    claim (\"READ-ONLY over all three\") describes what THIS campaign did, ",
+      "sourceGitBlob": "5b3b7b82211c0c1885951dd77c1d52e9213b411b"
+    },
+    {
+      "findingId": "a129a2d624edaa286228e563ad68ae2f3894281632001c6672621e26025d5b9c",
+      "fileId": 1343,
+      "path": "modules/atlas/packages/adapter-io/test/wp-per-fact-freshness.test.ts",
+      "fileSha256": "3d92f4251a8c06f854bc5f11899bdcbdaba47ea165660f27109802b9002a9ea0",
+      "edgeId": "5110e298c2aeda22ed27ec04401f9c0c7c417493e722392a752aab90f37beaa3",
+      "kind": "static-import-or-reexport",
+      "specifier": "vitest",
+      "start": 1472,
+      "end": 1528,
+      "statement": "import { describe, it, expect, afterEach } from \"vitest\"",
+      "sourceGitBlob": "b5f65aaec59b8ed6c106910c63bfb00aff63bf0e"
+    },
+    {
+      "findingId": "1ee5665acbe989206c99a028b8e075c9b17d7e8a1079153b10d7be96378fac13",
+      "fileId": 1343,
+      "path": "modules/atlas/packages/adapter-io/test/wp-per-fact-freshness.test.ts",
+      "fileSha256": "3d92f4251a8c06f854bc5f11899bdcbdaba47ea165660f27109802b9002a9ea0",
+      "edgeId": "fa06ad3855a397a64677d5c5f6434af966f7438734f2be69cb4042079be1a7ca",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/index",
+      "start": 1726,
+      "end": 1777,
+      "statement": "import { build, createResolve } from \"@atlas/index\"",
+      "sourceGitBlob": "b5f65aaec59b8ed6c106910c63bfb00aff63bf0e"
+    },
+    {
+      "findingId": "9519db2ef36d3a5975e0cae2eccfdd02cf6cb149ed4aaf5bd229867a96b1e6f6",
+      "fileId": 1343,
+      "path": "modules/atlas/packages/adapter-io/test/wp-per-fact-freshness.test.ts",
+      "fileSha256": "3d92f4251a8c06f854bc5f11899bdcbdaba47ea165660f27109802b9002a9ea0",
+      "edgeId": "87802ce084df9b8ab33ad6f250db871fc586b8ac4a0ca8dc7afee08116f4b0a8",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/index",
+      "start": 1778,
+      "end": 1818,
+      "statement": "import type { Axes } from \"@atlas/index\"",
+      "sourceGitBlob": "b5f65aaec59b8ed6c106910c63bfb00aff63bf0e"
+    },
+    {
+      "findingId": "087261e314b0b691a3be1963478f058c88fc9a7be1399c96a95c403d16017bd8",
+      "fileId": 1343,
+      "path": "modules/atlas/packages/adapter-io/test/wp-per-fact-freshness.test.ts",
+      "fileSha256": "3d92f4251a8c06f854bc5f11899bdcbdaba47ea165660f27109802b9002a9ea0",
+      "edgeId": "a1de8b0d7c8daa74249d0bbad4f03c197960a491dc019ccaca304cc1b3216ba2",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/grounding",
+      "start": 1819,
+      "end": 1865,
+      "statement": "import { driftDetect } from \"@atlas/grounding\"",
+      "sourceGitBlob": "b5f65aaec59b8ed6c106910c63bfb00aff63bf0e"
+    },
+    {
+      "findingId": "2c58823f2a4bfedd5efb3d8b555807ed8fa13e9e78564530645f5095491ca6cf",
+      "fileId": 1343,
+      "path": "modules/atlas/packages/adapter-io/test/wp-per-fact-freshness.test.ts",
+      "fileSha256": "3d92f4251a8c06f854bc5f11899bdcbdaba47ea165660f27109802b9002a9ea0",
+      "edgeId": "58f7382bef798276c5c780ea17500443d5f51e2ffe74aa02be926955c2c22e82",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/knowledge",
+      "start": 1866,
+      "end": 1919,
+      "statement": "import { upsert, emptyStore } from \"@atlas/knowledge\"",
+      "sourceGitBlob": "b5f65aaec59b8ed6c106910c63bfb00aff63bf0e"
+    },
+    {
+      "findingId": "0694bda8981d4fad7dcc9d2e4ec6fa2e57fba25b8076c0ad0affbfcfd467f420",
+      "fileId": 1343,
+      "path": "modules/atlas/packages/adapter-io/test/wp-per-fact-freshness.test.ts",
+      "fileSha256": "3d92f4251a8c06f854bc5f11899bdcbdaba47ea165660f27109802b9002a9ea0",
+      "edgeId": "0c7d7aa9980cb6fac9772786940cb451e1c7e38048156bc84e827e9cdd32bbdc",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/knowledge",
+      "start": 1920,
+      "end": 1989,
+      "statement": "import type { GroundedFact, StoreProjection } from \"@atlas/knowledge\"",
+      "sourceGitBlob": "b5f65aaec59b8ed6c106910c63bfb00aff63bf0e"
+    },
+    {
+      "findingId": "fcd0cb41c8993c4a35abcdd4b7f23e80285ed0b8ce834564e2d730773d6aa58c",
+      "fileId": 1343,
+      "path": "modules/atlas/packages/adapter-io/test/wp-per-fact-freshness.test.ts",
+      "fileSha256": "3d92f4251a8c06f854bc5f11899bdcbdaba47ea165660f27109802b9002a9ea0",
+      "edgeId": "e2ef1255b953e9045ee81a92536467f05c60fc20586cd2fe021aa55e75ebb0b3",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/contracts",
+      "start": 1990,
+      "end": 2049,
+      "statement": "import type { Hash, PackInvariant } from \"@atlas/contracts\"",
+      "sourceGitBlob": "b5f65aaec59b8ed6c106910c63bfb00aff63bf0e"
+    },
+    {
+      "findingId": "610127b84c3b8adc1e52b7e7932068d20e5d8ce2e1ef4edbe02120441865ac32",
+      "fileId": 1343,
+      "path": "modules/atlas/packages/adapter-io/test/wp-per-fact-freshness.test.ts",
+      "fileSha256": "3d92f4251a8c06f854bc5f11899bdcbdaba47ea165660f27109802b9002a9ea0",
+      "edgeId": "8c03e5c0b653ad31ec182efe0bb4937d9fafaee76e86fd551fd432208b9c41ba",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/tools",
+      "start": 2050,
+      "end": 2092,
+      "statement": "import { createQuery } from \"@atlas/tools\"",
+      "sourceGitBlob": "b5f65aaec59b8ed6c106910c63bfb00aff63bf0e"
+    },
+    {
+      "findingId": "3105bc17a2a56c69782101f31c34debc15fa04de6429ea0470c5a392067075b8",
+      "fileId": 1343,
+      "path": "modules/atlas/packages/adapter-io/test/wp-per-fact-freshness.test.ts",
+      "fileSha256": "3d92f4251a8c06f854bc5f11899bdcbdaba47ea165660f27109802b9002a9ea0",
+      "edgeId": "63a91d859cf42be55f7866d6ff4d207d93f6ae87f1d756f6b4888b7743a0b722",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/tools",
+      "start": 2093,
+      "end": 2139,
+      "statement": "import type { QueryIndex } from \"@atlas/tools\"",
+      "sourceGitBlob": "b5f65aaec59b8ed6c106910c63bfb00aff63bf0e"
+    },
+    {
+      "findingId": "7071ab4ad52dddcc88a19d2602ed81a4747bb667bcd41279e598968d727d4c24",
+      "fileId": 1343,
+      "path": "modules/atlas/packages/adapter-io/test/wp-per-fact-freshness.test.ts",
+      "fileSha256": "3d92f4251a8c06f854bc5f11899bdcbdaba47ea165660f27109802b9002a9ea0",
+      "edgeId": "d5155a49d13e82e7cbd8e5a2d0d8d6fb8f0120fa5b36306fab35ca870419f04c",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/tools",
+      "start": 2140,
+      "end": 2224,
+      "statement": "import { ADVISORY_CAP, atLeastT1 as toolsAtLeastT1, splitBands } from \"@atlas/tools\"",
+      "sourceGitBlob": "b5f65aaec59b8ed6c106910c63bfb00aff63bf0e"
+    },
+    {
+      "findingId": "c0a93e1ef5d3e3bab33b9c6044d242f30ab516fba3269506a07ef14b0d181c2c",
+      "fileId": 1647,
+      "path": "modules/atlas/packages/index/src/territory-catalog.ts",
+      "fileSha256": "42d0c934c156922f2bc8ae5c48d427bdd0da86d043382e2d22f676080e561020",
+      "edgeId": "d8439e0e4d34d445b48012146bfa906621356a7a064a655b8f631e8b6ab5b0ba",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/contracts",
+      "start": 0,
+      "end": 55,
+      "statement": "import type { Territory, Tier } from \"@atlas/contracts\"",
+      "sourceGitBlob": "0ad5a3e01f6ef5f45c0c0c3c7af813b8b8df574a"
+    },
+    {
+      "findingId": "56355780c4d4729950bc0f508c6467661563de8f9ce4a3fc2466cb9c473c57a7",
+      "fileId": 1859,
+      "path": "modules/atlas/packages/retrieval/src/host-context.ts",
+      "fileSha256": "c2a119e47de728839d10167cc8fd45bb74eb5502415f5b5162f56cae8d0c72ff",
+      "edgeId": "58b03fd0e3acaee5c7539f37a0fb01c9b34ef125ce53edb659fb40ffee76b4bf",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/contracts",
+      "start": 428,
+      "end": 477,
+      "statement": "import type { Territory } from \"@atlas/contracts\"",
+      "sourceGitBlob": "6c60032a6049e5de89592d9b6aa483207c909598"
+    },
+    {
+      "findingId": "a695df5ebe13c7750c57c4fe1741f3ab567c0f968555e534eb3c264c3198f281",
+      "fileId": 1859,
+      "path": "modules/atlas/packages/retrieval/src/host-context.ts",
+      "fileSha256": "c2a119e47de728839d10167cc8fd45bb74eb5502415f5b5162f56cae8d0c72ff",
+      "edgeId": "b6e2f6129159dfb47f47f9c6ef1ce9ac112525e21ffaea05c4ec277dcc86f9b1",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/index",
+      "start": 478,
+      "end": 554,
+      "statement": "import { createTerritoryCatalog, parseTerritoryCatalog } from \"@atlas/index\"",
+      "sourceGitBlob": "6c60032a6049e5de89592d9b6aa483207c909598"
+    },
+    {
+      "findingId": "1830669658757737d673ee398d1f48fd477029b7b95fdc49c7c6a6d578699fd3",
+      "fileId": 1859,
+      "path": "modules/atlas/packages/retrieval/src/host-context.ts",
+      "fileSha256": "c2a119e47de728839d10167cc8fd45bb74eb5502415f5b5162f56cae8d0c72ff",
+      "edgeId": "ca2e8f021ce05e988c34bc076b8342bd7fd9a1da681259553285852aa7277779",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/index",
+      "start": 555,
+      "end": 607,
+      "statement": "import type { TerritoryCatalog } from \"@atlas/index\"",
+      "sourceGitBlob": "6c60032a6049e5de89592d9b6aa483207c909598"
+    },
+    {
+      "findingId": "a22af38d52ca03acbff9250a7287bde5e3a96d6fa8762ca6ecfebcd819792047",
+      "fileId": 1859,
+      "path": "modules/atlas/packages/retrieval/src/host-context.ts",
+      "fileSha256": "c2a119e47de728839d10167cc8fd45bb74eb5502415f5b5162f56cae8d0c72ff",
+      "edgeId": "28bd12cdc34a038471687d329b32e91f1349e4e0f9c5f95ba8b510a8a4c92099",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/kernel",
+      "start": 608,
+      "end": 642,
+      "statement": "import { id } from \"@atlas/kernel\"",
+      "sourceGitBlob": "6c60032a6049e5de89592d9b6aa483207c909598"
+    },
+    {
+      "findingId": "354c1cc827e29e34402d9a0dfe8080e93cfaff4596a1e292e0b8f7f80eeae354",
+      "fileId": 1139,
+      "path": "modules/atlas/packages/adapter-io/src/territory-write.ts",
+      "fileSha256": "8b73e2153b82eac8dcd318ace2b454728f257ea2336cf9be71192695663f8948",
+      "edgeId": "0ec5dc80facbe1bd0f061ab4cafe4c9ddce84895dfd63d29070f90d37f9cf7c8",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/contracts",
+      "start": 874,
+      "end": 929,
+      "statement": "import type { Territory, Tier } from \"@atlas/contracts\"",
+      "sourceGitBlob": "52e7976a3aae19f1727b8b839cec06180bcfc3f0"
+    },
+    {
+      "findingId": "0b975a68da6fabe2a42c758a07e8eed05b4c23e0fe79e5bdc532fbd94b8cd4e6",
+      "fileId": 1139,
+      "path": "modules/atlas/packages/adapter-io/src/territory-write.ts",
+      "fileSha256": "8b73e2153b82eac8dcd318ace2b454728f257ea2336cf9be71192695663f8948",
+      "edgeId": "6134b892a78e4892fec8336c4e21bf0199902c838adf0398cfad8d68022423a3",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/index",
+      "start": 930,
+      "end": 982,
+      "statement": "import type { TerritoryCatalog } from \"@atlas/index\"",
+      "sourceGitBlob": "52e7976a3aae19f1727b8b839cec06180bcfc3f0"
+    },
+    {
+      "findingId": "be8b5a01b39c8018ac3ab52afffbb0dff94857023ff1025aaad24478bba1435c",
+      "fileId": 1139,
+      "path": "modules/atlas/packages/adapter-io/src/territory-write.ts",
+      "fileSha256": "8b73e2153b82eac8dcd318ace2b454728f257ea2336cf9be71192695663f8948",
+      "edgeId": "f410e14100810b73e89ee9cea6994fc9137c290adcc5a8e28e8077d2c1a49801",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/retrieval",
+      "start": 983,
+      "end": 1059,
+      "statement": "import { publishTerritoryCatalog, territoryCatalog } from \"@atlas/retrieval\"",
+      "sourceGitBlob": "52e7976a3aae19f1727b8b839cec06180bcfc3f0"
+    },
+    {
+      "findingId": "e07021f338d4726a6c57e4eb210bb8134d4d1dcecc4dc48356c0e981259975ee",
+      "fileId": 1445,
+      "path": "modules/atlas/packages/cli/test/mine-target-dispatch.test.ts",
+      "fileSha256": "9d646d15e700bfbc7279127b7e1f531f71f5b45236b104d1e3e9d950b2aeb112",
+      "edgeId": "5b4a64711769446d8c2e660cce32279f60d7fc10957a76b607a094eda76c6bad",
+      "kind": "static-import-or-reexport",
+      "specifier": "vitest",
+      "start": 635,
+      "end": 717,
+      "statement": "import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from \"vitest\"",
+      "sourceGitBlob": "732de8a5a29f5f8824bb25b45ca1a244088b98f5"
+    },
+    {
+      "findingId": "9f723f5f2c4690bb4a3416e8f603a7f58e517400c2bd55412421e671ef2b98cb",
+      "fileId": 1445,
+      "path": "modules/atlas/packages/cli/test/mine-target-dispatch.test.ts",
+      "fileSha256": "9d646d15e700bfbc7279127b7e1f531f71f5b45236b104d1e3e9d950b2aeb112",
+      "edgeId": "ad1f3be97540f044bc7d5189a382cdc3deba9b3fe380d40ca2cd73ecd6967e38",
+      "kind": "dynamic-import-or-require",
+      "specifier": "@atlas/adapter-io",
+      "start": 1357,
+      "end": 1384,
+      "statement": "import(\"@atlas/adapter-io\")",
+      "contextBefore": "process\"\nimport { join } from \"node:path\"\nimport { tmpdir } from \"node:os\"\n\nconst historySpy = vi.fn()\n\nvi.mock(\"@atlas/adapter-io\", async (importOriginal) => {\n  const actual = await importOriginal<typeof import(\"@atlas/adapter-io\")>()\n  return {\n    ...actual,\n    createHistorySource: (repoPath: string, rev: string) => {\n      historySpy(repoPath, rev)\n      return actual.createHistorySource(repoPath, rev)\n    },\n  }\n})\n\nconst { main } = await import(\"../src/cli.js\")\nconst { initAst } = await ",
+      "contextAfter": "\n\n// `bin.ts` awaits this once before composing anything (see mine-history-wired.test.ts).\nawait initAst()\n\nconst scratch: string[] = []\nafterAll(() => {\n  while (scratch.length > 0) rmSync(scratch.pop()!, { recursive: true, force: true })\n})\n\nconst tempDir = (prefix: string): string => {\n  const dir = mkdtempSync(join(tmpdir(), prefix))\n  scratch.push(dir)\n  return dir\n}\n\n/** A committed git repo with one source file and NO `.atlas/` at all. */\nfunction makeRepo(): string {\n  const repo = tempD",
+      "sourceGitBlob": "732de8a5a29f5f8824bb25b45ca1a244088b98f5"
+    },
+    {
+      "findingId": "e0a96586d05baec1d0c19e9d5f2e47143473a0a608610ec5a8ef2636df4ecc6e",
+      "fileId": 1699,
+      "path": "modules/atlas/packages/kernel/test/heldout-krn-store.test.ts",
+      "fileSha256": "529009c176dfc91dc82d2e70faf9753e58953be8050d7d3dd8877b088c9575b2",
+      "edgeId": "4c3af704cb60e57e746fc97963d9dd3bd6dfb4788cc35b060490f37850efabc2",
+      "kind": "static-import-or-reexport",
+      "specifier": "vitest",
+      "start": 742,
+      "end": 787,
+      "statement": "import { describe, it, expect } from \"vitest\"",
+      "sourceGitBlob": "31877d8e0cb3eade0d9dd2f6c550faa65d157180"
+    },
+    {
+      "findingId": "7ee5ec0a50b1d2a84cf26a01363c34823b87acde36355d8ee61b0122ff9e7b83",
+      "fileId": 1699,
+      "path": "modules/atlas/packages/kernel/test/heldout-krn-store.test.ts",
+      "fileSha256": "529009c176dfc91dc82d2e70faf9753e58953be8050d7d3dd8877b088c9575b2",
+      "edgeId": "b57e54989d914a842f64d57c8334a71639ea374c4823014da294bb64081295fc",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/contracts",
+      "start": 868,
+      "end": 912,
+      "statement": "import type { Hash } from \"@atlas/contracts\"",
+      "sourceGitBlob": "31877d8e0cb3eade0d9dd2f6c550faa65d157180"
+    },
+    {
+      "findingId": "99a2d732637b33c90ae351cf27505a716dc7839e30d7eb1ad7afc5d804e5c033",
+      "fileId": 1699,
+      "path": "modules/atlas/packages/kernel/test/heldout-krn-store.test.ts",
+      "fileSha256": "529009c176dfc91dc82d2e70faf9753e58953be8050d7d3dd8877b088c9575b2",
+      "edgeId": "7b62a3ad26c5744578dc3cb735d969cb814205127b0f68a510b9e4eba8e055a9",
+      "kind": "dynamic-import-or-require",
+      "specifier": "fast-check",
+      "start": 5382,
+      "end": 5402,
+      "statement": "import(\"fast-check\")",
+      "contextBefore": "Be(1) // size unchanged — neither truncate nor replace mutated the log\n    expect(after.get(\"id-f009\" as Hash)).toEqual(e3) // e3's original bytes intact (first-write-wins)\n    expect((after.get(\"id-f009\" as Hash) as Event).contentHash).toBe(\"3d81ee\")\n  })\n})\n\ndescribe(\"GATE SCN-KERNEL-7a-2 — held-out fuzz seed + a pinned deep-nesting corner stays total\", () => {\n  it(\"a fresh-seed fuzz stream + a ~10k-deep valid object never throw on the owned entry points\", async () => {\n    const fc = (await ",
+      "contextAfter": ").default\n    const store = createStore()\n    const log = createLog()\n    // (a) a corner-biased fuzz stream at a seed RESERVED for the GATE (not the author's default seed)\n    fc.assert(\n      fc.property(fc.anything(), (x) => {\n        expect(() => store.put(x)).not.toThrow()\n        expect(() => store.get(x as Hash)).not.toThrow()\n        expect(() => log.append(x as Event)).not.toThrow()\n      }),\n      { numRuns: 600, seed: 987654321, endOnFailure: true },\n    )\n    // (b) a pinned deep-but",
+      "sourceGitBlob": "31877d8e0cb3eade0d9dd2f6c550faa65d157180"
+    },
+    {
+      "findingId": "e3f581af0917d853765b499d0bebcbca13bc12819a1774be842fde948774c715",
+      "fileId": 1428,
+      "path": "modules/atlas/packages/cli/test/mine-history-wired.test.ts",
+      "fileSha256": "307aeb7b393f6f4e673df940099d558b4102495f9ad45801d3e290c3dc78a361",
+      "edgeId": "b557ecdc3b3121e9bf02c2855a75607ba072f8dd07f459d3464f44b55c499313",
+      "kind": "static-import-or-reexport",
+      "specifier": "vitest",
+      "start": 942,
+      "end": 1023,
+      "statement": "import { afterEach, beforeAll, afterAll, describe, expect, it, vi } from \"vitest\"",
+      "sourceGitBlob": "826f1c90debdfd8c0ebe05ebc2af3670be2e3787"
+    },
+    {
+      "findingId": "de388c85df24d02d787fe74cb1b5ad6b922b4b2f566eb019f888d3fa226f5a19",
+      "fileId": 1428,
+      "path": "modules/atlas/packages/cli/test/mine-history-wired.test.ts",
+      "fileSha256": "307aeb7b393f6f4e673df940099d558b4102495f9ad45801d3e290c3dc78a361",
+      "edgeId": "fbaf8878a5a3b53e751381ac3ea357b295f95eb8c5fb562448de448a82fafa15",
+      "kind": "dynamic-import-or-require",
+      "specifier": "@atlas/adapter-io",
+      "start": 1818,
+      "end": 1845,
+      "statement": "import(\"@atlas/adapter-io\")",
+      "contextBefore": "nal) => {\n  const actual = await importOriginal<typeof import(\"@atlas/adapter-io\")>()\n  return {\n    ...actual,\n    createHistorySource: (repoPath: string, rev: string) => {\n      historySpy(repoPath, rev)\n      return actual.createHistorySource(repoPath, rev)\n    },\n  }\n})\n\n// Imported AFTER the mock is registered (vi.mock is hoisted by vitest regardless of import order, but this\n// keeps the file readable top-to-bottom).\nconst { main } = await import(\"../src/cli.js\")\nconst { initAst } = await ",
+      "contextAfter": "\n\n// `bin.ts` awaits this once, at the entrypoint, before composing anything (the COLD-GRAMMAR guard this WP\n// added would otherwise fire here — see `mine-cold-grammar.test.ts` for that guard's own teeth).\nawait initAst()\n\nlet tempRepo: string\nlet prevCwd: string\n\nbeforeAll(() => {\n  tempRepo = mkdtempSync(join(tmpdir(), \"mine-history-wired-\"))\n  mkdirSync(join(tempRepo, \"src\"), { recursive: true })\n  writeFileSync(join(tempRepo, \"src\", \"a.ts\"), \"export function foo(): number { return 1; }\\n\")\n",
+      "sourceGitBlob": "826f1c90debdfd8c0ebe05ebc2af3670be2e3787"
+    },
+    {
+      "findingId": "8ed608019663001049dafa3c81cd71f8edf88eca4fdb156822fd81ec4d0d6b3c",
+      "fileId": 1013,
+      "path": "modules/atlas/harness/gates/own-snapshot-guard.test.mjs",
+      "fileSha256": "0ae26260ef1d6c8bd479a417814eb4b17bf3ce8582dfa3daf07221ffed719a2d",
+      "edgeId": "afed26e01561b917573a5a96a48b28c6127db7e663384cec1593d9d3bed40500",
+      "kind": "static-import-or-reexport",
+      "specifier": "vitest",
+      "start": 280,
+      "end": 348,
+      "statement": "import { afterEach, beforeEach, describe, expect, it } from \"vitest\"",
+      "sourceGitBlob": "dcc02d5a68b99593bb395f366aef3b7c88cc2588"
+    },
+    {
+      "findingId": "3fe36d033c580e29c6264c50cb56f5c2f1a1743bd7c52fa1328497d77544fb1f",
+      "fileId": 1013,
+      "path": "modules/atlas/harness/gates/own-snapshot-guard.test.mjs",
+      "fileSha256": "0ae26260ef1d6c8bd479a417814eb4b17bf3ce8582dfa3daf07221ffed719a2d",
+      "edgeId": "17816b5fa34244435cf15d15661425f5e0afe6b5378294927612518e9305ece6",
+      "kind": "dynamic-import-or-require",
+      "specifier": null,
+      "start": 618,
+      "end": 660,
+      "statement": "import(pathToFileURL(IMPLEMENTATION).href)",
+      "contextBefore": "writeFileSync } from \"node:fs\"\nimport { dirname, join } from \"node:path\"\nimport { tmpdir } from \"node:os\"\nimport { fileURLToPath, pathToFileURL } from \"node:url\"\nimport { afterEach, beforeEach, describe, expect, it } from \"vitest\"\n\nconst ROOT = join(dirname(fileURLToPath(import.meta.url)), \"..\", \"..\")\nconst GATE = fileURLToPath(new URL(\"./own-snapshot-guard.mjs\", import.meta.url))\nconst IMPLEMENTATION = join(ROOT, \"packages\", \"retrieval\", \"dist\", \"src\", \"own-snapshot.js\")\nconst contract = await ",
+      "contextAfter": "\nlet root\n\nfunction runGate(args = []) {\n  try {\n    const out = execFileSync(process.execPath, [GATE, ...args], {\n      encoding: \"utf8\",\n      env: { ...process.env, OWN_SNAPSHOT_GUARD_ROOT: root, OWN_SNAPSHOT_GUARD_IMPL: IMPLEMENTATION },\n      stdio: [\"ignore\", \"pipe\", \"pipe\"],\n    })\n    return { code: 0, out }\n  } catch (error) {\n    return { code: error.status ?? 1, out: `${error.stdout ?? \"\"}${error.stderr ?? \"\"}` }\n  }\n}\n\nfunction write(path, content) {\n  const target = join(root, path)",
+      "sourceGitBlob": "dcc02d5a68b99593bb395f366aef3b7c88cc2588"
+    },
+    {
+      "findingId": "05a84b8980c83f11d2db3d7fb819a06871de6effa46232690fb637e21c957742",
+      "fileId": 1149,
+      "path": "modules/atlas/packages/adapter-io/src/wire.ts",
+      "fileSha256": "c54565593564c621a591f8c98b36cff0eb2164dc1887763bdd736358775c5b2e",
+      "edgeId": "4ddc1910a078f8e3c53b6852d5dcc2cf117e4c9098b6b48b0b44d81316d78fb2",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/tools",
+      "start": 1640,
+      "end": 1726,
+      "statement": "import { createHandler, createInit, createQuery, createReconcile } from \"@atlas/tools\"",
+      "sourceGitBlob": "80ab2f4dac8acfb13fd774e52615fddeb311dd44"
+    },
+    {
+      "findingId": "26b74a47a64ea61ca4ed94f34d7c93026e459ab0cdf0c86d148fd5ea7041c853",
+      "fileId": 1149,
+      "path": "modules/atlas/packages/adapter-io/src/wire.ts",
+      "fileSha256": "c54565593564c621a591f8c98b36cff0eb2164dc1887763bdd736358775c5b2e",
+      "edgeId": "d25777bb0af77c664ae8df6a2a893d52be4a4e751f0511f107092f05db7d46f3",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/tools",
+      "start": 1727,
+      "end": 1807,
+      "statement": "import type { ToolLegs, ToolLeg, NodeSource, MemoryEmitOut } from \"@atlas/tools\"",
+      "sourceGitBlob": "80ab2f4dac8acfb13fd774e52615fddeb311dd44"
+    },
+    {
+      "findingId": "1f54b9403bd047a3e80ba8e61b0606bad2f1b06cccacae2893b649bf33deacc9",
+      "fileId": 1149,
+      "path": "modules/atlas/packages/adapter-io/src/wire.ts",
+      "fileSha256": "c54565593564c621a591f8c98b36cff0eb2164dc1887763bdd736358775c5b2e",
+      "edgeId": "58864f93ecb2aadca57f7845a906dc75fd2beb4c5759673f74d80fe469911a84",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/memory",
+      "start": 1808,
+      "end": 1856,
+      "statement": "import type { MemoryEntry } from \"@atlas/memory\"",
+      "sourceGitBlob": "80ab2f4dac8acfb13fd774e52615fddeb311dd44"
+    },
+    {
+      "findingId": "27e80ca3f978bd4f3e693e887f36aa2959945839a9e139fdb7f78f98e8157d12",
+      "fileId": 1149,
+      "path": "modules/atlas/packages/adapter-io/src/wire.ts",
+      "fileSha256": "c54565593564c621a591f8c98b36cff0eb2164dc1887763bdd736358775c5b2e",
+      "edgeId": "050002f47033abad6b1c49ee91d0967187e97107d4e9e897e0d2e5d2edfc179b",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/index",
+      "start": 1908,
+      "end": 2012,
+      "statement": "import { build, createResolve, createDepgraph, createSymbolReverse, nodeHashOfPath } from \"@atlas/index\"",
+      "sourceGitBlob": "80ab2f4dac8acfb13fd774e52615fddeb311dd44"
+    },
+    {
+      "findingId": "fd8c3ddfef9876b55af6d557c7ec46e46628653a5dd198540836cfc7c2974f23",
+      "fileId": 1149,
+      "path": "modules/atlas/packages/adapter-io/src/wire.ts",
+      "fileSha256": "c54565593564c621a591f8c98b36cff0eb2164dc1887763bdd736358775c5b2e",
+      "edgeId": "cddc23c78cd3a99d7cca50295fde62d0370db2bb69e541456c74cc0607f688d6",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/index",
+      "start": 2013,
+      "end": 2093,
+      "statement": "import type { Axes, FileTree, ScipOutput, SymbolReverseApi } from \"@atlas/index\"",
+      "sourceGitBlob": "80ab2f4dac8acfb13fd774e52615fddeb311dd44"
+    },
+    {
+      "findingId": "7c61df0e065a67392e86382329945af02e56c7839537b57b33b0e08e73f04f62",
+      "fileId": 1149,
+      "path": "modules/atlas/packages/adapter-io/src/wire.ts",
+      "fileSha256": "c54565593564c621a591f8c98b36cff0eb2164dc1887763bdd736358775c5b2e",
+      "edgeId": "cd6efe75e38919dcda044112cc215ddbfd17dba475b0a2b3ad9e6e9b8f5baf19",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/grounding",
+      "start": 2203,
+      "end": 2249,
+      "statement": "import { driftDetect } from \"@atlas/grounding\"",
+      "sourceGitBlob": "80ab2f4dac8acfb13fd774e52615fddeb311dd44"
+    },
+    {
+      "findingId": "aa47646694fc2d38a9a62bf441f123dda7765d98382c35870c65f2bdb8dc9bf5",
+      "fileId": 1149,
+      "path": "modules/atlas/packages/adapter-io/src/wire.ts",
+      "fileSha256": "c54565593564c621a591f8c98b36cff0eb2164dc1887763bdd736358775c5b2e",
+      "edgeId": "13e6f57417bb5ce8cafbe7c6d0b744875068c393be3328062eb6dd11bb9d6c9f",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/knowledge",
+      "start": 2250,
+      "end": 2349,
+      "statement": "import { currentNodes, deriveSameAs, deriveSubsumes, resolveFactFreshness } from \"@atlas/knowledge\"",
+      "sourceGitBlob": "80ab2f4dac8acfb13fd774e52615fddeb311dd44"
+    },
+    {
+      "findingId": "cc720dd7ff84a4383d4d9c1c32d6509f2c2411042853f76309de6f15c1c4fa73",
+      "fileId": 1149,
+      "path": "modules/atlas/packages/adapter-io/src/wire.ts",
+      "fileSha256": "c54565593564c621a591f8c98b36cff0eb2164dc1887763bdd736358775c5b2e",
+      "edgeId": "b5a6847c04f13c2e2221fab25882f114761d69e3c9a1df2ae2981972b0cfbc04",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/knowledge",
+      "start": 2350,
+      "end": 2413,
+      "statement": "import type { BoundHits, GroundedFact } from \"@atlas/knowledge\"",
+      "sourceGitBlob": "80ab2f4dac8acfb13fd774e52615fddeb311dd44"
+    },
+    {
+      "findingId": "65daf365ff9efd578cfb18ca0ace589899b8ba693cd0af9b2c241d18102622c6",
+      "fileId": 1149,
+      "path": "modules/atlas/packages/adapter-io/src/wire.ts",
+      "fileSha256": "c54565593564c621a591f8c98b36cff0eb2164dc1887763bdd736358775c5b2e",
+      "edgeId": "f93d6f024f1134cbe2daf5c140442971bc9396ae3e310e8536288a3b485c5944",
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/contracts",
+      "start": 2414,
+      "end": 2478,
+      "statement": "import type { Freshness, Hash, NodeKey } from \"@atlas/contracts\"",
+      "sourceGitBlob": "80ab2f4dac8acfb13fd774e52615fddeb311dd44"
+    },
+    {
+      "findingId": "78bd056c018fcd33f5e61c50d3450e7506ddf85f1f3e8ca85289b7f8bcfb263c",
+      "fileId": 1018,
+      "path": "modules/atlas/harness/gates/spec-conformance-guard.mjs",
+      "fileSha256": "7192fcb089fc5b31125d4eecbb797bb3e2656ac40ce781fbdc5ed000f53a35c3",
+      "edgeId": "062f33741aa3ce052721a098d962a34406898eaa3c62bb3697b504e1dd6f475c",
+      "kind": "dynamic-import-or-require",
+      "specifier": null,
+      "start": 4016,
+      "end": 4090,
+      "statement": "import(pathToFileURL(join(REPO, \"packages/tools/dist/src/index.js\")).href)",
+      "contextBefore": "turn header), `atlas-memory-awareness` and\n// `atlas-memory-orientation` (the two derived, shared slabs) — the read half of the memory doors, mirroring\n// how `atlas-emit`/`atlas-link` pair with the knowledge/sameAs read doors.\nconst EXPECTED_READ_SURFACE = [\n  \"atlas-anchors\",\n  \"atlas-slots\",\n  \"atlas-draft\",\n  \"atlas-check\",\n  \"atlas-doctor\",\n  \"atlas-node\",\n  \"atlas-memory-recall\",\n  \"atlas-memory-header\",\n  \"atlas-memory-awareness\",\n  \"atlas-memory-orientation\",\n]\ntry {\n  const mod = await ",
+      "contextAfter": "\n  const eq = (a, b) => Array.isArray(a) && a.length === b.length && a.every((x, i) => x === b[i])\n  if (!eq(mod.GOVERNANCE_SURFACE, EXPECTED_SURFACE)) {\n    problems.push(\n      `CODE-SURFACE: GOVERNANCE_SURFACE = [${mod.GOVERNANCE_SURFACE}] ≠ canonical [${EXPECTED_SURFACE}]. ` +\n        `If the surface changed by ratified amendment, update EXPECTED_SURFACE here AND the specs (INV-TOOLS-1, ADR).`,\n    )\n  }\n  if (!eq(mod.WRITE_PATHS, EXPECTED_WRITE_PATHS)) {\n    problems.push(`CODE-SURFACE: WRI",
+      "sourceGitBlob": "4b7704a502553bd4f59b96fa48c23d4a1d398877"
+    },
+    {
+      "findingId": "f061f3054f61123da2bdfc871e63542c830abb6a9a45c502b42b3c265bb00c25",
+      "fileId": 1014,
+      "path": "modules/atlas/harness/gates/reference-model-guard.mjs",
+      "fileSha256": "0e462c37c74813979e46237ac7ecf8ee5c2260f73c554c5c30400964fc2c69b4",
+      "edgeId": "9c2b851e6046ef6566dc7d8c7a6c59cf044ad66bfb1716a4866364b2a327747c",
+      "kind": "dynamic-import-or-require",
+      "specifier": null,
+      "start": 5932,
+      "end": 6000,
+      "statement": "import(pathToFileURL(process.env.REFERENCE_MODEL_GUARD_LEDGER).href)",
+      "contextBefore": "d below), so the ROOT seam alone can never make\n// a throwaway fixture pass — every baked entry reads as STALE against the fixture tree. Set\n// REFERENCE_MODEL_GUARD_LEDGER to a `.mjs` module exporting `{ LEDGER, DECLARED_COUNTS }` to drive both\n// from a fixture; unset, behaviour is byte-identical to the baked-in ledger. Only the gate's OWN teeth\n// (reference-model-guard.test.mjs) set it — the real repo run never does.\nconst LEDGER_OVERRIDE = process.env.REFERENCE_MODEL_GUARD_LEDGER\n  ? await ",
+      "contextAfter": "\n  : null\n\n/** The fixed header marker a declared reference model must carry. Deliberately a section RULE and not a\n *  bare word: `REFERENCE MODEL` alone appears in ordinary prose all over this repo. */\nconst BANNER_MARKER = \"── REFERENCE MODEL\"\n\n/** How far into a file a HEADER may reach. The six banners on the tree place their marker at lines 7-14\n *  and their back-reference at lines 20-26, all inside the module's opening comment block; 40 clears that\n *  with room and still refuses a marker",
+      "sourceGitBlob": "be637ec605dd4ff37a996f85a97fe27545cd3c1c"
+    },
+    {
+      "findingId": "39ad3e614ade15baec36b040d93130951daf6ea59c2ee1d864adad0a8ae8bdc8",
+      "fileId": 927,
+      "path": "modules/atlas/boundary/test/scanner-clock.test.ts",
+      "fileSha256": "5746e04c711373b3c08383a0229a0ef53bbc86da08aaa80f26d93ad9fead3367",
+      "edgeId": "dc290ddd56a97da1ba6b9295b629567d237cc209098c982812463ebc0f62b359",
+      "kind": "dynamic-import-or-require",
+      "specifier": null,
+      "start": 563,
+      "end": 648,
+      "statement": "import(\n  path.resolve(import.meta.dir, \"../../packages/adapter-io/src/scanner.ts\")\n)",
+      "contextBefore": "path\"\n\ntype Verdict = \"clean\" | \"hit\" | \"could-not-run\"\ntype Spec = { name: \"gitleaks\"; command: string; args: string[]; cleanExitCodes: number[]; hitExitCodes: number[] }\n\n// The canonical scanner the native-memory bundle inlines. The bundle runs detection right before every scan, which\n// refreshes Bun's synchronous-spawn clock, so a stale clock cannot show through it; this drives the scan directly.\nconst scanner: { runScanner(spec: Spec, record: unknown, timeoutMs: number): Verdict } = await ",
+      "contextAfter": "\n\nconst sleeper = (ms: number): Spec => ({\n  name: \"gitleaks\",\n  command: process.execPath,\n  args: [\"-e\", `setTimeout(() => {}, ${ms})`],\n  cleanExitCodes: [0],\n  hitExitCodes: [1],\n})\n\nconst timed = (spec: Spec, timeoutMs: number) => {\n  const started = performance.now()\n  return { verdict: scanner.runScanner(spec, { kind: \"probe\" }, timeoutMs), elapsed: performance.now() - started }\n}\n\n// oven-sh/bun#33932: Bun 1.3.14 on Windows armed this timeout against the previous synchronous spawn's cloc",
+      "sourceGitBlob": "bf194f15e35488b3692adcea4409ed7accaa6abd"
+    }
+  ],
+  "dynamicReviews": [
+    {
+      "findingId": "0dd7a9e9596a2d10edc7f952a182f9f3ba14a1469b92849e73a119b331591e78",
+      "path": "modules/atlas/harness/gates/layer-guard.mjs",
+      "statement": "import(join(PKGS, \"tools\", \"dist\", \"src\", \"index.js\"))",
+      "meaning": "checkSurface loads the built Atlas tools surface and checks GOVERNANCE_SURFACE/WRITE_PATHS/READ_SURFACE.",
+      "target": "<LAYER_GUARD_ROOT or Atlas root>/packages/tools/dist/src/index.js",
+      "targetSelection": "root environment override; source alone does not fix an overridden runtime value",
+      "executed": false,
+      "disposition": null
+    },
+    {
+      "findingId": "9d02e4ad3bb4ff22744be5ee7a9c7d6aec70ff1c92ecd5c2aab8d885941aa7a3",
+      "path": "modules/atlas/harness/gates/own-snapshot-guard.mjs",
+      "statement": "import(pathToFileURL(IMPLEMENTATION).href)",
+      "meaning": "Loads the compiled Own snapshot parser and checks the committed snapshot/skills; it first rejects a missing implementation.",
+      "target": "OWN_SNAPSHOT_GUARD_IMPL or <OWN_SNAPSHOT_GUARD_ROOT or Atlas root>/packages/retrieval/dist/src/own-snapshot.js",
+      "targetSelection": "explicit environment override; not a globally closed fixed target",
+      "executed": false,
+      "disposition": null
+    },
+    {
+      "findingId": "fde6ff87ee526b682bf68a99d6b70aae08320638fe96829d660c127251778bc9",
+      "path": "modules/atlas/scripts/materialize-own-snapshot.mjs",
+      "statement": "import(pathToFileURL(IMPLEMENTATION).href)",
+      "meaning": "Authoring script loads the compiled retrieval contract to validate/materialize a reviewed Own snapshot; cwd and optional implementation override select source.",
+      "target": "OWN_SNAPSHOT_MATERIALIZE_IMPL or <process.cwd()>/packages/retrieval/dist/src/own-snapshot.js",
+      "targetSelection": "cwd/environment-dependent authoring route",
+      "executed": false,
+      "disposition": null
+    },
+    {
+      "findingId": "825b882875345826636deca42a000db377ab182c3ebbd0621f4feb1833afd8cd",
+      "path": "modules/atlas/packages/tools/test/wp-10.a5-tools.test.ts",
+      "statement": "import(WRITE_SPY_STORE_PATH)",
+      "meaning": "Loads the cross-package write-spy harness for assertions that read doors do not mutate the store.",
+      "target": "modules/atlas/packages/cli/test/write-spy-store.ts",
+      "targetSelection": "constant [..,..,cli,test,write-spy-store.js].join('/') resolved by the test loader; no blanket namespace resolver",
+      "executed": false,
+      "disposition": null
+    },
+    {
+      "findingId": "9f723f5f2c4690bb4a3416e8f603a7f58e517400c2bd55412421e671ef2b98cb",
+      "path": "modules/atlas/packages/cli/test/mine-target-dispatch.test.ts",
+      "statement": "import(\"@atlas/adapter-io\")",
+      "meaning": "Literal dynamic import of @atlas/adapter-io obtains initAst after a Vitest wrapper of createHistorySource; test invokes CLI main over a temporary repository.",
+      "target": "nested workspace export of @atlas/adapter-io",
+      "executed": false,
+      "disposition": null
+    },
+    {
+      "findingId": "99a2d732637b33c90ae351cf27505a716dc7839e30d7eb1ad7afc5d804e5c033",
+      "path": "modules/atlas/packages/kernel/test/heldout-krn-store.test.ts",
+      "statement": "import(\"fast-check\")",
+      "meaning": "Literal fast-check import inside the held-out fuzz test; fc.assert/property drives totality checks at a reserved seed.",
+      "target": "nested Atlas lock node_modules/fast-check@3.23.2",
+      "executed": false,
+      "disposition": null
+    },
+    {
+      "findingId": "de388c85df24d02d787fe74cb1b5ad6b922b4b2f566eb019f888d3fa226f5a19",
+      "path": "modules/atlas/packages/cli/test/mine-history-wired.test.ts",
+      "statement": "import(\"@atlas/adapter-io\")",
+      "meaning": "Literal dynamic import of @atlas/adapter-io obtains initAst after a Vitest wrapper of createHistorySource; this is a runtime import in the harness.",
+      "target": "nested workspace export of @atlas/adapter-io",
+      "executed": false,
+      "disposition": null
+    },
+    {
+      "findingId": "3fe36d033c580e29c6264c50cb56f5c2f1a1743bd7c52fa1328497d77544fb1f",
+      "path": "modules/atlas/harness/gates/own-snapshot-guard.test.mjs",
+      "statement": "import(pathToFileURL(IMPLEMENTATION).href)",
+      "meaning": "Test imports the real compiled retrieval contract, then spawns own-snapshot-guard with fixture root and that implementation.",
+      "target": "modules/atlas/packages/retrieval/dist/src/own-snapshot.js",
+      "targetSelection": "constant join of test-relative Atlas root",
+      "executed": false,
+      "disposition": null
+    },
+    {
+      "findingId": "78bd056c018fcd33f5e61c50d3450e7506ddf85f1f3e8ca85289b7f8bcfb263c",
+      "path": "modules/atlas/harness/gates/spec-conformance-guard.mjs",
+      "statement": "import(pathToFileURL(join(REPO, \"packages/tools/dist/src/index.js\")).href)",
+      "meaning": "Compares the built tools surface with explicit governance/read/write inventories.",
+      "target": "<SPEC_CONFORMANCE_GUARD_ROOT or Atlas root>/packages/tools/dist/src/index.js",
+      "targetSelection": "root environment override",
+      "executed": false,
+      "disposition": null
+    },
+    {
+      "findingId": "f061f3054f61123da2bdfc871e63542c830abb6a9a45c502b42b3c265bb00c25",
+      "path": "modules/atlas/harness/gates/reference-model-guard.mjs",
+      "statement": "import(pathToFileURL(process.env.REFERENCE_MODEL_GUARD_LEDGER).href)",
+      "meaning": "Optional fixture ledger module supplies LEDGER/DECLARED_COUNTS for the guard's test seam; absent env selects built-in ledger.",
+      "target": "REFERENCE_MODEL_GUARD_LEDGER when present",
+      "targetSelection": "open environment-supplied module path; never claim static closure",
+      "executed": false,
+      "disposition": null
+    },
+    {
+      "findingId": "39ad3e614ade15baec36b040d93130951daf6ea59c2ee1d864adad0a8ae8bdc8",
+      "path": "modules/atlas/boundary/test/scanner-clock.test.ts",
+      "statement": "import(\n  path.resolve(import.meta.dir, \"../../packages/adapter-io/src/scanner.ts\")\n)",
+      "meaning": "Direct timeout/clock test of the canonical Atlas scanner source; the import expression fixes the target relative to import.meta.dir.",
+      "target": "modules/atlas/packages/adapter-io/src/scanner.ts",
+      "targetSelection": "fixed path.resolve expression",
+      "executed": false,
+      "disposition": null
+    }
+  ],
+  "extendsReviews": [
+    {
+      "findingId": "48121abc039c7ef6624245c089a528709142435cbb0ca4a47e404865255b7fa4",
+      "source": {
+        "path": "modules/atlas/boundary/tsconfig.json",
+        "gitBlob": "e3339ad80a399852ea9ee082ac957cf53067b639",
+        "bytes": 188
+      },
+      "sourceSha256": "8ab5155c7bbd57590df5938bc0ad055c55c7f2e4457c600ec26a2723cb6fe389",
+      "extends": "@tsconfig/bun/tsconfig.json",
+      "declaredDependency": "@tsconfig/bun@1.0.9 via root catalog",
+      "installedDependencyBytesObserved": false
+    },
+    {
+      "findingId": "259f23449d916285029b1cffd868fad01a623b07a0f2f7598e5a5dc3911135e4",
+      "source": {
+        "path": "modules/atlas/packages/adapter-io/tsconfig.json",
+        "gitBlob": "529e3c0fa5d3ad2121cef1542d3b1fd000e83192",
+        "bytes": 475
+      },
+      "sourceSha256": "0be39c428345e8dee07c8304ec228132505b63e913a236c9c8379422fcc34e43",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "4eacddbe37837207aaad1c125deca2d2a4e481d6329430e1a95fac060fb70d60",
+      "source": {
+        "path": "modules/atlas/packages/cli/tsconfig.json",
+        "gitBlob": "e879e4c4993cf186ca1127980095d2f4d6d8ca58",
+        "bytes": 327
+      },
+      "sourceSha256": "103ec37fa97163efc138b55a5319d8a79cf79b1d3ee96d5b85b882ddf6e1c47e",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "e5a388297c37eebb298d081acc05796a9368f0224cb5b95bac182bf76a8d89a8",
+      "source": {
+        "path": "modules/atlas/packages/contracts/tsconfig.json",
+        "gitBlob": "5285d28af22ae3cc360d5d619a0aee65645c0571",
+        "bytes": 137
+      },
+      "sourceSha256": "9222ec437c1c4b8378784ebceca444214102b64598ff2d611cb4f362d576990d",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "4724d8daa4f53daee17d2690b7d2e39686fb11237cd75a6a536bba3beea73e40",
+      "source": {
+        "path": "modules/atlas/packages/e2e-blackbox/tsconfig.json",
+        "gitBlob": "939156a4dda96e524c8ea8f455bb2507e0c6cd72",
+        "bytes": 378
+      },
+      "sourceSha256": "1d15bf9705783e938a4643dcc4afb4940a791df64d6475cc2705bb437a78ac82",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "65620d0e2fb8d4245840fab3b5629377ed316261b5c9e3b85b4f7707b97302bf",
+      "source": {
+        "path": "modules/atlas/packages/e2e/tsconfig.json",
+        "gitBlob": "e29bb8365cf6088e4128aff7140a70236423f0e6",
+        "bytes": 460
+      },
+      "sourceSha256": "a8cdc8a33b8733d25512361c39eb88a6a8a1654b41ad63bc217f04a6866cd2c6",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "4247016e1da044b1a72a2dddb9ca3e8166be7163238e94def76fec9c0862e295",
+      "source": {
+        "path": "modules/atlas/packages/genesis/tsconfig.json",
+        "gitBlob": "059943df99d68067726dee72d6bbf2e698bfc5e0",
+        "bytes": 266
+      },
+      "sourceSha256": "ad3f637ec4c62deaaebc649971b4cc7ed7955a745cc158cc88ffbead67c88ced",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "a583ae562a3a90d6cc88d7b383eb302c7919787c803b58dbf29971f5f5e3c44f",
+      "source": {
+        "path": "modules/atlas/packages/grounding/tsconfig.json",
+        "gitBlob": "0216473e0e1db2c10e1679db28ad35bfbc2c8ef3",
+        "bytes": 218
+      },
+      "sourceSha256": "612caa85a885a3406c3b25d82ff794ee5436e8682c48e8d6196e73d844f9a9d3",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "08428cbaa5dc834eb61ee074ad430b5fb8ea801b24e6827b535c246c866637e2",
+      "source": {
+        "path": "modules/atlas/packages/index/tsconfig.json",
+        "gitBlob": "36f49ffa7f9a189670b70a335e3182e2ecf1d396",
+        "bytes": 194
+      },
+      "sourceSha256": "72a5763b97b01b2991f6847636c005ec199d2259947d3c76668573cc4c0d2815",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "a12509cb6798931d973fa98d8d65f38b4a00be560d85716ab5ec0c8f7014df98",
+      "source": {
+        "path": "modules/atlas/packages/kernel/tsconfig.json",
+        "gitBlob": "a6804d99cc0d0b60d2cec841818d36fcf5973bd7",
+        "bytes": 169
+      },
+      "sourceSha256": "4c44884bad8bcb2a9f1612ebe6af54f274176ad6cbbde6bb959bb807e1d1dec9",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "3cb4371356755357104d53a3521773386ffdbf8d87a9d9585e246c7a98a95be7",
+      "source": {
+        "path": "modules/atlas/packages/knowledge/tsconfig.json",
+        "gitBlob": "d0747678d2bda0f40480b5aa9c11321c29a78561",
+        "bytes": 266
+      },
+      "sourceSha256": "64ec1560f6486f9b63a84216e693b350cb1c31237fef948dc7c5a4a48a72818f",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "ea7b52053be10fae01644024d87a30f3ce0ffbb9a6a4e9f37f500712fa2caf0f",
+      "source": {
+        "path": "modules/atlas/packages/mcp-server/tsconfig.json",
+        "gitBlob": "8848a0ca90eab1e632eca747eea54204bd06286c",
+        "bytes": 219
+      },
+      "sourceSha256": "f43b48d67923b6c7d4b1fdeea2d0f4b4bbd20f9cacdd130fc4752cc8a8b4b4ba",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "9250742d9f830b5fe0d299082ddaf68acfb0161badd5e7c56b909c1ba9fbd955",
+      "source": {
+        "path": "modules/atlas/packages/memory/tsconfig.json",
+        "gitBlob": "67be04f53d6d1488f0adfccb2af85cbac0c35448",
+        "bytes": 270
+      },
+      "sourceSha256": "74e8038601315be418c963db1808c0b409dfc71b922ea313b30dc631465f5872",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "7a394252af3ce0f6b1508029f79fde63b94cef0454ced8343445bc867450818f",
+      "source": {
+        "path": "modules/atlas/packages/persist/tsconfig.json",
+        "gitBlob": "36f49ffa7f9a189670b70a335e3182e2ecf1d396",
+        "bytes": 194
+      },
+      "sourceSha256": "72a5763b97b01b2991f6847636c005ec199d2259947d3c76668573cc4c0d2815",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "23a8e8055251fcbd8801af4b2d0f86cecaa39dc098d7d16938e9c15ace6a7e18",
+      "source": {
+        "path": "modules/atlas/packages/retrieval/tsconfig.json",
+        "gitBlob": "b7cf63d102a909d16c80bbc43929c036cbc5c409",
+        "bytes": 266
+      },
+      "sourceSha256": "741c278a46d812e19fe3a36a66e2b3c75d5e5bc130cdc8530b839e0a1fb0f75c",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    },
+    {
+      "findingId": "50638f58588c0a641d93502f2f6a32a457f9b1cb3c6d7df4c6c6e1cc2fa87217",
+      "source": {
+        "path": "modules/atlas/packages/tools/tsconfig.json",
+        "gitBlob": "d2c783c925eedbb9cdbb3906ee8dd74e1df52299",
+        "bytes": 329
+      },
+      "sourceSha256": "6398864d74823faef4ae48074360b5c30e2e3d2bd994a3e1d14c2a3960139910",
+      "extends": "../../tsconfig.base.json",
+      "target": {
+        "path": "modules/atlas/tsconfig.base.json",
+        "gitBlob": "a1ea42b6351770666502738cc8578ea3946171cb",
+        "bytes": 322
+      },
+      "observedOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "declaration": true,
+        "composite": true,
+        "verbatimModuleSyntax": true,
+        "skipLibCheck": true
+      }
+    }
+  ],
+  "fixture": {
+    "findingId": "a5377da4726003fa2d27f2e18610c10e65ff52f383314e4972054f290b93e409",
+    "header": {
+      "fileId": 1184,
+      "domain": "source",
+      "path": "modules/atlas/packages/adapter-io/test/fixtures/neg-collapsed-local/repo/packages/knowledge/src/negation-key.ts",
+      "fileSha256": "9119fca6c3c558685e460750f14309dcade9a975827c824d78442cf0bddeaed5",
+      "encoding": "utf8",
+      "occurrences": 0,
+      "findings": 1,
+      "seeds": {},
+      "findingKinds": {
+        "unresolved-import-or-content-edge": 1
+      },
+      "entrypoints": []
+    },
+    "edge": {
+      "id": "36f082ba4bcdc056ab058500e950b3801b826ed110aad8a3fc366636ea76e522",
+      "domain": "source",
+      "from": "modules/atlas/packages/adapter-io/test/fixtures/neg-collapsed-local/repo/packages/knowledge/src/negation-key.ts",
+      "fileSha256": "9119fca6c3c558685e460750f14309dcade9a975827c824d78442cf0bddeaed5",
+      "start": 551,
+      "end": 601,
+      "kind": "static-import-or-reexport",
+      "specifier": "@atlas/knowledge/brand",
+      "targets": [],
+      "status": "unresolved"
+    },
+    "meaning": "Frozen negative SCIP fixture intentionally expresses a collapsed cross-package caller. The test consumes collapsed-local.scip and requires verifyNegation/governed emit to abstain on that unknown caller. Applying the production boundary alias rule to this subpath would invent a target and defeat the fixture's purpose.",
+    "excludedBy": {
+      "path": "modules/atlas/packages/adapter-io/tsconfig.json",
+      "gitBlob": "529e3c0fa5d3ad2121cef1542d3b1fd000e83192",
+      "bytes": 475
+    },
+    "excludeValue": "test/fixtures/neg-collapsed-local/repo",
+    "generator": {
+      "path": "modules/atlas/packages/adapter-io/test/fixtures/neg-collapsed-local/build-fixture.mjs",
+      "gitBlob": "ebbf5036256c509f97dcee86415c952d02e65c41",
+      "bytes": 2554
+    },
+    "testConsumer": {
+      "path": "modules/atlas/packages/adapter-io/test/negation-collapsed-local.test.ts",
+      "gitBlob": "5860f29d33e6169c6d9d515a88240d44b256cbe5",
+      "bytes": 8265
+    },
+    "fixtureSource": {
+      "path": "modules/atlas/packages/adapter-io/test/fixtures/neg-collapsed-local/repo/packages/knowledge/src/negation-key.ts",
+      "gitBlob": "926163b405f69ee83a6b3932120fd5dee09f1a58",
+      "bytes": 643
+    },
+    "fixtureBinary": {
+      "path": "modules/atlas/packages/adapter-io/test/fixtures/neg-collapsed-local/collapsed-local.scip",
+      "gitBlob": "6892f268d245d1a782b496d7b370c0954b2a698d",
+      "bytes": 399
+    },
+    "testExecutionClaim": false,
+    "disposition": null
+  },
+  "occurrenceSemanticAnchors": [
+    {
+      "source": {
+        "path": "modules/atlas/packages/adapter-io/src/rev-index.ts",
+        "gitBlob": "a60b1809c2dc504e07914fa6f45cd499a7f2ae72",
+        "bytes": 18068
+      },
+      "header": {
+        "fileId": 1116,
+        "domain": "source",
+        "path": "modules/atlas/packages/adapter-io/src/rev-index.ts",
+        "fileSha256": "99c27015d61a8aceb6849e67e05cbd0ba6678337263a9d9fa1c8d51d4d8bf8f9",
+        "encoding": "utf8",
+        "occurrences": 27,
+        "findings": 4,
+        "seeds": {
+          "worktree": 26,
+          "repo-": 1
+        },
+        "findingKinds": {
+          "unresolved-import-or-content-edge": 4
+        },
+        "entrypoints": []
+      },
+      "symbols": "createRevIndex / axesAt / attemptBuild",
+      "observation": "Builds axes for an immutable Git revision in a temporary detached worktree, then removes that worktree in finally. The path is transient technical input to indexing; the 27 matching spans still include comments and require per-occurrence review.",
+      "occurrenceIdsRetrieved": false,
+      "disposition": null
+    },
+    {
+      "source": {
+        "path": "modules/atlas/packages/adapter-io/src/run-git.ts",
+        "gitBlob": "52fd4c4d83eefe1b9d24069869bbf92275eb3626",
+        "bytes": 6153
+      },
+      "header": {
+        "fileId": 1122,
+        "domain": "source",
+        "path": "modules/atlas/packages/adapter-io/src/run-git.ts",
+        "fileSha256": "2d672097db3e83883a1b3db4f1f3dd98f6de6f8ee6b07e4445366c393ac79fcd",
+        "encoding": "utf8",
+        "occurrences": 7,
+        "findings": 0,
+        "seeds": {
+          "worktree": 7
+        },
+        "findingKinds": {},
+        "entrypoints": []
+      },
+      "symbols": "runGit / headSha",
+      "observation": "Repository-scoped no-shell Git execution and revision read; references to worktree locks describe the Git execution mechanism.",
+      "occurrenceIdsRetrieved": false,
+      "disposition": null
+    },
+    {
+      "source": {
+        "path": "modules/atlas/packages/adapter-io/src/territory-write.ts",
+        "gitBlob": "52e7976a3aae19f1727b8b839cec06180bcfc3f0",
+        "bytes": 3975
+      },
+      "header": {
+        "fileId": 1139,
+        "domain": "source",
+        "path": "modules/atlas/packages/adapter-io/src/territory-write.ts",
+        "fileSha256": "8b73e2153b82eac8dcd318ace2b454728f257ea2336cf9be71192695663f8948",
+        "encoding": "utf8",
+        "occurrences": 17,
+        "findings": 3,
+        "seeds": {
+          "projectId": 17
+        },
+        "findingKinds": {
+          "unresolved-import-or-content-edge": 3
+        },
+        "entrypoints": []
+      },
+      "symbols": "declareTerritory",
+      "observation": "Reads/writes TERRITORY-CATALOG.json, requires the first projectId and rejects a mismatch with an existing catalog before writing.",
+      "occurrenceIdsRetrieved": false,
+      "disposition": null
+    },
+    {
+      "source": {
+        "path": "modules/atlas/packages/retrieval/src/host-context.ts",
+        "gitBlob": "6c60032a6049e5de89592d9b6aa483207c909598",
+        "bytes": 7677
+      },
+      "header": {
+        "fileId": 1859,
+        "domain": "source",
+        "path": "modules/atlas/packages/retrieval/src/host-context.ts",
+        "fileSha256": "c2a119e47de728839d10167cc8fd45bb74eb5502415f5b5162f56cae8d0c72ff",
+        "encoding": "utf8",
+        "occurrences": 15,
+        "findings": 4,
+        "seeds": {
+          "projectId": 15
+        },
+        "findingKinds": {
+          "unresolved-import-or-content-edge": 4
+        },
+        "entrypoints": []
+      },
+      "symbols": "publishTerritoryCatalog / territoryCatalog / verifyHostContext",
+      "observation": "projectId selects a catalog and participates in content-derived catalogVersion; mismatched identity/version rejects the read.",
+      "occurrenceIdsRetrieved": false,
+      "disposition": null
+    },
+    {
+      "source": {
+        "path": "modules/atlas/packages/index/src/territory-catalog.ts",
+        "gitBlob": "0ad5a3e01f6ef5f45c0c0c3c7af813b8b8df574a",
+        "bytes": 3314
+      },
+      "header": {
+        "fileId": 1647,
+        "domain": "source",
+        "path": "modules/atlas/packages/index/src/territory-catalog.ts",
+        "fileSha256": "42d0c934c156922f2bc8ae5c48d427bdd0da86d043382e2d22f676080e561020",
+        "encoding": "utf8",
+        "occurrences": 13,
+        "findings": 1,
+        "seeds": {
+          "projectId": 13
+        },
+        "findingKinds": {
+          "unresolved-import-or-content-edge": 1
+        },
+        "entrypoints": []
+      },
+      "symbols": "createTerritoryCatalog / parseTerritoryCatalog",
+      "observation": "Map keyed by explicit projectId rejects duplicates/unknown projects. This is a real generic project catalogue, not merely a lexical match.",
+      "occurrenceIdsRetrieved": false,
+      "disposition": null
+    },
+    {
+      "source": {
+        "path": "modules/atlas/packages/adapter-io/src/native-memory.ts",
+        "gitBlob": "6a068cac301e804e234f24fa5eac0390aea1aa30",
+        "bytes": 31372
+      },
+      "header": {
+        "fileId": 1096,
+        "domain": "source",
+        "path": "modules/atlas/packages/adapter-io/src/native-memory.ts",
+        "fileSha256": "b25010f6ba5e07c46c9f6762dad48a81b098250fb3cb9a95fd915479ab1cdf91",
+        "encoding": "utf8",
+        "occurrences": 3,
+        "findings": 3,
+        "seeds": {
+          "projectID": 1,
+          "worktree": 1,
+          "projectId": 1
+        },
+        "findingKinds": {
+          "unresolved-import-or-content-edge": 3
+        },
+        "entrypoints": []
+      },
+      "symbols": "createNativeMemory / readBoundHeader / proposeProjectRule / decideProjectRule",
+      "observation": "Uses binding.storage.root and memoryOwner for the memory store and ownership; binding also carries project identifiers and execution provenance. Calling composition must establish authority.",
+      "occurrenceIdsRetrieved": false,
+      "disposition": null
+    },
+    {
+      "source": {
+        "path": "modules/atlas/packages/adapter-io/src/surface/review.ts",
+        "gitBlob": "7767aba8e29f78962c25dae5934328c24548de99",
+        "bytes": 12988
+      },
+      "header": {
+        "fileId": 1136,
+        "domain": "source",
+        "path": "modules/atlas/packages/adapter-io/src/surface/review.ts",
+        "fileSha256": "b7e922af1b3df0613ef997539157067dbf9ed45e2581ae1a821bd7490e212fe9",
+        "encoding": "utf8",
+        "occurrences": 8,
+        "findings": 1,
+        "seeds": {
+          "projectId": 6,
+          "projectID": 1,
+          "worktree": 1
+        },
+        "findingKinds": {
+          "unresolved-import-or-content-edge": 1
+        },
+        "entrypoints": []
+      },
+      "symbols": "bindingOf / territory",
+      "observation": "Generic Atlas surface derives its binding from repoPath, basename(root) and supplied actor; territory writes delegate to declareTerritory. Source comments and implementation retain generic project/Git semantics.",
+      "occurrenceIdsRetrieved": false,
+      "disposition": null
+    }
+  ],
+  "genericCoreConsumer": {
+    "path": "packages/core/src/atlas.ts",
+    "symbols": [
+      "storeRoot",
+      "open",
+      "territory"
+    ],
+    "observed": "storeRoot uses worktree unless Project.isRoot(worktree), then directory. openSurface(root) supplies the store; territory injects projectId from the host's projectID. This is a real generic consumer. SF host exclusion/admission remains a separate obligation; do not label this dead/cosmetic from scanner reachability."
+  },
+  "minimalNextExamination": {
+    "status": "PROPOSED_NOT_EXECUTED",
+    "reuse": "Host-boundary archive-binding.json, package/compile-evidence.json and exact producer-source checkout83f; add original diagnosticZIP acquisition/validation without changing host verifier.",
+    "operations": [
+      "Run unchanged review indexer e08 on original report14738453502 to revalidate ZIP/API/source/report IDs and binding; preserve original execution separate from examination execution.",
+      "Read original diagnostic.json and require its raw SHA256 matches211422a64e4c713e4e3f96b5a88489fba76e099d26ea6d8001794ce019e7ff34.",
+      "For each Atlas finding source file, verify source SHA256 and use TypeScript5.8.2 AST to match exactly the report edge start/end/kind/specifier. Record import/export type-only and mixed bindings, dynamic expressions and original IDs. Do not resolve modules.",
+      "Read actual compile provenance/ledger from the verified productZIP and bind generated AtlasJS inputs to exact source hashes/Git blobs. Report inclusion and known external compiler edges without turning absence into dead-code proof.",
+      "Optionally include all688 Atlas occurrence IDs with original caller records and exact source byte contexts for semantic review. Preserve all classifications as unassigned."
+    ],
+    "outputSchema": "sf-g09-atlas-readonly-observation-v1",
+    "receiptFields": [
+      "producerBinding",
+      "diagnosticBinding",
+      "examinationBinding",
+      "sourceTreeSHA",
+      "archiveSha256",
+      "binarySha256",
+      "compileEvidenceSha256",
+      "parserVersion",
+      "sourceObservations",
+      "generatedCompilerInputs",
+      "openQuestions"
+    ],
+    "stdout": "Small counts/manifest only; full observations artifact.",
+    "newCliBuild": false,
+    "newScanner": false,
+    "newResolver": false,
+    "signing": false,
+    "limit": "CLI compile ledger records the already-generated JS inputs, not the earlier @atlas source closure. Full pre-bundle membership would require an explicitly observed generation run using the actual unchanged resolution logic plus equality of every generated output; it is not established here."
+  }
+}
