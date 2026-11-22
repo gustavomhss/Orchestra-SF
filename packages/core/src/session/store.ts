@@ -13,6 +13,7 @@ import { MessageDecodeError } from "./error"
 import { SessionMessage } from "./message"
 import { SessionSchema } from "./schema"
 import { SessionScope } from "./scope"
+import { SessionOwner } from "./owner"
 import { SessionMessageTable, SessionTable } from "./sql"
 import { fromRow } from "./info"
 
@@ -75,6 +76,7 @@ const layer = Layer.effect(
   Service,
   Effect.gen(function* () {
     const { db } = yield* Database.Service
+    const owners = yield* SessionOwner.Service
     const decodeMessage = Schema.decodeUnknownEffect(SessionMessage.Message)
     const decodeScope = Schema.decodeUnknownEffect(SessionScope.Scope)
     const decodeState = Schema.decodeUnknownEffect(SessionScope.State)
@@ -103,17 +105,17 @@ const layer = Layer.effect(
         .pipe(Effect.orDie, Effect.asVoid)
 
     return Service.of({
-      get: Effect.fn("SessionStore.get")(function* (sessionID) {
+      get: Effect.fn("SessionStore.get")((sessionID) => SessionOwner.guard(owners, sessionID, "read", () => Effect.gen(function* () {
         const row = yield* db.select().from(SessionTable).where(eq(SessionTable.id, sessionID)).get().pipe(Effect.orDie)
         return row ? fromRow(row) : undefined
-      }),
-      context: Effect.fn("SessionStore.context")(function* (sessionID) {
+      }))),
+      context: Effect.fn("SessionStore.context")((sessionID) => SessionOwner.guard(owners, sessionID, "read", () => Effect.gen(function* () {
         return yield* SessionHistory.load(db, sessionID)
-      }),
-      runnerContext: Effect.fn("SessionStore.runnerContext")(function* (sessionID, baselineSeq) {
+      }))),
+      runnerContext: Effect.fn("SessionStore.runnerContext")((sessionID, baselineSeq) => SessionOwner.guard(owners, sessionID, "read", () => Effect.gen(function* () {
         return yield* SessionHistory.loadForRunner(db, sessionID, baselineSeq)
-      }),
-      entries: Effect.fn("SessionStore.entries")(function* (sessionID) {
+      }))),
+      entries: Effect.fn("SessionStore.entries")((sessionID) => SessionOwner.guard(owners, sessionID, "read", () => Effect.gen(function* () {
         const rows = yield* db
           .select()
           .from(SessionMessageTable)
@@ -133,8 +135,8 @@ const layer = Layer.effect(
             ),
           ),
         )
-      }),
-      unsettledHiddenTools: Effect.fn("SessionStore.unsettledHiddenTools")(function* (sessionID) {
+      }))),
+      unsettledHiddenTools: Effect.fn("SessionStore.unsettledHiddenTools")((sessionID) => SessionOwner.guard(owners, sessionID, "read", () => Effect.gen(function* () {
         // session_message_session_type_seq_idx is (session_id, type, seq). Hidden means seq before the latest compaction.
         const rows = yield* db
           .all<{
@@ -169,14 +171,20 @@ const layer = Layer.effect(
             }
           }),
         )
-      }),
+      }))),
       message: Effect.fn("SessionStore.message")(function* (messageID) {
+        const scope = yield* owners.open().pipe(Effect.orDie)
+        const identity = yield* db.select({ sessionID: SessionMessageTable.session_id }).from(SessionMessageTable)
+          .where(eq(SessionMessageTable.id, messageID)).get().pipe(Effect.orDie)
+        if (!identity) { yield* owners.verify(scope).pipe(Effect.orDie); return undefined }
+        yield* owners.assert(scope, identity.sessionID, "read").pipe(Effect.orDie)
         const row = yield* db
           .select()
           .from(SessionMessageTable)
           .where(eq(SessionMessageTable.id, messageID))
           .get()
           .pipe(Effect.orDie)
+        yield* owners.verify(scope).pipe(Effect.orDie)
         return row
           ? {
               sessionID: SessionSchema.ID.make(row.session_id),
@@ -184,7 +192,7 @@ const layer = Layer.effect(
             }
           : undefined
       }),
-      permissions: Effect.fn("SessionStore.permissions")(function* (sessionID) {
+      permissions: Effect.fn("SessionStore.permissions")((sessionID) => SessionOwner.guard(owners, sessionID, "read", () => Effect.gen(function* () {
         const row = yield* db
           .select({ permission: SessionTable.permission })
           .from(SessionTable)
@@ -197,25 +205,28 @@ const layer = Layer.effect(
           resource: rule.pattern,
           effect: rule.action,
         }))
-      }),
-      scope: Effect.fn("SessionStore.scope")(function* (sessionID) {
+      }))),
+      scope: Effect.fn("SessionStore.scope")((sessionID) => SessionOwner.guard(owners, sessionID, "read", () => Effect.gen(function* () {
         return (yield* readScope(sessionID)).state
-      }),
-      narrow: Effect.fn("SessionStore.narrow")(function* (sessionID, scope) {
+      }))),
+      narrow: Effect.fn("SessionStore.narrow")((sessionID, scope) => SessionOwner.guard(owners, sessionID, "model", (ownerScope) => Effect.gen(function* () {
         const decoded = yield* decodeScope(scope).pipe(
           Effect.mapError(() => new SessionScope.WriteError({ sessionID, reason: "invalid-scope" })),
         )
-        yield* scopeWrites.withPermit(
+        yield* owners.withWriter(ownerScope, db.transaction(() => scopeWrites.withPermit(
           Effect.gen(function* () {
             const current = yield* readScope(sessionID)
             if (!current.found) return yield* new SessionScope.WriteError({ sessionID, reason: "missing-session" })
             if (current.state) return yield* new SessionScope.WriteError({ sessionID, reason: "already-scoped" })
             yield* writeScope(sessionID, SessionScope.initial(decoded))
           }),
+        ).pipe(Effect.tap(() => owners.verify(ownerScope).pipe(Effect.orDie))), { behavior: "immediate" }).pipe(Effect.catchTag("SqlError", Effect.die))).pipe(
+          Effect.catchTag("SessionOwner.Denied", Effect.die),
+          Effect.catchTag("AuthorityGenerationError", Effect.die),
         )
-      }),
-      charge: Effect.fn("SessionStore.charge")(function* (sessionID, request) {
-        return yield* scopeWrites.withPermit(
+      }))),
+      charge: Effect.fn("SessionStore.charge")((sessionID, request) => SessionOwner.guard(owners, sessionID, "run", (ownerScope) => Effect.gen(function* () {
+        return yield* owners.withWriter(ownerScope, db.transaction(() => scopeWrites.withPermit(
           Effect.gen(function* () {
             const current = yield* readScope(sessionID)
             if (!current.state) return { admitted: true } as const
@@ -228,10 +239,13 @@ const layer = Layer.effect(
             )
             return deviation ? ({ admitted: false, deviation } as const) : ({ admitted: true } as const)
           }),
+        ).pipe(Effect.tap(() => owners.verify(ownerScope).pipe(Effect.orDie))), { behavior: "immediate" }).pipe(Effect.catchTag("SqlError", Effect.die))).pipe(
+          Effect.catchTag("SessionOwner.Denied", Effect.die),
+          Effect.catchTag("AuthorityGenerationError", Effect.die),
         )
-      }),
+      }))),
     })
   }),
 )
 
-export const node = makeGlobalNode({ service: Service, layer, deps: [Database.node] })
+export const node = makeGlobalNode({ service: Service, layer, deps: [Database.node, SessionOwner.node] })

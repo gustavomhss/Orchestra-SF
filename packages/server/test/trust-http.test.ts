@@ -18,6 +18,7 @@ import { SchemaErrorMiddleware } from "@orchestra/protocol/middleware/schema-err
 import { Context, Effect, Layer, LayerMap, Option } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
+import { technicalLocationMap } from "../../core/test/fixture/technical-location-map"
 import { ServerAuth } from "../src/auth"
 import { TrustHandler } from "../src/handlers/trust"
 import { authorizationLayer } from "../src/middleware/authorization"
@@ -39,7 +40,7 @@ function serve(input: { config: string; locations: Locations }) {
     const routes = HttpApiBuilder.layer(api).pipe(
       Layer.provide(TrustHandler),
       Layer.provide(Layer.succeedContext(context)),
-      Layer.provide(Layer.succeed(LocationServiceMap.Service, input.locations)),
+      Layer.provide(Layer.succeed(LocationServiceMap.Service, technicalLocationMap(input.locations))),
       Layer.provide(authorizationLayer),
       Layer.provide(schemaErrorLayer),
       Layer.provide(ServerAuth.Config.configLayer({ username: "orchestra", password: Option.some("secret") })),

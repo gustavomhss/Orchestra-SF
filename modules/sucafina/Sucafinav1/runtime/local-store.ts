@@ -6,6 +6,8 @@ import { constants, lstatSync } from "node:fs"
 import { lstat, mkdir, open, realpath } from "node:fs/promises"
 import { isAbsolute, join, parse, resolve, sep } from "node:path"
 import type { LocalStore } from "./local-contract.ts"
+import { createTeamProfilePolicyStore, initializeTeamProfilePolicy, teamProfilePolicyInitialization } from "./team-profile-store.ts"
+import type { TeamProfilePolicyInitialization } from "./team-profile-store.ts"
 import type { Snapshot, TransactionOptions } from "./contract.ts"
 import type { BlobTransaction } from "./assets.ts"
 import type { Surface } from "../src/identity.ts"
@@ -81,7 +83,11 @@ export function consumeLocalTransactionAbort(observation: object, error: unknown
   return Object.freeze({ storageIdentity: transaction.storageIdentity, transactionId: transaction.transactionId })
 }
 
-export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number } = {}): Promise<LocalStore> {
+export async function openLocalStore(directory: string, options: {
+  lockTimeoutMs?: number
+  teamProfilePolicy?: TeamProfilePolicyInitialization
+} = {}): Promise<LocalStore> {
+  const teamPolicy = options.teamProfilePolicy && teamProfilePolicyInitialization(options.teamProfilePolicy)
   if (!isAbsolute(directory)) throw new Error("Local storage requires an absolute dedicated directory")
   const timeout = options.lockTimeoutMs ?? 5000
   if (!Number.isFinite(timeout) || timeout < 0) throw new Error("Invalid lock timeout")
@@ -152,6 +158,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         CREATE TABLE IF NOT EXISTS blobs (surface TEXT NOT NULL, key TEXT NOT NULL, payload BLOB NOT NULL, type TEXT NOT NULL, PRIMARY KEY (surface, key));
         CREATE TABLE IF NOT EXISTS authentication_payloads (key TEXT PRIMARY KEY, payload BLOB NOT NULL, expires_at REAL NOT NULL);
       `)
+      if (teamPolicy) initializeTeamProfilePolicy(initial, teamPolicy)
       requireDatabaseFile()
       initial.exec("COMMIT")
     } finally {
@@ -394,7 +401,17 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     requireScope(scope)
     return true
   }
+  const teamProfiles = teamPolicy && createTeamProfilePolicyStore({
+    binding: teamPolicy.binding,
+    read: (work) => operation(false, async (db) => work(db)),
+    write: (work, signal) => operation(true, work, signal),
+    commit: (db) => {
+      requireDatabaseFile()
+      db.exec("COMMIT")
+    },
+  })
   const store: LocalStore = {
+    ...(teamProfiles ? { teamProfiles } : {}),
     hasSnapshotRoot: hasCurrentSnapshots,
     holdTargetPreimage: () => {
       const state = { active: true }

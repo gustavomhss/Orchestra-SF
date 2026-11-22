@@ -5,6 +5,7 @@ import { ActionsOperations } from "@orchestra/core/actions/operations"
 import { Config } from "@orchestra/core/config"
 import { Database } from "@orchestra/core/database/database"
 import { makeLocationNode } from "@orchestra/core/effect/app-node"
+import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { FSUtil } from "@orchestra/core/fs-util"
 import { Global } from "@orchestra/core/global"
@@ -15,6 +16,7 @@ import { Policy } from "@orchestra/core/policy"
 import { AppProcess } from "@orchestra/core/process"
 import { Relay } from "@orchestra/core/relay"
 import { RelayHookRecovery } from "@orchestra/core/relay-hook-recovery"
+import { SessionOwner } from "@orchestra/core/session/owner"
 import { ActionsApiError } from "@orchestra/protocol/groups/actions-common"
 import { ActionsBindingGroup } from "@orchestra/protocol/groups/actions-binding"
 import { ActionsOperationGroup } from "@orchestra/protocol/groups/actions-operation"
@@ -121,6 +123,9 @@ export const httpFixture = Effect.fnUntraced(function* (
       }),
     ),
   })
+  const owners = AppNodeBuilder.build(SessionOwner.node, [
+    [Database.node, Layer.succeed(Database.Service, core.database)],
+  ])
   const locations = buildLocationServiceMap([
     ...omitted,
     [Actions.node, injected],
@@ -128,7 +133,7 @@ export const httpFixture = Effect.fnUntraced(function* (
     [Global.node, Layer.succeed(Global.Service, global)],
     [FSUtil.node, Layer.succeed(FSUtil.Service, fs)],
     [AppProcess.node, Layer.succeed(AppProcess.Service, proc)],
-  ])
+  ]).pipe(Layer.provide(owners))
   const map = Context.get(yield* Layer.build(locations), LocationServiceMap.Service)
   yield* Layer.build(
     map.get(

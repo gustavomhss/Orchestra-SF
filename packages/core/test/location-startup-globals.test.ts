@@ -8,13 +8,13 @@ import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { Global } from "@orchestra/core/global"
 import { Location } from "@orchestra/core/location"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
-import type { LocationError, LocationServices } from "@orchestra/core/location-services"
+import type { LocationError } from "@orchestra/core/location-services"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionV2 } from "@orchestra/core/session"
 import { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { Snapshot } from "@orchestra/core/snapshot"
-import { Context, Deferred, Effect, Fiber, Layer, LayerMap, Option, RcMap } from "effect"
+import { Context, Deferred, Effect, Fiber, Layer, Option } from "effect"
 import { tmpdir } from "./fixture/tmpdir"
 import { testEffect } from "./lib/effect"
 
@@ -28,7 +28,7 @@ it.live("startup Location acquisition waits for delayed root exports without poi
   )
   const ref = Location.Ref.make({ directory: AbsolutePath.make(tmp.path) })
   const release = yield* Deferred.make<void>()
-  const started = yield* Deferred.make<LayerMap.LayerMap<Location.Ref, LocationServices, LocationError>>()
+  const started = yield* Deferred.make<LocationServiceMap.Interface>()
   const acquired = yield* Deferred.make<AgentV2.Interface, LocationError>()
   const expected = { token: {} }
   const observed: { token: object }[] = []
@@ -76,7 +76,7 @@ it.live("startup Location acquisition waits for delayed root exports without poi
     const locations = yield* Deferred.await(started)
     yield* Effect.yieldNow
     expect(yield* Deferred.isDone(acquired)).toBe(false)
-    expect(Array.from(yield* RcMap.keys(locations.rcMap))).toHaveLength(0)
+    expect(yield* locations.keys).toHaveLength(0)
     expect(observed).toHaveLength(0)
 
     yield* Deferred.succeed(release, undefined)
@@ -87,7 +87,7 @@ it.live("startup Location acquisition waits for delayed root exports without poi
     expect(observed[0]).toBe(Context.get(completed, LateGlobal))
     expect(yield* AgentV2.Service.pipe(Effect.provide(locations.get(ref)))).toBe(agents)
     expect(observed).toHaveLength(1)
-    expect(Array.from(yield* RcMap.keys(locations.rcMap))).toHaveLength(1)
+    expect(yield* locations.keys).toHaveLength(1)
     expect(state.closed).toBe(false)
   }))
   expect(state.closed).toBe(true)

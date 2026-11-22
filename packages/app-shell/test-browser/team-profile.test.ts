@@ -79,9 +79,9 @@ type PendingRequest = {
   reject: (error: Error) => void
 }
 
-function mount() {
+function mount(target = installation.publicOrigin + "/") {
   const href = window.location.href
-  window.location.href = installation.publicOrigin + "/"
+  window.location.href = target
   const requests: PendingRequest[] = []
   let discoveries = 0
   // Only the network boundary is controlled; the component and its strict HTTP reader are real.
@@ -250,6 +250,7 @@ test("logout suppresses focus revalidation and the next account starts without t
     view.request(1).resolve(json(context(teamB)))
     await settle()
     expect(view.selected()).toBe(teamB)
+    expect(new URL(window.location.href).searchParams.get("teamObjectId")).toBe(teamB)
 
     view.click("header button")
     await settle()
@@ -264,6 +265,7 @@ test("logout suppresses focus revalidation and the next account starts without t
     view.request(2).resolve(new Response(null, { status: 204 }))
     await settle()
     expect(view.state()).toBe("unauthenticated")
+    expect(window.location.search).toBe("")
 
     revalidate("focus")
     await settle()
@@ -274,6 +276,211 @@ test("logout suppresses focus revalidation and the next account starts without t
     })))
     await settle()
     expect(view.selected()).toBeNull()
+  } finally {
+    view.close()
+  }
+})
+
+function teamHref(teamObjectId: string) {
+  return installation.publicOrigin + "/orchestra/sf-home?" + new URLSearchParams({
+    contractRevision: installation.contractRevision, server: installation.publicOrigin,
+    installationId: installation.installationId, tenantId: installation.tenantId, teamObjectId,
+  })
+}
+
+async function admit(view: ReturnType<typeof mount>, index: number, teamObjectId: string) {
+  await settle()
+  expectIntent(view.request(index), teamObjectId)
+  expect(view.selected()).toBeNull()
+  view.request(index).resolve(json(context(teamObjectId)))
+  await settle()
+  expect(view.selected()).toBe(teamObjectId)
+}
+
+function historyEvent(href: string) {
+  // The browser owns traversal. Exercise its location/event boundary without inventing a context response.
+  window.history.replaceState(null, "", href)
+  window.dispatchEvent(new PopStateEvent("popstate"))
+}
+
+test("an explicit Team deep link is revalidated before display and after a remount", async () => {
+  const target = teamHref(teamB)
+  const view = mount(target)
+  try {
+    await admit(view, 0, teamB)
+    expect(window.location.href).toBe(target)
+    expect(window.history.state).toBeNull()
+  } finally {
+    view.close()
+  }
+  const restored = mount(target)
+  try {
+    await settle()
+    expectIntent(restored.request(0), teamB)
+    expect(restored.selected()).toBeNull()
+    restored.request(0).resolve(json({ status: "denied" }, 403))
+    await settle()
+    expect(restored.state()).toBe("denied")
+    expect(window.location.href).toBe(target)
+  } finally {
+    restored.close()
+  }
+})
+
+test("A B A records only confirmed choices and history traversal rereads each intended owner", async () => {
+  const view = mount(teamHref(teamA))
+  try {
+    await admit(view, 0, teamA)
+    const initialLength = window.history.length
+    view.choose(teamB)
+    await settle()
+    expect(window.location.href).toBe(teamHref(teamA))
+    await admit(view, 1, teamB)
+    expect(window.location.href).toBe(teamHref(teamB))
+    expect(window.history.length).toBe(initialLength + 1)
+    view.choose(teamA)
+    await admit(view, 2, teamA)
+    expect(window.location.href).toBe(teamHref(teamA))
+    expect(window.history.length).toBe(initialLength + 2)
+
+    historyEvent(teamHref(teamB))
+    await settle()
+    expectIntent(view.request(3), teamB)
+    historyEvent(teamHref(teamA))
+    await settle()
+    expect(view.request(3).signal?.aborted).toBe(true)
+    expectIntent(view.request(4), teamA)
+    view.request(3).resolve(json(context(teamB)))
+    await settle()
+    expect(view.selected()).toBeNull()
+    expect(window.location.href).toBe(teamHref(teamA))
+    view.request(4).resolve(json(context(teamA)))
+    await settle()
+    expect(view.selected()).toBe(teamA)
+  } finally {
+    view.close()
+  }
+})
+
+test("history navigation cancels a pending picker intent instead of preserving it into the new entry", async () => {
+  const view = mount(teamHref(teamA))
+  try {
+    await admit(view, 0, teamA)
+    view.choose(teamB)
+    await settle()
+    expectIntent(view.request(1), teamB)
+    historyEvent(teamHref(teamA))
+    await settle()
+    expect(view.request(1).signal?.aborted).toBe(true)
+    expectIntent(view.request(2), teamA)
+    view.request(1).resolve(json(context(teamB)))
+    await settle()
+    expect(view.selected()).toBeNull()
+    view.request(2).resolve(json(context(teamA)))
+    await settle()
+    expect(view.selected()).toBe(teamA)
+    expect(window.location.href).toBe(teamHref(teamA))
+  } finally {
+    view.close()
+  }
+})
+
+for (const invalid of ["installation", "tenant", "duplicate"]) {
+  test("an invalid " + invalid + " link remains refused across refresh without any Team context request", async () => {
+    const url = new URL(teamHref(teamB))
+    if (invalid === "installation") url.searchParams.set("installationId", "foreign")
+    if (invalid === "tenant") url.searchParams.set("tenantId", "21111111-2222-4333-8444-555555555555")
+    if (invalid === "duplicate") url.searchParams.append("teamObjectId", teamA)
+    const view = mount(url.href)
+    try {
+      await settle()
+      expect(view.state()).toBe("invalid")
+      expect(view.selected()).toBeNull()
+      expect(view.requests).toHaveLength(0)
+      expect(view.host.querySelector("main [role=alert]")?.textContent).toBe("This link is invalid.")
+      expect(view.host.querySelector("main a")?.getAttribute("href")).toBe("/")
+      revalidate("focus")
+      await settle()
+      revalidate("pageshow")
+      await settle()
+      view.click("main > button")
+      await settle()
+      expect(view.state()).toBe("invalid")
+      expect(view.requests).toHaveLength(0)
+      expect(window.location.href).toBe(url.href)
+    } finally {
+      view.close()
+    }
+  })
+}
+
+for (const failure of ["network", "denied", "unauthenticated"]) {
+  test("an explicit URL intent survives a final " + failure + " response without default selection", async () => {
+    const target = teamHref(teamB)
+    const view = mount(target)
+    try {
+      await settle()
+      expectIntent(view.request(0), teamB)
+      if (failure === "network") view.request(0).reject(new Error("Connection lost"))
+      else view.request(0).resolve(json({ status: failure }, failure === "denied" ? 403 : 401))
+      await settle()
+      expect(view.state()).toBe(failure === "network" ? "unavailable" : failure)
+      expect(view.selected()).toBeNull()
+      expect(window.location.href).toBe(target)
+      if (failure === "unauthenticated") {
+        const link = view.host.querySelector("main a")?.getAttribute("href")
+        expect(link).toBeDefined()
+        const login = new URL(link!, installation.publicOrigin)
+        expect(login.origin).toBe(installation.publicOrigin)
+        expect(login.pathname).toBe(installation.mount + "/auth/login")
+        expect(login.searchParams.get("returnTo")).toBe(new URL(target).pathname + new URL(target).search)
+      }
+      revalidate("focus")
+      await settle()
+      expectIntent(view.request(1), teamB)
+      view.request(1).resolve(json(context(teamB)))
+      await settle()
+      expect(view.selected()).toBe(teamB)
+    } finally {
+      view.close()
+    }
+  })
+}
+
+test("a foreign history entry fences an in-flight Team response even when no popstate was delivered", async () => {
+  const view = mount(teamHref(teamA))
+  try {
+    await settle()
+    expectIntent(view.request(0), teamA)
+    const foreign = new URL(teamHref(teamB))
+    foreign.searchParams.set("installationId", "foreign")
+    window.history.replaceState(null, "", foreign.href)
+    view.request(0).resolve(json(context(teamA)))
+    await settle()
+    await settle()
+    expect(view.state()).toBe("invalid")
+    expect(view.selected()).toBeNull()
+    expect(view.requests).toHaveLength(1)
+    expect(window.location.href).toBe(foreign.href)
+  } finally {
+    view.close()
+  }
+})
+
+test("a valid URL cannot authorize a different Team returned by the context producer", async () => {
+  const target = teamHref(teamB)
+  const view = mount(target)
+  try {
+    await settle()
+    expectIntent(view.request(0), teamB)
+    view.request(0).resolve(json(context(teamA)))
+    await settle()
+    expect(view.state()).toBe("unavailable")
+    expect(view.selected()).toBeNull()
+    expect(window.location.href).toBe(target)
+    revalidate("pageshow")
+    await settle()
+    expectIntent(view.request(1), teamB)
   } finally {
     view.close()
   }

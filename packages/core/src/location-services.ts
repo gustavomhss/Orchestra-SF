@@ -1,4 +1,4 @@
-import { Context, Deferred, Effect, Layer, LayerMap } from "effect"
+import { Context, Deferred, Effect, Layer } from "effect"
 import { AgentV2 } from "./agent"
 import { Actions } from "./actions"
 import { AISDK } from "./aisdk"
@@ -44,6 +44,7 @@ import { MeetingConsolidation } from "./session/meeting-consolidation"
 import { MeetingContext } from "./session/meeting-context"
 import { MeetingHandoff } from "./session/meeting-handoff"
 import { SessionTodo } from "./session/todo"
+import { SessionOwner } from "./session/owner"
 import { SkillV2 } from "./skill"
 import { SkillGuidance } from "./skill/guidance"
 import { Snapshot } from "./snapshot"
@@ -122,15 +123,17 @@ export type LocationError = LayerNode.Error<typeof locationServices>
 export function buildLocationServiceMap(
   replacements: LayerNode.Replacements = [],
   extra: ReadonlyArray<Node.LocationNode<unknown, LocationError>> = [],
-): Layer.Layer<LocationServiceMap.Service> {
+  globalContext?: Effect.Effect<Context.Context<never>>,
+): Layer.Layer<LocationServiceMap.Service, never, SessionOwner.Service> {
   return Layer.effect(
     LocationServiceMap.Service,
     Effect.gen(function* () {
+      const owners = yield* SessionOwner.Service
       // A hoisted global (for example Arsenal observations) may depend on the Location map itself. Its node is
       // unbound inside the hoisted graph, so it is bound to this map once the map exists.
       const self = Deferred.makeUnsafe<Context.Service.Shape<typeof LocationServiceMap.Service>>()
-      const locations = yield* LayerMap.make(
-        (ref: Location.Ref) => {
+      const locations = yield* LocationServiceMap.makeScoped(owners,
+        (ref) => {
           const allReplacements: LayerNode.Replacements = [
             [ToolRegistry.node, ToolRegistry.nativeNode],
             [ToolRegistry.toolsNode, ToolRegistry.nativeToolsNode],
@@ -159,13 +162,15 @@ export function buildLocationServiceMap(
               }),
             ),
             Layer.provide(
-              LayerNode.compile(location.hoisted, [
-                [LocationServiceMap.node, Layer.effect(LocationServiceMap.Service, Deferred.await(self))],
-              ]),
+              Layer.unwrap(Effect.map(globalContext ?? Effect.context<never>(), (existingContext) =>
+                LayerNode.compile(location.hoisted, [
+                  [LocationServiceMap.node, Layer.effect(LocationServiceMap.Service, Deferred.await(self))],
+                ], { existingContext }),
+              )),
+
             ),
           )
         },
-        { idleTimeToLive: "60 minutes" },
       )
       yield* Deferred.succeed(self, locations)
       return locations
