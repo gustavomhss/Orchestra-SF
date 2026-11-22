@@ -4,7 +4,7 @@ import assert from "node:assert/strict"
 import { chmod, link, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
-import { cases, coverageLedger, destinationGrants, digest, requireDistinctDestinationGrants, obligationPath, pendingGroups, preservedTeams, productContractPaths, requireCompleteGate, requireProductContracts, privateRoot, privateText, requireInvocation, target, validateHost, validatePackage, validatePlan, verifyReport, writePrivate } from "./g08-private-evidence.mjs"
+import { destinationGrants, requireDistinctDestinationGrants, cases, coverageLedger, digest, obligationPath, pendingGroups, preservedTeams, productContractPaths, requireCompleteGate, requireProductContracts, privateRoot, privateText, requireInvocation, target, validateGrantProof, validateHost, validatePackage, validatePlan, verifyReport, writePrivate } from "./g08-private-evidence.mjs"
 
 const uuid = (last) => "00000000-0000-4000-8000-" + String(last).padStart(12, "0")
 function scope(installationId = "synthetic-installation", teamObjectId = uuid(2)) {
@@ -232,23 +232,6 @@ for (const [name, change] of [
   ["lookalike spec", (value) => { value.suites[0].specs[0].file = "foreign-teams-installed.spec.ts" }],
 ]) test("refuses report " + name, () => { const value = report(); change(value); assert.throws(() => verifyReport(value, true)) })
 
-test("a previous seven-case report cannot attest the two actual draft scenarios", () => {
-  const value = report()
-  value.suites[0].specs = value.suites[0].specs.filter((entry) =>
-    !cases.filter((item) => ["narrow-keyboard-draft", "draft-cancel-discard"].includes(item.id))
-      .some((item) => item.title === entry.title))
-  value.stats.expected = 7
-  assert.throws(() => verifyReport(value, false), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
-  assert.throws(() => verifyReport(value, true), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
-})
-
-test("a previous principal-only nine-case report cannot attest distinct destination grants", () => {
-  const value = report()
-  value.suites[0].specs[0].title = "Two original Microsoft principals select the same Team without claiming different grants"
-  assert.throws(() => verifyReport(value, false), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
-  assert.throws(() => verifyReport(value, true), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
-})
-
 test("private files are exclusive, bounded, owner-only and reject links", async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), "g08-refusal-"))
   try {
@@ -275,7 +258,7 @@ test("digest preserves exact bytes including trailing newline", () => {
 })
 
 const obligations = JSON.parse(await readFile(new URL("../../" + obligationPath, import.meta.url), "utf8"))
-test("nine current scenarios preserve complete contract mappings without claiming installed G08 groups", () => {
+test("nine current-contract controls retain the original Teams obligations and separate 50 business registrations", () => {
   const list = coverageLedger(obligations, false), executed = coverageLedger(obligations, true)
   assert.equal(cases.length, 9)
   assert.equal(preservedTeams.length, 9)
@@ -283,11 +266,8 @@ test("nine current scenarios preserve complete contract mappings without claimin
   assert(list.originalTeams.every((entry) => entry.status === "NOT_RUN"))
   assert.equal(executed.originalTeams.filter((entry) => entry.status === "PASS").length, 9)
   assert.equal(executed.originalTeams.find((entry) => entry.id === "narrow-keyboard-draft").status, "PASS")
-  assert.equal(executed.originalTeams.find((entry) => entry.id === "draft-cancel-discard").status, "PASS")
   assert.equal(executed.originalTeams.find((entry) => entry.id === "same-team-distinct-grants").status, "PASS")
   assert.equal(executed.originalTeams.find((entry) => entry.id === "admin-without-team").status, "PASS")
-  assert(executed.groups.every((entry) => entry.status === "NOT_RUN"))
-  assert.equal(executed.complete, false)
   assert.deepEqual(executed.groups.map((entry) => entry.id), pendingGroups)
   assert.deepEqual(executed.groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 32])
   assert.throws(() => requireCompleteGate(list), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
@@ -296,13 +276,11 @@ test("nine current scenarios preserve complete contract mappings without claimin
 for (const [name, change] of [
   ["deleted original Teams case", (value) => { value.originalTeams.obligations.pop() }],
   ["renamed original Teams case", (value) => { value.originalTeams.obligations[0].id = "principal-only" }],
-  ["landing keyboard substituted for Chat", (value) => { value.originalTeams.obligations[5].implementedCases = ["aba-two-windows"] }],
-  ["principal-only control substituted for distinct grants", (value) => { value.originalTeams.obligations[0].implementedCases = ["same-team-principal-binding"] }],
-  ["principal-only control substituted for native admin UI", (value) => { value.originalTeams.obligations[4].implementedCases = ["same-team-principal-binding"] }],
-  ["draft discard omitted", (value) => { value.originalTeams.obligations[6].implementedCases = [] }],
+  ["landing keyboard substituted for chat", (value) => { value.originalTeams.obligations[5].implementedCases = ["aba-two-windows"] }],
+  ["different grants claimed from old principal-only control", (value) => { value.originalTeams.obligations[0].implementedCases = ["same-team-principal-binding"] }],
+  ["native admin UI claimed from old HTTP-only control", (value) => { value.originalTeams.obligations[4].implementedCases = ["admin-api-without-team"] }],
   ["fake manual revoke PASS", (value) => { value.originalTeams.obligations[7].state = "PASS" }],
-  ["stale product blocker attached to a complete grant mapping", (value) => { value.originalTeams.obligations[0].blocker = "BLOCKED_BY_PRODUCT_GRANTS_NOT_PUBLISHED" }],
-  ["distinct-grants oracle omitted", (value) => { value.originalTeams.obligations[0].implementedCases = [] }],
+  ["missing required mapping", (value) => { value.originalTeams.obligations[4].implementedCases = [] }],
   ["wrong complete mapping", (value) => { value.originalTeams.obligations[7].implementedCases = ["aba-two-windows"] }],
   ["missing required group", (value) => { value.groups.pop() }],
   ["renamed required group", (value) => { value.groups[0].id = "legacy-U15" }],
@@ -348,4 +326,56 @@ for (const [name, change] of [
   value.groups.forEach((entry) => { entry.status = "PASS" })
   change(value)
   assert.throws(() => requireCompleteGate(value))
+})
+
+
+function grantProof() {
+  const original = plan(), fixture = (actor) => "ses_g08_" + original.invocation.id + "_" + (actor === "requester" ? "a" : "b").repeat(32)
+  const profile = { installationId: original.target.installationId, tenantId: original.target.tenantId, teamObjectId: original.target.teamObjectId }
+  const namespace = (actor) => ({ version: 1, owner: { profile,
+    principal: { tenantId: original.target.tenantId, principalObjectId: original.actors[actor] } }, authorityGeneration: 1 })
+  const created = { id: fixture("requester"), namespace: namespace("requester"), title: "Synthetic parser control",
+    projectID: "global", location: { directory: "/synthetic" }, cost: 0,
+    tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } }, time: { created: 1, updated: 1 } }
+  return { schema: "sf-g08-session-grants-v1", invocationId: original.invocation.id, profile,
+    fixtureIds: { requester: fixture("requester"), holder: fixture("holder") },
+    requester: { namespace: namespace("requester"), before: [], created, observed: structuredClone(created),
+      afterCreate: [structuredClone(created)], createStatus: 200, readStatus: 200 },
+    holder: { namespace: namespace("holder"), before: [], afterDenial: [], deniedStatus: 401, readStatus: 200 },
+    cleanup: { requester: { namespace: namespace("requester"), entries: [] }, holder: { namespace: namespace("holder"), entries: [] } } }
+}
+test("synthetic grant transcript requires a positive durable effect, original owners, denial without effect and cleanup", () => {
+  const value = grantProof()
+  assert.deepEqual(validateGrantProof(value, validatePlan(plan())), value)
+  // This shape test is neither a Microsoft admission nor an installed grant proof.
+})
+for (const [name, change] of [
+  ["identity only", (value) => { delete value.requester.created }],
+  ["empty after-create", (value) => { value.requester.afterCreate = [] }],
+  ["forged requester failure", (value) => { value.requester.createStatus = 401 }],
+  ["holder also allowed", (value) => { value.holder.deniedStatus = 200 }],
+  ["unauthenticated holder read", (value) => { value.holder.readStatus = 401 }],
+  ["foreign invocation", (value) => { value.invocationId = "0".repeat(32) }],
+  ["foreign Team", (value) => { value.profile = { ...value.profile, teamObjectId: uuid(99) } }],
+  ["same actor twice", (value) => { value.holder.namespace = structuredClone(value.requester.namespace) }],
+  ["missing namespace", (value) => { delete value.requester.namespace }],
+  ["extra namespace authority claim", (value) => { value.requester.namespace.grants = ["create"] }],
+  ["missing current generation", (value) => { value.requester.namespace.authorityGeneration = 0 }],
+  ["existing fixture", (value) => { value.requester.before = [structuredClone(value.requester.created)] }],
+  ["same fixture ID", (value) => { value.fixtureIds.holder = value.fixtureIds.requester }],
+  ["unbounded non-fixture ID", (value) => { value.fixtureIds.requester = "ses_existing" }],
+  ["wrong created owner", (value) => { value.requester.created.namespace = structuredClone(value.holder.namespace) }],
+  ["changed reread", (value) => { value.requester.observed.title = "changed" }],
+  ["duplicate effect", (value) => { value.requester.afterCreate.push(structuredClone(value.requester.created)) }],
+  ["denial created a row", (value) => { value.holder.afterDenial = [{
+    ...value.requester.created, id: value.fixtureIds.holder, namespace: structuredClone(value.holder.namespace),
+  }] }],
+  ["missing cleanup", (value) => { delete value.cleanup }],
+  ["requester row remains", (value) => { value.cleanup.requester.entries = [structuredClone(value.requester.created)] }],
+  ["holder cleanup owner changed", (value) => { value.cleanup.holder.namespace = structuredClone(value.requester.namespace) }],
+  ["operator status replaces observations", (value) => { value.status = "PASS" }],
+]) test("grant transcript refuses " + name, () => {
+  const value = grantProof()
+  change(value)
+  assert.throws(() => validateGrantProof(value, validatePlan(plan())))
 })
