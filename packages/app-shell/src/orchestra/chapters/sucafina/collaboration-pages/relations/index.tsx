@@ -44,9 +44,11 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
     "sf.common.empty" | "sf.common.noAccess" | "sf.common.loginAgain" | "sf.common.invalidLink" |
     "sf.common.conflict" | "sf.common.operationUnknown" | "sf.common.partial"): Key => s as Key
   const t = (s: keyof typeof SF_U44_COPY) => language.t(s as Parameters<typeof language.t>[0])
-  const [presentation, setPresentation] = createStore({ editing: props.route.kind === "new", tools: false })
+  const [presentation, setPresentation] = createStore({ editing: props.route.kind === "new", tools: false, listEpoch: 1 })
   const reviewing = () => !!preparedPair() || !!removeDraft()
   let targetInput: HTMLInputElement | undefined
+  let relationList: HTMLDivElement | undefined
+  let removalOrigin = -1
   const [source, setSource] = createSignal("")
   const [relations, setRelations] = createSignal<readonly Relation[]>([])
   const [storageVersion, setStorageVersion] = createSignal<number>()
@@ -92,7 +94,7 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
     setSource(routeSource()); setQuery(""); setTarget(""); setKind("")
     setEvidenceText(""); setPreparedPair(undefined); setRemoveDraft(undefined)
     setPending(undefined); setBusy(false); setError(undefined)
-    setPresentation({ editing: props.route.kind === "new", tools: false })
+    setPresentation({ editing: props.route.kind === "new", tools: false, listEpoch: presentation.listEpoch + 1 })
   }))
   onCleanup(() => { readAbort?.abort(); writeAbort?.abort() })
   const read = async (selected = source()) => {
@@ -320,7 +322,8 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
         <SfStatePanel state={effectiveState()} messageKey={stateKey(effectiveState())}
           onRetryRead={() => { if (props.route.kind === "entry") void readReference(props.route.params.relationRef); else void read(source()) }}>
           <Show when={source()}>
-            <SfRelations
+            <div ref={relationList}>
+            <Show when={presentation.listEpoch} keyed>{() => <SfRelations
               sourceRef={source() as SfRef}
               relations={visibleRelations()}
               candidates={candidates()}
@@ -328,9 +331,14 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
               canWrite={granted("collaboration.relation-create")}
               onSearchTargets={setQuery}
               onCreate={(request) => { if (granted("collaboration.relation-create")) prepareKnown(request) }}
-              onRemove={(request) => { if (granted("collaboration.relation-remove") && !pending()) setRemoveDraft({ id: request.relationRef, version: request.expectedVersion }) }}
+              onRemove={(request) => {
+                if (!granted("collaboration.relation-remove") || pending()) return
+                removalOrigin = visibleRelations().findIndex((item) => item.ref === request.relationRef)
+                setRemoveDraft({ id: request.relationRef, version: request.expectedVersion })
+              }}
               onOpen={(ref) => void read(ref)}
-            />
+            />}</Show>
+            </div>
             <Show when={relations().some((r) => r.toRef === source() && r.fromRef !== source())}>
               <section aria-label={t("sf.u44.inbound")}>
                 <h3>{t("sf.u44.inbound")}</h3>
@@ -382,7 +390,13 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
             <Show when={relations().find((item) => item.id === value().id && item.fromRef === source())}>
               {(record) => <div><p>{t("sf.u44.postedEvidence")}</p><ul>{record().evidenceRefs.map((item) => <li><code>{item.refId}</code></li>)}</ul></div>}
             </Show>
-            <button class="mx-btn" type="button" onClick={() => setRemoveDraft(undefined)}>{t("sf.u44.keepEditing")}</button>
+            <button class="mx-btn" type="button" disabled={busy() || !!pending()} onClick={() => {
+              // S05 fences a requested removal; cancellation must reset that view-only
+              // fence without remounting the explicit relationship draft above.
+              setRemoveDraft(undefined); setPresentation("listEpoch", (value) => value + 1)
+              setQuery("")
+              queueMicrotask(() => relationList?.querySelectorAll<HTMLButtonElement>(".sf-collab-item .danger").item(removalOrigin)?.focus())
+            }}>{t("sf.u44.keepEditing")}</button>
             <button class="mx-btn danger" type="button" disabled={busy() || !granted("collaboration.relation-remove")} onClick={() => void confirmRemove()}>{t("sf.u44.confirmRemove")}</button>
           </section>}
         </Show>

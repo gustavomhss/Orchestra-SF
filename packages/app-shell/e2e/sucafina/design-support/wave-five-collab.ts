@@ -9,7 +9,7 @@ export const collabTest = waveFourTest.extend<{ realScanner: true }>({
   installation: [async ({ realScanner }, use) => {
     if (!realScanner) throw new Error("The actual scanner was not qualified")
     await withDesignInstallation(use, "four-files")
-  }, { timeout: 190_000 }],
+  }, { scope: "test", timeout: 190_000 }],
 })
 
 export { capture, enter, observePage, ready, reflow, scheme, scrollPageTop } from "./wave-three"

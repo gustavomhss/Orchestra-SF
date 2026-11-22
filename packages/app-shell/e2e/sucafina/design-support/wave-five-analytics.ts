@@ -59,12 +59,15 @@ export async function captureModes(page: Page, info: TestInfo, prefix: string) {
   await captureAnalytics(page, info, prefix + "-dark-desktop-test-data")
   await scheme(page, "light")
   await captureAnalytics(page, info, prefix + "-light-desktop-test-data")
-  await page.setViewportSize({ width: 390, height: 844 })
+  // The native shell places its theme toggle outside the compact navigation.
+  // Choose each actual theme while that control is visible, then measure narrow CSS reflow.
   await scheme(page, "dark")
+  await page.setViewportSize({ width: 390, height: 844 })
   await scrollPageTop(page)
   await captureAnalytics(page, info, prefix + "-dark-390-test-data")
-  await page.setViewportSize({ width: 320, height: 800 })
+  await page.setViewportSize({ width: 1440, height: 1100 })
   await scheme(page, "light")
+  await page.setViewportSize({ width: 320, height: 800 })
   await scrollPageTop(page)
   await captureAnalytics(page, info, prefix + "-light-320-test-data")
   await page.setViewportSize({ width: 1440, height: 1100 })

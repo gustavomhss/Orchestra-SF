@@ -252,8 +252,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       onLayoutMode={() => undefined}
       primaryAction={store.phase === "reviewing" || store.phase === "confirmed" || store.phase === "outcome-unknown" ? undefined : {
         id: "preview", labelKey: key("sf.u25.preview"), tone: "primary",
-        disabled: !mayPreview() || !store.selected.length || store.phase === "submitting" ||
-          store.phase === "outcome-unknown" || store.phase === "previewing" || store.phase === "confirmed",
+        disabled: !mayPreview() || !store.selected.length || store.phase === "submitting" || store.phase === "previewing",
         busy: store.phase === "previewing", onInvoke: () => { void preview() },
       }}
     >

@@ -65,9 +65,9 @@ const string = (value: unknown): value is string => typeof value === "string"
  * Public routing, successful URL parsing, or a remembered case never confers
  * a grant. Selection/readers are still fenced by the host on each call.
  */
-export function sfPortfolioReady(context: SfContext, operationId: string, family: "portfolio" | "decisions"): boolean {
+export function sfPortfolioReady(context: Pick<SfContext, "availability">, operationId: string, family: "portfolio" | "decisions"): boolean {
   return context.availability.some((resource) =>
-    resource.family === family && resource.state === "ready" &&
+    resource.family === family && (resource.state === "ready" || resource.state === "partial") &&
     resource.operations.some((op) => op.operationId === operationId &&
       op.state === "ready" && op.operational))
 }
