@@ -55,7 +55,7 @@ test("private-session-policy: minimal checkpoint and recovery grants remain inde
     { input: ["checkpoint"], expected: ["checkpoint"] },
     { input: ["recover"], expected: ["recover"] },
     { input: ["recover", "checkpoint"], expected: ["checkpoint", "recover"] },
-  ]
+  ] as const
   for (const scenario of scenarios) {
     const policy = teamSessionPolicy({ groups, grants: [{
       principalRef: principalId, migrationActions: scenario.input,
