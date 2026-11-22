@@ -1,4 +1,7 @@
 import { createHash } from "node:crypto"
+import { realpath, stat } from "node:fs/promises"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
 import { expect, test } from "@playwright/test"
 import { withDesignInstallation } from "./design-support/installation"
 import { authenticateRecordingInstallation } from "./design-support/recording-installation"
@@ -40,6 +43,8 @@ test("record actual shared AI catalogs, a workflow draft, and a genuine local-mo
         await workflowChapter(film)
         await atlasChapter(film)
         await connectionsChapter(film)
+        await expect(film.page.locator('[data-slot="orchestra-profile"] small[title]'))
+          .toHaveAttribute("title", installed.root + "/workspace")
         // All independent catalog/setup footage is complete before the model
         // download, process start or inference can fail.
         try {
@@ -84,23 +89,35 @@ async function selectOriginalGitProject(film: Film) {
         response.request().method() === "POST", { timeout: 60_000 })
       await film.click(initialize, "Initialize git in this empty demonstration workspace")
       const response = await initialized
-      expect(response.status()).toBe(200)
-      const result = object(await response.json())
-      const project = object(result.data)
-      expect(typeof project.id).toBe("string")
-      expect(project.worktree).toBe(directory)
-      film.proof({ kind: "actual-project-initialization", mechanism: "original Initialize git UI",
-        projectId: project.id, vcs: project.vcs, directory: "verified private workspace", initialCommitCreatedByProduct: true })
+      const body = await response.text()
+      if (response.status() === 200) {
+        const project = object(object(JSON.parse(body)).data)
+        expect(typeof project.id).toBe("string")
+        expect(project.worktree).toBe(directory)
+        film.proof({ kind: "actual-project-initialization", mechanism: "original Initialize git UI",
+          projectId: project.id, vcs: project.vcs, directory: "verified private workspace", initialCommitCreatedByProduct: true })
+      } else {
+        // Preserve the actual refusal/error before continuing the independent
+        // catalog and Chat chapters. Do not weaken or retry a denied operation.
+        film.proof({ kind: "actual-project-initialization-failed", status: response.status(),
+          response: safeBody(body, film), initializedClaimed: false, operationRetried: false })
+        await film.pause(1000)
+        await film.snap("setup-actual-git-failure")
+      }
     }
   }
   await selectOriginalProject(film)
   const projectsResponse = await film.context.request.get(film.installed.origin + "/api/project")
   expect(projectsResponse.status()).toBe(200)
   const projects = rows(await projectsResponse.json())
-  const project = projects.find((value) => value.worktree === film.installed.root + "/workspace")
-  if (!project) throw new Error("The actual project catalog did not retain the selected workspace")
-  film.proof({ kind: "actual-project-readback", id: project.id, vcs: project.vcs, nativeOwnerProjectId: film.owner.projectId,
-    sameProjectId: project.id === film.owner.projectId })
+  const located = object((await apiObject(film, "/api/agent", true)).location)
+  const selected = object(located.project)
+  const project = projects.find((value) => value.id === selected.id)
+  expect(typeof selected.id).toBe("string")
+  expect(located.directory).toBe(film.installed.root + "/workspace")
+  film.proof({ kind: "actual-project-readback", id: selected.id, vcs: project?.vcs,
+    nativeOwnerProjectId: film.owner.projectId, sameProjectId: selected.id === film.owner.projectId,
+    gitRequiredForCatalogsOrChat: false })
 
   // Git creates a new shared project identity. Preserve the native installation's
   // explicit original owner; never assume or overwrite its project identifier.
@@ -220,7 +237,29 @@ async function catalogChapters(film: Film) {
 
 async function workflowChapter(film: Film) {
   const page = film.page
-  await film.cue("41-shared-workflows", async () => {
+  let directory = film.installed.root + "/workspace"
+  let separateProject = false
+  try { await film.cue("41-shared-workflows", async () => {
+    const current = object(object((await apiObject(film, "/api/agent", true)).location).project)
+    if (current.id === "global") {
+      // This job's checkout is already a real git repository. Use the normal
+      // picker for this draft only, then return to the original runtime
+      // workspace before Atlas, providers or Chat. No git status is invented.
+      const checkout = await realpath(path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../.."))
+      if (!process.env.CI || !process.env.GITHUB_WORKSPACE || checkout !== await realpath(process.env.GITHUB_WORKSPACE))
+        throw new Error("Workflow fallback is restricted to this isolated Actions checkout")
+      if (!(await stat(path.join(checkout, ".git"))).isDirectory()) throw new Error("Actions checkout has no actual git directory")
+      separateProject = true
+      await selectProjectThroughUI(film, checkout)
+      directory = checkout
+      const response = await film.context.request.get(film.installed.origin + "/api/project")
+      expect(response.status()).toBe(200)
+      const project = rows(await response.json()).find((value) => value.worktree === checkout)
+      expect(project?.vcs).toBe("git")
+      expect(project?.id).not.toBe("global")
+      film.proof({ kind: "workflow-project-selected", projectId: project?.id, vcs: project?.vcs,
+        scope: "this recording job's ephemeral checkout", mechanism: "normal project picker", nativeWorkspaceChanged: false })
+    }
     await film.go("/orchestra/workflows")
     const create = page.getByRole("button", { name: "New workflow", exact: true })
     await expect(create).toBeEnabled({ timeout: 40_000 })
@@ -249,7 +288,7 @@ async function workflowChapter(film: Film) {
     const workflowUrl = page.url()
     const id = new URL(workflowUrl).pathname.match(/^\/orchestra\/workflows\/([^/]+)$/)?.[1]
     if (!id) throw new Error("The actual workflow editor omitted its document identity")
-    const document = object((await apiObject(film, "/api/relay/document/" + encodeURIComponent(id), true)).data)
+    const document = object((await apiObject(film, "/api/relay/document/" + encodeURIComponent(id), true, directory)).data)
     expect(document.name).toBe(name)
     const node = rows(document.nodes).find((value) => object(value.parameters).instructions === instructions)
     if (!node) throw new Error("The saved workflow readback omitted the actual instruction step")
@@ -257,8 +296,35 @@ async function workflowChapter(film: Film) {
     await film.click(page.locator('[data-document=' + JSON.stringify(id) + ']'), "Open the same regional review draft")
     await expect(canvas).toBeVisible()
     film.proof({ kind: "actual-workflow-draft", id, name, step: node.name, instructionSha256: digest(instructions),
-      freshAPIReadback: true, navigationAwayAndReopen: true, published: false, executed: false })
-  }, true)
+      freshAPIReadback: true, navigationAwayAndReopen: true, published: false, executed: false,
+      projectScope: separateProject ? "ephemeral Actions checkout" : "original runtime workspace" })
+  }, true) } finally {
+    if (separateProject) {
+      await page.keyboard.press("Escape")
+      await selectProjectThroughUI(film, film.installed.root + "/workspace")
+      await film.go("/orchestra/agents")
+      const current = object((await apiObject(film, "/api/agent", true)).location)
+      expect(current.directory).toBe(film.installed.root + "/workspace")
+      film.proof({ kind: "returned-to-original-workspace", actualSharedProjectId: object(current.project).id,
+        nativeInstallationId: film.owner.installationId, modelPromptWillUseThisDirectory: true })
+    }
+  }
+}
+
+async function selectProjectThroughUI(film: Film, directory: string) {
+  await film.click(film.page.locator('[data-slot="orchestra-profile"]'), "Choose project through the original sidebar")
+  const menu = film.page.locator('[data-component="orchestra-profile-picker"]')
+  await film.click(menu.getByRole("menuitem", { name: "Add project", exact: true }), "Open the actual project folder picker")
+  await film.input(film.page.getByPlaceholder("Search folders", { exact: true }), directory, "Find the explicit demonstration project")
+  await film.click(film.page.locator('[data-directory-path=' + JSON.stringify(directory) + ']'), "Select the actual demonstration folder")
+  const skip = film.page.getByRole("button", { name: "Add without git", exact: true })
+  const selected = film.page.locator('[data-slot="orchestra-profile"] small[title]')
+  await expect.poll(async () => await skip.isVisible() || await selected.getAttribute("title").catch(() => undefined) === directory,
+    { timeout: 40_000 }).toBe(true)
+  if (await skip.isVisible()) await film.click(skip, "Use the existing workspace without another git initialization")
+  await expect(selected).toHaveAttribute("title", directory, { timeout: 40_000 })
+  film.proof({ kind: "actual-project-picker-selection", mechanism: "Choose project / Add project / Search folders",
+    selectedDirectory: directory === film.installed.root + "/workspace" ? "original private workspace" : "verified isolated Actions checkout" })
 }
 
 async function atlasChapter(film: Film) {
@@ -418,9 +484,9 @@ async function readSkill(film: Film, name: string) {
     readOnly: await instructions.getAttribute("readonly") !== null, edited: false })
 }
 
-async function apiObject(film: Film, route: string, location = false): Promise<Json> {
+async function apiObject(film: Film, route: string, location = false, directory = film.installed.root + "/workspace"): Promise<Json> {
   const url = new URL(route, film.installed.origin)
-  if (location) url.searchParams.set("location[directory]", film.installed.root + "/workspace")
+  if (location) url.searchParams.set("location[directory]", directory)
   const response = await film.context.request.get(url.href, { timeout: 30_000 })
   if (response.status() !== 200) throw new Error("Actual readback failed: " + url.pathname + " (" + response.status() + ")")
   return object(await response.json())
@@ -430,3 +496,9 @@ function object(value: unknown): Json { return value !== null && typeof value ==
 function rows(value: unknown): Json[] { if (!Array.isArray(value)) throw new Error("Expected an actual API array"); return value.map(object) }
 function digest(value: string) { return createHash("sha256").update(value).digest("hex") }
 function normalizeVisible(value: string) { return value.replace(/[*_`#]/g, "").replace(/^\s*(?:[-•]|\d+[.)])\s*/gm, "").replace(/\s+/g, " ").trim() }
+function safeBody(value: string, film: Film) {
+  return value.replaceAll(film.installed.root, "[installation]").replaceAll(film.installed.serverPassword, "[credential]")
+    .replace(/(?:Bearer|Basic)\s+[A-Za-z0-9._~+/=-]+/gi, "[authorization removed]")
+    .replace(/((?:api[_-]?key|token|password|authorization)\s*[=:]\s*)[^\s,;]+/gi, "$1[removed]")
+    .slice(0, 1500)
+}
