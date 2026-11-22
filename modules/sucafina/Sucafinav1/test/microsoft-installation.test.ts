@@ -1611,7 +1611,9 @@ test("Corporate Team contexts project the original per-principal pages and Team 
     teams: [teamObjectId, secondTeamId], business,
     sessionGrants: [{ principalRef: oid, namespaces: [], operations: [], sessionActions: ["read", "create"] }],
   })
-  const profile = (id: string) => ({ installationId: f.selection.installationId, tenantId, teamObjectId: id })
+  const profile = (id: string) => Schema.decodeUnknownSync(TeamProfile.Ref)({
+    installationId: f.selection.installationId, tenantId, teamObjectId: id,
+  })
   const seed = async (id: string, summaries: string[], assigned: string[]) => {
     const store = await openLocalStore(join(f.directory, "business-teams", digestSfValue(profile(id))))
     try {
@@ -1716,7 +1718,7 @@ for (const revoked of ["roles", "membership", "logout"] as const) {
         if (revoked === "membership") f.membership.teams = [secondTeamId]
         if (revoked === "logout") {
           const logout = await f.installation.handler(ingress("/auth/logout", { cookie, origin }, { method: "POST" }))
-          expect(logout?.status).toBe(303)
+          expect(logout?.status).toBe(204)
         }
       } finally { release.resolve() }
       const response = await pending
