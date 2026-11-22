@@ -36,7 +36,6 @@ jobs:
       CI: "true"
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
       SF_G08_LIST_ONLY: "1"
-      SF_G08_TOOLING_EVIDENCE: ${{ runner.temp }}/g08-tooling-evidence-${{ github.run_id }}-${{ github.run_attempt }}
     defaults:
       run:
         shell: bash
@@ -52,7 +51,9 @@ jobs:
       - name: Bind tooling source without claiming an installed candidate
         run: |
           set -euo pipefail
-          mkdir "$SF_G08_TOOLING_EVIDENCE"
+          proof_output="$RUNNER_TEMP/g08-tooling-evidence-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          mkdir "$proof_output"
+          printf 'SF_G08_TOOLING_EVIDENCE=%s\n' "$proof_output" >> "$GITHUB_ENV"
           printf 'SF_G08_CANDIDATE_SHA=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_ENV"
           printf 'SF_G08_CANDIDATE_TREE=%s\n' "$(git rev-parse 'HEAD^{tree}')" >> "$GITHUB_ENV"
       - name: Exercise evidence admission and fail-closed report controls
@@ -92,7 +93,7 @@ jobs:
           name: g08-executor-controls-${{ github.sha }}-${{ github.run_attempt }}
           retention-days: 14
           if-no-files-found: error
-          path: ${{ env.SF_G08_TOOLING_EVIDENCE }}/
+          path: ${{ runner.temp }}/g08-tooling-evidence-${{ github.run_id }}-${{ github.run_attempt }}/
 
   installed-teams-current:
     if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.event_name == 'workflow_dispatch' && inputs.mode == 'installed'
