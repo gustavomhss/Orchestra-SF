@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, wri
 import { ZipWriter, BlobWriter, BlobReader } from "@zip.js/zip.js"
 import { dirname, join } from "node:path"
 import { homedir } from "node:os"
-import { isRedactable, redactLog } from "./log-redact"
+import { isRedactable, redactLog, redactLogFile } from "./log-redact"
 
 const MAX_LOG_AGE_DAYS = 7
 const TAIL_LINES = 1000
@@ -196,7 +196,7 @@ async function writeZip(output: string, entries: Entry[]) {
   for (const entry of entries) {
     const data = entry.data ?? readFileSync(entry.path!)
     // Server logs and the netlog can hold the server password (Authorization) and auth_token query values.
-    const clean = isRedactable(entry.name) ? Buffer.from(redactLog(data.toString("utf8"))) : data
+    const clean = isRedactable(entry.name) ? Buffer.from(redactLogFile(entry.name, data.toString("utf8"))) : data
     await writer.add(entry.name, new BlobReader(new Blob([new Uint8Array(clean)])))
   }
   const zip = await writer.close()

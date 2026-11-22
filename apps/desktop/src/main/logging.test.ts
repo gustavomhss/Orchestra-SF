@@ -54,12 +54,16 @@ test("desktop file logs redact scoped, structured and renderer messages before d
       expect(main + window + renderer).not.toContain(secret)
 
     await writeFile(join(run, "legacy.log"), "GET /event?auth_token=fixture-legacy&keep=yes")
+    await writeFile(join(run, "legacy.jsonl"), '{"password":12345,"ok":true}\n')
     const zip = new ZipReader(new BlobReader(Bun.file(await exportDebugLogs())))
     try {
       const entries = await zip.getEntries()
       const legacy = entries.find((entry) => entry.filename.endsWith("/legacy.log"))
       if (!legacy || legacy.directory) throw new Error("Missing legacy log")
       expect(await legacy.getData(new TextWriter())).toBe("GET /event?auth_token=[redacted]&keep=yes")
+      const jsonl = entries.find((entry) => entry.filename.endsWith("/legacy.jsonl"))
+      if (!jsonl || jsonl.directory) throw new Error("Missing legacy JSONL")
+      expect(await jsonl.getData(new TextWriter())).toBe('{"password":"[redacted]","ok":true}\n')
     } finally {
       await zip.close()
     }
