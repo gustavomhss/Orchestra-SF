@@ -32,9 +32,10 @@ jobs:
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
-      INVENTORY_DIR: ${{ runner.temp }}/azure-qualification-inventory
     steps:
       - name: Prepare minimized observation and validate configured scope
+        env:
+          INVENTORY_DIR: ${{ runner.temp }}/azure-qualification-inventory
         run: |
           set -euo pipefail
           umask 077
@@ -67,6 +68,7 @@ jobs:
       - name: Observe GitHub environment and runner metadata where the existing token permits
         env:
           GH_TOKEN: ${{ github.token }}
+          INVENTORY_DIR: ${{ runner.temp }}/azure-qualification-inventory
         run: |
           python3 - <<'PY'
           import json, os, pathlib, urllib.error, urllib.request
@@ -110,6 +112,8 @@ jobs:
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
       - name: Read the configured Azure foundation without guest execution
+        env:
+          INVENTORY_DIR: ${{ runner.temp }}/azure-qualification-inventory
         run: |
           set -euo pipefail
           umask 077
