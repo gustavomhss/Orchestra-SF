@@ -39,6 +39,7 @@ type View = {
   preview: SfPortfolioPreview | null
   previewRequestKey: string | null
   previewState: SfUiState
+  expandedCombination: SfRef | null
   selected: readonly string[]
   constraints: readonly string[]
   priorities: readonly string[]
@@ -58,7 +59,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
   const [refresh, setRefresh] = createSignal(0)
   const [store, set] = createStore<View>({
     status: "loading", controls: null, caseState: "loading", history: [], recorded: null,
-    preview: null, previewRequestKey: null, previewState: "empty",
+    preview: null, previewRequestKey: null, previewState: "empty", expandedCombination: null,
     selected: [], constraints: [], priorities: [], explorationLimit: "32",
     review: false, busy: false, outcomeUnknown: false, message: null,
   })
@@ -88,7 +89,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
     set({ status: status === "ready" ? "loading" : status === "denied" ? "denied" :
       status === "unauthenticated" ? "session-expired" : "unavailable",
       controls: null, caseState: "loading", history: [], recorded: null,
-      preview: null, previewRequestKey: null, previewState: "empty", selected: [],
+      preview: null, previewRequestKey: null, previewState: "empty", expandedCombination: null, selected: [],
       constraints: [], priorities: [], review: false, busy: false, outcomeUnknown: false, message: null })
     if (!current || status !== "ready") return
     if (current.context.stamp.projectId !== props.route.ownerSelection.projectId ||
@@ -156,7 +157,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
     if (store.busy) return
     const items = store[field]
     set(field, include ? [...items, value] : items.filter((item) => item !== value))
-    set({ preview: null, previewRequestKey: null, review: false })
+    set({ preview: null, previewRequestKey: null, review: false, expandedCombination: null })
   }
   const preview = () => {
     const current = active(), currentCase = selectedCase(), request = preparedRequest()
@@ -166,7 +167,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
     const scope = currentCase.caseRef
     const key = JSON.stringify(request)
     const controller = new AbortController()
-    set({ preview: null, previewState: "loading", busy: true, message: null, review: false })
+    set({ preview: null, previewState: "loading", busy: true, message: null, review: false, expandedCombination: null })
     void sfPortfolioPreviewRequest(current.transport, current.context, scope, request, controller.signal)
       .then((result) => {
         if (owner.generation() !== epoch || selectedCase()?.caseRef.version !== scope.version) return
@@ -229,11 +230,17 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
         <p>{t("sf.u19.results.noCompleteTotal")}</p></div>
       <SfDataTable rows={value.combinations} getRowKey={(row) => row.id as SfRef}
         columns={tableCols} sort={{ kind: "none" }} page={{ kind: "none", total: value.combinations.length }}
-        onSort={() => undefined} onPage={() => undefined} onSelect={() => undefined}
+        onSort={() => undefined} onPage={() => undefined} selectedKey={store.expandedCombination ?? undefined}
+        onSelect={(ref) => set("expandedCombination", ref)}
         rowActions={() => []} onRowAction={() => undefined} captionKey={kt("sf.u19.results.combinations")}
         density="comfortable" state={value.combinations.length ? "ready" : "empty"} />
       <For each={value.combinations}>{(entry) =>
-        <details class="sf-u19-combination">
+        <details class="sf-u19-combination" data-sf-combination={entry.id}
+          open={store.expandedCombination === entry.id}
+          onToggle={(event) => {
+            if (event.currentTarget.open) set("expandedCombination", entry.id as SfRef)
+            else if (store.expandedCombination === entry.id) set("expandedCombination", null)
+          }}>
           <summary>{entry.id} — {entry.eligibility} / {entry.comparisonStatus}</summary>
           <dl class="sf-u19-facts">
             <div><dt>{t("sf.u19.results.sources")}</dt><dd><ul>
