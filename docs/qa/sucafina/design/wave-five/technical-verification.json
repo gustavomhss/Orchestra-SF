@@ -483,11 +483,24 @@
         44996623210,
         44998750010,
         45002137493,
-        45003432183
+        45003432183,
+        45008412557
       ],
-      "limitation": "Portfolio diagnostic 17 retains the original 60-second preview failure and observes that same POST returning 403 at about 300 seconds. Isolated UI44 passes original A04/units/rule/source, editor/review/cancel, but its single evaluate POST has no observed response in the original 120 seconds. The readonly correction is now integrated; a clean original UI42–UI44 journey is the next qualification step.",
-      "evidence": "analytics/attempt-14/README.md",
-      "isolatedSensitivityEvidence": "collab/sensitivity-isolated-01/README.md"
+      "limitation": "Portfolio diagnostic 17 retains the original 60-second preview failure and observes that same POST returning 403 at about 300 seconds. Isolated UI44 passes original A04/units/rule/source, editor/review/cancel, but its single evaluate POST has no observed response in the original 120 seconds. The readonly correction is now integrated; a clean original UI42–UI44 journey is the next qualification step. The clean original Portfolio18 journey on integrated source 2d3abae also failed the first preview's unchanged 60s wait, with no response observed. Original preparation/readbacks and both histories passed. No evaluate or UI43/UI44 stage was reached.",
+      "evidence": "analytics/attempt-15/README.md",
+      "isolatedSensitivityEvidence": "collab/sensitivity-isolated-01/README.md",
+      "latestClean": {
+        "run": 45008412557,
+        "job": 137165052929,
+        "cleanupJob": 137167295350,
+        "product": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+        "snapshot": "5b31da8839f2738995fc5b07cdb4b05212188eab",
+        "status": "FAILURE_FIRST_PREVIEW_ORIGINAL60S",
+        "captures": 7,
+        "agentViewed": 7,
+        "rootViewed": 2,
+        "explicitEvaluations": 0
+      }
     }
   ],
   "references": {
@@ -501,7 +514,7 @@
   "merged": false,
   "inventoryAcceptedAndMergedAreas": 41,
   "pendingDelta": {
-    "status": "READONLY_CORRECTION_INTEGRATED_INSTALLED_QUALIFICATION_PENDING_ORIGINAL_C17_FAILURE_RECORDED",
+    "status": "READONLY_INTEGRATED_CLEAN_PREVIEW_STILL_FAILED_DIAGNOSIS_PENDING",
     "integratedAt": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
     "candidate": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
     "files": [

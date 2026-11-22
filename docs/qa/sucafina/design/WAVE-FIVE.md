@@ -8,7 +8,7 @@ São **15 áreas e 22 padrões de rota existentes**. O inventário continua em *
 
 | Frente | Áreas | Situação neste checkpoint |
 | --- | --- | --- |
-| Cenários e sensibilidade | UI42–UI44 | A prévia de portfólio e a avaliação isolada de sensibilidade excederam seus prazos originais. A correção de composição readonly está integrada e a jornada limpa está em execução; resultados completos ainda não qualificados. |
+| Cenários e sensibilidade | UI42–UI44 | A prévia de portfólio e a avaliação isolada de sensibilidade excederam seus prazos originais. A correção de composição readonly está integrada; a jornada limpa ainda falhou na primeira prévia em 60 segundos, sem resposta observada. Resultados completos não qualificados. |
 | Catálogo e visão contextual de BI | UI45–UI46 | Jornadas nativas e valores/unidades originais verificados; capturas selecionadas revisadas. |
 | Revisões e relatórios | UI47–UI50 | Jornadas, preservações e recusas originais verificadas. |
 | Relações, conversas e confirmações | UI51–UI53 | Jornada limpa passou com confirmação original, comprovante e releitura autenticada; tipos do ajuste de teste também verificados. |
@@ -35,7 +35,7 @@ A [tentativa 14 de Analytics](wave-five/analytics/attempt-14/README.md) conserva
 
 A correção de composição readonly foi integrada em `2d3abae061c9d4be188540433b9d34c4bfaf2b24`, preservando produtores, verificações de autoridade, transações e prazos. Os dez grupos novos, Finance, os casos originais de LocalStore sem os dois skips já existentes e os tipos de CLI/E2E passaram. O teste original C17 continuou falhando no deadline de 105 segundos; um controle anterior à correção reproduziu a mesma falha. C17 permanece pendente, sem alegação de ganho de desempenho. O [recibo de integração](wave-five/analytics/readonly-authority/integration-review.json) registra essa distinção.
 
-Depois da remoção de um transcript bruto de QA, os guards originais passaram: 78 regras, 669 arquivos, 36 warnings e nenhum bloqueio, erro ou aprovação excepcional. O [run limpo 45008412557](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45008412557), sobre o produto integrado, executa apenas a primeira declaração permanente de Analytics, idêntica em conteúdo, com preparação, configuração e limites originais. As três áreas permanecem pendentes até o resultado completo e a revisão das capturas reais.
+Depois da remoção de um transcript bruto de QA, os guards originais passaram: 78 regras, 669 arquivos, 36 warnings e nenhum bloqueio, erro ou aprovação excepcional. O [run limpo 45008412557](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45008412557), sobre o produto integrado, executou a primeira declaração permanente de Analytics, idêntica em conteúdo, com preparação, configuração e limites originais. O preparo e as duas leituras de histórico passaram, mas a primeira prévia não teve resposta observada dentro de 60 segundos. Nenhuma avaliação ou etapa UI43/UI44 foi alcançada. As sete capturas originais estão em [Attempt 15](wave-five/analytics/attempt-15/README.md); todas foram revistas pelo agente e duas também pelo root. As três áreas permanecem pendentes.
 
 ## Aceite
 

@@ -1,6 +1,6 @@
 # Native source integration — wave five
 
-This is a chronological integration record. Earlier checkpoint outcomes remain historical; the final readonly-composition section states the current integrated product and unresolved qualifications. Exact tested snapshots and failed outcomes are retained.
+This is a chronological integration record. Earlier checkpoint outcomes remain historical; the latest checkpoint sections state the current integrated product and unresolved qualifications. Exact tested snapshots and failed outcomes are retained.
 
 The UI42–UI56 presentation work uses the existing native shell, route registry, original services and access authority. These corrections were required by the installed browser journeys.
 
@@ -189,3 +189,12 @@ The raw transcript was removed from the product, retaining structured receipts a
 [The unchanged-source C17 control](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45007654887/job/137162737147) reproduced the same deadline on product 5882179a before this correction. Both executions completed 14 inner and 1,952 outer canonical result reads, then aborted reopened ancestry at 105,002 ms. C17 remains failed; later persisted-cycle and recovery/revocation phases were not reached. Separate jobs and surrounding selections do not establish a performance improvement or regression. The structured comparison is in collab/c17-precorrection-control-01/receipt.json.
 
 Integration is limited to the reviewed correction and its explicit evidence boundary. The original clean UI42–UI44 journey remains required, with its existing preparation, producers, assertions, screenshots and request budgets. Twelve areas are qualified, three remain pending, and 41 areas remain accepted and merged. User visual approval and merge are pending.
+
+
+## Clean Portfolio18 after readonly integration
+
+The original clean analytics declaration in [run 45008412557](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45008412557/job/137165052929), snapshot 5b31da8839f2738995fc5b07cdb4b05212188eab on product 2d3abae061c9d4be188540433b9d34c4bfaf2b24, failed its first preview's unchanged 60-second wait. The complete original helper581 preparation, rule/selection registration and exact readbacks passed; both native history reads returned 200/ok. The single preview had no observed response before teardown, so its status, refusal reason and internal persistence outcome remain unknown. No explicit evaluation or UI43/UI44 stage was reached. Cleanup passed.
+
+Seven original JPEGs are archived in analytics/attempt-15, reconstructed from 33 complete chunks. The analytics reviewer inspected all seven; root inspected configuration/focus and the failed pending-preview image, with exact original-byte parity. The failed image shows Running, disabled controls, a pending skeleton and empty history, with no connection-loss banner or completed result. Root independently confirmed that all 24 archived original source records match the job events.
+
+The readonly correction did not complete the installed journey within its budget. This clean run has no internal hit/miss counters and establishes no causal saving. Static follow-up identifies a remaining raw-only readonly lookup in source-lifecycle's ordinary transaction branch, reached by the two Planner evidence reads without sealedRead. That branch retains full source-metadata validation and initial source/audit digests. Its measured importance is unknown; no further runtime change follows from static inspection alone. Original case-wide source checks, both authorization passes and the helper581 scenario remain intact. Twelve areas remain qualified, three pending, and 41 accepted/merged.

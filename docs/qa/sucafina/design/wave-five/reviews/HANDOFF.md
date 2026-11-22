@@ -73,7 +73,7 @@ Root owns the shared frame, installed fixture host, source-composition fixes, in
 
 The root's technical receipts are recorded by exact scope in [ATTEMPTS.md](ATTEMPTS.md) and capture-provenance.json. They span CLI/original-source regression, palette/copy, app/client/E2E types/guards/BI and the later A05 oracle correction. Some whole workflows failed unrelated scopes. They must not be presented as one all-green run.
 
-The final body-acquisition spec came after the latest recorded E2E type-check receipt. Its runtime passed attempt 8; root will perform the final narrow E2E integration type check after integrating this exact full spec blob. Product and catalog files remained frozen during this final acquisition correction.
+The current full review spec at QA checkpoint `c8bb2c950e1f4473926cd3a03e754a7c2dc991b8` (runtime product `2d3abae061c9d4be188540433b9d34c4bfaf2b24`) remains exactly blob `7cda60f820508ac4123693a97cd9ffe2e0eeee56`. The E2E type-check gate subsequently passed in [run 45006460499](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45006460499), job `137159049164`, snapshot `37417cdeda06111bec608e4839d458e49b39ae25`, which contains that same spec blob. The combined workflow remains FAILED; [readonly-composition/README.md](readonly-composition/README.md) records its separate C17 and guard outcomes. This closes the formerly pending E2E type-check item without adding another installed UI47–50/UI54 execution. Product and catalog files remained frozen during the final body-acquisition correction.
 
 ### Owned source/test paths
 

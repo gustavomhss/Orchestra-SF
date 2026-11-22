@@ -354,15 +354,15 @@
     "The A04 leaf and sensitivity-aware preparation are now exercised by the native isolated UI44 journey through editor and review. The evaluation response, persisted samples/threshold and pt-BR result remain unobserved; historical flat-binding structural tests are not original issue() evidence."
   ],
   "latestInstalledPortfolio": {
-    "source": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
-    "snapshot": "b6f80dbe7691f07fa3b89bb98b858988b3423d3a",
-    "run": 44996623210,
-    "job": 137128917698,
-    "cleanupJob": 137130784728,
+    "source": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+    "snapshot": "5b31da8839f2738995fc5b07cdb4b05212188eab",
+    "run": 45008412557,
+    "job": 137165052929,
+    "cleanupJob": 137167295350,
     "conclusion": "failure",
     "cleanupConclusion": "success",
-    "manifest": "attempt-12/manifest.json",
-    "result": "Original comparisons, human selection register and exact readback passed. One preview request emitted, no response observed before original60000ms timeout/teardown. No explicit evaluation; UI43/UI44 not reached."
+    "manifest": "attempt-15/manifest.json",
+    "result": "Complete original helper581 preparation and both native histories passed. Exactly one preview emitted; no response observed before the original60000ms timeout/teardown. No explicit evaluation, UI43 or native UI44 stage reached. All7 images viewed; six captured stages accepted, failure remains diagnostic."
   },
   "biNative1": {
     "source": "6703cc5ba71709f0616b186383ab63f779c22dfb",
@@ -1026,7 +1026,7 @@
     "measuredFinding": "Only2458ms accumulated in116502 calculated calls. Native pure calculation is not the dominant300s cost. Source/guard boundaries account for larger inclusive times, but inner copying/hashing/authority costs are not separately measured."
   },
   "readonlyAuthorityBridge": {
-    "status": "Integrated at 2d3abae after exact static review, 10 new passing regression groups, original Finance/LocalStore passing cases, CLI/E2E type passes, unchanged-source C17 control and a passing guard-only correction. C17 and the original combined gate remain failed. No installed latency or new UI qualification is claimed while the clean journey is in progress.",
+    "status": "Integrated at 2d3abae after exact static review, 10 new passing groups, original Finance/LocalStore passing cases, CLI/E2E type passes, unchanged-source C17 control and passing guard-only cleanup. C17 and the original combined gate remain failed. Clean Portfolio18 also failed its original first-preview wait; no installed result qualification or causal latency attribution follows.",
     "integratedProduct": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
     "integrationReview": "readonly-authority/integration-review.json",
     "runtimeCandidate": "5bf37fc96c0d42cff073eee754bdc9a5543d85fa",
@@ -1173,7 +1173,7 @@
     ]
   },
   "portfolioClean18": {
-    "status": "in_progress",
+    "status": "completed",
     "product": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
     "snapshot": "5b31da8839f2738995fc5b07cdb4b05212188eab",
     "tree": "0c63eb561b9fb2cb2c602890293073cd48623a07",
@@ -1257,6 +1257,145 @@
       "verificationPhase": "Before CI branch creation; source and committed overlay readbacks verified"
     },
     "qualification": false,
-    "workflowUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45008412557"
+    "workflowUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45008412557",
+    "conclusion": "failure",
+    "cleanupJob": 137167295350,
+    "cleanupConclusion": "success",
+    "manifest": "attempt-15/manifest.json",
+    "outcome": {
+      "tests": {
+        "pass": 0,
+        "fail": 1,
+        "reportedDuration": "5.1m"
+      },
+      "fixture": "Original installation/enrollment and complete helper581 preparation passed: real parameter promotion, A04 units reads, one observed-version rule registration, original comparisons, explicit portfolio selection and exact readbacks.",
+      "preparation": {
+        "caseVersion": 6,
+        "criterionPreviousVersion": 1,
+        "criterionVersion": 2,
+        "selectionVersion": 1,
+        "unitsReadAcquisition": "original A04 preparation GET, not the unreached native UI44 GET",
+        "completeStoredRuleReadEndpointClaimed": false,
+        "operationDurations": [
+          {
+            "operation": "decision-criteria",
+            "http": 200,
+            "status": "ok",
+            "elapsedMs": 1464
+          },
+          {
+            "operation": "decision-compare",
+            "http": 200,
+            "status": "ok",
+            "elapsedMs": 61445
+          },
+          {
+            "operation": "decision-select-portfolio",
+            "http": 200,
+            "status": "ok",
+            "elapsedMs": 39907
+          },
+          {
+            "operation": "decision-compare",
+            "http": 200,
+            "status": "ok",
+            "elapsedMs": 58947
+          }
+        ]
+      },
+      "nativeHistory": [
+        {
+          "prefix": "SF_ANALYTICS_SOURCE",
+          "timestamp": "2026-11-22T09:44:42.0673667",
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 1,
+          "ownerBinding": "exact",
+          "elapsedMs": 449,
+          "http": 200,
+          "status": "ok",
+          "reason": null,
+          "valueShape": "array"
+        },
+        {
+          "prefix": "SF_ANALYTICS_SOURCE",
+          "timestamp": "2026-11-22T09:44:54.8412002",
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 2,
+          "ownerBinding": "exact",
+          "elapsedMs": 908,
+          "http": 200,
+          "status": "ok",
+          "reason": null,
+          "valueShape": "array"
+        }
+      ],
+      "preview": {
+        "requests": 1,
+        "sequence": 3,
+        "requestTimestamp": "2026-11-22T09:44:54.6797245",
+        "method": "POST",
+        "ownerBinding": "exact",
+        "originalWaitMs": 60000,
+        "responseObserved": false,
+        "http": null,
+        "status": null,
+        "reason": null,
+        "failure": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\"",
+        "specLine": 72,
+        "observedUntil": "page closed at 2026-11-22T09:45:55.2644238Z",
+        "persistence": "unknown; original preview may perform its own internal persistence/binding"
+      },
+      "explicitPortfolioEvaluateRequests": 0,
+      "explicitSensitivityEvaluateRequests": 0,
+      "reached": [
+        "original source preparation",
+        "UI42 authorized case list",
+        "UI42 authorized empty case",
+        "UI42 candidate/constraint configuration",
+        "first native preview request"
+      ],
+      "notReached": [
+        "completed preview",
+        "back-and-repeat preview",
+        "portfolio review/evaluate",
+        "persisted result/readback/UI43",
+        "native UI44 A04 GET/editor/review/evaluate/result",
+        "sample/threshold readback",
+        "pt-BR routes",
+        "final scope and error assertions"
+      ],
+      "hooksReportedNoPageOrConsoleErrors": true,
+      "finalPageErrorAssertionsExecuted": false,
+      "interpretation": "The integrated readonly correction did not complete this clean journey within the original preview wait. No measured hit/miss profile or causal performance attribution exists in this run."
+    },
+    "artifact": {
+      "id": 14748539261,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 8819283,
+      "digest": "sha256:d9da46a48c2894b3cbf11e0fcfdfdc22cfabc45a211f4e754794bcfcefcd5086",
+      "expiresAt": "2026-11-29T09:45:57Z",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45008412557/artifacts/14748539261"
+    },
+    "captures": {
+      "images": 7,
+      "stageCaptures": 6,
+      "failureCaptures": 1,
+      "actuallyViewed": 7,
+      "remoteBytesVerified": 7,
+      "fullAreaQualification": false
+    }
+  },
+  "previousCleanPortfolio15": {
+    "source": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
+    "snapshot": "b6f80dbe7691f07fa3b89bb98b858988b3423d3a",
+    "run": 44996623210,
+    "job": 137128917698,
+    "cleanupJob": 137130784728,
+    "conclusion": "failure",
+    "cleanupConclusion": "success",
+    "manifest": "attempt-12/manifest.json",
+    "result": "Original comparisons, human selection register and exact readback passed. One preview request emitted, no response observed before original60000ms timeout/teardown. No explicit evaluation; UI43/UI44 not reached."
   }
 }

@@ -314,3 +314,11 @@ All seven original images were actually viewed: six list/configuration stages ar
 ### Separate clean UI44 attempt — A04 proved, evaluation unanswered
 
 [UI44 isolated1](../collab/sensitivity-isolated-01/README.md), run45003432183/test137149720488, used unchanged runtime6acd67 with test head5882179 and snapshotcde5333d2c988b069633e2de0b677a477b2f9d5e. The full original fixture, native A04 GET, units/source/rule assertions, editor modes, review and cancel preservation passed. One sensitivity evaluation POST had no observed response within its original120000ms wait; result/readback/samples/threshold/pt-BR were not reached. Cleanup137152154372 passed. No Portfolio17 status is imported into this request; persistence is unknown. Nine JPEGs and the complete original A04 event are preserved by design_collaboration; partial stages do not qualify UI44.
+
+## Attempt 15 — clean installed readonly composition, original preview wait
+
+[Run 45008412557](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45008412557), product `2d3abae061c9d4be188540433b9d34c4bfaf2b24`, snapshot `5b31da8839f2738995fc5b07cdb4b05212188eab`, retained the exact first permanent f4eb declaration and helpers581/ebbab. Test `137165052929` failed; cleanup `137167295350` passed. Complete original A04/rule preparation, comparison 61,445ms, explicit selection 39,907ms, comparison 58,947ms and exact readbacks passed. Native histories returned 200/ok in 449/908 ms.
+
+The single original preview request had no observed response within the unchanged 60-second wait. No second preview, explicit evaluation, UI43 or native UI44 stage was reached. Do not import a later 403 from a prior diagnostic. This clean run has no internal hit/miss or phase instrumentation, so it does not establish whether readonly recognition was used or attribute a remaining cost.
+
+All seven original JPEGs were actually viewed and remotely byte-verified: six readable list/configuration stages and one diagnostic pending-preview image. The latter shows Running, disabled inputs, Preview is not yet available and empty history, without a connection banner. [Receipt and visual review](attempt-15/README.md), [manifest](attempt-15/manifest.json) and [structured source events](attempt-15/source-events.json) preserve the failed outcome. No raw transcript is committed. The wave remains 12/15; UI42–44 are pending.

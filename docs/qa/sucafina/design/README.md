@@ -1,6 +1,16 @@
 # Sucafina nativa — inventário e retrabalho das telas
 
-## Quarto bloco — 20 áreas aprovadas e mescladas
+## Quinto bloco — 15 áreas em qualificação
+
+O bloco **UI42–UI56** está implementado na branch `sf-design-next`, com **15 áreas e 22 padrões de rota existentes**, no [PR #613](https://github.com/gustavomhss/Orchestra-SF/pull/613). **Doze áreas (UI45–UI56) têm jornadas e evidências visuais qualificadas; UI42–UI44 ainda aguardam o resultado completo de Analytics.** A jornada limpa sobre a correção readonly integrada voltou a atingir o limite original de 60 segundos na primeira prévia, sem resposta observada; a investigação do caminho instalado continua. O registro de integração conserva também a falha original de C17 reproduzida antes da correção.
+
+O total aceito e mesclado continua em **41 de 70 áreas**. Este bloco permanece em rascunho, sem aceite visual ou merge. O inventário abaixo preserva o último baseline aceito; o andamento da quinta rodada está no seu mapa próprio.
+
+[Entrega e situação atual](WAVE-FIVE.md) · [Escopo das 15 áreas](wave-five/scope.json) · [Matriz técnica](wave-five/technical-verification.json) · [Integração das fontes](wave-five/SOURCE-INTEGRATION.md)
+
+[Galeria de BI](wave-five/reviews/BI-NATIVE-HANDOFF.md) · [Galeria de revisões](wave-five/reviews/REVIEW-GALLERY.md) · [Galeria de colaboração e importação](wave-five/collab/REVIEW-GALLERY.md)
+
+## Histórico — quarto bloco com 20 áreas aprovadas e mescladas
 
 O quarto bloco implementa **CAP20–CAP28, UI30–UI32 e UI34–UI41**, com 49 padrões de rota já existentes. O [PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588) foi aprovado pelo usuário e mesclado em `f2a6c23551289ef8705baea03f8cec2425b8445a`. [Registro verificado do merge](wave-four/MERGE.md).
 
@@ -76,7 +86,7 @@ As imagens usam dados isolados de teste. Incluem desktop em claro/escuro, portug
 
 The source route registry contains **70 unique surfaces, 165 route patterns and 15 native chapters**. These numbers describe route recognition; they do not prove runtime admission, data availability or visual acceptance. Every entrypoint below exists as a blob in the pinned native source tree. `inventory.json` preserves every route variant and source blob SHA, including create, edit, detail, review, comparison and alias routes.
 
-The first wave follows the first three Sucafina destinations in the source navigation: **Today (UI29), Decisions/Cases (UI33), Executive dashboard (CAP01)**. Wave two continues with Hot Topics (CAP02), Budget Overview (CAP03) and OPEX (CAP04). Wave three implements CAP05–CAP19. Wave four implements CAP20–CAP28, UI30–UI32 and UI34–UI41. The campaign now has 41 implemented and merged areas: 21 from earlier waves and 20 in user-approved PR #588. There are 29 remaining areas. The implemented route scope is 118 of 165 existing patterns; 47 remain. Route coverage is not a claim that every route/state/locale combination was exercised.
+The first wave follows the first three Sucafina destinations in the source navigation: **Today (UI29), Decisions/Cases (UI33), Executive dashboard (CAP01)**. Wave two continues with Hot Topics (CAP02), Budget Overview (CAP03) and OPEX (CAP04). Wave three implements CAP05–CAP19. Wave four implements CAP20–CAP28, UI30–UI32 and UI34–UI41. The campaign now has 41 implemented and merged areas: 21 from earlier waves and 20 in user-approved PR #588. There are 29 remaining areas. The implemented route scope is 118 of 165 existing patterns; 47 remain. Route coverage is not a claim that every route/state/locale combination was exercised. These counts and entrypoint hashes describe the accepted baseline. Wave five is tracked separately in WAVE-FIVE.md and wave-five/scope.json until qualification and user acceptance.
 
 | Order | Surface | Screen | Main route | Native source entrypoint |
 | --- | --- | --- | --- | --- |
