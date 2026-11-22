@@ -551,6 +551,33 @@ const session = { id: SessionSchema.ID.make("ses_host"), location: { directory: 
 const permissionCall = (options: Options, tool: string, input: Record<string, unknown>, id: string) =>
   options.canUseTool?.(tool, input, { signal: new AbortController().signal, toolUseID: id, requestId: id })
 
+test("mapped Claude Code calls without a text resource are refused before authorization", async () => {
+  const authorized: string[] = []
+  const decisions: unknown[] = []
+  during = async (options) => {
+    decisions.push(await pre(options, "Bash", {}, "tu-missing-command"))
+    decisions.push(await permissionCall(options, "Bash", {}, "tu-missing-command"))
+    decisions.push(await permissionCall(options, "Read", { file_path: 42 }, "tu-invalid-path"))
+    decisions.push(await pre(options, "Read", { file_path: 42 }, "tu-invalid-path"))
+  }
+  script = [done]
+  await collect(turnOf({
+    authorize: (input) => Effect.sync(() => {
+      authorized.push(input.callID)
+      return {}
+    }),
+  }))
+
+  const reason = "This call does not name its resource, so Orchestra refuses it. Send the command, path, pattern, or query as text."
+  expect(decisions).toEqual([
+    refused(reason),
+    { behavior: "deny", message: reason },
+    { behavior: "deny", message: reason },
+    refused(reason),
+  ])
+  expect(authorized).toEqual([])
+})
+
 test("ToolSafety's rewrite and the dispatch's domains reach Claude Code, and a ToolSafety refusal names its reason", async () => {
   const asked: { callID: string; safety?: unknown }[] = []
   const decisions: unknown[] = []
