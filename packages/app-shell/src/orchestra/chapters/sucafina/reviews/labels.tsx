@@ -4,6 +4,16 @@ import { SfDisplayValueText, type SfCopyKey } from "../shared/frame"
 
 const key = (value: string) => value as SfCopyKey
 const statusKey: Readonly<Record<string, SfCopyKey>> = {
+  confirmed: key("sf.u44.evidenceConfirmed"),
+  estimated: key("sf.u44.evidenceEstimated"),
+  hypothetical: key("sf.u44.evidenceHypothetical"),
+  unconfirmed: key("sf.u44.reasonUnconfirmed"),
+  "incompatible-currency": key("sf.u44.reasonIncompatibleCurrency"),
+  "missing-fx": key("sf.u44.reasonMissingFx"),
+  "missing-rate": key("sf.u44.reasonMissingRate"),
+  ready: key("sf.u32.statusReady"),
+  true: key("sf.u44.yes"),
+  false: key("sf.u44.no"),
   failed: key("sf.common.failed"),
   cancelled: key("sf.common.cancelled"),
   completed: key("sf.common.completed"),
@@ -75,6 +85,6 @@ export function AmountText(props: { value: number | string | boolean | null; cur
         : { kind: "unspecified", label: { key: key("sf.common.unknown") } },
     }} />
   }
-  if (typeof props.value === "boolean") return <StatusText value="boolean" />
+  if (typeof props.value === "boolean") return <StatusText value={String(props.value)} />
   return <bdi>{props.value}</bdi>
 }

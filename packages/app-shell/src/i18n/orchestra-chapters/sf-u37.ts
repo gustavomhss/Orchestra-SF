@@ -65,6 +65,7 @@ export const SF_U37_COPY = {
   "sf.u37.requested": "Operation scope",
   "sf.u37.outputRef": "Output reference",
   "sf.u37.openImportPreview": "Open original import preview",
+  "sf.u37.caseNameUnavailable": "Case name unavailable",
 } as const
 
 export const SF_U37_COPY_BR: Readonly<Record<keyof typeof SF_U37_COPY, string>> = {
@@ -133,4 +134,5 @@ export const SF_U37_COPY_BR: Readonly<Record<keyof typeof SF_U37_COPY, string>> 
   "sf.u37.requested": "Escopo de operações",
   "sf.u37.outputRef": "Referência do resultado",
   "sf.u37.openImportPreview": "Abrir simulação original da importação",
+  "sf.u37.caseNameUnavailable": "Nome do caso indisponível",
 }

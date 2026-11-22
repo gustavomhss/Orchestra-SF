@@ -216,10 +216,10 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
       render: (row) => <bdi>{row.id}</bdi> },
     { id: "eligibility", labelKey: kt("sf.u19.results.eligibility"), align: "start",
       widthPolicy: { kind: "content", minPx: 120, maxPx: 200 },
-      render: (row) => <span data-sf-eligibility={row.eligibility}>{t("sf.u19.results." + row.eligibility as keyof typeof SF_U19_COPY)}</span> },
+      render: (row) => <span data-sf-eligibility={row.eligibility}>{t(`sf.u19.status.${row.eligibility}`)}</span> },
     { id: "comparisonStatus", labelKey: kt("sf.u19.results.comparison"), align: "start",
       widthPolicy: { kind: "content", minPx: 105, maxPx: 180 },
-      render: (row) => <span>{row.comparisonStatus}</span> },
+      render: (row) => <span>{t(`sf.u19.status.${row.comparisonStatus}`)}</span> },
     { id: "costCoverageRefs", labelKey: kt("sf.u19.results.coverage"), align: "start",
       widthPolicy: { kind: "content", minPx: 95, maxPx: 150 },
       render: (row) => <span>{row.costCoverageRefs.length} {t("sf.u19.results.sources")}</span> },
@@ -235,7 +235,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
         density="comfortable" state={value.combinations.length ? "ready" : "empty"} />
       <For each={value.combinations}>{(entry) =>
         <details class="sf-u19-combination">
-          <summary>{entry.id} — {entry.eligibility} / {entry.comparisonStatus}</summary>
+          <summary><bdi>{entry.id}</bdi> — {t(`sf.u19.status.${entry.eligibility}`)} / {t(`sf.u19.status.${entry.comparisonStatus}`)}</summary>
           <dl class="sf-u19-facts">
             <div><dt>{t("sf.u19.results.sources")}</dt><dd><ul>
               <For each={entry.costCoverageRefs}>{(ref) => <li><bdi>{ref}</bdi></li>}</For>
@@ -317,10 +317,11 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
                       </fieldset>
                       <fieldset disabled={store.busy || store.outcomeUnknown}>
                         <legend>{t("sf.u19.scenarios.constraints")}</legend>
+                        <Show when={source().rules.length > 0}><p class="sf-metadata">{t("sf.u19.scenarios.constraintNamesUnavailable")}</p></Show>
                         <For each={source().rules}>{(rule) =>
                           <label class="sf-u19-check"><input type="checkbox" checked={store.constraints.includes(rule.id)}
                             onChange={(event) => updateSelection("constraints", rule.id, event.currentTarget.checked)} />
-                            <span>{rule.id} · v{rule.expectedVersion ?? t("sf.u19.results.sourceUnknown")}</span></label>
+                            <span>{t("sf.u19.scenarios.constraintRef")}: <bdi>{rule.id}</bdi> · v{rule.expectedVersion ?? t("sf.u19.results.sourceUnknown")}</span></label>
                         }</For>
                       </fieldset>
                       <fieldset disabled={store.busy || store.outcomeUnknown}>

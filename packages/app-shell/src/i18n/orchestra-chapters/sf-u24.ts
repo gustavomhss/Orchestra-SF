@@ -84,6 +84,12 @@ export const SF_U24_COPY = {
   "sf.u24.scenarioLinked": "Evidence linked:",
   "sf.u24.scenarioLinkSubmit": "Link confirmed evidence to scenario",
   "sf.u24.scenarioLinkLabel": "· persisted link",
+  "sf.u24.label.currency": "Currency",
+  "sf.u24.label.knownSubtotal": "Known subtotal",
+  "sf.u24.label.total": "Total",
+  "sf.u24.state.extracted": "Extracted",
+  "sf.u24.state.confirmed": "Confirmed",
+  "sf.u24.state.rejected": "Rejected",
 } as const
 
 export const SF_U24_COPY_BR: Record<keyof typeof SF_U24_COPY, string> = {
@@ -170,4 +176,10 @@ export const SF_U24_COPY_BR: Record<keyof typeof SF_U24_COPY, string> = {
   "sf.u24.scenarioLinked": "Evidência vinculada:",
   "sf.u24.scenarioLinkSubmit": "Vincular evidência confirmada ao cenário",
   "sf.u24.scenarioLinkLabel": "· vínculo persistido",
+  "sf.u24.label.currency": "Moeda",
+  "sf.u24.label.knownSubtotal": "Subtotal conhecido",
+  "sf.u24.label.total": "Total",
+  "sf.u24.state.extracted": "Extraído",
+  "sf.u24.state.confirmed": "Confirmado",
+  "sf.u24.state.rejected": "Rejeitado",
 }

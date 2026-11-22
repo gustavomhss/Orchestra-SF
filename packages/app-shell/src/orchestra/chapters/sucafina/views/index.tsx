@@ -477,7 +477,9 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
             }}
             base={snapshot(context.record, context.record.view)}
             current={snapshot(context.record, context.record.view)}
-            proposed={snapshot(context.record, context.draft.value)}
+            proposed={context.kind === "remove"
+              ? { kind: "not-provided", reason: message("sf.ui32.removalProposed") }
+              : snapshot(context.record, context.draft.value)}
             effects={[]}
             coverage={{ state: "complete", summary: message("sf.ui32.legacyReviewScope"), reasons: [], knownCount: null, expectedCount: null }}
             blockingReasons={[]}

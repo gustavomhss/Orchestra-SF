@@ -207,3 +207,70 @@
     margin-block-end: var(--sf-workflow-space-sm);
   }
 }
+
+/* Values stay primary; full source identities remain available in disclosures. */
+.sf-page-frame .sf-workflow .sf-files-diff {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sf-workflow-space-md);
+}
+.sf-page-frame .sf-workflow .sf-files-diff > div {
+  min-inline-size: 0;
+  padding: var(--sf-workflow-space-md);
+  border: var(--sf-workflow-line) solid var(--mx-line);
+  border-radius: var(--orchestra-radius-md);
+  background: var(--mx-soft);
+}
+.sf-page-frame .sf-workflow .sf-files-diff h4 {
+  margin-block: 0 var(--sf-workflow-space-sm);
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+  font-weight: var(--mx-emphasis);
+}
+.sf-page-frame .sf-workflow .sf-n28-items > .mx-card > .sf-n28-section {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.sf-page-frame .sf-workflow .sf-n28-values > div {
+  padding: var(--sf-workflow-space-md);
+  border: var(--sf-workflow-line) solid var(--mx-line);
+  border-radius: var(--orchestra-radius-md);
+  background: var(--mx-soft);
+}
+.sf-page-frame .sf-workflow .sf-n28-values dt {
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-page-frame .sf-workflow .sf-n28-values dd {
+  font-size: var(--orchestra-font-size-lg);
+}
+.sf-page-frame .sf-workflow .sf-n28-values dd small {
+  display: block;
+  margin-block-start: var(--sf-workflow-space-xs);
+}
+.sf-page-frame .sf-workflow .sf-n28-change-tags span {
+  padding: var(--sf-workflow-space-xs) var(--sf-workflow-space-sm);
+  border: var(--sf-workflow-line) solid var(--mx-line);
+  border-radius: var(--orchestra-radius-sm);
+  background: var(--mx-soft);
+  color: var(--mx-dim);
+}
+.sf-page-frame .sf-workflow .sf-n28-scroll tr[data-change-value="true"] {
+  background: var(--mx-soft);
+}
+.sf-page-frame .sf-workflow .sf-n28-scroll tr[data-change-value="true"] > th {
+  border-inline-start: var(--sf-workflow-focus) solid var(--orchestra-accent);
+}
+.sf-page-frame .sf-workflow.sf-n28-preserved article[data-review-ref] {
+  display: grid;
+  gap: var(--sf-workflow-space-lg);
+  min-inline-size: 0;
+}
+@media (max-width: 767px) {
+  .sf-page-frame .sf-workflow .sf-files-diff {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

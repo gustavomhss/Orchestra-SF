@@ -19,6 +19,7 @@ type Translate = (value: string) => string
 /** Display only reauthorized source lineage, never a reconstructed or freshly fetched source. */
 function SourceRefList(props: { sources: readonly PreservedSourceRef[]; t: Translate }) {
   return <Show when={props.sources.length > 0} fallback={<span>{props.t("sf.u32.notRecorded")}</span>}>
+    <details class="sf-technical-details"><summary>{props.t("sf.u32.inspectSource")} ({props.sources.length})</summary>
     <ul class="sf-n28-source-list">
       <For each={props.sources}>{(source) => <li>
         <span>{source.surface} / {source.type} / {source.id}</span>
@@ -31,12 +32,14 @@ function SourceRefList(props: { sources: readonly PreservedSourceRef[]; t: Trans
         </Show>
       </li>}</For>
     </ul>
+    </details>
   </Show>
 }
 
 type EvidenceRef = PreservedValue["sourceRefs"][number]
 function EvidenceList(props: { sources: readonly EvidenceRef[]; t: Translate }) {
   return <Show when={props.sources.length > 0} fallback={<span>{props.t("sf.u32.notRecorded")}</span>}>
+    <details class="sf-technical-details"><summary>{props.t("sf.u32.inspectSource")} ({props.sources.length})</summary>
     <ul class="sf-n28-source-list">
       <For each={props.sources}>{(source) => <li>
         <span>{source.kind} / {source.refId}</span>
@@ -48,13 +51,14 @@ function EvidenceList(props: { sources: readonly EvidenceRef[]; t: Translate }) 
         </> : null}
       </li>}</For>
     </ul>
+    </details>
   </Show>
 }
 
 function SourceGaps(props: { gaps: ReviewProjection["missing"]; t: Translate }) {
   return <Show when={props.gaps.length > 0} fallback={<span>{props.t("sf.u32.noDeclaredGaps")}</span>}>
     <ul class="sf-n28-source-list">
-      <For each={props.gaps}>{(gap) => <li>{gap.field}: {gap.reason}</li>}</For>
+      <For each={props.gaps}>{(gap) => <li><bdi>{gap.field}</bdi>: <StatusText value={gap.reason} /></li>}</For>
     </ul>
   </Show>
 }

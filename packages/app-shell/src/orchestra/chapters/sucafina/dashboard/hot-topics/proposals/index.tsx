@@ -374,7 +374,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
         <section class="sf-u38-section">
           <h2>{t(key("sf.u38.proposalReceipt"))}</h2>
           <Show when={store.review?.receipt}
-            fallback={<p role="status">{t(key("sf.u38.proposalNeedsReview"))}</p>}>
+            fallback={<p role="status">{t(key("sf.u38.proposalNoReceipt"))}</p>}>
             {(receipt) => <dl class="sf-u38-meta">
               <div><dt>{t(key("sf.u38.proposalReceipt"))}</dt><dd><bdi>{receipt().id}</bdi></dd></div>
               <Show when={receipt().status}><div><dt>{t(key("sf.u38.status"))}</dt>

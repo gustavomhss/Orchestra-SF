@@ -697,7 +697,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                       disabled={!canSelect(candidate)}
                       onClick={() => { void openEvidence(candidate) }}>
                       {candidate.fieldCandidate}: {candidate.value === null ? "null" : String(candidate.value)}
-                      {" "}{candidate.unit ?? ""} · {candidate.status} · {candidate.version}
+                      {" "}{candidate.unit ?? ""} · {t("sf.u24.state." + candidate.status)} · {candidate.version}
                     </button>
                     <Show when={candidate.status === "rejected" && candidate.rejection}>
                       <p role="status" data-sf-rejection="persisted">
@@ -815,9 +815,9 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                   {value().evidence.value === null ? "null" : String(value().evidence.value)}
                   {" "}{value().evidence.unit ?? ""}</p>
                 <dl>
-                  <dt>currency</dt><dd>{showScenarioValue(value().scenario, "currency") ?? t("sf.common.unknown")}</dd>
-                  <dt>knownSubtotal</dt><dd>{showScenarioValue(value().scenario, "knownSubtotal") ?? t("sf.common.unknown")}</dd>
-                  <dt>total</dt><dd>{showScenarioValue(value().scenario, "total") ?? t("sf.common.unknown")}</dd>
+                  <dt>{t("sf.u24.label.currency")}</dt><dd>{showScenarioValue(value().scenario, "currency") ?? t("sf.common.unknown")}</dd>
+                  <dt>{t("sf.u24.label.knownSubtotal")}</dt><dd>{showScenarioValue(value().scenario, "knownSubtotal") ?? t("sf.common.unknown")}</dd>
+                  <dt>{t("sf.u24.label.total")}</dt><dd>{showScenarioValue(value().scenario, "total") ?? t("sf.common.unknown")}</dd>
                 </dl>
                 <p role="status">{t("sf.u24.scenarioReady")}</p>
                 <p>{t("sf.u24.scenarioLinkHelp")}</p>
@@ -836,7 +836,6 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
           </Show>
         </SfStatePanel>
         <Show when={state.status === "unavailable" || state.status === "outcome-unknown" || state.status === "stale"}>
-          <p role="alert" class="sf-files-note">{t(message())}</p>
           <Show when={state.phase === "unknown"}>
             <button type="button" class="mx-btn" disabled={state.busy}
               onClick={refresh}>{t("sf.u24.reconcile")}</button>

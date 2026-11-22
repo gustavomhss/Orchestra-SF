@@ -23,6 +23,7 @@ export const SF_U41_COPY = {
   "sf.u41.openDestination": "Open authorized destination",
   "sf.u41.openSource": "Open current source",
   "sf.u41.checkDestination": "Check current destination",
+  "sf.u41.ownerReference": "Owner reference",
 } as const
 export const SF_U41_COPY_BR: Readonly<Record<keyof typeof SF_U41_COPY, string>> = {
   "sf.ui30.title": "Meu trabalho",
@@ -48,4 +49,5 @@ export const SF_U41_COPY_BR: Readonly<Record<keyof typeof SF_U41_COPY, string>> 
   "sf.u41.openDestination": "Abrir destino autorizado",
   "sf.u41.openSource": "Abrir fonte atual",
   "sf.u41.checkDestination": "Consultar destino atual",
+  "sf.u41.ownerReference": "Referência do responsável",
 }

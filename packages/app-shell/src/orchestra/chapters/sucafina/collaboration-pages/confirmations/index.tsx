@@ -292,7 +292,10 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
       density="comfortable" layout="reading" onLayoutMode={() => undefined}
     >
       <section data-sf-wave="polish" class="sf-u44-confirm sf-workflow" data-sf-surface="UI53">
-        <p>{t(recordedRoute() ? "sf.u44.confirmationId" : "sf.u44.navigationSelection")}: <code data-sf-selection-ref>{selectedRef()}</code></p>
+        <details class="sf-technical-details">
+          <summary>{t(recordedRoute() ? "sf.u44.confirmationId" : "sf.u44.navigationSelection")}</summary>
+          <code data-sf-selection-ref>{selectedRef()}</code>
+        </details>
         <Show when={owner.state().status === "ready" && !confirmed() && !recordedRoute()}>
           <details><summary>{t("sf.u44.prepareMaterial")}</summary>
             <form class="sf-u44-scope-form sf-form" onSubmit={(event) => { event.preventDefault(); void prepareManual() }}>
@@ -324,9 +327,12 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
                 <div><dt>{t("sf.u44.dependencies")}</dt><dd>{scope()!.materialDependencies.length}</dd></div>
               </dl>
               <Show when={scope()!.materialDependencies.length > 0} fallback={<p data-sf-confirm-no-dependencies>{t("sf.u44.noDependencies")}</p>}>
-                <ul data-sf-confirm-dependencies><For each={scope()!.materialDependencies}>
-                  {(dependency) => <li><pre data-sf-confirm-dependency style={{ "white-space": "pre-wrap" }}>{JSON.stringify(dependency, null, 2)}</pre></li>}
-                </For></ul>
+                <details class="sf-technical-details">
+                  <summary>{t("sf.u44.dependencies")}</summary>
+                  <ul data-sf-confirm-dependencies><For each={scope()!.materialDependencies}>
+                    {(dependency) => <li><pre data-sf-confirm-dependency style={{ "white-space": "pre-wrap" }}>{JSON.stringify(dependency, null, 2)}</pre></li>}
+                  </For></ul>
+                </details>
               </Show>
               <h3>{t("sf.u44.materialValues")}</h3>
               <ul><For each={prepared()!.projection.values}>
