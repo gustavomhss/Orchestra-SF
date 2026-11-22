@@ -544,7 +544,7 @@
       "id": "UI31",
       "label": "Busca Sucafina",
       "owner": "planner",
-      "status": "IN_PROGRESS",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
       "routes": [
         {
           "kind": "entry",
@@ -557,8 +557,44 @@
           "referenceBlob": "c64e321bf6212dc24494034ca29270285391e899"
         }
       ],
-      "states": [],
-      "captures": []
+      "states": [
+        "before query",
+        "empty query validation",
+        "original private query",
+        "canonical empty result",
+        "English light and dark",
+        "English320px",
+        "Brazilian Portuguese desktop"
+      ],
+      "captures": [
+        {
+          "name": "UI31-dark-desktop-before-query",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-dark-desktop-before-query.jpg"
+        },
+        {
+          "name": "UI31-dark-desktop-required-query",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-dark-desktop-required-query.jpg"
+        },
+        {
+          "name": "UI31-dark-desktop-source-empty",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-dark-desktop-source-empty.jpg"
+        },
+        {
+          "name": "UI31-light-desktop-source-empty",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-light-desktop-source-empty.jpg"
+        },
+        {
+          "name": "UI31-light-320-source-empty",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-light-320-source-empty.jpg"
+        },
+        {
+          "name": "UI31-pt-BR-dark-desktop",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-pt-BR-dark-desktop.jpg"
+        }
+      ],
+      "evidenceRun": 44964042218,
+      "visualReview": "evidence/work/README.md",
+      "userAcceptance": "PENDING"
     },
     {
       "id": "UI32",
