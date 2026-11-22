@@ -127,7 +127,7 @@ Bun.plugin({
           if (spec === "./edit" && file.endsWith("/dashboard/executive/index.tsx")) {
             return lead + JSON.stringify("crosslinks-copy:edit")
           }
-          if (imports[spec]) return lead + JSON.stringify(imports[spec])
+          if (imports[spec] && file.includes("/packages/app-shell/")) return lead + JSON.stringify(imports[spec])
           const resolved = Bun.resolveSync(spec, path.dirname(file))
           return /\.tsx?$/.test(resolved) && !resolved.includes("node_modules")
             ? lead + JSON.stringify(resolved + suffix) : match
