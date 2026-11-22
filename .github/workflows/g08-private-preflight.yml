@@ -2,7 +2,7 @@ name: g08-private-preflight
 
 on:
   push:
-    branches: ["teams-qa-executor", "teams-landing-proof", "teams-admin-check"]
+    branches: ["teams-qa-reconcile"]
   workflow_dispatch:
     inputs:
       mode:
@@ -42,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: ${{ github.sha }}
+          ref: "37745ae6893a131a68cf1a535498d32b1874b172"
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
@@ -51,6 +51,8 @@ jobs:
       - name: Bind tooling source without claiming an installed candidate
         run: |
           set -euo pipefail
+          test "$(git rev-parse HEAD)" = "37745ae6893a131a68cf1a535498d32b1874b172"
+          test "$(git rev-parse 'HEAD^{tree}')" = "18c67f6520e07e7a2d8f3248c0bf749badd17aa7"
           proof_output="$RUNNER_TEMP/g08-tooling-evidence-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
           mkdir "$proof_output"
           printf 'SF_G08_TOOLING_EVIDENCE=%s\n' "$proof_output" >> "$GITHUB_ENV"
@@ -59,16 +61,19 @@ jobs:
       - name: Exercise evidence admission and fail-closed report controls
         run: |
           set -euo pipefail
-          node --test script/sf-ci/g08-private-evidence.test.mjs 2>&1 | tee "$SF_G08_TOOLING_EVIDENCE/contracts.tap"
+          node --test --test-reporter=tap script/sf-ci/g08-private-evidence.test.mjs 2>&1 | tee "$SF_G08_TOOLING_EVIDENCE/contracts.tap"
       - name: Exercise private-file and read-only host observer controls
         run: |
           set -euo pipefail
           python3 script/sf-ci/test_g08_installed_preflight.py 2>&1 | tee "$SF_G08_TOOLING_EVIDENCE/host-controls.txt"
           bash -n script/sf-ci/g08-private-run.sh
       - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
       - name: Typecheck the isolated installed QA executor through its package script
         working-directory: packages/app-shell/e2e/sucafina/g08
-        run: bun typecheck
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$SF_G08_TOOLING_EVIDENCE/typecheck.log"
       - name: Exercise the real landing, administration and native draft DOM with controlled transport
         working-directory: packages/app-shell
         env:
@@ -85,7 +90,43 @@ jobs:
       - name: Require the exact nine Teams cases and preserve all separate groups
         run: node script/sf-ci/g08-private-evidence.mjs verify-list "$SF_G08_TOOLING_EVIDENCE/list.json"
       - name: Check all guards against origin dev
-        run: bun run check:guards --base origin/dev
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$SF_G08_TOOLING_EVIDENCE/guards.log"
+      - name: Bind reconciliation evidence to its actual source
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD 'HEAD^{tree}' > "$SF_G08_TOOLING_EVIDENCE/source-refs.txt"
+          printf '%s\n' "$GITHUB_SHA" > "$SF_G08_TOOLING_EVIDENCE/workflow-sha.txt"
+          git diff --name-only "31295e3a745c4ddffe49b921207671de976b1446" HEAD > "$SF_G08_TOOLING_EVIDENCE/changed-paths.txt"
+          while IFS= read -r file; do sha256sum "$file"; done < "$SF_G08_TOOLING_EVIDENCE/changed-paths.txt" > "$SF_G08_TOOLING_EVIDENCE/source.sha256"
+          git diff --check "31295e3a745c4ddffe49b921207671de976b1446" HEAD
+          test -z "$(git status --porcelain --untracked-files=no)"
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, re, xml.etree.ElementTree as ET
+          root = pathlib.Path(os.environ["SF_G08_TOOLING_EVIDENCE"])
+          cases = list(ET.parse(root / "landing-dom.junit.xml").getroot().iter("testcase"))
+          assert len(cases) == 8
+          assert not any(c.find(tag) is not None for c in cases for tag in ("failure", "error", "skipped"))
+          tap = (root / "contracts.tap").read_text()
+          assert re.search(r"^# tests 134$", tap, re.M)
+          assert re.search(r"^# pass 134$", tap, re.M)
+          for key in ("fail", "cancelled", "skipped", "todo"):
+              assert re.search(r"^# " + key + r" 0$", tap, re.M)
+          python = (root / "host-controls.txt").read_text()
+          assert "Ran 28 tests" in python and re.search(r"^OK$", python, re.M)
+          paths = (root / "changed-paths.txt").read_text().splitlines()
+          assert len(paths) == 9
+          receipt = {"schema": "sf-g08-reconciliation-controls-v1", "status": "CONTROLS_PASSED_NOT_LIVE",
+              "sourceSha": "37745ae6893a131a68cf1a535498d32b1874b172", "sourceTree": "18c67f6520e07e7a2d8f3248c0bf749badd17aa7",
+              "workflowSha": os.environ["GITHUB_SHA"], "runId": os.environ["GITHUB_RUN_ID"],
+              "attempt": os.environ["GITHUB_RUN_ATTEMPT"], "node": 134, "python": 28, "dom": len(cases),
+              "playwright": "NINE_LISTED_NOT_RUN", "installed": False, "finalCandidate": False,
+              "g08Closed": False, "productionCutover": False,
+              "hashes": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in root.iterdir() if p.is_file()}}
+          (root / "reconciliation-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          print(json.dumps({k: v for k, v in receipt.items() if k != "hashes"}))
+          PY
       - name: Preserve tooling evidence only
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -111,7 +152,7 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: ${{ github.sha }}
+          ref: "37745ae6893a131a68cf1a535498d32b1874b172"
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
