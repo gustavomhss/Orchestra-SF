@@ -9,7 +9,6 @@ import { makeGlobalNode } from "./effect/app-node"
 import { AbsolutePath } from "./schema"
 import { SessionV2 } from "./session"
 import { SessionInput } from "./session/input"
-import { Prompt } from "./session/prompt"
 import { ScheduledTaskCapability } from "./scheduled-task/capability"
 import { ScheduledTaskModel } from "./scheduled-task/model"
 import { ScheduledTaskPort } from "./scheduled-task/port"
@@ -77,15 +76,6 @@ type LegacyTask = ScheduledTaskShared.LegacyTask
 type RunRow = ScheduledTaskShared.RunRow
 type Claim = ScheduledTaskShared.Claim
 type Outcome = ScheduledTaskShared.Outcome
-
-const PROMPT_MISMATCH = "Scheduled prompt refused: the admitted prompt does not match this run"
-
-const matchesClaim = (durable: SessionInput.Admitted, claimed: Claim) =>
-  SessionInput.equivalent(durable, {
-    sessionID: claimed.sessionID,
-    prompt: Prompt.make({ text: claimed.prompt }),
-    delivery: "steer",
-  })
 
 const layer = Layer.effect(
   Service,
@@ -173,7 +163,7 @@ const layer = Layer.effect(
         if (checked && !(yield* cap.holds(claimed))) return { type: "void" } as const
         if (admitted) {
           const durable = yield* SessionInput.find(db, claimed.messageID)
-          if (!durable || !matchesClaim(durable, claimed)) return { type: "failed", error: PROMPT_MISMATCH } as const
+          if (!durable || !ScheduledTaskShared.matchesPrompt(durable, claimed.sessionID, claimed.prompt)) return { type: "failed", error: ScheduledTaskShared.PROMPT_MISMATCH } as const
         }
         const session = yield* sessions.create({
           id: claimed.sessionID,
@@ -187,7 +177,7 @@ const layer = Layer.effect(
         // read to the durable admission inside `sessions.prompt` (its prompt hooks included); a claim revoked in it
         // still settles with an honest `started` receipt.
         if (checked && !(yield* cap.holds(claimed))) return { type: "void" } as const
-        yield* sessions.prompt({ id: claimed.messageID, sessionID: claimed.sessionID, prompt: { text: claimed.prompt } })
+        yield* sessions.prompt({ id: claimed.messageID, sessionID: claimed.sessionID, prompt: { text: claimed.prompt }, delivery: "steer" })
         return { type: "started", sessionID: claimed.sessionID } as const
       }).pipe(
         Effect.catchCause((cause) =>
@@ -200,7 +190,7 @@ const layer = Layer.effect(
               admitted || claimed.task.policy === "capability"
                 ? yield* SessionInput.find(db, claimed.messageID)
                 : undefined
-            if (durable && matchesClaim(durable, claimed)) return { type: "started", sessionID: claimed.sessionID } as const
+            if (durable && ScheduledTaskShared.matchesPrompt(durable, claimed.sessionID, claimed.prompt)) return { type: "started", sessionID: claimed.sessionID } as const
             return { type: "failed", error: reason(cause) } as const
           }),
         ),
@@ -318,8 +308,8 @@ const layer = Layer.effect(
       if (!claimed) return
       const admitted = yield* SessionInput.find(db, claimed.messageID)
       if (!admitted) return yield* settle(claimed, { type: "void" })
-      if (!matchesClaim(admitted, claimed))
-        return yield* settle(claimed, { type: "failed", error: PROMPT_MISMATCH })
+      if (!ScheduledTaskShared.matchesPrompt(admitted, claimed.sessionID, claimed.prompt))
+        return yield* settle(claimed, { type: "failed", error: ScheduledTaskShared.PROMPT_MISMATCH })
       const retried = yield* dispatch(claimed, true)
       if (retried.type === "failed") return yield* settle(claimed, retried)
       if (retried.type !== "started") yield* Effect.logWarning("Scheduled run retry failed", retried)
