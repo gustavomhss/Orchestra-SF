@@ -34,12 +34,12 @@ function ok<T>(result: PortResult<T>): T {
 // Original shipping factories, canonical domain commands and private SQLite.
 // Authentication/directory/grants are explicit fixture inputs, not installed
 // Entra/Teams qualification or proof of another recipient's private access.
-async function fixture(pending: boolean, work: (value: Awaited<ReturnType<typeof setup>>) => Promise<void>) {
+async function fixture(mode: "draft" | "pending" | "issued", work: (value: Awaited<ReturnType<typeof setup>>) => Promise<void>) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-procurement-answer-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
   const cleanup: { business?: ReturnType<typeof createSfBusinessServices> } = {}
-  try { await work(await setup(directory, store, cleanup, pending)) }
+  try { await work(await setup(directory, store, cleanup, mode)) }
   finally {
     cleanup.business?.dispose()
     await store.dispose()
@@ -48,11 +48,12 @@ async function fixture(pending: boolean, work: (value: Awaited<ReturnType<typeof
 }
 
 async function setup(directory: string, store: Awaited<ReturnType<typeof openLocalStore>>,
-  cleanup: { business?: ReturnType<typeof createSfBusinessServices> }, pending: boolean) {
-  const clock = { at: "2026-11-21T08:00:00.000Z" }
+  cleanup: { business?: ReturnType<typeof createSfBusinessServices> }, mode: "draft" | "pending" | "issued") {
+  const clock: { at: string; live: boolean; observations: string[] } = { at: "2026-11-21T08:00:00.000Z", live: false, observations: [] }
+  const now = () => clock.live ? new Date().toISOString() : clock.at
   const authentication = { available: true }
   const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID,
-    enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at) })
+    enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(now) })
   for (const surface of ["dashboard", "planner", "procurement"] as const) {
     await persistence.initializeSources(surface)
     await persistence.transaction(surface, async (snapshot) => {
@@ -61,12 +62,16 @@ async function setup(directory: string, store: Awaited<ReturnType<typeof openLoc
       return { commit: true, value: undefined }
     })
   }
-  const environment = () => ({ at: clock.at, id: randomUUID, directory: people })
+  const environment = () => {
+    const at = now()
+    clock.observations.push(at)
+    return { at, id: randomUUID, directory: people }
+  }
   const actor = { id: "questioner", roles: ["admin"], canWrite: true }
   const requestId = await persistence.transaction("procurement", async (snapshot) => {
     const settings = domain.execute(snapshot, actor, { page: "Settings", action: "reset", version: 0, values: {} }, environment())
     if (!settings.ok) throw new Error("Canonical settings: " + JSON.stringify(settings))
-    if (pending) {
+    if (mode !== "draft") {
       const assigned = domain.execute(snapshot, actor, { page: "Settings", action: "save", version: snapshot.versions.settings!.version,
         values: { levels: [{ id: "L1", name: "Approver", threshold: 0, holderId: "recipient" }] } }, environment())
       if (!assigned.ok) throw new Error("Canonical matrix: " + JSON.stringify(assigned))
@@ -78,10 +83,37 @@ async function setup(directory: string, store: Awaited<ReturnType<typeof openLoc
     if (!created.ok) throw new Error("Canonical request: " + JSON.stringify(created))
     const number = object(created.value).number
     if (typeof number !== "string") throw new Error("Canonical request number missing")
-    if (pending) {
+    if (mode !== "draft") {
       const submitted = domain.execute(snapshot, actor, { page: "Requests", action: "submit_pr", id: number,
         version: snapshot.versions["requests:" + number]!.version, values: {} }, environment())
       if (!submitted.ok) throw new Error("Canonical submission: " + JSON.stringify(submitted))
+    }
+    if (mode === "issued") {
+      const holder = { id: "recipient", canWrite: true, roles: ["approver"] }
+      const buyer = { id: "questioner", canWrite: true, roles: ["buyer"] }
+      const run = (action: string, values: Command["values"], who = buyer) => {
+        const result = domain.execute(snapshot, who, { page: "Requests", action, id: number,
+          version: snapshot.versions["requests:" + number]!.version, values }, environment())
+        if (!result.ok) throw new Error("Canonical issued request: " + JSON.stringify(result))
+      }
+      run("approve", {}, holder)
+      const sourcing = {
+        quotes: [{ id: "q1", supplier: "Vendor", supplierId: null, currency: "USD", total: 100,
+          qty: 1, unitPrice: 100, techPass: true, scores: [5], cscores: [] }],
+        evaluator: "Engineer", selectedId: "q1", fewQuotesJustification: "Sole source",
+        selectionJustification: "Best", contractStrategy: "new",
+        weights: { tech: 60, comm: 40, criteria: [{ name: "Quality", weight: 1 }],
+          commCriteria: [{ name: "Price", weight: 1, auto: true }] },
+      }
+      run("save", { sourcing })
+      run("select_quote", { quoteId: "q1" })
+      run("submit_sourcing", { sourcing })
+      run("approve", {}, holder)
+      run("submit_po", { po: { description: "Purchased item", paymentTerms: "Net 30",
+        deliveryDate: "2026-12-20", deliveryConditions: "Office", contractRef: "C-1", assetRef: "Item",
+        lines: [{ description: "Equipment", qty: 1, unitPrice: 100 }], expenseType: "CAPEX" } })
+      run("approve", {}, holder)
+      run("issue", {})
     }
     return { commit: true, value: number }
   })
@@ -159,10 +191,10 @@ async function setup(directory: string, store: Awaited<ReturnType<typeof openLoc
   })
   const confirm = async (mutation: AnswerConfirmationMutation) => human("collaboration.answer.confirm",
     { questionId: thread.id, answerRef, mutation }, (call) => answerReuse.confirm(thread.id, answerRef, mutation, call))
-  const command = async (page: "Settings" | "Requests", action: string, values: Command["values"]) =>
+  const command = async (page: "Settings" | "Requests", action: string, values: Command["values"], who = actor) =>
     persistence.transaction("procurement", async (snapshot) => {
       const key = page === "Settings" ? "settings" : "requests:" + requestId
-      const changed = domain.execute(snapshot, actor, { page, action, values, id: requestId, version: snapshot.versions[key]!.version }, environment())
+      const changed = domain.execute(snapshot, who, { page, action, values, id: requestId, version: snapshot.versions[key]!.version }, environment())
       if (!changed.ok) throw new Error("Canonical change: " + JSON.stringify(changed))
       return { commit: true, value: changed.value }
     })
@@ -177,11 +209,11 @@ async function setup(directory: string, store: Awaited<ReturnType<typeof openLoc
 }
 
 test("ordinary Procurement answer uses the shipped scope, real confirmation and capability receipt", async () => {
-  await fixture(false, async (f) => {
+  await fixture("draft", async (f) => {
     const before = await f.projection()
     expect(before.value.values.find((value) => value.id === "ageDays")?.value).toBeNull()
     const unconfirmed = await f.invoke()
-    expect(unconfirmed).toMatchObject({ status: "ok", value: { state: "unconfirmed", answer: replyBody },
+    expect(unconfirmed).toMatchObject({ status: "ok", result: { state: "unconfirmed", answer: replyBody },
       receipt: { kind: "ui", operation: "sf_answer_read", principalRef: "questioner", inputDigest: digestSfValue(f.payload) } })
     const prepared = await f.prepare()
     expect(prepared.scope.scopeDefinitionVersion).toBe("procurement-answer-v1")
@@ -191,7 +223,7 @@ test("ordinary Procurement answer uses the shipped scope, real confirmation and 
     const committed = await f.confirm(mutation)
     expect(committed.status).toBe("ok")
     expect(await f.confirm(mutation)).toEqual(committed)
-    expect(await f.invoke()).toMatchObject({ status: "ok", value: { state: "confirmed", answer: replyBody } })
+    expect(await f.invoke()).toMatchObject({ status: "ok", result: { state: "confirmed", answer: replyBody } })
 
     const call = await f.read("sf_answer_read", f.payload)
     expect(await f.business.collaboration.authority.recipientSources("recipient", [f.reference], call)).toBe(false)
@@ -207,7 +239,7 @@ test("ordinary Procurement answer uses the shipped scope, real confirmation and 
     expect(differentPeriod.status).not.toBe("ok")
     expect(JSON.stringify(differentPeriod)).not.toContain(replyBody)
     await f.select()
-    expect(await f.invoke()).toMatchObject({ status: "ok", value: { state: "confirmed" } })
+    expect(await f.invoke()).toMatchObject({ status: "ok", result: { state: "confirmed" } })
 
     const admitted = await f.read("sf_answer_read", f.payload)
     f.authentication.available = false
@@ -215,7 +247,7 @@ test("ordinary Procurement answer uses the shipped scope, real confirmation and 
     expect(unavailable.status).not.toBe("ok")
     expect(JSON.stringify(unavailable)).not.toContain(replyBody)
     f.authentication.available = true
-    expect(await f.invoke()).toMatchObject({ status: "ok", value: { state: "confirmed" } })
+    expect(await f.invoke()).toMatchObject({ status: "ok", result: { state: "confirmed" } })
     const revoked = await f.read("sf_answer_read", f.payload)
     await f.persistence.transaction("procurement", async (snapshot) => {
       snapshot.data.roleMap = []
@@ -227,48 +259,80 @@ test("ordinary Procurement answer uses the shipped scope, real confirmation and 
   })
 }, 120_000)
 
-test("ordinary Procurement answer rejects changed private dependencies and displayed source fields", async () => {
-  await fixture(false, async (f) => {
-    const prepared = await f.prepare()
-    const mutation = await f.confirmation(prepared)
-    const before = await f.projection()
-    await f.command("Settings", "save", { minQuotes: 4 })
-    const dependencyChanged = await f.projection()
-    expect(dependencyChanged.evidence.target.projectionDigest).not.toBe(before.evidence.target.projectionDigest)
-    expect(dependencyChanged.value.values.map(({ id, value }) => ({ id, value }))).toEqual(before.value.values.map(({ id, value }) => ({ id, value })))
-    expect((await f.confirm(mutation)).status).not.toBe("ok")
-    const current = await f.prepare()
-    expect(current.observation.dependencyFingerprint).not.toBe(prepared.observation.dependencyFingerprint)
-    expect((await f.confirm(await f.confirmation(current))).status).toBe("ok")
-    expect(await f.invoke()).toMatchObject({ status: "ok", value: { state: "confirmed" } })
-    await f.command("Requests", "save", { pr: { title: "Changed selected purchase" } })
-    const changed = await f.projection()
-    expect(changed.value.values.find((value) => value.id === "subject")?.value).toBe("Changed selected purchase")
-    expect(await f.answerReuse.read(f.thread.id, await f.read("sf_answer_read", f.payload))).toEqual({ status: "stale", reason: "answer-scope-changed" })
-    expect(await f.invoke()).toMatchObject({ status: "ok", value: { state: "stale" } })
-  })
-}, 120_000)
+for (const change of ["private-dependency", "displayed-field"] as const) {
+  test("ordinary Procurement answer rejects a changed " + change, async () => {
+    await fixture("draft", async (f) => {
+      expect((await f.confirm(await f.confirmation(await f.prepare()))).status).toBe("ok")
+      expect(await f.invoke()).toMatchObject({ status: "ok", result: { state: "confirmed" } })
+      const prepared = await f.prepare()
+      const mutation = await f.confirmation(prepared)
+      const before = await f.projection()
+      if (change === "private-dependency") await f.command("Settings", "save", { minQuotes: 4 })
+      if (change === "displayed-field") await f.command("Requests", "save", { pr: { title: "Changed selected purchase" } })
+      const changed = await f.projection()
+      expect(changed.evidence.target.projectionDigest).not.toBe(before.evidence.target.projectionDigest)
+      if (change === "private-dependency")
+        expect(changed.value.values.map((value) => ({ id: value.id, value: value.value }))).toEqual(before.value.values.map((value) => ({ id: value.id, value: value.value })))
+      if (change === "displayed-field")
+        expect(changed.value.values.find((value) => value.id === "subject")?.value).toBe("Changed selected purchase")
+      expect((await f.confirm(mutation)).status).not.toBe("ok")
+      // The original historical reader refuses uncaptured old source material.
+      // Keep that guard; a current observer cannot turn it into a fresh answer.
+      expect(await f.answerReuse.read(f.thread.id, await f.read("sf_answer_read", f.payload))).toEqual({ status: "unavailable", reason: "thread-read-unavailable" })
+      const result = await f.invoke()
+      expect(result.status).toBe("unavailable")
+      expect(JSON.stringify(result)).not.toContain(replyBody)
+      expect(ok(await f.business.collaboration.storageVersion("threads", await f.read("sf_answer_read", f.payload)))).toBe(mutation.expectedStorageVersion)
+    })
+  }, 120_000)
+}
 
 test("ordinary Procurement answer ages with the real projection even when canonical stored digest is unchanged", async () => {
-  await fixture(true, async (f) => {
+  await fixture("pending", async (f) => {
     const before = await f.projection()
     expect(before.value.values.find((value) => value.id === "status")?.value).toBe("pr_pending")
     expect(before.value.values.find((value) => value.id === "ageDays")?.value).toBe(1)
+    expect(await f.invoke()).toMatchObject({ status: "ok", result: { state: "unconfirmed", answer: replyBody } })
     const prepared = await f.prepare()
     const mutation = await f.confirmation(prepared)
     expect((await f.confirm(mutation)).status).toBe("ok")
-    expect(await f.invoke()).toMatchObject({ status: "ok", value: { state: "confirmed" } })
+    expect(await f.invoke()).toMatchObject({ status: "ok", result: { state: "confirmed" } })
     f.clock.at = "2026-11-23T08:00:00.000Z"
     const after = await f.projection()
     expect(after.value.values.find((value) => value.id === "ageDays")?.value).toBe(2)
     expect(after.evidence.target.version).toBe(before.evidence.target.version)
     expect(after.evidence.target.projectionDigest).toBe(before.evidence.target.projectionDigest)
     expect(await f.answerReuse.read(f.thread.id, await f.read("sf_answer_read", f.payload))).toEqual({ status: "stale", reason: "answer-scope-changed" })
-    expect(await f.invoke()).toMatchObject({ status: "ok", value: { state: "stale" } })
+    expect(await f.invoke()).toMatchObject({ status: "ok", result: { state: "stale" } })
     expect((await f.confirm(mutation)).status).not.toBe("ok")
     const current = await f.prepare()
     expect(current.observation.sourceFingerprint).not.toBe(prepared.observation.sourceFingerprint)
     expect(current.observation.dependencyFingerprint).toBe(prepared.observation.dependencyFingerprint)
-    expect(await f.invoke()).toMatchObject({ status: "ok", value: { state: "stale" } })
+    expect(await f.invoke()).toMatchObject({ status: "ok", result: { state: "stale" } })
+  })
+}, 120_000)
+
+test("issued Procurement answer confirms under the real advancing clock", async () => {
+  await fixture("issued", async (f) => {
+    f.clock.observations.length = 0
+    f.clock.live = true
+    const before = await f.projection()
+    expect(before.value.values.find((value) => value.id === "status")?.value).toBe("po_issued")
+    expect(before.value.values.find((value) => value.id === "ageDays")?.value).toBeNull()
+    expect((await f.confirm(await f.confirmation(await f.prepare()))).status).toBe("ok")
+    expect(await f.invoke()).toMatchObject({ status: "ok", result: { state: "confirmed", answer: replyBody } })
+    expect(Date.parse(f.clock.observations.at(-1)!)).toBeGreaterThan(Date.parse(f.clock.observations[0]!))
+  })
+}, 120_000)
+
+test("pending Procurement answer remains unconfirmed when its continuously advancing age changes", async () => {
+  await fixture("pending", async (f) => {
+    f.clock.observations.length = 0
+    f.clock.live = true
+    expect(await f.invoke()).toMatchObject({ status: "ok", result: { state: "unconfirmed", answer: replyBody } })
+    const prepared = await f.prepare()
+    expect((await f.confirm(await f.confirmation(prepared))).status).not.toBe("ok")
+    expect(await f.invoke()).toMatchObject({ status: "ok", result: { state: "unconfirmed", answer: replyBody } })
+    expect(Date.parse(f.clock.observations.at(-1)!)).toBeGreaterThan(Date.parse(f.clock.observations[0]!))
   })
 }, 120_000)
