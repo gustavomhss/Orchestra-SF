@@ -19,6 +19,21 @@ describe("redactLog", () => {
     expect(redactLog("sent Basic b3JjaGVzdHJhOnNlY3JldA== upstream")).toBe("sent Basic [redacted] upstream")
   })
 
+  test("keeps structured text valid and makes subsequent export redaction idempotent", () => {
+    const formatted = JSON.stringify({
+      authorization: 'Bearer fixture "quoted" value',
+      password: "fixture password",
+      url: "https://user:fixture-secret@example.invalid/path?access_token=fixture-token&keep=1#anchor",
+    })
+    const clean = redactLog(formatted)
+    expect(JSON.parse(clean)).toEqual({
+      authorization: "[redacted]",
+      password: "[redacted]",
+      url: "https://[redacted]@example.invalid/path?access_token=[redacted]&keep=1#anchor",
+    })
+    expect(redactLog(clean)).toBe(clean)
+  })
+
   test("selects log text and not crash dumps", () => {
     expect(isRedactable("server-1/orchestra.log")).toBe(true)
     expect(isRedactable("network.netlog")).toBe(true)

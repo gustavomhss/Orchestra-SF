@@ -1,5 +1,6 @@
 import { appendFile, mkdir } from "node:fs/promises"
 import { join } from "node:path"
+import { redactLog } from "./log-redact"
 
 // A JSON-lines transport log per meeting, for diagnosis: connects, close reasons, latency per segment. It never holds
 // audio, transcript text or keys; callers pass only the fields below.
@@ -27,7 +28,10 @@ export function transportLog(directory: string, meetingID: string) {
   return {
     file,
     write(entry: TransportEntry) {
-      const line = JSON.stringify({ at: Date.now(), ...entry }) + "\n"
+      const line =
+        JSON.stringify({ at: Date.now(), ...entry }, (_key, value: unknown) =>
+          typeof value === "string" ? redactLog(value) : value,
+        ) + "\n"
       state.queue = state.queue.then(() => appendFile(file, line)).catch(() => undefined)
     },
     flush() {

@@ -23,6 +23,10 @@ export const getLogger = () => logger
 export function initLogging() {
   initRunDirectory()
   log.transports.file.maxSize = 5 * 1024 * 1024
+  // Redact the formatted line, after electron-log has rendered objects and error stacks.
+  log.transports.file.transforms.push(({ data }: { data: unknown }) =>
+    typeof data === "string" ? redactLog(data) : "[redacted]",
+  )
   log.transports.file.resolvePathFn = (_vars, message) =>
     join(
       run,
