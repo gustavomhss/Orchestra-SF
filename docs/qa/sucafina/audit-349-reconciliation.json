@@ -1,0 +1,3706 @@
+{
+  "source": "8a2f89faf71d77b499a70cfa5f7e6045a44ac022",
+  "dev": "79912446753af5bb291fc2581543732eb4c83057",
+  "historicalHead": "d51c2d2f2a1dfe28059904a07e37db253aea1547",
+  "historicalBase": "52d2c24f4f8cb776889b97894131df6ada43ce98",
+  "candidates": [
+    {
+      "id": 1,
+      "name": "Context Epoch",
+      "owner": "Astra/context_epoch",
+      "state": "integrated",
+      "pr": 626,
+      "head": "4c42fd816c049a879eb51be359b49cc251903d15",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/626#pullrequestreview-6010506642",
+      "merge": "c6ddf9c7b80dad49aaa42f419dd336126eefed56",
+      "ci": [
+        44988743502,
+        44989026751
+      ],
+      "proof": "159 tests/548 assertions on exact4c42 source: first/update/compaction meeting data, shell replay, real durable EventV2+SQL unique sequence replay, baseline/prompt admission. Runtime typecheck green. FinalCI verifies full core diagnostics equal base (only existing Jira fixtureTS2353 tracked593);78guards/11paths clean. Merge parents67bb+approved4c42 confirmed."
+    },
+    {
+      "id": 2,
+      "name": "Provider Agents/Settings V2",
+      "owner": "Astra/provider_state",
+      "state": "integrated",
+      "pr": 625,
+      "head": "d6836074e188236557faff39de40b16ff7b1a9b0",
+      "merge": "079d86766f9c324924e024d53722c09e018c23d2",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/625#pullrequestreview-6010499833",
+      "ci": [
+        44988169984,
+        44988002304
+      ],
+      "proof": "DOM base: 0 pass / 2 fail; approved head: 3 pass / 42 assertions. Existing Agents 18 tests /77 assertions, app-shell typecheck and 78 guard rules/4 paths clean. Merge parents confirmed: old dev799124 and approved d6836074."
+    },
+    {
+      "id": 3,
+      "name": "Generic Web sourcemaps",
+      "owner": "Astra/context_epoch",
+      "state": "integrated",
+      "pr": 636,
+      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/257#issuecomment-7075825904",
+      "head": "d69cdd7a356d490068e2cfd2e3f12a87ba90488e",
+      "merge": "ac241bde903fa5ca4778a69ae414073f68fd8e7b",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/636#pullrequestreview-6011056602",
+      "ci": [
+        44998323414
+      ],
+      "regressionCI": [
+        44997786433
+      ],
+      "proof": "Exact generic Web producer, verifier and archive: compressed/external maps omitted without builder mutation, inline JS/CSS rejected, self-consistent reconstructed manifests/checksums cannot restore maps. Three preimage tests fail; source38pass375assertions0fail with one pre-existing case-insensitive-volume skip. CLI declared typecheck0;78guards3paths0. Final snapshotd8b1dba is direct child of approved d69cdd7, only request+harness; clean source tests/gates. Merge protected by exact expected head, confirmed as dev with parents90861699+d69cdd7. No full compiled CLI/Web or G09/Teams claim.",
+      "ownershipEvidence": "Current scan of122openPRs plus closure/supersession comments shows no active writer for these3genericdistributionpaths. Continued under Gustavo's assignment, recorded in257comment7075825904; historicalPR existence was not treated as ownership or accepted transfer."
+    },
+    {
+      "id": 4,
+      "name": "Domain/Planner numeric contracts",
+      "owner": "Astra/planner_contracts",
+      "state": "integrated",
+      "pr": 624,
+      "head": "98f509fcf3eca40e62e0a771223a6d12ee32507f",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/624#pullrequestreview-6010509958",
+      "merge": "a0b162822d0b62621095dbae4117f781409d0377",
+      "ci": [
+        44988764759
+      ],
+      "proof": "Actual project import CAS accepts supported numeric/decimal legacy revisions; malformed versions rejected422/no writes; valid retry409. Editable amount strings/null and invalid measure-label drafts retained. Base3pass1fail; head4pass69assertions. Production schema typecheck/full Sucafina pass; complete schema3 pre-existing Teams diagnostics identical.78 guards clean. Merge approved98f509 into current dev02af, confirmed parents."
+    },
+    {
+      "id": 5,
+      "name": "Hot Topic correlation",
+      "owner": "Astra/reconciliation",
+      "state": "absorbed",
+      "pr": 560,
+      "merge": "3d19bbcc30c6d6ea62c717c891b7bed51a2b41fc",
+      "sourcePR": 358,
+      "sourceHead": "f286c1cb69ef038e96b67770e7aa18d9d1fad042",
+      "proof": "Current HotTopic producer blob4fab9abb226fc8921c52a503e939fc3a3d556d51 is identical to PR358. HotTopic host differs only by one blank line. Current transaction-scoped creation binder preserves metadata, uniqueness, original incarnation/digest, finish-time replacement rejection and final authorization; readonly preimage path cannot commit. Current composition checks recipient at commit. Historical Actions44562370162/job135694822161:9pass/105asserts including real SQLite create/reopen, same correlation, ABA/reused ID, revoked source, withdrawn human admission rollback and expired/tampered reservation. Historical CI is invariant evidence, not a new claim of full current-dev qualification. #452 private editor paths do not overlap this backend scope.",
+      "ci": [
+        44562370162
+      ],
+      "verification": {
+        "checkedDev": "79912446753af5bb291fc2581543732eb4c83057",
+        "producerCommit": "90d5468325c853a879dc131b220933501e63e0ac",
+        "hostCommit": "fa6605e0ffbdff5ba7e7e88f612b930ca2cb21dd"
+      }
+    },
+    {
+      "id": 6,
+      "name": "Phase bridge physical origin",
+      "owner": "Astra/phase_finish",
+      "state": "integrated",
+      "pr": 650,
+      "head": "a602ae98c37bfc9d0775a52ad21f047269705f9f",
+      "merge": "4670ef4ea6771e17d6a4fdbf74c8de43b70ad240",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/650#pullrequestreview-6012453888",
+      "ci": [
+        45026566407,
+        45026200781
+      ],
+      "regressionCI": [
+        45026201726
+      ],
+      "proof": "Real Local Operator entry delegates its stable physical private installation/workspace to the real host factory before business storage opens. Permanent regression2/31; original Global/SQLite/Runtime/Governance/Session/Event graph2/60 proves physical sibling origin, durable session/fence and refusal of aliases/unsafe ancestors/revoked UI authority without reserving sessions. Complete CLI/Sucafina types and78guards pass. Earlier45026200781 overall failed only extra EOF blank line; final45026566407 verifies exact before===current+LF and reruns2/31/guards/diff. Expected-head merge and dev ancestry verified. No installed Teams/G09 claim.",
+      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7079399930",
+      "diagnosticCI": [
+        44998691395
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Planner source reads",
+      "owner": "Astra/planner_contracts",
+      "state": "integrated",
+      "head": "bb42be286373e17db67a82ecde8836fda1df141f",
+      "pr": 627,
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/627#pullrequestreview-6010507432",
+      "merge": "67bb104bb36f1c4766f05ae3124f68bc513647e5",
+      "ci": [
+        44988766599
+      ],
+      "proof": "Existing real Finance composition reproduces late reader replacement on base; head1test35assertions passes, including typed denials, scope/pair/source/revocation and restored reader. Full CLI/Sucafina types green,78guards clean. Approved headbb42 was merged and parents a0b162+bb42 confirmed.",
+      "remaining": "Original I25 sensitivity and BI complementary hunks are tracked separately; they are not silently included in the acceptance of this source-read candidate.",
+      "complementaryEvidence": "result-store canonical/batch/historical ancestry behavior in #560 (90d546..., fa6605...) and #562 b74273c2. historical operation-verifier replaced by actual scenario-operation-access + scenario-port + recorded-planner-operation-access; before/after source and actor/snapshot/request validation retained. case-port canonical-vs-digest comparison and readProjection reuse are representation/read-count changes, not independently demonstrated gaps. Current period containment preserves valid subperiods; no port of historical strict equality solely for missing helper."
+    },
+    {
+      "id": 8,
+      "name": "Coverage proof order",
+      "owner": "Astra/planner_contracts",
+      "state": "integrated",
+      "pr": 632,
+      "head": "1b2e7635954efab67cdd046c5016c72f590c65f8",
+      "merge": "cca15664bcb6aa4f1b90104ba6ec68ff454c7aec",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/632#pullrequestreview-6010547933",
+      "ci": [
+        44989560573
+      ],
+      "proof": "Actual C08 private-producer order reproduced failing on base67bb; exact source2tests54assertions incl Finance preservation. CLI/Sucafina full types0;78guards3paths0. Snapshot direct parent source, only request/harness delta; merge parents5f490+approved1b2 confirmed."
+    },
+    {
+      "id": 9,
+      "name": "Non-C05 follow-up",
+      "owner": "Astra/followup_finish",
+      "state": "integrated",
+      "pr": 648,
+      "head": "65f0caa312a80e2ec45c0b8c7a43b2e9793a745a",
+      "merge": "be98f8ea371babd5a7fe0c686705984afd83a144",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/648#pullrequestreview-6012468728",
+      "ci": [
+        45026115722,
+        45026756697
+      ],
+      "regressionCI": [
+        45026097453
+      ],
+      "proof": "Shipping business-services/authority and real SQLite now observe ordinary Procurement reply scope using original issuer/resolver/projection/private material fence.6tests155assertions cover real capability receipt, confirmation/replay, same principal binding, other recipient refusal without write, changed period/dependency/displayed value, outage/revocation, moving day and actual advancing Date. Issued PO with ageDays=null confirms; continuously changing pending age remains unconfirmed. Full CLI/Sucafina types and78guards pass. Final docs-only65f0 mechanically preserves all3runtime/test blobs from9aad; final clean4path guards/diff pass. Expected-head merge and ancestry verified.",
+      "subparts": {
+        "dispatch": {
+          "state": "absorbed",
+          "proof": "Currenttyped unavailable is preserved even ifsource recovers duringanswerReuse. Historicaldowngrade would violate the real transientoutagecontrol; notported."
+        },
+        "historicalFallback": {
+          "state": "absorbed",
+          "proof": "Author's owncurrent originalreference/version is allowed when appropriate; aftercanonicalsourcechange or anotheractor's uncaptured replybasis it is refused bythreadReads andthreadHistory.readVersion. No falsehistoryreproduced; strictblanket historicalhunknotneeded."
+        },
+        "shippedProducer": {
+          "state": "integrated",
+          "pr": 648,
+          "merge": "be98f8ea371babd5a7fe0c686705984afd83a144"
+        },
+        "newCrossPersonProvider": {
+          "state": "out-of-scope",
+          "owner": "No transferred delivery",
+          "acceptance": null,
+          "proof": "Common recipient-authority.ts is byte-identical between historical base52d2c24f and head d51c2d2f (blob3b7080be16213512835902c37e58e1c88ca8405f); currentdev differs only trailing LF. Contract is optional and fail-closed for another principal. None of recipient-authority.ts, collaboration/host.ts or contracts/host-context.ts changes among the160 original paths. Historic threads delta covers only C05. The briefing asks observation/binding/refusal/revocation, not installation of a new Entra cross-person provider. #648 proves those required guards. This corrects the prior diagnostic's broader proposed provider requirement; not an accepted transfer or a new G04 debt.",
+          "historicalBase": "52d2c24f4f8cb776889b97894131df6ada43ce98",
+          "historicalHead": "d51c2d2f2a1dfe28059904a07e37db253aea1547",
+          "historicalBlob": "3b7080be16213512835902c37e58e1c88ca8405f",
+          "currentBlob": "8b0336ee3d72e4ebd9c16dec923c2f602759d543",
+          "independentReview": "https://github.com/gustavomhss/Orchestra-SF/pull/648#pullrequestreview-6012468728",
+          "scopeCorrection": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7079828442"
+        }
+      },
+      "priorDiagnostic": {
+        "ci": [
+          45000271685,
+          45000122463,
+          44999007116
+        ],
+        "proof": "Shipped createSfProductAuthority/createSfBusinessServices unchanged with realSQLite/Procurement selection/source and reply: sourcefresh, self-thread/replypersisted and visible, but answerReuse.prepare gives answer-scope-unavailable and sf_answer_read gives unavailable/answer-reuse-unavailable with realUIreceipt and noanswer. Cross-person thread lacks commonrecipientAuthority and is refused without storagewrite. Actual45000271685 qualifies1test22assertions. Eleven separate component/fallback controls in45000122463 pass; itsoverallfailure was a diagnostic expectation omittingUIreceipt, corrected and rerunfor the shippedcase only. Prior8controls used an explicitDashboard reissuer and are not installedcomposition equivalence.",
+        "broaderProviderRequestCorrected": true,
+        "comment": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7076223159"
+      }
+    },
+    {
+      "id": 10,
+      "name": "Confirmation payload UI",
+      "state": "integrated",
+      "owner": "Astra (UI53 and integration); Design (original prerequisite hunk)",
+      "pr": 653,
+      "head": "441a349c5db6eb7f67b08d810b6c419380710ca3",
+      "merge": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/653#pullrequestreview-6012504467",
+      "reviewAddendum": "https://github.com/gustavomhss/Orchestra-SF/pull/653#pullrequestreview-6012513003",
+      "ci": [
+        45027353078,
+        45027752799
+      ],
+      "proof": "Four own UI paths over integrated651. Actual DOM/client/originalHTTP/C06/SQLite proves displayed fingerprint,CAS includingzero andfull materialdependencyJSON equaltheclick's actualcommand; bothlocales,empty/nonemptydependencies,source/dependencychange,CASconflict andsamereceiptreplay. Initialbase2pass2fail→4/59; finalprewrapbase3pass1fail→exact441a4/60,fullapp-shelltypes,78guards/diff. Wrapping proofiscomputedDOMstyle,nopixelclaim. Earlierfourpathguardsreusedforunchangedbytes; finaltwopathdeltaqualified. Independentexactheadapproval, prerequisitealreadyindev, expected-headmerge; mergedparentsb6a213+441a349anddevproofconfirmed.",
+      "prerequisite": {
+        "id": "10-read-fence",
+        "name": "Confirmation selection read transaction",
+        "owner": "Design",
+        "state": "integrated",
+        "pr": 651,
+        "head": "60f51bb87558ddbff869ccf77edf9f64bf04ef12",
+        "merge": "b6a213be32933d042a97583da7e3ffa6dda0afa4",
+        "review": "https://github.com/gustavomhss/Orchestra-SF/pull/651#pullrequestreview-6012488236",
+        "reviewAddendum": "https://github.com/gustavomhss/Orchestra-SF/pull/651#pullrequestreview-6012514339",
+        "ci": [
+          45027173290
+        ],
+        "proof": "Exact extraction of Design/#613@9341bc3d host.ts blob309a607eb430f451ecc54cabee0d4cca3a9d0b7a, unchanged. Original readSelection source/manifest fences execute inside read-only transactionAll with cancellation/refusal; C08 write fence remains unchanged. Actual native HTTP/authority/SQLite regression: base2pass2fail expected,head4pass0fail55assertions; fullCLI/Sucafina types,78guards4paths0 anddiffcheck. Exact independent technicalreview plususer-authorizedintegration, expected-head protected, merge...dev identical. Design author/owner preserved; no transfer/ACK claimed.",
+        "sourcePR": 613,
+        "sourceHead": "9341bc3d25f5771009258b58c91c0fe85cb093ae",
+        "sourceBlob": "309a607eb430f451ecc54cabee0d4cca3a9d0b7a",
+        "ownershipClarification": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7079917262",
+        "integrator": "Astra",
+        "acceptance": null,
+        "transfer": false
+      },
+      "subparts": {
+        "backend": {
+          "id": "10-read-fence",
+          "name": "Confirmation selection read transaction",
+          "owner": "Design (original hunk); Astra (qualification and integration)",
+          "state": "integrated",
+          "pr": 651,
+          "head": "60f51bb87558ddbff869ccf77edf9f64bf04ef12",
+          "merge": "b6a213be32933d042a97583da7e3ffa6dda0afa4",
+          "review": "https://github.com/gustavomhss/Orchestra-SF/pull/651#pullrequestreview-6012488236",
+          "reviewAddendum": "https://github.com/gustavomhss/Orchestra-SF/pull/651#pullrequestreview-6012514339",
+          "ci": [
+            45027173290
+          ],
+          "proof": "Exact extraction of Design/#613@9341bc3d host.ts blob309a607eb430f451ecc54cabee0d4cca3a9d0b7a, unchanged. Original readSelection source/manifest fences execute inside read-only transactionAll with cancellation/refusal; C08 write fence remains unchanged. Actual native HTTP/authority/SQLite regression: base2pass2fail expected,head4pass0fail55assertions; fullCLI/Sucafina types,78guards4paths0 anddiffcheck. Exact independent technicalreview plususer-authorizedintegration, expected-head protected, merge...dev identical. Design author/owner preserved; no transfer/ACK claimed.",
+          "sourcePR": 613,
+          "sourceHead": "9341bc3d25f5771009258b58c91c0fe85cb093ae",
+          "sourceBlob": "309a607eb430f451ecc54cabee0d4cca3a9d0b7a",
+          "ownershipClarification": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7079917262"
+        },
+        "ui": {
+          "id": "10-payload",
+          "name": "UI53 exact prepared confirmation payload",
+          "owner": "Astra/ui_finish",
+          "state": "integrated",
+          "pr": 653,
+          "head": "441a349c5db6eb7f67b08d810b6c419380710ca3",
+          "merge": "37931c77eb07aecf01610bb0ee7d717276b85539",
+          "review": "https://github.com/gustavomhss/Orchestra-SF/pull/653#pullrequestreview-6012504467",
+          "reviewAddendum": "https://github.com/gustavomhss/Orchestra-SF/pull/653#pullrequestreview-6012513003",
+          "ci": [
+            45027353078,
+            45027752799
+          ],
+          "proof": "Four own UI paths over integrated651. Actual DOM/client/originalHTTP/C06/SQLite proves displayed fingerprint,CAS includingzero andfull materialdependencyJSON equaltheclick's actualcommand; bothlocales,empty/nonemptydependencies,source/dependencychange,CASconflict andsamereceiptreplay. Initialbase2pass2fail→4/59; finalprewrapbase3pass1fail→exact441a4/60,fullapp-shelltypes,78guards/diff. Wrapping proofiscomputedDOMstyle,nopixelclaim. Earlierfourpathguardsreusedforunchangedbytes; finaltwopathdeltaqualified. Independentexactheadapproval, prerequisitealreadyindev, expected-headmerge; mergedparentsb6a213+441a349anddevproofconfirmed.",
+          "dependsOn": 651
+        }
+      },
+      "ownershipClarification": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7079917262"
+    },
+    {
+      "id": 11,
+      "name": "UI state copy and currency",
+      "owner": "Astra (integrated residuals), prior absorbed Talent",
+      "state": "integrated",
+      "subparts": {
+        "headcount": {
+          "pr": 630,
+          "head": "d16d97ccff572510bb9cc5aab1cbc4fd58b4a07c",
+          "state": "integrated",
+          "review": "https://github.com/gustavomhss/Orchestra-SF/pull/630#pullrequestreview-6010540923",
+          "proof": "Real CAP20 producer through schema/client/view: months/HR USD, annual rate source currency, mixed EUR/BRL FX, null/zero/missing currency, denied/empty/scope. Base1pass2fail; source3pass117assertions. Full app-shell types0;78guards4paths0. Merge parents7be47+approvedd16 confirmed.",
+          "merge": "5f490bdb3c4d7478c89b07ba37b2b8acf10c3a65",
+          "ci": [
+            44989309122
+          ]
+        },
+        "talent": {
+          "state": "absorbed",
+          "prs": [
+            573,
+            587
+          ],
+          "merge": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02",
+          "commits": [
+            "d5e0c9df54f2773dfbadf343408e129e830b9857",
+            "6c89750245d3028b5516f0970885b15b96a4c9be"
+          ],
+          "proof": "Current Talent enum labels use talentFields.options/t(labelKey); status uses localized statusLabel while filter tokens remain canonical. Missing fields localized. #573 denied/session-expired structure/session clears data+owner, shared state rendering unchanged; Talent authorized empty/filtered empty stays distinct. #587 enum helper commits are ancestors of current dev."
+        },
+        "crossLinks": {
+          "state": "integrated",
+          "pr": 633,
+          "head": "677b1cab54b076e44b27c5403bc15ce2bf4d3746",
+          "review": "https://github.com/gustavomhss/Orchestra-SF/pull/633#pullrequestreview-6010571989",
+          "merge": "e2e9ba59b951771a4aa87ba6b70a560e730f4e6a",
+          "ci": [
+            44990197536
+          ],
+          "proof": "RelatedLinks and Executive real DOM clients/codecs: denial vs authorized empty/outage, per-owner reset/late response, partial authorized records, original numeric/string IDs, bilingual catalog + selection preservation. Base1pass3fail; source4pass75assertions; full app-shell types0,78guards5paths0. Mergeparentscca156+approved677b confirmed."
+        },
+        "imports": {
+          "id": "11-imports",
+          "name": "Imports labels and value states",
+          "owner": "Astra/ui_finish",
+          "state": "integrated",
+          "pr": 649,
+          "head": "0a45ba8ccf6badf7cceecd2b0075855455b02957",
+          "merge": "8c4bd53dece5bc7f6340406948163a6a9baf45c8",
+          "review": "https://github.com/gustavomhss/Orchestra-SF/pull/649#pullrequestreview-6012427690",
+          "ci": [
+            45025540377
+          ],
+          "proof": "Original Imports DOM, CAP25 and import diff producers: unchanged base 0 pass / 3 fail; exact source 3 pass / 75 assertions. Both locales, 19 labels, all six state catalogs/five reachable state displays, absent/undefined/null vs zero/false/empty, retained original PR/wire selection, authorization revocation, fresh CAP25 before export. Original app-shell typecheck and 78 guards/four paths zero findings. Exact-head independent review and expected-head merge; merge...dev identical immediately after integration.",
+          "operationalDependency": "S5 integrated separately in #652; copy residual itself integrated in #649."
+        }
+      },
+      "proof": "All subparts terminal; Imports final residual merged in #649."
+    }
+  ],
+  "paths": [
+    {
+      "path": ".github/workflows/sf-factory-package.yml",
+      "historicalBlob": "1f68937c0c253621ef5b0e380b04513ae5a6429d",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 1,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "Fora do escopo: único hunk adiciona HUSKY=0 ao passo de instalação do workflow histórico, ausente em dev. Não altera artefato ou runtime; G09/factory permanecem na frente estabelecida."
+    },
+    {
+      "path": "apps/cli/script/distribution-payload.ts",
+      "historicalBlob": "059bd6f3f44894f9f2a062f1230b38a0e184fb51",
+      "currentBlob": "014071abc1d6ea9f532aa7382e75d0cca3cf24f8",
+      "blobRelation": "different",
+      "ordinal": 2,
+      "inventoryRows": [
+        "I16"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
+      "historicalBlob": "8b4f14a51c966fe1a318b7d9349488c0a44cd4b9",
+      "currentBlob": "c678a85ec8e930b96c8880d0c220fb172f9447e8",
+      "blobRelation": "different",
+      "ordinal": 3,
+      "inventoryRows": [
+        "I26"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "historicalBlob": "8e45ef1bdcdab9b459711bb2b04a7758212fb66b",
+      "currentBlob": "24cb859d3508309c0cfe7476907f5421be9149a8",
+      "blobRelation": "different",
+      "ordinal": 4,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "The historical hunk adds only a trailing blank line; no product behavior is missing."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "historicalBlob": "7e7edcdfb65762a8b5b48b4c57cc8eec7ff6a5ff",
+      "currentBlob": "c63b08c535951725d7b0842a6e193f00fb4df7a8",
+      "blobRelation": "different",
+      "ordinal": 5,
+      "inventoryRows": [
+        "I25",
+        "I26"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "historicalBlob": "c7448b4f7f2156e8b4d818c8582298cc06022777",
+      "currentBlob": "a2997d77f01283b426f7940e604f1569effa5bbd",
+      "blobRelation": "different",
+      "ordinal": 6,
+      "inventoryRows": [
+        "I23"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+      "historicalBlob": "ca5b0827164296da5c4041e8469bd6e9404888e7",
+      "currentBlob": "bfdd3303fe076bf7668c8055afbad07568fa5c95",
+      "blobRelation": "different",
+      "ordinal": 7,
+      "inventoryRows": [
+        "I01",
+        "I02"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "S5 integrado pelo #652/e9b730: índice files.export.po e observação autorizada do produtor efetivamente montado, com prova real de fonte/egress e17testes/120assertivas. O blob diferente não é tratado como equivalência automática."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "historicalBlob": "77db6454d6370d0a4952119561d228c6cdc6b21a",
+      "currentBlob": "13153182e357b716a12d2554654905d54fa30ee4",
+      "blobRelation": "different",
+      "ordinal": 8,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "historicalBlob": "a5c059946a8d3b0d3be6570f36b4eb484cf1af29",
+      "currentBlob": "c670a45ba421d3fb6dbce8c677223f04b74250db",
+      "blobRelation": "different",
+      "ordinal": 9,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "historicalBlob": "135a172c067da8caaaadc295e9e0f94f065cad5a",
+      "currentBlob": "881ce4672d9d0e641d1cc849663c0980c118774d",
+      "blobRelation": "different",
+      "ordinal": 10,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-phase-bridge.ts",
+      "historicalBlob": "6b7c20fa2e7093f027c15dbeb78319ab0085d640",
+      "currentBlob": "19d13c68633fc390d63fb6685e7a4f06f5780925",
+      "blobRelation": "different",
+      "ordinal": 11,
+      "inventoryRows": [
+        "I24"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-phase-fence.ts",
+      "historicalBlob": "8c168312071fe6d93678c1d4b35e6ac325ff1c28",
+      "currentBlob": "d917d8c52ef4129d069839483e12e1f13d5daa61",
+      "blobRelation": "different",
+      "ordinal": 12,
+      "inventoryRows": [
+        "I24"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-phase-origin.ts",
+      "historicalBlob": "9a2ef9b49c8102a169c59785a1647bf6c1c8f6f3",
+      "currentBlob": "a046bc883784777b10a22a67872f58782efff2d1",
+      "blobRelation": "different",
+      "ordinal": 13,
+      "inventoryRows": [
+        "I24"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "historicalBlob": "82ab5fd3000baffb1c96ef3af53c588cc22bb4ab",
+      "currentBlob": "a59f695365a71614f6189eb6f2c2737c83ba233d",
+      "blobRelation": "different",
+      "ordinal": 14,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/test/distribution-web-native.test.ts",
+      "historicalBlob": "2c72db84605c33bd19d04ea5eb023d271f2578f1",
+      "currentBlob": "42465f55bf42ba319e0a323a054f9994a1e20754",
+      "blobRelation": "different",
+      "ordinal": 15,
+      "inventoryRows": [
+        "I16"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/test/distribution-web.test.ts",
+      "historicalBlob": "74ce1253e30c52d15369360114f8cab4e3b77936",
+      "currentBlob": "144761a1b35842a7bcb777f50d4394969fe44290",
+      "blobRelation": "different",
+      "ordinal": 16,
+      "inventoryRows": [
+        "I16"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/cli/test/factory-distribution-linux.test.ts",
+      "historicalBlob": "379695a97ab5855769f2358dab989206e75dad89",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 17,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock-linux-live.test.ts",
+      "historicalBlob": "c64b32a7402e771f7b3e3524222e119d1f6bc10d",
+      "currentBlob": "c64b32a7402e771f7b3e3524222e119d1f6bc10d",
+      "blobRelation": "identical",
+      "ordinal": 18,
+      "inventoryRows": [
+        "I13"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock.ts",
+      "historicalBlob": "a246c08e6840b5844bc7cf125b412d7f19563c8a",
+      "currentBlob": "5a33bfa94386b22860de40b5b1dbda0dcc4c97b5",
+      "blobRelation": "different",
+      "ordinal": 19,
+      "inventoryRows": [
+        "I13"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/desktop/src/main/live-capture.ts",
+      "historicalBlob": "656d828583620c837318ff68f62eebda9061a3dd",
+      "currentBlob": "48f274c5022d5cba8f3480b393803fdaafc12ea8",
+      "blobRelation": "different",
+      "ordinal": 20,
+      "inventoryRows": [
+        "I13"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/desktop/src/main/live-ipc.test.ts",
+      "historicalBlob": "f03abc3f87b9c9ae89935039d7ede884187cd6d2",
+      "currentBlob": "a7aeba46cd4e51c4a87bbf2d793405946df7aa7d",
+      "blobRelation": "different",
+      "ordinal": 21,
+      "inventoryRows": [
+        "I13"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/desktop/src/main/live-ipc.ts",
+      "historicalBlob": "fbca3814de6200971b629c2d93b9046c5624a63b",
+      "currentBlob": "71b1a1611aef001255f9831fc13df4ab88544d00",
+      "blobRelation": "different",
+      "ordinal": 22,
+      "inventoryRows": [
+        "I13"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/desktop/src/main/live-overlay.ts",
+      "historicalBlob": "778223ffb2768d0b640a0b7305a16c6d2679c6d5",
+      "currentBlob": "37f0dda5eb46ce4754a69cd4c2aae46447dff561",
+      "blobRelation": "different",
+      "ordinal": 23,
+      "inventoryRows": [
+        "I13"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/desktop/src/main/live-transport-log.ts",
+      "historicalBlob": "2a6824712e4426e1daa56e0c23590f7af0aa329a",
+      "currentBlob": "e39dbb654e8302659acba5cc02f2942831ae56e7",
+      "blobRelation": "different",
+      "ordinal": 24,
+      "inventoryRows": [
+        "I14"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/desktop/src/main/log-redact.ts",
+      "historicalBlob": "b52e4d98d0af87013249d94b4ecada7ce046bcd3",
+      "currentBlob": "f1f806879086aa64ac59942ba9c3020a8a52cbfd",
+      "blobRelation": "different",
+      "ordinal": 25,
+      "inventoryRows": [
+        "I14"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/desktop/src/main/logging.ts",
+      "historicalBlob": "24786535cd9d527a23d42a4663460f36dbf5ed04",
+      "currentBlob": "813a210bf053bf928703344cec2b23119f3d4ee4",
+      "blobRelation": "different",
+      "ordinal": 26,
+      "inventoryRows": [
+        "I14"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/desktop/src/main/windows.ts",
+      "historicalBlob": "62685ee6aed3752af199df0af4655b1fd3cffc53",
+      "currentBlob": "43746ac81f3761dfbb9553958672edc91fcd324a",
+      "blobRelation": "different",
+      "ordinal": 27,
+      "inventoryRows": [
+        "I13"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "apps/desktop/src/main/wsl/ipc.ts",
+      "historicalBlob": "792b24e5d30b817951c7cbbfbaf6ee2d34d96025",
+      "currentBlob": "165e60f6f72e05181237d98d0574bb43a372dca8",
+      "blobRelation": "different",
+      "ordinal": 28,
+      "inventoryRows": [
+        "I13"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "docs/handoff/HANDOFF-audit-one.md",
+      "historicalBlob": "dc6cc471bfbefe21593b4fa4d63d64445a4b4172",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 29,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/engine-adapters/claude-code/src/v2/host.ts",
+      "historicalBlob": "9d1e124a908e268230f54527dee81e3c93dcb87d",
+      "currentBlob": "dd441b07ab150ed5f03148568e168dfba69f3cca",
+      "blobRelation": "different",
+      "ordinal": 30,
+      "inventoryRows": [
+        "I09"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "historicalBlob": "1aa1678159e54659c1840ee201e4afab9966e43a",
+      "currentBlob": "329a500051ff1ef3ad576e21a6dde4e76339f489",
+      "blobRelation": "different",
+      "ordinal": 31,
+      "inventoryRows": [
+        "I01",
+        "I24"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "historicalBlob": "4da4fa30855ab04fdb7799916bdd05651581b4fd",
+      "currentBlob": "4da4fa30855ab04fdb7799916bdd05651581b4fd",
+      "blobRelation": "identical",
+      "ordinal": 32,
+      "inventoryRows": [
+        "I07"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+      "historicalBlob": "e0db261171f77ecb8cd71f1d7da9c78035b6a76b",
+      "currentBlob": "ac3440f4d7cc9b2350ce42f02c9ca478e354de0a",
+      "blobRelation": "different",
+      "ordinal": 33,
+      "inventoryRows": [
+        "I05",
+        "I22",
+        "I26"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+      "historicalBlob": "e51c053fccad7d917f9be48f65d0687d73cdb1a7",
+      "currentBlob": "bf8cf5289917d996c86df170a0e0c5ab4d43c812",
+      "blobRelation": "different",
+      "ordinal": 34,
+      "inventoryRows": [
+        "I26"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts",
+      "historicalBlob": "f78e26ac73cc6e879de1b5f9e32295d18fc7e99f",
+      "currentBlob": "a523b3359b71f927d9ff60a37cf28d19c409c136",
+      "blobRelation": "different",
+      "ordinal": 35,
+      "inventoryRows": [
+        "I22"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+      "historicalBlob": "e933f4d5fd70ff82bbc3596b82b18a74f99563de",
+      "currentBlob": "df3b285512f34a82df4260b8e443aaeafd0ae617",
+      "blobRelation": "different",
+      "ordinal": 36,
+      "inventoryRows": [
+        "I05",
+        "I26"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "historicalBlob": "0ef118f5496b6608cd5b847a052942274ac47feb",
+      "currentBlob": "a02bcc1e09602922ab9a2eed5da12b6832a91a52",
+      "blobRelation": "different",
+      "ordinal": 37,
+      "inventoryRows": [
+        "I05",
+        "I26"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
+      "historicalBlob": "e3bfb4a9fe2adc7809877db237efb7d4de9ffe42",
+      "currentBlob": "4fab9abb226fc8921c52a503e939fc3a3d556d51",
+      "blobRelation": "different",
+      "ordinal": 38,
+      "inventoryRows": [
+        "I22"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "historicalBlob": "966ea0128d54da647c61567285990450f6e0f764",
+      "currentBlob": "09625842cb19dd56b147cdcf0624804bff351d68",
+      "blobRelation": "different",
+      "ordinal": 39,
+      "inventoryRows": [
+        "I22"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "historicalBlob": "f3382646180a2756be1dd0cdfca3080ddb2689f7",
+      "currentBlob": "07a19dcaf10f9ee612e9ba1496d4abc60967e29a",
+      "blobRelation": "different",
+      "ordinal": 40,
+      "inventoryRows": [
+        "I19"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "historicalBlob": "6a53bd03d6af6936e41e132ae1967bf27e32ce1c",
+      "currentBlob": "e90713d5c7c4e7f977641a28b436c314c635cc33",
+      "blobRelation": "different",
+      "ordinal": 41,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "historicalBlob": "b74b526717ba4bca91c53eb591ae09c12da69671",
+      "currentBlob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+      "blobRelation": "different",
+      "ordinal": 42,
+      "inventoryRows": [
+        "I06",
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "historicalBlob": "f5a9ded6c4d133a08268943d3cdcae0aa0355aa5",
+      "currentBlob": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
+      "blobRelation": "different",
+      "ordinal": 43,
+      "inventoryRows": [
+        "I06"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "historicalBlob": "26bd56fdf87b7f729779448032a8fd4f1d39a1e5",
+      "currentBlob": "dd3a92ed3586ac3de5bc7981e220be9d52379048",
+      "blobRelation": "different",
+      "ordinal": 44,
+      "inventoryRows": [
+        "I19"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "historicalBlob": "7fdd57190ac0eb5fcd5233abfb42b82e59bf13e5",
+      "currentBlob": "bf1b2e6d62b21f9ebf1819d84a6e3e075f2a2efc",
+      "blobRelation": "different",
+      "ordinal": 45,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "historicalBlob": "fa60cc862eb7b90b9ec0bda1cd913b3d4011e7b3",
+      "currentBlob": "1c6a03d65acfc4386da90720ec7161b2f9582cd0",
+      "blobRelation": "different",
+      "ordinal": 46,
+      "inventoryRows": [
+        "I23"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "historicalBlob": "19657ce2ab758a9cbf46e3b0aad916bbdc1c10e6",
+      "currentBlob": "e95faf6c5d980111a80aa638c4ee02fdc47f9908",
+      "blobRelation": "different",
+      "ordinal": 47,
+      "inventoryRows": [
+        "I22"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "historicalBlob": "dcf9cc0da6b6727e88fae842ecf16595046d6204",
+      "currentBlob": "b8f7b22413a9c6ae912b97e546186a7441794d52",
+      "blobRelation": "different",
+      "ordinal": 48,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "historicalBlob": "0c0fda7fe6f35b48f84ac757d385c957bd1dddf8",
+      "currentBlob": "2c44f063c0a9f2bfcb0aec313bd5d57f07056414",
+      "blobRelation": "different",
+      "ordinal": 49,
+      "inventoryRows": [
+        "I22",
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "historicalBlob": "c7c6b0a1088838f3c0cc32274398be768ab91e1c",
+      "currentBlob": "ac2d7219d3dbeae866d8c81220a841acfde59214",
+      "blobRelation": "different",
+      "ordinal": 50,
+      "inventoryRows": [
+        "I22",
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "historicalBlob": "2471cf048c28d9c84acba3bd68d2829bfd2cd9a2",
+      "currentBlob": "eb2ac067e45f5917e782d9a36267a64ae9998896",
+      "blobRelation": "different",
+      "ordinal": 51,
+      "inventoryRows": [
+        "I22"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "historicalBlob": "78524ac85b50f007d650bc6e6fefdb55094078ed",
+      "currentBlob": "048b87031d28d95b63ea753d380c23e867ffbd34",
+      "blobRelation": "different",
+      "ordinal": 52,
+      "inventoryRows": [
+        "I21"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+      "historicalBlob": "02e340c660dd1833575fb32fed4cbc12c8880204",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 53,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "historicalBlob": "e9df3a358d35a009c71f276fd30d1523de8d6262",
+      "currentBlob": "b4aa7ae69195da98a84d2c77efbc9b634c1346a8",
+      "blobRelation": "different",
+      "ordinal": 54,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "historicalBlob": "9b713ae5662af7c0f4974d87a84d8895df588155",
+      "currentBlob": "6f5e6c9aaa5687f76b113e232f03fb433fc0c0aa",
+      "blobRelation": "different",
+      "ordinal": 55,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "historicalBlob": "05eb28a407e03ca2d551f05cce479d69c588e4fe",
+      "currentBlob": "571890e9845e7edf322af1cbf2ace275f5df1b49",
+      "blobRelation": "different",
+      "ordinal": 56,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "Integrated635 restores primary-source proof for known subtotals with current annual-source/monthly-observation semantics, preserving coverage refs and refusing mixed/transformed/null links."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "historicalBlob": "7fbe74766c6e08a63e8cd133997b7716a78fbd4a",
+      "currentBlob": "7779595b7440daca4769883432ac81fc3c8bb0e2",
+      "blobRelation": "different",
+      "ordinal": 57,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+      "historicalBlob": "17a4b2ff8c2f2db9cafc8c915b41289e5b6ae798",
+      "currentBlob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+      "blobRelation": "different",
+      "ordinal": 58,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "historicalBlob": "18aa7062e1e8de577700d1705ae5ed0cbdb5e617",
+      "currentBlob": "086f1e4a6bd898684971617ff9736dc20bace931",
+      "blobRelation": "different",
+      "ordinal": 59,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "historicalBlob": "1ab1e21b2c25b7f185dd1b06647571e224b139c1",
+      "currentBlob": "d96460636b3865f7b7ba075eba14724a616581d3",
+      "blobRelation": "different",
+      "ordinal": 60,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "historicalBlob": "f1b94175ef167c2483d3a1aa58ae917ee498cc4e",
+      "currentBlob": "688d1c811a08510bbb527e7af8388a428d409f32",
+      "blobRelation": "different",
+      "ordinal": 61,
+      "inventoryRows": [
+        "I04"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "historicalBlob": "ef1cca25821f7830b39e1df8ec29e3a8c15bce4f",
+      "currentBlob": "ef1cca25821f7830b39e1df8ec29e3a8c15bce4f",
+      "blobRelation": "identical",
+      "ordinal": 62,
+      "inventoryRows": [
+        "I04"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "historicalBlob": "f840ab6049df00515e87d2e486d163d5e198d9fb",
+      "currentBlob": "56c33df7b818307f32b9d8bbd03b27e7891904a0",
+      "blobRelation": "different",
+      "ordinal": 63,
+      "inventoryRows": [
+        "I20"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+      "historicalBlob": "6bf0bfc9a50b503389cb3bac25f3f74c637db2ee",
+      "currentBlob": "846318874c8838e5410091d8ac54439bae1a3465",
+      "blobRelation": "different",
+      "ordinal": 64,
+      "inventoryRows": [
+        "I03"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "Historical hunk only names a DOCX continuation paragraph style basedOn Normal and bumps a private renderer digest. Current renderer already emits the same continuation text/layout and seals artifact bytes/inclusion; no separate current product contract depends on the historic style marker. Do not claim the old byte seal/version is interchangeable."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/routine-selection.ts",
+      "historicalBlob": "0da6a79264192c3c618d19109d2939825436196d",
+      "currentBlob": "d5055c71b0f3e3b1adc2a4b3758bb5b2fc990f4c",
+      "blobRelation": "different",
+      "ordinal": 65,
+      "inventoryRows": [
+        "I20"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "historicalBlob": "2efedb5bb9c5d920a4fa61412b8944f75a51797d",
+      "currentBlob": "cbb83bc6a13a437243622fa87c4dfa10cbb6808a",
+      "blobRelation": "different",
+      "ordinal": 66,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "Fora do escopo somente os hunks do console paralelo: seleção ?page=, installed-console, asset=page/admission e resposta de probe. O runtime atual continua ativo, autentica e verifica papéis/páginas, chama domain.view antes de render e preserva mutações/exports. Destino da interface nativa573. A proveniência privada atual do produtor/mount PO foi integrada separadamente por #652, com prova S5; não se exclui o arquivo inteiro."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "historicalBlob": "ffdf65307aed5846010a6e832980c169677c14a7",
+      "currentBlob": "10bba42977c33b11bf9b2426a5de765c49b92d9b",
+      "blobRelation": "different",
+      "ordinal": 67,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "Current Persistence already includes currentSnapshot and stronger snapshot-owner/fence contracts. The optional detached snapshot accessor from349 is absorbed; physical read optimizations are not inferred from missing old fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+      "historicalBlob": "d301f212112235b985bf1c08e25de6c3f0a8feb6",
+      "currentBlob": "21e1a63b3a88db673c79170cdf873be0c9949a27",
+      "blobRelation": "different",
+      "ordinal": 68,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "Capacidade de Reports/backup já oferecida por application.fileControls e downloads/createReport (563). Hunk349 somente acrescenta outra posição do formulário HTML; não altera cálculo de orçamento."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/installed-console.ts",
+      "historicalBlob": "9f9ce95db8b692feeca0876b0d49442c9e89084f",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 69,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "Fora do escopo: renderer histórico GET/HEAD de HTML/navegação/evidências, sem nova regra de domínio, mutação ou serializador. Não restaurar uma superfície paralela à interface nativa563/573/579."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "historicalBlob": "a4bf814a7a951d83e851afbda87f9007e37ceaa0",
+      "currentBlob": "0bd5099c6f303d189f65cb1483730c7af03676b5",
+      "blobRelation": "different",
+      "ordinal": 70,
+      "inventoryRows": [
+        "I24"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "The old identity-level config.groups fallback is superseded by current producers: local bootstrap writes roleMap only when absent after configured-admin membership/person checks; intentionally empty/edited maps stay intact. Microsoft uses separate microsoft-entry/runTeamBusiness, constructing rolePolicy from config.groups and verifying current actor before/after, at commit and egress (#547). Existing source/tests inspected, no new Teams qualification."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "historicalBlob": "83f513c9b9c3c9a7f4497eea80c9e4aa896c9be9",
+      "currentBlob": "8cccd5bcc8c814b9909a693e279234b9d45b4d42",
+      "blobRelation": "different",
+      "ordinal": 71,
+      "inventoryRows": [
+        "I04",
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "historicalBlob": "6e8bf2e4101946268bf04eefda9058ffe7805361",
+      "currentBlob": "97424780a064ff6128b1ec3e3d101d59bbc163d5",
+      "blobRelation": "different",
+      "ordinal": 72,
+      "inventoryRows": [
+        "I24"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "The old identity-level config.groups fallback is superseded by current producers: local bootstrap writes roleMap only when absent after configured-admin membership/person checks; intentionally empty/edited maps stay intact. Microsoft uses separate microsoft-entry/runTeamBusiness, constructing rolePolicy from config.groups and verifying current actor before/after, at commit and egress (#547). Existing source/tests inspected, no new Teams qualification."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "historicalBlob": "e1f9b25472a74cd7152a0c61df801a05e68d517f",
+      "currentBlob": "4845de24285df2459991da7d9895aad95eb93b19",
+      "blobRelation": "different",
+      "ordinal": 73,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "O destino cross-site mount/dashboard já é usado por dev para todo enrollment. A mudança histórica de redirect same-origin para / pertence ao console legado; consumo do token, sessão, cookie e revogação não mudam nesse hunk."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "historicalBlob": "167be44583c4c00bfa4bcf69fe7590765662b982",
+      "currentBlob": "2d5d9d29889b937cbf47df44dbd7a37912fd3e9a",
+      "blobRelation": "different",
+      "ordinal": 74,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "Fora do escopo a adaptação plannerPageData para renderer receber dados brutos do fragmento HTML histórico. O percurso atual já chama domain.view e passa versions antes do render; XLSX usa workbooks. Nenhum cálculo/mutação alterado pelo hunk."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "historicalBlob": "26fe8e6f9b54d5d06908d435da72dd72aa14086d",
+      "currentBlob": "a36a7cb892b90a1cb905e704f60897de3abde4d0",
+      "blobRelation": "different",
+      "ordinal": 75,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "Wrapper de dados brutos, abertura automática de um supplier e disposição de upload são adições de console. O atual privateFileControls já confere supplier ID/version/canWrite/papel; native Documents/Suppliers579 cobre o percurso relevante. Nenhum delta histórico de mutação/serializador."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts",
+      "historicalBlob": "e58dac03c25af436a6f411014de5a79cbdd789b4",
+      "currentBlob": "82f9ad8ca215e115a6a901eefe5ddfd4b99c686a",
+      "blobRelation": "different",
+      "ordinal": 76,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+      "historicalBlob": "64e1eb0a2ca24c3256e87fd2faf30f1608a11121",
+      "currentBlob": "ef8e8efdbffacafb5979430bcb8310bc8233ae25",
+      "blobRelation": "different",
+      "ordinal": 77,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-controls-browser.test.ts",
+      "historicalBlob": "5febc9e3a3798a7880f874744c93dd66b1504bc6",
+      "currentBlob": "47ec264082c1ddbef933c7b7cf9fb99c28257d8c",
+      "blobRelation": "different",
+      "ordinal": 78,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-entry.test.ts",
+      "historicalBlob": "eb530bbaec12de7e69cf154f0edea72ddfa9f4da",
+      "currentBlob": "f574311b0be4124d58d7bd311f439a605bfa5296",
+      "blobRelation": "different",
+      "ordinal": 79,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "historicalBlob": "4572151e5bcd63d340ce520155267bf36b0113f5",
+      "currentBlob": "2875f552e35196e4de2b4602bf4310d8823f0c13",
+      "blobRelation": "different",
+      "ordinal": 80,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "historicalBlob": "504602e1d295b4299c2d53fb7c29d380da0f5ec9",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 81,
+      "inventoryRows": [
+        "I24",
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-first-login.test.ts",
+      "historicalBlob": "355053d456ef2dd5fe8feea9df7aa5905bbf0dd9",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 82,
+      "inventoryRows": [
+        "I24",
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "historicalBlob": "04e8fae2d097a726598d3c54dd8b3e91e0c672d0",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 83,
+      "inventoryRows": [
+        "I24",
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "historicalBlob": "0ab08f70761351547fb8ce11a7dfd27afabfaa99",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 84,
+      "inventoryRows": [
+        "I24",
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "historicalBlob": "feddcf4c9e3f73edc6ccbe7f5750b59628d6c077",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 85,
+      "inventoryRows": [
+        "I24",
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/operator-browser.test.ts",
+      "historicalBlob": "ec5b33349f146eab0cd5d3c8b28702012b273b4d",
+      "currentBlob": "b354bd253788dfd08f38c1a236e8d1e5a8e1b245",
+      "blobRelation": "different",
+      "ordinal": 86,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-pitr.test.ts",
+      "historicalBlob": "b21e1e4227f4e51df7f0e90cd91c2b3b58712e13",
+      "currentBlob": "e20dc20d98e2fb20122c844008a747b955613b40",
+      "blobRelation": "different",
+      "ordinal": 87,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+      "historicalBlob": "7f4c50586acbe857b69cc551e43d45aef0c70b5d",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 88,
+      "inventoryRows": [
+        "I22"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decision-compare-performance/current-case-observations.test.ts",
+      "historicalBlob": "75b2cfe947ffd0c3997a62d81ab3abd4ae2cabc1",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 89,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/docx-continuation130/table-flow.test.ts",
+      "historicalBlob": "8e280521437ff2573ca809522c5b240919e8162a",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 90,
+      "inventoryRows": [
+        "I03"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/result-materialization.test.ts",
+      "historicalBlob": "01e02e0e16d8105bb49206780e75444fb1780347",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 91,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+      "historicalBlob": "172b155444a797af751516e38ad865d88899d160",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 92,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-phase-bridge/fixture.ts",
+      "historicalBlob": "834586844cb94b252d0d66c795156a4b41574d79",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 93,
+      "inventoryRows": [
+        "I24"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-phase-bridge/native-fixture.ts",
+      "historicalBlob": "64ac6da439fec90714f7fe8e6625b2dc8aaa9032",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 94,
+      "inventoryRows": [
+        "I24"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-verification-fixture.ts",
+      "historicalBlob": "c685a5aa326da6133d7a4d9bdb2093e6c81c938f",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 95,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-verification-pairs.test.ts",
+      "historicalBlob": "364f55137d3e6e34e984c90564ee30575fabb99a",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 96,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/observed-coverage.ts",
+      "historicalBlob": "d354eb333508305d60285d94b69e120a404d21e3",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 97,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/choice.ts",
+      "historicalBlob": "8697c256be40c5a88db2c8046ab37a4a98e8d075",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 98,
+      "inventoryRows": [
+        "I04",
+        "I19"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+      "historicalBlob": "8a642ccb20406821c2033d5f168e75a0a75ea69e",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 99,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/source-identity.test.ts",
+      "historicalBlob": "381c514aa329c1ab31b7193a6dc5733f498eee63",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 100,
+      "inventoryRows": [
+        "I22"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+      "historicalBlob": "52bd4ee4532aa21d5a0f3ee8f8019ebe592a673f",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 101,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "historicalBlob": "3a9844639c4bbd5925cdfee5662b392d71f2553c",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 102,
+      "inventoryRows": [
+        "I26"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+      "historicalBlob": "d68b41022893f8bc50ea796a22fa78b7e9be4905",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 103,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+      "historicalBlob": "7e0c6beedf6c7290e09ad663c8a360ece5ba1241",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 104,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/source-issuer.test.ts",
+      "historicalBlob": "d43fd34937fec7c626c3910ae6b168a5db49f680",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 105,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/projection-access.test.ts",
+      "historicalBlob": "72c147f618e49e8fb791136c9da19ef34af1c1fb",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 106,
+      "inventoryRows": [
+        "I03"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/record-read-observation.test.ts",
+      "historicalBlob": "48821d786ede37ecf3b8b1a18aada299534bcd2c",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 107,
+      "inventoryRows": [
+        "I22"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/followup-consumer.test.ts",
+      "historicalBlob": "9865cc94cc6d6988da4d7b16ac83e6d5358c0c1c",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 108,
+      "inventoryRows": [
+        "I26"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "historicalBlob": "41d5da4d38800a89806519d3fbb03ff32f9a8068",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 109,
+      "inventoryRows": [
+        "I22",
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+      "historicalBlob": "b7ac1a2ce7b285e46cafeaa3b63b0181f2bdbde4",
+      "currentBlob": "095f57136c09b9c418435e98662e2c0cc55087a4",
+      "blobRelation": "different",
+      "ordinal": 110,
+      "inventoryRows": [
+        "I21"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+      "historicalBlob": "d50742e65e53e9ecc89e179aa774a1589d799625",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 111,
+      "inventoryRows": [
+        "I23"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+      "historicalBlob": "2ffdf7d78655b1a21fe4765dd6a66d5db05fe13d",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 112,
+      "inventoryRows": [
+        "I24"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "historicalBlob": "fa8bac594cf753f20fe294adda9a641cbeed04f5",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 113,
+      "inventoryRows": [
+        "I24"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "historicalBlob": "90b09e30f999bcbc262cf69875731119788f8643",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 114,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "historicalBlob": "2233b0c1825a81789ef94f655495a1a7a902154c",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 115,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+      "historicalBlob": "59756ace4ed97c0d90c29b933da01bb466a20430",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 116,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+      "historicalBlob": "320fc52274e331a5ed07c6a7bf33a141fa273954",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 117,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "Historical fixture-only change preserves one Request identity for Planner/C08 outcome review. It is not a numeric contract guard and is not claimed covered by624; test infrastructure is reconciled with current host/behavior rather than blindly restored."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/runtime-http.test.ts",
+      "historicalBlob": "d88ffc8ddf0d888251c68691d9ebb190fdd1f1d6",
+      "currentBlob": "15b567600088057268834ac70204e201d8e863dc",
+      "blobRelation": "different",
+      "ordinal": 118,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+      "historicalBlob": "7d9cf8ff1c0aa1640f3e39acf692703338be02b1",
+      "currentBlob": "4f3f35b5381c68b82230ee2635b7ae4170e21898",
+      "blobRelation": "different",
+      "ordinal": 119,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/installed-console-preload.ts",
+      "historicalBlob": "a36adbd05b197b1c82d75e637aa66095a00e5304",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 120,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/installed-console.ts",
+      "historicalBlob": "bb98618d6b3b02c886d4d23891f4a4cd6c7884a2",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 121,
+      "inventoryRows": [
+        "I28"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "historicalBlob": "a7967accce606017e666dc0585562754d3a535b5",
+      "currentBlob": "48d080f69bc23c4a3f02bd3ff345e725686ac070",
+      "blobRelation": "different",
+      "ordinal": 122,
+      "inventoryRows": [
+        "I02"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/ooxml.ts",
+      "historicalBlob": "a268cb05f00f0b4251e04fb1f6ee12ed369c04a3",
+      "currentBlob": "14864c9bbd4d561b7aeffa8491a3093b191914a2",
+      "blobRelation": "different",
+      "ordinal": 123,
+      "inventoryRows": [
+        "I03"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+      "historicalBlob": "23e01ae668bb6046082a001b8397ff7ae9e42c0b",
+      "currentBlob": "75a76a1ef7f8fc4b9339b7f8a55d3cf308116f74",
+      "blobRelation": "different",
+      "ordinal": 124,
+      "inventoryRows": [
+        "I03"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "historicalBlob": "7a4903088376890997cd73c97cd6dba74f24f345",
+      "currentBlob": null,
+      "blobRelation": "absent",
+      "ordinal": 125,
+      "inventoryRows": [
+        "I25"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "historicalBlob": "dc3ed3a09ae0cfea6429710e0ca30290e9e61d2b",
+      "currentBlob": "f610924d4da591ed389b0e1293cab2350e36e0dd",
+      "blobRelation": "different",
+      "ordinal": 126,
+      "inventoryRows": [
+        "I02"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/components/settings-v2/view/capabilities-section.tsx",
+      "historicalBlob": "7d903bc2ca1c93543fc346e81cc0e87f1d89bbe9",
+      "currentBlob": "546b09de2564fb89904421a7edff2d6ae27a070b",
+      "blobRelation": "different",
+      "ordinal": 127,
+      "inventoryRows": [
+        "I15"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/components/settings-v2/view/settings-data.test.ts",
+      "historicalBlob": "21b391ae0dfb93388f5ecb4dfc91f3bd84577b6d",
+      "currentBlob": "2e307ed289f0c25a7a3fc5aa344c3196b2bedb0f",
+      "blobRelation": "different",
+      "ordinal": 128,
+      "inventoryRows": [
+        "I15"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/components/settings-v2/view/settings-data.ts",
+      "historicalBlob": "bd8b15131239af05ba8f33927231feb1b8d07189",
+      "currentBlob": "dcf0405b20ccbacc48dbb6de49e69b1232fc2162",
+      "blobRelation": "different",
+      "ordinal": 129,
+      "inventoryRows": [
+        "I15"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/components/settings-v2/view/settings-view.tsx",
+      "historicalBlob": "3bdda10400e1f4fc0583472361e117df02aa3b3c",
+      "currentBlob": "13a483e1b2c848598355c650062fe9e81f7780b6",
+      "blobRelation": "different",
+      "ordinal": 130,
+      "inventoryRows": [
+        "I15"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-cross.ts",
+      "historicalBlob": "a92311c7a5e6990cd4735d2169cc5a882ce8d7f6",
+      "currentBlob": "a92311c7a5e6990cd4735d2169cc5a882ce8d7f6",
+      "blobRelation": "identical",
+      "ordinal": 131,
+      "inventoryRows": [
+        "I27"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u08.ts",
+      "historicalBlob": "f1ff523731e0f17a9e05545b7796e4107b2fd3d2",
+      "currentBlob": "ef1f90dfc74bafac5425f7ba934ebec861bde030",
+      "blobRelation": "different",
+      "ordinal": 132,
+      "inventoryRows": [
+        "I27"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+      "historicalBlob": "eace17e5b5c13c5ce043f8e698551ce194b33a4c",
+      "currentBlob": "2dbcf4e81e1ab063c4859a559564783e5110c575",
+      "blobRelation": "different",
+      "ordinal": 133,
+      "inventoryRows": [
+        "I27"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
+      "historicalBlob": "d2e519693019ff06d6e2bdd723916054906e8a03",
+      "currentBlob": "d2e519693019ff06d6e2bdd723916054906e8a03",
+      "blobRelation": "identical",
+      "ordinal": 134,
+      "inventoryRows": [
+        "I27"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/agents-view.tsx",
+      "historicalBlob": "675ae1f7d104a6158c4a1c3059ac6f2406451043",
+      "currentBlob": "675ae1f7d104a6158c4a1c3059ac6f2406451043",
+      "blobRelation": "identical",
+      "ordinal": 135,
+      "inventoryRows": [
+        "I15"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx",
+      "historicalBlob": "fdc6c303a468bd2bb6aaacc5d12a6f8dda33cafe",
+      "currentBlob": "519deb766b5926ad2afcccc7416bed456c18ee77",
+      "blobRelation": "different",
+      "ordinal": 136,
+      "inventoryRows": [
+        "I27"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/cross-links/view.tsx",
+      "historicalBlob": "8b8809ef956f8f7cbfea41358c3ecb8faa1616c0",
+      "currentBlob": "dae8177100c21495fe9fa4d68f1c2aae17cef9ce",
+      "blobRelation": "different",
+      "ordinal": 137,
+      "inventoryRows": [
+        "I27"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx",
+      "historicalBlob": "bcbaed29aec8ed5ea183b7e1dd1659623dac6579",
+      "currentBlob": "c2da4454a18863093a6ddf5fe1534110e2ce1f35",
+      "blobRelation": "different",
+      "ordinal": 138,
+      "inventoryRows": [
+        "I27"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+      "historicalBlob": "870809e13518984eba3d6610d60c0109b9d073d3",
+      "currentBlob": "823d55a8b7dcca2c5736085076b57531720f712b",
+      "blobRelation": "different",
+      "ordinal": 139,
+      "inventoryRows": [
+        "I27"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+      "historicalBlob": "49a96d87b37d1d3aedae479debf30b8235b96218",
+      "currentBlob": "29aec81cc8b0dbf7e385ddbe9a1bd73f4c76c4bd",
+      "blobRelation": "different",
+      "ordinal": 140,
+      "inventoryRows": [
+        "I27"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+      "historicalBlob": "ae99b53209b0fe15b4aedd1982cf16dd3bab3d21",
+      "currentBlob": "edb4d287b2f5771422d24f53efa8911b5bbcdb68",
+      "blobRelation": "different",
+      "ordinal": 141,
+      "inventoryRows": [
+        "I27"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/client/src/sucafina/bindings.ts",
+      "historicalBlob": "4663f1c6d42d672e2568d32872cace53423c5ab2",
+      "currentBlob": "dcf4229af5745da305906a2c1f7ce42427fd62bd",
+      "blobRelation": "different",
+      "ordinal": 142,
+      "inventoryRows": [
+        "I01"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "dispositionNote": "Equivalent denial safety via strict discriminated schemas572 and actual consumers573/588: denied carries no value; consumers require body.statusok before data; transport clears stamp401/403. Historical deniedIsNotData invalid-conversion is not ported. Analysis588 negative/readiness tests are narrower than all17operation DOM coverage."
+    },
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "historicalBlob": "15fa83665492f5c951d24b6a499e9fc260f96003",
+      "currentBlob": "5ce42b03cf854cf32b6bcd5aa2eb089ad634f256",
+      "blobRelation": "different",
+      "ordinal": 143,
+      "inventoryRows": [
+        "I17"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/permission.ts",
+      "historicalBlob": "bdfe4658e1c27ead16f568fb38d8cb5fa212ecf6",
+      "currentBlob": "b1baeae5de82fdfe6f5d41fe2da770eb020dfc30",
+      "blobRelation": "different",
+      "ordinal": 144,
+      "inventoryRows": [
+        "I08"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/scheduled-task.ts",
+      "historicalBlob": "734121f4c381d36bb7a6fea4b315de726e3b38fe",
+      "currentBlob": "1edb089ca37cbbb31a7ce382b7d2820cd3802e0d",
+      "blobRelation": "different",
+      "ordinal": 145,
+      "inventoryRows": [
+        "I10"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/session.ts",
+      "historicalBlob": "2072224bfd78e7cc55e07a02d0b16da0171d7fe7",
+      "currentBlob": "d6493c3a54cbd8c91347d19131dd0e05b6dd2798",
+      "blobRelation": "different",
+      "ordinal": 146,
+      "inventoryRows": [
+        "I10"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/session/context-epoch.ts",
+      "historicalBlob": "9b933cd66e7018a8acad021b2a65eb82feda8afa",
+      "currentBlob": "96ca771914d760b8750778e9b48af51916a3b0b8",
+      "blobRelation": "different",
+      "ordinal": 147,
+      "inventoryRows": [
+        "I11"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/session/meeting-briefing.ts",
+      "historicalBlob": "f28d83fbea0ad7502492428781b2f4aab35a5734",
+      "currentBlob": "b466298d99ffa951b8fdf54a90eb8c056a3042ba",
+      "blobRelation": "different",
+      "ordinal": 148,
+      "inventoryRows": [
+        "I11"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/session/meeting-context.ts",
+      "historicalBlob": "b5e8184210ea73c9947ab27adb8d84af138a1306",
+      "currentBlob": "b5e8184210ea73c9947ab27adb8d84af138a1306",
+      "blobRelation": "identical",
+      "ordinal": 149,
+      "inventoryRows": [
+        "I11"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/session/message-updater.ts",
+      "historicalBlob": "cb3fd373d4c4c69934a97f1d73f651a1ca3823a8",
+      "currentBlob": "62cf9973415f87b5620d7aec510975f3d9cdd3f2",
+      "blobRelation": "different",
+      "ordinal": 150,
+      "inventoryRows": [
+        "I11"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/session/run-coordinator.ts",
+      "historicalBlob": "71843b7d7642e7538c7bef8f18b9f2e872f2de64",
+      "currentBlob": "71843b7d7642e7538c7bef8f18b9f2e872f2de64",
+      "blobRelation": "identical",
+      "ordinal": 151,
+      "inventoryRows": [
+        "I12"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/session/runner/direct-commands.ts",
+      "historicalBlob": "ac0c8bc4b630fa0a9524ce9b5e47a439a339b504",
+      "currentBlob": "db0927504a6aa6ba341ef016364c00fa2e1ad15c",
+      "blobRelation": "different",
+      "ordinal": 152,
+      "inventoryRows": [
+        "I11"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/session/runner/llm.ts",
+      "historicalBlob": "479fb5b355b58983a9c37a972e0242faa12bdd9f",
+      "currentBlob": "b6df15107957ad6051e356bb590e90605512189d",
+      "blobRelation": "different",
+      "ordinal": 153,
+      "inventoryRows": [
+        "I08",
+        "I11"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/session/runner/to-llm-message.ts",
+      "historicalBlob": "0f166b9752919063c9b33d71e2abe82161c5319c",
+      "currentBlob": "0f166b9752919063c9b33d71e2abe82161c5319c",
+      "blobRelation": "identical",
+      "ordinal": 154,
+      "inventoryRows": [
+        "I11"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/tool/task-permission.ts",
+      "historicalBlob": "7896a82070bb208298796bccec658aa61d6e83c0",
+      "currentBlob": "1a3c81a3a321a22509730275814c4339059f4115",
+      "blobRelation": "different",
+      "ordinal": 155,
+      "inventoryRows": [
+        "I08"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/src/tool/task.ts",
+      "historicalBlob": "9c94b629abf52b36eba6c1195252a323002775be",
+      "currentBlob": "80c2215b73afca686443669e26ad9e655961d8e1",
+      "blobRelation": "different",
+      "ordinal": 156,
+      "inventoryRows": [
+        "I08",
+        "I10"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/core/test/session-run-coordinator.test.ts",
+      "historicalBlob": "795b229305421ae990f0b101f7b92ffb2831aa57",
+      "currentBlob": "795b229305421ae990f0b101f7b92ffb2831aa57",
+      "blobRelation": "identical",
+      "ordinal": 157,
+      "inventoryRows": [
+        "I12"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/schema/src/sucafina/domain/fields.ts",
+      "historicalBlob": "02665af4cb6e9d9a3f85e38a9c9a4d9dfdcfdaa1",
+      "currentBlob": "cdb09915b945861ebba3b7337a5182e962e199a8",
+      "blobRelation": "different",
+      "ordinal": 158,
+      "inventoryRows": [
+        "I18"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/schema/src/sucafina/files/structures.ts",
+      "historicalBlob": "fef3a3b416719e783b8890382cd3f86bdeaa69b7",
+      "currentBlob": "72c31c9889c7ddf4d3ff35adf703233da59e6db5",
+      "blobRelation": "different",
+      "ordinal": 159,
+      "inventoryRows": [
+        "I17"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    },
+    {
+      "path": "packages/schema/src/sucafina/planner.ts",
+      "historicalBlob": "dfdcc46f329a23eb87811436d6574eb80023e7a9",
+      "currentBlob": "1fb53c214274381b82da12a52e259442d08cce01",
+      "blobRelation": "different",
+      "ordinal": 160,
+      "inventoryRows": [
+        "I18"
+      ],
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    }
+  ],
+  "historicalDestinations": [
+    {
+      "n": 560,
+      "title": "feat(sf): integrar a instalação nativa de Files e C17",
+      "merged": "2026-11-21T04:57:08Z",
+      "merge": "3d19bbcc30c6d6ea62c717c891b7bed51a2b41fc",
+      "head": "90e724224b5f59d5d04fbf9fdce5484142e4b5e4",
+      "base": "dev"
+    },
+    {
+      "n": 562,
+      "title": "fix(sucafina): preserve C17 calculation ancestry across reopen",
+      "merged": "2026-11-21T05:38:14Z",
+      "merge": "0164e91b4f1f4c1186617899bdfc8bad4f92dfba",
+      "head": "14149347c0f1bf83db84a33c95f62957e840a4bb",
+      "base": "dev"
+    },
+    {
+      "n": 563,
+      "title": "fix(sucafina): restore the installed Reports collaboration flow",
+      "merged": "2026-11-21T12:45:10Z",
+      "merge": "1fd255026dec8e1db1f4342f7ec206a6812b42ea",
+      "head": "6c6999fb7779a00e6e653b5e2f8586061deeb181",
+      "base": "dev"
+    },
+    {
+      "n": 566,
+      "title": "feat(sf): expose trusted native installation discovery",
+      "merged": "2026-11-21T06:40:49Z",
+      "merge": "948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1",
+      "head": "3a8bcdb9351056e005c85f289749f34cd16cb5ef",
+      "base": "dev"
+    },
+    {
+      "n": 569,
+      "title": "fix(sf): restore authenticated skill load provenance",
+      "merged": "2026-11-21T06:50:03Z",
+      "merge": "e452abd1c028e5aaa5378663894ba7a95048f876",
+      "head": "8212e23891ef9378fda39476d52934aa99e80389",
+      "base": "dev"
+    },
+    {
+      "n": 570,
+      "title": "feat(sf): mount native context on the local installation",
+      "merged": "2026-11-21T06:50:08Z",
+      "merge": "b5297b938735eab8ae37a686f01015f37c727724",
+      "head": "fa648516e862467921f1edb0aba80f0ae21a1f74",
+      "base": "dev"
+    },
+    {
+      "n": 572,
+      "title": "feat(sf): restore native Web contracts and client transport",
+      "merged": "2026-11-21T07:52:15Z",
+      "merge": "0289a1d6a0000e59914de0cc227c581ab614999a",
+      "head": "4aa86a2ce41c9689b218ec0ceb462cf39242be08",
+      "base": "dev"
+    },
+    {
+      "n": 573,
+      "title": "feat(sf): restore the native Web shell for the local operator",
+      "merged": "2026-11-21T08:04:46Z",
+      "merge": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
+      "head": "392bb7bd98023413194a7f06596f267f175ebb32",
+      "base": "dev"
+    },
+    {
+      "n": 575,
+      "title": "fix(sucafina): retain Files authorization through download",
+      "merged": "2026-11-21T08:58:30Z",
+      "merge": "16896ff38ff4512ae1da375bd722fbf284d1cedc",
+      "head": "df54ddf93486559e69a4f6c30cdbbcec2eb1865a",
+      "base": "dev"
+    },
+    {
+      "n": 579,
+      "title": "fix(sucafina): qualify native Imports and Documents",
+      "merged": "2026-11-21T09:50:42Z",
+      "merge": "da48ba0105ea98ceabf5247b36f0596e07c722fa",
+      "head": "e0229873ab067ec3e9fdf6a784d00faef48c2877",
+      "base": "dev"
+    },
+    {
+      "n": 581,
+      "title": "feat(sf): mount the authenticated Team Web entry",
+      "merged": "2026-11-21T13:57:45Z",
+      "merge": "bcdc109326de02e20c01c32ffb6b00bee3ff978d",
+      "head": "0869f0467d7f89ae752c3cc2aa44c5f77c40d3e6",
+      "base": "dev"
+    },
+    {
+      "n": 582,
+      "title": "fix(sucafina): complete installed CurrentChoice preview",
+      "merged": "2026-11-21T15:00:48Z",
+      "merge": "761abac2f8ee4106db0347189ff304a4a79bf026",
+      "head": "c2274e5985d570e0d5391b1192f1ae6244cda636",
+      "base": "dev"
+    },
+    {
+      "n": 583,
+      "title": "feat(sucafina): refine six native screens",
+      "merged": "2026-11-21T18:18:35Z",
+      "merge": "acc0181508ceda7416bce57284b2307a9b20385b",
+      "head": "55bc2c624ae3ba4384df1203329de046d76f14b5",
+      "base": "dev"
+    },
+    {
+      "n": 585,
+      "title": "feat(sf): enable CurrentChoice for Microsoft Teams",
+      "merged": "2026-11-21T19:53:48Z",
+      "merge": "2f44b902ef0eb28fc73c3b9a31876866d850bc1a",
+      "head": "e32bd1186d966de218d49825aca00728d2e87175",
+      "base": "dev"
+    },
+    {
+      "n": 587,
+      "title": "feat(sf): redesign fifteen native Sucafina areas",
+      "merged": "2026-11-21T22:12:42Z",
+      "merge": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02",
+      "head": "602238a48e04eb209e0c2fba0af3adc8fd5e6edf",
+      "base": "dev"
+    },
+    {
+      "n": 589,
+      "title": "fix(core): enforce recorded session permission denies",
+      "merged": "2026-11-21T22:46:50Z",
+      "merge": "eb381dcc7ccdd4b965adf360241e67a1714810b6",
+      "head": "a90fcb86b2909249a54adbc8a23d5c4d4ee104d8",
+      "base": "dev"
+    },
+    {
+      "n": 590,
+      "title": "fix(sf): resume Apply with the original receipt",
+      "merged": "2026-11-21T22:59:36Z",
+      "merge": "3aff901838a4eafc515e6a72faf14b5c6930eeba",
+      "head": "dd65d1d76553d060d1240ff568e7abf0683cd957",
+      "base": "dev"
+    },
+    {
+      "n": 596,
+      "title": "feat(sf): observe the Finance pair in a readonly scope",
+      "merged": "2026-11-21T23:30:47Z",
+      "merge": "d73672b2293ee3d2db790b976301ced63b169cc3",
+      "head": "c3110161a2eb0d29ec55d1433f14a9875fded599",
+      "base": "dev"
+    },
+    {
+      "n": 597,
+      "title": "fix(sf): observe the exact portfolio coverage scenario pair",
+      "merged": "2026-11-21T23:35:26Z",
+      "merge": "bd1d3fae5162f3a97cb48181f729db6d62a3955b",
+      "head": "452facd21cb055d00128a3dd60bfafdc64e1b4a7",
+      "base": "dev"
+    },
+    {
+      "n": 602,
+      "title": "fix(claude-code): deny mapped calls without a text resource",
+      "merged": "2026-11-22T00:25:30Z",
+      "merge": "82670e1e919bdf3f859bcdb2214e9eac0d194ea1",
+      "head": "42ba9ce19d22725c918ed47a7ab55718feed2309",
+      "base": "dev"
+    },
+    {
+      "n": 605,
+      "title": "fix(core): enforce session adoption identity",
+      "merged": "2026-11-22T01:07:34Z",
+      "merge": "9effb3cbc91f87bcca6c8e76705f5fb8e856e43e",
+      "head": "1f4701afb115d1c39bfb3ae4e4438c82bc7267bb",
+      "base": "dev"
+    },
+    {
+      "n": 606,
+      "title": "fix(desktop): validate Live IPC senders",
+      "merged": "2026-11-22T01:18:31Z",
+      "merge": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "head": "5f40d11e0795c4103f4b238c359decb652431752",
+      "base": "dev"
+    },
+    {
+      "n": 607,
+      "title": "fix(desktop): validate WSL IPC senders",
+      "merged": "2026-11-22T01:40:13Z",
+      "merge": "8bd7645767deb85b286b046a52a4e9f1db100262",
+      "head": "fba6d59d603e84b6f5c973dc02ffe3352224defd",
+      "base": "dev"
+    },
+    {
+      "n": 608,
+      "title": "fix(desktop): block privileged window redirects",
+      "merged": "2026-11-22T01:55:06Z",
+      "merge": "a46fc34226e8a9fc4e527248fe1f820a73324543",
+      "head": "7658984177d3390c4690e553c7cfe667a5bee3d3",
+      "base": "dev"
+    },
+    {
+      "n": 609,
+      "title": "fix(desktop): redact credentials before writing logs",
+      "merged": "2026-11-22T02:19:54Z",
+      "merge": "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+      "head": "c5f77bda3bdb725abb8d3baa68f84b966fd53da4",
+      "base": "dev"
+    },
+    {
+      "n": 612,
+      "title": "fix(files): reject empty downloads",
+      "merged": "2026-11-22T02:31:53Z",
+      "merge": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+      "head": "5a66100c6acdc44409285e33b981bf000fecca7c",
+      "base": "dev"
+    },
+    {
+      "n": 614,
+      "title": "fix(reports): require proof for historical selections",
+      "merged": "2026-11-22T02:51:42Z",
+      "merge": "58c423c4bc1404434ff4a033fe2aeeb2be8f3491",
+      "head": "9e169c65014e705ad779588d754c1503e4c59135",
+      "base": "dev"
+    },
+    {
+      "n": 615,
+      "title": "fix(sf): revalidate consumed UI commands after expiry",
+      "merged": "2026-11-22T03:19:16Z",
+      "merge": "4e3730dc6aaac4616b29e3f6daf23771d01d9d58",
+      "head": "41330aad3e2b2337f4044d87ca357e62f19ef196",
+      "base": "dev"
+    },
+    {
+      "n": 616,
+      "title": "fix(core): settle ownership before returning exclusive outcomes",
+      "merged": "2026-11-22T03:32:51Z",
+      "merge": "16a4c35c345944b222282a3ace149d588d4f156b",
+      "head": "5fb21f697edd5235db51e3ff01a75124da34dcee",
+      "base": "dev"
+    },
+    {
+      "n": 618,
+      "title": "fix(sf): preserve unavailable analysis evidence at case selection",
+      "merged": "2026-11-22T03:45:10Z",
+      "merge": "888669d395a196ef95979d340d00304fa16256ab",
+      "head": "a408ccf56c06a2493383195e5c8eaf3870f7e8bf",
+      "base": "dev"
+    },
+    {
+      "n": 620,
+      "title": "fix(sf): bind Atlas recall evidence to its live observation",
+      "merged": "2026-11-22T04:10:07Z",
+      "merge": "be0e95bbdf6f0b210bae9df83c6f671f179c4040",
+      "head": "c809ad516c20bf3bf4b0fe22a1d826459f0f9661",
+      "base": "dev"
+    },
+    {
+      "n": 622,
+      "title": "fix(settings): preserve legacy permission rules when editing",
+      "merged": "2026-11-22T04:21:40Z",
+      "merge": "1f1703f462d13e10ac417c23da2072d84aab011f",
+      "head": "9173490c7562e530e1e86ce5a446d75feeeb6237",
+      "base": "dev"
+    },
+    {
+      "n": 623,
+      "title": "fix(settings): match MCP actions to connection state",
+      "merged": "2026-11-22T04:37:13Z",
+      "merge": "79912446753af5bb291fc2581543732eb4c83057",
+      "head": "0bcbcb41a62d73da308630a1dffbee363e31f25b",
+      "base": "dev"
+    },
+    {
+      "n": 547,
+      "title": "feat(teams): authorize corporate business flows by Team",
+      "merge": "6d9e67e634cd860fc91819707aca53f6fa7e33ab",
+      "head": "bae4782203ab3b76ab4479ea5bade427f3a4798e",
+      "merged": "2026-11-21T04:00:09Z",
+      "base": "dev"
+    }
+  ],
+  "currentDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+  "supplementary": [
+    {
+      "id": "S1",
+      "name": "AppDock subframe navigation",
+      "inventoryRow": "I13",
+      "state": "integrated",
+      "owner": "Astra/context_epoch",
+      "paths": [
+        "apps/desktop/src/main/app-dock.ts",
+        "apps/desktop/src/main/app-dock-linux-live.test.ts"
+      ],
+      "proof": "Actual createAppDock listener on existing Electron boundary: non-HTTPS subframes refused, HTTPS and main-frame delegation/callbacks preserved. Baseexpected-red,source11tests65asserts; full Desktop types0,focusedtypes0,exact Linux mutationneedle1;78guards3paths0. Approved42d111 merged,parentsc6dd+42d111 confirmed.",
+      "pr": 631,
+      "head": "42d111ae930aebfe9ce236fdd8ae7805b5e34429",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/631#pullrequestreview-6010534179",
+      "merge": "7be47a85119e467f1c01e32287137bf43768994c",
+      "ci": [
+        44989437551
+      ]
+    },
+    {
+      "id": "S2",
+      "name": "Sensitivity final publication and replay qualification",
+      "inventoryRow": "I25",
+      "state": "integrated",
+      "owner": "Astra/planner_contracts",
+      "prs": [
+        641,
+        643
+      ],
+      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/405#issuecomment-7076009926",
+      "paths": [
+        "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts"
+      ],
+      "proof": "Integrated641 classification/replay and643 finalpublication. Real native human coverage/promotion, persisted sampled pending/partial results, cold recomposition and exact positive remain supported. Unscoped verification stages privatefence through lastauthorization, rejects late mutation and invalidates previousgrant. Historical516 sequencing, optional subtotalfallback and optionalreadscope are separately justified as not applicable/necessary to shipped composition; no authority/digest weakening.",
+      "coordinationQualification": "https://github.com/gustavomhss/Orchestra-SF/pull/445#issuecomment-7074956953",
+      "remaining": null,
+      "subparts": {
+        "classification": {
+          "state": "integrated",
+          "pr": 641,
+          "head": "c2c48cb4f8438d4b1f77a3ec2493e8c3f916bb71",
+          "review": "https://github.com/gustavomhss/Orchestra-SF/pull/641#pullrequestreview-6011106743",
+          "ci": [
+            44999861912,
+            44999041880
+          ],
+          "regressionCI": [
+            44998494998
+          ],
+          "id": "S2-classification",
+          "name": "Sensitivity classification and replay",
+          "owner": "Astra/planner_contracts",
+          "merge": "ed20d7c432f9adc707edd82b588c1eeb4aa9d086",
+          "proof": "Two native preimage failures: pending sampled result denied on durable replay, partial priced component incorrectly exact. Runtime7399785 qualifies4tests99assertions (pending/partial durable+coldcomposition, exact positive, Finance). Finalc2 changes only type import/helper union;44999861912 Bun.Transpiler asserts identical emittedJS digest33d92193026fc62e606785eb26527d6f955268a040ea614b5ce7cc07cea9dc38, full CLI/Sucafina types0 and78guards/4paths0. Exact review+expectedhead merge, parentbabc+c2 confirmed. Initialrun44999041880 overall failed fixturetypes, not presented as fullPASS.",
+          "recordedDestination": "https://github.com/gustavomhss/Orchestra-SF/pull/445#issuecomment-7076231150"
+        },
+        "publication": {
+          "state": "integrated",
+          "branch": "sensitivity-publication",
+          "head": "dbca1c3497c24daa52f436fc9e775cf7885d3ba4",
+          "dependsOn": 641,
+          "snapshot": "b0410165c1c8f9d45ed9d652b4f1bc1a34d8b732",
+          "regressionCI": [
+            44998658828
+          ],
+          "ci": [
+            44999929962
+          ],
+          "proof": "Actual native persisted sensitivity and independent recertifications: grant hidden during final async authority, previousgrant immediately revoked, late borrowed binding/stored mutation refused, durablecase unchanged and revokedaccess denied.1test41assertions on exactdbca source, full CLI/Sucafina types0 and78guards2paths0. Snapshotb0410165 directparent source with only request+harness. Independent review6011124765 and expectedhead merge; parentsed20+dbca confirmed. Runtime includes approved641 classification; full priorfailedtype run44999214859 not used as a passinggate.",
+          "pr": 643,
+          "id": "S2-publication",
+          "name": "Sensitivity final publication",
+          "owner": "Astra/planner_contracts",
+          "merge": "325a907d8de892c82d9b5b654db1836d73232f75",
+          "review": "https://github.com/gustavomhss/Orchestra-SF/pull/643#pullrequestreview-6011124765",
+          "recordedDestination": "https://github.com/gustavomhss/Orchestra-SF/pull/405#issuecomment-7076228028"
+        },
+        "historicalSerialReads": {
+          "state": "out-of-scope",
+          "pr": 516,
+          "proof": "Historical516 depends on sensitivity-observation.ts, absent in currentdev. Shipped preview-comparison uses direct resolve/source/coverage/preview/reobservations without oldsharedlexicalowner. Native pending/partial preimage44998494998 completes both sample pairs and Promise.all revalidation without siblingstale. No current defect established; arbitrary serialization notported.",
+          "evidenceCI": 44998494998,
+          "recordedDestination": "https://github.com/gustavomhss/Orchestra-SF/pull/516#issuecomment-7076233972"
+        },
+        "historicalOptionalSubtotalFallback": {
+          "state": "out-of-scope",
+          "proof": "Current immutable resultRef requires identical digests across storedResult, selected alternative and canonical resolution. Historicalfallback allowed originals with differentcostCoverage and cannot revive an existingrefafterclassification.641shareseligibilitybeforeissuingresultwithoutrelaxingthosebindings.",
+          "recordedDestination": "https://github.com/gustavomhss/Orchestra-SF/pull/445#issuecomment-7076231150"
+        },
+        "optionalReadScope": {
+          "state": "out-of-scope",
+          "proof": "Optional sensitivityReadScope provides optimization/extraatomicity; current compositionunscoped is supported and finalpublicationgap is separatelyreproduced. Inconclusiveexactsolver timeout doesnotjustify portingtheoptional scope.",
+          "recordedDestination": "https://github.com/gustavomhss/Orchestra-SF/pull/405#issuecomment-7076228028"
+        }
+      },
+      "merges": [
+        "ed20d7c432f9adc707edd82b588c1eeb4aa9d086",
+        "325a907d8de892c82d9b5b654db1836d73232f75"
+      ],
+      "ci": [
+        44999861912,
+        44999041880,
+        44999929962
+      ],
+      "sourceAnchors": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/325a907d8de892c82d9b5b654db1836d73232f75/apps/cli/src/sucafina-product/portfolio-services.ts",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/325a907d8de892c82d9b5b654db1836d73232f75/modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/325a907d8de892c82d9b5b654db1836d73232f75/apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/325a907d8de892c82d9b5b654db1836d73232f75/apps/cli/src/sucafina-product/portfolio-coverage-authority.ts",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/325a907d8de892c82d9b5b654db1836d73232f75/modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts"
+      ]
+    },
+    {
+      "id": "S3",
+      "name": "Procurement legacy unavailable choice",
+      "inventoryRow": "I04",
+      "state": "integrated",
+      "owner": "Astra/planner_contracts",
+      "pr": 634,
+      "head": "d63487d8686a61691368da38bd40a7ea58c79fc9",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/634#pullrequestreview-6010569719",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+      ],
+      "proof": "Real requisition, source lifecycle, scenario and human C12 preparation: base0pass1fail6assertions; source Procurement+Apply receipt2tests25assertions. Refuses legacy flag in either list before archive; current draft requires explicit action,approvalGrantedfalse,receiptnull,confirmedfalse; domain/case state preserved/revocationrefused. CLI/Sucafina fulltypes0;baseowned78guards3paths0. Mergeparentse2e9+approvedd634 confirmed.",
+      "merge": "d572060d8164607f6981e6d42635a854a6fa23a4",
+      "ci": [
+        44990139841
+      ]
+    },
+    {
+      "id": "S4",
+      "name": "Planner BI known-subtotal origin",
+      "inventoryRow": "I25",
+      "state": "integrated",
+      "owner": "Astra/planner_contracts",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts"
+      ],
+      "proof": "Actual persisted C08 scenario promotions and BI09/10 factories with annual sources/monthly observation: baseline null drilldown reproduced15asserts; source BI+Finance2tests90assertions. Proves original priced components while retaining coverage refs and subperiods; 0allowed,null/transformed/mixeddenied. Full CLI/Sucafina types0/0;78guards2paths0. Approved7b34d merged;parentsd572+7b34d confirmed.",
+      "pr": 635,
+      "head": "7b34d700d77b6a64aa9140a456487c231dd8e380",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/635#pullrequestreview-6010607765",
+      "merge": "90861699b40d7093adbba70a69ac866eb517090f",
+      "ci": [
+        44991053426
+      ]
+    },
+    {
+      "id": "S5",
+      "name": "Native PO export operational observation and resource index",
+      "inventoryRows": [
+        "I01",
+        "I02"
+      ],
+      "owner": "Astra/root; reviewed independently by Astra/phase_finish",
+      "state": "integrated",
+      "pr": 652,
+      "head": "8bdb2e7d732e54ff5d86e3781bd379e0b0052716",
+      "merge": "e9b7305507e06a1f1c505548411b6c377c87a08d",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/652#pullrequestreview-6012475817",
+      "ci": [
+        45027059452
+      ],
+      "proof": "Exact original mounted Files/application factory provenance includes frozen original mount. Two read-only observations pin original request authority, delegate/persistence/auth/environment and source data; existing liveContext retains final admission. Entry wires actual files router and resource index adds only files.export.po. ActualSQLite/authority/router/renderer/liveContext17tests120assertions: healthy observation without rendering/commit,200HTML/escaping,wrongrecipient/missingPO404,lateauth403/source409 without bytes, missing/unowned/mismatchedmount and dependency/stamp/abort refusal. Baseindex0pass1fail expected. Full CLI/Sucafina types,78guards7paths0findings,diff-check green. Independent review caught/fixed missing producer-mount provenance and optional files guard before approval. Expected-head merge and ancestry verified.",
+      "scopeLimit": "Fixture identity/directory/fault inputs are explicit. No installed Entra/Teams/G09 qualification; scanner/signingkey availability does not grant PO access.",
+      "diagnosticCI": [
+        44998628394
+      ],
+      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7079399930"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "I01",
+      "behavior": "Seletor de instalação, shell Web e projeções nativas",
+      "historicalEvidence": "#566, #570, #572 e #573 compõem descoberta, contexto e shell. `apps/web/src/entry.tsx` usa a instalação selecionada. #581 monta a entrada Web autenticada por Team.",
+      "originalDestination": "**Absorvido no fluxo nativo.** Usar essa composição como base para qualquer fixture residual.",
+      "prs": [
+        566,
+        570,
+        572,
+        573,
+        581,
+        652
+      ],
+      "state": "integrated",
+      "proof": "Prior native shell/Files journeys remain absorbed in the recorded PRs. S5 missing PO operational observation, real mounted source composition and resource index integrated by #652/e9b730 with exact independent review and CI45027059452:17/120,fullCLI/SFtypes,78guards7paths0. Selected-order authorization and final egress preserved; no installed Teams qualification inferred."
+    },
+    {
+      "id": "I02",
+      "behavior": "Files, retomada de importação, arquivo assinado e catálogo",
+      "historicalEvidence": "#575 e #579 estão no dev. `packages/client/src/sucafina/transport.ts:375–500` preserva ownership, abort, recusa tipada e decodificação de bytes. O #579 exercitou os cenários instalados de Imports e Documents.",
+      "originalDestination": "**Jornadas absorvidas.** Validar separadamente os limites de saída e contratos abaixo.",
+      "prs": [
+        575,
+        579,
+        652
+      ],
+      "state": "integrated",
+      "proof": "Prior native shell/Files journeys remain absorbed in the recorded PRs. S5 missing PO operational observation, real mounted source composition and resource index integrated by #652/e9b730 with exact independent review and CI45027059452:17/120,fullCLI/SFtypes,78guards7paths0. Selected-order authorization and final egress preserved; no installed Teams qualification inferred."
+    },
+    {
+      "id": "I03",
+      "behavior": "Reports C05, anexos Office e navegação",
+      "historicalEvidence": "#563 está no dev. `src/screen-shell.ts:6,26` monta `shellPreviewScript`. O fluxo de entrega, replay e revogação está na composição C05 do #563.",
+      "originalDestination": "**Jornada absorvida.** Excluir o console substituto e os probes de performance antigos dessa integração.",
+      "prs": [
+        563
+      ],
+      "state": "absorbed",
+      "proof": "Native Reports/C05 journey replaces historical parallel console; historical export-style marker/probes do not define an additional product interface."
+    },
+    {
+      "id": "I04",
+      "behavior": "CurrentChoice C17, ancestry, SQLite e Team",
+      "historicalEvidence": "#562, #582 e #585 estão no dev. `apps/cli/src/sucafina-product/team-current-choice.ts:35,94–95` registra as operações e verifica ações. A factory Microsoft usa a composição Team.",
+      "originalDestination": "**Jornada absorvida.** Preservar os contratos de C17 atuais. A retomada de Apply legado é tratada abaixo.",
+      "prs": [
+        562,
+        582,
+        585,
+        634
+      ],
+      "state": "integrated-and-absorbed",
+      "proof": "CurrentChoice ancestry/reopen/Team behavior preserved by562/582/585; independent Procurement legacy flag supplement integrated634."
+    },
+    {
+      "id": "I05",
+      "behavior": "Grant do destinatário e revisão C05 no commit",
+      "historicalEvidence": "#563 adicionou `product/collaboration/authority.ts:281`; `threads.ts:53–63,131,226` confirma o guard de destinatário e identidade do provedor.",
+      "originalDestination": "**Absorvido para C05.** Conferir o ramo distinto de follow-up não C05 antes de portar alterações de `dispatch.ts` ou `thread-reads.ts`.",
+      "prs": [
+        563,
+        648
+      ],
+      "candidates": [
+        9
+      ],
+      "state": "integrated",
+      "proof": "C05 recipient grant stays absorbed via #563. Ordinary Procurement observer integrated by #648; recipient/source/period binding and refusal/revocation proven. New cross-person provider is outside the historical delta: unchanged optional fail-closed contract, no such composition in #349, no new provider criterion in briefing. No transfer accepted or inferred."
+    },
+    {
+      "id": "I06",
+      "behavior": "Cobertura completa sem produtor de evidência",
+      "historicalEvidence": "`product/decisions/mutations.ts:120,125` já recusa um resultado completo sem `coverageEvidence` e liga `verifySnapshot` ao commit.",
+      "originalDestination": "**Recusa básica absorvida.** A prova privada para no-op e o ordenamento seguem no recorte Finance.",
+      "prs": [
+        560,
+        632
+      ],
+      "candidates": [
+        8
+      ],
+      "state": "integrated-and-absorbed",
+      "proof": "Complete coverage without a private evidence producer was already refused by560; the residual no-op/private ordering and revocation proof was integrated by632 on exact reviewed1b2e763, mergecca15664, CI44989560573."
+    },
+    {
+      "id": "I07",
+      "behavior": "Projeção analítica compartilhada",
+      "historicalEvidence": "`product/analytics/view.ts` tem o blob final do #349.",
+      "originalDestination": "**Absorvido literalmente.**",
+      "state": "absorbed-literal",
+      "proof": "product/analytics/view.ts current blob equals #349 final blob."
+    },
+    {
+      "id": "I08",
+      "behavior": "Core V2, recurso vazio e precedência de deny",
+      "historicalEvidence": "`packages/core/src/permission.ts:156–171` ainda usa `evaluate` por recurso e cai em `allow` quando a lista está vazia. A resolução de pendências em `permission.ts:304–323` não contém a guarda equivalente do #349.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `core-permission-deny`, a partir de `95ad84fc64` limitado a Permission e consumidores task. Reprovar recurso vazio e preservar o deny configurado.",
+      "prs": [
+        589
+      ],
+      "state": "absorbed",
+      "proof": "Empty resource refusal and configured deny precedence integrated."
+    },
+    {
+      "id": "I09",
+      "behavior": "Claude tool sem recurso tipado",
+      "historicalEvidence": "`modules/engine-adapters/claude-code/src/v2/host.ts:243,799–802` ainda fornece wildcard para chamada mapeada sem texto. O ramo de ferramentas sem mapeamento tem contrato distinto.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `claude-resource-required` de `97407e0db8`, limitado ao adaptador e seu teste de admissão.",
+      "prs": [
+        602
+      ],
+      "state": "absorbed",
+      "proof": "Mapped Claude tool requires typed resource; unknown-tool contract preserved."
+    },
+    {
+      "id": "I10",
+      "behavior": "Reuso de Session ID e prompts agendados",
+      "historicalEvidence": "`packages/core/src/session.ts:417–435` ainda devolve a sessão existente na corrida. `scheduled-task.ts` e `tool/task.ts` mantêm os blobs da base histórica, sem as proteções de adoção/reconciliação do #349.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `session-adoption` de `95ad84fc64`. Exercitar localização, agente, parent e posse do prompt em retomada.",
+      "prs": [
+        605
+      ],
+      "state": "absorbed",
+      "proof": "Session ownership/adoption and scheduled prompt reconciliation integrated."
+    },
+    {
+      "id": "I11",
+      "behavior": "Reunião e shell como dados no Context Epoch",
+      "historicalEvidence": "Em dev, `context-epoch.ts`, `meeting-context.ts`, `meeting-briefing.ts`, `message-updater.ts`, `direct-commands.ts` e `to-llm-message.ts` são os blobs anteriores ao delta. O #349 separa dados de baseline/instrução e preserva eventos de replay.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `context-epoch-data` de `6be0951806` mais correções de dependência de `fbe62fb53a` e `86f6e9f99b`. Preservar semântica de baseline/admissão e uma chamada LLM por turno.",
+      "candidates": [
+        1
+      ],
+      "state": "integrated",
+      "proof": "Context Epoch handled in626; exact merge and proof referenced by candidate1."
+    },
+    {
+      "id": "I12",
+      "behavior": "Publicação do resultado exclusivo após liberar a posse",
+      "historicalEvidence": "`packages/core/src/session/run-coordinator.ts` e seu teste mantêm o blob da base. O resultado é publicado no onExit do trabalho antes do settle do dono.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `exclusive-settlement` de `7e42b794e6` com o teste `81b45523df`.",
+      "prs": [
+        616
+      ],
+      "state": "absorbed",
+      "proof": "Exclusive result is published only after owner settlement."
+    },
+    {
+      "id": "I13",
+      "behavior": "Electron, origem de IPC e redirecionamento",
+      "historicalEvidence": "`live-ipc.ts` e `wsl/ipc.ts` mantêm os blobs da base. `windows.ts` diverge e já tem navegação própria, mas o #349 acrescenta validação de sender/origem e cancelamento de redirecionamento para janelas privilegiadas.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `desktop-ipc-origin` de `f6f2be6426`. Conferir os redirects já tratados em App Dock e manter as validações existentes de permissões e canais.",
+      "prs": [
+        606,
+        607,
+        608,
+        631
+      ],
+      "supplementary": [
+        "S1"
+      ],
+      "state": "integrated-and-absorbed",
+      "proof": "Original Electron popup/lifecycle/capture scopes absorbed in606/607/608; complementary missing subframe HTTPS rule integrated631, exact review+CI44989437551,merge7be47 confirmed."
+    },
+    {
+      "id": "I14",
+      "behavior": "Redação de credenciais em logs ao gravar",
+      "historicalEvidence": "`apps/desktop/src/main/logging.ts:195` redige no export. `logging.ts` e `live-transport-log.ts` continuam iguais à base, sem redação antes das escritas usuais do #349.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `desktop-log-redaction` de `f6f2be6426`, separado do IPC. Testar escrita e export.",
+      "prs": [
+        609
+      ],
+      "state": "absorbed",
+      "proof": "Credential redaction at writes/export integrated."
+    },
+    {
+      "id": "I15",
+      "behavior": "Settings V2, round-trip de permissões e estados MCP/Agents",
+      "historicalEvidence": "Os quatro arquivos de `settings-v2/view/` e `agents-view.tsx` mantêm os blobs da base histórica. `ea518dbbea` normaliza regras objeto/lista, preserva padrões, expõe status de provider e separa ação MCP de login/retry/toggle.",
+      "originalDestination": "**Resíduo de UI.** Dividir em `settings-permission-roundtrip` e `settings-agent-mcp-state`. O MCP de compras #586 é do host Microsoft e não resolve o comportamento desta tela.",
+      "prs": [
+        622,
+        623,
+        625
+      ],
+      "candidates": [
+        2
+      ],
+      "state": "integrated",
+      "proof": "Permissions round-trip, MCP actions and provider/roster state integrated."
+    },
+    {
+      "id": "I16",
+      "behavior": "Empacotamento Web genérico sem sourcemaps",
+      "historicalEvidence": "`apps/cli/script/distribution-payload.ts:34–46` ainda captura todos os assets Web. O arquivo tem o blob da base. O fluxo Entra tem empacotador próprio e a prova ELF histórica trabalha com sidecars separados.",
+      "originalDestination": "**Resíduo do empacotador compartilhado.** Reconciliar com o [#254](https://github.com/gustavomhss/Orchestra-SF/pull/254), aberto na base histórica. O #254 toca o mesmo empacotador e os dois testes Web, além do wrapper Deno. Reconciliar os guards de `7217133495` e portar somente as diferenças que faltarem, com mapa externo/comprimido, mapa inline e verificação do payload.",
+      "candidates": [
+        3
+      ],
+      "state": "integrated",
+      "proof": "Exact generic Web producer, verifier and archive: compressed/external maps omitted without builder mutation, inline JS/CSS rejected, self-consistent reconstructed manifests/checksums cannot restore maps. Three preimage tests fail; source38pass375assertions0fail with one pre-existing case-insensitive-volume skip. CLI declared typecheck0;78guards3paths0. Final snapshotd8b1dba is direct child of approved d69cdd7, only request+harness; clean source tests/gates. Merge protected by exact expected head, confirmed as dev with parents90861699+d69cdd7. No full compiled CLI/Web or G09/Teams claim.",
+      "pr": 636,
+      "head": "d69cdd7a356d490068e2cfd2e3f12a87ba90488e",
+      "merge": "ac241bde903fa5ca4778a69ae414073f68fd8e7b",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/636#pullrequestreview-6011056602",
+      "ci": [
+        44998323414
+      ]
+    },
+    {
+      "id": "I17",
+      "behavior": "Contrato Files de download vazio, negação e MIME",
+      "historicalEvidence": "O transporte recusa MIME inválido e conserva 401/403, mas `transport.ts:395–410,475–482` pode completar com zero bytes e `files/structures.ts:245` aceita qualquer Uint8Array.",
+      "originalDestination": "**Resíduo de contrato.** Recorte `files-nonempty-download` de `bb53193cba` sobre #572/#575/#579. Manter erro tipado e testar Web e IPC.",
+      "prs": [
+        612
+      ],
+      "state": "absorbed",
+      "proof": "Nonempty downloads and typed Web/IPC failure boundaries integrated."
+    },
+    {
+      "id": "I18",
+      "behavior": "Contratos Domain/Planner de versão, quantia e rótulo de medida",
+      "historicalEvidence": "`domain/fields.ts:17` ainda aceita string livre em `SfDomainVersionInput`. `planner.ts` divergiu com os contratos nativos. Os inputs de quantia editável precisam manter o formato observado no produtor.",
+      "originalDestination": "**Resíduo de contrato.** Recorte `native-numeric-contracts`, apenas guards compatíveis de `bb53193cba` e `41493a3b27`. Validar consumidores antes de restringir wire. Os três contratos de produtor explicitamente excluídos na descrição do #349 continuam fora desse porte.",
+      "prs": [
+        624
+      ],
+      "candidates": [
+        4
+      ],
+      "state": "integrated",
+      "proof": "Producer-backed numeric revisions in project import; supported text/null amount wire preserved, invalid measure labels rejected without mutation."
+    },
+    {
+      "id": "I19",
+      "behavior": "Preparação de Apply e replay com recibo anterior",
+      "historicalEvidence": "#560 trouxe o Apply, porém `product/decisions/receipt-review-binding.ts` conserva a base e não contém `preparedResumeIntentState`. O CurrentChoice #585 cobre outro replay.",
+      "originalDestination": "**Resíduo de runtime.** O [#392](https://github.com/gustavomhss/Orchestra-SF/pull/392) tem cobertura de navegador e UI, sem o produtor de Apply. Usar suas asserções e extrair de `d4ce0d4eb5` o recorte `apply-receipt-resume`, que retém a intenção/digest originais e valida versão/incarnação sem novo dispatch.",
+      "prs": [
+        590
+      ],
+      "state": "absorbed",
+      "proof": "Original Apply intent/digest and receipt are retained on resume."
+    },
+    {
+      "id": "I20",
+      "behavior": "Agenda/Reports, selo histórico de seleção",
+      "historicalEvidence": "`product/reviews/routine-selection.ts:83–86` usa registry, TTL e binding. `product/reviews/port.ts:46` ainda espera boolean; o pedido do #349 relê o resultado emitido e confere stamps individuais.",
+      "originalDestination": "**Resíduo de autoridade.** Recorte `report-selection-proof` sobre #563. Portar prova e seam juntos, com revogação, alteração de digest e comparação de stamps.",
+      "prs": [
+        614
+      ],
+      "state": "absorbed",
+      "proof": "Historical Reports selection seal checks actual issued proof and individual stamps."
+    },
+    {
+      "id": "I21",
+      "behavior": "UI Authority, tempo inválido e comando consumido",
+      "historicalEvidence": "`product/integration/ui-authority.ts:19–34,45` revoga a admissão ao atingir TTL em vez do recheck do comando consumido de `420c1dae91`. Timeout/revogação de Reports e Files já têm gates próprios.",
+      "originalDestination": "**Resíduo de autoridade.** Recorte `ui-command-clock`, isolando relógio finito e reautorização depois da expiração. Preservar TTL de download e caminhos de recusa atuais.",
+      "prs": [
+        615
+      ],
+      "state": "absorbed",
+      "proof": "Finite clock and consumed-command authorization beyond TTL integrated."
+    },
+    {
+      "id": "I22",
+      "behavior": "Observação de registro/projeção e correlação Hot Topic",
+      "historicalEvidence": "`product/dashboard/sources.ts` contém boa parte da projeção de #349 em dev, com diferenças no vínculo Request/lease e egress. `collaboration/composition.ts` e `source-lifecycle.ts` não têm o mesmo wiring da identidade recém-criada.",
+      "originalDestination": "**Parcial.** Recorte `record-observation-fence` com `3f3543206e`, `420c1dae91` e assert WP08. A correlação de Hot Topic de `9bc24e341d` entra em recorte próprio depois de comparar #563 e o shape de source identity atual.",
+      "prs": [
+        560,
+        563
+      ],
+      "candidates": [
+        5
+      ],
+      "state": "absorbed",
+      "proof": "Dashboard record projection plus transactional HotTopic identity/correlation and commit authorization; see candidate5 equality and historical negative proof."
+    },
+    {
+      "id": "I23",
+      "behavior": "Recall Atlas por owner vivo",
+      "historicalEvidence": "Os blobs de `memory-case-read-scope.ts` e `host-binding/atlas-memory.ts` mudaram em dev, mas não contêm o par `withSfAtlasRecallObservation` do #349. A escrita Atlas do C17 por Team já existe.",
+      "originalDestination": "**Resíduo de recall.** Recorte `atlas-live-recall` de `f4ed9e86d4`, somente observação/leitura e testes de revogação. Verificar a API atual de Atlas antes de portar.",
+      "prs": [
+        620
+      ],
+      "state": "absorbed",
+      "proof": "Atlas recall observes current owner/source authority."
+    },
+    {
+      "id": "I24",
+      "behavior": "Phase bridge, origem física, skill load e login local",
+      "historicalEvidence": "#569 já integrou a proveniência de carregamento governado. #566/#570/#573 substituem o antigo console local. `routine-native-phase-origin.ts` e `routine-native-phase-fence.ts` ainda têm blobs da base.",
+      "originalDestination": "**Parcial.** Recorte `phase-origin-proof` para origem absoluta e fixture com raiz física. Usar contrato atual de #569; reaproveitar apenas assertions de login/audit em `native-fixtures` sobre a factory real.",
+      "prs": [
+        547,
+        569,
+        560,
+        650
+      ],
+      "candidates": [
+        6
+      ],
+      "state": "integrated",
+      "proof": "Real Local Operator entry delegates its stable physical private installation/workspace to the real host factory before business storage opens. Permanent regression2/31; original Global/SQLite/Runtime/Governance/Session/Event graph2/60 proves physical sibling origin, durable session/fence and refusal of aliases/unsafe ancestors/revoked UI authority without reserving sessions. Complete CLI/Sucafina types and78guards pass. Earlier45026200781 overall failed only extra EOF blank line; final45026566407 verifies exact before===current+LF and reruns2/31/guards/diff. Expected-head merge and dev ancestry verified. No installed Teams/G09 claim. Prior provenance #569 and authenticated group/bootstrap #547 remain absorbed; legacy console replaced by native composition."
+    },
+    {
+      "id": "I25",
+      "behavior": "Planner/BI e Finance, prova exata e pares de caso",
+      "historicalEvidence": "#562/#582/#585 fecham ancestry e CurrentChoice nos fluxos aceitos. `planner-evidence.ts`, `scenario-operation-access.ts`, `portfolio-coverage.ts`, `cost-coverage.ts` e `stored-scenarios.ts` não carregam o pacote de observação de `15fd6f34cc`–`887d25a227`. `result-store.ts` divergiu no caminho C17.",
+      "originalDestination": "**Parcial.** Separar `planner-source-reads`, `coverage-proof-order` e `finance-case-observe`. O [#517](https://github.com/gustavomhss/Orchestra-SF/pull/517) toca apenas `portfolio-coverage-authority.ts`. Tratar sua seleção de pares como sobreposição de contrato. Portar observação inicial/final, digest e clones só após comparar com a API atual. A falta do fixture antigo não demonstra regressão de C17.",
+      "prs": [
+        562,
+        582,
+        585,
+        596,
+        597,
+        627,
+        632,
+        635,
+        641,
+        643
+      ],
+      "candidates": [
+        7,
+        8
+      ],
+      "state": "integrated-and-absorbed",
+      "proof": "Historical CurrentChoice/Finance composition retained;627reader fence,632privatecoverageorder,635BI knownsubtotal origin,641sensitivity classification/replay and643finalpublication integrated. Ancillary historical516/optional fallback/readscope are not necessary or compatible with current immutable canonicalbindings; reasons recorded inS2."
+    },
+    {
+      "id": "I26",
+      "behavior": "Análise indisponível e follow-up fora de C05",
+      "historicalEvidence": "`analysis-host-services.ts` preserva o blob da base e não preserva o motivo de indisponibilidade da fonte no recorte `2f272331bc`. `collaboration/dispatch.ts` e `thread-reads.ts` divergem após #563, que cobre uma trilha de Reports.",
+      "originalDestination": "**Resíduo estreito de análise; equivalência pendente no follow-up.** Recortes `analysis-source-status` e `followup-observation`. Primeiro manter status `unavailable` vs recusa; no segundo requerer reproduzir o ramo real ainda sem prova antes de portar.",
+      "prs": [
+        618,
+        648
+      ],
+      "candidates": [
+        9
+      ],
+      "state": "integrated",
+      "proof": "Analysis unavailable remains absorbed via #618; current dispatch preserves real unavailability and current historical fallback is source/version bound. Ordinary observer integrated by #648 with6/155 native checks, full types/guards. Historical broad downgrade not ported; optional new cross-person provider excluded with unchanged-contract evidence."
+    },
+    {
+      "id": "I27",
+      "behavior": "UI Sucafina, negativa, moeda, texto e confirmação",
+      "historicalEvidence": "#573/#579/#583 mudaram o shell, Imports e Executive. `confirmations/index.tsx`, `talent/index.tsx`, `headcount/index.tsx` e os quatro arquivos de i18n ainda têm os blobs da base.",
+      "originalDestination": "**Parcial.** Recortes `sf-confirmation-payload` (fingerprint, versão e dependências do que será enviado) e `sf-ui-status-copy` (denied vs empty, moeda real e catálogo). Revalidar os atalhos do fornecedor e a apresentação de importação contra #579 e Executive contra #583 antes de transferir qualquer hunk.",
+      "prs": [
+        573,
+        579,
+        583,
+        587,
+        630,
+        633,
+        649,
+        651,
+        653
+      ],
+      "candidates": [
+        10,
+        11
+      ],
+      "state": "integrated",
+      "proof": "Talent denied/enum behavior absorbed573/587; Headcount producer currencies integrated630; Crosslinks/Executive denial+catalog integrated633; Imports finalcatalog integrated649. UI53 exactpreparedpayload integrated653 after exactDesignreadFence extraction651; displayed fingerprint,CAS and dependencyJSON match the real C06command; source/dependency/CAS refusal,replay and wrappingqualified4/60. Designauthor/ownerretainedforbackend,Astraintegrator; no transferredpendingdelivery."
+    },
+    {
+      "id": "I28",
+      "behavior": "Console PAGE legado, fixtures, provas de relatório e handoff",
+      "historicalEvidence": "O #349 adiciona console instalado auxiliar, preload e vários fixtures ausentes em dev. O #563 usa a instalação de produção no Reports, e #573/#579 montam o host que os cenários atuais abrem. Os probes no handoff registram candidatos históricos e gates específicos.",
+      "originalDestination": "**Infraestrutura histórica substituída.** Recortes de teste por comportamento, junto a cada delta de runtime acima. Preservar provas antigas como evidência; não portar um console paralelo, o workflow histórico ou resultados de perf como code paths.",
+      "state": "out-of-scope",
+      "proof": "Original inventory excludes historical console/fragment/probe additions, not entire active runtime files. Per-hunk inspection: application still authenticates/views/renders; reports fileControls and supplier privateFileControls already exist; planner/procurement wrappers only adapt legacy raw HTML input; operator cross-site redirect already current; old workflow hunk onlyHUSKY=0. Native destinations563/573/579 preserved.",
+      "prs": [
+        563,
+        573,
+        579
+      ]
+    }
+  ],
+  "reconciliationStatus": "complete:19productPRs integrated,11candidates and28inventoryrows terminal,160historicalpaths reconciled,zero remaining balance,zero accepted transfers",
+  "readyToClose": true,
+  "historyPreservation": {
+    "pr": 349,
+    "state": "open",
+    "merged": false,
+    "headRef": "audit-one",
+    "head": "d51c2d2f2a1dfe28059904a07e37db253aea1547",
+    "baseRef": "close-final-candidate",
+    "base": "52d2c24f4f8cb776889b97894131df6ada43ce98",
+    "handoffRef": "audit-residual-bundle",
+    "handoff": "8a2f89faf71d77b499a70cfa5f7e6045a44ac022",
+    "documentationBranch": "audit-residual-ledger",
+    "action": "Read-only preservation confirmed; no historical ref or PR state changed by this bundle.",
+    "finalVerification": {
+      "pr349OpenUnmerged": true,
+      "auditOne": "d51c2d2f2a1dfe28059904a07e37db253aea1547",
+      "closeFinal": "52d2c24f4f8cb776889b97894131df6ada43ce98",
+      "handoff": "8a2f89faf71d77b499a70cfa5f7e6045a44ac022",
+      "checkedDev": "37931c77eb07aecf01610bb0ee7d717276b85539"
+    }
+  },
+  "scopeExclusions": [
+    "G09 remains with its established front.",
+    "#588 remains with its established front.",
+    "Teams migration qualification and cutover remain with Migration.",
+    "Original #349 explicitly excludes analysis action discriminator, document-confirm evidence body and upload {ok:true} without ID because another session owns those producer wires. This bundle preserves that recorded scope boundary."
+  ],
+  "ownershipChecks": {
+    "lastObservedDev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+    "executionClaim": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7079399930",
+    "note": "Every item now has a proven terminal destination. Astra integrated the exact existing Design hunk without changing its owner/author or613 branch. The extra ACK wait initially inferred for651 was withdrawn after independent reading of the user's literal authorization: acceptance is required for the transferred destination, not as a new permission for an already-authorized verified integration. No external acceptance or transfer is claimed.",
+    "writer613": {
+      "head": "9341bc3d25f5771009258b58c91c0fe85cb093ae",
+      "paths": 721,
+      "state": "open",
+      "front": "Design",
+      "branch": "sf-design-next",
+      "acceptance": null
+    },
+    "pendingWithoutAck": [],
+    "acceptedTransfers": [],
+    "resolvedWithoutTransfer": [
+      {
+        "candidate": 6,
+        "pr": 650
+      },
+      {
+        "candidate": 9,
+        "pr": 648,
+        "scopeCorrection": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7079828442"
+      },
+      {
+        "candidate": 11,
+        "pr": 649
+      },
+      {
+        "supplement": "S5",
+        "pr": 652
+      },
+      {
+        "candidate": 10,
+        "prs": [
+          651,
+          653
+        ],
+        "merges": [
+          "b6a213be32933d042a97583da7e3ffa6dda0afa4",
+          "37931c77eb07aecf01610bb0ee7d717276b85539"
+        ]
+      }
+    ],
+    "previousCheckpoint": {
+      "dev": "4e9beb3e209a0c85f9b73e5cf745d58c5e27d86e",
+      "ledger": "be36637a0a29c1a67cd23d40f388dd89edd5e65e",
+      "note": "Previous ownership requests/statuses are historical only; current state is described above."
+    },
+    "integrationClarification": {
+      "prerequisite": 651,
+      "sourcePR": 613,
+      "sourceHead": "9341bc3d25f5771009258b58c91c0fe85cb093ae",
+      "sourceBlob": "309a607eb430f451ecc54cabee0d4cca3a9d0b7a",
+      "authorOwner": "Design",
+      "integrator": "Astra",
+      "destination": "integrated",
+      "merge": "b6a213be32933d042a97583da7e3ffa6dda0afa4",
+      "transfer": false,
+      "ownerAcceptance": null,
+      "record": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7079917262",
+      "reviews": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/651#pullrequestreview-6012514339",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/653#pullrequestreview-6012513003"
+      ]
+    }
+  },
+  "auditReview": {
+    "previousCheckpointReviews": {
+      "ledger": "be36637a0a29c1a67cd23d40f388dd89edd5e65e",
+      "status": "historical-only",
+      "reviews": {
+        "reviewer": "Astra/provider_state (independent of ledger author)",
+        "sourceCheckpoint": "4cf497156909005ccf60a1998844c66b18a7eed9",
+        "counts": {
+          "candidates": 11,
+          "rows": 28,
+          "paths": 160,
+          "uniquePaths": 160
+        },
+        "findings": [
+          "Corrected wp14/domain-outcome fixture mapping from I18 to I25; not attributed to numerical624.",
+          "Documented bindings denial equivalence through strict discriminants/current consumers572/573/588; no claim of17operation DOM coverage.",
+          "Found missing POresource index and health observation; S5 remains pending coordinated ownership and real qualification.",
+          "Kept Context/core full-typecheck and schema baseline diagnostics explicit, and retained gate-level reuse limits for625/626."
+        ],
+        "terminalPRMetadataChecked": 41,
+        "initialExactReviewsChecked": 9,
+        "additionalReview": {
+          "reviewer": "Astra/context_epoch",
+          "scope": "I28 hunks and I24 identity/group composition",
+          "source": "d572060d8164607f6981e6d42635a854a6fa23a4",
+          "finding": "No additional product gap. Clarified active runtime vs excluded old console additions; authenticated bootstrap and actual runTeamBusiness/groups547 replace old identity-level fallback. Phase failure limited to Local Operator; Microsoft/G09 not inferred."
+        },
+        "continuation": {
+          "state": "independent-review-completed-documentation-corrections-applied",
+          "newPRs": [
+            636,
+            641,
+            643
+          ],
+          "candidate9": "Confirmed shipped composition gap, not absorbed",
+          "counts": {
+            "candidates": 11,
+            "rows": 28,
+            "paths": 160,
+            "integratedPRs": 13
+          },
+          "correctedFindings": [
+            "Updated I01/I02 to distinguish complete PO producer/egress proof from missing authorized operational observation/composition/index.",
+            "Updated I24 and candidate6 to record completed real-entry diagnostic and current shared writer613; historical237 is not assigned as current owner.",
+            "Kept residual accountability with Astra, separately identifying Design/#613 as active file writer and no accepted transfer.",
+            "Checked currentdev source continuity for Phase/PO/follow-up anchors through325a907d without repeating valid CI."
+          ],
+          "reviewer": "Astra/context_epoch (independent of ledger author)",
+          "reviewedCheckpoint": "37b4252f613f1ee3f35a8fc509a01ddfd9755012",
+          "verified": {
+            "productPRsMerged": 13,
+            "approvedHeadsAndMergeSHAsMatch": true,
+            "all13MergesInCurrentDevAncestry": true,
+            "candidates": 11,
+            "terminalCandidates": 7,
+            "pendingCandidates": [
+              6,
+              9,
+              10,
+              11
+            ],
+            "inventoryRows": 28,
+            "terminalInventoryRows": 22,
+            "historicalPaths": 160,
+            "uniquePaths": 160,
+            "allOriginalHistoricalBlobsMatch": true,
+            "blobRelations": {
+              "identical": 9,
+              "different": 109,
+              "absent": 42
+            },
+            "preservedRefs": true,
+            "pr349OpenUnmerged": true,
+            "candidate9": "Shipped producer gap confirmed; no absorption or transfer",
+            "ci641": "Only passing runtime reused from failed typing job; final emitted-JS witness, CLI/Sucafina types and guards independently verified",
+            "sensitivityAncillaryHunks": "Current canonical digest constraints and historical comments justify non-applicability",
+            "phaseAndPOLimits": "Diagnostic component boundaries retained; no installed Teams qualification"
+          },
+          "finalExactReviewDestination": "PR349 conversation; final approval is anchored to the corrected documentation commit there.",
+          "previousExactApprovedCheckpoint": "b4b35ce1cbbdb2881fd0b3662600d819c2ab365f",
+          "latestProvenanceReview": {
+            "reviewer": "Astra/context_epoch",
+            "devFrom": "325a907d8de892c82d9b5b654db1836d73232f75",
+            "devTo": "4e9beb3e209a0c85f9b73e5cf745d58c5e27d86e",
+            "writerFrom": "6acd67a926c664c696df3ae1c0791599ef58e811",
+            "writerTo": "bacd7c48e7b00844dd6683f25938f5f06b6783dc",
+            "devPaths": 19,
+            "writerDocPaths": 17,
+            "countsUnchanged": true,
+            "sharedProductSourcesUnchanged": true,
+            "noNewAcceptance": true
+          }
+        }
+      }
+    },
+    "resumeReadAudit": {
+      "reviewer": "Astra/followup_finish (independent of ledger author)",
+      "dev": "e9b7305507e06a1f1c505548411b6c377c87a08d",
+      "tree": "111d82680240cdaeddbd3794a8d0aeac57a74537",
+      "verified": {
+        "productPRsMerged": 17,
+        "candidates": 11,
+        "terminalCandidates": 10,
+        "pendingCandidates": [
+          10
+        ],
+        "inventoryRows": 28,
+        "terminalInventoryRows": 27,
+        "historicalPaths": 160,
+        "uniquePaths": 160,
+        "unmappedPaths": 0,
+        "historicalBlobsCorrect": true,
+        "completeGitSubtrees": true,
+        "relations": {
+          "identical": 9,
+          "different": 109,
+          "absent": 42
+        },
+        "newRealResiduals": 0,
+        "refsPreserved": true
+      },
+      "note": "This read audit confirms evidence/counts; exact documentation checkpoint review will be recorded separately."
+    },
+    "exactDocumentationReview": {
+      "mechanism": "Independent external attestation in PR349 conversation, pinned to the documentation commit SHA",
+      "reviewer": "Astra/followup_finish",
+      "requiredBeforeFinalDelivery": true
+    },
+    "finalProductAudit": {
+      "state": "completed",
+      "reviewers": [
+        "Astra/followup_finish",
+        "Astra/phase_finish"
+      ],
+      "dev": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "tree": "a2fd28f1a16971a7cf89ea9722c5b70b815a0792",
+      "verified": {
+        "productPRsMerged": 19,
+        "all19HeadsAndMergesMatch": true,
+        "all19MergesInDevAncestry": true,
+        "terminalCandidates": 11,
+        "terminalInventoryRows": 28,
+        "supplements": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5"
+        ],
+        "historicalPaths": 160,
+        "uniquePaths": 160,
+        "historicalBlobsCorrect": true,
+        "completeGitSubtrees": true,
+        "relations": {
+          "identical": 10,
+          "different": 108,
+          "absent": 42
+        },
+        "unmapped": 0,
+        "newRealResiduals": 0,
+        "transfers": 0,
+        "refsPreserved": true
+      },
+      "c10PublicConfirmation": "https://github.com/gustavomhss/Orchestra-SF/pull/653#issuecomment-7079950149"
+    }
+  },
+  "ciLimits": [
+    "No local build, test or typecheck; all executable gates used existing GitHub Actions test-ci in isolated snapshots.",
+    "Tests and gates are tied to exact product heads. Source snapshot parents and allowed request/harness-only deltas were verified; guards ran on clean product diffs.",
+    "625 reused passing existing Agents/typecheck/guards from44988002304; only its DOM invocation failed before execution. DOM was separately qualified by44988169984 on unchanged product head.",
+    "626 reused159tests/548assertions and production runtime typecheck from44988743502; final44989026751 passed type-diagnostic comparison and clean product guards. Full Core retains one existing Jira fixture TS2353, identical base/head.",
+    "624 production schema and Sucafina typechecks pass. Complete schema retains three pre-existing Teams fixture diagnostics identical between base and head; not a claim of global schema typecheck PASS.",
+    "AppDock631 uses actual listener code at existing Electron fixture boundary; it does not requalify installed Linux/Docker runtime.",
+    "636 focused38pass375assertions,1pre-existingcase-alias skip. Declared CLI typecheck0 in44998323414 supersedes invalid --force invocation; full compiled native build/G09/Teams not claimed.",
+    "641 reuses only4passing runtime tests/99assertions from44999041880 (overallfailednewfixturetypes). Final44999861912 onapprovedc2 proves exacttwo-line type-onlydelta and identical emittedJavaScript viaBun.Transpiler, thenfull CLI/Sucafina types0 and78guards4paths0. No fullPASS attributed to theearlierfailedrun.",
+    "643 final44999929962 runs the corrected regression again on exactdbca,1pass41assertions,fulltypes0,78guards2paths0. Earlier44999214859 failed testfixturetypes and is not a passingmergegate.",
+    "650: source66e91 runtime2/31 plus originalCore graph2/60, fulltypes andguards passed in45026200781, whose whole job failed only EOF blank LF. Final green45026566407 proves before===current+LF, reruns2/31/guards/diff on approveda602. No fullpass claimed for earlierjob.",
+    "648: green45026115722 runtime6/155 and fullCLI/SFtypes; green45026756697 proves65f0 changedonlyguide andall3runtime/testblobs identical to9aad, then78guards4paths/diff pass. Actual advancingDate tested; continuous pendingage confirmation refusals documented without rounding.",
+    "649: full DOM with actualCAP25/importdiff producers,3/75,fullapp-shelltypes and78guards4paths. F01/auth/persistence/byteegress fixtureboundaries explicit.",
+    "652: finalgreen45027059452 on exact8bdb qualifies17/120,originalfactorymountprovenance/SQLite/liveContext/actualPOegress,fullCLI/SFtypes and78guards7paths. Earlier fixture/types failures not reused as passing merge gates. Identity/directory/fault inputs explicit; no installedTeams/G09claim.",
+    "651 actualnativeHTTP4/55, fullCLI/Sucafinatypechecks,78guards4paths;653 nativeDOM/HTTP/C064/60, app-shelltypes, initial4pathguards andfinal2pathwrapdelta. Each exacthead independentlyapprovedandprotected;653 mergedonlyafter651. Computedstyle isnotpixelqualification; neitherclaimsinstalledTeams. NoDesignACK/transferclaimed."
+  ],
+  "concurrentDevChanges": {
+    "from": "4e9beb3e209a0c85f9b73e5cf745d58c5e27d86e",
+    "to": "37931c77eb07aecf01610bb0ee7d717276b85539",
+    "compare": "https://github.com/gustavomhss/Orchestra-SF/compare/4e9beb3e209a0c85f9b73e5cf745d58c5e27d86e...37931c77eb07aecf01610bb0ee7d717276b85539",
+    "behind": 0,
+    "newIntegrations": [
+      649,
+      650,
+      648,
+      652,
+      651,
+      653
+    ],
+    "otherFronts": "G09/go-live/Teams changes remain with their established owners; their qualification is not inherited.",
+    "reservedHunk": "Design readFence extracted byte-exact into651 and integrated; owner/authorDesign preserved, Astra integrator; no accepted transfer."
+  },
+  "integrations": [
+    {
+      "id": 4,
+      "name": "Domain/Planner numeric contracts",
+      "owner": "Astra/planner_contracts",
+      "state": "integrated",
+      "pr": 624,
+      "head": "98f509fcf3eca40e62e0a771223a6d12ee32507f",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/624#pullrequestreview-6010509958",
+      "merge": "a0b162822d0b62621095dbae4117f781409d0377",
+      "ci": [
+        44988764759
+      ],
+      "proof": "Actual project import CAS accepts supported numeric/decimal legacy revisions; malformed versions rejected422/no writes; valid retry409. Editable amount strings/null and invalid measure-label drafts retained. Base3pass1fail; head4pass69assertions. Production schema typecheck/full Sucafina pass; complete schema3 pre-existing Teams diagnostics identical.78 guards clean. Merge approved98f509 into current dev02af, confirmed parents."
+    },
+    {
+      "id": 2,
+      "name": "Provider Agents/Settings V2",
+      "owner": "Astra/provider_state",
+      "state": "integrated",
+      "pr": 625,
+      "head": "d6836074e188236557faff39de40b16ff7b1a9b0",
+      "merge": "079d86766f9c324924e024d53722c09e018c23d2",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/625#pullrequestreview-6010499833",
+      "ci": [
+        44988169984,
+        44988002304
+      ],
+      "proof": "DOM base: 0 pass / 2 fail; approved head: 3 pass / 42 assertions. Existing Agents 18 tests /77 assertions, app-shell typecheck and 78 guard rules/4 paths clean. Merge parents confirmed: old dev799124 and approved d6836074."
+    },
+    {
+      "id": 1,
+      "name": "Context Epoch",
+      "owner": "Astra/context_epoch",
+      "state": "integrated",
+      "pr": 626,
+      "head": "4c42fd816c049a879eb51be359b49cc251903d15",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/626#pullrequestreview-6010506642",
+      "merge": "c6ddf9c7b80dad49aaa42f419dd336126eefed56",
+      "ci": [
+        44988743502,
+        44989026751
+      ],
+      "proof": "159 tests/548 assertions on exact4c42 source: first/update/compaction meeting data, shell replay, real durable EventV2+SQL unique sequence replay, baseline/prompt admission. Runtime typecheck green. FinalCI verifies full core diagnostics equal base (only existing Jira fixtureTS2353 tracked593);78guards/11paths clean. Merge parents67bb+approved4c42 confirmed."
+    },
+    {
+      "id": 7,
+      "name": "Planner source reads",
+      "owner": "Astra/planner_contracts",
+      "state": "integrated",
+      "head": "bb42be286373e17db67a82ecde8836fda1df141f",
+      "pr": 627,
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/627#pullrequestreview-6010507432",
+      "merge": "67bb104bb36f1c4766f05ae3124f68bc513647e5",
+      "ci": [
+        44988766599
+      ],
+      "proof": "Existing real Finance composition reproduces late reader replacement on base; head1test35assertions passes, including typed denials, scope/pair/source/revocation and restored reader. Full CLI/Sucafina types green,78guards clean. Approved headbb42 was merged and parents a0b162+bb42 confirmed.",
+      "remaining": "Original I25 sensitivity and BI complementary hunks are tracked separately; they are not silently included in the acceptance of this source-read candidate.",
+      "complementaryEvidence": "result-store canonical/batch/historical ancestry behavior in #560 (90d546..., fa6605...) and #562 b74273c2. historical operation-verifier replaced by actual scenario-operation-access + scenario-port + recorded-planner-operation-access; before/after source and actor/snapshot/request validation retained. case-port canonical-vs-digest comparison and readProjection reuse are representation/read-count changes, not independently demonstrated gaps. Current period containment preserves valid subperiods; no port of historical strict equality solely for missing helper."
+    },
+    {
+      "pr": 630,
+      "head": "d16d97ccff572510bb9cc5aab1cbc4fd58b4a07c",
+      "state": "integrated",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/630#pullrequestreview-6010540923",
+      "proof": "Real CAP20 producer through schema/client/view: months/HR USD, annual rate source currency, mixed EUR/BRL FX, null/zero/missing currency, denied/empty/scope. Base1pass2fail; source3pass117assertions. Full app-shell types0;78guards4paths0. Merge parents7be47+approvedd16 confirmed.",
+      "merge": "5f490bdb3c4d7478c89b07ba37b2b8acf10c3a65",
+      "ci": [
+        44989309122
+      ],
+      "name": "Headcount source currencies"
+    },
+    {
+      "id": "S1",
+      "name": "AppDock subframe navigation",
+      "inventoryRow": "I13",
+      "state": "integrated",
+      "owner": "Astra/context_epoch",
+      "paths": [
+        "apps/desktop/src/main/app-dock.ts",
+        "apps/desktop/src/main/app-dock-linux-live.test.ts"
+      ],
+      "proof": "Actual createAppDock listener on existing Electron boundary: non-HTTPS subframes refused, HTTPS and main-frame delegation/callbacks preserved. Baseexpected-red,source11tests65asserts; full Desktop types0,focusedtypes0,exact Linux mutationneedle1;78guards3paths0. Approved42d111 merged,parentsc6dd+42d111 confirmed.",
+      "pr": 631,
+      "head": "42d111ae930aebfe9ce236fdd8ae7805b5e34429",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/631#pullrequestreview-6010534179",
+      "merge": "7be47a85119e467f1c01e32287137bf43768994c",
+      "ci": [
+        44989437551
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Coverage proof order",
+      "owner": "Astra/planner_contracts",
+      "state": "integrated",
+      "pr": 632,
+      "head": "1b2e7635954efab67cdd046c5016c72f590c65f8",
+      "merge": "cca15664bcb6aa4f1b90104ba6ec68ff454c7aec",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/632#pullrequestreview-6010547933",
+      "ci": [
+        44989560573
+      ],
+      "proof": "Actual C08 private-producer order reproduced failing on base67bb; exact source2tests54assertions incl Finance preservation. CLI/Sucafina full types0;78guards3paths0. Snapshot direct parent source, only request/harness delta; merge parents5f490+approved1b2 confirmed."
+    },
+    {
+      "state": "integrated",
+      "pr": 633,
+      "head": "677b1cab54b076e44b27c5403bc15ce2bf4d3746",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/633#pullrequestreview-6010571989",
+      "merge": "e2e9ba59b951771a4aa87ba6b70a560e730f4e6a",
+      "ci": [
+        44990197536
+      ],
+      "proof": "RelatedLinks and Executive real DOM clients/codecs: denial vs authorized empty/outage, per-owner reset/late response, partial authorized records, original numeric/string IDs, bilingual catalog + selection preservation. Base1pass3fail; source4pass75assertions; full app-shell types0,78guards5paths0. Mergeparentscca156+approved677b confirmed.",
+      "name": "Crosslinks and Executive state copy"
+    },
+    {
+      "id": "S3",
+      "name": "Procurement legacy unavailable choice",
+      "inventoryRow": "I04",
+      "state": "integrated",
+      "owner": "Astra/planner_contracts",
+      "pr": 634,
+      "head": "d63487d8686a61691368da38bd40a7ea58c79fc9",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/634#pullrequestreview-6010569719",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+      ],
+      "proof": "Real requisition, source lifecycle, scenario and human C12 preparation: base0pass1fail6assertions; source Procurement+Apply receipt2tests25assertions. Refuses legacy flag in either list before archive; current draft requires explicit action,approvalGrantedfalse,receiptnull,confirmedfalse; domain/case state preserved/revocationrefused. CLI/Sucafina fulltypes0;baseowned78guards3paths0. Mergeparentse2e9+approvedd634 confirmed.",
+      "merge": "d572060d8164607f6981e6d42635a854a6fa23a4",
+      "ci": [
+        44990139841
+      ]
+    },
+    {
+      "id": "S4",
+      "name": "Planner BI known-subtotal origin",
+      "inventoryRow": "I25",
+      "state": "integrated",
+      "owner": "Astra/planner_contracts",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts"
+      ],
+      "proof": "Actual persisted C08 scenario promotions and BI09/10 factories with annual sources/monthly observation: baseline null drilldown reproduced15asserts; source BI+Finance2tests90assertions. Proves original priced components while retaining coverage refs and subperiods; 0allowed,null/transformed/mixeddenied. Full CLI/Sucafina types0/0;78guards2paths0. Approved7b34d merged;parentsd572+7b34d confirmed.",
+      "pr": 635,
+      "head": "7b34d700d77b6a64aa9140a456487c231dd8e380",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/635#pullrequestreview-6010607765",
+      "merge": "90861699b40d7093adbba70a69ac866eb517090f",
+      "ci": [
+        44991053426
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Generic Web sourcemaps",
+      "owner": "Astra/context_epoch",
+      "state": "integrated",
+      "pr": 636,
+      "head": "d69cdd7a356d490068e2cfd2e3f12a87ba90488e",
+      "merge": "ac241bde903fa5ca4778a69ae414073f68fd8e7b",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/636#pullrequestreview-6011056602",
+      "ci": [
+        44998323414
+      ],
+      "regressionCI": [
+        44997786433
+      ],
+      "proof": "Exact generic Web producer, verifier and archive: compressed/external maps omitted without builder mutation, inline JS/CSS rejected, self-consistent reconstructed manifests/checksums cannot restore maps. Three preimage tests fail; source38pass375assertions0fail with one pre-existing case-insensitive-volume skip. CLI declared typecheck0;78guards3paths0. Final snapshotd8b1dba is direct child of approved d69cdd7, only request+harness; clean source tests/gates. Merge protected by exact expected head, confirmed as dev with parents90861699+d69cdd7. No full compiled CLI/Web or G09/Teams claim.",
+      "ownershipEvidence": "Current scan of122openPRs plus closure/supersession comments shows no active writer for these3genericdistributionpaths. Continued under Gustavo's assignment, recorded in257comment7075825904; historicalPR existence was not treated as ownership or accepted transfer.",
+      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/257#issuecomment-7075825904"
+    },
+    {
+      "id": "S2-classification",
+      "name": "Sensitivity classification and replay",
+      "owner": "Astra/planner_contracts",
+      "state": "integrated",
+      "pr": 641,
+      "head": "c2c48cb4f8438d4b1f77a3ec2493e8c3f916bb71",
+      "merge": "ed20d7c432f9adc707edd82b588c1eeb4aa9d086",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/641#pullrequestreview-6011106743",
+      "ci": [
+        44999861912,
+        44999041880
+      ],
+      "regressionCI": [
+        44998494998
+      ],
+      "proof": "Two native preimage failures: pending sampled result denied on durable replay, partial priced component incorrectly exact. Runtime7399785 qualifies4tests99assertions (pending/partial durable+coldcomposition, exact positive, Finance). Finalc2 changes only type import/helper union;44999861912 Bun.Transpiler asserts identical emittedJS digest33d92193026fc62e606785eb26527d6f955268a040ea614b5ce7cc07cea9dc38, full CLI/Sucafina types0 and78guards/4paths0. Exact review+expectedhead merge, parentbabc+c2 confirmed. Initialrun44999041880 overall failed fixturetypes, not presented as fullPASS."
+    },
+    {
+      "id": "S2-publication",
+      "name": "Sensitivity final publication",
+      "owner": "Astra/planner_contracts",
+      "state": "integrated",
+      "pr": 643,
+      "head": "dbca1c3497c24daa52f436fc9e775cf7885d3ba4",
+      "merge": "325a907d8de892c82d9b5b654db1836d73232f75",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/643#pullrequestreview-6011124765",
+      "ci": [
+        44999929962
+      ],
+      "regressionCI": [
+        44998658828
+      ],
+      "proof": "Actual native persisted sensitivity and independent recertifications: grant hidden during final async authority, previousgrant immediately revoked, late borrowed binding/stored mutation refused, durablecase unchanged and revokedaccess denied.1test41assertions on exactdbca source, full CLI/Sucafina types0 and78guards2paths0. Snapshotb0410165 directparent source with only request+harness. Independent review6011124765 and expectedhead merge; parentsed20+dbca confirmed. Runtime includes approved641 classification; full priorfailedtype run44999214859 not used as a passinggate."
+    },
+    {
+      "id": "11-imports",
+      "name": "Imports labels and value states",
+      "owner": "Astra/ui_finish",
+      "state": "integrated",
+      "pr": 649,
+      "head": "0a45ba8ccf6badf7cceecd2b0075855455b02957",
+      "merge": "8c4bd53dece5bc7f6340406948163a6a9baf45c8",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/649#pullrequestreview-6012427690",
+      "ci": [
+        45025540377
+      ],
+      "proof": "Original Imports DOM, CAP25 and import diff producers: unchanged base 0 pass / 3 fail; exact source 3 pass / 75 assertions. Both locales, 19 labels, all six state catalogs/five reachable state displays, absent/undefined/null vs zero/false/empty, retained original PR/wire selection, authorization revocation, fresh CAP25 before export. Original app-shell typecheck and 78 guards/four paths zero findings. Exact-head independent review and expected-head merge; merge...dev identical immediately after integration.",
+      "operationalDependency": "S5 integrated separately in #652; copy residual itself integrated in #649."
+    },
+    {
+      "id": 6,
+      "name": "Phase bridge physical origin",
+      "owner": "Astra/phase_finish",
+      "state": "integrated",
+      "pr": 650,
+      "head": "a602ae98c37bfc9d0775a52ad21f047269705f9f",
+      "merge": "4670ef4ea6771e17d6a4fdbf74c8de43b70ad240",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/650#pullrequestreview-6012453888",
+      "ci": [
+        45026566407,
+        45026200781
+      ],
+      "regressionCI": [
+        45026201726
+      ],
+      "proof": "Real Local Operator entry delegates its stable physical private installation/workspace to the real host factory before business storage opens. Permanent regression2/31; original Global/SQLite/Runtime/Governance/Session/Event graph2/60 proves physical sibling origin, durable session/fence and refusal of aliases/unsafe ancestors/revoked UI authority without reserving sessions. Complete CLI/Sucafina types and78guards pass. Earlier45026200781 overall failed only extra EOF blank line; final45026566407 verifies exact before===current+LF and reruns2/31/guards/diff. Expected-head merge and dev ancestry verified. No installed Teams/G09 claim.",
+      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7079399930",
+      "diagnosticCI": [
+        44998691395
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Non-C05 follow-up",
+      "owner": "Astra/followup_finish",
+      "state": "integrated",
+      "pr": 648,
+      "head": "65f0caa312a80e2ec45c0b8c7a43b2e9793a745a",
+      "merge": "be98f8ea371babd5a7fe0c686705984afd83a144",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/648#pullrequestreview-6012468728",
+      "ci": [
+        45026115722,
+        45026756697
+      ],
+      "regressionCI": [
+        45026097453
+      ],
+      "proof": "Shipping business-services/authority and real SQLite now observe ordinary Procurement reply scope using original issuer/resolver/projection/private material fence.6tests155assertions cover real capability receipt, confirmation/replay, same principal binding, other recipient refusal without write, changed period/dependency/displayed value, outage/revocation, moving day and actual advancing Date. Issued PO with ageDays=null confirms; continuously changing pending age remains unconfirmed. Full CLI/Sucafina types and78guards pass. Final docs-only65f0 mechanically preserves all3runtime/test blobs from9aad; final clean4path guards/diff pass. Expected-head merge and ancestry verified.",
+      "subparts": {
+        "dispatch": {
+          "state": "absorbed",
+          "proof": "Currenttyped unavailable is preserved even ifsource recovers duringanswerReuse. Historicaldowngrade would violate the real transientoutagecontrol; notported."
+        },
+        "historicalFallback": {
+          "state": "absorbed",
+          "proof": "Author's owncurrent originalreference/version is allowed when appropriate; aftercanonicalsourcechange or anotheractor's uncaptured replybasis it is refused bythreadReads andthreadHistory.readVersion. No falsehistoryreproduced; strictblanket historicalhunknotneeded."
+        },
+        "shippedProducer": {
+          "state": "integrated",
+          "pr": 648,
+          "merge": "be98f8ea371babd5a7fe0c686705984afd83a144"
+        },
+        "newCrossPersonProvider": {
+          "state": "out-of-scope",
+          "owner": "No transferred delivery",
+          "acceptance": null,
+          "proof": "Common recipient-authority.ts is byte-identical between historical base52d2c24f and head d51c2d2f (blob3b7080be16213512835902c37e58e1c88ca8405f); currentdev differs only trailing LF. Contract is optional and fail-closed for another principal. None of recipient-authority.ts, collaboration/host.ts or contracts/host-context.ts changes among the160 original paths. Historic threads delta covers only C05. The briefing asks observation/binding/refusal/revocation, not installation of a new Entra cross-person provider. #648 proves those required guards. This corrects the prior diagnostic's broader proposed provider requirement; not an accepted transfer or a new G04 debt.",
+          "historicalBase": "52d2c24f4f8cb776889b97894131df6ada43ce98",
+          "historicalHead": "d51c2d2f2a1dfe28059904a07e37db253aea1547",
+          "historicalBlob": "3b7080be16213512835902c37e58e1c88ca8405f",
+          "currentBlob": "8b0336ee3d72e4ebd9c16dec923c2f602759d543",
+          "independentReview": "https://github.com/gustavomhss/Orchestra-SF/pull/648#pullrequestreview-6012468728"
+        }
+      },
+      "priorDiagnostic": {
+        "ci": [
+          45000271685,
+          45000122463,
+          44999007116
+        ],
+        "proof": "Shipped createSfProductAuthority/createSfBusinessServices unchanged with realSQLite/Procurement selection/source and reply: sourcefresh, self-thread/replypersisted and visible, but answerReuse.prepare gives answer-scope-unavailable and sf_answer_read gives unavailable/answer-reuse-unavailable with realUIreceipt and noanswer. Cross-person thread lacks commonrecipientAuthority and is refused without storagewrite. Actual45000271685 qualifies1test22assertions. Eleven separate component/fallback controls in45000122463 pass; itsoverallfailure was a diagnostic expectation omittingUIreceipt, corrected and rerunfor the shippedcase only. Prior8controls used an explicitDashboard reissuer and are not installedcomposition equivalence.",
+        "broaderProviderRequestCorrected": true,
+        "comment": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7076223159"
+      }
+    },
+    {
+      "id": "S5",
+      "name": "Native PO export operational observation and resource index",
+      "inventoryRows": [
+        "I01",
+        "I02"
+      ],
+      "owner": "Astra/root; reviewed independently by Astra/phase_finish",
+      "state": "integrated",
+      "pr": 652,
+      "head": "8bdb2e7d732e54ff5d86e3781bd379e0b0052716",
+      "merge": "e9b7305507e06a1f1c505548411b6c377c87a08d",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/652#pullrequestreview-6012475817",
+      "ci": [
+        45027059452
+      ],
+      "proof": "Exact original mounted Files/application factory provenance includes frozen original mount. Two read-only observations pin original request authority, delegate/persistence/auth/environment and source data; existing liveContext retains final admission. Entry wires actual files router and resource index adds only files.export.po. ActualSQLite/authority/router/renderer/liveContext17tests120assertions: healthy observation without rendering/commit,200HTML/escaping,wrongrecipient/missingPO404,lateauth403/source409 without bytes, missing/unowned/mismatchedmount and dependency/stamp/abort refusal. Baseindex0pass1fail expected. Full CLI/Sucafina types,78guards7paths0findings,diff-check green. Independent review caught/fixed missing producer-mount provenance and optional files guard before approval. Expected-head merge and ancestry verified.",
+      "scopeLimit": "Fixture identity/directory/fault inputs are explicit. No installed Entra/Teams/G09 qualification; scanner/signingkey availability does not grant PO access.",
+      "diagnosticCI": [
+        44998628394
+      ],
+      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7079399930"
+    },
+    {
+      "id": "10-read-fence",
+      "name": "Confirmation selection read transaction",
+      "owner": "Design (original hunk); Astra (qualification and integration)",
+      "state": "integrated",
+      "pr": 651,
+      "head": "60f51bb87558ddbff869ccf77edf9f64bf04ef12",
+      "merge": "b6a213be32933d042a97583da7e3ffa6dda0afa4",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/651#pullrequestreview-6012488236",
+      "reviewAddendum": "https://github.com/gustavomhss/Orchestra-SF/pull/651#pullrequestreview-6012514339",
+      "ci": [
+        45027173290
+      ],
+      "proof": "Exact extraction of Design/#613@9341bc3d host.ts blob309a607eb430f451ecc54cabee0d4cca3a9d0b7a, unchanged. Original readSelection source/manifest fences execute inside read-only transactionAll with cancellation/refusal; C08 write fence remains unchanged. Actual native HTTP/authority/SQLite regression: base2pass2fail expected,head4pass0fail55assertions; fullCLI/Sucafina types,78guards4paths0 anddiffcheck. Exact independent technicalreview plususer-authorizedintegration, expected-head protected, merge...dev identical. Design author/owner preserved; no transfer/ACK claimed.",
+      "sourcePR": 613,
+      "sourceHead": "9341bc3d25f5771009258b58c91c0fe85cb093ae",
+      "sourceBlob": "309a607eb430f451ecc54cabee0d4cca3a9d0b7a",
+      "ownershipClarification": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7079917262"
+    },
+    {
+      "id": "10-payload",
+      "name": "UI53 exact prepared confirmation payload",
+      "owner": "Astra/ui_finish",
+      "state": "integrated",
+      "pr": 653,
+      "head": "441a349c5db6eb7f67b08d810b6c419380710ca3",
+      "merge": "37931c77eb07aecf01610bb0ee7d717276b85539",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/653#pullrequestreview-6012504467",
+      "reviewAddendum": "https://github.com/gustavomhss/Orchestra-SF/pull/653#pullrequestreview-6012513003",
+      "ci": [
+        45027353078,
+        45027752799
+      ],
+      "proof": "Four own UI paths over integrated651. Actual DOM/client/originalHTTP/C06/SQLite proves displayed fingerprint,CAS includingzero andfull materialdependencyJSON equaltheclick's actualcommand; bothlocales,empty/nonemptydependencies,source/dependencychange,CASconflict andsamereceiptreplay. Initialbase2pass2fail→4/59; finalprewrapbase3pass1fail→exact441a4/60,fullapp-shelltypes,78guards/diff. Wrapping proofiscomputedDOMstyle,nopixelclaim. Earlierfourpathguardsreusedforunchangedbytes; finaltwopathdeltaqualified. Independentexactheadapproval, prerequisitealreadyindev, expected-headmerge; mergedparentsb6a213+441a349anddevproofconfirmed.",
+      "dependsOn": 651
+    }
+  ],
+  "ciLimitsPt": [
+    "**Execução:** todos os testes, typechecks e gates executáveis foram conduzidos em GitHub Actions. Não houve execução local nem edição de workflows/catalog/guards para aceitar os resultados.",
+    "**Identidade:** snapshots isolados, fonte e árvore fixadas e diffs permitidos conferidos. Os guards examinaram o produto limpo; pedidos e harness não entraram nos PRs.",
+    "**#625:** reaproveitados apenas os gates verdes de Agents/types/guards de44988002304. A invocação DOM daquele run falhou antes dos testes; o DOM foi qualificado por44988169984 no mesmo head. O primeiro run não é descrito como todo verde.",
+    "**#626:**159 testes/548 asserções e tipos de runtime vieram de44988743502.44989026751 qualificou diagnósticos equivalentes e guards. Core completo conserva um TS2353 preexistente da fixture Jira, idêntico entre base/head; não se afirma typecheck global verde.",
+    "**#624:** schema de produção e Sucafina passaram. Schema completo conserva três diagnósticos Teams preexistentes e iguais na base/head; nenhum diagnóstico novo.",
+    "**#631:** listener real exercitado pela fronteira Electron existente. Não houve nova qualificação instalada Linux/Docker.",
+    "**#630/#633:** fronteiras de autenticação/IO/admissão são explícitas nas fixtures; produtores, componentes, mappers e codecs reais são usados conforme o caso. Não equivalem a homologação Teams.",
+    "**#636:**38 testes/375 asserções e CLI types/guards passaram no head final em44998323414. Um skip preexistente depende de volume case-insensitive. A invocação anterior com --force era inválida e foi descartada. Não se reivindica build completo nativo/Web ou G09.",
+    "**#641:** reutilizados somente os4 testes/99 asserções verdes de44999041880, cujo job falhou em tipos da fixture. O gate final44999861912 no head c2c48cb4 comprovou alteração só de tipos e JavaScript emitido idêntico via Bun.Transpiler, depois passou CLI/Sucafina types e guards. Não se afirma que o run anterior passou integralmente.",
+    "**#643:** o teste foi reexecutado depois da correção dos wrappers:44999929962 passou no head dbca1c34, com1 teste/41 asserções, types completos e78 guards/2 caminhos.44999214859 falhou nos tipos da fixture e não foi usado como gate completo.",
+    "**#650 / Phase:** o gate final45026566407 passou no head a602. Reutiliza somente provas verdes de45026200781 (2/31 permanentes,2/60 no grafo Core original e types completos), cujo erro geral era apenas LF final. A equivalência literal antes=depois+LF foi verificada; guards e diff-check finais passaram. Não é homologação instalada Teams/G09.",
+    "**#648 / follow-up:**45026115722 passou6 testes/155 assertivas e tipos completos CLI/Sucafina.45026756697 comprovou que o head final só acrescenta guia, preservando três blobs runtime/teste, e passou guards/diff. Relógio real avançando foi exercitado; idade contínua alterada conserva resposta não confirmada.",
+    "**#649 / Imports:**3 testes/75 assertivas com DOM, CAP25 e produtores de diff reais; types app-shell e78guards passaram. Autenticação/F01/persistência e bytes permanecem fronteiras explícitas da fixture.",
+    "**#652 / PO:**45027059452 passou17 testes/120 assertivas no head aprovado, tipos completos e78guards. Factory, mount original, SQLite, contexto e egress foram exercitados; identidade/diretório/faults são entradas de fixture. Falhas de fixtures ou tipos em tentativas anteriores não foram contadas como gates verdes.",
+    "**#651/#653:** a extração exata de Design passou4 testes/55 assertivas HTTP/SQLite, tipos CLI/Sucafina e78guards. UI53 passou4 testes/60 expectativas DOM/HTTP/C06, tipos app-shell, guards iniciais dos4 caminhos e gate final de2 caminhos do wrapping. O estilo computado não é inspeção por pixels. Ambos os heads foram aprovados e protegidos;653 entrou após651. Nenhum aceite/transferência Design foi presumido."
+  ],
+  "extraReportSections": [
+    "### Follow-up fora do C05: correção integrada e fronteira retificada",
+    "O observador ordinário de Procurement entrou pelo #648. Os guards atuais de indisponibilidade, vínculo de destinatário, período e histórico foram preservados; a regressão nativa cobre confirmação/replay, mudança material, recusa e revogação. O pedido anterior de criar um novo provider comum entre pessoas foi revisto contra o delta histórico e o aceite literal.",
+    "recipient-authority.ts é byte-idêntico entre base/head349 (blob3b7080be16213512835902c37e58e1c88ca8405f); esse contrato opcional recusa outro destinatário sem prova privada. Os hunks históricos de threads são C05, e a composição349 não instala tal provider. A capacidade nova é fora do escopo desse delta, com justificativa verificável, não transferência aceita nem dívida nova de G04. Retificação registrada em https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7079828442.",
+    "### Sensibilidade: destino dos hunks complementares",
+    "Classificação/replay foram integrados em[#641](https://github.com/gustavomhss/Orchestra-SF/pull/641), e publicação final em[#643](https://github.com/gustavomhss/Orchestra-SF/pull/643). Os destinos foram registrados em[#445](https://github.com/gustavomhss/Orchestra-SF/pull/445#issuecomment-7076231150) e[#405](https://github.com/gustavomhss/Orchestra-SF/pull/405#issuecomment-7076228028), preservando os PRs e heads históricos.",
+    "**Serialização #516:** fora da aplicabilidade atual. O patch pressupõe novo dono de observação lexical por preview, ausente da cadeia nativa comparePlannerPreview. A implementação atual resolve fonte/cobertura, calcula e reobserva diretamente; Promise.all foi preservado e duas amostras reais foram qualificadas em641. [Justificativa e fontes](https://github.com/gustavomhss/Orchestra-SF/pull/516#issuecomment-7076233972).",
+    "**Fallback proveKnownSubtotal/coverage-preview:** não cabe ao contrato atual de referências imutáveis. A autoridade exige mesmos resultRefs e digests iguais entre selecionado, persistido e canônico; o assessment usa as entries desses resultados. A classificação humana válida ocorre antes da promoção que publica a referência, como na regressão641. O fallback histórico não pode reviver uma referência depois de mudar costCoverage. [Justificativa e fontes](https://github.com/gustavomhss/Orchestra-SF/pull/445#issuecomment-7076231150).",
+    "**sensitivityReadScope opcional:** não foi instalado apenas para contornar a falha.643 corrige e qualifica precisamente a composição sem esse host. O timeout inicial do solver permanece inconclusivo, sem virar achado de desempenho ou motivo para alterar leituras. [Registro](https://github.com/gustavomhss/Orchestra-SF/pull/405#issuecomment-7076228028).",
+    "### Avanços concorrentes e composição",
+    "Os avanços das frentes G09/go-live/Teams foram conferidos por caminhos e objetos Git antes dos merges. Não qualificam automaticamente esta frente e suas aprovações não foram herdadas. Os seis PRs desta retomada são649,650,648,652,651,653, todos com head protegido e merge verificado emdev. Seus guias ocupam âncoras distintas.",
+    "Design/#613 continua preservado no head9341bc3d25f5771009258b58c91c0fe85cb093ae. O hunk readFence foi extraído byte a byte em651 e integrado, com Design como autor/dono e Astra como integrador autorizado. UI53 própria653 também foi integrada. A espera adicional de ACK foi retirada e documentada em7079917262 após revisão literal da autorização; nenhum aceite foi fabricado e nenhuma transferência foi contabilizada."
+  ],
+  "counts": {
+    "candidates": 11,
+    "terminalCandidates": 11,
+    "pendingCandidates": [],
+    "inventoryRows": 28,
+    "terminalInventoryRows": 28,
+    "partialInventoryRows": [],
+    "historicalPaths": 160,
+    "integratedProductPRs": 19,
+    "terminalSupplements": [
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "S5"
+    ],
+    "pendingSupplements": [],
+    "acceptedTransfers": 0
+  },
+  "devRole": "Preparation base from the original handoff; current observed product is currentDev.",
+  "previousConcurrentDevChanges": [
+    {
+      "pr": 638,
+      "merge": "babc660b2cda3e20ed6b68ecab86b973110652cb",
+      "paths": 11,
+      "historical349Overlap": [],
+      "note": "G06 component qualification by established other front; not counted as residual-bundle integration or installedTeams gate."
+    },
+    {
+      "prs": [
+        642,
+        645
+      ],
+      "merges": [
+        "b60b14aee897596d56854697adb00bdc5ecce7b4",
+        "4e9beb3e209a0c85f9b73e5cf745d58c5e27d86e"
+      ],
+      "from": "325a907d8de892c82d9b5b654db1836d73232f75",
+      "to": "4e9beb3e209a0c85f9b73e5cf745d58c5e27d86e",
+      "combinedChangedPaths": 19,
+      "historical349Overlap": [],
+      "note": "Established G09 front, not residual-bundle integrations or new qualification claimed here."
+    }
+  ],
+  "currentTree": "a2fd28f1a16971a7cf89ea9722c5b70b815a0792",
+  "pathCounts": {
+    "total": 160,
+    "unique": 160,
+    "identical": 10,
+    "different": 108,
+    "absent": 42,
+    "unmapped": 0
+  }
+}
