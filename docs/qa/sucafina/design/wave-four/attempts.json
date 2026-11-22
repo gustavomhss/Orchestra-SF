@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedThrough": "2026-11-22 00:16:59 UTC",
+  "updatedThrough": "2026-11-22 00:24:13 UTC",
   "note": "Historical attempts include failures and incomplete journeys. Only a final passing run qualifies its stated coverage.",
   "attempts": [
     {
@@ -848,9 +848,14 @@
         }
       },
       "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
-      "status": "running",
-      "cause": "Four original journeys against composed dev3ce1acd0 after selected-quotation selector fix.",
-      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965165654"
+      "status": "passed",
+      "cause": "Four original-source journeys passed against composed dev:11HTTP200/JSON acknowledgements and exact fresh readbacks. Six bodies readable and positive; five bodies unavailable, requiring native readiness and source readback. No readable negative accepted; no browser errors or preview skips.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965165654",
+      "job": 137032420336,
+      "passedTests": 4,
+      "confirmedWrites": 11,
+      "sourceReadbacks": 11,
+      "completeCaptures": 43
     },
     {
       "group": "technical",
@@ -906,9 +911,105 @@
         }
       },
       "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+      "status": "passed",
+      "cause": "Composed Planner/previous-six workflow succeeded. Combined decoded log could not be retrieved through MCP; no combined capture/error/test count inferred. Separate fully read passing Planner9 and Regression2 evidence retains its own exact source commits.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965221018",
+      "job": 137032596814,
+      "evidenceBasis": "GitHub job and Run tests step both completed success; exact scoped request includes the original Planner and first/second-wave specs.",
+      "logRetrieval": "MCP_TRANSPORT_CLOSED_TWICE",
+      "artifact": {
+        "id": 14730969977,
+        "name": "playwright-ubuntu-24.04-1",
+        "bytes": 122468172,
+        "digest": "sha256:e4c4e84237690f962b15fc6797c1750c6d909bbb1e7f2fe446e9e255141e7963"
+      }
+    },
+    {
+      "group": "work",
+      "attempt": 10,
+      "run": 44965705732,
+      "job": 137034123246,
+      "head": "87a738830c83bf1fa9ee30c32b38fb1e297b30f8",
+      "snapshot": "6bff36e3308c4ac205a59011827c8f19c06c5873",
+      "branch": "ci-run-sf20work10",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-work.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+      "status": "passed",
+      "passedTests": 3,
+      "completeCaptures": 22,
+      "confirmedWrites": 1,
+      "sourceReadbacks": 1,
+      "cause": "UI30 both original reauthorizations and native destination; UI31 private query; UI32 one save, original Version2 readback with exact filters/period, fresh route, remove cancellation and honest unavailableV2. Six EN/BR page closures had empty browser error arrays.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965705732"
+    },
+    {
+      "group": "decisions",
+      "attempt": 9,
+      "run": 44966014444,
+      "job": 137035090735,
+      "head": "250e8faf80931c807a86c5f06c0e797de469adca",
+      "snapshot": "8cfd3eb141d31d18ee2b32dda629d67e7d44c10a",
+      "branch": "ci-run-sf20decisions9",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-decisions.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
       "status": "running",
-      "cause": "Four original browser journeys qualify Planner and six prior areas against actual updated-dev host/business sources.",
-      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965221018"
+      "cause": "Current dev composition, original A15 dashboard route, bounded actions, UI36 alignment and complete UI37 source disclosure.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966014444"
+    },
+    {
+      "group": "technical",
+      "attempt": 13,
+      "run": 44966016316,
+      "job": 137035096579,
+      "head": "250e8faf80931c807a86c5f06c0e797de469adca",
+      "snapshot": "0849344a07285ae4eef3b362817f9fe8d017d6fb",
+      "branch": "ci-run-sf20gates13",
+      "request": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "300000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+      "checks": 14,
+      "regressionTests": 87,
+      "status": "passed",
+      "passedChecks": 14,
+      "fullCliTypecheck": "passed",
+      "cause": "All14 checks passed: app/E2E/fullCLI types, exact-dev guards, palette parity and87 regression tests. Three new real Solid/View/schema cases reproduce tracked-object rejection, exact detached input admission and invalid-value rejection.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966016316"
     }
   ]
 }

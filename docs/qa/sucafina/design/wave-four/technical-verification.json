@@ -1,0 +1,101 @@
+{
+  "run": 44966016316,
+  "job": 137035096579,
+  "snapshot": "0849344a07285ae4eef3b362817f9fe8d017d6fb",
+  "productHead": "250e8faf80931c807a86c5f06c0e797de469adca",
+  "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+  "checks": [
+    {
+      "name": "Application declarations",
+      "passed": true
+    },
+    {
+      "name": "Exact dev guardrails",
+      "passed": true
+    },
+    {
+      "name": "Palette byte parity",
+      "passed": true
+    },
+    {
+      "name": "E2E semantic types",
+      "passed": true
+    },
+    {
+      "name": "Portfolio CAS",
+      "passed": true
+    },
+    {
+      "name": "Vendor browser DTO",
+      "passed": true
+    },
+    {
+      "name": "Decision browser DTO",
+      "passed": true
+    },
+    {
+      "name": "Procurement browser DTO",
+      "passed": true
+    },
+    {
+      "name": "Work/Search source health",
+      "passed": true
+    },
+    {
+      "name": "Original installed host",
+      "passed": true
+    },
+    {
+      "name": "Decision source health",
+      "passed": true
+    },
+    {
+      "name": "Analysis source health",
+      "passed": true
+    },
+    {
+      "name": "Full CLI package types",
+      "passed": true
+    },
+    {
+      "name": "Saved Views browser DTO",
+      "passed": true
+    }
+  ],
+  "regressionTests": 87,
+  "includesOriginalInstalledHost": true,
+  "guards": {
+    "base": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+    "rules": 78,
+    "files": 191,
+    "errors": 0,
+    "warnings": 20,
+    "approved": 0,
+    "touchesGuards": false
+  },
+  "fullCli": {
+    "status": "PASSED",
+    "run": 44966016316,
+    "diagnostics": 0,
+    "previousBaseline": {
+      "run": 44958162297,
+      "diagnostics": 7,
+      "status": "HISTORICAL"
+    }
+  },
+  "commandCases": {
+    "portfolioCAS": 3,
+    "vendorBrowserDTO": 4,
+    "decisionsBrowserDTO": 5,
+    "procurementBrowserDTO": 10,
+    "workAndSearchSourceHealth": 18,
+    "originalInstalledHost": 1,
+    "decisionSourceHealth": 24,
+    "analysisSourceHealth": 19,
+    "savedViewsBrowserDTO": 3
+  },
+  "palette": {
+    "generatedFiles": 7,
+    "changedFiles": 0
+  }
+}

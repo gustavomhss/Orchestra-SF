@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "group": "work",
-  "status": "PARTIAL",
+  "status": "PASSED",
   "areas": {
     "UI30": "PASSED",
     "UI31": "PASSED",
-    "UI32": "AWAITING_QUALIFICATION"
+    "UI32": "PASSED"
   },
   "sources": [
     {
@@ -38,13 +38,31 @@
         "UI31"
       ],
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964988862"
+    },
+    {
+      "run": 44965705732,
+      "job": 137034123246,
+      "snapshot": "6bff36e3308c4ac205a59011827c8f19c06c5873",
+      "productHead": "87a738830c83bf1fa9ee30c32b38fb1e297b30f8",
+      "fileRunResult": {
+        "passed": 3,
+        "failed": 0
+      },
+      "qualifiedAreas": [
+        "UI32"
+      ],
+      "alsoPassed": [
+        "UI30",
+        "UI31"
+      ],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965705732"
     }
   ],
-  "qualifiedTests": 2,
-  "completeCaptures": 13,
+  "qualifiedTests": 3,
+  "completeCaptures": 22,
   "pageErrors": [],
   "consoleErrors": [],
-  "data": "Isolated enrolled installation. Original local Dashboard handoff, Work sources and Documents producer; no context, response, grant or receipt mocks.",
+  "data": "Isolated enrolled installation. Original local Dashboard handoff, Work sources, Documents producer and personal-view HTTP source; no context, response, grant or receipt mocks.",
   "captures": [
     {
       "name": "UI30-dark-desktop-choose-period",
@@ -240,14 +258,174 @@
       "locale": "pt-BR",
       "visualReview": "PASS",
       "sourceRun": 44964042218
+    },
+    {
+      "name": "UI32-dark-desktop-existing-view-list",
+      "area": "UI32",
+      "sha": "68b91156472bf0028debede3855cbd11afda2fd4",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-dark-desktop-existing-view-list.jpg",
+      "bytes": 87962,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44965705732
+    },
+    {
+      "name": "UI32-dark-desktop-existing-view-editor",
+      "area": "UI32",
+      "sha": "e4fd0a91b9fba7f0f50656fe9096dbaabb9c385a",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-dark-desktop-existing-view-editor.jpg",
+      "bytes": 100952,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44965705732
+    },
+    {
+      "name": "UI32-dark-desktop-existing-view-review",
+      "area": "UI32",
+      "sha": "2353731269822db9617b5a557734b729c7fbe1e9",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-dark-desktop-existing-view-review.jpg",
+      "bytes": 110212,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44965705732
+    },
+    {
+      "name": "UI32-light-desktop-existing-view-review",
+      "area": "UI32",
+      "sha": "5e4a727d18ea2ee015e9bb1111ad8a703d9a6b87",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-existing-view-review.jpg",
+      "bytes": 113544,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "light",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44965705732
+    },
+    {
+      "name": "UI32-light-320-existing-view-review-actions",
+      "area": "UI32",
+      "sha": "ed3f97b45315986cfcc53b476f7cb9a51a1babf9",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-320-existing-view-review-actions.jpg",
+      "bytes": 30480,
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "theme": "light",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44965705732
+    },
+    {
+      "name": "UI32-light-desktop-confirmed-view-readback",
+      "area": "UI32",
+      "sha": "500f0a107bfb184311f7f53d828791e32eefb88d",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-confirmed-view-readback.jpg",
+      "bytes": 101789,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "light",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44965705732
+    },
+    {
+      "name": "UI32-light-desktop-removal-review",
+      "area": "UI32",
+      "sha": "6184e6a1a7448a3f45596e54bd275b99aac7ed73",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-removal-review.jpg",
+      "bytes": 114023,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "light",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44965705732
+    },
+    {
+      "name": "UI32-light-desktop-native-v2-unavailable",
+      "area": "UI32",
+      "sha": "88bf1567c7150508f2e0c44b43d3904885b824e5",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-native-v2-unavailable.jpg",
+      "bytes": 89890,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "light",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44965705732
+    },
+    {
+      "name": "UI32-pt-BR-dark-desktop",
+      "area": "UI32",
+      "sha": "32186ec5f9c02b98e1aea69f489e8f44338afccc",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-pt-BR-dark-desktop.jpg",
+      "bytes": 89764,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "pt-BR",
+      "visualReview": "PASS",
+      "sourceRun": 44965705732
     }
   ],
   "limitations": [
-    "UI30 and UI31 are qualified in this revision. UI32 is still awaiting qualification; its failed-journey captures are excluded.",
     "UI30's successful detail and destination use a real local Hot Topic handoff. Procurement details returned HTTP 503 in an earlier original-source run; this gallery does not qualify a successful Procurement detail or alter C58 protections.",
-    "The source returned ownerLabel unknown; it is preserved. The original owner reference and current source version were asserted in the detail response.",
+    "The Work source returned ownerLabel unknown; it is preserved. The original owner reference and current source version were asserted in the detail response.",
     "Search returned the canonical empty result because the isolated source has no uploaded searchable document. A non-empty search result and result destination are not qualified.",
+    "UI32 qualifies editing an existing V1 view. Removal was reviewed and canceled; actual deletion was not performed. Native V2 views and preferred entry remain unavailable and no V2 command was sent.",
     "Chromium only. English desktop dark/light, English 320px light, and Brazilian Portuguese desktop dark initial states were captured. Actual browser zoom, Portuguese 320px and other engines were not tested."
   ],
-  "diagnosticScope": "Qualified UI30/UI31 journeys only; UI32's failed journey is excluded."
+  "diagnosticScope": "All three independent journeys in Work10, including their English and Portuguese pages.",
+  "latestWholeFileQualification": {
+    "run": 44965705732,
+    "job": 137034123246,
+    "snapshot": "6bff36e3308c4ac205a59011827c8f19c06c5873",
+    "productHead": "87a738830c83bf1fa9ee30c32b38fb1e297b30f8",
+    "passed": 3,
+    "failed": 0,
+    "duration": "5.1m",
+    "completeCaptures": 22
+  },
+  "confirmedBrowserWrites": 1,
+  "sourceReadbacks": {
+    "UI30": "Original detail owner/sourceVersion and two HTTP 200 reauthorizations followed by the genuine Hot Topic destination.",
+    "UI31": "Fresh original private POST confirms matches: []; local result filtering sends no second browser search.",
+    "UI32": "Fresh original V1 open confirms version 2, revised title and compact density with exact original period/filters; a new native route rereads that same view."
+  },
+  "commandRegression": {
+    "run": 44966016316,
+    "job": 137035096579,
+    "snapshot": "0849344a07285ae4eef3b362817f9fe8d017d6fb",
+    "file": "packages/app-shell/test-browser/sucafina-saved-view-command.test.ts",
+    "status": "PASSED",
+    "tests": 3,
+    "failures": 0
+  }
 }

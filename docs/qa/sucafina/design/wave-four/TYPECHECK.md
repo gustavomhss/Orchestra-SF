@@ -2,7 +2,7 @@
 
 ## Current composed candidate
 
-[Gate12 / run44965223657](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965223657) passed all13 checks on snapshot `dacaec3b11b0dce7244268f7de1ade2a6df0aece`, product `331cafc50bee2112f6366ff428658de938c6f58e`, after incorporating exact dev `3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1`. Application declarations, E2E semantics and the full CLI package typecheck each exited0. Exact-dev guards, seven-file palette parity and84 regression tests passed. The historical CLI diagnostics below were corrected by the incorporated upstream commits; no local suppression was introduced.
+[Gate13 / run44966016316](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966016316) passed all14 checks on snapshot `0849344a07285ae4eef3b362817f9fe8d017d6fb`, product `250e8faf80931c807a86c5f06c0e797de469adca`, after incorporating exact dev `3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1`. Application declarations, E2E semantics and the full CLI package typecheck each exited0. Exact-dev guards, seven-file palette parity and87 regression tests passed. The three added Saved Views cases reproduce Solid metadata rejection, exact detached admission and retained invalid-field rejection. The historical CLI diagnostics below were corrected by the incorporated upstream commits; no local suppression was introduced.
 
 ## E2E typecheck boundary
 

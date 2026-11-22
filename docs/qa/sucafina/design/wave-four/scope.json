@@ -580,7 +580,8 @@
       ],
       "evidenceRun": 44964988862,
       "visualReview": "evidence/work/README.md",
-      "userAcceptance": "PENDING"
+      "userAcceptance": "PENDING",
+      "finalQualificationRun": 44965705732
     },
     {
       "id": "UI31",
@@ -636,13 +637,14 @@
       ],
       "evidenceRun": 44964042218,
       "visualReview": "evidence/work/README.md",
-      "userAcceptance": "PENDING"
+      "userAcceptance": "PENDING",
+      "finalQualificationRun": 44965705732
     },
     {
       "id": "UI32",
       "label": "Visões salvas",
       "owner": "planner",
-      "status": "IN_PROGRESS",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
       "routes": [
         {
           "kind": "list",
@@ -663,8 +665,62 @@
           "referenceBlob": "16db968cbe6c5bfbaa40521aff74f2c83bb51be5"
         }
       ],
-      "states": [],
-      "captures": []
+      "states": [
+        "existing V1 list",
+        "retained edit draft",
+        "review and revise",
+        "cancel review",
+        "one confirmed save",
+        "source Version2 exact readback",
+        "fresh route",
+        "remove review canceled",
+        "native V2 unavailable",
+        "English desktop light/dark",
+        "English320px review actions",
+        "Brazilian Portuguese list"
+      ],
+      "captures": [
+        {
+          "name": "UI32-dark-desktop-existing-view-list",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-dark-desktop-existing-view-list.jpg"
+        },
+        {
+          "name": "UI32-dark-desktop-existing-view-editor",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-dark-desktop-existing-view-editor.jpg"
+        },
+        {
+          "name": "UI32-dark-desktop-existing-view-review",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-dark-desktop-existing-view-review.jpg"
+        },
+        {
+          "name": "UI32-light-desktop-existing-view-review",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-existing-view-review.jpg"
+        },
+        {
+          "name": "UI32-light-320-existing-view-review-actions",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-320-existing-view-review-actions.jpg"
+        },
+        {
+          "name": "UI32-light-desktop-confirmed-view-readback",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-confirmed-view-readback.jpg"
+        },
+        {
+          "name": "UI32-light-desktop-removal-review",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-removal-review.jpg"
+        },
+        {
+          "name": "UI32-light-desktop-native-v2-unavailable",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-native-v2-unavailable.jpg"
+        },
+        {
+          "name": "UI32-pt-BR-dark-desktop",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-pt-BR-dark-desktop.jpg"
+        }
+      ],
+      "evidenceRun": 44965705732,
+      "visualReview": "evidence/work/README.md",
+      "userAcceptance": "PENDING",
+      "finalQualificationRun": 44965705732
     },
     {
       "id": "UI34",
@@ -850,23 +906,32 @@
   "verification": {
     "runtime": "IN_PROGRESS",
     "visual": "IN_PROGRESS",
-    "technical": "THIRTEEN_GATES_PASSED_AT_331CAFC5",
+    "technical": "FOURTEEN_GATES_PASSED_AT_250E8FAF",
     "regression": "FIRST_SIX_PASSED_AT_7C0CAF8D",
     "userAcceptance": "PENDING",
     "merge": "NOT_MERGED"
   },
   "technicalEvidence": {
-    "run": 44965223657,
-    "job": 137032605736,
-    "snapshot": "dacaec3b11b0dce7244268f7de1ade2a6df0aece",
-    "productHead": "331cafc50bee2112f6366ff428658de938c6f58e",
+    "run": 44966016316,
+    "job": 137035096579,
+    "snapshot": "0849344a07285ae4eef3b362817f9fe8d017d6fb",
+    "productHead": "250e8faf80931c807a86c5f06c0e797de469adca",
     "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
-    "checks": 13,
-    "regressionTests": 84,
+    "checks": 14,
+    "regressionTests": 87,
     "includesOriginalInstalledHost": true,
+    "guards": {
+      "base": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+      "rules": 78,
+      "files": 191,
+      "errors": 0,
+      "warnings": 20,
+      "approved": 0,
+      "touchesGuards": false
+    },
     "fullCli": {
       "status": "PASSED",
-      "run": 44965223657,
+      "run": 44966016316,
       "diagnostics": 0,
       "previousBaseline": {
         "run": 44958162297,
@@ -900,8 +965,13 @@
     ],
     "resolution": "Exact upstream FSUtil dependency and outer service acquisition retained together with all native reading-health integration.",
     "status": "IN_PROGRESS",
-    "technicalRun": 44965223657,
+    "technicalRun": 44966016316,
     "plannerAndPreviousSixRun": 44965221018,
-    "procurementRun": 44965165654
+    "procurementRun": 44965165654,
+    "workRun": 44965705732,
+    "decisionsRun": 44966014444,
+    "plannerAndPreviousSixStatus": "PASSED",
+    "procurementStatus": "PASSED",
+    "workStatus": "PASSED"
   }
 }
