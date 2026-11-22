@@ -1,0 +1,130 @@
+{
+  "schema": "sf-semantic-boundary-review-v1",
+  "status": "SOURCE_REVIEW_COMPLETED_WITH_LIMITS",
+  "signed": false,
+  "formalG09Pass": false,
+  "runtimeExecutionByReviewer": false,
+  "testExecutionStatus": "not-run-by-reviewer",
+  "canonicalDispositionsGenerated": false,
+  "reviewedSource": "90861699b40d7093adbba70a69ac866eb517090f",
+  "carryForward": {
+    "targetSource": "babc660b2cda3e20ed6b68ecab86b973110652cb",
+    "verification": "GitHub compare; 14 changed paths, none among 23 reviewed code paths",
+    "reviewedChangedPaths": [],
+    "archiveEquivalenceClaimed": false
+  },
+  "candidateCarryForward": {
+    "targetSource": "edd15e422dd8b1008a1a32ff4c8d5108e8e2e3a2",
+    "reviewedCodePathCount": 23,
+    "reviewedCodePathsIdentical": true,
+    "verification": "Root verified that the 19-path candidate delta contains only build, harness and scanner changes; all 23 reviewed code paths remain identical.",
+    "verificationSource": "Root's supplied verification; no additional reads by this reviewer",
+    "archiveEquivalenceClaimed": false,
+    "runtimeExecutionByReviewer": false
+  },
+  "coldReview": {
+    "status": "PASS_AFTER_CORRECTION",
+    "probeBlob": "23f3cd8ff19fb7edcc388cbfed56ef0920db8a8e",
+    "bindingBlob": "7c26ce26c6e8491c7c903f923185707d66d182a3",
+    "correctedFinding": {
+      "originalProbeBlob": "fcf21f42d5dfc55006169e96c41b945e638a9db6",
+      "originalLine": 493,
+      "incorrectPath": "/health",
+      "correctPath": "/api/health",
+      "contractPath": "packages/protocol/src/groups/health.ts",
+      "contractBlob": "be777a5f8d482fcb5f3b06c1a21077e2fc452bb5",
+      "contractLine": 5,
+      "exactSingleReplacementVerified": true
+    }
+  },
+  "groups": [
+    {
+      "id": "microsoft-listener-composition",
+      "claim": "The dedicated Microsoft listener composes installation.layer only. Unmatched and failed requests do not fall through to generic routes or Core database layers.",
+      "sources": {
+        "apps/cli/src/index.ts": "56019073d94e33ded20d762a2cc5f87c97b17fed",
+        "apps/cli/src/commands/commands.ts": "355f183ab5b49b133daa49b2f2dcd9906342c48d",
+        "apps/cli/src/framework/runtime.ts": "02d1d778896d87fd360a75f10d749342c0698ea1",
+        "apps/cli/src/commands/handlers/serve.ts": "7fe2c12327642262577b26d85f6606a6b6312074",
+        "apps/cli/src/sucafina-product/installation.ts": "1d0459efa7a42dae3b93ffb0eb4299460e373989",
+        "modules/sucafina/Sucafinav1/local/microsoft-entry.ts": "49a6ed3ffe7c8fbbe1bce6634d81b4a7c1ef419e"
+      },
+      "keySpans": [
+        "framework/runtime.ts:68-75",
+        "commands/handlers/serve.ts:84-107",
+        "commands/handlers/serve.ts:141-171",
+        "sucafina-product/installation.ts:132-197",
+        "sucafina-product/installation.ts:267-287",
+        "local/microsoft-entry.ts:118-156"
+      ],
+      "limits": [
+        "This closes the examined listener composition, not every transitive import or opaque binary span.",
+        "Actual archive membership and executed installed controls must bind the final candidate."
+      ]
+    },
+    {
+      "id": "generic-client-and-daemon-paths",
+      "claim": "The examined default, ACP, run, attach, API, import and export handlers use the generic client transport. The generic daemon starts serve without an installation factory; the dedicated Microsoft listener refuses daemon registration.",
+      "sources": {
+        "apps/cli/src/services/daemon.ts": "6b383fc3e9205e8f575b7fb235c85846b8ea52d3",
+        "apps/cli/src/commands/handlers/default.ts": "d0a9968e5d8e553c852b0aa724097d2a2c8de849",
+        "apps/cli/src/commands/handlers/acp.ts": "6818e84900fa443cc6cbd3ded73b3334414bb6bf",
+        "apps/cli/src/commands/handlers/run.ts": "48943a08bc30c9926c0563bce3b9a702bcb511db",
+        "apps/cli/src/commands/handlers/attach.ts": "25ad913a11460da503ef81a8f2b51dba021d4c7a",
+        "apps/cli/src/commands/handlers/api.ts": "992bf3688415a6c6cd0469955602344e376860d7",
+        "apps/cli/src/commands/handlers/import.ts": "0b4e4682e7d96c618f5991f2d92219919a76eab7",
+        "apps/cli/src/commands/handlers/export.ts": "105dca957678bd6947a6c1b5d104358655334c53",
+        "apps/cli/src/commands/handlers/web.ts": "165f36da8effb2e640a71bbdd3a9e050ff0f5a9c"
+      },
+      "limits": [
+        "No claim that every CLI handler body was reviewed.",
+        "Basic, directory and known identifiers are not Microsoft authority.",
+        "Generic client tests preserve client behavior but do not prove Microsoft admission."
+      ]
+    },
+    {
+      "id": "corporate-recovery-entry",
+      "claim": "Corporate recovery uses its own current Microsoft administration admission, recover grant, enabled Team, installation/tenant/Team partition and independently owned recovery pin.",
+      "sources": {
+        "modules/sucafina/Sucafinav1/runtime/corporate-recovery-http.ts": "4529c31cd523d85a59b6f26aa115ff556f76521c",
+        "modules/sucafina/Sucafinav1/local/microsoft-entry.ts": "49a6ed3ffe7c8fbbe1bce6634d81b4a7c1ef419e"
+      },
+      "keySpans": [
+        "runtime/corporate-recovery-http.ts:35-85",
+        "local/microsoft-entry.ts:50-58"
+      ],
+      "existingTestSources": {
+        "modules/sucafina/Sucafinav1/test/corporate-restore-retention.test.ts": "bfb439736b80403d1da7816de6f0d9508beaffc3",
+        "modules/sucafina/Sucafinav1/test/corporate-recovery-register.test.ts": "2b772ce078a2771f0ced48503771031932dc3fb2"
+      },
+      "limits": [
+        "This is an active SF boundary, not a generic personal subsystem.",
+        "Test assertions were read; no execution or live tenant/Azure proof is claimed."
+      ]
+    },
+    {
+      "id": "explicit-local-and-shared-exceptions",
+      "sources": {
+        "packages/core/src/global.ts": "ba7790536b60c6075ff37854c4db14909b779183",
+        "packages/core/src/database/database.ts": "aa519134efff085e960affd9be376b0dc92456e1",
+        "packages/core/src/permission/saved.ts": "385d560b4b7658872a1639a1e5fb3252b4e52eb2",
+        "apps/cli/src/commands/handlers/db/query.ts": "dfba4e1da0ad2368d51f001b66f5eff823512c11",
+        "apps/cli/src/commands/handlers/db/path.ts": "bc9a9436fa37a4f2fe1456d8446163758e24239d",
+        "apps/cli/src/commands/handlers/plugin.ts": "4e9bbe9e0cd65640236d4cd590ffbb5bd1299caf",
+        "apps/cli/src/sucafina-product/creation-recovery-http.ts": "271cd8f4199810a8c659ac5987a8a9cc2ea27b83"
+      },
+      "observations": [
+        "Global import creates technical XDG directories; zero generic side effects is not a valid claim.",
+        "db query opens an explicitly selected local database and can use an absolute ORCHESTRA_DB path; HTTP exclusion is not its filesystem access control.",
+        "plugin writes cwd/global configuration; its exclusion from Microsoft authority must be tied to composition and config-trap evidence.",
+        "nativeSfLocalInstallation/host-context and shared SF recovery helpers require their actual consumer and packaging disposition; they are not automatically personal or historical."
+      ]
+    }
+  ],
+  "globalLimits": [
+    "No canonical occurrence or finding ID is erased or declared classified by this document.",
+    "No global activeLegacy/unclassified/orphan counts are asserted.",
+    "No signature, trusted signer identity, formal scanner PASS, live tenant proof or Azure deployment is invented.",
+    "A group may justify multiple exact members only after each member is linked to the reviewed semantic boundary."
+  ]
+}

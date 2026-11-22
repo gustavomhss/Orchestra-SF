@@ -1,98 +1,53 @@
 # Preparação do go-live — G05, G06, G07, G08 e G10
 
-**Estado: roteiros e evidências de referência preparados; nenhum dos cinco gates foi aprovado no candidato final nesta frente.** O SHA final e as reservas dos ambientes ainda precisam de confirmação. Este pacote identifica o trabalho que pode avançar e os bloqueios concretos de execução.
+**Ferramentas implementadas e provas de componente executadas; nenhum dos cinco gates está aprovado para o candidato final.** A qualificação final depende de C/T confirmados por Migração e Release, do tar original verificado e da execução nos ambientes isolados reservados. O estado e os recibos observados em 22/11/2026 constam no [registro de execução](execution-2026-11-22.md) e no [registro estruturado](status.json).
 
-Escopo recebido no [handoff c02f329d](https://github.com/gustavomhss/Orchestra-SF/blob/c02f329d48d37e2f6296154978cd8a7cf80bcb64/docs/qa/sucafina/astra-go-live-handoff.md). Branch própria: `go-live-readiness`, criada de `dev@79912446753af5bb291fc2581543732eb4c83057`, árvore `5c32cd72537799632e7d2583c1775df1d88b8780`. Esse SHA é referência de leitura, não candidato final.
-
-O [registro estruturado](status.json) contém por gate dono, SHA, artefato, recibo, bloqueio e critério de fechamento. Campos ainda não observados permanecem nulos; este JSON não é um recibo de execução.
+Escopo recebido no [handoff c02f329d](https://github.com/gustavomhss/Orchestra-SF/blob/c02f329d48d37e2f6296154978cd8a7cf80bcb64/docs/qa/sucafina/astra-go-live-handoff.md). Esta frente mantém os limites de posse e de produção estabelecidos pelo usuário.
 
 ## Donos e fronteiras
 
-| Responsabilidade | Dono confirmado / confirmação pendente |
+| Responsabilidade | Dono e situação |
 | --- | --- |
-| Preparação e coordenação G05/G06/G07/G08/G10 | Esta sessão Astra |
+| Preparação, ferramentas, coordenação e qualificação G05/G06/G07/G08/G10 | Esta sessão Astra; entregas nas PRs #637, #638, #640, #644 e #639, com registro consolidado na #628 |
 | G01–G04, pool e integração do candidato | Sessão **Retomar migração para Microsoft Teams** |
-| Correções residuais #349 | Outra sessão Astra, `audit-residual-bundle` |
+| Residual #349 | Astra já responsável por essa frente |
 | G09 e #588 | Gustavo e Astra já responsável |
-| Aceite de Compras já realizado | Sessão **222 (2)**, limitado à instalação QA observada |
-| Transporte Server/HTTP e composição Files/Operations | Claim exclusivo de edição a confirmar com a Migração antes de alterar caminhos compartilhados |
-| Executor do pacote final e decisão de toolchain | Release atual a confirmar; #247/#257 são referências históricas |
-| Reserva QA, host, sessões Entra e callbacks | Responsáveis atuais ainda não confirmados |
-| Backup, corte, recuperação, observador de efeitos e rollback | Responsáveis atuais do ensaio ainda não confirmados |
+| Aceite de Compras já realizado | Sessão **222 (2)**: 4/4 no QA em que foi produzido, conforme handoff |
+| Confirmação do pacote, workflow, compilador e operador Release | Responsável operacional atual ainda sem ACK para C/T |
+| Reserva QA, host, sessões Entra, grants e callbacks | Responsáveis atuais ainda sem confirmação para a execução final |
+| Reserva G10, backup/chave, corte e observação independente de efeitos | Responsáveis operacionais ainda sem confirmação |
 
-A posse documental desta sessão limita-se aos seis arquivos em `docs/qa/sucafina/go-live/`. Nenhum caminho compartilhado de produto, workflow ou ambiente foi editado nesta etapa. A fila de G03/G04 e a frente #349 permanecem com seus donos.
+Os artefatos desta frente adicionam transportes e verificadores de prova, sem assumir G01–G04/pool, #349 ou G09. O produtor Microsoft de pacote continua sob Release; G07 verifica o tar original. O estado observado de G09 deve ser consultado na sua própria frente, sem transportar aprovação para G05–G10.
 
 ## Estado por gate
 
-| Gate | Preparação concreta | Prova reaproveitada | Primeiro bloqueio para executar/fechar |
-| --- | --- | --- | --- |
-| **G05 — HTTP** | [Roteiro dos três modos, isolamento e recibos](g05-g06-controls.md) | Exercitador e catálogo existentes; alcance do transporte conferido | Dono/rota do listener HTTP real e admissão Teams precisam ser reconciliados. O exercitador atual chama handlers em processo e usa Basic; não fecha a prova pedida. |
-| **G06 — ClamAV** | [Controles, seleção, integridade, cleanup e lacuna malformed](g05-g06-controls.md) | Run 44684352036: 59 controles do verificador + 7 casos reais aprovados | Workflow/fixtures ausentes da linha atual. O controle histórico de protocolo ClamD malformado não demonstra arquivo inválido no ingresso da aplicação. |
-| **G07 — Linux x64** | [Produtor Microsoft, verificador/instalador e protocolo pós-pin](g07-linux-package.md) | Run 44983358294, artefato 14738902174, tar prod com hashes registrados | Pin conjunto Migração/Release, dono executor e toolchain/rota confirmados antes de gerar tar final. |
-| **G08 — Teams QA** | [Matriz de homologação, reserva, seleção por papel e recibo](g08-teams-qa.md) | Aceite Compras 222 (2) preservado; #586/#592/#604 e suportes históricos classificados | Reconciliar executor/seletores/recibos atuais; confirmar slot, atores Entra e grants; depois instalar o tar G07 final. |
-| **G10 — recuperação** | [Runbook de inventário, backup, corte, restore, restart/retry e rollback](g10-cutover-rollback.md) | Rota corporativa e testes #568/#574; instalador atual | Confirmar reserva/operadores e executor operacional de backup/migração; ensaiar no tar final com observador externo real. |
+| Gate | Entrega e prova disponível | O que impede fechar |
+| --- | --- | --- |
+| [G05](g05-g06-controls.md) | Listener HTTP real, catálogo completo, três modos e isolamento Team com observação independente de estado; CI e SHA exatos no registro de execução | Repetir/aprovar no C/T final integrado; não herdar aprovação do candidato de trabalho |
+| [G06](g05-g06-controls.md) | ClamAV real, 69 controles do verificador e 8 casos/218 asserções; arquivo benigno inválido e XLSX truncado recusados pela aplicação; cleanup observado | Nova execução no C/T final e composição pertinente; prova atual é de componente |
+| [G07](g07-linux-package.md) | Verificador integrado; 31 controles Node e 18 Python; admite dois ACKs reais e verifica os bytes do produtor original | ACKs Migração/Release antes do build; tar final ainda não gerado por esta frente |
+| [G08](g08-teams-qa.md) | Executor privado integrado; 84 controles Node, 28 Python; inventário de 9 casos listado sem execução instalada | Contratos UI/admin no candidato, tar G07, reserva e atores Microsoft reais; U15/U39/U40/F04/AZ02 mantêm provas próprias |
+| [G10](g10-cutover-rollback.md) | Runbook e adaptador backup/clone integrados; 15 controles reais de arquivos/SQLite; origem R distinta do destino C | Tar final e ensaio reservado completo: chave utilizável, corte, efeito posterior, restart/retry e rollback compatível |
 
-**Qualificação final observada nesta frente: 0/5.** Os roteiros foram produzidos; os recibos finais ainda não foram executados. Não contar testes históricos como passes de um SHA novo.
+As contagens acima descrevem os runs referenciados, não um agregado executado sobre o mesmo candidato final. G08 registra nove casos como **LISTED_NOT_RUN**; não são nove passes de homologação. G10 prova o mecanismo de arquivos, não um corte nem recuperação de negócio.
 
-## Evidências que já evitam retrabalho
+## Pré-requisitos e ordem de execução
 
-### ClamAV
+1. A Migração conclui e integra G01–G04/pool e fornece os recibos do candidato; a linha de preparação desta frente deve fazer parte de C.
+2. Migração e Release confirmam explicitamente o mesmo SHA C e árvore T, o dono executor, a rota produtora e a toolchain. Os ACKs devem preceder o job produtor. O último agregado observado da Migração ainda está em falha; ver o registro com data e run.
+3. G05 e G06 executam as seleções completas sobre C, sem casos obrigatórios omitidos, com recibos e limpeza verificáveis.
+4. Release produz o tar original de C; G07 verifica sua proveniência, bytes, manifesto, componentes e correspondência com os dois ACKs.
+5. Operadores reservam e instalam os mesmos bytes em QA e recuperação. **G08 e G10 podem avançar em paralelo**, mantendo processos, dados, sessões, escritores e callbacks isolados.
+6. Consolidar os recibos finais e bloqueios de G01–G10 para a decisão humana de go/no-go. A janela e a virada de produção exigem aprovação específica posterior.
 
-[Run 44684352036](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44684352036), job 136115014524, fonte `6f9b66a2aaa8b057653244c94183254bb6f008b2`: sete casos reais, três arquivos, 162 asserções, mais 59 controles do verificador. Artefato [14606100590](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44684352036/artifacts/14606100590).
+## Evidência reaproveitada
 
-A classe emitida é `COMPONENT_REAL_CLAMD`, com `installedTeamsProof: false`. Preservar essa classificação. O daemon real, EICAR e os negativos de protocolo/admissão são insumos úteis; falta a obrigação de arquivo inválido benigno pela aplicação e a nova execução no candidato pertinente.
+O aceite **222 (2)** permanece **4/4, aceito no QA original**, incluindo gravação/releitura e revogação do acesso temporário. O backlink original com SHA/tar/reserva ainda não foi recuperado. Isso limita a vinculação ao candidato final, sem invalidar o aceite recebido.
 
-### Pacote Microsoft
+As provas históricas de ClamAV, pacote, recuperação e Compras continuam registradas em status.json e nos documentos de cada gate. Elas ajudam a preparar e revisar os mecanismos; o SHA testado, a identidade e o alcance de cada recibo permanecem explícitos.
 
-[Run 44983358294](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44983358294), job 137088492396, fonte `83f1283f8e39cd5863d9806b9a48f0573f44eaff`: artefato [14738902174](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44983358294/artifacts/14738902174), tar interno SHA-256 `af312871e79307bd281e7d46a162feeb44bc0112db0e67cb59f8be55db20a109`.
+## Coordenação e critério de fechamento
 
-Os logs registram verificação do pacote e instalação temporária idempotente. O preflight de VM foi substituído no runner; não é prova de VM/Entra reais. Esta sessão conferiu metadata e logs, sem readquirir os bytes do tar. A rota pertence à frente G09/Release e serve de referência; não foi disparada ou alterada por esta sessão.
+Pedidos persistidos para [Migração](https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7074623731), [Release](https://github.com/gustavomhss/Orchestra-SF/pull/247#issuecomment-7074623941) e [empacotamento Microsoft](https://github.com/gustavomhss/Orchestra-SF/pull/257#issuecomment-7074624125). Comentários desta frente solicitando um ACK não contam como o ACK do dono. Nenhum SHA de dev é promovido automaticamente a candidato final.
 
-### Compras
-
-O handoff atesta **222 (2): 4/4 em QA, gravação/releitura e revogação do acesso temporário**. Esse aceite permanece preservado. O link do recibo original, o SHA/tar e a reserva usados não foram recuperados nas fontes consultadas. Registrar esses vínculos quando fornecidos; não converter essa ausência de backlink em reprovação do aceite nem usar o aceite para um tar novo.
-
-As provas dos PRs [#586](https://github.com/gustavomhss/Orchestra-SF/pull/586), [#592](https://github.com/gustavomhss/Orchestra-SF/pull/592) e [#604](https://github.com/gustavomhss/Orchestra-SF/pull/604) usam contextos controlados/sintéticos e são distintas da prova operacional 222 (2).
-
-## Dependências da integração e sequência
-
-O agregado [44984930949](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44984930949), `0eab89232860463ab2aabbee15fc422e43bd6e74`, terminou com falha. A Migração abriu [44987301540](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987301540), `b4ba7f595e6b3b5ff10a3379cd91b6771bb1b793`. Na observação de 22/11/2026 05:08 UTC, esse run ainda estava em andamento e já havia falhas nos shards 4/5/8. Não há confirmação de candidato final derivada desse run.
-
-A ordem de trabalho é:
-
-1. **Em paralelo agora:** resolver os donos dos componentes, reconciliar G05/G06 e os executores G08/G10, preparar atores/dados/reservas e revisar a rota de pacote. Os documentos detalham entradas e oráculos.
-2. **Confirmar C/T com Migração e Release:** registrar referências verificáveis dos dois aceites, gates de entrada e toolchain/rota escolhidos. O pin não é preenchido por inferência a partir de `dev`.
-3. **Qualificar G05/G06 e produzir G07:** no mesmo candidato final, emitir recibos reais e verificar tar, inventário e instalação.
-4. **Executar G08 e G10 em paralelo:** consumir exatamente o mesmo tar em ambientes autorizados separados. Não reconstruir entre os gates.
-5. **Consolidar go/no-go:** conferir os cinco recibos desta frente e os gates externos, incluindo G09. A virada de produção depende da decisão humana e da aprovação específica da janela.
-
-Se código ou bytes mudarem, os vínculos de evidência devem ser reconciliados e os controles pertinentes reexecutados. O pacote documental não cria um novo candidato de produção.
-
-## Coordenação a registrar
-
-Os pedidos de coordenação devem trazer respostas concretas, sem assinatura gerada por esta sessão:
-
-| Destino | Informação necessária |
-| --- | --- |
-| Migração | C/T final ou estado de bloqueio, recibos G01–G04/pool, dono exclusivo de Server/HTTP e Files/Operations, rota instalada G08/G10 e caminhos que podem ser alterados |
-| Release | Confirmação do mesmo C/T, executor do pacote, workflow/toolchain, recibos de entrada e tratamento dos artefatos |
-| QA/Entra | Reserva isolada, operadores, sessões/grants, dados e ações de revogação/limpeza autorizadas |
-| Backup/recuperação | Reserva separada, executor e versão, chave/destino por referência privada, observador independente e release anterior já instalado/retido |
-| 222 (2) | Recibo sanitizado original e vínculo ao SHA/tar/instalação do aceite já realizado |
-
-As solicitações e eventuais respostas ficam no PR desta branch e no campo `coordination.requests` de `status.json`. Uma solicitação publicada é pendência; não é aceite recebido.
-
-Pedidos publicados e relidos: [Migração/reservas/222 (2)](https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7074623731), [Release](https://github.com/gustavomhss/Orchestra-SF/pull/247#issuecomment-7074623941) e [pacote Microsoft](https://github.com/gustavomhss/Orchestra-SF/pull/257#issuecomment-7074624125). Ainda não há ACK recebido nesta frente. O PR documental é [#628](https://github.com/gustavomhss/Orchestra-SF/pull/628), draft.
-
-Durante a publicação, dev avançou para `079d86766f9c324924e024d53722c09e018c23d2`. O status registra esse movimento; a análise de fontes permanece vinculada ao pin de triagem indicado e nenhum desses heads foi adotado como candidato final.
-
-## Revisão e verificação deste pacote
-
-Três subfrentes reais trabalharam em paralelo e fizeram revisão cruzada dos documentos. Foram corrigidos quatro pontos materiais antes da integração:
-
-- Protocolo ClamD malformado não satisfaz a obrigação de arquivo inválido da aplicação.
-- F04 precisa manter guest/seletor malformado/zero requests no stale-preflight; Teams/U15/U39/U40 precisam de invocações e bundles próprios.
-- O rollback do instalador só seleciona uma release R já instalada e retida; ter seu tar não basta.
-- A rota corporativa de restore cobre somente o dashboard de um Team; o backup operacional precisa provar separadamente as demais classes inventariadas.
-
-A verificação documental usa leitura de retorno dos blobs, links e pins observados, consistência do JSON e comparação do diff com a base. Não representa testes de produto nem aprovação de gate. Não foram iniciados CI, build, tar, login, revogação, deploy ou alteração de produção por esta frente.
+O fechamento exige G05/G06 aprovados em C, G07 verificado nesse SHA, G08 comprovado no mesmo tar instalado e G10 comprovando backup, corte, retomada e rollback com efeitos e recibos pós-checkpoint preservados. **qualifiedFinalGates permanece 0/5 e goNoGoReadiness permanece NOT_READY** até esses recibos existirem. Nenhuma virada de produção foi executada.

@@ -1,7 +1,8 @@
 #!/usr/bin/env bun
 
 import { $ } from "bun"
-import { lstat, realpath, rm } from "fs/promises"
+import { lstat, mkdir, mkdtemp, realpath, rm, writeFile } from "fs/promises"
+import { tmpdir } from "node:os"
 import path from "path"
 import { namedTargets } from "./targets"
 import { WorkspacePaths } from "@orchestra/script/workspace-paths"
@@ -12,6 +13,7 @@ const singleFlag = process.argv.includes("--single")
 const baselineFlag = process.argv.includes("--baseline")
 const skipInstall = process.argv.includes("--skip-install")
 const sourcemapsFlag = process.argv.includes("--sourcemaps")
+const externalCompileMaps = process.argv.includes("--external-compile-maps")
 const compileEvidence = !process.argv.includes("--no-compile-evidence")
 
 const targetArgs = process.argv.slice(2).flatMap((arg, index, args) =>
@@ -31,6 +33,10 @@ const targets = targetArgs.length
         return item.abi === undefined
       })
     : namedTargets
+
+if (externalCompileMaps && (sourcemapsFlag || !compileEvidence || targetArgs[0] !== "linux-x64-baseline" ||
+    Bun.version !== "1.4.1" || Bun.revision !== "4661e494f052c83c80dade1318e5710238340be6"))
+  throw new Error("--external-compile-maps requires the pinned Bun 1.4.1 Linux x64 baseline target and compile evidence")
 
 // Validate before loading build-time snapshots/dependencies or replacing any artifact.
 const workspace = WorkspacePaths.make(import.meta.dir)
@@ -147,33 +153,62 @@ for (const { item, name, omni, omniFiles, treeSitter } of prepared) {
     }
   })) : []
   const observed = new Map(before.map((input) => [input.path, input]))
-  const result = await Bun.build({ ...options, compile: {
-    autoloadBunfig: false,
-    autoloadDotenv: false,
-    autoloadTsconfig: true,
-    autoloadPackageJson: true,
-    target: `bun-${item.target}` as Bun.Build.CompileTarget,
-    outfile: `./dist/${name}/bin/${binary}${item.os === "win32" ? ".exe" : ""}`,
-    execArgv: [`--user-agent=${binary}/${Script.version}`, "--use-system-ca", "--"],
-    windows: {},
-  } })
-
+  const executable = path.resolve(dir, `dist/${name}/bin/${binary}${item.os === "win32" ? ".exe" : ""}`)
+  const scratch = externalCompileMaps ? await mkdtemp(path.join(tmpdir(), "orchestra-compile-maps-")) : undefined
+  const result = await Bun.build({
+    ...options,
+    sourcemap: scratch ? "external" : options.sourcemap,
+    compile: {
+      autoloadBunfig: false,
+      autoloadDotenv: false,
+      autoloadTsconfig: true,
+      autoloadPackageJson: true,
+      target: `bun-${item.target}` as Bun.Build.CompileTarget,
+      outfile: scratch ? path.join(scratch, binary) : `./dist/${name}/bin/${binary}${item.os === "win32" ? ".exe" : ""}`,
+      execArgv: [`--user-agent=${binary}/${Script.version}`, "--use-system-ca", "--"],
+      windows: {},
+    },
+  }).catch(async (error: unknown) => {
+    if (scratch) await rm(scratch, { recursive: true, force: true })
+    throw error
+  })
   if (!result.success) {
+    if (scratch) await rm(scratch, { recursive: true, force: true })
     for (const log of result.logs) console.error(log)
     process.exit(1)
+  }
+
+  const compileDebugIds = new Map<string, string>()
+  if (scratch) {
+    try {
+      const { detachCompileSourceMaps } = await import("./compile-source-map-evidence")
+      const raw = Buffer.from(await Bun.file(path.join(scratch, binary)).arrayBuffer())
+      const detached = await detachCompileSourceMaps(raw, result.outputs.filter((file) => file.kind === "sourcemap"))
+      for (const module of detached.index.modules) {
+        if ("debugId" in module && module.debugId) compileDebugIds.set(module.name, module.debugId)
+      }
+      const evidence = path.join(dir, "dist", "compile-source-maps-" + item.target)
+      await mkdir(path.dirname(executable), { recursive: true })
+      await mkdir(evidence, { mode: 0o700 })
+      await Promise.all([...detached.files].map(([file, contents]) =>
+        writeFile(path.join(evidence, file), contents, { flag: "wx", mode: 0o600 })))
+      await writeFile(path.join(evidence, "index.json"), JSON.stringify(detached.index) + "\n", { flag: "wx", mode: 0o600 })
+      await writeFile(executable, detached.binary, { flag: "wx", mode: 0o755 })
+    } finally {
+      await rm(scratch, { recursive: true, force: true })
+    }
   }
 
   if (compileEvidence) {
     const metafile = result.metafile
     if (!metafile || !Object.keys(metafile.inputs).length || !Object.keys(metafile.outputs).length)
       throw new Error("CLI_COMPILE_METAFILE_MISSING_OR_EMPTY")
-    const executable = path.resolve(dir, `dist/${name}/bin/${binary}${item.os === "win32" ? ".exe" : ""}`)
     if (!(await lstat(executable)).isFile()) throw new Error("CLI_COMPILE_BINARY_NOT_REGULAR")
     const binaryBytes = Buffer.from(await Bun.file(executable).arrayBuffer())
     const textEvidence = Bun.version === "1.4.1" && item.target === "linux-x64-baseline"
       ? await import("./compile-text-evidence")
       : undefined
-    const proveText = textEvidence?.linuxBunTextWitness(binaryBytes)
+    const proveText = textEvidence?.linuxBunTextWitness(binaryBytes, scratch ? compileDebugIds : undefined)
     const checked = await Promise.allSettled(Object.keys(metafile.inputs).filter(onDisk).map(async (key) => {
       const canonical = await realpath(path.resolve(dir, key)).catch((cause: unknown) => {
         throw new Error(`CLI_COMPILER_INPUT_NOT_OBSERVED: ${key}`, { cause })

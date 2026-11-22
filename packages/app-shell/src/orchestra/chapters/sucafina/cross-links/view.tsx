@@ -1,4 +1,6 @@
 import { createEffect, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
+import { createStore } from "solid-js/store"
+import type { SF_CROSS_COPY } from "@/i18n/orchestra-chapters/sf-cross"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import { useSfContext } from "../context"
@@ -6,6 +8,8 @@ import { sfCommonKey, useSfPresentation } from "../shared/frame/presentation"
 import { SfStatePanel } from "../shared/states"
 import type { SfCopyKey } from "../shared/frame/types"
 import { sfExecutiveLinkAllowed, type SfExecutiveLink, type SfExecutiveSourceRoute } from "./index"
+
+const key = (value: keyof typeof SF_CROSS_COPY): SfCopyKey => value as SfCopyKey
 
 type Label = Readonly<{ en: string; pt: string }>
 type Related = Readonly<{ kind: "risk" | "stakeholder" | "topic"; ref: string; label: string }>
@@ -69,17 +73,16 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
   omit: Related["kind"]
 }>): JSX.Element {
   const owner = useSfContext()
-  const { locale } = useSfPresentation()
+  const { t } = useSfPresentation()
   const [records, setRecords] = createSignal<readonly Related[]>([])
   const [choice, setChoice] = createSignal("")
-  const [loading, setLoading] = createSignal(false)
-  const [failed, setFailed] = createSignal(false)
-  const pt = () => locale().toLowerCase().startsWith("pt")
+  const [status, setStatus] = createStore({ loading: false, failed: false, denied: false })
   const chosen = () => records().find((item) => JSON.stringify([item.kind, item.ref]) === choice())
 
   createEffect(() => {
     const generation = owner.generation(), state = owner.state(), ready = owner.ready()
-    setRecords([]); setChoice(""); setLoading(false); setFailed(false)
+    setRecords([]); setChoice("")
+    setStatus({ loading: false, failed: false, denied: state.status === "denied" || state.status === "context-mismatch" })
     if (state.status !== "ready" || !ready) return
     const controller = new AbortController()
     const { signal } = controller
@@ -91,11 +94,14 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
     const miss = (response: { kind: string; status?: number; reason?: string; body?: { status?: string } }) => {
       if (!current()) return
       if (response.kind !== "response") {
-        if (response.reason !== "aborted") setFailed(true)
+        if (response.reason !== "aborted") setStatus("failed", true)
         return
       }
-      if (response.body?.status === "denied" || response.status === 401 || response.status === 403) return
-      setFailed(true)
+      if (response.body?.status === "denied" || response.status === 401 || response.status === 403) {
+        setStatus("denied", true)
+        return
+      }
+      setStatus("failed", true)
     }
     const jobs: Promise<void>[] = []
     if (props.omit !== "risk" && sfExecutiveLinkAllowed(ready.context, { kind: "risks" })) {
@@ -110,7 +116,7 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
             return
           }
           miss(response)
-        }).catch(() => { if (current()) setFailed(true) }))
+        }).catch(() => { if (current()) setStatus("failed", true) }))
     }
     if (props.omit !== "stakeholder" && sfExecutiveLinkAllowed(ready.context, { kind: "stakeholders" })) {
       jobs.push(createSfDomainClient(ready.transport)["domain.page.CAP15"]({}, { signal })
@@ -124,7 +130,7 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
             return
           }
           miss(response)
-        }).catch(() => { if (current()) setFailed(true) }))
+        }).catch(() => { if (current()) setStatus("failed", true) }))
     }
     if (props.omit !== "topic" && sfExecutiveLinkAllowed(ready.context, { kind: "topics" })) {
       jobs.push(createSfPeopleClient(ready.transport)["domain.page.CAP02"]({ topicStatus: "" }, { signal })
@@ -138,38 +144,40 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
             return
           }
           miss(response)
-        }).catch(() => { if (current()) setFailed(true) }))
+        }).catch(() => { if (current()) setStatus("failed", true) }))
     }
-    setLoading(jobs.length > 0)
-    void Promise.all(jobs).finally(() => { if (current()) setLoading(false) })
+    setStatus("loading", jobs.length > 0)
+    void Promise.all(jobs).finally(() => { if (current()) setStatus("loading", false) })
     onCleanup(() => controller.abort())
   })
 
   return <section class="mt-3" data-sf-executive-record-links>
-    <h3>{pt() ? "Referências executivas" : "Executive references"}</h3>
+    <h3>{t(key("sf.cross.references"))}</h3>
     <div class="flex flex-wrap items-end gap-2">
       <label class="flex flex-col gap-1">
-        <span>{pt() ? "Abrir registro canônico" : "Open canonical record"}</span>
+        <span>{t(key("sf.cross.openCanonical"))}</span>
         <select class="mx-input" value={choice()} onChange={(event) => setChoice(event.currentTarget.value)}
-          disabled={loading() || records().length === 0}>
-          <option value="">{loading() ? (pt() ? "Carregando..." : "Loading...") :
-            (pt() ? "Selecione um registro" : "Select a record")}</option>
+          disabled={status.loading || records().length === 0}>
+          <option value="">{t(key(status.loading ? "sf.cross.loading" : "sf.cross.select"))}</option>
           <For each={records()}>{(row) => <option value={JSON.stringify([row.kind, row.ref])}>
-            {row.kind + " · " + row.label}
+            {t(key(`sf.cross.kind.${row.kind}`)) + " · " + row.label}
           </option>}</For>
         </select>
       </label>
       <Show when={chosen()}>{(row) =>
         <SfExecutiveAction from={props.from} target={{ kind: row().kind, ref: row().ref }}
-          label={{ pt: "Abrir referência", en: "Open reference" }} />}
+          label={{ key: key("sf.cross.open") }} />}
       </Show>
     </div>
-    <Show when={!loading() && failed()}>
+    <Show when={!status.loading && status.denied}>
+      <SfStatePanel state="denied" messageKey={sfCommonKey("sf.common.noAccess")} />
+    </Show>
+    <Show when={!status.loading && !status.denied && status.failed}>
       <SfStatePanel state="unavailable" messageKey={sfCommonKey("sf.common.unavailable")} />
     </Show>
-    <Show when={!loading() && !failed() && records().length === 0}>
+    <Show when={!status.loading && !status.denied && !status.failed && records().length === 0}>
       <p role="status" class="text-sm">
-        {pt() ? "Nenhum destino autorizado ou disponível" : "No authorized or available destinations"}
+        {t(key("sf.cross.empty"))}
       </p>
     </Show>
   </section>

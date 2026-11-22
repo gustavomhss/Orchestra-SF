@@ -1,0 +1,46 @@
+name: go-live-recovery-controls
+
+on:
+  push:
+    branches:
+      - go-live-recovery
+
+permissions:
+  contents: read
+
+jobs:
+  checkpoint-controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Real file and SQLite controls
+        id: controls
+        env:
+          G10_COMPONENT_RECEIPT: ${{ runner.temp }}/g10-component/receipt.json
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -m 700 "$RUNNER_TEMP/g10-component"
+          git rev-parse HEAD > "$RUNNER_TEMP/g10-component/source-sha.txt"
+          git rev-parse 'HEAD^{tree}' > "$RUNNER_TEMP/g10-component/source-tree.txt"
+          python3 -B sf/azure/recovery/test_teams_checkpoint.py 2>&1 | tee "$RUNNER_TEMP/g10-component/tests.log"
+      - name: Setup Bun for canonical guards
+        uses: ./.github/actions/setup-bun
+      - name: Canonical guards
+        run: |
+          set -euo pipefail
+          bun run check:spawn-imports
+          bun run check:guards --base origin/dev
+      - name: Publish component evidence
+        if: always() && steps.controls.outcome != 'skipped'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g10-file-controls-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/g10-component
+          if-no-files-found: error
+          retention-days: 14

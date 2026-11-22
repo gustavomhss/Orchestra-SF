@@ -2,7 +2,7 @@
 
 ## Estado, escopo e donos
 
-- Estado desta frente: **PREPARED — EXECUTION BLOCKED**.
+- Estado desta frente: **EXECUTOR IMPLEMENTADO E TESTADO — HOMOLOGAÇÃO INSTALADA NOT_RUN**.
 - Data da leitura: 22/11/2026.
 - Dono da preparação: sessão Astra responsável por G05/G06/G07/G08/G10.
 - Integração G01–G04 e pool: sessão **Retomar migração para Microsoft Teams**, conforme o handoff.
@@ -12,7 +12,33 @@
 
 Este documento prepara a homologação no ambiente isolado autorizado. A aprovação de G08 vale somente para o SHA, a árvore e os bytes do tar efetivamente instalados. O pin de triagem não é um candidato final confirmado. A virada de produção depende de aprovação específica da janela e de go/no-go.
 
-A leitura desta subfrente foi feita via GitHub. Nenhum ambiente, identidade, grant, dado de negócio, teste, build, workflow ou implantação foi alterado ou executado por esta subfrente. Não houve assinatura de aprovação.
+Esta subfrente implementou e executou os controles do executor em GitHub Actions, na [PR #644](https://github.com/gustavomhss/Orchestra-SF/pull/644), integrada em `ab54723003859c01251617716272ad7ebd834fb6`. Nenhum host QA, identidade Microsoft, grant ou dado de negócio foi alterado por esta frente. Não houve assinatura de aprovação final.
+
+## Executor atual e seu limite
+
+Fonte `aa928b6ae4a5944e5dad4b5bd206d5c123d2238e`, árvore `36794c205023010cf43dc29d6856340f4ed325ea`. No [run 45003896381](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45003896381), os controles executaram **84 testes Node e 28 Python**, typecheck do pacote, import/list do Playwright e 78 guards sem findings. O job instalado ficou **skipped**.
+
+O artefato [14746898273](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45003896381/artifacts/14746898273), ZIP SHA-256 `17c1d362a945b23c5b10a3c7c13bffd37ef78a61d49d42e7bbae5c09fc4474a8`, foi adquirido e verificado independentemente. O recibo `sf-g08-executor-inventory-v1` informa `EXECUTOR_INVENTORY_VERIFIED`, **9 casos LISTED_NOT_RUN**, `installed:false`, `g08Closed:false`, `productionCutover:false`.
+
+| Caso central implementado | Observação requerida no ambiente real |
+| --- | --- |
+| same-team-distinct-grants | Dois principais originais, mesmo Team, grants realmente distintos, reload nas duas ordens |
+| aba-two-windows | A/B/A, resposta F02 original da própria ação e releitura, janela irmã preservada |
+| account-without-team | Conta Microsoft autenticada sem Team recebe negativa de negócio |
+| foreign-deep-link-reload | Deep link de outra instalação e reload não herdam autoridade |
+| admin-without-team | Administração real permitida; negócio continua negado |
+| narrow-keyboard-draft | Navegação estreita por teclado e draft com owner preservado |
+| draft-cancel-discard | Cancelar preserva draft/Team; descarte explícito troca sem transportar dados |
+| real-revoke-restore | Admin desabilita o Team descartável A pelo CAS real, observa revogação e restaura pela versão corrente |
+| logout-original-context | Logout real invalida requester e janela antiga; holder distinto permanece autorizado |
+
+A implementação e o contrato privado estão em [packages/app-shell/e2e/sucafina/g08/README.md](../../../../packages/app-shell/e2e/sucafina/g08/README.md). A workflow `.github/workflows/g08-private-preflight.yml` usa runner dedicado `[self-hosted, Linux, X64, orchestra-sf-g08-qa]` e ambiente `g08-isolated-qa` no modo instalado. Nomear runner/ambiente não cria a reserva nem a autoridade.
+
+O preflight liga G07, tar, manifesto, arquivos/permissões instalados, current/.a7-source, PID/executável/argv/factory, descritor Microsoft, listener, hostId, Azure IMDS e configuração **ativa** de Caddy. As respostas HTTPS devem vir do peer observado do host, com cache/service-worker bypass somente nas páginas próprias. A prova de host é repetida após os casos. O processo não instala, inicia ou reinicia serviço.
+
+O browser se conecta a quatro contextos Microsoft originais distintos por CDP privado. Não importa cookies ou storageState, não cria contextos autenticados e não transforma metadados em autoridade. Revogação e logout exigem autorização da reserva; restauração do Team usa a revisão observada e cleanup obrigatório. Relatório bruto e plano permanecem privados; o recibo público contém apenas a lista permitida de fontes, casos, C/T/tar e hashes.
+
+Mesmo um futuro resultado `CORE_TEAMS_INSTALLED_VERIFIED` mantém `g08Closed:false`. As linhas mais amplas da matriz — ações protegidas concorrentes, efeito/releitura de negócio, U15/U39/U40, F04 e AZ02 — conservam suas próprias seleções, produtores e recibos.
 
 ## Evidência disponível e limites de reutilização
 
@@ -26,11 +52,15 @@ A leitura desta subfrente foi feita via GitHub. Nenhum ambiente, identidade, gra
 | [Guia dos packs no pin de triagem](https://github.com/gustavomhss/Orchestra-SF/blob/79912446753af5bb291fc2581543732eb4c83057/docs/guides/sf-packs-acceptance.md) | Roteiro de Teams privados, contas separadas, grants, 12 chamadas de três packs e persistência de Compras. | Guia operacional, não recibo de execução. Reaproveitar os contratos de entrada/saída e a separação de sessões. |
 | [Agregado G03/G04](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44984930949) | Run `44984930949`, `g03-g04-repair@0eab89232860463ab2aabbee15fc422e43bd6e74`, concluído com `failure`. | A qualificação e a integração desse agregado pertencem à Migração. |
 
-Os metadados e descrições dos PRs foram lidos; as execuções não foram repetidas por esta subfrente. As fontes históricas abaixo são insumos de preparação, sem herança de aprovação.
+Os metadados e descrições dos PRs históricos foram lidos; aquelas execuções não foram repetidas por esta subfrente. As fontes históricas abaixo são insumos de preparação, sem herança de aprovação.
 
-## Primeiro bloqueio específico: reconciliar a rota instalada
+## Primeiro bloqueio específico: contratos do produto e reserva
 
-Antes de reservar uma execução, identificar um único dono da rota G08 e reconciliar seu executor, seus seletores e seus recibos com o candidato de integração.
+O executor central já existe. A linha inspecionada em `babc660b2cda3e20ed6b68ecab86b973110652cb` não apresenta todos os contratos históricos de chat, draft/descarte, picker/admin e `/api/ui/team-profiles` usados pelos casos. A Migração deve reconciliar as rotas e seletores originais no candidato integrado. Uma rota ou seletor ausente é bloqueio visível, sem substituição por produtor sintético ou skip.
+
+Ainda faltam o pin final, o tar G07, a reserva e os atores/grants originais. U15/U39/U40/F04/AZ02 também precisam de reconciliação e execução próprias. As constatações de ausência de arquivos abaixo são do levantamento inicial e não negam a nova rota `g08/`.
+
+### Levantamento histórico
 
 A consulta direta por caminho, tanto em `dev@79912446753af5bb291fc2581543732eb4c83057` quanto no SHA `0eab89232860463ab2aabbee15fc422e43bd6e74` do agregado, retornou 404 para:
 
@@ -75,7 +105,7 @@ O pin final é dependência global: Migração e Release devem confirmar SHA/ár
 | Ator autorizado nos dois Teams para A/B/A e duas janelas | Dono da autorização | Não confirmado |
 | Atores/ações de revogação, restauração de autorização e limpeza | Dono Entra/QA | Não confirmados |
 | Dados sintéticos por caso, escritores e política de limpeza | Dono dos dados QA | Não confirmados |
-| Executor, seletores exatos, captura e verificador reconciliados | Dono da rota G08 + Migração | Pendente |
+| Executor, seletores exatos, captura e verificador | Astra + Migração | Executor central integrado; contratos de produto e grupos completos pendentes |
 
 Aliases de ator e variáveis de ambiente não concedem autoridade. O host deve observar a sessão corporativa atual e os grants de cada principal. A prova de 222 (2) não reserva automaticamente o mesmo slot para esta frente.
 
@@ -130,11 +160,11 @@ O verificador deve consumir o resultado real, preservar o exit code e rejeitar s
 
 Relatórios brutos e material de autenticação ficam no fluxo privado autorizado: diretórios próprios 0700 e arquivos regulares 0600, sem symlinks conforme o contrato histórico. O recibo público deve usar uma lista explícita de campos permitidos; não copiar cookies, tokens, storageState, endpoint CDP, URLs privadas, payloads de negócio, screenshots, traces ou mensagens brutas que possam expô-los.
 
-A configuração da captura e do verificador final permanece parte da reconciliação da rota; estes requisitos não afirmam que o workflow atual já os implementa.
+O executor central já implementa captura privada e verificação estrita dos nove casos. A captura e seleção dos grupos mais amplos ainda exigem reconciliação e recibos próprios; o verde do job de ferramentas não os cobre.
 
 ## Fechamento e sequência
 
-1. Confirmar o dono e a rota instalada suportada; reconciliar executor, seletores e recibos no candidato, preservando a coordenação da Migração.
+1. Reconciliar os contratos UI/admin e os grupos completos no candidato da Migração; manter o executor central integrado e seu limite de prova.
 2. Receber o pin final confirmado por Migração e Release e os gates prévios pertinentes.
 3. Confirmar reserva, Entra, atores/grants, dados e callbacks autorizados.
 4. Receber G07 verificado e instalar exatamente o tar atestado.
@@ -148,10 +178,10 @@ G08 e G10 podem executar em paralelo após G07, em ambientes isolados autorizado
 | Campo | Registro |
 | --- | --- |
 | Dono | Astra preparação; dono operacional QA/Entra não confirmado |
-| SHA/árvore | Triagem `79912446753af5bb291fc2581543732eb4c83057` / `5c32cd72537799632e7d2583c1775df1d88b8780`; final pendente |
+| SHA/árvore | Executor `aa928b6ae4a5944e5dad4b5bd206d5c123d2238e` / `36794c205023010cf43dc29d6856340f4ed325ea`; candidato final pendente |
 | Artefato G07 | Não recebido |
-| Recibo G08 | Não produzido; execução NOT_RUN |
+| Recibo | Inventário do executor verificado; nove casos LISTED_NOT_RUN; homologação instalada NOT_RUN |
 | Prova reaproveitada | Compras 222 (2) preservada conforme briefing; provas técnicas #586/#592/#604 mantidas em seus candidatos |
-| Primeiro bloqueio específico | Dono/rota instalada e seleção reconciliada para o candidato atual |
+| Primeiro bloqueio específico | Contratos UI/admin e seleções amplas do candidato; reserva e atores ainda não confirmados |
 | Dependências seguintes | Pin final, G07, reserva QA, identidades/grants e callbacks reais autorizados |
 | Aprovação | Nenhuma emitida |

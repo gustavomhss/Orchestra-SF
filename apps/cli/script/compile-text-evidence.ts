@@ -1,77 +1,14 @@
 import { createHash } from "node:crypto"
 import path from "node:path"
 import { exportsImportMetaRequire } from "@orchestra/script/esm-binding"
+import { readLinuxBunGraph } from "./compile-bun-linux-graph"
 
-const trailer = Buffer.from("\n---- Bun! ----\n")
 const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true })
 const utf16 = new TextDecoder("utf-16le", { fatal: true, ignoreBOM: true })
 
-// The ELF framing and 52-byte module records are specific to the pinned Bun 1.4.1 Linux build.
-export function linuxBunTextWitness(binary: Buffer) {
+export function linuxBunTextWitness(binary: Buffer, debugIds?: ReadonlyMap<string, string>) {
   const fail = () => new Error("CLI_COMPILER_TEXT_GRAPH_INVALID")
-  const range = (offset: number, length: number) => {
-    if (!Number.isSafeInteger(offset) || !Number.isSafeInteger(length) || offset < 0 || length < 0 ||
-        offset > binary.length || length > binary.length - offset) throw fail()
-    return binary.subarray(offset, offset + length)
-  }
-  const u64 = (offset: number) => Number(binary.readBigUInt64LE(offset))
-  const header = range(0, 64)
-  if (!header.subarray(0, 6).equals(Buffer.from([0x7f, 0x45, 0x4c, 0x46, 2, 1])) ||
-      header.readUInt16LE(18) !== 62) throw fail()
-  const program = u64(32)
-  const sections = u64(40)
-  const programCount = header.readUInt16LE(56)
-  const sectionCount = header.readUInt16LE(60)
-  const namesIndex = header.readUInt16LE(62)
-  if (header.readUInt16LE(54) !== 56 || header.readUInt16LE(58) !== 64 ||
-      !programCount || !namesIndex || namesIndex >= sectionCount) throw fail()
-  range(program, programCount * 56)
-  range(sections, sectionCount * 64)
-  const nameHeader = sections + namesIndex * 64
-  const sectionNames = range(u64(nameHeader + 24), u64(nameHeader + 32))
-  const bunSections = []
-  for (let index = 0; index < sectionCount; index++) {
-    const section = sections + index * 64
-    const start = binary.readUInt32LE(section)
-    const end = sectionNames.indexOf(0, start)
-    if (end === -1) throw fail()
-    if (sectionNames.subarray(start, end).equals(Buffer.from(".bun"))) bunSections.push(section)
-  }
-  if (bunSections.length !== 1) throw fail()
-  const section = bunSections[0]!
-  const fileOffset = u64(section + 24)
-  const payload = range(fileOffset, u64(section + 32))
-  const address = u64(section + 16)
-  if (binary.readUInt32LE(section + 4) !== 1 || payload.length < 56 ||
-      Number(payload.readBigUInt64LE(0)) !== payload.length - 8 ||
-      !payload.subarray(-trailer.length).equals(trailer)) throw fail()
-  const mapped = Array.from({ length: programCount }, (_, i) => program + i * 56).some((segment) => {
-    const offset = u64(segment + 8)
-    const size = u64(segment + 32)
-    return binary.readUInt32LE(segment) === 1 && Number.isSafeInteger(offset) && Number.isSafeInteger(size) &&
-      offset <= fileOffset && payload.length <= size - (fileOffset - offset) &&
-      u64(segment + 16) + fileOffset - offset === address
-  })
-  if (!mapped) throw fail()
-
-  const graph = payload.subarray(8)
-  const footer = graph.length - trailer.length - 32
-  const tableOffset = graph.readUInt32LE(footer + 8)
-  const tableSize = graph.readUInt32LE(footer + 12)
-  const entrypoint = graph.readUInt32LE(footer + 16)
-  if (Number(graph.readBigUInt64LE(footer)) !== footer || !tableOffset || tableSize % 52 !== 0 ||
-      tableOffset + tableSize > footer || entrypoint >= tableSize / 52) throw fail()
-  const modules = new Map<string, number[]>()
-  for (let row = tableOffset; row < tableOffset + tableSize; row += 52) {
-    const name = graph.readUInt32LE(row)
-    const size = graph.readUInt32LE(row + 4)
-    if (!size || name + size >= tableOffset || graph[name + size] !== 0) throw fail()
-    const key = decoder.decode(graph.subarray(name, name + size))
-    const entries = modules.get(key) ?? []
-    entries.push(row)
-    modules.set(key, entries)
-  }
-
+  const { graph, graphOffset, tableOffset, modules } = readLinuxBunGraph(binary)
   const uniqueRow = (name: string) => {
     const rows = modules.get(name)
     if (rows?.length !== 1) throw fail()
@@ -88,7 +25,7 @@ export function linuxBunTextWitness(binary: Buffer) {
         graph[start + length + 1] !== 0)) throw fail()
     return {
       body, encoding: encoding === 1 ? "ascii" : "utf16le",
-      offset: fileOffset + 8 + start, bytes: length,
+      offset: graphOffset + start, bytes: length,
     }
   }
 
@@ -110,7 +47,11 @@ export function linuxBunTextWitness(binary: Buffer) {
       if (graph[chunkRow + 49] !== 1 || graph[chunkRow + 50] !== 1) throw fail()
       const chunkText = readBody(chunkRow)
       const code = (chunkText.encoding === "ascii" ? decoder : utf16).decode(chunkText.body)
-      const binding = textDefaultBinding(code, name)
+      // Exclude the exact terminal metadata authenticated by this module's
+      // compiler map from the stub grammar, while hashing the entire raw body.
+      const debugId = debugIds?.get(module)
+      const footer = debugId ? `\n//# debugId=${debugId}\n` : undefined
+      const binding = textDefaultBinding(footer && code.endsWith(footer) ? code.slice(0, -footer.length) : code, name)
       if (!binding) throw fail()
       if (binding.helperModule) {
         const key = JSON.stringify([binding.helperModule, binding.exported])

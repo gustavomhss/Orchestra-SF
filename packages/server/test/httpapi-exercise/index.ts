@@ -20,12 +20,12 @@ import { Effect } from "effect"
 import { OpenApi } from "effect/unstable/httpapi"
 import { array, check, data, isRecord, locationData, object } from "./assertions"
 import { controlledPtyInput, cursor, http, route } from "./dsl"
-import { cleanupExercisePaths, exerciseConfigDirectory, exerciseDataDirectory, exerciseGlobalRoot } from "./environment"
-import { color, printHeader, printResults } from "./report"
+import { cleanupExercisePaths, exerciseConfigDirectory, exerciseDataDirectory, exerciseGlobalRoot, exerciseProbeDirectory } from "./environment"
+import { color, printHeader, printResults, writeReceipt } from "./report"
 import { coverageResult, parseOptions, routeKey, routeKeys, selectedScenarios } from "./routing"
 import { runScenario } from "./runner"
 import { type ExerciseApp } from "./backend"
-import { type Scenario } from "./types"
+import { type Result, type Scenario } from "./types"
 import { globalConfigScenarios } from "./global-config"
 import { vcsScenarios } from "./vcs"
 import { skillScenarios } from "./skill"
@@ -59,6 +59,22 @@ import { sessionOperationScenarios } from "./session-operations"
 import { ragStudioScenarios } from "./rag-studio"
 
 export const scenarios: Scenario[] = [
+  http.protected
+    .get("/api/sucafina/installations", "v2.sucafina.installations.current.unconfigured")
+    .at(() => ({ path: "/api/sucafina/installations?select=current&contractRevision=sf-team-profile%2F1" }))
+    .json(200, (body) => {
+      object(body)
+      array(body.installations)
+      check(body.installations.length === 0, "an unconfigured server must not invent a Microsoft installation")
+    }, "none"),
+  http.protected
+    .get("/api/sucafina/installations", "v2.sucafina.installations.selector.required")
+    .at(() => ({ path: "/api/sucafina/installations" }))
+    .json(400, object, "status"),
+  http.protected
+    .get("/api/sucafina/installations", "v2.sucafina.installations.caller-owner.denied")
+    .at(() => ({ path: "/api/sucafina/installations?select=current&contractRevision=sf-team-profile%2F1&installationId=caller" }))
+    .json(400, object, "status"),
   ...globalConfigScenarios,
   ...vcsScenarios,
   ...skillScenarios,
@@ -576,18 +592,31 @@ export const scenarios: Scenario[] = [
 
 export function main(args: string[]) {
   return Effect.gen(function* () {
+    if (!exerciseGlobalRoot) throw new Error("HttpApi exercise requires a non-empty global storage path")
+    const ownsGlobal = process.env.ORCHESTRA_HTTPAPI_EXERCISE_GLOBAL === undefined
     const shared: { auth: ExerciseApp | undefined } = { auth: undefined }
-    yield* Effect.addFinalizer(() =>
-      Effect.promise(async () => {
-        await shared.auth?.dispose().catch(() => undefined)
-        await cleanupExercisePaths()
-      }),
-    )
     const options = parseOptions(args)
     const apiRoutes = routeKeys(OpenApi.fromApi(Api))
     const selected = selectedScenarios(options, scenarios)
     const missing = apiRoutes.filter((route) => !scenarios.some((scenario) => route === routeKey(scenario)))
     const extra = scenarios.filter((scenario) => !apiRoutes.includes(routeKey(scenario)))
+    const evidence = { results: [] as Result[], cleanupComplete: false }
+    yield* Effect.addFinalizer(() =>
+      Effect.promise(async () => {
+        try {
+          await shared.auth?.dispose()
+          await cleanupExercisePaths()
+          const { lstat } = await import("node:fs/promises")
+          for (const owned of [exerciseProbeDirectory, ...(ownsGlobal ? [exerciseGlobalRoot] : [])])
+            await lstat(owned).then(() => { throw new Error("HttpApi owned temporary storage cleanup incomplete") }, (error: unknown) => {
+              if (!(error instanceof Error && "code" in error && error.code === "ENOENT")) throw error
+            })
+          evidence.cleanupComplete = true
+        } finally {
+          await writeReceipt(options, apiRoutes, scenarios, evidence.results, missing, extra, evidence.cleanupComplete)
+        }
+      }),
+    )
 
     printHeader(options, apiRoutes, selected, missing, extra, { database: ":memory:", global: exerciseGlobalRoot })
 
@@ -604,13 +633,15 @@ export function main(args: string[]) {
             { concurrency: 1 },
           )
     printResults(results, missing, extra)
+    evidence.results = results
 
+    if (results.length === 0) return yield* Effect.fail(new Error("no scenarios selected"))
     if (results.some((result) => result.status === "fail"))
       return yield* Effect.fail(new Error("one or more scenarios failed"))
     if (options.failOnSkip && results.some((result) => result.status === "skip"))
       return yield* Effect.fail(new Error("one or more scenarios are skipped"))
-    if (options.failOnMissing && missing.length > 0)
-      return yield* Effect.fail(new Error("one or more routes have no scenario"))
+    if (options.failOnMissing && (missing.length > 0 || extra.length > 0))
+      return yield* Effect.fail(new Error("route inventory has missing or extra scenarios"))
     return undefined
   }).pipe(Effect.scoped)
 }

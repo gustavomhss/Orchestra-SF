@@ -77,7 +77,9 @@ This section controls server-wide default tool rules; project and agent rules ca
 
 ## Agents
 
-Settings shows the open project's agent roster, with each agent's role, description, model and step limit when supplied. **Configure** and **Create agent** open the Agents page; editing the agent's prompt, tools, skills or picture happens there, not in the Settings card.
+Settings shows the open project's agent roster, with each agent's role, description, model and step limit when supplied. **Configure** and the roster action open the Agents page; editing the agent's prompt, tools, skills or picture happens there, not in the Settings card.
+
+Availability follows the open project's provider catalog. It stays unknown while that catalog loads or fails; a disconnected provider or an unavailable or incompatible explicit model is shown on the card. Agents without an explicit model follow the connected-provider state, as on the Agents page.
 
 Only Maestro's card offers **Open Chat**; specialists work through Maestro. For saving, resetting and removing agent configuration, see [The agent screen](agent-screen.md). [The agents](agents.md) explains the seats' roles. Maestro's name stays fixed; other seats keep their stable IDs when you change their display names.
 

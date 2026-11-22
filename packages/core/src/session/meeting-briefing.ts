@@ -5,6 +5,7 @@ import { Context, Effect, Layer, Schema } from "effect"
 import { Database } from "../database/database"
 import { makeLocationNode } from "../effect/app-node"
 import { SystemContext } from "../system-context/index"
+import { SessionContextEpoch } from "./context-epoch"
 import { MeetingTable } from "./meeting.sql"
 import { MeetingMemory } from "./meeting-memory"
 import { MeetingItemTable } from "./meeting-memory.sql"
@@ -82,8 +83,8 @@ const layer = Layer.effect(
           key: SystemContext.Key.make("live/briefing"),
           codec: Schema.toCodecJson(Value),
           load: Effect.succeed({ text }),
-          baseline: (current) => `[From memory: briefing of the last meetings]\n${current.text}`,
-          update: (_, current) => `[From memory: briefing of the last meetings]\n${current.text}`,
+          baseline: (current) => SessionContextEpoch.untrustedData(`[From memory: briefing of the last meetings]\n${current.text}`),
+          update: (_, current) => SessionContextEpoch.untrustedData(`[From memory: briefing of the last meetings]\n${current.text}`),
           removed: () => "The meeting briefing no longer applies.",
         })
       }),

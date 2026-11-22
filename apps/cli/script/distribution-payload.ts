@@ -34,6 +34,17 @@ export async function prepareDistribution(input: { dist: string; out: string; ve
   const loaded = await Promise.all(sources.map(capture))
   const nativeCaptured = loaded[0]
   const webCaptured = input.web === undefined ? undefined : loaded[1]
+  // Debugging maps remain private builder assets, outside the installed Web payload.
+  if (webCaptured) {
+    for (const [file, asset] of webCaptured) {
+      if (isWebSourceMap(file)) {
+        webCaptured.delete(file)
+        continue
+      }
+      if (/\.(?:js|css)$/i.test(file) && /sourceMappingURL\s*=\s*data:/i.test(asset.bytes.toString("utf8")))
+        throw new Error(`Public web inline sourcemap forbidden: ${file}`)
+    }
+  }
   if ([...nativeCaptured.keys()].some((file) => file !== "package.json" && !file.startsWith("bin/")))
     throw new Error("Unexpected build root file")
   if (webCaptured && !webCaptured.has("index.html")) throw new Error("Missing web entrypoint: index.html")
@@ -205,7 +216,18 @@ function verifyCaptured(captured: Captured, expected?: { version?: string; targe
   return value
 }
 
+function isWebSourceMap(file: string) {
+  return /\.map(?:\.(?:gz|br))?$/i.test(file)
+}
+
 function requirePayload(captured: Captured, target: string, version: string) {
+  // Verification also rejects a reconstructed payload with self-consistent hashes.
+  for (const [file, asset] of captured) {
+    if (!file.startsWith("bin/web/")) continue
+    if (isWebSourceMap(file)) throw new Error("Public web sourcemap forbidden")
+    if (/\.(?:js|css)$/i.test(file) && /sourceMappingURL\s*=\s*data:/i.test(asset.bytes.toString("utf8")))
+      throw new Error(`Public web inline sourcemap forbidden: ${file}`)
+  }
   const tuple = requireTarget(target, version)
   const metadata = JSON.parse(captured.get("package.json")?.bytes.toString("utf8") ?? "null")
   if (!metadata || metadata.name !== `@humanguardrail/cli-${target}` || metadata.version !== version || JSON.stringify(metadata.os) !== JSON.stringify([tuple.os]) || JSON.stringify(metadata.cpu) !== JSON.stringify([tuple.arch]))

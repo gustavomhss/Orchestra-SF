@@ -2,11 +2,27 @@
 
 ## Estado e escopo
 
-**RUNBOOK PREPARADO; ENSAIO NÃO EXECUTADO.** A sessão Astra desta frente coordena G10. O operador do backup/host, o observador independente dos efeitos e o responsável pelo corte ainda precisam ser confirmados para o ambiente reservado. Esta preparação não registra aprovação de janela nem autoriza virada de produção.
+**RUNBOOK E ADAPTADOR BACKUP/CLONE IMPLEMENTADOS; CONTROLES APROVADOS; ENSAIO INSTALADO NÃO EXECUTADO.** A sessão Astra desta frente coordena G10. O operador do backup/host, o observador independente dos efeitos e o responsável pelo corte ainda precisam ser confirmados para o ambiente reservado. Esta preparação não registra aprovação de janela nem autoriza virada de produção.
 
 O [handoff](https://github.com/gustavomhss/Orchestra-SF/blob/c02f329d48d37e2f6296154978cd8a7cf80bcb64/docs/qa/sucafina/astra-go-live-handoff.md) permite a qualificação em ambientes isolados autorizados. Depois do tar G07 verificado, G08 e G10 podem avançar em paralelo com processos, dados, sessões e escritores separados. O candidato final deve ser o mesmo SHA/árvore e o tar deve ter o mesmo SHA-256 nos dois ambientes.
 
 Referência de leitura: `dev@79912446753af5bb291fc2581543732eb4c83057`, árvore `5c32cd72537799632e7d2583c1775df1d88b8780`. Não é o pin final da Release.
+
+## Adaptador implementado nesta frente
+
+A [PR #639](https://github.com/gustavomhss/Orchestra-SF/pull/639), fonte `f5b22050bbe04c228576dbe5ca1356cafbe1f431`, árvore `28a6d7cd0cbecaf6d3f3d364c81cda1bca9ca5c0`, foi integrada em `e1ed546cac909208959f60734d601723d3101662`. O [run 45024293423](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45024293423), job 137213794907, aprovou **15 controles reais de arquivos/SQLite**, zero falha/skip, spawn-imports e guards.
+
+O artefato [14755630213](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45024293423/artifacts/14755630213), ZIP SHA-256 `ba3531559a97f82f5a1533c5b2aaa5517aae03f566e9dad90ba052334fd27655`, foi adquirido e conferido independentemente. Seu recibo é `orchestra-sf.g10-component-tests.v1`, classe `FILESYSTEM_COMPONENT_CONTROLS`, `installedTeamsProof:false`, `releaseQualified:false`.
+
+`sf/azure/recovery/teams-checkpoint.py` inventaria os arquivos e diretórios existentes em `/var/lib/orchestra-sf` e `/etc/orchestra-sf`, verifica SQLite em repouso, produz um arquivo privado em volume independente e confere cada membro/byte. A recuperação de integridade escreve somente em `target/restored` numa **outra VM Azure reservada**. A reserva exige as atestações `networkEgressFenced:true` e `credentialsDisabled:true`; o adaptador observa a VM, mas não implementa nem comprova a cerca de saída ou a desativação das credenciais. O operador precisa fornecer a observação independente dessas condições antes de recuperar o clone. Não ativa serviço, seleciona release, sobrescreve dados vivos nem escreve o registro monotônico externo.
+
+A origem instalada **R** é verificada por `current_source()`, `check_rollback_release(R)` e `.a7-source.json`, separadamente do destino **C/T/tar** fornecido por G07. Assim o backup anterior ao corte não exige instalar C antes. Se a origem já for C, tar e manifesto precisam coincidir exatamente com G07. O registro externo permanece fora das duas raízes restauradas.
+
+O CLI real exige Linux x64/root, lock/preflight do instalador, serviço parado, Caddy em manutenção, volume de dados e Azure IMDS compatíveis com a reserva privada. A drenagem dos demais escritores é uma atestação do operador vinculada por hash; inatividade do serviço e bytes da instalação são observações. A presença/leitura da chave no inventário **não prova decriptação**.
+
+Os recibos host `orchestra-sf.teams-checkpoint.v2` e `orchestra-sf.teams-clone-integrity.v2` conservam `releaseQualified:false`, `businessRecovery:NOT_RUN` e `keyDecryption:NOT_RUN`. O censo cobre as raízes observadas, não uma lista predefinida de todos os bancos possíveis; o operador deve conciliar esse inventário com todas as classes e destinos de dados da instalação.
+
+Contrato, entradas privadas e comandos completos: [sf/azure/recovery/README.md](../../../../sf/azure/recovery/README.md).
 
 ## O que já existe e o limite das provas
 
@@ -19,7 +35,7 @@ Referência de leitura: `dev@79912446753af5bb291fc2581543732eb4c83057`, árvore 
 | [Instalador atual](https://github.com/gustavomhss/Orchestra-SF/blob/79912446753af5bb291fc2581543732eb4c83057/sf/azure/vm/install-factory-distribution.py) e [guia Azure](https://github.com/gustavomhss/Orchestra-SF/blob/79912446753af5bb291fc2581543732eb4c83057/sf/azure/README.md) | Verificação do tar, seleção atômica e rollback de código com compatibilidade revisada | Seleção não inicia serviço nem restaura dados; manutenção deve permanecer até decisão explícita |
 | [Plano G10 histórico](https://github.com/gustavomhss/Orchestra-SF/blob/736a5087c223629be4d73c8a4535d615fcafd96a/docs/architecture/teams-profile-qualification-review.json) | Obrigações de inventário, checkpoint, efeitos, clone, retomada e evidência | `sf/azure/recovery/recovery.py` e o spec de ensaio não estão no dev consultado; seus comandos não são uma rota executável atual |
 
-Os componentes de recuperação estão em dev. A rota operacional de checkpoint/backup completo e o executor do ensaio instalado precisam ser confirmados ou implementados pelo dono acordado antes da execução. Não há recibo de ensaio no tar final nesta preparação.
+Os componentes de recuperação e o novo adaptador backup/clone estão em dev. O executor operacional deve vincular a reserva, a migração admitida, a chave utilizável, as observações do host e os efeitos de negócio às etapas abaixo. Os 15 controles do adaptador não executaram essa sequência. Não há recibo de ensaio no tar final nesta preparação.
 
 ## Entradas e responsáveis
 
@@ -30,7 +46,7 @@ Os componentes de recuperação estão em dev. A rota operacional de checkpoint/
 | Candidato anterior R já instalado e retido em `/opt/orchestra-sf/releases/<R>`, com `.a7-source.json`, manifesto, roster, hashes e permissões verificados; tar original preservado | Release | O rollback não instala R a partir do tar: verificar a presença do release retido antes de selecionar C |
 | Compatibilidade de R com o estado produzido por C, revisada independentemente | Revisor + operador | Rollback de código bloqueado |
 | Inventário dos dados, donos por Team, mapeamentos, colisões e quarentena | Migração + dono dos dados | Não atribuir dados ao primeiro Team/default |
-| Executor de backup/checkpoint e de migração, versão e interface admitida | Donos backup + Migração | Não improvisar cópia de banco ou SQL |
+| Adaptador backup/clone desta frente e executor de migração admitido, em C | Donos backup + Migração | Confirmar contrato operacional e reserva; não improvisar SQL |
 | Destino privado fora da área restaurada, retenção, backup verificado e acesso autorizado à chave | Dono backup/chave | Não fazer corte sem recuperação verificável |
 | Controle do escritor antigo, drenagem de tarefas/Relay/jobs e critério de quiescência | Dono runtime/host | Não obter snapshot com escritores desconhecidos |
 | Sessões Entra reais: ator de negócio e recuperador administrativo; grants atuais | Dono Entra | Não inferir autorização a partir de acesso root |
@@ -77,6 +93,25 @@ Todas as etapas estão **NOT_RUN** nesta frente. Cada transição exige o recibo
 O efeito de Decisions já exercitado em #574 é um candidato concreto para a etapa 7. O executor deve observar uma fonte independente autorizada. Uma reabertura do SQLite no mesmo processo, um retorno HTTP isolado ou a geração de um JSON pelo teste não comprovam restart, corte e ausência de efeito duplicado.
 
 ## Interfaces atuais que o executor deve usar
+
+### Backup e clone de integridade
+
+Executar apenas no host e clone reservados, com os arquivos privados observados. A reserva de checkpoint vincula `sourceRelease` R e `candidate` C/T; a reserva do clone conserva a mesma origem e aponta outra VM. Não publicar reservas, inventários, backup, chave ou configuração em artefatos públicos.
+
+~~~sh
+python3 -B sf/azure/recovery/teams-checkpoint.py checkpoint \
+  --reservation "$G10_CHECKPOINT_RESERVATION" \
+  --g07-receipt "$G10_G07_RECEIPT" \
+  --output-dir "$G10_INDEPENDENT_BACKUP_DIRECTORY"
+
+python3 -B sf/azure/recovery/teams-checkpoint.py verify-clone \
+  --reservation "$G10_CLONE_RESERVATION" \
+  --archive "$G10_PRIVATE_CHECKPOINT_TAR" \
+  --receipt "$G10_PRIVATE_CHECKPOINT_RECEIPT" \
+  --target "$G10_EMPTY_CLONE_DIRECTORY"
+~~~
+
+O restore de arquivos verificado no clone é parte da etapa 4. Validar separadamente a utilização da chave, as classes de negócio e a recuperação operacional admitida. Nenhum recibo de integridade de arquivo autoriza ativar o clone.
 
 ### Recuperação corporativa
 

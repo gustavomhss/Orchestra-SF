@@ -13,8 +13,8 @@ import type { PlannerDirectIntervalProof } from "../decisions/coverage-interval.
 import type { createPlannerSensitivityUnits } from "../planner/sensitivity-units.ts"
 import { createPlannerIntervalProof } from "../planner/interval-proof.ts"
 import { plannerScenarioDigest } from "../planner/preview-comparison.ts"
-import { createSensitivityEvaluator, quantifiedSensitivityScenario } from "./sensitivity.ts"
-import { finalizePlannerSensitivity, plannerSensitivityScenario } from "./planner-sensitivity.ts"
+import { createSensitivityEvaluator } from "./sensitivity.ts"
+import { assessedKnownSubtotalCoverage, finalizePlannerSensitivity, plannerSensitivityScenario } from "./planner-sensitivity.ts"
 import { validatePlannerThreshold } from "./threshold-proof.ts"
 import type { KnownSubtotalThreshold } from "./threshold-proof.ts"
 import type { createPlannerSensitivity, SensitivityDisclosureFormat } from "./planner-sensitivity.ts"
@@ -140,7 +140,7 @@ export function createPortfolioProofVerifier(input: {
         return { status: "ok", value: { resultRef: point.resultRef, scenario: saved.value.result, criterionValue: point.value, parameterUnit: unitBinding.parameterUnit, resultUnit: unitBinding.resultUnit, unitMetadataRef: unitBinding.unitMetadataRef, unitMetadataVersion: unitBinding.unitMetadataVersion, ...(qualification ? { coverageQualification: qualification } : {}) } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold || !quantifiedSensitivityScenario(sourceScenario) || !quantifiedSensitivityScenario(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || !assessedKnownSubtotalCoverage(sourceScenario) || !assessedKnownSubtotalCoverage(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
         if (expectedResult.thresholdEvidence.state === "exact") {
           // The persisted number is a candidate, never a reused proof. Rebuild
           // its current domain and verify its accepted/rejected IEEE boundary.
@@ -202,7 +202,6 @@ export function createPortfolioProofVerifier(input: {
   }
   const verifySensitivity = async (incomingBinding: CriterionResultBinding, incomingStored: StoredDecisionResult, context: TrustedDomainContext) => {
     const host = input.sensitivityReadScope
-    if (!host) return replaySensitivity(incomingBinding, incomingStored, context)
     let fenceKey: string | undefined
     let attempt: symbol | undefined
     let published = false
@@ -212,13 +211,34 @@ export function createPortfolioProofVerifier(input: {
       fenceKey = key(incomingBinding, context)
       fences.delete(fenceKey)
       if (sensitivityAttempts.size >= 2048 && !sensitivityAttempts.has(fenceKey)) return false
-      attempt = Symbol("sensitivity-read-scope")
+      attempt = Symbol("sensitivity-verification")
       sensitivityAttempts.set(fenceKey, attempt)
       const bindingDigest = digestSfValue(incomingBinding)
       const storedDigest = digestSfValue(incomingStored)
       const authorityDigest = digestSfValue({ kind: context.kind, binding: context.binding })
       const binding = structuredClone(incomingBinding)
       const stored = structuredClone(incomingStored)
+      const inputsUnchanged = () => input.sensitivityReadScope === host && sensitivityAttempts.get(fenceKey!) === attempt &&
+        digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest &&
+        digestSfValue(incomingBinding) === bindingDigest && digestSfValue(incomingStored) === storedDigest &&
+        digestSfValue(binding) === bindingDigest && digestSfValue(stored) === storedDigest
+      if (!host) {
+        const staged: { capture?: StagedCapture } = {}
+        const accepted = await replaySensitivity(binding, stored, context, (entry) => {
+          if (staged.capture || entry.key !== fenceKey) throw new Error("Sensitivity source fence capture changed")
+          staged.capture = entry
+        })
+        const entry = staged.capture
+        if (!accepted || !entry || entry.key !== fenceKey || !inputsUnchanged()) return false
+        const now = Date.now()
+        for (const [ref, value] of fences) if (value.expires <= now) fences.delete(ref)
+        if (entry.value.expires <= now || fences.size >= 2048 && !fences.has(fenceKey)) return false
+        // The native unscoped composition must also finish every awaited
+        // authority check before making its private source fence usable.
+        fences.set(fenceKey, entry.value)
+        published = true
+        return true
+      }
       const persistence = host.persistence
       const transaction = persistence.transaction
       const currentSnapshots = persistence.currentSnapshots
@@ -237,9 +257,7 @@ export function createPortfolioProofVerifier(input: {
       const unchanged = () => !request.signal.aborted && input.sensitivityReadScope === host && host.persistence === persistence &&
         persistence.transaction === transaction && persistence.currentSnapshots === currentSnapshots &&
         host.requestFor === requestFor && host.revalidate === revalidate && host.requestFor(context) === request && requestFingerprint() === requestDigest &&
-        sensitivityAttempts.get(fenceKey!) === attempt && digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest &&
-        digestSfValue(incomingBinding) === bindingDigest && digestSfValue(incomingStored) === storedDigest &&
-        digestSfValue(binding) === bindingDigest && digestSfValue(stored) === storedDigest
+        inputsUnchanged()
       let invocations = 0
       let workAccepted = false
       const staged: { capture?: StagedCapture } = {}

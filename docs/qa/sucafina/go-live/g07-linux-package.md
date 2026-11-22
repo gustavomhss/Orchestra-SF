@@ -2,9 +2,23 @@
 
 ## Estado desta preparação
 
-**PREPARADO; QUALIFICAÇÃO FINAL NÃO EXECUTADA.** Este documento reconcilia as rotas de pacote disponíveis. Nenhum tar foi gerado por esta frente, nenhum workflow foi disparado e nenhum ambiente foi alterado. O SHA final permanece sem pin conjunto da Migração e da Release.
+**VERIFICADOR IMPLEMENTADO, TESTADO E INTEGRADO; TAR FINAL AINDA NÃO QUALIFICADO.** A [PR #640](https://github.com/gustavomhss/Orchestra-SF/pull/640) adicionou a rota de verificação do tar original produzido pela Release. Os controles em Actions passaram; a etapa de qualificação do pacote ficou skipped. Nenhum tar de produção foi gerado por esta frente e nenhum ambiente instalado foi alterado. O SHA final permanece sem pin conjunto da Migração e da Release.
 
 Fonte de escopo: [handoff c02f329d](https://github.com/gustavomhss/Orchestra-SF/blob/c02f329d48d37e2f6296154978cd8a7cf80bcb64/docs/qa/sucafina/astra-go-live-handoff.md). Referência de triagem: `dev@79912446753af5bb291fc2581543732eb4c83057`, árvore `5c32cd72537799632e7d2583c1775df1d88b8780`. Esse pin de leitura não é o candidato final.
+
+## Rota integrada e prova desta frente
+
+A fonte `b7edac10a2e9bbe10fec6ec1318f568ccde74813`, árvore `fa8734cdf99883488183b5ef423c48d608ba116e`, foi integrada em `f07690a41ccf090a39a76ce2733323a98c75c326`. Os runs [44999252013](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44999252013) e [44999256028](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44999256028) executaram **31 controles Node, 18 Python e 78 guards sem findings**. Esses runs qualificam o verificador; não consumiram um tar final.
+
+A workflow `.github/workflows/go-live-package.yml` usa `script/sf-ci/go-live-package.mjs` para admission/download e `go-live-package-archive.py` para os bytes. Não cria um segundo produtor e não altera a toolchain de G09.
+
+O admission consulta as fontes reais do GitHub: commit/árvore, dois comentários distintos com papel Migração/Release e pin C/T, identidade/associação dos autores, digest e data dos textos, operador do produtor, workflow/run/attempt/job/check-run e metadados do artefato. Os ACKs precisam anteceder o job produtor. O login indicado pela Release deve coincidir com o ator real de disparo; rótulos de sessão Astra não são identidades GitHub diferentes. As fontes são consultadas novamente antes de publicar o recibo.
+
+O download preserva o ZIP original, valida tamanho/digest e não encaminha credencial ao armazenamento redirecionado. A verificação confere CRC, membros e limites do ZIP, o tar interno, inventário de arquivos, hashes, permissões, ELF/factory/Web, marca/canal, source proof/build inputs e mapas separados. Ela invoca o `verify()` do instalador do **checkout exato C**, com árvore T e working tree limpo. Membros especiais, duplicatas, escapes de path e mapas públicos são recusados.
+
+Para a qualificação, versionar a requisição observada em `docs/qa/sucafina/go-live/g07-request.json` e disparar a workflow em `dev` com `request_revision` igual ao commit desse pedido. Os schemas e exemplos de controle estão nos arquivos da PR #640. Nenhum pedido preenchido foi criado aqui: faltam os dois ACKs e o artefato real.
+
+O recibo resultante é `sf-g07-package-v1`, status `PACKAGE_VERIFIED`, com candidato, tar, ZIP Actions, manifesto/roster, factory, produtor/toolchain, ACKs e digests do verificador. Ele mantém `installation:null`, `g07Closed:false` e `productionCutover:false`: a prova da instalação dos mesmos bytes ainda precisa ser anexada por G08/G10.
 
 ## Donos e pré-condições
 
@@ -20,7 +34,7 @@ Fonte de escopo: [handoff c02f329d](https://github.com/gustavomhss/Orchestra-SF/
 
 Os pins antigos contidos nos corpos de #247 e #257 não substituem seus heads observados nem constituem confirmação da Release. Os comentários de 18/11 registram esses PRs como superseded pelo bundle antigo; por isso seus nomes não são aceites operacionais atuais. Em 22/11, outra frente Astra registrou em [#257](https://github.com/gustavomhss/Orchestra-SF/pull/257#issuecomment-7074525725) a reconciliação dos sourcemaps do empacotador genérico para o residual #349. Esta frente G07 preserva esse dono e não inicia um segundo escritor nesse recorte. Antes da geração final, registrar os dois ACKs — Migração e Release — para o mesmo SHA C e árvore T, a rota de execução, o compilador e os recibos de pré-requisitos. A aprovação da janela e o go/no-go de produção são decisões posteriores e específicas.
 
-## Reconciliação das rotas existentes
+## Reconciliação inicial das rotas — referência histórica
 
 | Rota no pin de triagem | Uso correto |
 | --- | --- |
@@ -30,9 +44,9 @@ Os pins antigos contidos nos corpos de #247 e #257 não substituem seus heads ob
 | `sf/ci/assemble-orchestra-web.mjs` e `.github/workflows/sf-factory-package.yml` | Ausentes em `dev@7991244` e no candidato de preparação `g03-g04-repair@b4ba7f595e6b3b5ff10a3379cd91b6771bb1b793`; as receitas antigas não podem ser executadas como se esses caminhos estivessem presentes |
 | [g09-candidate.yml@83f1283](https://github.com/gustavomhss/Orchestra-SF/blob/83f1283f8e39cd5863d9806b9a48f0573f44eaff/.github/workflows/g09-candidate.yml) | Referência concreta de produção Linux Microsoft com `ORCHESTRA_CHANNEL=prod`, marca Sucafina, inventário e proveniência; não foi assumida por esta frente |
 
-A rota prod de referência usa o mesmo blob do produtor Microsoft presente no `dev` observado. Sua workflow usa Node 24.15 e Bun 1.4.1 baseline, revisão `4661e494f052c83c80dade1318e5710238340be6`, ZIP SHA-256 `a8c9c6738202e2fced555dd860a953c56c0cd059f75041e7010ae81a32802646`. O plano antigo e a workflow genérica citam Bun 1.3.14. A Release deve fixar essa decisão explicitamente; não trocar o compilador silenciosamente nem transportar prova entre versões.
+A rota prod histórica de referência usa o mesmo blob do produtor Microsoft presente no `dev` observado. A workflow naquele pin usa Node 24.15 e Bun 1.4.1 baseline, revisão `4661e494f052c83c80dade1318e5710238340be6`, ZIP SHA-256 `a8c9c6738202e2fced555dd860a953c56c0cd059f75041e7010ae81a32802646`. O plano antigo e a workflow genérica citam Bun 1.3.14. A Release deve fixar essa decisão explicitamente; não trocar o compilador silenciosamente nem transportar prova entre versões.
 
-## Evidência anterior disponível
+## Evidência anterior disponível — não é o tar final
 
 Referência observada em [run 44983358294, tentativa 1](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44983358294), job [teams-profile-artifact / 137088492396](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44983358294/job/137088492396), concluído com sucesso.
 
@@ -63,13 +77,13 @@ O recibo nativo deve ser preservado como produzido. A evidência complementar de
 
 O instalador verifica hash antes de escrever, recusa membros especiais/duplicados, compara roster e checksums exatos, valida closure e ELF e aplica permissões geridas. A instalação real exige Linux x64/root, conta não privilegiada do serviço, volume privado independente, Caddy em manutenção e serviço parado. `INSTALLED_NOT_STARTED_CADDY_STILL_503` significa que o código foi selecionado; não significa que o serviço foi iniciado ou que houve corte.
 
-## Procedimento pós-pin — preparado, não executado
+## Procedimento pós-pin — qualificação final não executada
 
 1. Registrar C/T e os ACKs reais da Migração e da Release; conferir os pré-requisitos no mesmo candidato. Revalidar os blobs das ferramentas no C final.
 2. Fixar workflow e compilador. Confirmar fonte limpa, canal `prod`, marca `sucafina`, modo production e ausência de overrides `VITE_*`. Capturar os pins e hashes dos inputs, incluindo o catálogo de modelos usado no build.
 3. No runner Linux x64 autorizado, instalar dependências congeladas, construir Omni/CLI e Web pelo roteiro reconciliado. Preservar separadamente os mapas/ledgers vinculados aos bytes para a frente G09. Nunca publicar mapas por acidente no payload.
 4. Executar o produtor Microsoft sobre os outputs desse mesmo checkout.
-5. Verificar o tar com o instalador, capturar inventário e hashes e publicar o artefato imutável. Registrar também ID/nome/digest do ZIP e run/tentativa/job.
+5. Preservar o artefato original e seu ID/nome/digest do ZIP, tar e run/tentativa/job. Executar o verificador G07 integrado sobre esses bytes, com os dois ACKs observados e o instalador de C; guardar o recibo e inventário.
 6. Disponibilizar exatamente esse tar para G08 e G10. Nas instalações autorizadas, conferir `.a7-source.json`, hashes instalados e identidade do executável/factory em uso. Não reconstruir entre os gates.
 
 Comandos existentes para uso após o pin. `C`, `PACKAGE_OUT`, `TAR_SHA256` e `QA_FQDN` são inputs reais a obter e validar; não são valores observados nesta preparação.

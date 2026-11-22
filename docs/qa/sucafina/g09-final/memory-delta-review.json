@@ -1,0 +1,195 @@
+{
+  "schema": "sucafina-memory-delta-review-v1",
+  "intended_path": "docs/qa/sucafina/g09-final/memory-delta-review.json",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "direct_team_ui",
+  "signed": false,
+  "signature_status": "UNSIGNED",
+  "formal": false,
+  "execution_status": "NOT_RUN_BY_REVIEWER",
+  "result": "PASS_LIMITED",
+  "comparison": {
+    "from": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "to": "babc660b2cda3e20ed6b68ecab86b973110652cb"
+  },
+  "candidate": {
+    "commit": "edd15e422dd8b1008a1a32ff4c8d5108e8e2e3a2",
+    "applicability": "Root reported checking all 19 candidate deltas and finding no overlap with the memory paths. This reviewer did not repeat that candidate comparison."
+  },
+  "scope": {
+    "method": "Static review of the two-file delta, relevant observed consumer spans and existing negative test bodies, using GitHub MCP.",
+    "questions": [
+      "authority",
+      "observation lifetime",
+      "invalidation",
+      "cleanup",
+      "revalidation"
+    ],
+    "prior_partition_chain": "Accepted as previously reviewed context; not independently re-audited here.",
+    "global_consumer_enumeration": false,
+    "limitations": [
+      "No tests or CI were executed by this reviewer.",
+      "Symbol search returned incomplete results; consumer coverage is limited to the observed paths.",
+      "This is not an audit of all Atlas, its complete graph, or every Teams partition boundary."
+    ]
+  },
+  "reviewed_delta": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "blob": "1c6a03d65acfc4386da90720ec7161b2f9582cd0",
+      "spans": [
+        [
+          33,
+          54
+        ],
+        [
+          64,
+          77
+        ],
+        [
+          93,
+          123
+        ],
+        [
+          168,
+          183
+        ],
+        [
+          245,
+          365
+        ]
+      ],
+      "findings": [
+        "AsyncLocalStorage ownership and the active owner for the same call must agree; completion rechecks current ownership.",
+        "Finally removes the active owner and private record observations, including on thrown work.",
+        "Outside callers cannot consume owned witnesses. Failed canonical completion invalidates the owner.",
+        "Renewal requires the prior observation to remain live, repeats canonical validation and issues a new records array.",
+        "Request, abort, lease, binding, headers, record integrity, current authority and protected state checks remain in place.",
+        "Standalone canonical reads remain supported and independently revalidated; they do not reuse a closed owner."
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "e6035264bcc4fbce8da5aefa3dec9a43589d0970",
+      "spans": [
+        [
+          288,
+          312
+        ]
+      ],
+      "findings": [
+        "reportUnavailableEvidence returns case-evidence-unavailable only for the exact still-authorized case, incarnation and version with the original request, binding and input.",
+        "This unavailable branch returns before installing a selection scope or invoking action()."
+      ]
+    }
+  ],
+  "observed_consumers": [
+    {
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "blob": "a2997d77f01283b426f7940e604f1569effa5bbd",
+      "spans": [
+        [
+          58,
+          63
+        ],
+        [
+          297,
+          340
+        ],
+        [
+          342,
+          368
+        ],
+        [
+          379,
+          391
+        ]
+      ],
+      "findings": [
+        "Direct withSfAtlasRecallObservation consumer at line 353 binds current(scope) to the original request, lease, binding, live selection and reader.",
+        "Observation completion revalidates protected proofs, clones the returned result and closes and clears the scope in finally.",
+        "The supplied canonical recall callback admits one invocation with the original call and input."
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
+      "blob": "c678a85ec8e930b96c8880d0c220fb172f9447e8",
+      "spans": [
+        [
+          268,
+          282
+        ]
+      ],
+      "findings": [
+        "Uses reportUnavailableEvidence for preparation, reauthorizes the request and translates case-evidence-unavailable to analysis-source-unavailable."
+      ]
+    }
+  ],
+  "existing_negative_tests": [
+    {
+      "path": "apps/cli/test/sucafina-case-read-scope.test.ts",
+      "blob": "175912b45082ce384b60efc0df161a33c0b094b2",
+      "name": "canonical Atlas witnesses and renewals stay bound to their live observation",
+      "span": [
+        236,
+        282
+      ],
+      "checks_observed": [
+        "outside consumption refused without consuming the owner's witness",
+        "post-close consumption and renewal refused",
+        "standalone canonical witness consumed once",
+        "revocation invalidates the owner even after authorization is restored"
+      ],
+      "execution_status": "NOT_RUN_BY_REVIEWER"
+    },
+    {
+      "path": "apps/cli/test/sucafina-case-read-scope.test.ts",
+      "blob": "175912b45082ce384b60efc0df161a33c0b094b2",
+      "name": "analysis preparation distinguishes unavailable case evidence from a refused selection",
+      "span": [
+        187,
+        234
+      ],
+      "checks_observed": [
+        "unavailable source distinguished from wrong version or incarnation",
+        "revocation denied",
+        "case and preference revisions unchanged"
+      ],
+      "execution_status": "NOT_RUN_BY_REVIEWER"
+    },
+    {
+      "path": "apps/cli/test/sucafina-case-read-scope.test.ts",
+      "blob": "175912b45082ce384b60efc0df161a33c0b094b2",
+      "name": "case-read scope keeps common fences and refuses expired or replaced eligible Procurement boundaries",
+      "span": [
+        327,
+        437
+      ],
+      "checks_observed": [
+        "expired or replaced selection and replaced reader refused",
+        "changed request, headers or input refused",
+        "finished lease, abort and revocation refused"
+      ],
+      "limitation": "Associated case-read boundary coverage, not a standalone proof of all Atlas.",
+      "execution_status": "NOT_RUN_BY_REVIEWER"
+    },
+    {
+      "path": "apps/cli/test/sucafina-reviewer-recall.test.ts",
+      "blob": "f0660677bb29157cc307637897dc4558d97e1ab5",
+      "name": "native sf_reviewer recalls a selected Atlas precedent and rejects other cases without writing business state",
+      "span": [
+        70,
+        355
+      ],
+      "checks_observed": [
+        "stale precedent, another principal's case and wrong principal refused",
+        "revoked reviewer denied",
+        "unselected case unavailable",
+        "business state compared before and after"
+      ],
+      "execution_status": "NOT_RUN_BY_REVIEWER"
+    }
+  ],
+  "blockers": [],
+  "conclusion": "No concrete authority, lifetime or revalidation defect was found in the reviewed delta and observed consumers. PASS is limited to this static review."
+}

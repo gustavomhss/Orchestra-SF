@@ -2,6 +2,12 @@
 
 Este guia descreve as telas nativas de orçamento, pessoas, portfólio, operações e planejamento da Sucafina. As ações disponíveis dependem do seu acesso à instalação e aos dados.
 
+## Visão executiva e referências
+
+A navegação da visão executiva permite abrir a pauta de revisão, os Hot Topics e ações, os riscos e as partes interessadas disponíveis para seu acesso. Os rótulos e as referências acompanham o idioma selecionado.
+
+Em **Referências executivas**, selecione um registro e escolha **Abrir referência**. A seleção identifica o registro original; mudar o idioma mantém essa seleção. Uma leitura negada mostra o aviso de acesso, separado da mensagem de lista vazia. Se outra origem fornecer registros autorizados, eles continuam disponíveis. Uma falha de leitura mostra a indisponibilidade, e trocar de contexto remove as referências anteriores.
+
 ## Hot Topics e ações
 
 Use **Filtrar por status** para localizar os tópicos de uma situação. Cada registro mostra a ação, a prioridade, o responsável e o prazo. **Ver detalhes** abre as notas e as informações do tópico.
@@ -76,6 +82,12 @@ A lista reúne fornecedor, identificação e informações principais de cada co
 
 Um campo opcional em branco permanece sem valor. A moeda e o valor exibidos dependem da informação que a fonte fornece.
 
+## Importações e exportações
+
+Os rótulos de origem e de seleção do pedido acompanham o idioma da interface. A seleção continua usando a referência original da solicitação; mudar o idioma não escolhe outro pedido nem autoriza uma exportação.
+
+Na revisão de mudanças, **ausente**, **indefinido** e **nulo** identificam estados distintos da fonte. Zero, falso e texto vazio conservam seus valores. Para baixar um arquivo novamente, solicite nova autorização.
+
 ## Planner
 
 ### Visão geral
@@ -87,6 +99,12 @@ Escolha a versão para consultar os indicadores e a série mensal do planejament
 O OPEX organiza as linhas de despesas e o CAPEX organiza projetos e linhas de investimento. Os detalhes mantêm a distribuição pelos doze meses, com orçamento, realizado e previsão identificados. Meses sem valor e zeros informados continuam distintos.
 
 A edição, a colagem de valores, a distribuição e a revisão usam as regras da versão selecionada. Meses fechados e restrições de acesso continuam visíveis. Os ajustes só são concluídos depois da confirmação apresentada pela operação.
+
+### Headcount
+
+O custo mensal de cada posição e o orçamento total de pessoal são calculados pelo Planner em USD, usando as taxas de câmbio da versão selecionada. A tela mantém esses valores em USD. O valor anual de uma tabela de custos permanece na moeda original dessa tabela. Se essa moeda não estiver informada, o valor anual mostra **Moeda não especificada na fonte**. Zero e **Não informado** continuam distintos.
+
+A seleção de ano e versão define o planejamento exibido. **Ainda não há registros** indica uma leitura autorizada vazia; **Você não tem acesso a este conteúdo** indica acesso recusado e oculta os dados.
 
 ## Leitura em telas menores
 

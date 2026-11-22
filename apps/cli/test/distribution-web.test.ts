@@ -2,8 +2,9 @@ import { afterEach, expect, test } from "bun:test"
 import { createHash } from "node:crypto"
 import { chmod, link, lstat, mkdir, readFile, readlink, rm, symlink, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
+import { brotliCompressSync, gzipSync } from "node:zlib"
 import { WebUi } from "@orchestra/server/web-ui"
-import { prepareDistribution, verifyDistribution } from "../script/distribution-payload"
+import { archiveDistribution, prepareDistribution, verifyDistribution } from "../script/distribution-payload"
 import { requireDistributionHost } from "./fixture/distribution-host"
 import { payloadFixture, payloadSnapshot, tuple } from "./fixture/distribution-payload"
 
@@ -139,6 +140,77 @@ test("verify rejects a published web asset whose bytes diverge", async () => {
   expect(sha256(flipped)).not.toBe(recorded)
   await expect(verifyDistribution(input.out)).rejects.toThrow("Distribution file mismatch: bin/web/assets/app.js")
   expect(await payloadSnapshot(value.source)).toEqual(source)
+})
+
+test("web source maps stay in the builder and out of the published archive", async () => {
+  const value = await fixture()
+  const source = Buffer.from('{"version":3,"sourcesContent":["private source"]}')
+  const maps = [
+    ["app.js.map", source], ["APP.JS.MAP.GZ", gzipSync(source)], ["app.css.map.br", brotliCompressSync(source)],
+  ] as const
+  for (const [name, bytes] of maps) await writeFile(join(value.web, "assets", name), bytes)
+  const before = await seal(value.source, value.web)
+  const input = { ...value.input, web: value.web }
+  const manifest = await prepareDistribution(input)
+  expect(await verifyDistribution(input.out)).toEqual(manifest)
+  const published = await payloadSnapshot(input.out)
+  for (const [name] of maps) {
+    expect(manifest.files.some((entry) => entry.path === `bin/web/assets/${name}`)).toBe(false)
+    expect(published.some((entry) => entry.path === `bin/web/assets/${name}`)).toBe(false)
+  }
+  const archive = join(value.root, "public.tar.gz")
+  const receipt = await archiveDistribution({ directory: input.out, file: archive })
+  const bytes = await readFile(archive)
+  expect(sha256(bytes)).toBe(receipt.sha256)
+  const unpacked = await new Bun.Archive(bytes).files()
+  expect([...unpacked.keys()].sort()).toEqual(published.filter((entry) => entry.kind === "file").map((entry) => entry.path).sort())
+  for (const entry of published.filter((item) => item.kind === "file")) {
+    expect(Buffer.from(await unpacked.get(entry.path)!.arrayBuffer()).equals(entry.bytes)).toBe(true)
+  }
+  expect(Buffer.from(await unpacked.get("bin/web/assets/app.js")!.arrayBuffer())).toEqual(appJs)
+  expect(Buffer.from(await unpacked.get("bin/web/index.html")!.arrayBuffer())).toEqual(indexHtml)
+  expect(await seal(value.source, value.web)).toEqual(before)
+})
+
+test("web source maps inline in JavaScript or CSS reject before publication", async () => {
+  for (const [name, bytes] of [
+    ["app.js", "console.log(1)\n//# sourceMappingURL=data:application/json;base64,AAAA\n"],
+    ["app.css", "body{}\n/*# sourceMappingURL = DATA:application/json;base64,AAAA */\n"],
+  ]) {
+    const value = await fixture()
+    await writeFile(join(value.web, "assets", name), bytes)
+    const before = await seal(value.source, value.web)
+    await expect(prepareDistribution({ ...value.input, web: value.web })).rejects.toThrow("Public web inline sourcemap forbidden")
+    await expect(lstat(value.input.out)).rejects.toMatchObject({ code: "ENOENT" })
+    expect(await seal(value.source, value.web)).toEqual(before)
+  }
+})
+
+test("web source maps cannot be reintroduced with a valid descriptor and checksum table", async () => {
+  for (const [name, bytes, message] of [
+    ["app.js.map", '{"version":3}', "Public web sourcemap forbidden"],
+    ["app.js.map.gz", gzipSync('{"version":3}'), "Public web sourcemap forbidden"],
+    ["app.js.map.br", brotliCompressSync('{"version":3}'), "Public web sourcemap forbidden"],
+    ["app.js", "//# sourceMappingURL=data:application/json;base64,AAAA\n", "Public web inline sourcemap forbidden"],
+    ["app.css", "/*# sourceMappingURL=data:application/json;base64,AAAA */\n", "Public web inline sourcemap forbidden"],
+  ] as const) {
+    const value = await fixture()
+    const manifest = await prepareDistribution({ ...value.input, web: value.web })
+    const file = `bin/web/assets/${name}`
+    await writeFile(join(value.input.out, file), bytes)
+    await chmod(join(value.input.out, file), 0o644)
+    manifest.files = [...manifest.files.filter((entry) => entry.path !== file),
+      { path: file, sha256: sha256(Buffer.from(bytes)), executable: false }]
+      .sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0)
+    await writeFile(join(value.input.out, "distribution.json"), JSON.stringify(manifest, null, 2) + "\n")
+    const files = (await payloadSnapshot(value.input.out)).filter((entry) => entry.kind === "file" && entry.path !== "checksums.sha256")
+    await writeFile(join(value.input.out, "checksums.sha256"), files.sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0)
+      .map((entry) => `${entry.sha256}  ${entry.path}\n`).join(""))
+    await expect(verifyDistribution(value.input.out)).rejects.toThrow(message)
+    const archive = join(value.root, "forbidden.tar.gz")
+    await expect(archiveDistribution({ directory: value.input.out, file: archive })).rejects.toThrow(message)
+    await expect(lstat(archive)).rejects.toMatchObject({ code: "ENOENT" })
+  }
 })
 
 async function fixture() {
