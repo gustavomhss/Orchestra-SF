@@ -69,7 +69,7 @@ export function nativeDashboardCommandTarget(
 
 export async function requireNativeJourney(input: Readonly<{
   page: Page
-  manifest: NativeManifest
+  manifest: Pick<NativeManifest, "candidateSha" | "target" | "actors">
   actor: NativeActor
   capabilityId: NativeJourney
   intent: NativeJourneyIntent

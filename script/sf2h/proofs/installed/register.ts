@@ -5,22 +5,26 @@ import type { Browser, Page } from "../../../../packages/app-shell/e2e/sucafina/
 import type { SfResolvedRoute } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts"
 import { privateText } from "../../../sf-ci/g08-private-evidence.mjs"
 import { attachHostedNativeBrowser, disconnectNativeBrowser, prepareNativePage, closeNativeOwnedPages } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts"
-import { registerNativeInstalledManifest } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts"
-import type { NativeInstalledRegistration } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts"
+import { registerG08NativeInstalledManifest as registerNativeInstalledManifest } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts"
+import type { G08NativeInstalledRegistration as NativeInstalledRegistration } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts"
 import { nativeCaseIntent, nativeRole, nativeSuiteCases, nativeSuiteCapability } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/case-contract.ts"
 import { requireNativeJourney } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/journeys.ts"
 import { registerNativeSelectedInstallation, readNativeSelectedInstallation, nativeManifestForTarget,
   readOriginalNativeSource, requireOriginalNativeOperations, u15RegisteredEnvironment } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts"
 import type { NativeInstalledCase, NativeInstalledSuite, NativeSelectionInput } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts"
-import { observeNativeBinding, readNativeManifest } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/readiness.ts"
-import type { NativeActor, NativeManifest, NativeTarget } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/manifest-contract.ts"
+import { observeNativeBinding } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/readiness.ts"
+import { readG08NativeManifest as readNativeManifest } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/g08-readiness.ts"
+import type { NativeActor, NativeTarget } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/manifest-contract.ts"
+import type { InstalledNativeManifest as NativeManifest } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/g08-manifest-contract.ts"
 import { nativeTargetInReservation, readNativeInstalledHost } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-host.ts"
 
 type LiveActors = NativeInstalledRegistration["actors"]
 export type ApprovedInstalledHost = Readonly<{
-  target: NativeTarget; teamB: NativeTarget; wrongServer: NativeTarget; wrongTeam: NativeTarget; wrongInstallation: NativeTarget
+  target: NativeTarget; teamB: NativeTarget; wrongTeam: NativeTarget; wrongInstallation: NativeTarget
   resolveApprovedConnection: NativeInstalledRegistration["resolveApprovedConnection"]
   liveMicrosoftActorPages(browser: Browser): Promise<LiveActors>
+  /** Snapshot of the original contexts/pages captured by the concrete adapter, checked before detach. */
+  confirmOriginalContexts(): void
   /** Must invoke the original F01/UI. The consumer independently resolves and observes its result. */
   resolveOriginalF01Route(input: Readonly<{
     page: Page; target: NativeTarget; capabilityId: "CAP14" | "CAP04" | "CAP05"; caseId: NativeInstalledCase
@@ -72,7 +76,7 @@ export async function registerInstalledProofFromHost(input: Readonly<{
   try {
     const pages = await input.host.liveMicrosoftActorPages(browser)
     const registration = await registerNativeInstalledManifest({ scratchRoot: input.scratchRoot, candidateSha: input.candidateSha,
-      invocation, target: input.host.target, wrongServer: input.host.wrongServer,
+      invocation, target: input.host.target,
       wrongTeam: input.host.wrongTeam, wrongInstallation: input.host.wrongInstallation,
       actors: pages, resolveApprovedConnection: input.host.resolveApprovedConnection })
     for (const file of [registration.path, path.join(input.scratchRoot, "native-context-observations.json")])
@@ -127,6 +131,7 @@ export async function registerInstalledProofFromHost(input: Readonly<{
     return { manifestPath: registration.path, selectedPath: selected.file, candidateSha: manifest.candidateSha,
       suite: input.suite, selectedCount: consumed.selections.length,
       privateRunnerEnvironment: input.suite === "U15" ? u15RegisteredEnvironment(consumed) : {},
+      cleanup: { completed: true, ownPagesClosed: owned.length, originalPagesPreserved: true, clientDisconnected: true },
       proofClass: "REGISTERED_ONLY_NOT_EXECUTED" as const, installed: false, liveQualified: false }
   } catch (error) {
     // Only files created by this call, and only while their private original bytes remain unchanged.
@@ -139,6 +144,12 @@ export async function registerInstalledProofFromHost(input: Readonly<{
     }
     throw error
   } finally {
-    await closeNativeOwnedPages(owned, () => disconnectNativeBrowser(browser))
+    try { input.host.confirmOriginalContexts() }
+    finally {
+      await closeNativeOwnedPages(owned, async () => {
+        await disconnectNativeBrowser(browser)
+        if (browser.isConnected()) throw new Error("F04_CDP_CLIENT_NOT_DISCONNECTED")
+      })
+    }
   }
 }

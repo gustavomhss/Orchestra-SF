@@ -48,7 +48,7 @@ export async function readPrivateNativeText(rootPath: string, file: string, maxi
   } finally { await handle.close() }
 }
 
-export function requireNativeInvocation(manifest: NativeManifest) {
+export function requireNativeInvocation(manifest: Pick<NativeManifest, "candidateSha" | "invocation">) {
   if (process.env.GITHUB_ACTIONS !== "true" || process.env.CI !== "true" ||
       process.env.SF_NATIVE_CANDIDATE_SHA !== manifest.candidateSha ||
       process.env.GITHUB_RUN_ID !== manifest.invocation.runId ||
@@ -134,7 +134,7 @@ export type NativeWebObservation = Readonly<{
   transactionP0P1: "NOT_PROVEN_BY_READINESS"; desktop: "NOT_PROVEN_REQUIRES_D01"
 }>
 export async function proveNativeWebReadiness(
-  page: Page, manifest: NativeManifest, nativeChapter: Locator,
+  page: Page, manifest: Pick<NativeManifest, "candidateSha" | "target" | "actors">, nativeChapter: Locator,
 ): Promise<NativeWebObservation> {
   const actualURL = new URL(page.url()), expectedURL = new URL(manifest.target.chapterHref, manifest.target.shellOrigin)
   if (actualURL.origin !== manifest.target.shellOrigin || actualURL.pathname !== expectedURL.pathname ||

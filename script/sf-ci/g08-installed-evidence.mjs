@@ -27,7 +27,7 @@ export const installedSources = Object.freeze([...new Set([...sourcePaths,
   "script/sf2h/proofs/installed/register.ts", "script/sf2h/proofs/installed/consume.ts",
   "packages/app-shell/e2e/playwright.production.config.ts",
   ...["fixture.ts", ...["browser-transport", "case-contract", "installed-browser", "installed-host",
-    "installed-manifest", "installed-operations", "g08-manifest-contract", "g08-readiness", "manifest-contract",
+    "installed-manifest", "installed-operations", "original-host-adapter", "g08-manifest-contract", "g08-readiness", "manifest-contract",
     "selected-installation", "readiness", "journeys", "response-faults"].map((name) => "fixture/" + name + ".ts"),
     ...["u15", "u39", "u40"].map((name) => "journeys/" + name + ".spec.ts")]
     .map((name) => "packages/app-shell/e2e/sucafina/native/" + name),
@@ -46,8 +46,9 @@ const candidateEnvironment = (plan) => ({
   ...process.env, SF_G08_CANDIDATE_SHA: plan.candidate.sha, SF_G08_CANDIDATE_TREE: plan.candidate.tree,
   SF_G08_INVOCATION_ID: plan.invocation.id, SF_G08_PRIVATE_ROOT: plan.scratchRoot,
   SF_NATIVE_CANDIDATE_SHA: plan.candidate.sha, SF_NATIVE_INVOCATION_ID: plan.invocation.id,
-  SF_NATIVE_INSTALLED_MANIFEST: path.join(plan.scratchRoot, "native-manifest.json"),
+  SF_NATIVE_INSTALLED_MANIFEST: path.join(plan.scratchRoot, "native-installed-manifest.json"),
   SF_NATIVE_PRIVATE_REPORT: path.join(plan.scratchRoot, "native-playwright.json"),
+  SF_NATIVE_BROWSER_ENDPOINT_FILE: path.join(plan.scratchRoot, "browser-endpoint.txt"),
 })
 export async function installedSourceInventory() {
   return Promise.all(installedSources.map(async (file) => ({ path: file, sha256: digest(await readFile(file)) })))
@@ -191,6 +192,48 @@ export function verifyExecutionStatus(status, plan, kind, before, after) {
   return status
 }
 
+
+/** The plan reserves the original Team home. Each suite uses the shipped route helper,
+ * then registration independently observes the real anchor/F01/UI.
+ */
+export async function expectedInstalledTargets(kind, plan) {
+  assert(nativeGroups.includes(kind) || kind === "F04", "G08_NATIVE_KIND_REQUIRED")
+  if (kind === "F04") return { target: plan.target, wrongTeam: plan.teamB, wrongInstallation: plan.foreignInstallation }
+  const { nativeJourneyEntryHref } = await import("../../packages/app-shell/e2e/sucafina/native/fixture/journeys.ts")
+  const capability = { U15: "CAP14", U39: "CAP04", U40: "CAP05" }[kind]
+  const derive = (value) => {
+    const href = new URL(nativeJourneyEntryHref(value, capability, kind === "U15" ? undefined : 2026))
+    return { ...value, chapterHref: href.pathname + href.search }
+  }
+  return { target: derive(plan.target), wrongTeam: derive(plan.teamB), wrongInstallation: derive(plan.foreignInstallation) }
+}
+export function verifyOriginalRegistration(kind, value, manifest, plan, bytes) {
+  assert(value.schema === "sf-g08-native-registration-v1" && value.status === "REGISTERED_ONLY_NOT_EXECUTED" &&
+    value.kind === kind && value.manifestSchema === manifest.schema &&
+    value.connectionSource === "SfTrustedInstallationSource.current", "G08_ORIGINAL_REGISTRATION_REQUIRED")
+  same(value.source, plan.candidate, "G08_REGISTRATION_SOURCE_CHANGED")
+  same(value.invocation, manifest.invocation, "G08_REGISTRATION_INVOCATION_CHANGED")
+  assert(value.selectedCount === (kind === "F04" ? 0 : kind === "U15" ? 5 : 8), "G08_REGISTRATION_SELECTION_COUNT")
+  same(value.bindings, { planSha256: digest(bytes["plan.json"]), packageReceiptSha256: plan.packageReceiptSha256,
+    hostBeforeSha256: digest(bytes["host-before.json"]), actorsReferenceSha256: digest(plan.approvals.actorsReference),
+    reservationSha256: digest(JSON.stringify(plan.reservation)) }, "G08_REGISTRATION_BINDING_CHANGED")
+  const expected = ["native-installed-manifest.json", "native-context-observations.json", "native-registration-observations.json",
+    ...(kind === "F04" ? [] : ["native-installed-" + kind.toLowerCase() + ".json"]),
+    ...(kind === "U15" ? ["native-runner-environment.json"] : [])].sort()
+  assert(Array.isArray(value.files), "G08_REGISTRATION_ORIGINAL_FILES_REQUIRED")
+  same(value.files.map((item) => item.path).sort(), expected, "G08_REGISTRATION_EXACT_FILES_REQUIRED")
+  for (const item of value.files) {
+    assert(Object.hasOwn(bytes, item.path), "G08_REGISTRATION_ORIGINAL_BYTES_MISSING")
+    assert.equal(digest(bytes[item.path]), item.sha256, "G08_REGISTRATION_ORIGINAL_BYTES_CHANGED")
+  }
+  const cleanup = record(value.cleanup)
+  assert(cleanup.completed === true && cleanup.originalPagesPreserved === true && cleanup.clientDisconnected === true &&
+    Number.isSafeInteger(cleanup.ownPagesClosed) && cleanup.ownPagesClosed >= (kind === "F04" ? 0 : 1),
+    "G08_REGISTRATION_CLEANUP_REQUIRED")
+  for (const field of ["installed", "liveQualified", "g08Closed", "finalCandidate", "productionCutover"])
+    assert(value[field] === false, "G08_REGISTRATION_IS_NOT_EXECUTION")
+}
+
 export async function inspectInstalledGroup(root, kind) {
   assert(installedKinds.includes(kind), "G08_EXACT_GROUP_REQUIRED")
   await privateRoot(root)
@@ -224,18 +267,28 @@ export async function inspectInstalledGroup(root, kind) {
     for (const item of cases) await text("cleanup-" + item.id + ".json")
   } else if (nativeGroups.includes(kind) || kind === "F04") {
     const { validateG08NativeManifest } = await import("../../packages/app-shell/e2e/sucafina/native/fixture/g08-manifest-contract.ts")
-    const manifestRaw = await text("native-manifest.json")
+    const manifestRaw = await text("native-installed-manifest.json")
     const manifest = validateG08NativeManifest(parse(manifestRaw))
     assert(manifest.candidateSha === plan.candidate.sha && manifest.scratchRoot === root,
       "G08_NATIVE_MANIFEST_SOURCE_MISMATCH")
     same(manifest.actors, plan.actors, "G08_NATIVE_PLAN_ACTORS_MISMATCH")
-    same(manifest.target, plan.target, "G08_NATIVE_PLAN_TARGET_MISMATCH")
-    same(manifest.wrongTeam, plan.teamB, "G08_NATIVE_NEGATIVE_TEAM_NOT_RESERVED")
-    same(manifest.wrongInstallation, plan.foreignInstallation, "G08_NATIVE_FOREIGN_INSTALLATION_NOT_RESERVED")
+    const expectedTargets = await expectedInstalledTargets(kind, plan)
+    for (const field of ["target", "wrongTeam", "wrongInstallation"])
+      same(manifest[field], expectedTargets[field], "G08_NATIVE_PLAN_TARGET_MISMATCH")
     for (const [key, expected] of Object.entries({ treeSha: plan.candidate.tree, runId: plan.invocation.runId,
       runAttempt: plan.invocation.runAttempt, invocationId: plan.invocation.id, archiveSha256: packageReceipt.archive.sha256 }))
       assert(manifest.invocation[key] === expected, "G08_NATIVE_MANIFEST_INVOCATION_MISMATCH")
     await text("native-context-observations.json")
+    await text("native-registration-observations.json")
+    const registration = await json("native-registration.json")
+    if (kind !== "F04") await text("native-installed-" + kind.toLowerCase() + ".json")
+    if (kind === "U15") {
+      const { validateNativeSelectedInstallation } = await import("../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts")
+      const { validateU15RegisteredEnvironment } = await import("../sf2h/proofs/installed/execute-registration.ts")
+      const selected = validateNativeSelectedInstallation(manifest, await json("native-installed-u15.json"))
+      validateU15RegisteredEnvironment(await json("native-runner-environment.json"), selected)
+    }
+    verifyOriginalRegistration(kind, registration, manifest, plan, Object.fromEntries(files))
     if (kind === "F04") {
       assert(manifest.invocation.role === "teams", "G08_F04_ORIGINAL_ROLE_REQUIRED")
       const junit = await text("f04.junit.xml", 2_000_000), log = await text("f04.log", 4_000_000)
@@ -418,7 +471,7 @@ async function runInstalled(kind) {
               const { validateG08NativeManifest } = await import("../../packages/app-shell/e2e/sucafina/native/fixture/g08-manifest-contract.ts")
               const { validateNativeSelectedInstallation, u15RegisteredEnvironment } =
                 await import("../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts")
-              const manifest = validateG08NativeManifest(parse(await privateText(root, "native-manifest.json")))
+              const manifest = validateG08NativeManifest(parse(await privateText(root, "native-installed-manifest.json")))
               const selected = validateNativeSelectedInstallation(manifest,
                 parse(await privateText(root, "native-installed-" + kind.toLowerCase() + ".json")))
               if (kind === "U15") Object.assign(env, u15RegisteredEnvironment(selected))

@@ -10,7 +10,7 @@ Antes de executar:
 
 1. Migração e Release confirmam o mesmo candidato C/T; G07 verifica o tar original desse candidato.
 2. O operador instala exatamente esses bytes na VM isolada reservada e mantém o recibo original G07.
-3. A reserva e as permissões de cada invocação são registradas em fontes originais de autorização, verificáveis pelo GitHub. A autorização deve ser anterior ao início do job; string ou hash preenchido no plano não basta.
+3. A reserva e as permissões de cada invocação são registradas em fontes originais de autorização, verificáveis pelo GitHub. A autorização deve ser anterior ao início real do job; string ou hash preenchido no plano não basta. A preparação que depende do runId/tentativa deve terminar enquanto a execução ainda está retida pelo controle autorizado do environment, antes de liberar o runner.
 4. Os contextos Microsoft originais, os dados e as permissões exigidos por cada caso já existem. O registro consulta a descoberta atual, F01/F02 e a UI/reader originais. Não cria identidades, sessões, servidores ou dados.
 5. O observador instalado confirma o binário, a factory, o tar, a instalação, a VM, o processo, a configuração, o listener e o ingresso HTTPS reais.
 
@@ -25,7 +25,7 @@ O operador prepara, fora do checkout, a raiz exclusiva da invocação com:
 - `plan.json` canônico, com o run e a tentativa que serão executados.
 - `package-receipt.json` e o tar original G07, ambos com os hashes aprovados.
 - `authorization.json`: referência à declaração original, autor e hash do corpo, no contrato do módulo de proveniência.
-- Descriptor CDP loopback privado para os grupos que precisam observar os contextos existentes.
+- Arquivo `browser-endpoint.txt` com o endpoint CDP loopback original para os grupos que observam os contextos existentes. O wrapper fixa `SF_NATIVE_BROWSER_ENDPOINT_FILE` nesse arquivo e o manifesto em `native-installed-manifest.json`.
 - Para AZ02, `az02-config.json`, cookies originais privados e corpos originais dos dois testes negativos, conforme o executor AZ02.
 
 Os inputs do workflow são `mode=group`, `kind`, `private_root` e `invocation_id`. O checkout é o próprio SHA do workflow; não se aceita um C indicado somente por metadata. A árvore Git e o status limpo são observados antes do uso do host.
@@ -65,7 +65,7 @@ O agregador:
 
 - Relê os arquivos privados e executa os verificadores originais de cada grupo.
 - Recalcula o recibo de cada grupo e exige igualdade byte a byte com o recibo preservado.
-- Consulta run, tentativa, job, check-run, commit/árvore, workflow e artefato no GitHub original.
+- Consulta run, tentativa, job, commit/árvore, workflow e artefato no GitHub original. Confere o vínculo `check_run_url` fornecido pelo job; não afirma uma consulta independente à API de check-runs.
 - Baixa o ZIP original, confere tamanho, digest, CRC e o único receipt.json; exige os mesmos bytes locais.
 - Confere a autorização original anterior ao início, o mesmo C/T/tar/reserva/VM, os onze nonces/roots distintos, as fases AZ02 em ordem e a continuidade do cookie revogado.
 - Liga o recibo privado de cleanup à atestação posterior de seu operador/observador. Essa parte permanece explicitamente classificada como atestação da fonte original; não é inferida do parser nem descrita como observação automática.

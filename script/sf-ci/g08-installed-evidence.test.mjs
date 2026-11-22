@@ -4,7 +4,7 @@ import assert from "node:assert/strict"
 import az02 from "../../sf/azure/identity/az02-proof.cjs"
 import { digest, validatePlan, validatePackage } from "./g08-private-evidence.mjs"
 import { installedKinds, verifyInstalledHostPair, verifyAz02Phase, verifyExecutionStatus,
-  verifyInstalledChain, verifyRestartBinding, finishCommandOutput, finalizeExecution } from "./g08-installed-evidence.mjs"
+  verifyInstalledChain, verifyRestartBinding, finishCommandOutput, finalizeExecution, verifyOriginalRegistration } from "./g08-installed-evidence.mjs"
 const uuid = (last) => "00000000-0000-4000-8000-" + String(last).padStart(12, "0")
 function scope(installationId = "synthetic-installation", teamObjectId = uuid(2)) {
   const result = { serverKey: "https://qa.example.invalid", discoveryOrigin: "https://qa.example.invalid",
@@ -329,4 +329,50 @@ test("all finalizer failures retain attempts and never claim a positive receipt"
   assert.equal(observed.hostAfterExit, 125)
   assert.equal(observed.trackedDiffExit, 125)
   assert.equal(observed.stagedDiffExit, 125)
+})
+
+function registrationFixture(kind = "F04") {
+  const p = validatePlan(plan())
+  const invocation = { treeSha: p.candidate.tree, runId: p.invocation.runId, runAttempt: p.invocation.runAttempt,
+    invocationId: p.invocation.id, role: kind === "F04" ? "teams" : kind.toLowerCase(), archiveSha256: packageReceipt().archive.sha256 }
+  const manifest = { schema: "sf-g08-native-installed-v1", invocation }
+  const files = ["native-installed-manifest.json", "native-context-observations.json", "native-registration-observations.json",
+    ...(kind === "F04" ? [] : ["native-installed-" + kind.toLowerCase() + ".json"]),
+    ...(kind === "U15" ? ["native-runner-environment.json"] : [])]
+  const bytes = Object.fromEntries(files.map((file) => [file, JSON.stringify({ schema: "CONTROL_ONLY_BYTES", file }) + "\n"]))
+  bytes["plan.json"] = JSON.stringify(p) + "\n"
+  bytes["host-before.json"] = JSON.stringify(host()) + "\n"
+  const value = { schema: "sf-g08-native-registration-v1", status: "REGISTERED_ONLY_NOT_EXECUTED",
+    kind, source: p.candidate, invocation, manifestSchema: manifest.schema,
+    connectionSource: "SfTrustedInstallationSource.current", selectedCount: kind === "F04" ? 0 : kind === "U15" ? 5 : 8,
+    bindings: { planSha256: digest(bytes["plan.json"]), packageReceiptSha256: p.packageReceiptSha256,
+      hostBeforeSha256: digest(bytes["host-before.json"]), actorsReferenceSha256: digest(p.approvals.actorsReference),
+      reservationSha256: digest(JSON.stringify(p.reservation)) },
+    files: files.map((file) => ({ path: file, sha256: digest(bytes[file]) })),
+    cleanup: { completed: true, originalPagesPreserved: true, clientDisconnected: true, ownPagesClosed: kind === "F04" ? 0 : 8 },
+    installed: false, liveQualified: false, g08Closed: false, finalCandidate: false, productionCutover: false }
+  return { kind, value, manifest, p, bytes }
+}
+for (const kind of ["F04", "U15"])
+  test("registration joins original " + kind + " file bindings without claiming execution", () => {
+    const v = registrationFixture(kind)
+    assert.doesNotThrow(() => verifyOriginalRegistration(v.kind, v.value, v.manifest, v.p, v.bytes))
+    assert.equal(v.value.installed, false)
+  })
+for (const [name, change] of [
+  ["manual execution status", (v) => { v.value.status = "PASS" }],
+  ["another source", (v) => { v.value.source = { ...v.p.candidate, sha: "9".repeat(40) } }],
+  ["another invocation", (v) => { v.value.invocation = { ...v.value.invocation, runId: "999" } }],
+  ["another kind", (v) => { v.value.kind = "U40" }],
+  ["missing selection", (v) => { v.value.selectedCount-- }],
+  ["claimed remote registry", (v) => { v.value.connectionSource = "CALLER_METADATA" }],
+  ["unbound plan", (v) => { v.bytes["plan.json"] += " " }],
+  ["changed original context", (v) => { v.bytes["native-context-observations.json"] += " " }],
+  ["missing file", (v) => { v.value.files.pop() }],
+  ["extra file", (v) => { v.value.files.push({ path: "unexpected.json", sha256: "0".repeat(64) }) }],
+  ["missing disconnect", (v) => { v.value.cleanup.clientDisconnected = false }],
+  ["manual installed promotion", (v) => { v.value.installed = true }],
+]) test("registration refuses " + name, () => {
+  const v = registrationFixture("U15"); change(v)
+  assert.throws(() => verifyOriginalRegistration(v.kind, v.value, v.manifest, v.p, v.bytes))
 })
