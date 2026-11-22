@@ -1,0 +1,280 @@
+{
+  "schema": "sf-wave-five-analytics-root-review-v1",
+  "status": "PASS_ARCHIVE_PARITY_FAILED_PARTIAL_JOURNEY",
+  "reviewer": "root",
+  "reviewedAt": "2026-11-22 12:14:50 UTC",
+  "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+  "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+  "worker": "858f23928ce48c628c418a33454818a40c52d258",
+  "snapshot": "27499e0b3f81bed868dfe2d4724b295fd5aab9c6",
+  "run": {
+    "id": 45019357466,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45019357466",
+    "branch": "ci-run-sf5portfolio21",
+    "workflow": "test-ci",
+    "attempt": 1,
+    "createdBy": "root",
+    "createdAt": "2026-11-22T11:51:28Z",
+    "status": "completed",
+    "conclusion": "failure",
+    "test": {
+      "id": 137198592243,
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45019357466/job/137198592243"
+    },
+    "cleanup": {
+      "id": 137201120833,
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45019357466/job/137201120833"
+    }
+  },
+  "archive": "docs/qa/sucafina/design/wave-five/analytics/attempt-18",
+  "originalTimeoutMs": 60000,
+  "previewResponseObserved": false,
+  "profile": {
+    "recordCount": 625,
+    "exactOriginalRecords": true,
+    "exactOriginalSummaries": true,
+    "exactLatestRows": true,
+    "independentCompleteness": [
+      {
+        "snapshot": 1,
+        "rows": 122,
+        "unique": 122,
+        "declared": 122,
+        "sameKeys": true,
+        "pendingSum": 6,
+        "pendingDeclared": 6,
+        "streamPositionMatches": true,
+        "fails": []
+      },
+      {
+        "snapshot": 2,
+        "rows": 122,
+        "unique": 122,
+        "declared": 122,
+        "sameKeys": true,
+        "pendingSum": 9,
+        "pendingDeclared": 9,
+        "streamPositionMatches": true,
+        "fails": []
+      },
+      {
+        "snapshot": 3,
+        "rows": 122,
+        "unique": 122,
+        "declared": 122,
+        "sameKeys": true,
+        "pendingSum": 8,
+        "pendingDeclared": 8,
+        "streamPositionMatches": true,
+        "fails": []
+      },
+      {
+        "snapshot": 4,
+        "rows": 122,
+        "unique": 122,
+        "declared": 122,
+        "sameKeys": true,
+        "pendingSum": 9,
+        "pendingDeclared": 9,
+        "streamPositionMatches": true,
+        "fails": []
+      },
+      {
+        "snapshot": 5,
+        "rows": 122,
+        "unique": 122,
+        "declared": 122,
+        "sameKeys": true,
+        "pendingSum": 4,
+        "pendingDeclared": 4,
+        "streamPositionMatches": true,
+        "fails": []
+      }
+    ],
+    "finalSnapshotObserved": false,
+    "lastSampleElapsedMs": 50015,
+    "lastSamplePending": 4,
+    "drops": 0,
+    "parseErrors": 0,
+    "diagnosticErrors": 0,
+    "skippedThresholds": 0,
+    "limitations": [
+      "Inclusive milliseconds contain settled spans only; active work remains pending.",
+      "Samples are cumulative and parents/children overlap. No subtraction across different populations or cross-run performance conclusion.",
+      "Physical callback exit is not final provider acceptance."
+    ]
+  },
+  "events": {
+    "sourceExact": true,
+    "sourceCount": 32,
+    "errors": [],
+    "stages": 46,
+    "stagesExact": true,
+    "diagnostics": 3,
+    "diagnosticsExact": true,
+    "stageParseErrors": []
+  },
+  "imageByteParity": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "parts": 5,
+      "sequential": true,
+      "bytes": 80581,
+      "originalEqualsArchive": true
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "parts": 5,
+      "sequential": true,
+      "bytes": 85863,
+      "originalEqualsArchive": true
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "parts": 2,
+      "sequential": true,
+      "bytes": 28699,
+      "originalEqualsArchive": true
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "parts": 2,
+      "sequential": true,
+      "bytes": 27454,
+      "originalEqualsArchive": true
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "parts": 6,
+      "sequential": true,
+      "bytes": 97803,
+      "originalEqualsArchive": true
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "parts": 6,
+      "sequential": true,
+      "bytes": 106309,
+      "originalEqualsArchive": true
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "parts": 7,
+      "sequential": true,
+      "bytes": 110088,
+      "originalEqualsArchive": true
+    }
+  ],
+  "visual": {
+    "workerViewed": 7,
+    "rootViewed": 2,
+    "images": [
+      {
+        "path": "gallery/UI42-configure-focused-candidate-test-data.jpg",
+        "sha": "47e44159f8644d3160d00555f68d36935e4c0628",
+        "finding": "Original candidate and v2 constraint selected, limit 4 focused; readable native desktop configuration. No preview result."
+      },
+      {
+        "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+        "sha": "a976d7e2ec3e19e77144f0aa66b00c46e06d2b1c",
+        "finding": "Running action, disabled controls, unavailable-preview skeleton and empty history. No result, receipt or connection/refusal banner. Failure evidence only."
+      }
+    ],
+    "noFullJourneyQualification": true
+  },
+  "peerReview": {
+    "status": "PASS",
+    "reviewer": "design_reviews",
+    "worker": "858f23928ce48c628c418a33454818a40c52d258",
+    "records": 625,
+    "keysPerSnapshot": 122,
+    "selectedReadmeRows": 14,
+    "corrections": []
+  },
+  "findings": {
+    "measuredRowsOriginNone": [
+      {
+        "name": "canonical.digest.total",
+        "surface": "none",
+        "calls": 748497,
+        "settledInclusiveMs": 15457
+      },
+      {
+        "name": "authority.principal.total",
+        "surface": "none",
+        "calls": 33687,
+        "settledInclusiveMs": 14058
+      },
+      {
+        "name": "local.operation.ingress",
+        "surface": "none",
+        "calls": 387132,
+        "settledInclusiveMs": 1474
+      },
+      {
+        "name": "local.file.lstat",
+        "surface": "none",
+        "calls": 1934412,
+        "settledInclusiveMs": 5788
+      }
+    ],
+    "interpretation": "These are separate observed populations and nested boundaries, not an exclusive-time decomposition or available savings.",
+    "storageStaticReview": {
+      "source": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "reusedAuthReader": true,
+      "preserves": "Each operation executes original SQL; inherited scope, file identity, signal, transaction-state and egress checks remain.",
+      "noConnectionReuseCandidate": "The private readonly autocommit connection is already reused."
+    },
+    "authenticationStaticReview": {
+      "source": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+      "originalSuccessfulSessionReads": [
+        "revoked before session",
+        "session payload",
+        "revoked after decrypt and valid"
+      ],
+      "productAuthoritySurfaces": 3,
+      "successfulPrincipalStaticReadEnvelope": 9,
+      "limit": "This is a conditional static call graph, not measured attribution of all 387132 operations. It does not prove every principal followed all successful branches.",
+      "noAuthorityCache": true,
+      "getActive": {
+        "forwarded": true,
+        "usedByOperator": false,
+        "originalTest": "modules/sucafina/Sucafinav1/test/operator-identity.test.ts",
+        "testBlob": "23e3db0071c676e8aa4bc93daeb8fe3e68129466",
+        "equivalentReplacementDemonstrated": false,
+        "reason": "The original test retains getActive via spread and intercepts get(session) to revoke while the read is pending. Selecting getActive would bypass that original callback boundary."
+      }
+    },
+    "canonicalStaticReview": {
+      "source": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "d52aca01250ccff4c3811cee95f8a341fa3335c8",
+      "noSelectedCandidate": true,
+      "reason": "The measurement includes canonical traversal, tagged AST, serialization and SHA. Existing scoped memos do not provide a general exact-hasher capability. General memo/streaming alternatives lack equivalence for original hooks, getters, sparse arrays, species and error order."
+    },
+    "followup619": {
+      "candidate": "62a4233ae6f9145f5c45d527ceb1bb562d84b516",
+      "executed": false,
+      "integrated": false,
+      "status": "HELD_NOT_JUSTIFIED_AS_DOMINANT_COST"
+    },
+    "newRuntimeCandidateSelected": false,
+    "newCiStarted": false
+  },
+  "qualification": {
+    "implementedAreas": 15,
+    "routePatterns": 22,
+    "qualifiedAreas": 12,
+    "pending": [
+      "UI42",
+      "UI43",
+      "UI44"
+    ],
+    "acceptedMergedAreas": 41,
+    "userVisualApproval": false,
+    "merged": false
+  },
+  "integrationScope": "QA archive and current delivery records only. No diagnostic overlay, runtime, workflow, guard, schema, grant, timeout or seed change."
+}

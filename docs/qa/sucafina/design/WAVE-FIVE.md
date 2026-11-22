@@ -1,6 +1,6 @@
 # Quinta rodada — quinze áreas nativas da Sucafina
 
-Status: **PARTIALLY_VERIFIED_PENDING_COMPLETION**. O bloco UI42–UI56 está implementado na branch isolada `sf-design-next`, a partir de `dev d3ccea42b5f8409c8d6c68e4909f7b868b50322c`. A qualificação completa das quinze áreas ainda está em andamento. O [PR #613](https://github.com/gustavomhss/Orchestra-SF/pull/613) permanece em rascunho.
+Status: **PARTIALLY_VERIFIED_PENDING_COMPLETION**. O bloco UI42–UI56 está implementado na branch isolada `sf-design-next`, a partir de `dev d3ccea42b5f8409c8d6c68e4909f7b868b50322c`. A qualificação completa das quinze áreas permanece bloqueada pelas jornadas de UI42–UI44. O [PR #613](https://github.com/gustavomhss/Orchestra-SF/pull/613) permanece em rascunho.
 
 ## Escopo e contagem
 
@@ -43,6 +43,18 @@ O [diagnóstico Portfolio20](wave-five/analytics/attempt-17/README.md), run 4501
 
 A ponte readonly e o memo de fences têm evidência positiva no fluxo instalado. Os digests iniciais de sources/audit somam 951 ms no prefixo medido, incluindo caminhos inelegíveis para a alteração da linha 619; esse subtotal não estima seu ganho nem explica o atraso dominante. O candidato `62a4233` e suas propostas continuam isolados, sem execução ou integração. A análise prossegue nas leituras repetidas de fontes e no trabalho em torno delas, preservando callbacks, cópias defensivas e verificações de autoridade. Permanecem 12 áreas qualificadas e UI42–UI44 pendentes.
 
+## Diagnóstico final deste checkpoint: Portfolio21
+
+O [diagnóstico Portfolio21](wave-five/analytics/attempt-18/README.md), run 45019357466, concluiu com falha no primeiro waiter original de **60 segundos**, sem resposta da prévia observada; o cleanup passou. A preparação original e as duas leituras de histórico 200/ok terminaram. Os 625 registros preservados incluem cinco amostras completas com 122 chaves cada, sem descartes, erros ou limiares perdidos. A última amostra é parcial, aos 50.015 ms, com quatro spans pendentes; não houve amostra final.
+
+Foram observadas 748.497 chamadas de digest canônico, 33.687 de principal de autoridade, 387.132 ingressos de operação de armazenamento e 1.934.412 verificações de arquivo no prefixo medido. Essas populações se sobrepõem e não formam uma decomposição de tempo exclusivo. A medição de digest inclui percurso, árvore intermediária, serialização e SHA; não demonstra quanto seria economizado por trocar qualquer etapa.
+
+A inspeção estática confirmou que a conexão de credenciais já é reutilizada. Uma sessão de operador bem-sucedida conserva três leituras: revogação antes, credencial e revogação após decrypt/valid. A autoridade observa três superfícies. Esse multiplicador é um mapa condicional do código, não uma atribuição medida de todas as operações. Reutilizar a autoridade ou omitir essas verificações não é uma correção selecionada.
+
+A revisão também não encontrou uma capacidade existente que permita memoizar ou substituir genericamente o hash preservando os hooks e a ordem de erros originais. Nenhum novo candidato de runtime ou nova execução foi iniciado a partir desses achados. O candidato separado da linha 619 permanece isolado. O [recibo do root](wave-five/analytics/attempt-18/root-review.json) confere todos os registros, eventos e sete JPEGs contra o log original; o agente viu as sete imagens, o root viu configuração e falha, e a revisão independente dos dados passou.
+
+**A implementação cobre as quinze áreas; a qualificação continua em 12/15.** UI42 e UI43 dependem da conclusão da prévia e dos resultados originais; UI44 depende da avaliação e releitura originais dentro de seu prazo. A última tentativa limpa continua sendo Portfolio18. Não há qualificação completa, ganho de latência ou fechamento dessas três áreas comprovado.
+
 ## Aceite
 
-**Aprovação visual do usuário pendente. Nenhum merge realizado.** A entrega das quinze áreas será apresentada com capturas reais e os resultados completos, após fechar as jornadas pendentes.
+**Aprovação visual do usuário pendente. Nenhum merge realizado.** As galerias apresentam as evidências reais das doze áreas qualificadas. As três jornadas pendentes impedem considerar o bloco concluído.

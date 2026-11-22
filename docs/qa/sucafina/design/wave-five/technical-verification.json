@@ -486,9 +486,10 @@
         45003432183,
         45008412557,
         45013832359,
-        45015314625
+        45015314625,
+        45019357466
       ],
-      "limitation": "Portfolio diagnostic 17 retains the original 60-second preview failure and observes that same POST returning 403 at about 300 seconds. Isolated UI44 passes original A04/units/rule/source, editor/review/cancel, but its single evaluate POST has no observed response in the original 120 seconds. The readonly correction is integrated; clean Portfolio18 remains the latest clean attempt and failed the unchanged first-preview 60s wait without an observed response. Its original preparation/readbacks and both histories passed; no evaluate or UI43/UI44 stage was reached. Portfolio19 is a partial instrumented diagnostic, also failed at 60s with no preview response, and emitted no profiler snapshot summaries. It adds no qualification or causal performance evidence. Portfolio20 also failed the original first-preview 60s wait without an observed response; its five complete partial samples end at50s, with four pending spans and no final snapshot. The installed readonly bridge and source-fence memo are observed, but the measured951ms guard-digest subtotal includes ineligible paths and is not an estimate of619 savings.",
+      "limitation": "Portfolio diagnostic 17 retains the original 60-second preview failure and observes that same POST returning 403 at about 300 seconds. Isolated UI44 passes original A04/units/rule/source, editor/review/cancel, but its single evaluate POST has no observed response in the original 120 seconds. The readonly correction is integrated; clean Portfolio18 remains the latest clean attempt and failed the unchanged first-preview 60s wait without an observed response. Its original preparation/readbacks and both histories passed; no evaluate or UI43/UI44 stage was reached. Portfolio19 is a partial instrumented diagnostic, also failed at 60s with no preview response, and emitted no profiler snapshot summaries. It adds no qualification or causal performance evidence. Portfolio20 also failed the original first-preview 60s wait without an observed response; its five complete partial samples end at50s, with four pending spans and no final snapshot. The installed readonly bridge and source-fence memo are observed, but the measured951ms guard-digest subtotal includes ineligible paths and is not an estimate of619 savings. Portfolio21 also failed the original 60 s wait, with no preview response; its 625 valid records contain five complete partial samples, 122 keys each, through 50,015 ms and four pending spans. The large canonical, authority and storage call counts are observed; exclusive cost, saved time and a safe optimization are not established. No new product change or follow-up CI was selected from these measurements.",
       "evidence": "analytics/attempt-15/README.md",
       "isolatedSensitivityEvidence": "collab/sensitivity-isolated-01/README.md",
       "latestClean": {
@@ -504,6 +505,118 @@
         "explicitEvaluations": 0
       },
       "latestDiagnostic": {
+        "label": "Portfolio21",
+        "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
+        "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
+        "run": 45019357466,
+        "job": 137198592243,
+        "cleanupJob": 137201120833,
+        "cleanupStatus": "SUCCESS",
+        "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+        "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+        "snapshot": "27499e0b3f81bed868dfe2d4724b295fd5aab9c6",
+        "evidence": "analytics/attempt-18/README.md",
+        "immutableArchiveCommit": "858f23928ce48c628c418a33454818a40c52d258",
+        "rootReview": "analytics/attempt-18/root-review.json",
+        "originalPreviewTimeoutMs": 60000,
+        "failureLine": 72,
+        "previewResponseObserved": false,
+        "internalPersistence": "UNKNOWN",
+        "preparation": {
+          "helper": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+          "complete": true
+        },
+        "nativeHistory": [
+          {
+            "sequence": 1,
+            "http": 200,
+            "status": "ok",
+            "elapsedMs": 529
+          },
+          {
+            "sequence": 2,
+            "http": 200,
+            "status": "ok",
+            "elapsedMs": 1064
+          }
+        ],
+        "profiler": {
+          "records": 625,
+          "started": 1,
+          "sealedRootMarkers": 5,
+          "rootCallbackExits": 4,
+          "periodicSnapshots": 5,
+          "finalSnapshots": 0,
+          "bucketsPerSnapshot": 122,
+          "emittedBucketRecords": 610,
+          "elapsedMs": [
+            10000,
+            20000,
+            30000,
+            40000,
+            50015
+          ],
+          "pendingAtLastSample": 4,
+          "drops": 0,
+          "errors": 0,
+          "skippedThresholds": 0,
+          "interpretation": "Cumulative settled-span samples through 50,015 ms only; nested populations and active pending work do not establish exclusive cost or available savings. Instrumentation coverage differs from Portfolio20."
+        },
+        "selectedMeasurements": [
+          {
+            "name": "canonical.digest.total",
+            "surface": "none",
+            "calls": 748497,
+            "settledInclusiveMs": 15457
+          },
+          {
+            "name": "authority.principal.total",
+            "surface": "none",
+            "calls": 33687,
+            "settledInclusiveMs": 14058
+          },
+          {
+            "name": "local.operation.ingress",
+            "surface": "none",
+            "calls": 387132,
+            "settledInclusiveMs": 1474
+          },
+          {
+            "name": "local.file.lstat",
+            "surface": "none",
+            "calls": 1934412,
+            "settledInclusiveMs": 5788
+          }
+        ],
+        "staticFollowup": {
+          "authentication": {
+            "source": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+            "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+            "originalSuccessfulSessionReads": [
+              "revoked before session",
+              "session payload",
+              "revoked after decrypt and valid"
+            ],
+            "productAuthoritySurfaces": 3,
+            "successfulPrincipalStaticReadEnvelope": 9,
+            "limit": "This is a conditional static call graph, not measured attribution of all 387132 operations. It does not prove every principal followed all successful branches.",
+            "noAuthorityCache": true
+          },
+          "canonical": {
+            "source": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+            "blob": "d52aca01250ccff4c3811cee95f8a341fa3335c8",
+            "noSelectedCandidate": true,
+            "reason": "The measurement includes canonical traversal, tagged AST, serialization and SHA. Existing scoped memos do not provide a general exact-hasher capability. General memo/streaming alternatives lack equivalence for original hooks, getters, sparse arrays, species and error order."
+          },
+          "noNewRuntimeCandidate": true,
+          "noNewCi": true
+        },
+        "captures": 7,
+        "agentViewed": 7,
+        "rootViewed": 2,
+        "additionalQualifiedAreas": 0
+      },
+      "previousDiagnostic": {
         "label": "Portfolio20",
         "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
         "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
@@ -574,60 +687,62 @@
         "rootViewed": 2,
         "additionalQualifiedAreas": 0
       },
-      "previousDiagnostic": {
-        "label": "Portfolio19",
-        "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
-        "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
-        "run": 45013832359,
-        "job": 137181760072,
-        "cleanupJob": 137184430073,
-        "cleanupStatus": "PASSED",
-        "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
-        "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
-        "snapshot": "46792e9d945a8d27802ec2ae7c05b1a6ce7b5068",
-        "evidence": "analytics/attempt-16/README.md",
-        "immutableArchiveCommit": "41a4f73f5e9e5ea5480c79752d644df41e6907d3",
-        "originalPreviewTimeoutMs": 60000,
-        "failureLine": 72,
-        "previewResponseObserved": false,
-        "internalPersistence": "UNKNOWN",
-        "preparation": {
-          "helper": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
-          "complete": true
-        },
-        "nativeHistory": [
-          {
-            "sequence": 1,
-            "http": 200,
-            "status": "ok"
+      "olderDiagnostics": [
+        {
+          "label": "Portfolio19",
+          "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
+          "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
+          "run": 45013832359,
+          "job": 137181760072,
+          "cleanupJob": 137184430073,
+          "cleanupStatus": "PASSED",
+          "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+          "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+          "snapshot": "46792e9d945a8d27802ec2ae7c05b1a6ce7b5068",
+          "evidence": "analytics/attempt-16/README.md",
+          "immutableArchiveCommit": "41a4f73f5e9e5ea5480c79752d644df41e6907d3",
+          "originalPreviewTimeoutMs": 60000,
+          "failureLine": 72,
+          "previewResponseObserved": false,
+          "internalPersistence": "UNKNOWN",
+          "preparation": {
+            "helper": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+            "complete": true
           },
-          {
-            "sequence": 2,
-            "http": 200,
-            "status": null,
-            "acquisitionFailure": "response-body-unavailable",
-            "additionalObserverRecord": "native-request-failed",
-            "sourceRefusalProven": false
-          }
-        ],
-        "profiler": {
-          "records": 10,
-          "started": 1,
-          "sealedRootMarkers": 5,
-          "rootCallbackExits": 4,
-          "periodicSnapshots": 0,
-          "finalSnapshots": 0,
-          "emittedBucketRecords": 0,
-          "aggregateCounts": null,
-          "aggregateBucketCount": null,
-          "pending": null,
-          "drops": null,
-          "costs": null,
-          "interpretation": "Aggregate counts, pending spans, drops and costs are UNKNOWN because no snapshot summaries were emitted. Callback exits do not prove the provider's later egress accepted the operation."
-        },
-        "captures": 7,
-        "additionalQualifiedAreas": 0
-      }
+          "nativeHistory": [
+            {
+              "sequence": 1,
+              "http": 200,
+              "status": "ok"
+            },
+            {
+              "sequence": 2,
+              "http": 200,
+              "status": null,
+              "acquisitionFailure": "response-body-unavailable",
+              "additionalObserverRecord": "native-request-failed",
+              "sourceRefusalProven": false
+            }
+          ],
+          "profiler": {
+            "records": 10,
+            "started": 1,
+            "sealedRootMarkers": 5,
+            "rootCallbackExits": 4,
+            "periodicSnapshots": 0,
+            "finalSnapshots": 0,
+            "emittedBucketRecords": 0,
+            "aggregateCounts": null,
+            "aggregateBucketCount": null,
+            "pending": null,
+            "drops": null,
+            "costs": null,
+            "interpretation": "Aggregate counts, pending spans, drops and costs are UNKNOWN because no snapshot summaries were emitted. Callback exits do not prove the provider's later egress accepted the operation."
+          },
+          "captures": 7,
+          "additionalQualifiedAreas": 0
+        }
+      ]
     }
   ],
   "references": {
@@ -641,7 +756,7 @@
   "merged": false,
   "inventoryAcceptedAndMergedAreas": 41,
   "pendingDelta": {
-    "status": "READONLY_INTEGRATED_CLEAN_PREVIEW_STILL_FAILED_DIAGNOSIS_PENDING",
+    "status": "READONLY_INTEGRATED_CLEAN_PREVIEW_STILL_FAILED_NO_NEW_SAFE_CANDIDATE_SELECTED",
     "integratedAt": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
     "candidate": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
     "files": [
@@ -676,7 +791,7 @@
       "qualificationRun": null,
       "integrated": false,
       "performanceClaim": null,
-      "scope": "The single source-lifecycle line 619 readonly lookup change and its reviewed regression candidate remain separate from product and diagnostic 19/20.",
+      "scope": "The single source-lifecycle line 619 readonly lookup change and reviewed regression candidate remain separate from product and diagnostics 19–21.",
       "reason": "All measured source/audit guard digests total 951 ms through 50 s, including unchanged transactionAll and potentially non-readonly paths. This is not projected saving; no candidate CI is justified by this cost evidence."
     }
   }
