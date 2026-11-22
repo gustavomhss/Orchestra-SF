@@ -344,3 +344,14 @@ Five settled-span checkpoints at 10,002/20,001/30,001/40,001/50,000 ms each cont
 The installed bridge and source-fence memo were used: 9,065 prepared Choice hits, 1,276 legitimate non-readonly misses, and 550 fence memo hits/1 miss. The raw-only guard has 6,568 registration misses, but all measured guard digests total951ms through50s, including ineligible paths. That cost does not justify treating619 as the dominant cause; its candidate was not executed. Planner source1/source2 have7,256/7,274ms inclusive, without exclusive residual inferred by subtracting nested rows.
 
 All seven original JPEGs were actually viewed. [Receipt and findings](attempt-17/README.md), [manifest](attempt-17/manifest.json), [profile](attempt-17/profile.json), [last-sample aggregates](attempt-17/aggregates.json) and [source events](attempt-17/source-events.json) preserve the result. These partial states do not qualify UI42–44; the wave remains12/15.
+
+
+## Attempt 18 — Portfolio21 authority/storage profile, original timeout
+
+[Run 45019357466](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45019357466), snapshot `27499e0b3f81bed868dfe2d4724b295fd5aab9c6`, retained product runtime `2d3abae`. Test `137198592243` failed at the original first-preview wait of 60,000 ms; cleanup `137201120833` passed. Full helper581 preparation and exact source readbacks completed. Both native histories were HTTP 200/ok with bodies acquired; the one preview had no observed response, status or body. No second preview or explicit evaluation was performed.
+
+The five settled-span checkpoints at 10,000/20,000/30,000/40,000/50,015 ms each contain 122 unique buckets. All 610 rows satisfy calls=settled+pending and pending sums match; drops, errors and skipped thresholds are zero. The last sample is partial with four pending spans and no final summary. Five root entries and four callback exits are recorded; callback exit does not establish provider acceptance.
+
+This focused snapshot restores three previous observer bodies and adds authority, storage, Finance, canonical and SourceLife measurements while keeping helper20, raw619, the original preparation and all budgets exact. Counts and times belong to changed instrumentation coverage and nested populations; they do not by themselves establish a product regression, gain or exclusive-time attribution. The separate619 candidate was not executed.
+
+All seven original JPEGs were actually viewed and remotely byte-verified. [Receipt and visual review](attempt-18/README.md), [manifest](attempt-18/manifest.json), [original profile records](attempt-18/profile.json), [last-sample aggregates](attempt-18/aggregates.json) and [source events](attempt-18/source-events.json) preserve this failed partial diagnostic. UI42–44 remain pending; no qualification is added and the wave remains 12/15.

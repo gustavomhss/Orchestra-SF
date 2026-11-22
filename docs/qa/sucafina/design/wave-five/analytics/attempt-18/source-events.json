@@ -1,0 +1,822 @@
+{
+  "schema": "sf-wave-five-analytics-source-events-v1",
+  "runId": 45019357466,
+  "testJobId": 137198592243,
+  "snapshot": "27499e0b3f81bed868dfe2d4724b295fd5aab9c6",
+  "records": [
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:55:36.1750890Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:55:42.2400366Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:55:49.4184035Z",
+      "operation": "parameter-source-read",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:55:52.2812700Z",
+      "operation": "decision-promote-parameter",
+      "http": 200,
+      "status": "ok",
+      "parameterPeriod": {
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "parameterUnit": "USD"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:56:00.1384838Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:56:16.8493326Z",
+      "operation": "sensitivity-controls-units-read",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:56:16.8819153Z",
+      "operation": "decision-criteria",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:56:18.6236202Z",
+      "operation": "decision-criteria",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 1742
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:56:36.4570872Z",
+      "operation": "sensitivity-controls-units-read",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:56:36.4696684Z",
+      "operation": "sensitivity-rule-fixture-registered-readback",
+      "status": "ok",
+      "caseVersion": 6,
+      "criterionId": "58784d79-5c33-41d4-927a-8d78bd79911a",
+      "ruleRef": "criterion-rule:ea465b86132fda30cd99937fedf3c9b8a1982203a2d83a99ecd42af1296bdd08",
+      "previousVersion": 1,
+      "ruleVersion": 2,
+      "baselineRef": "decision-result:7bbbd1620dcd90bbc6c3e1606a503b3d94cbe30b03ba2246acbe36165bfc6ddc",
+      "scenarioRef": "decision-result:2683e4677507aecbb14b0bf989ed061a9642b437b61c3637fb1a1e1b6589545b",
+      "parameterRef": "2543a1d2-b8d4-4ee6-aca7-f5d2cf60fcdc:2",
+      "parameterUnit": "USD",
+      "resultUnit": "USD",
+      "engineVersion": "planner-runtime-v1",
+      "sourceReferences": [
+        {
+          "refId": "planner-version:a7c2b978-6183-41c6-909e-78fe35aece67:d81e74a2-dfe9-4f97-830c-def872bc5a93:1",
+          "refDigest": "0a0b921c594f210a428858c8a842854cd31476e66851dcc20f3da81955c36bcd"
+        },
+        {
+          "refId": "planner-version:d02862b1-f70f-483e-bf96-e7d7e93d77f9:c118471a-4839-42e0-b64a-eebab0b25bd3:1",
+          "refDigest": "8a62bd6618b1f6cbab97e87030e038c16f13b9554cdc8d8017ab75595da2467d"
+        }
+      ],
+      "originalCaseUnchanged": true,
+      "originalUnitsReadbackMatched": true,
+      "acquisition": "original-register-canonical-resolve-then-controls-units-and-version"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:56:36.4704759Z",
+      "operation": "decision-compare",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:57:51.0202312Z",
+      "operation": "decision-compare",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 74551
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:57:51.0302254Z",
+      "operation": "portfolio-selection-fixture-basis",
+      "initialVersion": 0,
+      "basis": "new-isolated-fixture-with-no-prior-registration",
+      "caseVersion": 6,
+      "criteriaCount": 1
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:57:51.0311874Z",
+      "operation": "decision-select-portfolio",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:58:46.0519387Z",
+      "operation": "decision-select-portfolio",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 55024
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:58:54.3951378Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T11:58:54.4071988Z",
+      "operation": "decision-compare",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T12:00:05.1826520Z",
+      "operation": "decision-compare",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 70776
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T12:00:05.1851004Z",
+      "operation": "portfolio-selection-registered-readback",
+      "status": "ok",
+      "selectionVersion": 1,
+      "caseVersion": 6,
+      "originalAlternativePairMatched": true,
+      "originalCriteriaMatched": true,
+      "currentComparisonUnchanged": true,
+      "acquisition": "original-register-canonical-read-then-controls-and-comparison"
+    },
+    {
+      "prefix": "SF_ANALYTICS_CONTEXT",
+      "timestamp": "2026-11-22T12:00:13.2075445Z",
+      "stage": "UI42-list",
+      "http": 200,
+      "status": "ok",
+      "acquisition": "authenticated-original-readback",
+      "ownerBinding": "exact",
+      "resources": [
+        {
+          "family": "decisions",
+          "resource": "case-intent",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "decisions",
+          "resource": "assumptions",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "campaign",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "results",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "sensitivity",
+          "state": "ready",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-sensitivity-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-units",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "timestamp": "2026-11-22T12:00:14.0604665Z",
+      "name": "UI42-list-dark-desktop-test-data",
+      "width": 1440,
+      "surface": "UI42",
+      "stage": "list"
+    },
+    {
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "timestamp": "2026-11-22T12:00:14.9822133Z",
+      "name": "UI42-list-light-desktop-test-data",
+      "width": 1440,
+      "surface": "UI42",
+      "stage": "list"
+    },
+    {
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "timestamp": "2026-11-22T12:00:15.1359412Z",
+      "name": "UI42-list-dark-390-test-data",
+      "width": 390,
+      "surface": "UI42",
+      "stage": "list"
+    },
+    {
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "timestamp": "2026-11-22T12:00:15.5150054Z",
+      "name": "UI42-list-light-320-test-data",
+      "width": 320,
+      "surface": "UI42",
+      "stage": "list"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T12:00:23.7090819Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-request",
+      "sequence": 1,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T12:00:24.2413934Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-response",
+      "sequence": 1,
+      "ownerBinding": "exact",
+      "elapsedMs": 529,
+      "http": 200,
+      "status": "ok",
+      "reason": null,
+      "valueShape": "array"
+    },
+    {
+      "prefix": "SF_ANALYTICS_CONTEXT",
+      "timestamp": "2026-11-22T12:00:26.0638067Z",
+      "stage": "UI42-empty-case",
+      "http": 200,
+      "status": "ok",
+      "acquisition": "authenticated-original-readback",
+      "ownerBinding": "exact",
+      "resources": [
+        {
+          "family": "decisions",
+          "resource": "case-intent",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "decisions",
+          "resource": "assumptions",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "campaign",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "results",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "sensitivity",
+          "state": "ready",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-sensitivity-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-units",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "timestamp": "2026-11-22T12:00:26.8959941Z",
+      "name": "UI42-empty-authorized-case-test-data",
+      "width": 1440,
+      "surface": "UI42",
+      "stage": "configure"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T12:00:39.6223917Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-request",
+      "sequence": 2,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "timestamp": "2026-11-22T12:00:40.9088050Z",
+      "name": "UI42-configure-focused-candidate-test-data",
+      "width": 1440,
+      "surface": "UI42",
+      "stage": "configure"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T12:00:40.9089891Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-response",
+      "sequence": 2,
+      "ownerBinding": "exact",
+      "elapsedMs": 1064,
+      "http": 200,
+      "status": "ok",
+      "reason": null,
+      "valueShape": "array"
+    },
+    {
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "timestamp": "2026-11-22T12:00:40.9091417Z",
+      "operation": "decision-portfolio-preview",
+      "phase": "native-request",
+      "sequence": 3,
+      "method": "POST",
+      "ownerBinding": "exact"
+    }
+  ],
+  "originalFixtureStages": [
+    {
+      "timestamp": "2026-11-22T11:53:31.5294970Z",
+      "stage": "build"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:25.4996442Z",
+      "stage": "installation"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:25.5242058Z",
+      "stage": "configuration"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:25.5261933Z",
+      "stage": "dashboard-seed"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:25.5457314Z",
+      "stage": "planner-seed"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:25.5515794Z",
+      "stage": "procurement-seed"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:25.6074837Z",
+      "stage": "seed-complete"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:28.5489993Z",
+      "stage": "native-ready"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:28.5492335Z",
+      "stage": "decisions-seed"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:28.5518893Z",
+      "stage": "decisions-request-bi-options"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:28.7023448Z",
+      "stage": "decisions-response-bi-options"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:28.7038931Z",
+      "stage": "decisions-request-bi-data"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:29.1416692Z",
+      "stage": "decisions-response-bi-data"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:29.1441334Z",
+      "stage": "decisions-request-bi-data"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:29.4563500Z",
+      "stage": "decisions-response-bi-data"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:29.4582123Z",
+      "stage": "decisions-request-workbench-command"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:29.5289394Z",
+      "stage": "decisions-response-workbench-command"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:29.5291324Z",
+      "stage": "decisions-request-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:32.7743901Z",
+      "stage": "decisions-response-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:32.7780962Z",
+      "stage": "decisions-request-decision-edit"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:33.1211574Z",
+      "stage": "decisions-response-decision-edit"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:33.1213217Z",
+      "stage": "decisions-request-workbench-command"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:33.1818437Z",
+      "stage": "decisions-response-workbench-command"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:33.1823864Z",
+      "stage": "decisions-request-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:36.2663807Z",
+      "stage": "decisions-response-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:36.2694547Z",
+      "stage": "decisions-request-decision-edit"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:36.5730044Z",
+      "stage": "decisions-response-decision-edit"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:36.5730972Z",
+      "stage": "decisions-request-decision-coverage"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:37.2001431Z",
+      "stage": "decisions-response-decision-coverage"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:37.2002477Z",
+      "stage": "decisions-request-decision-promote"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:40.3010817Z",
+      "stage": "decisions-response-decision-promote"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:40.3026225Z",
+      "stage": "decisions-request-decision-coverage"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:40.9638271Z",
+      "stage": "decisions-response-decision-coverage"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:40.9639067Z",
+      "stage": "decisions-request-decision-promote"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:44.3363024Z",
+      "stage": "decisions-response-decision-promote"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:44.3364942Z",
+      "stage": "decisions-request-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:49.3139471Z",
+      "stage": "decisions-response-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:49.3194411Z",
+      "stage": "decisions-request-decision-criteria"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:49.9787357Z",
+      "stage": "decisions-response-decision-criteria"
+    },
+    {
+      "timestamp": "2026-11-22T11:54:49.9789025Z",
+      "stage": "decisions-request-decision-compare"
+    },
+    {
+      "timestamp": "2026-11-22T11:55:09.1812394Z",
+      "stage": "decisions-response-decision-compare"
+    },
+    {
+      "timestamp": "2026-11-22T11:55:09.1814794Z",
+      "stage": "decisions-request-decision-choose"
+    },
+    {
+      "timestamp": "2026-11-22T11:55:27.5440033Z",
+      "stage": "decisions-response-decision-choose"
+    },
+    {
+      "timestamp": "2026-11-22T11:55:27.5442167Z",
+      "stage": "decisions-request-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T11:55:33.6237645Z",
+      "stage": "decisions-response-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T11:55:33.6268357Z",
+      "stage": "decisions-ready"
+    }
+  ],
+  "pageDiagnostics": [
+    {
+      "timestamp": "2026-11-22T12:01:40.8925562Z",
+      "kind": "wave-three-failure",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "timestamp": "2026-11-22T12:01:40.9016126Z",
+      "kind": "native-view",
+      "state": {
+        "discovery": "ready",
+        "provider": "ready",
+        "view": "ready",
+        "text": "Context and access⁨127.0.0.1:41469⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1Constraints58784d79-5c33-41d4-927a-8d78bd79911a · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+      }
+    },
+    {
+      "timestamp": "2026-11-22T12:01:41.6978630Z",
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  ],
+  "parseErrors": [],
+  "notes": [
+    "24 original source records,2 context records and6 capture-metadata records preserve all32 prefixed events;46 original fixture stages and3 diagnostics retained.",
+    "Both original native history responses acquired HTTP200/ok bodies in this attempt.",
+    "The only native preview request has no observed response/status/body before the original60s failure.",
+    "No replay, extended wait or explicit portfolio/sensitivity evaluation was introduced. Internal preview persistence is unknown."
+  ]
+}
