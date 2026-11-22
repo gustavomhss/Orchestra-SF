@@ -55,6 +55,39 @@ function guardExternalWrites(page: Page, mount: string, writes: GuardedWrite[] =
   })
   return writes
 }
+async function observeOriginalWorkbench(page: Page, origin: string, mount: string) {
+  // Start consuming the actual response immediately, before navigation readiness waits.
+  // Only an unreadable DevTools body may use an exact replay of this declared read.
+  return page.waitForResponse((response) => {
+    const request = response.request()
+    const url = new URL(response.url())
+    return request.method() === "POST" && url.origin === origin &&
+      url.pathname === mount + "/dashboard" && url.searchParams.get("sf") === "dashboard-workbench"
+  }, { timeout: 40_000 }).then(async (response) => {
+    expect(response.status(), "Original native workbench response").toBe(200)
+    try {
+      return { status: response.status(), body: object(await response.json()), acquisition: "native-response" }
+    } catch (error) {
+      if (!String(error).includes("Network.getResponseBody")) throw error
+      expect(SfOperationRegistry["dashboard.dashboard-workbench"].effect).toBe("read")
+      console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({
+        kind: "wave-five-workbench-body-acquisition", acquisition: "exact-observed-read-replay",
+        originalStatus: response.status(), reason: "DevTools response body unavailable",
+      }))
+      // APIRequestContext accepts the observed Request itself. Its URL, method,
+      // body and headers are copied unchanged; no new read envelope is synthesized.
+      const reread = await page.request.fetch(response.request(), { timeout: 40_000 })
+      const body = object(await reread.json())
+      console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({
+        kind: "wave-five-original-workbench-reread", status: reread.status(),
+        sourceStatus: body.status, reason: body.reason ?? null,
+      }))
+      expect(reread.status(), "Exact observed original workbench read").toBe(200)
+      return { status: reread.status(), body, acquisition: "exact-observed-read-replay" }
+    }
+  })
+}
+
 async function captureValues(page: Page, info: TestInfo, name: string, presenting: boolean) {
   const selector = presenting ? ".sf-review-meeting-values > div" : "[data-sf-review-sequence] .sf-n28-values > div"
   await page.locator(selector).first().scrollIntoViewIfNeeded()
@@ -106,14 +139,13 @@ waveFourTest("wave five proposals: original draft and missing-source boundaries"
   const diagnostics = observePage(page)
   const reads = monitor(page)
   const externalWrites = guardExternalWrites(page, installation.mount)
-  const initialWorkbenchRead = page.waitForResponse((response) =>
-    response.request().method() === "POST" &&
-    new URL(response.url()).searchParams.get("sf") === "dashboard-workbench", { timeout: 40_000 })
-  await enter(page, owner, installation.origin + "/orchestra/sf-dashboard/hot-topics/proposals/" +
-    encodeSfRouteRef("design-test-before-proposal-source"), "Follow-up proposal", 40_000)
-  const initialWorkbenchResponse = await initialWorkbenchRead
-  expect(initialWorkbenchResponse.status()).toBe(200)
-  const originalWorkbench = object(await initialWorkbenchResponse.json())
+  const initialWorkbenchRead = observeOriginalWorkbench(page, installation.origin, installation.mount)
+  const [, initialWorkbenchResponse] = await Promise.all([
+    enter(page, owner, installation.origin + "/orchestra/sf-dashboard/hot-topics/proposals/" +
+      encodeSfRouteRef("design-test-before-proposal-source"), "Follow-up proposal", 40_000),
+    initialWorkbenchRead,
+  ])
+  const originalWorkbench = initialWorkbenchResponse.body
   expect(originalWorkbench.status).toBe("ok")
   await info.attach("original-native-workbench-test-data", { contentType: "application/json",
     body: JSON.stringify(originalWorkbench, null, 2) })
@@ -127,13 +159,9 @@ waveFourTest("wave five proposals: original draft and missing-source boundaries"
     href: installation.origin + "/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef(draft.draftRef),
     title: "Follow-up proposal", titleBr: "Proposta de encaminhamento", state: "ready" }
   await page.setViewportSize({ width: 1440, height: 1100 })
-  const draftWorkbenchRead = page.waitForResponse((response) =>
-    response.request().method() === "POST" &&
-    new URL(response.url()).searchParams.get("sf") === "dashboard-workbench", { timeout: 40_000 })
-  await screen(page, owner, proposal)
-  const draftWorkbenchResponse = await draftWorkbenchRead
-  expect(draftWorkbenchResponse.status()).toBe(200)
-  const registeredWorkbench = object(await draftWorkbenchResponse.json())
+  const draftWorkbenchRead = observeOriginalWorkbench(page, installation.origin, installation.mount)
+  const [, draftWorkbenchResponse] = await Promise.all([screen(page, owner, proposal), draftWorkbenchRead])
+  const registeredWorkbench = draftWorkbenchResponse.body
   expect(registeredWorkbench.status).toBe("ok")
   const decisions = object(object(registeredWorkbench.value).decisions)
   const drafts = decisions.drafts
@@ -178,6 +206,7 @@ waveFourTest("wave five proposals: original draft and missing-source boundaries"
   expect(diagnostics.pageErrors).toEqual([])
   await info.attach("wave-five-proposals-source-manifest", { contentType: "application/json", body: JSON.stringify({
     surfaces: ["UI54"], proposalDraftRef: draft.draftRef, reads,
+    bodyAcquisition: { initial: initialWorkbenchResponse.acquisition, registeredDraft: draftWorkbenchResponse.acquisition },
     originalFixture: "Independent test-scoped installation; source draft created through original registered producers.",
     limitations: ["No recorded current choice; preparation, apply and receipt remain unavailable.",
       "No proposal applied; no collaboration or notification sent.",

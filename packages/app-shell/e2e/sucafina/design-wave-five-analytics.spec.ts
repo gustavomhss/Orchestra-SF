@@ -452,6 +452,12 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   const operationalResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data", { timeout: 60_000 })
   await catalog.getByRole("button", { name: "View data", exact: true }).click()
   const originalOperationsResponse = await operationalResponse
+  if (originalOperationsResponse.status() !== 200) {
+    console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({
+      operation: "bi-data-original-refusal", view: "BI06", http: originalOperationsResponse.status(),
+      body: await originalOperationsResponse.json(),
+    }))
+  }
   expect(originalOperationsResponse.status()).toBe(200)
   await expect(catalog.locator('[data-sf-bi-view="BI06"]')).toBeVisible()
   await assertBiSource(page, originalOperationsResponse.url(), "BI06")
