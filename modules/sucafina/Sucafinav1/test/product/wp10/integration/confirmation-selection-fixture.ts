@@ -163,7 +163,7 @@ export async function confirmationSelectionFixture(dependency = true) {
           const result: unknown = await response.json()
           event.result = result
           if (command) outcomes.push(Schema.decodeUnknownSync(SfCollaboration.operations["collaboration.confirmation-confirm"].output)(result))
-          return { kind: "response", status: response.status, headers: {}, body: Schema.decodeUnknownSync(operation.output)(result) }
+          return { kind: "response", status: response.status, headers: {}, body: Schema.decodeUnknownSync(Schema.toType(operation.output))(result) }
         } catch (error) { event.error = String(error); throw error }
       },
     }
