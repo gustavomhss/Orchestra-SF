@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "group": "work",
+  "status": "PARTIAL",
+  "areas": {
+    "UI30": "AWAITING_QUALIFICATION",
+    "UI31": "PASSED",
+    "UI32": "AWAITING_QUALIFICATION"
+  },
+  "sources": [
+    {
+      "run": 44964042218,
+      "job": 137028931967,
+      "snapshot": "0d836c823ae855a167dfef521a63fef0ae5be3fe",
+      "productHead": "7c0caf8da905a03579379c35ce1cd49375a87509",
+      "fileRunResult": {
+        "passed": 1,
+        "failed": 2
+      },
+      "qualifiedAreas": [
+        "UI31"
+      ],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964042218"
+    }
+  ],
+  "qualifiedTests": 1,
+  "completeCaptures": 6,
+  "pageErrors": [],
+  "consoleErrors": [],
+  "data": "Isolated enrolled installation. Original Documents producer and original HTTP readback; no context, response, grant or receipt mocks.",
+  "captures": [
+    {
+      "name": "UI31-dark-desktop-before-query",
+      "area": "UI31",
+      "sha": "985a11f35344cbf47aa708ce5515956d8832047e",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-dark-desktop-before-query.jpg",
+      "bytes": 74754,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44964042218
+    },
+    {
+      "name": "UI31-dark-desktop-required-query",
+      "area": "UI31",
+      "sha": "6abbd9905c6db521223575d4d8de56a77bbb1082",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-dark-desktop-required-query.jpg",
+      "bytes": 76454,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44964042218
+    },
+    {
+      "name": "UI31-dark-desktop-source-empty",
+      "area": "UI31",
+      "sha": "ea2bf05b5a98a99eed7143e7133d1fae7b2987b1",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-dark-desktop-source-empty.jpg",
+      "bytes": 77581,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44964042218
+    },
+    {
+      "name": "UI31-light-desktop-source-empty",
+      "area": "UI31",
+      "sha": "3822a7292b6ead72012b7dc6ab2551b5ef9d8e93",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-light-desktop-source-empty.jpg",
+      "bytes": 82666,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "light",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44964042218
+    },
+    {
+      "name": "UI31-light-320-source-empty",
+      "area": "UI31",
+      "sha": "f02f952e255d39b0470e6fcf103931693cbc7fdb",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-light-320-source-empty.jpg",
+      "bytes": 22707,
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "theme": "light",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44964042218
+    },
+    {
+      "name": "UI31-pt-BR-dark-desktop",
+      "area": "UI31",
+      "sha": "dd573aedb97a9f9a7f2b0b07bc852733085915a6",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-pt-BR-dark-desktop.jpg",
+      "bytes": 77500,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "pt-BR",
+      "visualReview": "PASS",
+      "sourceRun": 44964042218
+    }
+  ],
+  "limitations": [
+    "Only UI31 is qualified in this revision. UI30 and UI32 remain under investigation; their failed-journey captures are excluded.",
+    "Search returned the canonical empty result because the isolated source has no uploaded searchable document. A non-empty search result and result destination are not qualified.",
+    "Chromium only. English desktop in dark and light themes, English 320px light, and Brazilian Portuguese desktop dark were captured. Actual browser zoom and Portuguese 320px were not tested."
+  ]
+}
