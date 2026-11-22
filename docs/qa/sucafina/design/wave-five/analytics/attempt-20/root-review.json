@@ -1,0 +1,179 @@
+{
+  "schema": "sf-root-archive-review-v1",
+  "reviewer": "/root",
+  "attempt": "Portfolio23",
+  "run": 45033525825,
+  "job": 137242109427,
+  "snapshot": "7f9a1233a200c4da2e80baa2e546d70afbd87ff4",
+  "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+  "source": "Completed original test-job logs and GitHub QA files at 29f86ded00253462b5c1bbef5f51c87ae2362ccb",
+  "eventsExact": {
+    "profile": true,
+    "nativeEvents": true,
+    "originalTimestampsAndSourceLines": true
+  },
+  "counts": {
+    "profile": 181,
+    "nativeEvents": 81,
+    "previewChunks": 33,
+    "totalStructuredEmissionLines": 295
+  },
+  "parseErrors": 0,
+  "imageChunks": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "sha": "94795ceeabbb23e14a93c914e7cc29e6942734ad",
+      "complete": true,
+      "parts": 5,
+      "bytes": 80609,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": true
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "sha": "ffdf4a472f267294f66e63b3c836c7e099ef5e5d",
+      "complete": true,
+      "parts": 5,
+      "bytes": 85903,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": true
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "sha": "b87c32a7750b07d609e8f37d52cbc9d0a4b94b22",
+      "complete": true,
+      "parts": 2,
+      "bytes": 28711,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": true
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "sha": "ffc614eef3528db85772e4d2c210822638e9f5e6",
+      "complete": true,
+      "parts": 2,
+      "bytes": 27477,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": true
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "sha": "68b9c4d3e1db4620ea3e44987db5df261391bda8",
+      "complete": true,
+      "parts": 6,
+      "bytes": 97837,
+      "manifestBytesMatch": true,
+      "viewedByRoot": false,
+      "remoteOriginalBytesEqual": true
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "sha": "a84a3d68ad99f3a55ee4f27b002879b7c2e6f5c0",
+      "complete": true,
+      "parts": 6,
+      "bytes": 106272,
+      "manifestBytesMatch": true,
+      "viewedByRoot": true,
+      "remoteOriginalBytesEqual": true
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "sha": "5dbdd1d9368063b9fa232442c8c5d7111c815f55",
+      "complete": true,
+      "parts": 7,
+      "bytes": 110052,
+      "manifestBytesMatch": true,
+      "viewedByRoot": true,
+      "remoteOriginalBytesEqual": true
+    }
+  ],
+  "totalJpegBytes": 536861,
+  "rootActuallyViewed": [
+    "a84a3d68ad99f3a55ee4f27b002879b7c2e6f5c0",
+    "5dbdd1d9368063b9fa232442c8c5d7111c815f55"
+  ],
+  "workerReview": "All seven original images were separately inspected by /root/root_cost; root viewed only the two named frames.",
+  "profileReview": {
+    "pass": true,
+    "records": 181,
+    "started": 1,
+    "buckets": 175,
+    "snapshots": 5,
+    "keysPerSnapshot": 35,
+    "lastMs": 50000,
+    "pending": 1,
+    "finalObserved": false,
+    "invariants": "complete keys, calls=settled+pending, monotone cumulative counters, pending sum exact, zero losses/errors/skips",
+    "branchFindings": {
+      "mintRegistered": 1,
+      "Business": {
+        "captures": 132,
+        "currentFast": 589,
+        "provenance": 853,
+        "environment": 853,
+        "proofCountIdentity": true
+      },
+      "Root": {
+        "captures": 9,
+        "currentFast": 125,
+        "provenance": 143,
+        "environment": 143,
+        "proofCountIdentity": true
+      },
+      "selector": {
+        "factory": 131,
+        "registered": 131,
+        "eligible": 131,
+        "actualNarrow": 131,
+        "callback": 131
+      },
+      "absentLabels": [
+        "fallback",
+        "environment.baseline",
+        "environment.descriptor",
+        "environment.value-drift",
+        "environment.accessor-drift",
+        "provenance.miss",
+        "root.caller"
+      ],
+      "interpretation": "Absence is established only in the complete five emitted samples through50000ms; no final state or later execution is inferred."
+    },
+    "limits": [
+      "instrumented partial observation only",
+      "before-human-admit origin differs from21",
+      "inclusive overlapping spans",
+      "digestSfValue excludes direct canonicalSfValue calls",
+      "root.caller covers PlannerCalculationServices only",
+      "identity-absent includes other namespaces"
+    ]
+  },
+  "qualification": "FAILED original 60000 ms preview response wait; diagnostic prefix only; no qualification or global count increment.",
+  "visualFindings": [
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "findings": [
+        "Original case version 6, candidate and constraint version 2 are shown; exploration limit 4 has a visible focus outline.",
+        "Preview action is available before submission; history has no results."
+      ],
+      "scope": "configuration only"
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "findings": [
+        "Preview action remains Running and form controls are disabled.",
+        "Preview is not yet available with placeholders; history has no recorded results."
+      ],
+      "scope": "pending preview at timeout; no completed producer response inferred"
+    }
+  ],
+  "limitations": [
+    "No final profiler snapshot or preview response was observed.",
+    "Inclusive timings overlap, and the profile does not attribute all runtime CPU or canonicalSfValue calls.",
+    "The native journey did not reach completed preview, UI43 result or UI44 sensitivity readbacks.",
+    "This review is internal evidence review, not user visual acceptance."
+  ]
+}
