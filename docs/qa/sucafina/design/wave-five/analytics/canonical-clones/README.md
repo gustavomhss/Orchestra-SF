@@ -1,6 +1,6 @@
 # Canonicalização de clones nativos
 
-**Verificação técnica: PASS nos oito gates selecionados. Jornada instalada: em andamento.** O [run 45048665481](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45048665481) testou o produto `d6bce5d81d0fd578a190b9bacac2a1a4250109a1` no snapshot `c18b97d8a316992b95abcbb57ef9b6c6754b1518`. A [receita técnica](technical-01/receipt.json) e a [verificação detalhada](technical-01/verification.json) preservam o resultado exato, sem logs brutos ou nonce.
+**Verificação técnica: PASS nos oito gates selecionados. Jornada instalada: falha no primeiro preview, no prazo original de 60.000 ms. UI42–UI44 continuam pendentes.** O [run 45048665481](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45048665481) testou o produto `d6bce5d81d0fd578a190b9bacac2a1a4250109a1` no snapshot `c18b97d8a316992b95abcbb57ef9b6c6754b1518`. A [receita técnica](technical-01/receipt.json) e a [verificação detalhada](technical-01/verification.json) preservam o resultado exato, sem logs brutos ou nonce.
 
 | Gate | Resultado observado |
 |---|---|
@@ -15,7 +15,13 @@ O C17 retornou as sete fases, incluindo ciclo e revogação, em **95.715,75 ms**
 
 O produto seguinte, `9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0`, apenas documenta dentro do catch por que uma falha do registro opcional conserva o clone já produzido. A inversão literal desse comentário/formatação recupera o helper testado. A mudança trata o único warning novo deste candidato; os outros 37 pertencem aos arquivos preexistentes da base. Um guard final do checkpoint documental ainda está pendente.
 
-A jornada instalada original está no [run 45049647711](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45049647711), snapshot `cd68b7226780d58cca96e6a821071df3feb8517a`, produto `9bb7eeff…`. Os dois overlays são idênticos ao request e à primeira declaração completa da tentativa limpa anterior. Preservam preview de 60.000 ms, sensibilidade de 120.000 ms, fixtures, callbacks e workflow. Nenhum resultado instalado é antecipado neste checkpoint.
+A jornada instalada original terminou com falha no [run 45049647711](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45049647711), snapshot `cd68b7226780d58cca96e6a821071df3feb8517a`, produto `9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0`. O test job `137291725271` falhou e o cleanup `137294725575` passou. Os dois overlays são idênticos ao request e à primeira declaração completa da tentativa limpa anterior. Preservam preview de 60.000 ms, sensibilidade de 120.000 ms, fixtures, callbacks e workflow.
+
+O build Vite de produção, a instalação e a preparação nativa concluíram. UI42 chegou às listas, ao caso autorizado vazio e à configuração com candidato, constraint e limite 4. O POST de preview, sequência 3, foi registrado na linha 1249; não há resposta observada. O waiter original falhou em `design-wave-five-analytics.spec.ts:72:32`. A gravação/readback de UI43, a avaliação/resultados de UI44 e o trecho pt-BR não foram alcançados. Os sete JPEGs originais, 115 emissões e seus locators estão em [installed-01](installed-01/README.md).
+
+O History preparatório de sequência 1 registrou HTTP 200, mas com `response-body-unavailable` e `native-request-failed`; seu corpo não está confirmado. A sequência 2 confirmou HTTP 200, `status: ok`, array e 1.131 ms. A imagem final mostra Running, controles desabilitados, preview indisponível e History vazio. Não estabelece unwind do backend ou ausência de persistência posterior. Os diagnostics registram listas vazias de erros de console/página.
+
+Esse run limpo não possui profiler. Não demonstra admissão efetiva da árvore otimizada nos dados instalados nem ganho causal de desempenho. O artefato `14764509379` tem 8.821.842 bytes e SHA-256 `74fe0e59a95cc3f067f11a3b48891c1c18214d9f07a4bc9d72e028b9a27e8895`.
 
 A [revisão independente de root](root-review.json) conferiu os 102 locators selecionados contra o log final, 39 payloads estruturados e os oito blobs de teste. O [registro estático de fonte](source-review.json) permanece como foi fechado antes da conclusão da CI; seu campo PENDING é histórico. Nenhuma qualificação de UI42–UI44, incremento de inventário, aceite visual ou merge é atribuído a esses gates.
 

@@ -1,0 +1,694 @@
+{
+  "schema": "sucafina-canonical-clones-installed-receipt-v1",
+  "attempt": "installed-01",
+  "classification": "FAILED at the first original 60000 ms preview-response waiter; no UI42, UI43 or UI44 qualification",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "product": "9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0",
+    "productTree": "5537fb6a8a9f4079ed981fa74727cfbf3d76812b",
+    "snapshot": "cd68b7226780d58cca96e6a821071df3feb8517a",
+    "snapshotTree": "3dc27460bf267a18d8071e9cb7cfbc2e8d96a529",
+    "snapshotParentIsProduct": true,
+    "qaBase": "924a4acb63390e58f978676b4b22478e6c384808",
+    "qaBaseTree": "d950a8429aea8feb33ce9a2b6a60d824b661781b",
+    "request": {
+      "path": ".ci-run.json",
+      "sha": "a11922821a47594d76397582be38f9b7940177ca",
+      "value": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-five-analytics.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      }
+    },
+    "spec": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "snapshotBlob": "db1d7f4f0d770e5eed811070b0814c0363083c62",
+      "permanentBlob": "f4eb9a534b7a22fcf79e7ccb20bbfd9f8251ae74",
+      "snapshotIsLiteralPrefixOfPermanent": true,
+      "retainedSourceCharacters": 30401,
+      "permanentSourceCharacters": 57192,
+      "selection": "Complete original first declaration and its original helpers; subsequent declarations omitted from this isolated snapshot.",
+      "originalPreviewWaiterMs": 60000,
+      "waiterSourceLine": 72,
+      "waiterSourceColumn": 32
+    },
+    "snapshotDelta": [
+      {
+        "path": ".ci-run.json",
+        "sha": "a11922821a47594d76397582be38f9b7940177ca",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "sha": "db1d7f4f0d770e5eed811070b0814c0363083c62",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 376
+      }
+    ],
+    "instrumentation": "No profiler overlays; only the request and the literal first-declaration spec selection differ from product."
+  },
+  "actions": {
+    "workflow": ".github/workflows/test-ci.yml",
+    "runner": "ubuntu-24.04",
+    "branch": "ci-run-sf5cloneui",
+    "run": 45049647711,
+    "runAttempt": 1,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-22T17:28:36Z",
+    "updatedAt": "2026-11-22T17:39:06Z",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45049647711",
+    "jobs": [
+      {
+        "id": 137291725271,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-22T17:28:38Z",
+        "completedAt": "2026-11-22T17:38:59Z",
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:28:39Z",
+            "completedAt": "2026-11-22T17:28:40Z"
+          },
+          {
+            "number": 2,
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:28:40Z",
+            "completedAt": "2026-11-22T17:28:49Z"
+          },
+          {
+            "number": 3,
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:28:49Z",
+            "completedAt": "2026-11-22T17:28:49Z"
+          },
+          {
+            "number": 4,
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:28:49Z",
+            "completedAt": "2026-11-22T17:28:49Z"
+          },
+          {
+            "number": 5,
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:28:49Z",
+            "completedAt": "2026-11-22T17:28:53Z"
+          },
+          {
+            "number": 6,
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:28:53Z",
+            "completedAt": "2026-11-22T17:28:53Z"
+          },
+          {
+            "number": 7,
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:28:53Z",
+            "completedAt": "2026-11-22T17:28:53Z"
+          },
+          {
+            "number": 8,
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:28:53Z",
+            "completedAt": "2026-11-22T17:29:04Z"
+          },
+          {
+            "number": 9,
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:29:04Z",
+            "completedAt": "2026-11-22T17:29:05Z"
+          },
+          {
+            "number": 10,
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:29:05Z",
+            "completedAt": "2026-11-22T17:29:05Z"
+          },
+          {
+            "number": 11,
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:29:05Z",
+            "completedAt": "2026-11-22T17:29:26Z"
+          },
+          {
+            "number": 12,
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:29:26Z",
+            "completedAt": "2026-11-22T17:29:30Z"
+          },
+          {
+            "number": 13,
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:29:30Z",
+            "completedAt": "2026-11-22T17:29:30Z"
+          },
+          {
+            "number": 14,
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:29:30Z",
+            "completedAt": "2026-11-22T17:29:30Z"
+          },
+          {
+            "number": 15,
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:29:30Z",
+            "completedAt": "2026-11-22T17:29:31Z"
+          },
+          {
+            "number": 16,
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:29:31Z",
+            "completedAt": "2026-11-22T17:29:31Z"
+          },
+          {
+            "number": 17,
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:29:31Z",
+            "completedAt": "2026-11-22T17:29:31Z"
+          },
+          {
+            "number": 18,
+            "name": "Qualify real loopback ClamD for Files uploads",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:29:31Z",
+            "completedAt": "2026-11-22T17:29:31Z"
+          },
+          {
+            "number": 19,
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:29:31Z",
+            "completedAt": "2026-11-22T17:29:31Z"
+          },
+          {
+            "number": 20,
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:29:31Z",
+            "completedAt": "2026-11-22T17:29:31Z"
+          },
+          {
+            "number": 21,
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "failure",
+            "startedAt": "2026-11-22T17:29:31Z",
+            "completedAt": "2026-11-22T17:38:56Z"
+          },
+          {
+            "number": 22,
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:38:56Z",
+            "completedAt": "2026-11-22T17:38:56Z"
+          },
+          {
+            "number": 23,
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:38:56Z",
+            "completedAt": "2026-11-22T17:38:58Z"
+          },
+          {
+            "number": 43,
+            "name": "Post Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:38:58Z",
+            "completedAt": "2026-11-22T17:38:58Z"
+          },
+          {
+            "number": 44,
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:38:58Z",
+            "completedAt": "2026-11-22T17:38:58Z"
+          },
+          {
+            "number": 45,
+            "name": "Post Setup request validator Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:38:58Z",
+            "completedAt": "2026-11-22T17:38:58Z"
+          },
+          {
+            "number": 46,
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:38:58Z",
+            "completedAt": "2026-11-22T17:38:58Z"
+          },
+          {
+            "number": 47,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:38:58Z",
+            "completedAt": "2026-11-22T17:38:58Z"
+          }
+        ]
+      },
+      {
+        "id": 137294725575,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-22T17:39:01Z",
+        "completedAt": "2026-11-22T17:39:05Z",
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:39:02Z",
+            "completedAt": "2026-11-22T17:39:02Z"
+          },
+          {
+            "number": 2,
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:39:02Z",
+            "completedAt": "2026-11-22T17:39:04Z"
+          },
+          {
+            "number": 3,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:39:04Z",
+            "completedAt": "2026-11-22T17:39:04Z"
+          }
+        ]
+      }
+    ],
+    "environment": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "artifacts": {
+      "items": [
+        {
+          "id": 14764509379,
+          "name": "playwright-ubuntu-24.04-1",
+          "size_in_bytes": 8821842,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14764509379",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14764509379/zip",
+          "expired": false,
+          "created_at": "2026-11-22T17:38:58Z",
+          "expires_at": "2026-11-29T17:38:57Z",
+          "updated_at": "2026-11-22T17:38:58Z",
+          "digest": "sha256:74fe0e59a95cc3f067f11a3b48891c1c18214d9f07a4bc9d72e028b9a27e8895",
+          "workflow_run": {
+            "id": 45049647711,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "ci-run-sf5cloneui",
+            "head_sha": "cd68b7226780d58cca96e6a821071df3feb8517a"
+          }
+        }
+      ],
+      "source": "Final GitHub Actions artifact metadata",
+      "zipDownloaded": false,
+      "zipDigestIndependentlyVerified": false,
+      "previewJpegsAcquiredFrom": "Completed test-job log SF_DESIGN_PREVIEW chunks"
+    },
+    "cleanup": {
+      "job": 137294725575,
+      "conclusion": "success",
+      "deleteSnapshotBranchStep": "success",
+      "finalLogErrorsObserved": false,
+      "remoteRefReadbackPerformed": false
+    },
+    "rerun": false
+  },
+  "result": {
+    "tests": 1,
+    "failed": 1,
+    "passed": 0,
+    "testTitle": "wave five analytics: native scenarios, recorded results and sensitivity",
+    "testDeclaration": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 12,
+      "column": 1
+    },
+    "failure": {
+      "name": "TimeoutError",
+      "message": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\"",
+      "operation": "decision-portfolio-preview",
+      "sequence": 3,
+      "method": "POST",
+      "request": {
+        "sourceLine": 1249,
+        "timestamp": "2026-11-22T17:37:53.7420045Z",
+        "marker": "SF_ANALYTICS_SOURCE",
+        "originalPayload": "{\"operation\":\"decision-portfolio-preview\",\"phase\":\"native-request\",\"sequence\":3,\"method\":\"POST\",\"ownerBinding\":\"exact\"}",
+        "value": {
+          "operation": "decision-portfolio-preview",
+          "phase": "native-request",
+          "sequence": 3,
+          "method": "POST",
+          "ownerBinding": "exact"
+        }
+      },
+      "matchingResponseObserved": false,
+      "matchingRequestFailedEventObserved": false,
+      "sourceLocation": {
+        "line": 72,
+        "column": 32
+      },
+      "evidence": [
+        {
+          "sourceLine": 1275,
+          "timestamp": "2026-11-22T17:38:56.6678366Z",
+          "originalPayload": "    TimeoutError: page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\""
+        },
+        {
+          "sourceLine": 1279,
+          "timestamp": "2026-11-22T17:38:56.6682557Z",
+          "originalPayload": "    > 72 |   const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })"
+        },
+        {
+          "sourceLine": 1284,
+          "timestamp": "2026-11-22T17:38:56.6686204Z",
+          "originalPayload": "        at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts:72:32"
+        },
+        {
+          "sourceLine": 1323,
+          "timestamp": "2026-11-22T17:38:56.7988935Z",
+          "originalPayload": "  1 failed"
+        },
+        {
+          "sourceLine": 1325,
+          "timestamp": "2026-11-22T17:38:56.8205978Z",
+          "originalPayload": "error: script \"test:e2e:local\" exited with code 1"
+        }
+      ],
+      "laterOperationOutcomeObserved": false
+    },
+    "history": [
+      {
+        "sequence": 1,
+        "request": {
+          "sourceLine": 1211,
+          "timestamp": "2026-11-22T17:37:36.6287483Z",
+          "marker": "SF_ANALYTICS_SOURCE",
+          "originalPayload": "{\"operation\":\"decision-portfolio-results\",\"phase\":\"native-request\",\"sequence\":1,\"method\":\"POST\",\"ownerBinding\":\"exact\"}",
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
+            "sequence": 1,
+            "method": "POST",
+            "ownerBinding": "exact"
+          }
+        },
+        "requestFailed": {
+          "sourceLine": 1213,
+          "timestamp": "2026-11-22T17:37:37.2595154Z",
+          "marker": "SF_ANALYTICS_SOURCE",
+          "originalPayload": "{\"operation\":\"decision-portfolio-results\",\"phase\":\"native-request-failed\",\"sequence\":1,\"ownerBinding\":\"exact\",\"elapsedMs\":633}",
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request-failed",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 633
+          }
+        },
+        "response": {
+          "sourceLine": 1215,
+          "timestamp": "2026-11-22T17:37:37.2613558Z",
+          "marker": "SF_ANALYTICS_SOURCE",
+          "originalPayload": "{\"operation\":\"decision-portfolio-results\",\"phase\":\"native-response\",\"sequence\":1,\"ownerBinding\":\"exact\",\"elapsedMs\":631,\"http\":200,\"acquisitionFailure\":\"response-body-unavailable\"}",
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 631,
+            "http": 200,
+            "acquisitionFailure": "response-body-unavailable"
+          }
+        },
+        "http": 200,
+        "elapsedMs": 631,
+        "requestFailedElapsedMs": 633,
+        "acquisitionFailure": "response-body-unavailable",
+        "businessStatus": null,
+        "statusOkEstablished": false,
+        "interpretation": "HTTP headers were observed, but the response body was unavailable and native-request-failed was emitted. No successful business status or body shape is established."
+      },
+      {
+        "sequence": 2,
+        "request": {
+          "sourceLine": 1233,
+          "timestamp": "2026-11-22T17:37:52.3907429Z",
+          "marker": "SF_ANALYTICS_SOURCE",
+          "originalPayload": "{\"operation\":\"decision-portfolio-results\",\"phase\":\"native-request\",\"sequence\":2,\"method\":\"POST\",\"ownerBinding\":\"exact\"}",
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
+            "sequence": 2,
+            "method": "POST",
+            "ownerBinding": "exact"
+          }
+        },
+        "response": {
+          "sourceLine": 1251,
+          "timestamp": "2026-11-22T17:37:53.7421658Z",
+          "marker": "SF_ANALYTICS_SOURCE",
+          "originalPayload": "{\"operation\":\"decision-portfolio-results\",\"phase\":\"native-response\",\"sequence\":2,\"ownerBinding\":\"exact\",\"elapsedMs\":1131,\"http\":200,\"status\":\"ok\",\"reason\":null,\"valueShape\":\"array\"}",
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 2,
+            "ownerBinding": "exact",
+            "elapsedMs": 1131,
+            "http": 200,
+            "status": "ok",
+            "reason": null,
+            "valueShape": "array"
+          }
+        },
+        "http": 200,
+        "elapsedMs": 1131,
+        "businessStatus": "ok",
+        "valueShape": "array",
+        "reason": null,
+        "statusOkEstablished": true,
+        "interpretation": "The captured source event reports a successful body acquisition with status ok and array shape. It does not preserve array cardinality."
+      }
+    ],
+    "stages": {
+      "count": 46,
+      "first": {
+        "sourceLine": 1043,
+        "timestamp": "2026-11-22T17:30:34.0821545Z",
+        "marker": "SF_DESIGN_STAGE",
+        "originalPayload": "build",
+        "value": "build"
+      },
+      "last": {
+        "sourceLine": 1133,
+        "timestamp": "2026-11-22T17:32:39.1438931Z",
+        "marker": "SF_DESIGN_STAGE",
+        "originalPayload": "decisions-ready",
+        "value": "decisions-ready"
+      },
+      "buildProgressEvidence": [
+        {
+          "sourceLine": 1043,
+          "timestamp": "2026-11-22T17:30:34.0821545Z",
+          "marker": "SF_DESIGN_STAGE",
+          "originalPayload": "build",
+          "value": "build"
+        },
+        {
+          "sourceLine": 1045,
+          "timestamp": "2026-11-22T17:31:28.8520144Z",
+          "marker": "SF_DESIGN_STAGE",
+          "originalPayload": "installation",
+          "value": "installation"
+        },
+        {
+          "sourceLine": 1057,
+          "timestamp": "2026-11-22T17:31:32.0166633Z",
+          "marker": "SF_DESIGN_STAGE",
+          "originalPayload": "native-ready",
+          "value": "native-ready"
+        }
+      ]
+    },
+    "diagnostics": [
+      {
+        "sourceLine": 1253,
+        "timestamp": "2026-11-22T17:38:53.6034043Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "originalPayload": "{\"kind\":\"wave-three-failure\",\"consoleErrors\":[],\"pageErrors\":[]}",
+        "value": {
+          "kind": "wave-three-failure",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "sourceLine": 1255,
+        "timestamp": "2026-11-22T17:38:53.6459418Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "originalPayload": "{\"kind\":\"native-view\",\"state\":{\"discovery\":\"ready\",\"provider\":\"ready\",\"view\":\"ready\",\"text\":\"Context and access⁨127.0.0.1:42783⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1Constraints72e18579-3525-436b-a32a-bb4d427f0e12 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case.\"}}",
+        "value": {
+          "kind": "native-view",
+          "state": {
+            "discovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "text": "Context and access⁨127.0.0.1:42783⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1Constraints72e18579-3525-436b-a32a-bb4d427f0e12 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+          }
+        }
+      },
+      {
+        "sourceLine": 1271,
+        "timestamp": "2026-11-22T17:38:54.5650585Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "originalPayload": "{\"kind\":\"wave-three-page-closed\",\"consoleErrors\":[],\"pageErrors\":[]}",
+        "value": {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    ]
+  },
+  "evidence": {
+    "acquiredOnlyAfterJobsCompleted": true,
+    "testJobLog": {
+      "characters": 841788,
+      "lines": 1386,
+      "rawLogArchived": false
+    },
+    "structuredEmissions": 115,
+    "nativeEmissions": 82,
+    "previewChunks": 33,
+    "counts": {
+      "SF_DESIGN_STAGE": 46,
+      "SF_ANALYTICS_SOURCE": 25,
+      "SF_ANALYTICS_CONTEXT": 2,
+      "SF_DESIGN_PREVIEW": 33,
+      "SF_ANALYTICS_CAPTURE": 6,
+      "SF_DESIGN_DIAGNOSTICS": 3
+    },
+    "sourceEvents": "source-events.json",
+    "captureManifest": "manifest.json",
+    "images": 7,
+    "jpegBytes": 537102,
+    "allSevenImagesIndividuallyViewed": true,
+    "allOriginalPayloadsPreserved": true,
+    "profilerRecords": 0,
+    "profilerPresent": false,
+    "controlNonceArchived": false,
+    "binaryContentAddressesVerified": true,
+    "separateBinaryReadbackCompleted": false,
+    "binaryReadbackLimitation": "GitHub Fetch accepts UTF-8 text only; original bytes are preserved in JPEG blobs and all source preview payloads, with independent Git blob SHA and SHA-256 checks."
+  },
+  "separatelyScopedTechnicalVerification": {
+    "path": "../technical-01/receipt.json",
+    "run": 45048665481,
+    "product": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+    "snapshot": "c18b97d8a316992b95abcbb57ef9b6c6754b1518",
+    "selectedGates": 8,
+    "status": "pass",
+    "reexecutedByThisRun": false,
+    "interpretation": "The prior eight-gate PASS remains attached to its own d6/c18 product and snapshot. This installed run is a separate failed journey on 9bb/cd68."
+  },
+  "qualification": {
+    "ui42": "pending; not qualified by this run",
+    "ui43": "pending; not qualified by this run",
+    "ui44": "pending; not qualified by this run",
+    "completeOriginalJourney": false,
+    "globalCountChanges": false,
+    "userAcceptanceEstablished": false,
+    "causalPerformanceGainEstablished": false,
+    "rootVisualReviewAttributed": false
+  },
+  "limits": [
+    "The displayed History state must not be substituted for the first History response body, which was unavailable.",
+    "No preview response, preview result, recorded evaluation or sensitivity completion was captured before the original waiter failed.",
+    "No profiler or CPU attribution is available in this run; elapsed wall time is not a causal comparison with prior attempts.",
+    "The failure screenshot does not prove later unwind, cancellation, persistence or final server state.",
+    "The original JPEG previews are preserved byte-for-byte; the artifact ZIP and original PNG attachments are metadata-only here."
+  ],
+  "archive": {
+    "qaOnly": true,
+    "baseCommit": "924a4acb63390e58f978676b4b22478e6c384808",
+    "baseTree": "d950a8429aea8feb33ce9a2b6a60d824b661781b",
+    "scope": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/installed-01/",
+    "newFiles": 11,
+    "rawLogsCommitted": false,
+    "nonceCommitted": false,
+    "productChanges": false,
+    "topReadmeChanged": false,
+    "rootReviewChanged": false,
+    "commitCreated": false,
+    "refUpdated": false,
+    "newCiExecution": false
+  }
+}

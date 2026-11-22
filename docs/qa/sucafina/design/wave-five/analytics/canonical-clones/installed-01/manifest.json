@@ -1,0 +1,585 @@
+{
+  "schema": "sf-design-installed-capture-manifest-v1",
+  "attempt": "installed-01",
+  "runId": 45049647711,
+  "jobId": 137291725271,
+  "qaBase": {
+    "commit": "924a4acb63390e58f978676b4b22478e6c384808",
+    "tree": "d950a8429aea8feb33ce9a2b6a60d824b661781b"
+  },
+  "classification": "Failed installed journey; captured UI42 prefix only; no surface qualification",
+  "recordCounts": {
+    "SF_DESIGN_STAGE": 46,
+    "SF_ANALYTICS_SOURCE": 25,
+    "SF_ANALYTICS_CONTEXT": 2,
+    "SF_DESIGN_PREVIEW": 33,
+    "SF_ANALYTICS_CAPTURE": 6,
+    "SF_DESIGN_DIAGNOSTICS": 3
+  },
+  "structuredEmissionCount": 115,
+  "allOriginalPayloadsPreservedIn": "source-events.json",
+  "rawLogArchived": false,
+  "nonceArchived": false,
+  "imageSource": "Original JPEG bytes from SF_DESIGN_PREVIEW emissions; no conversion, recompression, resizing, crop or annotation",
+  "chunkAudit": {
+    "images": 7,
+    "chunks": 33,
+    "indexOrigin": 1,
+    "missingParts": 0,
+    "duplicateParts": 0,
+    "inconsistentPartCounts": 0,
+    "parseErrors": 0,
+    "base64RoundtripExact": true,
+    "jpegBoundariesValid": true,
+    "totalJpegBytes": 537102,
+    "totalBase64Characters": 716144
+  },
+  "byteIdentityVerification": {
+    "method": "SHA-1 of the Git blob header plus original JPEG bytes was computed independently and compared with the SHA returned by GitHub create_blob. Every image matched; SHA-256 is also recorded.",
+    "gitContentAddressMatches": 7,
+    "separateBinaryReadbackCompleted": false,
+    "separateBinaryReadbackLimitation": "The GitHub Fetch connector rejected the Git Data blob endpoint with HTTP 400: GitHub Fetch only accepts UTF-8 text. No auxiliary commit or ref was created."
+  },
+  "images": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "path": "gallery/UI42-list-dark-desktop-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 80620,
+      "sha256": "071a5160edc2986ee4bf6b980b8658c9ccb7e4cd5a4a71bd7d0dac7fa6c91a29",
+      "gitBlobSha": "d9c40541d6081c9238d8b37d1d3d32c01aeb4938",
+      "expectedGitBlobSha": "d9c40541d6081c9238d8b37d1d3d32c01aeb4938",
+      "gitBlobIdentityVerified": true,
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 107496,
+      "declaredParts": 5,
+      "receivedParts": 5,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "firstChunkAt": "2026-11-22T17:37:26.4282292Z",
+      "lastChunkAt": "2026-11-22T17:37:26.6848847Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "8bb866f04a40da8f94be93178108780d62cadf4aeea588c038a31fda88e93230",
+          "sourceLine": 1175,
+          "timestamp": "2026-11-22T17:37:26.4282292Z"
+        },
+        {
+          "part": 2,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "03e33ba12acb3f9740418905ed125ccec533f8452472f95117cb842c366ff2e2",
+          "sourceLine": 1177,
+          "timestamp": "2026-11-22T17:37:26.4915923Z"
+        },
+        {
+          "part": 3,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "4c17e21d5169ba0f88e1fab487301ab8cf60bf15b9949dc47c4c3456fcfa8f4e",
+          "sourceLine": 1179,
+          "timestamp": "2026-11-22T17:37:26.5573490Z"
+        },
+        {
+          "part": 4,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "b4f16aab614325793c4d175a63c71623ed1f002b2b2bb266f1b149b8f234fe77",
+          "sourceLine": 1181,
+          "timestamp": "2026-11-22T17:37:26.6351169Z"
+        },
+        {
+          "part": 5,
+          "parts": 5,
+          "base64Characters": 11496,
+          "base64Sha256": "e34aaa40dfa6b927af1413b3bfca1e0d5b59dae3720e96d9a22763948df6cc53",
+          "sourceLine": 1183,
+          "timestamp": "2026-11-22T17:37:26.6848847Z"
+        }
+      ],
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Dark desktop list shows two authorized cases with Open case links and versions 2 and 6.",
+          "Both titles remain inside their cards; the longer operating-plans title wraps onto a second line.",
+          "Portfolio scenarios is selected in the left navigation."
+        ],
+        "limits": [
+          "A static list capture does not show a completed preview or recorded result."
+        ]
+      }
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "path": "gallery/UI42-list-light-desktop-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 85910,
+      "sha256": "bd64efc314ab66b0979f73159ee6035eb80976727345fcc2e015112dc15f2ab9",
+      "gitBlobSha": "8fa6bb77414bdfeae0bff108dda8d0caf7c58996",
+      "expectedGitBlobSha": "8fa6bb77414bdfeae0bff108dda8d0caf7c58996",
+      "gitBlobIdentityVerified": true,
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 114548,
+      "declaredParts": 5,
+      "receivedParts": 5,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "firstChunkAt": "2026-11-22T17:37:27.2511581Z",
+      "lastChunkAt": "2026-11-22T17:37:27.5380169Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "4f2311138ed0969ec8a5cffcab56ad928dd20a32dfeb25bd5eb959c8ca6e0008",
+          "sourceLine": 1187,
+          "timestamp": "2026-11-22T17:37:27.2511581Z"
+        },
+        {
+          "part": 2,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "8d867d31c536a7e312a1e8ab508e93ab83fd85b82ae982e0b5baa2da3101fc6d",
+          "sourceLine": 1189,
+          "timestamp": "2026-11-22T17:37:27.3127222Z"
+        },
+        {
+          "part": 3,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "c9131a36c9b1ed42f48541061ed086e711d56a2e97205da3c6f2a73ab2d3a6f0",
+          "sourceLine": 1191,
+          "timestamp": "2026-11-22T17:37:27.4058369Z"
+        },
+        {
+          "part": 4,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "16fe0e5c169285323491d8ab8efd956dc1006703c287538549cc0f1a5689cf05",
+          "sourceLine": 1193,
+          "timestamp": "2026-11-22T17:37:27.4819035Z"
+        },
+        {
+          "part": 5,
+          "parts": 5,
+          "base64Characters": 18548,
+          "base64Sha256": "e5e4cc80cccca4b315205833a0beec51aa77ccf65bdfd27adfdfef93f223b9f7",
+          "sourceLine": 1195,
+          "timestamp": "2026-11-22T17:37:27.5380169Z"
+        }
+      ],
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Light desktop list shows the same two authorized cases and versions 2 and 6.",
+          "Titles, version labels and Open case links remain within their respective cards."
+        ],
+        "limits": [
+          "This list view contains no preview result or completed evaluation."
+        ]
+      }
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "path": "gallery/UI42-list-dark-390-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 28701,
+      "sha256": "e93837e8fda971bac6c9db61718a14100571ad0342641d9469791d435506f214",
+      "gitBlobSha": "4e1757ddfce7a7191d3c78969fbb9e59b044ba6a",
+      "expectedGitBlobSha": "4e1757ddfce7a7191d3c78969fbb9e59b044ba6a",
+      "gitBlobIdentityVerified": true,
+      "width": 390,
+      "height": 844,
+      "base64Characters": 38268,
+      "declaredParts": 2,
+      "receivedParts": 2,
+      "originalEmissionOrder": [
+        1,
+        2
+      ],
+      "firstChunkAt": "2026-11-22T17:37:27.6277080Z",
+      "lastChunkAt": "2026-11-22T17:37:27.6965988Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 2,
+          "base64Characters": 24000,
+          "base64Sha256": "bf041d3785866746e5cd2ff088a5f3ceed356aed2aa347d68520c6d123fb9994",
+          "sourceLine": 1199,
+          "timestamp": "2026-11-22T17:37:27.6277080Z"
+        },
+        {
+          "part": 2,
+          "parts": 2,
+          "base64Characters": 14268,
+          "base64Sha256": "9b7b4eedf7aed5ba62d3438b5abb39688acbd7338be9e4752432a7ba833306f4",
+          "sourceLine": 1201,
+          "timestamp": "2026-11-22T17:37:27.6965988Z"
+        }
+      ],
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "At 390 px in dark mode, the two case cards stack vertically.",
+          "Both long titles wrap within the card boundaries; version labels and Open case links are visible.",
+          "The capture shows the complete authorized-case list without visible horizontal clipping."
+        ],
+        "limits": [
+          "This is a static list capture only."
+        ]
+      }
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "path": "gallery/UI42-list-light-320-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 27445,
+      "sha256": "31e4c68a01eb60d01d2cffb6bf0dd18e130b9a7bbf3ec379391e5dd398310f4e",
+      "gitBlobSha": "0cc553ea638a1fed97143baa14d2d84e13553884",
+      "expectedGitBlobSha": "0cc553ea638a1fed97143baa14d2d84e13553884",
+      "gitBlobIdentityVerified": true,
+      "width": 320,
+      "height": 800,
+      "base64Characters": 36596,
+      "declaredParts": 2,
+      "receivedParts": 2,
+      "originalEmissionOrder": [
+        1,
+        2
+      ],
+      "firstChunkAt": "2026-11-22T17:37:28.1478568Z",
+      "lastChunkAt": "2026-11-22T17:37:28.1869832Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 2,
+          "base64Characters": 24000,
+          "base64Sha256": "25279000b92a321f437ba06bd7eb0c05b1243e100cd54eba86d005ed34fd13da",
+          "sourceLine": 1205,
+          "timestamp": "2026-11-22T17:37:28.1478568Z"
+        },
+        {
+          "part": 2,
+          "parts": 2,
+          "base64Characters": 12596,
+          "base64Sha256": "a699d3f014dd4159c115461846dda3071afdf0361475f66a88b7bc9b45b0de56",
+          "sourceLine": 1207,
+          "timestamp": "2026-11-22T17:37:28.1869832Z"
+        }
+      ],
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "At 320 px in light mode, both authorized cases remain visible in vertically stacked cards.",
+          "The instruction and long titles wrap within the viewport; version labels and Open case links remain visible."
+        ],
+        "limits": [
+          "This frame does not establish behavior beyond the list state."
+        ]
+      }
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "path": "gallery/UI42-empty-authorized-case-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 97973,
+      "sha256": "edb2605539988199d7aab8adf23d8646610af2b878a82a4fe9cf4004214d5733",
+      "gitBlobSha": "f09a4fc19d8cfcc01e4d7d40e3614ff1f0db11ba",
+      "expectedGitBlobSha": "f09a4fc19d8cfcc01e4d7d40e3614ff1f0db11ba",
+      "gitBlobIdentityVerified": true,
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 130632,
+      "declaredParts": 6,
+      "receivedParts": 6,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "firstChunkAt": "2026-11-22T17:37:39.4482739Z",
+      "lastChunkAt": "2026-11-22T17:37:39.6472638Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "9d6d5947eda84fcd3b81baaa095401dc1d5be61600865f5cd08d3a9cac508ee2",
+          "sourceLine": 1219,
+          "timestamp": "2026-11-22T17:37:39.4482739Z"
+        },
+        {
+          "part": 2,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "0f4486c90ed410a6c1ac04fffc83fe57b3bfe2c669966396293a4c7adb794104",
+          "sourceLine": 1221,
+          "timestamp": "2026-11-22T17:37:39.4835025Z"
+        },
+        {
+          "part": 3,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "8d899c32493f0126a7fac4ec228ba5cc9983414fcdf7271e2f5294f318a72d40",
+          "sourceLine": 1223,
+          "timestamp": "2026-11-22T17:37:39.5220460Z"
+        },
+        {
+          "part": 4,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "207060bb67af00df0133f0158a0875e51243ab9ea9ee98019ccfb104e8a0ea40",
+          "sourceLine": 1225,
+          "timestamp": "2026-11-22T17:37:39.5733490Z"
+        },
+        {
+          "part": 5,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "4f8ebc77cd45095f77f86e3913a0fb1fdaf089489004468191602919e2c3de82",
+          "sourceLine": 1227,
+          "timestamp": "2026-11-22T17:37:39.6138024Z"
+        },
+        {
+          "part": 6,
+          "parts": 6,
+          "base64Characters": 10632,
+          "base64Sha256": "4ca787ce47d51a2e0154e90553d298f17202d226dd5aaf622691fd19c1171ecb",
+          "sourceLine": 1229,
+          "timestamp": "2026-11-22T17:37:39.6472638Z"
+        }
+      ],
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "The sourcing case is shown at version 2 with no eligible candidate scenarios.",
+          "Preview combinations appears disabled; the constraint and priority criterion are unchecked and the displayed exploration limit is 32.",
+          "History displays No recorded results for this case."
+        ],
+        "limits": [
+          "The displayed empty History is not proof of an acquired successful History body: sequence 1 separately records response-body-unavailable."
+        ]
+      }
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "path": "gallery/UI42-configure-focused-candidate-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 106320,
+      "sha256": "90a15b97a064219a052a95394a595e9c5fa9391f258314b253d2804413412702",
+      "gitBlobSha": "c6b094afd9c7b3af11b5b6602606515555537860",
+      "expectedGitBlobSha": "c6b094afd9c7b3af11b5b6602606515555537860",
+      "gitBlobIdentityVerified": true,
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 141760,
+      "declaredParts": 6,
+      "receivedParts": 6,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "firstChunkAt": "2026-11-22T17:37:53.3506228Z",
+      "lastChunkAt": "2026-11-22T17:37:53.7267727Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "78ed61ebe271861838e3e2e25d8e4d913378ebc3f77af875a78522ebc335d1d9",
+          "sourceLine": 1235,
+          "timestamp": "2026-11-22T17:37:53.3506228Z"
+        },
+        {
+          "part": 2,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "6254f941b41186b95fc2e906c290bc791723060dce7c14b9bba4d08c515d892c",
+          "sourceLine": 1237,
+          "timestamp": "2026-11-22T17:37:53.4265122Z"
+        },
+        {
+          "part": 3,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "2b4d5098691f06048bf87ba03c14ca7ae7f4171967d598b8eb9d5148c847b43c",
+          "sourceLine": 1239,
+          "timestamp": "2026-11-22T17:37:53.5051467Z"
+        },
+        {
+          "part": 4,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "83c5b071ee61d323b29f5cec13be526b9a1515bb009f8c92368b151f9a2e0fb2",
+          "sourceLine": 1241,
+          "timestamp": "2026-11-22T17:37:53.6004740Z"
+        },
+        {
+          "part": 5,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "899593a84859ccbd09fc9cb9ded9c73e9149634a8512760844be6ec17e41075a",
+          "sourceLine": 1243,
+          "timestamp": "2026-11-22T17:37:53.6749527Z"
+        },
+        {
+          "part": 6,
+          "parts": 6,
+          "base64Characters": 21760,
+          "base64Sha256": "5273b32e25f02f99f0a089cdd16f3e5bee1cbab2f0bd6346a5e7069cc26b5027",
+          "sourceLine": 1245,
+          "timestamp": "2026-11-22T17:37:53.7267727Z"
+        }
+      ],
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "The operating-plans case is shown at version 6.",
+          "Decision candidate plan v1 and the constraint v2 are selected; baseline and monthly-amount hypothesis are unchecked.",
+          "Exploration limit is 4 with a visible focus outline, and Preview combinations appears enabled.",
+          "History displays No recorded results for this case."
+        ],
+        "limits": [
+          "This frame is the pre-submit configuration; it does not show a computed preview or evaluation."
+        ]
+      }
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 110133,
+      "sha256": "2ec1c24c59a3042e4116f6aa21a105c7c2e09bb979d53ed294a66b345bbc7a4c",
+      "gitBlobSha": "4b5108bfe4dc1bcbc52f8a6c74a128558f4ad524",
+      "expectedGitBlobSha": "4b5108bfe4dc1bcbc52f8a6c74a128558f4ad524",
+      "gitBlobIdentityVerified": true,
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 146844,
+      "declaredParts": 7,
+      "receivedParts": 7,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "firstChunkAt": "2026-11-22T17:38:54.3050884Z",
+      "lastChunkAt": "2026-11-22T17:38:54.5627908Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "eb84068c0fc0dc32691d35a1036258fec5cf46e1a18fd0d11efdaa058b1c01a2",
+          "sourceLine": 1257,
+          "timestamp": "2026-11-22T17:38:54.3050884Z"
+        },
+        {
+          "part": 2,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "0d6f6e8165f0c3f40b78887943e4a6fb2d35e01d33acc63ae942df31372407d0",
+          "sourceLine": 1259,
+          "timestamp": "2026-11-22T17:38:54.3633796Z"
+        },
+        {
+          "part": 3,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "45cbed64efcbf963330923ade40b51e5efe53b638e4d420b7ae7950f5b92f27a",
+          "sourceLine": 1261,
+          "timestamp": "2026-11-22T17:38:54.4120191Z"
+        },
+        {
+          "part": 4,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "9745a7306250d6a5cb7ed721f34cb16542f2d54eb354d1b4ed2aaa73a31e2431",
+          "sourceLine": 1263,
+          "timestamp": "2026-11-22T17:38:54.4643771Z"
+        },
+        {
+          "part": 5,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "77c3866507f10c3b9f4a258a26284c436d404899f67f87382ab56950a95248b4",
+          "sourceLine": 1265,
+          "timestamp": "2026-11-22T17:38:54.4990755Z"
+        },
+        {
+          "part": 6,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "8ef915e71bb98ceafd0aed4057e3113e53f8844ea25b21286bd403e545bc3e52",
+          "sourceLine": 1267,
+          "timestamp": "2026-11-22T17:38:54.5388603Z"
+        },
+        {
+          "part": 7,
+          "parts": 7,
+          "base64Characters": 2844,
+          "base64Sha256": "e0e04b88f98ac8d5733c92f74ddfec7ced440bbf103e3a338f10aafa8496cc4e",
+          "sourceLine": 1269,
+          "timestamp": "2026-11-22T17:38:54.5627908Z"
+        }
+      ],
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "The failure frame retains the selected candidate v1, constraint v2 and exploration limit 4.",
+          "Preview combinations is disabled and labelled Running; the form controls appear disabled.",
+          "A skeleton panel states Preview is not yet available.",
+          "History displays No recorded results for this case."
+        ],
+        "limits": [
+          "The capture does not establish later cancellation, unwind, completion, persistence or cleanup of the in-flight operation."
+        ]
+      }
+    }
+  ],
+  "visualReview": {
+    "allSevenImagesIndividuallyViewed": true,
+    "rootVisualReviewAttributed": false,
+    "qualification": false
+  },
+  "limitations": [
+    "List, empty-case and configured-state screenshots do not substitute for the full original journey and its source readbacks.",
+    "The failure frame shows Running, disabled controls, unavailable preview and empty rendered History; it does not establish later unwind, completion, cancellation or persistence.",
+    "The first History response has HTTP 200 but no acquired body/status; it must not be labelled status ok based on the image or HTTP status.",
+    "PNG attachments, traces and other files inside the Actions artifact were not downloaded or inspected; artifact metadata is recorded in receipt.json.",
+    "No profiler was installed or emitted; no causal performance improvement is inferred."
+  ]
+}
