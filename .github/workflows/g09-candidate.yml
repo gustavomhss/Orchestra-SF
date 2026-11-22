@@ -197,6 +197,18 @@ jobs:
           writeFileSync(process.env.RUNNER_TEMP + '/g09-slot-source-proof.json', JSON.stringify(proof, null, 2) + '\n', { flag: 'wx' })
           NODE
 
+      - name: Typecheck the changed TUI package
+        working-directory: packages/tui
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/g09-tui-typecheck.log"
+
+      - name: Typecheck the restored CLI build support
+        working-directory: apps/cli
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/g09-cli-typecheck.log"
+
       - name: Build Linux CLI at the selected candidate SHA
         working-directory: apps/cli
         env:
@@ -599,12 +611,13 @@ jobs:
           node script/sf-ci/g09-candidate-evidence.mjs receipt "$evidence" \
             "$RUNNER_TEMP/azure-entra-package" "$RUNNER_TEMP/azure-entra-vm/current"
           cp "$RUNNER_TEMP/g09-producer-jobs.json" "$RUNNER_TEMP/g09-guards.log" "$RUNNER_TEMP/g09-slot-source-proof.log" \
-            "$RUNNER_TEMP/g09-slot-source-proof.json" "$RUNNER_TEMP/azure-entra-package/"
+            "$RUNNER_TEMP/g09-slot-source-proof.json" "$RUNNER_TEMP/g09-tui-typecheck.log" \
+            "$RUNNER_TEMP/g09-cli-typecheck.log" "$RUNNER_TEMP/azure-entra-package/"
           (
             cd "$RUNNER_TEMP/azure-entra-package"
             sha256sum g09-artifact-receipt.json orchestra-sf-entra-linux-x64-baseline.tar.gz.inventory.json \
               g09-build-inputs.json g09-producer-jobs.json g09-guards.log g09-slot-source-proof.log g09-slot-source-proof.json \
-              cli-map-verification.json >> SHA256SUMS
+              g09-tui-typecheck.log g09-cli-typecheck.log cli-map-verification.json >> SHA256SUMS
           )
 
       - name: Upload the candidate package and exact evidence
@@ -629,6 +642,8 @@ jobs:
             ${{ runner.temp }}/g09-build-inputs.json
             ${{ runner.temp }}/g09-slot-source-proof.log
             ${{ runner.temp }}/g09-slot-source-proof.json
+            ${{ runner.temp }}/g09-tui-typecheck.log
+            ${{ runner.temp }}/g09-cli-typecheck.log
           if-no-files-found: warn
           retention-days: 30
           compression-level: 0
