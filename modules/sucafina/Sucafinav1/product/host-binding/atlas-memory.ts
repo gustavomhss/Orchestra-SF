@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "node:async_hooks"
 import { createMemoryEmit, createMemoryRead, versioned } from "@orchestra/atlas-boundary/business-memory-ports"
 import type { MemoryRecord, NamedScanner } from "@orchestra/atlas-boundary/business-memory-ports"
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
@@ -18,11 +19,45 @@ import type { SfAtlasReadObservation } from "./atlas-recall-scope.ts"
 
 type AtlasPartition = { events: Parameters<typeof createSfAtlasDurableMemory>[0]["events"]; envelopes: Record<string, BusinessMemoryEnvelope>; originals: Record<string, { ref: BusinessEvidenceRef; projection: NonNullable<Awaited<ReturnType<BusinessContextService["resolve"]>>["authorizedProjection"]> }>; captureDigests: Record<string, Record<string, string>> }
 
+type RecallOwner = { call: TrustedDomainContext; current: () => boolean; records: Set<readonly unknown[]> }
+
 type RecallObservation = {
+  owner?: RecallOwner
   call: TrustedDomainContext; stable: () => boolean; recordsDigest: string; sourceState: string; sourceFence: string
   complete: (observations: readonly { records: readonly unknown[]; observed?: RecallObservation }[], call: TrustedDomainContext) => Promise<boolean>
 }
 const recallObservations = new WeakMap<readonly unknown[], RecallObservation>()
+const recallOwner = new AsyncLocalStorage<RecallOwner>()
+const activeRecallOwners = new WeakMap<TrustedDomainContext, RecallOwner>()
+
+function recallOwnerCurrent(call: TrustedDomainContext, owner: RecallOwner | undefined) {
+  if (recallOwner.getStore() !== owner || activeRecallOwners.get(call) !== owner) return false
+  try { return !owner || (owner.call === call && owner.current()) }
+  catch { return false }
+}
+
+/** Keep rank witnesses private to the live case observation that requested them. */
+export async function withSfAtlasRecallObservation<Value>(call: TrustedDomainContext, current: () => boolean,
+  work: () => Promise<Value | undefined>): Promise<Value | undefined> {
+  if (recallOwner.getStore() || activeRecallOwners.has(call) || !current()) return undefined
+  const owner: RecallOwner = { call, current, records: new Set() }
+  activeRecallOwners.set(call, owner)
+  try {
+    return await recallOwner.run(owner, async () => {
+      const result = await work()
+      return recallOwnerCurrent(call, owner) ? result : undefined
+    })
+  } finally {
+    activeRecallOwners.delete(call)
+    for (const records of owner.records) recallObservations.delete(records)
+    owner.records.clear()
+  }
+}
+
+function rememberRecallObservation(records: readonly unknown[], observation: RecallObservation) {
+  observation.owner?.records.add(records)
+  recallObservations.set(records, observation)
+}
 
 /** Consume private canonical observations and reopen one C08 scope for the
  * complete result. Fabricated arrays, mixed readers and reused observations deny. */
@@ -30,6 +65,9 @@ export async function revalidateSfAtlasRecall(groups: readonly (readonly unknown
   const selected = [...groups]
   const stable = () => groups.length === selected.length && selected.every((records, index) => groups[index] === records)
   const observations = selected.map((records) => ({ records, observed: recallObservations.get(records) }))
+  const owner = recallOwner.getStore()
+  // A caller outside an observation cannot claim or consume its witnesses.
+  if (!recallOwnerCurrent(call, owner) || observations.some(({ observed }) => observed && observed.owner !== owner)) return false
   selected.forEach((records) => recallObservations.delete(records))
   const first = observations[0]?.observed
   if (!first || !stable() || new Set(selected).size !== selected.length || observations.some(({ observed }) => observed?.complete !== first.complete || observed.call !== call)) return false
@@ -71,7 +109,7 @@ export function retainSfAtlasRecallResult<T>(value: T, call: TrustedDomainContex
       const renewed = structuredClone(retained), next = recallRecords(renewed)
       if (!next || digestSfValue(renewed) !== fingerprint) return undefined
       const observation: RecallObservation = { ...previous.observed, stable, recordsDigest: digestSfValue(next) }
-      recallObservations.set(next, observation)
+      rememberRecallObservation(next, observation)
       current = { value: renewed, records: next, observed: observation }
       return cloneSfAtlasRecallResult(renewed)
     } catch { return undefined }
@@ -205,9 +243,10 @@ export function createSfAtlasMemory(input: {
       const lease = call.lease
       const binding = digestSfValue([call.kind, call.binding])
       const headers = request && digestSfValue([...request.headers.entries()])
+      const ownerScope = recallOwner.getStore()
       const observations: { value: unknown; identity: string }[] = []
       const pin = (value: unknown) => { observations.push({ value, identity: digestSfValue(value) }) }
-      const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
+      const stable = () => recallOwnerCurrent(call, ownerScope) && !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
         binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()]) &&
         digestSfValue(incomingCaseRef) === digestSfValue(caseRef) && observations.every((item) => digestSfValue(item.value) === item.identity)
       const authorized = async () => stable() && await input.host.revalidate(call) && stable()
@@ -239,7 +278,7 @@ export function createSfAtlasMemory(input: {
           latest.value.outboxVersion !== outbox.value.version || digestSfValue(latest.value.case) !== digestSfValue(caseBefore.value) || !stable())
           return { status: "unavailable" as const }
         const records: never[] = []
-        recallObservations.set(records, { call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
+        rememberRecallObservation(records, { owner: ownerScope, call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
           sourceState: latest.value.sourceState, sourceFence: latest.value.sourceFence })
         return { status: "ok" as const, records }
       }
@@ -315,7 +354,7 @@ export function createSfAtlasMemory(input: {
       }).catch(() => undefined)
       if (!latest || latest.status !== "ok" || !latest.value || !stable() ||
         digestSfValue(latest.value) !== digestSfValue(before.value)) return { status: "unavailable" as const }
-      recallObservations.set(records, { call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
+      rememberRecallObservation(records, { owner: ownerScope, call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
         sourceState: before.value.sourceState, sourceFence: before.value.sourceFence })
       return { status: "ok" as const, records }
       } catch { return { status: "unavailable" as const } }
