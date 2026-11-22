@@ -321,7 +321,7 @@ test("owner deletion spans years while leaving YTD/deviations; CAPEX deletion le
   expect(state.data.capexEntries).toEqual([])
   expect(state.data.projects).toEqual([{ id: "p", name: "PMO" }])
 })
-test("budget overview uses singleton CAS, deletes zero revenue and retains flat chart", () => {
+test("budget overview uses singleton CAS, deletes revenue and distinguishes effective budget from the flat reference", () => {
   const state = snapshot()
   state.data.opexOwners = [{ id: "o", budget: 1200 }]
   state.data.opexEntries = [
@@ -358,7 +358,8 @@ test("budget overview uses singleton CAS, deletes zero revenue and retains flat 
   })
   expect(html).toContain("$1300")
   expect(html).toContain("13.00%")
-  expect(html).toContain("$108.33333333333333")
+  expect(html).toContain('<tr><td>1</td><td>$200</td><td>$100</td></tr>')
+  expect(html).toContain('<tr><td>2</td><td>$100</td><td>$100</td></tr>')
   expect(
     domain.execute(
       state,
@@ -524,6 +525,7 @@ test("CAPEX create/edit status and annual field are independent from PMO", () =>
 })
 test("executive derived ops, SLA, security and performance expose no raw records", () => {
   const state = snapshot()
+  state.data.opsCats = ["Infrastructure"]
   state.data.opsTickets = [
     {
       id: "j",
@@ -536,8 +538,12 @@ test("executive derived ops, SLA, security and performance expose no raw records
       id: "f",
       year: 2026,
       month: 2,
+      "Infrastructure|Incidents|Initial Balance": 20,
       "Infrastructure|Incidents|Open": 10,
       "Infrastructure|Incidents|Closed": 15,
+      "Infrastructure|Service Requests|Initial Balance": 0,
+      "Infrastructure|Service Requests|Open": 0,
+      "Infrastructure|Service Requests|Closed": 0,
     },
   ]
   state.data.opsSLA = [
@@ -572,8 +578,9 @@ test("executive derived ops, SLA, security and performance expose no raw records
   expect(monthly).toMatchObject({
     opened: 10,
     closed: 15,
-    backlog: 0,
-    backlogYtd: 0,
+    netChange: -5,
+    backlog: 15,
+    backlogYtd: 15,
     incYtd: 95,
     svcYtd: 85,
     p1: 1,
@@ -583,13 +590,19 @@ test("executive derived ops, SLA, security and performance expose no raw records
     key: "training",
     value: 96,
     status: "Good",
+    sourceYear: 2026,
+    sourceMonth: 1,
   })
   expect(monthly.kpis).toContainEqual({
     key: "socClosure",
     value: 50,
     status: "High risk",
+    sourceYear: 2026,
+    sourceMonth: 1,
   })
   expect(view.data.executive).toMatchObject({ onTarget: 2 })
+  expect(view.data.opsTickets).toBeUndefined()
+  expect(view.data.secIncidents).toBeUndefined()
   expect(JSON.stringify(view)).not.toContain("secret")
 })
 test("deviation writes original collection with record CAS and escaped display", () => {
@@ -713,7 +726,7 @@ test("monthly departures require Terminated for current and selected years", () 
   expect(years["2025"]?.monthlyDepartures[1]).toBe(1)
   expect(years["2025"]?.departures).toBe(1)
 })
-test("Executive backlog ignores Initial Balance and clamps negative opened minus closed", () => {
+test("Executive backlog needs complete measurements and includes initial balance with signed net change", () => {
   const state = snapshot()
   state.data.opsCats = ["Infrastructure"]
   state.data.opsTickets = [
@@ -724,6 +737,9 @@ test("Executive backlog ignores Initial Balance and clamps negative opened minus
       "Infrastructure|Incidents|Initial Balance": 100,
       "Infrastructure|Incidents|Open": 10,
       "Infrastructure|Incidents|Closed": 15,
+      "Infrastructure|Service Requests|Initial Balance": 0,
+      "Infrastructure|Service Requests|Open": 0,
+      "Infrastructure|Service Requests|Closed": 0,
     },
     {
       id: "feb",
@@ -742,20 +758,31 @@ test("Executive backlog ignores Initial Balance and clamps negative opened minus
   expect(months["2026:1"]).toMatchObject({
     opened: 10,
     closed: 15,
-    backlog: 0,
-    backlogYtd: 0,
+    netChange: -5,
+    backlog: 95,
+    backlogYtd: 95,
   })
   expect(months["2026:2"]).toMatchObject({
     opened: 23,
     closed: 10,
-    backlog: 13,
-    backlogYtd: 13,
+    netChange: 13,
+    backlog: 513,
+    backlogYtd: 513,
   })
   expect(months["2026:3"]).toMatchObject({
-    opened: 0,
-    closed: 0,
-    backlog: 0,
-    backlogYtd: 13,
+    opened: null,
+    closed: null,
+    netChange: null,
+    backlog: null,
+    backlogYtd: 513,
+  })
+  delete (state.data.opsTickets as Record<string, unknown>[])[1]!["Infrastructure|Service Requests|Initial Balance"]
+  expect((domain.view(state, actor, env).data.executiveMonths as typeof months)["2026:2"]).toMatchObject({
+    opened: 23,
+    closed: 10,
+    netChange: 13,
+    backlog: null,
+    backlogYtd: null,
   })
 })
 test("aggregate member reads audit every member and reveal no talent or change versions", () => {
@@ -977,7 +1004,7 @@ test("render month fallback matches execution December past and January future",
     }),
   ).toContain('name="month" type="number" value="4"')
 })
-test("capped utilization drives visible color; overview renders progress and flat graph", () => {
+test("actual utilization drives visible color and the overview plots effective monthly budget", () => {
   const data = {
     opexOwners: [{ id: "o", name: "O", budget: 1200 }],
     opexEntries: [
@@ -994,18 +1021,19 @@ test("capped utilization drives visible color; overview renders progress and fla
   }
   const context = { actor, year: 2026, month: 1, at, versions: {} }
   const detail = render("OPEX Detail", data, context)!
-  expect(detail).toContain('data-utilization="100" data-tone="amber" style="color:#b45309"')
-  expect(detail).toContain('data-utilization="90" data-tone="teal" style="color:#0f766e"')
-  expect(detail).not.toContain('data-utilization="125"')
+  expect(detail).toContain('data-utilization="125" data-tone="red" style="color:#dc2626">125%</span>')
+  expect(detail).toContain('data-utilization="90" data-tone="teal" style="color:#0f766e">90%</span>')
+  expect(detail).toContain('data-utilization="" data-tone="neutral">Unavailable — actual missing</span>')
   const overview = render("Budget Overview", data, context)!
   expect(overview).toContain('<progress aria-label="Actuals / budget"')
   expect(overview).toContain('value="26.153846153846157"')
   expect(overview).toContain('<svg role="img"')
-  expect(overview).toContain('data-budget-series="flat"')
-  const points = overview.match(/data-budget-series="flat" points="([^"]+)"/)![1]!.split(" ")
+  const points = overview.match(/data-budget-series="effective" points="([^"]+)"/)![1]!.split(" ")
   expect(points.length).toBe(12)
-  expect(new Set(points.map((point) => point.split(",")[1])).size).toBe(1)
-  expect(overview.match(/Month \d+: \$108\.33333333333333/g)?.length).toBe(12)
+  expect(points[0]).toBe("45,50")
+  expect(points.slice(1).map((point) => point.split(",")[1])).toEqual(Array(11).fill("105"))
+  expect(overview).toContain("<title>Month 1: $200</title>")
+  expect(overview.match(/<title>Month \d+: \$100<\/title>/g)?.length).toBe(11)
 })
 
 test("same-id budget grants isolate both collections in server mutations and rendered controls", () => {

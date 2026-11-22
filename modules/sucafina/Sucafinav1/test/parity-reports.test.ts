@@ -7,7 +7,7 @@ import { empty } from "./fixture/persistence.ts"
 const actor = { id: "admin", canWrite: true, roles: ["admin"] }
 const environment = { at: "2026-11-12T12:00:00Z", id: () => "unused", directory: [] }
 
-test("IT Operations reports aggregate current pipe-key categories for the chosen year in PPTX and DOCX", async () => {
+test("IT Operations reports monthly measurements for the configured categories and selected year in PPTX and DOCX", async () => {
   const snapshot = empty()
   snapshot.data.opsCats = ["IT Security", "Infrastructure", "Application"]
   snapshot.data.opsTickets = [
@@ -43,15 +43,21 @@ test("IT Operations reports aggregate current pipe-key categories for the chosen
     })
     if (!result.ok) throw new Error(`${format} report refused`)
     const text = await reportXmlText(result.bytes, format)
-    expect(text).toContain("Tickets Opened YTD")
-    expect(text).toContain("10")
-    expect(text).toContain("Tickets Closed YTD")
-    expect(text).toContain("7")
-    expect(text).toContain("Months w/ Data")
-    expect(text).toContain("2")
-    expect(text).toContain("IT Operations recorded 10 ticket(s) opened and 7 closed year-to-date across 2 month(s) of data.")
-    expect(text).not.toContain("900")
-    expect(text).not.toContain("800")
+    const records = text.replace(/\s+/g, " ")
+    expect(records).toContain("2026-01 · IT Security · Incidents · Opened: 0 · Closed: 0")
+    expect(records).toContain("2026-12 · IT Security · Incidents · Opened: 5 · Closed: 4")
+    expect(records).toContain("2026-12 · IT Security · Service Requests · Opened: 2 · Closed: 1")
+    expect(records).toContain("2026-12 · Infrastructure · Incidents · Opened: 3 · Closed: 0")
+    expect(records).toContain("2026-12 · Application · Service Requests · Opened: 0 · Closed: 2")
+    expect(records).toContain("2026-12 · Application · Incidents · Opened: unavailable · Closed: unavailable")
+    expect(records).toContain(format === "pptx" ? "Months w/ Data 2" : "Months w/ Data: 2")
+    expect(records).toContain("YTD totals are unavailable from this source projection")
+    expect(records).not.toContain("Tickets Opened YTD")
+    expect(records).not.toContain("Tickets Closed YTD")
+    expect(records).not.toContain("Not Configured")
+    expect(records).not.toContain("2025-12")
+    expect(records).not.toContain("900")
+    expect(records).not.toContain("800")
     if (format === "pptx") {
       const zip = await JSZip.loadAsync(result.bytes)
       const slide = await zip.file("ppt/slides/slide1.xml")!.async("string")
@@ -140,8 +146,8 @@ test("report data distinguishes real zero metrics from absent year data", async 
   })
   if (!zeroReport.ok) throw new Error("Zero report refused")
   const zeroText = await reportXmlText(zeroReport.bytes, "docx")
-  expect(zeroText).toContain("Tickets Opened YTD: 0")
-  expect(zeroText).toContain("Tickets Closed YTD: 0")
+  expect(zeroText).toContain("2026-03 · Infrastructure · Incidents · Opened: 0 · Closed: 0 · Initial balance: unavailable")
+  expect(zeroText).toContain("2026-03 · Infrastructure · Service Requests · Opened: 0 · Closed: 0")
   expect(zeroText).toContain("Months w/ Data: 1")
   expect(zeroText).toContain("Awareness Training: 0%")
   expect(zeroText).toContain("Patch Compliance: 0%")
@@ -159,6 +165,9 @@ test("report data distinguishes real zero metrics from absent year data", async 
   if (!emptyReport.ok) throw new Error("Empty report refused")
   const emptyText = await reportXmlText(emptyReport.bytes, "docx")
   expect(emptyText).toContain("No IT Operations ticket data has been entered yet for 2026.")
+  expect(emptyText).toContain("Months w/ Data: 0")
+  expect(emptyText).not.toContain("Opened: 0")
+  expect(emptyText).not.toContain("Closed: 0")
   expect(emptyText).toContain("No IT Security KPI data has been entered yet for 2026.")
 })
 
