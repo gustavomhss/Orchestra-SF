@@ -1,8 +1,10 @@
 import { createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-js"
+import { createStore } from "solid-js/store"
 import type { SfTeamContext, SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import { readCurrentTeamInstallation, readTeamWebContext } from "../context/team-profile-web"
 import { readTeamNavigationIntent, teamNavigationReturnTo, teamNavigationURL } from "../context/team-profile-navigation"
 import { useLanguage } from "../context/language"
+import { TeamProfileAdministration, type TeamAdministrationNotice } from "../components/team-profile-administration"
 
 type TeamWebState =
   | { status: "loading" | "unavailable" | "invalid" }
@@ -14,12 +16,22 @@ export function SfTeamWebApp() {
   const [state, setState] = createSignal<TeamWebState>({ status: "loading" })
   const [logoutFailed, setLogoutFailed] = createSignal(false)
   const [signingOut, setSigningOut] = createSignal(false)
+  const [administration, setAdministration] = createStore<{
+    openFor?: string; notice?: { scope: string; key: TeamAdministrationNotice }
+  }>({})
+  let generation = 0
   let pending: AbortController | undefined
   let pendingNavigation: { href: string; teamObjectId?: string; push: boolean } | undefined
   const binding = () => {
     const current = state()
     return "binding" in current ? current.binding : undefined
   }
+  const authenticated = () => {
+    const current = state()
+    return current.status === "authenticated" ? current : undefined
+  }
+  const administrationScope = (current: Extract<TeamWebState, { status: "authenticated" }>) =>
+    JSON.stringify([current.binding, current.context.profile.principal])
   const teams = () => {
     const current = state()
     return current.status === "authenticated" ? current.context.profile.teams : undefined
@@ -39,6 +51,7 @@ export function SfTeamWebApp() {
     if (active && current) return `${current.mount}/teams/${active.profile.teamObjectId}`
   }
   const begin = () => {
+    generation++
     pending?.abort()
     pending = new AbortController()
     setState({ status: "loading" })
@@ -103,6 +116,7 @@ export function SfTeamWebApp() {
     if (!current || signingOut()) return
     setLogoutFailed(false)
     setSigningOut(true)
+    setAdministration("openFor", undefined)
     pendingNavigation = undefined
     const signal = begin()
     const response = await fetch(current.mount + "/auth/logout", {
@@ -114,6 +128,7 @@ export function SfTeamWebApp() {
     if (signal.aborted) return
     setSigningOut(false)
     if (response?.status === 204) {
+      setAdministration("notice", undefined)
       const url = new URL(window.location.href)
       url.search = ""
       url.hash = ""
@@ -128,7 +143,13 @@ export function SfTeamWebApp() {
     if (status === "invalid") return "sf.common.invalidLink"
     if (status === "unauthenticated") return "sf.ui67.unauthenticated"
     if (status === "denied") return "sf.teams.noTeams"
-    if (status === "authenticated" && teams()?.status === "selection-required") return "sf.teams.select"
+    if (status === "authenticated") {
+      const value = teams()
+      if (value?.status === "selection-required") return "sf.teams.select"
+      if (value?.status === "no-teams") return "sf.teams.noTeams"
+      if (value?.status === "revoked") return "sf.teams.teamRevoked"
+      if (value?.status === "denied") return "sf.teams.teamDenied"
+    }
     return "sf.ui67.unavailable"
   }
   const restore = (event: PageTransitionEvent) => { if (event.persisted) refresh() }
@@ -140,6 +161,7 @@ export function SfTeamWebApp() {
     window.addEventListener("hashchange", navigation)
   })
   onCleanup(() => {
+    generation++
     pending?.abort()
     window.removeEventListener("focus", refresh)
     window.removeEventListener("pageshow", restore)
@@ -163,7 +185,8 @@ export function SfTeamWebApp() {
           <p role={state().status === "invalid" ? "alert" : "status"}>{language.t(statusCopy())}</p>
         </Show>
         <Show when={logoutFailed()}><p role="alert">{language.t("sf.ui67.signOutFailed")}</p></Show>
-        <Show when={state().status === "invalid" || state().status === "denied"}>
+        <Show when={state().status === "invalid" || state().status === "denied" ||
+          teams()?.status === "revoked" || teams()?.status === "denied"}>
           <a class="mx-btn" href="/">{language.t("sf.teams.select")}</a>
         </Show>
         <Show when={state().status === "unauthenticated" && signInHref()} keyed>{(href) =>
@@ -189,6 +212,30 @@ export function SfTeamWebApp() {
         <Show when={groupPath()} keyed>{(path) =>
           <a class="mx-btn" href={path + "/dashboard"}>{language.t("sf.teams.dashboard")}</a>
         }</Show>
+        <Show when={authenticated()} keyed>{(current) => {
+          const scope = administrationScope(current)
+          const notice = () => administration.notice?.scope === scope ? administration.notice.key : undefined
+          const notify = (key?: TeamAdministrationNotice) => {
+            if (key) setAdministration("notice", { scope, key })
+            else if (administration.notice?.scope === scope) setAdministration("notice", undefined)
+          }
+          return <>
+            <Show when={notice()} keyed>{(key) =>
+              <p data-sf-admin-notice role={key === "sf.teams.adminSaved" ? "status" : "alert"}>{language.t(key)}</p>
+            }</Show>
+            <Show when={current.context.profile.administration.status === "available"}>
+              <button type="button" class="mx-btn" data-sf-admin-toggle
+                aria-expanded={administration.openFor === scope}
+                onClick={() => setAdministration("openFor", administration.openFor === scope ? undefined : scope)}>
+                {language.t("sf.teams.administration")}</button>
+              <Show when={administration.openFor === scope}>
+                <TeamProfileAdministration binding={current.binding} context={current.context} generation={generation}
+                  currentGeneration={() => generation} currentContext={() => authenticated()?.context}
+                  refresh={refresh} notice={notice()} notify={notify} />
+              </Show>
+            </Show>
+          </>
+        }}</Show>
         <Show when={state().status !== "loading" && state().status !== "unauthenticated"}>
           <button type="button" class="mx-btn" onClick={refresh}>{language.t("sf.ui67.refreshAccess")}</button>
         </Show>
