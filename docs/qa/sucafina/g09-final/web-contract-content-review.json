@@ -1,0 +1,1276 @@
+{
+  "schema": "sf-g09-semantic-source-review-observation/1",
+  "schemaStatus": "LOCAL_OBSERVATION_FORMAT_NOT_A_GATE_RECEIPT",
+  "artifactPath": "docs/qa/sucafina/g09-final/web-contract-content-review.json",
+  "repository": "gustavomhss/Orchestra-SF",
+  "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+  "observationKind": "UNSIGNED_BOUNDED_SEMANTIC_SOURCE_REVIEW",
+  "signed": false,
+  "signature": null,
+  "reviewer": {
+    "task": "/root/direct_team_memory",
+    "role": "source reviewer",
+    "cryptographicIdentityAttested": false
+  },
+  "reviewStatus": "COMPLETE_FOR_DECLARED_GROUPS",
+  "formalG09Pass": false,
+  "purpose": "Preserve the completed semantic decisions for the four declared groups so a final relevant-occurrence ledger can reference their producer/consumer boundaries. This document is not an occurrence census, CI receipt, archive inspection, or acceptance certificate.",
+  "method": {
+    "sourceAccess": "GitHub MCP read-only source access at the pinned commit",
+    "materialization": "A documentation blob only; no source edit, commit, tree, reference, workflow or CI mutation is part of this observation.",
+    "analysis": "Follow actual entrypoints, installed composition, request parsers, runtime consumers and effects. Interpret project/profile/directory names by their dataflow rather than by occurrence counts.",
+    "occurrenceIdsGenerated": false,
+    "executableScannerCreated": false,
+    "previousReviewReused": "The prior Teams -> Decisions/C17 -> Atlas review was closed separately and is not presented as new coverage here.",
+    "readExtentRule": "A file listed with selected ranges was reviewed only for the stated boundary; its entire implementation is not claimed as reviewed."
+  },
+  "conclusion": {
+    "disposition": "NO_CONFIRMED_BUG_IN_DECLARED_SCOPE",
+    "confirmedBugs": [],
+    "observedActiveCorporateRepoProfileSelector": false,
+    "rationale": "In these reviewed paths Microsoft corporate selection is an explicit installation/tenant/Team intent re-admitted by the installed server. Project/Location paths retained for local-operator discovery or personal Orchestra execution do not select the active Microsoft profile. Packaged development prompts and skills have identified personal/local consumers and do not create Microsoft admission.",
+    "appliesOnlyToDeclaredGroups": true,
+    "doesNotAssertGlobalAbsence": true
+  },
+  "execution": {
+    "status": "NOT_RUN",
+    "receipts": [],
+    "ciRunsExecutedByReviewer": [],
+    "inheritedCiSuccessClaim": false,
+    "note": "Every test entry below describes existing source assertions. No test was executed in this review. Earlier chat statements about UI CI success are intentionally not converted into execution evidence in this blob; root may attach separately verified execution."
+  },
+  "globalGateClaims": {
+    "formalG09Pass": false,
+    "activeLegacy": null,
+    "unclassified": null,
+    "orphan": null,
+    "metricStatus": "NOT_MEASURED_BY_THIS_OBSERVATION",
+    "completeOccurrenceCoverage": false,
+    "completeCallerGraphCoverage": false,
+    "productionArchiveInspected": false,
+    "sourceArchiveParityEstablished": false,
+    "auditorMutationControlsExecuted": false,
+    "explanation": "Four semantic groups do not classify a repository-wide 23k occurrence universe. No global zero count, signed qualification, or production-delivery acceptance is inferred from this document."
+  },
+  "groups": [
+    {
+      "key": "webTeams",
+      "reviewStatus": "CLOSED_WITHOUT_CONFIRMED_BUG",
+      "classification": "ACTIVE_CORPORATE_FLOW_WITH_EXPLICIT_TEAM_SELECTOR",
+      "decision": "The installed Microsoft web entry chooses the Teams shell before the personal Orchestra server/project path. It requests current installation metadata and then an explicit selection or Team context; it does not select a corporate profile from repo, cwd, worktree, Dock profile or saved personal server.",
+      "sources": [
+        {
+          "path": "apps/web/src/entry.tsx",
+          "blobSha": "533aae78fa506e1163f05b73096415ea24e5399e",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              146,
+              181
+            ]
+          ],
+          "role": "Corporate shell branch returns before auth token, saved default server and AppInterface composition."
+        },
+        {
+          "path": "packages/app-shell/src/web.ts",
+          "blobSha": "b772740cdbe0678dde96cf6765e194496dd6b74c",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              8
+            ]
+          ],
+          "role": "Public web export resolves SfTeamWebApp to the reviewed page."
+        },
+        {
+          "path": "packages/app-shell/src/pages/team-profile.tsx",
+          "blobSha": "bc54e1de33e08ac9e001b6d97815a50d3adb7d88",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              143
+            ]
+          ],
+          "role": "Per-component selection, request cancellation, pending Team intent, logout and Team dashboard destination."
+        },
+        {
+          "path": "packages/app-shell/src/context/team-profile-web.ts",
+          "blobSha": "6b074ab0840461155d328bba4a28df3d488e62bb",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              79
+            ]
+          ],
+          "role": "Same-origin HTTPS bootstrap, strict descriptor/context decode, explicit Team request and response binding."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "blobSha": "1d0459efa7a42dae3b93ffb0eb4299460e373989",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              165,
+              192
+            ]
+          ],
+          "role": "Installed web HTML receives data-sf-team-web=1; static asset publication is not profile admission."
+        }
+      ],
+      "flow": [
+        {
+          "producer": "loadSfInstallation web route",
+          "value": "Branded installed HTML with data-sf-team-web=1",
+          "consumer": "apps/web/src/entry.tsx",
+          "effect": "Render SfTeamWebApp and return before personal AppInterface/defaultServer/auth-token path."
+        },
+        {
+          "producer": "readCurrentTeamInstallation",
+          "value": "select=current + sf-team-profile/1 at the current HTTPS origin",
+          "consumer": "Installed discovery endpoint",
+          "effect": "Accept exactly one same-origin TeamInstallationDescriptor; no Location or repo fallback."
+        },
+        {
+          "producer": "User choice from server-issued Team choices",
+          "value": "installationId, tenantId, hostId, kind and optional complete teamObjectId",
+          "consumer": "readTeamWebContext and mounted corporate context endpoint",
+          "effect": "Validate response binding and selected Team, then expose mount/teams/<teamObjectId>/dashboard."
+        },
+        {
+          "producer": "Refresh, focus, pageshow or logout",
+          "value": "New request generation represented by AbortController and component pending intent",
+          "consumer": "SfTeamWebApp local state",
+          "effect": "Abort old work, remove visible stale selection and prevent an old response from publishing a different Team."
+        }
+      ],
+      "storeOrEffect": {
+        "corporateSelectionState": "Solid component signals and request-local pending intent in SfTeamWebApp; no repo-keyed persisted profile was observed in this page.",
+        "businessEffect": "Navigation to an explicit Team route. Server admission remains required.",
+        "personalStateBoundary": "The entry defines a generic browser Platform/draft store, but the corporate page does not consume its personal server/project profile selection."
+      },
+      "retainedPersonalFlow": {
+        "classification": "PERSONAL_ORCHESTRA_ENTRY_OUTSIDE_THE_INSTALLED_TEAM_BRANCH",
+        "reason": "AppInterface/defaultServer/authFromToken are reached only after the corporate branch has returned. Corporate enforcement also exists in the installed endpoint; changing client rendering does not create server authority."
+      },
+      "existingNegatives": [
+        {
+          "path": "packages/app-shell/test-browser/team-profile.test.ts",
+          "blobSha": "f198743dda2000de7fb669a41bad8fb28e577b17",
+          "caseName": "Team B survives overlapping selection and refresh on focus",
+          "caseNameOrigin": "DETERMINISTIC_EXPANSION_OF_SOURCE_TEMPLATE",
+          "sourceNameTemplate": "Team B survives overlapping selection and refresh on ",
+          "sourceParameters": {
+            "event": "focus"
+          },
+          "lineRanges": [
+            [
+              163,
+              209
+            ]
+          ],
+          "assertion": "Overlapping refresh aborts older reads, preserves pending Team B, and a late Team A response cannot replace B or its dashboard link.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-profile.test.ts",
+          "blobSha": "f198743dda2000de7fb669a41bad8fb28e577b17",
+          "caseName": "Team B survives overlapping selection and refresh on pageshow",
+          "caseNameOrigin": "DETERMINISTIC_EXPANSION_OF_SOURCE_TEMPLATE",
+          "sourceNameTemplate": "Team B survives overlapping selection and refresh on ",
+          "sourceParameters": {
+            "event": "pageshow"
+          },
+          "lineRanges": [
+            [
+              163,
+              209
+            ]
+          ],
+          "assertion": "Overlapping refresh aborts older reads, preserves pending Team B, and a late Team A response cannot replace B or its dashboard link.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-profile.test.ts",
+          "blobSha": "f198743dda2000de7fb669a41bad8fb28e577b17",
+          "caseName": "a final network response clears the pending Team intent",
+          "caseNameOrigin": "DETERMINISTIC_EXPANSION_OF_SOURCE_TEMPLATE",
+          "sourceNameTemplate": " response clears the pending Team intent",
+          "sourceParameters": {
+            "failure": "network"
+          },
+          "lineRanges": [
+            [
+              212,
+              241
+            ]
+          ],
+          "assertion": "A final failed result clears selected Team, choices and dashboard link; the next refresh sends no retained Team intent.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-profile.test.ts",
+          "blobSha": "f198743dda2000de7fb669a41bad8fb28e577b17",
+          "caseName": "a final denied response clears the pending Team intent",
+          "caseNameOrigin": "DETERMINISTIC_EXPANSION_OF_SOURCE_TEMPLATE",
+          "sourceNameTemplate": " response clears the pending Team intent",
+          "sourceParameters": {
+            "failure": "denied"
+          },
+          "lineRanges": [
+            [
+              212,
+              241
+            ]
+          ],
+          "assertion": "A final failed result clears selected Team, choices and dashboard link; the next refresh sends no retained Team intent.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-profile.test.ts",
+          "blobSha": "f198743dda2000de7fb669a41bad8fb28e577b17",
+          "caseName": "a final unauthenticated response clears the pending Team intent",
+          "caseNameOrigin": "DETERMINISTIC_EXPANSION_OF_SOURCE_TEMPLATE",
+          "sourceNameTemplate": " response clears the pending Team intent",
+          "sourceParameters": {
+            "failure": "unauthenticated"
+          },
+          "lineRanges": [
+            [
+              212,
+              241
+            ]
+          ],
+          "assertion": "A final failed result clears selected Team, choices and dashboard link; the next refresh sends no retained Team intent.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-profile.test.ts",
+          "blobSha": "f198743dda2000de7fb669a41bad8fb28e577b17",
+          "caseName": "logout suppresses focus revalidation and the next account starts without the old Team",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              244,
+              280
+            ]
+          ],
+          "assertion": "Logout suppresses focus/pageshow reads and a different principal starts without the old Team.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        }
+      ],
+      "limits": [
+        "No browser or installed Microsoft session was operated in this review.",
+        "The six UI cases are source evidence only here; this artifact does not import their separately reported CI outcome.",
+        "This group covers the explicit Teams shell, not every personal AppInterface route."
+      ]
+    },
+    {
+      "key": "discovery-schema-client",
+      "reviewStatus": "CLOSED_WITHOUT_CONFIRMED_BUG",
+      "classification": "UNTRUSTED_TRANSPORT_AND_DISCOVERY_METADATA_WITH_SERVER_ENFORCED_BRANCHES",
+      "decision": "Public Schema/Protocol/generated-client fields are transport shapes. The installed/server parser reads the original raw URL and separates corporate current/installation selectors from local-operator ids/location selectors before any result is returned.",
+      "sources": [
+        {
+          "path": "packages/schema/src/sucafina/team-profile.ts",
+          "blobSha": "df8d4f71ab75ef6036a6bc7eca7d733574b4262e",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              283
+            ]
+          ],
+          "role": "Canonical Team ref, principal, owner, revisions, selector and authenticated projection are closed shapes."
+        },
+        {
+          "path": "packages/schema/src/sucafina/context.ts",
+          "blobSha": "c26f87e09138ab2e45de7ae6013bc6bf042f142c",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              343,
+              419
+            ],
+            [
+              597,
+              649
+            ]
+          ],
+          "role": "Technical placement DTO and transport query are separate from closed corporate context and bound business destinations."
+        },
+        {
+          "path": "packages/protocol/src/groups/sucafina.ts",
+          "blobSha": "4b5d1ad1389e5b8e791d6753aeca150d508f39cc",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              21
+            ]
+          ],
+          "role": "Only Sucafina discovery endpoint is registered in this Protocol group; it grants no admission."
+        },
+        {
+          "path": "packages/server/src/sucafina-installations.ts",
+          "blobSha": "235f38eb174748d4a7684a7417d99f9b830d33f0",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              137
+            ]
+          ],
+          "role": "Strict raw selector parser and installed-source dispatch; ids/location filter local-operator."
+        },
+        {
+          "path": "packages/server/src/handlers/sucafina.ts",
+          "blobSha": "3ac4f3721d6eeac97c8e9cdcb2b5162163793467",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              36
+            ]
+          ],
+          "role": "Handler parses original request URL and returns metadata with no-store."
+        },
+        {
+          "path": "packages/client/src/generated/client.ts",
+          "blobSha": "fc48d6e9cfdc8315dc15677f376c4a0ce2d8b6af",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              4703,
+              4722
+            ]
+          ],
+          "role": "Generated Promise client serializes fields into the discovery GET; no runtime selector synthesis."
+        },
+        {
+          "path": "packages/client/src/generated/types.ts",
+          "blobSha": "9d7c12a42e7b4e6c29a70e8d13344345a738f395",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              14011,
+              14083
+            ]
+          ],
+          "role": "Generated input/output types preserve discovery DTO branches; these are not admission capabilities."
+        },
+        {
+          "path": "packages/client/src/generated-effect/client.ts",
+          "blobSha": "e677540a9847d37cfeed38f3e9a86547bb96d8ac",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              3883,
+              3904
+            ]
+          ],
+          "role": "Generated Effect adapter forwards the same optional fields to the same Protocol endpoint."
+        }
+      ],
+      "flow": [
+        {
+          "producer": "SfInstallationQuery and generated SDK inputs",
+          "value": "select plus optional installation/tenant/project/Location transport fields",
+          "consumer": "parseSfInstallationSelector(raw.url)",
+          "effect": "Reject duplicate, unknown, mixed, partial or malformed raw parameters; SDK decoding does not confer authority."
+        },
+        {
+          "producer": "Closed current or installation selector",
+          "value": "sf-team-profile/1, and exact installation/tenant for installation intent",
+          "consumer": "source.current -> toDescriptor -> readSfInstallations",
+          "effect": "Return only the already-loaded corporate descriptor; no admitted Location or alternate-runtime fallback."
+        },
+        {
+          "producer": "Closed legacy ids or location selector",
+          "value": "Technical operator IDs or admitted Location",
+          "consumer": "readSfInstallations local-operator branches",
+          "effect": "Filter out Microsoft descriptors; return local operator metadata only."
+        },
+        {
+          "producer": "TeamProfile schemas and SfTeamContext filter",
+          "value": "Explicit installation/tenant/Team ref and principal-owned binding",
+          "consumer": "Context decoders and corporate response boundary",
+          "effect": "Reject repo aliases, extra project/directory fields, mixed resource tenants and business destinations without matching Team binding."
+        }
+      ],
+      "storeOrEffect": {
+        "effect": "Read-only discovery metadata and context DTO validation.",
+        "dataAuthority": "Discovery does not open a corporate profile store or grant business access; the mounted Microsoft producer re-admits requests."
+      },
+      "classificationRationale": [
+        "projectId/location remain in the transport because local-operator discovery has an identified consumer.",
+        "The broad top-level query Struct is required by generation and is not the semantic selector accepted by the server.",
+        "The canonical corporate profile is installationId + tenantId + teamObjectId. Personal ownership additionally includes the resource-tenant principal.",
+        "A generic string occurrence or generated type is not classified as active corporate repo identity without a consumer that uses it for that purpose."
+      ],
+      "existingNegatives": [
+        {
+          "path": "packages/schema/test/sucafina-team-identity.test.ts",
+          "blobSha": "8d8a19f733e8d6634c3a53c50f8c28ccb908617f",
+          "caseName": "Microsoft IDs require complete canonical GUIDs, never repo aliases or rewritten input",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              49,
+              57
+            ]
+          ],
+          "assertion": "Rejects global, repo-1234, path, partial, uppercase, padded and brace-wrapped Team IDs.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/schema/test/sucafina-team-identity.test.ts",
+          "blobSha": "8d8a19f733e8d6634c3a53c50f8c28ccb908617f",
+          "caseName": "all profile identity components are mandatory and repo-profile fields are forbidden",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              65,
+              76
+            ]
+          ],
+          "assertion": "Rejects missing profile components and additional projectId/directory/principal fields.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/schema/test/sucafina-team-identity.test.ts",
+          "blobSha": "8d8a19f733e8d6634c3a53c50f8c28ccb908617f",
+          "caseName": "resource tenant must agree with the principal, including guests",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              41,
+              47
+            ]
+          ],
+          "assertion": "Rejects mismatched resource tenant in private ownership.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/schema/test/sucafina-team-identity.test.ts",
+          "blobSha": "8d8a19f733e8d6634c3a53c50f8c28ccb908617f",
+          "caseName": "principals reject email, home tenant substitution and alternate authority fields",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              78,
+              87
+            ]
+          ],
+          "assertion": "Rejects email/homeTenant/role/accessToken aliases for principal identity.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/schema/test/sucafina-team-context.test.ts",
+          "blobSha": "e11e6440ec6dd81511b7f05bcc780054b2bda36c",
+          "caseName": "selectors are versioned complete intents without a client-claimed principal or grant",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              34,
+              48
+            ]
+          ],
+          "assertion": "Rejects legacy revision, absent revision, caller authority fields, old project profile and location selector.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/schema/test/sucafina-team-context.test.ts",
+          "blobSha": "e11e6440ec6dd81511b7f05bcc780054b2bda36c",
+          "caseName": "restored selection must be in the complete eligible set and cannot fall back",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              72,
+              79
+            ]
+          ],
+          "assertion": "Rejects a restored Team outside choices, empty choices and missing selection.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/schema/test/sucafina-team-context.test.ts",
+          "blobSha": "e11e6440ec6dd81511b7f05bcc780054b2bda36c",
+          "caseName": "eligible lists cannot mix tenants or installations",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              91,
+              105
+            ]
+          ],
+          "assertion": "Rejects foreign installation/tenant in ready or selection-required projections.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/schema/test/sucafina-team-context.test.ts",
+          "blobSha": "e11e6440ec6dd81511b7f05bcc780054b2bda36c",
+          "caseName": "closed shapes reject unknown nested fields even when the caller asks to ignore them",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              158,
+              168
+            ]
+          ],
+          "assertion": "Explicit closed nested annotations still reject old project/directory and caller authority fields.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/server/test/sucafina-team-discovery.test.ts",
+          "blobSha": "3663bd78d39642127d693d2a70770050400e1067",
+          "caseName": "missing, duplicate, mixed and caller authority fields are rejected before lookup",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              26,
+              39
+            ]
+          ],
+          "assertion": "Rejects duplicate keys, encoded duplicate keys, project/Location mixing, caller authority, missing fields and legacy revision.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/server/test/sucafina-team-discovery.test.ts",
+          "blobSha": "3663bd78d39642127d693d2a70770050400e1067",
+          "caseName": "legacy ID and directory selectors cannot discover a Microsoft business profile",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              51,
+              57
+            ]
+          ],
+          "assertion": "Both legacy selector branches return an empty installation list for a Microsoft runtime.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/server/test/sucafina-team-discovery.test.ts",
+          "blobSha": "3663bd78d39642127d693d2a70770050400e1067",
+          "caseName": "wrong tenant or installation never uses admitted Location or first-runtime fallback",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              58,
+              68
+            ]
+          ],
+          "assertion": "Wrong corporate binding returns empty and never calls the Location provider.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/server/test/sucafina-team-discovery.test.ts",
+          "blobSha": "3663bd78d39642127d693d2a70770050400e1067",
+          "caseName": "current never accepts an owner, legacy protocol, partial or mixed selector",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              108,
+              116
+            ]
+          ],
+          "assertion": "Current bootstrap rejects owner fields, legacy protocol, duplicate/encoded revision and Location.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/server/test/sucafina-team-discovery.test.ts",
+          "blobSha": "3663bd78d39642127d693d2a70770050400e1067",
+          "caseName": "missing, local, incomplete or aborted runtime cannot become corporate bootstrap",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              117,
+              126
+            ]
+          ],
+          "assertion": "Absent runtime, absent tenant, local operator and aborted read cannot produce corporate discovery.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        }
+      ],
+      "limits": [
+        "Only the Sucafina portions of generated clients were read; this is not a review of every generated endpoint.",
+        "Schema acceptance is not claimed to establish authorization.",
+        "No generated file was edited or regenerated; no generator execution or drift gate was run."
+      ]
+    },
+    {
+      "key": "legacy-context-exclusion",
+      "reviewStatus": "CLOSED_WITHOUT_CONFIRMED_BUG",
+      "classification": "LEGACY_NATIVE_CONTEXT_EXCLUDED_FROM_MICROSOFT_INSTALLED_COMPOSITION",
+      "decision": "Microsoft composition does not load the generic local host context. Its context handler takes the Teams parser branch whenever teamTenantId exists, even if a client omits contractRevision. Remaining legacy Microsoft DTO literals do not provide an observed fallback into corporate authority.",
+      "sources": [
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "blobSha": "1d0459efa7a42dae3b93ffb0eb4299460e373989",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              32,
+              76
+            ],
+            [
+              148,
+              163
+            ]
+          ],
+          "role": "Only nativeSfLocalInstallation imports host-context; nativeSfTeamInstallation injects limited Team factories and dedicated discovery rejects ids/location."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/microsoft-entry.ts",
+          "blobSha": "49a6ed3ffe7c8fbbe1bce6634d81b4a7c1ef419e",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              1,
+              16
+            ],
+            [
+              84,
+              121
+            ],
+            [
+              132,
+              177
+            ]
+          ],
+          "role": "Exports the Team marker; provides fixed installed binding, tenant, readTeamContext and explicit Team-business dispatch."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/context.ts",
+          "blobSha": "68232a2c2aba2f86c2d6c45e651ad56712e33cab",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              167
+            ]
+          ],
+          "role": "Corporate producer branch forces readTeamContextQuery, checks exact binding/tenant and stable runtime after await."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blobSha": "cb3a26cfce9ba8359bc1afe37190c09a2d2c7cf3",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              920,
+              922
+            ]
+          ],
+          "role": "Identified local-native consumer still resolves ProjectV2(directory); caller exclusion determines its corporate reachability."
+        },
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "blobSha": "5ce42b03cf854cf32b6bcd5aa2eb089ad634f256",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              814,
+              851
+            ]
+          ],
+          "role": "Legacy transport requires sf-native-ui/1 and still permits a Microsoft DTO literal; this is recorded rather than hidden."
+        },
+        {
+          "path": "packages/client/src/sucafina/context.ts",
+          "blobSha": "aac93d7c9e34674db51a143b3638a4f626b6398a",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              20
+            ]
+          ],
+          "role": "Legacy context client forwards through its bound transport and does not invent an installed descriptor."
+        },
+        {
+          "path": "packages/schema/src/sucafina/context.ts",
+          "blobSha": "c26f87e09138ab2e45de7ae6013bc6bf042f142c",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              343,
+              400
+            ],
+            [
+              597,
+              649
+            ]
+          ],
+          "role": "Legacy and Team DTO shapes coexist; corporate context uses separate versioned decoder and binding rules."
+        }
+      ],
+      "flow": [
+        {
+          "producer": "Installed factory module marker",
+          "value": "nativeSfLocalInstallation === true",
+          "consumer": "loadSfInstallation",
+          "effect": "Only this branch imports host-context and supplies createHostRuntime/sourceRoot."
+        },
+        {
+          "producer": "microsoft-entry.ts",
+          "value": "nativeSfTeamInstallation=true with no local marker",
+          "consumer": "loadSfInstallation Team branch",
+          "effect": "Supply limited Team MCP/current-choice factories; no generic ProjectV2-based host-context injection."
+        },
+        {
+          "producer": "Microsoft web context composition",
+          "value": "Fixed installation/project/host binding, configured tenant and teamAccess.readContext",
+          "consumer": "createSfContextHandler.handle",
+          "effect": "Always parse the Teams query when teamTenantId is defined; missing legacy revision cannot invoke readContext/readRequestContext."
+        },
+        {
+          "producer": "Corporate context request",
+          "value": "Explicit selected installation/tenant/Team intent",
+          "consumer": "readTeamContext and installed Team authority",
+          "effect": "Check binding and selected Team before publication; runtime/identity replacement or aborted request fails closed."
+        }
+      ],
+      "storeOrEffect": {
+        "corporateEffect": "Mounted context projection and explicitly admitted Team business dispatch.",
+        "localEffect": "Generic native ProjectV2 placement remains in the identified local-operator/personal composition.",
+        "legacyCompatibilityShape": "sf-native-ui/1 with Microsoft literal is retained in legacy client/schema code, but no accepting path into the reviewed Microsoft installation was found."
+      },
+      "existingNegatives": [
+        {
+          "path": "packages/server/test/sucafina-team-discovery.test.ts",
+          "blobSha": "3663bd78d39642127d693d2a70770050400e1067",
+          "caseName": "legacy ID and directory selectors cannot discover a Microsoft business profile",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              51,
+              57
+            ]
+          ],
+          "assertion": "Confirms old project/Location selectors cannot discover the corporate runtime.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/server/test/sucafina-team-discovery.test.ts",
+          "blobSha": "3663bd78d39642127d693d2a70770050400e1067",
+          "caseName": "Microsoft runtime with no configured tenant is unavailable rather than a legacy descriptor",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              69,
+              74
+            ]
+          ],
+          "assertion": "Missing tenant cannot turn a Microsoft runtime into the old descriptor.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/server/test/sucafina-team-discovery.test.ts",
+          "blobSha": "3663bd78d39642127d693d2a70770050400e1067",
+          "caseName": "local technical operator descriptor cannot satisfy a corporate selector",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              81,
+              88
+            ]
+          ],
+          "assertion": "Corporate selector rejects the local operator while legacy ids still serve that local operator.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "packages/server/test/sucafina-team-discovery.test.ts",
+          "blobSha": "3663bd78d39642127d693d2a70770050400e1067",
+          "caseName": "aborted read releases no late installation metadata",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              75,
+              80
+            ]
+          ],
+          "assertion": "Aborted installed lookup returns no descriptor.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "apps/cli/test/sucafina-native-web.test.ts",
+          "blobSha": "503625fbcbfcf5057734cf34c0a1681828e11ad0",
+          "caseName": "the installed SF operator host serves the native Web bundle and its authenticated context",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              18,
+              70
+            ]
+          ],
+          "assertion": "The existing local-operator integration includes unauthenticated discovery/context 401 checks and authenticated descriptor/context checks; it is not a Microsoft authentication proof.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        }
+      ],
+      "limits": [
+        "The context-parser exclusion was verified by implementation reading; this blob does not supply a new executed direct-request proof of that branch.",
+        "The entire generic host-context implementation was not re-reviewed; only its ProjectV2 selector and the caller boundary needed for exclusion are claimed.",
+        "The separately reported dedicated-installed-host probe and its CI run are not imported as execution evidence here.",
+        "No assumption is made that a DTO literal alone grants admission, nor that all legacy strings have been removed."
+      ]
+    },
+    {
+      "key": "packagedskills",
+      "reviewStatus": "CLOSED_WITHOUT_CONFIRMED_BUG",
+      "classification": "PACKAGED_PERSONAL_DEVELOPMENT_CONTENT_WITH_IDENTIFIED_CONSUMERS_NOT_CORPORATE_PROFILE_AUTHORITY",
+      "decision": "The reviewed packer builds declared native-seat skill trees and Maestro playbooks as content. Its source/extraction paths are content placement, not Team selection. Its runtime consumers belong to personal/local Orchestra composition, and the reviewed Microsoft installation does not load the generic native host contribution.",
+      "sources": [
+        {
+          "path": "modules/maestro/coordination/src/seat-skills-module.ts",
+          "blobSha": "a3ed7947dbf9b8a632ca1deae91a0fc1e94c94b3",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              45
+            ]
+          ],
+          "role": "Build producer emits one virtual module with declared seat/shared trees and Maestro playbooks."
+        },
+        {
+          "path": "modules/maestro/coordination/src/seats/index.ts",
+          "blobSha": "a4f0ecf5b5144f91837571286f91fc552be0c826",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              69
+            ]
+          ],
+          "role": "Catalog identifies the native development seats and shared team-* skill roots."
+        },
+        {
+          "path": "modules/maestro/coordination/src/seats/seat.ts",
+          "blobSha": "041587dc6d049eee78eca22b71acb9db0a1fb523",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              8,
+              58
+            ],
+            [
+              60,
+              118
+            ]
+          ],
+          "role": "Seat profile enum is execution/review/discovery/direct; source roots derive from package placement."
+        },
+        {
+          "path": "modules/maestro/coordination/src/seat-skill-content.ts",
+          "blobSha": "ee9de21c4aeceb1c9b014cdae2b710efb9d0360a",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              13,
+              154
+            ]
+          ],
+          "role": "Declared-root validation, routed nodes, orphan/path checks and source-byte acquisition reject invalid paths/symlinks/content."
+        },
+        {
+          "path": "modules/maestro/coordination/src/seat-skill-root.ts",
+          "blobSha": "c01632881ed8e61ee0b008fb41d36ef8ceba8afd",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              13,
+              105
+            ]
+          ],
+          "role": "Compiled module is mandatory; extraction uses installation version and content digest under cache without compiled-to-source fallback."
+        },
+        {
+          "path": "modules/maestro/coordination/src/v2/skill-sources.ts",
+          "blobSha": "f69456425da16565b69b3b1f9b8385c4130c9330",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              50
+            ]
+          ],
+          "role": "Maestro playbooks are reserved sources; skill visibility distinguishes native seats."
+        },
+        {
+          "path": "packages/core/src/skill.ts",
+          "blobSha": "4fe232a113aef92a3adde83cc2bfbea074945790",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              32,
+              38
+            ],
+            [
+              179,
+              225
+            ],
+            [
+              255,
+              271
+            ]
+          ],
+          "role": "Permission/scope filters and current catalog provenance constrain loaded content."
+        },
+        {
+          "path": "packages/core/src/agent/prompt/maestro.txt",
+          "blobSha": "a1fa2a6f785fef8c9778d09355c20c9779660f24",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              107
+            ]
+          ],
+          "role": "Reviewed personal software-work prompt refers to repo/worktree/board/Dock and does not prescribe repo-derived SF profile admission."
+        },
+        {
+          "path": "modules/maestro/coordination/playbooks/maestro-orchestra/SKILL.md",
+          "blobSha": "f6663722d2a67aedd554ff13510c785b7221f5b9",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "FULL_FILE_READ",
+          "lineRanges": [
+            [
+              1,
+              65
+            ]
+          ],
+          "role": "Reviewed packaged Orchestra guide indexes personal tools/seats and legitimate development workflows."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "blobSha": "1d0459efa7a42dae3b93ffb0eb4299460e373989",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              45,
+              75
+            ]
+          ],
+          "role": "Installed Microsoft caller excludes the generic native host composition that would load local execution context."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/microsoft-entry.ts",
+          "blobSha": "49a6ed3ffe7c8fbbe1bce6634d81b4a7c1ef419e",
+          "baseCommit": "90861699b40d7093adbba70a69ac866eb517090f",
+          "readExtent": "SELECTED_IMPLEMENTATION_RANGES",
+          "lineRanges": [
+            [
+              1,
+              16
+            ],
+            [
+              84,
+              102
+            ]
+          ],
+          "role": "Team-only installation marker and limited context producer establish the corporate side of the boundary."
+        }
+      ],
+      "flow": [
+        {
+          "producer": "Seats.all + Seats.skillSource/sharedSource + PlaybookContent",
+          "value": "Declared native-seat and playbook source trees",
+          "consumer": "SeatSkillContent.read/validate and seatSkillsModule",
+          "effect": "Package exact validated text into orchestra-seat-skills.gen.ts."
+        },
+        {
+          "producer": "Compiled embedded module",
+          "value": "Seat-keyed tree-relative paths and text",
+          "consumer": "SeatSkillRoot",
+          "effect": "Require valid embedded trees and materialize a verified version/content-keyed cache tree; unavailable module fails instead of searching cwd."
+        },
+        {
+          "producer": "SeatSkillRoot roots/playbooks",
+          "value": "Content directory sources",
+          "consumer": "MaestroSkillSourcesV2 -> SkillV2 catalog -> agent permissions/Session scope",
+          "effect": "Expose allowed skills; reserved playbooks cannot be shadowed by another source."
+        },
+        {
+          "producer": "Native development prompt and Orchestra guide",
+          "value": "Instructions for repository, board, worktree, Dock and native-seat tools",
+          "consumer": "Personal/local Orchestra execution",
+          "effect": "Guide identified development workflows; no Microsoft principal, Team grant or corporate store is produced."
+        }
+      ],
+      "storeOrEffect": {
+        "storedMaterial": "Content-addressed extracted skill trees under Global.Path.cache and an in-memory SkillV2 catalog with source provenance.",
+        "corporateStore": "None selected by this packer/consumer chain.",
+        "terminology": "team-* here names shared native-agent skills; Seat.profile names a permission archetype. Neither is a Microsoft TeamProfileRef."
+      },
+      "classificationRationale": [
+        "Repository/worktree words in the reviewed development prompt and guide have identified legitimate consumers and are not counted as corporate profile selectors.",
+        "Build-time source paths and runtime cache extraction paths select content bytes, not Microsoft business ownership.",
+        "The review does not infer that uninspected text is harmless; it records the reviewed entry content and the execution/composition boundary.",
+        "Packager orphan validation concerns the declared skill tree and is not a repository-wide G09 orphan metric."
+      ],
+      "existingNegatives": [
+        {
+          "path": "modules/maestro/coordination/test/seat-skills-build.test.ts",
+          "blobSha": "9dc1d1750994a27d008fc19fe761f380c929eab0",
+          "caseName": "invalid binary UTF-8 companion fails source acquisition",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              33,
+              40
+            ]
+          ],
+          "assertion": "Source reader rejects binary companion bytes instead of silently omitting them.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "modules/maestro/coordination/test/seat-skills-build.test.ts",
+          "blobSha": "9dc1d1750994a27d008fc19fe761f380c929eab0",
+          "caseName": "missing, file and symlink source roots fail acquisition",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              42,
+              57
+            ]
+          ],
+          "assertion": "Source reader rejects absent/file/symlink roots and a planted directory link.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "modules/maestro/coordination/test/seat-skills-build.test.ts",
+          "blobSha": "9dc1d1750994a27d008fc19fe761f380c929eab0",
+          "caseName": "compiled generated-module import failure is named, never source fallback",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              122,
+              127
+            ]
+          ],
+          "assertion": "Compiled consumer fails on absent generated module rather than consulting source/cwd.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "modules/maestro/coordination/test/seat-skills-build.test.ts",
+          "blobSha": "9dc1d1750994a27d008fc19fe761f380c929eab0",
+          "caseName": "compiled missing maestro cannot publish empty playbook success",
+          "caseNameOrigin": "DETERMINISTIC_EXPANSION_OF_SOURCE_TEMPLATE",
+          "sourceNameTemplate": "compiled %s cannot publish empty playbook success",
+          "sourceParameters": {
+            "kind": "missing maestro"
+          },
+          "lineRanges": [
+            [
+              129,
+              143
+            ]
+          ],
+          "assertion": "Missing required embedded or explicit playbook material fails compilation/runtime acquisition.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "modules/maestro/coordination/test/seat-skills-build.test.ts",
+          "blobSha": "9dc1d1750994a27d008fc19fe761f380c929eab0",
+          "caseName": "compiled missing companion cannot publish empty playbook success",
+          "caseNameOrigin": "DETERMINISTIC_EXPANSION_OF_SOURCE_TEMPLATE",
+          "sourceNameTemplate": "compiled %s cannot publish empty playbook success",
+          "sourceParameters": {
+            "kind": "missing companion"
+          },
+          "lineRanges": [
+            [
+              129,
+              143
+            ]
+          ],
+          "assertion": "Missing required embedded or explicit playbook material fails compilation/runtime acquisition.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "modules/maestro/coordination/test/seat-skills-build.test.ts",
+          "blobSha": "9dc1d1750994a27d008fc19fe761f380c929eab0",
+          "caseName": "compiled missing override cannot publish empty playbook success",
+          "caseNameOrigin": "DETERMINISTIC_EXPANSION_OF_SOURCE_TEMPLATE",
+          "sourceNameTemplate": "compiled %s cannot publish empty playbook success",
+          "sourceParameters": {
+            "kind": "missing override"
+          },
+          "lineRanges": [
+            [
+              129,
+              143
+            ]
+          ],
+          "assertion": "Missing required embedded or explicit playbook material fails compilation/runtime acquisition.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "modules/maestro/coordination/test/seat-skill-root.test.ts",
+          "blobSha": "b32f1eb6a1dea69c1664a3a250c033dc843d8661",
+          "caseName": "matching external symlink root fails acquisition without touching external bytes",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              101,
+              115
+            ]
+          ],
+          "assertion": "Extraction rejects a symlink root even when its bytes match and leaves external bytes unchanged.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "modules/maestro/coordination/test/seat-skill-root.test.ts",
+          "blobSha": "b32f1eb6a1dea69c1664a3a250c033dc843d8661",
+          "caseName": "planted companion symlink cannot pass digest verification",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              117,
+              129
+            ]
+          ],
+          "assertion": "The planted companion link is replaced with the canonical regular file; the external file is unchanged.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "modules/maestro/coordination/test/v2-skills.test.ts",
+          "blobSha": "ea291ad760294f510fbd48441af27250c16f4ec0",
+          "caseName": "Maestro lists every playbook, a same-name skill from another source cannot replace one, and other agents cannot load them",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              25,
+              74
+            ]
+          ],
+          "assertion": "A configured same-name source cannot shadow a reserved playbook and non-Maestro agents cannot list/load those playbooks.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        },
+        {
+          "path": "modules/maestro/coordination/test/v2-skills.test.ts",
+          "blobSha": "ea291ad760294f510fbd48441af27250c16f4ec0",
+          "caseName": "every seat lists and loads its own skill tree, and no other agent sees it",
+          "caseNameOrigin": "LITERAL_SOURCE_TITLE",
+          "lineRanges": [
+            [
+              76,
+              112
+            ]
+          ],
+          "assertion": "Other seats and Maestro cannot see foreign private seat skills.",
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN"
+        }
+      ],
+      "supportingExistingTests": [
+        {
+          "path": "apps/cli/test/packaged-skills-build.test.ts",
+          "blobSha": "d5d48620d66e8da5c5d817cf42b4c3d68e2257c3",
+          "caseName": "CLI build producer includes every canonical seat, entry and reference byte",
+          "lineRanges": [
+            [
+              9,
+              54
+            ]
+          ],
+          "evidenceStatus": "SOURCE_ASSERTIONS_INSPECTED",
+          "executionStatus": "NOT_RUN",
+          "role": "Positive source-to-build/materialization proof with a reference-content control. It compiles the real packaged-skills consumer and compares exact bytes; it is not a semantic-old-profile mutation test."
+        }
+      ],
+      "limits": [
+        "The reviewed content is the Maestro prompt, the packaged Orchestra guide entry and the producer/consumer implementation. This is not a word-by-word review of every packaged skill leaf or every seat prompt.",
+        "No production tar or binary inventory was opened in this review.",
+        "Existing packaging negatives do not substitute for the G09 auditor's planted legacy fallback/caller/content controls.",
+        "No assertion is made that all packaged bytes are active in the Microsoft server; the explicit installed composition boundary is the reachability evidence."
+      ]
+    }
+  ],
+  "testGapAssessment": {
+    "newFunctionalTestRequiredByThisReview": false,
+    "confirmedUncoveredDefect": null,
+    "basis": "No new functional defect was confirmed in these declared boundaries. Existing source assertions address the identity, selector, UI lifecycle and content-integrity behaviors identified above.",
+    "boundedMeaning": "This is not a claim that every repository behavior has a test or that every listed test has executed.",
+    "formalGateEvidenceStillSeparate": [
+      "Relevant-occurrence ledger integration and global activeLegacy/unclassified/orphan accounting",
+      "Review and inventory of the actual delivered SF production archive",
+      "Executed negative controls of the G09 auditor itself",
+      "Execution receipts selected and verified by root for the final candidate"
+    ]
+  },
+  "limitations": [
+    "This is an unsigned source-review observation at the pinned base, not an attestation or formal G09 PASS.",
+    "No local checkout, browser operation, runtime command, CI run or test execution was performed by this review.",
+    "Only stated source ranges and named producer/consumer boundaries are covered.",
+    "No global claim about 23k occurrences, complete import graphs, repository-wide orphan exports or all packaged content is made.",
+    "Other fronts G01-G08/G10 and design issue #349 were not changed or re-qualified.",
+    "All test statuses remain NOT_RUN until separately verified execution evidence is attached by root.",
+    "Any source blob change affecting a recorded boundary requires checking the delta before reusing that decision."
+  ]
+}

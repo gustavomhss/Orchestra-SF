@@ -1,0 +1,1049 @@
+{
+  "schema": "sf-g09-installed-host-boundary-observation-v1",
+  "status": "INSTALLED_HOST_BOUNDARY_OBSERVED",
+  "producerBinding": {
+    "sourceSHA": "edd15e422dd8b1008a1a32ff4c8d5108e8e2e3a2",
+    "sourceTreeSHA": "f3e59ed0a3f77400757ca3377241cebcb1afcc2e",
+    "workflowSHA": "edd15e422dd8b1008a1a32ff4c8d5108e8e2e3a2",
+    "workflowPath": ".github/workflows/g09-final.yml",
+    "branch": "g09-final-review",
+    "event": "push",
+    "runId": "44999398244",
+    "runAttempt": "1",
+    "job": "teams-profile-artifact",
+    "jobId": "137137388398",
+    "checkRunId": "137137388398",
+    "repository": "gustavomhss/Orchestra-SF",
+    "repositoryId": "1455724710",
+    "artifact": {
+      "id": "14745363273",
+      "name": "orchestra-sf-entra-linux-edd15e422dd8b1008a1a32ff4c8d5108e8e2e3a2",
+      "digest": "sha256:748e5fdf181bd37f80e51fb8206fd17e365f52a467823dbc7dc5bf21ebad9597",
+      "bytes": 125409738
+    }
+  },
+  "examinationBinding": {
+    "sourceSHA": "edd15e422dd8b1008a1a32ff4c8d5108e8e2e3a2",
+    "sourceTreeSHA": "f3e59ed0a3f77400757ca3377241cebcb1afcc2e",
+    "workflowSHA": "edd15e422dd8b1008a1a32ff4c8d5108e8e2e3a2",
+    "workflowPath": ".github/workflows/g09-final.yml",
+    "branch": "g09-final-review",
+    "event": "push",
+    "runId": "44999398244",
+    "runAttempt": "1",
+    "job": "candidate-host-boundary",
+    "jobId": "137140475358",
+    "checkRunId": "137140475358",
+    "repository": "gustavomhss/Orchestra-SF",
+    "repositoryId": "1455724710",
+    "files": [
+      {
+        "path": ".github/ci/tests/g09-final-host-boundary.mjs",
+        "gitBlob": "23f3cd8ff19fb7edcc388cbfed56ef0920db8a8e",
+        "sha256": "5edf7c9efc19cd26d81f4dfb0b856211e13c49d5ad5c74465b868d49a4c13936"
+      },
+      {
+        "path": "script/sf-ci/g09-candidate-evidence.mjs",
+        "gitBlob": "7c26ce26c6e8491c7c903f923185707d66d182a3",
+        "sha256": "743d79d1f98c7d771a9c5694913164264b31dc50d8859fd1ed511add69543370"
+      },
+      {
+        "path": ".github/workflows/g09-final.yml",
+        "gitBlob": "da1e1461461dea796f5bf7fd1d542601d79eecbd",
+        "sha256": "46c2095ac953a8ab0e09f4550b2b48fd69cc1f7c8bba61d9a6ee78051c4cec53"
+      }
+    ]
+  },
+  "archiveBindingSha256": "f8f5c48c7c4318d1dbcd2da34ec4d85a849908a72c90386c8262ed0bc50c45ba",
+  "installationModesSha256": "1c6fd9d5f24d213b0f448ac650ceb946bf83e3265305f8a1b99add956816de69",
+  "archiveSha256": "81b7c2ed9e54b6e1d259a270c84bb88d3048a0dec11b31a5ce436158c7adb07c",
+  "binarySha256": "fdd56c5e1b12f238113224c041cdb3a960242ed3a98a2518d41db6e12bd2af8a",
+  "factorySha256": "fdcb3fbc2348b3e1a8a8054c7ea518c21df504e02e60e372ae4c5c8565606297",
+  "scope": "Installed Microsoft dedicated host, controlled Entra/Graph transport, temporary isolated data",
+  "suppliedIdentifier": {
+    "value": "psv_g09_host_boundary_supplied_identifier",
+    "existingSavedRowClaimed": false
+  },
+  "sourceFiles": [
+    {
+      "path": "script/sf-ci/team-profile-residue.mjs",
+      "gitBlob": "10ae99ab085821f0e312ee05479cad3fb723c7b0",
+      "sha256": "afbbab279f067402ddc500e82add4d3d0f619e9cbd7535e54c11e3a2c28f272a"
+    },
+    {
+      "path": ".github/ci/entra-native-provider.mjs",
+      "gitBlob": "064d50d56cdade310aa99d50e7fdf670afd698b5",
+      "sha256": "c272473a9b98cb5231348a31576900b6e362b6fc692cbc9a728b4bc92264777f"
+    },
+    {
+      "path": ".github/ci/entra-native-http.mjs",
+      "gitBlob": "00a9cc6e4662fda415f9963c860737a6c4116a12",
+      "sha256": "fde0b08878ebfeaf506b60108e258c7ba0ba1d03753cea509435286c71207dd2"
+    },
+    {
+      "path": ".github/ci/g09-installation-modes.py",
+      "gitBlob": "7d2d15b1f424347615994e92c5e116f5b00b6873",
+      "sha256": "ee9f6cc543d69f4c654a30fd49fe2e22c5e20ef9abc770c467722d5c0b48b1d6"
+    },
+    {
+      "path": "sf/azure/vm/install-factory-distribution.py",
+      "gitBlob": "17345366812c79944928731d4fe188b3bced7342",
+      "sha256": "f1e77dbf861e7c759b81a5bf42751d9c07a39382f09c2cdae760d2f37e9918e2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-configuration.ts",
+      "gitBlob": "e668536926c3b3a384f4f7846bfeae5d5d30360b",
+      "sha256": "17893eee302b4a0b9f6e919d07248594eb54d8eec598b6b0f37dbf7ed190bed1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "gitBlob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "sha256": "bdeb9ff9943d0c1785dfe7f56d450093fcffc09a9aecbe63e079d3851a78d13b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/records.ts",
+      "gitBlob": "f769274f2887a187fbdad8688c2bb3ae5ad4a1e5",
+      "sha256": "1d3a4c7feca4f6302168cf22a78e482bf9c66bf2436b2978f5fdd64ab89e6069"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "gitBlob": "1d0459efa7a42dae3b93ffb0eb4299460e373989",
+      "sha256": "92495d1bc81d086f0892911f7ec0e90c864aad3518d0a9667262e2aecfea579f"
+    },
+    {
+      "path": "packages/schema/src/permission-saved.ts",
+      "gitBlob": "969a6dc25cad87bff7309ad7444f5c997ad0913b",
+      "sha256": "58cd2074b989e82b8060e71614abdd83f2e7db3779c68709b05a8780deebbd6b"
+    },
+    {
+      "path": "packages/core/src/config.ts",
+      "gitBlob": "55ab9355db79be66fecd29f7ad45ea3d5128d391",
+      "sha256": "4a1735d7f18fa26947eaa7c5f9a2592f75ea079699d5ccc2f016b7f0828c396a"
+    }
+  ],
+  "signInFunctionSha256": "2133817721fc6bc473132109020ae546dced29a789da493742c26409320fd2a0",
+  "checks": [
+    {
+      "case": "trusted-ingress-required",
+      "method": "GET",
+      "path": "/api/permission/saved",
+      "credentials": "anonymous",
+      "ingressProof": false,
+      "status": 403,
+      "bodyBytes": 0
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "GET",
+      "path": "/api/permission/saved",
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "GET",
+      "path": "/api/permission/saved?projectID=394777878bd75161123a2e90095c296c0f08b9fec341202c7bc2a93318da94c5",
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "DELETE",
+      "path": "/api/permission/saved/psv_g09_host_boundary_supplied_identifier",
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "GET",
+      "path": "/api/permission/saved",
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "GET",
+      "path": "/api/permission/saved?projectID=394777878bd75161123a2e90095c296c0f08b9fec341202c7bc2a93318da94c5",
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "DELETE",
+      "path": "/api/permission/saved/psv_g09_host_boundary_supplied_identifier",
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "GET",
+      "path": "/api/permission/saved",
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "GET",
+      "path": "/api/permission/saved?projectID=394777878bd75161123a2e90095c296c0f08b9fec341202c7bc2a93318da94c5",
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "DELETE",
+      "path": "/api/permission/saved/psv_g09_host_boundary_supplied_identifier",
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "GET",
+      "path": "/api/permission/saved",
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "GET",
+      "path": "/api/permission/saved?projectID=394777878bd75161123a2e90095c296c0f08b9fec341202c7bc2a93318da94c5",
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "saved-permission-route-absent",
+      "method": "DELETE",
+      "path": "/api/permission/saved/psv_g09_host_boundary_supplied_identifier",
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/session",
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "POST",
+      "path": "/api/session",
+      "json": {},
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/session/session_g09_boundary",
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/config",
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "PATCH",
+      "path": "/api/config",
+      "json": {},
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/event",
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "DELETE",
+      "path": "/api/credential/g09-boundary-credential",
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/openapi.json",
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/health",
+      "credentials": "anonymous",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/session",
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "POST",
+      "path": "/api/session",
+      "json": {},
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/session/session_g09_boundary",
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/config",
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "PATCH",
+      "path": "/api/config",
+      "json": {},
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/event",
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "DELETE",
+      "path": "/api/credential/g09-boundary-credential",
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/openapi.json",
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/health",
+      "credentials": "supplied-basic",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/session",
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "POST",
+      "path": "/api/session",
+      "json": {},
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/session/session_g09_boundary",
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/config",
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "PATCH",
+      "path": "/api/config",
+      "json": {},
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/event",
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "DELETE",
+      "path": "/api/credential/g09-boundary-credential",
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/openapi.json",
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/health",
+      "credentials": "allowed-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/session",
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "POST",
+      "path": "/api/session",
+      "json": {},
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/session/session_g09_boundary",
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/config",
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "PATCH",
+      "path": "/api/config",
+      "json": {},
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/event",
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "DELETE",
+      "path": "/api/credential/g09-boundary-credential",
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/openapi.json",
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "generic-core-route-absent",
+      "method": "GET",
+      "path": "/api/health",
+      "credentials": "denied-microsoft",
+      "ingressProof": true,
+      "status": 404,
+      "bodyBytes": 0,
+      "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentType": null
+    },
+    {
+      "case": "native-team-context",
+      "credentials": "anonymous",
+      "status": 401,
+      "selectedTeam": null
+    },
+    {
+      "case": "native-team-context",
+      "credentials": "supplied-basic",
+      "status": 401,
+      "selectedTeam": null
+    },
+    {
+      "case": "native-team-context",
+      "credentials": "allowed-microsoft",
+      "status": 200,
+      "selectedTeam": "44444444-4444-4444-8444-444444444444"
+    },
+    {
+      "case": "native-team-context",
+      "credentials": "denied-microsoft",
+      "status": 403,
+      "selectedTeam": null
+    }
+  ],
+  "databaseCheckpoints": [
+    {
+      "checkpoint": "before-startup",
+      "expectedPath": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/installation/host-data/orchestra.db",
+      "checkedNames": [
+        "orchestra.db",
+        "orchestra.db-wal",
+        "orchestra.db-shm",
+        "orchestra.db-journal"
+      ],
+      "present": [],
+      "openCoreDatabaseDescriptors": []
+    },
+    {
+      "checkpoint": "after-register-refusal",
+      "expectedPath": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/installation/host-data/orchestra.db",
+      "checkedNames": [
+        "orchestra.db",
+        "orchestra.db-wal",
+        "orchestra.db-shm",
+        "orchestra.db-journal"
+      ],
+      "present": [],
+      "openCoreDatabaseDescriptors": []
+    },
+    {
+      "checkpoint": "after-startup",
+      "expectedPath": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/installation/host-data/orchestra.db",
+      "checkedNames": [
+        "orchestra.db",
+        "orchestra.db-wal",
+        "orchestra.db-shm",
+        "orchestra.db-journal"
+      ],
+      "present": [],
+      "openCoreDatabaseDescriptors": []
+    },
+    {
+      "checkpoint": "after-permission-negatives",
+      "expectedPath": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/installation/host-data/orchestra.db",
+      "checkedNames": [
+        "orchestra.db",
+        "orchestra.db-wal",
+        "orchestra.db-shm",
+        "orchestra.db-journal"
+      ],
+      "present": [],
+      "openCoreDatabaseDescriptors": []
+    },
+    {
+      "checkpoint": "after-generic-core-negatives",
+      "expectedPath": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/installation/host-data/orchestra.db",
+      "checkedNames": [
+        "orchestra.db",
+        "orchestra.db-wal",
+        "orchestra.db-shm",
+        "orchestra.db-journal"
+      ],
+      "present": [],
+      "openCoreDatabaseDescriptors": []
+    },
+    {
+      "checkpoint": "after-positive-and-negative-team-controls",
+      "expectedPath": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/installation/host-data/orchestra.db",
+      "checkedNames": [
+        "orchestra.db",
+        "orchestra.db-wal",
+        "orchestra.db-shm",
+        "orchestra.db-journal"
+      ],
+      "present": [],
+      "openCoreDatabaseDescriptors": []
+    },
+    {
+      "checkpoint": "after-shutdown",
+      "expectedPath": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/installation/host-data/orchestra.db",
+      "checkedNames": [
+        "orchestra.db",
+        "orchestra.db-wal",
+        "orchestra.db-shm",
+        "orchestra.db-journal"
+      ],
+      "present": [],
+      "openCoreDatabaseDescriptors": []
+    }
+  ],
+  "databaseEvents": [],
+  "ignoredDatabaseDirectoryEvents": 1,
+  "processIdentity": [
+    {
+      "checkpoint": "before-first-http-request",
+      "pid": 2425,
+      "startTime": "8316",
+      "groupId": 2425,
+      "sessionId": 2425,
+      "executable": "/home/runner/work/_temp/g09-host-boundary-release/bin/orchestra",
+      "executableSha256": "fdd56c5e1b12f238113224c041cdb3a960242ed3a98a2518d41db6e12bd2af8a",
+      "factory": "/home/runner/work/_temp/g09-host-boundary-release/bin/local/entry.mjs",
+      "factorySha256": "fdcb3fbc2348b3e1a8a8054c7ea518c21df504e02e60e372ae4c5c8565606297",
+      "cwd": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/workspace",
+      "factoryEnvironmentObserved": true,
+      "coreDatabaseEnvironmentObserved": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/installation/host-data/orchestra.db",
+      "environmentKeys": [
+        "HOME",
+        "LANG",
+        "ORCHESTRA_CONFIG_DIR",
+        "ORCHESTRA_CREDENTIAL_KEY_FILE",
+        "ORCHESTRA_DB",
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER",
+        "ORCHESTRA_INHERIT_CREDENTIALS",
+        "ORCHESTRA_SERVER_PASSWORD",
+        "ORCHESTRA_SERVER_USERNAME",
+        "PATH",
+        "SF_PROOF_FACTORY",
+        "SUCAFINA_MICROSOFT_CONFIG",
+        "SUCAFINA_NATIVE_TEAM_DECISIONS",
+        "SUCAFINA_NATIVE_TEAM_WEB",
+        "TMPDIR",
+        "TZ",
+        "XDG_CACHE_HOME",
+        "XDG_CONFIG_HOME",
+        "XDG_DATA_HOME",
+        "XDG_STATE_HOME"
+      ],
+      "cmdlineSha256": "f1762840ba26c49b39b22759dbf9419c11e1b2410994a57bda6c0f2c09aa94bb"
+    },
+    {
+      "checkpoint": "after-startup",
+      "pid": 2425,
+      "startTime": "8316",
+      "groupId": 2425,
+      "sessionId": 2425,
+      "executable": "/home/runner/work/_temp/g09-host-boundary-release/bin/orchestra",
+      "executableSha256": "fdd56c5e1b12f238113224c041cdb3a960242ed3a98a2518d41db6e12bd2af8a",
+      "factory": "/home/runner/work/_temp/g09-host-boundary-release/bin/local/entry.mjs",
+      "factorySha256": "fdcb3fbc2348b3e1a8a8054c7ea518c21df504e02e60e372ae4c5c8565606297",
+      "cwd": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/workspace",
+      "factoryEnvironmentObserved": true,
+      "coreDatabaseEnvironmentObserved": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/installation/host-data/orchestra.db",
+      "environmentKeys": [
+        "HOME",
+        "LANG",
+        "ORCHESTRA_CONFIG_DIR",
+        "ORCHESTRA_CREDENTIAL_KEY_FILE",
+        "ORCHESTRA_DB",
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER",
+        "ORCHESTRA_INHERIT_CREDENTIALS",
+        "ORCHESTRA_SERVER_PASSWORD",
+        "ORCHESTRA_SERVER_USERNAME",
+        "PATH",
+        "SF_PROOF_FACTORY",
+        "SUCAFINA_MICROSOFT_CONFIG",
+        "SUCAFINA_NATIVE_TEAM_DECISIONS",
+        "SUCAFINA_NATIVE_TEAM_WEB",
+        "TMPDIR",
+        "TZ",
+        "XDG_CACHE_HOME",
+        "XDG_CONFIG_HOME",
+        "XDG_DATA_HOME",
+        "XDG_STATE_HOME"
+      ],
+      "cmdlineSha256": "f1762840ba26c49b39b22759dbf9419c11e1b2410994a57bda6c0f2c09aa94bb"
+    },
+    {
+      "checkpoint": "after-all-http-actions",
+      "pid": 2425,
+      "startTime": "8316",
+      "groupId": 2425,
+      "sessionId": 2425,
+      "executable": "/home/runner/work/_temp/g09-host-boundary-release/bin/orchestra",
+      "executableSha256": "fdd56c5e1b12f238113224c041cdb3a960242ed3a98a2518d41db6e12bd2af8a",
+      "factory": "/home/runner/work/_temp/g09-host-boundary-release/bin/local/entry.mjs",
+      "factorySha256": "fdcb3fbc2348b3e1a8a8054c7ea518c21df504e02e60e372ae4c5c8565606297",
+      "cwd": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/workspace",
+      "factoryEnvironmentObserved": true,
+      "coreDatabaseEnvironmentObserved": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/installation/host-data/orchestra.db",
+      "environmentKeys": [
+        "HOME",
+        "LANG",
+        "ORCHESTRA_CONFIG_DIR",
+        "ORCHESTRA_CREDENTIAL_KEY_FILE",
+        "ORCHESTRA_DB",
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER",
+        "ORCHESTRA_INHERIT_CREDENTIALS",
+        "ORCHESTRA_SERVER_PASSWORD",
+        "ORCHESTRA_SERVER_USERNAME",
+        "PATH",
+        "SF_PROOF_FACTORY",
+        "SUCAFINA_MICROSOFT_CONFIG",
+        "SUCAFINA_NATIVE_TEAM_DECISIONS",
+        "SUCAFINA_NATIVE_TEAM_WEB",
+        "TMPDIR",
+        "TZ",
+        "XDG_CACHE_HOME",
+        "XDG_CONFIG_HOME",
+        "XDG_DATA_HOME",
+        "XDG_STATE_HOME"
+      ],
+      "cmdlineSha256": "f1762840ba26c49b39b22759dbf9419c11e1b2410994a57bda6c0f2c09aa94bb"
+    }
+  ],
+  "canonicalQualification": false,
+  "signed": false,
+  "formalG09Pass": false,
+  "azureDeployment": false,
+  "browserInteraction": false,
+  "liveMicrosoftTenant": false,
+  "requestTransport": {
+    "implementation": "node:http.request",
+    "redirectsFollowed": false,
+    "timeoutMs": 20000,
+    "maximumResponseBytes": 2097152,
+    "maximumHeaderBytes": 16384,
+    "reason": "Node v24.15.0 bundled fetch removes the virtual Host required by trusted ingress",
+    "upstreamSource": "https://github.com/nodejs/node/blob/v24.15.0/deps/undici/src/lib/web/fetch/index.js"
+  },
+  "repositoryConfigTrap": {
+    "loader": {
+      "path": "packages/core/src/config.ts",
+      "gitBlob": "55ab9355db79be66fecd29f7ad45ea3d5128d391",
+      "sha256": "4a1735d7f18fa26947eaa7c5f9a2592f75ea079699d5ccc2f016b7f0828c396a"
+    },
+    "files": [
+      {
+        "path": "orchestra.json",
+        "byteLength": 80,
+        "sha256": "6ed3154b5e8ed11cf785a8d5efe7cb5d521c1dc569265a9e59672153c38d3967"
+      },
+      {
+        "path": "orchestra.jsonc",
+        "byteLength": 80,
+        "sha256": "6ed3154b5e8ed11cf785a8d5efe7cb5d521c1dc569265a9e59672153c38d3967"
+      },
+      {
+        "path": ".orchestra/orchestra.json",
+        "byteLength": 80,
+        "sha256": "6ed3154b5e8ed11cf785a8d5efe7cb5d521c1dc569265a9e59672153c38d3967"
+      },
+      {
+        "path": ".orchestra/orchestra.jsonc",
+        "byteLength": 80,
+        "sha256": "6ed3154b5e8ed11cf785a8d5efe7cb5d521c1dc569265a9e59672153c38d3967"
+      }
+    ],
+    "gitMarkers": [
+      {
+        "path": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/workspace/.git",
+        "present": false
+      },
+      {
+        "path": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/.git",
+        "present": false
+      },
+      {
+        "path": "/home/runner/work/_temp/.git",
+        "present": false
+      },
+      {
+        "path": "/home/runner/work/.git",
+        "present": false
+      },
+      {
+        "path": "/home/runner/.git",
+        "present": false
+      },
+      {
+        "path": "/home/.git",
+        "present": false
+      },
+      {
+        "path": "/.git",
+        "present": false
+      }
+    ],
+    "scope": "Malformed repository configuration is present while actual Microsoft Team requests succeed; no syscall-absence claim",
+    "unchangedAfterRequestsAndShutdown": true
+  },
+  "childEnvironmentKeys": [
+    "HOME",
+    "LANG",
+    "ORCHESTRA_CONFIG_DIR",
+    "ORCHESTRA_CREDENTIAL_KEY_FILE",
+    "ORCHESTRA_DB",
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER",
+    "ORCHESTRA_INHERIT_CREDENTIALS",
+    "ORCHESTRA_SERVER_PASSWORD",
+    "ORCHESTRA_SERVER_USERNAME",
+    "PATH",
+    "SF_PROOF_FACTORY",
+    "SUCAFINA_MICROSOFT_CONFIG",
+    "SUCAFINA_NATIVE_TEAM_DECISIONS",
+    "SUCAFINA_NATIVE_TEAM_WEB",
+    "TMPDIR",
+    "TZ",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_HOME",
+    "XDG_STATE_HOME"
+  ],
+  "daemonRegistration": {
+    "status": "rejected",
+    "arguments": [
+      "serve",
+      "--register"
+    ],
+    "timeoutMs": 15000,
+    "exitCode": 1,
+    "observedReason": "Trusted ingress listeners cannot register as the daemon",
+    "executable": "/home/runner/work/_temp/g09-host-boundary-release/bin/orchestra",
+    "executableSha256": "fdd56c5e1b12f238113224c041cdb3a960242ed3a98a2518d41db6e12bd2af8a",
+    "factory": "/home/runner/work/_temp/g09-host-boundary-release/bin/local/entry.mjs",
+    "factorySha256": "fdcb3fbc2348b3e1a8a8054c7ea518c21df504e02e60e372ae4c5c8565606297",
+    "cwd": "/home/runner/work/_temp/g09-host-boundary-runtime-l0PPAx/workspace",
+    "pid": 2411,
+    "startTime": "8223",
+    "groupId": 2411,
+    "sessionId": 2411,
+    "outputBytes": 279,
+    "outputSha256": "6187178d46cbad9c50477660e42173eff4271b2d7f58c4568e1b2c5b82ea59d3"
+  },
+  "installationBinding": {
+    "installationId": "394777878bd75161123a2e90095c296c0f08b9fec341202c7bc2a93318da94c5",
+    "tenantId": "11111111-1111-4111-8111-111111111111",
+    "projectId": "394777878bd75161123a2e90095c296c0f08b9fec341202c7bc2a93318da94c5",
+    "hostId": "a4544768-a263-48c8-a49b-8b9d67f7d038",
+    "publicOrigin": "https://sf.example.test",
+    "mount": "/sucafina",
+    "contractRevision": "sf-team-profile/1",
+    "authMode": "microsoft"
+  },
+  "suppliedCoreIdentifiers": {
+    "session": "session_g09_boundary",
+    "credential": "g09-boundary-credential",
+    "existingSessionOrCredentialClaimed": false
+  },
+  "completedCoreCases": 36,
+  "completedPermissionCases": 12,
+  "processExit": {
+    "code": 143,
+    "signal": null
+  },
+  "processAndListenerGone": true,
+  "output": {
+    "stdoutBytes": 43,
+    "stdoutSha256": "24f88173b181e293ddfcef774408482ee7ec08834769a0cc5385e466327f6938",
+    "stderrBytes": 0,
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "rawLogsPublished": false
+  },
+  "installedBytesUnchangedAfterShutdown": true,
+  "privateRuntimeRemoved": true,
+  "temporaryReleaseRemoved": true,
+  "cleanupErrors": []
+}
