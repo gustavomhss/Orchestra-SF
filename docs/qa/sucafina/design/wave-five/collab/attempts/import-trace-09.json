@@ -80,7 +80,456 @@
     }
   },
   "notes": "Disposable bounded aggregate profile over current original read-phase helper. All17 original health calls run once with source identities preserved; both read roots and arbitrary external await placement remain exact. Browser reference request/headers/finished timestamps distinguish transport versus publication. No timeout, source, grant or workflow changes.",
-  "result": "running",
+  "result": "diagnostic test passed with only45ms margin at unchanged10s UI56 refresh assertion; not a clean import qualification",
   "run": 44993675945,
-  "interpretation": "Nested/inclusive function times must not be summed. Concurrent health elapsed times include queueing. Numeric profiles and static browser timing only."
+  "job": 137120009217,
+  "cleanupJob": 137121066538,
+  "passed": 1,
+  "failed": 0,
+  "duration": "3.2m",
+  "artifact": {
+    "id": 14743371181,
+    "node_id": "MDg6QXJ0aWZhY3QxNDc0MzM3MTE4MQ==",
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 25773384,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14743371181",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14743371181/zip",
+    "expired": false,
+    "digest": "sha256:14b1c967a3c78d8da9d54e9542a376edda08ae071ae141a94a91cc5411b4cbb8",
+    "created_at": "2026-11-22T06:30:20Z",
+    "updated_at": "2026-11-22T06:30:20Z",
+    "expires_at": "2026-11-29T06:30:17Z",
+    "workflow_run": {
+      "id": 44993675945,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf5importtrace9",
+      "head_sha": "9c2187329110937bae09e4a97d4412369955fef0"
+    }
+  },
+  "captureCount": 21,
+  "findings": {
+    "refreshVisibleMs": 9955,
+    "browserReference2": {
+      "requestAfterClickMs": 4437,
+      "responseMs": 436,
+      "finishedOrAbortedMs": 500
+    },
+    "firstPostPreview": {
+      "group": 25,
+      "elapsedMs": 2076,
+      "newPlans": 0,
+      "materializeCalls": 228,
+      "materializeMs": 1362.755,
+      "observeCalls": 6,
+      "observeMs": 15.867,
+      "cloneCalls": 0
+    },
+    "refreshPreflight": {
+      "groups": [
+        35,
+        36
+      ],
+      "elapsedMs": [
+        2041,
+        2006
+      ],
+      "newPlans": [
+        0,
+        0
+      ],
+      "materializeCalls": [
+        228,
+        228
+      ]
+    },
+    "refreshPostflight": {
+      "groups": [
+        37,
+        38
+      ],
+      "elapsedMs": [
+        2019,
+        1998
+      ],
+      "newPlans": [
+        0,
+        0
+      ],
+      "materializeCalls": [
+        228,
+        228
+      ]
+    },
+    "interpretation": "Each original context health group has228 detached materializations, approximately1.19–1.40s after preview, and about2s total elapsed. Original GET returned436ms after starting. Original preflight and postflight context checks dominate publication latency. No new plan calls occurred in groups25–50; no evidence of memo churn or a cold/warm plan difference across first preview and refresh.",
+    "group35": {
+      "localElapsedMs": 662,
+      "hostElapsedApproxMs": 1379,
+      "profile": {
+        "snapshot-clone": {
+          "calls": 0,
+          "ms": 0,
+          "maxUnits": 4701827
+        },
+        "snapshot-copy-root": {
+          "calls": 0,
+          "ms": 0,
+          "maxUnits": 4701827
+        },
+        "snapshot-materialize": {
+          "calls": 228,
+          "ms": 1319.053,
+          "maxUnits": 4701827
+        },
+        "snapshot-plan": {
+          "calls": 0,
+          "ms": 0,
+          "maxUnits": 4701827
+        },
+        "snapshot-decode": {
+          "calls": 1727,
+          "ms": 7.297,
+          "maxUnits": 4701827
+        },
+        "snapshot-observe": {
+          "calls": 6,
+          "ms": 18.187,
+          "maxUnits": 4701827
+        },
+        "snapshot-current-snapshot": {
+          "calls": 0,
+          "ms": 0,
+          "maxUnits": 0
+        },
+        "snapshot-current-snapshots": {
+          "calls": 12,
+          "ms": 89.528,
+          "maxUnits": 0
+        },
+        "canonical": {
+          "calls": 2758,
+          "ms": 65.569,
+          "maxUnits": 4701495
+        },
+        "digest": {
+          "calls": 2758,
+          "ms": 79.914,
+          "maxUnits": null
+        }
+      },
+      "branches": {
+        "dashboard": {
+          "plan": 12,
+          "clone": 0,
+          "lazy": 0
+        },
+        "planner": {
+          "plan": 12,
+          "clone": 0,
+          "lazy": 0
+        },
+        "procurement": {
+          "plan": 12,
+          "clone": 0,
+          "lazy": 0
+        }
+      }
+    }
+  },
+  "profile": "import-trace-09-profile.json",
+  "browserTimeline": [
+    {
+      "at": "2026-11-22T06:29:13.2633852Z",
+      "stage": "browser-reference-1-request-start"
+    },
+    {
+      "at": "2026-11-22T06:29:13.7376002Z",
+      "stage": "browser-reference-1-response-200-elapsed-ms-474"
+    },
+    {
+      "at": "2026-11-22T06:29:13.7721344Z",
+      "stage": "browser-reference-1-requestfinished-elapsed-ms-507"
+    },
+    {
+      "at": "2026-11-22T06:29:32.4928732Z",
+      "stage": "browser-ui56-refresh-click-start"
+    },
+    {
+      "at": "2026-11-22T06:29:32.5108251Z",
+      "stage": "browser-ui56-refresh-click-returned-ms-17"
+    },
+    {
+      "at": "2026-11-22T06:29:36.9291947Z",
+      "stage": "browser-reference-2-request-start"
+    },
+    {
+      "at": "2026-11-22T06:29:37.3634753Z",
+      "stage": "browser-reference-2-response-200-elapsed-ms-436"
+    },
+    {
+      "at": "2026-11-22T06:29:37.4278703Z",
+      "stage": "browser-reference-2-requestfailed-elapsed-ms-500"
+    },
+    {
+      "at": "2026-11-22T06:29:42.4487969Z",
+      "stage": "browser-ui56-refresh-visible-ms-9955"
+    }
+  ],
+  "diagnostics": [
+    {
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "kind": "original-import-request",
+      "event": "requestfinished",
+      "mode": "import-targets",
+      "method": "GET",
+      "failure": null
+    },
+    {
+      "kind": "original-import-admission",
+      "httpStatus": 200,
+      "producerStatus": "ok",
+      "instrumentation": "CDP response-stage observation; no replay"
+    },
+    {
+      "kind": "original-import-request",
+      "event": "requestfinished",
+      "mode": "import-admit",
+      "method": "POST",
+      "failure": null
+    },
+    {
+      "kind": "original-import-progress",
+      "stage": "preview-producer-response",
+      "httpStatus": 200,
+      "producerStatus": "ok",
+      "codecStatus": "ok",
+      "typed": "Some",
+      "activity": "previewing",
+      "phase": "selecting",
+      "state": "ready"
+    },
+    {
+      "kind": "original-import-preview",
+      "manifestId": "95168c34c70029f9291dacab2959faa42f38fe2213b6faa6637f8b89b8ce6dbc",
+      "state": "preview",
+      "sourceDigest": "3573753f3e0e34866993127b3946d6d6becc54575fd5ae476482796ae36e638a",
+      "domainApplied": false
+    },
+    {
+      "kind": "original-import-request",
+      "event": "requestfinished",
+      "mode": "import-preview",
+      "method": "POST",
+      "failure": null
+    },
+    {
+      "kind": "original-import-progress",
+      "stage": "preview-delivered",
+      "activity": "previewing",
+      "phase": "selecting",
+      "state": "ready"
+    },
+    {
+      "kind": "original-import-progress",
+      "stage": "independent-reference-read",
+      "elapsedMs": 5080,
+      "httpStatus": 200,
+      "producerStatus": "ok",
+      "activity": "reading-source",
+      "phase": "selecting",
+      "state": "ready"
+    },
+    {
+      "kind": "original-import-request",
+      "event": "requestfinished",
+      "mode": "import-reference",
+      "method": "GET",
+      "failure": null
+    },
+    {
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "kind": "original-import-request",
+      "event": "requestfailed",
+      "mode": "import-reference",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  ],
+  "limitations": [
+    "Diagnostic source overlays are not integrated",
+    "No timeout increase or retries",
+    "No artificial warming",
+    "No clean UI56 pass claimed",
+    "Opaque state.read callback receives the entire product state; namespace-only cloning is not contract-compatible"
+  ],
+  "next": "Review original detached materialization cost and then qualify the unchanged clean import journey."
 }

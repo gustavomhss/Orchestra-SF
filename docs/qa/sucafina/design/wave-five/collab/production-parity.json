@@ -1,5 +1,5 @@
 {
-  "workerSource": "db7efc17411d31d14a201f81dac168ccb7ff7f08",
+  "workerSource": "edf94a3cd308070fce76984abfc9957192e88542",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "purpose": "Exact current blobs for root composition; compose only owned paths, not the complete pinned worker tree.",
   "files": [
@@ -148,7 +148,7 @@
       "unitRecord": "qualification/phase-unit-02.json",
       "audit": "qualification/operational-read-audit.json",
       "review": "qualification/operational-read-review.json",
-      "runtimeStatus": "Installed16+8 equivalence passed; UI55/56 diagnostic journey passed; clean UI56 refresh missed10s and clean UI53 acknowledgement observer failed, both preserved.",
+      "runtimeStatus": "Integrated exact helper/compositions; all24 installed groups matched. Clean UI51–53 passed. Clean UI56 refresh remains open.",
       "equivalenceRun": 44992278999,
       "equivalenceRecord": "attempts/phase-equivalence-01.json"
     },
@@ -161,6 +161,24 @@
       "run": 44992785649,
       "result": "failed on Chromium acknowledgement read after actual confirmation receipt; test observation corrected",
       "record": "attempts/collaboration-clean-07.json"
+    },
+    "cleanCollaboration8": {
+      "source": "15ff166d5c5fa9527e5d9515048fe15f58702264",
+      "productSource": "b486fd1e76bdb2dc7c48cb070ba67a744358131a",
+      "snapshot": "ff18667522878c4b46a0cbcae0452f0472010b2d",
+      "run": 44993470385,
+      "job": 137119394081,
+      "result": "passed",
+      "captures": 24,
+      "record": "attempts/collaboration-clean-08.json",
+      "specBlob": "a7481a0f5e6346d4794b2309c54f06bae3e4162b"
+    },
+    "importTrace9": {
+      "run": 44993675945,
+      "job": 137120009217,
+      "result": "diagnostic test passed with only45ms margin at unchanged10s UI56 refresh assertion; not a clean import qualification",
+      "record": "attempts/import-trace-09.json",
+      "profile": "attempts/import-trace-09-profile.json"
     }
   },
   "excluded": [

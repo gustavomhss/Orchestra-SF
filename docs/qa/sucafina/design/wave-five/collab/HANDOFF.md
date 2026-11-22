@@ -1,6 +1,6 @@
 # Collaboration and import presentation — wave five
 
-This handoff covers UI51, UI52, UI53, UI55 and UI56. It is a progress record, not final acceptance: clean Actions evidence proves the three collaboration journeys and now the original UI55 simulation and cancellation. UI56 route readiness still requires qualification after the remaining native context read cost is resolved.
+This handoff covers UI51, UI52, UI53, UI55 and UI56. It is a progress record, not final acceptance: the latest clean Actions journey passes UI51–53 on the integrated original read-phase runtime, with 24 inspected screenshots. UI55 original simulation and cancellation have real evidence. UI56 now reaches route readiness, but its clean preview refresh missed the unchanged 10 s rendering deadline; qualification remains open.
 
 ## Implemented composition
 
@@ -14,7 +14,7 @@ This handoff covers UI51, UI52, UI53, UI55 and UI56. It is a progress record, no
 
 The presentation uses the established native shell, quiet glass tokens, maximum content width and responsive gutters. New copy is bilingual. Existing English catalog keys and values are preserved. Forty pre-existing pt-BR import values received language corrections with root approval; some of those translations are also used by UI57.
 
-The real full-year import manifest contains 1,564 values. UI55/56 therefore place the proposed changes before a native disclosure containing the complete original impact, including all components, values and missing inputs. Nothing is truncated. Original issue messages stay visible outside that disclosure. The two new disclosure messages are bilingual; UI57/68 retain their original content order and markup. Clean import attempt 2 now captures this scoped composition in dark/light desktop and 390 px modes, and asserts the complete original impact row count and last field. UI56 and pt-BR preview capture remain pending.
+The real full-year import manifest contains 1,564 values. UI55/56 therefore place the proposed changes before a native disclosure containing the complete original impact, including all components, values and missing inputs. Nothing is truncated. Original issue messages stay visible outside that disclosure. The two new disclosure messages are bilingual; UI57/68 retain their original content order and markup. Clean import attempt 2 now captures this scoped composition in dark/light desktop and 390 px modes, and asserts the complete original impact row count and last field. The diagnostic installed-equivalence journey also reached UI56 and pt-BR. Those diagnostic captures do not substitute for the remaining clean import qualification.
 
 The only shared collaboration renderer change is a bounded correction for the two existing observed-kind messages that contain the legacy single-brace `{kind}` placeholder. It uses the typed value and a replacement callback for those exact keys, leaving the translation catalogs and other interpolation behavior intact.
 
@@ -33,7 +33,7 @@ The current collaboration observer also groups the same namespace metadata reads
 | [Clean import attempt 2](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987863383) | Source `74be68770c958a720c3a34fa5b8e71b779c77e44`, snapshot `3a021f025cedad0e2058df443f7bbc721939ef08`: UI55 original admission, preview, independent reference read, simulation, complete-impact disclosure and cancel retention succeeded. UI56 failed the unchanged 10 s provider readiness assertion. This is partial evidence, not a passing import journey. [Record and gallery](attempts/import-fixed-02.json). |
 | [Technical gates](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44981671317) | All 12 gates passed on source `b69429f5632cd15d524ef3df3527714a2ab8c13e`: CLI/app/E2E typing, 94 regression cases including 18 collaboration observer cases, guardrails, palette parity and English catalog preservation. Later progress-copy and observed-kind renderer changes still require a current composed gate. |
 | [Clean browser attempt 6](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44982724904) | Source `7a9e0696ff353d9352938abd2c5527d76f0a47b1`, snapshot `456c19e5cfce9d1692b0fe5b6a85104706f55cf4`: collaboration test passed; independent import test failed. See [exact record](attempts/06.json). |
-| UI51 | Dark/light desktop and 390px, removal review/cancel/reopen/focus, explicit editor/review/cancel with raw draft retained, case-alias empty and pt-BR. The visually observed legacy placeholder was corrected afterward and needs a fresh capture. |
+| UI51 | Dark/light desktop and 390px, removal review/cancel/reopen/focus, explicit editor/review/cancel with raw draft retained, case-alias empty and pt-BR. The bounded original-kind renderer correction is verified in clean8 in English and pt-BR, including 390px. |
 | UI52 | Dark/light desktop and 390px, original isolated comment, source provenance, retained unsent draft and pt-BR. [Complete inspected matrix](attempts/06-ui52-gallery.json). |
 | UI53 | Dark/light desktop and 390px, original material, explicit review/cancel, one original no-change confirmation, receipt, current validity and pt-BR. All nine inspected JPEGs are recorded in [attempt 6](attempts/06.json). |
 | UI55/56 | Genuine ClamD, original upload admission/preview, independent readback, actual UI55 simulation and cancellation succeeded in clean attempts 2 and 3. UI56 still fails the unchanged readiness assertion; no UI56 success is claimed. |
@@ -58,10 +58,9 @@ Use the exact owned code/test blob list in [production parity](production-parity
 
 Before final qualification:
 
-1. Resolve the observed original import/context boundary without weakening source guards.
-2. Run the two independent browser journeys against the clean composed product and inspect UI55/56 preview, provenance, cancellation and pt-BR.
-3. Re-capture UI51 with the bounded observed-kind renderer correction.
-4. Run current composed technical gates and update this handoff, parity record and gallery.
+1. Resolve the measured residual detached materialization cost without weakening source guards or widening timeouts.
+2. Complete the clean UI55/56 journey and inspect preview, provenance, cancellation and pt-BR; keep the existing10s UI56 refresh assertion.
+3. Preserve the passing clean UI51–53 receipt and 24-image gallery, then confirm final source parity and root-owned technical gates.
 
 No import apply, external reply, email or notification was requested by these browser journeys. No human visual acceptance or browser zoom qualification is claimed.
 
@@ -75,4 +74,10 @@ The measured repeated physical observations led to a narrow candidate that group
 
 The helper pins the original driver methods and readonly scope identity, rejects aborted or poisoned work, checks original callback result identity and final closure, and never replays after an error. Unsupported providers fall back before execution. Independent review identified and corrected a retained-first-callback lifetime gap and inherited-method pinning gap. The 13 genuine SQLite helper cases plus 24 collaboration and 24 portfolio source cases passed in [unit2](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44992111577): 61 cases, 524 assertions. See the [static audit](qualification/operational-read-audit.json), [peer review](qualification/operational-read-review.json) and [exact qualification](qualification/phase-unit-02.json).
 
-The installed comparison is a disposable first-call overlay: it executes the same original read-only observer lists ungrouped and grouped, compares every original availability field per observer, and emits only static labels/counts. Its result and the subsequent clean import journey are pending. Passing unit cases alone do not qualify UI56 or its performance.
+The installed comparison is a disposable first-call overlay: it executes the same original read-only observer lists ungrouped and grouped, compares every original availability field per observer, and emits only static labels/counts. All24 installed observer groups matched exactly:16 host groups/66 operations and8 local groups/149 operations. The diagnostic UI55/56 journey passed, but clean import4 missed the UI56 refresh rendering deadline after readiness passed. Passing unit and equivalence cases alone do not qualify clean UI56 performance.
+
+## Latest clean collaboration checkpoint
+
+[Clean8](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44993470385) passed the independent UI51–53 declaration on product `b486fd1e76bdb2dc7c48cb070ba67a744358131a` plus the exact permanent spec `a7481a0f5e6346d4794b2309c54f06bae3e4162b`. [Its record](attempts/collaboration-clean-08.json) contains24 actual hosted JPEG paths, original source checks and the preserved failure of clean7. The one no-change confirmation is schema decoded from its original acknowledgement, its audit reference appears in the native receipt, and a fresh authenticated original projection verifies the same confirmation and source version. The existing `forwardOnce` helper executes the original command once and forwards identical status, headers and bytes; no source result is mocked. Relationship changes are reviewed and cancelled; the reply remains unsent. English and pt-BR, dark/light, desktop1440 and mobile390, provenance, draft preservation and original receipt are covered. All24 screenshots were visually inspected by the agent. No human acceptance or browser zoom claim is made.
+
+[Trace9](attempts/import-trace-09.json) passed the instrumented UI55/56 journey, but Refresh→preview visibility took9.955s against the unchanged10s assertion. Its reference GET itself returned in436ms after starting4.437s after the click. The two context groups before it and two after it each took about2s. [The bounded profile](attempts/import-trace-09-profile.json) shows228 detached materializations per group, approximately1.19–1.40s, six fresh observations and zero new plans or fallback clones. The first post-preview group and later Refresh groups have the same plan counts; no artificial warming is proposed. This narrow diagnostic pass does not close clean UI56 qualification.
