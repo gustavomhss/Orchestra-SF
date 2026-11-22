@@ -403,3 +403,153 @@ test("CurrentChoice readonly calculation roots refuse aborted requests and repla
     }, abort.signal)
   })
 }, 45_000)
+
+const guardSurfaces = ["dashboard", "planner", "procurement"] as const
+
+async function sourceGuardFixture(fixture: Awaited<ReturnType<typeof createChain>>) {
+  // Give every surface a real, nonempty durable audit prefix. These are explicit
+  // fixture writes through the original source guard, not fabricated receipts.
+  for (const surface of guardSurfaces) await fixture.sources.transaction(surface, async (snapshot) => {
+    snapshot.audit.push({ who: "person", at, record: "readonly-guard-fixture:" + surface,
+      was: null, became: { surface, fixture: "current-choice-readonly" } })
+    return { commit: true, value: undefined }
+  })
+  const read = () => fixture.store.transactionAll!(async (snapshots) =>
+    ({ commit: false, value: structuredClone(snapshots) }))
+  const original = await read()
+  for (const surface of guardSurfaces) {
+    expect(original[surface].audit.length).toBeGreaterThan(0)
+    expect(original[surface].audit.some((event) => event.record === "readonly-guard-fixture:" + surface)).toBe(true)
+    expect(original[surface].sfSources).toBeDefined()
+  }
+  return {
+    original, read,
+    raw: createSfSourcePersistence({ ...fixture.sourceInput, persistence: fixture.store }),
+    // Copying an installed forwarder cannot confer its private factory identity.
+    // No registered driver method or property is replaced to create this lane.
+    opaque: createSfSourcePersistence({ ...fixture.sourceInput, persistence: { ...fixture.choice.persistence } }),
+  }
+}
+
+function mutateGuardedSnapshot(snapshot: Snapshot, surface: (typeof guardSurfaces)[number], target: "sources" | "audit") {
+  if (target === "sources") {
+    if (!snapshot.sfSources) throw new Error("Fixture source identities missing")
+    snapshot.sfSources.records[JSON.stringify(["readonly-guard-illegal", surface])] = {
+      incarnation: "uncommitted-readonly-guard-" + surface, version: 1, alive: true, inputDigest: "f".repeat(64),
+    }
+    return
+  }
+  const event = snapshot.audit.find((entry) => entry.record === "readonly-guard-fixture:" + surface)
+  if (!event) throw new Error("Fixture audit prefix missing")
+  event.became = "uncommitted-audit-rewrite"
+}
+
+test("CurrentChoice generic readonly transactions preserve raw callbacks and original projections on all surfaces", async () => {
+  await withChain(false, async (fixture) => {
+    const guarded = await sourceGuardFixture(fixture)
+    await fixture.ui(async (call) => fixture.choice.run(call, async () => {
+      const read = (sources: typeof fixture.sources) => fixture.store.readSnapshotRoot!(async () => {
+        const scope = currentSfReadonlySnapshotScope(sources)
+        expect(scope?.current()).toBe(true)
+        const callbacks: (typeof guardSurfaces)[number][] = []
+        const values = []
+        for (const surface of guardSurfaces) values.push(await sources.transaction(surface, async (snapshot) => {
+          callbacks.push(surface)
+          const original = structuredClone(snapshot)
+          const projections = Object.values(snapshot.sfSources?.scopes ?? {}).map((entry) => ({
+            scope: structuredClone(entry.scope),
+            projection: structuredClone(fixture.sourceInput.projectScope(surface, snapshot, entry.scope)),
+          }))
+          expect(original).toEqual(guarded.original[surface])
+          snapshot.data.readonlyCallbackMutation = surface
+          mutateGuardedSnapshot(snapshot, surface, "sources")
+          mutateGuardedSnapshot(snapshot, surface, "audit")
+          return { commit: false, value: { surface, original, projections } }
+        }))
+        expect(callbacks).toEqual([...guardSurfaces])
+        expect(scope?.current()).toBe(true)
+        return values
+      })
+      const raw = await read(guarded.raw)
+      const wrapped = await read(fixture.sources)
+      expect(wrapped).toEqual(raw)
+      const planner = wrapped.find((value) => value.surface === "planner")
+      expect(planner?.projections.some((entry) => entry.scope.recordType === "planner-version" &&
+        entry.scope.recordId === "v0" && entry.projection !== undefined)).toBe(true)
+    }))
+    expect(await guarded.read()).toEqual(guarded.original)
+  })
+}, 45_000)
+
+test("CurrentChoice readonly source and audit writes reach LocalStore rejection and poison just like the raw driver", async () => {
+  await withChain(false, async (fixture) => {
+    const guarded = await sourceGuardFixture(fixture)
+    await fixture.ui(async (call) => fixture.choice.run(call, async () => {
+      for (const sources of [guarded.raw, fixture.sources]) for (const surface of guardSurfaces) {
+        for (const target of ["sources", "audit"] as const) {
+          await expect(fixture.store.readSnapshotRoot!(async () => {
+            const scope = currentSfReadonlySnapshotScope(sources)
+            expect(scope?.current()).toBe(true)
+            await expect(sources.transaction(surface, async (snapshot) => {
+              expect(snapshot).toEqual(guarded.original[surface])
+              mutateGuardedSnapshot(snapshot, surface, target)
+              return { commit: true, value: "must not publish" }
+            })).rejects.toThrow("Nested local writes are forbidden")
+            // The inner rejection is deliberately caught. The unpoisoned proof
+            // and the owning root must still refuse a successful outer return.
+            expect(scope?.current()).toBe(false)
+            return "must not publish"
+          })).rejects.toThrow("Nested local write attempted")
+          expect(await guarded.read()).toEqual(guarded.original)
+        }
+      }
+    }))
+  })
+}, 45_000)
+
+test("CurrentChoice mutable source transactions retain the original source and audit guards on all surfaces", async () => {
+  await withChain(false, async (fixture) => {
+    const guarded = await sourceGuardFixture(fixture)
+    await fixture.ui(async (call) => fixture.choice.run(call, async () => {
+      for (const sources of [guarded.raw, fixture.sources]) for (const surface of guardSurfaces) {
+        for (const target of ["sources", "audit"] as const) {
+          await expect(sources.transaction(surface, async (snapshot) => {
+            expect(currentSfReadonlySnapshotScope(sources)).toBeUndefined()
+            expect(snapshot).toEqual(guarded.original[surface])
+            mutateGuardedSnapshot(snapshot, surface, target)
+            return { commit: true, value: "must not publish" }
+          })).rejects.toThrow(target === "sources" ? "SF_SOURCE_IDENTITY_MUTATION" : "SF_SOURCE_AUDIT_REWRITTEN")
+          expect(await guarded.read()).toEqual(guarded.original)
+        }
+      }
+    }))
+  })
+}, 45_000)
+
+test("Opaque CurrentChoice facades retain source guard rejection without poisoning a real readonly root", async () => {
+  await withChain(false, async (fixture) => {
+    const guarded = await sourceGuardFixture(fixture)
+    await fixture.ui(async (call) => fixture.choice.run(call, async () => {
+      for (const surface of guardSurfaces) for (const target of ["sources", "audit"] as const) {
+        expect(await fixture.store.readSnapshotRoot!(async () => {
+          const original = currentSfReadonlySnapshotScope(fixture.store)
+          expect(original?.current()).toBe(true)
+          expect(currentSfReadonlySnapshotScope(guarded.opaque)).toBeUndefined()
+          await expect(guarded.opaque.transaction(surface, async (snapshot) => {
+            expect(snapshot).toEqual(guarded.original[surface])
+            mutateGuardedSnapshot(snapshot, surface, target)
+            return { commit: true, value: "must not publish" }
+          })).rejects.toThrow(target === "sources" ? "SF_SOURCE_IDENTITY_MUTATION" : "SF_SOURCE_AUDIT_REWRITTEN")
+          // The legacy opaque guard rejects before LocalStore sees commit:true.
+          // Its unchanged behavior leaves this root readable and unpoisoned.
+          expect(original?.current()).toBe(true)
+          const current = await fixture.store.transaction(surface, async (snapshot) =>
+            ({ commit: false, value: structuredClone(snapshot) }))
+          expect(current).toEqual(guarded.original[surface])
+          return "original guard kept the root readable"
+        })).toBe("original guard kept the root readable")
+        expect(await guarded.read()).toEqual(guarded.original)
+      }
+    }))
+  })
+}, 45_000)

@@ -616,7 +616,7 @@ export function createSfSourcePersistence(input: {
         // A writable or opaque driver still needs the full preflight before work.
         const sealed = input.purpose !== "business-restore" && method && Object.hasOwn(method, "value") &&
           active && Object.hasOwn(active, "value") && active.value === method.value ?
-          currentLocalReadonlyAuthorityData(driver, []) : undefined
+          currentDriverReadonlyAuthorityData(driver, []) : undefined
         const sealedPreimage = sealed ? () => sealed.current() ? driver.currentSnapshot?.(surface) : undefined : undefined
         const guarded = guard(surface, snapshot, sealedPreimage)
         try {
