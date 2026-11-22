@@ -1,0 +1,1199 @@
+name: g09-final
+run-name: Linux Teams final candidate with behavioral checks and separate G09 inventory
+
+on:
+  push:
+    branches:
+      - g09-final-review
+
+concurrency:
+  group: g09-final-review
+  cancel-in-progress: false
+
+# A green behavioral run is not the independent authenticated G09 acceptance.
+# The canonical inventory job preserves its actual qualification status.
+permissions:
+  contents: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  teams-profile-artifact:
+    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/g09-final-review'"
+    outputs:
+      artifact-id: ${{ steps.package.outputs.artifact-id }}
+      artifact-name: orchestra-sf-entra-linux-${{ steps.source.outputs.sha }}
+      artifact-digest: ${{ steps.package.outputs.artifact-digest }}
+      source-sha: ${{ steps.source.outputs.sha }}
+      check-run-id: ${{ steps.identity.outputs.check_run_id }}
+      job-id: ${{ steps.identity.outputs.job_id }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      ORCHESTRA_CHANNEL: prod
+      ORCHESTRA_BRAND: sucafina
+      BUN_BASELINE_SHA256: a8c9c6738202e2fced555dd860a953c56c0cd059f75041e7010ae81a32802646
+    steps:
+      - name: Select revision
+        id: source
+        env:
+          REQUESTED_REVISION: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$REQUESTED_REVISION" =~ ^[0-9a-f]{40}$ ]]; then
+            printf '%s\n' "revision rejected" >&2
+            exit 1
+          fi
+          printf 'sha=%s\n' "$REQUESTED_REVISION" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ steps.source.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Bind the source and workflow to this run
+        id: identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
+          test "$SOURCE_REVISION" = "$GITHUB_SHA"
+          test "$GITHUB_REF" = refs/heads/g09-final-review
+          [[ "$CHECK_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs?per_page=100" > "$RUNNER_TEMP/g09-producer-jobs.json"
+          job_id="$(jq -er --arg url "https://api.github.com/repos/$GITHUB_REPOSITORY/check-runs/$CHECK_RUN_ID" \
+            --arg run "$GITHUB_RUN_ID" --arg source "$GITHUB_SHA" '
+              select(.total_count == (.jobs | length)) |
+              [.jobs[] | select(.check_run_url == $url and .name == "teams-profile-artifact" and
+                (.run_id | tostring) == $run and .head_sha == $source)] |
+              if length == 1 then (.[0].id | tostring) else error("exact producer Actions job not found") end
+            ' "$RUNNER_TEMP/g09-producer-jobs.json")"
+          [[ "$job_id" =~ ^[1-9][0-9]*$ ]]
+          printf 'job_id=%s\n' "$job_id" >> "$GITHUB_OUTPUT"
+          printf 'check_run_id=%s\n' "$CHECK_RUN_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node
+        id: node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+
+      - name: Verify and set up Bun Linux x64 baseline
+        run: |
+          set -euo pipefail
+          zip="$RUNNER_TEMP/bun-linux-x64-baseline.zip"
+          curl --fail --silent --show-error --location --retry 2 --max-time 120 \
+            https://github.com/oven-sh/bun/releases/download/bun-v1.4.1/bun-linux-x64-baseline.zip --output "$zip"
+          printf '%s  %s\n' "$BUN_BASELINE_SHA256" "$zip" | sha256sum --check
+          unzip -q "$zip" -d "$RUNNER_TEMP"
+          bin="$RUNNER_TEMP/bun-linux-x64-baseline"
+          test "$("$bin/bun" --version)" = "1.4.1"
+          test "$("$bin/bun" --print Bun.revision)" = "4661e494f052c83c80dade1318e5710238340be6"
+          printf '%s\n' "$bin" >> "$GITHUB_PATH"
+
+      - name: Install dependencies
+        id: install
+        run: bun install --frozen-lockfile
+
+      - name: Install pinned ripgrep for source tests
+        uses: ./.github/actions/ripgrep
+
+      - name: Check repository guardrails
+        run: |
+          set -euo pipefail
+          git show-ref --verify refs/remotes/origin/dev
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/g09-guards.log"
+
+      - name: Verify production build inputs
+        working-directory: apps/web
+        env:
+          NODE_ENV: production
+        run: |
+          set -euo pipefail
+          export ORCHESTRA_VERSION="$(jq -er '.version' ../cli/package.json)"
+          printf 'ORCHESTRA_VERSION=%s\n' "$ORCHESTRA_VERSION" >> "$GITHUB_ENV"
+          bun --eval '
+            import assert from "node:assert/strict";
+            import { resolveConfig, loadEnv } from "vite";
+            import { Script } from "../../packages/script/src/index.ts";
+            const resolved = await resolveConfig({}, "build", "production", "production");
+            const inputs = new Set([...Object.keys(process.env), ...Object.keys(loadEnv(resolved.mode, resolved.envDir, "VITE_"))].filter((key) => key.startsWith("VITE_")));
+            assert.equal(Script.channel, "prod");
+            assert.equal(process.env.ORCHESTRA_BRAND, "sucafina");
+            assert.equal(resolved.mode, "production");
+            assert.equal(resolved.isProduction, true);
+            assert.equal(resolved.define["import.meta.env.VITE_ORCHESTRA_CHANNEL"], JSON.stringify("prod"));
+            assert.equal(inputs.size, 0, "Unexpected VITE environment inputs");
+            await Bun.write(process.env.RUNNER_TEMP + "/g09-build-inputs.json", JSON.stringify({
+              sourceSHA: process.env.GITHUB_SHA, channel: Script.channel, brand: process.env.ORCHESTRA_BRAND, viteEnvironmentInputs: inputs.size
+            }, null, 2) + "\n");
+          '
+
+      - name: Install Chromium for the installed-package proof
+        working-directory: packages/app-shell
+        run: bun x playwright install --with-deps chromium
+
+      - name: Build native omni
+        id: native
+        working-directory: native/omni
+        run: |
+          set -euo pipefail
+          if [[ "$(uname -m)" != "x86_64" ]]; then
+            printf '%s\n' "runner rejected" >&2
+            exit 1
+          fi
+          rustup show active-toolchain || rustup toolchain install
+          cargo build --locked --release -p hugr-omni-node -p omni-supervisor
+
+      - name: Verify slot fallbacks with the candidate Bun runtime
+        working-directory: packages/tui
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+          PRODUCER_JOB_ID: ${{ steps.identity.outputs.job_id }}
+          ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: "false"
+          ORCHESTRA_OMNI_CONTROL: declared
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:packages/tui/test/plugin/slots.test.tsx)" = f47857a0ba3adf505d1ac9a6dee3a7b2e1e584a9
+          nonce="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
+          printf 'omni control nonce: %s\n' "$nonce"
+          NO_COLOR=1 ORCHESTRA_OMNI_CONTROL_NONCE="$nonce" GITHUB_ACTIONS=true \
+            bun test ./test/plugin/slots.test.tsx --timeout 120000 2>&1 | tee "$RUNNER_TEMP/g09-slot-source-proof.log"
+          SOURCE_TREE_SHA="$(git rev-parse 'HEAD^{tree}')" \
+            BUN_VERSION="$(bun --version)" BUN_REVISION="$(bun --print Bun.revision)" node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict'
+          import { createHash } from 'node:crypto'
+          import { readFileSync, writeFileSync } from 'node:fs'
+          const file = 'test/plugin/slots.test.tsx'
+          const log = readFileSync(process.env.RUNNER_TEMP + '/g09-slot-source-proof.log')
+          const text = log.toString('utf8')
+          const names = [
+            'replace slot mounts plugin content once',
+            'runtime without a plugin host renders and mounts slot fallbacks',
+            'configured runtime preserves replacement and restores fallback on unregister',
+            'runtime renders fallback when mounted after dispose',
+            'runtime renders fallback when mounted after clear',
+          ]
+          for (const name of names) assert.equal(text.split('\n').filter((line) => line.startsWith('(pass) ' + name + ' [')).length, 1)
+          assert.match(text, /(?:^|\n)\s*5 pass\r?\n/)
+          assert.match(text, /(?:^|\n)\s*0 fail\r?\n/)
+          assert.match(text, /(?:^|\n)\s*15 expect\(\) calls\r?\n/)
+          const digest = (bytes) => createHash('sha256').update(bytes).digest('hex')
+          const proof = {
+            sourceSHA: process.env.GITHUB_SHA, sourceTreeSHA: process.env.SOURCE_TREE_SHA, workflowSHA: process.env.GITHUB_SHA,
+            runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+            job: process.env.GITHUB_JOB, jobId: process.env.PRODUCER_JOB_ID, checkRunId: process.env.CHECK_RUN_ID,
+            bun: { version: process.env.BUN_VERSION, revision: process.env.BUN_REVISION },
+            tests: names.map((caseName) => ({
+              path: 'packages/tui/' + file, fileSha256: digest(readFileSync(file)), caseName, status: 'pass',
+              jobId: process.env.PRODUCER_JOB_ID, checkRunId: process.env.CHECK_RUN_ID, evidenceSha256: digest(log),
+            })),
+          }
+          writeFileSync(process.env.RUNNER_TEMP + '/g09-slot-source-proof.json', JSON.stringify(proof, null, 2) + '\n', { flag: 'wx' })
+          NODE
+
+      - name: Typecheck the changed TUI package
+        working-directory: packages/tui
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/g09-tui-typecheck.log"
+
+      - name: Typecheck the restored CLI build support
+        working-directory: apps/cli
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/g09-cli-typecheck.log"
+
+
+      - name: Verify the current Teams source regressions
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+          PRODUCER_JOB_ID: ${{ steps.identity.outputs.job_id }}
+          ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: "false"
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+          ORCHESTRA_OMNI_CONTROL: declared
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict"
+          import { createHash, randomBytes } from "node:crypto"
+          import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
+          import path from "node:path"
+          import { spawnSync } from "node:child_process"
+          import { controlVerdict } from "./script/test-ci-request.ts"
+          const out = path.join(process.env.RUNNER_TEMP, "g09-source-regressions")
+          mkdirSync(out, { mode: 0o700 })
+          const digest = (bytes) => createHash("sha256").update(bytes).digest("hex")
+          const suites = [
+            { name: "schema-teams", directory: "packages/schema", files: ["test/sucafina-team-identity.test.ts", "test/sucafina-team-context.test.ts"], omni: false },
+            { name: "server-teams", directory: "packages/server", files: ["test/sucafina-team-discovery.test.ts"], omni: true },
+            { name: "runtime-teams", directory: "modules/sucafina", files: ["Sucafinav1/test/microsoft-installation.test.ts", "Sucafinav1/test/local-identity.test.ts", "Sucafinav1/test/teams-profile/selector.test.ts"], omni: true },
+            { name: "cli-installation", directory: "apps/cli", files: ["test/sucafina-installation.test.ts"], omni: true },
+            { name: "web-team-refresh", directory: "packages/app-shell", files: ["test-browser/team-profile.test.ts"], omni: true,
+              preload: ["--conditions=browser", "--preload", "../../script/test-omni-control.ts", "--preload", "./happydom.ts"] },
+          ]
+          for (const suite of suites) {
+            const nonce = randomBytes(16).toString("hex")
+            const selected = suite.files.map((file) => ({ path: suite.directory + "/" + file,
+              fileSha256: digest(readFileSync(path.join(suite.directory, file))) }))
+            const args = ["test", ...(suite.preload ?? []), ...suite.files.map((file) => "./" + file), "--timeout", "120000"]
+            console.log("SOURCE_REGRESSION_START " + JSON.stringify({ suite: suite.name, directory: suite.directory, args, selected }))
+            console.log("omni control nonce: " + nonce)
+            const executed = spawnSync("bun", args, { cwd: suite.directory, encoding: "utf8", maxBuffer: 32 * 1024 * 1024,
+              env: { ...process.env, NO_COLOR: "1", ORCHESTRA_OMNI_CONTROL_NONCE: nonce } })
+            const log = String(executed.stdout ?? "") + String(executed.stderr ?? "")
+            process.stdout.write(log)
+            writeFileSync(path.join(out, suite.name + ".log"), log, { flag: "wx", mode: 0o600 })
+            const receipt = {
+              schema: "sf-g09-source-regression-v1", suite: suite.name, selected, command: ["bun", ...args],
+              sourceSHA: process.env.GITHUB_SHA, workflowSHA: process.env.GITHUB_SHA,
+              runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+              job: process.env.GITHUB_JOB, jobId: process.env.PRODUCER_JOB_ID, checkRunId: process.env.CHECK_RUN_ID,
+              logSha256: digest(log), status: "failed", exitCode: executed.status,
+              signal: executed.signal, executionError: executed.error?.message ?? null,
+            }
+            const record = () => writeFileSync(path.join(out, suite.name + ".json"),
+              JSON.stringify(receipt, null, 2) + "\n", { flag: "wx", mode: 0o600 })
+            if (executed.error || executed.status !== 0) { record(); throw new Error("Source regression failed: " + suite.name) }
+            assert.match(log, /(?:^|\n)\s*[1-9][0-9]* pass\r?\n/, "nonempty passing test selection")
+            assert.match(log, /(?:^|\n)\s*0 fail\r?\n/, "zero failed tests")
+            receipt.omniControl = suite.omni ? controlVerdict({ name: suite.name }, "omni control nonce: " + nonce + "\n" + log) : "not preloaded by this package"
+            receipt.status = "passed"
+            record()
+          }
+          NODE
+
+      - name: Typecheck the changed app shell
+        working-directory: packages/app-shell
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/g09-app-shell-typecheck.log"
+
+      - name: Build Linux CLI at the selected candidate SHA
+        working-directory: apps/cli
+        env:
+          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+          ORCHESTRA_CHANNEL: prod
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
+          models="$RUNNER_TEMP/azure-entra-models.json"
+          curl --fail --silent --show-error --max-time 60 --retry 2 https://models.dev/api.json --output "$models"
+          jq -e 'type == "object" and length > 0' "$models" >/dev/null
+          export MODELS_DEV_API_JSON="$models"
+          ORCHESTRA_VERSION="$(jq -er '.version' package.json)"
+          export ORCHESTRA_VERSION
+          sha256sum "$models"
+          bun script/build.ts --single --skip-install --target linux-x64-baseline --external-compile-maps
+
+      - name: Build the native Sucafina Web
+        working-directory: apps/web
+        env:
+          NODE_ENV: production
+        run: bun run build --base / --sourcemap hidden --manifest linux-web-build-manifest.json
+
+      - name: Retrieve the hosted proof harness
+        env:
+          WORKFLOW_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$WORKFLOW_SHA"
+          mkdir -m 0700 "$RUNNER_TEMP/azure-entra-proof"
+          for fixture in entra-native-provider.mjs entra-native-http.mjs entra-team-c17.mjs entra-tree-sitter-proof.py verify-packaged-compile-maps.py; do
+            git show "$WORKFLOW_SHA:.github/ci/$fixture" > "$RUNNER_TEMP/azure-entra-proof/$fixture"
+          done
+
+      - name: Build and verify the Azure Entra archive
+        env:
+          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+        run: |
+          set -euo pipefail
+          archive_dir="$RUNNER_TEMP/azure-entra-package"
+          mv apps/web/dist/linux-web-build-manifest.json "$RUNNER_TEMP/"
+          python3 -B - "$RUNNER_TEMP/web-source-maps" <<'PYMAP'
+          import hashlib, json, sys
+          from pathlib import Path
+
+          web = Path("apps/web/dist")
+          maps = Path(sys.argv[1])
+          maps.mkdir(mode=0o700)
+          records = []
+          digest = lambda file: hashlib.sha256(file.read_bytes()).hexdigest()
+          for mapping in sorted(web.rglob("*.map")):
+              emitted = mapping.with_suffix("")
+              assert emitted.is_file()
+              rel = mapping.relative_to(web)
+              destination = maps / rel
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              raw = json.loads(mapping.read_bytes())
+              assert raw["version"] == 3
+              published = {key: raw[key] for key in ("version", "sources", "mappings")}
+              published["names"] = raw.get("names", [])
+              if "sourceRoot" in raw:
+                  published["sourceRoot"] = raw["sourceRoot"]
+              destination.write_text(json.dumps(published, separators=(",", ":")) + "\n")
+              mapping.unlink()
+              records.append({"output": "bin/web/" + emitted.relative_to(web).as_posix(),
+                              "outputSha256": digest(emitted), "map": rel.as_posix(), "mapSha256": digest(destination)})
+          assert records and any(item["output"].endswith(".js") for item in records)
+          (maps / "index.json").write_text(json.dumps(records) + "\n")
+          PYMAP
+          bun apps/cli/script/azure-entra-package.ts --dist "$PWD/apps/cli/dist" --web "$PWD/apps/web/dist" --out "$archive_dir" --source-sha "$SOURCE_REVISION" --factory-source-map
+          tar -C "$RUNNER_TEMP/web-source-maps" -czf "$archive_dir/web-source-maps.tar.gz" .
+          python3 -B - "$archive_dir" <<'PYMAP'
+          from hashlib import sha256
+          import json, sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1])
+          factory = root / "factory-source-map.json"
+          receipt = root / "factory-source-map-receipt.json"
+          emitted = factory.read_bytes()
+          mapping = json.loads(emitted)
+          record = json.loads(receipt.read_bytes())
+          assert sha256(emitted).hexdigest() == record["mapSha256"] and mapping["version"] == 3
+          published = {key: mapping[key] for key in ("version", "sources", "names", "mappings")}
+          if "sourceRoot" in mapping:
+              published["sourceRoot"] = mapping["sourceRoot"]
+          factory.write_text(json.dumps(published, separators=(",", ":")) + "\n")
+          record["emittedMapSha256"] = record["mapSha256"]
+          record["mapSha256"] = sha256(factory.read_bytes()).hexdigest()
+          receipt.write_text(json.dumps(record, separators=(",", ":")) + "\n")
+          PYMAP
+          filename=orchestra-sf-entra-linux-x64-baseline.tar.gz
+          observed="$(sha256sum "$archive_dir/$filename" | cut -d' ' -f1)"
+          expected="$(jq -er '.archiveSha256' "$archive_dir/orchestra-sf-entra-package-receipt.json")"
+          test "$observed" = "$expected"
+          python3 -B sf/azure/vm/install-factory-distribution.py verify \
+            --artifact "$archive_dir/$filename" --receipt "$archive_dir/orchestra-sf-entra-package-receipt.json" \
+            --candidate "$SOURCE_REVISION" --sha256 "$observed"
+          printf '%s  %s\n' "$observed" "$filename" > "$archive_dir/SHA256SUMS"
+          tar -xOf "$archive_dir/$filename" distribution.json | jq -e --slurpfile maps "$RUNNER_TEMP/web-source-maps/index.json" '
+            ([.files[] | {key:.path, value:.sha256}] | from_entries) as $packed |
+            all($maps[0][]; .output as $path | $packed[$path] == .outputSha256)
+          ' > /dev/null
+
+      - name: Bind compiler evidence to the packaged Linux executable
+        env:
+          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          archive_dir="$RUNNER_TEMP/azure-entra-package"
+          ledgers=(apps/cli/dist/compile-evidence-linux-x64-baseline-*.json)
+          if (( ${#ledgers[@]} != 1 )); then
+            printf '%s\n' "Expected exactly one Linux compiler evidence file" >&2
+            exit 1
+          fi
+          ledger="${ledgers[0]}"
+          receipt="$archive_dir/orchestra-sf-entra-package-receipt.json"
+          tarball="$archive_dir/orchestra-sf-entra-linux-x64-baseline.tar.gz"
+          binary_sha="$(tar -xOf "$tarball" bin/orchestra | sha256sum | cut -d' ' -f1)"
+          compiler="$(bun --version)"
+          jq -e --arg binary "$binary_sha" --arg compiler "$compiler" '
+            .schema == "orchestra-compile-evidence-v2" and
+            .target == "linux-x64-baseline" and .bun == $compiler and
+            .binary.sha256 == $binary and (.inputs | length) > 0 and
+            (.metafile.outputs | length) > 0
+          ' "$ledger" > /dev/null
+
+          web_manifest="$RUNNER_TEMP/linux-web-build-manifest.json"
+          tar -xOf "$tarball" distribution.json | jq -e --slurpfile web "$web_manifest" '
+            ($web[0] | type == "object" and any(.[]; .isEntry == true)) and
+            ([.files[].path] as $files | all($web[0][];
+              (.file | type == "string") and
+              (("bin/web/" + .file) as $path | $files | index($path) != null)
+            ))
+          ' > /dev/null
+          cli_maps="apps/cli/dist/compile-source-maps-linux-x64-baseline"
+          python3 -B "$RUNNER_TEMP/azure-entra-proof/verify-packaged-compile-maps.py" "$tarball" "$cli_maps" | tee "$archive_dir/cli-map-verification.json"
+          install -m 0644 "$cli_maps/index.json" "$archive_dir/cli-source-map-index.json"
+          tar -C "$cli_maps" -czf "$archive_dir/cli-source-maps.tar.gz" .
+          install -m 0644 "$ledger" "$archive_dir/compile-evidence.json"
+          install -m 0644 "$web_manifest" "$archive_dir/web-build-manifest.json"
+          (
+            cd "$archive_dir"
+            sha256sum compile-evidence.json web-build-manifest.json web-source-maps.tar.gz \
+              factory-source-map.json factory-source-map-receipt.json \
+              cli-source-map-index.json cli-source-maps.tar.gz >> SHA256SUMS
+          )
+
+          jq -e --arg source "$SOURCE_REVISION" --arg tree "$(git rev-parse 'HEAD^{tree}')" \
+            --arg workflow "$GITHUB_SHA" --arg run "$GITHUB_RUN_ID" --arg attempt "$GITHUB_RUN_ATTEMPT" \
+            --arg job "$GITHUB_JOB" --arg checkRun "$CHECK_RUN_ID" \
+            --arg bun "$compiler" --arg bunRevision "$(bun --revision)" --arg bunArchive "$BUN_BASELINE_SHA256" \
+            --arg binary "$binary_sha" \
+            --arg ledger "$(sha256sum "$archive_dir/compile-evidence.json" | cut -d' ' -f1)" \
+            --arg cliMapIndex "$(sha256sum "$archive_dir/cli-source-map-index.json" | cut -d' ' -f1)" \
+            --arg cliMaps "$(sha256sum "$archive_dir/cli-source-maps.tar.gz" | cut -d' ' -f1)" \
+            --arg web "$(sha256sum "$archive_dir/web-build-manifest.json" | cut -d' ' -f1)" '
+              select(.sourceSHA == $source and .checkoutSHA == $source and .runID == $run and
+                .runAttempt == $attempt and ($checkRun | test("^[1-9][0-9]*$"))) |
+              {
+                schema: "sf-linux-compile-provenance-v2",
+                sourceSHA: $source, sourceTreeSHA: $tree, workflowSHA: $workflow,
+                runId: $run, runAttempt: $attempt, job: $job, checkRunId: $checkRun,
+                target, bun: $bun, bunRevision: $bunRevision, bunArchiveSha256: $bunArchive,
+                archiveSha256, manifestSha256,
+                binary: {path: "bin/orchestra", sha256: $binary},
+                ledger: {file: "compile-evidence.json", sha256: $ledger},
+                webManifest: {file: "web-build-manifest.json", sha256: $web},
+                cliSourceMaps: { file: "cli-source-maps.tar.gz", sha256: $cliMaps,
+                  index: "cli-source-map-index.json", indexSha256: $cliMapIndex }
+              }
+            ' "$receipt" > "$archive_dir/compile-provenance.json"
+
+      - name: Select the release in a temporary installation root
+        env:
+          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+        run: |
+          set -euo pipefail
+          archive_dir="$RUNNER_TEMP/azure-entra-package"
+          vm="$RUNNER_TEMP/azure-entra-vm"
+          mkdir -m 0755 "$vm"
+          tarball=orchestra-sf-entra-linux-x64-baseline.tar.gz
+          receipt=orchestra-sf-entra-package-receipt.json
+          digest="$(jq -er '.archiveSha256' "$archive_dir/$receipt")"
+          sudo install -m 0644 "$archive_dir/$tarball" "$archive_dir/$receipt" "$vm/"
+          sudo python3 -B - "$PWD/sf/azure/vm/install-factory-distribution.py" "$vm" "$SOURCE_REVISION" "$digest" "$tarball" "$receipt" <<'PY'
+          from argparse import Namespace
+          from contextlib import redirect_stdout
+          import importlib.util
+          import io
+          import json
+          from pathlib import Path
+          import sys
+
+          source, vm, candidate, digest, artifact, receipt = sys.argv[1:]
+          root = Path(vm)
+          spec = importlib.util.spec_from_file_location("factory_installer", source)
+          installer = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(installer)
+          installer.RELEASES = root / "releases"
+          installer.CURRENT = root / "current"
+          installer.LOCK = root / "installer.lock"
+          # Hosted CI exercises activation on temporary paths with no systemd or Caddy.
+          installer.vm_preflight = lambda *args, **kwargs: None
+          args = Namespace(candidate=candidate, artifact=str(root / artifact), receipt=str(root / receipt),
+                           sha256=digest, fqdn="sf.example.test", apply=False, dry_run=True)
+          def invoke():
+              output = io.StringIO()
+              with redirect_stdout(output):
+                  installer.install(args)
+              print(output.getvalue().strip())
+              return json.loads(output.getvalue())
+          assert invoke()["result"] == "DRY_RUN_NO_WRITES"
+          assert not installer.RELEASES.exists() and not installer.CURRENT.is_symlink() and not installer.LOCK.exists()
+          args.apply, args.dry_run = True, False
+          result = invoke()
+          assert result["result"] == "INSTALLED_NOT_STARTED_CADDY_STILL_503" and not result["idempotent"]
+          assert installer.CURRENT.readlink() == installer.RELEASES / candidate
+          assert invoke()["idempotent"]
+          PY
+          cmp apps/cli/dist/cli-linux-x64-baseline/bin/orchestra "$vm/current/bin/orchestra"
+
+      - name: Exercise installed native Web, Team admission and C17 on loopback
+        id: installed-c17
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+          PRODUCER_JOB_ID: ${{ steps.identity.outputs.job_id }}
+          SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+        run: |
+          set -euo pipefail
+          export CI_RUNTIME="$RUNNER_TEMP/azure-entra-runtime"
+          mkdir -m 0700 "$CI_RUNTIME"
+          export CI_PORT
+          CI_PORT="$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1])')"
+          export CI_PROOF
+          CI_PROOF="$(openssl rand -hex 32)"
+          bun --eval '
+            import { mkdir, writeFile } from "node:fs/promises"
+            import { join } from "node:path"
+            import { prepareLocalConfiguration } from "./modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
+            import freeze from "./modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
+            import { sfHumanActions } from "./modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
+            const root = process.env.CI_RUNTIME
+            const directory = join(root, "installation")
+            const workspaceDirectory = join(root, "workspace")
+            const file = await prepareLocalConfiguration(directory)
+            await mkdir(workspaceDirectory, { mode: 0o700 })
+            const port = process.env.CI_PORT
+            await writeFile(file, JSON.stringify({
+              version: 1, deployment: "azure-https", authentication: "microsoft",
+              origin: "https://sf.example.test", listenerOrigin: "http://127.0.0.1:" + port,
+              ingressOrigin: "http://sf-ingress.example.test:" + port, mount: "/sucafina",
+              tenantId: "11111111-1111-4111-8111-111111111111", clientId: "22222222-2222-4222-8222-222222222222",
+              workspaceDirectory,
+              teams: "direct", enabledTeamIds: ["44444444-4444-4444-8444-444444444444", "44444444-4444-4444-8444-444444444445"],
+              groups: {
+                dashboard: { admin: "group:55555555-5555-4555-8555-555555555555" },
+                planner: { admin: "group:55555555-5555-4555-8555-555555555555" }, procurement: {},
+              }, grants: [{
+                principalRef: "33333333-3333-4333-8333-333333333333",
+                namespaces: ["cases", "preferences", "atlas", "outbox", "bi-artifacts"],
+                operations: freeze.operations.map((entry) => entry.operation),
+                humanActions: sfHumanActions,
+              }], scanner: null,
+            }))
+            await writeFile(join(directory, "client-secret.txt"), "hosted-ci-only", { mode: 0o600 })
+            await writeFile(join(directory, "ingress-secret.txt"), process.env.CI_PROOF, { mode: 0o600 })
+          '
+          installed="$RUNNER_TEMP/azure-entra-vm/current/bin"
+          config="$CI_RUNTIME/installation"
+          cd "$CI_RUNTIME/workspace"
+          env -i PATH="$PATH" HOME="$CI_RUNTIME" \
+            XDG_DATA_HOME="$config/host-data" XDG_CONFIG_HOME="$config/host-config" \
+            XDG_CACHE_HOME="$config/host-cache" XDG_STATE_HOME="$config/host-state" \
+            TMPDIR="$config/host-tmp" ORCHESTRA_CONFIG_DIR="$config/host-config" \
+            ORCHESTRA_CREDENTIAL_KEY_FILE="$config/host-credential.key" ORCHESTRA_DB="$config/host-data/orchestra.db" \
+            ORCHESTRA_INHERIT_CREDENTIALS=0 ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict \
+            SUCAFINA_NATIVE_TEAM_DECISIONS=1 SUCAFINA_NATIVE_TEAM_WEB=1 SUCAFINA_MICROSOFT_CONFIG="$config/installation.json" \
+            "$installed/orchestra" serve --hostname 127.0.0.1 --port "$CI_PORT" --installation "$installed/local/entry.mjs" \
+            >"$CI_RUNTIME/server.log" 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
+          # Verify that the default exported factory starts with the real installed CLI.
+          url="http://127.0.0.1:$CI_PORT/sucafina/dashboard"
+          status=""
+          for _ in {1..40}; do
+            if status="$(curl -sS --max-time 2 --noproxy '*' -o /dev/null -w '%{http_code}' \
+              -H "Host: sf-ingress.example.test:$CI_PORT" "$url" 2>/dev/null)"; then break; fi
+            if ! kill -0 "$server" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          if [[ "$status" != 403 ]]; then
+            cat "$CI_RUNTIME/server.log"
+            exit 1
+          fi
+          kill "$server"
+          wait "$server" || true
+          trap - EXIT
+
+          # Repeat with only Entra and Graph transport substituted, no public service or live tenant.
+          env -i PATH="$PATH" HOME="$CI_RUNTIME" \
+            XDG_DATA_HOME="$config/host-data" XDG_CONFIG_HOME="$config/host-config" \
+            XDG_CACHE_HOME="$config/host-cache" XDG_STATE_HOME="$config/host-state" \
+            TMPDIR="$config/host-tmp" ORCHESTRA_CONFIG_DIR="$config/host-config" \
+            ORCHESTRA_CREDENTIAL_KEY_FILE="$config/host-credential.key" ORCHESTRA_DB="$config/host-data/orchestra.db" \
+            ORCHESTRA_INHERIT_CREDENTIALS=0 ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict \
+            SUCAFINA_NATIVE_TEAM_DECISIONS=1 SUCAFINA_NATIVE_TEAM_WEB=1 SUCAFINA_MICROSOFT_CONFIG="$config/installation.json" SF_PROOF_FACTORY="$installed/local/entry.mjs" \
+            "$installed/orchestra" serve --hostname 127.0.0.1 --port "$CI_PORT" \
+            --installation "$RUNNER_TEMP/azure-entra-proof/entra-native-provider.mjs" >"$CI_RUNTIME/auth-server.log" 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
+          status=""
+          for _ in {1..40}; do
+            if status="$(curl -sS --max-time 2 --noproxy '*' -o /dev/null -w '%{http_code}' \
+              -H "Host: sf-ingress.example.test:$CI_PORT" "$url" 2>/dev/null)"; then break; fi
+            if ! kill -0 "$server" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          if [[ "$status" != 403 ]]; then
+            cat "$CI_RUNTIME/auth-server.log"
+            exit 1
+          fi
+          archive_dir="$RUNNER_TEMP/azure-entra-package"
+          running_bin="$(readlink -f "/proc/$server/exe")"
+          packed_factory="$(readlink -f "$installed/local/entry.mjs")"
+          test "$running_bin" = "$(readlink -f "$installed/orchestra")"
+          binary_sha="$(sha256sum "/proc/$server/exe" | cut -d' ' -f1)"
+          factory_sha="$(sha256sum "$packed_factory" | cut -d' ' -f1)"
+          test "$binary_sha" = "$(jq -er '.binary.sha256' "$archive_dir/compile-provenance.json")"
+          test "$factory_sha" = "$(jq -er '.bundleSha256' "$archive_dir/orchestra-sf-entra-package-receipt.json")"
+          export SF_C17_RECEIPT="$CI_RUNTIME/c17-observed.json"
+          if ! SF_PROOF_PORT="$CI_PORT" SF_PROOF_KEY="$CI_PROOF" SF_PROOF_WEB="$installed/web" \
+            bun "$RUNNER_TEMP/azure-entra-proof/entra-native-http.mjs" | tee "$archive_dir/c17-team-proof.log"; then
+            # Report runtime exception classes and stack frames without request data.
+            grep -E '^((Type|Reference|Syntax|Range|Aggregate)Error|[[:space:]]+at )' "$CI_RUNTIME/auth-server.log" \
+              | sed -E 's/[?].*$//' | tail -30 || true
+            exit 1
+          fi
+          grep -F 'C17_TEAM_PACKAGE_OK' "$archive_dir/c17-team-proof.log" > /dev/null
+          jq -e --arg job "$PRODUCER_JOB_ID" --arg checkRun "$CHECK_RUN_ID" --arg runtime "$binary_sha" --arg factory "$factory_sha" \
+            --arg spec "$(sha256sum "$RUNNER_TEMP/azure-entra-proof/entra-team-c17.mjs" | cut -d' ' -f1)" \
+            --arg log "$(sha256sum "$archive_dir/c17-team-proof.log" | cut -d' ' -f1)" \
+            --slurpfile package "$archive_dir/compile-provenance.json" '
+              select(.status == "pass" and .syntheticEntra and .prepared == 200 and .beforeAtlas == 503 and
+                .reload == 200 and .replay == 200 and .noTeam == 403 and .crossTeam == 403 and .revoked == 403 and .promotion == false) |
+              . + {schema: "sf-c17-installed-team-proof-v1", sourceSHA: $package[0].sourceSHA,
+                sourceTreeSHA: $package[0].sourceTreeSHA, workflowSHA: $package[0].workflowSHA,
+                runId: $package[0].runId, runAttempt: $package[0].runAttempt, jobId: $job, checkRunId: $checkRun,
+                tarSha256: $package[0].archiveSha256, binary: {path:"bin/orchestra", sha256:$runtime},
+                factory: {path:"bin/local/entry.mjs", sha256:$factory},
+                spec: {path:".github/ci/entra-team-c17.mjs", sha256:$spec},
+                teamDecisionsEnabled: true, evidenceSha256: $log}
+            ' "$SF_C17_RECEIPT" > "$archive_dir/c17-team-proof.json"
+          printf '{"sourceSHA":"%s","temporaryInstall":true,"nativeWeb":true,"chromium":true,"noTeam":403,"directTeam":403,"syntheticProvider":true}\n' \
+            "$SOURCE_REVISION" > "$RUNNER_TEMP/azure-entra-package/ci-validation.json"
+
+      - name: Verify the shipped palette stylesheets
+        working-directory: packages/app-shell
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+          PRODUCER_JOB_ID: ${{ steps.identity.outputs.job_id }}
+        run: |
+          set -euo pipefail
+          path=src/orchestra/palette/palette.test.ts
+          case_name="the shipped stylesheets are exactly the generator's output"
+          expected=3b57409992b6bbc9e9dcdd07f54df6c042b67c853617f3d00e228ab0932a4af0
+          printf '%s  %s\n' "$expected" "$path" | sha256sum --check
+          proof_dir="$RUNNER_TEMP/azure-entra-package"
+          NO_COLOR=1 bun test "./$path" -t "$case_name" 2>&1 | tee "$proof_dir/palette-proof.log"
+          grep -F '(pass)' "$proof_dir/palette-proof.log" | grep -F "$case_name" > /dev/null
+          jq -n --arg path "packages/app-shell/$path" --arg file "$expected" \
+            --arg case "$case_name" --arg job "$PRODUCER_JOB_ID" --arg checkRun "$CHECK_RUN_ID" \
+            --arg log "$(sha256sum "$proof_dir/palette-proof.log" | cut -d' ' -f1)" \
+            '{path: $path, fileSha256: $file, caseName: $case, status: "pass", jobId: $job, checkRunId: $checkRun, evidenceSha256: $log}' \
+            > "$proof_dir/palette-proof.json"
+
+      - name: Exercise installed Tree-sitter for TypeScript and Python
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/azure-entra-package"
+          python3 -B "$RUNNER_TEMP/azure-entra-proof/entra-tree-sitter-proof.py" \
+            "$archive" "$RUNNER_TEMP/azure-entra-vm/current" \
+            "$RUNNER_TEMP/installed-tree-sitter-proof" | tee "$archive/tree-sitter-proof.log"
+
+      - name: Record the canonical archive inventory and extracted-byte receipt
+        env:
+          SF_PRODUCT_SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          evidence="$RUNNER_TEMP/g09-candidate"
+          mkdir -m 0700 "$evidence"
+          git cat-file commit HEAD > "$evidence/commit.raw"
+          git ls-tree -rz --full-tree HEAD > "$evidence/tracked.z"
+          node script/sf-ci/g09-candidate-evidence.mjs receipt "$evidence" \
+            "$RUNNER_TEMP/azure-entra-package" "$RUNNER_TEMP/azure-entra-vm/current"
+          cp "$RUNNER_TEMP/g09-producer-jobs.json" "$RUNNER_TEMP/g09-guards.log" "$RUNNER_TEMP/g09-slot-source-proof.log" \
+            "$RUNNER_TEMP/g09-slot-source-proof.json" "$RUNNER_TEMP/g09-tui-typecheck.log" \
+            "$RUNNER_TEMP/g09-cli-typecheck.log" "$RUNNER_TEMP/g09-app-shell-typecheck.log" "$RUNNER_TEMP/azure-entra-package/"
+          cp -R "$RUNNER_TEMP/g09-source-regressions" "$RUNNER_TEMP/azure-entra-package/"
+          (
+            cd "$RUNNER_TEMP/azure-entra-package"
+            sha256sum g09-artifact-receipt.json orchestra-sf-entra-linux-x64-baseline.tar.gz.inventory.json \
+              g09-build-inputs.json g09-producer-jobs.json g09-guards.log g09-slot-source-proof.log g09-slot-source-proof.json \
+              g09-tui-typecheck.log g09-cli-typecheck.log g09-app-shell-typecheck.log cli-map-verification.json \
+              g09-source-regressions/*.json g09-source-regressions/*.log >> SHA256SUMS
+          )
+
+      - name: Upload the candidate package and exact evidence
+        id: package
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: orchestra-sf-entra-linux-${{ steps.source.outputs.sha }}
+          path: ${{ runner.temp }}/azure-entra-package
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+
+      - name: Preserve unqualified candidate diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: unqualified-linux-candidate-${{ steps.source.outputs.sha }}
+          path: |
+            ${{ runner.temp }}/azure-entra-package
+            ${{ runner.temp }}/g09-producer-jobs.json
+            ${{ runner.temp }}/g09-guards.log
+            ${{ runner.temp }}/g09-build-inputs.json
+            ${{ runner.temp }}/g09-slot-source-proof.log
+            ${{ runner.temp }}/g09-slot-source-proof.json
+            ${{ runner.temp }}/g09-tui-typecheck.log
+            ${{ runner.temp }}/g09-cli-typecheck.log
+            ${{ runner.temp }}/g09-app-shell-typecheck.log
+            ${{ runner.temp }}/g09-source-regressions/
+          if-no-files-found: warn
+          retention-days: 30
+          compression-level: 0
+
+  g09-diagnostic:
+    name: g09-diagnostic
+    needs: teams-profile-artifact
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      actions: read
+    env:
+      SF_PRODUCT_SOURCE_SHA: ${{ github.sha }}
+      CANDIDATE_ARTIFACT_ID: ${{ needs.teams-profile-artifact.outputs.artifact-id }}
+      CANDIDATE_ARTIFACT_NAME: ${{ needs.teams-profile-artifact.outputs.artifact-name }}
+      CANDIDATE_ARTIFACT_DIGEST: ${{ needs.teams-profile-artifact.outputs.artifact-digest }}
+      CANDIDATE_PRODUCER_CHECK_RUN_ID: ${{ needs.teams-profile-artifact.outputs.check-run-id }}
+      SF_TEAMS_RESIDUE_ARTIFACT_ID: ${{ needs.teams-profile-artifact.outputs.artifact-id }}
+    outputs:
+      evidence-artifact-id: ${{ steps.diagnostic-evidence.outputs.artifact-id }}
+      evidence-artifact-digest: ${{ steps.diagnostic-evidence.outputs.artifact-digest }}
+    steps:
+      - name: Checkout the produced source and workflow SHA
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ needs.teams-profile-artifact.outputs.source-sha }}
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+
+      - name: Install the source-pinned TypeScript parser
+        run: |
+          set -euo pipefail
+          parser="$(node -p 'JSON.parse(require("node:fs").readFileSync("package.json", "utf8")).workspaces.catalog.typescript')"
+          [[ "$parser" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          npm install --prefix "$RUNNER_TEMP/g09-typescript" --ignore-scripts --no-audit --no-fund --no-package-lock "typescript@$parser"
+          mkdir -p node_modules
+          ln -s "$RUNNER_TEMP/g09-typescript/node_modules/typescript" node_modules/typescript
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict"
+          import { readFile } from "node:fs/promises"
+          import ts from "typescript"
+          const source = JSON.parse(await readFile("package.json", "utf8"))
+          assert.equal(ts.version, source.workspaces.catalog.typescript)
+          console.log(JSON.stringify({ node: process.version, typescript: ts.version }))
+          NODE
+
+      - name: Acquire and bind the exact same-run candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$SF_PRODUCT_SOURCE_SHA" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          [[ "$CANDIDATE_ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]
+          [[ "$CANDIDATE_PRODUCER_CHECK_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+          evidence="$RUNNER_TEMP/g09-candidate"
+          mkdir -m 0700 "$evidence"
+          printf '%s\n' \
+            "SF_TEAMS_RESIDUE_COMMIT_FILE=$evidence/commit.raw" \
+            "SF_TEAMS_RESIDUE_TRACKED_FILE=$evidence/tracked.z" \
+            "SF_TEAMS_RESIDUE_INVENTORY_FILE=$evidence/package/orchestra-sf-entra-linux-x64-baseline.tar.gz.inventory.json" \
+            "SF_TEAMS_RESIDUE_RECEIPT_FILE=$evidence/package/g09-artifact-receipt.json" \
+            "SF_TEAMS_RESIDUE_PROVENANCE_FILE=$evidence/artifact-provenance.json" \
+            "SF_TEAMS_RESIDUE_CONTROLS_FILE=$evidence/controls.json" >> "$GITHUB_ENV"
+          git cat-file commit HEAD > "$evidence/commit.raw"
+          git ls-tree -rz --full-tree HEAD > "$evidence/tracked.z"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$CANDIDATE_ARTIFACT_ID" > "$evidence/artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > "$evidence/run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs?per_page=100" > "$evidence/jobs.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$CANDIDATE_ARTIFACT_ID/zip" > "$evidence/artifact.zip"
+          node script/sf-ci/g09-candidate-evidence.mjs metadata "$evidence"
+          mkdir -m 0700 "$evidence/package"
+          unzip -q "$evidence/artifact.zip" -d "$evidence/package"
+          node script/sf-ci/g09-candidate-evidence.mjs provenance "$evidence"
+          digest="$(jq -er '.artifactDigest' "$evidence/candidate-binding.json")"
+          printf 'SF_TEAMS_RESIDUE_ARTIFACT_DIGEST=%s\n' "$digest" >> "$GITHUB_ENV"
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from "node:fs/promises"
+          import ts from "typescript"
+          const source = JSON.parse(await readFile("package.json", "utf8"))
+          const versions = { schema: "sf-g09-diagnostic-tool-versions-v1", sourceSHA: process.env.GITHUB_SHA,
+            workflowSHA: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID,
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT, node: process.version,
+            typescript: ts.version, sourceTypeScriptPin: source.workspaces.catalog.typescript }
+          await writeFile(process.env.RUNNER_TEMP + "/g09-candidate/tool-versions.json",
+            JSON.stringify(versions, null, 2) + "\n", { flag: "wx", mode: 0o600 })
+          NODE
+
+      - name: Run the unchanged canonical controls
+        run: |
+          set -euo pipefail
+          node --test script/sf-ci/team-profile-residue.test.mjs 2>&1 | tee "$RUNNER_TEMP/g09-candidate/controls.tap"
+
+      - name: Preserve the canonical inventory without granting acceptance
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          set +e
+          node script/sf-ci/team-profile-residue.mjs --source "$PWD" \
+            --archive "$RUNNER_TEMP/g09-candidate/package/orchestra-sf-entra-linux-x64-baseline.tar.gz" \
+            --manifest script/sf-ci/g09-581-catalog.json \
+            --output "$RUNNER_TEMP/g09-candidate/diagnostic.json"
+          audit_status=$?
+          set -e
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          AUDIT_STATUS="$audit_status" node --input-type=module <<'NODE'
+          import assert from "node:assert/strict"
+          import { readFile } from "node:fs/promises"
+          const report = JSON.parse(await readFile(process.env.RUNNER_TEMP + "/g09-candidate/diagnostic.json", "utf8"))
+          assert(["PASS", "DIAGNOSTIC_UNQUALIFIED"].includes(report.status), "valid canonical inventory status required")
+          assert.equal(report.schema, "teams-profile-residue-report-v1")
+          assert.equal(process.env.AUDIT_STATUS, report.status === "PASS" ? "0" : "2")
+          assert.equal(report.artifact.status, "BOUND")
+          assert.equal(report.controls.status, "VERIFIED")
+          assert.equal(report.source.sha, process.env.GITHUB_SHA)
+          assert.equal(report.source.recheckedAfter, true)
+          console.log(JSON.stringify({ inventoryCompleted: true, stage: "inventory-only", formalG09Pass: false,
+            status: report.status, counts: report.counts, blockers: report.blockers, binding: report.binding }))
+          NODE
+
+      - name: Preserve the complete diagnostic and acquisition evidence
+        if: always()
+        id: diagnostic-evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g09-diagnostic-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/g09-candidate/*.json
+            ${{ runner.temp }}/g09-candidate/*.tap
+            ${{ runner.temp }}/g09-candidate/commit.raw
+            ${{ runner.temp }}/g09-candidate/tracked.z
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 6
+
+  candidate-tui-journeys:
+    name: candidate-tui-journeys
+    needs: teams-profile-artifact
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    env:
+      SF_PRODUCT_SOURCE_SHA: ${{ github.sha }}
+      CANDIDATE_ARTIFACT_ID: ${{ needs.teams-profile-artifact.outputs.artifact-id }}
+      CANDIDATE_ARTIFACT_NAME: ${{ needs.teams-profile-artifact.outputs.artifact-name }}
+      CANDIDATE_ARTIFACT_DIGEST: ${{ needs.teams-profile-artifact.outputs.artifact-digest }}
+      CANDIDATE_PRODUCER_CHECK_RUN_ID: ${{ needs.teams-profile-artifact.outputs.check-run-id }}
+    steps:
+      - name: Checkout the candidate and workflow source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Set up pinned Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
+
+      - name: Install the source-pinned TypeScript parser
+        run: |
+          set -euo pipefail
+          parser="$(node -p 'JSON.parse(require("node:fs").readFileSync("package.json", "utf8")).workspaces.catalog.typescript')"
+          [[ "$parser" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          npm install --prefix "$RUNNER_TEMP/g09-typescript" --ignore-scripts --no-audit --no-fund --no-package-lock "typescript@$parser"
+          mkdir -p node_modules
+          ln -s "$RUNNER_TEMP/g09-typescript/node_modules/typescript" node_modules/typescript
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict"
+          import { readFile } from "node:fs/promises"
+          import ts from "typescript"
+          const source = JSON.parse(await readFile("package.json", "utf8"))
+          assert.equal(ts.version, source.workspaces.catalog.typescript)
+          console.log(JSON.stringify({ node: process.version, typescript: ts.version }))
+          NODE
+
+      - name: Acquire and bind the exact same-run candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$SF_PRODUCT_SOURCE_SHA" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          [[ "$CANDIDATE_ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]
+          [[ "$CANDIDATE_PRODUCER_CHECK_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+          evidence="$RUNNER_TEMP/g09-candidate"
+          mkdir -m 0700 "$evidence"
+          git cat-file commit HEAD > "$evidence/commit.raw"
+          git ls-tree -rz --full-tree HEAD > "$evidence/tracked.z"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$CANDIDATE_ARTIFACT_ID" > "$evidence/artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > "$evidence/run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs?per_page=100" > "$evidence/jobs.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$CANDIDATE_ARTIFACT_ID/zip" > "$evidence/artifact.zip"
+          node script/sf-ci/g09-candidate-evidence.mjs metadata "$evidence"
+          mkdir -m 0700 "$evidence/package"
+          unzip -q "$evidence/artifact.zip" -d "$evidence/package"
+          node script/sf-ci/g09-candidate-evidence.mjs provenance "$evidence"
+          digest="$(jq -er '.artifactDigest' "$evidence/candidate-binding.json")"
+          printf 'SF_TEAMS_RESIDUE_ARTIFACT_DIGEST=%s\n' "$digest" >> "$GITHUB_ENV"
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from "node:fs/promises"
+          import ts from "typescript"
+          const source = JSON.parse(await readFile("package.json", "utf8"))
+          const versions = { schema: "sf-g09-diagnostic-tool-versions-v1", sourceSHA: process.env.GITHUB_SHA,
+            workflowSHA: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID,
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT, node: process.version,
+            typescript: ts.version, sourceTypeScriptPin: source.workspaces.catalog.typescript }
+          await writeFile(process.env.RUNNER_TEMP + "/g09-candidate/tool-versions.json",
+            JSON.stringify(versions, null, 2) + "\n", { flag: "wx", mode: 0o600 })
+          NODE
+
+      - name: Bind the executing TUI job and install verified temporary modes
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/g09-candidate"
+          mkdir -m 0700 "$RUNNER_TEMP/g09-candidate-release" "$RUNNER_TEMP/g09-candidate-tui-out"
+          python3 -B - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"]) / "g09-candidate"
+          jobs = json.loads((root / "jobs.json").read_text())
+          assert jobs["total_count"] == len(jobs["jobs"])
+          selected = [job for job in jobs["jobs"] if job["name"] == "candidate-tui-journeys"]
+          assert len(selected) == 1
+          job = selected[0]
+          assert str(job["run_id"]) == os.environ["GITHUB_RUN_ID"]
+          assert job["head_sha"] == os.environ["GITHUB_SHA"]
+          assert job["status"] == "in_progress" and job["conclusion"] is None
+          prefix = "https://api.github.com/repos/" + os.environ["GITHUB_REPOSITORY"] + "/check-runs/"
+          assert job["check_run_url"].startswith(prefix)
+          check_id = job["check_run_url"][len(prefix):]
+          assert re.fullmatch(r"[1-9][0-9]*", check_id)
+          assert re.fullmatch(r"[1-9][0-9]*", str(job["id"]))
+          with (root / "tui-job.json").open("x") as stream:
+              json.dump(job, stream, indent=2)
+              stream.write("\n")
+          with open(os.environ["GITHUB_ENV"], "a") as stream:
+              stream.write("TUI_JOB_ID=" + str(job["id"]) + "\nCHECK_RUN_ID=" + check_id + "\n")
+          print(json.dumps({"jobId": str(job["id"]), "checkRunId": check_id, "workflowSHA": job["head_sha"]}))
+          PY
+          archive="$(jq -er '.paths.archive' "$evidence/candidate-binding.json")"
+          native_receipt="$(jq -er '.paths.nativeReceipt' "$evidence/candidate-binding.json")"
+          archive_sha="$(jq -er '.archiveSha256' "$evidence/candidate-binding.json")"
+          python3 -B sf/azure/vm/install-factory-distribution.py verify \
+            --artifact "$archive" --receipt "$native_receipt" --candidate "$GITHUB_SHA" --sha256 "$archive_sha"
+          tar -xzf "$archive" -C "$RUNNER_TEMP/g09-candidate-release"
+          python3 -B .github/ci/g09-installation-modes.py \
+            "$RUNNER_TEMP/g09-candidate-release" "$native_receipt" \
+            sf/azure/vm/install-factory-distribution.py "$RUNNER_TEMP/g09-candidate-tui-out/installation-modes.json"
+
+      - name: Exercise all eight journeys against the bound candidate ELF
+        run: |
+          set -euo pipefail
+          g09_uid="$(id -u)"
+          g09_gid="$(id -g)"
+          test "$g09_uid" != 0
+          sudo --preserve-env=GITHUB_ACTIONS,GITHUB_REPOSITORY,GITHUB_RUN_ID,GITHUB_RUN_ATTEMPT,GITHUB_SHA,SF_PRODUCT_SOURCE_SHA,CANDIDATE_ARTIFACT_ID,CANDIDATE_ARTIFACT_DIGEST,CANDIDATE_PRODUCER_CHECK_RUN_ID,TUI_JOB_ID,CHECK_RUN_ID,RUNNER_TEMP,RUNNER_ARCH \
+            unshare --net --pid --fork --kill-child=SIGKILL --mount-proc -- /bin/bash -ceu '
+              ip link set lo up
+              exec setpriv --reuid="$1" --regid="$2" --clear-groups --no-new-privs \
+                --bounding-set=-all --inh-caps=-all --ambient-caps=-all \
+                python3 -B "$3" --binary "$4" --archive "$5" --runtime-dir "$6" --output-dir "$7" --binding "$8"
+            ' g09-candidate-loopback "$g09_uid" "$g09_gid" \
+            "$GITHUB_WORKSPACE/.github/ci/g09-candidate-tui-journeys.py" \
+            "$RUNNER_TEMP/g09-candidate-release/bin/orchestra" \
+            "$RUNNER_TEMP/g09-candidate/package/orchestra-sf-entra-linux-x64-baseline.tar.gz" \
+            "$RUNNER_TEMP/g09-candidate-tui-runtime" "$RUNNER_TEMP/g09-candidate-tui-out/tui" \
+            "$RUNNER_TEMP/g09-candidate/candidate-binding.json" \
+            2>&1 | tee "$RUNNER_TEMP/g09-candidate-tui-out/tui-journeys.log"
+
+      - name: Report bounded journey evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 -B - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"]) / "g09-candidate-tui-out/tui"
+          proof = root / "tui-journeys-proof.json"
+          if not proof.is_file():
+              print(json.dumps({"journeyReceipt": "not-produced", "allEightJourneysProven": False}))
+          else:
+              raw = proof.read_bytes()
+              receipt = json.loads(raw)
+              print("TUI_CANDIDATE_RECEIPT")
+              if len(raw) <= 65536:
+                  print(raw.decode())
+              else:
+                  print(json.dumps({"receiptBytes": len(raw), "receiptSha256": hashlib.sha256(raw).hexdigest(),
+                                    "receiptInArtifact": True, "status": receipt.get("status"),
+                                    "cases": [{"caseName": case.get("caseName"), "status": case.get("status"),
+                                               "failure": case.get("failure")} for case in receipt.get("cases", [])]}))
+              for case_file in sorted(root.glob("*/case.json")):
+                  case = json.loads(case_file.read_text())
+                  if case.get("status") == "pass":
+                      continue
+                  print("TUI_FAILURE_DIAGNOSTICS " + case_file.parent.name)
+                  for name, limit in (("final-screen.txt", 6000), ("keyboard-actions.json", 3500)):
+                      file = case_file.parent / name
+                      if file.is_file():
+                          data = file.read_text()
+                          print(json.dumps({"file": name, "tail": data[-limit:], "truncated": len(data) > limit}))
+                  network = case_file.parent / "tui.network.json"
+                  if network.is_file():
+                      events = json.loads(network.read_text())
+                      keys = ("index", "method", "path", "status", "delivered", "query", "payload",
+                              "responseBytes", "responseSha256", "eventTypes")
+                      summary = [{key: event[key] for key in keys if key in event} for event in events[-12:]]
+                      data = json.dumps(summary)
+                      print(json.dumps({"file": network.name, "totalEvents": len(events),
+                                        "lastEventsJson": data[:4500], "truncated": len(data) > 4500}))
+          PY
+
+      - name: Preserve candidate TUI receipts and complete traces
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g09-candidate-tui-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/g09-candidate-tui-out
+            ${{ runner.temp }}/g09-candidate/artifact.json
+            ${{ runner.temp }}/g09-candidate/run.json
+            ${{ runner.temp }}/g09-candidate/jobs.json
+            ${{ runner.temp }}/g09-candidate/tui-job.json
+            ${{ runner.temp }}/g09-candidate/candidate-binding.json
+            ${{ runner.temp }}/g09-candidate/artifact-provenance.json
+            ${{ runner.temp }}/g09-candidate/tool-versions.json
+            ${{ runner.temp }}/g09-candidate/commit.raw
+            ${{ runner.temp }}/g09-candidate/tracked.z
+            ${{ runner.temp }}/g09-candidate/package/*.json
+
+  candidate-host-boundary:
+    name: candidate-host-boundary
+    needs: teams-profile-artifact
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    env:
+      SF_PRODUCT_SOURCE_SHA: ${{ github.sha }}
+      CANDIDATE_ARTIFACT_ID: ${{ needs.teams-profile-artifact.outputs.artifact-id }}
+      CANDIDATE_ARTIFACT_NAME: ${{ needs.teams-profile-artifact.outputs.artifact-name }}
+      CANDIDATE_ARTIFACT_DIGEST: ${{ needs.teams-profile-artifact.outputs.artifact-digest }}
+      CANDIDATE_PRODUCER_CHECK_RUN_ID: ${{ needs.teams-profile-artifact.outputs.check-run-id }}
+    steps:
+      - name: Checkout the candidate and workflow source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Set up pinned Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
+
+      - name: Install the source-pinned TypeScript parser
+        run: |
+          set -euo pipefail
+          parser="$(node -p 'JSON.parse(require("node:fs").readFileSync("package.json", "utf8")).workspaces.catalog.typescript')"
+          [[ "$parser" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          npm install --prefix "$RUNNER_TEMP/g09-typescript" --ignore-scripts --no-audit --no-fund --no-package-lock "typescript@$parser"
+          mkdir -p node_modules
+          ln -s "$RUNNER_TEMP/g09-typescript/node_modules/typescript" node_modules/typescript
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict"
+          import { readFile } from "node:fs/promises"
+          import ts from "typescript"
+          const source = JSON.parse(await readFile("package.json", "utf8"))
+          assert.equal(ts.version, source.workspaces.catalog.typescript)
+          console.log(JSON.stringify({ node: process.version, typescript: ts.version }))
+          NODE
+
+      - name: Acquire and bind the exact same-run candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$SF_PRODUCT_SOURCE_SHA" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          [[ "$CANDIDATE_ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]
+          [[ "$CANDIDATE_PRODUCER_CHECK_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+          evidence="$RUNNER_TEMP/g09-candidate"
+          mkdir -m 0700 "$evidence"
+          git cat-file commit HEAD > "$evidence/commit.raw"
+          git ls-tree -rz --full-tree HEAD > "$evidence/tracked.z"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$CANDIDATE_ARTIFACT_ID" > "$evidence/artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > "$evidence/run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs?per_page=100" > "$evidence/jobs.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$CANDIDATE_ARTIFACT_ID/zip" > "$evidence/artifact.zip"
+          node script/sf-ci/g09-candidate-evidence.mjs metadata "$evidence"
+          mkdir -m 0700 "$evidence/package"
+          unzip -q "$evidence/artifact.zip" -d "$evidence/package"
+          node script/sf-ci/g09-candidate-evidence.mjs provenance "$evidence"
+          digest="$(jq -er '.artifactDigest' "$evidence/candidate-binding.json")"
+          printf 'SF_TEAMS_RESIDUE_ARTIFACT_DIGEST=%s\n' "$digest" >> "$GITHUB_ENV"
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from "node:fs/promises"
+          import ts from "typescript"
+          const source = JSON.parse(await readFile("package.json", "utf8"))
+          const versions = { schema: "sf-g09-diagnostic-tool-versions-v1", sourceSHA: process.env.GITHUB_SHA,
+            workflowSHA: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID,
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT, node: process.version,
+            typescript: ts.version, sourceTypeScriptPin: source.workspaces.catalog.typescript }
+          await writeFile(process.env.RUNNER_TEMP + "/g09-candidate/tool-versions.json",
+            JSON.stringify(versions, null, 2) + "\n", { flag: "wx", mode: 0o600 })
+          NODE
+
+      - name: Bind the executing host test job and install verified temporary modes
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/g09-candidate"
+          mkdir -m 0700 "$RUNNER_TEMP/g09-host-boundary-release" "$RUNNER_TEMP/g09-candidate-host-out"
+          python3 -B - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"]) / "g09-candidate"
+          jobs = json.loads((root / "jobs.json").read_text())
+          assert jobs["total_count"] == len(jobs["jobs"])
+          selected = [job for job in jobs["jobs"] if job["name"] == "candidate-host-boundary"]
+          assert len(selected) == 1
+          job = selected[0]
+          assert str(job["run_id"]) == os.environ["GITHUB_RUN_ID"]
+          assert job["head_sha"] == os.environ["GITHUB_SHA"]
+          assert job["status"] == "in_progress" and job["conclusion"] is None
+          prefix = "https://api.github.com/repos/" + os.environ["GITHUB_REPOSITORY"] + "/check-runs/"
+          assert job["check_run_url"].startswith(prefix)
+          check_id = job["check_run_url"][len(prefix):]
+          assert re.fullmatch(r"[1-9][0-9]*", check_id)
+          assert re.fullmatch(r"[1-9][0-9]*", str(job["id"]))
+          with (root / "host-job.json").open("x") as stream:
+              json.dump(job, stream, indent=2)
+              stream.write("\n")
+          with open(os.environ["GITHUB_ENV"], "a") as stream:
+              stream.write("HOST_JOB_ID=" + str(job["id"]) + "\nCHECK_RUN_ID=" + check_id + "\n")
+          print(json.dumps({"jobId": str(job["id"]), "checkRunId": check_id, "workflowSHA": job["head_sha"]}))
+          PY
+          archive="$(jq -er '.paths.archive' "$evidence/candidate-binding.json")"
+          native_receipt="$(jq -er '.paths.nativeReceipt' "$evidence/candidate-binding.json")"
+          archive_sha="$(jq -er '.archiveSha256' "$evidence/candidate-binding.json")"
+          python3 -B sf/azure/vm/install-factory-distribution.py verify \
+            --artifact "$archive" --receipt "$native_receipt" --candidate "$GITHUB_SHA" --sha256 "$archive_sha"
+          tar -xzf "$archive" -C "$RUNNER_TEMP/g09-host-boundary-release"
+          python3 -B .github/ci/g09-installation-modes.py \
+            "$RUNNER_TEMP/g09-host-boundary-release" "$native_receipt" \
+            sf/azure/vm/install-factory-distribution.py "$RUNNER_TEMP/g09-candidate/installation-modes.json"
+
+
+      - name: Exercise installed host exclusion and repository configuration traps
+        run: |
+          set -euo pipefail
+          node .github/ci/tests/g09-final-host-boundary.mjs \
+            "$RUNNER_TEMP/g09-candidate" "$GITHUB_WORKSPACE" \
+            "$RUNNER_TEMP/g09-host-boundary-release" \
+            2>&1 | tee "$RUNNER_TEMP/g09-candidate/host-regression.log"
+
+      - name: Preserve the actual host regression and candidate binding
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g09-candidate-host-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/g09-candidate/*.json
+            ${{ runner.temp }}/g09-candidate/*.log
+            ${{ runner.temp }}/g09-candidate/commit.raw
+            ${{ runner.temp }}/g09-candidate/tracked.z
