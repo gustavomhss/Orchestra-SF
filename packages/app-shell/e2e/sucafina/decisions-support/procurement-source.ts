@@ -32,7 +32,15 @@ export async function createRequisition(page: Page, origin: string, observations
   await form.getByLabel("Needed by", { exact: true }).fill("2027-01-01")
   await form.getByLabel("Justification", { exact: true }).fill("Compare explicit alternatives before any financial approval or application")
   await domainCommand(page, origin, { page: "Requests", action: "create" }, form.getByRole("button", { name: "Create request", exact: true }), "Confirm action", observations)
-  const row = page.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name: title, exact: true }) })
+  // The producer accepted one write without returning a canonical new identity.
+  // Use its offered source refresh and the existing list control, never resubmit.
+  const accepted = page.getByRole("status").filter({ hasText: /^New request accepted without a canonical new record reference\./ })
+  await expect(accepted).toBeVisible()
+  await accepted.getByRole("button", { name: "Refresh source", exact: true }).click()
+  await article.getByRole("button", { name: "Back to requests", exact: true }).click()
+  const requests = page.getByRole("table", { name: "Requests", exact: true })
+  await expect(requests).toHaveCount(1)
+  const row = requests.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name: title, exact: true }) })
   await expect(row).toHaveCount(1)
   const id = (await row.getAttribute("data-sf-row")) ?? ""
   expect(id).toMatch(requestPattern)

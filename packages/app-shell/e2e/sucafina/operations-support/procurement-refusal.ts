@@ -66,7 +66,9 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(cells.nth(9)).toHaveText("")
   await expect(cells.nth(10)).toHaveText("Monetary issue: fx-missing")
   await expect(comparison.getByRole("status").filter({ hasText: /^Comparison is limited: fewer than two proposals are eligible\.$/ })).toBeVisible()
-  await expect(comparison.getByRole("status").filter({ hasText: /^Comparison ranking unavailable: at least one proposal has missing, invalid or inconsistent monetary data\./ })).toBeVisible()
+  // The canonical producer prioritizes eligibleCount < 2 in rankingUnavailableReason.
+  // The row above still proves fx-missing and every score/rank is unavailable.
+  await expect(comparison.getByRole("status").filter({ hasText: /^Rank / })).toHaveCount(0)
   const winning = comparison.getByRole("combobox", { name: "Selected quotation", exact: true })
   await winning.selectOption({ label: "Journey registered supplier · JPY 28000" })
   const selectionVersion = Number(await sourceVersion(page))

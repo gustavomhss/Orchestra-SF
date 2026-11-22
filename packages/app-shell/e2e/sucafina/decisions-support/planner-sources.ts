@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test"
 import { asRecord, decisionsChapterURL } from "./journey"
+import { captureInstalledCommand } from "../installed-command-response"
 
 export const sourceNames = { baseline: "Decisions baseline plan", candidate: "Decisions candidate plan", line: "Decision annual service" }
 
@@ -149,18 +150,18 @@ async function confirmVersion(page: Page, opener: Locator, action: "save" | "cop
   await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
   const confirm = review.getByRole("button", { name: "Confirm", exact: true })
   await expect(confirm).toBeEnabled()
-  const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
-  await confirm.click()
-  const response = await pending
-  expect(response.status()).toBe(200)
-  expect(response.headers()["content-type"]).toContain("application/json")
-  const result = asRecord(await response.json())
+  const response = await captureInstalledCommand(page, new URL("/sucafina/planner", page.url()), confirm, {
+    page: "Versions", action, ...(versionId ? { id: versionId } : {}),
+  })
+  expect(response.status).toBe(200)
+  expect(response.contentType).toContain("application/json")
+  const result = asRecord(response.body)
   expect(result.ok).toBe(true)
-  const sent = asRecord(response.request().postDataJSON())
+  const sent = asRecord(response.command)
   expect(sent).toMatchObject({ page: "Versions", action, confirmed: true, version: expect.any(Number) })
   expect(sent.id).toBe(versionId)
   if (!versionId) expect(sent.version).toBe(0)
-  observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok, version: sent.version })
+  observations.push({ stage: "planner-human-command", action, httpStatus: response.status, ok: result.ok, version: sent.version })
   return result
 }
 
@@ -215,23 +216,21 @@ async function confirmLine(page: Page, opener: Locator, expected: { version: num
   await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
   const confirm = review.getByRole("button", { name: "Confirm", exact: true })
   await expect(confirm).toBeEnabled()
-  const pending = page.waitForResponse((response) => {
-    if (response.request().method() !== "POST" || new URL(response.url()).pathname !== "/sucafina/planner") return false
-    const body = response.request().postDataJSON()
-    return body?.page === "OPEX" && body?.action === "save"
+  const response = await captureInstalledCommand(page, new URL("/sucafina/planner", page.url()), confirm, {
+    page: "OPEX", action: "save", version: expected.version, values: expected.values,
+  }, {
+    matchesCommand: (body) => body?.page === "OPEX" && body?.action === "save",
   })
-  await confirm.click()
-  const response = await pending
-  expect(response.status()).toBe(200)
-  expect(response.headers()["content-type"]).toContain("application/json")
-  const result = asRecord(await response.json())
+  expect(response.status).toBe(200)
+  expect(response.contentType).toContain("application/json")
+  const result = asRecord(response.body)
   expect(result.ok).toBe(true)
-  const body = asRecord(response.request().postDataJSON())
+  const body = asRecord(response.command)
   expect(body.page).toBe("OPEX")
   expect(body.action).toBe("save")
   expect(body.confirmed).toBe(true)
   expect(body.version).toBe(expected.version)
   expect(asRecord(body.values)).toMatchObject(expected.values)
-  observations.push({ stage: "planner-human-command", action: "save", httpStatus: response.status(), ok: result.ok, version: body.version })
+  observations.push({ stage: "planner-human-command", action: "save", httpStatus: response.status, ok: result.ok, version: body.version })
   return result
 }
