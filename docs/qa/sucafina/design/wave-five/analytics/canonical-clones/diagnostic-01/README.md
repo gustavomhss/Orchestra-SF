@@ -58,7 +58,7 @@ Instrumentation adds clocks, trace objects, counters, safe-flush work and output
 
 [source-events.json](source-events.json) retains **all 120 original SF emissions**, in order, with exact payloads, timestamps and 1-based source lines: **46 stage + 24 source + 2 context + 6 capture + 3 diagnostics + 6 profiler + 33 preview chunks**. [receipt.json](receipt.json) records pinned source, completed jobs, artifact metadata, failure and History locators. [manifest.json](manifest.json) records chunks, hashes, dimensions and individual visual observations.
 
-All **seven original JPEGs** were individually viewed by **root_cost**; no root visual review is attributed.
+All **seven original JPEGs** were individually viewed by **root_cost**. Root separately viewed the configured candidate and final failure capture; [root-review.json](root-review.json) records the independent observations.
 
 | Original image | Dimensions | Bytes | Chunks |
 |---|---:|---:|---:|
@@ -72,12 +72,12 @@ All **seven original JPEGs** were individually viewed by **root_cost**; no root 
 
 The lists show two authorized cases in desktop and mobile views. The empty case shows no eligible scenarios and a dimmed Preview action. The configured case shows candidate v1 and constraint v2 selected, with limit 4 focused. The final image retains that selection with dimmed controls, **Running**, **“Preview is not yet available.”** and History showing no recorded results. It does not show a completed preview or prove any later server outcome.
 
-All **33** chunk sequences are complete and 1-based. The seven JPEGs total **536,832 bytes**. No image conversion or recompression occurred. Base64 roundtrips, JPEG markers, dimensions, SHA-256 values and independently computed Git content addresses were verified; every GitHub-created blob SHA matches. Separate binary content readback is deferred until composition into a commit.
+All **33** chunk sequences are complete and 1-based. The seven JPEGs total **536,832 bytes**. No image conversion or recompression occurred. Base64 roundtrips, JPEG markers, dimensions, SHA-256 values and independently computed Git content addresses were verified; every GitHub-created blob SHA matches. Root subsequently fetched all seven JPEGs from commit `25f1cf5e322e2a21ce01f411816591ae66c3b14d` using explicit base64 encoding. Exact content and Git blob identities matched the original completed-log chunks: **7 images, 536,832 bytes**.
 
 Artifact `14767625900` is `playwright-ubuntu-24.04-1`, **8,823,794 bytes**, SHA-256 `282a9e704b63f01ea6967c017fcef6d0fac3a74f46aed4fb994a4eb0541704fa`, expiring **2026-11-29T18:33:05Z**. The ZIP and original PNG attachments were not downloaded or verified.
 
 ## Delivery scope
 
-This delivery contains **five text blobs and seven JPEG blobs** under `diagnostic-01/`. It creates no tree, commit, ref, CI run, runtime change, rollup, top-level README change or root review. Raw logs and the Omni control value are excluded.
+The original agent delivery contained **five text blobs and seven JPEG blobs** under `diagnostic-01/`. Root composed those twelve files into commit `25f1cf5e322e2a21ce01f411816591ae66c3b14d`, completed seven binary readbacks, added [root-review.json](root-review.json) and updated the parent README/root review. This QA integration changes no runtime, test, acceptance count or CI execution. Raw logs and the Omni control value are excluded. The earlier original guard run 45052663805 covers checkpoint `2b8cf6e0783c28eb293176657a2433ad35164485` and 17 QA files; it does not cover these later documents.
 
 The earlier eight technical PASS gates remain scoped to run 45048665481 on product `d6bce5d81d0fd578a190b9bacac2a1a4250109a1` / snapshot `c18b97d8a316992b95abcbb57ef9b6c6754b1518`; this diagnostic does not rerun or reattribute them. UI42–44 qualification and acceptance counts remain unchanged.

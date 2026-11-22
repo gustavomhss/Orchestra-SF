@@ -424,5 +424,180 @@
       "imageMappingExact": true,
       "errors": []
     }
+  },
+  "diagnostic": {
+    "run": 45054828500,
+    "product": "9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0",
+    "snapshot": "9ca5887b65d0b3f479f179838d98ebba64f6995f",
+    "status": "COMPLETED_FAILURE",
+    "testJob": 137307621294,
+    "cleanupJob": 137310417616,
+    "cleanupStatus": "success",
+    "instrumented": true,
+    "originalPreviewWaiterMs": 60000,
+    "profileRecords": 6,
+    "finalProfileObserved": false,
+    "lastCheckpointMs": 50000,
+    "archiveReview": {
+      "sourceLocators": 126,
+      "parsedPayloads": 41,
+      "stagePayloads": 46,
+      "previewPayloads": 33,
+      "uniqueEvents": 120,
+      "profileRecords": 6,
+      "eventLedgerExact": true,
+      "profileConsistency": "PASS",
+      "errors": []
+    },
+    "originalJpegReadback": {
+      "reviewer": "/root",
+      "commit": "25f1cf5e322e2a21ce01f411816591ae66c3b14d",
+      "method": "GitHub fetch_file with explicit base64 encoding; normalized transport whitespace and compared exact content with the original completed-log chunks.",
+      "images": 7,
+      "totalBytes": 536832,
+      "allExact": true,
+      "files": [
+        {
+          "path": "gallery/UI42-list-dark-desktop-test-data.jpg",
+          "sha": "c87e0221b69734b941d68a4c6533c5ebbc705c29",
+          "bytes": 80591,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI42-list-light-desktop-test-data.jpg",
+          "sha": "845df242d79885b255f254654b396c2d82565ebb",
+          "bytes": 85900,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI42-list-dark-390-test-data.jpg",
+          "sha": "8f62ff43b60fa78ad3d0868ea66cd9537e3b4885",
+          "bytes": 28676,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI42-list-light-320-test-data.jpg",
+          "sha": "3efe10603e6cd0442b2e4e535101a735f2ca9772",
+          "bytes": 27478,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI42-empty-authorized-case-test-data.jpg",
+          "sha": "dd01dc8beba37b4cf6166178e12958b97e6cd57a",
+          "bytes": 97929,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI42-configure-focused-candidate-test-data.jpg",
+          "sha": "d7b7db626c5232b26d665c0e817ad79fc52b345e",
+          "bytes": 106221,
+          "exact": true
+        },
+        {
+          "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+          "sha": "7506f2861335518c893932596ad3e9f2dabbba8f",
+          "bytes": 110037,
+          "exact": true
+        }
+      ]
+    },
+    "rootVisual": {
+      "reviewer": "/root",
+      "run": 45054828500,
+      "individuallyViewed": [
+        "UI42-configure-focused-candidate-test-data",
+        "FAILED-native-wave-three-test-data"
+      ],
+      "configuration": "Desktop dark native shell; candidate plan v1 and constraint v2 selected, exploration limit 4 focused; Preview combinations enabled.",
+      "failure": "Same selected candidate, constraint and limit 4. Preview combinations shows Running; selection controls are dimmed. Preview is not yet available and History shows no recorded results. No completed result is visible.",
+      "limits": "The image does not establish backend unwind, later completion or persistence.",
+      "qualificationAdded": 0
+    },
+    "interpretation": {
+      "bcs": {
+        "calls": 854,
+        "traversalStarted": 854,
+        "admitted": 488,
+        "traversalRejected": 366,
+        "rejectionReasons": {
+          "units": 366
+        },
+        "rootUnregistered": 0,
+        "environmentRejected": 0,
+        "helperInclusiveMs": 1650,
+        "canonicalTotalInclusiveMs": 5545,
+        "digestInclusiveMs": 6196,
+        "durationsOverlap": true,
+        "conservativeUnitLimit": 4194304,
+        "maxCompleteUnits": 3471592,
+        "maxRefusalObserved": 5207380,
+        "unitValuesAreMeasuredBytes": false,
+        "maxNodeChecks": 1126,
+        "maxOwnPropertiesPrefix": 5837,
+        "maxMemoHits": 1425,
+        "maxCompleteExpansion": 26861,
+        "maxCompleteHeight": 9,
+        "partialTraversals": 366
+      },
+      "unlabelled": {
+        "calls": 969642,
+        "rootUnregistered": 963580,
+        "admitted": 6062,
+        "helperInclusiveMs": 279,
+        "canonicalTotalInclusiveMs": 10620,
+        "digestInclusiveMs": 13109,
+        "durationsOverlap": true
+      },
+      "direct": {
+        "calls": 778,
+        "rootUnregistered": 778,
+        "admitted": 0,
+        "canonicalTotalInclusiveMs": 226
+      },
+      "cloneRegistration": {
+        "operations": 854,
+        "admittedMapCallbacks": 2440,
+        "trustedCloneAttempts": 2440,
+        "rememberStarted": 2440,
+        "rememberCompleted": 2440,
+        "nodesMarked": 915000,
+        "maxNodeChecks": 375,
+        "maxOwnPropertiesPrefix": 1944,
+        "registrationInclusiveMs": 703,
+        "cloneOperationInclusiveMs": 1573,
+        "durationsOverlap": true,
+        "nodesMarkedIsGlobalUniqueObjectCount": false
+      },
+      "comparison": {
+        "sampleCalls": 103,
+        "sampleSettled": 103,
+        "sampleInclusiveMs": 1292,
+        "scenarioFenceCalls": 52,
+        "scenarioFenceSettled": 51,
+        "scenarioFencePending": 1,
+        "scenarioFenceInclusiveMs": 18500,
+        "createdCriteria": 1,
+        "priorInvocation": 6,
+        "batchPresent": 26,
+        "compareCriteriaProducer": 4,
+        "batchColdProducer": 1,
+        "batchProofHit": 25,
+        "batchProofHitIsSuccessfulEgressCount": false
+      },
+      "http": {
+        "admitted": 1,
+        "withCaseEntered": 1,
+        "previewProducer": 1,
+        "withCaseReturned": "not emitted"
+      },
+      "independentReview": {
+        "reviewer": "read_path",
+        "scope": "schema/counter interpretation and consistency; no image review attributed"
+      }
+    },
+    "qualificationAdded": 0,
+    "causalPerformanceClaim": false,
+    "archive": "diagnostic-01",
+    "guardScope": "These later documents were not present in the 2b8 checkpoint guarded by run 45052663805."
   }
 }

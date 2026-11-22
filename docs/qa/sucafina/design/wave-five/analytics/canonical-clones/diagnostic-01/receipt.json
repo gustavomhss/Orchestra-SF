@@ -503,10 +503,86 @@
     "images": 7,
     "imageBytes": 536832,
     "allImagesIndividuallyViewedBy": "root_cost",
-    "rootVisualReviewAttributed": false,
+    "rootVisualReviewAttributed": true,
     "originalPayloadLocatorsVerified": 120,
     "rawLogsArchived": false,
-    "nonceArchived": false
+    "nonceArchived": false,
+    "rootVisualReview": {
+      "reviewer": "/root",
+      "run": 45054828500,
+      "individuallyViewed": [
+        "UI42-configure-focused-candidate-test-data",
+        "FAILED-native-wave-three-test-data"
+      ],
+      "configuration": "Desktop dark native shell; candidate plan v1 and constraint v2 selected, exploration limit 4 focused; Preview combinations enabled.",
+      "failure": "Same selected candidate, constraint and limit 4. Preview combinations shows Running; selection controls are dimmed. Preview is not yet available and History shows no recorded results. No completed result is visible.",
+      "limits": "The image does not establish backend unwind, later completion or persistence.",
+      "qualificationAdded": 0
+    },
+    "rootBinaryReadback": {
+      "reviewer": "/root",
+      "commit": "25f1cf5e322e2a21ce01f411816591ae66c3b14d",
+      "method": "GitHub fetch_file with explicit base64 encoding; normalized transport whitespace and compared exact content with the original completed-log chunks.",
+      "images": 7,
+      "totalBytes": 536832,
+      "allExact": true,
+      "files": [
+        {
+          "path": "gallery/UI42-list-dark-desktop-test-data.jpg",
+          "sha": "c87e0221b69734b941d68a4c6533c5ebbc705c29",
+          "bytes": 80591,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI42-list-light-desktop-test-data.jpg",
+          "sha": "845df242d79885b255f254654b396c2d82565ebb",
+          "bytes": 85900,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI42-list-dark-390-test-data.jpg",
+          "sha": "8f62ff43b60fa78ad3d0868ea66cd9537e3b4885",
+          "bytes": 28676,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI42-list-light-320-test-data.jpg",
+          "sha": "3efe10603e6cd0442b2e4e535101a735f2ca9772",
+          "bytes": 27478,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI42-empty-authorized-case-test-data.jpg",
+          "sha": "dd01dc8beba37b4cf6166178e12958b97e6cd57a",
+          "bytes": 97929,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI42-configure-focused-candidate-test-data.jpg",
+          "sha": "d7b7db626c5232b26d665c0e817ad79fc52b345e",
+          "bytes": 106221,
+          "exact": true
+        },
+        {
+          "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+          "sha": "7506f2861335518c893932596ad3e9f2dabbba8f",
+          "bytes": 110037,
+          "exact": true
+        }
+      ]
+    },
+    "separateBinaryReadbackCompleted": true,
+    "independentRootReview": {
+      "sourceLocators": 126,
+      "parsedPayloads": 41,
+      "stagePayloads": 46,
+      "previewPayloads": 33,
+      "uniqueEvents": 120,
+      "profileRecords": 6,
+      "eventLedgerExact": true,
+      "profileConsistency": "PASS",
+      "errors": []
+    }
   },
   "separatelyScopedTechnicalVerification": {
     "run": 45048665481,
@@ -555,6 +631,18 @@
     "treeCreated": false,
     "commitCreated": false,
     "refUpdated": false,
-    "newCiExecution": false
+    "newCiExecution": false,
+    "stage": "Original agent delivery: twelve blobs, before root integration; the following rootIntegration records later changes separately.",
+    "rootIntegration": {
+      "initialCommit": "25f1cf5e322e2a21ce01f411816591ae66c3b14d",
+      "initialTree": "c56e9ba536b7097794ce52138ec473afb8751be7",
+      "baseCommit": "9a3398a5c8ae89516c54cfabe0e990b1ba4d4fef",
+      "newRootReview": "root-review.json",
+      "parentReadmeUpdated": true,
+      "parentRootReviewUpdated": true,
+      "productChanges": false,
+      "newCiExecution": false,
+      "qualificationAdded": 0
+    }
   }
 }
