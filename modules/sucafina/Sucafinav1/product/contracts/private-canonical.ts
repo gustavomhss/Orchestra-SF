@@ -5,6 +5,7 @@ import { canonicalSfValue } from "./canonical.ts"
 // It does not retain an object, canonical fragment, digest or authority after a call.
 const descriptor = Object.getOwnPropertyDescriptor
 const own = Object.hasOwn
+const sameValue = Object.is
 const prototype = Object.getPrototypeOf
 const descriptors = Object.getOwnPropertyDescriptors
 const keys = Object.keys
@@ -32,7 +33,7 @@ function sameDescriptor(left: PropertyDescriptor | undefined, right: PropertyDes
   if (!left || !right) return left === right
   for (let index = 0; index < descriptorFields.length; index++) {
     const field = descriptorFields[index]!
-    if (own(left, field) !== own(right, field) || own(left, field) && left[field] !== right[field]) return false
+    if (own(left, field) !== own(right, field) || own(left, field) && !sameValue(left[field], right[field])) return false
   }
   return true
 }

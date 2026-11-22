@@ -84,11 +84,14 @@ test("private canonical observations preserve holes, custom prototypes, invalid 
 })
 
 test("private canonical route falls back when the serializer, prototype or Proxy inspector changes", () => {
+  const admitted = () => compareSfPrivateCanonical({ amount: 7 }, () => true)
+  expect(admitted()).toBe(true)
   const stringify = Object.getOwnPropertyDescriptor(JSON, "stringify")!
   const proxy = Object.getOwnPropertyDescriptor(types, "isProxy")!
   const arrayJSON = Object.getOwnPropertyDescriptor(Array.prototype, "toJSON")
   const species = Object.getOwnPropertyDescriptor(Array, Symbol.species)!
   const indexZero = Object.getOwnPropertyDescriptor(Array.prototype, "0")
+  const arrayLength = Object.getOwnPropertyDescriptor(Array.prototype, "length")!
   let calls = 0
   try {
     Object.defineProperty(JSON, "stringify", { ...stringify, value: (value: unknown) => { calls++; return stringify.value(value) } })
@@ -136,6 +139,8 @@ test("private canonical route falls back when the serializer, prototype or Proxy
     const privateIndex = canonicalSfPrivateValue({ values: [1, 2] }), privateIndexCalls = calls
     if (indexZero) Object.defineProperty(Array.prototype, "0", indexZero)
     else Reflect.deleteProperty(Array.prototype, "0")
+    // Deleting an added index does not restore an Array prototype's length.
+    Object.defineProperty(Array.prototype, "length", arrayLength)
     expect(privateIndex).toBe(canonicalIndex)
     expect(privateIndexCalls).toBe(canonicalIndexCalls)
   } finally {
@@ -146,7 +151,11 @@ test("private canonical route falls back when the serializer, prototype or Proxy
     else Reflect.deleteProperty(Array.prototype, "toJSON")
     if (indexZero) Object.defineProperty(Array.prototype, "0", indexZero)
     else Reflect.deleteProperty(Array.prototype, "0")
+    // Deleting an added index does not restore an Array prototype's length.
+    Object.defineProperty(Array.prototype, "length", arrayLength)
   }
+  expect(Object.getOwnPropertyDescriptor(Array.prototype, "length")).toEqual(arrayLength)
+  expect(admitted()).toBe(true)
 })
 
 test("private source comparisons share complete bytes only within a verified synchronous graph", () => {
@@ -212,6 +221,8 @@ test("private source comparison preserves observable CryptoHasher constructor, u
   expect(typeof update.value).toBe("function")
   expect(typeof digest.value).toBe("function")
   const reference = { revision: 1 }, source = structuredClone(reference)
+  const admitted = () => compareSfPrivateCanonical({ reference, source }, () => true)
+  expect(admitted()).toBe(true)
   let calls = 0
   const check = () => {
     let entered = false
@@ -244,4 +255,25 @@ test("private source comparison preserves observable CryptoHasher constructor, u
     Object.defineProperty(Bun.CryptoHasher.prototype, "update", update)
     Object.defineProperty(Bun.CryptoHasher.prototype, "digest", digest)
   }
+  expect(admitted()).toBe(true)
+})
+
+test("private descriptor guards distinguish signed zero and reject a replaced Object.is", () => {
+  const value = { amount: -0 }
+  expect(compareSfPrivateCanonical(value, (canonical) => {
+    const before = canonical(value)
+    value.amount = 0
+    return before === canonical(value)
+  })).toBe(false)
+  expect(canonicalSfPrivateValue(value)).toBe(canonicalSfValue({ amount: 0 }))
+
+  const original = Object.getOwnPropertyDescriptor(Object, "is")!
+  let entered = false
+  let result: boolean | undefined
+  try {
+    Object.defineProperty(Object, "is", { ...original, value: () => true })
+    result = compareSfPrivateCanonical({ amount: 1 }, () => { entered = true; return true })
+  } finally { Object.defineProperty(Object, "is", original) }
+  expect(result).toBeUndefined()
+  expect(entered).toBe(false)
 })
