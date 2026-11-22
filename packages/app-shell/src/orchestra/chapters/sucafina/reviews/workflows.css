@@ -21,16 +21,18 @@
   line-height: 1.6;
 }
 .sf-page-frame .sf-workflow :where(h2, h3, p, dl) { margin-block: 0; }
-.sf-page-frame .sf-workflow :where(h2) {
+.sf-page-frame .sf-workflow :where(h2:not(.sf-s03-review h2)) {
   color: var(--mx-strong);
   font-size: var(--orchestra-font-size-xl);
-  font-weight: var(--mx-emphasis);
+  font-family: var(--mx-emphasis);
+  font-weight: 600;
   line-height: 1.4;
 }
-.sf-page-frame .sf-workflow :where(h3) {
+.sf-page-frame .sf-workflow :where(h3:not(.sf-s03-review h3)) {
   color: var(--mx-strong);
   font-size: var(--orchestra-font-size-lg);
-  font-weight: var(--mx-emphasis);
+  font-family: var(--mx-emphasis);
+  font-weight: 600;
 }
 .sf-page-frame .sf-workflow :where(p, li, dt, dd, label) { overflow-wrap: break-word; }
 .sf-page-frame .sf-workflow :where(bdi, code, pre, .sf-u44-ref) { overflow-wrap: anywhere; }
@@ -124,7 +126,8 @@
   padding-inline: var(--sf-workflow-space-xs);
   color: var(--mx-dim);
   font-size: var(--orchestra-font-size-sm);
-  font-weight: var(--mx-emphasis);
+  font-family: var(--mx-emphasis);
+  font-weight: 600;
 }
 .sf-page-frame .sf-workflow :where(.sf-u19-check, .sf-memory-check) {
   display: flex;
@@ -181,7 +184,8 @@
 .sf-page-frame .sf-workflow :where(.sf-n28-scroll, .sf-u19-table-scroll) th {
   color: var(--mx-dim);
   font-size: var(--orchestra-font-size-sm);
-  font-weight: var(--mx-emphasis);
+  font-family: var(--mx-emphasis);
+  font-weight: 600;
 }
 .sf-page-frame .sf-workflow :where(.sf-memory-candidate-grid label):focus-within {
   outline-color: var(--orchestra-accent);
@@ -225,7 +229,8 @@
   margin-block: 0 var(--sf-workflow-space-sm);
   color: var(--mx-dim);
   font-size: var(--orchestra-font-size-sm);
-  font-weight: var(--mx-emphasis);
+  font-family: var(--mx-emphasis);
+  font-weight: 600;
 }
 .sf-page-frame .sf-workflow .sf-n28-items > .mx-card > .sf-n28-section {
   padding: 0;
@@ -273,4 +278,9 @@
   .sf-page-frame .sf-workflow .sf-files-diff {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.sf-page-frame .sf-workflow .sf-workflow-note {
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
 }

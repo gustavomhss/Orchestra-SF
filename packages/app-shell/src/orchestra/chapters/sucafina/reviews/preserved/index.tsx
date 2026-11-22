@@ -290,7 +290,7 @@ function SfPreservedMeeting(props: {
   }
   return (
     <section class="sf-n28-section sf-section" aria-label={t("sf.u32.meeting")}>
-      <p class="sf-metadata">{t("sf.u32.version")}: {props.review.version} · <WhenText iso={props.review.createdAt} /></p>
+      <p class="sf-workflow-note">{t("sf.u32.version")}: {props.review.version} · <WhenText iso={props.review.createdAt} /></p>
       <details class="sf-technical-details"><summary>{t("sf.u32.ref")}</summary><bdi>{props.review.id}</bdi></details>
       <Show when={section()}>
         {(current) => <>
@@ -301,7 +301,7 @@ function SfPreservedMeeting(props: {
               <For each={shown().values}>{(value) => <li>
                 <strong><AmountText value={value.value} currency={value.currency} /></strong>
                 <Show when={value.unit}><span> {value.unit}</span></Show>
-                <p class="sf-metadata"><PeriodText start={value.period.start} end={value.period.end} /></p>
+                <p class="sf-workflow-note"><PeriodText start={value.period.start} end={value.period.end} /></p>
                 <details class="sf-technical-details">
                   <summary>{t("sf.u32.inspectSource")}</summary>
                   <p>{t("sf.u32.valueReference")}: <bdi>{value.id}</bdi></p>

@@ -317,7 +317,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
                       </fieldset>
                       <fieldset disabled={store.busy || store.outcomeUnknown}>
                         <legend>{t("sf.u19.scenarios.constraints")}</legend>
-                        <Show when={source().rules.length > 0}><p class="sf-metadata">{t("sf.u19.scenarios.constraintNamesUnavailable")}</p></Show>
+                        <Show when={source().rules.length > 0}><p class="sf-workflow-note">{t("sf.u19.scenarios.constraintNamesUnavailable")}</p></Show>
                         <For each={source().rules}>{(rule) =>
                           <label class="sf-u19-check"><input type="checkbox" checked={store.constraints.includes(rule.id)}
                             onChange={(event) => updateSelection("constraints", rule.id, event.currentTarget.checked)} />
