@@ -1,5 +1,6 @@
 import { expect, type Page, type Request } from "@playwright/test"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
+import { prepareParameterizedScenario } from "./design-support/wave-five-analytics-source"
 import {
   analyticsTest, array, object, sourceText, controls, readPortfolio, isOperation,
   enter, ready, observePage,
@@ -22,10 +23,11 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   const empty = cases.find((item) => item.title === waveFourDecisionsData.editableObjective)
   expect(main).toBeDefined()
   expect(empty).toBeDefined()
-  const source = object((await controls(page, owner, sourceText(main!.ref))).selected)
+  const prepared = await prepareParameterizedScenario(page, owner, sourceText(main!.ref))
+  const source = prepared.selected
   const decision = object(source.decision)
   const caseRef = object(source.caseRef)
-  expect(array(decision.alternatives)).toHaveLength(2)
+  expect(array(decision.alternatives)).toHaveLength(3)
   expect(array(decision.choices)).toHaveLength(1)
   expect(array(decision.alternatives).map(object).every((entry) =>
     object(entry.result).total === null && object(entry.result).comparisonStatus === "conditioned")).toBe(true)
@@ -105,16 +107,19 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   await enter(page, owner, installation.origin + "/orchestra/sf-portfolio/sensitivity", "Sensitivity", 40_000)
   const sensitivity = page.locator("[data-sf-sensitivity]")
   await expect(sensitivity).toHaveAttribute("data-sf-wave", "five")
+  await sensitivity.getByRole("combobox", { name: "Authorized cases", exact: true }).selectOption(sourceText(empty!.ref))
+  await expect(sensitivity.getByText("The producer has not issued authorized sensitivity units.", { exact: true })).toBeVisible()
+  await captureAnalytics(page, info, "UI44-no-source-scenarios-test-data")
   await sensitivity.getByRole("combobox", { name: "Authorized cases", exact: true }).selectOption(sourceText(main!.ref))
   await ready(page, "Sensitivity", 40_000)
   const sourceScenarios = array(source.scenarios).map(object)
-  expect(sourceScenarios).toHaveLength(2)
-  const selectedScenario = sourceScenarios.find((entry) => entry.title === waveFourDecisionsData.plannerCandidate)
-  const baseline = sourceScenarios.find((entry) => entry.title === waveFourDecisionsData.plannerBaseline)
+  expect(sourceScenarios).toHaveLength(3)
+  const selectedScenario = sourceScenarios.find((entry) => entry.ref === prepared.scenarioRef && entry.alternativeId === prepared.alternativeId)
+  const baseline = sourceScenarios.find((entry) => entry.alternativeId === prepared.baselineAlternativeId)
   expect(selectedScenario).toBeDefined()
   expect(baseline).toBeDefined()
   const parameters = array(selectedScenario!.parameters).map(object)
-  expect(parameters.length).toBeGreaterThan(0)
+  expect(parameters).toEqual([expect.objectContaining({ ref: prepared.parameterRef })])
   await sensitivity.getByRole("combobox", { name: "Scenario", exact: true }).selectOption(sourceText(selectedScenario!.ref))
   await sensitivity.getByRole("combobox", { name: "Baseline", exact: true }).selectOption(sourceText(baseline!.ref))
   await sensitivity.getByRole("combobox", { name: "Parameter", exact: true }).selectOption(sourceText(parameters[0]!.ref))
@@ -125,8 +130,10 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   await expect(sensitivity.locator(".sf-u19-criterion")).toBeVisible()
   await sensitivity.getByRole("combobox", { name: "Criterion", exact: true }).selectOption({ index: 1 })
   await sensitivity.getByLabel("Criterion value", { exact: true }).fill("2000")
-  await sensitivity.getByLabel("Minimum", { exact: true }).fill("1200")
-  await sensitivity.getByLabel("Maximum", { exact: true }).fill("3600")
+  const minimum = String(prepared.parameterValue)
+  const maximum = String(prepared.parameterValue + 2000)
+  await sensitivity.getByLabel("Minimum", { exact: true }).fill(minimum)
+  await sensitivity.getByLabel("Maximum", { exact: true }).fill(maximum)
   await sensitivity.getByLabel("Steps", { exact: true }).fill("2")
   await captureModes(page, info, "UI44-issued-units-editor")
   await page.getByRole("button", { name: "Evaluate sensitivity", exact: true }).click()
@@ -134,11 +141,11 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   await expect(sensitivity.locator(".sf-u19-unit-selection")).toBeHidden()
   await expect(sensitivity.locator(".sf-u19-criterion")).toBeHidden()
   const review = sensitivity.getByRole("region", { name: "Review sensitivity request", exact: true })
-  await expect(review).toContainText("1200 — 3600 (2)")
+  await expect(review).toContainText(minimum + " — " + maximum + " (2)")
   await expect(review).toContainText(sourceText(parameters[0]!.ref))
   await captureAnalytics(page, info, "UI44-dark-desktop-review-test-data")
   await review.getByRole("button", { name: "Cancel review", exact: true }).click()
-  await expect(sensitivity.getByLabel("Minimum", { exact: true })).toHaveValue("1200")
+  await expect(sensitivity.getByLabel("Minimum", { exact: true })).toHaveValue(minimum)
   await expect(sensitivity.getByLabel("Steps", { exact: true })).toHaveValue("2")
   await page.getByRole("button", { name: "Evaluate sensitivity", exact: true }).click()
   await page.setViewportSize({ width: 320, height: 800 })
@@ -206,7 +213,8 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   expect(diagnostics.consoleErrors).toEqual([])
   console.info("SF_ANALYTICS_SCOPE " + JSON.stringify({
     surfaces: ["UI42", "UI43", "UI44"], originalCases: cases.length,
-    originalAlternatives: 2, originalPortfolioResults: history.length, combinations: combinations.length,
+    originalAlternatives: array(decision.alternatives).length, originalParameterPromotions: 1,
+    originalPortfolioResults: history.length, combinations: combinations.length,
     portfolioWrites: 1, sensitivityWrites: 1, sourceRef: portfolioRef,
     preserved: ["conditioned comparison", "pending cost coverage", "original rule and source-issued units", "no inferred complete total"],
   }))
