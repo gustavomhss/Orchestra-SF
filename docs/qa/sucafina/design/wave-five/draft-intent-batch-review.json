@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "status": "STATIC_REVIEW_AND_FOCUSED_REGRESSIONS_PASSED_INSTALLED_EQUIVALENCE_PENDING",
+  "integrationBase": "def862d6a2ea65bf94720b4b6b0761873df63986",
+  "runtimeCandidate": "991eb369b9defce9684bf53464d47d56f8b2c1a9",
+  "testCandidate": "528a348cfa9cff146872fd4a9d7272ee16f4d235",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.ts",
+      "before": "842989d8163acbba6c0c0f7b6c9b87ad370dcb50",
+      "after": "08f45a9910139614e977cb69d1fe053b6e78af7b"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts",
+      "before": "a9488e57a14713d47536d2096d7fe73fc1f57406",
+      "after": "479808933d294192fe3e0ce6f8f67583375e39e8"
+    },
+    {
+      "path": "apps/cli/test/sucafina-draft-intent-health.test.ts",
+      "after": "9afcfa9bd0bb065021189891e0fa9a5c968a9b24"
+    }
+  ],
+  "preserved": {
+    "originalCandidateArrays": true,
+    "admissions": 14,
+    "initialLeaseValidations": 14,
+    "finalLeaseRevalidations": 21,
+    "humanActionReads": 8,
+    "leaseFinishes": 14,
+    "originalSelectorAndModes": true,
+    "originalReaderCapturedBeforeAwait": true,
+    "originalProviderReadIsArrowClosure": true,
+    "producerInvocations": 0
+  },
+  "changes": {
+    "dashboardMetadataReads": {
+      "before": 26,
+      "after": 8
+    },
+    "intentMetadataReads": {
+      "before": 14,
+      "after": 4
+    },
+    "sharing": "Only matching namespace and read/write mode inside one phase; new promises after every phase and invocation."
+  },
+  "verification": {
+    "workflow": "test-ci",
+    "channel": "prod",
+    "omni": "strict",
+    "os": "Linux",
+    "run": 44998337630,
+    "testJob": 137134156854,
+    "cleanupJob": 137134383481,
+    "snapshot": "10dd4db5d194efa8878106218512a90d8e87b3d2",
+    "tests": 106,
+    "assertions": 1155,
+    "failures": 0,
+    "includesPreviouslyQualifiedTests": 71,
+    "newTests": 35,
+    "rootIndependentlyReadLogs": true,
+    "peerReview": "design_reviews"
+  },
+  "limitations": [
+    "Counts describe the fully admitted path; rejected operations cannot borrow another candidate's grant.",
+    "Unit hooks control external identity/namespace boundaries; no producer or receipt is simulated.",
+    "No installed latency or completed import journey is claimed.",
+    "Installed equivalence is running ondef862 plus the exact three blobs."
+  ]
+}

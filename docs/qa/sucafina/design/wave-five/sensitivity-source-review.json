@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "STATIC_REVIEWED_PENDING_FOCUSED_AND_INSTALLED_QUALIFICATION",
+  "status": "FOCUSED_CONTRACTS_AND_CLI_E2E_TYPES_PASSED_APP_TEST_TYPING_CORRECTED_PENDING_RECHECK",
   "integrationBase": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
   "candidates": [
     "4e32415ebf7b684ef26ca0012d48eb90acd095ee",
@@ -17,7 +17,8 @@
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
-      "blob": "a18e0fa6543867c60871da6436bf1b1b53e91a26"
+      "blob": "2c723f77a3e8b07829c9948d0daf07f40f9aa809",
+      "previousBlob": "a18e0fa6543867c60871da6436bf1b1b53e91a26"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
@@ -57,5 +58,27 @@
   "limitations": [
     "UI42/UI43/UI44 installed journey remains unqualified.",
     "This delta still needs app/CLI/E2E types and focused source-contract gates."
-  ]
+  ],
+  "typeCorrection": {
+    "candidate": "9b075c52070f6833f2e42607d54fa514787a056e",
+    "runtimeChange": false,
+    "rootRead": true,
+    "testsPreserved": 9,
+    "description": "Discriminated literal availability fixtures and unknown test observations preserve exact equality; contradictory availability remains an explicitly malformed test-only specimen."
+  },
+  "qualification": {
+    "run": 44998377220,
+    "job": 137134280480,
+    "tests": 15,
+    "assertions": 64,
+    "passed": [
+      "CLI types",
+      "permanent E2E types",
+      "source/readiness contracts"
+    ],
+    "failed": [
+      "App typecheck on prior test typing"
+    ],
+    "next": "Recheck app/CLI types and source contracts after this correction."
+  }
 }

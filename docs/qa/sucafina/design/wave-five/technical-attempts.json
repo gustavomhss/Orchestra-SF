@@ -1552,6 +1552,99 @@
         "localTests": false
       },
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44996682703"
+    },
+    {
+      "attempt": 16,
+      "product": "def862d6a2ea65bf94720b4b6b0761873df63986",
+      "snapshot": "d178252794c78fb8f57130ca0b47da56dc7d1716",
+      "run": 44998377220,
+      "job": 137134280480,
+      "cleanupJob": 137134672913,
+      "cleanupStatus": "success",
+      "checks": {
+        "total": 4,
+        "passed": 3,
+        "failed": 1,
+        "notRerun": 12
+      },
+      "scope": "A04 sensitivity consumer, original sensitivity-rule fixture and permanent analytics spec. App typecheck failed only in new structural test typing; CLI types, permanent E2E types and15 source/readiness regressions passed.",
+      "commands": [
+        {
+          "gate": "app-shell typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "typecheck"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 1,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "app-shell e2e typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck:e2e"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "CLI native host typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "apps/cli",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "portfolio readiness and sensitivity units regressions",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "--conditions=solid",
+            "--preload",
+            "./happydom.ts",
+            "./src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+            "./src/orchestra/chapters/sucafina/portfolio/scenarios/readiness.test.ts"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      ],
+      "focused": {
+        "tests": 15,
+        "passed": 15,
+        "failed": 0,
+        "assertions": 64,
+        "units": 9,
+        "readiness": 6
+      },
+      "failures": [
+        "##[error]src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts(64,34): error TS2322: Type '{ family: \"decisions\" | \"portfolio\"; resource: \"assumptions\" | \"sensitivity\"; state: \"partial\"; operations: readonly ({ readonly operationId: \"bi.bi-data\" | \"bi.bi-decision\" | \"bi.bi-options\" | ... 317 more ... | \"views.save\"; readonly state: \"ready\"; readonly reason: null; readonly operational: true; } | { ...; })[...' is not assignable to type '{ readonly family: \"ctx\"; readonly resource: \"context\"; readonly state: \"denied\" | \"partial\" | \"ready\" | \"unavailable\"; readonly operations: readonly ({ readonly operationId: \"bi.bi-data\" | \"bi.bi-decision\" | ... 318 more ... | \"views.save\"; readonly state: \"ready\"; readonly reason: null; readonly operational: true;...'.",
+        "##[error]src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts(72,69): error TS2769: No overload matches this call.",
+        "##[error]src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts(158,30): error TS2769: No overload matches this call.",
+        "##[error]src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts(159,24): error TS2339: Property 'method' does not exist on type 'Readonly<{ operationId: \"bi.bi-data\" | \"bi.bi-decision\" | \"bi.bi-options\" | \"bi.bi-source\" | \"collaboration.answer-confirm\" | \"collaboration.answer-prepare\" | \"collaboration.answer-prepare-message\" | ... 313 more ... | \"views.save\"; input: Schema<...>; output: Schema<...>; }>'.",
+        "##[error]src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts(179,16): error TS2322: Type '{ operationId: \"decisions.controls.read\"; state: \"ready\"; reason: null; operational: false; }' is not assignable to type '{ readonly operationId: \"bi.bi-data\" | \"bi.bi-decision\" | \"bi.bi-options\" | \"bi.bi-source\" | \"collaboration.answer-confirm\" | \"collaboration.answer-prepare\" | \"collaboration.answer-prepare-message\" | ... 313 more ... | \"views.save\"; readonly state: \"ready\"; readonly reason: null; readonly operational: true; } | { .....'.",
+        "##[error]src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts(180,16): error TS2322: Type '{ operationId: \"decisions.controls.read\"; reason: null; operational: true; state: \"unavailable\"; }' is not assignable to type '{ readonly operationId: \"bi.bi-data\" | \"bi.bi-decision\" | \"bi.bi-options\" | \"bi.bi-source\" | \"collaboration.answer-confirm\" | \"collaboration.answer-prepare\" | \"collaboration.answer-prepare-message\" | ... 313 more ... | \"views.save\"; readonly state: \"ready\"; readonly reason: null; readonly operational: true; } | { .....'."
+      ],
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      },
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44998377220"
     }
   ]
 }

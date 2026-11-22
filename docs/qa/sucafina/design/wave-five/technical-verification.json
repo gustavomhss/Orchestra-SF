@@ -3,7 +3,7 @@
   "status": "TECHNICAL_GATES_RECORDED_BROWSER_QUALIFICATION_IN_PROGRESS",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "sf-design-next",
-  "product": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
+  "product": "def862d6a2ea65bf94720b4b6b0761873df63986",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "environment": {
     "runtime": "existing test-ci",
@@ -136,6 +136,24 @@
       "approved": 0,
       "touchesGuards": false,
       "report": "technical-attempts/15-guard-report.json"
+    },
+    {
+      "name": "A04 sensitivity leaf composed app/CLI/E2E types and structural contracts",
+      "status": "PARTIAL_FAILURE_RECORDED",
+      "attempt": 16,
+      "run": 44998377220,
+      "job": 137134280480,
+      "product": "def862d6a2ea65bf94720b4b6b0761873df63986",
+      "snapshot": "d178252794c78fb8f57130ca0b47da56dc7d1716",
+      "passed": [
+        "CLI types",
+        "permanent E2E types",
+        "15 source/readiness regressions with64assertions"
+      ],
+      "failed": [
+        "App types:6 errors in new structural-test typing; production leaf and fixture had no reported type error."
+      ],
+      "note": "The whole workflow failed. Test-only typing correction and final app types are required."
     }
   ],
   "focusedRegressions": [
@@ -229,6 +247,29 @@
         "failed": 2,
         "expectedFailure": "The previous readers invoke the replacement twice in collaboration and once in portfolio. The same two negative cases pass with pinned readers."
       }
+    },
+    {
+      "name": "Original A04 sensitivity units and exact operation readiness",
+      "status": "PASSED",
+      "attempt": 16,
+      "run": 44998377220,
+      "job": 137134280480,
+      "product": "def862d6a2ea65bf94720b4b6b0761873df63986",
+      "snapshot": "d178252794c78fb8f57130ca0b47da56dc7d1716",
+      "tests": 15,
+      "assertions": 64,
+      "scope": "9 A04 unit-contract and6 existing readiness tests. This is not installed sensitivity qualification."
+    },
+    {
+      "name": "Draft and intent phase metadata with original phase/collaboration/portfolio regressions",
+      "status": "PASSED",
+      "run": 44998337630,
+      "job": 137134156854,
+      "snapshot": "10dd4db5d194efa8878106218512a90d8e87b3d2",
+      "candidate": "528a348cfa9cff146872fd4a9d7272ee16f4d235",
+      "tests": 106,
+      "assertions": 1155,
+      "scope": "35new plus71 previously qualified cases; counts are inclusive, not additive. Installed equivalence and clean import remain separate."
     }
   ],
   "installedEvidence": [
@@ -326,33 +367,29 @@
   "merged": false,
   "inventoryAcceptedAndMergedAreas": 41,
   "pendingDelta": {
-    "status": "PENDING_FOCUSED_TYPES_AND_INSTALLED_QUALIFICATION",
-    "scope": "Original A04 sensitivity units leaf and original rule registration fixture",
-    "sourceCandidates": [
-      "4e32415ebf7b684ef26ca0012d48eb90acd095ee",
-      "dca1820442b05a06aa3eb981f2c59007e05af606"
-    ],
+    "status": "PENDING_FINAL_APP_CLI_TYPES_GUARDS_AND_INSTALLED_QUALIFICATION",
     "files": [
       {
-        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/producer.ts",
-        "blob": "cc4680188c1004349e7a7b25e84ce68366aea1a0"
+        "path": "apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.ts",
+        "blob": "08f45a9910139614e977cb69d1fe053b6e78af7b"
       },
       {
-        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/index.tsx",
-        "blob": "3753bd060cefde92389e9ba2deb585388a6386f6"
+        "path": "apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts",
+        "blob": "479808933d294192fe3e0ce6f8f67583375e39e8"
+      },
+      {
+        "path": "apps/cli/test/sucafina-draft-intent-health.test.ts",
+        "blob": "9afcfa9bd0bb065021189891e0fa9a5c968a9b24"
       },
       {
         "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
-        "blob": "a18e0fa6543867c60871da6436bf1b1b53e91a26"
-      },
-      {
-        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
-        "blob": "1c9aaeeb88dd319d834e09bdc545a05a3f02c238"
-      },
-      {
-        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics-source.ts",
-        "blob": "581ac6c7f506c9ef7e46c633e70139edebddcfdd"
+        "blob": "2c723f77a3e8b07829c9948d0daf07f40f9aa809"
       }
+    ],
+    "notes": [
+      "The permanent E2E spec and original sensitivity-rule helper passed inattempt16 and are unchanged by this delta.",
+      "The test-only correction preserves all9 structural cases and full equality/descriptor assertions.",
+      "The original metadata regression suite passed106tests/1155assertions; installed equivalence and clean import remain pending."
     ]
   }
 }

@@ -61,15 +61,17 @@ function context(
   operations: SfContext["availability"][number]["operations"],
   family: "decisions" | "portfolio" = "decisions",
 ): Pick<SfContext, "availability" | "stamp"> {
-  return { stamp, availability: [{ family, resource: family === "decisions" ? "assumptions" : "sensitivity",
-    state: "partial", operations }] }
+  return { stamp, availability: [family === "decisions"
+    ? { family: "decisions", resource: "assumptions", state: "partial", operations }
+    : { family: "portfolio", resource: "sensitivity", state: "partial", operations }] }
 }
 const ready = { operationId: "decisions.controls.read", state: "ready", reason: null, operational: true } as const
 
 describe("source-issued sensitivity units through original A04 controls", () => {
   test("retains the exact selected case, tuple, units and complete source metadata", () => {
     const value = specimen()
-    expect(sfReadSensitivityUnits(value, selection, stamp)).toEqual({
+    const actual: unknown = sfReadSensitivityUnits(value, selection, stamp)
+    expect(actual).toEqual({
       ...value.selected.units, ref: selection.ref, caseRef: selection.caseRef, scenarioRef: selection.scenarioRef,
     })
   })
@@ -155,8 +157,9 @@ describe("source-issued sensitivity units through original A04 controls", () => 
     const stopped = new Error("Structural dispatch probe: no response or source is issued")
     const calls: { id: string; input: unknown }[] = []
     const transport: SfTransport = { execute: async (operation, input, options) => {
-      expect(operation).toBe(SfDecisions.operations["decisions.controls.read"])
-      expect(operation.method).toBe("GET")
+      const descriptor: unknown = operation
+      expect(descriptor).toBe(SfDecisions.operations["decisions.controls.read"])
+      expect(SfDecisions.operations["decisions.controls.read"].method).toBe("GET")
       expect(options.signal).toBe(signal)
       expect(options.idempotencyKey).toBeUndefined()
       calls.push({ id: operation.operationId, input })
@@ -172,12 +175,17 @@ describe("source-issued sensitivity units through original A04 controls", () => 
   test("refuses absent, sibling, nonoperational or wrong-family availability before transport", async () => {
     const transport: SfTransport = { execute: async () => { throw new Error("A denied read must not dispatch") } }
     const signal = new AbortController().signal
+    // Intentionally malformed in-memory availability: only these specimens bypass
+    // the static union to prove that inconsistent readiness cannot dispatch.
+    const inconsistent = [
+      { ...ready, operational: false },
+      { ...ready, state: "unavailable" },
+    ] as unknown as SfContext["availability"][number]["operations"]
     for (const source of [
       context([]),
       context([{ ...ready, operationId: "portfolio.decision-sensitivity-units" }], "portfolio"),
       context([{ ...ready, operationId: "decisions.decision-criteria" }]),
-      context([{ ...ready, operational: false }]),
-      context([{ ...ready, state: "unavailable" }]),
+      ...inconsistent.map((operation) => context([operation])),
       context([ready], "portfolio"),
     ]) expect(await sfSensitivityUnitsForSelection(transport, source, selection.ref, selection.caseRef,
       selection.scenarioRef, selection.baselineRef, selection.parameterRef, signal))
