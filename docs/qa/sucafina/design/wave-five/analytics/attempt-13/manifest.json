@@ -1,0 +1,496 @@
+{
+  "schema": "sf-design-wave-five-analytics-attempt-v1",
+  "attempt": 13,
+  "label": "Portfolio16 original preview eligibility/root diagnostic",
+  "outcome": "failed original60000ms wait; same request observed to original403 at300126ms",
+  "ui43Reached": false,
+  "ui44Reached": false,
+  "source": {
+    "product": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
+    "tree": "777e9a1a2fb3debbac3eb96ee795a2a9390f948a",
+    "sourcePreparation": "0e5745f13e3eaacabd4e19bd3b64e0d0f7b4c5e9",
+    "originalSeed": "32b39933bf81c220729d3af910809e7d7b88910f",
+    "fullSpec": "7d4af62590e256ed9f034fd8a00bbce5694f1c25",
+    "diagnosticSpec": "d457c752d3e85597a1ca5f147fee86e6442570a4",
+    "newA04SensitivityPreparationIncluded": false
+  },
+  "snapshot": "4d6fff306524812513cc2214c4339394f23fcc18",
+  "tree": "4e0a84acd271d1113cbe22a01aa5703c321bfe02",
+  "branch": "ci-run-sf5portfolio16",
+  "actions": {
+    "run": 44998750010,
+    "testJob": 137135382143,
+    "testConclusion": "failure",
+    "cleanupJob": 137138020487,
+    "cleanupConclusion": "success",
+    "workflow": ".github/workflows/test-ci.yml",
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod",
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "artifact": {
+    "id": 14745371831,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 9391057,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14745371831",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14745371831/zip",
+    "expired": false,
+    "created_at": "2026-11-22T07:44:37Z",
+    "expires_at": "2026-11-29T07:44:36Z",
+    "updated_at": "2026-11-22T07:44:37Z",
+    "digest": "sha256:9a648d069fa4fe06173cd83f1b571f0cd02d5b80c57884c26e918d630275b391",
+    "workflow_run": {
+      "id": 44998750010,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf5portfolio16",
+      "head_sha": "4d6fff306524812513cc2214c4339394f23fcc18"
+    }
+  },
+  "sourceEvents": [
+    {
+      "line": 1106,
+      "at": "2026-11-22T07:36:43.1296236Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "line": 1108,
+      "at": "2026-11-22T07:36:48.2529050Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "line": 1110,
+      "at": "2026-11-22T07:36:54.4491688Z",
+      "operation": "parameter-source-read",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "line": 1112,
+      "at": "2026-11-22T07:36:56.8431649Z",
+      "operation": "decision-promote-parameter",
+      "http": 200,
+      "status": "ok",
+      "parameterPeriod": {
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "parameterUnit": "USD"
+    },
+    {
+      "line": 1114,
+      "at": "2026-11-22T07:37:03.7885577Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "line": 1116,
+      "at": "2026-11-22T07:37:03.7973934Z",
+      "operation": "decision-compare",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "line": 1118,
+      "at": "2026-11-22T07:37:29.1809930Z",
+      "operation": "decision-compare",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 25382
+    },
+    {
+      "line": 1120,
+      "at": "2026-11-22T07:37:29.1825266Z",
+      "operation": "portfolio-selection-fixture-basis",
+      "initialVersion": 0,
+      "basis": "new-isolated-fixture-with-no-prior-registration",
+      "caseVersion": 6,
+      "criteriaCount": 1
+    },
+    {
+      "line": 1122,
+      "at": "2026-11-22T07:37:29.1827234Z",
+      "operation": "decision-select-portfolio",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "line": 1124,
+      "at": "2026-11-22T07:38:34.8338101Z",
+      "operation": "decision-select-portfolio",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 65651
+    },
+    {
+      "line": 1126,
+      "at": "2026-11-22T07:38:41.7782497Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "line": 1128,
+      "at": "2026-11-22T07:38:41.7864280Z",
+      "operation": "decision-compare",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "line": 1130,
+      "at": "2026-11-22T07:39:07.5138105Z",
+      "operation": "decision-compare",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 25727
+    },
+    {
+      "line": 1132,
+      "at": "2026-11-22T07:39:07.5167740Z",
+      "operation": "portfolio-selection-registered-readback",
+      "status": "ok",
+      "selectionVersion": 1,
+      "caseVersion": 6,
+      "originalAlternativePairMatched": true,
+      "originalCriteriaMatched": true,
+      "currentComparisonUnchanged": true,
+      "acquisition": "original-register-canonical-read-then-controls-and-comparison"
+    },
+    {
+      "line": 1172,
+      "at": "2026-11-22T07:39:21.9616420Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-request",
+      "sequence": 1,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "line": 1174,
+      "at": "2026-11-22T07:39:22.4239243Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-request-failed",
+      "sequence": 1,
+      "ownerBinding": "exact",
+      "elapsedMs": 461
+    },
+    {
+      "line": 1176,
+      "at": "2026-11-22T07:39:22.4240687Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-response",
+      "sequence": 1,
+      "ownerBinding": "exact",
+      "elapsedMs": 459,
+      "http": 200,
+      "acquisitionFailure": "response-body-unavailable"
+    },
+    {
+      "line": 1194,
+      "at": "2026-11-22T07:39:34.1794246Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-request",
+      "sequence": 2,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "line": 1196,
+      "at": "2026-11-22T07:39:34.9825538Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-request-failed",
+      "sequence": 2,
+      "ownerBinding": "exact",
+      "elapsedMs": 804
+    },
+    {
+      "line": 1198,
+      "at": "2026-11-22T07:39:34.9836220Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-response",
+      "sequence": 2,
+      "ownerBinding": "exact",
+      "elapsedMs": 803,
+      "http": 200,
+      "acquisitionFailure": "response-body-unavailable"
+    },
+    {
+      "line": 1214,
+      "at": "2026-11-22T07:39:35.3164548Z",
+      "operation": "decision-portfolio-preview",
+      "phase": "native-request",
+      "sequence": 3,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "line": 4232,
+      "at": "2026-11-22T07:44:35.2488721Z",
+      "operation": "decision-portfolio-preview",
+      "phase": "native-response",
+      "sequence": 3,
+      "ownerBinding": "exact",
+      "elapsedMs": 300030,
+      "http": 403,
+      "status": "denied",
+      "reason": "decision-authority-changed",
+      "valueShape": "undefined"
+    }
+  ],
+  "preview": [
+    {
+      "line": 1668,
+      "at": "2026-11-22T07:40:35.1336052Z",
+      "verdict": "failed-original60000ms-wait",
+      "elapsedMs": 60005,
+      "emittedRequests": 1
+    },
+    {
+      "line": 4234,
+      "at": "2026-11-22T07:44:35.2517170Z",
+      "verdict": "original-timeout-retained",
+      "sameRequest": true,
+      "elapsedMs": 300126,
+      "http": 403,
+      "status": "denied",
+      "reason": "decision-authority-changed",
+      "valueKeys": [],
+      "acquisition": "same-native-response"
+    }
+  ],
+  "diagnostic": {
+    "eventCount": 1507,
+    "ordinaryEvents": 1506,
+    "suppressed": 0,
+    "parseErrors": [],
+    "summary": {
+      "line": 4230,
+      "at": "2026-11-22T07:44:35.2336181Z",
+      "request": 1,
+      "operation": "decision-portfolio-preview",
+      "phase": "summary",
+      "requestElapsedMs": 300007,
+      "aborted": false,
+      "emitted": 1506,
+      "suppressed": 0,
+      "counts": {
+        "http.preview": 1,
+        "selection.read": 2,
+        "compare.canonical": 4,
+        "alternatives": 4,
+        "alternatives.read-case": 4,
+        "alternatives.scenario-lookup": 8,
+        "pair": 54,
+        "root.prepare": 43,
+        "root.prepare-authority": 43,
+        "root.initialize": 43,
+        "pair.rules-preflight": 15,
+        "root.initialized": 43,
+        "root.physical": 43,
+        "root.physical-callback-entered": 43,
+        "root.canonical-work": 43,
+        "pair.witness": 65,
+        "pair.materialized": 64,
+        "pair.canonical-work": 22,
+        "alternatives.canonical-work": 4,
+        "scenarios.direct": 15,
+        "pair.fallback-existing-snapshots": 32,
+        "metric": 35,
+        "metric.facade": 35,
+        "metric.historical": 35,
+        "metric.scalar-resolve": 140,
+        "root.physical-returned": 43
+      },
+      "pending": {
+        "http.preview": 0,
+        "selection.read": 0,
+        "compare.canonical": 0,
+        "alternatives": 0,
+        "alternatives.read-case": 0,
+        "alternatives.scenario-lookup": 0,
+        "pair": 0,
+        "root.prepare": 0,
+        "root.prepare-authority": 0,
+        "root.initialize": 0,
+        "pair.rules-preflight": 0,
+        "root.physical": 0,
+        "root.canonical-work": 0,
+        "pair.witness": 0,
+        "pair.canonical-work": 0,
+        "alternatives.canonical-work": 0,
+        "scenarios.direct": 0,
+        "metric": 0,
+        "metric.historical": 0,
+        "metric.scalar-resolve": 0
+      },
+      "inclusiveMilliseconds": {
+        "alternatives.read-case": 1478,
+        "alternatives.scenario-lookup": 8434,
+        "root.prepare-authority": 55,
+        "pair.rules-preflight": 2778,
+        "root.initialize": 2783,
+        "root.prepare": 2857,
+        "pair.witness": 7066,
+        "metric.historical": 3477,
+        "metric.scalar-resolve": 129473,
+        "pair": 441833,
+        "metric": 146601,
+        "scenarios.direct": 221779,
+        "alternatives.canonical-work": 74603,
+        "pair.canonical-work": 258198,
+        "root.canonical-work": 265272,
+        "root.physical": 265396,
+        "alternatives": 86882,
+        "compare.canonical": 86883,
+        "selection.read": 86925,
+        "http.preview": 300007
+      }
+    },
+    "physicalOutcomes": {
+      "acceptedCompletedSingleInvocation": 42,
+      "refusedIncompleteSingleInvocation": 1
+    },
+    "facade": {
+      "calls": 35,
+      "originalResolveMany": true,
+      "forwardedResolveMany": false
+    },
+    "intervals": "intervals.json",
+    "profile": "profile.json",
+    "overlays": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-observation-diagnostic.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4d480c3413890827a50b85d73cb417e2e755ac45"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e0f9b26433e915f97b6d13c0c35c1c2b6cf6335b"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "db9d55f0d7db673ddaaa20f8034100a977754d7c"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-observation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d8cf8cebdade3804088e86021a446c4762934331"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f6880d6380f3c1a2e3026168d766480dda9f9d78"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "76dc486f3a7f84b1cf3fa855abebdd7cc3df347b"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bc4533bdcdb888050604b1a36480512e670353b8"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d332652647948877bb58cdbeef2bf3aff51478ee"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d457c752d3e85597a1ca5f147fee86e6442570a4"
+      },
+      {
+        "path": ".ci-run.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a11922821a47594d76397582be38f9b7940177ca"
+      }
+    ],
+    "productIntegration": false
+  },
+  "captures": [
+    {
+      "file": "UI42-list-dark-desktop-test-data.jpg",
+      "sha": "cdb1c3256cd0258ba88971315ce075944de096d8",
+      "parts": 5,
+      "manuallyViewed": false,
+      "qualification": "unreviewed"
+    },
+    {
+      "file": "UI42-list-light-desktop-test-data.jpg",
+      "sha": "b0106016ad26eef10a77bb99b02ce098b1733d4b",
+      "parts": 5,
+      "manuallyViewed": false,
+      "qualification": "unreviewed"
+    },
+    {
+      "file": "UI42-list-dark-390-test-data.jpg",
+      "sha": "7507d662144e6a0d76f2f019fdc1aa831470a768",
+      "parts": 2,
+      "manuallyViewed": false,
+      "qualification": "unreviewed"
+    },
+    {
+      "file": "UI42-list-light-320-test-data.jpg",
+      "sha": "0181eabf60214aa897508703b136460d7a05d09d",
+      "parts": 2,
+      "manuallyViewed": false,
+      "qualification": "unreviewed"
+    },
+    {
+      "file": "UI42-empty-authorized-case-test-data.jpg",
+      "sha": "915a2c53e0f58722ff1fa5eb8518d449af420e5f",
+      "parts": 6,
+      "manuallyViewed": false,
+      "qualification": "unreviewed"
+    },
+    {
+      "file": "UI42-configure-focused-candidate-test-data.jpg",
+      "sha": "d3f98249a0cb88c87de553eb84f12a0e2d406685",
+      "parts": 6,
+      "manuallyViewed": false,
+      "qualification": "unreviewed"
+    },
+    {
+      "file": "FAILED-native-wave-three-test-data.jpg",
+      "sha": "03ef998b353af0ca56c9a5dad2f6f8a01196cb45",
+      "parts": 7,
+      "manuallyViewed": true,
+      "qualification": "diagnostic original source refusal; not a completed preview"
+    }
+  ],
+  "limits": [
+    "No explicit portfolio or sensitivity evaluation was submitted; original preview may perform its own canonical analysis persistence and binding operations.",
+    "The60-second failure is retained even though the diagnostic observes the same request afterward; no retry, lease extension or permanent timeout change.",
+    "No final inner producer result is inferred from the HTTP handler's final decision-authority-changed refusal.",
+    "All43 physical invocations entered once;42 completed/accepted, the last refused at the lease boundary. No recorded span remained pending.",
+    "No closure/materialization/local-principal/missing-rule fallback was recorded;32 existing-snapshot markers occurred inside physical invocation intervals.",
+    "Timer categories overlap; their inclusive totals must not be added.",
+    "Seven screenshots persisted; only final original refusal screenshot manually viewed in this attempt.",
+    "The newer A04 leaf, sensitivity rule preparation and forwarded resolveMany candidate are excluded from this diagnostic; future attempts are not an identical fixture/runtime comparison.",
+    "UI43 and UI44 were not reached."
+  ]
+}

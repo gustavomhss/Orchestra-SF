@@ -214,58 +214,77 @@
       "file": "UI42-list-dark-desktop-test-data.jpg",
       "sha": "99e430afe2d602ef9a7c17fa2fb7e6ea5b3cef46",
       "parts": 5,
-      "manuallyViewed": false,
-      "qualification": "unreviewed"
+      "manuallyViewed": true,
+      "qualification": "layout reviewed for this captured stage; full UI42 qualification remains pending",
+      "visualObservation": "The two original cases remain distinct in equal-height desktop cards, with title/version/action hierarchy visible in dark mode."
     },
     {
       "file": "UI42-list-light-desktop-test-data.jpg",
       "sha": "3e958610c54311086219955dc2ac3932c4042af8",
       "parts": 5,
-      "manuallyViewed": false,
-      "qualification": "unreviewed"
+      "manuallyViewed": true,
+      "qualification": "layout reviewed for this captured stage; full UI42 qualification remains pending",
+      "visualObservation": "Light-mode text and borders remain readable; long original titles wrap without card collision."
     },
     {
       "file": "UI42-list-dark-390-test-data.jpg",
       "sha": "6910d2d8532b0dcae1f238139b5b303116ef5846",
       "parts": 2,
-      "manuallyViewed": false,
-      "qualification": "unreviewed"
+      "manuallyViewed": true,
+      "qualification": "layout reviewed for this captured stage; full UI42 qualification remains pending",
+      "visualObservation": "The original case list becomes one column at390px; both Open case actions and Context disclosure fit without horizontal clipping."
     },
     {
       "file": "UI42-list-light-320-test-data.jpg",
       "sha": "dad39208fe39881050d856345c9d25468a68ae99",
       "parts": 2,
-      "manuallyViewed": false,
-      "qualification": "unreviewed"
+      "manuallyViewed": true,
+      "qualification": "layout reviewed for this captured stage; full UI42 qualification remains pending",
+      "visualObservation": "At320px, source copy and both long titles wrap inside their cards; case versions and actions remain visible."
     },
     {
       "file": "UI42-empty-authorized-case-test-data.jpg",
       "sha": "9d8f82de2ded6ca9b505480976864c0a022f80d9",
       "parts": 6,
-      "manuallyViewed": false,
-      "qualification": "unreviewed"
+      "manuallyViewed": true,
+      "qualification": "layout reviewed for this captured stage; full UI42 qualification remains pending",
+      "visualObservation": "The authorized empty case retains its source facts, unavailable candidate explanation and disabled preview; no result is invented."
     },
     {
       "file": "UI42-configure-focused-candidate-test-data.jpg",
       "sha": "6c811188c205d8e57f8f83b49de4475f72a05cb1",
       "parts": 6,
-      "manuallyViewed": false,
-      "qualification": "unreviewed"
+      "manuallyViewed": true,
+      "qualification": "layout reviewed for this captured stage; full UI42 qualification remains pending",
+      "visualObservation": "The actual candidate and criterion remain selected; exploration limit4 has a complete visible focus outline, with one primary preview action and empty original history."
     },
     {
       "file": "FAILED-native-wave-three-test-data.jpg",
       "sha": "ca2abc866027aa3e1def3d113cd83f14b2cbd595",
       "parts": 7,
       "manuallyViewed": true,
-      "qualification": "diagnostic pending preview, not pass"
+      "qualification": "diagnostic pending preview, not pass",
+      "visualObservation": "The final frame retains original running/pending controls and skeleton; no completed or refused preview is shown."
     }
   ],
   "limits": [
     "No profiler or extended wait in this attempt.",
     "No final preview status/body was observed; do not borrow another attempt's five-minute403.",
     "Both original histories returned200/ok, unlike earlier body-acquisition-limited attempts.",
-    "Only final pending JPEG viewed in this attempt.",
     "Technical source grouping is separately measured; actual installed eligibility/physical roots were not logged.",
     "UI44 original-rule and units-contract inconsistencies found later by static review were not reached by this run."
-  ]
+  ],
+  "visualReview": {
+    "reviewer": "design_analytics",
+    "method": "Original JPEG data emitted through functions image output and inspected; no editing.",
+    "viewed": 7,
+    "approvedCompleteJourneys": 0,
+    "scope": "Desktop dark/light list,390dark/320light list, authorized empty case, focused configured candidate, final pending preview.",
+    "limitations": [
+      "No UI42 preview/review/completed history result was reached.",
+      "UI43/UI44 not reached.",
+      "Mobile captures here cover the case-list stage only.",
+      "These English captures do not qualify Portuguese or actual browser zoom."
+    ]
+  }
 }

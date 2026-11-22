@@ -1,0 +1,611 @@
+{
+  "schema": "sf-design-wave-five-portfolio-metric-batch-attempt-v1",
+  "attempt": 1,
+  "status": "passed",
+  "scope": "CLI types and the original Finance integration; no installed UI or latency qualification",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "base": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+    "product": "ad5ed29c582752b72ee91ddd03bb2622bff7299a",
+    "productTree": "a7b598ca7b93e937aa30e1f02bd881a835fc5bbd",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "sha": "3404aa793a7c73f370a750c4dadc9f6410379706",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+        "sha": "b11a8727790131190664d21d4e230a59b74ae453",
+        "mode": "100644",
+        "type": "blob"
+      }
+    ],
+    "comparisonTemplate": "e89f34c8a94bbece6e4443c77f561aee977b71c0"
+  },
+  "ci": {
+    "workflow": "test-ci",
+    "workflowBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+    "branch": "ci-run-sf5metricbatch1",
+    "snapshot": "e2f0c197c39302b04fc3151a762e23fa3c037210",
+    "snapshotTree": "634254b0553265b1df9e12685a04bb31e9258dd2",
+    "requestBlob": "57e886c9edbd2dfb759f21d331a48ec0ff315665",
+    "request": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-design-verification.test.ts",
+        "--timeout",
+        "300000",
+        "-t",
+        "criterion pair observations|the native host and local installation"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "wrapper": {
+      "path": "apps/cli/test/sucafina-design-verification.test.ts",
+      "blob": "b290de8f9a6a87faf0106e992b628042a72ddac7",
+      "snapshotOnly": true,
+      "byteIdenticalToTemplate": true
+    },
+    "platform": "ubuntu-24.04",
+    "runId": 45000105434,
+    "runAttempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45000105434",
+    "createdAt": "2026-11-22T07:51:17Z",
+    "updatedAt": "2026-11-22T07:53:42Z",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 137139546983,
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "success"
+      },
+      {
+        "id": 137140053936,
+        "name": "cleanup",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "gates": [
+    {
+      "name": "CLI native host typecheck",
+      "status": "passed",
+      "command": [
+        "bun",
+        "run",
+        "typecheck"
+      ],
+      "directory": "apps/cli",
+      "exitCode": 0,
+      "outputTruncated": false
+    },
+    {
+      "name": "criterion pair physical-read comparison and authority regressions",
+      "status": "passed",
+      "command": [
+        "bun",
+        "test",
+        "./test/product/wp10/integration/finance-pair-observation.test.ts"
+      ],
+      "directory": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "groups": 1,
+      "assertions": 145,
+      "failures": 0,
+      "elapsedMs": 52079.84,
+      "outputTruncated": false
+    }
+  ],
+  "evidence": {
+    "decodedJobLog": {
+      "path": "docs/qa/sucafina/design/wave-five/reviews/portfolio-metric-batch/attempt-01.log",
+      "gitBlob": "da6543d63843a43fb2086b5684f02ab37e20f240",
+      "characters": 73110,
+      "acquisition": "github_fetch_workflow_job_logs for job137139546983; complete decoded content preserved"
+    },
+    "observations": [
+      {
+        "kind": "SF_METRIC_OBSERVATION",
+        "mode": "scalar",
+        "batch": "original",
+        "status": "ok",
+        "elapsedMs": 1176,
+        "observations": 1,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 2,
+          "references": 4
+        },
+        "phases": [
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ],
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ]
+        ],
+        "physical": 2041,
+        "roots": 0,
+        "work": 4
+      },
+      {
+        "kind": "SF_METRIC_OBSERVATION",
+        "mode": "grouped",
+        "batch": "original",
+        "status": "ok",
+        "elapsedMs": 985,
+        "observations": 1,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 2,
+          "references": 4
+        },
+        "phases": [
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ],
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ]
+        ],
+        "physical": 118,
+        "roots": 2,
+        "work": 4
+      },
+      {
+        "kind": "SF_METRIC_OBSERVATION",
+        "mode": "grouped",
+        "batch": "original",
+        "status": "ok",
+        "elapsedMs": 961,
+        "observations": 1,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 2,
+          "references": 4
+        },
+        "phases": [
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ],
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ]
+        ],
+        "physical": 118,
+        "roots": 2,
+        "work": 4
+      },
+      {
+        "kind": "SF_METRIC_OBSERVATION",
+        "mode": "unsupported",
+        "batch": "original",
+        "status": "ok",
+        "elapsedMs": 1173,
+        "observations": 1,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 2,
+          "references": 4
+        },
+        "phases": [
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ],
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ]
+        ],
+        "physical": 2041,
+        "roots": 0,
+        "work": 4
+      },
+      {
+        "kind": "SF_METRIC_OBSERVATION",
+        "mode": "scalar",
+        "batch": "absent",
+        "status": "ok",
+        "elapsedMs": 1399,
+        "observations": 1,
+        "scenarioReads": {
+          "scalar": 4,
+          "batch": 0,
+          "references": 4
+        },
+        "phases": [],
+        "physical": 2501,
+        "roots": 0,
+        "work": 4
+      },
+      {
+        "kind": "SF_METRIC_OBSERVATION",
+        "mode": "scalar",
+        "batch": "original",
+        "status": "stale",
+        "elapsedMs": 530,
+        "observations": 1,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 1,
+          "references": 2
+        },
+        "phases": [
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ]
+        ],
+        "physical": 844,
+        "roots": 0,
+        "work": 2
+      },
+      {
+        "kind": "SF_METRIC_OBSERVATION",
+        "mode": "scalar",
+        "batch": "original",
+        "status": "stale",
+        "elapsedMs": 521,
+        "observations": 1,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 1,
+          "references": 2
+        },
+        "phases": [
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ]
+        ],
+        "physical": 844,
+        "roots": 0,
+        "work": 2
+      },
+      {
+        "kind": "SF_METRIC_OBSERVATION",
+        "mode": "scalar",
+        "batch": "short",
+        "status": "unavailable",
+        "elapsedMs": 509,
+        "observations": 1,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 1,
+          "references": 2
+        },
+        "phases": [
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ]
+        ],
+        "physical": 844,
+        "roots": 0,
+        "work": 2
+      },
+      {
+        "kind": "SF_CRITERION_COMPARISON_OBSERVATION",
+        "route": "scenarios",
+        "grouped": false,
+        "status": "ok",
+        "elapsedMs": 1776,
+        "ruleReads": 0,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 3,
+          "references": 6
+        },
+        "physical": 3125,
+        "roots": 0,
+        "work": 6
+      },
+      {
+        "kind": "SF_CRITERION_COMPARISON_OBSERVATION",
+        "route": "scenarios",
+        "grouped": true,
+        "status": "ok",
+        "elapsedMs": 1715,
+        "ruleReads": 1,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 3,
+          "references": 6
+        },
+        "physical": 3132,
+        "roots": 0,
+        "work": 6
+      },
+      {
+        "kind": "SF_CRITERION_COMPARISON_OBSERVATION",
+        "route": "alternatives",
+        "grouped": false,
+        "status": "ok",
+        "elapsedMs": 5271,
+        "ruleReads": 0,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 7,
+          "references": 14
+        },
+        "physical": 9696,
+        "roots": 0,
+        "work": 14
+      },
+      {
+        "kind": "SF_CRITERION_COMPARISON_OBSERVATION",
+        "route": "alternatives",
+        "grouped": true,
+        "status": "ok",
+        "elapsedMs": 4989,
+        "ruleReads": 4,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 7,
+          "references": 14
+        },
+        "physical": 1137,
+        "roots": 2,
+        "work": 14
+      },
+      {
+        "kind": "SF_CRITERION_COMPARISON_OBSERVATION",
+        "route": "scenarios",
+        "grouped": true,
+        "status": "ok",
+        "elapsedMs": 3545,
+        "ruleReads": 4,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 7,
+          "references": 14
+        },
+        "physical": 118,
+        "roots": 2,
+        "work": 14
+      },
+      {
+        "kind": "SF_CRITERION_COMPARISON_OBSERVATION",
+        "route": "scenarios",
+        "grouped": true,
+        "status": "ok",
+        "elapsedMs": 3530,
+        "ruleReads": 4,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 7,
+          "references": 14
+        },
+        "physical": 118,
+        "roots": 2,
+        "work": 14
+      },
+      {
+        "kind": "SF_CRITERION_COMPARISON_OBSERVATION",
+        "route": "scenarios",
+        "grouped": true,
+        "status": "denied",
+        "elapsedMs": 3506,
+        "ruleReads": 3,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 7,
+          "references": 14
+        },
+        "physical": 117,
+        "roots": 1,
+        "work": 14,
+        "afterClose": {
+          "root": 1,
+          "work": 14,
+          "outside": true
+        }
+      },
+      {
+        "kind": "SF_CRITERION_COMPARISON_OBSERVATION",
+        "route": "scenarios",
+        "grouped": true,
+        "status": "unavailable",
+        "elapsedMs": 3559,
+        "ruleReads": 3,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 7,
+          "references": 14
+        },
+        "physical": 116,
+        "roots": 1,
+        "work": 14,
+        "afterClose": {
+          "root": 1,
+          "work": 14,
+          "outside": true
+        }
+      },
+      {
+        "kind": "SF_CRITERION_COMPARISON_OBSERVATION",
+        "route": "alternatives",
+        "grouped": true,
+        "status": "unavailable",
+        "elapsedMs": 4988,
+        "ruleReads": 4,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 7,
+          "references": 14
+        },
+        "physical": 1137,
+        "roots": 2,
+        "work": 14,
+        "afterClose": {
+          "root": 2,
+          "work": 14,
+          "outside": true
+        }
+      },
+      {
+        "kind": "SF_CRITERION_COMPARISON_OBSERVATION",
+        "route": "scenarios",
+        "grouped": true,
+        "status": "unavailable",
+        "elapsedMs": 3549,
+        "ruleReads": 4,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 7,
+          "references": 14
+        },
+        "physical": 118,
+        "roots": 2,
+        "work": 14,
+        "afterClose": {
+          "root": 2,
+          "work": 14,
+          "outside": true
+        }
+      },
+      {
+        "kind": "SF_CRITERION_COMPARISON_OBSERVATION",
+        "route": "scenarios",
+        "grouped": true,
+        "status": "unavailable",
+        "elapsedMs": 3822,
+        "ruleReads": 4,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 7,
+          "references": 14
+        },
+        "physical": 643,
+        "roots": 2,
+        "work": 14,
+        "afterClose": {
+          "root": 1,
+          "work": 14,
+          "outside": true
+        }
+      },
+      {
+        "kind": "SF_METRIC_OBSERVATION",
+        "mode": "grouped",
+        "batch": "original",
+        "status": "denied",
+        "elapsedMs": 959,
+        "observations": 1,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 2,
+          "references": 4
+        },
+        "phases": [
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ],
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ]
+        ],
+        "physical": 116,
+        "roots": 1,
+        "work": 4,
+        "afterClose": {
+          "root": 1,
+          "work": 4,
+          "outside": true
+        }
+      },
+      {
+        "kind": "SF_METRIC_OBSERVATION",
+        "mode": "grouped",
+        "batch": "original",
+        "status": "unavailable",
+        "elapsedMs": 965,
+        "observations": 1,
+        "scenarioReads": {
+          "scalar": 0,
+          "batch": 2,
+          "references": 4
+        },
+        "phases": [
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ],
+          [
+            "decision-result:2170ea9a-74aa-4a24-980c-eeddb6616187",
+            "decision-result:7d518e72-a27a-4d54-a5fa-ce9323b51fb7"
+          ]
+        ],
+        "physical": 118,
+        "roots": 2,
+        "work": 4,
+        "afterClose": {
+          "root": 1,
+          "work": 4,
+          "outside": true
+        }
+      }
+    ],
+    "workflowArtifacts": {
+      "queried": true,
+      "artifacts": [],
+      "limitation": "This Bun test-ci run published no workflow artifact; there is no artifact ZIP or SHA-256 to report."
+    },
+    "screenshotReview": "not applicable: this is source capability qualification, not a UI capture"
+  },
+  "assertions": {
+    "originalMetricBatchPhases": 2,
+    "originalMetricReferences": 4,
+    "absentCapabilityScalarCalls": 4,
+    "absentCapabilityBatchCalls": 0,
+    "fullMetricValueEqual": true,
+    "eachBatchOrderMatchesOriginalPair": true,
+    "replacementReaderCalls": 0,
+    "readerReplacement": "stale after one original batch",
+    "ownerReplacement": "stale after one original batch",
+    "shortOriginalBatch": "unavailable: scenario-batch-invalid",
+    "sourceAndAuthorityNegativesPreserved": true,
+    "comparisonConditioned": {
+      "scalar": 0,
+      "batch": 7,
+      "references": 14
+    },
+    "missingRule": {
+      "scalar": 0,
+      "batch": 3,
+      "references": 6,
+      "roots": 0
+    }
+  },
+  "counterMeaning": {
+    "work": "Within metric/comparison measurements, counts.work now counts scenario-reference occurrences from both scalar and batch dispatch. Earlier generic observations count work callbacks.",
+    "scenarioReads": "Explicit scalar calls, batch calls and total reference occurrences, including the outer comparator and inner metrics.",
+    "previousComparison2": "Its work=8 counted only the scalar facade and omitted original batch dispatch. Do not compare that8 with the new14 as if they were the same total.",
+    "timings": "One original integration fixture on one hosted runner; no installed latency claim or benchmark conclusion."
+  },
+  "limitations": [
+    "The original Finance integration stores both scenarios at the same historical case revision. The installed fixture promotes alternatives sequentially and may retain separate case-read groups.",
+    "Every original comparison/source/authority phase remains. This run does not prove the installed preview completes within its unchanged60s budget.",
+    "Portfolio16 is a separate diagnostic on unchanged506a and is not a corrected-batch UI run.",
+    "No source producer, schema, grant, admission, comparison cache, lease or workflow was changed.",
+    "No prior failure was overwritten: this is the first metric-batch qualification attempt."
+  ]
+}
