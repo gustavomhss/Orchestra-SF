@@ -64,37 +64,75 @@ export function createSfDecisionDomainHttp(input: { origin: string; mount: strin
     if (request.headers.get("origin") !== input.origin) return reply({ status: "denied" }, 403)
     if (request.method !== "POST") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
     if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1 || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "needs-input", reason: "invalid-decision-request" }, 400)
-    const payload = await boundedJson(request)
-    if (!record(payload) || !valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" }, 400)
-    const runtime = input.runtime()
-    if (!runtime) return reply({ status: "unavailable" }, 503)
-    const admitted = await runtime.authority.human.admit(request, actions[mode as keyof typeof actions], payload)
-    if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
+    const compareProbeStarted = performance.now()
+    const compareProbe = (phase: string, status?: string | number) => {
+      if (mode === "decision-compare") console.info("MIGRATION_COMPARE_HTTP_DIAGNOSTIC", JSON.stringify({
+        phase, ms: Math.round(performance.now() - compareProbeStarted), clockMs: Math.round(performance.now()),
+        aborted: request.signal.aborted, ...(status === undefined ? {} : { status }), qualification: false,
+      }))
+    }
+    const compareAbort = () => compareProbe("request-aborted")
+    if (mode === "decision-compare") request.signal.addEventListener("abort", compareAbort)
     try {
-      const call = admitted.value
-      if (mode === "decision-portfolio-catalog") {
-        if (!validCatalog(payload)) return reply({ status: "needs-input", reason: "invalid-portfolio-catalog" }, 400)
-        const catalog = await runtime.domain.portfolio.http.catalog(payload.caseRefs, call)
-        if (!await runtime.authority.host.revalidate(call)) return reply({ status: "denied" }, 403)
-        return reply(catalog, replyStatus(catalog))
+      compareProbe("handler-enter")
+      compareProbe("body-start")
+      const payload = await boundedJson(request)
+      compareProbe("body-finished")
+      if (!record(payload) || !valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" }, 400)
+      const runtime = input.runtime()
+      if (!runtime) return reply({ status: "unavailable" }, 503)
+      compareProbe("admit-start")
+      const admitted = await runtime.authority.human.admit(request, actions[mode as keyof typeof actions], payload)
+      compareProbe("admit-finished", admitted.status)
+      if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
+      try {
+        const call = admitted.value
+        if (mode === "decision-portfolio-catalog") {
+          if (!validCatalog(payload)) return reply({ status: "needs-input", reason: "invalid-portfolio-catalog" }, 400)
+          const catalog = await runtime.domain.portfolio.http.catalog(payload.caseRefs, call)
+          if (!await runtime.authority.host.revalidate(call)) return reply({ status: "denied" }, 403)
+          return reply(catalog, replyStatus(catalog))
+        }
+        if (!validCaseRef(payload.caseRef)) return reply({ status: "needs-input", reason: "invalid-case-ref" }, 400)
+        compareProbe("with-case-start")
+        const result = await runtime.business.withCase<unknown>(call, payload.caseRef,
+          { allowHistoricalRetry: mode === "decision-edit" }, async (): Promise<PortResult<unknown>> => {
+          compareProbe("with-case-entered")
+          if (mode === "decision-edit") return validEdit(payload)
+            ? runtime.domain.management.edit(payload, call) : { status: "needs-input", reason: "invalid-case-edit" }
+          if (mode === "decision-compare") {
+            if (!validCompare(payload)) return { status: "needs-input", reason: "invalid-comparison" }
+            compareProbe("domain-compare-start")
+            const compared = await runtime.domain.compare(payload, call)
+            compareProbe("domain-compare-finished", compared.status)
+            return compared
+          }
+          if (mode === "decision-coverage") return runtime.domain.baselineCoverage.register(payload as Parameters<typeof runtime.domain.baselineCoverage.register>[0], call)
+          if (mode === "decision-criteria") return runtime.domain.criteria.register(payload as Parameters<typeof runtime.domain.criteria.register>[0], call)
+          if (mode === "decision-select-portfolio") return runtime.domain.selection.register(payload as Parameters<typeof runtime.domain.selection.register>[0], call)
+          const registered = await runtime.domain.conditions.register(payload as Parameters<typeof runtime.domain.conditions.register>[0], call)
+          return registered.status === "ok" ? { status: "ok", value: { registered: true } } : { status: "unavailable", reason: "condition-selection-unavailable" }
+        })
+        compareProbe("with-case-finished", result.status)
+        compareProbe("revalidate-start")
+        const revalidated = await runtime.authority.host.revalidate(call)
+        compareProbe("revalidate-finished", revalidated ? "current" : "denied")
+        if (!revalidated) return reply({ status: "denied" }, 403)
+        const status = replyStatus(result)
+        compareProbe("reply-ready", status)
+        return reply(result, status)
+      } catch {
+        compareProbe("handler-exception")
+        return reply({ status: "unavailable", reason: "decision-domain-unavailable" }, 503)
+      } finally {
+        compareProbe("finish-start")
+        runtime.authority.human.finish(admitted.value)
+        compareProbe("finish-finished")
       }
-      if (!validCaseRef(payload.caseRef)) return reply({ status: "needs-input", reason: "invalid-case-ref" }, 400)
-      const result = await runtime.business.withCase<unknown>(call, payload.caseRef,
-        { allowHistoricalRetry: mode === "decision-edit" }, async (): Promise<PortResult<unknown>> => {
-        if (mode === "decision-edit") return validEdit(payload)
-          ? runtime.domain.management.edit(payload, call) : { status: "needs-input", reason: "invalid-case-edit" }
-        if (mode === "decision-compare") return validCompare(payload)
-          ? runtime.domain.compare(payload, call) : { status: "needs-input", reason: "invalid-comparison" }
-        if (mode === "decision-coverage") return runtime.domain.baselineCoverage.register(payload as Parameters<typeof runtime.domain.baselineCoverage.register>[0], call)
-        if (mode === "decision-criteria") return runtime.domain.criteria.register(payload as Parameters<typeof runtime.domain.criteria.register>[0], call)
-        if (mode === "decision-select-portfolio") return runtime.domain.selection.register(payload as Parameters<typeof runtime.domain.selection.register>[0], call)
-        const registered = await runtime.domain.conditions.register(payload as Parameters<typeof runtime.domain.conditions.register>[0], call)
-        return registered.status === "ok" ? { status: "ok", value: { registered: true } } : { status: "unavailable", reason: "condition-selection-unavailable" }
-      })
-      if (!await runtime.authority.host.revalidate(call)) return reply({ status: "denied" }, 403)
-      return reply(result, replyStatus(result))
-    } catch { return reply({ status: "unavailable", reason: "decision-domain-unavailable" }, 503) }
-    finally { runtime.authority.human.finish(admitted.value) }
+    } finally {
+      if (mode === "decision-compare") request.signal.removeEventListener("abort", compareAbort)
+      compareProbe("handler-left")
+    }
   }
 }
 
