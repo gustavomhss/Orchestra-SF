@@ -61,6 +61,7 @@ import { createSfScenarioProcurementProofScope } from "./scenario-procurement-pr
 import { createSfDecisionBaselineServices } from "./decision-baseline-services.ts"
 import { createCollaborationHost } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts"
 import type { WorkSignals } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/work-port.ts"
+import type { createSfReviewerRecall } from "./reviewer-recall.ts"
 import type { createSfContributionReader } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
 import { createProcurementConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/procurement/confirmation.ts"
 import { createProcurementCollectionMemberIssuer } from "../../../../modules/sucafina/Sucafinav1/product/procurement/collection-member.ts"
@@ -70,7 +71,7 @@ import { prepareSourcingDossier, type ProcurementPreparation } from "../../../..
 import { resolveSfDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 
-export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites?: WeakSet<object>; procurementEvidenceWrites?: WeakSet<object>; caseSelectionWrites?: WeakSet<object>; threadHistoryWrites?: WeakSet<object>; readQuestionContribution?: ReturnType<typeof createSfContributionReader>; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; procurementRequest?: Readonly<{ request: Request; period: Period }> }) {
+export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites?: WeakSet<object>; procurementEvidenceWrites?: WeakSet<object>; caseSelectionWrites?: WeakSet<object>; threadHistoryWrites?: WeakSet<object>; readQuestionContribution?: ReturnType<typeof createSfContributionReader>; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; procurementRequest?: Readonly<{ request: Request; period: Period }>; reviewerRecall?: ReturnType<typeof createSfReviewerRecall> }) {
   const host = input.authority.host
   const dashboardHostWrites = input.dashboardHostWrites ?? new WeakSet<object>()
   const periods = new Map<string, { period: Period; expiresAt: number }>()
@@ -589,6 +590,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
           }
           return refs.filter((ref, index) => refs.findIndex((candidate) => candidate.refDigest === ref.refDigest) === index)
         },
+        ...(input.reviewerRecall ? { scopedRecall: async (request, call) => input.reviewerRecall?.scopedRecall(request, call, caseRecall) } : {}),
         recallSelections: async (request, call) => {
           const found = await mapSfEvidenceInOrder(request.selectionRefs, (caseRef) => cases.read({ caseRef }, call))
           if (!found.length || found.some((item) => item.status !== "ok")) return undefined
@@ -604,6 +606,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     originalMemory.current = atlas.memory
     evidence.current = atlas.context
     recall.current = createSfCaseRecall({ host, cases,
+      ...(input.reviewerRecall ? { candidateAccess: input.reviewerRecall.candidateAccess } : {}),
       memory: { ...atlas.memory, recall: (ref, call) => memoryCaseScope.memory(ref, call, () => atlas.memory.recall(ref, call)) },
       featuresForCase, runtimeVersions: versions,
       proveContinuity: atlas.proveContinuity, rank: rankSfAtlasRecall,

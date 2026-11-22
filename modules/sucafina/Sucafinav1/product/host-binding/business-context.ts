@@ -265,7 +265,7 @@ export function createSfAtlasBusiness(input: {
     readCapture: (caseRef: { id: string; incarnation: string; version: number }, digest: string, call: TrustedDomainContext) => Promise<ProtectedEvidenceCapture | undefined>) => Promise<BusinessEvidenceResolution>
   withCalculationCase?: SfCalculationCaseScope
   lockedSourceFences?: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
-  selections: Pick<Parameters<typeof createSfEvidenceCapabilities>[0], "contextSelections" | "recallSelections" | "featuresForCase" | "runtimeVersions">
+  selections: Pick<Parameters<typeof createSfEvidenceCapabilities>[0], "contextSelections" | "recallSelections" | "scopedRecall" | "featuresForCase" | "runtimeVersions">
   scanner?: { spec: ScannerBinarySpec; version: string }
   now: () => string
 }) {

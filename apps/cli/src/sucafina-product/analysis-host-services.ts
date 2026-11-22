@@ -1,3 +1,4 @@
+import type { TrustedUiContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -8,6 +9,7 @@ import type { createSfBusinessServices } from "./business-services.ts"
 import type { createSfDocumentServices } from "./document-services.ts"
 import type { createSfImportServices } from "./import-services.ts"
 import { createSfAnalysisServices } from "./analysis-services.ts"
+import { reviewerRecallSkill } from "./reviewer-recall.ts"
 import { createSfAnalysisSelectionScope } from "./analysis-selection-scope.ts"
 import { createSfAnalysisConfirmationReader } from "./analysis-confirmation-readers.ts"
 import { createSfAnalysisBiBindings } from "./analysis-bi-bindings.ts"
@@ -286,7 +288,15 @@ export function createSfAnalysisHostServices(input: {
     ]
     return { skillId, registered: producerCount === 1 && verifierCount === 1, producerCount, verifierCount, missing: missing.get(skillId) ?? [], limitations }
   })
-  return { registry: { prepare, verify: bound.verify }, producers, verifiers: bound.verifiers, availability, readers, readAuthorAnalysis: readers.readAuthorAnalysis,
+  const withReviewerSelection = <T>(skillInput: unknown, request: SfAnalysisRequest, call: TrustedUiContext, work: () => Promise<PortResult<T>>) =>
+    scoped.selectionScope.verify(skillInput, request, call, async () => {
+      const stored = await scoped.read(request.caseRef, reviewerRecallSkill, call)
+      if (stored.status !== "ok" || request.profileId !== "sf_reviewer" || request.skillId !== reviewerRecallSkill ||
+        digestSfValue(stored.value.selection) !== digestSfValue(skillInput))
+        return { status: "denied", reason: "recall-human-selection-unavailable" }
+      return work()
+    })
+  return { withReviewerSelection, registry: { prepare, verify: bound.verify }, producers, verifiers: bound.verifiers, availability, readers, readAuthorAnalysis: readers.readAuthorAnalysis,
     readHistoricalAuthor: readers.readHistoricalAuthor, resolveReviewTarget: review.resolveReviewTarget }
 }
 

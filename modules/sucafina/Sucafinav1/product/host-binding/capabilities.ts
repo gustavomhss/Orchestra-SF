@@ -14,6 +14,7 @@ type EvidenceCapabilityHost = {
   context: BusinessContextService
   memory: ReturnType<typeof createSfAtlasMemory>
   contextSelections: (request: BusinessContextRequest, call: TrustedDomainContext) => Promise<readonly BusinessEvidenceRef[] | undefined>
+  scopedRecall?: (request: BusinessRecallRequest, call: TrustedDomainContext) => Promise<({ status: "ok" } & import("../contracts/outputs.ts").CaseRecall) | { status: "unavailable" } | undefined>
   recallSelections: (request: BusinessRecallRequest, call: TrustedDomainContext) => Promise<{ caseRefs: readonly { id: string; incarnation: string }[]; features: RecallFeatures } | undefined>
   featuresForCase: (value: AuthorizedCaseProjection, call: TrustedDomainContext) => Promise<RecallFeatures | undefined>
   runtimeVersions: Pick<RecallScope, "boundaryVersion" | "schemaVersion" | "manifestVersion" | "skillVersion">
@@ -75,6 +76,12 @@ export async function recallSfDecisions(value: unknown, call: TrustedDomainConte
   const input = decodeSfOperationInput("sf_decision_recall", value)
   if (!input.ok) return reject("sf_decision_recall", "invalid-input", "needs-input")
   if (!host.createReceipt(call, "sf_decision_recall", digestSfValue(input.value))) return reject("sf_decision_recall", "invalid-binding")
+  const scoped = await host.scopedRecall?.(input.value, call)
+  if (scoped) {
+    if (scoped.status !== "ok" || !await host.revalidate(call)) return reject("sf_decision_recall", "unavailable")
+    const { status: _status, ...result } = scoped
+    return deliver("sf_decision_recall", input.value, result, call, host)
+  }
   const selection = await host.recallSelections(input.value, call)
   if (!selection || (input.value.selectionRefs.length > 0 && selection.caseRefs.length === 0) || new Set(selection.caseRefs.map((ref) => JSON.stringify([ref.id, ref.incarnation]))).size !== selection.caseRefs.length) return reject("sf_decision_recall", "unavailable")
   const ranked = await rankSfAtlasRecall({ memory: host.memory, caseRefs: selection.caseRefs, features: selection.features, featuresForCase: host.featuresForCase, runtimeVersions: host.runtimeVersions, call, proveContinuity: host.proveContinuity, revalidate: host.revalidate })
