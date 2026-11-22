@@ -14,6 +14,8 @@ This handoff covers UI51, UI52, UI53, UI55 and UI56. It is a progress record, no
 
 The presentation uses the established native shell, quiet glass tokens, maximum content width and responsive gutters. New copy is bilingual. Existing English catalog keys and values are preserved. Forty pre-existing pt-BR import values received language corrections with root approval; some of those translations are also used by UI57.
 
+The real full-year import manifest contains 1,564 values. UI55/56 therefore place the proposed changes before a native disclosure containing the complete original impact, including all components, values and missing inputs. Nothing is truncated. Original issue messages stay visible outside that disclosure. The two new disclosure messages are bilingual; UI57/68 retain their original content order and markup. This scoped presentation change is pending the first successful preview capture.
+
 The only shared collaboration renderer change is a bounded correction for the two existing observed-kind messages that contain the legacy single-brace `{kind}` placeholder. It uses the typed value and a replacement callback for those exact keys, leaving the translation catalogs and other interpolation behavior intact.
 
 ## Original source readiness

@@ -3,6 +3,8 @@
 export const SF_U23_COPY = {
   "sf.u23.importSubtitle": "Choose an authorized destination and inspect the proposed changes before applying a file.",
   "sf.u23.previewSubtitle": "Review the original simulation, source context and item changes.",
+  "sf.u23.fullImpact": "Full domain impact",
+  "sf.u23.fullImpactHelp": "Inspect the complete original simulation, including its values and missing inputs.",
   "sf.u23.importStages": "Import stages",
   "sf.u23.chooseDestination": "Choose destination",
   "sf.u23.chooseFile": "Select file",
@@ -80,6 +82,8 @@ export const SF_U23_COPY = {
 export const SF_U23_COPY_BR: Record<keyof typeof SF_U23_COPY, string> = {
   "sf.u23.importSubtitle": "Escolha um destino autorizado e confira as alterações propostas antes de aplicar um arquivo.",
   "sf.u23.previewSubtitle": "Revise a simulação original, o contexto da fonte e as alterações dos itens.",
+  "sf.u23.fullImpact": "Impacto completo no domínio",
+  "sf.u23.fullImpactHelp": "Consulte a simulação original completa, incluindo seus valores e dados ausentes.",
   "sf.u23.importStages": "Etapas da importação",
   "sf.u23.chooseDestination": "Escolher destino",
   "sf.u23.chooseFile": "Selecionar arquivo",

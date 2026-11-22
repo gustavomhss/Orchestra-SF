@@ -67,6 +67,8 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
 
   let manifestId = ""
   let sourceDigest = ""
+  let impactRows = 0
+  let lastImpactLabel = ""
   await collabTest.step("UI55 admits actual scanned XLSX bytes and previews an original Planner line without applying", async () => {
     await enter(page, owner, url("/orchestra/sf-imports/new"), "Import file")
     const surface = page.locator('[data-sf-surface="UI55"]')
@@ -119,6 +121,11 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
     await expect(surface.getByLabel("Create a new Planner version", { exact: true })).not.toBeChecked()
     await expect(surface.getByLabel("Remove records missing from supplied sheets", { exact: true })).not.toBeChecked()
     await capture(page, info, "UI55-dark-desktop-selected-file-options")
+    await page.setViewportSize({ width: 390, height: 1100 })
+    await surface.locator(".sf-files-upload").scrollIntoViewIfNeeded()
+    await capture(page, info, "UI55-dark-390-selected-file-options")
+    await page.setViewportSize({ width: 1440, height: 1100 })
+
     const [prepared] = await Promise.all([
       captureOriginalImportPreview(page, { origin: installation.origin, mount: installation.mount, sourceDigest,
         generate: surface.getByRole("button", { name: "Generate preview", exact: true }),
@@ -134,6 +141,14 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
       expect(surface).toHaveAttribute("data-sf-phase", "reviewing", { timeout: 90_000 }),
     ])
     manifestId = prepared.manifest.id
+    impactRows = prepared.manifest.commands.reduce((sum, command) =>
+      sum + command.preview.components.length + command.preview.values.length + command.preview.missing.length, 0)
+    const lastProjection = prepared.manifest.commands.at(-1)?.preview
+    lastImpactLabel = lastProjection?.missing.at(-1)?.field ?? lastProjection?.values.at(-1)?.id ??
+      lastProjection?.components.at(-1)?.id ?? ""
+    expect(impactRows).toBeGreaterThan(0)
+    expect(lastImpactLabel).not.toBe("")
+
     expect(manifestId).not.toBe("")
     // The fresh authenticated source read is independent of the delivered response.
     const originalPreview = await sourceRequest("/planner?" + new URLSearchParams({
@@ -145,10 +160,18 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
     await expect(surface).toHaveAttribute("data-sf-phase", "reviewing")
     await expect(surface.locator(".sf-files-setup")).toBeHidden()
     await expect(surface.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
-    await capture(page, info, "UI55-dark-desktop-scanned-simulation")
+    await looks(page, info, "UI55-scanned-simulation")
     await surface.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary").filter({ hasText: /^changed / }).click()
     await expect(surface.getByText("11200", { exact: false }).first()).toBeVisible()
     await capture(page, info, "UI55-dark-desktop-field-change")
+    const impact = surface.locator(".sf-files-impact")
+    await expect(impact).not.toHaveAttribute("open", "")
+    await impact.getByText("Full domain impact", { exact: true }).click()
+    await expect(impact.locator("dt")).toHaveCount(impactRows)
+    await expect(impact.locator("dt").last()).toHaveText(lastImpactLabel)
+    await capture(page, info, "UI55-dark-desktop-complete-source-impact")
+    await impact.getByText("Full domain impact", { exact: true }).click()
+
     await surface.locator(".sf-files-preview-heading").getByRole("button", { name: "Cancel preview", exact: true }).click()
     await expect(surface.locator(".sf-files-setup")).toBeVisible()
     expect(await surface.getByLabel("File", { exact: true }).evaluate((element) =>
@@ -170,6 +193,14 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
     await looks(page, info, "UI56-preview")
     await surface.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary").filter({ hasText: /^changed / }).click()
     await capture(page, info, "UI56-dark-desktop-field-provenance")
+    const impact = surface.locator(".sf-files-impact")
+    await expect(impact).not.toHaveAttribute("open", "")
+    await impact.getByText("Full domain impact", { exact: true }).click()
+    await expect(impact.locator("dt")).toHaveCount(impactRows)
+    await expect(impact.locator("dt").last()).toHaveText(lastImpactLabel)
+    await capture(page, info, "UI56-dark-desktop-complete-source-impact")
+    await impact.getByText("Full domain impact", { exact: true }).click()
+
     const read = await sourceRequest("/planner?" + new URLSearchParams({ sf: "import-reference", importPreviewRef: manifestId }))
     expect(read.status).toBe(200)
     expect(await read.json()).toMatchObject({ status: "ok", value: { manifest: { id: manifestId, sourceDigest, domainApplied: false, state: "preview" } } })
@@ -196,6 +227,7 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
         if (screen.id === "UI56") {
           await localized.locator('[data-sf-surface="UI56"]').getByRole("button", { name: /Refresh receipt|Atualizar recibo/, exact: true }).click()
           await expect(localized.locator('[data-sf-surface="UI56"] .sf-files-preview')).toBeVisible()
+          await expect(localized.getByText("Impacto completo no domínio", { exact: true })).toBeVisible()
         }
         await scheme(localized, "dark")
         await capture(localized, info, screen.id + "-pt-BR-dark-desktop")
