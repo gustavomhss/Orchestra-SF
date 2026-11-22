@@ -8,16 +8,16 @@ import { createSfTodayResumePort, type SfCurrentResumeOwner } from "../navigatio
 import { createSfBudgetPeriodPort, sfBudgetPeriodAvailable } from "../navigation-state/budget-period"
 import { sfExecutiveLinkAllowed, sfExecutiveLinkMatches, sfExecutiveLinkRequest, sfExecutiveRevalidateRef } from "../cross-links"
 import type {
-  SfContext, SfContextHandle, SfContextProviderProps, SfContextState,
+  SfContext, SfReadableContext, SfContextHandle, SfContextProviderProps, SfContextState,
   SfOwnerIdentity, SfSurfaceProps,
 } from "./contracts"
 import type { SfInstallationDescriptor, SfOwnerKey, SfOwnerSelection } from "@orchestra/schema/sucafina/context"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 
-const Context = createContext<SfContextHandle>()
+const Context = createContext<SfContextHandle<SfReadableContext>>()
 
 /** Accept only a live owner handle; the corporate adapter keeps its original Team DTO. */
-export function SfContextHandleProvider(props: Readonly<{ value: SfContextHandle; children: JSX.Element }>): JSX.Element {
+export function SfContextHandleProvider(props: Readonly<{ value: SfContextHandle<SfReadableContext>; children: JSX.Element }>): JSX.Element {
   return <Context.Provider value={props.value}>{props.children}</Context.Provider>
 }
 type Active = Readonly<{
@@ -412,10 +412,36 @@ function discoveryDenied(value: unknown): boolean {
     || detail.reason === "denied" || detail.reason === "unauthenticated"
 }
 
-export function useSfContext(): SfContextHandle {
+/** Only explicitly adapted consumers may read either original versioned context. */
+export function useSfReadableContext(): SfContextHandle<SfReadableContext> {
   const value = useContext(Context)
   if (!value) throw new Error("SfContextProvider is required")
   return value
+}
+
+function legacyState(value: SfContextState<SfReadableContext>): value is SfContextState {
+  return value.status !== "ready" || value.context.contractRevision === "sf-native-ui/1"
+}
+type ReadableAccess = NonNullable<ReturnType<SfContextHandle<SfReadableContext>["ready"]>>
+type LegacyAccess = NonNullable<ReturnType<SfContextHandle["ready"]>>
+function legacyAccess(value: ReadableAccess | undefined): value is LegacyAccess {
+  return value?.context.contractRevision === "sf-native-ui/1"
+}
+
+/** A legacy consumer never receives a Team context relabeled as sf-native-ui/1. */
+export function useSfContext(): SfContextHandle {
+  const value = useSfReadableContext()
+  const handle: SfContextHandle = { ...value,
+    state: () => {
+      const state = value.state()
+      return legacyState(state) ? state : { status: "unavailable", selection: state.selection, reason: "contract-mismatch" }
+    },
+    ready: () => {
+      const ready = value.ready()
+      return legacyAccess(ready) ? ready : undefined
+    },
+  }
+  return Object.freeze(handle)
 }
 
 /** Context leaf: never renders a private projection outside the ready owner. */

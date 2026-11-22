@@ -18,10 +18,10 @@ export async function revalidateVendorContractDraft(
   const source = input.read.input
   if (!source || typeof source !== "object" || Array.isArray(source) || Object.keys(source).length)
     return { status: "unavailable" }
-  const availability = draftAvailability(fresh, "domain-read", "CAP14", ["domain.page.CAP14", "domain.command.CAP14.save"])
-  if (availability) return availability
   if (!fresh.destinations.some((item) => item.capabilityId === "CAP14" && item.surface === "dashboard" &&
       item.page === "Vendor Contracts" && item.canRead && item.allowedActionIds.includes("save"))) return { status: "denied" }
+  const availability = draftAvailability(fresh, "domain-read", "CAP14", ["domain.page.CAP14", "domain.command.CAP14.save"])
+  if (availability) return availability
   const result = await createSfDomainClient(transport)["domain.page.CAP14"]({}, { signal }).catch(() => undefined)
   if (signal.aborted || !result || result.kind !== "response") return { status: "unavailable" }
   if (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" ||

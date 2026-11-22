@@ -4,14 +4,17 @@ import { setImmediate } from "node:timers"
 import { createComponent, createSignal } from "solid-js"
 import { render } from "solid-js/web"
 import { Schema } from "effect"
-import { SfTeamContext, SfTeamInstallationDescriptor, type SfEditScopeKey, type SfRef } from "@orchestra/schema/sucafina/context"
+import { SfTeamContext, SfTeamInstallationDescriptor, type SfEditScopeKey, type SfReadableContext, type SfRef } from "@orchestra/schema/sucafina/context"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { SfTransportFetch } from "@orchestra/client/sucafina/transport"
 import type { SfTeamDomainLifecycle, SfTeamDomainSession } from "../src/orchestra/chapters/sucafina/host/team-domain"
+import type { SfContextHandle } from "../src/orchestra/chapters/sucafina/context/contracts"
 import { solidDom } from "./real-ui-solid"
 
 const { SfTeamDomainHost, createSfTeamDomainOwner }: typeof import("../src/orchestra/chapters/sucafina/host/team-domain") =
   await import(solidDom("../src/orchestra/chapters/sucafina/host/team-domain", import.meta.dir))
+const { SfContextHandleProvider, useSfContext, useSfReadableContext }: typeof import("../src/orchestra/chapters/sucafina/context") =
+  await import(solidDom("../src/orchestra/chapters/sucafina/context", import.meta.dir))
 const routes: typeof import("../src/orchestra/chapters/sucafina/host/team-domain-route") =
   await import(solidDom("../src/orchestra/chapters/sucafina/host/team-domain-route", import.meta.dir))
 const { encodeSfRouteRef }: typeof import("../src/orchestra/chapters/sucafina/navigation-state") =
@@ -364,3 +367,28 @@ test("source version drift becomes a retained conflict, and old owner handles ca
     expect(source.writes()).toHaveLength(0)
   } finally { owner.dispose(); controller.abort(); window.location.href = originalHref }
 }, 15000)
+
+test("unadapted legacy consumers fail closed while the explicit readable hook preserves the real Team DTO", async () => {
+  const source = network(), controller = new AbortController()
+  const current = { binding, context: source.context(a), generation: 1, signal: controller.signal }
+  const owner = createSfTeamDomainOwner({ initial: current, current: () => current, fetch: source.fetch, async reload() {} })
+  const observed: { legacy?: SfContextHandle; readable?: SfContextHandle<SfReadableContext> } = {}
+  const host = document.createElement("div")
+  let dispose: (() => void) | undefined
+  try {
+    await owner.activate(current)
+    dispose = render(() => createComponent(SfContextHandleProvider, { value: owner.handle, get children() {
+      return createComponent(() => {
+        observed.legacy = useSfContext()
+        observed.readable = useSfReadableContext()
+        return null
+      }, {})
+    } }), host)
+    expect(observed.legacy?.state()).toMatchObject({ status: "unavailable", reason: "contract-mismatch" })
+    expect(observed.legacy?.ready()).toBeUndefined()
+    expect(observed.readable?.ready()?.context).toBe(current.context)
+    expect(observed.readable?.ready()?.context.contractRevision).toBe("sf-team-profile/1")
+    expect(observed.legacy?.generation()).toBe(observed.readable?.generation())
+    expect(source.requests).toHaveLength(0)
+  } finally { dispose?.(); owner.dispose(); controller.abort(); host.remove() }
+})

@@ -33,7 +33,7 @@ export type SfTeamDomainSession = Readonly<{
 }>
 type Retirement = Parameters<SfContextHandle["invalidate"]>[0]
 type Drafts = ReturnType<typeof createSfOwnerDrafts<SfTeamContext>>
-type Ready = NonNullable<ReturnType<SfContextHandle["ready"]>>
+type Ready = NonNullable<ReturnType<SfContextHandle<SfTeamContext>["ready"]>>
 
 function sameStamp(left: SfContextStamp, right: SfContextStamp): boolean {
   const a = left.team, b = right.team
@@ -78,7 +78,7 @@ export function createSfTeamDomainOwner(options: Readonly<{
   reload: () => Promise<void>
   onAccessRevoked?: () => void
 }>) {
-  const [store, setStore] = createStore<{ state: SfContextState; generation: number }>({
+  const [store, setStore] = createStore<{ state: SfContextState<SfTeamContext>; generation: number }>({
     state: { status: "resolving", selection: sfTeamDomainSelection(options.initial.binding) }, generation: 0,
   })
   let disposed = false
@@ -199,7 +199,7 @@ export function createSfTeamDomainOwner(options: Readonly<{
     setStore("state", { status: "ready", selection, ownerKey: key, owner: identity,
       binding: input.binding, context: input.context })
   }
-  const handle: SfContextHandle = Object.freeze({
+  const handle: SfContextHandle<SfTeamContext> = Object.freeze({
     state: () => store.state, generation: () => store.generation,
     ready: () => store.state.status === "ready" && admitted && live(admitted, store.generation) ? access : undefined,
     hasDirtyDrafts: () => drafts?.dirty() === true,
@@ -319,7 +319,7 @@ export function SfTeamDomainHost(props: SfTeamDomainHostProps): JSX.Element {
 
 function SfTeamDomainPage(props: Readonly<{
   route: SfTeamDomainRoute
-  handle: SfContextHandle
+  handle: SfContextHandle<SfTeamContext>
   current: SfTeamDomainSession
   navigate: (href: string, replace?: boolean) => Promise<void>
 }>): JSX.Element {

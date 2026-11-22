@@ -31,14 +31,14 @@ export type SfOwnerIdentity = Readonly<{
   principalRef: string
   authEpoch: number
 }>
-export type SfContextState =
+export type SfContextState<Context extends SfReadableContext = SfContext> =
   | Readonly<{ status: "resolving"; selection: SfOwnerSelection }>
   | Readonly<{ status: "choose-installation"; selection: SfOwnerSelection; installations: readonly SfInstallationDescriptor[] }>
   | Readonly<{ status: "unauthenticated"; selection: SfOwnerSelection; binding: SfInstallationDescriptor }>
   | Readonly<{ status: "denied"; selection: SfOwnerSelection }>
   | Readonly<{ status: "unavailable"; selection: SfOwnerSelection; reason: "installation-unavailable" | "identity-unavailable" | "host-unavailable" | "connection-auth-unavailable" | "connection-unapproved" | "network" | "contract-mismatch" }>
   | Readonly<{ status: "context-mismatch"; selection: SfOwnerSelection }>
-  | Readonly<{ status: "ready"; selection: SfOwnerSelection; ownerKey: SfOwnerKey; owner: SfOwnerIdentity; binding: SfInstallationDescriptor; context: SfReadableContext }>
+  | Readonly<{ status: "ready"; selection: SfOwnerSelection; ownerKey: SfOwnerKey; owner: SfOwnerIdentity; binding: SfInstallationDescriptor; context: Context }>
 
 export type SfPublicDraftController<Value> = Pick<
   SfDraftController<Value>, "snapshot" | "edit" | "discard" | "receiveRemote" | "setPhase" | "setPending" | "confirmSave" | "rejectSave"
@@ -91,14 +91,14 @@ export type SfContextProviderProps = Readonly<{
   dependencies: SfContextDependencies
   children: JSX.Element
 }>
-export type SfContextHandle = Readonly<{
-  state: Accessor<SfContextState>
+export type SfContextHandle<Context extends SfReadableContext = SfContext> = Readonly<{
+  state: Accessor<SfContextState<Context>>
   generation: Accessor<number>
   /** Reads the original owner draft registry, including quarantined edits. */
   hasDirtyDrafts: () => boolean
   /** Only after explicit consent; quarantined unsent drafts may be purged, never pending/unknown operations. */
   discardDrafts: () => boolean
-  ready: Accessor<Readonly<{ context: SfReadableContext; transport: SfTransport; drafts: SfDraftRegistry }> | undefined>
+  ready: Accessor<Readonly<{ context: Context; transport: SfTransport; drafts: SfDraftRegistry }> | undefined>
   reload: () => Promise<void>
   /** Session expiry quarantines for same-owner revalidation; other reasons purge. */
   invalidate: (reason: "logout" | "revoked" | "session-expired" | "owner-changed" | "host-changed") => void

@@ -58,10 +58,11 @@ export function readSfTeamDomainIntent(url: URL, binding: SfTeamInstallationDesc
 
 /** Technical placement comes from discovery; the full Team owner remains on the context and transport. */
 export function sfTeamDomainSelection(binding: SfTeamInstallationDescriptor): SfOwnerSelection {
+  const installationId: string = binding.installationId
   return Object.freeze({
     serverKey: binding.publicOrigin as SfServerKey,
     projectId: binding.projectId as SfRef,
-    installationId: binding.installationId as SfRef,
+    installationId: installationId as SfRef,
   })
 }
 

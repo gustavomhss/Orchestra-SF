@@ -50,13 +50,13 @@ export async function revalidateBudgetDraft(
   if (input.identity.kind === "record" && action !== "save-entry" && input.identity.recordRef !== ownerId)
     return { status: "unavailable" }
 
-  const available = draftAvailability(fresh, "domain-read", cap,
-    [`domain.page.${cap}`, `domain.command.${cap}.${action}`])
-  if (available) return available
   if (!fresh.destinations.some((destination) => destination.capabilityId === cap &&
       destination.surface === "dashboard" &&
       destination.page === (cap === "CAP04" ? "OPEX Detail" : "CAPEX Projects") &&
       destination.canRead && destination.allowedActionIds.includes(action))) return { status: "denied" }
+  const available = draftAvailability(fresh, "domain-read", cap,
+    [`domain.page.${cap}`, `domain.command.${cap}.${action}`])
+  if (available) return available
   const client = createSfDomainClient(transport)
   const response = await (cap === "CAP04"
     ? client["domain.page.CAP04"]({ year }, { signal })
