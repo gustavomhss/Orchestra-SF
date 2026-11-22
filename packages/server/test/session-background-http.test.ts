@@ -15,6 +15,7 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { AppProcess } from "@orchestra/core/process"
 import { FSUtil } from "@orchestra/core/fs-util"
 import { SessionV2 } from "@orchestra/core/session"
+import { SessionOwner } from "@orchestra/core/session/owner"
 import { SessionSubagentModels } from "@orchestra/core/session/subagent-models"
 import { SessionExecution } from "@orchestra/core/session/execution"
 import { makeSessionGroup } from "@orchestra/protocol/groups/session"
@@ -39,6 +40,7 @@ const services = AppNodeBuilder.build(
     AppProcess.node,
     FSUtil.node,
     SessionV2.node,
+    SessionOwner.node,
     SessionExecution.node,
     SessionSubagentModels.node,
     SessionProcess.node,
