@@ -1,0 +1,298 @@
+{
+  "schema": "sf-g09-v2-visual-inspection-review-v1",
+  "status": "READ_ONLY_VISUAL_CONTEXT_REVIEW_COMPLETE",
+  "formalG09Pass": false,
+  "canonicalDispositionsAssigned": 0,
+  "canonicalTestObligationsAdded": 0,
+  "originalIdentities": {
+    "schema": "sf-g09-review-navigation-input-v1",
+    "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+    "workflowSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "runId": "44983358294",
+    "runAttempt": "1",
+    "diagnosticJobId": "137091279832",
+    "producerJobId": "137088492396",
+    "producerCheckRunId": "137088492396",
+    "reportArtifactId": "14738453502",
+    "reportArtifactDigest": "sha256:2d25388879050ce5c943bc7324f0b98162d1e6a7fc5277caf994c5f41c5e7bfd",
+    "producerArtifactId": "14738902174",
+    "producerArtifactDigest": "sha256:f080447b290086cc2b4fa0229204568876ee76f4cba5a98e608e0ba0aa1312a9"
+  },
+  "sourceReport": {
+    "sha256": "211422a64e4c713e4e3f96b5a88489fba76e099d26ea6d8001794ce019e7ff34",
+    "binding": {
+      "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+      "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+      "catalogSha256": "5780a2f9cafec15d16d87b0b31b1465d162e2caf3f4551448586f5ce15d3082b",
+      "inventorySha256": "67d69a7c4c3a13b30ff5dfee35838a0fd27e9eb0fdd9464c747aee1a849970e1",
+      "occurrencesSha256": "c6ea8f9a337fecdce5436884b5df2086bb02c9a7dc1f8fdbd163471e5b2a425a",
+      "graphSha256": "8906caad49eefcd479d508c2c94f9e4ef456a1ba16b2f919c0d6b34e2351fce7",
+      "gapsSha256": "f9aacdaa58b8152b1ab13dd78c668c1bc94f5d016bc91b9f754d21d8f3cc5a92"
+    },
+    "occurrences": 19882,
+    "reachabilityFindings": 3159,
+    "totalExactIds": 23041,
+    "changedByThisInspection": false
+  },
+  "inspection": {
+    "branch": "g09-visual-inspection",
+    "sourceSHA": "5e6d25c67216b535430071429dfe5749135b7a42",
+    "treeSHA": "00191dec21a5952fbf55d6b41450137405a39e78",
+    "parentSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "workflowPath": ".github/workflows/g09-visual-inspection.yml",
+    "workflowGitBlob": "c8f1a71bb96c1ff5f30d6665e31d93c76940ffdc",
+    "stageGitBlob": "9a4847c90fdc583ba8a1ea5f9c2a1dc0f5797b7b",
+    "readerGitBlob": "6630722e5534e6b44fee69fa8bf8e4f1571fc5f5",
+    "originalDiagnosticReaderGitBlob": "e08a0c2e51b6d3e4eaadf0aa739a42e186ebce79",
+    "runId": "44985878541",
+    "runAttempt": "1",
+    "jobId": "137096194326",
+    "jobName": "visual-context-inspection",
+    "conclusion": "success",
+    "runURL": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44985878541",
+    "jobURL": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44985878541/job/137096194326",
+    "productRebuilt": false,
+    "productExecuted": false,
+    "candidateOrCatalogModified": false
+  },
+  "artifact": {
+    "id": 14739692120,
+    "name": "g09-visual-inspection-44985878541-1",
+    "size_in_bytes": 1284006,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14739692120",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14739692120/zip",
+    "expired": false,
+    "created_at": "2026-11-22T04:38:34Z",
+    "expires_at": "2026-12-22T04:38:32Z",
+    "updated_at": "2026-11-22T04:38:34Z",
+    "digest": "sha256:153ae2c24d9bf0b5ca991406822af882b7a16d50900acfe5e345eed8e606c873",
+    "workflow_run": {
+      "id": 44985878541,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "g09-visual-inspection",
+      "head_sha": "5e6d25c67216b535430071429dfe5749135b7a42"
+    }
+  },
+  "outputs": {
+    "inspectionReceipt": {
+      "file": "visual-inspection-receipt.json",
+      "bytes": 2927,
+      "sha256": "cfc58aa1cf2f20b5f5793d2257a33ee3846203de1300aaa79eb977c3a7c6ae91"
+    },
+    "fullInspectionReport": {
+      "file": "visual-context-inspection.json",
+      "bytes": 8840054,
+      "sha256": "7527972ed3e5e3690216fe59e6b660a699e83de9b76bcf6bb1d633f5796fc878",
+      "location": "The unchanged successful inspection artifact; full 8.84 MB report was not copied into Git."
+    },
+    "readableContexts": {
+      "file": "visual-readable-contexts.jsonl",
+      "gitBlob": "6eaee603bbc2d305092946e3ec8e7f2be1d4c818",
+      "bytes": 546834,
+      "groups": 1375,
+      "archiveOccurrenceIds": 1425,
+      "sourceOccurrenceIds": 41,
+      "extraction": "Exact complete stdout body between G09_VISUAL_ACTUAL_CONTEXTS_BEGIN/END, with only per-line GitHub timestamps removed; no JSON reserialization. All bytes are ASCII, length equals the helper's measured byte count. Git blob was fetched back and compared byte-for-byte."
+    }
+  },
+  "cases": [
+    {
+      "caseName": "visual syntax reader rejects values and preserves literal offsets",
+      "status": "PASS",
+      "controls": 6
+    },
+    {
+      "caseName": "every selected source occurrence is bounded to an inspected CSS class or comment",
+      "status": "PASS",
+      "files": 26,
+      "occurrences": 1424
+    },
+    {
+      "caseName": "every selected archive occurrence is bounded to inspected CSS or a mapped static CSS string",
+      "status": "PASS",
+      "files": 17,
+      "occurrences": 1425
+    },
+    {
+      "caseName": "the 41 source spans outside the palette test have inspected contexts and consumer references",
+      "status": "PASS",
+      "files": 6,
+      "occurrences": 41
+    }
+  ],
+  "scope": {
+    "source": {
+      "files": 26,
+      "occurrences": 1424,
+      "classSelectorOccurrences": 1423,
+      "commentOccurrences": 1
+    },
+    "archive": {
+      "files": 17,
+      "occurrences": 1425,
+      "cssFiles": 12,
+      "cssOccurrences": 485,
+      "staticCssStringModules": 5,
+      "staticCssStringOccurrences": 940,
+      "classSelectorOccurrences": 1425,
+      "commentOccurrences": 0
+    },
+    "exactCompleteClassNames": 119,
+    "archiveClassesWithoutSameCompleteClassTokenInInspectedSource": 0,
+    "outsidePaletteGenerationTest": {
+      "files": 6,
+      "occurrences": 41,
+      "evidence": "Actual CSS contexts and existing consumer references inspected in this later external run; no credit assigned to palette.test.ts."
+    },
+    "archiveFiles": [
+      {
+        "path": "bin/web/assets/actions-CfX0sMqW.css",
+        "fileSha256": "e7725ef160701870c784e2304116f3c11cb3a2f049bda4dab1057217862e85c6",
+        "occurrences": 9
+      },
+      {
+        "path": "bin/web/assets/agents-cp56Iw8A.css",
+        "fileSha256": "62b065fbce91bb81f4b6a03b3b68f3e7aa4c489e82458e13fd28dd2452f9e028",
+        "occurrences": 1
+      },
+      {
+        "path": "bin/web/assets/dock-IWTWUD8s.css",
+        "fileSha256": "03d6e1246140011bb34aa5321d9a15bedbe379927eb37a3be95cdc7f37047f71",
+        "occurrences": 1
+      },
+      {
+        "path": "bin/web/assets/home-CACk_fJu.css",
+        "fileSha256": "0d0cd9f1c0ec50afd26eda3562565ceca005369d2f2e33ce9ee6f940ad0b8d14",
+        "occurrences": 6
+      },
+      {
+        "path": "bin/web/assets/index-DZljefBi.css",
+        "fileSha256": "6067f2ffee1e9b84d2e933e747c91d938f37ca6bebff7a34a14a02f95960b4f4",
+        "occurrences": 229
+      },
+      {
+        "path": "bin/web/assets/mcp-CpicTfgG.css",
+        "fileSha256": "0cfe779d21100dfd86593925b86f0352836ae61b845cb2a3002f39d197ea6c15",
+        "occurrences": 14
+      },
+      {
+        "path": "bin/web/assets/orchestra-governance-DFWnBFFz.css",
+        "fileSha256": "33bed5a390a0ae064aaf1ff6a8fef375642c2b7602280794cfa71a3db46897ed",
+        "occurrences": 49
+      },
+      {
+        "path": "bin/web/assets/palette-amoled-CIzcJbF7.js",
+        "fileSha256": "aae33615ebe0cb0ab7313edd6ae6ef3a958a109f043f1cbe9d4b48e71cd112f1",
+        "occurrences": 188
+      },
+      {
+        "path": "bin/web/assets/palette-github-B8IT1y1k.js",
+        "fileSha256": "0c72ca3299a5832572834368f204ed7c941beec4cc1d8fd07d04ad2178b1eaaa",
+        "occurrences": 188
+      },
+      {
+        "path": "bin/web/assets/palette-graphite-CaPSbzy0.js",
+        "fileSha256": "4e9095c3818627b92153516affe9e4910900f5469ad21ba245eae924f4057384",
+        "occurrences": 188
+      },
+      {
+        "path": "bin/web/assets/palette-gruvbox-C4SpMCMX.js",
+        "fileSha256": "939cbb2e8946e2913bdc67f7195fe60a65bed4eba83a42c03e68f48a555dbe18",
+        "occurrences": 188
+      },
+      {
+        "path": "bin/web/assets/palette-nord-C0R1snk8.js",
+        "fileSha256": "f292ed3f017e35ba4f0f36755c73ee8ff5211f8b82d833d6c82281f37fd2ba01",
+        "occurrences": 188
+      },
+      {
+        "path": "bin/web/assets/servers-DHGHJ_He.css",
+        "fileSha256": "051af69ecc9925c99e58c3794a7b741bcafdfdd6283327222f67d77f18666a22",
+        "occurrences": 23
+      },
+      {
+        "path": "bin/web/assets/session-Cc93wtW2.css",
+        "fileSha256": "f9a6d9779d490029359c60c79deb2934854724c5dd3bb4dc67759fba9f0f45c8",
+        "occurrences": 76
+      },
+      {
+        "path": "bin/web/assets/settings-DMr7_Kwi.css",
+        "fileSha256": "c580602ea0e96f996d88add56fc0c448f3fd3944dfab67f9d55f0a547f36d1cd",
+        "occurrences": 59
+      },
+      {
+        "path": "bin/web/assets/skills-Dj8mlAQf.css",
+        "fileSha256": "275e42df3e8048e55921c9234987b5e388f7015385bfd672a82524fa2fc80fd6",
+        "occurrences": 15
+      },
+      {
+        "path": "bin/web/assets/workspaces-BCegDlwT.css",
+        "fileSha256": "7d273f1e42a68dea105187865872176e7300fa6a487bc723fda6be5486f6533b",
+        "occurrences": 3
+      }
+    ]
+  },
+  "humanReading": [
+    "The nine repo- archive spans are parts of .actions-repo-strip, .repo-strip, .repo-name and .repo-connection selectors, including responsive presentation rules. Their inspected positions are visual class identifiers, not repository identifiers, request fields or saved permissions.",
+    "The remaining selected archive spans start complete .orchestra-* class tokens for navigation, profile menus, settings, dialogs, evidence, governance, sessions, workspaces and similar visual structures. Pseudo-classes, data attributes and @media/@supports contexts were retained. Names such as profile, permission or governance in these selectors do not prove the corresponding product identity or authorization behavior.",
+    "All five selected palette modules were parsed as static default-string exports. Every selected raw occurrence was mapped through the independently decoded literal to a real CSS class-selector context. The observed palette selectors use data-orchestra-palette gates. Source consumer bytes still identify the inline stylesheet loader and style-element textContent sink; no module or product executable was run by this inspection.",
+    "The sole source comment explains the .orchestra-glass visual class. It remains a source comment and was never treated as a compiled selector. The archive's selected occurrences contain no comment contexts.",
+    "The 41 source spans outside the generator test now have their own executed external syntactic-context and consumer-reference inspection. They were not assigned to the generator test, and no canonical test obligation was fabricated."
+  ],
+  "observedDifferences": {
+    "sourceVersusArchiveCounts": {
+      "sourceNonGenerated": {
+        "classSelectors": 483,
+        "comments": 1,
+        "total": 484
+      },
+      "archiveCss": {
+        "classSelectors": 485,
+        "comments": 0,
+        "total": 485
+      },
+      "sourceGeneratedPalettes": {
+        "classSelectors": 940
+      },
+      "archiveStaticPaletteStrings": {
+        "classSelectors": 940
+      },
+      "explanation": "The net +1 selected archive span is explained by the absent source comment (-1) and two additional .orchestra-profile-menu selector occurrences (+2). Counts are not used as a substitute for exact occurrence identities."
+    },
+    "onlyNonGeneratedClassMultiplicityDifference": {
+      "classToken": ".orchestra-profile-menu",
+      "sourceOccurrences": 4,
+      "archiveOccurrences": 6,
+      "sourceThemeOccurrenceId": "f7d5628c0c84e2e87e39405a9f3ce9fadd4ed49d4e6f7aaef28e41b7af0291d5",
+      "expandedArchiveOccurrenceIds": [
+        "00b5a43a5a4d9cfe1686a0aedc27e22b1fc669d135eaa59af040673e5971f2b1",
+        "4b318ca9739ff024de45356d85327dc79a61c2e050918c9d1e3fd6bc382aad57",
+        "a81ed2dfb93a3c574537e0a7e515a2103197c5da76c6a627cc5a1a815252ca52"
+      ],
+      "actualContext": "The same popover/menu :is(...) selector appears twice without an at-rule and once inside @supports (color:color-mix(in lab,red,red)) in index-DZljefBi.css. The source theme contains that selector once.",
+      "interpretation": "Observed compiled selector multiplicity; no inference of new project authority, no assumed one-to-one source map."
+    },
+    "absentSourceCommentId": "fabe25a162de7a0c58bd8120252a9ac4acc6b091d109e5279c0c3e69cd8115cc",
+    "paletteSelectorVariation": {
+      "githubActualSelector": "html[data-orchestra-palette=github][data-color-scheme=light] body[data-new-layout] .orchestra-settings",
+      "githubSourceSelector": "html[data-orchestra-palette=\"github\"][data-color-scheme=\"light\"] body[data-new-layout] .orchestra-settings",
+      "githubSourceOccurrenceId": "586d3828e6dbe3c18de118a3cf2287360d4c0ee427fed5cd6b098e48a7a42889",
+      "observation": "The GitHub palette's settings rule retains the explicit light-scheme gate from its source. The corresponding settings rules of amoled/graphite/gruvbox/nord use an unvalued data-color-scheme gate, also as in their source. This is an observed selector difference, not an equality claim across palettes."
+    },
+    "minifiedPresentation": "Observed compiled selectors omit optional attribute-value quotes and compress whitespace. Full byte or full CSS-token equality was not inferred from the readable contexts."
+  },
+  "semanticProposal": {
+    "classification": "different-meaning",
+    "scope": "Only the 1,424 exact source spans and 1,425 exact archive spans inspected here. The full report retains each original ID, raw offsets, source candidates and original lexical caller/import references.",
+    "canonicalDisposition": null
+  },
+  "limits": [
+    "This is a later external read-only inspection receipt, not same-run canonical qualification. The original 19,882 occurrence IDs plus 3,159 reachability findings remain 23,041 canonical IDs with their original unassigned dispositions.",
+    "No claim of byte-for-byte equality, full CSS-token equality or exact source mapping for palette modules is made. The full report contains comparison flags, but their values were not printed in the observed log and were not independently read in this review.",
+    "Source candidate matches identify complete class tokens and inspected contexts; they do not make ambiguous many-to-many correspondences unique.",
+    "The bounded CSS reader is not a full browser parser; the inspection does not establish rendering coverage, selected-palette behavior, DOM reachability of every class or corporate authorization.",
+    "The ordinary generator test, TUI journeys and future installed-boundary evidence remain separate proofs. None are promoted to formal G09 PASS here."
+  ]
+}

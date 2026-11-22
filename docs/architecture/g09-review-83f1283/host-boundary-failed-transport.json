@@ -1,0 +1,296 @@
+{
+  "schema": "sf-g09-installed-host-boundary-observation-v1",
+  "status": "FAIL_CLOSED",
+  "producerBinding": {
+    "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+    "workflowSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "workflowPath": ".github/workflows/g09-candidate.yml",
+    "branch": "g09-next-candidate",
+    "event": "push",
+    "runId": "44983358294",
+    "runAttempt": "1",
+    "job": "teams-profile-artifact",
+    "jobId": "137088492396",
+    "checkRunId": "137088492396",
+    "repository": "gustavomhss/Orchestra-SF",
+    "repositoryId": "1455724710",
+    "artifact": {
+      "id": "14738902174",
+      "name": "orchestra-sf-entra-linux-83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+      "digest": "sha256:f080447b290086cc2b4fa0229204568876ee76f4cba5a98e608e0ba0aa1312a9",
+      "bytes": 125389096
+    }
+  },
+  "examinationBinding": {
+    "sourceSHA": "94681c18b8407ef1d83a0990f0db81c7107dbfa9",
+    "sourceTreeSHA": "dfe727752e8c30ca3ddfcd740ed58c620044e4bf",
+    "workflowSHA": "94681c18b8407ef1d83a0990f0db81c7107dbfa9",
+    "workflowPath": ".github/workflows/g09-host-boundary.yml",
+    "runId": "44985926909",
+    "runAttempt": "1",
+    "job": "g09-host-boundary",
+    "checkRunId": "137096348955",
+    "event": "push",
+    "branch": "g09-host-boundary",
+    "repository": "gustavomhss/Orchestra-SF",
+    "repositoryId": "1455724710",
+    "files": [
+      {
+        "path": ".github/ci/g09-host-boundary.mjs",
+        "gitBlob": "09aaaee33b0923253707f834eb69ad6c2acbd0dc",
+        "sha256": "26401d42c7c58501cc061d4852988863f2434bed9af322c68b7d731469da8684"
+      },
+      {
+        "path": ".github/ci/g09-host-boundary-input.json",
+        "gitBlob": "e1d5075b941c9fd0640915880d6c70ac9941f34f",
+        "sha256": "a81915fcd698095fa64b663a82901b12665a7252b5161e50f654d7f4ac0864be"
+      },
+      {
+        "path": ".github/workflows/g09-host-boundary.yml",
+        "gitBlob": "1aafb516b7b8b4505cafa18d5871bade9fb51acf",
+        "sha256": "75dfcd4d7b9212fbe73e8add488abd2fde9323228ee6f012678e926e6a71d432"
+      }
+    ],
+    "jobId": "137096348955"
+  },
+  "archiveBindingSha256": "21b2b95c37fe2910b5714f19ce4a59aab15d5be515d8c16b491a5b198bb1e7de",
+  "installationModesSha256": "9efb97fc63b9ae294e31c7d1e9a8b23b2753422481370a987e96dc16758fa023",
+  "archiveSha256": "af312871e79307bd281e7d46a162feeb44bc0112db0e67cb59f8be55db20a109",
+  "binarySha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+  "factorySha256": "fdcb3fbc2348b3e1a8a8054c7ea518c21df504e02e60e372ae4c5c8565606297",
+  "scope": "Installed Microsoft dedicated host, controlled Entra/Graph transport, temporary isolated data",
+  "suppliedIdentifier": {
+    "value": "psv_g09_host_boundary_supplied_identifier",
+    "existingSavedRowClaimed": false
+  },
+  "sourceFiles": [
+    {
+      "path": "script/sf-ci/team-profile-residue.mjs",
+      "gitBlob": "10ae99ab085821f0e312ee05479cad3fb723c7b0",
+      "sha256": "afbbab279f067402ddc500e82add4d3d0f619e9cbd7535e54c11e3a2c28f272a"
+    },
+    {
+      "path": ".github/ci/entra-native-provider.mjs",
+      "gitBlob": "064d50d56cdade310aa99d50e7fdf670afd698b5",
+      "sha256": "c272473a9b98cb5231348a31576900b6e362b6fc692cbc9a728b4bc92264777f"
+    },
+    {
+      "path": ".github/ci/entra-native-http.mjs",
+      "gitBlob": "00a9cc6e4662fda415f9963c860737a6c4116a12",
+      "sha256": "fde0b08878ebfeaf506b60108e258c7ba0ba1d03753cea509435286c71207dd2"
+    },
+    {
+      "path": ".github/ci/g09-installation-modes.py",
+      "gitBlob": "7d2d15b1f424347615994e92c5e116f5b00b6873",
+      "sha256": "ee9f6cc543d69f4c654a30fd49fe2e22c5e20ef9abc770c467722d5c0b48b1d6"
+    },
+    {
+      "path": "sf/azure/vm/install-factory-distribution.py",
+      "gitBlob": "17345366812c79944928731d4fe188b3bced7342",
+      "sha256": "f1e77dbf861e7c759b81a5bf42751d9c07a39382f09c2cdae760d2f37e9918e2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-configuration.ts",
+      "gitBlob": "e668536926c3b3a384f4f7846bfeae5d5d30360b",
+      "sha256": "17893eee302b4a0b9f6e919d07248594eb54d8eec598b6b0f37dbf7ed190bed1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "gitBlob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "sha256": "bdeb9ff9943d0c1785dfe7f56d450093fcffc09a9aecbe63e079d3851a78d13b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/records.ts",
+      "gitBlob": "f769274f2887a187fbdad8688c2bb3ae5ad4a1e5",
+      "sha256": "1d3a4c7feca4f6302168cf22a78e482bf9c66bf2436b2978f5fdd64ab89e6069"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "gitBlob": "1d0459efa7a42dae3b93ffb0eb4299460e373989",
+      "sha256": "92495d1bc81d086f0892911f7ec0e90c864aad3518d0a9667262e2aecfea579f"
+    },
+    {
+      "path": "packages/schema/src/permission-saved.ts",
+      "gitBlob": "969a6dc25cad87bff7309ad7444f5c997ad0913b",
+      "sha256": "58cd2074b989e82b8060e71614abdd83f2e7db3779c68709b05a8780deebbd6b"
+    }
+  ],
+  "signInFunctionSha256": "2133817721fc6bc473132109020ae546dced29a789da493742c26409320fd2a0",
+  "checks": [
+    {
+      "case": "trusted-ingress-required",
+      "method": "GET",
+      "path": "/api/permission/saved",
+      "credentials": "anonymous",
+      "ingressProof": false,
+      "status": 403,
+      "bodyBytes": 0
+    }
+  ],
+  "databaseCheckpoints": [
+    {
+      "checkpoint": "before-startup",
+      "expectedPath": "/home/runner/work/_temp/g09-host-boundary-runtime-tzzAox/installation/host-data/orchestra.db",
+      "checkedNames": [
+        "orchestra.db",
+        "orchestra.db-wal",
+        "orchestra.db-shm",
+        "orchestra.db-journal"
+      ],
+      "present": [],
+      "openCoreDatabaseDescriptors": []
+    },
+    {
+      "checkpoint": "after-startup",
+      "expectedPath": "/home/runner/work/_temp/g09-host-boundary-runtime-tzzAox/installation/host-data/orchestra.db",
+      "checkedNames": [
+        "orchestra.db",
+        "orchestra.db-wal",
+        "orchestra.db-shm",
+        "orchestra.db-journal"
+      ],
+      "present": [],
+      "openCoreDatabaseDescriptors": []
+    },
+    {
+      "checkpoint": "after-shutdown",
+      "expectedPath": "/home/runner/work/_temp/g09-host-boundary-runtime-tzzAox/installation/host-data/orchestra.db",
+      "checkedNames": [
+        "orchestra.db",
+        "orchestra.db-wal",
+        "orchestra.db-shm",
+        "orchestra.db-journal"
+      ],
+      "present": [],
+      "openCoreDatabaseDescriptors": []
+    }
+  ],
+  "databaseEvents": [],
+  "ignoredDatabaseDirectoryEvents": 1,
+  "processIdentity": [
+    {
+      "checkpoint": "before-first-http-request",
+      "pid": 2787,
+      "startTime": "12332",
+      "groupId": 2787,
+      "sessionId": 2787,
+      "executable": "/home/runner/work/_temp/g09-host-boundary-release/bin/orchestra",
+      "executableSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+      "factory": "/home/runner/work/_temp/g09-host-boundary-release/bin/local/entry.mjs",
+      "factorySha256": "fdcb3fbc2348b3e1a8a8054c7ea518c21df504e02e60e372ae4c5c8565606297",
+      "cwd": "/home/runner/work/_temp/g09-host-boundary-runtime-tzzAox/workspace",
+      "factoryEnvironmentObserved": true,
+      "coreDatabaseEnvironmentObserved": "/home/runner/work/_temp/g09-host-boundary-runtime-tzzAox/installation/host-data/orchestra.db",
+      "environmentKeys": [
+        "HOME",
+        "LANG",
+        "ORCHESTRA_CONFIG_DIR",
+        "ORCHESTRA_CREDENTIAL_KEY_FILE",
+        "ORCHESTRA_DB",
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER",
+        "ORCHESTRA_INHERIT_CREDENTIALS",
+        "ORCHESTRA_SERVER_PASSWORD",
+        "ORCHESTRA_SERVER_USERNAME",
+        "PATH",
+        "SF_PROOF_FACTORY",
+        "SUCAFINA_MICROSOFT_CONFIG",
+        "SUCAFINA_NATIVE_TEAM_DECISIONS",
+        "SUCAFINA_NATIVE_TEAM_WEB",
+        "TMPDIR",
+        "TZ",
+        "XDG_CACHE_HOME",
+        "XDG_CONFIG_HOME",
+        "XDG_DATA_HOME",
+        "XDG_STATE_HOME"
+      ],
+      "cmdlineSha256": "d6a1df11f5dc14af11f19e9db94f95a6c46fee504c5bae92e593ec6ee1d1b8c9"
+    },
+    {
+      "checkpoint": "after-startup",
+      "pid": 2787,
+      "startTime": "12332",
+      "groupId": 2787,
+      "sessionId": 2787,
+      "executable": "/home/runner/work/_temp/g09-host-boundary-release/bin/orchestra",
+      "executableSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+      "factory": "/home/runner/work/_temp/g09-host-boundary-release/bin/local/entry.mjs",
+      "factorySha256": "fdcb3fbc2348b3e1a8a8054c7ea518c21df504e02e60e372ae4c5c8565606297",
+      "cwd": "/home/runner/work/_temp/g09-host-boundary-runtime-tzzAox/workspace",
+      "factoryEnvironmentObserved": true,
+      "coreDatabaseEnvironmentObserved": "/home/runner/work/_temp/g09-host-boundary-runtime-tzzAox/installation/host-data/orchestra.db",
+      "environmentKeys": [
+        "HOME",
+        "LANG",
+        "ORCHESTRA_CONFIG_DIR",
+        "ORCHESTRA_CREDENTIAL_KEY_FILE",
+        "ORCHESTRA_DB",
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER",
+        "ORCHESTRA_INHERIT_CREDENTIALS",
+        "ORCHESTRA_SERVER_PASSWORD",
+        "ORCHESTRA_SERVER_USERNAME",
+        "PATH",
+        "SF_PROOF_FACTORY",
+        "SUCAFINA_MICROSOFT_CONFIG",
+        "SUCAFINA_NATIVE_TEAM_DECISIONS",
+        "SUCAFINA_NATIVE_TEAM_WEB",
+        "TMPDIR",
+        "TZ",
+        "XDG_CACHE_HOME",
+        "XDG_CONFIG_HOME",
+        "XDG_DATA_HOME",
+        "XDG_STATE_HOME"
+      ],
+      "cmdlineSha256": "d6a1df11f5dc14af11f19e9db94f95a6c46fee504c5bae92e593ec6ee1d1b8c9"
+    }
+  ],
+  "canonicalQualification": false,
+  "signed": false,
+  "formalG09Pass": false,
+  "azureDeployment": false,
+  "browserInteraction": false,
+  "liveMicrosoftTenant": false,
+  "childEnvironmentKeys": [
+    "HOME",
+    "LANG",
+    "ORCHESTRA_CONFIG_DIR",
+    "ORCHESTRA_CREDENTIAL_KEY_FILE",
+    "ORCHESTRA_DB",
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER",
+    "ORCHESTRA_INHERIT_CREDENTIALS",
+    "ORCHESTRA_SERVER_PASSWORD",
+    "ORCHESTRA_SERVER_USERNAME",
+    "PATH",
+    "SF_PROOF_FACTORY",
+    "SUCAFINA_MICROSOFT_CONFIG",
+    "SUCAFINA_NATIVE_TEAM_DECISIONS",
+    "SUCAFINA_NATIVE_TEAM_WEB",
+    "TMPDIR",
+    "TZ",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_HOME",
+    "XDG_STATE_HOME"
+  ],
+  "processExit": {
+    "code": 143,
+    "signal": null
+  },
+  "processAndListenerGone": true,
+  "output": {
+    "stdoutBytes": 43,
+    "stdoutSha256": "2035078ec7adcf6405160c9b5c3e1618062085a129d18bc79dbf94c5426322ce",
+    "stderrBytes": 0,
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "rawLogsPublished": false
+  },
+  "installedBytesUnchangedAfterShutdown": true,
+  "privateRuntimeRemoved": true,
+  "temporaryReleaseRemoved": true,
+  "cleanupErrors": [],
+  "failure": {
+    "stage": "discovery-and-authentication",
+    "name": "AssertionError",
+    "message": "Expected values to be strictly equal:\n\n403 !== 200\n"
+  }
+}

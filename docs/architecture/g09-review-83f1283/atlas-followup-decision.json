@@ -1,0 +1,50 @@
+{
+  "schema": "sf-g09-atlas-followup-decision-v1",
+  "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+  "sourceReviewGitBlob": "5a1e886f744b3e070f361c6c8b9f79e56aaa9358",
+  "status": "ADDITIONAL_CONTEXT_ONLY_WORKFLOW_NOT_EXECUTED",
+  "formalG09Pass": false,
+  "canonicalDispositionsAssigned": 0,
+  "reason": "AST/ledger inspection alone would close zero IDs under the existing canonical protocol; it cannot establish the prebundle source closure or supply semantic dispositions.",
+  "counts": {
+    "occurrences": 688,
+    "findings": 2540,
+    "totalOpen": 3228
+  },
+  "remaining": [
+    {
+      "family": "plain @atlas package imports",
+      "ids": 1890,
+      "requirement": "Individual semantic/build-context decisions with appropriate evidence. Source builder rules alone do not prove the candidate run executed generation and reproduced all 20 outputs."
+    },
+    {
+      "family": "intentional @atlas/knowledge/brand fixture",
+      "ids": 1,
+      "requirement": "Preserve the intentional negative meaning and bind its specific executed test; never invent alias resolution."
+    },
+    {
+      "family": "vitest, vitest/config and fast-check imports",
+      "ids": 625,
+      "requirement": "Explain actual harness/test producers and consumers and their applicable executed obligations; directory or devDependency status alone is insufficient."
+    },
+    {
+      "family": "nonliteral dynamic imports",
+      "ids": 8,
+      "requirement": "Define each target-selection seam and its effective environment/cwd scope; no blanket resolver."
+    },
+    {
+      "family": "inherited configurations",
+      "ids": 16,
+      "requirement": "Explain the effective effect and appropriate obligation for 15 local and one external inheritance."
+    },
+    {
+      "family": "semantic occurrences",
+      "ids": 688,
+      "requirement": "Per-occurrence meaning including actual project catalog, territory and memory authority; 90 source anchors in seven files are contextual evidence, not accepted dispositions."
+    }
+  ],
+  "genericConsumer": "packages/core/src/atlas.ts uses projectID and worktree operationally; Microsoft composition exclusion is a separate obligation.",
+  "newWorkflow": false,
+  "newBuilder": false,
+  "newCandidate": false
+}
