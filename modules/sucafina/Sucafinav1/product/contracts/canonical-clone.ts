@@ -91,7 +91,9 @@ export function cloneSfCanonicalValues<Value>(values: readonly Value[]): Value[]
     const copied = structuredClone(value)
     // Registration is optional metadata; a failed inspection never repeats or
     // changes the clone operation that has already completed.
-    try { if (trusted && environmentCurrent()) rememberClone(copied) } catch {}
+    try { if (trusted && environmentCurrent()) rememberClone(copied) } catch {
+      // Origin metadata is optional; preserve the native clone that already succeeded.
+    }
     return copied
   })
   add(ordinary, result)
