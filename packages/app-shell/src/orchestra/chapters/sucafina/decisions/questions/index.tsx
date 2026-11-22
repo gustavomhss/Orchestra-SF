@@ -257,13 +257,17 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                     <p><bdi>{ui.text}</bdi></p>
                     <p>{t("sf.ui37.criterion")}: <bdi>{
                       current().criteria.find((item) => item.id === ui.criterion)?.description || t("sf.ui37.noCriterion")
-                    }</bdi><Show when={ui.criterion}>{" · "}<bdi>{ui.criterion}</bdi></Show></p>
+                    }</bdi></p>
                     <p>{t("sf.ui37.recipient")}: <bdi>{
                       ui.recipients.find((person) => person.id === ui.recipient)?.name || t("sf.ui37.noRecipient")
-                    }</bdi><Show when={ui.recipient}>{" · "}<bdi>{ui.recipient}</bdi></Show></p>
-                    <p>{t("sf.ui37.scope")}</p>
-                    <ul class="sf-n24-list"><For each={current().sourceRefs}>{(source) =>
-                      <li><bdi>{source.refId}</bdi> · <bdi>{source.evidenceLevel}</bdi> · <bdi>{source.kind}</bdi></li>}</For></ul>
+                    }</bdi></p>
+                    <details class="sf-decision-source-scope">
+                      <summary>{t("sf.ui37.scope")} · {current().sourceRefs.length}</summary>
+                      <Show when={ui.criterion}><p>{t("sf.ui37.criterion")}: <bdi>{ui.criterion}</bdi></p></Show>
+                      <Show when={ui.recipient}><p>{t("sf.ui37.recipient")}: <bdi>{ui.recipient}</bdi></p></Show>
+                      <ul class="sf-n24-list"><For each={current().sourceRefs}>{(source) =>
+                        <li><bdi>{source.refId}</bdi> · <bdi>{source.evidenceLevel}</bdi> · <bdi>{source.kind}</bdi></li>}</For></ul>
+                    </details>
                   </div>
                 </Show>
                 <Show when={ui.message}><p role="status">{t(ui.message)}</p></Show>

@@ -169,8 +169,9 @@
 .sf-decision-assumptions .sf-n24-toolbar { display: block; inline-size: 180px; max-inline-size: 100%; }
 .sf-decision-assumptions .has-selection .sf-n24-record { grid-template-columns: minmax(0, 1fr) auto; }
 .sf-decision-assumptions .has-selection .sf-n24-record > :first-child { grid-column: 1 / -1; }
+.sf-decision-assumptions .sf-n24-chip { justify-self: start; inline-size: max-content; max-inline-size: 100%; border-color: var(--mx-line); color: var(--mx-dim); }
 .sf-decision-page .sf-decision-gap-band { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-.sf-decision-gap-band > section { padding: 0; }
+.sf-decision-gap-band > section { padding: 0; align-content: start; }
 .sf-decision-gap-band > section + section { padding-inline-start: 24px; border-inline-start: 1px solid var(--mx-line); }
 .sf-decision-page .sf-decision-composer { display: block; inline-size: 100%; max-inline-size: var(--sf-decision-stage-width); justify-self: center; }
 .sf-decision-page .sf-decision-composer > summary { font-size: var(--orchestra-font-size-xl); padding-block: 10px; min-block-size: 44px; }
