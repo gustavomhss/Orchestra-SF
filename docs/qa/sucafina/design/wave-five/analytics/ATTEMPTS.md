@@ -125,3 +125,50 @@ The table captures exposed two concrete problems. Centering an oversized table c
 | [UI46 source action without request](attempt-03/UI46-source-action-no-request.jpg) | First original monthly source action invoked | Missing exact value binding |
 
 UI43, UI44, operational BI, Portuguese final states and completed source navigation remain unqualified after this attempt. The next production run must resolve the concrete failures and retain these receipts.
+
+## Attempt 4 — exact BI request, destination admission and portfolio transport
+
+- Source composition: `7a9e0696ff353d9352938abd2c5527d76f0a47b1`.
+- Test snapshot: `fc7e2584abbf9a9f647b58f38c98415a284a3d94`; branch `ci-run-sf5analytics5`.
+- [Run 44982724281](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44982724281), job `137086553639`, attempt 1, no retries.
+- Existing production Playwright configuration and workflow, strict omni control and production channel.
+- [Canonical artifact 14738631409](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44982724281/artifacts/14738631409): `playwright-ubuntu-24.04-1`, 20,224,029 bytes, SHA-256 `95a47f76dbc963879f3131f72ec274ce9de8b961bf38ce841ce2e7007b1de3b4`.
+- Result: both grouped journeys failed. No page or console errors were recorded. Nineteen captures were produced; thirteen were emitted as images, inspected and saved in this attempt folder. Remaining captures exist in the canonical artifact and are explicitly marked unreviewed in the manifest.
+
+### Context diagnostic failure and original route diagnosis
+
+The parameter source read, original parameter promotion and controls readback again succeeded. UI42 displayed both authorized cases with their original versions. One actual mounted context response returned 200 / ok with the exact owner tuple and all seven targeted portfolio operations ready/operational. A concurrent context request lost its CDP body during navigation. The diagnostic required every collected body to be readable and failed before the first capture matrix. The screenshot records the real list, not a completed portfolio evaluation.
+
+The next diagnostic observes the exact native context URL, verifies its installed origin, mount and three selector values, and explicitly reopens that original endpoint with the authenticated APIRequestContext at each required point. It still requires HTTP 200, status ok and the exact original owner stamp. It records acquisition as an authenticated original readback, not as the body of a cancelled native request. No readiness value is substituted.
+
+Read-only source investigation also isolated a transport defect. The canonical `SfPortfolio` family contains ten operations whose original inputs are closed and contain no top-level `surface`. Their catalog routes use `{mount}/{surface}`; the generic transport consequently rejected the unbound segment before HTTP. The original portfolio HTTP consumer accepts the installed dashboard page. Commit `3c308e8dcae615ad3d1fa8c0adeff89d3d44c73a` resolves that source page separately from the unchanged input, recognizes only the original family, and adds fourteen pure codec/URL regressions. It changes no schema, registry, permission, producer or admission. Renderer IPC still receives the original wire input. No additional D01 broker URL construction was found in the installed desktop composition. This patch was made after the attempt and awaits hosted validation.
+
+### Financial BI request and remaining destination boundary
+
+UI45's original eleven questions, real BI01 context, result and desktop/mobile captures passed. UI46 matched all thirty-six original row identities, fourteen numeric observations and twenty-two missing observations. Exact source values, evidence, period and unspecified currency were preserved.
+
+For the first genuinely published value, the native action now sent `bi-source` to the exact installed origin/dashboard with the current selection, its original value ID and its original reference digest. The original HTTP response was 200 and contained one source link. The navigation region rendered, but its filtered list contained zero anchors; the grouped test failed before opening the second same-reference value. The parent traced this to an existing destination filter that accepts legacy mounted pages while the original source publishes native Orchestra routes. The native route/owner boundary is being corrected separately. This attempt proves the first exact request/response, not completed source navigation, the two-value regression, operational BI or Portuguese end states.
+
+### Visual findings and subsequent correction
+
+The original monthly bar values are readable in both desktop themes. New narrow captures scroll the actual local chart container to show its numeric labels at 390px and 320px, alongside the separately captured left edge. No source geometry or value changed.
+
+Anchoring table captures at the caption exposes the heading and source limitations. The earlier cell rule did not override the child `.sf-numeric` anywhere-wrapping; “Measure”, “Effective” and “unspecified” still split within words at narrow widths. Commit `e700e17276b134484350425861fcb8a22e4fdbc4` changes only this financial/operational table's wrapping, including the numeric span, while keeping opaque references breakable. The screenshots below deliberately preserve the observed defect; they are not final corrected previews.
+
+| Inspected image | Observed state |
+| --- | --- |
+| [UI42 list at diagnostic failure](attempt-04/UI42-context-diagnostic-failure.jpg) | Two real cases; diagnostic failed before the list matrix |
+| [UI45 dark desktop catalog](attempt-04/UI45-catalog-dark-desktop.jpg) | Original eleven questions in three families |
+| [UI45 dark 390px catalog](attempt-04/UI45-catalog-dark-390.jpg) | Stacked source question groups |
+| [UI45 light 320px catalog](attempt-04/UI45-catalog-light-320.jpg) | Wrapped question text and original family labels |
+| [UI46 dark desktop plot](attempt-04/UI46-plot-dark-desktop.jpg) | Original monthly values and unspecified currency |
+| [UI46 light desktop plot](attempt-04/UI46-plot-light-desktop.jpg) | Same original geometry and values |
+| [UI46 dark 390px scrolled values](attempt-04/UI46-plot-values-dark-390.jpg) | Right side of the original local chart scroller |
+| [UI46 light 320px scrolled values](attempt-04/UI46-plot-values-light-320.jpg) | Original values remain readable |
+| [UI46 dark desktop table](attempt-04/UI46-table-heading-dark-desktop.jpg) | Caption, source limitations and value rows |
+| [UI46 light desktop table](attempt-04/UI46-table-heading-light-desktop.jpg) | Original values; numeric span still breaks a word |
+| [UI46 dark 390px table](attempt-04/UI46-table-heading-dark-390.jpg) | Whole-word correction still needed |
+| [UI46 light 320px table](attempt-04/UI46-table-heading-light-320.jpg) | Local table overflow; whole-word correction still needed |
+| [UI46 source action after exact request](attempt-04/UI46-source-request-links-filtered.jpg) | Original response received; destination filtered from link list |
+
+UI43, UI44, a completed UI46 source journey and the final Portuguese states remain unqualified after this failed attempt. The next composed production run must exercise the fixes and retain these failed receipts.
