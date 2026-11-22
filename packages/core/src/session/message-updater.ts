@@ -272,26 +272,17 @@ export function update(adapter: Adapter, event: SessionEvent.Event) {
               time: { created: event.data.timestamp },
             }),
           )
-        return Effect.gen(function* () {
-          if (split.privileged)
-            yield* adapter.appendMessage(
-              SessionMessage.System.make({
-                id: event.data.messageID,
-                type: "system",
-                text: split.privileged,
-                time: { created: event.data.timestamp },
-              }),
-            )
-          yield* adapter.appendMessage(
-            SessionMessage.Synthetic.make({
-              sessionID: event.data.sessionID,
-              id: split.privileged ? SessionMessage.ID.make(`${event.data.messageID}_data`) : event.data.messageID,
-              type: "synthetic",
-              text: split.data,
-              time: { created: event.data.timestamp },
-            }),
-          )
-        })
+        // A durable event owns one (session, seq) row. Historical mixed contexts
+        // must stay one data message, including for hosts that consume history directly.
+        return adapter.appendMessage(
+          SessionMessage.Synthetic.make({
+            sessionID: event.data.sessionID,
+            id: event.data.messageID,
+            type: "synthetic",
+            text: [split.privileged, split.data].filter(Boolean).join("\n\n"),
+            time: { created: event.data.timestamp },
+          }),
+        )
       },
       "session.next.synthetic": (event) => {
         return adapter.appendMessage(
