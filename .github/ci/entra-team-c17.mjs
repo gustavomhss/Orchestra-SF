@@ -88,7 +88,7 @@ export async function exerciseTeamC17(input) {
   assert.deepEqual(await invalid.json(), { status: "denied" })
   assert.equal(digestSfValue(snapshotRows()), unprovisioned, "denied case provisioned a snapshot")
   const draft = await controls(reference)
-  console.log("C17_TEAM_CONTROLS_OK: case available before BI")
+  process.stdout.write("C17_TEAM_CONTROLS_OK: case available before BI\n")
   const criteria = draft.decision.criteria.map((entry) => entry.id)
   assert.equal(criteria.length, 1)
   const options = (await ok(await read("bi-options", { viewId: "BI01", ...horizon }), "bi-options")).value
@@ -145,7 +145,7 @@ export async function exerciseTeamC17(input) {
   assert.equal(absent.status, 503)
   assert.deepEqual(await absent.json(), { status: "unavailable", reason: "choice-source-continuity-unavailable" })
   assert.equal(digestSfValue(snapshotRows()), before, "no prepared write without Atlas")
-  console.log("C17_TEAM_WITHOUT_ATLAS_DENIED")
+  process.stdout.write("C17_TEAM_WITHOUT_ATLAS_DENIED\n")
 
   const captureKey = randomUUID()
   const archive = async () => ok(await postRaw("decision-archive-choice", caseRef, {
@@ -156,7 +156,7 @@ export async function exerciseTeamC17(input) {
   const archivedState = digestSfValue(snapshotRows())
   assert.equal((await archive()).eventId, archived.eventId, "archive replay returns canonical event")
   assert.equal(digestSfValue(snapshotRows()), archivedState, "archive replay did not write a second event")
-  console.log("C17_TEAM_ARCHIVE_OK")
+  process.stdout.write("C17_TEAM_ARCHIVE_OK\n")
   assert.equal((await tab.reload({ waitUntil: "domcontentloaded", timeout: 120_000 })).status(), 200)
   await button.waitFor({ state: "visible", timeout: 30_000 })
   assert(await button.isEnabled())
@@ -202,7 +202,7 @@ export async function exerciseTeamC17(input) {
   assert.equal(different.status, 409, "same key with changed input")
   assert.deepEqual(await different.json(), { status: "conflict", reason: "choice-preview-idempotency-changed" })
   assert.equal(digestSfValue(snapshotRows()), record, "conflicting replay wrote state")
-  console.log("C17_TEAM_PREPARE_REPLAY_OK")
+  process.stdout.write("C17_TEAM_PREPARE_REPLAY_OK\n")
   const otherSession = await signIn("other")
   const otherContext = new URLSearchParams({
     contractRevision: binding.contractRevision, installationId: binding.installationId, tenantId: binding.tenantId,
@@ -234,5 +234,5 @@ export async function exerciseTeamC17(input) {
     beforeAtlas: 503, prepared: 200, reload: 200, replay: 200, noTeam: 403, crossTeam: 403, revoked: 403, promotion: false,
   }
   await writeFile(process.env.SF_C17_RECEIPT, JSON.stringify(receipt) + "\n", { flag: "wx", mode: 0o600 })
-  console.log("C17_TEAM_PACKAGE_OK", c17Case)
+  process.stdout.write("C17_TEAM_PACKAGE_OK " + c17Case + "\n")
 }
