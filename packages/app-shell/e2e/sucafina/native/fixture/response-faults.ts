@@ -1,7 +1,10 @@
 /** F04 transport-only fault seams on the original, authenticated producer.
  * No route.fulfill mock, forged status/receipt, role override, or replay.
  */
-import type { Page, Request, Route } from "@playwright/test"
+import type { Page, Request, Response, Route } from "@playwright/test"
+import { Schema } from "effect"
+import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
+import { strictJson } from "../../../../../../sf/azure/identity/az02-proof.cjs"
 import { nativeOriginalRequest } from "./browser-transport.ts"
 import { observeNativeBinding, nativeContextURL } from "./readiness.ts"
 import type { NativeManifest } from "./readiness.ts"
@@ -44,16 +47,22 @@ export async function armLostResponse(page: Page, target: NativeFaultTarget) {
   if (target.method !== "POST") throw new Error("F04_LOST_RESPONSE_REQUIRES_EXPLICIT_POST")
   let attempts = 0
   let producerStatus: number | null = null
+  let armed = true
+  let pending: Promise<void> | undefined
   // A path regexp avoids intercepting unrelated requests; query/Team remain checked on the original Request.
   const escaped = (target.origin + target.pathname).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
   const matchesURL = new RegExp("^" + escaped + "(?:\\?.*)?$")
-  const handler = async (route: Route) => {
+  const handler = (route: Route) => {
+    if (!armed) return route.fallback()
     if (!exactURL(route.request(), target)) return route.continue()
     attempts++
     if (attempts !== 1) return route.continue()
-    const actual = await route.fetch({ maxRedirects: 0, maxRetries: 0 })
-    producerStatus = actual.status()
-    await route.abort("failed")
+    pending = (async () => {
+      const actual = await route.fetch({ maxRedirects: 0, maxRetries: 0 })
+      producerStatus = actual.status()
+      await route.abort("failed")
+    })()
+    return pending
   }
   await page.route(matchesURL, handler)
   return {
@@ -67,7 +76,9 @@ export async function armLostResponse(page: Page, target: NativeFaultTarget) {
         automaticRetryProhibited: true, outcomeUnknownUntilOriginalRead: true,
       }
     },
-    dispose: () => page.unroute(matchesURL, handler),
+    // The owned Page closes at fixture teardown. Removing its last route while
+    // readback is live can break Chromium interception; retain a passive fallback.
+    dispose: async () => { armed = false; await pending },
   }
 }
 
@@ -78,19 +89,25 @@ export async function armHeldResponse(page: Page, target: NativeFaultTarget) {
   requireFaultTarget(target)
   let attempts = 0
   let producerStatus: number | null = null
+  let armed = true
+  let pending: Promise<void> | undefined
   let releaseResponse: () => void = () => {}
   const gate = new Promise<void>((resolve) => { releaseResponse = resolve })
   // A path regexp avoids intercepting unrelated requests; query/Team remain checked on the original Request.
   const escaped = (target.origin + target.pathname).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
   const matchesURL = new RegExp("^" + escaped + "(?:\\?.*)?$")
-  const handler = async (route: Route) => {
+  const handler = (route: Route) => {
+    if (!armed) return route.fallback()
     if (!exactURL(route.request(), target)) return route.continue()
     attempts++
     if (attempts !== 1) return route.continue()
-    const response = await route.fetch({ maxRedirects: 0, maxRetries: 0 })
-    producerStatus = response.status()
-    await gate
-    await route.fulfill({ response })
+    pending = (async () => {
+      const response = await route.fetch({ maxRedirects: 0, maxRetries: 0 })
+      producerStatus = response.status()
+      await gate
+      await route.fulfill({ response })
+    })()
+    return pending
   }
   await page.route(matchesURL, handler)
   return {
@@ -104,8 +121,33 @@ export async function armHeldResponse(page: Page, target: NativeFaultTarget) {
       }
     },
     release: () => releaseResponse(),
-    dispose: async () => { releaseResponse(); await page.unroute(matchesURL, handler) },
+    // Disarm and settle this delivery without changing routing on the live Page.
+    dispose: async () => { armed = false; releaseResponse(); await pending },
   }
+}
+
+/** Read only the already observed F02 refusal. Status alone is not evidence of
+ * authentication loss; keep the producer's closed DTO and duplicate-key refusal.
+ */
+export async function requireNativeRevocationRefusal(
+  response: Pick<Response, "status" | "headers" | "text">, origin: string,
+): Promise<void> {
+  const status = response.status(), headers = response.headers()
+  if ((status !== 401 && status !== 403) ||
+      headers["content-type"]?.split(";", 1)[0]?.trim().toLowerCase() !== "application/json" ||
+      headers["cache-control"]?.trim().toLowerCase() !== "no-store" ||
+      headers.location !== undefined ||
+      (headers["access-control-allow-origin"] !== undefined && headers["access-control-allow-origin"] !== origin))
+    throw new Error("F04_ORIGINAL_REVOCATION_REFUSAL_NOT_PROVEN")
+  try {
+    const result = Schema.decodeUnknownSync(Schema.toCodecJson(SfTeamContextResult), { onExcessProperty: "error" })(
+      strictJson(await response.text()),
+    )
+    if (result.status === (status === 401 ? "unauthenticated" : "denied")) return
+  } catch {
+    // A malformed private response is a failed proof, never body text in a receipt.
+  }
+  throw new Error("F04_ORIGINAL_REVOCATION_REFUSAL_NOT_PROVEN")
 }
 
 /** Invoke only the real privileged producer action supplied by the approved
@@ -125,6 +167,7 @@ export async function requestRealRevocation(input: Readonly<{
   if (!actual.committed) throw new Error("F04_REAL_PRODUCER_REVOCATION_NOT_CONFIRMED")
   const response = await nativeOriginalRequest(input.page, nativeContextURL(input.manifest.target))
   if (response.status() === 401 || response.status() === 403) {
+    await requireNativeRevocationRefusal(response, input.manifest.target.publicOrigin)
     return { phase: "PRODUCER_AUTHENTICATION_REVOKED" as const,
       status: response.status(), clientProjection: "REQUIRES_SEPARATE_UI_ASSERTION" as const }
   }
