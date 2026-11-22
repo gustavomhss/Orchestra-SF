@@ -184,3 +184,8 @@
   border-block-end: 1.5px solid currentColor; transform: rotate(45deg);
 }
 .sf-files[data-sf-wave="five"] :is(.sf-files-options,.sf-files-section details)[open] > summary::after { transform: rotate(225deg); }
+
+.sf-files[data-sf-wave="five"] .sf-files-progress {
+  margin: 0; padding-block: 12px; border-block-end: 1px solid var(--mx-line);
+  color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); line-height: 1.6;
+}

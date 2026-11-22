@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto"
+import { createHash, randomUUID } from "node:crypto"
 import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
 import type { Page, TestInfo } from "@playwright/test"
@@ -115,7 +115,16 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
     await capture(page, info, "UI55-dark-desktop-selected-file-options")
     const [prepared] = await Promise.all([
       captureOriginalImportPreview(page, { origin: installation.origin, mount: installation.mount, sourceDigest,
-        generate: surface.getByRole("button", { name: "Generate preview", exact: true }) }),
+        generate: surface.getByRole("button", { name: "Generate preview", exact: true }),
+        observe: async (facts) => {
+          const activity = await surface.getAttribute("data-sf-import-activity")
+          const phase = await surface.getAttribute("data-sf-phase")
+          const state = await surface.getAttribute("data-sf-read-state")
+          console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({
+            kind: "original-import-progress", ...facts, activity, phase, state,
+          }))
+        },
+      }),
       expect(surface).toHaveAttribute("data-sf-phase", "reviewing", { timeout: 90_000 }),
     ])
     manifestId = prepared.manifest.id
@@ -328,6 +337,16 @@ waveFourTest("UI51 UI52 UI53 · original relationships, unsent discussion and ma
   )
   if (freshlyPrepared.status !== "ok" || !freshlyPrepared.value.selectionRef)
     throw new Error("The original current material could not be refreshed")
+  const directSelection = await sourceRequest("/dashboard?sf=collaboration-confirmation-project", {
+    method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": randomUUID() },
+    body: JSON.stringify({ selectionRef: freshlyPrepared.value.selectionRef }),
+  })
+  const directSelectionBody = await directSelection.json()
+  console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "confirmation-prepare-project",
+    httpStatus: directSelection.status, status: directSelectionBody.status,
+    reason: typeof directSelectionBody.reason === "string" ? directSelectionBody.reason : undefined,
+    preparedSourceVersion: freshlyPrepared.value.sourceVersion,
+  }))
   let confirmationId = ""
   await waveFourTest.step("UI53 reviews exact current material, cancels review and records one no-change confirmation", async () => {
     await enter(page, owner, url("/orchestra/sf-work/confirmations/" + encodeSfRouteRef(freshlyPrepared.value.selectionRef!)), "Confirm no change")

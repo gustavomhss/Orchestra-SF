@@ -65,6 +65,7 @@ type LeafState = {
   reference: Reference | undefined
   detail: Detail | undefined
   busy: boolean
+  activity: "scanning" | "previewing" | "reading-source" | undefined
   error: SfUiState | undefined
   exportKind: "xlsx" | "suppliers" | "register" | "json" | "po"
   download: Readonly<{ name: string }> | undefined
@@ -87,7 +88,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     reviewedSelectionRef: "", needsDiscovery: false, historyRef: "",
     file: undefined, newVersion: false, removeMissing: false, replace: false,
     headerRow: "", manifest: undefined, reference: undefined, detail: undefined,
-    busy: false, error: undefined, exportKind: "xlsx", download: undefined,
+    busy: false, activity: undefined, error: undefined, exportKind: "xlsx", download: undefined,
     poRead: undefined, poSelection: "", poState: "idle", poRefresh: 0,
   })
   let generation = 0
@@ -114,7 +115,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const clearReview = () => {
     applyIntent = undefined
     setState({ manifest: undefined, reference: undefined, detail: undefined,
-      reviewedSelectionRef: "", phase: "selecting", error: undefined })
+      reviewedSelectionRef: "", phase: "selecting", error: undefined, activity: undefined })
   }
   const failure = (result: Readonly<{ state: SfUiState }>, isMutation = false) => {
     if (result.state === "denied" || result.state === "session-expired") {
@@ -127,7 +128,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       error: result.state,
       status: result.state,
       phase: isMutation && result.state === "outcome-unknown" ? "unknown" : state.phase,
-      busy: false,
+      busy: false, activity: undefined,
     })
   }
   const client = () => {
@@ -225,7 +226,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     if (!publish || (state.phase === "unknown" && !reference.receipt)) return reference
     setState({ manifest: reference.manifest, detail: { digest: reference.digest, detail: reference.detail, receipt: reference.receipt },
       reference, phase: reference.receipt ? "receipt" : "preview",
-      status: reference.manifest.state === "stale" ? "stale" : "ready", busy: false })
+      status: reference.manifest.state === "stale" ? "stale" : "ready", busy: false, activity: undefined })
     return reference
   }
   const loadReference = async () => {
@@ -291,7 +292,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     clearReview()
     // Admission and preview are busy actions, not a new page load. Unmounting
     // SfStatePanel here would discard the selected native file input.
-    setState({ busy: true, status: "ready", phase: "selecting" })
+    setState({ busy: true, status: "ready", phase: "selecting", activity: "scanning" })
     const bytes = new Uint8Array(await file.arrayBuffer())
     if (!current(token)) return
     const admit = unpack(await api["files.import-admit"]({
@@ -301,6 +302,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     }, { signal: token.signal, idempotencyKey: crypto.randomUUID() }))
     if (admit.kind === "failure") { if (current(token)) failure(admit, true); return }
     if (!current(token)) return
+    setState("activity", "previewing")
     const preview = unpack(await api["files.import-preview"]({
       surface: target.surface, admittedFileRef: admit.value.ref,
       format: sourceFormat(), options: options().preview,
@@ -310,13 +312,14 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const manifest = preview.value
     if (manifest.context.surface !== target.surface || manifest.domainApplied ||
       manifest.state !== "preview") { failure({ state: "invalid" }); return }
+    setState("activity", "reading-source")
     const reference = await refreshReference(manifest.id, target.surface, token)
     if (!reference || !current(token)) return
     if (reference.manifest.version !== manifest.version || reference.manifest.sourceDigest !== manifest.sourceDigest) {
       failure({ state: "stale" })
       return
     }
-    setState({ reviewedSelectionRef: target.selectionRef, phase: "reviewing", busy: false, status: "ready" })
+    setState({ reviewedSelectionRef: target.selectionRef, phase: "reviewing", busy: false, activity: undefined, status: "ready" })
   }
   const cancelPreview = () => {
     if (editLocked()) return
@@ -538,7 +541,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
         phase: "selecting", targets: [], discovery: undefined, selectionRef: "",
         reviewedSelectionRef: "", needsDiscovery: true, manifest: undefined,
         historyRef: "", reference: undefined, detail: undefined, file: undefined,
-        busy: false, error: undefined, poRead: undefined, poSelection: "", poState: "idle" })
+        busy: false, activity: undefined, error: undefined, poRead: undefined, poSelection: "", poState: "idle" })
       if (chapter === "UI57" && routeKind === "history" && ready && selectedOwner) {
         // Reference/detail reads only; no inferred history collection.
         setState("historyRef", "")
@@ -603,7 +606,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       } : undefined}
     >
       <section class="sf-files" data-sf-leaf="u23" data-sf-surface={props.surfaceId}
-        data-sf-wave={designed() ? "five" : undefined} data-sf-phase={state.phase} data-sf-read-state={state.status}>
+        data-sf-wave={designed() ? "five" : undefined} data-sf-phase={state.phase} data-sf-read-state={state.status}
+        data-sf-import-activity={isImport() ? state.activity : undefined}>
         <Show when={designed()}>
           <ol class="sf-files-steps" aria-label={t("sf.u23.importStages")}>
             <li data-current={isImport() && !state.manifest && !selectedTarget()}
@@ -613,6 +617,12 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             <li data-current={isReference() || !!state.manifest}
               aria-current={isReference() || !!state.manifest ? "step" : undefined}><span>3</span>{t("sf.u23.reviewPreview")}</li>
           </ol>
+        </Show>
+        <Show when={isImport() && state.busy && state.activity}>
+          <p class="sf-files-progress" role="status" aria-live="polite">{t(
+            state.activity === "scanning" ? "sf.u23.scanningFile" :
+            state.activity === "previewing" ? "sf.u23.buildingPreview" : "sf.u23.readingPreviewSource",
+          )}</p>
         </Show>
         <SfStatePanel state={state.status} messageKey={key(message())}
           onRetryRead={state.phase === "unknown" ? undefined : () => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) {
