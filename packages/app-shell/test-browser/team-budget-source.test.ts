@@ -16,7 +16,7 @@ const navigation: typeof import("../src/context/team-profile-navigation") =
   await import(solidDom("../src/context/team-profile-navigation", import.meta.dir))
 const { encodeSfRouteRef }: typeof import("../src/orchestra/chapters/sucafina/navigation-state") =
   await import(solidDom("../src/orchestra/chapters/sucafina/navigation-state", import.meta.dir))
-const { LanguageProvider }: typeof import("../src/context/language") =
+const { LanguageProvider, useLanguage }: typeof import("../src/context/language") =
   await import(solidDom("../src/context/language", import.meta.dir))
 const { PlatformProvider }: typeof import("../src/context/platform") =
   await import(solidDom("../src/context/platform", import.meta.dir))
@@ -123,6 +123,11 @@ function fixture(cap: Cap = "CAP03", options: Readonly<{ detail?: boolean; perio
   const dispose = render(() => createComponent(PlatformProvider, {
     value: { platform: "web", openExternal() {}, async restart() {}, async notify() {} },
     get children() { return createComponent(LanguageProvider, { locale: "en", get children() {
+      // Establish this fixture\'s language through the real owner after persistence hydration.
+      const language = useLanguage()
+      language.setLocale("en")
+      expect(language.locale()).toBe("en")
+      expect(language.intl()).toBe("en")
       return createComponent(DialogProvider, { get children() { return createComponent(SfTeamWebApp, {}) } })
     } }) },
   }), host)
