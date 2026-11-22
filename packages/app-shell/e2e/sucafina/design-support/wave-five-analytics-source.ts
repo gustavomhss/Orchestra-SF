@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test"
 import { waveFourDecisionsData } from "./wave-four-decisions-data"
-import { array, controls, object, sourceText, type AnalyticsOwner } from "./wave-five-analytics"
+import { array, controls, object, readPortfolio, sourceText, type AnalyticsOwner } from "./wave-five-analytics"
 
 export const parameterizedTitle = "Design test data · Regional monthly amount hypothesis"
 
@@ -74,6 +74,48 @@ export async function prepareParameterizedScenario(page: Page, owner: AnalyticsO
   expect(published).toHaveLength(1)
   expect(published[0]!.ref).toBe(sourceText(receipt.resultRef))
   expect(array(published[0]!.parameters).map(object)).toEqual([expect.objectContaining({ ref: targetRef })])
-  return { selected, scenarioRef: sourceText(published[0]!.ref), alternativeId: sourceText(accepted[0]!.id),
-    baselineAlternativeId: sourceText(baseline!.id), parameterRef: targetRef, parameterValue: amount.value as number }
+  const currentDecision = object(selected.decision)
+  const portfolioCriteria = array(currentDecision.criteria).map((entry) => sourceText(object(entry).id))
+  expect(portfolioCriteria.length).toBeGreaterThan(0)
+  const selectionInput = { caseRef: object(selected.caseRef),
+    baselineAlternativeId: sourceText(baseline!.id), alternativeId: sourceText(candidate!.id),
+    criteria: portfolioCriteria }
+  const comparisonBefore = object(await readPortfolio(page, owner, "decision-compare", selectionInput))
+  const scenarioRefs = array(object(comparisonBefore.request).scenarioRefs).map(sourceText)
+  const currentScenarios = array(selected.scenarios).map(object)
+  expect(scenarioRefs).toEqual([
+    sourceText(currentScenarios.find((entry) => entry.alternativeId === baseline!.id)?.ref),
+    sourceText(currentScenarios.find((entry) => entry.alternativeId === candidate!.id)?.ref),
+  ])
+  expect(object(comparisonBefore.comparison).comparisonStatus).toBe("conditioned")
+  expect(object(comparisonBefore.comparison).completeDifference).toBeNull()
+  // This new isolated fixture has never called decision-select-portfolio. The
+  // original CAS alone decides whether version zero is still valid. There is
+  // no retry, version reset or replacement of an existing human selection.
+  // The legacy UI names decision-portfolio-selection, but this installed HTTP
+  // composition exposes no handler for that read. register() itself returns
+  // its canonical read() after checking the persisted selection.
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "portfolio-selection-fixture-basis",
+    initialVersion: 0, basis: "new-isolated-fixture-with-no-prior-registration",
+    caseVersion: object(selected.caseRef).version, criteriaCount: portfolioCriteria.length }))
+  const registered = object(await readPortfolio(page, owner, "decision-select-portfolio", {
+    ...selectionInput, expectedVersion: 0,
+  }))
+  expect(registered).toEqual(expect.objectContaining({ schema: "sf-portfolio-selection-v1",
+    ...selectionInput, version: 1, baselineRef: scenarioRefs[0], alternativeRef: scenarioRefs[1] }))
+  expect(sourceText(registered.selectionRef)).toMatch(/^portfolio-selection:/)
+  expect(sourceText(registered.selectionDigest)).toMatch(/^[a-f0-9]{64}$/)
+  const readback = object((await controls(page, owner, reference)).selected)
+  expect(readback.caseRef).toEqual(selected.caseRef)
+  expect(object(readback.decision).alternatives).toEqual(currentDecision.alternatives)
+  expect(object(readback.decision).choices).toEqual(currentDecision.choices)
+  const comparisonAfter = object(await readPortfolio(page, owner, "decision-compare", selectionInput))
+  expect(comparisonAfter).toEqual(comparisonBefore)
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "portfolio-selection-registered-readback",
+    status: "ok", selectionVersion: registered.version, caseVersion: object(registered.caseRef).version,
+    originalAlternativePairMatched: true, originalCriteriaMatched: true, currentComparisonUnchanged: true,
+    acquisition: "original-register-canonical-read-then-controls-and-comparison" }))
+  return { selected: readback, scenarioRef: sourceText(published[0]!.ref), alternativeId: sourceText(accepted[0]!.id),
+    baselineAlternativeId: sourceText(baseline!.id), parameterRef: targetRef, parameterValue: amount.value as number,
+    portfolioCriteria }
 }
