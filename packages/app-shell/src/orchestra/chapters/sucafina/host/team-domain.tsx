@@ -79,8 +79,12 @@ export function createSfTeamDomainOwner(options: Readonly<{
   onAccessRevoked?: () => void
 }>) {
   const [store, setStore] = createStore<{ state: SfContextState<SfTeamContext>; generation: number }>({
-    state: { status: "resolving", selection: sfTeamDomainSelection(options.initial.binding) }, generation: 0,
+    state: Object.freeze({ status: "resolving", selection: sfTeamDomainSelection(options.initial.binding) }), generation: 0,
   })
+  // A closed wire DTO must not acquire Solid store symbols merely because a
+  // consumer reads state.context. Replace immutable state variants wholesale;
+  // the original context/binding and their exact identity stay outside proxies.
+  const publish = (state: SfContextState<SfTeamContext>) => setStore("state", Object.freeze(state))
   let disposed = false
   let authority: SfTeamDomainSession | undefined
   let pending: AbortController | undefined
@@ -110,7 +114,7 @@ export function createSfTeamDomainOwner(options: Readonly<{
     if (disposed || !authority && store.state.status === "resolving") return
     drafts?.quarantine()
     stop()
-    setStore("state", { status: "resolving", selection: store.state.selection })
+    publish({ status: "resolving", selection: store.state.selection })
   }
   const retire = (reason: Retirement) => {
     if (disposed) return
@@ -122,7 +126,7 @@ export function createSfTeamDomainOwner(options: Readonly<{
       if (reason === "revoked" && dirty) options.onAccessRevoked?.()
     }
     stop()
-    setStore("state", { status: reason === "revoked" ? "denied" : "resolving", selection: store.state.selection })
+    publish({ status: reason === "revoked" ? "denied" : "resolving", selection: store.state.selection })
   }
   const dependencies: SfDraftDependencies<SfTeamContext> = {
     createDraft: createSfDraft,
@@ -145,11 +149,11 @@ export function createSfTeamDomainOwner(options: Readonly<{
     drafts?.quarantine()
     stop()
     const selection = sfTeamDomainSelection(input.binding)
-    setStore("state", { status: "resolving", selection })
+    publish({ status: "resolving", selection })
     if (!validSession(input) || !parentCurrent(input)) {
       drafts?.revoke("authority-changed")
       drafts = undefined
-      setStore("state", { status: "context-mismatch", selection })
+      publish({ status: "context-mismatch", selection })
       return
     }
     authority = input
@@ -189,14 +193,14 @@ export function createSfTeamDomainOwner(options: Readonly<{
           drafts = undefined
           options.onAccessRevoked?.()
         }
-        setStore("state", denied ? { status: "denied", selection } : { status: "unavailable", selection, reason: "network" })
+        publish(denied ? { status: "denied", selection } : { status: "unavailable", selection, reason: "network" })
         return
       }
     } else drafts = createSfOwnerDrafts(dependencies, incoming)
     if (!live(input, epoch) || !drafts) return
     admitted = input
     access = Object.freeze({ context: input.context, transport, drafts: drafts.registry })
-    setStore("state", { status: "ready", selection, ownerKey: key, owner: identity,
+    publish({ status: "ready", selection, ownerKey: key, owner: identity,
       binding: input.binding, context: input.context })
   }
   const handle: SfContextHandle<SfTeamContext> = Object.freeze({

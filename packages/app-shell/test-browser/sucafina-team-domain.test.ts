@@ -377,6 +377,7 @@ test("unadapted legacy consumers fail closed while the explicit readable hook pr
   let dispose: (() => void) | undefined
   try {
     await owner.activate(current)
+    expect(owner.handle.ready()?.context).toBe(current.context)
     dispose = render(() => createComponent(SfContextHandleProvider, { value: owner.handle, get children() {
       return createComponent(() => {
         observed.legacy = useSfContext()
@@ -386,6 +387,13 @@ test("unadapted legacy consumers fail closed while the explicit readable hook pr
     } }), host)
     expect(observed.legacy?.state()).toMatchObject({ status: "unavailable", reason: "contract-mismatch" })
     expect(observed.legacy?.ready()).toBeUndefined()
+    expect(Schema.is(SfTeamContext)(current.context)).toBe(true)
+    expect(Schema.is(SfTeamInstallationDescriptor)(current.binding)).toBe(true)
+    const state = observed.readable?.state()
+    expect(state?.status).toBe("ready")
+    if (state?.status !== "ready") throw new Error("Expected unchanged admitted Team state")
+    expect(state.context).toBe(current.context)
+    expect(state.binding).toBe(current.binding)
     expect(observed.readable?.ready()?.context).toBe(current.context)
     expect(observed.readable?.ready()?.context.contractRevision).toBe("sf-team-profile/1")
     expect(observed.legacy?.generation()).toBe(observed.readable?.generation())
