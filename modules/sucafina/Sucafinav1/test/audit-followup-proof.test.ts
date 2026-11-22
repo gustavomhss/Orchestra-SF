@@ -146,7 +146,7 @@ async function fixture() {
   const create = async () => {
     const context = await read("questioner")
     const reference = ok(await records.issue({ page: "All Projects", recordType: "projects", recordId: "project", fields: ["name", "status"], period }, context))
-    const draft = { kind: "question" as const, sourceRef: reference.refId, sourceIncarnation: reference.target.incarnation, observedVersion: reference.target.version, period, recipientRef: "recipient", body: "Please check the selected project.", evidenceRefs: [reference] }
+    const draft = { kind: "clarification" as const, sourceRef: reference.refId, sourceIncarnation: reference.target.incarnation, observedVersion: reference.target.version, period, recipientRef: "recipient", body: "Please check the selected project.", evidenceRefs: [reference] }
     const mutation = { expectedStorageVersion: 0, idempotencyKey: "create-question" }
     const thread = await withHuman("questioner", "collaboration.thread.create", { draft, mutation }, (call) => collaboration.threads.create(draft, mutation, call))
     const version = ok(await collaboration.storageVersion("threads", await read("recipient")))
