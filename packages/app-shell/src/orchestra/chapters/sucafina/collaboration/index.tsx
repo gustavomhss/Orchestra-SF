@@ -31,7 +31,15 @@ function useCopy() {
   // No local English fallback is used for copy; absent registration remains an
   // integration blocker rather than an invented text source.
   const key = (value: keyof typeof SF_S05_COPY | SfSharedCopyKey) => language.t(value as Key)
-  const message = (value: SfMessage) => language.t(value.key as Key, value.params)
+  const message = (value: SfMessage) => {
+    const text = language.t(value.key as Key, value.params)
+    const kind = value.params?.kind
+    // These two frozen labels predate the double-brace global template format.
+    // Resolve only their named field; preserve all other copy and literal data.
+    return kind !== undefined && (value.key === "sf.s05.relations.observedKind" || value.key === "sf.u44.observedKind")
+      ? text.replace("{kind}", () => String(kind))
+      : text
+  }
   const text = (value: SfText) => value.kind === "data" ? value.text : message(value.message)
   return { key, message, text }
 }
