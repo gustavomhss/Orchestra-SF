@@ -1,7 +1,7 @@
 {
   "schema": "orchestra-sf.go-live-preparation.v1",
   "recordKind": "PREPARATION_STATUS_WITH_COMPONENT_EXECUTION_REFERENCES",
-  "observedAtUtc": "2026-11-22T17:39:16Z",
+  "observedAtUtc": "2026-11-22T19:01:12Z",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "readiness-reconciliation",
   "base": {
@@ -88,23 +88,25 @@
         "httpStatus": 404,
         "status": "NOT_OBSERVABLE"
       },
-      "githubSettingsBrowser": "SIGNED_OUT",
+      "githubSettingsBrowser": "SIGNED_OUT_AT_PRIOR_OBSERVATION_NOT_RECHECKED_IN_ATTEMPT_2",
       "desktopInventory": {
         "devicesObserved": 1,
         "platform": "macOS",
         "online": false,
-        "readOnly": true
+        "lastSeenHoursAgo": 110,
+        "readOnly": true,
+        "observedAtUtc": "2026-11-22T18:52:11Z"
       },
       "runId": 45036787201,
-      "jobId": 137252212765,
+      "jobId": 137315104950,
       "artifact": {
-        "id": 14760385059,
-        "zipBytes": 877,
-        "zipSha256": "672b98c1718bd66d97375571724981108db9fdbabcba08d634b13764dce01a64",
+        "id": 14766939588,
+        "zipBytes": 876,
+        "zipSha256": "d9bb7a22cafa22777560af42821dbb11ea643a35458f5dc07858d4fc83bc36c7",
         "independentlyDownloadedAndHashVerified": true,
         "crcVerified": true
       },
-      "receiptSha256": "4ec3f609af032496424ad7bd76c37828e157b4d848ff1a02a4a4f5dd20b72864",
+      "receiptSha256": "ee9d5d941754ae9da9804e2fa569ef89712a8aafa7ee7f64a4189b276dc02de5",
       "metadataSha256": "d4f3caee711ec59696ab32a27fb7c206f8118bc45637bacd6c5ac51dc96f028f",
       "reservationConfirmed": false,
       "guestObserved": false,
@@ -114,11 +116,73 @@
       "toolingPullRequests": [
         666,
         671
-      ]
-    }
+      ],
+      "observedAtUtc": "2026-11-22T18:49:36.173494Z",
+      "attempt": 2,
+      "actor": "gustavomhss",
+      "triggeringActor": "gustavomhss",
+      "githubSettingsBrowserCheckedThisAttempt": false
+    },
+    "discoveryHistory": [
+      {
+        "status": "BLOCKED_BEFORE_AZURE_LOGIN",
+        "environment": "azure-mvp",
+        "environmentExists": true,
+        "protectionPoliciesObserved": [],
+        "azureVariablesObservedEmptyAtPrelogin": [
+          "AZURE_CLIENT_ID",
+          "AZURE_TENANT_ID",
+          "AZURE_SUBSCRIPTION_ID",
+          "AZURE_RESOURCE_GROUP"
+        ],
+        "azureLogin": "SKIPPED",
+        "azureArmCommandsExecuted": false,
+        "runnerInventory": {
+          "httpStatus": 403,
+          "status": "NOT_OBSERVABLE"
+        },
+        "variableNames": {
+          "httpStatus": 403,
+          "status": "NOT_OBSERVABLE"
+        },
+        "branchPolicy": {
+          "httpStatus": 404,
+          "status": "NOT_OBSERVABLE"
+        },
+        "githubSettingsBrowser": "SIGNED_OUT",
+        "desktopInventory": {
+          "devicesObserved": 1,
+          "platform": "macOS",
+          "online": false,
+          "readOnly": true
+        },
+        "runId": 45036787201,
+        "jobId": 137252212765,
+        "artifact": {
+          "id": 14760385059,
+          "zipBytes": 877,
+          "zipSha256": "672b98c1718bd66d97375571724981108db9fdbabcba08d634b13764dce01a64",
+          "independentlyDownloadedAndHashVerified": true,
+          "crcVerified": true
+        },
+        "receiptSha256": "4ec3f609af032496424ad7bd76c37828e157b4d848ff1a02a4a4f5dd20b72864",
+        "metadataSha256": "d4f3caee711ec59696ab32a27fb7c206f8118bc45637bacd6c5ac51dc96f028f",
+        "reservationConfirmed": false,
+        "guestObserved": false,
+        "installedQualification": false,
+        "inferenceLimit": "Acesso/configuração não observados pelo caminho tentado; não comprova ausência de infraestrutura, donos ou reservas. Nenhum parâmetro privado histórico foi publicado.",
+        "priorOperationalRun": 45036258206,
+        "toolingPullRequests": [
+          666,
+          671
+        ],
+        "attempt": 1,
+        "recordedAtUtc": "2026-11-22T17:39:16Z"
+      }
+    ]
   },
   "coordination": {
-    "currentReleaseOwner": null,
+    "currentReleaseOwner": "Astra go-live — coordenação e execução autorizada da rota G07",
     "serverOwnerClaim": {
       "owner": "Astra go-live",
       "scope": "G05 proof transport and CI only",
@@ -135,7 +199,7 @@
     },
     "installedRunnerOwnerClaim": {
       "owner": "Astra go-live",
-      "scope": "Nove oráculos Teams e contratos originais integrados por #665; UI/factory #689/#690, AZ02 #685/#692/#695. CAP03/jornadas #691/#693/#694 pendentes; nenhuma reserva ou prova instalada afirmada.",
+      "scope": "Nine Teams oracles, original CAP03/native/F04/AZ02, restart observer, concrete context-registration CLI, original provenance and complete11-invocation coordinator integrated.99 installed obligations remain NOT_RUN.",
       "pullRequests": [
         644,
         659,
@@ -148,7 +212,12 @@
         695,
         691,
         693,
-        694
+        694,
+        697,
+        699,
+        700,
+        701,
+        698
       ]
     },
     "requests": [
@@ -257,9 +326,44 @@
           "mergeCommit": "5ba96127750f15fe221daebfc0635466997b69d6",
           "currentPolicyFollowup": 677
         }
+      },
+      {
+        "target": "Migração: composição final e diagnóstico recebido, preservando writer ativo",
+        "pr": 673,
+        "commentId": 7083841900,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7083841900",
+        "status": "INDEPENDENT_INTAKE_RECEIVED_FINAL_COMPOSITION_AND_ACK_PENDING"
       }
     ],
     "latestRead": {
+      "observedAtUtc": "2026-11-22T19:01:12Z",
+      "channels": [
+        628,
+        613,
+        673,
+        691,
+        693,
+        694,
+        697,
+        698,
+        699,
+        700,
+        701
+      ],
+      "apiAvailable": true,
+      "newFinalCandidateAcknowledgementsFound": false,
+      "operationalReservationsConfirmed": false,
+      "meaning": "All front-owned CAP03/native/restart/registration/provenance/coordinator components are merged. Migration and #613 retain active qualification work. No final C/T, two ACKs, operator, tar or reservations confirmed."
+    },
+    "integrationCoordinator": "Astra go-live",
+    "migrationWriter": {
+      "owner": "focal_migration",
+      "pullRequest": 673,
+      "scope": "Intake e fechamento de G01–G04/pool; provas por fonte, sem ACK final presumido.",
+      "claimRef": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7081090598"
+    },
+    "releaseCoordinator": "Astra go-live — mandato ampliado; operador real e ACK para C/T ainda pendentes",
+    "previousRead": {
       "observedAtUtc": "2026-11-22T17:39:16Z",
       "channels": [
         628,
@@ -282,28 +386,13 @@
       "operationalReservationsConfirmed": false,
       "meaning": "Merges e recibos de componente recebidos; Migração e #613 pendentes. C/T final, dois ACKs, operador, tar e reservas não confirmados."
     },
-    "integrationCoordinator": "Astra go-live",
-    "migrationWriter": {
-      "owner": "focal_migration",
-      "pullRequest": 673,
-      "scope": "Intake e fechamento de G01–G04/pool; provas por fonte, sem ACK final presumido.",
-      "claimRef": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7081090598"
-    },
-    "releaseCoordinator": "Astra go-live — mandato ampliado; operador real e ACK para C/T ainda pendentes",
-    "previousRead": {
-      "observedAtUtc": "2026-11-22T15:56:12Z",
-      "channels": [
-        628,
-        665,
-        669,
-        672,
-        673,
-        674
-      ],
-      "apiAvailable": true,
-      "newFinalCandidateAcknowledgementsFound": false,
-      "operationalReservationsConfirmed": false,
-      "meaning": "Resultados focados #665, intake #673 e merge dependente #675 conferidos. A integração em dev e findings Web/corpo vazio seguem pendentes; sem C/T final ou reserva."
+    "releaseExecutionIdentity": {
+      "coordinator": "Astra go-live",
+      "observedGithubActor": "gustavomhss",
+      "observedTriggeringActor": "gustavomhss",
+      "reference": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055970646",
+      "role": "OBSERVED_COMPONENT_WORKFLOW_IDENTITY_NOT_FINAL_BUILD_ACK",
+      "scope": "The effective operator for B and its original authorization will be bound after the final candidate is available; this record is not the future producer receipt."
     }
   },
   "gates": [
@@ -325,11 +414,12 @@
         "g05-work-proof-2026-11-22",
         "g06-microsoft-followup-2026-11-22",
         "g06-native-import-followup-2026-11-22",
-        "http-current-2026-11-22"
+        "http-current-2026-11-22",
+        "cap03-reader-client-2026-11-22"
       ],
-      "firstBlocker": "Concluir os recortes restantes, fixar C/T confirmado por Migração e Release e executar o inventário completo de HTTP/isolamento sobre esse candidato.",
+      "firstBlocker": "Concluir a composição de produto sob o writer da Migração, confirmar C/T com Migração+Release e reexecutar o inventário completo HTTP/coverage/auth/effect/isolamento no candidato final.",
       "remaining": [
-        "Os achados Web/JSON estão integrados por #665/#688; repetir coverage/auth/effect e isolamento Team sobre C/T final, reconciliando o inventário corrente.",
+        "Fronteiras Web/JSON e CAP03 readonly estão integradas por #665/#688/#693. Reexecutar o inventário HTTP/isolamento completo no C/T confirmado, sem herdar recibo de componente.",
         "Conservar recibos completos, hashes, veredito Omni real, cleanup e aceite explicitamente vinculado ao candidato efetivo."
       ],
       "closure": "Recibos de coverage, auth, effect e isolamento Microsoft/Team aprovados no mesmo C/T final, com inventário completo, HTTP real e limpeza observados.",
@@ -637,6 +727,57 @@
             "verified": true
           },
           "g08Closed": false
+        },
+        {
+          "id": "cap03-reader-client",
+          "pullRequest": 693,
+          "status": "COMPONENT_PASS_MERGED_NOT_INSTALLED",
+          "sourceSha": "821b7eb010a5010c0e642b08f03096cefd4c1b4d",
+          "sourceTree": "442cd93456a74daf16e36264a6d17387aaa839ff",
+          "mergeCommit": "70e3228cf2dbbe2ba1723ea4044ed855864dd516",
+          "mergeTree": "31b574107792dcac752ef8d633f7f683abc1ae98",
+          "runId": 45051010616,
+          "runAttempt": 1,
+          "jobId": 137295893621,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45051010616",
+          "artifact": {
+            "id": 14766250203,
+            "zipBytes": 15734,
+            "zipSha256": "703e236eb96aff4a395e8cf0897a82e1f50b4312dd119463eb7a14063a8b7445",
+            "receiptSha256": "e3b100fc77df82f9741e0fc6ce1c0360475f58878dae095919775a9af8721c87",
+            "independentlyAcquiredByThisFront": true,
+            "acquisitionReference": "https://github.com/gustavomhss/Orchestra-SF/pull/693"
+          },
+          "counts": {
+            "bun": 67,
+            "assertions": 67031,
+            "guards": 78,
+            "changedPaths": 9,
+            "failures": 0,
+            "skips": 0
+          },
+          "reviewIds": [
+            6013557636,
+            6013588969
+          ],
+          "scope": "Original CAP03 readonly reader, Client, Team factory and OIDC; policy enforces readonly on Client and server.",
+          "priorAttempts": [
+            {
+              "run": 45049761737,
+              "status": "failure",
+              "reason": "Five oracle/seeding expectations against the original producer."
+            },
+            {
+              "run": 45050387628,
+              "status": "failure",
+              "reason": "67 tests/types/guards passed; receipt refused the omitted original Client Omni preload.",
+              "artifact": 14765168886
+            }
+          ],
+          "installedQualification": false,
+          "finalCandidateApproval": false,
+          "formalGateApproval": false,
+          "productionCutover": false
         }
       ]
     },
@@ -662,7 +803,7 @@
       "firstBlocker": "Pin conjunto C/T e reexecução completa da seleção v3 sobre o candidato integrado; prova da instalação Microsoft não herdada de componente.",
       "coverageGap": null,
       "remaining": [
-        "Concluir os recortes restantes e confirmar C/T final com Migração/Release; #677 já integra a política privada corrente.",
+        "Concluir a composição/pin final com Migração+Release. Política corrente e Imports privados já estão integrados; o verde ClamD do B4 permanece específico daquela fonte.",
         "Executar teams-profile-scanner-v3 / controls-with-imports completo: oito legados, três Microsoft/Team, caso G05 com 11 controles e quatro Imports, em seis arquivos.",
         "Conferir scanner real, payload inválido após staging, autoridade/isolamento, armazenamento, limite de intake, indisponibilidade e cleanup; conferir artefato/recibos originais.",
         "Conservar a distinção entre local-operator, Microsoft/Graph controlados e instalação real; nenhum resultado atual aprova o gate final."
@@ -1008,11 +1149,12 @@
       "evidenceRefs": [
         "entra-prod-package-reference",
         "g07-work-proof-2026-11-22",
-        "g07-release-route-followup-2026-11-22"
+        "g07-release-route-followup-2026-11-22",
+        "operational-inventory-recheck-2026-11-22"
       ],
-      "firstBlocker": "Rota admitida disponível; faltam C/T final, dois ACKs reais anteriores ao produtor e operador confirmado.",
+      "firstBlocker": "Rota admitida e coordenação/execução atribuídas a Astra. Faltam C/T final e dois ACKs originais anteriores ao produtor; B vinculará o operador GitHub efetivo.",
       "remaining": [
-        "Confirmar C/T, papéis e operador real; vincular ACKs originais e, quando textual, attestation técnica sf-g07-pin-attestation-v1.",
+        "Confirmar C/T e os dois papéis de ACK; vincular o operador GitHub efetivo em B e a attestation sf-g07-pin-attestation-v1 quando a fonte for textual. O mandato de execução já é desta frente.",
         "Criar B imutável distinto de C e release-build-<B> exatamente em C; admitir antes de build e revalidar imediatamente antes do tar original.",
         "Após o artefato, criar Q e g07-qualify-<Q> em C, ou dispatch admitido; verificar ZIP/tar/proveniência pelo instalador original de C.",
         "Vincular os mesmos bytes, manifesto/roster/factory e observações instaladas a G08/G10; sem reconstrução entre gates."
@@ -1127,16 +1269,26 @@
         "native-ui-current-2026-11-22",
         "native-factory-current-2026-11-22",
         "az02-ledger-current-2026-11-22",
-        "az02-refusal-current-2026-11-22"
+        "az02-refusal-current-2026-11-22",
+        "cap03-reader-client-2026-11-22",
+        "cap03-team-ui-2026-11-22",
+        "native-journeys-f04-2026-11-22",
+        "az02-original-restart-observer-2026-11-22",
+        "original-native-registration-2026-11-22",
+        "original-producer-provenance-2026-11-22",
+        "native-original-refusal-lifecycle-2026-11-22",
+        "complete-installed-g08-coordinator-2026-11-22",
+        "operational-inventory-recheck-2026-11-22"
       ],
-      "firstBlocker": "Concluir CAP03 e jornadas #691/#693/#694, receber composição final e pin C/T, tar, reserva e contextos Microsoft reais.",
+      "firstBlocker": "Código de preparação integrado. Faltam composição final aprovada, C/T/ACKs, tar G07 verificado e reserva/host/contextos Microsoft reais para11 invocações originais e agregação posterior.",
       "remaining": [
-        "Concluir CAP03 e U15/U39/U40/F04 preservando os contratos integrados #665/#677/#685/#688/#689/#690/#692/#695; a contagem de preparação não é execução instalada.",
+        "Usar os executores originais já integrados: CAP03 #691/#693,50 jornadas/F04 #694, restart #697, correção de lifecycle #699, registro #700, proveniência #701 e coordenador #698. Controles de preparação não fecham G08.",
         "Confirmar reserva exclusiva, operador, quatro contextos Microsoft originais e autorização de logout, disable/restore e fixtures Session descartáveis.",
         "Instalar os mesmos bytes do tar G07 e executar as nove obrigações Teams, U15(6), U39(22), U40(22), F04(3) e a prova operacional AZ02 atual de37 casos em seis fases(16/14/2/2/2/1).",
         "Conservar os32 IDs históricos AZ02 e os dois remapeamentos explícitos; o ledger#692 exige as cinco adições e a recusa#695 não aceita ausência de prova.",
         "Conservar recovery como papel de G10; nove casos/cinco grupos não fecham o agregado G01–G10.",
-        "Preservar aceite222(2) no QA original, sem promoção para outro tar; recuperar o backlink."
+        "Preservar aceite222(2) no QA original, sem promoção para outro tar; recuperar o backlink.",
+        "Executar o workflow canônico g08-installed-complete:99 obrigações em11 produtores completos, depois agregação separada com arquivos privados originais, ZIPs do GitHub e atestação posterior de cleanup vinculada."
       ],
       "closure": "Homologação real comprovada no tar G07 instalado; evidência sanitizada e cleanup concluído.",
       "workProof": {
@@ -1745,11 +1897,433 @@
           "priorRun": 45049330296,
           "liveQualified": false,
           "g08Closed": false
+        },
+        {
+          "id": "cap03-reader-client",
+          "pullRequest": 693,
+          "status": "COMPONENT_PASS_MERGED_NOT_INSTALLED",
+          "sourceSha": "821b7eb010a5010c0e642b08f03096cefd4c1b4d",
+          "sourceTree": "442cd93456a74daf16e36264a6d17387aaa839ff",
+          "mergeCommit": "70e3228cf2dbbe2ba1723ea4044ed855864dd516",
+          "mergeTree": "31b574107792dcac752ef8d633f7f683abc1ae98",
+          "runId": 45051010616,
+          "runAttempt": 1,
+          "jobId": 137295893621,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45051010616",
+          "artifact": {
+            "id": 14766250203,
+            "zipBytes": 15734,
+            "zipSha256": "703e236eb96aff4a395e8cf0897a82e1f50b4312dd119463eb7a14063a8b7445",
+            "receiptSha256": "e3b100fc77df82f9741e0fc6ce1c0360475f58878dae095919775a9af8721c87",
+            "independentlyAcquiredByThisFront": true,
+            "acquisitionReference": "https://github.com/gustavomhss/Orchestra-SF/pull/693"
+          },
+          "counts": {
+            "bun": 67,
+            "assertions": 67031,
+            "guards": 78,
+            "changedPaths": 9,
+            "failures": 0,
+            "skips": 0
+          },
+          "reviewIds": [
+            6013557636,
+            6013588969
+          ],
+          "scope": "Original CAP03 readonly reader, Client, Team factory and OIDC; policy enforces readonly on Client and server.",
+          "priorAttempts": [
+            {
+              "run": 45049761737,
+              "status": "failure",
+              "reason": "Five oracle/seeding expectations against the original producer."
+            },
+            {
+              "run": 45050387628,
+              "status": "failure",
+              "reason": "67 tests/types/guards passed; receipt refused the omitted original Client Omni preload.",
+              "artifact": 14765168886
+            }
+          ],
+          "installedQualification": false,
+          "finalCandidateApproval": false,
+          "formalGateApproval": false,
+          "productionCutover": false
+        },
+        {
+          "id": "cap03-team-ui",
+          "pullRequest": 691,
+          "status": "COMPONENT_PASS_MERGED_NOT_INSTALLED",
+          "sourceSha": "ba91c39e5cd2f9fdbe3851007f7e3b4915477bbe",
+          "sourceTree": "8025be39e4893eebafd6586e08de3dc1a052b386",
+          "deliveryHead": "894c291bf6ddd47b49eaa886682f58d6b0fa9e68",
+          "deliveryTree": "26a9596704f116d404638c2231ba75289e0c1486",
+          "snapshotSha": "fb4241a7c56d97b4aba87e4245b9aeafb86dafa1",
+          "snapshotTree": "7d84cb5495fee4750dc680126fee924a3e213491",
+          "mergeCommit": "7e3e5e2bfd24f2efe8f424a298e31e071763061f",
+          "mergeTree": "31b99aaa0d9aef1957968ff039f83be31a2e7055",
+          "runId": 45050299263,
+          "runAttempt": 1,
+          "jobId": 137293705151,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45050299263",
+          "artifact": {
+            "id": 14765380985,
+            "zipBytes": 12110,
+            "zipSha256": "56e6304778605ae849ecbb78135cf86c0d608d835388076a1c75f057c36c3cde",
+            "receiptSha256": "6ad8476ddabbfca922a172b4256802601a23f9fdb90ea42e508c55cd08c4b6db",
+            "independentlyAcquiredByThisFront": true,
+            "acquisitionReference": "https://github.com/gustavomhss/Orchestra-SF/pull/691"
+          },
+          "counts": {
+            "bun": 79,
+            "assertions": 1501,
+            "guards": 78,
+            "changedPaths": 7,
+            "failures": 0,
+            "skips": 0
+          },
+          "reviewIds": [
+            6013568757,
+            6013591884
+          ],
+          "scope": "Original CAP03 UI and period port through Team. Qualified composition is delivery D plus the exact Client blob integrated by #693.",
+          "priorAttempts": [
+            {
+              "run": 45049910608,
+              "status": "failure",
+              "passed": 77,
+              "total": 79,
+              "reason": "Two stale test locators; corrected to the original details.code, product blobs unchanged."
+            }
+          ],
+          "installedQualification": false,
+          "finalCandidateApproval": false,
+          "formalGateApproval": false,
+          "productionCutover": false
+        },
+        {
+          "id": "native-journeys-f04",
+          "pullRequest": 694,
+          "status": "COMPONENT_PASS_MERGED_NOT_INSTALLED",
+          "sourceSha": "4c717ad9cda1af474802728248e3b9a2129ad134",
+          "sourceTree": "029b696c9d68d59abebc86564818a6d9b895e778",
+          "mergeCommit": "9804ee30848580787cc7e556d4a26269b3960656",
+          "mergeTree": "43028ea5b24246ca3b864b1e42c4a66b892b8814",
+          "runId": 45051200489,
+          "runAttempt": 1,
+          "jobId": 137296482968,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45051200489",
+          "artifact": {
+            "id": 14765527423,
+            "zipBytes": 9884,
+            "zipSha256": "9a6f4ea5233a1c43a9360e1751b49acd50cc70111280dbc945b9b280be82f198",
+            "receiptSha256": "8ff1f5d7e94b7789c4d9c35e607ad09b9a3aaaf99d128de7b7832b07919d54fd",
+            "independentlyAcquiredByThisFront": true,
+            "acquisitionReference": "https://github.com/gustavomhss/Orchestra-SF/pull/694"
+          },
+          "counts": {
+            "node": 40,
+            "bun": 25,
+            "assertions": 82,
+            "guards": 78,
+            "changedPaths": 30,
+            "failures": 0,
+            "skips": 0
+          },
+          "reviewIds": [
+            6013574321,
+            6013595065
+          ],
+          "scope": "Restores all 50 native obligations and three original F04 titles; original close/detach attempts all owned pages and retains failure. 50 LISTED_NOT_RUN and F04 NOT_RUN.",
+          "priorAttempts": [
+            {
+              "run": 45050117406,
+              "status": "failure",
+              "reason": "Node and Bun controls passed; eight type errors."
+            },
+            {
+              "run": 45050931067,
+              "status": "superseded_success",
+              "reason": "Superseded by the complete owned-page cleanup/detach correction."
+            }
+          ],
+          "installedQualification": false,
+          "finalCandidateApproval": false,
+          "formalGateApproval": false,
+          "productionCutover": false
+        },
+        {
+          "id": "az02-original-restart-observer",
+          "pullRequest": 697,
+          "status": "COMPONENT_PASS_MERGED_NOT_INSTALLED",
+          "sourceSha": "5b9e1734130792e3ad33b43689c69785596344ad",
+          "sourceTree": "55b151e7176bdbc807e01c4f34130761e374caf7",
+          "mergeCommit": "19fbe6542cdcc27139082c28acbc01bf070d60bd",
+          "mergeTree": "3cc2f840609b729742842f6ac4ac71603f4d2ea4",
+          "runId": 45052572893,
+          "runAttempt": 1,
+          "jobId": 137300735185,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45052572893",
+          "artifact": {
+            "id": 14766247497,
+            "zipBytes": 5420,
+            "zipSha256": "4060ee76c4587b39823541325d1cd2191cf49e57977363e6e320b36b8571cca5",
+            "receiptSha256": "ad79f5f70e23cca71f2e5ae8255a490c468c6e47bb5062d8df6b9b01ffa2bc86",
+            "independentlyAcquiredByThisFront": true,
+            "acquisitionReference": "https://github.com/gustavomhss/Orchestra-SF/pull/697"
+          },
+          "counts": {
+            "node": 42,
+            "python": 49,
+            "guards": 78,
+            "changedPaths": 3,
+            "failures": 0,
+            "skips": 0
+          },
+          "reviewIds": [
+            6013658815
+          ],
+          "scope": "Read-only after-restart observer binds original AZ02 watcher, old/new process and hostId, unchanged factory/tar/placement and revoked cookie. Does not restart a service.",
+          "priorAttempts": [
+            {
+              "run": 45052237890,
+              "status": "failure",
+              "reason": "Controls and guards passed; receipt expected TAP while Node reporter was spec."
+            }
+          ],
+          "installedQualification": false,
+          "finalCandidateApproval": false,
+          "formalGateApproval": false,
+          "productionCutover": false
+        },
+        {
+          "id": "original-native-registration",
+          "pullRequest": 700,
+          "status": "COMPONENT_PASS_MERGED_NOT_INSTALLED",
+          "sourceSha": "9991d8bb4df736f6d4abcab195a4f4138d7c339c",
+          "sourceTree": "fe76ef383c9bc379a8fd75372cf190a8259252f9",
+          "snapshotSha": "584280d79db91ffe7b1680ff4a8fd1a826575616",
+          "mergeCommit": "327e95d552fa6edc742f8b87bc19efb0ca6a1dd6",
+          "mergeTree": "b3da19c2ffcaaf60a0958c1d0840dd638ef71088",
+          "runId": 45055263348,
+          "runAttempt": 1,
+          "jobId": 137308970818,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055263348",
+          "artifact": {
+            "id": 14767152786,
+            "zipBytes": 15581,
+            "zipSha256": "76f4d9de9adac066d3af4bd8140d48797b859d01cd7b709d1b136ac6e9b9ea3d",
+            "receiptSha256": "7c6d0db484ffc444e19befff9fdb8af834e94cc2802c9e7decd6406584a9c7cc",
+            "independentlyAcquiredByThisFront": true,
+            "acquisitionReference": "https://github.com/gustavomhss/Orchestra-SF/pull/700"
+          },
+          "counts": {
+            "node": 40,
+            "bun": 42,
+            "dom": 21,
+            "bunAssertions": 151,
+            "domAssertions": 332,
+            "guards": 78,
+            "changedPaths": 25,
+            "failures": 0,
+            "skips": 0
+          },
+          "reviewIds": [
+            6013743307,
+            6013758503
+          ],
+          "scope": "Concrete original Microsoft context registration CLI, additive G08 manifest with strict historical v2 preserved, native F01/producer ID/CAS, real CAP14 Edit route, cleanup before REGISTERED_ONLY_NOT_EXECUTED.",
+          "priorAttempts": [
+            {
+              "run": 45053544699,
+              "status": "failure",
+              "reason": "Original controls passed; new adapter tests could not resolve @playwright/test from script root.",
+              "artifact": 14766556642
+            },
+            {
+              "run": 45053821703,
+              "status": "failure",
+              "reason": "40Node/42Bun/21DOM and AppShell/Client types passed; native types failed from literals and type-only UI graph.",
+              "artifact": 14767165149
+            },
+            {
+              "run": 45054388379,
+              "status": "failure",
+              "reason": "Native type-only barrel still reached UI ambient declarations; literal contract extraction repaired it.",
+              "artifact": 14766597996
+            }
+          ],
+          "installedQualification": false,
+          "finalCandidateApproval": false,
+          "formalGateApproval": false,
+          "productionCutover": false
+        },
+        {
+          "id": "original-producer-provenance",
+          "pullRequest": 701,
+          "status": "COMPONENT_PASS_MERGED_NOT_INSTALLED",
+          "sourceSha": "7800bec785c859580aec8e043ae5f18ab33ec8f3",
+          "sourceTree": "e410878956c9dbee907bb624d21b7578e70e225c",
+          "mergeCommit": "5cf8419032b544b3252b00bdee39afdbb366ffa6",
+          "mergeTree": "70e7a7097d531b7fa28badc9a1cc4f4fa2643b8d",
+          "runId": 45055493019,
+          "runAttempt": 1,
+          "jobId": 137309680512,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055493019",
+          "artifact": {
+            "id": 14767462255,
+            "zipBytes": 7906,
+            "zipSha256": "bf6dd3642e07f2f5bcb46549e29c53650a2e4ccaaffcf0f1189d6fbe1f2d1fe7",
+            "receiptSha256": "034fa8f81a7d6fe3dc6bcaf1f4aabb10df37b17fe8dd48efb183707fde35a0fb",
+            "independentlyAcquiredByThisFront": true,
+            "acquisitionReference": "https://github.com/gustavomhss/Orchestra-SF/pull/701"
+          },
+          "counts": {
+            "bun": 128,
+            "guards": 78,
+            "changedPaths": 3,
+            "failures": 0,
+            "skips": 0
+          },
+          "reviewIds": [
+            6013758249,
+            6013765513
+          ],
+          "scope": "Original source authorization before job started_at, canonical driver/step chain, original run/job/artifact ZIP CRC and bytes, pending/queued compatibility observed from the actual API. Cleanup is explicit operator attestation, not automatic observation.",
+          "priorAttempts": [
+            {
+              "run": 45053828016,
+              "status": "superseded_success",
+              "count": 89,
+              "artifact": 14766259816
+            },
+            {
+              "run": 45054963632,
+              "status": "superseded_success",
+              "count": 125,
+              "artifact": 14767560351,
+              "reason": "Admission was updated to accept the original pending API state with null timestamps; previous result not inherited."
+            }
+          ],
+          "installedQualification": false,
+          "finalCandidateApproval": false,
+          "formalGateApproval": false,
+          "productionCutover": false
+        },
+        {
+          "id": "native-original-refusal-lifecycle",
+          "pullRequest": 699,
+          "status": "COMPONENT_PASS_MERGED_NOT_INSTALLED",
+          "sourceSha": "217e9806f08491b6f286a8a5a3c36891bb17ae6a",
+          "sourceTree": "88a02263d9d2cfceb299b92f00664d46e44438c0",
+          "snapshotSha": "bbb008d964a6d3be6dfeb9a7bae7377824d679d0",
+          "snapshotTree": "1ebf525ef9799d2fb16f78089c1b299e48af2ab3",
+          "mergeCommit": "47fa6b594ce91058671d55a7104e1ed0264975c2",
+          "mergeTree": "21fdcc30251b6de524ecd3786760d82f2c823ea4",
+          "runId": 45055028234,
+          "runAttempt": 1,
+          "jobId": 137308231059,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055028234",
+          "artifact": {
+            "id": 14766813193,
+            "zipBytes": 11339,
+            "zipSha256": "6a45164f265f3f7e939ae5af20a744eac4a9ce7f85bc3fe6e5614d75aded7bd8",
+            "receiptSha256": "eb55a4598da125a61b3a9891d4a5f6f332ae23ea0a5d77e5374022eb360d8b42",
+            "independentlyAcquiredByThisFront": false,
+            "acquisitionReference": "https://github.com/gustavomhss/Orchestra-SF/pull/699#issuecomment-7083631349"
+          },
+          "counts": {
+            "node": 40,
+            "bun": 54,
+            "assertions": 188,
+            "guards": 78,
+            "changedPaths": 4,
+            "failures": 0,
+            "skips": 0
+          },
+          "reviewIds": [
+            6013672850,
+            6013736442,
+            6013737059
+          ],
+          "scope": "Original JSON denial and held/lost lifecycle; direct original SfUiState type import. Delivered and merged by the separate active owner. Composition preserves its runtime plus the #700 Pick type;24 other #700 blobs unchanged.",
+          "priorAttempts": [
+            {
+              "run": 45053502100,
+              "status": "failure",
+              "reason": "40Node/54Bun passed; native type imports failed; inventory/guards skipped."
+            }
+          ],
+          "installedQualification": false,
+          "finalCandidateApproval": false,
+          "formalGateApproval": false,
+          "productionCutover": false
+        },
+        {
+          "id": "complete-installed-g08-coordinator",
+          "pullRequest": 698,
+          "status": "COMPONENT_PASS_MERGED_NOT_INSTALLED",
+          "sourceSha": "03a8c8ab88d3dddff6524a4c3ccd39ac1250140e",
+          "sourceTree": "4e425fa9278be05e0018bc64d25c06f5417363b2",
+          "snapshotSha": "c4074d907f93d7c35f7dfbf109c70ef7103408b4",
+          "snapshotTree": "5bbad2d5c618a224e4acfbadc8aec252c689a41d",
+          "mergeCommit": "b7776698e61934ed2cb820658408ff8a8207ec62",
+          "mergeTree": "364344c376a4feb35245d8089bde1941d025ebf9",
+          "runId": 45055970646,
+          "runAttempt": 1,
+          "jobId": 137311147143,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055970646",
+          "artifact": {
+            "id": 14767840186,
+            "zipBytes": 9994,
+            "zipSha256": "2ce21877b759f1d4b0c3ae8ef824cc6ae5decbe8582544adfc1e7e4337414cf4",
+            "receiptSha256": "b2f2edf093dc584d6a74a3aeab65d49af47c6cc808ee914b1437b8099434f586",
+            "independentlyAcquiredByThisFront": true,
+            "acquisitionReference": "https://github.com/gustavomhss/Orchestra-SF/pull/698"
+          },
+          "counts": {
+            "node": 254,
+            "bun": 5,
+            "originalPrivate": 150,
+            "aggregate": 104,
+            "guards": 78,
+            "changedPaths": 7,
+            "failures": 0,
+            "skips": 0
+          },
+          "reviewIds": [
+            6013676046,
+            6013780071,
+            6013786667
+          ],
+          "scope": "Eleven original invocations,99 obligations; exact plan/tar/reservation/VM/process/actors/cookie continuity, original native registration bytes, complete reports, original completed producer chain and cleanup attestation. Actual #700 imports and #701 canonical YAML validated. No installed dispatch.",
+          "priorAttempts": [
+            {
+              "run": 45052772637,
+              "status": "superseded_success",
+              "count": 223,
+              "artifact": 14765339185
+            },
+            {
+              "run": 45053365211,
+              "status": "failure",
+              "reason": "Driver-only literal tree typo failed before tests/output; no artifact."
+            },
+            {
+              "run": 45053404197,
+              "status": "superseded_success",
+              "count": 240,
+              "artifact": 14766119628
+            }
+          ],
+          "installedQualification": false,
+          "finalCandidateApproval": false,
+          "formalGateApproval": false,
+          "productionCutover": false
         }
       ],
       "futureDomainDelivery": {
-        "status": "CAP14_CAP04_CAP05_CAP25_COMPONENTS_IN_DEV_CAP03_AND_JOURNEYS_PENDING",
-        "scope": "#689/#690 integrated original Team leaves/factory; #685 CAP25; #691/#693 CAP03 and #694 original installed journeys still pending at this observation. Every installed group remains NOT_RUN."
+        "status": "CAP03_NATIVE_REGISTRATION_PROVENANCE_AND_COMPLETE_COORDINATOR_IN_DEV",
+        "scope": "All required preparation code is integrated. Presence and behavior in the final candidate/tar and real contexts remain admission and installed execution obligations."
       },
       "currentOperationalInventory": {
         "teamsCases": 9,
@@ -1770,7 +2344,11 @@
           ]
         },
         "allInstalledStates": "NOT_RUN",
-        "complete": false
+        "complete": false,
+        "originalInvocations": 11,
+        "totalObligations": 99,
+        "coordinator": "script/sf-ci/g08-installed-evidence.mjs",
+        "workflow": ".github/workflows/g08-installed-complete.yml"
       }
     },
     {
@@ -1792,7 +2370,8 @@
         "g10-clone-followup-2026-11-22",
         "g10-logical-checkpoint-policy-2026-11-22",
         "checkpoint-decoder-integration-2026-11-22",
-        "policy-checkpoint-current-2026-11-22"
+        "policy-checkpoint-current-2026-11-22",
+        "operational-inventory-recheck-2026-11-22"
       ],
       "firstBlocker": "Checkpoint/recovery, decoder e política corrente estão em dev; faltam C/T final, tar e reservas/atores/chave/observador para o ensaio.",
       "remaining": [
@@ -2507,6 +3086,137 @@
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45050173497",
       "scope": "Original JSON denials required; missing-selector400 retains JSON media contract. Reader/projection original, controlled transport and identity. #685 original source ba521 was merged before repair; this PR is the sole incremental correction.",
       "finalCandidateApproval": false
+    },
+    {
+      "id": "cap03-reader-client-2026-11-22",
+      "kind": "SOURCE_BOUND_COMPONENT_EXECUTION_REFERENCE",
+      "pullRequest": 693,
+      "sourceSha": "821b7eb010a5010c0e642b08f03096cefd4c1b4d",
+      "sourceTree": "442cd93456a74daf16e36264a6d17387aaa839ff",
+      "runId": 45051010616,
+      "detailsGate": "G05",
+      "detailsProofId": "cap03-reader-client",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45051010616",
+      "scope": "Original CAP03 readonly reader, Client, Team factory and OIDC; policy enforces readonly on Client and server.",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "cap03-team-ui-2026-11-22",
+      "kind": "SOURCE_BOUND_COMPONENT_EXECUTION_REFERENCE",
+      "pullRequest": 691,
+      "sourceSha": "ba91c39e5cd2f9fdbe3851007f7e3b4915477bbe",
+      "sourceTree": "8025be39e4893eebafd6586e08de3dc1a052b386",
+      "runId": 45050299263,
+      "detailsGate": "G08",
+      "detailsProofId": "cap03-team-ui",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45050299263",
+      "scope": "Original CAP03 UI and period port through Team. Qualified composition is delivery D plus the exact Client blob integrated by #693.",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "native-journeys-f04-2026-11-22",
+      "kind": "SOURCE_BOUND_COMPONENT_EXECUTION_REFERENCE",
+      "pullRequest": 694,
+      "sourceSha": "4c717ad9cda1af474802728248e3b9a2129ad134",
+      "sourceTree": "029b696c9d68d59abebc86564818a6d9b895e778",
+      "runId": 45051200489,
+      "detailsGate": "G08",
+      "detailsProofId": "native-journeys-f04",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45051200489",
+      "scope": "Restores all 50 native obligations and three original F04 titles; original close/detach attempts all owned pages and retains failure. 50 LISTED_NOT_RUN and F04 NOT_RUN.",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "az02-original-restart-observer-2026-11-22",
+      "kind": "SOURCE_BOUND_COMPONENT_EXECUTION_REFERENCE",
+      "pullRequest": 697,
+      "sourceSha": "5b9e1734130792e3ad33b43689c69785596344ad",
+      "sourceTree": "55b151e7176bdbc807e01c4f34130761e374caf7",
+      "runId": 45052572893,
+      "detailsGate": "G08",
+      "detailsProofId": "az02-original-restart-observer",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45052572893",
+      "scope": "Read-only after-restart observer binds original AZ02 watcher, old/new process and hostId, unchanged factory/tar/placement and revoked cookie. Does not restart a service.",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "original-native-registration-2026-11-22",
+      "kind": "SOURCE_BOUND_COMPONENT_EXECUTION_REFERENCE",
+      "pullRequest": 700,
+      "sourceSha": "9991d8bb4df736f6d4abcab195a4f4138d7c339c",
+      "sourceTree": "fe76ef383c9bc379a8fd75372cf190a8259252f9",
+      "runId": 45055263348,
+      "detailsGate": "G08",
+      "detailsProofId": "original-native-registration",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055263348",
+      "scope": "Concrete original Microsoft context registration CLI, additive G08 manifest with strict historical v2 preserved, native F01/producer ID/CAS, real CAP14 Edit route, cleanup before REGISTERED_ONLY_NOT_EXECUTED.",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "original-producer-provenance-2026-11-22",
+      "kind": "SOURCE_BOUND_COMPONENT_EXECUTION_REFERENCE",
+      "pullRequest": 701,
+      "sourceSha": "7800bec785c859580aec8e043ae5f18ab33ec8f3",
+      "sourceTree": "e410878956c9dbee907bb624d21b7578e70e225c",
+      "runId": 45055493019,
+      "detailsGate": "G08",
+      "detailsProofId": "original-producer-provenance",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055493019",
+      "scope": "Original source authorization before job started_at, canonical driver/step chain, original run/job/artifact ZIP CRC and bytes, pending/queued compatibility observed from the actual API. Cleanup is explicit operator attestation, not automatic observation.",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "native-original-refusal-lifecycle-2026-11-22",
+      "kind": "SOURCE_BOUND_COMPONENT_EXECUTION_REFERENCE",
+      "pullRequest": 699,
+      "sourceSha": "217e9806f08491b6f286a8a5a3c36891bb17ae6a",
+      "sourceTree": "88a02263d9d2cfceb299b92f00664d46e44438c0",
+      "runId": 45055028234,
+      "detailsGate": "G08",
+      "detailsProofId": "native-original-refusal-lifecycle",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055028234",
+      "scope": "Original JSON denial and held/lost lifecycle; direct original SfUiState type import. Delivered and merged by the separate active owner. Composition preserves its runtime plus the #700 Pick type;24 other #700 blobs unchanged.",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "complete-installed-g08-coordinator-2026-11-22",
+      "kind": "SOURCE_BOUND_COMPONENT_EXECUTION_REFERENCE",
+      "pullRequest": 698,
+      "sourceSha": "03a8c8ab88d3dddff6524a4c3ccd39ac1250140e",
+      "sourceTree": "4e425fa9278be05e0018bc64d25c06f5417363b2",
+      "runId": 45055970646,
+      "detailsGate": "G08",
+      "detailsProofId": "complete-installed-g08-coordinator",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055970646",
+      "scope": "Eleven original invocations,99 obligations; exact plan/tar/reservation/VM/process/actors/cookie continuity, original native registration bytes, complete reports, original completed producer chain and cleanup attestation. Actual #700 imports and #701 canonical YAML validated. No installed dispatch.",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "operational-inventory-recheck-2026-11-22",
+      "kind": "ORIGINAL_READ_ONLY_OPERATIONAL_OBSERVATION",
+      "runId": 45036787201,
+      "attempt": 2,
+      "jobId": 137315104950,
+      "sourceSha": "c3d7f8eb6716db2e05ec33f4269b734793bd3d9e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45036787201/attempts/2",
+      "artifact": {
+        "id": 14766939588,
+        "zipBytes": 876,
+        "zipSha256": "d9bb7a22cafa22777560af42821dbb11ea643a35458f5dc07858d4fc83bc36c7",
+        "independentlyDownloadedAndHashVerified": true,
+        "crcVerified": true
+      },
+      "receiptSha256": "ee9d5d941754ae9da9804e2fa569ef89712a8aafa7ee7f64a4189b276dc02de5",
+      "status": "BLOCKED_BEFORE_AZURE_LOGIN",
+      "invalidConfigurationKeys": [
+        "AZURE_CLIENT_ID",
+        "AZURE_TENANT_ID",
+        "AZURE_SUBSCRIPTION_ID",
+        "AZURE_RESOURCE_GROUP"
+      ],
+      "installedQualification": false,
+      "finalCandidateApproval": false,
+      "productionCutover": false
     }
   ],
   "migrationObservations": [
@@ -2840,6 +3550,105 @@
       "evidenceAcquisition": "All six logs and11 ZIPs received before changes by owning front; SHA256/CRC, five execution bindings and pool admission verified. Coordination read primary receipt; no independent ZIP reacquisition claimed.",
       "selectionNote": "Canonical file manifest regrouped selections after composition; same job selectors. New97/156/140 counts do not retroactively replace80/64/98. Original planner-runtime52 includes monthly restart/restore/edit/legacy controls.",
       "finalCandidateAcknowledgement": null
+    },
+    {
+      "observedAtUtc": "2026-11-22T18:40:04Z",
+      "pullRequest": 673,
+      "sourceSha": "9612e7db0319c41ea0161e3924f332d9d76b0f9b",
+      "sourceTree": "b1dc4bdc3b4a73667e9ee8011667616565d2f9bc",
+      "driverSha": "f0b23434280e368f221cf43bd9709c0303d4326d",
+      "runId": 45055109181,
+      "jobs": [
+        {
+          "id": 137308483355,
+          "name": "static-and-contracts",
+          "conclusion": "failure",
+          "failedStage": "E2E inclusion"
+        },
+        {
+          "id": 137308483582,
+          "name": "Decisions",
+          "conclusion": "failure"
+        }
+      ],
+      "intakeStatus": "INDEPENDENT_FRONT_INTAKE_COMPLETE_OWNER_DELTA_PENDING",
+      "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7083612625",
+      "priorOperations": {
+        "sourceSha": "bf1c680d03c85a1b4974401a9be8a7c4bf43e281",
+        "runId": 45051170458,
+        "passed": 5,
+        "total": 5,
+        "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7083227030"
+      },
+      "notFinalCandidate": true,
+      "counts": {
+        "decisions": {
+          "pass": 3,
+          "fail": 2,
+          "skip": 0,
+          "timeoutMilliseconds": 180000
+        },
+        "e2eInclusion": {
+          "declaredEntries": 96,
+          "compilerFiles": 6323,
+          "diagnostics": 2
+        },
+        "guards": {
+          "originDevWarnings": 47,
+          "prBaseWarnings": 69,
+          "errorAnnotations": 0
+        }
+      },
+      "findings": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+          "code": "TS2322",
+          "observed": "Promise<Disposable> assigned to Promise<void>",
+          "knownFixIn699or700": false
+        },
+        {
+          "path": "packages/app-shell/tsconfig.sf-e2e.json",
+          "code": "TS2339",
+          "observed": "Original desktop env.d.ts absent; Window.api declaration not in compiler input",
+          "knownFixIn699or700": false
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+          "observed": "Response-only CDP promise has no terminal failure/Page-close observation; final root cause unresolved."
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14767512752,
+          "bytes": 14133,
+          "zipSha256": "d2a4e7f3ff8f398dbfeabc0316a287ec502b1af71ff104610da020757683fbde"
+        },
+        {
+          "id": 14767093444,
+          "bytes": 4170,
+          "zipSha256": "ed4e9efc787f50af5322070bab3705bf9d236283728f93774c5e7d8038b598fa"
+        },
+        {
+          "id": 14766784241,
+          "bytes": 536566,
+          "zipSha256": "b0125538d2c26f8b65e1047ac23224cf09a0dd766c90bff7ff3b38a7a0d0e5a7"
+        },
+        {
+          "id": 14766749952,
+          "bytes": 150090,
+          "zipSha256": "3d0d12083f981eec210654207a1b589a93ee7719d6681e0944df4a5e9bcb0297"
+        }
+      ],
+      "frontIntakeReference": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7083841900",
+      "ownerIntakeReference": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7083818853",
+      "teardown": {
+        "observedFixtureOwnedChildDisposeMilliseconds": [
+          112,
+          170
+        ],
+        "addressInUseObserved": false,
+        "scope": "Original owner intake of the two timeout cases on9612; does not qualify functional comparisons."
+      }
     }
   ],
   "review": {
@@ -2866,15 +3675,23 @@
       "G10 #669/#674: logical capture is separate from independent approval; restore uses current persistent policy and stable revision. Decoder checkpoint delivered by #675 into #665, not yet dev; full integration remains pending.",
       "G05 #665/#688: actual Web-byte cap, empty JSON handler distinction, typed stream overflow and unread-body SyntaxError preserve original Request and cancel at the boundary.",
       "G05/G06/G10 #677: current persistent private policy and fresh final fences; EOF terminal result settles before cleanup. Final58-case composition passed.",
-      "AZ02 #695: an arbitrary401/403 cannot prove denial; original JSON status is mandatory, and missing-selectors400 retains JSON media. Nine new controls preserve37 operational obligations."
+      "AZ02 #695: an arbitrary401/403 cannot prove denial; original JSON status is mandatory, and missing-selectors400 retains JSON media. Nine new controls preserve37 operational obligations.",
+      "Documentation: #694 source tree corrected against the original Git object; all eight new delivery/source/merge tree pairs will be checked by the documentation driver.",
+      "Documentation: superseded #665/CAP/native delivery statements placed in historical scope; design collector state and profile metadata separated from qualification.",
+      "Documentation: prior browser sign-out is explicitly not a fresh observation in Azure attempt2."
     ],
-    "documentReview": "Esta atualização de três documentos aguarda revisão independente e guards Actions vinculados ao head publicado; a metadata original da PR registrará o resultado, sem SHA autorreferente.",
+    "documentReview": {
+      "kind": "ORIGINAL_PR_METADATA_REQUIRED",
+      "status": "REVIEW_AND_ACTIONS_NOT_ANTICIPATED_IN_THIS_SNAPSHOT",
+      "scope": "Eight existing documentation paths: seven go-live ledger/runbooks plus installed native README. Product, workflows, migration-intake and #613 remain outside this documentation change."
+    },
     "previousDocumentReview": "Independent review of the current follow-up completed. Evidence catalog, publication metadata, complete G05 receipt obligations, cleanup scope, G10 count and Playwright-only invocation wording corrected; no material finding remaining.",
     "documentReviewHistory": [
       {
         "observedAtUtc": "2026-11-22T15:56:12Z",
         "text": "Revisão independente G07/G10 e G08 concluída sem pendências materiais após correções; revisão inicial da coordenação em README/status/execution sem erro material. Guards finais vinculados ao head exato pela metadata da PR #676."
-      }
+      },
+      "Esta atualização de três documentos aguarda revisão independente e guards Actions vinculados ao head publicado; a metadata original da PR registrará o resultado, sem SHA autorreferente."
     ]
   },
   "executionThisFront": {
@@ -2914,7 +3731,28 @@
       45047908103,
       45048657019,
       45049330296,
-      45050173497
+      45050173497,
+      45049761737,
+      45050387628,
+      45051010616,
+      45049910608,
+      45050299263,
+      45050117406,
+      45050931067,
+      45051200489,
+      45052237890,
+      45052572893,
+      45053544699,
+      45053821703,
+      45054388379,
+      45055263348,
+      45053828016,
+      45054963632,
+      45055493019,
+      45052772637,
+      45053365211,
+      45053404197,
+      45055970646
     ],
     "testInventoryScope": "Selected current/superseded runs. Exact sources and scopes are recorded per proof; G08 was tested on explicit composition. No result is promoted to final C/T.",
     "buildsStarted": [],
@@ -2947,7 +3785,15 @@
       689,
       690,
       692,
-      695
+      695,
+      693,
+      691,
+      694,
+      697,
+      700,
+      701,
+      699,
+      698
     ],
     "executionEnvironmentScope": "GitHub-hosted ephemeral component jobs; no reserved installed QA/recovery host was mutated.",
     "buildsStartedScope": "Production/release artifact builds; test setup and component fixtures are recorded with their runs.",
@@ -2955,20 +3801,7 @@
       45036258206,
       45036787201
     ],
-    "preparedCodePendingIntegration": [
-      {
-        "pullRequest": 691,
-        "scope": "CAP03 original UI"
-      },
-      {
-        "pullRequest": 693,
-        "scope": "CAP03 original reader/client/factory"
-      },
-      {
-        "pullRequest": 694,
-        "scope": "Original installed native journeys and private registration"
-      }
-    ],
+    "preparedCodePendingIntegration": [],
     "coordinatedExternalRuns": [
       45039523637,
       45039881113,
@@ -2981,7 +3814,10 @@
       45049241686,
       45049839950,
       45049352072,
-      45043532716
+      45043532716,
+      45055028234,
+      45055109181,
+      45054997790
     ],
     "branchIntegratedComponents": [
       {
@@ -2995,33 +3831,60 @@
           "mergeCommit": "5ba96127750f15fe221daebfc0635466997b69d6"
         }
       }
+    ],
+    "readOnlyOperationalAttempts": [
+      {
+        "runId": 45036787201,
+        "attempt": 2,
+        "jobId": 137315104950,
+        "sourceSha": "c3d7f8eb6716db2e05ec33f4269b734793bd3d9e",
+        "conclusion": "failure",
+        "scope": "Original read-only inventory rerun; failed before Azure login; no ARM or guest command executed."
+      }
     ]
   },
   "overall": {
-    "preparation": "REVIEWED_COMPONENTS_IN_DEV_MIGRATION_DESIGN_FINAL_QUALIFICATION_AND_OPERATIONAL_ACCESS_PENDING",
+    "preparation": "FRONT_COMPONENTS_MERGED_MIGRATION_DESIGN_FINAL_PIN_TAR_AND_ISOLATED_EXECUTIONS_PENDING",
     "qualifiedFinalGates": 0,
     "requiredFinalGates": 5,
     "goNoGoReadiness": "NOT_READY",
     "formalProductionDecision": null
   },
   "publication": {
-    "branch": "readiness-components",
+    "branch": "go-live-receipts",
     "recordKind": "PR_PUBLICATION_REFERENCE",
-    "scope": "Exactly three existing go-live documents: status.json, README.md and execution-2026-11-22.md. migration-intake.json, runbooks and product paths remain with their owners.",
-    "sourceIdentitySource": "Exact source/tree, Actions driver, guard receipt, independent review and merge are bound by the original PR metadata; no self-referential SHA.",
-    "stateSource": "Read the live PR metadata; this snapshot does not claim a future review or merge.",
-    "baseSha": "9db779820a54d251890b399c7f97ed99b333e228",
-    "baseTree": "b0e17cdcc1a88348399e1d1254bd306ac8235504"
+    "scope": "Eight existing documentation paths: seven go-live ledger/runbooks plus installed native README. Product, workflows, migration-intake and #613 remain outside this documentation change.",
+    "sourceIdentitySource": "Exact source/tree, Actions driver, guard receipt, independent review and merge are read from original PR metadata; no self-referential SHA.",
+    "stateSource": "This snapshot does not anticipate its review, CI or merge.",
+    "baseSha": "b7776698e61934ed2cb820658408ff8a8207ec62",
+    "baseTree": "364344c376a4feb35245d8089bde1941d025ebf9",
+    "validationHistory": [
+      {
+        "sourceSha": "4379c2a4b63d336f38905c5faf9fb531b2b0b7da",
+        "sourceTree": "f9d0058a161253cf3d9d2cc60bd8e703d1ed190e",
+        "snapshotSha": "62781e09d436e2dfc7a7f2ae67c077a7cf459ebc",
+        "runId": 45057722525,
+        "jobId": 137316568096,
+        "status": "failure",
+        "reason": "New blank line at native README EOF; git diff --check refused before setup/guards/validation.",
+        "artifact": {
+          "id": 14768425567,
+          "zipBytes": 485,
+          "zipSha256": "33d32060ef32232a541d6b3e4c8e7fffcea9f92bc9dd822dbfaf159934cd0ebf"
+        },
+        "positiveReceiptProduced": false
+      }
+    ]
   },
   "latestDevObserved": {
-    "sha": "9db779820a54d251890b399c7f97ed99b333e228",
-    "tree": "b0e17cdcc1a88348399e1d1254bd306ac8235504",
-    "observedAtUtc": "2026-11-22T17:39:16Z",
+    "sha": "b7776698e61934ed2cb820658408ff8a8207ec62",
+    "tree": "364344c376a4feb35245d8089bde1941d025ebf9",
+    "observedAtUtc": "2026-11-22T19:01:12Z",
     "notFinalCandidate": true
   },
   "integrationObservation": {
     "state": "COMPONENTS_MERGED_FINAL_QUALIFICATION_PENDING",
-    "observedAtUtc": "2026-11-22T17:39:16Z",
+    "observedAtUtc": "2026-11-22T19:01:12Z",
     "merges": [
       {
         "pullRequest": 665,
@@ -3084,6 +3947,78 @@
         "sourceSha": "ba521f92c5464dc9bee50223e8d3b4ea1b235c0a",
         "mergeCommit": "0fa4778b559963e0f3e7c60051060844d362e796",
         "repairPullRequest": 695
+      },
+      {
+        "pullRequest": 693,
+        "sourceSha": "821b7eb010a5010c0e642b08f03096cefd4c1b4d",
+        "sourceTree": "442cd93456a74daf16e36264a6d17387aaa839ff",
+        "qualifiedSourceSha": "821b7eb010a5010c0e642b08f03096cefd4c1b4d",
+        "qualifiedSourceTree": "442cd93456a74daf16e36264a6d17387aaa839ff",
+        "mergeCommit": "70e3228cf2dbbe2ba1723ea4044ed855864dd516",
+        "mergeTree": "31b574107792dcac752ef8d633f7f683abc1ae98"
+      },
+      {
+        "pullRequest": 691,
+        "sourceSha": "894c291bf6ddd47b49eaa886682f58d6b0fa9e68",
+        "sourceTree": "26a9596704f116d404638c2231ba75289e0c1486",
+        "qualifiedSourceSha": "ba91c39e5cd2f9fdbe3851007f7e3b4915477bbe",
+        "qualifiedSourceTree": "8025be39e4893eebafd6586e08de3dc1a052b386",
+        "mergeCommit": "7e3e5e2bfd24f2efe8f424a298e31e071763061f",
+        "mergeTree": "31b99aaa0d9aef1957968ff039f83be31a2e7055"
+      },
+      {
+        "pullRequest": 694,
+        "sourceSha": "4c717ad9cda1af474802728248e3b9a2129ad134",
+        "sourceTree": "029b696c9d68d59abebc86564818a6d9b895e778",
+        "qualifiedSourceSha": "4c717ad9cda1af474802728248e3b9a2129ad134",
+        "qualifiedSourceTree": "029b696c9d68d59abebc86564818a6d9b895e778",
+        "mergeCommit": "9804ee30848580787cc7e556d4a26269b3960656",
+        "mergeTree": "43028ea5b24246ca3b864b1e42c4a66b892b8814"
+      },
+      {
+        "pullRequest": 697,
+        "sourceSha": "5b9e1734130792e3ad33b43689c69785596344ad",
+        "sourceTree": "55b151e7176bdbc807e01c4f34130761e374caf7",
+        "qualifiedSourceSha": "5b9e1734130792e3ad33b43689c69785596344ad",
+        "qualifiedSourceTree": "55b151e7176bdbc807e01c4f34130761e374caf7",
+        "mergeCommit": "19fbe6542cdcc27139082c28acbc01bf070d60bd",
+        "mergeTree": "3cc2f840609b729742842f6ac4ac71603f4d2ea4"
+      },
+      {
+        "pullRequest": 700,
+        "sourceSha": "9991d8bb4df736f6d4abcab195a4f4138d7c339c",
+        "sourceTree": "fe76ef383c9bc379a8fd75372cf190a8259252f9",
+        "qualifiedSourceSha": "9991d8bb4df736f6d4abcab195a4f4138d7c339c",
+        "qualifiedSourceTree": "fe76ef383c9bc379a8fd75372cf190a8259252f9",
+        "mergeCommit": "327e95d552fa6edc742f8b87bc19efb0ca6a1dd6",
+        "mergeTree": "b3da19c2ffcaaf60a0958c1d0840dd638ef71088"
+      },
+      {
+        "pullRequest": 701,
+        "sourceSha": "7800bec785c859580aec8e043ae5f18ab33ec8f3",
+        "sourceTree": "e410878956c9dbee907bb624d21b7578e70e225c",
+        "qualifiedSourceSha": "7800bec785c859580aec8e043ae5f18ab33ec8f3",
+        "qualifiedSourceTree": "e410878956c9dbee907bb624d21b7578e70e225c",
+        "mergeCommit": "5cf8419032b544b3252b00bdee39afdbb366ffa6",
+        "mergeTree": "70e7a7097d531b7fa28badc9a1cc4f4fa2643b8d"
+      },
+      {
+        "pullRequest": 699,
+        "sourceSha": "217e9806f08491b6f286a8a5a3c36891bb17ae6a",
+        "sourceTree": "88a02263d9d2cfceb299b92f00664d46e44438c0",
+        "qualifiedSourceSha": "217e9806f08491b6f286a8a5a3c36891bb17ae6a",
+        "qualifiedSourceTree": "88a02263d9d2cfceb299b92f00664d46e44438c0",
+        "mergeCommit": "47fa6b594ce91058671d55a7104e1ed0264975c2",
+        "mergeTree": "21fdcc30251b6de524ecd3786760d82f2c823ea4"
+      },
+      {
+        "pullRequest": 698,
+        "sourceSha": "03a8c8ab88d3dddff6524a4c3ccd39ac1250140e",
+        "sourceTree": "4e425fa9278be05e0018bc64d25c06f5417363b2",
+        "qualifiedSourceSha": "03a8c8ab88d3dddff6524a4c3ccd39ac1250140e",
+        "qualifiedSourceTree": "4e425fa9278be05e0018bc64d25c06f5417363b2",
+        "mergeCommit": "b7776698e61934ed2cb820658408ff8a8207ec62",
+        "mergeTree": "364344c376a4feb35245d8089bde1941d025ebf9"
       }
     ],
     "resolvedReviewFindings": [
@@ -3121,27 +4056,29 @@
     "remainingProductIntegration": [
       {
         "pullRequest": 673,
-        "scope": "G01–G04/pool: three shards PASS; Decisions/Operations/pool unresolved on latest focal."
+        "sourceSha": "9612e7db0319c41ea0161e3924f332d9d76b0f9b",
+        "sourceTree": "b1dc4bdc3b4a73667e9ee8011667616565d2f9bc",
+        "scope": "G01–G04/pool active Migration writer. Latest Decisions3/5 with2 original180s timeouts; static E2E inclusion has2 type diagnostics. Independent intake delivered; source repairs and final composition pending. Operations5/5 remains historical on bf1; original pool replay without overlay still required.",
+        "sourceRole": "LAST_RECEIVED_FOCAL_NOT_PROMISE_OF_LATEST_BRANCH_HEAD"
       },
       {
         "pullRequest": 613,
-        "scope": "12/15 qualified; UI42/43/44 installed qualification pending."
-      },
-      {
-        "pullRequest": 691,
-        "scope": "Original CAP03 Budget UI/Team navigation."
-      },
-      {
-        "pullRequest": 693,
-        "scope": "Original CAP03 reader/client/factory/OIDC."
-      },
-      {
-        "pullRequest": 694,
-        "scope": "Original U15/U39/U40/F04 installed journeys and private registration tooling."
+        "sourceSha": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+        "scope": "Separate owner,12/15 design areas; C17 diagnostic CPU run45054997790 has an artifact but failed and does not qualify UI42/UI43/UI44."
       }
     ],
     "finalCandidateAcknowledgement": null,
-    "scopeLimit": "All component receipts remain bound to their tested source/tree. No replay of the final candidate, installed Microsoft qualification, final tar or production decision is implied."
+    "scopeLimit": "All component receipts remain bound to their tested source/tree. No replay of the final candidate, installed Microsoft qualification, final tar or production decision is implied.",
+    "compositionReadback": {
+      "mergeCommit": "47fa6b594ce91058671d55a7104e1ed0264975c2",
+      "nativeFaultBlob": "cd2d599b6ee3d14fda83bb7986cca5f72ea16fa2",
+      "producerBlob": "0ceceb218a6b88d27bc4304f1c7b863a012b40a6",
+      "historicalV2Blob": "122a31917565d2de51ba63e646cc20000c239670",
+      "preserved700Blobs": 24,
+      "total700Blobs": 25,
+      "sharedResolution": "The whole #699 response-faults file plus only the reviewed Pick<NativeManifest,target> type of #700; no runtime dropped.",
+      "qualification": "STATIC_READBACK_NOT_NEW_EXECUTION"
+    }
   },
   "ownershipHistory": [
     {
@@ -3399,6 +4336,139 @@
         "observedAtUtc": "2026-11-22T15:56:12Z",
         "notFinalCandidate": true
       }
+    },
+    {
+      "observedAtUtc": "2026-11-22T17:39:16Z",
+      "integrationObservation": {
+        "state": "COMPONENTS_MERGED_FINAL_QUALIFICATION_PENDING",
+        "observedAtUtc": "2026-11-22T17:39:16Z",
+        "merges": [
+          {
+            "pullRequest": 665,
+            "sourceSha": "f8981f8051edfc3647a368af44cbc41563680c2e",
+            "sourceTree": "cf39e663858f92d39a5649bb2f3e6c05e3bafbef",
+            "mergeCommit": "5ba96127750f15fe221daebfc0635466997b69d6",
+            "mergeTree": "38034fa8c000a93072846cfb91617161ccdbb47f",
+            "includes": [
+              672,
+              675,
+              678,
+              680,
+              681,
+              683,
+              686,
+              687
+            ]
+          },
+          {
+            "pullRequest": 677,
+            "sourceSha": "edadc608f10fd52c79197028f2b47de65fdfa7eb",
+            "sourceTree": "94241727e5eb88aaf4d985d2acf7f38105bdd566",
+            "mergeCommit": "5d0d3973a21b02df954e0e5cf31afe103960c23d",
+            "mergeTree": "94241727e5eb88aaf4d985d2acf7f38105bdd566"
+          },
+          {
+            "pullRequest": 689,
+            "sourceSha": "0f0373159f04528ed74bf500b55dd311ae0c23d9",
+            "sourceTree": "427647475aef83d71be1ec2487bd2ee94e79cb74",
+            "mergeCommit": "428cb9f93c59288d299f57dc70ed93566eda6ec1"
+          },
+          {
+            "pullRequest": 690,
+            "sourceSha": "482367ec13c073f73bec859a676e05d14e8f319b",
+            "sourceTree": "1aea8ae8f5538b16d6a973b693d1d161e9a99936",
+            "mergeCommit": "d9194fc04428da9a6c0ebf348e84633968f77b51",
+            "mergeTree": "1aea8ae8f5538b16d6a973b693d1d161e9a99936"
+          },
+          {
+            "pullRequest": 688,
+            "sourceSha": "33ba3d151bf523b17767e7030e7e6c0670d4b361",
+            "sourceTree": "271bce30b5694c96eac4b9d96a888a23104ba64c",
+            "mergeCommit": "2fdc76d8b40cd62c2da4967a5b9533411af308df"
+          },
+          {
+            "pullRequest": 692,
+            "sourceSha": "aff2fead9c9df28b725282a2d2e0665a67be7590",
+            "sourceTree": "5322d9b052745f5fb8ce377cd2a1b03f3ed1e65b",
+            "mergeCommit": "51d1879122f39bf894b3fc7d25c361ef2336753a"
+          },
+          {
+            "pullRequest": 695,
+            "sourceSha": "9f5198e176eeac817bd0f3fa153a26c5f2a42743",
+            "sourceTree": "5e8d2d8341803ace203bf8a12426777a56298538",
+            "mergeCommit": "9db779820a54d251890b399c7f97ed99b333e228",
+            "mergeTree": "b0e17cdcc1a88348399e1d1254bd306ac8235504"
+          },
+          {
+            "pullRequest": 685,
+            "sourceSha": "ba521f92c5464dc9bee50223e8d3b4ea1b235c0a",
+            "mergeCommit": "0fa4778b559963e0f3e7c60051060844d362e796",
+            "repairPullRequest": 695
+          }
+        ],
+        "resolvedReviewFindings": [
+          {
+            "ids": [
+              "web-real-byte-cap",
+              "empty-json-handler-defect"
+            ],
+            "integratedBy": 665,
+            "sourceSha": "e83b9edc8a9dd58b1baac6d56da05fe22110988c",
+            "runId": 45046979320,
+            "counts": {
+              "server": 31,
+              "cliFactory": 1
+            },
+            "laterRegressionProof": 688
+          },
+          {
+            "ids": [
+              "typed-web-stream-overflow",
+              "handler-defect-with-unread-body"
+            ],
+            "integratedBy": 688,
+            "proofId": "web-boundaries-final-component"
+          },
+          {
+            "ids": [
+              "az02-refusal-invalid-json",
+              "az02-missing-selector-json-media"
+            ],
+            "integratedBy": 695,
+            "proofId": "az02-refusal-repair"
+          }
+        ],
+        "remainingProductIntegration": [
+          {
+            "pullRequest": 673,
+            "scope": "G01–G04/pool: three shards PASS; Decisions/Operations/pool unresolved on latest focal."
+          },
+          {
+            "pullRequest": 613,
+            "scope": "12/15 qualified; UI42/43/44 installed qualification pending."
+          },
+          {
+            "pullRequest": 691,
+            "scope": "Original CAP03 Budget UI/Team navigation."
+          },
+          {
+            "pullRequest": 693,
+            "scope": "Original CAP03 reader/client/factory/OIDC."
+          },
+          {
+            "pullRequest": 694,
+            "scope": "Original U15/U39/U40/F04 installed journeys and private registration tooling."
+          }
+        ],
+        "finalCandidateAcknowledgement": null,
+        "scopeLimit": "All component receipts remain bound to their tested source/tree. No replay of the final candidate, installed Microsoft qualification, final tar or production decision is implied."
+      },
+      "latestDevObserved": {
+        "sha": "9db779820a54d251890b399c7f97ed99b333e228",
+        "tree": "b0e17cdcc1a88348399e1d1254bd306ac8235504",
+        "observedAtUtc": "2026-11-22T17:39:16Z",
+        "notFinalCandidate": true
+      }
     }
   ],
   "publicationHistory": [
@@ -3431,6 +4501,21 @@
       "sourceSha": "dd878301673ef0566ff4298e52fa63b0afe089c5",
       "sourceTree": "a307c6e3743b0c88bee8aff47929428eb682e3b4",
       "mergeCommit": "2169b64039855ffa10b36053d6ff41d57b7b4ee7"
+    },
+    {
+      "branch": "readiness-components",
+      "recordKind": "PR_PUBLICATION_REFERENCE",
+      "scope": "Exactly three existing go-live documents: status.json, README.md and execution-2026-11-22.md. migration-intake.json, runbooks and product paths remain with their owners.",
+      "sourceIdentitySource": "Exact source/tree, Actions driver, guard receipt, independent review and merge are bound by the original PR metadata; no self-referential SHA.",
+      "stateSource": "Read the live PR metadata; this snapshot does not claim a future review or merge.",
+      "baseSha": "9db779820a54d251890b399c7f97ed99b333e228",
+      "baseTree": "b0e17cdcc1a88348399e1d1254bd306ac8235504",
+      "pullRequest": 696,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/696",
+      "observedAtUtc": "2026-11-22T17:39:16Z",
+      "sourceSha": "e468eace5b3a36acaf08d7796a5bb869ed45b5a8",
+      "mergeCommit": "07eb67d16f0810fde2fc2ac39b79525c3bc100dd",
+      "mergeTree": "00327802db9def74dfbf0e93fe55bfbc01f1b7a6"
     }
   ],
   "designObservation": {
@@ -3463,33 +4548,157 @@
       "artifactId": 14763330927,
       "zipSha256": "2eabc5ae9d5f0fafb0e4199dcfc46cf7352e5c7038dd87765b6135d38a5a5d9e"
     },
-    "portfolioProfile": {
-      "runId": 45045175421,
-      "jobId": 137278106754,
-      "sourceSha": "0a1247db9a16f9eead04788a76d25723672c7e6a",
-      "snapshotSha": "dfdaca66da047f3b1f9c29ea84676bd11dcf030e",
-      "lastObservedAtUtc": "2026-11-22T17:31:41Z",
-      "status": "IN_PROGRESS_NO_ARTIFACT_OR_RECEIPT",
-      "observedElapsedMinutes": 50.87,
-      "cause": "UNKNOWN",
-      "qualification": false
+    "currentProductSource": {
+      "sha": "255c35c6cb741758b19440e79d36d0121d17d6c5",
+      "tree": "f03e37c8c494cd7feff2c4d058edfa4e77a8e125",
+      "state": "REVIEWED_SEPARATE_SOURCE_NOT_PROMOTED_TO_PR_HEAD"
     },
     "c17": {
-      "sourceSha": "6bec7f15f3457429fb1b3f91436ce60ecc48f20f",
-      "sourceTree": "3e4a82e209dfc7ed983f9197ef685c297874c8be",
-      "runId": 45049352072,
-      "jobId": 137290808542,
-      "passedGates": 6,
-      "totalGates": 7,
-      "originalDeadlineSeconds": 105,
+      "sourceSha": "255c35c6cb741758b19440e79d36d0121d17d6c5",
+      "sourceTree": "f03e37c8c494cd7feff2c4d058edfa4e77a8e125",
+      "runId": 45052257045,
+      "jobId": 137299763125,
+      "cleanupJobId": 137304757166,
+      "snapshotSha": "1a9c901a6b12de407daedafef23e040e468ee6fc",
+      "snapshotTree": "b3b31360f3ef22fb8273dcd3a2623d0995ac313e",
       "status": "FAIL_NOT_ACCEPTED_FOR_COMPOSITION",
-      "artifactId": 14764813414,
-      "zipSha256": "6b84fb258cd24f18313c18ceb9b668ef35521c6bd51bd5d7f7a90bf8dd2466ad",
-      "receiptRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7082905911",
-      "evidenceAcquisition": "Owning front acquired ZIP/CRC and11 receipt/log bindings; coordination read primary record.",
-      "remaining": "Reopened ancestry, cycle and recovery/revocation not completed; no deadline/assertion relaxed."
+      "passedGates": 8,
+      "totalGates": 10,
+      "originalDeadlineSeconds": 105,
+      "failures": [
+        "Nullable GITHUB_SHA matcher in driver",
+        "Original C17 deadline105s"
+      ],
+      "artifactId": null,
+      "receiptRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7083483010",
+      "evidenceAcquisition": "Original owner receipt and API read; full profile/product evidence not independently acquired by this front.",
+      "guards": {
+        "rules": 78,
+        "paths": 784,
+        "gates": 0,
+        "errors": 0,
+        "warnings": 38
+      },
+      "qualification": false
+    },
+    "driverFollowup": {
+      "sourceSha": "255c35c6cb741758b19440e79d36d0121d17d6c5",
+      "sourceTree": "f03e37c8c494cd7feff2c4d058edfa4e77a8e125",
+      "runId": 45054387720,
+      "jobId": 137306287664,
+      "cleanupJobId": 137306845583,
+      "snapshotSha": "19d964de928734d20d0aa823ea444c38c76828d7",
+      "snapshotTree": "a8e8943ceee618864b5f7484c72a86981a7cea61",
+      "status": "success",
+      "passedGates": 3,
+      "totalGates": 3,
+      "scope": [
+        "identity",
+        "CLI types",
+        "guards"
+      ],
+      "c17Repeated": false,
+      "functionalSuitesRepeated": false,
+      "receiptRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7083584902",
+      "doesNotConvertPriorFocalToTenOfTen": true
+    },
+    "portfolioProfile": {
+      "sourceSha": "255c35c6cb741758b19440e79d36d0121d17d6c5",
+      "sourceTree": "f03e37c8c494cd7feff2c4d058edfa4e77a8e125",
+      "runId": 45054997790,
+      "jobId": 137308136354,
+      "cleanupJobId": 137308910600,
+      "cleanupStatus": "success",
+      "snapshotSha": "86440de905c86ab56ddb7b5ac17c331b13431828",
+      "snapshotTree": "19e3b7288bebf72498602e63314f94d96e61fe34",
+      "status": "COMPLETED_FAILURE_DIAGNOSTIC_ARTIFACT_METADATA_ONLY",
+      "completedAtUtc": "2026-11-22T18:28:14Z",
+      "artifact": {
+        "id": 14766639145,
+        "name": "c17-private-profile-45054997790-1",
+        "bytes": 542421,
+        "zipSha256": "75217788b017b726545282f834f0dc5a94bc705e7dfeee103cfd9f052c48584d"
+      },
+      "evidenceClass": "ORIGINAL_API_METADATA_AND_OWNER_DECLARED_DIAGNOSTIC",
+      "profileContentsReviewed": false,
+      "artifactIndependentlyAcquired": false,
+      "receiptSha256": null,
+      "receiptSchema": null,
+      "declarationQualification": false,
+      "productQualification": false,
+      "qualification": false,
+      "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7083611219"
+    },
+    "previousCollectorFinal": {
+      "runId": 45045175421,
+      "snapshotSha": "dfdaca66da047f3b1f9c29ea84676bd11dcf030e",
+      "status": "COMPLETED_CANCELLED",
+      "completedAtUtc": "2026-11-22T17:36:01Z",
+      "artifactObserved": false,
+      "scope": "Earlier cancelled collector; separate from the later diagnostic artifact"
     },
     "finalApproval": null
   },
-  "evidenceInterpretation": "Historical proof fields and prior integration states are immutable observations of their source/time. Current merge state is recorded separately in integrationObservation and latestDevObserved; a source receipt is never promoted to a later candidate."
+  "evidenceInterpretation": "Historical proof fields and prior integration states are immutable observations of their source/time. Current merge state is recorded separately in integrationObservation and latestDevObserved; a source receipt is never promoted to a later candidate.",
+  "designObservationHistory": [
+    {
+      "pullRequest": 613,
+      "state": "OPEN_DRAFT_12_OF_15_QUALIFIED",
+      "sourceSha": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "sourceTree": "1b8155081dbfd2c94649f701c275d32b70bd15f6",
+      "qualifiedAreas": 12,
+      "totalAreas": 15,
+      "pendingAreas": [
+        "UI42",
+        "UI43",
+        "UI44"
+      ],
+      "existingEvidencePreserved": true,
+      "scopeFix": {
+        "runId": 45042892840,
+        "jobId": 137271043335,
+        "status": "success",
+        "cases": 5,
+        "assertions": 225,
+        "typechecks": 2
+      },
+      "ui44": {
+        "runId": 45043532716,
+        "jobId": 137272992582,
+        "status": "failure",
+        "originalRequestBudgetSeconds": 120,
+        "reason": "No response to original sensitivity evaluation; screenshot shows lost server connection, cause not established.",
+        "artifactId": 14763330927,
+        "zipSha256": "2eabc5ae9d5f0fafb0e4199dcfc46cf7352e5c7038dd87765b6135d38a5a5d9e"
+      },
+      "portfolioProfile": {
+        "runId": 45045175421,
+        "jobId": 137278106754,
+        "sourceSha": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+        "snapshotSha": "dfdaca66da047f3b1f9c29ea84676bd11dcf030e",
+        "lastObservedAtUtc": "2026-11-22T17:31:41Z",
+        "status": "IN_PROGRESS_NO_ARTIFACT_OR_RECEIPT",
+        "observedElapsedMinutes": 50.87,
+        "cause": "UNKNOWN",
+        "qualification": false
+      },
+      "c17": {
+        "sourceSha": "6bec7f15f3457429fb1b3f91436ce60ecc48f20f",
+        "sourceTree": "3e4a82e209dfc7ed983f9197ef685c297874c8be",
+        "runId": 45049352072,
+        "jobId": 137290808542,
+        "passedGates": 6,
+        "totalGates": 7,
+        "originalDeadlineSeconds": 105,
+        "status": "FAIL_NOT_ACCEPTED_FOR_COMPOSITION",
+        "artifactId": 14764813414,
+        "zipSha256": "6b84fb258cd24f18313c18ceb9b668ef35521c6bd51bd5d7f7a90bf8dd2466ad",
+        "receiptRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7082905911",
+        "evidenceAcquisition": "Owning front acquired ZIP/CRC and11 receipt/log bindings; coordination read primary record.",
+        "remaining": "Reopened ancestry, cycle and recovery/revocation not completed; no deadline/assertion relaxed."
+      },
+      "finalApproval": null,
+      "supersededBy": "Original source records7083483010/7083584902/7083611219 and Actions run metadata"
+    }
+  ]
 }

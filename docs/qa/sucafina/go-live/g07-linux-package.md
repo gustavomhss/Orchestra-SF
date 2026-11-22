@@ -6,6 +6,12 @@
 
 Fonte de escopo: [handoff c02f329d](https://github.com/gustavomhss/Orchestra-SF/blob/c02f329d48d37e2f6296154978cd8a7cf80bcb64/docs/qa/sucafina/astra-go-live-handoff.md). Referência de triagem: `dev@79912446753af5bb291fc2581543732eb4c83057`, árvore `5c32cd72537799632e7d2583c1775df1d88b8780`. Esse pin de leitura não é o candidato final.
 
+## Coordenação e admissão atuais
+
+Astra go-live já assumiu a coordenação e execução da rota G07, conforme [mandato#657](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7080753498) e [registroRelease#247](https://github.com/gustavomhss/Orchestra-SF/pull/247#issuecomment-7080852007). A identidade observada nos workflows desta frente é `gustavomhss`, inclusive no [run 45055970646](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055970646); isso identifica a conta GitHub, sem presumir uma pessoa distinta ou um ACK futuro.
+
+O B final ainda precisa vincular o operador efetivo e os ACKs originais de Migração/Release ao mesmo C/T. A composição entregue `b7776698e61934ed2cb820658408ff8a8207ec62` não foi aceita como candidato final. Não existem B/Q finais, tar final ou recibo final de qualificação registrados nesta frente. O bloqueio histórico de disparo já foi resolvido pela #668; não é necessário recriar o produtor. Após verificar o tar original, os mesmos bytes alimentam G08 e G10 em reservas separadas.
+
 ## Verificador integrado e prova histórica da #640
 
 A fonte `b7edac10a2e9bbe10fec6ec1318f568ccde74813`, árvore `fa8734cdf99883488183b5ef423c48d608ba116e`, foi integrada em `f07690a41ccf090a39a76ce2733323a98c75c326`. Os runs [44999252013](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44999252013) e [44999256028](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44999256028) executaram **31 controles Node, 18 Python e 78 guards sem findings**. Esses runs qualificam o verificador; não consumiram um tar final.
