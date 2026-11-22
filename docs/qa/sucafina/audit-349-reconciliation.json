@@ -87,7 +87,7 @@
       "id": 7,
       "name": "Planner source reads",
       "owner": "Astra/planner_contracts",
-      "state": "integrated-core-gap",
+      "state": "integrated",
       "head": "bb42be286373e17db67a82ecde8836fda1df141f",
       "pr": 627,
       "review": "https://github.com/gustavomhss/Orchestra-SF/pull/627#pullrequestreview-6010507432",
@@ -96,15 +96,22 @@
         44988766599
       ],
       "proof": "Existing real Finance composition reproduces late reader replacement on base; head1test35assertions passes, including typed denials, scope/pair/source/revocation and restored reader. Full CLI/Sucafina types green,78guards clean. Approved headbb42 was merged and parents a0b162+bb42 confirmed.",
-      "remaining": "Complementary historical Planner paths still under reconciliation; main candidate runtime fix integrated."
+      "remaining": "Original I25 sensitivity and BI complementary hunks are tracked separately; they are not silently included in the acceptance of this source-read candidate.",
+      "complementaryEvidence": "result-store canonical/batch/historical ancestry behavior in #560 (90d546..., fa6605...) and #562 b74273c2. historical operation-verifier replaced by actual scenario-operation-access + scenario-port + recorded-planner-operation-access; before/after source and actor/snapshot/request validation retained. case-port canonical-vs-digest comparison and readProjection reuse are representation/read-count changes, not independently demonstrated gaps. Current period containment preserves valid subperiods; no port of historical strict equality solely for missing helper."
     },
     {
       "id": 8,
       "name": "Coverage proof order",
       "owner": "Astra/planner_contracts",
-      "state": "open",
+      "state": "integrated",
       "pr": 632,
-      "head": "54434da3cdbbaba0a5162d09e02b6e93820ec682"
+      "head": "1b2e7635954efab67cdd046c5016c72f590c65f8",
+      "merge": "cca15664bcb6aa4f1b90104ba6ec68ff454c7aec",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/632#pullrequestreview-6010547933",
+      "ci": [
+        44989560573
+      ],
+      "proof": "Actual C08 private-producer order reproduced failing on base67bb; exact source2tests54assertions incl Finance preservation. CLI/Sucafina full types0;78guards3paths0. Snapshot direct parent source, only request/harness delta; merge parents5f490+approved1b2 confirmed."
     },
     {
       "id": 9,
@@ -131,12 +138,38 @@
         "headcount": {
           "pr": 630,
           "head": "d16d97ccff572510bb9cc5aab1cbc4fd58b4a07c",
-          "state": "approved-ci-pending",
+          "state": "integrated",
           "review": "https://github.com/gustavomhss/Orchestra-SF/pull/630#pullrequestreview-6010540923",
-          "proof": "Real CAP20 producer/mapper FX proves USD calculated months and HR total; source currency only annual rate cards."
+          "proof": "Real CAP20 producer through schema/client/view: months/HR USD, annual rate source currency, mixed EUR/BRL FX, null/zero/missing currency, denied/empty/scope. Base1pass2fail; source3pass117assertions. Full app-shell types0;78guards4paths0. Merge parents7be47+approvedd16 confirmed.",
+          "merge": "5f490bdb3c4d7478c89b07ba37b2b8acf10c3a65",
+          "ci": [
+            44989309122
+          ]
         },
-        "talent": "denied/empty and enum copy already mapped in current UI; source PR evidence pending",
-        "crossLinks": "confirmed denied swallowed and labels outside catalog; overlap reconciliation in progress",
+        "talent": {
+          "state": "absorbed",
+          "prs": [
+            573,
+            587
+          ],
+          "merge": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02",
+          "commits": [
+            "d5e0c9df54f2773dfbadf343408e129e830b9857",
+            "6c89750245d3028b5516f0970885b15b96a4c9be"
+          ],
+          "proof": "Current Talent enum labels use talentFields.options/t(labelKey); status uses localized statusLabel while filter tokens remain canonical. Missing fields localized. #573 denied/session-expired structure/session clears data+owner, shared state rendering unchanged; Talent authorized empty/filtered empty stays distinct. #587 enum helper commits are ancestors of current dev."
+        },
+        "crossLinks": {
+          "state": "integrated",
+          "pr": 633,
+          "head": "677b1cab54b076e44b27c5403bc15ce2bf4d3746",
+          "review": "https://github.com/gustavomhss/Orchestra-SF/pull/633#pullrequestreview-6010571989",
+          "merge": "e2e9ba59b951771a4aa87ba6b70a560e730f4e6a",
+          "ci": [
+            44990197536
+          ],
+          "proof": "RelatedLinks and Executive real DOM clients/codecs: denial vs authorized empty/outage, per-owner reset/late response, partial authorized records, original numeric/string IDs, bilingual catalog + selection preservation. Base1pass3fail; source4pass75assertions; full app-shell types0,78guards5paths0. Mergeparentscca156+approved677b confirmed."
+        },
         "imports": {
           "state": "ownership-pending",
           "pr": 613,
@@ -1984,22 +2017,78 @@
       "base": "dev"
     }
   ],
-  "currentDev": "c6ddf9c7b80dad49aaa42f419dd336126eefed56",
+  "currentDev": "d572060d8164607f6981e6d42635a854a6fa23a4",
   "supplementary": [
     {
       "id": "S1",
       "name": "AppDock subframe navigation",
       "inventoryRow": "I13",
-      "state": "approved-ci-pending",
+      "state": "integrated",
       "owner": "Astra/context_epoch",
       "paths": [
         "apps/desktop/src/main/app-dock.ts",
         "apps/desktop/src/main/app-dock-linux-live.test.ts"
       ],
-      "proof": "Historical349 adds HTTPS guard for subframes. Current dev only intercepts external URI callback on will-frame-navigate; #608 protects different renderer paths. Separate small fix in progress, no current overlapping writer observed.",
+      "proof": "Actual createAppDock listener on existing Electron boundary: non-HTTPS subframes refused, HTTPS and main-frame delegation/callbacks preserved. Baseexpected-red,source11tests65asserts; full Desktop types0,focusedtypes0,exact Linux mutationneedle1;78guards3paths0. Approved42d111 merged,parentsc6dd+42d111 confirmed.",
       "pr": 631,
       "head": "42d111ae930aebfe9ce236fdd8ae7805b5e34429",
-      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/631#pullrequestreview-6010534179"
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/631#pullrequestreview-6010534179",
+      "merge": "7be47a85119e467f1c01e32287137bf43768994c",
+      "ci": [
+        44989437551
+      ]
+    },
+    {
+      "id": "S2",
+      "name": "Sensitivity final publication and replay qualification",
+      "inventoryRow": "I25",
+      "state": "ownership-pending",
+      "owner": "Historical shared sensitivity coordination; acceptance pending",
+      "prs": [
+        405,
+        445,
+        455,
+        500,
+        516
+      ],
+      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/405#issuecomment-7074835793",
+      "paths": [
+        "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts"
+      ],
+      "proof": "Current verification has the unstaged no-sensitivityReadScope early return; actual portfolio composition does not pass the host. #405 retains the exact pending correction with partially failed historical CI. #445/#516 overlap qualification/order; #455/#500 are separate physical read observations. No new writer started and no transfer accepted."
+    },
+    {
+      "id": "S3",
+      "name": "Procurement legacy unavailable choice",
+      "inventoryRow": "I04",
+      "state": "integrated",
+      "owner": "Astra/planner_contracts",
+      "pr": 634,
+      "head": "d63487d8686a61691368da38bd40a7ea58c79fc9",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/634#pullrequestreview-6010569719",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+      ],
+      "proof": "Real requisition, source lifecycle, scenario and human C12 preparation: base0pass1fail6assertions; source Procurement+Apply receipt2tests25assertions. Refuses legacy flag in either list before archive; current draft requires explicit action,approvalGrantedfalse,receiptnull,confirmedfalse; domain/case state preserved/revocationrefused. CLI/Sucafina fulltypes0;baseowned78guards3paths0. Mergeparentse2e9+approvedd634 confirmed.",
+      "merge": "d572060d8164607f6981e6d42635a854a6fa23a4",
+      "ci": [
+        44990139841
+      ]
+    },
+    {
+      "id": "S4",
+      "name": "Planner BI known-subtotal origin",
+      "inventoryRow": "I25",
+      "state": "reproduction",
+      "owner": "Astra/planner_contracts",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts"
+      ],
+      "proof": "Current blob630ebaa remains historical base; knownSubtotalSource proof from349 absent. Exact priced components can share one original source while coverage refs make sourceRefs plural; current drilldown then null. No active writer of this backend path identified: #613352paths at796c7f excludes it; #505 changes UI only; #219 docs-only. Reproduction underway using current producer; no UI files or port period contract assigned."
     }
   ],
   "inventory": [
@@ -2049,10 +2138,11 @@
       "prs": [
         562,
         582,
-        585
+        585,
+        634
       ],
-      "state": "partial",
-      "proof": "CurrentChoice ancestry/reopen/Team journeys integrated. Complementary historical procurement financial-approval flag hunks are still being reconciled."
+      "state": "integrated-and-absorbed",
+      "proof": "CurrentChoice ancestry/reopen/Team behavior preserved by562/582/585; independent Procurement legacy flag supplement integrated634."
     },
     {
       "id": "I05",
@@ -2153,13 +2243,14 @@
       "prs": [
         606,
         607,
-        608
+        608,
+        631
       ],
       "supplementary": [
         "S1"
       ],
-      "state": "partial",
-      "proof": "Live/WSL origin and privileged renderer redirects integrated; AppDock subframe guard found by160-path check is supplemental631."
+      "state": "integrated-and-absorbed",
+      "proof": "Original Electron popup/lifecycle/capture scopes absorbed in606/607/608; complementary missing subframe HTTPS rule integrated631, exact review+CI44989437551,merge7be47 confirmed."
     },
     {
       "id": "I14",
@@ -2308,14 +2399,15 @@
         585,
         596,
         597,
-        627
+        627,
+        632
       ],
       "candidates": [
         7,
         8
       ],
       "state": "partial",
-      "proof": "CurrentChoice and Finance pair integrated; stored reader fence integrated; coverage order and complementary Planner paths still under reconciliation."
+      "proof": "CurrentChoice,Financepair,storedreaderfence and privatecoverageorder integrated. Ancillary resultstore/operationaccess equivalences mapped. Sensitivity S2 still awaits owner acceptance/qualification; BI primaryorigin S4 has independent free reproduction underway."
     },
     {
       "id": "I26",
