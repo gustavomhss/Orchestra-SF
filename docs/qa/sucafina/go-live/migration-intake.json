@@ -3843,6 +3843,48 @@
         "noPortKill": true,
         "separateDiagnosticNotIncluded": true
       }
+    },
+    "composedFocalTypes": {
+      "status": "PREPARED_FOR_INDEPENDENT_REVIEW_AND_ACTIONS",
+      "sourceRun": "45055109181",
+      "commit": "d5d01e4a217dbbd33134c36d90d973cb0f7704df",
+      "tree": "6d26dc6cb2609d30aaace3195ee54476dcb6eb21",
+      "paths": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+          "beforeBlob": "ad8eeca7bdbd9254737beadaa4b52a3a398bd3f0",
+          "afterBlob": "1799e34f9f222ae99531367a8541a79555b4920f",
+          "change": "Normalize only page.route's unused Disposable resolution to void; preserve original rejection, Page-lifetime handler, active capture and request bytes."
+        },
+        {
+          "path": "packages/app-shell/tsconfig.sf-e2e.json",
+          "beforeBlob": "93740e51cc01a84c2fd97771aa9ca5707e7e63a1",
+          "afterBlob": "9c0385ef5e75bee0cb3e62513ebbdd2f03982778",
+          "change": "Include the existing ../../apps/desktop/src/renderer/env.d.ts declaration, already included by e2e/tsconfig.json. No new ambient, exclusion, compiler option or proof selection change.",
+          "declarationBlob": "eb472d33abc340e4232465c9806ccb482fd8f1ab"
+        }
+      ]
+    },
+    "decisionsRequestObserver": {
+      "status": "PREPARED_FOR_INDEPENDENT_REVIEW_AND_ACTIONS",
+      "commit": "dae386091963bc2b4e777d4247dbe40ae84ea77d",
+      "tree": "ebefcb71bcf7516365e15eef87cfe0bd821594d6",
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "beforeBlob": "cff96806037d5bea4c90cc6e30d3ba231f7dca2b",
+      "afterBlob": "6aa80703af55c0e4c51f94a905db6a7be41d99bf",
+      "issue": "The response-stage promise has no terminal path when its original browser request fails or its page closes.",
+      "change": "Observe the exact original Request with the existing origin/path/mode/method predicate before one click. Reject a different second match, the same Request's requestfailed, or owning Page.close. Preserve captured original response bytes/status/headers and checkedReply. Attempt each owned listener removal, Fetch.disable and CDP detach independently; await the owned callback and retain primary plus cleanup errors.",
+      "preserved": {
+        "productDeadlineMilliseconds": 10000,
+        "testDeadlineMilliseconds": 180000,
+        "retries": 0,
+        "originalCases": 5,
+        "clickCount": 1,
+        "responseBytes": true,
+        "jsonAndHttpAssertions": true,
+        "omni": true
+      },
+      "limitation": "Observer completion only; no claim that the server/CDP Compare cause is fixed and no qualification result."
     }
   },
   "focalHistory": [
@@ -4415,94 +4457,212 @@
   ],
   "composition": {
     "status": "COMPOSED_NOT_QUALIFIED",
-    "sourceSha": "d8fe8032ac53096f9656555900f0f2132aaa199a",
-    "treeSha": "57fb5189a3ad41bb98a0a624954504e5d60c276b",
+    "sourceSha": "dae386091963bc2b4e777d4247dbe40ae84ea77d",
+    "treeSha": "ebefcb71bcf7516365e15eef87cfe0bd821594d6",
+    "codeMergeSha": "53d83a3e65913f10db4554257aaf45b8fc3fa802",
+    "codeMergeTreeSha": "0104f9fc1b7b2caf719a178c176db69d077bbbfa",
     "parents": [
-      "e35ac9fef50cc7bf2b1bcbe7ea03ffb660a5c603",
-      "19fbe6542cdcc27139082c28acbc01bf070d60bd"
+      "d5d01e4a217dbbd33134c36d90d973cb0f7704df",
+      "b7776698e61934ed2cb820658408ff8a8207ec62"
     ],
-    "devSha": "19fbe6542cdcc27139082c28acbc01bf070d60bd",
-    "devTreeSha": "3cc2f840609b729742842f6ac4ac71603f4d2ea4",
-    "migrationPreTeardownSha": "bf1c680d03c85a1b4974401a9be8a7c4bf43e281",
-    "mergeBase": "046fc0ff08235dc604b697c5fcd19b0e30440d02",
-    "devFiles": 193,
-    "migrationFiles": 211,
+    "previousQualificationSha": "9612e7db0319c41ea0161e3924f332d9d76b0f9b",
+    "previousQualificationTreeSha": "b1dc4bdc3b4a73667e9ee8011667616565d2f9bc",
+    "devSha": "b7776698e61934ed2cb820658408ff8a8207ec62",
+    "devTreeSha": "364344c376a4feb35245d8089bde1941d025ebf9",
+    "previousDevSha": "19fbe6542cdcc27139082c28acbc01bf070d60bd",
+    "devDeltaPaths": 38,
+    "overlapWithIntakePaths": 0,
     "changedPathsAgainstDev": 202,
-    "changedPathsAgainstReviewedMigration": 190,
-    "sharedPaths": [
+    "exactNewDevBlobs": [
       {
-        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
-        "baseBlob": "cbb83bc6a13a437243622fa87c4dfa10cbb6808a",
-        "devBlob": "27c21e4c1df0ee4748f762a324f52ff1a02f7105",
-        "migrationBlob": "37a7d925bfdeb4bffca3105bad2b41b0e108fdb5",
-        "resolution": "merge-nonoverlapping-reviewed-hunks",
-        "devHunks": 3,
-        "migrationHunks": 6,
-        "composedBlob": "f6ce7f4495d25028b38e4ad639c0b9b097586351"
+        "path": ".github/workflows/g08-installed-complete.yml",
+        "sha": "6035b60476c4fce49b83ce7503ef03367ffc2d28",
+        "mode": "100644"
       },
       {
-        "path": "modules/sucafina/Sucafinav1/test/runtime-http.test.ts",
-        "baseBlob": "15b567600088057268834ac70204e201d8e863dc",
-        "devBlob": "d90403d8c367a8dcda207ac217da862517fc6d43",
-        "migrationBlob": "90d872a0767e6e27cb055b77793d8606711ca1ed",
-        "resolution": "merge-nonoverlapping-reviewed-hunks",
-        "devHunks": 3,
-        "migrationHunks": 4,
-        "composedBlob": "c908fa5df7bf4b31d39586e547936d2519c77923"
+        "path": ".github/workflows/g08-native-journeys.yml",
+        "sha": "ee397d97a0c5f1bb12acb6220ad64e17143b7147",
+        "mode": "100644"
       },
       {
-        "path": "packages/app-shell/e2e/playwright.production.config.ts",
-        "devBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
-        "migrationBlob": "97eb144f46510a3b84ecf0c3f94113f4e561be60",
-        "resolution": "preserve-integrated-G08-additions-from-dev"
+        "path": ".github/workflows/g08-proof-provenance.yml",
+        "sha": "4a1809bf0ac8d018d2678f479662dc5a8f0640ff",
+        "mode": "100644"
       },
       {
-        "path": "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
-        "devBlob": "3abf0f86d431c09f3506570de78eca449c7d06a7",
-        "migrationBlob": "66e269a78af8262764228557e2eeccd29bca1a36",
-        "resolution": "preserve-integrated-G08-additions-from-dev"
+        "path": "script/sf-ci/g08-installed-adapters.test.ts",
+        "sha": "41f54c1540f5b71329e2dcb6c7eda1873967039a",
+        "mode": "100644"
       },
       {
-        "path": "packages/app-shell/e2e/sucafina/native/fixture/manifest-contract.ts",
-        "devBlob": "122a31917565d2de51ba63e646cc20000c239670",
-        "migrationBlob": "122a31917565d2de51ba63e646cc20000c239670",
-        "resolution": "identical-blob-preserved"
+        "path": "script/sf-ci/g08-installed-evidence.mjs",
+        "sha": "0319c73b0fbf885b5f7d322303fe1e33584efdad",
+        "mode": "100644"
       },
       {
-        "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
-        "devBlob": "cf31f5fce8c6f447466ccf7b1f21e89d8bfc30a7",
-        "migrationBlob": "4986e2d7b7a9021b1338f031d81d3e3eed2fe8cb",
-        "resolution": "preserve-integrated-G08-additions-from-dev"
+        "path": "script/sf-ci/g08-installed-evidence.test.mjs",
+        "sha": "c747cdb1fec898ceadbb429ca2e3a25409f51fa1",
+        "mode": "100644"
       },
       {
-        "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
-        "devBlob": "0f96917c656885c57be62a14885c122a81035d2e",
-        "migrationBlob": "71adbaaf679331a5a201aae663123ba87bc4a0b5",
-        "resolution": "preserve-integrated-G08-additions-from-dev"
+        "path": "script/sf-ci/g08-installed-run.sh",
+        "sha": "78a1800f719eabd3b9c56fd081114b9b7ae8d3bf",
+        "mode": "100644"
       },
       {
-        "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
-        "devBlob": "048f1dd16063a79cf59481e20d9000b09f7b2208",
-        "migrationBlob": "048f1dd16063a79cf59481e20d9000b09f7b2208",
-        "resolution": "identical-blob-preserved"
+        "path": "script/sf-ci/g08-native-journeys.mjs",
+        "sha": "a57386ee58bf9901bff00fb06dc879b00cfbdfbf",
+        "mode": "100644"
       },
       {
-        "path": "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts",
-        "devBlob": "7e5c9771a46c574da8b1e1ea9d1f9588585061fc",
-        "migrationBlob": "238d8329bc5677cdc98b9fa238426783bf4add65",
-        "resolution": "preserve-integrated-G08-additions-from-dev"
+        "path": "script/sf-ci/g08-private-evidence.mjs",
+        "sha": "8e38c88c069d2e49942d80e316f3ba230af0241f",
+        "mode": "100644"
       },
       {
-        "path": "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts",
-        "devBlob": "c4c4db3c8542f1cda9e83afad026266335e4e141",
-        "migrationBlob": "c4c4db3c8542f1cda9e83afad026266335e4e141",
-        "resolution": "identical-blob-preserved"
+        "path": "script/sf-ci/g08-proof-provenance.mjs",
+        "sha": "330f01c370f0bfe66eaf19f0c2fdecb27d2a15d1",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf-ci/g08-proof-provenance.test.mjs",
+        "sha": "0ba450d0ecea4670f296a45d52822631e479fb8d",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/test-browser/team-installed-registration.test.ts",
+        "sha": "a60fa7f3816eb2d9fe63b1b3c437225a1392f2c5",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/qa/sucafina/go-live/g08-installed-execution.md",
+        "sha": "8482a24f20b6d7a65d0c0f10e1183385cd018bf1",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts",
-        "devBlob": "63082cac56900c82075a434731f5b8f87b38ab03",
-        "migrationBlob": "a067b9fd835920ad864174461617778700021fa3",
-        "resolution": "preserve-integrated-G08-additions-from-dev"
+        "sha": "3027bb63678ac6d64dea2756c87a0cd7dc442237",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf2h/proofs/installed/execute-registration.ts",
+        "sha": "70be98809e6bbc84824f47c3cf56cb3184515a18",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf2h/proofs/installed/host-adapter.test.ts",
+        "sha": "780df6cd5f40a007838ff491291f055de96047c6",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf2h/proofs/installed/host-adapter.ts",
+        "sha": "967e4cd19620be36f667d2ffc5ee750c9dcc8800",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf2h/proofs/installed/register.ts",
+        "sha": "c0211324b62acc0c8a14c56f22ec78ca5eff9ef4",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture.ts",
+        "sha": "41d8f77a00cd7aab6ef64450c193d6ff3fb8270c",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+        "sha": "7b04d179fbcd9187211d659f65efb6f56eb90f52",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-native/fixture/response-faults.test.ts",
+        "sha": "a17c63e92bc7094b2f981bd20cec6d366d8f76b7",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/g08-manifest-contract.ts",
+        "sha": "0da4dbe1077597a933d80ae7578b6831d8e219ae",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/g08-readiness.ts",
+        "sha": "8837433d2474dc8079dcb60d02b18b265bc7cf8f",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts",
+        "sha": "66269d83f2b32532863e8f160b59c96d712f4c98",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-host.ts",
+        "sha": "5780041073deb2caf6055de8e59d212df8aa26b1",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts",
+        "sha": "5f87a827f6a039650fc9f8150c38bbb3c5d7878f",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-operations.ts",
+        "sha": "899a08e1736a0bac01c1811188eb67974a8195b6",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+        "sha": "20da0d86996ddb2e59708f471d103f6a28056977",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/original-host-adapter.ts",
+        "sha": "6a6cf83d212a2e1ff78bc7e8a7ea65a4219ec422",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+        "sha": "1499d19e9adb46162b89d80c54132288c56a28d3",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
+        "sha": "cd2d599b6ee3d14fda83bb7986cca5f72ea16fa2",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts",
+        "sha": "5264220c97517baa66026fca4606bf5afbf605d5",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/cross-links/contract.ts",
+        "sha": "f158afe62031a150eabf362aa0146839894c5e3b",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/cross-links/index.ts",
+        "sha": "39b280f45af23364e3b422e24bfda3cab3085ce9",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain-route.ts",
+        "sha": "8d827d8efabd9302fa952ed27f88f690cd9d00d4",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/signals.ts",
+        "sha": "c295463dd66295208a03359f5d907302a8825cbe",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/producer.ts",
+        "sha": "0ceceb218a6b88d27bc4304f1c7b863a012b40a6",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+        "sha": "3c44b835523e24c48f763f52643e1252614bbea1",
+        "mode": "100644"
       }
     ],
     "preservedDevBlobs": [
@@ -4520,7 +4680,8 @@
       },
       {
         "path": ".github/workflows/g08-native-journeys.yml",
-        "sha": "0dd6293b5e1536f02b6a4dc456cb386da346b0ac"
+        "sha": "ee397d97a0c5f1bb12acb6220ad64e17143b7147",
+        "mode": "100644"
       },
       {
         "path": ".github/workflows/g08-private-preflight.yml",
@@ -4756,7 +4917,8 @@
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture.ts",
-        "sha": "205eaa85dba2aa4812e5f7b804892b777e5b39a2"
+        "sha": "41d8f77a00cd7aab6ef64450c193d6ff3fb8270c",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/browser-transport.ts",
@@ -4768,19 +4930,23 @@
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts",
-        "sha": "a30f10cf596bc39dda98278b7dae4df186018fc7"
+        "sha": "66269d83f2b32532863e8f160b59c96d712f4c98",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-host.ts",
-        "sha": "8ef432d678be4e4bb5facec690aaad7fd93513ae"
+        "sha": "5780041073deb2caf6055de8e59d212df8aa26b1",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts",
-        "sha": "1aa87f62f1a54d3dd31c8b3f585fd02d99c9d31a"
+        "sha": "5f87a827f6a039650fc9f8150c38bbb3c5d7878f",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-operations.ts",
-        "sha": "324bc23e05abbd3e5ea3d6fbed1159419ec80228"
+        "sha": "899a08e1736a0bac01c1811188eb67974a8195b6",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/isolated-installation.ts",
@@ -4788,7 +4954,8 @@
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
-        "sha": "3abf0f86d431c09f3506570de78eca449c7d06a7"
+        "sha": "20da0d86996ddb2e59708f471d103f6a28056977",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/manifest-contract.ts",
@@ -4796,15 +4963,18 @@
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
-        "sha": "cf31f5fce8c6f447466ccf7b1f21e89d8bfc30a7"
+        "sha": "1499d19e9adb46162b89d80c54132288c56a28d3",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
-        "sha": "0f96917c656885c57be62a14885c122a81035d2e"
+        "sha": "cd2d599b6ee3d14fda83bb7986cca5f72ea16fa2",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts",
-        "sha": "6079fe4076f64dcb6dbae1b7a096e4c8a984d4d4"
+        "sha": "5264220c97517baa66026fca4606bf5afbf605d5",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
@@ -4912,7 +5082,8 @@
       },
       {
         "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain-route.ts",
-        "sha": "74710da54d03f6362811f10448417aa5f2c0b73a"
+        "sha": "8d827d8efabd9302fa952ed27f88f690cd9d00d4",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain.tsx",
@@ -4920,7 +5091,8 @@
       },
       {
         "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
-        "sha": "b5d8462a54e20082f99de70d97ef67168e5f0aea"
+        "sha": "3c44b835523e24c48f763f52643e1252614bbea1",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/src/pages/team-profile.tsx",
@@ -4960,7 +5132,8 @@
       },
       {
         "path": "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts",
-        "sha": "63082cac56900c82075a434731f5b8f87b38ab03"
+        "sha": "3027bb63678ac6d64dea2756c87a0cd7dc442237",
+        "mode": "100644"
       },
       {
         "path": "packages/app-shell/test-browser/sucafina-team-domain.test.ts",
@@ -5220,7 +5393,8 @@
       },
       {
         "path": "script/sf-ci/g08-native-journeys.mjs",
-        "sha": "55567e82d9ed70a0188f8a734e7076b61d76fd06"
+        "sha": "a57386ee58bf9901bff00fb06dc879b00cfbdfbf",
+        "mode": "100644"
       },
       {
         "path": "script/sf-ci/g08-native-journeys.test.mjs",
@@ -5228,7 +5402,8 @@
       },
       {
         "path": "script/sf-ci/g08-private-evidence.mjs",
-        "sha": "ac00d5bc0a9f81ed111f213c886d5a7139bd7d0a"
+        "sha": "8e38c88c069d2e49942d80e316f3ba230af0241f",
+        "mode": "100644"
       },
       {
         "path": "script/sf-ci/g08-private-evidence.test.mjs",
@@ -5256,7 +5431,8 @@
       },
       {
         "path": "script/sf2h/proofs/installed/register.ts",
-        "sha": "93f53e402c2dfcb351ef1d490b98566fdf1fd69f"
+        "sha": "c0211324b62acc0c8a14c56f22ec78ca5eff9ef4",
+        "mode": "100644"
       },
       {
         "path": "sf/azure/identity/az02-proof.cjs",
@@ -5269,47 +5445,159 @@
       {
         "path": "tooling/httpapi-codegen/src/index.ts",
         "sha": "560719476091beba1fbaf66a57533ff03a235785"
+      },
+      {
+        "path": ".github/workflows/g08-installed-complete.yml",
+        "sha": "6035b60476c4fce49b83ce7503ef03367ffc2d28",
+        "mode": "100644"
+      },
+      {
+        "path": ".github/workflows/g08-proof-provenance.yml",
+        "sha": "4a1809bf0ac8d018d2678f479662dc5a8f0640ff",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf-ci/g08-installed-adapters.test.ts",
+        "sha": "41f54c1540f5b71329e2dcb6c7eda1873967039a",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf-ci/g08-installed-evidence.mjs",
+        "sha": "0319c73b0fbf885b5f7d322303fe1e33584efdad",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf-ci/g08-installed-evidence.test.mjs",
+        "sha": "c747cdb1fec898ceadbb429ca2e3a25409f51fa1",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf-ci/g08-installed-run.sh",
+        "sha": "78a1800f719eabd3b9c56fd081114b9b7ae8d3bf",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf-ci/g08-proof-provenance.mjs",
+        "sha": "330f01c370f0bfe66eaf19f0c2fdecb27d2a15d1",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf-ci/g08-proof-provenance.test.mjs",
+        "sha": "0ba450d0ecea4670f296a45d52822631e479fb8d",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/test-browser/team-installed-registration.test.ts",
+        "sha": "a60fa7f3816eb2d9fe63b1b3c437225a1392f2c5",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/qa/sucafina/go-live/g08-installed-execution.md",
+        "sha": "8482a24f20b6d7a65d0c0f10e1183385cd018bf1",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf2h/proofs/installed/execute-registration.ts",
+        "sha": "70be98809e6bbc84824f47c3cf56cb3184515a18",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf2h/proofs/installed/host-adapter.test.ts",
+        "sha": "780df6cd5f40a007838ff491291f055de96047c6",
+        "mode": "100644"
+      },
+      {
+        "path": "script/sf2h/proofs/installed/host-adapter.ts",
+        "sha": "967e4cd19620be36f667d2ffc5ee750c9dcc8800",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+        "sha": "7b04d179fbcd9187211d659f65efb6f56eb90f52",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-native/fixture/response-faults.test.ts",
+        "sha": "a17c63e92bc7094b2f981bd20cec6d366d8f76b7",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/g08-manifest-contract.ts",
+        "sha": "0da4dbe1077597a933d80ae7578b6831d8e219ae",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/g08-readiness.ts",
+        "sha": "8837433d2474dc8079dcb60d02b18b265bc7cf8f",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/original-host-adapter.ts",
+        "sha": "6a6cf83d212a2e1ff78bc7e8a7ea65a4219ec422",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/cross-links/contract.ts",
+        "sha": "f158afe62031a150eabf362aa0146839894c5e3b",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/cross-links/index.ts",
+        "sha": "39b280f45af23364e3b422e24bfda3cab3085ce9",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/signals.ts",
+        "sha": "c295463dd66295208a03359f5d907302a8825cbe",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/producer.ts",
+        "sha": "0ceceb218a6b88d27bc4304f1c7b863a012b40a6",
+        "mode": "100644"
       }
     ],
+    "priorSharedPathResolutionsPreserved": true,
     "verification": {
-      "againstDev": {
-        "files": 202,
-        "allExpected": true
-      },
-      "againstMigration": {
-        "files": 190,
-        "allExpected": true
-      },
-      "devExactBlobs": 191,
-      "mergedPaths": 2,
-      "preservedNativeSupersets": 6,
-      "identicalNativeBlobs": 3
+      "previousDevExactBlobs": 191,
+      "newDevDeltaPaths": 38,
+      "newDevDeltaAllExact": true,
+      "preservedDevBlobs": 213,
+      "additionalProductionEdits": 0,
+      "reviewedApplicationAndRuntimeHttpUnionsUnchanged": true,
+      "original205DispositionsUnchanged": true,
+      "originalSixJobsAndReceiptsUnchanged": true,
+      "allFourLatestZipDigestsCrcAnd22MembersVerified": true
     },
     "pendingCompositionDependencies": [
       {
         "pr": 613,
-        "reason": "Independent Design changes are not in this candidate; final composition must preserve them and re-evaluate Reports applicability."
+        "reason": "Design remains pending. Preserve its final reviewed changes and rerun the 11 original Reports cases on the final integrated candidate."
       },
       {
-        "pr": 699,
-        "headObserved": "d1b5110ff94ed1c95af7002aaa208dcf6569de00",
-        "reason": "Open at freeze; native response-fault completion/refusal follow-up belongs to the Teams writer. Do not overwrite its later integrated blobs."
-      },
-      {
-        "pr": 700,
-        "reason": "Open native installed adapter follow-up; preserve its shared helper type changes and additive G08 schema at final composition. No lease assumed."
+        "pr": 698,
+        "reason": "The preparatory aggregator is included through b777. Its separate admission follow-up remains with the Teams writer and has not been assumed by this intake."
       }
     ],
     "reportsApplicability": {
       "historicalRun": "44987301540",
+      "historicalSourceSha": "b4ba7f595e6b3b5ff10a3379cd91b6771bb1b793",
+      "historicalTreeSha": "7f6077c35fcff4d6f53033f1586478a3536b3f62",
       "passed": 11,
       "failed": 0,
+      "auditedAgainstSource": "9612e7db0319c41ea0161e3924f332d9d76b0f9b",
       "sameSpecBlob": "6a02a4a5a64dc567b0cb9639a6640b519dc325ce",
       "sameManifestBlob": "e9b4d19d2b2b027416e337ad0d8a787d18165475",
       "unchangedReportsSupportFiles": 16,
-      "scope": "Direct spec/manifest/helper identity checked against bf1 only. Runtime/installed-shell/HTTP and subsequent Design consumers are not proven identical. This preserves historical11/11, not current-candidate acceptance; final dependency mapping remains required."
+      "changedCoveredConsumers": [
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+        "apps/cli/src/sucafina-product/business-services.ts"
+      ],
+      "disposition": "The 11 original Reports oracles and their historical positive receipt remain applicable history. Changed runtime consumers prevent transferring acceptance to this or a future candidate. Execute the 11 original cases after final Design composition."
     },
-    "qualification": "No previous run is relabelled as qualification of this composition. The sourceSha/treeSha above identify the code merge; this ledger is a follow-up commit and changes the tree. Only the subsequent dispatch/admission/execution/receipt may name the effective qualification head. First review then original Decisions5 plus required types/guards; pool original and full focal remain pending. No production action."
+    "qualification": "No test or diagnostic has executed this composition. This source/tree identifies the code before the ledger-only follow-up. The effective reviewed head and any diagnostic snapshot/driver must receive separate C/T/S admissions. No prior PASS is promoted; original Decisions5, original pool, integrated focal and Reports11 after Design remain pending. No production action."
   },
   "latestUiFocal": {
     "runId": "45051170458",
@@ -6060,6 +6348,1341 @@
         "method": "Apply the exact four-line base-to-dev delta to the reviewed Migration blob. It reproduces the entire dev blob when applied to common base; preserve C02 member provenance, #679 qty/unitPrice, and #684 three projection export/rename references."
       },
       "qualification": "No receipt from385 is relabelled as qualification of this composition. Root independent review and Actions remain required."
+    },
+    {
+      "status": "COMPOSED_NOT_QUALIFIED",
+      "sourceSha": "d8fe8032ac53096f9656555900f0f2132aaa199a",
+      "treeSha": "57fb5189a3ad41bb98a0a624954504e5d60c276b",
+      "parents": [
+        "e35ac9fef50cc7bf2b1bcbe7ea03ffb660a5c603",
+        "19fbe6542cdcc27139082c28acbc01bf070d60bd"
+      ],
+      "devSha": "19fbe6542cdcc27139082c28acbc01bf070d60bd",
+      "devTreeSha": "3cc2f840609b729742842f6ac4ac71603f4d2ea4",
+      "migrationPreTeardownSha": "bf1c680d03c85a1b4974401a9be8a7c4bf43e281",
+      "mergeBase": "046fc0ff08235dc604b697c5fcd19b0e30440d02",
+      "devFiles": 193,
+      "migrationFiles": 211,
+      "changedPathsAgainstDev": 202,
+      "changedPathsAgainstReviewedMigration": 190,
+      "sharedPaths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "baseBlob": "cbb83bc6a13a437243622fa87c4dfa10cbb6808a",
+          "devBlob": "27c21e4c1df0ee4748f762a324f52ff1a02f7105",
+          "migrationBlob": "37a7d925bfdeb4bffca3105bad2b41b0e108fdb5",
+          "resolution": "merge-nonoverlapping-reviewed-hunks",
+          "devHunks": 3,
+          "migrationHunks": 6,
+          "composedBlob": "f6ce7f4495d25028b38e4ad639c0b9b097586351"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/runtime-http.test.ts",
+          "baseBlob": "15b567600088057268834ac70204e201d8e863dc",
+          "devBlob": "d90403d8c367a8dcda207ac217da862517fc6d43",
+          "migrationBlob": "90d872a0767e6e27cb055b77793d8606711ca1ed",
+          "resolution": "merge-nonoverlapping-reviewed-hunks",
+          "devHunks": 3,
+          "migrationHunks": 4,
+          "composedBlob": "c908fa5df7bf4b31d39586e547936d2519c77923"
+        },
+        {
+          "path": "packages/app-shell/e2e/playwright.production.config.ts",
+          "devBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+          "migrationBlob": "97eb144f46510a3b84ecf0c3f94113f4e561be60",
+          "resolution": "preserve-integrated-G08-additions-from-dev"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+          "devBlob": "3abf0f86d431c09f3506570de78eca449c7d06a7",
+          "migrationBlob": "66e269a78af8262764228557e2eeccd29bca1a36",
+          "resolution": "preserve-integrated-G08-additions-from-dev"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/manifest-contract.ts",
+          "devBlob": "122a31917565d2de51ba63e646cc20000c239670",
+          "migrationBlob": "122a31917565d2de51ba63e646cc20000c239670",
+          "resolution": "identical-blob-preserved"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+          "devBlob": "cf31f5fce8c6f447466ccf7b1f21e89d8bfc30a7",
+          "migrationBlob": "4986e2d7b7a9021b1338f031d81d3e3eed2fe8cb",
+          "resolution": "preserve-integrated-G08-additions-from-dev"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
+          "devBlob": "0f96917c656885c57be62a14885c122a81035d2e",
+          "migrationBlob": "71adbaaf679331a5a201aae663123ba87bc4a0b5",
+          "resolution": "preserve-integrated-G08-additions-from-dev"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
+          "devBlob": "048f1dd16063a79cf59481e20d9000b09f7b2208",
+          "migrationBlob": "048f1dd16063a79cf59481e20d9000b09f7b2208",
+          "resolution": "identical-blob-preserved"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts",
+          "devBlob": "7e5c9771a46c574da8b1e1ea9d1f9588585061fc",
+          "migrationBlob": "238d8329bc5677cdc98b9fa238426783bf4add65",
+          "resolution": "preserve-integrated-G08-additions-from-dev"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts",
+          "devBlob": "c4c4db3c8542f1cda9e83afad026266335e4e141",
+          "migrationBlob": "c4c4db3c8542f1cda9e83afad026266335e4e141",
+          "resolution": "identical-blob-preserved"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts",
+          "devBlob": "63082cac56900c82075a434731f5b8f87b38ab03",
+          "migrationBlob": "a067b9fd835920ad864174461617778700021fa3",
+          "resolution": "preserve-integrated-G08-additions-from-dev"
+        }
+      ],
+      "preservedDevBlobs": [
+        {
+          "path": ".github/workflows/az02-teams-proof.yml",
+          "sha": "83dc11812a96c7b865a7abb539152efa94a55ac3"
+        },
+        {
+          "path": ".github/workflows/g08-domain-bridge.yml",
+          "sha": "7e98626073c1c7e1f8008fbb560282b96d465498"
+        },
+        {
+          "path": ".github/workflows/g08-native-factory.yml",
+          "sha": "f2db67aebd0d1be469f1418432241964a8a3fe63"
+        },
+        {
+          "path": ".github/workflows/g08-native-journeys.yml",
+          "sha": "0dd6293b5e1536f02b6a4dc456cb386da346b0ac"
+        },
+        {
+          "path": ".github/workflows/g08-private-preflight.yml",
+          "sha": "f0235d8f395a6b820a4ecbaaafc6521743045a84"
+        },
+        {
+          "path": ".github/workflows/g08-restart-observer.yml",
+          "sha": "57ddfaee15ef3f7232841d04fcf50132bcc645de"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "sha": "702191e7ff8b224fe020f57651885a8c7e5023f1"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/team-native-domain.ts",
+          "sha": "42337429dd7ecb6be8bb9496c955e3e73d2f0193"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/team-native-procurement.ts",
+          "sha": "71f1b768a8b5969087b0400a64bc39930c7722af"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/team-session-http.ts",
+          "sha": "5849d1d683f5da205e897c2b8cf612b8666a65b0"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/token-gate.ts",
+          "sha": "17cfed3a06b749eeb8381aff97899477f5339f38"
+        },
+        {
+          "path": "apps/cli/src/turn.ts",
+          "sha": "cb531fa6e2439df7163a7bef8cb290be44244f40"
+        },
+        {
+          "path": "apps/cli/test/fixture/team-session-factory.ts",
+          "sha": "5cc1e88d352819785b1373136644d5903b14171b"
+        },
+        {
+          "path": "apps/cli/test/sucafina-product/team-native-procurement.test.ts",
+          "sha": "ecc51f3864e96ed0e45e65e01d6048e4a55eecc2"
+        },
+        {
+          "path": "apps/cli/test/team-native-domain.test.ts",
+          "sha": "cc19c587fbffb6044238bda7228a90e155162859"
+        },
+        {
+          "path": "apps/cli/test/team-session-factory.test.ts",
+          "sha": "32a6d4cc93f3caca7d33418750e031ca3436174e"
+        },
+        {
+          "path": "apps/cli/test/turn-namespace.test.ts",
+          "sha": "cee1e0c10878560ffc15ff50102f437a2a93310c"
+        },
+        {
+          "path": "docs/guides/sucafina-team-configuration.md",
+          "sha": "4c7f1df9a9910bb25987a95ec246eb5a1914a604"
+        },
+        {
+          "path": "docs/qa/sucafina/go-live/README.md",
+          "sha": "0289cd9947e11403a84dc3e3b3241ec09e0b7de7"
+        },
+        {
+          "path": "docs/qa/sucafina/go-live/execution-2026-11-22.md",
+          "sha": "67b3581e647dc5056133ad16ea450294d6fca63a"
+        },
+        {
+          "path": "docs/qa/sucafina/go-live/status.json",
+          "sha": "1e3edca777dd633e5658302a983f57f4444a8f0b"
+        },
+        {
+          "path": "docs/qa/sucafina/teams-native-chat-components.json",
+          "sha": "e12bfa8e488d2250462647a8470a2828809124c5"
+        },
+        {
+          "path": "docs/qa/sucafina/teams-native-performance/README.md",
+          "sha": "84125df5a2f5f754f738c23c197eb69d6d61fa87"
+        },
+        {
+          "path": "docs/qa/sucafina/teams-native-performance/after-chat-corrected.json",
+          "sha": "002fdd54ac725846345af3202b4481eda7275cfe"
+        },
+        {
+          "path": "docs/qa/sucafina/teams-native-performance/after-chat-first.json",
+          "sha": "b603779fc7282ad393c2176b9325407478b70cb6"
+        },
+        {
+          "path": "docs/qa/sucafina/teams-native-performance/baseline-before-chat.json",
+          "sha": "8b7df454a69b30de8f5f3bd8aeb39dffd379156a"
+        },
+        {
+          "path": "docs/qa/sucafina/teams-native-performance/baseline-streaming-repaired.json",
+          "sha": "128e6030f1b215042427e75e4459c6ffc6d77594"
+        },
+        {
+          "path": "docs/qa/sucafina/teams-native-performance/comparison.json",
+          "sha": "20965d0c257061178ead3fa800eeedd012ba16cf"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/microsoft-entry.ts",
+          "sha": "e82859133885da06c78cd77caf05708389ebda49"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/corporate-checkpoint-http.ts",
+          "sha": "e79b3a39f77b993f7faa18c6d81b6cfd80cd8165"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/corporate-recovery-http.ts",
+          "sha": "894e0bfad734d47621ee7b3766312f8fb01e6f62"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+          "sha": "73ccc8fd6b9d5141360a563cdc946be7ccc696e7"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+          "sha": "f7e15b2081a52ad3e16aef945730594f49028468"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "sha": "dc729bd780614fb48f18ee6c824d591218d9ec53"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+          "sha": "2ee93a065433beb430b50ec6bc932b2ba4e886d9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+          "sha": "4a786d355b29746784007903842a4bd4316d7410"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/team-business.ts",
+          "sha": "114a67ddcd863e74389796dfe8f508d214de1d25"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/team-connection-crypto.ts",
+          "sha": "00c4dce1eb74560cf4c273a4420fd6d2051e9069"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/team-connection-store.ts",
+          "sha": "d3edce34e5d422566fde9c6e8e677af11982e1fb"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/team-profile-access.ts",
+          "sha": "e953a76443a3923d13aada08841b516c017d107f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/team-session-admission.ts",
+          "sha": "6b400aa600b8389de3de83adeee8095568c5be96"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/team-session-policy.ts",
+          "sha": "c84971910ec82ada366cc2a86b7a447d96535c22"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/corporate-checkpoint-http.test.ts",
+          "sha": "7745620b987a7b52d7148057307e039d451869c9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/corporate-restore-retention.test.ts",
+          "sha": "8a5d33e47f665fbb592297a9d7e1b006277123a3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/fixture/microsoft-http.ts",
+          "sha": "ff04f96a7bed97ce1dd2ee080af3b4c3a1f25ec8"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-installation.test.ts",
+          "sha": "cd9f4d3c52b9e988997c616ffacf632842304014"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/teams-scanner/private-import.check.ts",
+          "sha": "20fee5ad19e4fcb446db1b1e461068fe594db4f4"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/request-body-cleanup.test.ts",
+          "sha": "e3fb7961d4b9fe28321be7e9e17340eeaf412d51"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/team-native-domain-http.test.ts",
+          "sha": "ecc6d1070d136df62c0537778db8014fbde971d3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/teams-profile/private-connection-store.test.ts",
+          "sha": "5dee6636195c5e820ccb707571f277bc5b20c4b7"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/teams-profile/private-session-admission.test.ts",
+          "sha": "ce06004e587de8997f293d529206b03425acbe4a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/teams-profile/private-session-fixture.ts",
+          "sha": "343b4239e628aed3e35810ef12aaccf7e3e2427e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/teams-profile/private-session-policy.test.ts",
+          "sha": "8bc9d82290bd96a419512e9bbe6cf41a9f937861"
+        },
+        {
+          "path": "packages/app-shell/e2e/performance/timeline/session-timeline-benchmark.fixture.ts",
+          "sha": "1f18746d0beb031b2d88acd3f86c62b1ec880d56"
+        },
+        {
+          "path": "packages/app-shell/e2e/playwright.production.config.ts",
+          "sha": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/g08/README.md",
+          "sha": "f5df22bb8399cf40ad175a7fc70fa184930539b8"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/g08/installed-fixture.ts",
+          "sha": "81e7a289a4f01b20a06afb669f686b262b02eda3"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/g08/landing-contract.test.ts",
+          "sha": "c120a8732843bb8331efe657ab938db212311d07"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/g08/landing-contract.ts",
+          "sha": "643842d1b955c37d14c61ccca26ef2632de6e13b"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/g08/obligations.json",
+          "sha": "c906726d30fa36cfa5d905570b6f5f82afb2b30e"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/g08/teams-installed.spec.ts",
+          "sha": "2b8c1d61c0ce326bbcc88df5ec357a6fb1647737"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/g08/tsconfig.json",
+          "sha": "a8946c4a4b5fcfce4e1faa54ac63d1e406dae614"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture.ts",
+          "sha": "205eaa85dba2aa4812e5f7b804892b777e5b39a2"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/browser-transport.ts",
+          "sha": "dbbddfc8f631fe90eac5d41c276108a2219dd258"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/case-contract.ts",
+          "sha": "fb91d8cbb136c2a2beda1c6e4134adb2c4a14f58"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts",
+          "sha": "a30f10cf596bc39dda98278b7dae4df186018fc7"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-host.ts",
+          "sha": "8ef432d678be4e4bb5facec690aaad7fd93513ae"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts",
+          "sha": "1aa87f62f1a54d3dd31c8b3f585fd02d99c9d31a"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-operations.ts",
+          "sha": "324bc23e05abbd3e5ea3d6fbed1159419ec80228"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/isolated-installation.ts",
+          "sha": "853e70edc355345fe4c673f9f334727997066a7d"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+          "sha": "3abf0f86d431c09f3506570de78eca449c7d06a7"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/manifest-contract.ts",
+          "sha": "122a31917565d2de51ba63e646cc20000c239670"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+          "sha": "cf31f5fce8c6f447466ccf7b1f21e89d8bfc30a7"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
+          "sha": "0f96917c656885c57be62a14885c122a81035d2e"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts",
+          "sha": "6079fe4076f64dcb6dbae1b7a096e4c8a984d4d4"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
+          "sha": "048f1dd16063a79cf59481e20d9000b09f7b2208"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+          "sha": "26c21f4faec253ac8557bf141def00893ec16e7f"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+          "sha": "7ae3ecfe1bc44c79637da6f8c63cdc591bfbd104"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+          "sha": "3d0a499f2404895b4e38a332831a167884afbd2f"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/package.json",
+          "sha": "18c487ecd2d941af45b82945d03dc8807e598538"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/tsconfig.json",
+          "sha": "9763d9d2d7c91ef7fbe63770176c3da2703487b7"
+        },
+        {
+          "path": "packages/app-shell/e2e/utils/mock-server.ts",
+          "sha": "c087d8218c488d8fce355fd86c8aba8886d10e62"
+        },
+        {
+          "path": "packages/app-shell/src/components/team-profile-administration.tsx",
+          "sha": "3add9f0568d7a7bcc77bea9bdeca5a091285318c"
+        },
+        {
+          "path": "packages/app-shell/src/components/team-profile-configuration.tsx",
+          "sha": "eddc3f0268b3c98f50637093a1255d223de98df4"
+        },
+        {
+          "path": "packages/app-shell/src/context/team-profile-navigation.ts",
+          "sha": "ff2b065ec36492e92ffe62be912451a0d3e11a2e"
+        },
+        {
+          "path": "packages/app-shell/src/context/team-profile-web.ts",
+          "sha": "c9c6f2fabe0d1350d76ba60156fccb261a3dda40"
+        },
+        {
+          "path": "packages/app-shell/src/context/team-session-lifetime.ts",
+          "sha": "a8ce1d8e3f59058295b069f149d02b19d0eb7360"
+        },
+        {
+          "path": "packages/app-shell/src/context/team-session-live.test.ts",
+          "sha": "054c5e267915b73de163b9edc2420e9eefb7198c"
+        },
+        {
+          "path": "packages/app-shell/src/context/team-session-live.ts",
+          "sha": "ae3dc13e508ba8ba25769e64b48864396c387488"
+        },
+        {
+          "path": "packages/app-shell/src/context/team-session-runtime.ts",
+          "sha": "8a554f010b92696c60957ecc63aeb4a2a7e8b6e0"
+        },
+        {
+          "path": "packages/app-shell/src/context/team-session-transcript.ts",
+          "sha": "17bcfde153e7d7a85f1b04a827d96cbaae1cc7c7"
+        },
+        {
+          "path": "packages/app-shell/src/context/team-sessions.ts",
+          "sha": "81ca7a6c10adf0b6cb6534fc670c155b47f5dc21"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts",
+          "sha": "a32a1d36e8c1d7e73b4aa4e2fcc5c5a6818df906"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "sha": "94dbe3ff84f9dedf7fef07385eaba8b2cd0885d9"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/drafts.ts",
+          "sha": "9de81c9127a239f5a4be6a6b64a3288cccd0e61e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "sha": "7f04fd683aeea1ed5f135e336886491fa643ec75"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/reader.ts",
+          "sha": "9a3fc718d498149ae39add068598858d831fa954"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+          "sha": "e61340a944a735dc1906895036c70156b83c6500"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/draft-revalidation-availability.ts",
+          "sha": "5dde06641ac705dabd072ea19fff03e78b91ee4c"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/draft-revalidation-budget.ts",
+          "sha": "e4f3a9a2637255853da87618d3cefa3b9126eec1"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/draft-revalidation-vendor.ts",
+          "sha": "dbea7c628542a9b54616849e7da780c3da1dd54c"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain-route.ts",
+          "sha": "74710da54d03f6362811f10448417aa5f2c0b73a"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain.tsx",
+          "sha": "5aac54351e7e95a5fabeb1f98c1ca3fd49386b5f"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+          "sha": "b5d8462a54e20082f99de70d97ef67168e5f0aea"
+        },
+        {
+          "path": "packages/app-shell/src/pages/team-profile.tsx",
+          "sha": "a5834e9c46612696242cafe6d1e233d48c6faaeb"
+        },
+        {
+          "path": "packages/app-shell/src/pages/team-session.css",
+          "sha": "87eb24f1c110184d9bf4bb5b90f99f5afabeeba7"
+        },
+        {
+          "path": "packages/app-shell/src/pages/team-session.tsx",
+          "sha": "358ab7e83ee77c158d742d44ab54edfd5718f5df"
+        },
+        {
+          "path": "packages/app-shell/src/utils/server.test.ts",
+          "sha": "c6e0c63b76d44ebdb814005b5d0caa16dcd96b2d"
+        },
+        {
+          "path": "packages/app-shell/src/utils/server.ts",
+          "sha": "d25ba1096baf4cf6a4f25821bbf917170dfb1784"
+        },
+        {
+          "path": "packages/app-shell/src/utils/team-profile-storage.test.ts",
+          "sha": "f16a90eb28177a529e68c616ca9a815ecc4ce2d8"
+        },
+        {
+          "path": "packages/app-shell/src/utils/team-profile-storage.ts",
+          "sha": "4fee61d0555ebdaaec425ffe53919f71e6e77cb4"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts",
+          "sha": "7e5c9771a46c574da8b1e1ea9d1f9588585061fc"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts",
+          "sha": "c4c4db3c8542f1cda9e83afad026266335e4e141"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts",
+          "sha": "63082cac56900c82075a434731f5b8f87b38ab03"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-team-domain.test.ts",
+          "sha": "14c2a2e29dbfa28937d3ba663ab3ffd991bf4992"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-budget-source.test.ts",
+          "sha": "f9fd5888e4fa33d65d2b5a21c5a4fbada0fc961c"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-domain-hooks.test.ts",
+          "sha": "dd26571d4a35fcba14ff818d6300a350fe2b6cc9"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-profile-configuration.test.ts",
+          "sha": "f3c6d56db2928d3fe8eee18c6597eda20ccf648b"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-profile-navigation.test.ts",
+          "sha": "9780153d3616a8eaec4c1ca830b97947fbca329d"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-profile.test.ts",
+          "sha": "5dcd04f422f337958c7882923646a53d113e538c"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-session-page.test.ts",
+          "sha": "7982fac4199c21b589700098a25b4fc14eabe04c"
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-sessions.test.ts",
+          "sha": "dfe1009488a797446a566d35f3ce9b466d3e566d"
+        },
+        {
+          "path": "packages/app-shell/test/sucafina-native/installed-journeys.test.ts",
+          "sha": "ab2511296e658fcdc83958fb899723fc67259c1c"
+        },
+        {
+          "path": "packages/client/package.json",
+          "sha": "672a2a3fd8aa2dbedf8c5c3afa870c30a77f37bf"
+        },
+        {
+          "path": "packages/client/script/build.ts",
+          "sha": "18314e58c0a07e5ca519a10d1151ce70c971671c"
+        },
+        {
+          "path": "packages/client/src/generated-effect/client.ts",
+          "sha": "540e20608e90e1c2f2107acc2558c77930cf32fd"
+        },
+        {
+          "path": "packages/client/src/generated/client.ts",
+          "sha": "ef448e7d84844ceeec3d5e4870c988fc24b686ac"
+        },
+        {
+          "path": "packages/client/src/generated/types.ts",
+          "sha": "fb1fee31f157b6ac982ad5bd369b74760f25ddf4"
+        },
+        {
+          "path": "packages/client/src/sucafina/sessions.ts",
+          "sha": "231f095363c2ff5f03cae78c5e1c5bb3616846c5"
+        },
+        {
+          "path": "packages/client/src/sucafina/team-configuration.ts",
+          "sha": "e74236080bfcc0f4860350494c7eeab5ea12974d"
+        },
+        {
+          "path": "packages/client/src/sucafina/team-domain.ts",
+          "sha": "db7df64e426d1fa59f0ceed63dae3e72f16dff2f"
+        },
+        {
+          "path": "packages/client/src/sucafina/team-profile.ts",
+          "sha": "84fff5cc8ed0ce052ce97b1f5bb1076be4851478"
+        },
+        {
+          "path": "packages/client/src/wire.ts",
+          "sha": "a0e0b2cf03875c670ffd9ca911075fbe3252419d"
+        },
+        {
+          "path": "packages/client/test/sucafina-team-domain.test.ts",
+          "sha": "b52297b591819eb69f24dff7b79cd1ca19394408"
+        },
+        {
+          "path": "packages/client/test/sucafina/team-sessions.test.ts",
+          "sha": "a9679ff2c124153b95ec0e613ad97ca60ebe29bd"
+        },
+        {
+          "path": "packages/core/package.json",
+          "sha": "65fa3bd608a71d0b53cf63dc7d67ecf0a2a7c969"
+        },
+        {
+          "path": "packages/core/src/catalog.ts",
+          "sha": "e6173ebed406ea4cf3cc77ca1858c4cd1bc492c4"
+        },
+        {
+          "path": "packages/core/src/effect/app-node-platform.ts",
+          "sha": "4b1ca01145bc0970af2f3b14cb35bc7caf9c5511"
+        },
+        {
+          "path": "packages/core/src/host.ts",
+          "sha": "1c5ae5174678453887c2c1b09a452e36d9bfc5aa"
+        },
+        {
+          "path": "packages/core/src/provider/admission.ts",
+          "sha": "20555b7a18d5fd89a27705b302cffaf982952b6d"
+        },
+        {
+          "path": "packages/core/src/provider/private.ts",
+          "sha": "e1a7b20ed3c23240ea7cf111ce092d331d6be271"
+        },
+        {
+          "path": "packages/core/src/session/owner.ts",
+          "sha": "36e73986c6eec30731e19044a5db10d5454be5b2"
+        },
+        {
+          "path": "packages/core/src/session/runner/model.ts",
+          "sha": "c73ca1407e9cbafbec08a0400d8ec9c66c797bcf"
+        },
+        {
+          "path": "packages/core/test/fixture/session-owner.ts",
+          "sha": "2a8d0c11219b503f685c552cea49aafe6535f4f9"
+        },
+        {
+          "path": "packages/core/test/session-archive-http.test.ts",
+          "sha": "711eb0f4cbab1b3b48ed2e04c4dd6f9603375907"
+        },
+        {
+          "path": "packages/core/test/team-provider-native.test.ts",
+          "sha": "9f50d062f76e4be0485e94a69ab89d79f3eaaee9"
+        },
+        {
+          "path": "packages/core/test/tool-task-http.test.ts",
+          "sha": "5b786ce6a04450309019a832ffb1b6fac3a729dc"
+        },
+        {
+          "path": "packages/protocol/src/groups/event.ts",
+          "sha": "d705c93654698dc1d8e7791eb92d2b8b4f33c422"
+        },
+        {
+          "path": "packages/protocol/src/groups/message.ts",
+          "sha": "763adc08f8930620d0d6e25680c67d1427f44cd3"
+        },
+        {
+          "path": "packages/protocol/src/groups/session.ts",
+          "sha": "35ad492a6366f164cc8cdac128dd75316bf121df"
+        },
+        {
+          "path": "packages/schema/package.json",
+          "sha": "d54c1c58314c28cadcb0f1c50326e7a39e5833f1"
+        },
+        {
+          "path": "packages/schema/src/provider-access.ts",
+          "sha": "fd465240f0af3d219d29b6c7de920450e7d4a186"
+        },
+        {
+          "path": "packages/schema/src/session.ts",
+          "sha": "38fe24a8cc4cf4bac6cf801205c9204479c5b438"
+        },
+        {
+          "path": "packages/schema/src/sucafina/team-profile.ts",
+          "sha": "42ff9d3effa380468791b3f06116cb8b9e1e49d7"
+        },
+        {
+          "path": "packages/schema/test/provider-access.test.ts",
+          "sha": "4d21773425efc72accfcbe1df81294030a2474f0"
+        },
+        {
+          "path": "packages/server/package.json",
+          "sha": "b62fde3ca1a0633e2dd56c5d05e210c7de4946ac"
+        },
+        {
+          "path": "packages/server/src/body-limit.ts",
+          "sha": "d674f21d746d00abe718bcda84cedca641f392b8"
+        },
+        {
+          "path": "packages/server/src/handlers/event.ts",
+          "sha": "6254efc576b2c4c7c756ed19b33fbfd4e76db467"
+        },
+        {
+          "path": "packages/server/src/handlers/message.ts",
+          "sha": "69fbbbc3faaaa8944a822525f0a3d0dff827a8fd"
+        },
+        {
+          "path": "packages/server/src/handlers/session.ts",
+          "sha": "468950f3db3c49e7ff3d47493bd9323fdfc71b69"
+        },
+        {
+          "path": "packages/server/src/middleware/authorization.ts",
+          "sha": "9a30bd9dc7074dbd6ef50590aa07bb872190a665"
+        },
+        {
+          "path": "packages/server/src/middleware/session-location.ts",
+          "sha": "0348c4f607d1092d1158fec0bd70f97aa0570274"
+        },
+        {
+          "path": "packages/server/src/routes.ts",
+          "sha": "42fe72df43a1c688286185734b9155beaf17684c"
+        },
+        {
+          "path": "packages/server/src/session-access.ts",
+          "sha": "b2a809bb2f22c4f7723f3d0ad6b01954b807e032"
+        },
+        {
+          "path": "packages/server/src/session-http.ts",
+          "sha": "16a8cd6d6749161cdc26db9da42b399e0fbce5c3"
+        },
+        {
+          "path": "packages/server/src/web-body-limit.ts",
+          "sha": "247e82c1b725d62556be8ae9c12dc53cc51431ae"
+        },
+        {
+          "path": "packages/server/test/body-limit.test.ts",
+          "sha": "ac4667cc1a7146734276ffb727d0d026b97f00fa"
+        },
+        {
+          "path": "packages/server/test/fixture/session-http.ts",
+          "sha": "29cba9ff5e283f3a54c45d1eed45c0afa1c49bcc"
+        },
+        {
+          "path": "packages/server/test/session-background-http.test.ts",
+          "sha": "954380d5216fdcadfa9af511c4f675aa07a51523"
+        },
+        {
+          "path": "packages/server/test/session-diff-http.test.ts",
+          "sha": "59c726b9e487949384db64d6c44e21d7282b83cd"
+        },
+        {
+          "path": "packages/server/test/session-move-http.test.ts",
+          "sha": "d52cfd772e6a96ac43d78501fea062bb69f1de0d"
+        },
+        {
+          "path": "packages/server/test/session-owner-events.test.ts",
+          "sha": "92f0a92a1a3ab7c856e96732aa4912a327db5815"
+        },
+        {
+          "path": "packages/server/test/session-owner-http.test.ts",
+          "sha": "12fe944e90a0550d6c48ae66fabc767c593cff40"
+        },
+        {
+          "path": "packages/server/test/session-owner-technical-http.test.ts",
+          "sha": "8e6520d399c5b1484cf5bf895c6a38d188481385"
+        },
+        {
+          "path": "packages/server/test/session-revert-http.test.ts",
+          "sha": "95cbe767c30af8cca9cdefa698d0ffb3c26d7c8f"
+        },
+        {
+          "path": "packages/server/test/web-body-limit.test.ts",
+          "sha": "5017b27fad6f602c5c4d230b00e905fccd049ff1"
+        },
+        {
+          "path": "packages/tui/src/context/sdk.tsx",
+          "sha": "abad5543027f264ae048cb1e13ed44ff8abb4ac9"
+        },
+        {
+          "path": "script/sf-ci/g08-installed-preflight.py",
+          "sha": "1963e6b3508fa352443fc642690d5a4b78a47138"
+        },
+        {
+          "path": "script/sf-ci/g08-native-journeys.mjs",
+          "sha": "55567e82d9ed70a0188f8a734e7076b61d76fd06"
+        },
+        {
+          "path": "script/sf-ci/g08-native-journeys.test.mjs",
+          "sha": "a555cff1dc749532c2818a5a0207e2950dd6c7bc"
+        },
+        {
+          "path": "script/sf-ci/g08-private-evidence.mjs",
+          "sha": "ac00d5bc0a9f81ed111f213c886d5a7139bd7d0a"
+        },
+        {
+          "path": "script/sf-ci/g08-private-evidence.test.mjs",
+          "sha": "883cf8c2b717d5d8538d36f4640064a184a025c1"
+        },
+        {
+          "path": "script/sf-ci/team-profile-scanner.mjs",
+          "sha": "14257e1603ec9a1206b3cc04be29f0b29d81d027"
+        },
+        {
+          "path": "script/sf-ci/team-profile-scanner.test.mjs",
+          "sha": "9daca258772edfcb6ddeb29cc1c48abc622fe0b0"
+        },
+        {
+          "path": "script/sf-ci/test_g08_installed_preflight.py",
+          "sha": "5257775d4f597fda3708405352a0289616728ca7"
+        },
+        {
+          "path": "script/sf2h/proofs/installed/README.md",
+          "sha": "92b620f36c589d8dd07b1318b4f4385518b48a3e"
+        },
+        {
+          "path": "script/sf2h/proofs/installed/consume.ts",
+          "sha": "76d8179bf5a538a09241f5df150079ab55646a69"
+        },
+        {
+          "path": "script/sf2h/proofs/installed/register.ts",
+          "sha": "93f53e402c2dfcb351ef1d490b98566fdf1fd69f"
+        },
+        {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "sha": "835c2f7cd6290691a0e28013c37b31ff57cce504"
+        },
+        {
+          "path": "sf/azure/identity/az02-proof.test.cjs",
+          "sha": "2a942cb7b6bdbdd752fcfbd54c77ebfa8d7e3ff0"
+        },
+        {
+          "path": "tooling/httpapi-codegen/src/index.ts",
+          "sha": "560719476091beba1fbaf66a57533ff03a235785"
+        }
+      ],
+      "verification": {
+        "againstDev": {
+          "files": 202,
+          "allExpected": true
+        },
+        "againstMigration": {
+          "files": 190,
+          "allExpected": true
+        },
+        "devExactBlobs": 191,
+        "mergedPaths": 2,
+        "preservedNativeSupersets": 6,
+        "identicalNativeBlobs": 3
+      },
+      "pendingCompositionDependencies": [
+        {
+          "pr": 613,
+          "reason": "Independent Design changes are not in this candidate; final composition must preserve them and re-evaluate Reports applicability."
+        },
+        {
+          "pr": 699,
+          "headObserved": "d1b5110ff94ed1c95af7002aaa208dcf6569de00",
+          "reason": "Open at freeze; native response-fault completion/refusal follow-up belongs to the Teams writer. Do not overwrite its later integrated blobs."
+        },
+        {
+          "pr": 700,
+          "reason": "Open native installed adapter follow-up; preserve its shared helper type changes and additive G08 schema at final composition. No lease assumed."
+        }
+      ],
+      "reportsApplicability": {
+        "historicalRun": "44987301540",
+        "passed": 11,
+        "failed": 0,
+        "sameSpecBlob": "6a02a4a5a64dc567b0cb9639a6640b519dc325ce",
+        "sameManifestBlob": "e9b4d19d2b2b027416e337ad0d8a787d18165475",
+        "unchangedReportsSupportFiles": 16,
+        "scope": "Direct spec/manifest/helper identity checked against bf1 only. Runtime/installed-shell/HTTP and subsequent Design consumers are not proven identical. This preserves historical11/11, not current-candidate acceptance; final dependency mapping remains required."
+      },
+      "qualification": "No previous run is relabelled as qualification of this composition. The sourceSha/treeSha above identify the code merge; this ledger is a follow-up commit and changes the tree. Only the subsequent dispatch/admission/execution/receipt may name the effective qualification head. First review then original Decisions5 plus required types/guards; pool original and full focal remain pending. No production action."
     }
-  ]
+  ],
+  "latestComposedFocal": {
+    "runId": 45055109181,
+    "allTwoJobsReceived": true,
+    "sourceSha": "9612e7db0319c41ea0161e3924f332d9d76b0f9b",
+    "treeSha": "b1dc4bdc3b4a73667e9ee8011667616565d2f9bc",
+    "driverSha": "f0b23434280e368f221cf43bd9709c0303d4326d",
+    "artifactCount": 4,
+    "allZipDigestsCrcAndMemberHashesVerified": true,
+    "admissions": [
+      {
+        "artifact": 14767512752,
+        "sha256": "ec7ac1eaac2aef7a86c4c3b720f8e6a311441a2aa7a10b962136a882b28953b8",
+        "schema": "sf-source-driver-admission-v1",
+        "sourceSha": "9612e7db0319c41ea0161e3924f332d9d76b0f9b",
+        "sourceTree": "b1dc4bdc3b4a73667e9ee8011667616565d2f9bc",
+        "driverEventSha": "f0b23434280e368f221cf43bd9709c0303d4326d",
+        "driverWorkflowSha": "f0b23434280e368f221cf43bd9709c0303d4326d",
+        "originalGithubSha": "f0b23434280e368f221cf43bd9709c0303d4326d",
+        "runId": "45055109181",
+        "attempt": "1",
+        "runnerOs": "Linux",
+        "runnerArch": "X64",
+        "eventName": "push",
+        "qualification": false
+      },
+      {
+        "artifact": 14766784241,
+        "sha256": "ec7ac1eaac2aef7a86c4c3b720f8e6a311441a2aa7a10b962136a882b28953b8",
+        "schema": "sf-source-driver-admission-v1",
+        "sourceSha": "9612e7db0319c41ea0161e3924f332d9d76b0f9b",
+        "sourceTree": "b1dc4bdc3b4a73667e9ee8011667616565d2f9bc",
+        "driverEventSha": "f0b23434280e368f221cf43bd9709c0303d4326d",
+        "driverWorkflowSha": "f0b23434280e368f221cf43bd9709c0303d4326d",
+        "originalGithubSha": "f0b23434280e368f221cf43bd9709c0303d4326d",
+        "runId": "45055109181",
+        "attempt": "1",
+        "runnerOs": "Linux",
+        "runnerArch": "X64",
+        "eventName": "push",
+        "qualification": false
+      }
+    ],
+    "ui": {
+      "jobId": 137308483582,
+      "stats": {
+        "startTime": "2026-11-22T18:27:49.373Z",
+        "duration": 474700.135,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+          "line": 21,
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "timedOut",
+              "duration": 180428,
+              "errors": [
+                "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+              ],
+              "steps": [],
+              "attachments": [
+                {
+                  "name": "screenshot",
+                  "contentType": "image/png",
+                  "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/test-failed-1.png"
+                },
+                {
+                  "name": "wp03-real-cli.log",
+                  "contentType": "text/plain",
+                  "path": null
+                },
+                {
+                  "name": "error-context",
+                  "contentType": "text/markdown",
+                  "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/error-context.md"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+          "line": 31,
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "timedOut",
+              "duration": 180429,
+              "errors": [
+                "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+              ],
+              "steps": [],
+              "attachments": [
+                {
+                  "name": "screenshot",
+                  "contentType": "image/png",
+                  "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png"
+                },
+                {
+                  "name": "wp03-real-cli.log",
+                  "contentType": "text/plain",
+                  "path": null
+                },
+                {
+                  "name": "error-context",
+                  "contentType": "text/markdown",
+                  "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through native Decisions",
+          "line": 46,
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 34631,
+              "errors": [],
+              "steps": [],
+              "attachments": [
+                {
+                  "name": "decisions-observations.json",
+                  "contentType": "application/json",
+                  "path": null
+                },
+                {
+                  "name": "wp03-real-cli.log",
+                  "contentType": "text/plain",
+                  "path": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+          "line": 53,
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 14267,
+              "errors": [],
+              "steps": [],
+              "attachments": [
+                {
+                  "name": "decisions-observations.json",
+                  "contentType": "application/json",
+                  "path": null
+                },
+                {
+                  "name": "wp03-real-cli.log",
+                  "contentType": "text/plain",
+                  "path": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+          "line": 99,
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 20147,
+              "errors": [],
+              "steps": [],
+              "attachments": [
+                {
+                  "name": "decisions-observations.json",
+                  "contentType": "application/json",
+                  "path": null
+                },
+                {
+                  "name": "wp03-real-cli.log",
+                  "contentType": "text/plain",
+                  "path": null
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "execution": {
+        "sourceSha": "9612e7db0319c41ea0161e3924f332d9d76b0f9b",
+        "treeSha": "b1dc4bdc3b4a73667e9ee8011667616565d2f9bc",
+        "runId": "45055109181",
+        "attempt": "1",
+        "exitCode": "1"
+      },
+      "positiveReceiptPresent": false
+    },
+    "static": {
+      "jobId": 137308483355,
+      "generators": "PASS",
+      "sevenTypechecks": "PASS",
+      "sfE2e": {
+        "status": "FAIL",
+        "compiler_status": "FAIL",
+        "diagnostics": [
+          "e2e/sucafina/operations-support/procurement.ts(40,3): error TS2322: Type 'Promise<Disposable>' is not assignable to type 'Promise<void>'.",
+          "src/context/server-sync.tsx(778,22): error TS2339: Property 'api' does not exist on type 'Window & typeof globalThis'."
+        ],
+        "failures": [
+          "TYPECHECK_FAILED: exit 2",
+          "COMPILER_DIAGNOSTICS: 2 errors; preserve the complete log"
+        ],
+        "command_statuses": {
+          "effective_config": 0,
+          "typecheck": 2
+        },
+        "effective_root_count": 6323,
+        "compiler_file_count": 6323,
+        "transitive_source_count": 2723
+      },
+      "webBuild": "SKIPPED_AFTER_E2E_FAILURE",
+      "guardReceipt": {
+        "schema": "sf-ci-guard-bases-v1",
+        "candidate": "9612e7db0319c41ea0161e3924f332d9d76b0f9b",
+        "tree": "b1dc4bdc3b4a73667e9ee8011667616565d2f9bc",
+        "run": "45055109181",
+        "attempt": "1",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "canonical_base": "327e95d552fa6edc742f8b87bc19efb0ca6a1dd6",
+        "pr_base": "8bd7645767deb85b286b046a52a4e9f1db100262",
+        "commands": [
+          {
+            "command": "bun run check:spawn-imports",
+            "status": 0
+          },
+          {
+            "command": "bun run check:guards --base origin/dev",
+            "status": 0
+          },
+          {
+            "command": "bun run check:guards --base <PR base SHA>",
+            "status": 0
+          }
+        ]
+      },
+      "guardWarnings": {
+        "guard-dev.log": {
+          "warningAnnotations": 47,
+          "errorAnnotations": 0,
+          "summaries": []
+        },
+        "guard-pr-base.log": {
+          "warningAnnotations": 69,
+          "errorAnnotations": 0,
+          "summaries": []
+        }
+      }
+    },
+    "qualification": "FAIL; exact source only, no final integrated gates",
+    "attempt": 1,
+    "driverTreeSha": "92f14c6f655b0768e3e02fa40a89d543273c7d27",
+    "record": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7083818853",
+    "warningClarification": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7083887192",
+    "independentReception": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7083841900",
+    "artifacts": [
+      {
+        "id": 14767512752,
+        "name": "sf-candidate-CI-UI-DECISIONS",
+        "zipSha256": "d2a4e7f3ff8f398dbfeabc0316a287ec502b1af71ff104610da020757683fbde",
+        "zipBytes": 14133,
+        "crcVerified": true,
+        "files": [
+          {
+            "path": "driver-admission.json",
+            "bytes": 504,
+            "sha256": "ec7ac1eaac2aef7a86c4c3b720f8e6a311441a2aa7a10b962136a882b28953b8"
+          },
+          {
+            "path": "selection.txt",
+            "bytes": 31,
+            "sha256": "b592d895a0344e20771025ce2b1075e10b2e9c0d00093f6fa581ce25a5f31492"
+          },
+          {
+            "path": "execution.txt",
+            "bytes": 267,
+            "sha256": "b57254f603c73160477d4b0579687980a32e49fb902346a06fb9e904f7145924"
+          },
+          {
+            "path": "report.raw.json",
+            "bytes": 60594,
+            "sha256": "f917dc93dede176aea0d0c6bf4b63653da9fb09afa6da3f5e75ae6890ad371c0"
+          },
+          {
+            "path": "run.log",
+            "bytes": 10730,
+            "sha256": "a51b6a6fa0edda77cd676d31cd3d05fe8136f6504d25894ef3b24332ddff8780"
+          }
+        ]
+      },
+      {
+        "id": 14767093444,
+        "name": "sf-guard-bases-9612e7db0319c41ea0161e3924f332d9d76b0f9b-1",
+        "zipSha256": "ed4e9efc787f50af5322070bab3705bf9d236283728f93774c5e7d8038b598fa",
+        "zipBytes": 4170,
+        "crcVerified": true,
+        "files": [
+          {
+            "path": "guard-dev.log",
+            "bytes": 18887,
+            "sha256": "a304bf4be2c5f30cf27c80480cd2baf4027e25fcee0fd2a17a38795a08df0d2c"
+          },
+          {
+            "path": "guard-pr-base.log",
+            "bytes": 27675,
+            "sha256": "ba933267391ac7c437888760430641ffa7a80e707847253fe3e845637c524157"
+          },
+          {
+            "path": "receipt.json",
+            "bytes": 645,
+            "sha256": "90256627982844bfc68df42996866bf0e527f5a6e8ef8df2bb6580ba965451ff"
+          },
+          {
+            "path": "sha256sums.txt",
+            "bytes": 475,
+            "sha256": "f21597888d56669bed2695a67a4843483ee5ca3fb5318217265233f8905facf7"
+          },
+          {
+            "path": "spawn.log",
+            "bytes": 97,
+            "sha256": "304b274933b132ec9186507444a8b34c1ad735114de453a87db578a1f674f7f8"
+          }
+        ]
+      },
+      {
+        "id": 14766784241,
+        "name": "sf-e2e-inclusion-9612e7db0319c41ea0161e3924f332d9d76b0f9b-1",
+        "zipSha256": "b0125538d2c26f8b65e1047ac23224cf09a0dd766c90bff7ff3b38a7a0d0e5a7",
+        "zipBytes": 536566,
+        "crcVerified": true,
+        "files": [
+          {
+            "path": "config.stderr.log",
+            "bytes": 44,
+            "sha256": "13e0b94a8977f08798183eebac7381edffbc3d429ace0d7b7949cfc4ddc0b190"
+          },
+          {
+            "path": "command-statuses.json",
+            "bytes": 65,
+            "sha256": "15b2bfdd643c60582b9dbf9b9bb796589d0d5dccc4ad6a5a4cb56154d23a3a6d"
+          },
+          {
+            "path": "driver-admission.json",
+            "bytes": 504,
+            "sha256": "ec7ac1eaac2aef7a86c4c3b720f8e6a311441a2aa7a10b962136a882b28953b8"
+          },
+          {
+            "path": "bun-version.txt",
+            "bytes": 7,
+            "sha256": "56b0485099b6c5427d3b68c042fd05b632d5e52e924c5064473389812227164c"
+          },
+          {
+            "path": "effective-config.json",
+            "bytes": 1064,
+            "sha256": "1011272e602eb8ccc7a3eb1ffcaa7ab10979b3f42aefd04fb531a6b11c6b002f"
+          },
+          {
+            "path": "sha256sums.txt",
+            "bytes": 534,
+            "sha256": "dc111be996143cdbd4a6968f367534c1b74d6a116f2ead9673670981bd51e728"
+          },
+          {
+            "path": "inclusion.json",
+            "bytes": 1991603,
+            "sha256": "3a8f9dac44fd0cff563e1084e3b5c2cf379ee510ebb9d850cda88258a6247e3a"
+          },
+          {
+            "path": "typecheck.log",
+            "bytes": 790400,
+            "sha256": "7828d5ba39fb4e21cf6636870a2fe716d9121f20da9817481a3f7d39f5abe0d2"
+          }
+        ]
+      },
+      {
+        "id": 14766749952,
+        "name": "sf-ui-failure-CI-UI-DECISIONS",
+        "zipSha256": "3d0d12083f981eec210654207a1b589a93ee7719d6681e0944df4a5e9bcb0297",
+        "zipBytes": 150090,
+        "crcVerified": true,
+        "files": [
+          {
+            "path": "sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png",
+            "bytes": 78760,
+            "sha256": "ca20a5521f98fee5604534828299da50cbad6daf385e824d240fa4bf21259bc1"
+          },
+          {
+            "path": "sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+            "bytes": 30522,
+            "sha256": "f773cd8aa5faae10599c3c856965beb306511488ed76f0f8806ad4d40face0d6"
+          },
+          {
+            "path": "sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/test-failed-1.png",
+            "bytes": 72205,
+            "sha256": "34a9fb45ab775576559adc0d4ef67c9fd82c71b3b9a123219b74208074392140"
+          },
+          {
+            "path": "sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/error-context.md",
+            "bytes": 19583,
+            "sha256": "cbf24548c9222dc2c9b8c361e8db25895b7ad2f3a4f2f09d94a858f767fafae8"
+          }
+        ]
+      }
+    ],
+    "observedCleanup": {
+      "sameCandidate": true,
+      "portInUseFailures": 0,
+      "additionalCleanupFailures": 0,
+      "failedCaseProcessDisposalMilliseconds": [
+        112,
+        170
+      ],
+      "firstCliLogSha256": "c4f076724d867907037dbe3baa26317882c13e4e2231d6540bb03321032c0c7a",
+      "secondCliLogSha256": "4539b2bd3aad3201af5f1b6da12a3c87fb61a38cb4e317f855000b114e6d88cc",
+      "limitation": "The owning afterEach completed cleanup after both 180s failures. Neither failed case reached the helper's normal observation attachment; no response-stage or server phase trace exists for this source."
+    },
+    "causalLimits": [
+      "The earlier diagnostic 45052876559 observed a real second Compare POST followed by ERR_ABORTED near the product's existing 10s deadline on its own snapshot. That observation is not evidence of the same transport outcome on 9612.",
+      "The second failed screenshot shows comparison unavailable/source-change information. It is a post-timeout symptom, not a causal diagnosis.",
+      "Three original Decisions cases passed; the two Compare-dependent journeys remain unqualified. The web build was skipped after the E2E compiler failure.",
+      "Canonical guards exited zero with 0 errors and 47 warnings; historical-base guards exited zero with 0 errors and 69 warnings. This is not a zero-findings claim."
+    ]
+  }
 }
