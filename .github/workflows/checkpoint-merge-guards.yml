@@ -1,0 +1,62 @@
+name: checkpoint-merge-guards
+on:
+  push:
+    branches: [checkpoint-merge-guards]
+permissions:
+  contents: read
+jobs:
+  guards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: f84f9c0fbdf8d93ede8c0d14eeed270771bbd519
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify composed source and documentation-only delta
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = f84f9c0fbdf8d93ede8c0d14eeed270771bbd519
+          test "$(git rev-parse 'HEAD^{tree}')" = d9d329d4d55a08ca3c969c2565d11665b85f5b05
+          test "$(git diff --name-only 32f06e47407e31c98d84babb31a1565d8aedbd4c HEAD)" = docs/guides/sucafina-microsoft-installation.md
+          mkdir -m 700 "$RUNNER_TEMP/checkpoint-merge-guards"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/checkpoint-merge-guards/refs.txt"
+          git diff --name-only "$(git merge-base HEAD origin/dev)" HEAD > "$RUNNER_TEMP/checkpoint-merge-guards/paths.txt"
+          while IFS= read -r file; do sha256sum "$file"; done < "$RUNNER_TEMP/checkpoint-merge-guards/paths.txt" > "$RUNNER_TEMP/checkpoint-merge-guards/source.sha256"
+      - uses: ./.github/actions/setup-bun
+      - name: Run required canonical guards on the composed source
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/checkpoint-merge-guards/guards.log"
+      - name: Bind prior component proof without relabeling it
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          root = pathlib.Path(os.environ["RUNNER_TEMP"]) / "checkpoint-merge-guards"
+          receipt = {
+              "schema": "sf-checkpoint-merge-guards-v1",
+              "sourceSha": "f84f9c0fbdf8d93ede8c0d14eeed270771bbd519",
+              "sourceTree": "d9d329d4d55a08ca3c969c2565d11665b85f5b05",
+              "workflowSha": os.environ["GITHUB_SHA"],
+              "runId": os.environ["GITHUB_RUN_ID"],
+              "attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "productSourceUnchangedSince": "32f06e47407e31c98d84babb31a1565d8aedbd4c",
+              "priorComponentRun": "45038388189",
+              "class": "DOCUMENTATION_DELTA_AND_MERGE_GUARDS",
+              "installedTeamsProof": False, "g10Closed": False, "productionCutover": False,
+              "hashes": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in root.iterdir() if p.is_file()},
+          }
+          (root / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          PY
+      - name: Preserve exact source and guard evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: checkpoint-merge-guards-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/checkpoint-merge-guards
+          retention-days: 14
+          if-no-files-found: error
