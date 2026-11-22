@@ -7,6 +7,7 @@ test.use({ serviceWorkers: "block" })
 const modes = [
   { name: "desktop", viewport: { width: 1440, height: 1000 } },
   { name: "mobile", viewport: { width: 390, height: 844 } },
+  { name: "small-mobile", viewport: { width: 320, height: 900 } },
 ] as const
 
 async function layoutEvidence(page: Page) {
@@ -345,6 +346,7 @@ for (const scheme of ["dark", "light"] as const) for (const mode of modes) {
           await expect(history).not.toHaveAttribute("hidden", /.*/)
           await expect(history).toBeVisible()
           await expect(recent).toContainText("No chats were found.")
+          await expect(history.getByText("No chats were found.", { exact: true })).toBeInViewport({ ratio: 1 })
           await capture(page, info, "chat-history-expanded", scheme)
           await historyToggle.click()
           await expect(historyToggle).toHaveAttribute("aria-expanded", "false")

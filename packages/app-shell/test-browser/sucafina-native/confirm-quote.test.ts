@@ -7,7 +7,7 @@ import type { SfContext, SfContextDependencies, SfContextHandle, SfSurfaceProps 
 const { createComponent, render } = await import("../lean-dom.test-helper")
 const { solidDom } = await import("../solid-dom")
 const { PlatformProvider }: typeof import("@/context/platform") = await import(solidDom("@/context/platform", import.meta.dir))
-const { LanguageProvider }: typeof import("@/context/language") = await import(solidDom("@/context/language", import.meta.dir))
+const { LanguageProvider, useLanguage }: typeof import("@/context/language") = await import(solidDom("@/context/language", import.meta.dir))
 const { SfContextProvider, useSfContext }: typeof import("@/orchestra/chapters/sucafina/context") = await import(solidDom("@/orchestra/chapters/sucafina/context", import.meta.dir))
 const { SfSourcingView }: typeof import("@/orchestra/chapters/sucafina/procurement/sourcing") = await import(solidDom("@/orchestra/chapters/sucafina/procurement/sourcing", import.meta.dir))
 const { createSfDraft }: typeof import("@/orchestra/chapters/sucafina/shared/draft") = await import(solidDom("@/orchestra/chapters/sucafina/shared/draft", import.meta.dir))
@@ -43,7 +43,14 @@ const mount = (transport: SfTransport) => {
     value: { platform: "web", openExternal: unexpected, restart: unexpected, notify: unexpected },
     get children() {
       return createComponent(LanguageProvider, { locale: "en",
-        get children() { return createComponent(SfContextProvider, { selection: () => selection, dependencies: deps, get children() { return createComponent(child, {}) } }) },
+        get children() {
+          // The provider prop is a default; persisted preferences can come from another DOM test.
+          const language = useLanguage()
+          language.setLocale("en")
+          expect(language.locale()).toBe("en")
+          expect(language.intl()).toBe("en")
+          return createComponent(SfContextProvider, { selection: () => selection, dependencies: deps, get children() { return createComponent(child, {}) } })
+        },
       })
     },
   }), node)

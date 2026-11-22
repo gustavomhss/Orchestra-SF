@@ -65,6 +65,7 @@
 @media (max-width: 980px) {
   .sf-team-session { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: var(--sf-chat-row-gap); }
   .sf-team-session-list { display: grid; grid-template-columns: minmax(0, 1fr); max-block-size: 12rem; border-inline-end: 0; border-block-end: var(--sf-chat-line) solid var(--mx-line); padding: 0 0 var(--sf-chat-row-gap); }
+  .sf-team-session-list:has([data-sf-history-toggle][aria-expanded="true"]) { max-block-size: 20rem; }
   .sf-team-session-history:not([hidden]) { padding-block-start: var(--sf-chat-row-gap); }
   .sf-team-session-list form { margin-block-start: var(--sf-chat-row-gap); }
   .sf-team-session-search { grid-template-columns: minmax(0, 1fr) auto; }

@@ -166,3 +166,9 @@ html[data-color-scheme="light"] .sf-team-logo [data-sf-logo-scheme="light"] { di
   .sf-team-shell { --sf-team-logo-width: 80px; }
   .sf-team-brand { gap: var(--sf-team-sm); }
 }
+
+/* Expanding history gives both regions their own usable height and lets the shell scroll. */
+@media (max-width: 980px) {
+  .sf-team-shell[data-sf-team-layout="chat"] .sf-team-session:has([data-sf-history-toggle][aria-expanded="true"]) { block-size: auto; }
+  .sf-team-shell[data-sf-team-layout="chat"] .sf-team-session:has([data-sf-history-toggle][aria-expanded="true"]) .sf-team-session-main { block-size: max(28rem, 50dvh); }
+}
