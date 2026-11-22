@@ -2,7 +2,7 @@
 
 Para criar outro pack com a mesma estrutura, use o [template de packs do Orchestra-SF](sf-pack-template.md).
 
-Use um perfil OpenClaw isolado por conta SF, com o MCP de comparação disponível na instalação. Configure `mcp.servers.sfcompras` com a URL HTTPS terminada em `/sucafina/api/claw/mcp`, transporte `streamable-http` e filtro `{"include":["sf_comparar_compra"]}`. Use um filtro sem exclusões para habilitar a comparação por HTTP. Habilite o servidor e forneça a credencial SF do perfil ao processo em `SF_CLAW_PURCHASE_TOKEN`.
+Use um perfil OpenClaw isolado por conta SF, com o MCP de comparação disponível na instalação. Configure `mcp.servers.sfcompras` com a URL HTTPS formada pelo `mount` da instalação seguido de `/api/claw/mcp`, transporte `streamable-http` e filtro `{"include":["sf_comparar_compra"]}`. O `mount` padrão é `/sucafina`. Use um filtro sem exclusões para habilitar a comparação por HTTP. Habilite o servidor e forneça a credencial SF do perfil ao processo em `SF_CLAW_PURCHASE_TOKEN`.
 
 Adicione o [plugin do Gateway](../../modules/sucafina/Sucafinav1/product/ai/packs/procurement/gateway) a `plugins.load.paths`. O diretório deve resolver as instalações existentes de OpenClaw e `@modelcontextprotocol/sdk`. Habilite `plugins.entries.sf-purchase-gateway.enabled` e inclua `sf-purchase-gateway` em `plugins.allow` quando o perfil usar uma lista explícita. Permita `sfcompras__sf_comparar_compra` para o agente e reinicie o Gateway do perfil.
 
@@ -36,7 +36,7 @@ configurações com `teams: "direct"`. O principal precisa de acesso ao Team, de
 papel de Procurement e das operações `sf_request_read` e `sf_sourcing_compare`
 no seu grant.
 
-Com uma sessão Entra ativa, faça um POST vazio para `/sucafina/api/claw/connect`
+Com uma sessão Entra ativa, faça um POST vazio para `<mount>/api/claw/connect`
 na mesma origem, com `X-SF-Claw-Purpose: purchases`. Se houver mais de um Team
 elegível, envie o seletor da instalação em `X-SF-Team-Profile`. Configure
 `SF_CLAW_PURCHASE_TOKEN` no perfil Gateway com o token devolvido. O token fica
