@@ -25,7 +25,7 @@ The 115 emissions comprise **46 stage + 21 source + 8 capture + 3 diagnostics + 
 
 ## Individual visual review
 
-All nine JPEGs below were individually viewed by **root_cost**. No root visual review is attributed in this archive.
+All nine JPEGs below were individually viewed by **root_cost**. Root separately viewed the light desktop editor, 320 px review actions and final failure capture; those observations are recorded in [root-review.json](root-review.json).
 
 | Original image | Dimensions | Bytes | Chunks | Observed state |
 |---|---:|---:|---:|---|
@@ -47,12 +47,12 @@ That banner is a visual observation at capture time. It does not identify the ca
 
 JPEGs were decoded from the original base64 chunks without resizing, cropping, annotation or recompression. Every sequence is complete and 1-based. Base64 roundtrips, JPEG start/end markers and dimensions were checked. SHA-256 and independently computed Git blob SHA-1 values are recorded; all nine GitHub-created blob SHAs match the original bytes.
 
-A separate binary content readback is not claimed at this immutable-tree stage. The root can perform that readback after composition into a commit.
+Root independently fetched all nine JPEGs from commit `6df9d688432ffcd323a6adc97a7e3894f1ba8fb2` using explicit base64 encoding. Every file matched the original completed-log chunks exactly: **9 images, 607,895 bytes**, with matching Git blob identities. The receipt, manifest and [root-review.json](root-review.json) record this completed readback.
 
 Artifact `14766805641` is `playwright-ubuntu-24.04-1`, **9,052,395 bytes**, SHA-256 `f837e16a83e98c05bfd8331f60fcd62e5ab1ac87edf1b60f3080eb1cfef6574f`, expiring **2026-11-29T18:16:13Z**. Its ZIP contents and original PNG attachments were not downloaded or verified here. Raw logs and the Omni control value are not archived.
 
 ## Scope boundaries
 
-This is a QA-only addition of 13 files under `sensitivity-01/`, based on QA `eb1c438cbdbaead15a8cecbb8245cc4f020b5b1c` / tree `dfa36c5ef43bb1158debf64b45f86e65ef6a85fc`. It changes no runtime, test, top-level README, root review, acceptance count, branch or CI execution.
+The agent prepared 13 QA-only files under `sensitivity-01/`, based on QA `eb1c438cbdbaead15a8cecbb8245cc4f020b5b1c` / tree `dfa36c5ef43bb1158debf64b45f86e65ef6a85fc`. Root composed that staging into commit `6df9d688432ffcd323a6adc97a7e3894f1ba8fb2`, completed the nine binary readbacks, added this directory's root review and updated the parent README/root review. This later integration changes no runtime, test, acceptance count or CI execution. The shared product branch is outside this archive.
 
 The earlier eight technical PASS gates remain scoped to run **45048665481**, product `d6bce5d81d0fd578a190b9bacac2a1a4250109a1` and snapshot `c18b97d8a316992b95abcbb57ef9b6c6754b1518`. The passing original guard **45052663805** covers QA `2b8cf6e0783c28eb293176657a2433ad35164485` and its 17 prior QA files; it does not cover this later archive. This failed UI44 run establishes no causal performance gain or completed visual qualification.

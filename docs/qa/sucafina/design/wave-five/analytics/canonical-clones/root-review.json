@@ -292,5 +292,137 @@
       "priorFindingsComparisonExact": true,
       "nonceAbsent": true
     }
+  },
+  "sensitivity": {
+    "run": 45052940386,
+    "product": "9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0",
+    "snapshot": "34612b8ee430bb9964f558883286ef40b36fe2b7",
+    "testJob": 137301845700,
+    "cleanupJob": 137305441267,
+    "status": "COMPLETED_FAILURE",
+    "cleanupStatus": "success",
+    "specBlob": "0df7e844d4f0419dc13249e87c2ad5766403b1c3",
+    "requestBlob": "03c8f5c84391add25fdd11165eb1af6549c2e301",
+    "originalCompleteSpecLines": 205,
+    "evaluationWaiterMs": 120000,
+    "failure": {
+      "sourceRequestLine": 1263,
+      "errorLine": 1277,
+      "operation": "decision-sensitivity-evaluate",
+      "sequence": 1,
+      "testLocation": "design-wave-five-sensitivity.spec.ts:115:34",
+      "responseObserved": false
+    },
+    "sourceUnits": {
+      "line": 1199,
+      "method": "GET",
+      "http": 200,
+      "bodyAcquired": true,
+      "sourceRefs": 2
+    },
+    "records": 115,
+    "previewChunks": 37,
+    "originalImages": 9,
+    "jpegBytes": 607895,
+    "rootVisual": {
+      "reviewer": "/root",
+      "run": 45052940386,
+      "individuallyViewed": [
+        "UI44-issued-units-editor-light-desktop-test-data",
+        "UI44-dark-320-review-actions-test-data",
+        "FAILED-native-wave-three-test-data"
+      ],
+      "editor": "Light desktop shows native shell, issued USD/USD units and2 evidence references, selected scenario/baseline/parameter, criterion <=2000, minimum200 maximum2200 steps2.",
+      "review": "At320x800 the review displays scenario/parameter references, lte2000USD and200—2200(2)USD; confirmation and cancellation controls are visible.",
+      "failure": "Retains review request and values; confirmation appears disabled. Lost connection to the server / Retrying banner and Retry now are visible. Does not establish cause, backend crash/unwind, later reconnection, completion or persistence.",
+      "qualificationAdded": 0
+    },
+    "artifact": {
+      "id": 14766805641,
+      "bytes": 9052395,
+      "sha256": "f837e16a83e98c05bfd8331f60fcd62e5ab1ac87edf1b60f3080eb1cfef6574f"
+    },
+    "notReached": [
+      "Recorded evaluation result",
+      "Original sample and threshold readbacks",
+      "pt-BR result portion"
+    ],
+    "profiler": false,
+    "causalPerformanceClaim": false,
+    "qualificationAdded": 0,
+    "archive": "sensitivity-01",
+    "guardScope": "This later evidence did not exist in the2b8 checkpoint guarded by45052663805.",
+    "originalJpegReadback": {
+      "reviewer": "/root",
+      "commit": "6df9d688432ffcd323a6adc97a7e3894f1ba8fb2",
+      "method": "GitHub fetch_file with explicit base64 encoding; transport whitespace removed and exact base64 compared with the original completed-log chunks.",
+      "images": 9,
+      "totalBytes": 607895,
+      "allExact": true,
+      "files": [
+        {
+          "path": "gallery/UI44-no-source-scenarios-test-data.jpg",
+          "sha": "3787957169138e952d15dce27862c54ecf78a950",
+          "bytes": 86317,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-original-source-selection-test-data.jpg",
+          "sha": "e1c97671302887a93229f1e5df219d0ffab8b147",
+          "bytes": 89416,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-issued-units-editor-dark-desktop-test-data.jpg",
+          "sha": "4e137e0293239b808031440811fe93778116aca2",
+          "bytes": 106342,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-issued-units-editor-light-desktop-test-data.jpg",
+          "sha": "d5f4e8f697706b0beb392fa72d7f2fb79652e304",
+          "bytes": 108528,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-issued-units-editor-dark-390-test-data.jpg",
+          "sha": "86ad6d9e5f8254b22f8c285a1ef35fafdb8c0164",
+          "bytes": 36779,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-issued-units-editor-light-320-test-data.jpg",
+          "sha": "83b19b884318e7122b2296ff9404aa498d204e11",
+          "bytes": 31123,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-dark-desktop-review-test-data.jpg",
+          "sha": "bc060534a21098eae4c9fb694172d1834867dce0",
+          "bytes": 89146,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-dark-320-review-actions-test-data.jpg",
+          "sha": "869377196700ff5d51390994db15bb23f0d319df",
+          "bytes": 29344,
+          "exact": true
+        },
+        {
+          "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+          "sha": "7b6c966161e7e75577d5a373d9297278ffc92ed2",
+          "bytes": 30900,
+          "exact": true
+        }
+      ]
+    },
+    "independentArchiveReview": {
+      "sourceLocators": 131,
+      "parsedPayloads": 37,
+      "uniqueEvents": 115,
+      "eventLedgerExact": true,
+      "imageMappingExact": true,
+      "errors": []
+    }
   }
 }

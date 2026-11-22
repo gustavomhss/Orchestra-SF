@@ -1,6 +1,6 @@
 # Canonicalização de clones nativos
 
-**Verificação técnica: PASS nos oito gates selecionados. Jornada instalada: falha no primeiro preview, no prazo original de 60.000 ms. UI42–UI44 continuam pendentes.** O [run 45048665481](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45048665481) testou o produto `d6bce5d81d0fd578a190b9bacac2a1a4250109a1` no snapshot `c18b97d8a316992b95abcbb57ef9b6c6754b1518`. A [receita técnica](technical-01/receipt.json) e a [verificação detalhada](technical-01/verification.json) preservam o resultado exato, sem logs brutos ou nonce.
+**Verificação técnica: PASS nos oito gates selecionados. Portfolio falhou no preview de 60.000 ms; sensibilidade falhou na avaliação de 120.000 ms. UI42–UI44 continuam pendentes.** O [run 45048665481](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45048665481) testou o produto `d6bce5d81d0fd578a190b9bacac2a1a4250109a1` no snapshot `c18b97d8a316992b95abcbb57ef9b6c6754b1518`. A [receita técnica](technical-01/receipt.json) e a [verificação detalhada](technical-01/verification.json) preservam o resultado exato, sem logs brutos ou nonce.
 
 | Gate | Resultado observado |
 |---|---|
@@ -22,6 +22,10 @@ O build Vite de produção, a instalação e a preparação nativa concluíram. 
 O History preparatório de sequência 1 registrou HTTP 200, mas com `response-body-unavailable` e `native-request-failed`; seu corpo não está confirmado. A sequência 2 confirmou HTTP 200, `status: ok`, array e 1.131 ms. A imagem final mostra Running, controles desabilitados, preview indisponível e History vazio. Não estabelece unwind do backend ou ausência de persistência posterior. Os diagnostics registram listas vazias de erros de console/página.
 
 Esse run limpo não possui profiler. Não demonstra admissão efetiva da árvore otimizada nos dados instalados nem ganho causal de desempenho. O artefato `14764509379` tem 8.821.842 bytes e SHA-256 `74fe0e59a95cc3f067f11a3b48891c1c18214d9f07a4bc9d72e028b9a27e8895`.
+
+A jornada isolada original de sensibilidade também foi executada no produto `9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0`, no [run 45052940386](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45052940386), snapshot `34612b8ee430bb9964f558883286ef40b36fe2b7`. O test job `137301845700` falhou e o cleanup `137305441267` passou. O request e a declaração completa de 205 linhas são idênticos aos da execução isolada anterior; o waiter de avaliação continua em 120.000 ms.
+
+O GET original de unidades retornou HTTP 200 com corpo e duas referências de origem (linha 1199). O POST de avaliação, sequência 1, foi emitido na linha 1263 às `18:14:10.6560195Z`, sem resposta capturada. O timeout está na linha 1277, spec `115:34`. Resultado gravado, leitura das amostras, threshold e trecho pt-BR não foram alcançados. As nove imagens originais, 607.895 bytes e 115 emissões estão em [sensitivity-01](sensitivity-01/README.md). A imagem final conserva a revisão, critério `lte 2000 USD` e limites `200 — 2200 (2) USD`, com confirmação esmaecida e aviso de perda de conexão. Ela não estabelece a causa do timeout, crash, reconexão posterior ou persistência. Não há profiler nesse run nem nova qualificação.
 
 A [revisão independente de root](root-review.json) conferiu os 102 locators selecionados contra o log final, 39 payloads estruturados e os oito blobs de teste. O [registro estático de fonte](source-review.json) permanece como foi fechado antes da conclusão da CI; seu campo PENDING é histórico. Nenhuma qualificação de UI42–UI44, incremento de inventário, aceite visual ou merge é atribuído a esses gates.
 

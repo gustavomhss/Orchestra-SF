@@ -37,8 +37,72 @@
   "byteIdentityVerification": {
     "method": "SHA-1 of the Git blob header plus original JPEG bytes was computed independently and compared with the SHA returned by GitHub create_blob. Every image matched; SHA-256 is also recorded.",
     "gitContentAddressMatches": 9,
-    "separateBinaryReadbackCompleted": false,
-    "separateBinaryReadbackScope": "No commit or ref is created by this archive. Binary content readback is left for the root after composition into a commit; no such later readback is claimed here."
+    "separateBinaryReadbackCompleted": true,
+    "separateBinaryReadbackScope": "Root independently read all nine JPEGs from the initial archive commit using explicit base64 content mode and matched every byte against the original final-log chunks.",
+    "rootReadback": {
+      "reviewer": "/root",
+      "commit": "6df9d688432ffcd323a6adc97a7e3894f1ba8fb2",
+      "method": "GitHub fetch_file with explicit base64 encoding; transport whitespace removed and exact base64 compared with the original completed-log chunks.",
+      "images": 9,
+      "totalBytes": 607895,
+      "allExact": true,
+      "files": [
+        {
+          "path": "gallery/UI44-no-source-scenarios-test-data.jpg",
+          "sha": "3787957169138e952d15dce27862c54ecf78a950",
+          "bytes": 86317,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-original-source-selection-test-data.jpg",
+          "sha": "e1c97671302887a93229f1e5df219d0ffab8b147",
+          "bytes": 89416,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-issued-units-editor-dark-desktop-test-data.jpg",
+          "sha": "4e137e0293239b808031440811fe93778116aca2",
+          "bytes": 106342,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-issued-units-editor-light-desktop-test-data.jpg",
+          "sha": "d5f4e8f697706b0beb392fa72d7f2fb79652e304",
+          "bytes": 108528,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-issued-units-editor-dark-390-test-data.jpg",
+          "sha": "86ad6d9e5f8254b22f8c285a1ef35fafdb8c0164",
+          "bytes": 36779,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-issued-units-editor-light-320-test-data.jpg",
+          "sha": "83b19b884318e7122b2296ff9404aa498d204e11",
+          "bytes": 31123,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-dark-desktop-review-test-data.jpg",
+          "sha": "bc060534a21098eae4c9fb694172d1834867dce0",
+          "bytes": 89146,
+          "exact": true
+        },
+        {
+          "path": "gallery/UI44-dark-320-review-actions-test-data.jpg",
+          "sha": "869377196700ff5d51390994db15bb23f0d319df",
+          "bytes": 29344,
+          "exact": true
+        },
+        {
+          "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+          "sha": "7b6c966161e7e75577d5a373d9297278ffc92ed2",
+          "bytes": 30900,
+          "exact": true
+        }
+      ]
+    }
   },
   "images": [
     {
@@ -676,7 +740,20 @@
     "reviewer": "root_cost",
     "allNineImagesIndividuallyViewed": true,
     "rootVisualReviewAttributed": false,
-    "qualification": false
+    "qualification": false,
+    "rootIndependent": {
+      "reviewer": "/root",
+      "run": 45052940386,
+      "individuallyViewed": [
+        "UI44-issued-units-editor-light-desktop-test-data",
+        "UI44-dark-320-review-actions-test-data",
+        "FAILED-native-wave-three-test-data"
+      ],
+      "editor": "Light desktop shows native shell, issued USD/USD units and2 evidence references, selected scenario/baseline/parameter, criterion <=2000, minimum200 maximum2200 steps2.",
+      "review": "At320x800 the review displays scenario/parameter references, lte2000USD and200—2200(2)USD; confirmation and cancellation controls are visible.",
+      "failure": "Retains review request and values; confirmation appears disabled. Lost connection to the server / Retrying banner and Retry now are visible. Does not establish cause, backend crash/unwind, later reconnection, completion or persistence.",
+      "qualificationAdded": 0
+    }
   },
   "limitations": [
     "The original units GET and its captured body establish the source-issued units step. They do not establish completion of the later evaluation POST.",
