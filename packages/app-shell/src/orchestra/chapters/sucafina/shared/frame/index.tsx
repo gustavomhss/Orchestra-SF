@@ -366,7 +366,7 @@ export function SfChartFrame(props: SfChartFrameProps): JSX.Element {
           {/* BI consumers supply their original native SVG, not arbitrary HTML. */}
           {props.children}
         </div>
-        <div class="sf-chart-table-region">
+        <div class="sf-chart-table-region" role="region" aria-label={t(props.table.caption.key, props.table.caption.params)} tabIndex={0}>
           <table class="sf-chart-table">
             <caption id={`sf-chart-caption-${id}`}>
               <SfMessageText message={props.table.caption} />

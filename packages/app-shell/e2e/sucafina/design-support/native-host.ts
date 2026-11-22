@@ -17,6 +17,7 @@ import { seedWaveFourPlanner } from "./wave-four-planner-seed"
 import { seedWaveFourProcurement } from "./wave-four-procurement-seed"
 import { seedWaveFourDecisions, seedWaveFourDecisionsPlanner } from "./wave-four-decisions-seed"
 import { loadLocalConfiguration } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-configuration"
+import { scanLocalFile } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-scanner"
 
 const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../..")
 const privateRoot = process.argv[2]
@@ -26,7 +27,8 @@ if (Object.keys(process.env).some((key) => key.startsWith("VITE_")))
 
 const secondWave = process.argv[3] === "two"
 const decisionsWave = process.argv[3] === "four-decisions"
-const fourthWave = process.argv[3] === "four" || decisionsWave
+const filesWave = process.argv[3] === "four-files"
+const fourthWave = process.argv[3] === "four" || decisionsWave || filesWave
 const thirdWave = process.argv[3] === "three" || fourthWave
 const now = new Date()
 const year = now.getUTCFullYear()
@@ -59,10 +61,21 @@ const program = Effect.scoped(Effect.gen(function* () {
   }), { timeout: 120_000, maxOutputBytes: 64 * 1024, maxErrorBytes: 64 * 1024 })
   if (bundle.exitCode !== 0)
     throw new Error("Native Web build failed (" + bundle.exitCode + "): " + bundle.stderr.toString("utf8").slice(-4000))
+  // The parent owns the real ClamD service. The original INSTREAM adapter
+  // must admit an actual clean probe before this isolated installation uses it.
+  const scanner = filesWave ? { host: "127.0.0.1" as const, port: 3310 } : undefined
+  if (scanner) {
+    process.stdout.write("SF_DESIGN_STAGE scanner-probe\n")
+    const clean = yield* Effect.promise(() => scanLocalFile(
+      new TextEncoder().encode("SF_DESIGN_FILES_CLEAN_PROBE\n"), scanner,
+    ))
+    if (!clean) throw new Error("Files design fixture requires a ready real ClamD scanner")
+  }
   const serverPassword = randomUUID()
   let configuration: string | undefined
   process.stdout.write("SF_DESIGN_STAGE installation\n")
   const installed = yield* withNativeInstallation({
+    ...(scanner ? { scanner } : {}),
     webRoot,
     serverPassword,
     seed: async ({ config, store, actorId }) => {

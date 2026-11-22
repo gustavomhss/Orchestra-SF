@@ -21,7 +21,11 @@ export type DesignInstallation = {
 }
 
 /** Node owns the Bun adapter's scope; the existing fixture owns the real CLI. */
-export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>, wave: "one" | "two" | "three" | "four" | "four-decisions" = "one") {
+export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>, wave: "one" | "two" | "three" | "four" | "four-decisions" | "four-files" = "one") {
+  if (wave === "four-files" && (process.env.GITHUB_ACTIONS !== "true" ||
+      process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64" ||
+      process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF"))
+    throw new Error("The Files design fixture requires the actual Linux X64 GitHub Actions runner")
   const support = path.dirname(fileURLToPath(import.meta.url))
   const repository = path.resolve(support, "../../../../..")
   // Test listing must not initialize the process graph.
