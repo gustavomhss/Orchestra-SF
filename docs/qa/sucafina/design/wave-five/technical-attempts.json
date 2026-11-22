@@ -1111,6 +1111,56 @@
           "stderrTruncated": false
         }
       ]
+    },
+    {
+      "attempt": 10,
+      "product": "0e8a2a7c48c092f9954f6739fddeb57054cfa542",
+      "snapshot": "85120f51a20073861f712126395139e510d56a70",
+      "run": 44988554041,
+      "job": 137104383377,
+      "cleanupJob": 137104790549,
+      "checks": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "notRerun": 14
+      },
+      "failures": [],
+      "scope": "CLI package typecheck after the explicit original-response guard, and permanent E2E typecheck after original human-selection preparation and expanded BI source assertions. No production change since the attempt 9 product.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44988554041",
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      },
+      "commands": [
+        {
+          "gate": "app-shell e2e typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck:e2e"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "CLI native host typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "apps/cli",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      ]
     }
   ]
 }
