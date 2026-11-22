@@ -379,7 +379,36 @@
     ],
     "rootStaticReview": "PASSED",
     "peerStaticReview": "PASSED",
-    "focusedCi": "PENDING",
-    "installedLatencyClaim": false
+    "focusedCi": "PASSED",
+    "installedLatencyClaim": false,
+    "receipt": {
+      "run": 45000105434,
+      "job": 137139546983,
+      "cleanupJob": 137140053936,
+      "product": "ad5ed29c582752b72ee91ddd03bb2622bff7299a",
+      "snapshot": "e2f0c197c39302b04fc3151a762e23fa3c037210",
+      "base": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+      "status": "PASSED",
+      "gates": [
+        "CLI types",
+        "original Finance and criterion integration"
+      ],
+      "testGroups": 1,
+      "assertions": 145,
+      "includesPriorAssertions": 109,
+      "rootReadLogs": true,
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict"
+      },
+      "latencyClaim": "None; Finance fixture uses shared historical case version unlike installed fixture15."
+    },
+    "notes": [
+      "The original producer capability is forwarded through the consumer; producer code, schema, grants, source metadata and leases remain unchanged.",
+      "Original scalar/batch reference counts are now reported separately; prior scalar-only8 is not a total resolver count.",
+      "Installed historical case revisions differ, so the integration fixture's sharing and timing cannot establish the native deadline."
+    ]
   }
 }

@@ -287,6 +287,42 @@
       "tests": 106,
       "assertions": 1155,
       "scope": "35new plus71 previously qualified cases; counts are inclusive, not additive. Installed equivalence and clean import remain separate."
+    },
+    {
+      "name": "Original scenario batch capability forwarded through criterion metric consumer",
+      "status": "PASSED",
+      "run": 45000105434,
+      "job": 137139546983,
+      "cleanupJob": 137140053936,
+      "product": "ad5ed29c582752b72ee91ddd03bb2622bff7299a",
+      "snapshot": "e2f0c197c39302b04fc3151a762e23fa3c037210",
+      "base": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+      "gates": [
+        "CLI types",
+        "original Finance and criterion integration"
+      ],
+      "testGroups": 1,
+      "assertions": 145,
+      "includesPriorAssertions": 109,
+      "rootReadLogs": true,
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict"
+      },
+      "latencyClaim": "None; Finance fixture uses shared historical case version unlike installed fixture15.",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+          "blob": "3404aa793a7c73f370a750c4dadc9f6410379706"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+          "blob": "b11a8727790131190664d21d4e230a59b74ae453"
+        }
+      ],
+      "scope": "Full original metric/comparison equality, fresh two-phase batches, absent-capability scalar fallback, source/authority changes, late reader/owner replacement and invalid batch cardinality.145assertions include previous109."
     }
   ],
   "installedEvidence": [
@@ -386,29 +422,18 @@
   "merged": false,
   "inventoryAcceptedAndMergedAreas": 41,
   "pendingDelta": {
-    "status": "TECHNICAL_GATES_PASSED_INSTALLED_QUALIFICATION_PENDING",
+    "status": "FOCUSED_CLI_AND_ORIGINAL_INTEGRATION_PASSED_INSTALLED_QUALIFICATION_PENDING",
+    "candidate": "ad5ed29c582752b72ee91ddd03bb2622bff7299a",
     "files": [
       {
-        "path": "apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.ts",
-        "blob": "08f45a9910139614e977cb69d1fe053b6e78af7b"
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "blob": "3404aa793a7c73f370a750c4dadc9f6410379706"
       },
       {
-        "path": "apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts",
-        "blob": "479808933d294192fe3e0ce6f8f67583375e39e8"
-      },
-      {
-        "path": "apps/cli/test/sucafina-draft-intent-health.test.ts",
-        "blob": "9afcfa9bd0bb065021189891e0fa9a5c968a9b24"
-      },
-      {
-        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
-        "blob": "2c723f77a3e8b07829c9948d0daf07f40f9aa809"
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+        "blob": "b11a8727790131190664d21d4e230a59b74ae453"
       }
     ],
-    "notes": [
-      "The permanent E2E spec and original sensitivity-rule helper passed inattempt16 and are unchanged by this delta.",
-      "The test-only correction preserves all9 structural cases and full equality/descriptor assertions.",
-      "The original metadata regression suite passed106tests/1155assertions; installed equivalence and clean import remain pending."
-    ]
+    "scope": "Native metric forwards existing original resolveMany; no installed latency claim."
   }
 }
