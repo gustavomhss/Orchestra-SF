@@ -160,7 +160,7 @@ async function workbook() {
 
 async function fixture(scanner: Awaited<ReturnType<typeof ownedScanner>>, granted = true): Promise<Fixture> {
   const http = await microsoftHttpFixture({
-    label: "g06", scanner, plannerAdministrator: true,
+    label: "g06", scanner: { host: scanner.host, port: scanner.port }, plannerAdministrator: true,
     grants: granted ? [{ principalRef: principalId, namespaces: ["documents"],
       operations: ["sf_import_preview"], humanActions: ["imports.admit", "imports.apply"] }] : [],
   })
