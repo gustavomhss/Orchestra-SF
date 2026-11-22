@@ -120,13 +120,22 @@ async function tokens(page: Page, account: Account, year: string, version: strin
     expect(Number.isSafeInteger(revision)).toBe(true)
     result[id] = revision
     if (!observeControls) continue
-    const row = surface.locator(`tbody tr[data-sf-row="${id}"]`)
+    await surface.getByRole("tab", { name: "Lines", exact: true }).click()
+    const lines = surface.getByRole("tabpanel", { name: "Lines", exact: true })
+    await expect(lines).toBeVisible()
+    const row = lines.locator(`tbody tr[data-sf-row="${id}"]`)
     await expect(row).toHaveCount(1)
     await row.getByRole("button", { name: "Manage", exact: true }).click()
-    const detail = page.getByRole("region", { name: "Manage record", exact: true })
-    const line = detail.locator("p").filter({ has: page.getByText(id, { exact: true }) })
+    const detail = surface.getByRole("region", { name: "Manage", exact: true })
+    await expect(detail).toBeVisible()
+    const provenance = detail.locator("details.sf-u07-source")
+    await provenance.locator("summary").click()
+    const line = provenance.locator("p").filter({ has: page.getByText(id, { exact: true }) })
     await expect(line).toHaveCount(1)
+    await expect(line).toBeVisible()
     await expect(line).toContainText(new RegExp(`Source revision:\\s*${revision}(?![0-9])`))
+    await detail.getByRole("button", { name: "Back to plan", exact: true }).click()
+    await expect(lines).toBeVisible()
   }
   return result
 }
@@ -358,7 +367,7 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   expect(detail.detail.changes.filter((change) => change.path === `/versions/@id=${version}/lines/@id=${renewal}/f/0`)).toEqual([expect.objectContaining({ kind: "changed", before: { state: "present", value: 72000 }, after: { state: "present", value: 84000 }, source: { kind: "file", sheet: "OPEX", row: 2, column: 6, address: "F2", field: "Jan" } })])
   await expect(root).toHaveAttribute("data-sf-phase", "reviewing")
   await expect(root.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
-  await expect(root.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary")).toHaveCount(6)
+  await expect(root.getByRole("region", { name: "Item and field changes", exact: true }).locator(":scope > details > summary")).toHaveCount(6)
   const [afterPreview, previewTokens] = await Promise.all([
     exported(reader, account, version), tokens(reader, account, fiscalYear, version, [renewal, fixed], false),
   ])
