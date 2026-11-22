@@ -272,6 +272,8 @@ test("canonical Atlas witnesses and renewals stay bound to their live observatio
         if (result.status !== "ok") throw new Error("Canonical Atlas read unavailable before revocation")
         fixture.control.authorized = false
         expect(await revalidateSfAtlasRecall([result.records], call)).toBe(false)
+        fixture.control.authorized = true
+        expect(await read()).toEqual({ status: "unavailable" })
         return true
       })
       expect(revoked).toBeUndefined()

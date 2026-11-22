@@ -19,7 +19,7 @@ import type { SfAtlasReadObservation } from "./atlas-recall-scope.ts"
 
 type AtlasPartition = { events: Parameters<typeof createSfAtlasDurableMemory>[0]["events"]; envelopes: Record<string, BusinessMemoryEnvelope>; originals: Record<string, { ref: BusinessEvidenceRef; projection: NonNullable<Awaited<ReturnType<BusinessContextService["resolve"]>>["authorizedProjection"]> }>; captureDigests: Record<string, Record<string, string>> }
 
-type RecallOwner = { call: TrustedDomainContext; current: () => boolean; records: Set<readonly unknown[]> }
+type RecallOwner = { call: TrustedDomainContext; current: () => boolean; invalid: boolean; records: Set<readonly unknown[]> }
 
 type RecallObservation = {
   owner?: RecallOwner
@@ -32,7 +32,7 @@ const activeRecallOwners = new WeakMap<TrustedDomainContext, RecallOwner>()
 
 function recallOwnerCurrent(call: TrustedDomainContext, owner: RecallOwner | undefined) {
   if (recallOwner.getStore() !== owner || activeRecallOwners.get(call) !== owner) return false
-  try { return !owner || (owner.call === call && owner.current()) }
+  try { return !owner || (owner.call === call && !owner.invalid && owner.current()) }
   catch { return false }
 }
 
@@ -40,7 +40,7 @@ function recallOwnerCurrent(call: TrustedDomainContext, owner: RecallOwner | und
 export async function withSfAtlasRecallObservation<Value>(call: TrustedDomainContext, current: () => boolean,
   work: () => Promise<Value | undefined>): Promise<Value | undefined> {
   if (recallOwner.getStore() || activeRecallOwners.has(call) || !current()) return undefined
-  const owner: RecallOwner = { call, current, records: new Set() }
+  const owner: RecallOwner = { call, current, invalid: false, records: new Set() }
   activeRecallOwners.set(call, owner)
   try {
     return await recallOwner.run(owner, async () => {
@@ -71,7 +71,10 @@ export async function revalidateSfAtlasRecall(groups: readonly (readonly unknown
   selected.forEach((records) => recallObservations.delete(records))
   const first = observations[0]?.observed
   if (!first || !stable() || new Set(selected).size !== selected.length || observations.some(({ observed }) => observed?.complete !== first.complete || observed.call !== call)) return false
-  try { return await first.complete(observations, call) && stable() } catch { return false }
+  const valid = await first.complete(observations, call).catch(() => false) && stable()
+  // A failed canonical check cannot be hidden by the surrounding callback.
+  if (!valid && owner) owner.invalid = true
+  return valid
 }
 
 /** Canonical readers copy results so callers cannot mutate a protected root.
@@ -105,7 +108,11 @@ export function retainSfAtlasRecallResult<T>(value: T, call: TrustedDomainContex
     // Claim before awaiting so two cache readers cannot share a renewal.
     busy = true
     try {
-      if (!await previous.observed.complete([{ records: previous.records, observed: previous.observed }], call) || !stable()) return undefined
+      const valid = await previous.observed.complete([{ records: previous.records, observed: previous.observed }], call).catch(() => false) && stable()
+      if (!valid) {
+        if (previous.observed.owner) previous.observed.owner.invalid = true
+        return undefined
+      }
       const renewed = structuredClone(retained), next = recallRecords(renewed)
       if (!next || digestSfValue(renewed) !== fingerprint) return undefined
       const observation: RecallObservation = { ...previous.observed, stable, recordsDigest: digestSfValue(next) }
