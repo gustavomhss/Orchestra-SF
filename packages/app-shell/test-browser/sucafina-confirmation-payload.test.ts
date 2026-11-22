@@ -163,7 +163,9 @@ test("UI53 shows no dependencies and the native producer rejects a source change
   const view = mount(value, "pt-BR")
   try {
     await until(() => view.host.querySelector("[data-sf-confirm-material]") !== null)
-    expect(view.host.querySelector("[data-sf-confirm-no-dependencies]")?.textContent).toBe(SF_U44_COPY_BR["sf.u44.noDependencies"])
+    const empty = view.host.querySelector("[data-sf-confirm-no-dependencies]")
+    expect(empty).not.toBeNull()
+    expect(empty?.textContent).toBe(SF_U44_COPY_BR["sf.u44.noDependencies"])
     expect(view.host.querySelectorAll("[data-sf-confirm-dependency]")).toHaveLength(0)
     await value.save("project", 110, 1)
     confirm(view.host)
