@@ -87,7 +87,7 @@ export function withNativeInstallation(input: {
       // SNAPSHOT_ONLY_DIAGNOSTIC: relay only the finite branch-enum grammar.
       if (/^SF_DECISIONS_DIAGNOSTIC (?:origin:(?:page|global|request|none)|fallback:(?:no-selection|no-reader)|current:(?:request-identity|request-aborted|request-digest|binding|incoming|selection-identity|selection-expired|selection-digest|reader-identity)|changed:(?:entry-request-missing|entry-request-aborted|transaction-entry|case-read|case-unavailable|fence-before|snapshots|principal|fence-admitted|fence-after|transaction-egress|exception)|exception:(?:transaction|revalidation|case-read|scope-before|snapshots|authenticate|materialized|scope-admitted|canonical-read|scope-after|scope-close|transaction-egress))$/.test(line)) console.info(line)
       return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
-    }))))
+    })))
     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
       Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),
     )))
