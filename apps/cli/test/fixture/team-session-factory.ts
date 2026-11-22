@@ -50,9 +50,12 @@ try {
       text += decoder.decode(chunk.value, { stream: true })
     }
     if (!text.includes("server.connected") || !text.includes('"namespace"')) throw new Error("Corporate SSE frame missing")
-    const ended = reader.read().then((chunk) => chunk.done, () => true)
-    await deadline(runtime.dispose())
-    if (!await deadline(ended)) throw new Error("Disposed graph retained a live SSE reader")
+    const ended = (async () => {
+      while (true) {
+        if ((await reader.read()).done) return
+      }
+    })()
+    await deadline(Promise.all([ended, Promise.resolve().then(() => runtime.dispose())]))
   } finally { await reader.cancel().catch(() => undefined) }
   await runtime.dispose()
   const closed = await runtime.handler(request("/api/session"))

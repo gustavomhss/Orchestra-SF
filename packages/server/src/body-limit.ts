@@ -35,9 +35,9 @@ export const withLimit = (override?: (request: HttpServerRequest.HttpServerReque
       const declared = Number(request.headers["content-length"])
       if (declared > limit) return tooLarge(limit)
       return yield* effect.pipe(
+        // The API reads its payload with `orDie`, and JSON syntax failures also arrive as defects.
+        Effect.catchDefect((defect) => (exceeded(defect) ? Effect.succeed(tooLarge(limit)) : malformedJson(request, defect))),
         Effect.provideService(HttpServerRequest.MaxBodySize, FileSystem.Size(limit)),
-        // The API reads its payload with `orDie`, so the cut-off arrives as a defect.
-        Effect.catchDefect((defect) => (exceeded(defect) ? Effect.succeed(tooLarge(limit)) : Effect.die(defect))),
       )
     }),
   { global: true },
@@ -58,6 +58,21 @@ function exceeded(defect: unknown) {
     defect.reason.cause instanceof Error &&
     defect.reason.cause.message === "maxBytes exceeded"
   )
+}
+
+function malformedJson(request: HttpServerRequest.HttpServerRequest, defect: unknown) {
+  const contentType = request.headers["content-type"]?.split(";", 1)[0]?.trim().toLowerCase()
+  if (!(defect instanceof SyntaxError) || contentType !== "application/json") return Effect.die(defect)
+  // The API has already cached this bounded text. Confirm syntax so a handler's own SyntaxError stays a 500.
+  return Effect.flatMap(Effect.orDie(request.text), (text) => {
+    try { JSON.parse(text) } catch (error) {
+      if (error instanceof SyntaxError) return Effect.succeed(HttpServerResponse.jsonUnsafe(
+        { _tag: "InvalidRequestError", message: "Invalid JSON request body", kind: "Payload" },
+        { status: 400 },
+      ))
+    }
+    return Effect.die(defect)
+  })
 }
 
 function tooLarge(limit: number) {

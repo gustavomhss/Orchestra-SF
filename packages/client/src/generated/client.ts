@@ -661,7 +661,9 @@ export function make(options: ClientOptions) {
     if (descriptor.declaredStatuses.includes(response.status)) throw await json(response)
     try {
       await response.body?.cancel()
-    } catch {}
+    } catch {
+      /* The response is complete or rejected; cleanup must not replace that outcome. */
+    }
     throw new ClientError("UnexpectedStatus", { cause: { status: response.status } })
   }
 
@@ -671,7 +673,9 @@ export function make(options: ClientOptions) {
     if (descriptor.empty) {
       try {
         await response.body?.cancel()
-      } catch {}
+      } catch {
+        /* The response is complete or rejected; cleanup must not replace that outcome. */
+      }
       return undefined as A
     }
     if (descriptor.binary) {
@@ -687,7 +691,9 @@ export function make(options: ClientOptions) {
       if (!isContentType(response, "text/event-stream")) {
         try {
           await response.body?.cancel()
-        } catch {}
+        } catch {
+          /* The response is complete or rejected; cleanup must not replace that outcome. */
+        }
         throw new ClientError("UnsupportedContentType")
       }
       if (response.body === null) throw new ClientError("MalformedResponse")
@@ -732,7 +738,9 @@ export function make(options: ClientOptions) {
       } finally {
         try {
           await reader.cancel()
-        } catch {}
+        } catch {
+          /* The response is complete or rejected; cleanup must not replace that outcome. */
+        }
         reader.releaseLock()
       }
     },
@@ -4741,7 +4749,9 @@ async function json(response: Response): Promise<unknown> {
   if (!isContentType(response, "application/json") && !response.headers.get("content-type")?.includes("+json")) {
     try {
       await response.body?.cancel()
-    } catch {}
+    } catch {
+      /* The response is complete or rejected; cleanup must not replace that outcome. */
+    }
     throw new ClientError("UnsupportedContentType")
   }
   let text: string
