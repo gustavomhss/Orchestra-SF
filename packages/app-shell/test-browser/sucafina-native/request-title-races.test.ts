@@ -116,7 +116,7 @@ async function review(view: Awaited<ReturnType<typeof mount>>) {
   view.button("Review save")!.click()
   await waitFor(() => !!view.node.querySelector('[data-component="sf-change-review"]'))
   expect(view.writes).toEqual([]) // Positive control: the review really precedes the POST.
-  return view.button("Confirm action")!
+  return view.button("Confirm save")!
 }
 
 function gateDigest() {

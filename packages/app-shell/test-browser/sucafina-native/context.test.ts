@@ -27,10 +27,10 @@ const route = (ownerSelection: SfOwnerSelection): SfResolvedRoute => ({
   pathname: "/orchestra/sf-home/context",
   query: {},
 })
-const original = (id: string, projectId = "project") => ({
-  publicOrigin: "https://sucafina.example",
+const localInstallation = (id: string, projectId = "project") => ({
+  publicOrigin: "http://127.0.0.1:4096",
   mount: "/sucafina",
-  authMode: "microsoft" as const,
+  authMode: "local-operator" as const,
   identity: () => ({ installationId: id, projectId, hostId: "loaded-host" }),
 })
 
@@ -38,8 +38,8 @@ describe("F01 strict installation discovery", () => {
   test("IDs never call selected Location, cwd or directory fallback", async () => {
     let locationCalls = 0
     const source: SfTrustedInstallationSource = {
-      current: async () => original("installation"),
-      forAdmittedLocation: async () => { locationCalls++; return [original("wrong")] },
+      current: async () => localInstallation("installation"),
+      forAdmittedLocation: async () => { locationCalls++; return [localInstallation("wrong")] },
     }
     const match = await readSfInstallations(source, { select: "ids", installationId: "installation", projectId: "project" }, new AbortController().signal)
     expect(match.installations).toHaveLength(1)
@@ -51,7 +51,7 @@ describe("F01 strict installation discovery", () => {
     let inspected = ""
     const source: SfTrustedInstallationSource = {
       current: async () => { throw new Error("should not use IDs") },
-      forAdmittedLocation: async (loc) => { inspected = loc.directory; return [original("one")] },
+      forAdmittedLocation: async (loc) => { inspected = loc.directory; return [localInstallation("one")] },
     }
     expect(parseSfInstallationSelector("https://orchestra.example/api/sucafina/installations?select=location&location%5Bdirectory%5D=%2Frepo")).toEqual({
       select: "location", location: { directory: "/repo" },
