@@ -1,3 +1,4 @@
+import type { WorkflowCapture } from "../design-support/workflow-polish-capture"
 import { createHash, randomUUID } from "node:crypto"
 import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
@@ -216,7 +217,7 @@ async function prepareImport(page: Page, account: Account, generate: Locator, so
 }
 
 /** PR34 15df31a: actual XLSX admission, C02 preview, one Apply, delivery loss and read-only reconciliation. */
-export async function importJourney(page: Page, info: TestInfo) {
+export async function importJourney(page: Page, info: TestInfo, capture?: WorkflowCapture) {
   const account = await login(page, "first", "journey")
   const name = "Operations import " + randomUUID()
   const renewal = randomUUID(), fixed = randomUUID()
@@ -300,6 +301,7 @@ export async function importJourney(page: Page, info: TestInfo) {
   await expect(root.getByLabel("Remove records missing from supplied sheets", { exact: true })).not.toBeChecked()
   const generate = root.getByRole("button", { name: "Generate preview", exact: true })
   await expect(generate, "Preview needs the installed import admission and real scanner").toBeEnabled()
+  await capture?.(page, info, { surface: "UI55", state: "source-file-selected", evidence: "Original target selection and real XLSX bytes; Generate preview is enabled." })
   const { preview, detail, referenceURL } = await prepareImport(page, account, generate, sourceDigest, info)
   const isReference = (request: Request) => request.method() === "GET" && request.url() === referenceURL
   const readReference = async (tab: Page, action: () => Promise<unknown>) =>
@@ -330,6 +332,21 @@ export async function importJourney(page: Page, info: TestInfo) {
   ])
   expect(afterPreview).toEqual(before)
   expect(previewTokens).toEqual(beforeTokens)
+  await capture?.(page, info, { surface: "UI55", state: "original-preview", evidence: "Original scanned import preview; independent export and version tokens prove no domain changes.", attributes: { "data-sf-phase": "reviewing" }, focus: ".sf-files-preview" })
+  if (capture) {
+    const previewPage = await page.context().newPage()
+    try {
+      const previewURL = chapterURL(account, "/orchestra/sf-imports/r_" + Buffer.from(preview.id).toString("base64url") + "/preview")
+      expect((await previewPage.goto(previewURL.href))?.status()).toBe(200)
+      const previewRoot = previewPage.locator('[data-sf-surface="UI56"]')
+      await expect(previewRoot).toBeVisible()
+      const reread = await readReference(previewPage, () => previewRoot.locator(".sf-files-fields")
+        .getByRole("button", { name: "Refresh receipt", exact: true }).click())
+      expect(reread).toEqual(detail)
+      await expect(previewRoot.locator(".sf-files-preview")).toBeVisible()
+      await capture(previewPage, info, { surface: "UI56", state: "original-manifest-preview", evidence: "Independent native preview route re-read the exact original manifest; no Apply was invoked.", focus: ".sf-files-preview" })
+    } finally { await previewPage.close() }
+  }
   const applies: Request[] = []
   const applyURL = modeURL(account, "planner", "import-apply").href
   const applyPayload = { manifestId: preview.id, version: preview.version }
@@ -379,6 +396,7 @@ export async function importJourney(page: Page, info: TestInfo) {
   await expect(refreshReceipt).toBeEnabled()
   await expect(root.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
   expect(applies).toHaveLength(1)
+  await capture?.(page, info, { surface: "UI55", state: "lost-delivery-unavailable", evidence: "The original Apply committed once; only its delivery and one reconciliation read were dropped. Apply is absent.", attributes: { "data-sf-phase": "unknown", "data-sf-read-state": "unavailable" } })
   const recovered = await readReference(page, () => refreshReceipt.click())
   expect(recovered.manifest).toEqual(committed)
   expect(recovered.manifest.receipts).toHaveLength(1)
@@ -438,6 +456,7 @@ export async function importJourney(page: Page, info: TestInfo) {
     await expect(result).toHaveAttribute("data-sf-phase", "receipt")
     await expect(result.locator('[data-sf-receipt="producer"]')).toContainText(receipt.id + " · " + receipt.at + " · applied · " + receipt.version)
     await expect(result.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
+    await capture?.(resultPage, info, { surface: "UI57", state: "original-confirmed-receipt", evidence: "Independent native receipt route matches the committed producer receipt and one original Apply.", attributes: { "data-sf-phase": "receipt" }, focus: '[data-sf-receipt="producer"]' })
   } finally {
     await resultPage.close()
   }
@@ -480,6 +499,7 @@ export async function importJourney(page: Page, info: TestInfo) {
     await expect(result.locator('[data-sf-receipt="producer"]')).toHaveCount(0)
     await expect(result.getByRole("region", { name: "Item and field changes", exact: true })).toHaveCount(0)
     await expect(result.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
+    await capture?.(viewerPage, info, { surface: "UI57", state: "real-owner-denied", evidence: "A separately authenticated read-only operator received the original HTTP 403 denied for the owner's exact manifest. No response or role was fabricated.", attributes: { "data-sf-read-state": "denied" } })
   } finally {
     await viewerPage.close()
   }

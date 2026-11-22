@@ -1,3 +1,4 @@
+import type { WorkflowCapture } from "../design-support/workflow-polish-capture"
 import { createHash, randomUUID } from "node:crypto"
 import { readFile } from "node:fs/promises"
 import { expect } from "@playwright/test"
@@ -165,7 +166,7 @@ export async function createDocumentSupplier(page: Page, account: Account, key: 
 }
 
 /** PR34 15df31a: real private bytes, explicit schema and confirmation, then removal of the same source. */
-export async function documentJourney(page: Page, info: TestInfo) {
+export async function documentJourney(page: Page, info: TestInfo, capture?: WorkflowCapture) {
   const account = await login(page, "first", "suppliers")
   const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
   const text = "Price: 42\nReference: " + key + "\n"
@@ -365,6 +366,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(await valueOf<DocumentEvidence[]>((await emptyCandidates.completed).response)).toEqual([])
   await expect(root).toHaveAttribute("data-sf-read-state", "ready")
   await expect(root.getByText("No extracted candidates yet.", { exact: true })).toBeVisible()
+  await capture?.(page, info, { surface: "UI58", state: "admitted-empty-evidence", evidence: "Original private attachment admitted; original candidates read returned an empty array.", attributes: { "data-sf-read-state": "ready" } })
   const documentRoute = `/orchestra/sf-documents/${encodeSfRouteRef(documentRef)}`
   const evidenceURL = chapterURL(account, documentRoute + "/evidence")
   const scenarioURL = chapterURL(account, documentRoute + "/scenario")
@@ -402,6 +404,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(root).toHaveAttribute("data-sf-phase", "candidates")
   await expect(root.locator("[data-sf-evidence-id]")).toHaveCount(1)
   await expect(root.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" })).toBeVisible()
+  await capture?.(page, info, { surface: "UI58", state: "original-extracted-candidate", evidence: "Original schema and extraction returned Price 42 USD with exact text range and blob digest; confirmation is absent.", attributes: { "data-sf-phase": "candidates" } })
   const continueToEvidence = root.getByRole("link", { name: /^(Document evidence|Evidência do documento)$/ })
   await expect(continueToEvidence).toHaveAttribute("href", evidenceURL.pathname + evidenceURL.search)
   const routedCandidates = await observeCandidates()
@@ -432,6 +435,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(confirmationReview).toContainText("Price: 42 USD")
   await expect(confirmationReview.locator("blockquote")).toHaveText("42")
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract"])
+  await capture?.(page, info, { surface: "UI59", state: "source-confirmation-review", evidence: "Selected original extracted value and original source excerpt are both 42; confirmation has not been sent.", focus: '[data-sf-confirmation="review"]' })
   const [confirmResponse, confirmedCandidates] = await Promise.all([
     observe(page, endpoint("document-confirm"), "POST"), observeCandidates(),
   ])
@@ -450,6 +454,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(scenarioLink).toHaveAttribute("href", scenarioURL.pathname + scenarioURL.search)
   expect(await readSchemas()).toEqual([schema])
   expect(await readCandidates()).toEqual([confirmed])
+  await capture?.(page, info, { surface: "UI59", state: "original-confirmed-evidence", evidence: "The original confirmation response returned confirmationVersion 1 and the native evidence route re-read that exact record.", attributes: { "data-sf-phase": "confirmed" } })
   const scenarioCandidates = await observeCandidates()
   await scenarioLink.click()
   await expect(page).toHaveURL(scenarioURL.href)
@@ -467,6 +472,9 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const currentPresentation = await valueOf<Presentation>(confirmedSourceTransport)
   expect(currentPresentation).toMatchObject({ title: presentation.title, excerpt: presentation.excerpt, location: presentation.location })
   expect(new URL(currentPresentation.href!, account.origin).searchParams.get("asset")).toBe(assetURL.searchParams.get("asset"))
+
+  await expect(scenario.getByRole("region", { name: "source-text", exact: true }).locator("blockquote")).toHaveText("42")
+  await capture?.(page, info, { surface: "UI60", state: "confirmed-source-prerequisite", evidence: "The original confirmed evidence and source excerpt are visible. Planner scenario preview remains unavailable and is not claimed." })
 
   // Leave the confirmed UI60 card and source open while the second page deletes the supplier.
   const reader = await page.context().newPage()
@@ -538,6 +546,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(scenario.locator("blockquote")).toHaveCount(0)
   await expect(scenarioAction).toHaveCount(0)
   await expect(scenario.locator('[data-sf-scenario="preview"]')).toHaveCount(0)
+  await capture?.(page, info, { surface: "UI60", state: "source-revoked", evidence: "Original supplier removal revoked the source; native refresh removed all source text and candidates.", attributes: { "data-sf-read-state": "unavailable" } })
 
   const refreshed = await observe(reader, endpoint("document-sources"))
   expect((await reader.goto(catalogRoute.href))?.status()).toBe(200)
