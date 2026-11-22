@@ -4,7 +4,7 @@
 import type { Page, Request, Response, Route } from "@playwright/test"
 import { Schema } from "effect"
 import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
-import { strictJson } from "../../../../../../sf/azure/identity/az02-proof.cjs"
+import az02 from "../../../../../../sf/azure/identity/az02-proof.cjs"
 import { nativeOriginalRequest } from "./browser-transport.ts"
 import { observeNativeBinding, nativeContextURL } from "./readiness.ts"
 import type { NativeManifest } from "./readiness.ts"
@@ -141,7 +141,7 @@ export async function requireNativeRevocationRefusal(
     throw new Error("F04_ORIGINAL_REVOCATION_REFUSAL_NOT_PROVEN")
   try {
     const result = Schema.decodeUnknownSync(Schema.toCodecJson(SfTeamContextResult), { onExcessProperty: "error" })(
-      strictJson(await response.text()),
+      az02.strictJson(await response.text()),
     )
     if (result.status === (status === 401 ? "unauthenticated" : "denied")) return
   } catch {
