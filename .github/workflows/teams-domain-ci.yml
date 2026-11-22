@@ -1,0 +1,108 @@
+name: teams-domain-return
+
+on:
+  push:
+    branches: [teams-domain-deep]
+
+permissions:
+  contents: read
+
+jobs:
+  controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: "true"
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+      ORCHESTRA_OMNI_CONTROL: declared
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact Team domain return source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "15c3d7e8d5d1199b2fd176571f75d38d38a32682"
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Record source and changed paths
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(git rev-parse HEAD)" = "15c3d7e8d5d1199b2fd176571f75d38d38a32682"
+          test "$(git rev-parse 'HEAD^{tree}')" = "3c014f275f737c6477e03c71f1e4bafbee3d1acd"
+          mkdir -m 700 "$RUNNER_TEMP/teams-domain-controls"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/teams-domain-controls/refs.txt"
+          printf '%s\n' "$GITHUB_SHA" > "$RUNNER_TEMP/teams-domain-controls/workflow-sha.txt"
+          git diff --name-only "4bee9c656034bb6771929a3d1eb893bc65af6a7a" HEAD > "$RUNNER_TEMP/teams-domain-controls/changed-paths.txt"
+          git diff --check "$(git merge-base HEAD origin/dev)" HEAD
+          while IFS= read -r file; do sha256sum "$file"; done < "$RUNNER_TEMP/teams-domain-controls/changed-paths.txt" > "$RUNNER_TEMP/teams-domain-controls/source.sha256"
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+      - name: Own the invocation nonce
+        run: |
+          set -euo pipefail
+          nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+          printf '%s\n' "$nonce" > "$RUNNER_TEMP/teams-domain-controls/omni-nonce.txt"
+          printf 'ORCHESTRA_OMNI_CONTROL_NONCE=%s\n' "$nonce" >> "$GITHUB_ENV"
+      - name: Exercise original identity and signed Microsoft installation controls
+        working-directory: modules/sucafina
+        run: |
+          set -euo pipefail
+          GITHUB_ACTIONS=false bun test \
+            ./Sucafinav1/test/local-identity.test.ts \
+            ./Sucafinav1/test/microsoft-installation.test.ts \
+            --timeout 30000 --reporter=junit "--reporter-outfile=$RUNNER_TEMP/teams-domain-controls/report.xml" \
+            2>&1 | tee "$RUNNER_TEMP/teams-domain-controls/bun.log"
+      - name: Typecheck module
+        working-directory: modules/sucafina
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/teams-domain-controls/typecheck.log"
+      - name: Canonical guards
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/teams-domain-controls/guards.log"
+          test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Verify original test report and write bounded component receipt
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, re, xml.etree.ElementTree as ET
+          root = pathlib.Path(os.environ["RUNNER_TEMP"]) / "teams-domain-controls"
+          cases = list(ET.parse(root / "report.xml").getroot().iter("testcase"))
+          assert cases and not any(c.find("failure") is not None or c.find("error") is not None for c in cases)
+          skipped = [c.attrib.get("name") for c in cases if c.find("skipped") is not None]
+          assert not skipped, skipped
+          selected = [c for c in cases if c.attrib.get("name", "") in [
+              "Corporate native login preserves closed Team domain routes without granting membership",
+              "Corporate native domain return rejects incomplete, duplicate, legacy and out-of-range intent after signed OIDC",
+              "Corporate native login preserves canonical original detail and edit references without authority"]]
+          assert len(selected) == 3
+          expected_paths = {"modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+              "modules/sucafina/Sucafinav1/test/microsoft-installation.test.ts"}
+          assert set((root / "changed-paths.txt").read_text().splitlines()) == expected_paths
+          nonce = (root / "omni-nonce.txt").read_text().strip()
+          verdicts = re.findall(r"omni positive control \[" + re.escape(nonce) + r"\]: ([^\r\n]+)", (root / "bun.log").read_text())
+          assert len(verdicts) == 1 and (verdicts[0].startswith("pass ") or verdicts[0].startswith("not applicable "))
+          receipt = {"schema": "sf-teams-domain-return-controls-v1", "sourceSha": "15c3d7e8d5d1199b2fd176571f75d38d38a32682",
+              "sourceTree": "3c014f275f737c6477e03c71f1e4bafbee3d1acd", "workflowSha": os.environ["GITHUB_SHA"],
+              "runId": os.environ["GITHUB_RUN_ID"], "attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "tests": len(cases), "domainReturnCases": len(selected), "skipped": skipped,
+              "class": "TEAM_DOMAIN_RETURN_COMPONENT_CONTROLS",
+              "integrationBaseSha": "4bee9c656034bb6771929a3d1eb893bc65af6a7a", "identityProvider": "CONTROLLED_SIGNED_OIDC_AND_GRAPH",
+              "productSeed": "DECLARED_MICROSOFT_INSTALLATION_FIXTURE", "membershipMutation": "CONTROLLED_GRAPH",
+              "installedTeamsProof": False, "independentApproval": False,
+              "finalCandidate": False, "g05Closed": False, "g08Closed": False, "productionCutover": False,
+              "hashes": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in root.iterdir() if p.is_file()}}
+          (root / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          print(json.dumps({"tests": len(cases), "domainReturnCases": len(selected), "skipped": skipped}))
+          PY
+      - name: Preserve original evidence including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: teams-domain-return-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/teams-domain-controls
+          if-no-files-found: error
+          retention-days: 14
