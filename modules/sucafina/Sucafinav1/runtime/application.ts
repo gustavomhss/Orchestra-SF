@@ -43,7 +43,7 @@ export type Application = {
   assets?: { persistence: AssetPersistence; services: AssetServices }
 }
 
-const applicationSources = new WeakMap<object, Application>()
+const applicationSources = new WeakMap<object, Readonly<{ mount: string; application: Application }>>()
 
 /** Server-private provenance of a handler returned by the original application factory. */
 export function readSfApplicationSource(handler: object) {
@@ -512,7 +512,7 @@ export function createApplication(mount: string, application: Application) {
         })
       : response
   }
-  applicationSources.set(handler, application)
+  applicationSources.set(handler, Object.freeze({ mount, application }))
   return handler
 }
 

@@ -210,6 +210,9 @@ test("PO discovery rejects missing or unowned routes and delegates", async () =>
     value.source.routes = value.routes
     value.bindings.application = async () => new Response("unowned")
     expect(await value.health()).toEqual([])
+    value.bindings.application = createModule("/other", value.services)
+    expect(await value.health()).toEqual([])
+    expect((await value.routes(value.exportRequest()))?.status).toBe(503)
     value.bindings.application = createModule("/sf", { ...value.services, persistence: { ...value.persistence } })
     expect(await value.health()).toEqual([])
     expect(value.gate.producerCalls).toBe(0)

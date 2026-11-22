@@ -67,9 +67,9 @@ export function mountSfFilesOriginalRoutes(input: Readonly<{
   }
   applicationSources.set(route, () => {
     const producer = sources.application
-    const application = producer && readSfApplicationSource(producer)
-    return input.sources === sources && producer && application
-      ? { producer, application, origin: input.origin, mount: input.mount } : undefined
+    const source = producer && readSfApplicationSource(producer)
+    return input.sources === sources && producer && source && source.mount === input.mount
+      ? { producer, application: source.application, origin: input.origin, mount: input.mount } : undefined
   })
   return route
 }

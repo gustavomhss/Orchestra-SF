@@ -9,6 +9,11 @@ export type ExerciseApp = BackendApp & { readonly dispose: () => Promise<void>; 
 
 const credentials = { username: "orchestra", password: "secret" }
 
+const transport = process.env.ORCHESTRA_HTTPAPI_EXERCISE_TRANSPORT ?? "handler"
+if (transport !== "handler" && transport !== "loopback") throw new Error("Unknown HttpApi exercise transport")
+const witness = { transport, listeners: 0, closedListeners: 0, requests: 0, responses: 0, loopbackPeers: 0 }
+export const transportEvidence = () => ({ ...witness })
+
 // Deadlines, not waits: a response that arrives returns at once and never sleeps on these.
 // The auth layer answers 401 before any handler runs, so a probe that passes auth and then enters a handler that
 // never finishes (a stream held open, a long poll) is expected to hit this and is read as "not rejected".
@@ -26,13 +31,44 @@ export function makeApp(options: { auth: boolean }): ExerciseApp {
     createRoutes(options.auth ? { password: credentials.password } : {}).pipe(Layer.provide(HttpServer.layerServices)),
     { disableLogger: true, memoMap: Layer.makeMemoMapUnsafe() },
   )
+  if (transport === "handler")
+    return {
+      dispose: web.dispose,
+      request: (input, init) =>
+        web.handler(
+          input instanceof Request ? input : new Request(new URL(input, "http://localhost"), init),
+          Context.makeUnsafe<unknown>(new Map()),
+        ),
+    }
+
+  // A listener-owned peer observation witnesses that every request crossed TCP.
+  // Keep the original path, body, headers and abort signal; only the loopback destination changes.
+  const server = Bun.serve({
+    hostname: "127.0.0.1",
+    port: 0,
+    idleTimeout: 0,
+    async fetch(request, listener) {
+      witness.requests += 1
+      const peer = listener.requestIP(request)
+      if (peer?.address !== "127.0.0.1") return new Response("Non-loopback exercise peer", { status: 500 })
+      witness.loopbackPeers += 1
+      const response = await web.handler(request, Context.makeUnsafe<unknown>(new Map()))
+      witness.responses += 1
+      return response
+    },
+  })
+  witness.listeners += 1
   return {
-    dispose: web.dispose,
-    request: (input, init) =>
-      web.handler(
-        input instanceof Request ? input : new Request(new URL(input, "http://localhost"), init),
-        Context.makeUnsafe<unknown>(new Map()),
-      ),
+    async dispose() {
+      await server.stop(true)
+      await web.dispose()
+      witness.closedListeners += 1
+    },
+    request(input, init) {
+      const request = input instanceof Request ? input : new Request(new URL(input, "http://localhost"), init)
+      const url = new URL(request.url)
+      return fetch(new Request(new URL(url.pathname + url.search, server.url), request), { redirect: "manual" })
+    },
   }
 }
 
