@@ -139,7 +139,9 @@ test("Team CAP25 uses original HTTP writer, projection and versionRecord; CAS409
     expect(before.context.principalRef).toBe(f.context().stamp.principalRef)
     expect(before.value.data.requests.some((row: { number: string }) => row.number === id)).toBe(true)
     const version = before.value.versions["requests:" + id]
-    expect(version).toMatchObject({ version: expect.any(Number), by: expect.any(String) })
+    expect(typeof version.version).toBe("number")
+    expect(Number.isSafeInteger(version.version)).toBe(true)
+    expect(typeof version.by).toBe("string")
     const durable = f.durable()
     for (const [expected, values, submittedVersion] of [
       [409, { pr: { title: "Must not persist" } }, version.version + 10],
