@@ -5,9 +5,9 @@ import { createHash } from "node:crypto"
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { digest, validatePlan } from "./g08-private-evidence.mjs"
-import { exerciseAuthorizationControl, exerciseCleanupControl, exerciseProvenanceControl,
+import { aggregateJob, exerciseAggregateControl, exerciseAuthorizationControl, exerciseCleanupControl, exerciseProvenanceControl,
   inspectOriginalWorkflow, parseProducerRequest, producerJob, producerLabels, repository, repositoryId,
-  verifyDatasetCleanupAuthority, verifyExecutionAuthorization, verifyOriginalProducer, verifyReceiptArchive,
+  verifyAggregateExecution, verifyDatasetCleanupAuthority, verifyExecutionAuthorization, verifyOriginalProducer, verifyReceiptArchive,
   workflowPath } from "./g08-proof-provenance.mjs"
 
 const base = "/repos/" + repository, uuid = (n) => "00000000-0000-4000-8000-" + String(n).padStart(12, "0")
@@ -424,4 +424,192 @@ for (const [name, change] of [
 ]) test("posterior cleanup attestation refuses " + name, async () => {
   const f = await cleanupFixture(); change(f)
   await expect(exerciseCleanupControl(f.cleanup, f.api, Date.parse("2026-01-01T01:30:00Z"))).rejects.toThrow()
+})
+
+const aggregateNow = Date.parse("2026-01-01T03:05:00Z")
+async function aggregateFixture() {
+  const f = await fixture(), runId = 901, attempt = 2
+  const run = { ...structuredClone(f.run), id: runId, run_attempt: attempt, event: "workflow_dispatch",
+    status: "in_progress", conclusion: null, created_at: "2026-01-01T02:50:00Z", updated_at: "2026-01-01T03:05:00Z" }
+  const names = ["Verify all guards and the original source",
+    "Re-read every raw private report and verify its completed GitHub producer",
+    "Publish the isolated qualification receipt only"]
+  const steps = observedSteps().slice(0, 7).map((step, index) => ({ ...step,
+    ...(index >= 4 ? { name: names[index - 4] } : {}),
+    started_at: step.started_at.replace("T01:", "T03:"), completed_at: step.completed_at.replace("T01:", "T03:") }))
+  Object.assign(steps[5], { status: "in_progress", conclusion: null, completed_at: null })
+  Object.assign(steps[6], { status: "pending", conclusion: null, started_at: null, completed_at: null })
+  const job = { ...structuredClone(f.job), id: 902, run_id: runId, run_attempt: attempt, name: aggregateJob,
+    status: "in_progress", conclusion: null, check_run_url: "https://api.github.com" + base + "/check-runs/903",
+    started_at: "2026-01-01T03:00:00Z", completed_at: null, steps }
+  const jobs = { total_count: 2, jobs: [
+    { id: 904, run_id: runId, run_attempt: attempt, head_sha: candidate.sha,
+      name: producerJob, status: "completed", conclusion: "skipped" }, structuredClone(job),
+  ] }
+  f.data.set(base + "/actions/runs/901/attempts/2", run)
+  f.data.set(base + "/actions/runs/901/attempts/2/jobs?per_page=100", jobs)
+  f.data.set(base + "/actions/jobs/902", job)
+  const env = { ...f.env, GITHUB_RUN_ID: "901", GITHUB_RUN_ATTEMPT: "2", GITHUB_JOB: aggregateJob,
+    GITHUB_EVENT_NAME: "workflow_dispatch", RUNNER_NAME: job.runner_name }
+  for (const key of ["SF_G08_CANDIDATE_SHA", "SF_G08_CANDIDATE_TREE", "SF_G08_INVOCATION_ID"]) delete env[key]
+  const input = { plan: f.input.plan, planRaw: f.input.planRaw, archiveSha256: f.input.archiveSha256 }
+  return { ...f, aggregateInput: input, aggregateEnv: env, aggregateRun: run, aggregateRecord: job, aggregateJobs: jobs }
+}
+test("aggregate admission reads its own six-step workflow and current job after the producer reservation has ended", async () => {
+  const f = await aggregateFixture()
+  assert(aggregateNow > Date.parse(f.input.plan.reservation.endsAt))
+  const result = await exerciseAggregateControl(f.aggregateInput, f.api, f.aggregateEnv, aggregateNow)
+  isControl(result)
+  assert.equal(result.finalCandidate, false)
+  assert.equal(result.controlledSchema, "sf-g08-aggregate-admission-v1")
+  assert.equal(result.mode, "RETROSPECTIVE_READ_ONLY")
+  assert.equal(result.requiresNewActiveReservation, false)
+  assert.equal(result.currentJobIsInstalledProducer, false)
+  assert(!Object.hasOwn(result, "authorization"))
+  assert(!Object.hasOwn(result, "producer"))
+  assert.equal(result.aggregator.runId, "901")
+  assert.equal(result.aggregator.runAttempt, "2")
+  assert.equal(result.aggregator.jobId, "902")
+  assert.equal(result.aggregator.checkRunId, "903")
+  assert.equal(result.aggregator.producerJobConclusion, "skipped")
+  assert.equal(result.aggregator.event, "workflow_dispatch")
+  assert.equal(result.aggregator.steps.length, 5)
+  assert.equal(result.aggregator.steps.at(-1).status, "in_progress")
+  assert.equal(result.source.workflow.execution.steps.length, 6)
+  assert.equal(result.source.workflow.job, aggregateJob)
+  assert.equal(result.source.workflow.blobSha, "6035b60476c4fce49b83ce7503ef03367ffc2d28")
+  assert.equal(result.aggregator.runnerNameSha256, digest(f.aggregateEnv.RUNNER_NAME))
+  assert(f.calls.includes(base + "/actions/jobs/902"))
+  assert(!f.calls.some((name) => /comments|reviews|artifacts/.test(name)))
+  assert.equal(f.downloads.length, 0)
+  assert(!JSON.stringify(result).includes(f.aggregateEnv.RUNNER_NAME))
+  // Re-reading does not weaken the original producer's reservation or permission checks.
+  isControl(await exerciseProvenanceControl(f.input, f.api))
+  await expect(exerciseAuthorizationControl(f.authInput, f.api, f.env, aggregateNow)).rejects.toThrow("G08_OUTSIDE_RESERVED_WINDOW")
+})
+test("aggregate parser keeps roles closed and the original publication contract distinct", () => {
+  const observed = inspectOriginalWorkflow(canonicalWorkflow, aggregateJob)
+  assert.equal(observed.execution.command, 'set -euo pipefail\numask 077\nbun script/sf-ci/g08-installed-evidence.mjs aggregate "$SF_G08_PRIVATE_ROOT"\n')
+  assert.equal(observed.execution.steps.at(-1), "Publish the isolated qualification receipt only")
+  assert.throws(() => inspectOriginalWorkflow(canonicalWorkflow, "manual-job"), /CLOSED_EXECUTION_ROLE_REQUIRED/)
+})
+test("real aggregate export cannot turn an injected hosted control into current Actions provenance", async () => {
+  const f = await aggregateFixture()
+  assert.equal(process.env.GH_TOKEN ?? "", "")
+  await expect(verifyAggregateExecution(f.aggregateInput, f.api, f.aggregateEnv, aggregateNow)).rejects.toThrow()
+  assert.equal(f.calls.length, 0)
+  assert.equal(f.downloads.length, 0)
+})
+test("aggregate admission accepts a queued unpublished receipt without executing or authorizing a producer", async () => {
+  const f = await aggregateFixture(); f.aggregateRecord.steps[6].status = "queued"
+  const value = await exerciseAggregateControl(f.aggregateInput, f.api, f.aggregateEnv, aggregateNow)
+  isControl(value)
+  assert.equal(value.currentJobIsInstalledProducer, false)
+})
+
+const aggregateContextRefusals = [
+  ["not Actions", (env) => { env.GITHUB_ACTIONS = "false" }],
+  ["not CI", (env) => { env.CI = "false" }],
+  ["another repository", (env) => { env.GITHUB_REPOSITORY = "another/repo" }],
+  ["another repository id", (env) => { env.GITHUB_REPOSITORY_ID = "99" }],
+  ["hosted runner", (env) => { env.RUNNER_ENVIRONMENT = "github-hosted" }],
+  ["non-Linux runner", (env) => { env.RUNNER_OS = "Windows" }],
+  ["another architecture", (env) => { env.RUNNER_ARCH = "ARM64" }],
+  ["another checkout SHA", (env) => { env.GITHUB_SHA = "9".repeat(40) }],
+  ["another workflow SHA", (env) => { env.GITHUB_WORKFLOW_SHA = "9".repeat(40) }],
+  ["producer job context", (env) => { env.GITHUB_JOB = producerJob }],
+  ["push event", (env) => { env.GITHUB_EVENT_NAME = "push" }],
+  ["missing run id", (env) => { delete env.GITHUB_RUN_ID }],
+  ["invalid attempt", (env) => { env.GITHUB_RUN_ATTEMPT = "0" }],
+  ["missing runner name", (env) => { env.RUNNER_NAME = "" }],
+]
+for (const [name, change] of aggregateContextRefusals) test("aggregate before-I/O admission refuses " + name, async () => {
+  const f = await aggregateFixture(); change(f.aggregateEnv)
+  await expect(exerciseAggregateControl(f.aggregateInput, f.api, f.aggregateEnv, aggregateNow)).rejects.toThrow()
+  assert.equal(f.calls.length, 0); assert.equal(f.downloads.length, 0)
+})
+
+const aggregateJobRefusals = [
+  ["repository id", (f) => { f.data.get(base).id = 99 }],
+  ["candidate tree", (f) => { f.data.get(base + "/git/commits/" + candidate.sha).tree.sha = "9".repeat(40) }],
+  ["workflow bytes", (f) => { f.data.get(base + "/contents/" + workflowPath + "?ref=" + candidate.sha).sha = "9".repeat(40) }],
+  ["run id", (f) => { f.aggregateRun.id = 100 }],
+  ["run attempt", (f) => { f.aggregateRun.run_attempt = 1 }],
+  ["run event", (f) => { f.aggregateRun.event = "push" }],
+  ["fork run source", (f) => { f.aggregateRun.head_repository.id = 99 }],
+  ["run source SHA", (f) => { f.aggregateRun.head_sha = "9".repeat(40) }],
+  ["another workflow path", (f) => { f.aggregateRun.path = ".github/workflows/other.yml" }],
+  ["completed run replay", (f) => { f.aggregateRun.status = "completed"; f.aggregateRun.conclusion = "success" }],
+  ["missing producer job", (f) => { f.aggregateJobs.jobs.shift(); f.aggregateJobs.total_count = 1 }],
+  ["extra concurrent job", (f) => { f.aggregateJobs.jobs.push({ name: "manual" }); f.aggregateJobs.total_count = 3 }],
+  ["producer ran in aggregate run", (f) => { f.aggregateJobs.jobs[0].conclusion = "success" }],
+  ["producer active in aggregate run", (f) => { f.aggregateJobs.jobs[0].status = "in_progress"; f.aggregateJobs.jobs[0].conclusion = null }],
+  ["aggregate job skipped", (f) => { f.aggregateJobs.jobs[1].status = "completed"; f.aggregateJobs.jobs[1].conclusion = "skipped" }],
+  ["listed job source mismatch", (f) => { f.aggregateJobs.jobs[1].head_sha = "9".repeat(40) }],
+  ["actual job run mismatch", (f) => { f.aggregateRecord.run_id = 100 }],
+  ["actual job attempt mismatch", (f) => { f.aggregateRecord.run_attempt = 1 }],
+  ["actual job role mismatch", (f) => { f.aggregateRecord.name = producerJob }],
+  ["actual job source mismatch", (f) => { f.aggregateRecord.head_sha = "9".repeat(40) }],
+  ["actual job check URL changed", (f) => { f.aggregateRecord.check_run_url = "https://api.github.com" + base + "/check-runs/999" }],
+  ["foreign check URL", (f) => { f.aggregateRecord.check_run_url = f.aggregateJobs.jobs[1].check_run_url = "https://example.invalid/check-runs/903" }],
+  ["hosted labels in both observations", (f) => { f.aggregateRecord.labels = f.aggregateJobs.jobs[1].labels = ["ubuntu-latest"] }],
+  ["missing actual runner", (f) => { f.aggregateRecord.runner_id = 0 }],
+  ["different actual runner name", (f) => { f.aggregateRecord.runner_name = "another-runner" }],
+  ["job before run creation", (f) => { f.aggregateRun.created_at = "2026-01-01T03:00:01Z" }],
+  ["job after observation time", (f) => { f.aggregateRecord.started_at = f.aggregateJobs.jobs[1].started_at = "2026-01-01T03:06:00Z" }],
+  ["completed active job", (f) => { f.aggregateRecord.completed_at = "2026-01-01T03:04:00Z" }],
+  ["skipped guards", (f) => { f.aggregateRecord.steps[4].conclusion = "skipped" }],
+  ["missing current driver", (f) => { f.aggregateRecord.steps.splice(5, 1) }],
+  ["duplicate current driver", (f) => { f.aggregateRecord.steps.push({ ...f.aggregateRecord.steps[5], number: 99 }) }],
+  ["additional receipt writer", (f) => { f.aggregateRecord.steps.push({ ...f.aggregateRecord.steps[5], number: 99, name: "Write manual receipt" }) }],
+  ["reordered observed steps", (f) => { [f.aggregateRecord.steps[4], f.aggregateRecord.steps[5]] = [f.aggregateRecord.steps[5], f.aggregateRecord.steps[4]] }],
+  ["driver still queued", (f) => { f.aggregateRecord.steps[5].status = "queued" }],
+  ["publication already started", (f) => { f.aggregateRecord.steps[6].started_at = "2026-01-01T03:04:00Z" }],
+  ["publication already completed", (f) => { Object.assign(f.aggregateRecord.steps[6], { status: "completed", conclusion: "success", started_at: "2026-01-01T03:03:00Z", completed_at: "2026-01-01T03:04:00Z" }) }],
+  ["duplicate publication", (f) => { f.aggregateRecord.steps.push({ ...f.aggregateRecord.steps[6], number: 99 }) }],
+]
+for (const [name, change] of aggregateJobRefusals) test("current original aggregate job refuses " + name, async () => {
+  const f = await aggregateFixture(); change(f)
+  await expect(exerciseAggregateControl(f.aggregateInput, f.api, f.aggregateEnv, aggregateNow)).rejects.toThrow()
+  assert.equal(f.downloads.length, 0)
+})
+
+const aggregateWorkflowRefusals = [
+  ["changed guard command", (job, v) => { job.steps[3].run = "echo PASS" }],
+  ["manual receipt command", (job, v) => { job.steps[4].run = "printf PASS > g08-aggregate-public/receipt.json" }],
+  ["another driver id", (job, v) => { job.steps[4].id = "manual" }],
+  ["missing driver", (job, v) => { job.steps.splice(4, 1) }],
+  ["extra writer", (job, v) => { job.steps.splice(5, 0, { run: "touch g08-aggregate-public/receipt.json" }) }],
+  ["upload before driver", (job, v) => { [job.steps[4], job.steps[5]] = [job.steps[5], job.steps[4]] }],
+  ["ignored driver failure", (job, v) => { job.steps[4]["continue-on-error"] = true }],
+  ["ignored job failure", (job, v) => { job["continue-on-error"] = true }],
+  ["branch checkout", (job, v) => { job.steps[0].with.ref = "dev" }],
+  ["mutable checkout", (job, v) => { job.steps[0].uses = "actions/checkout@main" }],
+  ["unclean checkout", (job, v) => { job.steps[0].with.clean = false }],
+  ["foreign environment", (job, v) => { job.environment = "production" }],
+  ["hosted runner", (job, v) => { job["runs-on"] = ["ubuntu-latest"] }],
+  ["container substitution", (job, v) => { job.container = "unbound-image" }],
+  ["write permissions", (job, v) => { job.permissions = { ...v.permissions, contents: "write" } }],
+  ["foreign shell", (job, v) => { job.defaults.run.shell = "sh" }],
+  ["inexact aggregate artifact name", (job, v) => { job.steps[5].with.name = "g08-complete-installed-forged" }],
+  ["upload directory", (job, v) => { job.steps[5].with.path = "g08-aggregate-public/" }],
+  ["publication on failure", (job, v) => { job.steps[5].if = "always()" }],
+]
+for (const [name, change] of aggregateWorkflowRefusals) test("original aggregate workflow refuses " + name, async () => {
+  const f = await aggregateFixture(); f.changeWorkflow((v) => change(v.jobs[aggregateJob], v))
+  await expect(exerciseAggregateControl(f.aggregateInput, f.api, f.aggregateEnv, aggregateNow)).rejects.toThrow()
+})
+
+for (const [name, change] of [
+  ["run identity", (f) => { f.aggregateEnv.GITHUB_RUN_ID = "999" }],
+  ["runner identity", (f) => { f.aggregateEnv.RUNNER_NAME = "changed-runner" }],
+  ["event", (f) => { f.aggregateEnv.GITHUB_EVENT_NAME = "push" }],
+]) test("aggregate admission rechecks current " + name + " after original API reads", async () => {
+  const f = await aggregateFixture(), json = f.api.json
+  f.api.json = async (path) => {
+    const value = await json(path)
+    if (path === base + "/actions/jobs/902") change(f)
+    return value
+  }
+  await expect(exerciseAggregateControl(f.aggregateInput, f.api, f.aggregateEnv, aggregateNow)).rejects.toThrow()
 })
