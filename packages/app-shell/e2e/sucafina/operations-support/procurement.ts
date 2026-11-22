@@ -37,7 +37,7 @@ async function queueReadInterceptor(page: Page, endpoint: URL) {
   queueReadInterceptors.set(page, state)
   const owned = state
   const pattern = new RegExp("^" + endpoint.href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?:\\?|$)")
-  owned.ready = page.route(pattern, (route) => owned.active ? owned.active.forward(route) : route.fallback())
+  owned.ready = page.route(pattern, (route) => owned.active ? owned.active.forward(route) : route.fallback()).then(() => undefined)
   page.once("close", () => {
     queueReadInterceptors.delete(page)
     const active = owned.active
