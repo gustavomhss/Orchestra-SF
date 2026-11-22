@@ -1,0 +1,82 @@
+{
+  "schema": "sf-design-visual-review-v1",
+  "label": "Portfolio27",
+  "reviewer": "/root/root_cost",
+  "recordedAt": "2026-11-22T16:41:02Z",
+  "method": "Each of the seven original emitted JPEGs was displayed separately and inspected; no montage, crop, repaint or generated substitute was used.",
+  "classification": "visual observations of an incomplete diagnostic journey; no qualification credit",
+  "images": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "path": "gallery/UI42-list-dark-desktop-test-data.jpg",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "d140e11eae0f86b94654d2220e735436cb22c31d1b3564ec250c426a85834c2f",
+      "individuallyViewed": true,
+      "observations": "Dark desktop view shows the Portfolio scenarios heading and two authorized case cards at versions 2 and 6, with readable Open case actions. The sidebar and project selector remain visible. No overlap or horizontal clipping is apparent in this captured viewport.",
+      "qualification": "Preparatory evidence only; no completed preview or result."
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "path": "gallery/UI42-list-light-desktop-test-data.jpg",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "6c568b56c10a952f2aba16c0087d497e2ba62cd9fd9a81d1303678a2b8f3c6c1",
+      "individuallyViewed": true,
+      "observations": "Light desktop view shows two authorized case cards with case versions 2 and 6 and readable Open case actions. The heading, authorized count, navigation and cards fit within the captured viewport.",
+      "qualification": "Preparatory evidence only; no completed preview or result."
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "path": "gallery/UI42-list-dark-390-test-data.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "212035309848176556d9da797f4c4a231b627d5fdfaede576fed43c7d1f6c881",
+      "individuallyViewed": true,
+      "observations": "At 390 pixels in dark mode, the authorized cases stack vertically with case titles wrapping inside their cards. Both case versions and Open case actions remain readable. Compact navigation is visible and no horizontal clipping is apparent.",
+      "qualification": "Preparatory evidence only; no completed preview or result."
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "path": "gallery/UI42-list-light-320-test-data.jpg",
+      "width": 320,
+      "height": 800,
+      "sha256": "fcca827b17ffb3f8883f52d75946a5de9890eaf1de998e563c3ae58703cd8e32",
+      "individuallyViewed": true,
+      "observations": "At 320 pixels in light mode, the helper text and case titles wrap within the authorized-cases panel. Both stacked cards retain readable case versions and Open case actions. No horizontal clipping is apparent in this viewport.",
+      "qualification": "Preparatory evidence only; no completed preview or result."
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "path": "gallery/UI42-empty-authorized-case-test-data.jpg",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "4e0ff8d5a9ae60a7219c15aa91cddff943899638a0390db1e743e8e809c0cdbb",
+      "individuallyViewed": true,
+      "observations": "The empty authorized case is shown at version 2 with USD and the 2026 horizon. Candidate scenarios says no eligible scenarios are available, Preview combinations appears inactive, and History reports no recorded results. Constraint and priority sections remain visible, with exploration limit 32.",
+      "qualification": "Preparatory evidence only; no completed preview or result."
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "path": "gallery/UI42-configure-focused-candidate-test-data.jpg",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "dd02517d0bac4ee23f2d112264960d7da734a93cadd500a59da6f47cff1adcb3",
+      "individuallyViewed": true,
+      "observations": "The operating-plans case is shown at version 6, USD and the 2026 horizon. Decision candidate plan v1 and the constraint at version 2 are selected. Baseline, monthly-amount hypothesis and priority criterion remain unselected. Exploration limit 4 has a visible focus outline; Preview combinations appears enabled and History is empty.",
+      "qualification": "Prepared configuration only; no completed preview or recorded result is visible."
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "bb66082b62ccfa4af5a6dbc8dba967d3d3144da542da3184667a97a5d8cd66cf",
+      "individuallyViewed": true,
+      "observations": "The failure capture retains the candidate-only configuration and exploration limit 4. Controls appear dimmed while Preview combinations displays Running. The preview panel says Preview is not yet available and shows loading placeholders; History still reports no recorded results. No completed preview, evaluated portfolio, saved result or sensitivity view is visible.",
+      "qualification": "Failure-state evidence only; no UI42, UI43 or UI44 qualification."
+    }
+  ],
+  "failureState": "Running; controls dimmed; Preview is not yet available; history empty; no completed preview/result/sensitivity screen.",
+  "limits": "Screenshots establish visible state at capture time only. They do not establish backend completion, full responsive coverage, persistence success, or successful original preview/result readbacks. This file attributes review only to /root/root_cost; root review is not asserted."
+}
