@@ -322,21 +322,29 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const review = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
       expect(review.response.status).toBe(200)
       const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
+      const changedReason = "Concurrent authorized revision of the reviewed choice"
       fixture.afterReceiptCommit(async () => {
         const current = await fixture.storedCase()
-        const changed = { ...current.value, version: current.value.version + 1, objective: "Concurrent authorized case edit" }
+        const selected = current.value.choices.filter((choice) => choice.id === application.choiceId)
+        expect(selected).toHaveLength(1)
+        expect(current.value.version).toBe(application.caseRef.version)
+        // Unrelated case edits can be preserved by reconciliation. Replacing the
+        // reviewed choice invalidates its captured digest despite its stable ID.
+        const changed = { ...current.value, version: current.value.version + 1,
+          choices: current.value.choices.map((choice) => choice.id === application.choiceId ? { ...choice, reason: changedReason } : choice) }
         const saved = await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: changed.id, targetIncarnation: changed.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue(changed) }, async (state) => { state.cases[changed.id] = changed; return { commit: true, value: true } })
-        if (saved.status !== "ok") throw new Error("concurrent real case edit failed")
+        if (saved.status !== "ok" || !saved.value) throw new Error("concurrent real case edit failed")
       })
       const conflict = await fixture.http("decision-apply", application)
       expect(conflict.response.status).toBe(409)
-      expect(conflict.body).toEqual({ status: "stale", reason: "case-changed-after-application" })
+      expect(conflict.body).toEqual({ status: "stale", reason: "prepared-choice-changed" })
       expect(fixture.receiptCommits).toHaveLength(1)
       const after = await fixture.material()
       expect(object(after.request.pr).estAmount).toBe(150)
       expect(after.request.history).toHaveLength(1)
       const decision = await fixture.storedCase()
-      expect(decision.value.objective).toBe("Concurrent authorized case edit")
+      expect(decision.value.version).toBe(application.caseRef.version + 1)
+      expect(decision.value.choices.find((choice) => choice.id === application.choiceId)?.reason).toBe(changedReason)
       expect(decision.value.preparedChanges[0]?.state).toBe("planned")
       expect(decision.value.receipts).toEqual([])
       const receipts = await fixture.authority.state.read(fixture.request(), "receipts", (state) => Object.values(state.receipts))
@@ -347,6 +355,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(receipts.value[0]!.result).toEqual({ ok: true, value: { status: "applied" } })
       expect((await fixture.http("decision-apply", application)).response.status).toBe(409)
       expect(await fixture.material()).toEqual(after)
+      expect(await fixture.storedCase()).toEqual(decision)
       expect(fixture.receiptCommits).toHaveLength(1)
     } finally { await fixture.dispose() }
   // W5 reached the post-commit assertions in 6.34s; the retry adds real case reads.
@@ -368,13 +377,19 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const afterCommit = await fixture.material()
       expect(object(afterCommit.request.pr).estAmount).toBe(150)
       expect(afterCommit.request.history).toHaveLength(1)
-      expect((await fixture.storedCase()).value.receipts).toEqual([])
+      const caseAfterCommit = await fixture.storedCase()
+      expect(caseAfterCommit.value.receipts).toEqual([])
+      const storedReceipts = () => fixture.authority.state.read(fixture.request(), "receipts", (state) => Object.values(state.receipts))
+      const receiptsAfterCommit = await storedReceipts()
+      expect(receiptsAfterCommit.status === "ok" && receiptsAfterCommit.value).toHaveLength(1)
       expect(fixture.receiptCommits).toHaveLength(1)
       fixture.advance(300_001)
       const changedProof = await fixture.http("decision-apply", { ...application, reviewDigest: changedReviewDigest(application.reviewDigest) }, "alice", "recover-application")
       expect(changedProof.response.status).toBe(409)
-      expect(changedProof.body).toEqual({ status: "conflict", reason: "review-proof-mismatch" })
+      expect(changedProof.body).toEqual({ status: "conflict", reason: "application-intent-mismatch" })
       expect(await fixture.material()).toEqual(afterCommit)
+      expect(await fixture.storedCase()).toEqual(caseAfterCommit)
+      expect(await storedReceipts()).toEqual(receiptsAfterCommit)
       expect(fixture.receiptCommits).toHaveLength(1)
       const recovered = await fixture.http("decision-apply", application, "alice", "recover-application")
       expect(recovered.response.status).toBe(200)
@@ -460,7 +475,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     let browser: Awaited<ReturnType<typeof launchWp01Browser>> | undefined
     let fixture: Awaited<ReturnType<typeof hostFixture>> | undefined
     let prepared: Awaited<ReturnType<typeof prepareChange>> | undefined
-    const traffic: { mode: string | null; body: string; key: string | null; origin: string | null; authorized: boolean; originalStatus: number; deliveredStatus: number; result: Record<string, unknown> }[] = []
+    const traffic: { mode: string | null; body: string; key: string | null; origin: string | null; authorized: boolean; originalStatus: number; deliveredStatus: number; responseBody: string; result: Record<string, unknown> }[] = []
     const navigationKeys: (string | null)[] = []
     let withheld = false
     const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => {
@@ -474,12 +489,13 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         // origin, actor, idempotency key and unchanged body. Only delivery may fail.
         const response = await current.application(request)
         if (!response) throw new Error("real Procurement Application did not handle its browser request")
-        const result = object(await response.clone().json())
+        const responseBody = await response.clone().text()
+        const result = object(JSON.parse(responseBody))
         const mode = url.searchParams.get("sf")
         const loseResponse = mode === "decision-apply" && response.status === 200 && !withheld
         traffic.push({ mode, body, key: request.headers.get("idempotency-key"), origin: request.headers.get("origin"),
           authorized: request.headers.get("authorization") === "Bearer alice", originalStatus: response.status,
-          deliveredStatus: loseResponse ? 503 : response.status, result })
+          deliveredStatus: loseResponse ? 503 : response.status, responseBody, result })
         if (loseResponse) {
           withheld = true
           return Response.json({ status: "unavailable", reason: "fixture-response-withheld" }, { status: 503 })
@@ -558,13 +574,38 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       // A retry must be authorized from durable proof after this owned cache clears.
       // The process, SQLite store and browser stay alive; this is not a restart test.
       fixture.business.procurementDecisions.dispose()
-      const reconciled = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "decision-apply")
-      const reloaded = page.waitForEvent("domcontentloaded")
-      await retry.click()
-      const replay = await reconciled
-      expect(replay.status()).toBe(200)
-      expect(await replay.json()).toEqual(first[0]!.result)
-      await reloaded
+      const applyURL = `${origin}/sf/procurement?sf=decision-apply`
+      const cdp = await context.newCDPSession(page)
+      const captured = Promise.withResolvers<{ status: number; body: string }>()
+      void captured.promise.catch(() => undefined)
+      cdp.on("Fetch.requestPaused", async (event) => {
+        const status = event.responseStatusCode
+        const resume = () => status === undefined && event.responseErrorReason === undefined
+          ? cdp.send("Fetch.continueRequest", { requestId: event.requestId })
+          : cdp.send("Fetch.continueResponse", { requestId: event.requestId })
+        try {
+          if (event.request.url !== applyURL || event.request.method !== "POST") {
+            await resume()
+            return
+          }
+          if (status === undefined) throw new Error("Procurement replay did not receive HTTP headers")
+          const raw = await cdp.send("Fetch.getResponseBody", { requestId: event.requestId })
+          const body = raw.base64Encoded ? Buffer.from(raw.body, "base64").toString("utf8") : raw.body
+          await resume()
+          captured.resolve({ status, body })
+        } catch (error) {
+          captured.reject(error)
+          await resume().catch(() => undefined)
+        }
+      })
+      try {
+        // Observe the actual response before acknowledging it can reload the page.
+        // Response-stage capture leaves the original browser POST and body intact.
+        await cdp.send("Fetch.enable", { patterns: [{ urlPattern: applyURL.replace(/[\\*?]/g, "\\$&"), requestStage: "Response" }] })
+        const [replay] = await Promise.all([captured.promise, page.waitForEvent("domcontentloaded"), retry.click()])
+        expect(replay.status).toBe(200)
+        expect(replay.body).toBe(first[0]!.responseBody)
+      } finally { await cdp.detach() }
       await expect(article.getByText("State: applied", { exact: true })).toBeVisible()
       expect(navigationKeys).toEqual([null, null])
       const applications = traffic.filter((entry) => entry.mode === "decision-apply")
