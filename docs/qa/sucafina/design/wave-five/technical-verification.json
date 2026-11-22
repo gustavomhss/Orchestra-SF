@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "status": "TARGETED_EVIDENCE_RECORDED_ORIGINAL_C17_FAILURE_INSTALLED_ANALYTICS_PENDING",
+  "status": "CONTEXT_INTEGRITY_TARGETED_GATES_PASSED_INSTALLED_JOURNEYS_FAILED",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "sf-design-next",
-  "product": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+  "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "environment": {
     "runtime": "existing test-ci",
@@ -201,6 +201,31 @@
       "touchesGuards": false,
       "report": "technical-attempts/19-guard-report.json",
       "scope": "Original guard-only rerun with exact five candidate blobs. No tests or types repeated."
+    },
+    {
+      "name": "CLI and permanent E2E types with immutable UI context and original case-identity selector",
+      "status": "PASSED",
+      "run": 45028131990,
+      "job": 137225529279,
+      "product": "62b66c502640d31d35cae31ef354101aa9b25d81",
+      "snapshot": "0e62f4e66dc000bddf4f73cbc2bf4de7ffbab7d5",
+      "limitation": "These gates passed while the overall wrapper failed on two test-only issues; production remains identical in e4cc03b."
+    },
+    {
+      "name": "Sucafina package types and original guards after native test-hook and matcher typing corrections",
+      "status": "PASSED_WITH_RECORDED_WARNINGS",
+      "run": 45029061059,
+      "job": 137228382586,
+      "cleanupJob": 137228762050,
+      "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+      "snapshot": "d24f52d7c36d300e8d543a156da57154d7bd9b69",
+      "rules": 78,
+      "files": 731,
+      "warnings": 36,
+      "gates": 0,
+      "errors": 0,
+      "approved": 0,
+      "report": "analytics/context-integrity/attempt-02/guard-report.json"
     }
   ],
   "focusedRegressions": [
@@ -399,6 +424,56 @@
       "outerCanonicalReads": 1952,
       "receipt": "collab/c17-precorrection-control-01/receipt.json",
       "interpretation": "Same original boundary reproduced before the correction. C17 remains failed. This is neither delivery qualification nor a performance benchmark."
+    },
+    {
+      "name": "Original upstream sensitivity classification and final publication",
+      "status": "PASSED",
+      "run": 45025494458,
+      "job": 137217498463,
+      "product": "0de8e697838f9083ceaadbc2b16abee14640d230",
+      "snapshot": "1356f842ba1fd6ea0277abe85168f3d6a1121447",
+      "tests": 4,
+      "assertions": 105,
+      "receipt": "analytics/sensitivity-upstream/receipt.json",
+      "scope": "Original pending/partial native persist and cold reread, exact bound with classified known components, late input mutation and revoked authority."
+    },
+    {
+      "name": "Original LocalStore, CurrentChoice, C17 and Finance composition with context integrity",
+      "status": "PASSED",
+      "run": 45028131990,
+      "job": 137225529279,
+      "product": "62b66c502640d31d35cae31ef354101aa9b25d81",
+      "snapshot": "0e62f4e66dc000bddf4f73cbc2bf4de7ffbab7d5",
+      "counts": {
+        "pass": 54,
+        "fail": 0,
+        "skip": 2,
+        "expectCalls": 985,
+        "files": 4,
+        "durationSeconds": 160.47,
+        "c17Ms": 102717.47,
+        "financeMs": 50655.93
+      },
+      "c17AllOriginalPhasesCompleted": true,
+      "originalC17DeadlineMs": 105000,
+      "receipt": "analytics/context-integrity/attempt-01/receipt.json",
+      "limits": [
+        "One observed original C17 completion; no causal speedup or stable margin claim.",
+        "Two preexisting UID-dependent skips remain.",
+        "The complete wrapper failed separately on two test-only gates, corrected in the next attempt."
+      ]
+    },
+    {
+      "name": "Immutable UI integrity, canonical hooks and live admission refusal",
+      "status": "PASSED",
+      "run": 45029061059,
+      "job": 137228382586,
+      "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+      "snapshot": "d24f52d7c36d300e8d543a156da57154d7bd9b69",
+      "tests": 7,
+      "assertions": 100,
+      "receipt": "analytics/context-integrity/attempt-02/receipt.json",
+      "scope": "Real UI authority mint, opaque/native fallback and getter order, late mutation/freeze changes, canonical and CryptoHasher drift/restoration, and retained live revoke/expiry/abort/finish denial."
     }
   ],
   "installedEvidence": [
@@ -487,22 +562,48 @@
         45008412557,
         45013832359,
         45015314625,
-        45019357466
+        45019357466,
+        45025502692,
+        45029253108,
+        45029259117
       ],
-      "limitation": "Portfolio diagnostic 17 retains the original 60-second preview failure and observes that same POST returning 403 at about 300 seconds. Isolated UI44 passes original A04/units/rule/source, editor/review/cancel, but its single evaluate POST has no observed response in the original 120 seconds. The readonly correction is integrated; clean Portfolio18 remains the latest clean attempt and failed the unchanged first-preview 60s wait without an observed response. Its original preparation/readbacks and both histories passed; no evaluate or UI43/UI44 stage was reached. Portfolio19 is a partial instrumented diagnostic, also failed at 60s with no preview response, and emitted no profiler snapshot summaries. It adds no qualification or causal performance evidence. Portfolio20 also failed the original first-preview 60s wait without an observed response; its five complete partial samples end at50s, with four pending spans and no final snapshot. The installed readonly bridge and source-fence memo are observed, but the measured951ms guard-digest subtotal includes ineligible paths and is not an estimate of619 savings. Portfolio21 also failed the original 60 s wait, with no preview response; its 625 valid records contain five complete partial samples, 122 keys each, through 50,015 ms and four pending spans. The large canonical, authority and storage call counts are observed; exclusive cost, saved time and a safe optimization are not established. No new product change or follow-up CI was selected from these measurements.",
-      "evidence": "analytics/attempt-15/README.md",
-      "isolatedSensitivityEvidence": "collab/sensitivity-isolated-01/README.md",
+      "limitation": "The current product e4cc03b has composed passing technical evidence, including one complete original C17 run, but installed UI42–UI44 remain unqualified. Clean Portfolio22 completes original preparation and both native histories, then fails the unchanged first-preview60000ms wait with no response observed. UI44 isolated03 completes original source/units/editor/review/cancel stages, then its one evaluation POST has no response observed within the unchanged120000ms wait. Neither journey reaches its result assertions/readbacks or final scope footer. Internal completion or persistence is unknown. Prior attempts and instrumented diagnostics remain separately recorded; their counts and inclusive times do not establish a causal speedup.",
+      "evidence": "analytics/attempt-19/README.md",
+      "isolatedSensitivityEvidence": "collab/sensitivity-isolated-03/README.md",
       "latestClean": {
-        "run": 45008412557,
-        "job": 137165052929,
-        "cleanupJob": 137167295350,
-        "product": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
-        "snapshot": "5b31da8839f2738995fc5b07cdb4b05212188eab",
-        "status": "FAILURE_FIRST_PREVIEW_ORIGINAL60S",
+        "label": "Portfolio22",
+        "run": 45029253108,
+        "job": 137228964207,
+        "cleanupJob": 137231419873,
+        "cleanupStatus": "success",
+        "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+        "snapshot": "405775a4af9c9a990228d3cff44b8c0940bf899d",
+        "status": "FAILURE_FIRST_PREVIEW_ORIGINAL60000MS_NO_RESPONSE_OBSERVED",
         "captures": 7,
         "agentViewed": 7,
         "rootViewed": 2,
-        "explicitEvaluations": 0
+        "originalChunks": 33,
+        "totalJpegBytes": 537306,
+        "preparationComplete": true,
+        "nativeHistory": [
+          {
+            "sequence": 1,
+            "http": 200,
+            "status": "ok",
+            "elapsedMs": 438
+          },
+          {
+            "sequence": 2,
+            "http": 200,
+            "status": "ok",
+            "elapsedMs": 824
+          }
+        ],
+        "explicitEvaluations": 0,
+        "resultAssertionsReached": false,
+        "ptBrCompletion": false,
+        "evidence": "analytics/attempt-19/manifest.json",
+        "rootReview": "analytics/attempt-19/root-review.json"
       },
       "latestDiagnostic": {
         "label": "Portfolio21",
@@ -609,7 +710,8 @@
             "reason": "The measurement includes canonical traversal, tagged AST, serialization and SHA. Existing scoped memos do not provide a general exact-hasher capability. General memo/streaming alternatives lack equivalence for original hooks, getters, sparse arrays, species and error order."
           },
           "noNewRuntimeCandidate": true,
-          "noNewCi": true
+          "noNewCi": true,
+          "interpretation": "These findings and no-candidate/no-CI fields describe the Portfolio21 checkpoint only. The later context integrity candidate and Portfolio22/UI44 isolated03 runs are recorded separately."
         },
         "captures": 7,
         "agentViewed": 7,
@@ -742,7 +844,49 @@
           "captures": 7,
           "additionalQualifiedAreas": 0
         }
-      ]
+      ],
+      "previousClean": {
+        "run": 45008412557,
+        "job": 137165052929,
+        "cleanupJob": 137167295350,
+        "product": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+        "snapshot": "5b31da8839f2738995fc5b07cdb4b05212188eab",
+        "status": "FAILURE_FIRST_PREVIEW_ORIGINAL60S",
+        "captures": 7,
+        "agentViewed": 7,
+        "rootViewed": 2,
+        "explicitEvaluations": 0
+      },
+      "latestIsolatedSensitivity": {
+        "attempt": "sensitivity-isolated-03",
+        "run": 45029259117,
+        "job": 137228983031,
+        "cleanupJob": 137231749847,
+        "cleanupStatus": "success",
+        "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+        "snapshot": "79a3e22f5d2b44533a55b2cb66a253443016a4f8",
+        "status": "FAILURE_EVALUATE_ORIGINAL120000MS_NO_RESPONSE_OBSERVED",
+        "captures": 9,
+        "agentViewed": 9,
+        "rootViewed": 2,
+        "originalChunks": 37,
+        "totalJpegBytes": 608216,
+        "sourceUnitsEditorReviewCancelCompleted": true,
+        "nativeEvaluationRequests": 1,
+        "resultReadback": false,
+        "ptBrResult": false,
+        "internalPersistence": "unknown",
+        "evidence": "collab/sensitivity-isolated-03/receipt.json",
+        "rootReview": "collab/sensitivity-isolated-03/root-review.json"
+      },
+      "previousIsolatedSensitivity": {
+        "attempt": "sensitivity-isolated-02",
+        "run": 45025502692,
+        "job": 137217522587,
+        "cleanupJob": 137220332644,
+        "status": "FAILURE_EVALUATE_ORIGINAL120000MS_NO_RESPONSE_OBSERVED",
+        "evidence": "collab/sensitivity-isolated-02/receipt.json"
+      }
     }
   ],
   "references": {
@@ -756,43 +900,93 @@
   "merged": false,
   "inventoryAcceptedAndMergedAreas": 41,
   "pendingDelta": {
-    "status": "READONLY_INTEGRATED_CLEAN_PREVIEW_STILL_FAILED_NO_NEW_SAFE_CANDIDATE_SELECTED",
-    "integratedAt": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
-    "candidate": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
+    "status": "CONTEXT_INTEGRITY_TECHNICALLY_VERIFIED_INSTALLED_JOURNEYS_FAILED",
+    "candidate": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+    "tree": "1ed3cafc973db7f4103646c3f0fa06c1586a9ff5",
+    "base": "9341bc3d25f5771009258b58c91c0fe85cb093ae",
     "files": [
       {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blob": "be460c4f26ce08c87efad53c3e6ae510477d9ee1"
+      },
+      {
         "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
-        "blob": "a76473e700d62774d8e068cf69fa1d2123812024"
+        "blob": "7899544f26e87207cb74552048cd9a71763a58bb"
       },
       {
-        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
-        "blob": "c3715380830df6bad1b320e1f1bb00b15959654f"
+        "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "blob": "0c1113d990fc756a5f23563b1e832661d662d01f"
       },
       {
-        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
-        "blob": "e292f539b03bf6d0aa5268cca33a0a5fdf004479"
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "blob": "086f1e4a6bd898684971617ff9736dc20bace931"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "blob": "d96460636b3865f7b7ba075eba14724a616581d3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-classification.test.ts",
+        "blob": "dab757c9f420edcee3bd632cf25c88a5ce5dba3e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-observation-fixture.ts",
+        "blob": "07fe64a1c790072035741044ad0bd14871d10922"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-publication.test.ts",
+        "blob": "a2a1ffd89f9625f8e18b1cef8581136e51410951"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-context-integrity.test.ts",
+        "blob": "51dc68c5e4dced64641e265344aa3099e1301946"
       },
       {
         "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
-        "blob": "b67a3fd90eefc5ebf880528d22be2afcdc25c3c8"
-      },
-      {
-        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
-        "blob": "6c836317f08ea0f36b734bcd26c7ab0c4e5350bb"
+        "blob": "e9a1f32896f8094edaf71a519430c9dc0c70f8f4"
       }
     ],
-    "scope": "Only original exact-owner readonly evidence is forwarded; Planner root consumer asks each actual lexical child for fresh evidence of the same physical root. No authority, result or projection cache; original guards and budgets unchanged.",
-    "isolatedFollowUp619": {
-      "status": "HELD_AFTER_DIAGNOSTIC20_NOT_DOMINANT_MEASURED_COST_NOT_EXECUTED_NOT_INTEGRATED",
-      "branch": "sf-readonly-guards",
-      "candidate": "62a4233ae6f9145f5c45d527ceb1bb562d84b516",
-      "qualificationProposal": "f4f7999b2e6656afe4b746b81b7a0147ab868330",
-      "proposalBase": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
-      "qualificationRun": null,
-      "integrated": false,
-      "performanceClaim": null,
-      "scope": "The single source-lifecycle line 619 readonly lookup change and reviewed regression candidate remain separate from product and diagnostics 19–21.",
-      "reason": "All measured source/audit guard digests total 951 ms through 50 s, including unchanged transactionAll and potentially non-readonly paths. This is not projected saving; no candidate CI is justified by this cost evidence."
+    "review": "analytics/context-integrity/integration-review.json",
+    "scope": "Literal upstream sensitivity fixes, existing fresh case-identity selector and private immutable UI kind/binding integrity observation. Every original live authority callback and current guard remains.",
+    "previousReadonlyIntegration": {
+      "status": "READONLY_INTEGRATED_CLEAN_PREVIEW_STILL_FAILED_NO_NEW_SAFE_CANDIDATE_SELECTED",
+      "integratedAt": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+      "candidate": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+          "blob": "a76473e700d62774d8e068cf69fa1d2123812024"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "blob": "c3715380830df6bad1b320e1f1bb00b15959654f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "blob": "e292f539b03bf6d0aa5268cca33a0a5fdf004479"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+          "blob": "b67a3fd90eefc5ebf880528d22be2afcdc25c3c8"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+          "blob": "6c836317f08ea0f36b734bcd26c7ab0c4e5350bb"
+        }
+      ],
+      "scope": "Only original exact-owner readonly evidence is forwarded; Planner root consumer asks each actual lexical child for fresh evidence of the same physical root. No authority, result or projection cache; original guards and budgets unchanged.",
+      "isolatedFollowUp619": {
+        "status": "HELD_AFTER_DIAGNOSTIC20_NOT_DOMINANT_MEASURED_COST_NOT_EXECUTED_NOT_INTEGRATED",
+        "branch": "sf-readonly-guards",
+        "candidate": "62a4233ae6f9145f5c45d527ceb1bb562d84b516",
+        "qualificationProposal": "f4f7999b2e6656afe4b746b81b7a0147ab868330",
+        "proposalBase": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+        "qualificationRun": null,
+        "integrated": false,
+        "performanceClaim": null,
+        "scope": "The single source-lifecycle line 619 readonly lookup change and reviewed regression candidate remain separate from product and diagnostics 19–21.",
+        "reason": "All measured source/audit guard digests total 951 ms through 50 s, including unchanged transactionAll and potentially non-readonly paths. This is not projected saving; no candidate CI is justified by this cost evidence."
+      }
     }
   }
 }

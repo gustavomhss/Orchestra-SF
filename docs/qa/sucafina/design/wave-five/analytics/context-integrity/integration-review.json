@@ -1,0 +1,217 @@
+{
+  "schema": "sucafina-context-integrity-integration-review-v1",
+  "status": "TARGETED_GATES_COMPOSED_PASS_INSTALLED_JOURNEYS_FAILED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": "9341bc3d25f5771009258b58c91c0fe85cb093ae",
+  "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+  "tree": "1ed3cafc973db7f4103646c3f0fa06c1586a9ff5",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sha": "be460c4f26ce08c87efad53c3e6ae510477d9ee1",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "sha": "7899544f26e87207cb74552048cd9a71763a58bb",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "sha": "0c1113d990fc756a5f23563b1e832661d662d01f",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "sha": "086f1e4a6bd898684971617ff9736dc20bace931",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "sha": "d96460636b3865f7b7ba075eba14724a616581d3",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-classification.test.ts",
+      "sha": "dab757c9f420edcee3bd632cf25c88a5ce5dba3e",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-observation-fixture.ts",
+      "sha": "07fe64a1c790072035741044ad0bd14871d10922",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-publication.test.ts",
+      "sha": "a2a1ffd89f9625f8e18b1cef8581136e51410951",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-context-integrity.test.ts",
+      "sha": "51dc68c5e4dced64641e265344aa3099e1301946",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "sha": "e9a1f32896f8094edaf71a519430c9dc0c70f8f4",
+      "mode": "100644",
+      "type": "blob"
+    }
+  ],
+  "changes": {
+    "upstream": {
+      "commit": "0de8e697838f9083ceaadbc2b16abee14640d230",
+      "pullRequests": [
+        641,
+        643
+      ],
+      "exactBlobs": true,
+      "scope": "Five literal upstream files align sensitivity assessed-component eligibility and defer unscoped publication until final authorization and borrowed-input checks."
+    },
+    "caseSelection": {
+      "commit": "1c7ea42f40332e94e5ecf4f5ac3cd3a77f7ff4fc",
+      "predicateIdentical": true,
+      "liveStateReadAuthorizations": 2,
+      "scope": "Connect the existing registered case-identity selector instead of cloning all C08 state. Cases remain freshly observed; binding, actor, ACL, version and egress checks remain."
+    },
+    "context": {
+      "commit": "62b66c502640d31d35cae31ef354101aa9b25d81",
+      "scope": "Private structural integrity observation for the exact UI context minted by the authority. This attests immutable kind/binding only; no authorization state or result is retained.",
+      "registeredAfterFinalRevalidate": true,
+      "actualReturnedObjectsInspected": true,
+      "immutableStringBindingFields": 7,
+      "originalDigestCapturedAlways": true,
+      "beforeAndAfterProofRequired": true,
+      "opaqueNativeHookedFallback": "Original digest and error propagation",
+      "rootCapturedBindingOrderPreserved": true,
+      "liveCallbacksAndGuardsPreserved": true,
+      "preImportTrustBoundary": "Original host intrinsics are trusted at module loading, consistent with existing native guards."
+    },
+    "testRepairs": {
+      "commits": [
+        "58126990696aa8c2ba5e59cc6192887dd4a30919",
+        "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d"
+      ],
+      "runtimeUnchanged": true,
+      "negativeAssertionsPreserved": true,
+      "localStoreTypeOnlyExactInverse": true
+    }
+  },
+  "staticReview": {
+    "root": "PASS",
+    "peer": "read_path PASS for production, tests and both corrections",
+    "wrapper": "dev_delta PASS; read_path PASS of reduced follow-up",
+    "noProductionChangeBetweenContextRuns": true
+  },
+  "evidence": {
+    "sensitivity": {
+      "run": 45025494458,
+      "pass": 4,
+      "fail": 0,
+      "assertions": 105,
+      "receipt": "../sensitivity-upstream/receipt.json"
+    },
+    "context1": {
+      "run": 45028131990,
+      "conclusion": "failure",
+      "receipt": "attempt-01/receipt.json",
+      "originalComposition": {
+        "pass": 54,
+        "fail": 0,
+        "skip": 2,
+        "assertions": 985,
+        "c17Ms": 102717.47,
+        "c17AllOriginalPhases": true,
+        "financeMs": 50655.93
+      },
+      "cliTypes": "PASS",
+      "e2eTypes": "PASS",
+      "guards": "PASS",
+      "integrity": "6 pass / 1 failed test hook setup",
+      "sucafinaTypes": "one original matcher typing failure"
+    },
+    "context2": {
+      "run": 45029061059,
+      "conclusion": "success",
+      "receipt": "attempt-02/receipt.json",
+      "integrity": {
+        "pass": 7,
+        "fail": 0,
+        "assertions": 100
+      },
+      "sucafinaTypes": "PASS",
+      "guards": {
+        "rules": 78,
+        "files": 731,
+        "warnings": 36,
+        "gates": 0,
+        "errors": 0,
+        "approved": 0
+      }
+    },
+    "composition": "All selected technical requirements have passing evidence on identical production blobs; no single all-green six-gate run is claimed.",
+    "c17Limits": "Observed completion within the unchanged 105000ms cooperative deadline in one run; no causal speedup or stable margin claim.",
+    "native": {
+      "portfolio": {
+        "run": 45029253108,
+        "status": "completed",
+        "conclusion": "failure",
+        "originalWaitMs": 60000,
+        "responseObserved": false,
+        "receipt": "../attempt-19/manifest.json"
+      },
+      "sensitivity": {
+        "run": 45029259117,
+        "status": "completed",
+        "conclusion": "failure",
+        "originalWaitMs": 120000,
+        "responseObserved": false,
+        "receipt": "../../collab/sensitivity-isolated-03/receipt.json"
+      }
+    }
+  },
+  "preserved": {
+    "runtimeProducers": true,
+    "liveAuthority": true,
+    "revocation": true,
+    "callbacks": true,
+    "cas": true,
+    "idempotency": true,
+    "defensiveCopies": true,
+    "originalFixtures": true,
+    "originalDeadlines": true,
+    "workflows": true,
+    "guards": true,
+    "allowlists": true,
+    "englishCopy": true,
+    "shellAndPalettes": true
+  },
+  "excludedFromProduct": [
+    ".ci-run.json",
+    "snapshot-only verification wrapper",
+    "isolated native spec overlays",
+    "profiling overlays",
+    "raw job logs"
+  ],
+  "acceptance": {
+    "qualified": 12,
+    "total": 15,
+    "pending": [
+      "UI42",
+      "UI43",
+      "UI44"
+    ],
+    "acceptedMerged": 41,
+    "userVisualApproval": "pending",
+    "mergeAuthorized": false
+  }
+}

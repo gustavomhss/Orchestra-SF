@@ -320,17 +320,26 @@
     "merged": false,
     "inventoryAcceptedAndMergedAreas": 41,
     "pendingFinalTestTypes": [],
-    "latestTechnicalAttempt": 19,
+    "latestTechnicalAttempt": 22,
     "latestInstalledFailures": {
       "portfolioDiagnostic": 45019357466,
-      "isolatedSensitivity": 45003432183,
-      "cleanPortfolio": 45008412557
+      "isolatedSensitivity": 45029259117,
+      "cleanPortfolio": 45029253108
     },
     "latestInstalledImportRun": 44998959512,
     "originalC17Failure": {
       "candidateRun": 45006460499,
       "preCorrectionControlRun": 45007654887,
-      "status": "FAILED_BEFORE_AND_AFTER_CHANGE"
+      "status": "HISTORICAL_FAILURE_FOLLOWED_BY_COMPLETE_PASS_ON_CONTEXT_CANDIDATE",
+      "historicalStatus": "FAILED_BEFORE_AND_AFTER_CHANGE",
+      "currentPass": {
+        "run": 45028131990,
+        "snapshot": "0e62f4e66dc000bddf4f73cbc2bf4de7ffbab7d5",
+        "reportedDurationMs": 102717.47,
+        "deadlineMs": 105000,
+        "allSevenPhases": true,
+        "limitation": "One observed pass; no causal speedup or stable margin claim."
+      }
     },
     "readonlyComposition": {
       "integratedProduct": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
@@ -351,6 +360,21 @@
       "lastSampleMs": 50015,
       "finalObserved": false,
       "qualificationAdded": 0
+    },
+    "contextIntegrity": {
+      "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+      "technicalRuns": [
+        45028131990,
+        45029061059
+      ],
+      "technicalEvidence": "analytics/context-integrity/integration-review.json",
+      "allSelectedGatesHavePassingEvidence": true,
+      "singleAllGreenSixGateRun": false,
+      "installedQualification": "FAILED_ORIGINAL_WAITERS"
+    },
+    "latestInstalledEvidence": {
+      "portfolio": "analytics/attempt-19/README.md",
+      "sensitivity": "collab/sensitivity-isolated-03/README.md"
     }
   }
 }

@@ -1,0 +1,121 @@
+{
+  "schema": "sucafina-design-root-review-v1",
+  "surface": "UI44",
+  "attempt": "sensitivity-isolated-02",
+  "reviewer": "root",
+  "recordedBy": "dev_delta",
+  "date": "2026-11-22",
+  "reviewedQaCommit": "8d6747ffb1532589907d65fe27eda165ce13b5de",
+  "reviewedQaTree": "bb397bff6d881f3b5a39f84fdc967fa2d5e5a91c",
+  "reviewBasis": "Root reported the completed independent reads, source comparisons and actual visual inspections before this QA-only record was written.",
+  "runs": [
+    {
+      "scope": "original composition regressions",
+      "run": 45025494458,
+      "testJob": 137217498463,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45025494458"
+    },
+    {
+      "scope": "installed UI44 journey",
+      "run": 45025502692,
+      "testJob": 137217522587,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45025502692"
+    }
+  ],
+  "textFilesReviewed": [
+    {
+      "path": "docs/qa/sucafina/design/wave-five/collab/sensitivity-isolated-02/receipt.json",
+      "sha": "4e3617f033d3b1b7bb4e2b5e894840571bf68c44"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-five/collab/sensitivity-isolated-02/capture-manifest.json",
+      "sha": "830c787994b34e7e1837e9bf53d000b0c5e5f25f"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-five/collab/sensitivity-isolated-02/source-events.json",
+      "sha": "e42582e34c4470af2f0c270462ed490ccf71f0c1"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-five/analytics/sensitivity-upstream/receipt.json",
+      "sha": "6a152f4efc2d7d511fa5ae27ca029ed38ab6c8ee"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-five/analytics/sensitivity-upstream/phase-events.json",
+      "sha": "4d3092f460774775027908da74e1a311c170432a"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-five/collab/sensitivity-isolated-02/README.md",
+      "sha": "aba131ed05822d4beb587613725cbeff6a2a1f00"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-five/analytics/sensitivity-upstream/README.md",
+      "sha": "c220d9ba0273a976d57e4887beea87a4d12872ae"
+    }
+  ],
+  "originalEvidenceChecks": {
+    "compositionPhaseEvents": {
+      "count": 30,
+      "matchedFinalJobLogPayloads": true
+    },
+    "ui44SourceEvents": {
+      "count": 21,
+      "matchedFinalJobLogPayloads": true
+    },
+    "previewChunks": {
+      "images": 9,
+      "chunks": 37,
+      "complete": true,
+      "totalJpegBytes": 608004
+    },
+    "remoteImageContentsCompared": [
+      "UI44-issued-units-editor-dark-desktop-test-data",
+      "UI44-dark-320-review-actions-test-data",
+      "FAILED-native-wave-three-test-data"
+    ]
+  },
+  "visualInspections": [
+    {
+      "name": "UI44-issued-units-editor-dark-desktop-test-data",
+      "sha": "64daa4afb378481037202045cd5e51e11a00debb",
+      "observations": [
+        "Dark desktop editor shows USD / USD, two evidence references, criterion value 2000, minimum 200, maximum 2200 and two steps."
+      ],
+      "path": "gallery/UI44-issued-units-editor-dark-desktop-test-data.jpg",
+      "remoteBytesMatchOriginalPreviewChunks": true
+    },
+    {
+      "name": "UI44-dark-320-review-actions-test-data",
+      "sha": "ce6f61f562413d1151a4522905f0150ab3ee2f15",
+      "observations": [
+        "At 320 pixels, source references wrap; the basis and both review actions are legible."
+      ],
+      "path": "gallery/UI44-dark-320-review-actions-test-data.jpg",
+      "remoteBytesMatchOriginalPreviewChunks": true
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "sha": "57629dd6404b017d5b5d58d01d65588cded3275b",
+      "observations": [
+        "The lost-connection banner is visible, confirmation is disabled and no result is displayed.",
+        "The banner shifts cancel to the lower viewport edge."
+      ],
+      "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+      "remoteBytesMatchOriginalPreviewChunks": true
+    }
+  ],
+  "limits": [
+    "Root visually inspected exactly the three listed JPEGs, not all nine.",
+    "Other capture rows retain the original dev_delta visual review.",
+    "Root review does not establish a recorded sensitivity result, threshold, sample table, result-table keyboard focus, pt-BR result view or browser zoom behavior.",
+    "The connection warning does not establish the backend cause or mutation persistence.",
+    "No peer visual review is claimed."
+  ],
+  "qualification": {
+    "ui44": "pending",
+    "qualifiedSurfaces": 12,
+    "totalSurfaces": 15,
+    "qualificationCountChanged": false
+  },
+  "changes": "QA review attribution only; original images, events, runtime, tests, run results and counts remain unchanged.",
+  "newExecution": false
+}

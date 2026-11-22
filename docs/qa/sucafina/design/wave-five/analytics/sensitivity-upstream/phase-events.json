@@ -1,0 +1,259 @@
+{
+  "schema": "sucafina-composition-observed-events-v1",
+  "run": 45025494458,
+  "testJob": 137217498463,
+  "phases": [
+    {
+      "timestamp": "2026-11-22T13:04:33.0690715Z",
+      "fixture": "sensitivity-pending-classification",
+      "phase": "native-fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "timestamp": "2026-11-22T13:04:41.6466163Z",
+      "fixture": "sensitivity-pending-classification",
+      "phase": "native-fixture",
+      "state": "returned",
+      "phaseMs": 8578,
+      "elapsedMs": 8579,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:04:41.6468701Z",
+      "fixture": "sensitivity-pending-classification",
+      "phase": "native-produce",
+      "state": "started",
+      "elapsedMs": 8579
+    },
+    {
+      "timestamp": "2026-11-22T13:05:13.1054964Z",
+      "fixture": "sensitivity-pending-classification",
+      "phase": "native-produce",
+      "state": "returned",
+      "phaseMs": 31459,
+      "elapsedMs": 40037,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:05:13.1057698Z",
+      "fixture": "sensitivity-pending-classification",
+      "phase": "native-persist",
+      "state": "started",
+      "elapsedMs": 40038
+    },
+    {
+      "timestamp": "2026-11-22T13:07:39.4784509Z",
+      "fixture": "sensitivity-pending-classification",
+      "phase": "native-persist",
+      "state": "returned",
+      "phaseMs": 146373,
+      "elapsedMs": 186410,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:07:39.4833429Z",
+      "fixture": "sensitivity-pending-classification",
+      "phase": "cold-read",
+      "state": "started",
+      "elapsedMs": 186415
+    },
+    {
+      "timestamp": "2026-11-22T13:08:24.1486272Z",
+      "fixture": "sensitivity-pending-classification",
+      "phase": "cold-read",
+      "state": "returned",
+      "phaseMs": 44665,
+      "elapsedMs": 231081,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:08:24.1649731Z",
+      "fixture": "sensitivity-partial-classification",
+      "phase": "native-fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "timestamp": "2026-11-22T13:08:33.0157741Z",
+      "fixture": "sensitivity-partial-classification",
+      "phase": "native-fixture",
+      "state": "returned",
+      "phaseMs": 8851,
+      "elapsedMs": 8851,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:08:33.0159683Z",
+      "fixture": "sensitivity-partial-classification",
+      "phase": "native-produce",
+      "state": "started",
+      "elapsedMs": 8851
+    },
+    {
+      "timestamp": "2026-11-22T13:09:06.6058047Z",
+      "fixture": "sensitivity-partial-classification",
+      "phase": "native-produce",
+      "state": "returned",
+      "phaseMs": 33590,
+      "elapsedMs": 42441,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:09:06.6060345Z",
+      "fixture": "sensitivity-partial-classification",
+      "phase": "native-persist",
+      "state": "started",
+      "elapsedMs": 42441
+    },
+    {
+      "timestamp": "2026-11-22T13:11:35.5316574Z",
+      "fixture": "sensitivity-partial-classification",
+      "phase": "native-persist",
+      "state": "returned",
+      "phaseMs": 148926,
+      "elapsedMs": 191367,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:11:35.5365569Z",
+      "fixture": "sensitivity-partial-classification",
+      "phase": "cold-read",
+      "state": "started",
+      "elapsedMs": 191372
+    },
+    {
+      "timestamp": "2026-11-22T13:12:20.3324216Z",
+      "fixture": "sensitivity-partial-classification",
+      "phase": "cold-read",
+      "state": "returned",
+      "phaseMs": 44796,
+      "elapsedMs": 236167,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:12:20.3443243Z",
+      "fixture": "sensitivity-assessed-subtotal",
+      "phase": "native-fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "timestamp": "2026-11-22T13:12:29.1774407Z",
+      "fixture": "sensitivity-assessed-subtotal",
+      "phase": "native-fixture",
+      "state": "returned",
+      "phaseMs": 8833,
+      "elapsedMs": 8833,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:12:29.1776379Z",
+      "fixture": "sensitivity-assessed-subtotal",
+      "phase": "native-exact-produce",
+      "state": "started",
+      "elapsedMs": 8833
+    },
+    {
+      "timestamp": "2026-11-22T13:13:42.7557461Z",
+      "fixture": "sensitivity-assessed-subtotal",
+      "phase": "native-exact-produce",
+      "state": "returned",
+      "phaseMs": 73578,
+      "elapsedMs": 82411,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:13:42.7642256Z",
+      "fixture": "sensitivity-publication",
+      "phase": "native-fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "timestamp": "2026-11-22T13:13:51.5887021Z",
+      "fixture": "sensitivity-publication",
+      "phase": "native-fixture",
+      "state": "returned",
+      "phaseMs": 8826,
+      "elapsedMs": 8826,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:13:51.5888767Z",
+      "fixture": "sensitivity-publication",
+      "phase": "native-persist",
+      "state": "started",
+      "elapsedMs": 8826
+    },
+    {
+      "timestamp": "2026-11-22T13:16:20.8168738Z",
+      "fixture": "sensitivity-publication",
+      "phase": "native-persist",
+      "state": "returned",
+      "phaseMs": 149228,
+      "elapsedMs": 158054,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:16:21.1999648Z",
+      "fixture": "sensitivity-publication",
+      "phase": "positive-recertification",
+      "state": "started",
+      "elapsedMs": 158437
+    },
+    {
+      "timestamp": "2026-11-22T13:16:42.3322397Z",
+      "fixture": "sensitivity-publication",
+      "phase": "positive-recertification",
+      "state": "returned",
+      "phaseMs": 21132,
+      "elapsedMs": 179569,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:16:42.5146936Z",
+      "fixture": "sensitivity-publication",
+      "phase": "late-stored-mutation",
+      "state": "started",
+      "elapsedMs": 179752
+    },
+    {
+      "timestamp": "2026-11-22T13:17:03.8520467Z",
+      "fixture": "sensitivity-publication",
+      "phase": "late-stored-mutation",
+      "state": "returned",
+      "phaseMs": 21337,
+      "elapsedMs": 201089,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-22T13:17:03.8548510Z",
+      "fixture": "sensitivity-publication",
+      "phase": "late-binding-mutation",
+      "state": "started",
+      "elapsedMs": 201092
+    },
+    {
+      "timestamp": "2026-11-22T13:17:25.1259308Z",
+      "fixture": "sensitivity-publication",
+      "phase": "late-binding-mutation",
+      "state": "returned",
+      "phaseMs": 21271,
+      "elapsedMs": 222363,
+      "aborted": false
+    }
+  ],
+  "persist": [
+    {
+      "timestamp": "2026-11-22T13:07:39.4786363Z",
+      "assessment": "pending",
+      "status": "ok"
+    },
+    {
+      "timestamp": "2026-11-22T13:11:35.5318460Z",
+      "assessment": "partial",
+      "status": "ok"
+    }
+  ]
+}

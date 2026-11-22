@@ -1929,6 +1929,342 @@
       },
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45007665762",
       "receipt": "evidence-guard-correction.json"
+    },
+    {
+      "attempt": 20,
+      "name": "Original upstream sensitivity classification and publication regressions",
+      "product": "0de8e697838f9083ceaadbc2b16abee14640d230",
+      "snapshot": "1356f842ba1fd6ea0277abe85168f3d6a1121447",
+      "run": 45025494458,
+      "job": 137217498463,
+      "cleanupJob": 137221162527,
+      "cleanupStatus": "success",
+      "checks": {
+        "total": 4,
+        "passed": 4,
+        "failed": 0
+      },
+      "conclusion": "success",
+      "scope": "Two literal upstream test files from #641 and #643, with their original fixture, assertions and deadlines; no wrapper or timeout override.",
+      "regression": {
+        "pass": 4,
+        "fail": 0,
+        "expectCallsReported": 105,
+        "files": 2,
+        "reportedDurationSeconds": 772.65
+      },
+      "nativePersistMs": [
+        146373,
+        148926,
+        149228
+      ],
+      "limitations": [
+        "These composition fixtures do not qualify the installed UI44 deadline; installed attempt02 still failed at 120000ms.",
+        "No causal timing comparison across distinct fixtures."
+      ],
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      },
+      "receipt": "analytics/sensitivity-upstream/receipt.json",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45025494458"
+    },
+    {
+      "attempt": 21,
+      "name": "Immutable UI context and existing case selector composition",
+      "product": "62b66c502640d31d35cae31ef354101aa9b25d81",
+      "snapshot": "0e62f4e66dc000bddf4f73cbc2bf4de7ffbab7d5",
+      "run": 45028131990,
+      "job": 137225529279,
+      "cleanupJob": 137226797976,
+      "cleanupStatus": "success",
+      "checks": {
+        "total": 6,
+        "passed": 4,
+        "failed": 2
+      },
+      "conclusion": "failure",
+      "commands": [
+        {
+          "gate": "fetch pinned guard base",
+          "command": [
+            "git",
+            "fetch",
+            "--no-tags",
+            "--depth=1",
+            "origin",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "resolve pinned guard base",
+          "command": [
+            "git",
+            "rev-parse",
+            "--verify",
+            "refs/remotes/origin/dev^{commit}"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "guardrails",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "check:guards",
+            "--base",
+            "origin/dev",
+            "--json"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "app-shell e2e typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck:e2e"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "CLI native host typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "apps/cli",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "CurrentChoice readonly storage and nested calculation composition",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/local-store.test.ts",
+            "./test/product/wp10/integration/current-choice-readonly.test.ts",
+            "./test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+            "./test/product/wp10/integration/finance-pair-observation.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "immutable UI context integrity regressions",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/ui-context-integrity.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 1,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "Sucafina package typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 2,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      ],
+      "originalComposition": {
+        "pass": 54,
+        "fail": 0,
+        "skip": 2,
+        "expectCalls": 985,
+        "files": 4,
+        "durationSeconds": 160.47,
+        "c17Ms": 102717.47,
+        "financeMs": 50655.93
+      },
+      "integrity": {
+        "pass": 6,
+        "fail": 1,
+        "expectCalls": 96,
+        "files": 1,
+        "durationMs": 31
+      },
+      "failures": [
+        "New test attempts an unsupported accessor redefinition of the non-configurable native CryptoHasher prototype update property; failure is before observe() in that subcase.",
+        "Existing LocalStore matcher type inferred Snapshot while expected may be undefined: TS2769 at test/local-store.test.ts211."
+      ],
+      "c17": {
+        "originalDeadlineMs": 105000,
+        "reportedDurationMs": 102717.47,
+        "allSevenPhasesCompleted": true,
+        "reopenedAncestry": true,
+        "persistedCycleRejection": true,
+        "recoveryAndRevocation": true
+      },
+      "guards": {
+        "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+        "rules": 78,
+        "files": 731,
+        "warnings": 36,
+        "gates": 0,
+        "errors": 0,
+        "approved": 0
+      },
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      },
+      "receipt": "analytics/context-integrity/attempt-01/receipt.json",
+      "followup": "Only two test files repaired; production unchanged; attempt22 verifies the two failing gates and guards."
+    },
+    {
+      "attempt": 22,
+      "name": "Native test hook and matcher typing correction",
+      "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+      "snapshot": "d24f52d7c36d300e8d543a156da57154d7bd9b69",
+      "run": 45029061059,
+      "job": 137228382586,
+      "cleanupJob": 137228762050,
+      "cleanupStatus": "success",
+      "checks": {
+        "total": 3,
+        "passed": 3,
+        "failed": 0
+      },
+      "conclusion": "success",
+      "commands": [
+        {
+          "gate": "fetch pinned guard base",
+          "command": [
+            "git",
+            "fetch",
+            "--no-tags",
+            "--depth=1",
+            "origin",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "resolve pinned guard base",
+          "command": [
+            "git",
+            "rev-parse",
+            "--verify",
+            "refs/remotes/origin/dev^{commit}"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "guardrails",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "check:guards",
+            "--base",
+            "origin/dev",
+            "--json"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "immutable UI context integrity regressions",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/ui-context-integrity.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "Sucafina package typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      ],
+      "integrity": {
+        "pass": 7,
+        "fail": 0,
+        "expectCalls": 100,
+        "files": 1,
+        "durationMs": 31
+      },
+      "productionIdenticalToAttempt21": true,
+      "testCorrections": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-context-integrity.test.ts",
+          "blob": "51dc68c5e4dced64641e265344aa3099e1301946",
+          "change": "Create the temporary update getter on a real hasher instance; preserve all assertions and restoration."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+          "blob": "e9a1f32896f8094edaf71a519430c9dc0c70f8f4",
+          "change": "Only add expect<Snapshot | undefined>; erasure recovers exact original runtime expressions."
+        }
+      ],
+      "guards": {
+        "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+        "rules": 78,
+        "files": 731,
+        "warnings": 36,
+        "gates": 0,
+        "errors": 0,
+        "approved": 0
+      },
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      },
+      "receipt": "analytics/context-integrity/attempt-02/receipt.json",
+      "scope": "New context tests, Sucafina package types and original guards only. Passing original composition/CLI/E2E gates from attempt21 are retained on identical production; no claim of a single all-green six-gate run."
     }
   ],
   "causalControls": [
