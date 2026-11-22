@@ -11,6 +11,8 @@ All five owned areas have passing independent clean production journeys with the
 
 The [qualified gallery](REVIEW-GALLERY.md) contains 45 actual JPEGs, all individually inspected by the collaboration agent; root independently inspected the ten marked images. English dark/light desktop and 390px reflow, relevant review/source states and pt-BR application copy are covered. Actual browser zoom and 320px are not measured. No import Apply or external reply is performed. UI57/UI68 remain outside this visual scope.
 
+Across wave five, **12 of the 15 areas are qualified**; **UI42–UI44 remain pending** full installed qualification. The latest combined portfolio journey still stops at its first preview within the unchanged 60-second response budget, before UI43, UI44 or an evaluation. This does not change the five qualified areas in this document.
+
 User visual acceptance remains pending. The campaign inventory remains **41 accepted and merged areas**; this group's qualification does not add accepted or merged areas. [HANDOFF.md](HANDOFF.md) separates current qualification from the retained historical attempts.
 
 ## Selected areas
