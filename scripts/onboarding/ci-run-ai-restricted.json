@@ -1,0 +1,10 @@
+{
+  "package": "app",
+  "directory": "packages/app-shell",
+  "runner": "playwright",
+  "config": "e2e/playwright.production.config.ts",
+  "args": [
+    "e2e/sucafina/onboarding-ai-restricted.spec.ts"
+  ],
+  "env": {}
+}
