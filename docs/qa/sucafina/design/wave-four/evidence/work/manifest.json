@@ -3,7 +3,7 @@
   "group": "work",
   "status": "PARTIAL",
   "areas": {
-    "UI30": "AWAITING_QUALIFICATION",
+    "UI30": "PASSED",
     "UI31": "PASSED",
     "UI32": "AWAITING_QUALIFICATION"
   },
@@ -21,14 +21,136 @@
         "UI31"
       ],
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964042218"
+    },
+    {
+      "run": 44964988862,
+      "job": 137031865834,
+      "snapshot": "206c0ea661c1647713cbaf312ade4c73be70dc5d",
+      "productHead": "24ea6a77df72b639af7f461c9d9a634e483e7373",
+      "fileRunResult": {
+        "passed": 2,
+        "failed": 1
+      },
+      "qualifiedAreas": [
+        "UI30"
+      ],
+      "alsoPassed": [
+        "UI31"
+      ],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964988862"
     }
   ],
-  "qualifiedTests": 1,
-  "completeCaptures": 6,
+  "qualifiedTests": 2,
+  "completeCaptures": 13,
   "pageErrors": [],
   "consoleErrors": [],
-  "data": "Isolated enrolled installation. Original Documents producer and original HTTP readback; no context, response, grant or receipt mocks.",
+  "data": "Isolated enrolled installation. Original local Dashboard handoff, Work sources and Documents producer; no context, response, grant or receipt mocks.",
   "captures": [
+    {
+      "name": "UI30-dark-desktop-choose-period",
+      "area": "UI30",
+      "sha": "5d6755417cd709bb8fb3ef51d441f9c41c49dc89",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-dark-desktop-choose-period.jpg",
+      "bytes": 68867,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44964988862
+    },
+    {
+      "name": "UI30-dark-desktop-assigned-work",
+      "area": "UI30",
+      "sha": "77e1e9443f6a795d3761b3b343366eb64e95b9fe",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-dark-desktop-assigned-work.jpg",
+      "bytes": 100296,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44964988862
+    },
+    {
+      "name": "UI30-dark-desktop-authorized-detail",
+      "area": "UI30",
+      "sha": "aca62ba166bfed0017b69e4f1255429cb3ab77aa",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-dark-desktop-authorized-detail.jpg",
+      "bytes": 92416,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44964988862
+    },
+    {
+      "name": "UI30-light-desktop-authorized-detail",
+      "area": "UI30",
+      "sha": "f09d625965342c4aae2427adc18b7dc97240f97e",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-light-desktop-authorized-detail.jpg",
+      "bytes": 96481,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "light",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44964988862
+    },
+    {
+      "name": "UI30-light-320-authorized-detail",
+      "area": "UI30",
+      "sha": "31f5c0a94388a36a340bda3a2a788cedc478edc1",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-light-320-authorized-detail.jpg",
+      "bytes": 29466,
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "theme": "light",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44964988862
+    },
+    {
+      "name": "UI30-light-320-filtered-empty",
+      "area": "UI30",
+      "sha": "1d98a130c147521a67595a391cd8faf31feac38e",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-light-320-filtered-empty.jpg",
+      "bytes": 25434,
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "theme": "light",
+      "locale": "en",
+      "visualReview": "PASS",
+      "sourceRun": 44964988862
+    },
+    {
+      "name": "UI30-pt-BR-dark-desktop",
+      "area": "UI30",
+      "sha": "a2f093acb6f954ca5c96c0cfed733063ca44d4a5",
+      "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-pt-BR-dark-desktop.jpg",
+      "bytes": 73212,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "locale": "pt-BR",
+      "visualReview": "PASS",
+      "sourceRun": 44964988862
+    },
     {
       "name": "UI31-dark-desktop-before-query",
       "area": "UI31",
@@ -121,8 +243,11 @@
     }
   ],
   "limitations": [
-    "Only UI31 is qualified in this revision. UI30 and UI32 remain under investigation; their failed-journey captures are excluded.",
+    "UI30 and UI31 are qualified in this revision. UI32 is still awaiting qualification; its failed-journey captures are excluded.",
+    "UI30's successful detail and destination use a real local Hot Topic handoff. Procurement details returned HTTP 503 in an earlier original-source run; this gallery does not qualify a successful Procurement detail or alter C58 protections.",
+    "The source returned ownerLabel unknown; it is preserved. The original owner reference and current source version were asserted in the detail response.",
     "Search returned the canonical empty result because the isolated source has no uploaded searchable document. A non-empty search result and result destination are not qualified.",
-    "Chromium only. English desktop in dark and light themes, English 320px light, and Brazilian Portuguese desktop dark were captured. Actual browser zoom and Portuguese 320px were not tested."
-  ]
+    "Chromium only. English desktop dark/light, English 320px light, and Brazilian Portuguese desktop dark initial states were captured. Actual browser zoom, Portuguese 320px and other engines were not tested."
+  ],
+  "diagnosticScope": "Qualified UI30/UI31 journeys only; UI32's failed journey is excluded."
 }

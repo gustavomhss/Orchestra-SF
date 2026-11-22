@@ -1,4 +1,10 @@
-# E2E typecheck boundary
+# Technical verification and typechecks
+
+## Current composed candidate
+
+[Gate12 / run44965223657](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965223657) passed all13 checks on snapshot `dacaec3b11b0dce7244268f7de1ade2a6df0aece`, product `331cafc50bee2112f6366ff428658de938c6f58e`, after incorporating exact dev `3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1`. Application declarations, E2E semantics and the full CLI package typecheck each exited0. Exact-dev guards, seven-file palette parity and84 regression tests passed. The historical CLI diagnostics below were corrected by the incorporated upstream commits; no local suppression was introduced.
+
+## E2E typecheck boundary
 
 The existing `typecheck:e2e` command runs `tsgo -p e2e/tsconfig.json` and has `noEmit: true`. Its inherited app configuration enabled `composite` and `emitDeclarationOnly`, which also requested declaration-serialization diagnostics even though this test command produces no declaration artifact.
 
@@ -18,4 +24,4 @@ The native queue and FX fixes also received a full CLI package typecheck. Candid
 
 [Audit5](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44963827656) tested product `7c0caf8da905a03579379c35ce1cd49375a87509` in snapshot `71e73384e3fb0a9d10faa8b7e2b17a491469c930`. Its seven file/code/message diagnostics match [the exact-dev baseline](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44958162297); only timestamps, Actions display markers and line/column locations were normalized. The host-context location moved from 933 to 936; its diagnostic and continuation remain identical. No new diagnostic remains.
 
-Audit4 had exposed three test-only errors in the new original SQLite fixture: implicit callback parameter types and an optional transactionAll method. Those were corrected with the exact Snapshot/BlobTransaction types and an explicit presence check for the original snapshot methods. No cast, suppression or compiler option was added. The full CLI workflow still fails because of its seven baseline diagnostics; it must not be reported as green. [Machine-readable comparison](cli-type-audit.json).
+Audit4 had exposed three test-only errors in the new original SQLite fixture: implicit callback parameter types and an optional transactionAll method. Those were corrected with the exact Snapshot/BlobTransaction types and an explicit presence check for the original snapshot methods. No cast, suppression or compiler option was added. Audit5 remains a historical failed workflow on the earlier base. The current composed full CLI run above passed after the upstream repairs; the two results must not be conflated. [Machine-readable comparison](cli-type-audit.json).

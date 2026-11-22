@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedThrough": "2026-11-22 00:11:42 UTC",
+  "updatedThrough": "2026-11-22 00:16:59 UTC",
   "note": "Historical attempts include failures and incomplete journeys. Only a final passing run qualifies its stated coverage.",
   "attempts": [
     {
@@ -796,8 +796,8 @@
           "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
         }
       },
-      "status": "running",
-      "cause": "Accessible native select names, bounded action waits and source-faithful UI36 divergence assertion; positive original-source journey retained.",
+      "status": "failed",
+      "cause": "UI34 through UI40 functional steps passed, including original question preparation and current-choice reads. UI41 failed before any choices POST: A15 closed inputs lack surface but the effective route still required that placeholder. Source-backed dashboard metadata overrides and matching two-read health guard correct the route without changing inputs, F02 or grants.",
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964845981"
     },
     {
@@ -819,11 +819,13 @@
           "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
         }
       },
-      "status": "running",
-      "cause": "Second original destination authorization now awaited explicitly; safe temporary boolean diagnostics isolate pre-dispatch saved-view rejection.",
+      "status": "failed",
+      "cause": "UI30 passed both original destination reauthorizations (~17.2s and17.4s) and native navigation; UI31 passed. UI32 still rejected contract-mismatch before POST. Product console.info was not forwarded by the test collector; no diagnostic bit was inferred. A real Solid/closed-codec regression and exact command snapshot now test the concrete reactive metadata hypothesis.",
       "run": 44964988862,
       "job": 137031865834,
-      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964988862"
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964988862",
+      "passedTests": 2,
+      "failedTests": 1
     },
     {
       "group": "procurement",
@@ -874,9 +876,12 @@
       },
       "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
       "checks": 13,
-      "status": "running",
-      "cause": "Thirteen checks include fullCLI typecheck, app/E2E declarations/semantics, exact updated-dev guard base and84 regression tests.",
-      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965223657"
+      "status": "passed",
+      "cause": "All13 checks passed against dev3ce1acd0, including the full CLI package with zero diagnostics. App/E2E types, exact-dev guards, palette parity and84 regression tests also passed.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965223657",
+      "passedChecks": 13,
+      "regressionTests": 84,
+      "fullCliTypecheck": "passed"
     },
     {
       "group": "composition-planner-and-six",

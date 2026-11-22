@@ -73,6 +73,14 @@ export const SfOperationExtensions = Object.freeze({
   "decisions.decision-coverage": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-coverage"}},
   "decisions.decision-criteria": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-criteria"}},
   "decisions.decision-select-portfolio": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-select-portfolio"}},
+  // Original A15 endpoints accept closed bodies without a caller-selected surface.
+  "intelligence.analysis.cancel": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"workbench-analysis"},"fixedBodyDiscriminator":{"action":"cancel"},"maxRequestBytes":65536},
+  "intelligence.analysis.choices": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"workbench-analysis"},"fixedBodyDiscriminator":{"action":"choices"},"maxRequestBytes":65536},
+  "intelligence.analysis.list": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"workbench-analysis"},"fixedBodyDiscriminator":{"action":"list"},"maxRequestBytes":65536},
+  "intelligence.analysis.output": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"workbench-analysis"},"fixedBodyDiscriminator":{"action":"output"},"maxRequestBytes":65536},
+  "intelligence.analysis.prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"workbench-analysis"},"fixedBodyDiscriminator":{"action":"prepare"},"maxRequestBytes":65536},
+  "intelligence.analysis.read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"workbench-analysis"},"fixedBodyDiscriminator":{"action":"read"},"maxRequestBytes":65536},
+  "intelligence.analysis.start": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"workbench-analysis"},"fixedBodyDiscriminator":{"action":"start"},"maxRequestBytes":65536},
   // C12 stays on the original procurement adapter; no surface or purpose is invented in a payload.
   "decisions.decision-prepare-changes": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"decision-prepare-changes"}},
   "decisions.decision-review": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"read","responseMode":"json","fixedQuery":{"sf":"decision-review"}},

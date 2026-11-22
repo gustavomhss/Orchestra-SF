@@ -524,7 +524,7 @@
       "id": "UI30",
       "label": "Meu trabalho",
       "owner": "planner",
-      "status": "IN_PROGRESS",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
       "routes": [
         {
           "kind": "entry",
@@ -537,8 +537,50 @@
           "referenceBlob": "d012691ea65e0de4185f4942967c0d2ca9044161"
         }
       ],
-      "states": [],
-      "captures": []
+      "states": [
+        "explicit period selection",
+        "assigned original work list",
+        "authorized handoff detail",
+        "source owner and version",
+        "revalidate and open native Hot Topic destination",
+        "filtered empty state",
+        "English desktop dark/light",
+        "English320px",
+        "Brazilian Portuguese entry"
+      ],
+      "captures": [
+        {
+          "name": "UI30-dark-desktop-choose-period",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-dark-desktop-choose-period.jpg"
+        },
+        {
+          "name": "UI30-dark-desktop-assigned-work",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-dark-desktop-assigned-work.jpg"
+        },
+        {
+          "name": "UI30-dark-desktop-authorized-detail",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-dark-desktop-authorized-detail.jpg"
+        },
+        {
+          "name": "UI30-light-desktop-authorized-detail",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-light-desktop-authorized-detail.jpg"
+        },
+        {
+          "name": "UI30-light-320-authorized-detail",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-light-320-authorized-detail.jpg"
+        },
+        {
+          "name": "UI30-light-320-filtered-empty",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-light-320-filtered-empty.jpg"
+        },
+        {
+          "name": "UI30-pt-BR-dark-desktop",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-pt-BR-dark-desktop.jpg"
+        }
+      ],
+      "evidenceRun": 44964988862,
+      "visualReview": "evidence/work/README.md",
+      "userAcceptance": "PENDING"
     },
     {
       "id": "UI31",
@@ -808,26 +850,30 @@
   "verification": {
     "runtime": "IN_PROGRESS",
     "visual": "IN_PROGRESS",
-    "technical": "TWELVE_GATES_PASSED_AT_3C57DCC8",
+    "technical": "THIRTEEN_GATES_PASSED_AT_331CAFC5",
     "regression": "FIRST_SIX_PASSED_AT_7C0CAF8D",
     "userAcceptance": "PENDING",
     "merge": "NOT_MERGED"
   },
   "technicalEvidence": {
-    "run": 44964454946,
-    "snapshot": "7fa02bcd424429bf4fb86ea2cc458db76400ccb4",
-    "productHead": "3c57dcc8e64dbc3b725f27af82242bd9ac9fbdd0",
-    "checks": 12,
+    "run": 44965223657,
+    "job": 137032605736,
+    "snapshot": "dacaec3b11b0dce7244268f7de1ade2a6df0aece",
+    "productHead": "331cafc50bee2112f6366ff428658de938c6f58e",
+    "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+    "checks": 13,
     "regressionTests": 84,
     "includesOriginalInstalledHost": true,
     "fullCli": {
-      "status": "KNOWN_BASELINE_FAILURE_NO_NEW_DIAGNOSTICS",
-      "run": 44963827656,
-      "baselineRun": 44958162297,
-      "existingDiagnostics": 7,
-      "newDiagnostics": 0
-    },
-    "job": 137030229344
+      "status": "PASSED",
+      "run": 44965223657,
+      "diagnostics": 0,
+      "previousBaseline": {
+        "run": 44958162297,
+        "diagnostics": 7,
+        "status": "HISTORICAL"
+      }
+    }
   },
   "regressionEvidence": {
     "run": 44963871177,

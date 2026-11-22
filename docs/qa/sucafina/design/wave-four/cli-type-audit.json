@@ -1,21 +1,35 @@
 {
-  "run": 44963827656,
-  "job": 137028278910,
-  "snapshot": "71e73384e3fb0a9d10faa8b7e2b17a491469c930",
-  "head": "7c0caf8da905a03579379c35ce1cd49375a87509",
-  "baselineRun": 44958162297,
-  "baselineJob": 137010787929,
-  "baseline": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02",
-  "status": "KNOWN_BASELINE_FAILURE_NO_NEW_DIAGNOSTICS",
-  "existingDiagnostics": 7,
-  "newDiagnostics": 0,
-  "diagnostics": [
-    "src/sucafina-product/host-context.ts: error TS2345: Argument of type 'Effect<boolean, MessageDecodeError, Service>' is not assignable to parameter of type 'Effect<boolean, MessageDecodeError, never>'.",
-    "src/sucafina-product/team-current-choice.ts: error TS2345: Argument of type '{ schemaVersion: number; version: string; profiles: { id: string; version: string; mission: string; allowedSkills: string[]; allowedOperations: string[]; outputTypes: string[]; contextBudgetTokens: number; ... 5 more ...; sourceDigest: string; }[]; skills: { ...; }[]; packs: { ...; }[]; operation_call_routes: { ...;...' is not assignable to parameter of type 'BinaryLike'.",
-    "src/sucafina-product/team-current-choice.ts: error TS2345: Argument of type '{ schemaVersion: number; version: string; profiles: { id: string; version: string; mission: string; allowedSkills: string[]; allowedOperations: string[]; outputTypes: string[]; contextBudgetTokens: number; ... 5 more ...; sourceDigest: string; }[]; skills: { ...; }[]; packs: { ...; }[]; operation_call_routes: { ...;...' is not assignable to parameter of type 'string'.",
-    "src/sucafina-product/team-purchase-mcp.ts: error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
-    "src/sucafina-product/team-purchase-mcp.ts: error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
-    "test/sucafina-native-documents.test.ts: error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
-    "test/sucafina-native-documents.test.ts: error TS7006: Parameter 'snapshot' implicitly has an 'any' type."
-  ]
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "run": 44965223657,
+  "job": 137032605736,
+  "snapshot": "dacaec3b11b0dce7244268f7de1ade2a6df0aece",
+  "head": "331cafc50bee2112f6366ff428658de938c6f58e",
+  "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+  "command": "bun run typecheck",
+  "package": "apps/cli",
+  "exitCode": 0,
+  "diagnostics": [],
+  "resolution": "Current dev includes original upstream CLI type repairs; no suppression or compiler flag change accepted the historical diagnostics.",
+  "historicalAudit": {
+    "run": 44963827656,
+    "job": 137028278910,
+    "snapshot": "71e73384e3fb0a9d10faa8b7e2b17a491469c930",
+    "head": "7c0caf8da905a03579379c35ce1cd49375a87509",
+    "baselineRun": 44958162297,
+    "baselineJob": 137010787929,
+    "baseline": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02",
+    "status": "KNOWN_BASELINE_FAILURE_NO_NEW_DIAGNOSTICS",
+    "existingDiagnostics": 7,
+    "newDiagnostics": 0,
+    "diagnostics": [
+      "src/sucafina-product/host-context.ts: error TS2345: Argument of type 'Effect<boolean, MessageDecodeError, Service>' is not assignable to parameter of type 'Effect<boolean, MessageDecodeError, never>'.",
+      "src/sucafina-product/team-current-choice.ts: error TS2345: Argument of type '{ schemaVersion: number; version: string; profiles: { id: string; version: string; mission: string; allowedSkills: string[]; allowedOperations: string[]; outputTypes: string[]; contextBudgetTokens: number; ... 5 more ...; sourceDigest: string; }[]; skills: { ...; }[]; packs: { ...; }[]; operation_call_routes: { ...;...' is not assignable to parameter of type 'BinaryLike'.",
+      "src/sucafina-product/team-current-choice.ts: error TS2345: Argument of type '{ schemaVersion: number; version: string; profiles: { id: string; version: string; mission: string; allowedSkills: string[]; allowedOperations: string[]; outputTypes: string[]; contextBudgetTokens: number; ... 5 more ...; sourceDigest: string; }[]; skills: { ...; }[]; packs: { ...; }[]; operation_call_routes: { ...;...' is not assignable to parameter of type 'string'.",
+      "src/sucafina-product/team-purchase-mcp.ts: error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "src/sucafina-product/team-purchase-mcp.ts: error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "test/sucafina-native-documents.test.ts: error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "test/sucafina-native-documents.test.ts: error TS7006: Parameter 'snapshot' implicitly has an 'any' type."
+    ]
+  }
 }
