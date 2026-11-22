@@ -139,8 +139,9 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     // read-only source fence inside the canonical persistence snapshot.
     const readFence: ConfirmationObserver<T>["fence"] = async (scope, observation, context) => {
       const transaction = input.host.persistence.transactionAll
-      if (!transaction) return false
-      return transaction(async () => ({ commit: false, value: await fence(scope, observation, context) }))
+      const request = input.host.requestFor(context)
+      if (!transaction || !request) return false
+      return transaction(async () => ({ commit: false, value: await fence(scope, observation, context) }), { signal: request.signal })
     }
     const observations = createConfirmationObservationReceipts<T>({ host: input.host, observe, fence: readFence, now: () => Date.parse(input.now()) })
     const port = createConfirmationPort<T>({ host: input.host, state: input.state, creationTarget: input.creationTarget, human: input.human, observe, fence, verifyObserved: observations.verifyObserved, createId: input.createId, now: input.now })
