@@ -152,7 +152,7 @@ async function setup(directory: string, store: Awaited<ReturnType<typeof openLoc
   if (!answerReuse || !capability) throw new Error("Answer capability missing")
   const invoke = async (call?: TrustedUiContext) => capability.handler(payload, call ?? await read("sf_answer_read", payload))
   const prepare = async () => ok(await answerReuse.prepare(thread.id, answerRef, await read("sf_answer_read", payload)))
-  const confirmation = async (prepared: Awaited<ReturnType<typeof prepare>>, idempotencyKey = randomUUID()): Promise<AnswerConfirmationMutation> => ({
+  const confirmation = async (prepared: Awaited<ReturnType<typeof prepare>>, idempotencyKey: string = randomUUID()): Promise<AnswerConfirmationMutation> => ({
     expectedStorageVersion: ok(await business.collaboration.storageVersion("threads", await read("sf_answer_read", payload))),
     idempotencyKey, observationRef: prepared.observationRef, observedSourceVersion: prepared.observedSourceVersion,
     expectedScopeFingerprint: prepared.expectedScopeFingerprint,

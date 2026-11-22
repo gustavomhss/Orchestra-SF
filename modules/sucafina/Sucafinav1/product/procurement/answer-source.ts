@@ -144,10 +144,11 @@ export function createProcurementAnswerSource(input: {
   const fence = async (scope: ConfirmationScope, observation: Available, call: TrustedDomainContext) => {
     const request = requestFor.call(host, call)
     const binding = digestSfValue([call.kind, call.binding])
-    const snapshot = snapshots?.call(persistence)?.procurement
     const proof = fences.get(call)?.get(key(scope, call, observation.scopeFingerprint))
-    const validSource = () => !!snapshot && snapshots?.call(persistence)?.procurement === snapshot &&
-      physical(snapshot, observation.evidence) === observation.physicalIncarnation
+    const validSource = () => {
+      const snapshot = snapshots?.call(persistence)?.procurement
+      return !!snapshot && physical(snapshot, observation.evidence) === observation.physicalIncarnation
+    }
     return valid(scope) && !!request && !!proof && proof.observation === digestSfValue(observation) &&
       current(call, request, binding) && validSource() && await proof.fence() &&
       current(call, request, binding) && validSource() && await revalidate.call(host, call) &&
