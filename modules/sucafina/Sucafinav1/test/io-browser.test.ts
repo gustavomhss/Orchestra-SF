@@ -4,6 +4,7 @@ import { expect } from "@playwright/test"
 import type { Locator, Page } from "@playwright/test"
 import path from "node:path"
 import { localBrowser } from "./fixture/local-browser.ts"
+import { captureBrowserPng, withinBrowserDeadline } from "./fixture/browser-evidence.ts"
 
 test("browser previews/applies Planner XLSX and exports persisted monthly values and totals", async () => {
   console.info("browser IO: opening private installation")
@@ -83,7 +84,7 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     expect(budget).toBeDefined()
     expect(budget!.slice(9, 21)).toEqual(Array.from({ length: 12 }, () => 125))
     expect(budget![21]).toMatchObject({ formula: expect.stringMatching(/^SUM\(J\d+:U\d+\)$/), result: 1500 })
-    await captureBusinessPage(page, "opex")
+    await captureBrowserPng(page, path.join(import.meta.dir, "artifacts/browser-business-opex.png"))
 
     expect(fixture.errors).toEqual([])
   } catch (error) {
@@ -159,6 +160,9 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     await expect(members.locator("[data-import-notice]")).toContainText("All Members (1)")
     await submit(page, members)
     await expect(page.getByRole("row").filter({ hasText: "Browser acceptance member fixture" })).toHaveCount(1)
+    // Capture the verified post-import document before triggering the browser download.
+    const capturedMembers = await captureBrowserPng(page, path.join(import.meta.dir, "artifacts/browser-business-members.png"))
+      .then(() => ({ ok: true as const }), (error: unknown) => ({ ok: false as const, error }))
     const membersExport = new Workbook()
     const memberDownload = await expectDownload(page, page.getByRole("link", { name: "Export All Members", exact: true }))
     console.info("browser IO: Members XLSX parse starting")
@@ -168,7 +172,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     expect(allMembers?.rowCount).toBe(2)
     expect(allMembers!.getCell("A2").text).toBe("Browser acceptance member fixture")
     expect(allMembers!.getCell("I2").text).toBe("Active")
-    await captureBusinessPage(page, "members")
+    if (!capturedMembers.ok) throw capturedMembers.error
     expect(fixture.errors).toEqual([])
   } catch (error) {
     console.error("browser IO: failed before cleanup", error)
@@ -207,65 +211,10 @@ async function expectDownload(page: Page, link: Locator) {
     link.click(),
   ])
   console.info("browser IO: download event received", downloaded.suggestedFilename())
-  const deadline = AbortSignal.timeout(10_000)
-  expect(await withinBrowserDeadline("download completion", () => downloaded.failure(), deadline)).toBeNull()
-  const file = await withinBrowserDeadline("downloaded file path", () => downloaded.path(), deadline)
+  const deadline = performance.now() + 10_000
+  expect(await withinBrowserDeadline("download completion", () => downloaded.failure(), deadline - performance.now())).toBeNull()
+  const file = await withinBrowserDeadline("downloaded file path", () => downloaded.path(), deadline - performance.now())
   expect(file).not.toBeNull()
   console.info("browser IO: downloaded", downloaded.suggestedFilename())
   return Bun.file(file!)
-}
-
-async function captureBusinessPage(page: Page, name: "opex" | "members") {
-  const deadline = AbortSignal.timeout(10_000)
-  console.info("browser IO: PNG start", name)
-  const session = await withinBrowserDeadline("attach screenshot CDP session", () => page.context().newCDPSession(page), deadline)
-  let completed = false
-  try {
-    // Capture the full authenticated page without Playwright's renderer-side
-    // screenshot preparation (font/animation waits and viewport resizing).
-    const metrics = await withinBrowserDeadline("screenshot layout metrics", () => session.send("Page.getLayoutMetrics"), deadline)
-    const { x, y, width, height } = metrics.cssContentSize
-    const area = { x, y, width: Math.ceil(width), height: Math.ceil(height), scale: 1 }
-    if (![x, y, width, height].every(Number.isFinite) || width <= 0 || height <= 0)
-      throw new Error("Chrome returned invalid full-page screenshot dimensions")
-    console.info("browser IO: PNG layout", name, area.width, area.height)
-    const frame = await withinBrowserDeadline("capture full-page PNG", () => session.send("Page.captureScreenshot", {
-      format: "png", fromSurface: true, captureBeyondViewport: true, clip: area,
-    }), deadline)
-    const bytes = Buffer.from(frame.data, "base64")
-    expect(bytes.length).toBeGreaterThan(33)
-    expect(bytes.subarray(0, 8)).toEqual(Buffer.from("89504e470d0a1a0a", "hex"))
-    expect(bytes.toString("ascii", 12, 16)).toBe("IHDR")
-    expect(bytes.readUInt32BE(16)).toBe(area.width)
-    expect(bytes.readUInt32BE(20)).toBe(area.height)
-    expect(bytes.subarray(-12)).toEqual(Buffer.from("0000000049454e44ae426082", "hex"))
-    const artifact = path.join(import.meta.dir, "artifacts", `browser-business-${name}.png`)
-    await withinBrowserDeadline("persist screenshot", () => Bun.write(artifact, bytes), deadline)
-    const persisted = await withinBrowserDeadline("read persisted screenshot", () => Bun.file(artifact).arrayBuffer(), deadline)
-    expect(Buffer.from(persisted).equals(bytes)).toBe(true)
-    completed = true
-    console.info("browser IO: PNG verified", name, bytes.length)
-  } finally {
-    // Let fixture.dispose certify browser ownership even when the CDP pipe stalls.
-    await withinBrowserDeadline("detach screenshot CDP session", () => session.detach(), AbortSignal.timeout(2_000))
-      .catch((error: unknown) => {
-        if (completed) throw error
-        console.error("browser IO: CDP detach failed after screenshot error", name)
-      })
-  }
-}
-
-function withinBrowserDeadline<T>(
-  phase: string,
-  operation: () => Promise<T>,
-  signal = AbortSignal.timeout(10_000),
-): Promise<T> {
-  const expired = new Error(`Browser IO deadline exceeded: ${phase}`)
-  if (signal.aborted) return Promise.reject(expired)
-  let rejectDeadline: (error: Error) => void = () => {}
-  const timeout = new Promise<never>((_, reject) => { rejectDeadline = reject })
-  const abort = () => rejectDeadline(expired)
-  signal.addEventListener("abort", abort, { once: true })
-  return Promise.race([Promise.resolve().then(operation), timeout])
-    .finally(() => signal.removeEventListener("abort", abort))
 }
