@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedThrough": "2026-11-22 00:58:31 UTC",
+  "updatedThrough": "2026-11-22 01:09:52 UTC",
   "note": "Historical attempts include failures and incomplete journeys. Only a final passing run qualifies its stated coverage.",
   "attempts": [
     {
@@ -1088,10 +1088,27 @@
         }
       },
       "dev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
-      "status": "running",
-      "cause": "Corrected observer URL accessor; strict source positivity on every screen, original status/reason diagnostics, final UI41 CSS and composed dev699.",
+      "status": "failed",
+      "cause": "UI41 light lost original case eligibility at297s after specentry. Diagnostic projection.case503/unavailable/procurement-case-read-changed; current-choice403/denied/current-choice-case-unavailable. Context200 and four required read/prepare operations stillready. Fullsource guard diagnosis pending; notsessiontimeout inference.",
       "run": 44968620170,
-      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968620170"
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968620170",
+      "job": 137043213784,
+      "firstOriginalRefusal": {
+        "operation": "projection.case",
+        "httpStatus": 503,
+        "status": "unavailable",
+        "reason": "procurement-case-read-changed",
+        "elapsedMs": 1936
+      },
+      "secondary": {
+        "operation": "current-choice",
+        "httpStatus": 403,
+        "status": "denied",
+        "reason": "current-choice-case-unavailable",
+        "elapsedMs": 172
+      },
+      "pageErrors": [],
+      "consoleErrors": []
     },
     {
       "group": "technical",

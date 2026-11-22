@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED_FULL_JOURNEY_NOT_ACCEPTED",
+  "run": 44968620170,
+  "job": 137043213784,
+  "snapshot": "47cbbb5eb1f9b8518f3cada5838429fcb4d4a5ab",
+  "product": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+  "testEnteredAt": "2026-11-22T00:55:11.568Z",
+  "timingOrigin": "Test entry after original seed and enrollment, not exact selection creation time.",
+  "failedScreen": "UI41",
+  "initialEmptyChoicesElapsedMs": 297140,
+  "failureDetectedElapsedMs": 307374,
+  "probes": [
+    {
+      "operation": "projection.case",
+      "httpStatus": 503,
+      "status": "unavailable",
+      "reason": "procurement-case-read-changed",
+      "elapsedMs": 1936
+    },
+    {
+      "operation": "current-choice",
+      "httpStatus": 403,
+      "status": "denied",
+      "reason": "current-choice-case-unavailable",
+      "elapsedMs": 172
+    }
+  ],
+  "contextHTTPStatus": 200,
+  "requiredOperationsReady": [
+    "decisions.choice.read",
+    "decisions.command.sf_question_prepare",
+    "intelligence.analysis.choices",
+    "intelligence.analysis.list"
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "conclusion": "Original case wrapper refusal established. Static tracing found no procurement-selection writer in the Decisions journey. Shared reason can represent multiple guards or a caught exception, so no TTL/session cause is accepted without the snapshot-only branch discriminator.",
+  "limitations": [
+    "Full journey failed; later states not accepted.",
+    "The wrapper shares its reason across request, identity, selection, authority and persistence failures.",
+    "No session expiration or scanner TTL inferred."
+  ],
+  "nextVerification": "Disposable Decisions12 snapshot with safe enum diagnostics only; original source behavior and full journey unchanged."
+}

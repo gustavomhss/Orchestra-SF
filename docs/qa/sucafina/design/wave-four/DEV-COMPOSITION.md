@@ -1,6 +1,6 @@
 # Composition with dev699ad1a1
 
-Status: **TECHNICAL_PASS; DECISIONS_BROWSER_PENDING**. Product `218a5ee39935336c88abeb92b0a4d2cc980f21de` incorporates upstream dev `699ad1a1f837ef4a918b73ba89b06aa9cc0a10db`. Composition commit `cb5b92074c64b7087abeeba75a1effe52b01eff5` retains that upstream head as a parent. Since the actual PR #587 merge `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`, fourteen upstream commits changed 65 distinct paths in two stages. Counts below distinguish the stages from the cumulative set.
+Status: **TECHNICAL_PASS; DECISIONS_SOURCE_GUARD_UNDER_INVESTIGATION**. Product `218a5ee39935336c88abeb92b0a4d2cc980f21de` incorporates upstream dev `699ad1a1f837ef4a918b73ba89b06aa9cc0a10db`. Composition commit `cb5b92074c64b7087abeeba75a1effe52b01eff5` retains that upstream head as a parent. Since the actual PR #587 merge `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`, fourteen upstream commits changed 65 distinct paths in two stages. Counts below distinguish the stages from the cumulative set.
 
 ## Stage one — dev3ce1acd0
 
@@ -40,7 +40,7 @@ No workflow, guard, allowlist or permission mechanism was edited for this reconc
 | Planner and previous six native areas | [44965221018](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965221018) | Workflow and Run tests step PASS; combined log unavailable |
 | Procurement five-area journey | [44965165654](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965165654) | PASS; 4 original journeys, 11 POSTs/readbacks |
 | Work, Search and Saved Views | [44965705732](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965705732) | PASS; 3 original journeys |
-| Decisions | [44968620170](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968620170) | Running with positive original-content assertions and safe refusal diagnostics |
+| Decisions | [44968620170](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968620170) | Failed on UI41 real-content assertion; original503/procurement-case-read-changed isolated; exact guard pending |
 
 The combined Planner/previous-six workflow on the first composition (dev3ce1acd0) completed successfully, including the original test step and evidence upload. Two MCP attempts to retrieve its decoded log returned Transport closed. We do not infer a combined test/capture/write/error count. The [composition manifest](evidence/composition/manifest.json) records artifact identity and the exact selected specs; separately read Planner9 and Regression2 evidence retains its own source snapshots.
 

@@ -1,6 +1,6 @@
 # Wave four — validation
 
-Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete browser journeys and visual review. Decisions9 passed its eight functional flows and initial English dark states, then lost original case availability by the UI41 light capture, before narrow/localized coverage. The failed run is retained; it does not qualify those later states.
+Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete browser journeys and visual review. Decisions11 stopped when real UI41 content disappeared. Its original case probe returned procurement-case-read-changed, while context and the four required operations remained available. The precise guard remains under investigation; the shared reason alone does not prove selection expiry. Failed journeys remain recorded and do not qualify later states.
 
 ## Candidate and scope
 
@@ -67,6 +67,7 @@ The E2E project retains strict semantic checking and noEmit, with declaration em
 | Procurement | [44965165654](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965165654) | `7f3de0206fc25b2925d7c55947d9b5785bdfe7ba` | `331cafc50bee2112f6366ff428658de938c6f58e` | 4 passed; 11 POSTs/readbacks; 43 captures |
 | Work/Search/Saved Views | [44965705732](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965705732) | `6bff36e3308c4ac205a59011827c8f19c06c5873` | `87a738830c83bf1fa9ee30c32b38fb1e297b30f8` | 3 passed; 1 view save/readback; 22 captures |
 | Decisions | [44966014444](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966014444) | `8cfd3eb141d31d18ee2b32dda629d67e7d44c10a` | `250e8faf80931c807a86c5f06c0e797de469adca` | Failed from UI41 light original-source coverage onward; followed by diagnostic Decisions11 |
+| Decisions diagnostic11 | [44968620170](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968620170) | `47cbbb5eb1f9b8518f3cada5838429fcb4d4a5ab` | `218a5ee39935336c88abeb92b0a4d2cc980f21de` | Failed on UI41 light real-content assertion; original503 reason identified; guard discriminator pending |
 | Previous six native areas | [44963871177](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44963871177) | `f6533b5856840c4722f38d3e5070204c8e4d4877` | `7c0caf8da905a03579379c35ce1cd49375a87509` | 2 passed; 67 complete previews; 6 representative JPEGs persisted |
 | Planner + previous six after dev composition | [44965221018](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965221018) | `fcd8c3099ecc04ae7fd47c3d323e889b4b1af0a8` | `331cafc50bee2112f6366ff428658de938c6f58e` | Workflow and Run tests step PASS; combined decoded log unavailable |
 
@@ -100,7 +101,7 @@ Saved Views edits an original V1 view, reviews/cancels/revises, confirms one sav
 
 ### Decisions — UI34–UI41
 
-Final complete qualification remains pending. Decisions11 / run44968620170 now tests product218a5ee3 with strict source-positive assertions and safe original refusal diagnostics. Decisions10 failed in the diagnostic observer URL accessor itself and is not source-lifecycle evidence. Preserve the failed Decisions9 record and complete the diagnosis before claiming passing light/narrow/localized states. [A15 contract review](A15-REVIEW.md) is a separate static audit and does not substitute for runtime evidence.
+Final complete qualification remains pending. Decisions11 / run44968620170 tested product218a5ee3 and stopped on missing real UI41 content. The original case probe returned HTTP503 / unavailable / procurement-case-read-changed; current-choice returned403 / denied / current-choice-case-unavailable. Context remained200 and all four required operations remained ready. The shared wrapper reason narrows the failure but alone does not establish which identity, selection, authority or persistence guard refused the read. Decisions10 failed in the diagnostic observer URL accessor itself and is not source-lifecycle evidence. Preserve the failed Decisions9 record and complete the diagnosis before claiming passing light/narrow/localized states. [A15 contract review](A15-REVIEW.md) is a separate static audit and does not substitute for runtime evidence.
 
 ## Implementation boundaries and corrective work
 

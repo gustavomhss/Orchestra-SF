@@ -7,7 +7,7 @@ Status: **IN_PROGRESS**. Twelve areas are qualified; the final Decisions journey
 | [Planner](planner/README.md) | 4 | 40 | Planner9; Planner + previous six passed again after dev composition |
 | [Procurement](procurement/README.md) | 5 | 43 | Procurement10: 4 tests, 11 original POSTs and fresh readbacks |
 | [Work, Search, Saved Views](work/README.md) | 3 | 22 | Work10: all 3 tests passed; selected images retain exact original run identities |
-| Decisions | 8 | Pending final successful source states | Decisions9 lost original case availability by UI41 light; diagnostic Decisions11 is running |
+| Decisions | 8 | Pending final successful source states | Decisions11 stopped on missing real UI41 content; original case503 reason established, exact guard pending |
 | [Previous six regression](regression/README.md) | Earlier 6 | 6 representative JPEGs of 67 previews | Separate from this block's capture total |
 
 [Validation and scope limits](../VALIDATION.md) · [Exact area/route/state mapping](../scope.json) · [Technical verification](../technical-verification.json) · [Composition evidence](composition/manifest.json)

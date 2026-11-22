@@ -61,5 +61,47 @@
     "sizeMismatches": 0
   },
   "notRuntimeQualification": true,
-  "notUserAcceptance": true
+  "notUserAcceptance": true,
+  "followupDeltaAudit": {
+    "status": "STATIC_PASS_WITH_DOCUMENTED_LIMITS",
+    "reviewedBy": "independent Procurement agent",
+    "previousProduct": "250e8faf80931c807a86c5f06c0e797de469adca",
+    "product": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+    "upstreamFrom": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+    "upstreamTo": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+    "comparedPaths": 102,
+    "upstreamPaths": 26,
+    "exactUpstreamBlobs": 25,
+    "overlap": {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "verification": "Product patch and upstream patch identical after removing only hunk offset headers; same additions, removals and context."
+    },
+    "ownPaths": 76,
+    "ownDocumentationPaths": 74,
+    "ownProductPaths": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/decision.css"
+    ],
+    "ownTestPaths": [
+      "packages/app-shell/e2e/sucafina/design-wave-four-decisions.spec.ts"
+    ],
+    "ownProductDelta": "UI41 editor width, history spacing, two-column control placement.",
+    "ownTestDelta": "Strict positive content assertions in eight areas and safe original refusal diagnostics; GET probes do not recover or replace a failed assertion; request.url() corrected.",
+    "scopeUnchanged": {
+      "areas": 20,
+      "routePatterns": 49,
+      "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572"
+    },
+    "noOwnChanges": [
+      "gates",
+      "workflows",
+      "authorization",
+      "guards",
+      "generated palettes",
+      "schemas",
+      "original producers",
+      "seed/harness",
+      "CI wrappers"
+    ],
+    "notRuntimeQualification": true
+  }
 }
