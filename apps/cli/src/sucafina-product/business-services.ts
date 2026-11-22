@@ -285,7 +285,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     })
     return read.status === "ok" ? read.value : undefined
   }
-  const withCase = async <T>(call: TrustedDomainContext, selected: CaseRef, options: { allowHistoricalRetry?: boolean }, action: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+  const withCase = async <T>(call: TrustedDomainContext, selected: CaseRef, options: { allowHistoricalRetry?: boolean; reportUnavailableEvidence?: boolean }, action: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
     const request = host.requestFor(call)
     const binding = callBindingDigest(call)
     const captured = structuredClone(selected)
@@ -295,6 +295,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     const historical = observed !== undefined && observed > captured.version
     if (!historical) {
       const current = await cases.read({ caseRef: encodeCaseRef(captured) }, call)
+      // Report this failure only for the exact authorized case, without installing a selection scope.
+      if (options.reportUnavailableEvidence && current.status === "unavailable" && current.reason === "case-evidence-unavailable" &&
+        await host.revalidate(call) && await boundCaseVersion(request, call, captured) === captured.version &&
+        currentCaseAuthority(call, request, binding) && !caseBindings.has(call) && digestSfValue(selected) === digestSfValue(captured)) return current
       if (current.status !== "ok" || (options.allowHistoricalRetry ? current.value.case.version < captured.version : current.value.case.version !== captured.version))
         return { status: "denied", reason: "case-selection-unavailable" }
     }

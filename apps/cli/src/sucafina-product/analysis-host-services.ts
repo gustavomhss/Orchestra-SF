@@ -270,12 +270,16 @@ export function createSfAnalysisHostServices(input: {
     const digest = digestSfValue(captured)
     if (call.kind !== "ui" || !await authority.human.authorize(call, "analysis.prepare", captured) || !await authority.host.revalidate(call))
       return { status: "denied", reason: "analysis-input-authority-unavailable" }
-    return business.withCase(call, captured.request.caseRef, {}, async () => {
+    const prepared = await business.withCase(call, captured.request.caseRef, { reportUnavailableEvidence: true }, async () => {
       const result = await bound.prepare(call, captured)
       if (!await authority.human.authorize(call, "analysis.prepare", captured) || !await authority.host.revalidate(call) || digestSfValue(captured) !== digest)
         return { status: "denied", reason: "analysis-input-authority-changed" }
       return result
     })
+    if (prepared.status !== "unavailable" || prepared.reason !== "case-evidence-unavailable") return prepared
+    if (!await authority.human.authorize(call, "analysis.prepare", captured) || !await authority.host.revalidate(call) || digestSfValue(captured) !== digest)
+      return { status: "denied", reason: "analysis-input-authority-changed" }
+    return { status: "unavailable", reason: "analysis-source-unavailable" }
   }
   const availability = sfAnalysisSkillIds.map((skillId) => {
     const count = (values: readonly { skillIds: readonly string[] }[]) => values.flatMap((value) => value.skillIds.filter((id) => id === skillId)).length
