@@ -322,6 +322,39 @@ def restore_clone_files(archive, receipt, target):
             shutil.rmtree(staging)
 
 
+def restore_reserved_clone(archive, receipt, target, reservation, observation):
+    binding = receipt.get("binding", {})
+    vm = observation.get("vm")
+    if reservation.get("action") != "verify-clone" or not isinstance(vm, dict) or \
+       vm.get("source") != "AZURE_IMDS" or not isinstance(vm.get("resourceId"), str) or not vm["resourceId"] or \
+       vm["resourceId"].lower() != str(reservation.get("vmResourceId", "")).lower() or \
+       not SHA64.fullmatch(str(observation.get("reservationSha256", ""))):
+        refuse("clone requires the actual VM and reservation observations")
+    observed_at = datetime.fromisoformat(str(vm.get("observedAtUtc", "")).replace("Z", "+00:00"))
+    if observed_at.tzinfo is None:
+        refuse("clone VM observation requires an explicit timezone")
+    if binding.get("candidate") != reservation["candidate"] or \
+       binding.get("archiveSha256") != reservation["archiveSha256"] or \
+       binding.get("sourceRelease") != reservation["sourceRelease"] or \
+       binding.get("vmResourceId", "").lower() == vm["resourceId"].lower() or \
+       binding.get("vmResourceId", "").lower() != str(reservation.get("sourceVmResourceId", "")).lower() or \
+       reservation.get("networkEgressFenced") is not True or reservation.get("credentialsDisabled") is not True:
+        refuse("clone must be a distinct reserved VM with exact source binding and isolation")
+    target = private_directory(Path(target), empty=True)
+    if target == STATE or STATE in target.parents or target == CONFIGURATION or CONFIGURATION in target.parents:
+        refuse("clone restore cannot target live state or configuration")
+    result = restore_clone_files(archive, receipt, target)
+    result["schema"] = "orchestra-sf.teams-clone-integrity.v3"
+    result["clone"] = {
+        "vm": dict(vm),
+        "reservationSha256": observation["reservationSha256"],
+        "verifiedAtUtc": datetime.now(timezone.utc).isoformat(),
+        "isolation": {"source": "OPERATOR_ATTESTATION", "networkEgressFenced": True,
+                      "credentialsDisabled": True},
+    }
+    return result
+
+
 def installer_module():
     spec = importlib.util.spec_from_file_location("g10_installer", Path(__file__).resolve().parents[1] / "vm/install-factory-distribution.py")
     module = importlib.util.module_from_spec(spec)
@@ -348,7 +381,11 @@ def azure_identity():
 def admission(file, command):
     if os.geteuid() != 0 or sys.platform != "linux" or os.uname().machine != "x86_64":
         refuse("root Linux x64 required for the operational adapter")
-    reservation = private_json(Path(file))
+    with regular_file(Path(file), private=True, maximum=MAX_MANIFEST) as stream:
+        reservation_bytes = stream.read(MAX_MANIFEST + 1)
+        if len(reservation_bytes) > MAX_MANIFEST:
+            refuse("reservation exceeds the bounded format")
+        reservation = json.loads(reservation_bytes)
     if reservation.get("schema") != "orchestra-sf.g10-reservation.v1" or \
        reservation.get("environment") != "isolated-qa" or reservation.get("disposable") is not True or \
        reservation.get("action") != command or not reservation.get("authorizationRef") or \
@@ -357,7 +394,9 @@ def admission(file, command):
     expires = datetime.fromisoformat(str(reservation.get("expiresAtUtc", "")).replace("Z", "+00:00"))
     if expires.tzinfo is None or expires <= datetime.now(timezone.utc):
         refuse("reservation has expired")
-    if azure_identity() != str(reservation.get("vmResourceId", "")).lower():
+    observed_vm = {"source": "AZURE_IMDS", "resourceId": azure_identity(),
+                   "observedAtUtc": datetime.now(timezone.utc).isoformat()}
+    if observed_vm["resourceId"] != str(reservation.get("vmResourceId", "")).lower():
         refuse("running Azure VM is not the reserved VM")
     candidate = reservation.get("candidate", {})
     if not SHA40.fullmatch(str(candidate.get("sha", ""))) or not SHA40.fullmatch(str(candidate.get("tree", ""))) or \
@@ -368,7 +407,7 @@ def admission(file, command):
        not SHA64.fullmatch(str(source.get("archiveSha256", ""))) or \
        not SHA64.fullmatch(str(source.get("manifestSha256", ""))):
         refuse("exact current source release and its archive/manifest hashes required")
-    return reservation
+    return reservation, {"vm": observed_vm, "reservationSha256": hashlib.sha256(reservation_bytes).hexdigest()}
 
 
 def bind_releases(reservation, g07, current, installed):
@@ -404,25 +443,14 @@ def main():
     for command in (checkpoint, clone):
         command.add_argument("--reservation", required=True)
     args = parser.parse_args()
-    reservation = admission(args.reservation, args.command)
+    reservation, observation = admission(args.reservation, args.command)
     installer = installer_module()
     with installer.install_lock():
         installer.vm_preflight(reservation["fqdn"])
         if args.command == "verify-clone":
             receipt = private_json(Path(args.receipt))
-            binding = receipt.get("binding", {})
-            if binding.get("candidate") != reservation["candidate"] or \
-               binding.get("archiveSha256") != reservation["archiveSha256"] or \
-               binding.get("sourceRelease") != reservation["sourceRelease"] or \
-               binding.get("vmResourceId", "").lower() == reservation["vmResourceId"].lower() or \
-               binding.get("vmResourceId", "").lower() != str(reservation.get("sourceVmResourceId", "")).lower() or \
-               reservation.get("networkEgressFenced") is not True or reservation.get("credentialsDisabled") is not True:
-                refuse("clone must be a distinct reserved VM with exact source binding and isolation")
-            target = private_directory(Path(args.target), empty=True)
-            if target == STATE or STATE in target.parents or target == CONFIGURATION or CONFIGURATION in target.parents:
-                refuse("clone restore cannot target live state or configuration")
-            result = restore_clone_files(Path(args.archive), receipt, target)
-            write_private(target / "clone-receipt.json", result)
+            result = restore_reserved_clone(Path(args.archive), receipt, Path(args.target), reservation, observation)
+            write_private(Path(args.target) / "clone-receipt.json", result)
             print(json.dumps({"result": result["proofClass"], "releaseQualified": False}))
             return
         current = installer.current_source()
@@ -452,8 +480,8 @@ def main():
             refuse("backup destination must be on a different volume from durable state")
         binding = {"candidate": reservation["candidate"], "archiveSha256": reservation["archiveSha256"],
                    "sourceRelease": source_release,
-                   "vmResourceId": reservation["vmResourceId"], "installedManifestSha256": installed["manifestSha256"],
-                   "reservationSha256": file_digest(Path(args.reservation)),
+                   "vmResourceId": observation["vm"]["resourceId"], "installedManifestSha256": installed["manifestSha256"],
+                   "reservationSha256": observation["reservationSha256"],
                    "writerFence": {"evidenceSha256": reservation["writerFenceEvidenceSha256"], "source": "OPERATOR_ATTESTATION"},
                    "service": "OBSERVED_INACTIVE", "key": "READABLE_IN_PRIVATE_INVENTORY"}
         archive, receipt = checkpoint_files(roots, destination, binding)
