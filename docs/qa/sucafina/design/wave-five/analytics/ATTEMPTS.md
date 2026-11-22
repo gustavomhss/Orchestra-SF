@@ -290,3 +290,9 @@ Seven JPEGs are durable; only the final refusal was viewed. The [receipt and int
 [Run 44992968102](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44992968102) used product `b486fd1e76bdb2dc7c48cb070ba67a744358131a`, snapshot `1118949166cfe49ec1a3931a7d9d0176c81c646f`, with only the first permanent Portfolio declaration retained. No profiler was present. Original comparisons returned 200/ok in 25,764ms and 25,820ms; selection registration returned 200/ok in 77,135ms, with exact readback. The single native preview POST had no observed response before the unchanged 60-second failure and teardown. Do not import Attempt 10's later 403 into this run.
 
 Seven JPEGs are durable; only the pending preview was viewed. [Receipt and limitations](attempt-11/README.md), [manifest](attempt-11/manifest.json). UI43/UI44 were not reached.
+
+## Attempt 12 — composed comparison/read availability changes, clean native wait
+
+[Run 44996623210](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44996623210), product `506a0a6141c5afaff37ec8c282ea3cb2cc7daf31`, snapshot `b6f80dbe7691f07fa3b89bb98b858988b3423d3a`, retained the original first declaration and all budgets. Both original comparisons (25,904ms and25,691ms), selection registration (65,372ms), exact selection readback and both native history reads passed. The single native preview had no observed response before its first60-second timeout/teardown. No evaluation was submitted; UI43/UI44 were not reached.
+
+Seven JPEGs are durable; only the pending preview was viewed. [Receipt and limits](attempt-12/README.md), [manifest](attempt-12/manifest.json). No five-minute refusal or profiler result is attributed to this clean run.
