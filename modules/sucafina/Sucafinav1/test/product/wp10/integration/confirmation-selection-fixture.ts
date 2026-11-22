@@ -6,7 +6,7 @@ import path from "node:path"
 import { Schema } from "effect"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
-import type { SfTransport } from "@orchestra/client/sucafina/transport"
+import type { SfTransport } from "../../../../../../../packages/client/src/sucafina/transport.ts"
 import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
 import { SfContext } from "@orchestra/schema/sucafina/context"
 import { createCollaborationHttp } from "../../../../product/collaboration/http.ts"
@@ -133,7 +133,17 @@ export async function confirmationSelectionFixture(dependency = true) {
     }
     const http = createCollaborationHttp({
       origin: "https://example.test", mount: "/sf", host: business.collaboration, human: authority.human,
-      admitRead: (request, operation, payload) => authority.ui.admit(request, "sf-read:" + operation, digestSfValue(payload)),
+      admitRead: async (request, action, payload) => {
+        const operation = "sf-read:" + action
+        const digest = digestSfValue(payload)
+        const admitted = await authority.ui.admit(request, operation, digest)
+        if (admitted.status !== "ok") return admitted
+        if (!await authority.ui.validate(admitted.value, operation, digest)) {
+          authority.ui.finish(admitted.value)
+          return { status: "denied", reason: "read-authority-unavailable" }
+        }
+        return admitted
+      },
       finishRead: authority.ui.finish,
     })
     const transport: SfTransport = {
