@@ -532,7 +532,10 @@ test("diagnostic 9 shipped composition: Procurement reply has no ordinary answer
     expect(prepared).toEqual({ status: "unavailable", reason: "answer-scope-unavailable" })
     const capability = services.collaboration.capabilities.find((entry) => entry.id === "sf_answer_read")!
     const result = await capability.handler(payload, call)
-    expect(result).toEqual({ status: "unavailable", reason: "answer-reuse-unavailable" })
+    expect(result).toMatchObject({ status: "unavailable", reason: "answer-reuse-unavailable",
+      receipt: { kind: "ui", operation: "sf_answer_read", handlerExport: "readAnswer", principalRef: "questioner", inputDigest: digestSfValue(payload) },
+    })
+    expect("value" in result).toBe(false)
     expect(JSON.stringify(result)).not.toContain(replyBody)
   } finally {
     business?.dispose()
