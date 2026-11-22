@@ -1,0 +1,157 @@
+{
+  "attempt": 6,
+  "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+  "snapshot": "456c19e5cfce9d1692b0fe5b6a85104706f55cf4",
+  "branch": "ci-run-sf5collab6",
+  "run": 44982724904,
+  "job": 137086555249,
+  "cleanupJob": 137087867167,
+  "status": "failed",
+  "tests": {
+    "passed": 1,
+    "failed": 1
+  },
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44982724904",
+  "artifacts": [
+    {
+      "id": 14738815804,
+      "name": "playwright-ubuntu-24.04-1",
+      "size": 35660573,
+      "digest": "sha256:1b8bf6721744f30c1f136a3bfee346f0abd79a07f6f5f302a55fca1d7ab3fbc4",
+      "expires": "2026-11-29T04:00:55Z"
+    }
+  ],
+  "collaboration": {
+    "status": "passed",
+    "areas": [
+      "UI51",
+      "UI52",
+      "UI53"
+    ],
+    "details": [
+      "Both direct fresh prepare→project and actual native prepared-selection read succeeded with original material.",
+      "UI51 dark/light desktop/390, removal review/cancel/reopen/focus, explicit editor/review/cancel raw draft, case-alias empty.",
+      "UI52 original isolated comment and provenance; draft retained desktop/390; no reply sent.",
+      "UI53 dark/light desktop/390 material; explicit review/cancel; one original no-change confirmation; original receipt and fresh validity readback.",
+      "Actual pt-BR desktop captures for all three areas; zero page or console errors."
+    ],
+    "presentationIssue": "The original {kind} legacy placeholder was found visually in UI51. Renderer-only correction b0a8bf159ef56a6ba573337f6249c393e77c4815 and EN/pt-BR assertions are pending requalification.",
+    "sourceComposition": "Root 4a1120a3cbc85647b966123fcd1f2136c9bf9a9c wraps only readSelection's original manifest/source fences in the installed read transaction. Both observation comparisons and write fence remain original."
+  },
+  "imports": {
+    "status": "failed",
+    "areas": [
+      "UI55",
+      "UI56"
+    ],
+    "facts": [
+      {
+        "at": "03:58:13.6038489Z",
+        "event": "Original admission",
+        "httpStatus": 200,
+        "status": "ok"
+      },
+      {
+        "at": "03:58:19.0979400Z",
+        "event": "Original preview response",
+        "httpStatus": 200,
+        "status": "ok",
+        "codecStatus": "ok",
+        "schema": "Some",
+        "activity": "previewing",
+        "phase": "selecting",
+        "readState": "ready"
+      },
+      {
+        "at": "03:58:19.1067471Z",
+        "event": "Original preview manifest",
+        "id": "737ceab79acac73cce0666a1ed71da503e133303167616542255eee537f70054",
+        "state": "preview",
+        "sourceDigest": "ee805b5233dd2c438e08d734c7468a4775ecbe5461663bbc46fd80cc565eb7ad",
+        "domainApplied": false
+      },
+      {
+        "at": "03:58:19.2271455Z",
+        "event": "Unchanged original response delivered",
+        "activity": "previewing",
+        "phase": "selecting",
+        "readState": "ready"
+      },
+      {
+        "at": "03:58:59.4452346Z",
+        "event": "Independent authenticated import-reference GET timed out after 40000ms; actual UI still preparing original preview."
+      }
+    ],
+    "limitations": [
+      "A source preview was produced but no native UI55 reviewing state or UI56 preview is claimed.",
+      "No import-apply requested; no business data imported.",
+      "Source reference and client postflight blockage remain under investigation; no guard or timeout semantics changed to claim success."
+    ]
+  },
+  "captures": [
+    {
+      "name": "UI53-material-dark-desktop",
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/attempt-06-UI53-material-dark-desktop.jpg",
+      "blob": "4fb3bb598060094704a3559f87e19e0bd9ba40c1",
+      "timestamp": "2026-11-22T04:00:32.9378008Z",
+      "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+      "run": 44982724904,
+      "job": 137086555249,
+      "origin": "Actual Playwright JPEG captured on GitHub Actions, reconstructed from original log chunks; visually inspected without editing."
+    },
+    {
+      "name": "UI53-material-light-390",
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/attempt-06-UI53-material-light-390.jpg",
+      "blob": "92d085311d283fce003ce1ad106393e697fee0ab",
+      "timestamp": "2026-11-22T04:00:33.5073175Z",
+      "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+      "run": 44982724904,
+      "job": 137086555249,
+      "origin": "Actual Playwright JPEG captured on GitHub Actions, reconstructed from original log chunks; visually inspected without editing."
+    },
+    {
+      "name": "UI53-dark-desktop-original-receipt",
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/attempt-06-UI53-original-receipt-dark-desktop.jpg",
+      "blob": "41f88a648876f4cbb2e1924efefbae55ca729de4",
+      "timestamp": "2026-11-22T04:00:35.3214626Z",
+      "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+      "run": 44982724904,
+      "job": 137086555249,
+      "origin": "Actual Playwright JPEG captured on GitHub Actions, reconstructed from original log chunks; visually inspected without editing."
+    },
+    {
+      "name": "UI53-pt-BR-dark-desktop",
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/attempt-06-UI53-recorded-validity-pt-BR.jpg",
+      "blob": "11204bafd0f81cef83d62ba9a118106525d75226",
+      "timestamp": "2026-11-22T04:00:54.3045968Z",
+      "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+      "run": 44982724904,
+      "job": 137086555249,
+      "origin": "Actual Playwright JPEG captured on GitHub Actions, reconstructed from original log chunks; visually inspected without editing."
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/attempt-06-UI55-FAILED-source-read-timeout.jpg",
+      "blob": "fc8e2845ee4fa95539994e2a498051adcaf1f750",
+      "timestamp": "2026-11-22T03:58:59.8173946Z",
+      "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+      "run": 44982724904,
+      "job": 137086555249,
+      "origin": "Actual Playwright JPEG captured on GitHub Actions, reconstructed from original log chunks; visually inspected without editing."
+    }
+  ],
+  "visualReview": {
+    "viewed": [
+      "UI53-material-dark-desktop",
+      "UI53-material-light-390",
+      "UI53-dark-desktop-original-receipt",
+      "UI53-pt-BR-dark-desktop",
+      "FAILED UI55 previewing"
+    ],
+    "findings": [
+      "UI53 presents source identity/version/period before explicit review, preserves readable reflow and shows original receipt/validity.",
+      "UI55 truthfully displays its current preparing-source stage while its source read is unresolved."
+    ],
+    "acceptance": "No final human design acceptance or browser zoom claim."
+  }
+}
