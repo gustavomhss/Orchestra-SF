@@ -30,14 +30,22 @@ export function createStoredPlannerScenarioHost(input: {
     if (input.store !== store) return references.map(() => ({ status: "denied" as const, reason: "historical-reader-changed" }))
     return structuredClone(observed)
   }
-  const observeCase = async (stored: StoredScenario, observations: Map<string, CaseObservation>, context: TrustedDomainContext) => {
-    // Historical producer versions may differ. They remain separate groups, not a refusal.
-    const key = digestSfValue(stored.caseRef)
-    if (!observations.has(key)) observations.set(key, structuredClone(await input.cases.read({ caseRef: encodeCaseRef(stored.caseRef) }, context)))
-    return structuredClone(observations.get(key)!)
-  }
   const resolveMany = async (incoming: readonly string[], context: TrustedDomainContext): Promise<PortResult<ResolvedScenario>[]> => {
     const references = [...incoming]
+    const cases = input.cases
+    const readCase = cases.read
+    const sameCaseReader = () => input.cases === cases && cases.read === readCase
+    const observeCase = async (stored: StoredScenario, observations: Map<string, CaseObservation>): Promise<CaseObservation> => {
+      if (!sameCaseReader()) return { status: "denied", reason: "case-reader-changed" }
+      // Historical producer versions remain separate groups within each read phase.
+      const key = digestSfValue(stored.caseRef)
+      if (!observations.has(key)) {
+        const current = await readCase.call(cases, { caseRef: encodeCaseRef(stored.caseRef) }, context)
+        if (!sameCaseReader()) return { status: "denied", reason: "case-reader-changed" }
+        observations.set(key, structuredClone(current))
+      }
+      return structuredClone(observations.get(key)!)
+    }
     // Group only this phase's C08 envelopes. Every occurrence still receives
     // its own result/source checks, including repeated refs and scalar facades.
     const stored = await read(references, context)
@@ -46,7 +54,7 @@ export function createStoredPlannerScenarioHost(input: {
     for (const [index, entry] of stored.entries()) {
       if (entry.status !== "ok") { prepared.push(entry); continue }
       if (entry.value.kind !== "scenario") { prepared.push({ status: "unavailable", reason: "scenario-unavailable" }); continue }
-      const current = await observeCase(entry.value, initialCases, context)
+      const current = await observeCase(entry.value, initialCases)
       if (current.status !== "ok") { prepared.push(current); continue }
       if (current.value.case.id !== entry.value.caseRef.id || current.value.case.incarnation !== entry.value.caseRef.incarnation || current.value.case.version < entry.value.caseRef.version) { prepared.push({ status: "stale", reason: "case-changed" }); continue }
       const caseDigest = digestSfValue(current.value.case)
@@ -86,10 +94,13 @@ export function createStoredPlannerScenarioHost(input: {
     const result: PortResult<ResolvedScenario>[] = []
     for (const entry of checked) {
       if (entry.status !== "ok") { result.push(structuredClone(entry)); continue }
-      const current = await observeCase(entry.value.stored, finalCases, context)
+      const current = await observeCase(entry.value.stored, finalCases)
       if (current.status !== "ok") { result.push(current); continue }
       result.push(digestSfValue(current.value.case) === entry.value.caseDigest ? { status: "ok", value: structuredClone(entry.value.value) } : { status: "stale", reason: "case-changed" })
     }
+    // A reader can change during the final awaited observation or while it is cloned.
+    // Close the whole phase before releasing any previously prepared result.
+    if (!sameCaseReader()) return references.map(() => ({ status: "denied", reason: "case-reader-changed" }))
     return result
   }
   return { resolveMany, resolve: async (reference, context) => (await resolveMany([reference], context))[0]! }
