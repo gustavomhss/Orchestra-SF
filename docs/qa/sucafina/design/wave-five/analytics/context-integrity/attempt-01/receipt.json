@@ -1,0 +1,432 @@
+{
+  "schema": "sucafina-context-integrity-verification-attempt-v1",
+  "attempt": "attempt-01",
+  "classification": "FAILED overall: four original wrapper gates pass; the new integrity test gate and Sucafina typecheck fail",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "product": "62b66c502640d31d35cae31ef354101aa9b25d81",
+    "productTree": "4e0a85c76ced17ef591a76c4324406b90c1189c0",
+    "snapshot": "0e62f4e66dc000bddf4f73cbc2bf4de7ffbab7d5",
+    "snapshotTree": "69acd0645ee43c2bb5a8968fcfa89d7ea0c14d49",
+    "wrapper": {
+      "path": "apps/cli/test/sucafina-design-verification.test.ts",
+      "sha": "f28bdc1b08fe74eeb7937c1b1fd2fe948677c413",
+      "originalBlob": "631a2df11496d14c961c4bd257c085a4494ce437",
+      "originalContentPreservedLiterally": true,
+      "appendedGates": 2
+    },
+    "request": {
+      "path": ".ci-run.json",
+      "sha": "07de5f0330f10d5fa4dfbfd3163ef9d6cc7d0765",
+      "originalBlob": "9419f53a0d5999efd9b009745eeb8933b8f113bb",
+      "value": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "360000",
+          "-t",
+          "CurrentChoice readonly composition|CLI package typecheck|permanent e2e typecheck|guardrails|immutable UI context integrity|Sucafina package typecheck"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "change": "append only the two new gate alternatives to -t"
+    },
+    "integrityTest": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-context-integrity.test.ts",
+      "sha": "0ac9d8249d898fc799ec5dbc312c06906c38f071",
+      "lines": 291,
+      "cases": 7,
+      "customTimeout": false
+    },
+    "originalCompositionFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+        "sha": "b67a3fd90eefc5ebf880528d22be2afcdc25c3c8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+        "sha": "6c836317f08ea0f36b734bcd26c7ab0c4e5350bb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "sha": "0d9094ae67866a919573c9c172176ca2bc88d4dc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+        "sha": "b11a8727790131190664d21d4e230a59b74ae453"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+        "sha": "3eb140557b597156baf52578d8981d332e52aef3"
+      }
+    ],
+    "snapshotDelta": [
+      "add .ci-run.json",
+      "add snapshot-only verification wrapper"
+    ]
+  },
+  "actions": {
+    "workflow": ".github/workflows/test-ci.yml",
+    "runner": "ubuntu-24.04",
+    "branch": "ci-run-sf5context1",
+    "run": 45028131990,
+    "runAttempt": 1,
+    "runConclusion": "failure",
+    "testJob": 137225529279,
+    "testConclusion": "failure",
+    "cleanupJob": 137226797976,
+    "cleanupConclusion": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45028131990",
+    "environment": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "artifacts": [],
+    "replay": false
+  },
+  "budgetsMs": {
+    "requestBunTimeout": 360000,
+    "originalCompositionCommand": 300000,
+    "originalCompositionGate": 360000,
+    "c17Cooperative": 105000,
+    "c17BunTest": 120000,
+    "financeCooperative": 105000,
+    "financeBunTest": 120000,
+    "integrityCommand": 120000,
+    "integrityGate": 180000,
+    "sucafinaTypecheckCommand": 240000,
+    "sucafinaTypecheckGate": 300000,
+    "originalBudgetsChanged": false
+  },
+  "wrapperResult": {
+    "pass": 4,
+    "fail": 2,
+    "tests": 6,
+    "files": 1,
+    "expectCalls": 10,
+    "reportedDurationSeconds": 209.41,
+    "gates": [
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:35:00.7304781Z",
+        "status": "pass",
+        "name": "the composed candidate passes guardrails from the exact dev base",
+        "durationMs": 2870.08
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:35:05.0638581Z",
+        "status": "pass",
+        "name": "the native design capture passes the permanent e2e typecheck",
+        "durationMs": 4340.02
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:35:32.3239854Z",
+        "status": "pass",
+        "name": "the native host and local installation pass the CLI package typecheck",
+        "durationMs": 27260.08
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:38:12.8363346Z",
+        "status": "pass",
+        "name": "CurrentChoice readonly composition preserves real LocalStore and calculation authority",
+        "durationMs": 160501.97
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:38:12.8663493Z",
+        "status": "fail",
+        "name": "immutable UI context integrity preserves opaque behavior and live authority",
+        "durationMs": 39.18
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:38:27.0194080Z",
+        "status": "fail",
+        "name": "the new context integrity tests pass the Sucafina package typecheck",
+        "durationMs": 14150.86
+      }
+    ]
+  },
+  "originalComposition": {
+    "pass": 54,
+    "fail": 0,
+    "skip": 2,
+    "tests": 56,
+    "files": 4,
+    "expectCalls": 985,
+    "reportedDurationSeconds": 160.47,
+    "skipped": [
+      "rejects foreign UID directory (requires root fixture privileges)",
+      "rejects foreign UID database (requires root fixture privileges)"
+    ],
+    "c17": {
+      "wrapperLogTimestamp": "2026-11-22T13:38:12.8358328Z",
+      "status": "pass",
+      "name": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+      "durationMs": 102717.47,
+      "allSevenOriginalPhasesCompleted": true,
+      "phaseEvents": 14,
+      "ancestryEvents": 2,
+      "finalFixtureElapsedMs": 102711,
+      "firstCompleteOriginalC17ObservedInThisCycle": true,
+      "interpretation": "Observed completion under unchanged original budgets in this run; no causal speedup or installed UI qualification is established."
+    },
+    "finance": {
+      "wrapperLogTimestamp": "2026-11-22T13:38:12.8359436Z",
+      "status": "pass",
+      "name": "Finance and criterion metrics use original pair reads and close on revocation or source change",
+      "durationMs": 50655.93
+    }
+  },
+  "guardReport": {
+    "wrapperLogTimestamp": "2026-11-22T13:35:00.7266128Z",
+    "path": "guard-report.json",
+    "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+    "bootstrap": false,
+    "rules": 78,
+    "files": 731,
+    "warnings": 36,
+    "gateFindings": 0,
+    "errors": 0,
+    "approvals": 0,
+    "touchesGuards": false,
+    "interpretation": "The original report has 36 warning findings, no gate-severity findings, no errors or approvals, and touchesGuards=false."
+  },
+  "integrityTestResult": {
+    "pass": 6,
+    "fail": 1,
+    "tests": 7,
+    "files": 1,
+    "expectCalls": 96,
+    "reportedDurationMs": 31,
+    "cases": [
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:38:12.8638310Z",
+        "status": "pass",
+        "name": "immutable UI integrity remains separate from live admission and revocation",
+        "durationMs": 8.8
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:38:12.8639062Z",
+        "status": "pass",
+        "name": "opaque contexts retain kind/binding getter order and the Root's already captured binding",
+        "durationMs": 0.48
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:38:12.8639836Z",
+        "status": "pass",
+        "name": "mint inspects values after commandIdentity and the actual freeze result",
+        "durationMs": 0.99
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:38:12.8640368Z",
+        "status": "pass",
+        "name": "serializer changes and inherited hooks retain the original canonical path",
+        "durationMs": 0.86
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:38:12.8640848Z",
+        "status": "pass",
+        "name": "CryptoHasher hooks execute on fallback, including its original exception",
+        "durationMs": 0.51
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:38:12.8646585Z",
+        "status": "fail",
+        "name": "a temporary hasher or update getter cannot attest a capture made under hooks",
+        "durationMs": 0.47
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:38:12.8647077Z",
+        "status": "pass",
+        "name": "private integrity checks do not consult later Symbol or WeakMap method hooks",
+        "durationMs": 0.21
+      }
+    ],
+    "failure": {
+      "message": "TypeError: Attempting to change access mechanism for an unconfigurable property.",
+      "helperLocation": "ui-context-integrity.test.ts:30:3",
+      "callerLocation": "ui-context-integrity.test.ts:255:20",
+      "target": "Bun.CryptoHasher.prototype.update",
+      "causeInTestSetup": "Object.defineProperty attempted to replace the non-configurable data property with an accessor.",
+      "failedBefore": "observeSfUiContextIntegrity in the update-getter subcase at line 268",
+      "precedingSubcase": "The transient-constructor capture and its two assertions at lines 247-249 completed before the update-getter setup failure.",
+      "qualification": "The update-getter capture assertions were not reached; the integrity gate is not passing."
+    }
+  },
+  "sucafinaTypecheck": {
+    "exitCode": 2,
+    "diagnostics": [
+      {
+        "code": "TS2769",
+        "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+        "line": 211,
+        "column": 20,
+        "message": "No overload matches this call.",
+        "detail": "Argument of type 'Snapshot | undefined' is not assignable to parameter of type 'Snapshot'. Type 'undefined' is not assignable to type 'Snapshot'.",
+        "source": "Original optional store.currentSnapshot?.(\"planner\") passed to the assertion overload."
+      }
+    ],
+    "qualification": "Failed; no Sucafina package typecheck qualification from this attempt."
+  },
+  "commandEvidence": [
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:34:58.4415097Z",
+      "payload": {
+        "gate": "fetch pinned guard base",
+        "command": [
+          "git",
+          "fetch",
+          "--no-tags",
+          "--depth=1",
+          "origin",
+          "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:34:58.4447995Z",
+      "payload": {
+        "gate": "resolve pinned guard base",
+        "command": [
+          "git",
+          "rev-parse",
+          "--verify",
+          "refs/remotes/origin/dev^{commit}"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:35:00.7223804Z",
+      "payload": {
+        "gate": "guardrails",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "check:guards",
+          "--base",
+          "origin/dev",
+          "--json"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:35:05.0634960Z",
+      "payload": {
+        "gate": "app-shell e2e typecheck",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck:e2e"
+        ],
+        "cwd": "packages/app-shell",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:35:32.3235141Z",
+      "payload": {
+        "gate": "CLI native host typecheck",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "apps/cli",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:38:12.8258795Z",
+      "payload": {
+        "gate": "CurrentChoice readonly storage and nested calculation composition",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/local-store.test.ts",
+          "./test/product/wp10/integration/current-choice-readonly.test.ts",
+          "./test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+          "./test/product/wp10/integration/finance-pair-observation.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:38:12.8636379Z",
+      "payload": {
+        "gate": "immutable UI context integrity regressions",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/ui-context-integrity.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 1,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:38:27.0153607Z",
+      "payload": {
+        "gate": "Sucafina package typecheck",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 2,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    }
+  ],
+  "evidenceLimits": [
+    "Child stdout/stderr are buffered by runCommand and printed after process completion. wrapperLogTimestamp is the log emission time, not a phase execution timestamp.",
+    "SF_COMPOSITION_PHASE elapsedMs is fixture elapsed time and phaseMs is phase duration. SF_CALCULATION_ANCESTRY elapsedMs is the producer interval. Original payload fields are preserved without synthesizing wall-clock phase times.",
+    "This attempt contains no installed UI42, UI43 or UI44 journey and no screenshots.",
+    "The candidate is not fully verified: two of six selected wrapper gates failed.",
+    "This is one observed C17 completion, not a causal performance comparison or a guarantee of deadline margin."
+  ],
+  "qualification": {
+    "candidateVerified": false,
+    "ui42": "pending",
+    "ui43": "pending",
+    "ui44": "pending",
+    "blockQualifiedSurfaces": 12,
+    "blockTotalSurfaces": 15,
+    "acceptedMergedTotal": 41,
+    "countChanges": false
+  },
+  "archive": {
+    "qaOnly": true,
+    "baseProduct": "62b66c502640d31d35cae31ef354101aa9b25d81",
+    "rawLogsCommitted": false,
+    "runtimeOrTestChanges": false,
+    "newCiExecution": false
+  }
+}
