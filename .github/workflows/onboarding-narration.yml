@@ -32,7 +32,7 @@ jobs:
     timeout-minutes: 25
     env:
       NARRATION_DIR: scripts/onboarding-media/narration
-      NARRATION_SOURCE: ${{ inputs.source || 'audition' }}
+      NARRATION_SOURCE: ${{ inputs.source || 'chapters' }}
       ONNX_PROVIDER: CPUExecutionProvider
       OMP_NUM_THREADS: '2'
       OPENBLAS_NUM_THREADS: '2'
@@ -62,7 +62,7 @@ jobs:
             audition|chapters) ;;
             *) exit 2 ;;
           esac
-          .venv-media/bin/python "$NARRATION_DIR/generate_narration.py" --input "$NARRATION_DIR/$NARRATION_SOURCE.json" --output media-output --assets media-assets --voice af_heart --speed 1.0
+          .venv-media/bin/python "$NARRATION_DIR/generate_narration.py" --input "$NARRATION_DIR/$NARRATION_SOURCE.json" --output media-output --assets media-assets --voice af_heart --speed 0.9
           cp "$NARRATION_DIR/$NARRATION_SOURCE.json" media-output/narration-source.json
           cp "$NARRATION_DIR/requirements-cpu.txt" media-output/
           cp "$NARRATION_DIR/dependency-sources.json" media-output/
@@ -78,7 +78,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
       - name: Upload verified models for media reuse
-        if: github.event_name == 'push' || inputs.export_models
+        if: inputs.export_models == true
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4, resolved 2026-11-22
         with:
           name: kokoro-models-v1.0-verified
