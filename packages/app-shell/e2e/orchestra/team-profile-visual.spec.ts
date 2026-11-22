@@ -7,6 +7,7 @@ test.use({ serviceWorkers: "block" })
 const modes = [
   { name: "desktop", viewport: { width: 1440, height: 1000 } },
   { name: "mobile", viewport: { width: 390, height: 844 } },
+  { name: "small-mobile", viewport: { width: 320, height: 900 } },
 ] as const
 
 async function layoutEvidence(page: Page) {
