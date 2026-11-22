@@ -4,20 +4,21 @@ import { eq } from "drizzle-orm"
 import { Board } from "@orchestra/schema/board"
 import { BoardIssueTable, BoardProjectTable, BoardQuestionTable } from "../../src/board/sql"
 import { Inbox } from "../../src/inbox"
+import { installOwner } from "../../src/inbox/install"
+import { connect } from "../../src/inbox/remote"
 import { InboxDraftTable, InboxRowTable } from "../../src/inbox/sql"
 import { ProjectTable } from "../../src/project/sql"
 import { directory, fixture, location } from "./work-service-fixture"
 
-fixture("stored Inbox reads the installation without provider acquisition or legacy adoption", ({ inbox, db, calls }) =>
+fixture("stored Inbox reads the installation without provider acquisition or legacy adoption", ({ inbox, credentials, db, calls }) =>
   Effect.gen(function* () {
     // Keep Jira eligible for acquisition so a provider call would hit the fixture transport.
-    const jira = {
+    yield* connect(credentials, installOwner, {
       source: "jira",
       token: "fixture-read",
       site: "https://example.atlassian.net",
       email: "owner@example.com",
-    } as const
-    yield* inbox.connect(jira)
+    })
     const stored = yield* inbox.upsert({
       source: "mail", externalId: "stored", actor: "owner", snippet: "Pending", threadId: "stored", reply: true,
     })

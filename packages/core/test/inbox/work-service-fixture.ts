@@ -23,6 +23,7 @@ export function fixture(
   name: string,
   run: (input: {
     inbox: Inbox.Interface
+    credentials: Credential.Interface
     db: Database.Interface["db"]
     calls: URL[]
     provider: {
@@ -493,7 +494,7 @@ export function fixture(
           ),
         ),
       ).pipe(Effect.map((context) => Context.get(context, Inbox.Service)))
-      yield* run({ inbox, db: database.db, calls, provider })
+      yield* run({ inbox, credentials, db: database.db, calls, provider })
     }),
   )
 }
