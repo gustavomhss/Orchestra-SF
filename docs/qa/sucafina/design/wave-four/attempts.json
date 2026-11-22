@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedThrough": "58591b82cbec9fe57cc0f9813e9097164c6f8753",
+  "updatedThrough": "2026-11-22 00:58:31 UTC",
   "note": "Historical attempts include failures and incomplete journeys. Only a final passing run qualifies its stated coverage.",
   "attempts": [
     {
@@ -977,7 +977,7 @@
       },
       "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
       "status": "failed",
-      "cause": "UI34–UI41 functional assertions and desktop reads progressed; later original current-choice returned403 and catalog cases became empty during narrow/localized coverage. Final Portuguese composer assertion failed. No unavailable captures accepted as successful source states; original authorization/evidence lifecycle under investigation.",
+      "cause": "Eight functional sequences passed with real source data; initial English dark states were positive. UI41 light at00:27:41 already had no authorized cases, preceding original 503/403 failures in narrow/localized coverage. Its full journey failed; these later images are not accepted. Source-lifecycle cause pending Decisions10 diagnostic.",
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966014444"
     },
     {
@@ -1010,6 +1010,118 @@
       "fullCliTypecheck": "passed",
       "cause": "All14 checks passed: app/E2E/fullCLI types, exact-dev guards, palette parity and87 regression tests. Three new real Solid/View/schema cases reproduce tracked-object rejection, exact detached input admission and invalid-value rejection.",
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966016316"
+    },
+    {
+      "group": "decisions",
+      "attempt": 10,
+      "head": "1f4946776b0c5b7aa4e3a9161f931381cb202d88",
+      "snapshot": "7d185a7d56b3ad2c4d3e7cbd4b35a2c00965a3cf",
+      "branch": "ci-run-sf20decisions10",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-decisions.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+      "status": "failed",
+      "cause": "New diagnostic observer used Request.url method as a URL value. Failed early; no original-source lifecycle inference accepted. One-line accessor correction follows.",
+      "run": 44968178103,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968178103",
+      "job": 137041817702
+    },
+    {
+      "group": "technical",
+      "attempt": 14,
+      "head": "cb5b92074c64b7087abeeba75a1effe52b01eff5",
+      "snapshot": "101cc8f28069452ac3180ec23daeec7822dd96f9",
+      "branch": "ci-run-sf20gates14",
+      "request": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "300000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+      "status": "failed",
+      "checks": 14,
+      "regressionTests": 87,
+      "cause": "13/14 checks and87 regressions passed; only E2E types failed TS2345 at spec43 because the new diagnostic passed request.url instead of calling request.url(). Original application/fullCLI/host and all unit cases passed.",
+      "run": 44968337342,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968337342",
+      "job": 137042320017,
+      "passedChecks": 13,
+      "fullCliTypecheck": "passed"
+    },
+    {
+      "group": "decisions",
+      "attempt": 11,
+      "head": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+      "snapshot": "47cbbb5eb1f9b8518f3cada5838429fcb4d4a5ab",
+      "branch": "ci-run-sf20decisions11",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-decisions.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+      "status": "running",
+      "cause": "Corrected observer URL accessor; strict source positivity on every screen, original status/reason diagnostics, final UI41 CSS and composed dev699.",
+      "run": 44968620170,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968620170"
+    },
+    {
+      "group": "technical",
+      "attempt": 15,
+      "head": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+      "snapshot": "bf0ef86bb6f9e7e3d19ab5a1826bb9f188b0e004",
+      "branch": "ci-run-sf20gates15",
+      "request": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "300000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+      "status": "passed",
+      "cause": "All14 checks and87 regression cases passed on the dev699 composition plus final UI41 CSS and corrected diagnostic. App/E2E/fullCLI types, exact-dev guards, palette parity and original installed host all passed.",
+      "run": 44968622344,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968622344",
+      "job": 137043220483,
+      "passedChecks": 14,
+      "regressionTests": 87,
+      "fullCliTypecheck": "passed"
     }
   ]
 }

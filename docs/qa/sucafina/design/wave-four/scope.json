@@ -5,7 +5,7 @@
   "branch": "sf-design-twenty",
   "base": {
     "ref": "dev",
-    "sha": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1"
+    "sha": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db"
   },
   "previousWave": {
     "branch": "sf-design-fifteen",
@@ -57,7 +57,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
-          "referenceBlob": "45badcf55818ed04351fda974ef713da0a0ef523"
+          "referenceBlob": "45badcf55818ed04351fda974ef713da0a0ef523",
+          "implementationBlob": "3357f14b20086aac70bf5f108651c129cb9c89db"
         }
       ],
       "states": [
@@ -111,7 +112,9 @@
       "evidenceRun": 44961772161,
       "visualReview": "planner/PLANNER9-REVIEW.md",
       "userAcceptance": "PENDING",
-      "finalQualificationRun": 44965221018
+      "finalQualificationRun": 44965221018,
+      "workerBranch": "sf-twenty-planner",
+      "group": "planner"
     },
     {
       "id": "CAP21",
@@ -135,7 +138,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
-          "referenceBlob": "06b02b7408b35b9e13442621ab45b35c23161d7f"
+          "referenceBlob": "06b02b7408b35b9e13442621ab45b35c23161d7f",
+          "implementationBlob": "32c42540b3c92f4fbef6f1fd6ec91c3914162c34"
         }
       ],
       "states": [
@@ -184,7 +188,9 @@
       "evidenceRun": 44961772161,
       "visualReview": "planner/PLANNER9-REVIEW.md",
       "userAcceptance": "PENDING",
-      "finalQualificationRun": 44965221018
+      "finalQualificationRun": 44965221018,
+      "workerBranch": "sf-twenty-planner",
+      "group": "planner"
     },
     {
       "id": "CAP22",
@@ -200,7 +206,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/fx/index.tsx",
-          "referenceBlob": "01c837c2379a3be78e402e9e82de9d63009ebd22"
+          "referenceBlob": "01c837c2379a3be78e402e9e82de9d63009ebd22",
+          "implementationBlob": "b3bf77199c16df20d80e0af8cf0b05e7930954fa"
         }
       ],
       "states": [
@@ -250,7 +257,9 @@
       "evidenceRun": 44961772161,
       "visualReview": "planner/PLANNER9-REVIEW.md",
       "userAcceptance": "PENDING",
-      "finalQualificationRun": 44965221018
+      "finalQualificationRun": 44965221018,
+      "workerBranch": "sf-twenty-planner",
+      "group": "planner"
     },
     {
       "id": "CAP23",
@@ -278,11 +287,13 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx",
-          "referenceBlob": "da4e99a66b686aa263de0ecfae76ee7cd189271e"
+          "referenceBlob": "da4e99a66b686aa263de0ecfae76ee7cd189271e",
+          "implementationBlob": "bdb0107e305f53add1503280b7e4b43525b703f1"
         },
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/index.tsx",
-          "referenceBlob": "c7332911b34925443dd65f2ee846ccb21f71eeea"
+          "referenceBlob": "c7332911b34925443dd65f2ee846ccb21f71eeea",
+          "implementationBlob": "2102c9264c0fad43324e3b24613861b94cb45a7f"
         }
       ],
       "states": [
@@ -362,7 +373,9 @@
       "evidenceRun": 44961772161,
       "visualReview": "planner/PLANNER9-REVIEW.md",
       "userAcceptance": "PENDING",
-      "finalQualificationRun": 44965221018
+      "finalQualificationRun": 44965221018,
+      "workerBranch": "sf-twenty-planner",
+      "group": "planner"
     },
     {
       "id": "CAP24",
@@ -378,7 +391,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
-          "referenceBlob": "a9107579d40e8a54741923831d487539c484c1da"
+          "referenceBlob": "a9107579d40e8a54741923831d487539c484c1da",
+          "implementationBlob": "e3e436d0fc0bc17524b3041185ea8045fa241004"
         }
       ],
       "states": [
@@ -414,7 +428,9 @@
       "evidenceRun": 44965165654,
       "finalQualificationRun": 44965165654,
       "visualReview": "evidence/procurement/README.md",
-      "userAcceptance": "PENDING"
+      "userAcceptance": "PENDING",
+      "workerBranch": "sf-twenty-procurement",
+      "group": "procurement"
     },
     {
       "id": "CAP25",
@@ -458,15 +474,18 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx",
-          "referenceBlob": "ff532b5a275d01299bf8fccead910c1b7a4e1e5b"
+          "referenceBlob": "ff532b5a275d01299bf8fccead910c1b7a4e1e5b",
+          "implementationBlob": "c13b809fe73f7d5f83a24e90aae6fa490ad93faf"
         },
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/index.tsx",
-          "referenceBlob": "98a04c2608414744f44b2afa0326799a1023aa32"
+          "referenceBlob": "98a04c2608414744f44b2afa0326799a1023aa32",
+          "implementationBlob": "98a04c2608414744f44b2afa0326799a1023aa32"
         },
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
-          "referenceBlob": "34234bee605bc368538dee797b29f0e4b29b20ec"
+          "referenceBlob": "34234bee605bc368538dee797b29f0e4b29b20ec",
+          "implementationBlob": "134f6f705f05d87afd318aa9f7d0ff9aa1a080e2"
         }
       ],
       "states": [
@@ -542,7 +561,9 @@
       "evidenceRun": 44965165654,
       "finalQualificationRun": 44965165654,
       "visualReview": "evidence/procurement/README.md",
-      "userAcceptance": "PENDING"
+      "userAcceptance": "PENDING",
+      "workerBranch": "sf-twenty-procurement",
+      "group": "procurement"
     },
     {
       "id": "CAP26",
@@ -566,11 +587,13 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx",
-          "referenceBlob": "9b2f7a159eca70a5c4d8cb46309ceee9f15c05ff"
+          "referenceBlob": "9b2f7a159eca70a5c4d8cb46309ceee9f15c05ff",
+          "implementationBlob": "dda95a55eb9320a0f3d34b6900fece92bbe5689b"
         },
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/remaining/index.tsx",
-          "referenceBlob": "1948c63e1304d2fcc7e9923a2e29db3c7e57272d"
+          "referenceBlob": "1948c63e1304d2fcc7e9923a2e29db3c7e57272d",
+          "implementationBlob": "b4f6cae4fa2614960e7c999d19c8af49a515ba99"
         }
       ],
       "states": [
@@ -620,7 +643,9 @@
       "evidenceRun": 44965165654,
       "finalQualificationRun": 44965165654,
       "visualReview": "evidence/procurement/README.md",
-      "userAcceptance": "PENDING"
+      "userAcceptance": "PENDING",
+      "workerBranch": "sf-twenty-procurement",
+      "group": "procurement"
     },
     {
       "id": "CAP27",
@@ -648,7 +673,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
-          "referenceBlob": "881c8d4ec6c2f20cc7d19ea57ba1efbe8566fd90"
+          "referenceBlob": "881c8d4ec6c2f20cc7d19ea57ba1efbe8566fd90",
+          "implementationBlob": "ac06b58419f86affee8a438f937281cc108b031e"
         }
       ],
       "states": [
@@ -701,7 +727,9 @@
       "evidenceRun": 44965165654,
       "finalQualificationRun": 44965165654,
       "visualReview": "evidence/procurement/README.md",
-      "userAcceptance": "PENDING"
+      "userAcceptance": "PENDING",
+      "workerBranch": "sf-twenty-procurement",
+      "group": "procurement"
     },
     {
       "id": "CAP28",
@@ -717,7 +745,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/index.tsx",
-          "referenceBlob": "c7e6818389a6b12cd21ebb123e7b65c13afb39bf"
+          "referenceBlob": "c7e6818389a6b12cd21ebb123e7b65c13afb39bf",
+          "implementationBlob": "08ca2dcd4953d225ca6f7f3e43536a92271b11d5"
         }
       ],
       "states": [
@@ -762,12 +791,14 @@
       "evidenceRun": 44965165654,
       "finalQualificationRun": 44965165654,
       "visualReview": "evidence/procurement/README.md",
-      "userAcceptance": "PENDING"
+      "userAcceptance": "PENDING",
+      "workerBranch": "sf-twenty-procurement",
+      "group": "procurement"
     },
     {
       "id": "UI30",
       "label": "Meu trabalho",
-      "owner": "planner",
+      "owner": "work",
       "status": "BROWSER_PASSED_VISUAL_REVIEWED",
       "routes": [
         {
@@ -778,7 +809,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
-          "referenceBlob": "d012691ea65e0de4185f4942967c0d2ca9044161"
+          "referenceBlob": "d012691ea65e0de4185f4942967c0d2ca9044161",
+          "implementationBlob": "51aa26bc26f5adb7d4c528d078efad06f78f18b7"
         }
       ],
       "states": [
@@ -825,12 +857,15 @@
       "evidenceRun": 44964988862,
       "visualReview": "evidence/work/README.md",
       "userAcceptance": "PENDING",
-      "finalQualificationRun": 44965705732
+      "finalQualificationRun": 44965705732,
+      "originalAssignment": "planner",
+      "workerBranch": "sf-twenty-work-finish",
+      "group": "work"
     },
     {
       "id": "UI31",
       "label": "Busca Sucafina",
-      "owner": "planner",
+      "owner": "work",
       "status": "BROWSER_PASSED_VISUAL_REVIEWED",
       "routes": [
         {
@@ -841,7 +876,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
-          "referenceBlob": "c64e321bf6212dc24494034ca29270285391e899"
+          "referenceBlob": "c64e321bf6212dc24494034ca29270285391e899",
+          "implementationBlob": "5c1dfd8f77631d315bdacc3fa976232d03ea18b4"
         }
       ],
       "states": [
@@ -882,12 +918,15 @@
       "evidenceRun": 44964042218,
       "visualReview": "evidence/work/README.md",
       "userAcceptance": "PENDING",
-      "finalQualificationRun": 44965705732
+      "finalQualificationRun": 44965705732,
+      "originalAssignment": "planner",
+      "workerBranch": "sf-twenty-work-finish",
+      "group": "work"
     },
     {
       "id": "UI32",
       "label": "Visões salvas",
-      "owner": "planner",
+      "owner": "work",
       "status": "BROWSER_PASSED_VISUAL_REVIEWED",
       "routes": [
         {
@@ -906,7 +945,8 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/views/index.tsx",
-          "referenceBlob": "16db968cbe6c5bfbaa40521aff74f2c83bb51be5"
+          "referenceBlob": "16db968cbe6c5bfbaa40521aff74f2c83bb51be5",
+          "implementationBlob": "d2065ccbf7e50d3aba85818ca76fd92922b31dce"
         }
       ],
       "states": [
@@ -964,7 +1004,10 @@
       "evidenceRun": 44965705732,
       "visualReview": "evidence/work/README.md",
       "userAcceptance": "PENDING",
-      "finalQualificationRun": 44965705732
+      "finalQualificationRun": 44965705732,
+      "originalAssignment": "planner",
+      "workerBranch": "sf-twenty-work-finish",
+      "group": "work"
     },
     {
       "id": "UI34",
@@ -980,11 +1023,14 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/index.tsx",
-          "referenceBlob": "d64e5c7ca7126d0397afd323a780bbab5725f774"
+          "referenceBlob": "d64e5c7ca7126d0397afd323a780bbab5725f774",
+          "implementationBlob": "f7f2bd567947d9ffd3f408b6600d13cac2beca21"
         }
       ],
       "states": [],
-      "captures": []
+      "captures": [],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions"
     },
     {
       "id": "UI35",
@@ -1008,11 +1054,14 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
-          "referenceBlob": "2a4472606a1fe05c8d96044c4dc979322d048349"
+          "referenceBlob": "2a4472606a1fe05c8d96044c4dc979322d048349",
+          "implementationBlob": "f6e954f779f5080a831f59c3066922a942e4dfb4"
         }
       ],
       "states": [],
-      "captures": []
+      "captures": [],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions"
     },
     {
       "id": "UI36",
@@ -1028,11 +1077,14 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/assumptions/index.tsx",
-          "referenceBlob": "80297cb0719c05aa0241fa8023322853561678de"
+          "referenceBlob": "80297cb0719c05aa0241fa8023322853561678de",
+          "implementationBlob": "992ad31cbeb950b4fdaab9de3a620723d38dca24"
         }
       ],
       "states": [],
-      "captures": []
+      "captures": [],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions"
     },
     {
       "id": "UI37",
@@ -1048,11 +1100,14 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/index.tsx",
-          "referenceBlob": "ca1a807d6d43bea5493b7d8545505988ee28dfd7"
+          "referenceBlob": "ca1a807d6d43bea5493b7d8545505988ee28dfd7",
+          "implementationBlob": "eedb5e7c9210690e3c70e3e5036d5552a10c0b6b"
         }
       ],
       "states": [],
-      "captures": []
+      "captures": [],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions"
     },
     {
       "id": "UI38",
@@ -1068,11 +1123,14 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/index.tsx",
-          "referenceBlob": "c1a7d08fa1dffb7f0469dbb53dd9fc49d93aec29"
+          "referenceBlob": "c1a7d08fa1dffb7f0469dbb53dd9fc49d93aec29",
+          "implementationBlob": "49e186efdd3e8da74414afd12fa88499cbe6386b"
         }
       ],
       "states": [],
-      "captures": []
+      "captures": [],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions"
     },
     {
       "id": "UI39",
@@ -1092,11 +1150,14 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
-          "referenceBlob": "0e531465198c208e53eadae54f128bc664300ec9"
+          "referenceBlob": "0e531465198c208e53eadae54f128bc664300ec9",
+          "implementationBlob": "dbbf131007bbf8efe71952fdf3550c3b2be014f7"
         }
       ],
       "states": [],
-      "captures": []
+      "captures": [],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions"
     },
     {
       "id": "UI40",
@@ -1116,11 +1177,14 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/receipts/index.tsx",
-          "referenceBlob": "6571685621d4103c8da30dc769d1be61d43ab4bd"
+          "referenceBlob": "6571685621d4103c8da30dc769d1be61d43ab4bd",
+          "implementationBlob": "93b792fa9ebbe981f447ac2b4520623416f2244d"
         }
       ],
       "states": [],
-      "captures": []
+      "captures": [],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions"
     },
     {
       "id": "UI41",
@@ -1140,48 +1204,123 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/index.tsx",
-          "referenceBlob": "52d194c16837a41d19d2d535321483585bbef801"
+          "referenceBlob": "52d194c16837a41d19d2d535321483585bbef801",
+          "implementationBlob": "6a44140073afd88819c6de8c47daeb7303e199fc"
         }
       ],
       "states": [],
-      "captures": []
+      "captures": [],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions"
     }
   ],
   "verification": {
     "runtime": "IN_PROGRESS",
     "visual": "IN_PROGRESS",
-    "technical": "FOURTEEN_GATES_PASSED_AT_250E8FAF",
+    "technical": "FOURTEEN_GATES_PASSED_AT_218A5EE3",
     "regression": "FIRST_SIX_PASSED_AT_7C0CAF8D",
     "userAcceptance": "PENDING",
     "merge": "NOT_MERGED"
   },
   "technicalEvidence": {
-    "run": 44966016316,
-    "job": 137035096579,
-    "snapshot": "0849344a07285ae4eef3b362817f9fe8d017d6fb",
-    "productHead": "250e8faf80931c807a86c5f06c0e797de469adca",
-    "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
-    "checks": 14,
+    "run": 44968622344,
+    "job": 137043220483,
+    "snapshot": "bf0ef86bb6f9e7e3d19ab5a1826bb9f188b0e004",
+    "productHead": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+    "dev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+    "checks": [
+      {
+        "name": "Application declarations",
+        "passed": true
+      },
+      {
+        "name": "Exact dev guardrails",
+        "passed": true
+      },
+      {
+        "name": "Palette byte parity",
+        "passed": true
+      },
+      {
+        "name": "E2E semantic types",
+        "passed": true
+      },
+      {
+        "name": "Portfolio CAS",
+        "passed": true
+      },
+      {
+        "name": "Vendor browser DTO",
+        "passed": true
+      },
+      {
+        "name": "Decision browser DTO",
+        "passed": true
+      },
+      {
+        "name": "Procurement browser DTO",
+        "passed": true
+      },
+      {
+        "name": "Work/Search source health",
+        "passed": true
+      },
+      {
+        "name": "Original installed host",
+        "passed": true
+      },
+      {
+        "name": "Decision source health",
+        "passed": true
+      },
+      {
+        "name": "Analysis source health",
+        "passed": true
+      },
+      {
+        "name": "Full CLI package types",
+        "passed": true
+      },
+      {
+        "name": "Saved Views browser DTO",
+        "passed": true
+      }
+    ],
     "regressionTests": 87,
     "includesOriginalInstalledHost": true,
     "guards": {
-      "base": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+      "base": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
       "rules": 78,
-      "files": 191,
+      "files": 250,
       "errors": 0,
-      "warnings": 20,
+      "warnings": 21,
       "approved": 0,
       "touchesGuards": false
     },
     "fullCli": {
       "status": "PASSED",
-      "run": 44966016316,
+      "run": 44968622344,
       "diagnostics": 0,
       "previousBaseline": {
         "run": 44958162297,
         "diagnostics": 7,
         "status": "HISTORICAL"
       }
+    },
+    "commandCases": {
+      "portfolioCAS": 3,
+      "vendorBrowserDTO": 4,
+      "decisionsBrowserDTO": 5,
+      "procurementBrowserDTO": 10,
+      "workAndSearchSourceHealth": 18,
+      "originalInstalledHost": 1,
+      "decisionSourceHealth": 24,
+      "analysisSourceHealth": 19,
+      "savedViewsBrowserDTO": 3
+    },
+    "palette": {
+      "generatedFiles": 7,
+      "changedFiles": 0
     }
   },
   "regressionEvidence": {
@@ -1208,15 +1347,35 @@
       "apps/cli/src/sucafina-product/host-context.ts"
     ],
     "resolution": "Exact upstream FSUtil dependency and outer service acquisition retained together with all native reading-health integration.",
-    "status": "IN_PROGRESS",
-    "technicalRun": 44966016316,
+    "status": "TECHNICAL_PASSED_DECISIONS_BROWSER_PENDING",
+    "technicalRun": 44968622344,
     "plannerAndPreviousSixRun": 44965221018,
     "procurementRun": 44965165654,
     "workRun": 44965705732,
-    "decisionsRun": 44966014444,
+    "decisionsRun": 44968620170,
     "plannerAndPreviousSixStatus": "PASSED",
     "procurementStatus": "PASSED",
     "workStatus": "PASSED",
-    "decisionsStatus": "FAILED_UNDER_DIAGNOSIS"
+    "decisionsStatus": "RUNNING",
+    "followupDevComposition": {
+      "prior": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+      "dev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+      "commits": 4,
+      "paths": 26,
+      "overlapPaths": [
+        "apps/cli/src/sucafina-product/host-context.ts"
+      ],
+      "resolution": "All six exact upstream reviewer-recall hunks applied uniquely to the current host context, retaining all native source-health and FSUtil changes.",
+      "notCommitted": false,
+      "head": "cb5b92074c64b7087abeeba75a1effe52b01eff5",
+      "tree": "41c2a4d71c7c58b7425a2130d81ee7d8a6d8abd0",
+      "status": "TECHNICAL_PASSED_DECISIONS_BROWSER_PENDING",
+      "cumulativeFromPR587": {
+        "commits": 14,
+        "files": 65
+      },
+      "technicalStatus": "PASSED",
+      "technicalRun": 44968622344
+    }
   }
 }

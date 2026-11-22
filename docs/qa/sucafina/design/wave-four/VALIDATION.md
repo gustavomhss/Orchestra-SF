@@ -1,11 +1,11 @@
 # Wave four — validation
 
-Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete browser journeys and visual review. Decisions9 passed its eight functional flows and initial desktop assertions, then lost original case availability in the later narrow/localized sequence. The failed run is retained; it does not qualify those later states.
+Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete browser journeys and visual review. Decisions9 passed its eight functional flows and initial English dark states, then lost original case availability by the UI41 light capture, before narrow/localized coverage. The failed run is retained; it does not qualify those later states.
 
 ## Candidate and scope
 
-- Product code: `250e8faf80931c807a86c5f06c0e797de469adca`.
-- Incorporated dev: `3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1`.
+- Product code: `218a5ee39935336c88abeb92b0a4d2cc980f21de`.
+- Incorporated dev: `699ad1a1f837ef4a918b73ba89b06aa9cc0a10db`.
 - Isolated branch: `sf-design-twenty`; [draft PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588).
 - Earlier block: PR #587 merged as `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`.
 - This block: 20 inventory areas, 49 registered route patterns. Recognition of a route is not independent qualification of every state.
@@ -36,14 +36,14 @@ Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete brows
 
 ## Hosted technical verification
 
-[Gate13 / run 44966016316](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966016316), job `137035096579`, snapshot `0849344a07285ae4eef3b362817f9fe8d017d6fb`, tested the product code above and passed **14 checks / 87 regression cases**.
+[Gate15 / run 44968622344](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968622344), job `137043220483`, snapshot `bf0ef86bb6f9e7e3d19ab5a1826bb9f188b0e004`, tested the product code above and passed **14 checks / 87 regression cases**.
 
 | Check | Result |
 | --- | --- |
 | Application declaration build | PASS |
 | E2E semantic typecheck | PASS |
 | Full CLI package typecheck | PASS, zero diagnostics |
-| Exact-dev repository guards | PASS: 78 rules, 0 errors, 20 warnings, 0 approvals |
+| Exact-dev repository guards | PASS: 78 rules, 0 errors, 21 warnings, 0 approvals |
 | Generated palette parity | PASS: all 7 files byte-identical |
 | Portfolio CAS | 3 cases passed |
 | Vendor browser DTO | 4 cases passed |
@@ -55,7 +55,7 @@ Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete brows
 | Analysis source health | 19 cases passed |
 | Saved Views browser DTO | 3 cases passed |
 
-Nineteen guard warnings concern bounded canonical I/O timeouts. The remaining double-cast warning is inherited from the original CAP20 expression; the diff changes its signal access, not the cast's meaning. No warning approval was used. Guards, workflow definitions and allowlists were unchanged.
+Twenty guard warnings concern bounded canonical I/O timeouts. The remaining double-cast warning is inherited from the original CAP20 expression; the diff changes its signal access, not the cast's meaning. No warning approval was used. Guards, workflow definitions and allowlists were unchanged.
 
 The E2E project retains strict semantic checking and noEmit, with declaration emission/composite disabled for that test project. The independent application declaration build remains enabled. Historical full-CLI diagnostics were fixed by incorporated upstream commits; they are not a current limitation. See [TYPECHECK.md](TYPECHECK.md), [cli-type-audit.json](cli-type-audit.json) and [technical-verification.json](technical-verification.json).
 
@@ -66,11 +66,11 @@ The E2E project retains strict semantic checking and noEmit, with declaration em
 | Planner | [44961772161](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44961772161) | `9f52fd75da5f789f91b61d595a86651277ec2ec0` | `70b756800304adb9c0e9ff494f3cd3fc189fe828` | 2 passed; 5 writes/readbacks; 40 captures |
 | Procurement | [44965165654](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965165654) | `7f3de0206fc25b2925d7c55947d9b5785bdfe7ba` | `331cafc50bee2112f6366ff428658de938c6f58e` | 4 passed; 11 POSTs/readbacks; 43 captures |
 | Work/Search/Saved Views | [44965705732](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965705732) | `6bff36e3308c4ac205a59011827c8f19c06c5873` | `87a738830c83bf1fa9ee30c32b38fb1e297b30f8` | 3 passed; 1 view save/readback; 22 captures |
-| Decisions | [44966014444](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966014444) | `8cfd3eb141d31d18ee2b32dda629d67e7d44c10a` | `250e8faf80931c807a86c5f06c0e797de469adca` | Failed during later original-source/narrow/localized coverage; under investigation |
+| Decisions | [44966014444](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966014444) | `8cfd3eb141d31d18ee2b32dda629d67e7d44c10a` | `250e8faf80931c807a86c5f06c0e797de469adca` | Failed from UI41 light original-source coverage onward; followed by diagnostic Decisions11 |
 | Previous six native areas | [44963871177](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44963871177) | `f6533b5856840c4722f38d3e5070204c8e4d4877` | `7c0caf8da905a03579379c35ce1cd49375a87509` | 2 passed; 67 complete previews; 6 representative JPEGs persisted |
 | Planner + previous six after dev composition | [44965221018](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965221018) | `fcd8c3099ecc04ae7fd47c3d323e889b4b1af0a8` | `331cafc50bee2112f6366ff428658de938c6f58e` | Workflow and Run tests step PASS; combined decoded log unavailable |
 
-The final composition run selected the original Planner and first/second-wave specs. Its job, test step, artifact upload and cleanup completed successfully. MCP returned “Transport closed” for both combined-log retrieval attempts. No combined test, capture, error or write total is inferred from that unavailable log. The original separately read Planner and regression galleries retain their exact source commits. [Composition manifest](evidence/composition/manifest.json).
+The earlier composition run on dev3ce selected the original Planner and first/second-wave specs. Its job, test step, artifact upload and cleanup completed successfully. MCP returned “Transport closed” for both combined-log retrieval attempts. No combined test, capture, error or write total is inferred from that unavailable log. The original separately read Planner and regression galleries retain their exact source commits. [Composition manifest](evidence/composition/manifest.json).
 
 Work's selected gallery retains seven UI30 images from Work9 and six UI31 images from Work8; all three areas then passed together in Work10. Nine UI32 images are from Work10. A selected area's earlier successful images are not relabeled as images from the latest product.
 
@@ -100,7 +100,7 @@ Saved Views edits an original V1 view, reviews/cancels/revises, confirms one sav
 
 ### Decisions — UI34–UI41
 
-Final complete qualification remains pending. Preserve the failed Decisions9 record and complete the source-lifecycle diagnosis before claiming passing narrow/localized states. [A15 contract review](A15-REVIEW.md) is a separate static audit and does not substitute for runtime evidence.
+Final complete qualification remains pending. Decisions11 / run44968620170 now tests product218a5ee3 with strict source-positive assertions and safe original refusal diagnostics. Decisions10 failed in the diagnostic observer URL accessor itself and is not source-lifecycle evidence. Preserve the failed Decisions9 record and complete the diagnosis before claiming passing light/narrow/localized states. [A15 contract review](A15-REVIEW.md) is a separate static audit and does not substitute for runtime evidence.
 
 ## Implementation boundaries and corrective work
 

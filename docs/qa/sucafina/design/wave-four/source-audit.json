@@ -1,0 +1,65 @@
+{
+  "status": "STATIC_PASS_WITH_DOCUMENTED_LIMITS",
+  "productHead": "250e8faf80931c807a86c5f06c0e797de469adca",
+  "base": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+  "reviewedBy": "independent Procurement agent",
+  "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
+  "routeSetsEqual": true,
+  "areas": 20,
+  "routePatterns": 49,
+  "groups": {
+    "planner": {
+      "areas": 4,
+      "routes": 14
+    },
+    "procurement": {
+      "areas": 5,
+      "routes": 17
+    },
+    "work": {
+      "areas": 3,
+      "routes": 5
+    },
+    "decisions": {
+      "areas": 8,
+      "routes": 13
+    }
+  },
+  "comparedPaths": 188,
+  "productPaths": 78,
+  "testHarnessPaths": 23,
+  "documentationEvidencePaths": 87,
+  "compareTruncated": false,
+  "unchanged": [
+    "packages/core",
+    "packages/client",
+    "GitHub workflows",
+    "guard mechanisms",
+    "allowlists",
+    "seven generated palette files",
+    "route registry",
+    "legacy HTML console"
+  ],
+  "sourceChangesInclude": [
+    "native UI leaves and styles",
+    "original source projection forwarding",
+    "host binding and original reading health",
+    "seven A15 route descriptors"
+  ],
+  "noAddedProductDiagnostics": true,
+  "noAddedProductMocksOrBypasses": true,
+  "noAddedCssColorLiterals": true,
+  "galleryIntegrity": {
+    "atCommit": "58591b82cbec9fe57cc0f9813e9097164c6f8753",
+    "planner": 40,
+    "procurement": 43,
+    "work": 22,
+    "regressionSamples": 6,
+    "total": 111,
+    "missing": 0,
+    "hashMismatches": 0,
+    "sizeMismatches": 0
+  },
+  "notRuntimeQualification": true,
+  "notUserAcceptance": true
+}
