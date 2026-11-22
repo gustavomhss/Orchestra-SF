@@ -6,6 +6,13 @@
 // This executor records observations. Even a successful invocation never grants
 // LIVE qualification by itself: installed G08 joins the original host observer,
 // package, reservation and complete phase receipts on the same candidate.
+// CLI: node sf/azure/identity/az02-proof.cjs --phase <phase> --config <private-json>
+//      --out <fresh-private-public-receipt> --private-out <fresh-private-details>
+// Producer/logout additionally require their explicit --confirm-* flags.
+// Start after-restart --observe-restart BEFORE the owner performs the approved
+// restart, while the original service runs and the logout cookie is already
+// revoked. This read-only watcher waits at most five minutes; it never restarts
+// a service. It rediscovers the fresh hostId before replaying those same bytes.
 const fs = require("node:fs");
 const path = require("node:path");
 const https = require("node:https");
@@ -268,10 +275,11 @@ async function runPhase(configInput, phase, options = {}, overrides) {
     read: privateRead, observe: () => nativeProcess(config),
     wait: (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds)),
     now: () => Date.now(), ...overrides };
-  const cases = [], details = [];
+  const cases = [], details = [], actorCookies = new Map();
   const cookie = (role) => {
+    if (actorCookies.has(role)) return actorCookies.get(role);
     const raw = io.read(config.actors[role].cookieFile, 4096).trim();
-    assert(COOKIE.test(raw), "ORIGINAL_COOKIE_REQUIRED"); return raw;
+    assert(COOKIE.test(raw), "ORIGINAL_COOKIE_REQUIRED"); actorCookies.set(role, raw); return raw;
   };
   const actorHeaders = (role = "requester", team) => ({ Cookie: cookie(role), "x-sf-team-profile": selector(config, team) });
   const contextHeaders = (role = "requester") => ({ Cookie: cookie(role) });
@@ -345,7 +353,10 @@ async function runPhase(configInput, phase, options = {}, overrides) {
         const raw = cookie(role), r = await send("GET", contextRoute(config), { Cookie: raw });
         const ok = role === "denied" ? refusal(r, config) || noBusiness(r, config, role, "revoked") :
           stampOk(r, config, role);
-        if (ok && role !== "denied") admitted.push({ raw, principal: json(r).value.stamp.principalRef });
+        if (ok && role !== "denied") {
+          admitted.push({ raw, principal: json(r).value.stamp.principalRef });
+          details.push({ role, cookieSha256: sha(raw), context: json(r).value.stamp });
+        }
         return { status: r.status, ok };
       });
     await check("DISTINCT_ACTORS", "distinct original cookies and exact principals", async () => ({
@@ -376,6 +387,7 @@ async function runPhase(configInput, phase, options = {}, overrides) {
       typeof config.isolated.requestId === "string" && config.isolated.requestId.length > 0, "PRODUCER_APPROVAL_REQUIRED");
     const context = await send("GET", contextRoute(config), contextHeaders());
     assert(stampOk(context, config, "requester"), "CURRENT_TEAM_ADMISSION_REQUIRED");
+    details.push({ role: "requester", cookieSha256: sha(cookie("requester")), context: json(context).value.stamp });
     async function snapshot() {
       const r = await send("GET", config.mount + "/api/ui/pages/CAP25?request=" + encodeURIComponent(config.isolated.requestId), actorHeaders());
       const value = json(r), key = "requests:" + config.isolated.requestId;
@@ -402,6 +414,7 @@ async function runPhase(configInput, phase, options = {}, overrides) {
   }
   if (phase === "after-revoke") {
     const raw = cookie("requester");
+    details.push({ role: "requester", cookieSha256: sha(raw) });
     await check("REVOKE_CONTEXT", "current session may survive but revoked Team has no business authority", async () => {
       const r = await send("GET", contextRoute(config), { Cookie: raw });
       return { status: r.status, ok: refusal(r, config) || noBusiness(r, config, "requester", "revoked") };
@@ -423,7 +436,7 @@ async function runPhase(configInput, phase, options = {}, overrides) {
     await check("REPLAY_AFTER_LOGOUT", "401|403 replay of the exact cookie sent to logout", async () => {
       const r = await send("GET", contextRoute(config), { Cookie: raw }); return { status: r.status, ok: refusal(r, config) };
     });
-    details.push({ cookieSha256: sha(raw) });
+    details.push({ role: "requester", cookieSha256: sha(raw) });
   }
   if (phase === "after-restart") {
     assert(options.observeRestart === true && !Object.hasOwn(options, "restartReceipt"), "OBSERVED_RESTART_REQUIRED");
@@ -455,7 +468,7 @@ async function runPhase(configInput, phase, options = {}, overrides) {
       const fresh = { ...config, hostId: observed.hostId };
       const r = await send("GET", contextRoute(fresh), { Cookie: raw });
       const last = await io.observe();
-      details.push({ cookieSha256: sha(raw), before, after, freshHost: observed });
+      details.push({ role: "requester", cookieSha256: sha(raw), before, after, freshHost: observed });
       return { status: r.status, ok: refusal(r, config) && same(last, after) };
     });
   }
@@ -478,7 +491,8 @@ async function runPhase(configInput, phase, options = {}, overrides) {
 async function bindInstalledPlan(config) {
   // Input equality is a prerequisite, never an observation of a running host.
   const evidence = await import(pathToFileURL(path.resolve(__dirname, "../../../script/sf-ci/g08-private-evidence.mjs")));
-  const plan = evidence.validatePlan(strictJson(privateRead(config.hostPlanFile)));
+  const planRaw = privateRead(config.hostPlanFile);
+  const plan = evidence.validatePlan(strictJson(planRaw));
   const root = path.dirname(config.hostPlanFile);
   const packageRaw = privateRead(path.join(root, "package-receipt.json"), 5_000_000);
   assert(sha(packageRaw) === plan.packageReceiptSha256, "G07_RECEIPT_BYTES_REQUIRED");
@@ -502,7 +516,7 @@ async function bindInstalledPlan(config) {
     config.actors.noTeam.principalObjectId === plan.actors.denied &&
     config.actors.administrator.principalObjectId === plan.actors.dashboardAdmin,
     "G08_PACKAGE_RESERVATION_BINDING_REQUIRED");
-  return sha(privateRead(config.hostPlanFile));
+  return sha(planRaw);
 }
 
 async function main(argv = process.argv.slice(2)) {

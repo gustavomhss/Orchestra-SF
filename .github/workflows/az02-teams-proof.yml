@@ -81,7 +81,7 @@ jobs:
           const read = (name) => readFileSync(root + "/" + name, "utf8")
           const hash = (bytes) => createHash("sha256").update(bytes).digest("hex")
           const tap = read("node-controls.tap"), log = read("reader.log"), junit = read("reader.junit.xml")
-          for (const [name, expected] of [["tests", 32], ["pass", 32], ["fail", 0], ["cancelled", 0], ["skipped", 0], ["todo", 0]])
+          for (const [name, expected] of [["tests", 33], ["pass", 33], ["fail", 0], ["cancelled", 0], ["skipped", 0], ["todo", 0]])
             assert(new RegExp("^# " + name + " " + expected + "$", "m").test(tap), "AZ02_NODE_INVENTORY_" + name)
           assert.equal((junit.match(/<testcase\b/g) ?? []).length, 10, "AZ02_ORIGINAL_READER_INVENTORY")
           assert(!/<(?:failure|error|skipped)\b/.test(junit), "AZ02_READER_FAILURE_OR_SKIP")
@@ -112,7 +112,7 @@ jobs:
           const artifacts = readdirSync(root).sort().map((path) => ({ path, sha256: hash(readFileSync(root + "/" + path)) }))
           const receipt = { schema: "sf-az02-component-controls-v1", status: "PASS", source, sources, artifacts,
             run: { id: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT, workflowSha: process.env.GITHUB_WORKFLOW_SHA },
-            guardBase: read("guard-base.txt").trim(), node: { passed: 32, failed: 0, skipped: 0 },
+            guardBase: read("guard-base.txt").trim(), node: { passed: 33, failed: 0, skipped: 0 },
             originalReader: { passed: 7, failed: 0, skipped: 0, transport: "REAL_LOOPBACK_HTTP",
               persistence: "ORIGINAL_SQLITE", identity: "CONTROLLED_COMPONENT" },
             preservedProjection: { passed: 3, failed: 0, skipped: 0, testBlob: "748ef34f030eafc4336f25da08bba0d1a4ca5387",

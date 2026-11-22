@@ -335,3 +335,22 @@ test("private files reject symlinks, hard links, exposed modes, oversized inputs
   } finally { fs.rmSync(directory, { recursive: true, force: true }); }
   assert.equal(fs.existsSync(directory), false);
 });
+
+test("each phase captures the original session bytes once and retains private correlation across actors, producer and revocation", async () => {
+  for (const phase of ["actors", "producer", "after-revoke", "logout"]) {
+    const f = fixture();
+    f.state.revoked = phase === "after-revoke";
+    const read = f.io.read, reads = new Map();
+    f.io.read = (file) => {
+      reads.set(file, (reads.get(file) ?? 0) + 1);
+      if (file === f.config.actors.requester.cookieFile && reads.get(file) > 1) return f.cookies.holder;
+      return read(file);
+    };
+    const result = await runPhase(f.config, phase, { confirmProducerWrites: true, confirmLogout: true }, f.io);
+    assert.equal(result.receipt.status, "PASS");
+    assert.equal(reads.get(f.config.actors.requester.cookieFile), 1);
+    const identity = result.privateDetails.details.find((entry) => entry.role === "requester");
+    assert.equal(identity.cookieSha256, require("node:crypto").createHash("sha256").update(f.cookies.requester).digest("hex"));
+    assert(!JSON.stringify(result.receipt).includes(identity.cookieSha256));
+  }
+});
