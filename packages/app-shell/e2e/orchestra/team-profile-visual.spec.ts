@@ -224,7 +224,7 @@ for (const scheme of ["dark", "light"] as const) for (const mode of modes) {
     test.use({ viewport: mode.viewport })
 
     test("access, selection, administration and configuration", { tag: "@component-visual" }, async ({ page, baseURL }, info) => {
-      test.skip(info.config.metadata.bundle !== "production", "Requires the original production integration build")
+      expect(info.config.metadata.bundle, "Requires the original production integration build").toBe("production")
       if (!baseURL) throw new Error("Production baseURL is required")
       const fixture = await installTeamsVisual(page, { baseURL, scheme })
       try {
@@ -293,7 +293,7 @@ for (const scheme of ["dark", "light"] as const) for (const mode of modes) {
     })
 
     test("empty chat, native draft guard, expanded administration and stopped updates", { tag: "@component-visual" }, async ({ page, baseURL }, info) => {
-      test.skip(info.config.metadata.bundle !== "production", "Requires the original production integration build")
+      expect(info.config.metadata.bundle, "Requires the original production integration build").toBe("production")
       if (!baseURL) throw new Error("Production baseURL is required")
       const fixture = await installTeamsVisual(page, { baseURL, scheme, signedIn: true })
       try {
