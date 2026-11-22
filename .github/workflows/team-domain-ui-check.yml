@@ -1,0 +1,131 @@
+name: Team domain UI checks
+on:
+  push:
+    branches: ["team-domain-raw"]
+permissions:
+  contents: read
+concurrency:
+  group: team-domain-ui-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  component:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      CI: "true"
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      ORCHESTRA_OMNI_CONTROL: declared
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+      ORCHESTRA_CHANNEL: prod
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "44058f582438b750e539dfd2bc87e14da51765fd"
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Bind the exact UI and client composition
+        run: |
+          set -euo pipefail
+          proof_output="$RUNNER_TEMP/team-domain-ui-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          mkdir "$proof_output"
+          printf 'SF_TEAM_DOMAIN_EVIDENCE=%s\n' "$proof_output" >> "$GITHUB_ENV"
+          test "$(git rev-parse HEAD)" = "44058f582438b750e539dfd2bc87e14da51765fd"
+          test "$(git rev-parse 'HEAD^{tree}')" = "26ee4ad1417013b6aecd58730db85b62e4e14ddd"
+          test "$(git rev-parse HEAD^)" = "c02a600e4bfe0eb0362f5698ad2d099a10262751"
+          test "$(git rev-parse "$GITHUB_SHA^")" = "44058f582438b750e539dfd2bc87e14da51765fd"
+          test "$(git diff --name-only 44058f582438b750e539dfd2bc87e14da51765fd "$GITHUB_SHA")" = ".github/workflows/team-domain-ui-check.yml"
+          git rev-parse origin/dev > "$proof_output/guard-base.sha"
+          git merge-base HEAD origin/dev > "$proof_output/guard-merge-base.sha"
+          python3 - <<'PY'
+          import json, subprocess
+          expected = {"packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts":"0e26e6556c78597e2f3f6481dc817ba492c1b25f","packages/app-shell/src/orchestra/chapters/sucafina/context/drafts.ts":"2ba1ebfe0a8fefb26d4132ad7db2a43d023afab2","packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx":"580a81a78cb6429e5b739eb35b8bb7063985698a","packages/app-shell/src/orchestra/chapters/sucafina/host/draft-revalidation-availability.ts":"ed8f25b73cf3d9a3b2a49061edc03bcc20a33008","packages/app-shell/src/orchestra/chapters/sucafina/host/draft-revalidation-budget.ts":"f362a8e4b54808a3f61ae92cf2e418ff33ae6a5a","packages/app-shell/src/orchestra/chapters/sucafina/host/draft-revalidation-vendor.ts":"c861fa927df1ccbd6fb00c6ec885fac7908832b5","packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain-route.ts":"16754544582682d5899194850fa4dd97acd560bc","packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain.tsx":"0d89f417c878fdc6dc254fe7c8dcf76b27fadf56","packages/app-shell/test-browser/sucafina-team-domain.test.ts":"14c2a2e29dbfa28937d3ba663ab3ffd991bf4992","packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx":"b5d8462a54e20082f99de70d97ef67168e5f0aea","packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx":"e61340a944a735dc1906895036c70156b83c6500","packages/client/src/sucafina/team-domain.ts":"222b08bbd3ab7e0583b38afd2924c3f458b6b09d","packages/client/package.json":"672a2a3fd8aa2dbedf8c5c3afa870c30a77f37bf"}
+          for path, blob in expected.items():
+              actual = subprocess.check_output(["git", "rev-parse", "HEAD:" + path], text=True).strip()
+              if actual != blob:
+                  raise SystemExit("TEAM_DOMAIN_COMPOSITION_BLOB_MISMATCH:" + path)
+          print(json.dumps({"compositionSha": "44058f582438b750e539dfd2bc87e14da51765fd", "compositionTree": "26ee4ad1417013b6aecd58730db85b62e4e14ddd", "verifiedBlobs": expected}))
+          PY
+      - uses: ./.github/actions/setup-bun
+        id: install
+        with:
+          reuse-node: "true"
+      - name: Exercise original native leaves and Team draft lifecycle
+        id: dom
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        working-directory: packages/app-shell
+        run: |
+          set -euo pipefail
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
+          bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts --timeout 15000 --reporter=junit --reporter-outfile "$SF_TEAM_DOMAIN_EVIDENCE/domain-dom.junit.xml" ./test-browser/sucafina-team-domain.test.ts 2>&1 | tee "$SF_TEAM_DOMAIN_EVIDENCE/domain-dom.log"
+      - name: Typecheck Client through its package command
+        id: client_types
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        working-directory: packages/client
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$SF_TEAM_DOMAIN_EVIDENCE/client-types.log"
+      - name: Typecheck the original App Shell composition
+        id: shell_types
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        working-directory: packages/app-shell
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$SF_TEAM_DOMAIN_EVIDENCE/app-shell-types.log"
+      - name: Check canonical guards against origin dev
+        id: guards
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$SF_TEAM_DOMAIN_EVIDENCE/guards.log"
+      - name: Preserve complete component receipt
+        if: success() && steps.dom.outcome == 'success' && steps.client_types.outcome == 'success' && steps.shell_types.outcome == 'success' && steps.guards.outcome == 'success'
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, re, subprocess
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          output = Path(os.environ["SF_TEAM_DOMAIN_EVIDENCE"])
+          expected = ["Team domain URL intent reuses canonical refs and rejects partial, foreign, duplicate and invalid year selectors","original CAP14 leaf renders Team data and product-resolved F01 links with no mutation","original CAP04 leaf renders Team data and product-resolved F01 links with no mutation","original CAP05 leaf renders Team data and product-resolved F01 links with no mutation","CAP14 original review dispatches exact CAS/idempotency and rereads the confirmed Team projection","same-owner refresh revalidates and restores an unsent CAP14 draft without dispatching it","Team switch removes the old private draft and late old reads never populate the new leaf","loss of the original write grant purges the retained private draft before remount","a lost POST response survives refresh as unresolved and cannot dispatch a second command with a new key","source version drift becomes a retained conflict, and old owner handles cannot mutate after Team replacement","unadapted legacy consumers fail closed while the explicit readable hook preserves the real Team DTO"]
+          cases = ET.parse(output / "domain-dom.junit.xml").getroot().findall(".//testcase")
+          if sorted(x.attrib.get("name") for x in cases) != sorted(expected):
+              raise SystemExit("TEAM_DOMAIN_JUNIT_INVENTORY_MISMATCH")
+          if any(x.find(tag) is not None for x in cases for tag in ("failure", "error", "skipped")):
+              raise SystemExit("TEAM_DOMAIN_NON_PASS_CASE")
+          logs = (output / "domain-dom.log").read_text()
+          if len(re.findall(r'omni positive control \[[0-9a-f]{32}\]: (?:pass|not applicable)', logs)) != 1:
+              raise SystemExit("TEAM_DOMAIN_OMNI_CONTROL_MISSING")
+          if subprocess.check_output(["git", "diff", "--name-only"], text=True).strip():
+              raise SystemExit("TEAM_DOMAIN_SOURCE_MODIFIED_DURING_CHECKS")
+          sources = {"packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts":"0e26e6556c78597e2f3f6481dc817ba492c1b25f","packages/app-shell/src/orchestra/chapters/sucafina/context/drafts.ts":"2ba1ebfe0a8fefb26d4132ad7db2a43d023afab2","packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx":"580a81a78cb6429e5b739eb35b8bb7063985698a","packages/app-shell/src/orchestra/chapters/sucafina/host/draft-revalidation-availability.ts":"ed8f25b73cf3d9a3b2a49061edc03bcc20a33008","packages/app-shell/src/orchestra/chapters/sucafina/host/draft-revalidation-budget.ts":"f362a8e4b54808a3f61ae92cf2e418ff33ae6a5a","packages/app-shell/src/orchestra/chapters/sucafina/host/draft-revalidation-vendor.ts":"c861fa927df1ccbd6fb00c6ec885fac7908832b5","packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain-route.ts":"16754544582682d5899194850fa4dd97acd560bc","packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain.tsx":"0d89f417c878fdc6dc254fe7c8dcf76b27fadf56","packages/app-shell/test-browser/sucafina-team-domain.test.ts":"14c2a2e29dbfa28937d3ba663ab3ffd991bf4992","packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx":"b5d8462a54e20082f99de70d97ef67168e5f0aea","packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx":"e61340a944a735dc1906895036c70156b83c6500","packages/client/src/sucafina/team-domain.ts":"222b08bbd3ab7e0583b38afd2924c3f458b6b09d","packages/client/package.json":"672a2a3fd8aa2dbedf8c5c3afa870c30a77f37bf"}
+          receipts = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in output.iterdir() if path.is_file()}
+          receipt = {
+              "schema": "sf-team-domain-ui-component-v1", "status": "COMPONENT_CONTROLS_VERIFIED",
+              "ui": {"sha": "c02a600e4bfe0eb0362f5698ad2d099a10262751", "tree": "8e409e3fa36dbeb98e4e76d694a490df0dac1c29"},
+              "composition": {"sha": "44058f582438b750e539dfd2bc87e14da51765fd", "tree": "26ee4ad1417013b6aecd58730db85b62e4e14ddd"},
+              "workflowSnapshot": {"sha": os.environ["GITHUB_SHA"], "singleParent": "44058f582438b750e539dfd2bc87e14da51765fd"},
+              "run": {"id": os.environ["GITHUB_RUN_ID"], "attempt": os.environ["GITHUB_RUN_ATTEMPT"]},
+              "sources": [{"path": path, "gitBlob": blob, "sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest()} for path, blob in sources.items()],
+              "reports": receipts, "tests": len(cases), "failures": 0, "skips": 0,
+              "proofScope": ["original native CAP14/CAP04/CAP05 DOM", "original Team transport over controlled HTTP", "original owner draft registry"],
+              "microsoftObservation": "CONTROLLED_COMPONENT_BOUNDARY", "factoryHooksIntegrated": False,
+              "installed": False, "g08Closed": False, "productionCutover": False,
+          }
+          (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          print(json.dumps({"composition": receipt["composition"], "tests": len(cases), "installed": False, "g08Closed": False}))
+          PY
+      - name: Upload component evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: team-domain-ui-${{ github.sha }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: ${{ runner.temp }}/team-domain-ui-${{ github.run_id }}-${{ github.run_attempt }}/
