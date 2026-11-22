@@ -2,6 +2,8 @@
 
 A execução gerenciada deste Mac fica em `~/Library/Application Support/Sucafina`: `runtime` contém a cópia aprovada do módulo e do host; `installation` guarda configurações, chaves, bancos e bases do scanner com acesso privado. Os fontes em Documents permanecem preservados. O macOS recusou o início direto de executáveis em Documents pelo launchd; por isso os três serviços apontam para a cópia em Application Support. O atalho em Documents abre essa instalação.
 
+No perfil Local Operator, o runtime usa `installation/workspace`, um diretório físico privado criado ou reutilizado no início. Configurações, chaves e bancos continuam nos diretórios existentes; a proveniência Phase permanece em `installation/host-data/orchestra/sucafina/native-origins`, fora do workspace. O início recusa workspace com symlink, permissões abertas ou ancestral inseguro e não corrige permissões de diretórios existentes automaticamente.
+
 A homologação está disponível em `http://localhost:4110/sucafina/dashboard`. O perfil ativo é **local-operator**, com a conta real do macOS. Não representa uma conta nem grupos do Microsoft 365. A faixa amarela identifica esse perfil em todas as telas.
 
 Para reabrir uma sessão no Chrome, usar o atalho `/Users/gustavoschneiter/Documents/sucafina/Abrir Sucafina.command`. Ele prepara uma credencial de uso único em arquivo privado e abre a aplicação. A credencial dura dez minutos; a sessão HttpOnly dura oito horas. O atalho renova o acesso sem exibir tokens. A emissão exige o UID do dono e configuração privada com permissão 0600 em diretório 0700. Nenhuma rota HTTP emite acesso anônimo.

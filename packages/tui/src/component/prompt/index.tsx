@@ -427,6 +427,11 @@ export function Prompt(props: PromptProps) {
         name: "prompt.editor",
         slashName: "editor",
         run: async () => {
+          // A shortcut can run before onContentChange flushes the current buffer.
+          if (input && !input.isDestroyed && input.plainText !== store.prompt.input) {
+            setStore("prompt", "input", input.plainText)
+            syncExtmarksWithPromptParts()
+          }
           dialog.clear()
 
           // replace summarized text parts with the actual text

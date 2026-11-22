@@ -53,7 +53,7 @@ describe("Teams profile canonical contracts", () => {
     ]) {
       expect(Schema.is(TeamProfile.Ref)({ ...profile, teamObjectId })).toBe(false)
     }
-    expect(Schema.decodeUnknownSync(TeamProfile.Ref)(profile).teamObjectId).toBe(profile.teamObjectId)
+    expect<string>(Schema.decodeUnknownSync(TeamProfile.Ref)(profile).teamObjectId).toBe(profile.teamObjectId)
   })
 
   test("empty, padded, control-bearing and unbounded installation identifiers are rejected", () => {

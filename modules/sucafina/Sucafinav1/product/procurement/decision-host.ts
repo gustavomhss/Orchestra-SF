@@ -123,6 +123,9 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     const prepared = await Promise.all(request.operations.map((value, index) => bridge.prepareScenario({ operation: value, choice, operationId: `${operation}:${index}`, idempotencyKey: `${operation}:${index}` }, context)))
     const failed = prepared.find((value) => value.status !== "ok")
     if (failed) return failed
+    // A legacy unsupported choice must be reviewed again under the draft-only producer.
+    if (choice.result.unresolvedConditions.includes("financial-approval-command-unavailable") || choice.result.restrictions.includes("financial-approval-command-unavailable"))
+      return { status: "needs-input", reason: "financial-approval-command-unavailable" }
     // Persist the authorized original while the source and preferences share the same lock.
     // The later case mutation's captured source fences still have to match this preparation.
     for (const item of prepared) if (item.status === "ok" && !await captureSource(item.value.targetEvidence, context)) return { status: "unavailable", reason: "preparation-original-evidence-unavailable" }

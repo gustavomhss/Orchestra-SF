@@ -216,6 +216,22 @@ test("Finance and criterion metrics use original pair reads and close on revocat
       business.results.readHistoricalScenario = readHistorical
       business.withPlannerObservation = observe
     }
+    // A scalar caller has no outer pair fence. The stored-scenario host must
+    // reject a changed reader even when both real case observations agree.
+    const readCase = business.cases.read
+    let caseReads = 0
+    business.cases.read = async (request, call) => {
+      const current = await readCase(request, call)
+      if (++caseReads === 2) business.cases.read = readCase
+      return current
+    }
+    try {
+      const replaced = await measure(false)
+      expect(caseReads).toBe(2)
+      expect(ok(replaced.result)).toEqual(pair.scenarioRefs.map(() => ({ status: "denied", reason: "case-reader-changed" })))
+    } finally { business.cases.read = readCase }
+    const restored = await measure(false)
+    expect(ok(restored.result).map((entry) => ok(entry).result)).toEqual(value.map((entry) => ok(entry).result))
     // Exercise the real criterion consumer with the same published scenarios.
     // Mode "scalar" disables only the physical root. Capability "absent" exercises
     // the actual scalar resolver fallback. Both delegate to original producers;

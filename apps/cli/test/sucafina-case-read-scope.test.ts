@@ -5,8 +5,11 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
+import { createSfAnalysisHostServices } from "../src/sucafina-product/analysis-host-services.ts"
 import { createSfBusinessServices } from "../src/sucafina-product/business-services.ts"
 import { createSfProcurementCaseReadScope } from "../src/sucafina-product/procurement-case-read-scope.ts"
+import { createResidentAiBundle } from "../../../modules/sucafina/Sucafinav1/product/ai/resident.ts"
+import { createSfAtlasMemory, retainSfAtlasRecallResult, revalidateSfAtlasRecall, withSfAtlasRecallObservation } from "../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
 import { createSfProductAuthority } from "../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { createSfSourcePersistence } from "../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
@@ -97,7 +100,7 @@ async function withFixture<T>(work: (fixture: Fixture) => Promise<T>): Promise<T
       identity: () => identity, installationId: identity.installationId, origin, policyVersion: "case-scope-policy",
       persistence, proposalCoverageWrites: new WeakSet<object>(),
       grants: [{ principalRef: actorId, namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
-        operations: ["sf_case_draft", "sf_case_read", "sf_work_list"], humanActions: [] }],
+        operations: ["sf_case_draft", "sf_case_read", "sf_work_list"], humanActions: ["analysis.prepare"] }],
       // A bounded fixture identity provider; the original authority owns every
       // admission, consumed lease, request binding, revalidation and C08 grant.
       authenticate: async (incoming, scope) => requests.has(incoming) && control.authorized && scope
@@ -179,6 +182,103 @@ test("canonical Planner case remains readable after the original global Procurem
       expect(value(await revision(), "C08 revision after replacement")).toBe(before)
     })
   } finally { clock.mockRestore() }
+}, 45_000)
+
+test("analysis preparation distinguishes unavailable case evidence from a refused selection", async () => {
+  await withFixture(async (fixture) => {
+    const root = path.resolve(import.meta.dir, "../../../modules/sucafina/Sucafinav1/product/ai")
+    const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
+    const selected = bundle.profiles.map((profile) => {
+      const skills = bundle.skills.filter((skill) => profile.allowedSkills.includes(skill.id))
+      return {
+        profile, skills, manifestDigest: bundle.manifestDigest,
+        operationIds: profile.allowedOperations.filter((operation) => skills.some((skill) => skill.allowedOperations.includes(operation))),
+      }
+    })
+    const finance = selected.find((entry) => entry.profile.id === "sf_finance")
+    const forecast = finance?.skills.find((skill) => skill.id === "sf-explicar-forecast")
+    if (!finance || !forecast) throw new Error("Finance forecast skill missing from fixture manifest")
+    const analysis = createSfAnalysisHostServices({
+      business: fixture.business, authority: fixture.authority, selected, analysisSelectionWrites: new WeakSet<object>(),
+    })
+    const caseRef = { id: fixture.plannerCase.id, incarnation: fixture.plannerCase.incarnation, version: fixture.plannerCase.version }
+    const request = {
+      caseRef, objective: "Inspect an unavailable case source", profileId: finance.profile.id, profileVersion: finance.profile.version,
+      skillId: forecast.id, skillVersion: forecast.version, manifestDigest: finance.manifestDigest,
+      outputSchemaVersion: "sf-contribution-v1" as const, requestedOperationScope: [],
+    }
+    const prepare = (ref = caseRef) => {
+      const input = { request: { ...request, caseRef: ref }, selection: {} }
+      return fixture.ui("sf-human:analysis.prepare", input, (call) => analysis.registry.prepare(input.selection, input.request, call))
+    }
+    const revisions = async () => ({
+      cases: value(await fixture.authority.state.read(fixture.request(), "cases", (state) => state.versions.cases), "cases revision"),
+      preferences: value(await fixture.authority.state.read(fixture.request(), "preferences", (state) => state.versions.preferences), "preferences revision"),
+    })
+    const before = await revisions()
+    const source = spyOn(fixture.business.context, "context").mockRejectedValue(new Error("fixture source unavailable"))
+    try {
+      expect(await prepare()).toEqual({ status: "unavailable", reason: "analysis-source-unavailable" })
+      expect(source).toHaveBeenCalledTimes(1)
+      expect(await prepare({ ...caseRef, version: caseRef.version + 1 })).toMatchObject({ status: "denied" })
+      expect(await prepare({ ...caseRef, incarnation: "foreign-incarnation" })).toMatchObject({ status: "denied" })
+      source.mockImplementation(async () => {
+        fixture.control.authorized = false
+        throw new Error("fixture source unavailable during revocation")
+      })
+      expect(await prepare()).toMatchObject({ status: "denied" })
+      fixture.control.authorized = true
+      expect(await revisions()).toEqual(before)
+    } finally { source.mockRestore() }
+  })
+}, 45_000)
+
+test("canonical Atlas witnesses and renewals stay bound to their live observation", async () => {
+  await withFixture(async (fixture) => {
+    const memory = createSfAtlasMemory({
+      state: fixture.authority.state, cases: fixture.business.cases, host: fixture.authority.host,
+      evidence: fixture.business.context, proveContinuity: async () => false,
+      scanner: { name: "read-only-fixture", scan: () => { throw new Error("Recall must not scan or write") } },
+      scannerVersion: "1", now: () => at,
+    })
+    const ref = { id: fixture.plannerCase.id, incarnation: fixture.plannerCase.incarnation }
+    await fixture.ui("sf_case_read", { caseRef: encodeCaseRef(ref) }, async (call, request) => {
+      const read = () => memory.recall(ref, call)
+      const current = () => fixture.authority.host.requestFor(call) === request && !request.signal.aborted
+      const leaked = Promise.withResolvers<readonly unknown[]>()
+      const outside = leaked.promise.then((records) => revalidateSfAtlasRecall([records], call))
+      const released = await withSfAtlasRecallObservation(call, current, async () => {
+        const result = await read()
+        if (result.status !== "ok") throw new Error("Canonical Atlas observation unavailable")
+        const renew = retainSfAtlasRecallResult(result, call)
+        if (!renew) throw new Error("Canonical Atlas observation could not be retained")
+        leaked.resolve(result.records)
+        expect(await outside).toBe(false)
+        expect(await revalidateSfAtlasRecall([result.records], call)).toBe(true)
+        const renewed = await renew()
+        if (renewed?.status !== "ok") throw new Error("Live owner could not renew its Atlas observation")
+        expect(renewed.records).not.toBe(result.records)
+        return { records: renewed.records, renew }
+      })
+      if (!released) throw new Error("Live Atlas observation did not complete")
+      expect(await revalidateSfAtlasRecall([released.records], call)).toBe(false)
+      expect(await released.renew()).toBeUndefined()
+      const ordinary = await read()
+      if (ordinary.status !== "ok") throw new Error("Standalone canonical Atlas read unavailable")
+      expect(await revalidateSfAtlasRecall([ordinary.records], call)).toBe(true)
+      expect(await revalidateSfAtlasRecall([ordinary.records], call)).toBe(false)
+      const revoked = await withSfAtlasRecallObservation(call, current, async () => {
+        const result = await read()
+        if (result.status !== "ok") throw new Error("Canonical Atlas read unavailable before revocation")
+        fixture.control.authorized = false
+        expect(await revalidateSfAtlasRecall([result.records], call)).toBe(false)
+        fixture.control.authorized = true
+        expect(await read()).toEqual({ status: "unavailable" })
+        return true
+      })
+      expect(revoked).toBeUndefined()
+    })
+  })
 }, 45_000)
 
 /** Structural negative fixture only. This is NOT an emitted C12 preparation,

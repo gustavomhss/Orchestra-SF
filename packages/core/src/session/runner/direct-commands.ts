@@ -13,6 +13,7 @@ import { PermissionV2 } from "../../permission"
 import { QuestionV2 } from "../../question"
 import type { AppProcess } from "../../process"
 import { SkillV2 } from "../../skill"
+import { AgentTerminal } from "../../tool/agent-terminal"
 import { BashTool } from "../../tool/bash"
 import type { ReadToolFileSystem } from "../../tool/read-filesystem"
 import { SkillTool } from "../../tool/skill"
@@ -121,7 +122,7 @@ export const shell = Effect.fn("SessionRunner.shell")(function* (
         sessionID: input.sessionID,
         timestamp: yield* DateTime.now,
         callID,
-        output,
+        output: AgentTerminal.sanitize(output),
       })
     })
   yield* deps.appProcess.run(command, { combineOutput: true, maxOutputBytes: SHELL_OUTPUT_BYTES }).pipe(

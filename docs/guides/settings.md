@@ -77,7 +77,9 @@ This section controls server-wide default tool rules; project and agent rules ca
 
 ## Agents
 
-Settings shows the open project's agent roster, with each agent's role, description, model and step limit when supplied. **Configure** and **Create agent** open the Agents page; editing the agent's prompt, tools, skills or picture happens there, not in the Settings card.
+Settings shows the open project's agent roster, with each agent's role, description, model and step limit when supplied. **Configure** and the roster action open the Agents page; editing the agent's prompt, tools, skills or picture happens there, not in the Settings card.
+
+Availability follows the open project's provider catalog. It stays unknown while that catalog loads or fails; a disconnected provider or an unavailable or incompatible explicit model is shown on the card. Agents without an explicit model follow the connected-provider state, as on the Agents page.
 
 Only Maestro's card offers **Open Chat**; specialists work through Maestro. For saving, resetting and removing agent configuration, see [The agent screen](agent-screen.md). [The agents](agents.md) explains the seats' roles. Maestro's name stays fixed; other seats keep their stable IDs when you change their display names.
 
@@ -89,7 +91,7 @@ Revoking a folder that is trusted only through a parent folder changes nothing f
 
 ## MCP servers
 
-Settings lists the open project's MCP servers and their status and lets you enable or disable them. **Configure** opens the MCP page, where editing and tool inspection live. On that page:
+Settings lists the open project's MCP servers and their status. Use the switch to connect or disconnect, **Authenticate** when sign-in is required, and **Try again** after a connection failure. Use **Configure** if the server needs client registration. Configure opens the MCP page for editing and tool inspection. On that page:
 
 - **Add MCP server**: type a command to run a local server, or a URL to connect to a remote one. The transport follows what you type, so there is no transport choice. A local server takes environment variables as `KEY=value` lines. A remote server takes headers as `Name: value` lines.
 - Values you enter replace the set of the same kind in the config file. Leave the box empty to keep what the file has. Secrets and OAuth clients are not shown on the page. Add an OAuth client to `orchestra.json` by hand.

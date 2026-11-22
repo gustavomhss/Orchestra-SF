@@ -106,7 +106,7 @@ function policies(info: typeof ConfigUpgradeSource.Info.Type) {
   return statements.length ? { policies: statements } : undefined
 }
 
-function permissions(info?: ConfigUpgradePermission.Info, tools?: Readonly<Record<string, boolean>>) {
+export function permissions(info?: ConfigUpgradePermission.Info, tools?: Readonly<Record<string, boolean>>) {
   const rules: Array<{ action: string; resource: string; effect: ConfigUpgradePermission.Action }> = Object.entries(
     tools ?? {},
   ).map(([action, enabled]) => ({

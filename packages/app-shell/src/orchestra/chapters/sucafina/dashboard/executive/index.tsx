@@ -11,6 +11,7 @@ import { sfCommonKey, useSfPresentation, SF_STATE_FALLBACK_KEY } from "../../sha
 import type { SfCopyKey } from "../../shared/frame/types"
 import { SfDomainPageData } from "@orchestra/schema/sucafina/domain"
 import { SF_U02_COPY } from "@/i18n/orchestra-chapters/sf-u02"
+import type { SF_CROSS_COPY } from "@/i18n/orchestra-chapters/sf-cross"
 import { SfU02Edit, sfU02ExecutiveTarget } from "./edit"
 import { useU02Projection, knownNumber } from "./reader"
 import { parseSfSignalPriorities, sfExecutiveSignals, sfExecutiveSignalTarget } from "./signals"
@@ -18,7 +19,7 @@ import "../../shared/wave-one.css"
 import "./executive.css"
 
 type ExecutiveData = typeof SfDomainPageData.CAP01.Type
-type Key = keyof typeof SF_U02_COPY
+type Key = keyof typeof SF_U02_COPY | keyof typeof SF_CROSS_COPY
 const key = (value: Key): SfCopyKey => value as SfCopyKey
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const
 
@@ -119,15 +120,15 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
       eyebrow={{ kind: "message", message: { key: "sf.design.eyebrow" as SfCopyKey } }}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
     <div class="sf-u02-page" data-sf-surface="CAP01" data-sf-wave="executive">
-      <nav class="sf-u02-crosslinks" aria-label="Executive cross-links" data-sf-executive-crosslinks>
+      <nav class="sf-u02-crosslinks" aria-label={t(key("sf.cross.nav"))} data-sf-executive-crosslinks>
         <SfExecutiveAction from={props.route} target={{ kind: "agenda" }}
-          label={{ pt: "Criar pauta de revisão", en: "Create review agenda" }} />
+          label={{ key: key("sf.cross.agenda") }} />
         <SfExecutiveAction from={props.route} target={{ kind: "topics" }}
-          label={{ pt: "Hot Topics e ações", en: "Hot Topics & actions" }} />
+          label={{ key: key("sf.cross.topics") }} />
         <SfExecutiveAction from={props.route} target={{ kind: "risks" }}
-          label={{ pt: "Riscos", en: "Risks" }} />
+          label={{ key: key("sf.cross.risks") }} />
         <SfExecutiveAction from={props.route} target={{ kind: "stakeholders" }}
-          label={{ pt: "Stakeholders", en: "Stakeholders" }} />
+          label={{ key: key("sf.cross.stakeholders") }} />
       </nav>
       <SfStatePanel state={reader.state()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[reader.state()])}
         onRetryRead={reader.refresh}>

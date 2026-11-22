@@ -1,0 +1,125 @@
+name: sf-operations-scanner
+
+# Request-only snapshots keep these real controls separate from generic test-ci.
+on:
+  push:
+    branches: ["tp-scan-*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: teams-profile-scanner-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  teams-profile-controls:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.event_name == 'push' && startsWith(github.ref_name, 'tp-scan-')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CI: "true"
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      ORCHESTRA_CHANNEL: prod
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+      ORCHESTRA_OMNI_CONTROL: declared
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact Teams scanner request snapshot
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Exercise Teams admission and evidence rejection contracts
+        run: node --test script/sf-ci/team-profile-scanner.test.mjs
+      - name: Admit exact product tree and request-only snapshot
+        id: request
+        run: |
+          set -euo pipefail
+          git diff --exit-code
+          git diff --cached --exit-code
+          export SF_TEAMS_SCANNER_HEAD="$(git rev-parse HEAD)"
+          export SF_TEAMS_SCANNER_PARENT="$(git show -s --format=%P HEAD)"
+          export SF_TEAMS_SCANNER_TREE="$(git rev-parse 'HEAD^1^{tree}')"
+          export SF_TEAMS_SCANNER_CHANGED="$(git diff-tree --no-commit-id --name-only -r HEAD)"
+          node script/sf-ci/team-profile-scanner.mjs admit .ci-run.json
+      - uses: ./.github/actions/setup-bun
+      - name: Check candidate guards against origin dev
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin dev:refs/remotes/origin/dev
+          bun run check:guards --base origin/dev
+      - name: Typecheck Sucafina control composition
+        working-directory: modules/sucafina
+        run: bun typecheck
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+      - name: Prepare pinned real ClamD and official databases
+        id: scanner
+        run: bash script/sf2h/operations-scanner/setup.sh
+      - name: Own the invocation nonce
+        run: |
+          set -euo pipefail
+          nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+          printf '%s\n' "$nonce" > teams-profile-scanner-evidence/omni-nonce.txt
+          printf 'ORCHESTRA_OMNI_CONTROL_NONCE=%s\n' "$nonce" >> "$GITHUB_ENV"
+      - name: Execute the exact legacy or expanded Microsoft Team selection
+        id: tests
+        run: |
+          set -euo pipefail
+          node script/sf-ci/team-profile-scanner.mjs integrity
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          git diff --exit-code
+          git diff --cached --exit-code
+          output="$GITHUB_WORKSPACE/teams-profile-scanner-evidence"
+          node script/sf-ci/team-profile-scanner.mjs arguments > "$output/arguments.txt"
+          mapfile -t selected < "$output/arguments.txt"
+          export G05_TEAM_RECEIPT="$output/g05-team-http.json"
+          export G05_SOURCE_TREE="$(git rev-parse 'HEAD^{tree}')"
+          printf 'G05_SOURCE_TREE=%s\n' "$G05_SOURCE_TREE" >> "$GITHUB_ENV"
+          cd modules/sucafina
+          set +e
+          GITHUB_ACTIONS=false bun test "${selected[@]}" \
+            --reporter=junit "--reporter-outfile=$output/report.xml" \
+            2>&1 | tee "$output/bun.log"
+          status=${PIPESTATUS[0]}
+          set -e
+          printf '%s\n' "$status" > "$output/exit-code.txt"
+          exit "$status"
+      - name: Stop only this job's owned scanner processes
+        if: always() && steps.request.outputs.admitted == 'true'
+        run: bash script/sf2h/operations-scanner/cleanup.sh
+      - name: Verify actual cases, source, daemon controls and completed cleanup
+        if: always() && steps.request.outputs.admitted == 'true'
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$G05_SOURCE_TREE" = "$(git rev-parse 'HEAD^{tree}')"
+          evidence="$GITHUB_WORKSPACE/teams-profile-scanner-evidence"
+          git status --porcelain=v1 --untracked-files=no > "$evidence/tracked-worktree-after.txt"
+          git diff --exit-code > "$evidence/tracked-diff-after.txt"
+          git diff --cached --exit-code > "$evidence/staged-diff-after.txt"
+          set +e
+          python3 script/sf2h/operations-scanner/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
+          report_status=$?
+          node script/sf-ci/team-profile-scanner.mjs verify
+          verification_status=$?
+          set -e
+          printf '{"report":%d,"verification":%d}\n' "$report_status" "$verification_status" > "$evidence/verification-statuses.json"
+          test "$report_status" -eq 0 && test "$verification_status" -eq 0
+      - name: Preserve real Teams scanner evidence including failures
+        if: always() && steps.request.outputs.admitted == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: teams-profile-scanner-${{ github.sha }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            teams-profile-scanner-evidence
+            ${{ runner.temp }}/sf-teams-profile-scan-*/evidence/

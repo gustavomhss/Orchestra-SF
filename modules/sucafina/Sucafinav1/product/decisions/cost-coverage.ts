@@ -1,6 +1,6 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import { requiredSfCostCategories } from "../contracts/coverage-inventory.ts"
-import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
+import type { BusinessEvidenceResolution } from "../contracts/business-context.ts"
 import type { Period, ProjectionComponent } from "../contracts/context.ts"
 import type { CostCoverageAssessment, CostCoverageBasis, CostCoverageEntry } from "../contracts/decisions.ts"
 
@@ -97,7 +97,7 @@ export async function reassessScenarioCoverage(incoming: {
     }
     if (input.baseline.basisId !== input.basis.id || input.baseline.basisVersion !== input.basis.version) return undefined
     const refs = [...input.basis.sourceRefs, ...input.scenario.sourceRefs, ...input.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
-    const evidence = orderBaselineCoverageEvidence(captureCoverageEvidence(await input.resolveEvidence(structuredClone(refs))), input.baseline.evaluatedSourceRefs)
+    const evidence = captureCoverageEvidence(await input.resolveEvidence(structuredClone(refs)))
     if (evidence.length !== refs.length || refs.some((ref) => !evidence.some((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref)))) return undefined
     // A baseline's generated missing-category row is still an omitted input, not a newly supplied answer.
     const derivedMissingCategories = new Set<string>(input.baseline.derivedMissingCategoryIds)
@@ -109,16 +109,6 @@ export async function reassessScenarioCoverage(incoming: {
   } catch {
     return undefined
   }
-}
-
-/** Evidence order is part of the human assessment digest. A reassessment must not rank basis sources ahead of sources that assessment already evaluated. */
-function orderBaselineCoverageEvidence(evidence: readonly BusinessEvidenceResolution[], baseline: readonly BusinessEvidenceRef[]): BusinessEvidenceResolution[] {
-  const ranked = baseline.flatMap((ref) => {
-    const match = evidence.find((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref))
-    return match ? [match] : []
-  })
-  const retained = new Set(ranked.map((item) => digestSfValue(item.ref)))
-  return [...ranked, ...evidence.filter((item) => item.state !== "fresh" || !retained.has(digestSfValue(item.ref)))]
 }
 
 /** Read evidence identity once without copying the opaque authorized projection. */

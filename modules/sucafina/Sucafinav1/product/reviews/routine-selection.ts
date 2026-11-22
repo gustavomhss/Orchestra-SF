@@ -5,7 +5,7 @@ import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import type { createRoutineReviewResultReader } from "../routines/review-result.ts"
-import type { ReviewSection } from "./port.ts"
+import type { HistoricalSelectionProof, ReviewSection } from "./port.ts"
 import type { ReviewAgendaPreview } from "./selection.ts"
 
 export type RoutineReviewSelectionRequest = { runRef: string; resultRef: string; outputDigest: string }
@@ -78,12 +78,24 @@ export function createReviewRoutineSelection(input: {
       return { status: "ok", value: structuredClone(ordered) }
     },
     release(selectionRef: string) { selections.delete(selectionRef) },
-    // Provenance comes from this private registry after its authenticated reader,
-    // never from a caller's prefix or claim about the source of the selection.
-    isHistoricalSelection(selectionRef: string, context: TrustedDomainContext) {
+    async historicalSelectionProof(selectionRef: string, context: TrustedDomainContext): Promise<HistoricalSelectionProof | false> {
+      const startedAt = Date.parse(input.now())
       const selected = selections.get(selectionRef)
-      const at = Date.parse(input.now())
-      return !!selected && Number.isFinite(at) && at < selected.expiresAt && selected.binding === bindingDigest(context)
+      if (!selected || !Number.isFinite(startedAt) || startedAt >= selected.expiresAt ||
+        selected.binding !== bindingDigest(context) || !await input.revalidate(context)) return false
+      // Registry membership alone cannot prove that the producer still serves the identical result.
+      const loaded = await read(structuredClone(selected.request), context)
+      if (loaded.status !== "ok") return false
+      const resultDigest = digestSfValue(loaded.value)
+      if (resultDigest !== selected.digest || !await input.revalidate(context)) return false
+      const completedAt = Date.parse(input.now())
+      if (!Number.isFinite(completedAt) || completedAt < startedAt || completedAt >= selected.expiresAt ||
+        selections.get(selectionRef) !== selected || selected.binding !== bindingDigest(context)) return false
+      return {
+        selectionRef,
+        resultDigest,
+        sections: loaded.value.sections.map((section) => ({ id: section.id, digest: digestSfValue(section) })),
+      }
     },
   }
 }

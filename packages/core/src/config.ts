@@ -32,6 +32,7 @@ import { ConfigToolOutput } from "./config/tool-output"
 import { ConfigWatcher } from "./config/watcher"
 import { ConfigUpgradeSource } from "./config/upgrade/source"
 import { ConfigUpgrade } from "./config/upgrade/upgrade"
+import { SessionOwner } from "./session/owner"
 
 export class Info extends Schema.Class<Info>("Config.Info")({
   $schema: Schema.optional(Schema.String).annotate({
@@ -146,6 +147,8 @@ export class InvalidError extends Schema.TaggedErrorClass<InvalidError>()("Confi
 }) {}
 
 export interface Interface {
+  /** Describes the data source only; it never grants process, tool or provider access. */
+  readonly source?: "team"
   /** Returns location config documents and supplemental directories from lowest to highest priority. */
   readonly entries: () => Effect.Effect<Entry[]>
   /** Returns packaged roots already admitted during required location initialization. */
@@ -157,6 +160,25 @@ export class Service extends Context.Service<Service, Interface>()("@orchestra/v
 const layer = Layer.effect(
   Service,
   Effect.gen(function* () {
+    const owners = yield* SessionOwner.Service
+    const scope = yield* owners.open().pipe(Effect.orDie)
+    if (owners.owner(scope)) {
+      // Required private admission precedes all filesystem/global discovery and skill materialization.
+      const initial = yield* owners.configuration(scope).pipe(Effect.orDie)
+      if (!initial) return yield* Effect.die(new SessionOwner.Denied({ reason: "storage-unavailable" }))
+      const policy = yield* Policy.Service
+      yield* policy.load([])
+      return Service.of({
+        source: "team",
+        packagedSkills: () => owners.verify(scope).pipe(Effect.orDie, Effect.as([])),
+        entries: () => Effect.gen(function* () {
+          const current = yield* owners.configuration(scope).pipe(Effect.orDie)
+          if (!current) return yield* Effect.die(new SessionOwner.Denied({ reason: "storage-unavailable" }))
+          const info = yield* Schema.decodeUnknownEffect(Info)(current.document.settings).pipe(Effect.orDie)
+          return [new Document({ type: "document", info })]
+        }),
+      })
+    }
     const fs = yield* FSUtil.Service
     const global = yield* Global.Service
     // Required admission must fail before recoverable plugin boot can swallow packaging defects.
@@ -338,6 +360,11 @@ const globalCache = new Map<string, { file: string; signature: string; value: Gl
 
 function readGlobalDocument(text: string) {
   const document = settings(text)
+  const permissions = document.permissions.flatMap((item) => Option.toArray(decodeRule(item)))
+  const legacy = Option.getOrUndefined(decodeLegacyPermissions(document.legacyPermissions))
+  const written = new Set(permissions.map((rule) => JSON.stringify([rule.action, rule.resource])))
+  const inherited = (ConfigUpgrade.permissions(legacy?.permission, legacy?.tools) ?? [])
+    .filter((rule) => !written.has(JSON.stringify([rule.action, rule.resource])))
   return {
     ...(typeof document.model === "string" ? { model: document.model } : {}),
     ...(typeof document.shell === "string" ? { shell: document.shell } : {}),
@@ -354,13 +381,17 @@ function readGlobalDocument(text: string) {
         ...document.disabled.filter((item): item is string => typeof item === "string"),
       ]),
     ],
-    // In the document's order: a later matching rule wins, so reordering would change what the rules decide.
-    permissions: document.permissions.flatMap((item) => Option.toArray(decodeRule(item))),
+    // An identical selector in the saved list shadows its legacy copy in the runtime.
+    permissions: [...inherited, ...permissions],
     trustedProjects: document.trustedProjects.filter((item): item is string => typeof item === "string"),
   }
 }
 
 const decodeRule = Schema.decodeUnknownOption(Permission.Rule)
+const decodeLegacyPermissions = Schema.decodeUnknownOption(Schema.Struct({
+  permission: ConfigUpgradeSource.Info.fields.permission,
+  tools: ConfigUpgradeSource.Info.fields.tools,
+}), { propertyOrder: "original" })
 
 const globalDocument = Effect.fnUntraced(function* () {
   const fs = yield* FSUtil.Service
@@ -403,6 +434,7 @@ function settings(text: string) {
     disabled: Array.isArray(root.disabled_providers) ? root.disabled_providers : [],
     hasDisabled: "disabled_providers" in root,
     permissions: Array.isArray(root.permissions) ? root.permissions : [],
+    legacyPermissions: { permission: root.permission, tools: root.tools },
     trustedProjects: Array.isArray(root.trusted_projects) ? root.trusted_projects : [],
   }
 }
@@ -416,5 +448,5 @@ export const locationLayer = layer.pipe(Layer.provideMerge(Policy.locationLayer)
 export const node = makeLocationNode({
   service: Service,
   layer,
-  deps: [FSUtil.node, Global.node, Location.node, Policy.node],
+  deps: [FSUtil.node, Global.node, Location.node, Policy.node, SessionOwner.node],
 })

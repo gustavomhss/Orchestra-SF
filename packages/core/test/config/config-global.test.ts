@@ -9,6 +9,7 @@ import { FSUtil } from "@orchestra/core/fs-util"
 import { Global } from "@orchestra/core/global"
 import { Location } from "@orchestra/core/location"
 import { Policy } from "@orchestra/core/policy"
+import { PermissionV2 } from "@orchestra/core/permission"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { location } from "../fixture/location"
 import { tmpdir } from "../fixture/tmpdir"
@@ -128,47 +129,82 @@ describe("Config.updateGlobal", () => {
     ),
   )
 
-  it.live("serves saved permissions from a global file that still holds legacy keys", () =>
-    Effect.acquireRelease(
-      Effect.promise(() => tmpdir()),
-      (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
-    ).pipe(
-      Effect.flatMap((tmp) => {
-        const globalDirectory = path.join(tmp.path, "global")
-        return Effect.gen(function* () {
-          yield* Effect.promise(async () => {
-            await fs.mkdir(globalDirectory, { recursive: true })
-            await fs.writeFile(
-              path.join(globalDirectory, "orchestra.json"),
-              JSON.stringify({ disabled_providers: ["mistral"], permission: { edit: "ask" } }),
-            )
-          })
-          const config = yield* Config.Service
-          const rule = { action: "read", resource: "*.env", effect: "deny" } as const
-          yield* Config.updateGlobal({ permissions: [rule] })
-          expect((yield* Config.readGlobal()).permissions).toEqual([rule])
-          // The legacy rules migrate first, so the saved rule, matching later, wins.
-          expect(Config.latest(yield* config.entries(), "permissions")).toEqual([
-            { action: "edit", resource: "*", effect: "ask" },
-            rule,
-          ])
-        }).pipe(
-          Effect.provide(
-            AppNodeBuilder.build(LayerNode.group([Config.node, Policy.node, FSUtil.node, Global.node]), [
-              [
-                Location.node,
-                Layer.succeed(
-                  Location.Service,
-                  Location.Service.of(location({ directory: AbsolutePath.make(tmp.path) })),
-                ),
-              ],
-              [Global.node, Global.layerWith({ config: globalDirectory })],
-            ]),
-          ),
-        )
-      }),
-    ),
-  )
+  for (const fixture of [
+    {
+      label: "legacy object",
+      permission: { bash: "ask", read: { "*": "ask", "*.env": "deny" } },
+      rules: [
+        { action: "bash", resource: "*", effect: "ask" },
+        { action: "read", resource: "*", effect: "ask" },
+        { action: "read", resource: "*.env", effect: "deny" },
+      ],
+      readDefault: "ask",
+    },
+    {
+      label: "legacy text",
+      permission: "deny",
+      rules: [{ action: "*", resource: "*", effect: "deny" }],
+      readDefault: "deny",
+    },
+  ] as const) {
+    it.live("round-trips " + fixture.label + " permissions through global settings", () =>
+      Effect.acquireRelease(
+        Effect.promise(() => tmpdir()),
+        (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
+      ).pipe(
+        Effect.flatMap((tmp) => {
+          const globalDirectory = path.join(tmp.path, "global")
+          return Effect.gen(function* () {
+            yield* Effect.promise(async () => {
+              await fs.mkdir(globalDirectory, { recursive: true })
+              await fs.writeFile(
+                path.join(globalDirectory, "orchestra.json"),
+                JSON.stringify({ disabled_providers: ["mistral"], permission: fixture.permission }),
+              )
+            })
+            const config = yield* Config.Service
+            expect((yield* Config.readGlobal()).permissions).toEqual([...fixture.rules])
+            const saved = { action: "grep", resource: "*", effect: "ask" } as const
+            yield* Config.updateGlobal({ permissions: [saved] })
+            const current = (yield* Config.readGlobal()).permissions
+            expect(current).toEqual([...fixture.rules, saved])
+            expect(Config.latest(yield* config.entries(), "permissions")).toEqual(current)
+
+            const bash = { action: "bash", resource: "*", effect: "allow" } as const
+            const edited = fixture.label === "legacy object"
+              ? current.map((rule) => rule.action === "bash" && rule.resource === "*" ? bash : rule)
+              : [...current, bash]
+            yield* Config.updateGlobal({ permissions: edited })
+            const reloaded = (yield* Config.readGlobal()).permissions
+            expect(reloaded).toEqual(edited)
+            yield* Config.updateGlobal({ permissions: reloaded })
+            expect((yield* Config.readGlobal()).permissions).toEqual(edited)
+            const runtime = Config.latest(yield* config.entries(), "permissions") ?? []
+            expect(PermissionV2.evaluate("bash", "echo hi", runtime).effect).toBe("allow")
+            expect(PermissionV2.evaluate("read", "secret.env", runtime).effect).toBe("deny")
+            expect(PermissionV2.evaluate("read", "README.md", runtime).effect).toBe(fixture.readDefault)
+            const text = yield* Effect.promise(() => fs.readFile(path.join(globalDirectory, "orchestra.json"), "utf8"))
+            expect(JSON.parse(text)).toMatchObject({
+              permission: fixture.permission, disabled_providers: ["mistral"], permissions: edited,
+            })
+          }).pipe(
+            Effect.provide(
+              AppNodeBuilder.build(LayerNode.group([Config.node, Policy.node, FSUtil.node, Global.node]), [
+                [
+                  Location.node,
+                  Layer.succeed(
+                    Location.Service,
+                    Location.Service.of(location({ directory: AbsolutePath.make(tmp.path) })),
+                  ),
+                ],
+                [Global.node, Global.layerWith({ config: globalDirectory })],
+              ]),
+            ),
+          )
+        }),
+      ),
+    )
+  }
 
   for (const name of ["orchestra.json", "orchestra.jsonc"]) {
     it.live(`sees same-metadata external edits to ${name} on the next global settings read`, () =>

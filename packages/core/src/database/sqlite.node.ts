@@ -14,6 +14,8 @@ import type { Connection } from "effect/unstable/sql/SqlConnection"
 import { classifySqliteError, SqlError } from "effect/unstable/sql/SqlError"
 import * as Statement from "effect/unstable/sql/Statement"
 import { Sqlite } from "./sqlite"
+import { AuthoritySqlFence } from "./authority-sql-fence"
+import { AuthorityGeneration } from "../session/authority-generation"
 
 const ATTR_DB_SYSTEM_NAME = "db.system.name"
 
@@ -47,6 +49,7 @@ interface SqliteConnection extends Connection {
 const make = (options: Config) =>
   Effect.gen(function* () {
     const native = (yield* Sqlite.Native) as DatabaseSync
+    const guarded = AuthoritySqlFence.make(authorityDriver(native), AuthorityGeneration.storageID(native, options.filename))
 
     const compiler = Statement.makeCompilerSqlite(options.transformQueryNames)
     const transformRows = options.transformResultNames
@@ -58,7 +61,7 @@ const make = (options: Config) =>
         const statement = native.prepare(query)
         statement.setReadBigInts(Context.get(fiber.context, Client.SafeIntegers))
         try {
-          return Effect.succeed(statement.all(...(params as SQLInputValue[])) as Array<Record<string, unknown>>)
+          return Effect.succeed(guarded(query, fiber.context, () => statement.all(...(params as SQLInputValue[])) as Array<Record<string, unknown>>))
         } catch (cause) {
           return Effect.fail(
             new SqlError({
@@ -74,9 +77,9 @@ const make = (options: Config) =>
         statement.setReadBigInts(Context.get(fiber.context, Client.SafeIntegers))
         statement.setReturnArrays(true)
         try {
-          return Effect.succeed(
-            statement.all(...(params as SQLInputValue[])) as unknown as ReadonlyArray<ReadonlyArray<unknown>>,
-          )
+          const rows: ReadonlyArray<unknown> = guarded(query, fiber.context, () => statement.all(...(params as SQLInputValue[])))
+          if (!rows.every(Array.isArray)) throw new TypeError("SQLite array results required")
+          return Effect.succeed(rows)
         } catch (cause) {
           return Effect.fail(
             new SqlError({
@@ -175,4 +178,25 @@ export const layer = (config: Config) => {
   return Layer.merge(native, Layer.merge(sqliteLayer(config), drizzleLayer).pipe(Layer.provide(native))).pipe(
     Layer.provide(Reactivity.layer),
   )
+}
+
+/** The control database is separate from business checkpoints and carries no content or credentials. */
+export function openAuthorityControl(filename: string) {
+  const native = new DatabaseSync(filename, { enableForeignKeyConstraints: true, timeout: 5000 })
+  native.exec("PRAGMA journal_mode = WAL")
+  native.exec("PRAGMA synchronous = FULL")
+  return { ...authorityDriver(native), close: () => native.close() }
+}
+
+function authorityDriver(native: DatabaseSync): AuthoritySqlFence.Driver {
+  return {
+    all: (query, params = []) => native.prepare(query).all(...(params as SQLInputValue[])),
+    execute: (query, params = []) => { native.prepare(query).run(...(params as SQLInputValue[])) },
+    inTransaction: () => native.isTransaction,
+  }
+}
+
+export function readAuthorityMarker(native: unknown) {
+  if (!(native instanceof DatabaseSync)) throw new AuthorityGeneration.GenerationError("unavailable")
+  return AuthoritySqlFence.marker(authorityDriver(native))
 }

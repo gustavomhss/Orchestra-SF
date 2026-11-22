@@ -67,6 +67,7 @@ import type { WorkSignals } from "../../../../modules/sucafina/Sucafinav1/produc
 import type { createSfReviewerRecall } from "./reviewer-recall.ts"
 import type { createSfContributionReader } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
 import { createProcurementConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/procurement/confirmation.ts"
+import { createProcurementAnswerSource } from "../../../../modules/sucafina/Sucafinav1/product/procurement/answer-source.ts"
 import { createProcurementCollectionMemberIssuer } from "../../../../modules/sucafina/Sucafinav1/product/procurement/collection-member.ts"
 import { createProcurementDecisionPreparation } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts"
 import { createProcurementQueuePageView, procurementQueueIntent } from "../../../../modules/sucafina/Sucafinav1/product/procurement/queue-page.ts"
@@ -134,6 +135,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     readContractSource: contracts.readContractSource,
   }
   const procurement = createProcurementPort(procurementHost)
+  const procurementAnswers = createProcurementAnswerSource({ host, sources: individual, procurement })
   const sourcingEvidence = createProcurementSourcingEvidence(procurementHost)
   const dashboardSources = createDashboardSourceHost({ host, scopedSources: input.persistence })
   const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
@@ -198,7 +200,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }
   const plannerConfirmation: { current?: ReturnType<typeof createPlannerConfirmationObserver> } = {}
   const confirmationSourceFor = (scope: ConfirmationScope) => scope.sourceRef.surface === "dashboard" ? dashboardServices.observer
-    : scope.sourceRef.surface === "planner" ? plannerConfirmation.current : scope.sourceRef.surface === "procurement" ? procurementConfirmation : undefined
+    : scope.sourceRef.surface === "planner" ? plannerConfirmation.current : scope.sourceRef.surface === "procurement"
+      ? scope.scopeDefinitionVersion === "procurement-answer-v1" ? procurementAnswers : procurementConfirmation : undefined
   const confirmationSource: NonNullable<Parameters<typeof createCollaborationHost>[0]["confirmationSource"]> = {
     verifyManifest: async (scope, call) => (await confirmationSourceFor(scope)?.verifyManifest(scope, call)) ?? false,
     fenceManifest: async (scope, call) => (await confirmationSourceFor(scope)?.fenceManifest(scope, call)) ?? false,
@@ -212,6 +215,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     authorizeReviewThreadContext: reviewCollaboration.authorizeReviewThreadContext, reviewRecipientAuthority: reviewCollaboration.reviewRecipientAuthority,
     reviewAnswerSource: reviewCollaboration.reviewAnswerSource,
     resolveAnswerScope: async (source, refs, call) => {
+      if (source.target.surface === "procurement") return procurementAnswers.resolveAnswerScope(source, refs, call)
       if (source.target.surface === "planner") return plannerConfirmation.current?.resolveAnswerScope(source, refs, call) ?? { status: "unavailable", reason: "answer-scope-unavailable" }
       // Preserve the existing single-record Dashboard manifest. Other domains
       // still need their own producer; a source reference grants no scope.
@@ -298,7 +302,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     })
     return read.status === "ok" ? read.value : undefined
   }
-  const withCase = async <T>(call: TrustedDomainContext, selected: CaseRef, options: { allowHistoricalRetry?: boolean }, action: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+  const withCase = async <T>(call: TrustedDomainContext, selected: CaseRef, options: { allowHistoricalRetry?: boolean; reportUnavailableEvidence?: boolean }, action: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
     const request = host.requestFor(call)
     const binding = callBindingDigest(call)
     const captured = structuredClone(selected)
@@ -308,6 +312,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     const historical = observed !== undefined && observed > captured.version
     if (!historical) {
       const current = await cases.read({ caseRef: encodeCaseRef(captured) }, call)
+      // Report this failure only for the exact authorized case, without installing a selection scope.
+      if (options.reportUnavailableEvidence && current.status === "unavailable" && current.reason === "case-evidence-unavailable" &&
+        await host.revalidate(call) && await boundCaseVersion(request, call, captured) === captured.version &&
+        currentCaseAuthority(call, request, binding) && !caseBindings.has(call) && digestSfValue(selected) === digestSfValue(captured)) return current
       if (current.status !== "ok" || (options.allowHistoricalRetry ? current.value.case.version < captured.version : current.value.case.version !== captured.version))
         return { status: "denied", reason: "case-selection-unavailable" }
     }

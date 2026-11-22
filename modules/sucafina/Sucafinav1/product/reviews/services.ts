@@ -16,7 +16,7 @@ export function createReviewServices(input: {
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
   authority: SfDomainValidation
   evidence: Pick<BusinessContextService, "resolve">
-  selection: Pick<ReviewHost, "select" | "isHistoricalSelection" | "authorizeOutcomeComparison" | "authorizeOutcome" | "authorizeDecision" | "authorizeSections" | "authorizeComments" | "authorizeSensitivity" | "revalidate">
+  selection: Pick<ReviewHost, "select" | "historicalSelectionProof" | "authorizeOutcomeComparison" | "authorizeOutcome" | "authorizeDecision" | "authorizeSections" | "authorizeComments" | "authorizeSensitivity" | "revalidate">
   creationTarget: { ref: string; incarnation: string }
   operationIdentity: (context: TrustedDomainContext) => string | undefined
   requiredAuthority: readonly string[]

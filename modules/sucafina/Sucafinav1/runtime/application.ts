@@ -43,6 +43,13 @@ export type Application = {
   assets?: { persistence: AssetPersistence; services: AssetServices }
 }
 
+const applicationSources = new WeakMap<object, Readonly<{ mount: string; application: Application }>>()
+
+/** Server-private provenance of a handler returned by the original application factory. */
+export function readSfApplicationSource(handler: object) {
+  return applicationSources.get(handler)
+}
+
 /** Mount this in the installation's existing fetch composition. It starts no listener and selects no database. */
 export function createApplication(mount: string, application: Application) {
   if (!/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(mount)) throw new Error("Invalid module mount")
@@ -50,7 +57,7 @@ export function createApplication(mount: string, application: Application) {
     throw new Error("HTTP and jobs must use the same authoritative persistence adapter")
   if (!Number.isSafeInteger(application.maxJsonBytes) || application.maxJsonBytes <= 0)
     throw new Error("JSON request limit required")
-  return async (request: Request): Promise<Response | undefined> => {
+  const handler = async (request: Request): Promise<Response | undefined> => {
     const url = new URL(request.url)
     if (url.pathname !== mount && !url.pathname.startsWith(`${mount}/`)) return undefined
     const surface = url.pathname.slice(mount.length + 1)
@@ -505,6 +512,8 @@ export function createApplication(mount: string, application: Application) {
         })
       : response
   }
+  applicationSources.set(handler, Object.freeze({ mount, application }))
+  return handler
 }
 
 async function readCommand(request: Request, maximum: number): Promise<Command | Response> {
