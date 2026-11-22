@@ -194,10 +194,14 @@ jobs:
 
       # The control's scope comes from the request (script/test-ci-request.ts omniControlScope): a whole-package request
       # is "suite" like every test.yml lane, a narrower one is "declared". Not an --env key; an empty value fails the run.
-      - name: Check compact Chat media tools
+      - name: Install and verify compact Chat media tools
         if: github.ref_name == 'ci-run-onboarding-chat-long'
         run: |
           set -euo pipefail
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install --yes --no-install-recommends ffmpeg
+          fi
           python3 --version
           ffmpeg -v error -version
           ffprobe -v error -version
@@ -313,7 +317,7 @@ jobs:
           esac
 
       - name: Prepare compact real Chat evidence
-        if: always() && github.ref_name == 'ci-run-onboarding-chat-long' && steps.request.outputs.runner == 'playwright'
+        if: always() && github.ref_name == 'ci-run-onboarding-chat-long' && steps.request.outputs.runner == 'playwright' && hashFiles(format('{0}/e2e/test-results/**/transport-proof/*-film-report.json', steps.request.outputs.directory)) != ''
         run: |
           set -euo pipefail
           python3 scripts/onboarding-media/capture_transport.py --test-results "${{ steps.request.outputs.directory }}/e2e/test-results" --output onboarding-transport
