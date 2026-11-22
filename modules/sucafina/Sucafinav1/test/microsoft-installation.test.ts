@@ -3,7 +3,8 @@ import { LayerNode } from "@orchestra/core/effect/layer-node"
 import type { SessionOwner } from "@orchestra/core/session/owner"
 import { AppProcess } from "@orchestra/core/process"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
-import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
+import { SfTeamContextResult, type SfTeamContext } from "@orchestra/schema/sucafina/context"
+import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { expect, test } from "bun:test"
 import { Database } from "bun:sqlite"
@@ -1598,6 +1599,33 @@ test("Microsoft private session readers detect changed grants and key bytes with
   } finally { await f.close() }
 })
 
+// These actors have no native mutation assignment. The contributor can read
+// CAP14; the viewer's original summaries do not include any of these three CAPs.
+const deniedNativeDestinations = [
+  { capabilityId: "CAP14", surface: "dashboard", page: "Vendor Contracts", canRead: false, allowedActionIds: [] },
+  { capabilityId: "CAP04", surface: "dashboard", page: "OPEX Detail", canRead: false, allowedActionIds: [] },
+  { capabilityId: "CAP05", surface: "dashboard", page: "CAPEX Projects", canRead: false, allowedActionIds: [] },
+] as const
+function expectNativeReadBindings(context: SfTeamContext, contractsReadable = false) {
+  const expected = deniedNativeDestinations.map((destination) => ({
+    ...destination, canRead: destination.capabilityId === "CAP14" && contractsReadable,
+  }))
+  expect(context.destinations.filter((item) => ["CAP14", "CAP04", "CAP05"].includes(item.capabilityId))).toEqual(expected)
+  expect<unknown>(context.availability).toEqual(expected.map((destination) => ({
+    family: "domain-read", resource: destination.capabilityId, state: destination.canRead ? "partial" : "denied",
+    operations: Object.keys(SfOperationRegistry)
+      .filter((id) => id === "domain.page." + destination.capabilityId || id.startsWith("domain.command." + destination.capabilityId + "."))
+      .map((operationId) => {
+        const ready = destination.canRead && operationId === "domain.page.CAP14"
+        return { operationId, state: ready ? "ready" : "denied",
+          reason: ready ? null : "current-business-authority-denied", operational: ready }
+      }),
+  })))
+  // Every other family keeps the same original read-only projection.
+  expect(context.destinations.filter((item) => !["CAP14", "CAP04", "CAP05"].includes(item.capabilityId))
+    .every((item) => item.canRead && item.allowedActionIds.length === 0)).toBe(true)
+}
+
 test("Corporate Team contexts project the original per-principal pages and Team ACL without granting native actions", async () => {
   const viewerGroup = "71111111-1111-4111-8111-111111111111"
   const contributorGroup = "72222222-2222-4222-8222-222222222222"
@@ -1624,14 +1652,13 @@ test("Corporate Team contexts project the original per-principal pages and Team 
       })
     } finally { await store.dispose() }
   }
-  const read = async (id: string, cookie: string) => {
+  const read = async (id: string, cookie: string, contractsReadable = false) => {
     const response = await f.context(id, cookie)
     expect(response?.status).toBe(200)
     const result = Schema.decodeUnknownSync(SfTeamContextResult)(await response!.json())
     if (result.status !== "ok") throw new Error("Expected a current original Team context")
     expect(result.value.stamp.team?.owner.profile).toEqual(profile(id))
-    expect(result.value.destinations.every((destination) => destination.canRead && destination.allowedActionIds.length === 0)).toBe(true)
-    expect(result.value.availability).toEqual([])
+    expectNativeReadBindings(result.value, contractsReadable)
     return result.value
   }
   try {
@@ -1640,14 +1667,16 @@ test("Corporate Team contexts project the original per-principal pages and Team 
     const viewerCookie = await f.signIn("/")
     const contributorCookie = await f.signIn("/", "/", undefined, otherPrincipal)
     const a = await read(teamObjectId, viewerCookie)
-    const other = await read(teamObjectId, contributorCookie)
+    const other = await read(teamObjectId, contributorCookie, true)
     expect(a.stamp.principalRef).toBe(oid)
     expect(other.stamp.principalRef).toBe(otherPrincipal)
     expect(a.destinations.map((item) => [item.capabilityId, item.page])).toEqual([
       ["CAP01", "Executive Dashboard"], ["CAP13", "IT Risks"],
+      ...deniedNativeDestinations.map((item) => [item.capabilityId, item.page]),
     ])
     expect(other.destinations.map((item) => item.page)).toEqual([
-      "Portfolio Dashboard", "All Projects", "IT Operations", "IT Security KPIs", "IT Risks", "Vendor Contracts",
+      "Portfolio Dashboard", "All Projects", "IT Operations", "IT Security KPIs", "IT Risks",
+      "Vendor Contracts", "OPEX Detail", "CAPEX Projects",
     ])
     expect(other.destinations).not.toEqual(a.destinations)
     const businessPage = (cookie: string, page: string) => f.installation.handler(ingress(
@@ -1658,11 +1687,12 @@ test("Corporate Team contexts project the original per-principal pages and Team 
     expect((await businessPage(contributorCookie, "IT Operations"))?.status).toBe(200)
     expect((await businessPage(contributorCookie, "Executive Dashboard"))?.status).toBe(403)
     expect((await read(teamObjectId, viewerCookie)).destinations).toEqual(a.destinations)
-    expect((await read(teamObjectId, contributorCookie)).destinations).toEqual(other.destinations)
+    expect((await read(teamObjectId, contributorCookie, true)).destinations).toEqual(other.destinations)
 
     const b = await read(secondTeamId, viewerCookie)
     expect(b.destinations.map((item) => [item.capabilityId, item.page])).toEqual([
       ["CAP01", "Executive Dashboard"], ["CAP07", "Team Structure"],
+      ...deniedNativeDestinations.map((item) => [item.capabilityId, item.page]),
     ])
     expect((await read(teamObjectId, viewerCookie)).destinations).toEqual(a.destinations)
     await seed(teamObjectId, ["IT Risks"], ["risk-a", "changed-original-assignment"])
@@ -1675,7 +1705,7 @@ test("Corporate Team contexts project the original per-principal pages and Team 
     viewer.groups = []
     const sessionOnly = await read(teamObjectId, viewerCookie)
     expect(sessionOnly.profile.administration.status).toBe("available")
-    expect(sessionOnly.destinations).toEqual([])
+    expect(sessionOnly.destinations).toEqual(deniedNativeDestinations)
     expect(sessionOnly.stamp.accessRevision).not.toBe(changedAcl.stamp.accessRevision)
     expect((await businessPage(viewerCookie, "Executive Dashboard"))?.status).toBe(403)
     const admin = await f.installation.handler(ingress("/api/ui/context?" + new URLSearchParams({
@@ -1733,7 +1763,8 @@ for (const revoked of ["roles", "membership", "logout"] as const) {
         expect(current?.status).toBe(200)
         const context = Schema.decodeUnknownSync(SfTeamContextResult)(await current!.json())
         if (context.status !== "ok") throw new Error("Current Team must remain available without business roles")
-        expect(context.value.destinations).toEqual([])
+        expectNativeReadBindings(context.value)
+        expect(context.value.destinations).toEqual(deniedNativeDestinations)
       }
     } finally { release.resolve(); await f.close() }
   })
@@ -1774,7 +1805,7 @@ for (const boundary of ["roles-before", "grants-before", "invalid-before", "role
       if (result.status !== "ok") throw new Error("Expected current private Team context")
       expect(result.value.stamp.team?.owner.profile).toEqual(profile(teamObjectId))
       expect(result.value.stamp.principalRef).toBe(oid)
-      expect(result.value.availability).toEqual([])
+      expectNativeReadBindings(result.value)
       return result.value
     }
     try {
@@ -1792,6 +1823,7 @@ for (const boundary of ["roles-before", "grants-before", "invalid-before", "role
       const admitted = await read(cookie)
       expect(admitted.destinations.map((destination) => [destination.capabilityId, destination.page])).toEqual([
         ["CAP01", "Executive Dashboard"], ["CAP13", "IT Risks"],
+        ...deniedNativeDestinations.map((item) => [item.capabilityId, item.page]),
       ])
       const before = await partitions()
       const originalFile = await Bun.file(f.file).text()
@@ -1831,7 +1863,7 @@ for (const boundary of ["roles-before", "grants-before", "invalid-before", "role
         const current = await read(cookie)
         expect(current.stamp.accessRevision).not.toBe(admitted.stamp.accessRevision)
         // Session grants do not confer or remove original business read roles.
-        expect(current.destinations).toEqual(boundary.startsWith("roles") ? [] : admitted.destinations)
+        expect(current.destinations).toEqual(boundary.startsWith("roles") ? deniedNativeDestinations : admitted.destinations)
       }
       expect(await partitions()).toEqual(before)
       await writeFile(f.file, originalFile, { mode: 0o600 })
