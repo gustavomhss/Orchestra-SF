@@ -114,10 +114,7 @@ def main():
     print("G09_REVIEW_OVERVIEW " + compact({key: value for key, value in overview.items() if key != "files"}))
     for start in range(0, len(overview["files"]), 25):
         print("G09_REVIEW_FILES " + compact(overview["files"][start:start + 25]))
-    for start in range(0, len(occurrences), 50):
-        print("G09_REVIEW_OCCURRENCES " + compact(occurrences[start:start + 50]))
-    for start in range(0, len(findings), 25):
-        print("G09_REVIEW_FINDINGS " + compact(findings[start:start + 25]))
+    # The complete exact-ID sets stay in the artifact; stdout is navigation only.
     print("G09_REVIEW_INDEX_FILES " + compact([
         {"path": file.name, "bytes": file.stat().st_size, "sha256": digest(file.read_bytes())}
         for file in sorted(args.output.iterdir())]))
