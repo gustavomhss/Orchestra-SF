@@ -1677,7 +1677,7 @@ test("Corporate Team contexts project the original per-principal pages and Team 
     ])
     expect(other.destinations.map((item) => item.page)).toEqual([
       "Portfolio Dashboard", "All Projects", "IT Operations", "IT Security KPIs", "IT Risks",
-      "Vendor Contracts", "OPEX Detail", "CAPEX Projects",
+      "Vendor Contracts", "OPEX Detail", "CAPEX Projects", "Budget Overview",
     ])
     expect(other.destinations).not.toEqual(a.destinations)
     const businessPage = (cookie: string, page: string) => f.installation.handler(ingress(

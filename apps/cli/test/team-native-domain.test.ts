@@ -206,8 +206,8 @@ test("original Team reader publishes current CAP authority without legacy contex
   })
   expect(ctx.availability.find((item) => item.resource === "CAP03")?.operations.map((item) =>
     [item.operationId, item.state, item.operational])).toEqual([
-      ["domain.page.CAP03", "ready", true], ["domain.command.CAP03.save-month", "denied", false],
-      ["domain.command.CAP03.save-revenue", "denied", false],
+      ["domain.command.CAP03.save-month", "denied", false],
+      ["domain.command.CAP03.save-revenue", "denied", false], ["domain.page.CAP03", "ready", true],
     ])
   expect(JSON.stringify(ctx)).not.toMatch(/component-session|roleMap|snapshot|business-teams/)
   const request = f.contextRequest()
@@ -438,6 +438,25 @@ test("Budget source projects original OPEX and CAPEX totals with selected period
   expect((await f.command("CAP04", { name: "Original OPEX A", budget: 120 })).response.status).toBe(200)
   expect((await f.command("CAP05", { name: "Original CAPEX A", budget: 80 })).response.status).toBe(200)
   expect((await f.command("CAP04", { name: "Original OPEX B", budget: 37 }, { team: 1 })).response.status).toBe(200)
+  expect((await f.command("CAP05", { name: "Original CAPEX B", budget: 24 }, { team: 1 })).response.status).toBe(200)
+  const incomplete = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP03"].output)(
+    await (await f.read("CAP03", 0, "")).response.json())
+  if (incomplete.status !== "ok") throw new Error("Original incomplete budget source unavailable")
+  // Missing entry collections are an unobserved source, not an invented zero total.
+  expect(incomplete.value.data.totals).toBeUndefined()
+  for (const team of [0, 1]) {
+    for (const cap of ["CAP04", "CAP05"] as const) {
+      const page = await (await f.read(cap, team)).response.json()
+      const owners = page.value.data[cap === "CAP04" ? "opexOwners" : "capexProjects"]
+      expect(owners).toHaveLength(1)
+      const entry = await f.command(cap, {
+        year: 2026, month: 1, [cap === "CAP04" ? "ownerId" : "projId"]: owners[0].id,
+        budget: 0, actual: team === 0 ? cap === "CAP04" ? 10 : 20 : 0, forecast: 0,
+      }, { team, action: "save-entry" })
+      expect(entry.response.status).toBe(200)
+      expect(await entry.response.json()).toEqual({ ok: true })
+    }
+  }
   const before = await Promise.all([f.snapshot(), f.snapshot(1)])
   for (const [search, period] of [
     ["", { year: 2026, month: 11 }],
@@ -452,12 +471,14 @@ test("Budget source projects original OPEX and CAPEX totals with selected period
     expect(body.context.team?.owner.profile).toEqual(f.profiles[0])
     expect(body.value.selection).toEqual(period)
     expect(body.value.allowedActionIds).toEqual([])
-    // The original producer sums twelve monthly owner/project budgets.
-    expect(body.value.data.totals).toEqual({
-      opexBudget: 1440, opexActual: 0, opexForecast: 0,
-      capexBudget: 960, capexActual: 0, capexForecast: 0,
-      totalBudget: 2400, totalActual: 0, totalForecast: 0,
+    // Original owner budgets are annual; entry actuals belong to their source year.
+    expect(body.value.data.totals).toMatchObject({
+      opexBudget: 120, opexActual: period.year === 2026 ? 10 : 0, opexForecast: 0,
+      capexActual: period.year === 2026 ? 20 : 0, capexForecast: 0,
+      totalActual: period.year === 2026 ? 30 : 0, totalForecast: 0,
     })
+    expect(body.value.data.totals?.capexBudget).toBeCloseTo(80, 10)
+    expect(body.value.data.totals?.totalBudget).toBeCloseTo(200, 10)
     expect(body.value.data.budgetCurrentMonth).toEqual({})
     expect(body.value.data.revenueByYear).toEqual({})
     expect(body.value.versions.budgetCurrentMonth).toBe(0)
@@ -468,17 +489,24 @@ test("Budget source projects original OPEX and CAPEX totals with selected period
   const body = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP03"].output)(await other.response.json())
   if (body.status !== "ok") throw new Error("Original second Team budget projection unavailable")
   expect(body.context.team?.owner.profile).toEqual(f.profiles[1])
-  expect(body.value.data.totals?.totalBudget).toBe(444)
+  expect(body.value.data.totals?.totalBudget).toBeCloseTo(61, 10)
+  expect(body.value.data.totals?.totalActual).toBe(0)
   expect(await Promise.all([f.snapshot(), f.snapshot(1)])).toEqual(before)
 }))
 
 test("Budget source rejects invalid selection and both native mutations before body consumption without effects", async () => fixture(async (f) => {
   const context = await f.context()
   const before = await Promise.all([f.snapshot(), f.snapshot(1)])
-  for (const selection of ["?year=2023", "?year=2028", "?month=0", "?month=13", "?month=1&month=2", "?principalRef=claimed"]) {
+  for (const selection of ["?year=2023", "?year=2028", "?month=0", "?month=13", "?principalRef=claimed"]) {
     const read = await f.read("CAP03", 0, selection)
     expect(read.response.status).toBe(400)
     expect(await read.response.json()).toEqual({ status: "needs-input", reason: "invalid-page-selection" })
+  }
+  // Original Team admission refuses duplicate or forged-owner syntax before selection decode.
+  for (const selection of ["?month=1&month=2", "?teamObjectId=" + teams[1]]) {
+    const read = await f.read("CAP03", 0, selection)
+    expect(read.response.status).toBe(403)
+    expect(await read.response.json()).toEqual({ status: "denied" })
   }
   for (const action of ["save-month", "save-revenue"] as const) {
     for (const body of [

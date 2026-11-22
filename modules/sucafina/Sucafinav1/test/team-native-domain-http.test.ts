@@ -361,10 +361,29 @@ test("Microsoft HTTP Budget source reads original period totals and denies nativ
     ["CAP04", "Budget source OPEX A", 120, f.teamA],
     ["CAP05", "Budget source CAPEX A", 80, f.teamA],
     ["CAP04", "Budget source OPEX B", 37, f.teamB],
+    ["CAP05", "Budget source CAPEX B", 24, f.teamB],
   ] as const) {
     const created = await f.command(cap, { name, budget }, { team })
     expect(created.status).toBe(200)
     expect(await created.json()).toMatchObject({ ok: true })
+  }
+  const incompleteResponse = await f.page("CAP03")
+  const incomplete = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP03"].output)(await incompleteResponse.json())
+  if (incomplete.status !== "ok") throw new Error("Original incomplete Microsoft source unavailable")
+  expect(incomplete.value.data.totals).toBeUndefined()
+  for (const team of [f.teamA, f.teamB]) {
+    for (const cap of ["CAP04", "CAP05"] as const) {
+      const response = await f.page(cap, team)
+      const page = object(object(await response.json()).value)
+      const owners = object(page.data)[cap === "CAP04" ? "opexOwners" : "capexProjects"]
+      if (!Array.isArray(owners) || owners.length !== 1) throw new Error("Original single budget owner required")
+      const entry = await f.command(cap, {
+        year: 2026, month: 1, [cap === "CAP04" ? "ownerId" : "projId"]: object(owners[0]).id,
+        budget: 0, actual: team === f.teamA ? cap === "CAP04" ? 10 : 20 : 0, forecast: 0,
+      }, { team, action: "save-entry" })
+      expect(entry.status).toBe(200)
+      expect(await entry.json()).toEqual({ ok: true })
+    }
   }
   const before = f.durable()
   const held = await f.context()
@@ -384,11 +403,13 @@ test("Microsoft HTTP Budget source reads original period totals and denies nativ
     expect<unknown>(result.context).toEqual(held.stamp)
     expect<unknown>(result.value.selection).toEqual(period)
     expect<unknown>(result.value.allowedActionIds).toEqual([])
-    expect(result.value.data.totals).toEqual({
-      opexBudget: 1440, opexActual: 0, opexForecast: 0,
-      capexBudget: 960, capexActual: 0, capexForecast: 0,
-      totalBudget: 2400, totalActual: 0, totalForecast: 0,
+    expect(result.value.data.totals).toMatchObject({
+      opexBudget: 120, opexActual: period.year === 2026 ? 10 : 0, opexForecast: 0,
+      capexActual: period.year === 2026 ? 20 : 0, capexForecast: 0,
+      totalActual: period.year === 2026 ? 30 : 0, totalForecast: 0,
     })
+    expect(result.value.data.totals?.capexBudget).toBeCloseTo(80, 10)
+    expect(result.value.data.totals?.totalBudget).toBeCloseTo(200, 10)
     expect(result.value.versions.budgetCurrentMonth).toBe(0)
     expect(result.value.versions.revenueByYear).toBe(0)
   }
@@ -396,7 +417,8 @@ test("Microsoft HTTP Budget source reads original period totals and denies nativ
   const result = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP03"].output)(await other.json())
   if (result.status !== "ok") throw new Error("Original second Team budget source unavailable")
   expect<unknown>(result.context.team?.owner.profile).toEqual(f.profile(f.teamB))
-  expect(result.value.data.totals?.totalBudget).toBe(444)
+  expect(result.value.data.totals?.totalBudget).toBeCloseTo(61, 10)
+  expect(result.value.data.totals?.totalActual).toBe(0)
   for (const action of ["save-month", "save-revenue"] as const) {
     const response = await f.request("/teams/" + f.teamA + "/dashboard?page=Budget%20Overview", {
       ...f.headers(), origin: f.origin, "content-type": "application/json", "idempotency-key": randomUUID(),
@@ -410,11 +432,14 @@ test("Microsoft HTTP Budget source reads original period totals and denies nativ
     expect(response.status).toBe(403)
     expect(await response.json()).toEqual({ ok: false, status: 403 })
   }
-  for (const query of ["year=2023", "month=0", "month=13", "month=1&month=2"]) {
+  for (const query of ["year=2023", "month=0", "month=13"]) {
     const response = await f.request("/api/ui/pages/CAP03?" + query, f.headers())
     expect(response.status).toBe(400)
     expect(await response.json()).toEqual({ status: "needs-input", reason: "invalid-page-selection" })
   }
+  const duplicate = await f.request("/api/ui/pages/CAP03?month=1&month=2", f.headers())
+  expect(duplicate.status).toBe(403)
+  await duplicate.body?.cancel()
   const unauthenticated = await f.request("/api/ui/pages/CAP03?year=invalid", { ...f.headers(), cookie: "" })
   expect(unauthenticated.status).toBe(401)
   await unauthenticated.body?.cancel()
