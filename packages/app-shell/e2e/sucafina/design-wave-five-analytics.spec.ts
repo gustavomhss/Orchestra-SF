@@ -414,9 +414,25 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     await expect(navigation).toBeVisible()
     await expect(navigation.getByRole("link")).toHaveCount(sourceLinks.length)
     for (const [linkIndex, link] of sourceLinks.entries()) {
-      await expect(navigation.getByRole("link").nth(linkIndex)).toHaveText(sourceText(link.label))
-      await expect(navigation.getByRole("link").nth(linkIndex)).toHaveAttribute("href",
-        new URL(sourceText(link.url), owner.publicOrigin + owner.mount + "/dashboard").href)
+      const sourceLink = navigation.getByRole("link").nth(linkIndex)
+      await expect(sourceLink).toHaveText(sourceText(link.label))
+      const published = new URL(sourceText(link.url), owner.publicOrigin + owner.mount + "/dashboard")
+      const rendered = new URL(sourceText(await sourceLink.getAttribute("href")), page.url())
+      expect(rendered.origin).toBe(published.origin)
+      expect(rendered.pathname).toBe(published.pathname)
+      expect(rendered.hash).toBe(published.hash)
+      if (published.pathname.startsWith("/orchestra/")) {
+        const ownerKeys = ["server", "project", "installation"]
+        expect([...published.searchParams.keys()].some((key) => ownerKeys.includes(key))).toBe(false)
+        expect([...rendered.searchParams.entries()].filter(([key]) => !ownerKeys.includes(key)))
+          .toEqual([...published.searchParams.entries()])
+        expect(rendered.searchParams.size).toBe(published.searchParams.size + ownerKeys.length)
+        expect(rendered.searchParams.get("server")).toBe(sourceText(new URL(page.url()).searchParams.get("server")))
+        expect(rendered.searchParams.get("project")).toBe(owner.projectId)
+        expect(rendered.searchParams.get("installation")).toBe(owner.installationId)
+      } else {
+        expect(rendered.href).toBe(published.href)
+      }
     }
     expect(await catalog.locator('[data-sf-bi-view="BI01"]').textContent()).toBe(originalProjectionText)
     await navigation.scrollIntoViewIfNeeded()
