@@ -306,7 +306,7 @@ export function reportSpecs(value) {
 /** @param {unknown} value @param {boolean} executed */
 export function verifyReport(value, executed) {
   const report = record(value), specs = reportSpecs(report), config = record(report.config)
-  assert.deepEqual(specs.map((spec) => spec.title).sort(), cases.map((item) => item.title).sort(), "G08_EXACT_NINE_CASE_INVENTORY_REQUIRED")
+  assert.deepEqual(specs.map((spec) => spec.title).sort(), cases.map((item) => item.title).sort(), "G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED")
   assert.deepEqual(report.errors ?? [], [], "G08_REPORT_ERRORS")
   assert.equal(config.workers, 1, "G08_WORKERS_ONE_REQUIRED")
   assert(Array.isArray(config.projects) && config.projects.length === 1, "G08_SINGLE_PROJECT_REQUIRED")
@@ -377,12 +377,21 @@ export function coverageLedger(value, executed = false) {
     groups: groups.map((entry) => ({ id: entry.id, status: "NOT_RUN", expectedCount: entry.expectedCount, blocker: entry.blocker })),
     complete: false }
 }
-/** No subset receipt is a closing gate receipt, even if all its selected cases pass.
- * @param {ReturnType<typeof coverageLedger>} coverage
+/** Shape/completeness guard only; callers must already have verified original proof provenance.
+ * This CLI derives coverage from its verified report and never accepts a manual completion document.
+ * @param {unknown} value
  */
-export function requireCompleteGate(coverage) {
-  assert(coverage.complete && coverage.originalTeams.every((entry) => entry.status === "PASS") &&
-    coverage.groups.every((entry) => entry.status === "PASS"), "G08_REQUIRED_OBLIGATIONS_NOT_PROVEN")
+export function requireCompleteGate(value) {
+  const coverage = record(value)
+  exact(coverage, ["schema", "originalTeams", "groups", "complete"])
+  assert(coverage.schema === "sf-g08-coverage-v1" && coverage.complete === true &&
+    Array.isArray(coverage.originalTeams) && Array.isArray(coverage.groups), "G08_REQUIRED_OBLIGATIONS_NOT_PROVEN")
+  const original = coverage.originalTeams.map(record), groups = coverage.groups.map(record)
+  assert.deepEqual(original.map((entry) => entry.id), preservedTeams, "G08_EXACT_CLOSING_TEAMS_INVENTORY_REQUIRED")
+  assert.deepEqual(groups.map((entry) => entry.id), pendingGroups, "G08_EXACT_CLOSING_GROUP_INVENTORY_REQUIRED")
+  assert.deepEqual(groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 32], "G08_EXACT_CLOSING_GROUP_COUNTS_REQUIRED")
+  assert(original.every((entry) => entry.status === "PASS") && groups.every((entry) => entry.status === "PASS"),
+    "G08_REQUIRED_OBLIGATIONS_NOT_PROVEN")
 }
 /** @param {boolean} executed */
 async function readCoverage(executed) {
@@ -409,8 +418,12 @@ async function main() {
     const receipt = { schema: "sf-g08-executor-inventory-v2", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
       candidate: { sha: process.env.SF_G08_CANDIDATE_SHA, tree: process.env.SF_G08_CANDIDATE_TREE },
       cases: inventory, coverage: await readCoverage(false), sources: await sourceInventory(), installed: false, g08Closed: false, pendingGroups, productionCutover: false }
-    await mkdir("g08-tooling-evidence", { recursive: true })
-    await writeFile("g08-tooling-evidence/inventory.json", JSON.stringify(receipt, null, 2) + "\n")
+    const output = text(process.env.SF_G08_TOOLING_EVIDENCE), workspace = process.env.GITHUB_WORKSPACE
+    assert(path.isAbsolute(output) && path.resolve(output) === output &&
+      (!workspace || !(output === workspace || output.startsWith(path.resolve(workspace) + path.sep))),
+      "G08_TOOLING_OUTPUT_OUTSIDE_CHECKOUT_REQUIRED")
+    await mkdir(output, { recursive: true })
+    await writeFile(path.join(output, "inventory.json"), JSON.stringify(receipt, null, 2) + "\n")
     console.log(JSON.stringify(receipt))
     return
   }

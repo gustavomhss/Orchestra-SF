@@ -4,7 +4,7 @@
 
 A #644 usava seletores de chat/admin e uma revisão administrativa numérica que não correspondiam à linha integrada. Esta adaptação mantém **um único executor**, os quatro atores Microsoft originais e o witness instalado revisado da #644. Atualiza os controles para o seletor nativo, o contrato de navegação observado na #654 e o produtor administrativo/política observado na integração295eb/#655/#657.
 
-São **sete controles executáveis**, não nove obrigações encerradas. Os nove IDs/títulos originais permanecem em [obligations.json](./obligations.json), junto de U15=6, U39=22, U40=22, F04=3 e das seis fases AZ02. Não há skip de chat/draft para aparentar9/9. Grants distintos e UI administrativa continuam parciais; chat/draft continuam sem implementação; todos os grupos continuam obrigatórios.
+São **sete controles executáveis**, não nove obrigações encerradas. Os nove IDs/títulos originais permanecem em [obligations.json](./obligations.json), junto de U15=6, U39=22, U40=22, F04=3 e das seis fases AZ02. Não há skip de chat/draft para aparentar 9/9. Grants distintos e UI administrativa continuam parciais; chat/draft continuam sem implementação; todos os grupos continuam obrigatórios.
 
 Os contratos externos foram lidos em fontes imutáveis, **não aprovados como candidato final**:
 
@@ -53,11 +53,11 @@ O CAS administrativo preserva `ConfigRevision` exatamente, inclusive tokens opac
 | --- | --- | --- |
 | U15 / CAP14 | 6 títulos originais | Capítulo admitido e bundle list/editable/denied/stale/lost; segundo editor Microsoft na mesma versão CAS; dados isolados/cleanup do produtor. |
 | U39 / CAP04/2026 | 22 títulos originais | Bundle entry/empty/source/readonly/denied/revoked/stale/late; revogador real e segundo escritor; fonte/oráculos originais. |
-| U40 / CAP05/2026 | 22 títulos originais | Mesmo contrato completo por caso, em invocação própria CAP05. Não colapsar22 casos para entry. |
+| U40 / CAP05/2026 | 22 títulos originais | Mesmo contrato completo por caso, em invocação própria CAP05. Não colapsar 22 casos para entry. |
 | F04 | 3 controles originais | Guest no ingresso real; selector moderno malformado recusado; cliente real com geração vencida produz zero rede. Invocação Bun/Happy DOM com manifest instalado; não é positivo CDP. |
 | AZ02 | preflight14, actors11, producer2, after-revoke2, logout2, after-restart1 | Contrato moderno tenant/Team/host/revisões; CAS409/422 com estado intacto; revogação observada; cookies/replay; restart real do mesmo C/T/tar. |
 
-Títulos/blobs/paths originais de `687759276c2c9121c2cfd20a5994b277ceb7ee4d` estão no JSON. O inventário de U15/U39/U40 totaliza50 registros preservados; isso não é50 execuções. Os paths históricos de journeys/native manifest não existem na árvore base inspecionada. Nenhuma dependência legada foi importada, nenhum console ressuscitado e nenhum comando histórico foi apresentado como CLI existente.
+Títulos/blobs/paths originais de `687759276c2c9121c2cfd20a5994b277ceb7ee4d` estão no JSON. O inventário de U15/U39/U40 totaliza 50 registros preservados; isso não é 50 execuções. Os paths históricos de journeys/native manifest não existem na árvore base inspecionada. Nenhuma dependência legada foi importada, nenhum console ressuscitado e nenhum comando histórico foi apresentado como CLI existente.
 
 Esses grupos continuam `NOT_RUN`. A atualização de navegação/admin não compõe por si seus capítulos/fixtures/callbacks. O executor atual não emite recibos desses papéis. A falta de reserva operacional é independente da falta de composição técnica.
 
@@ -103,7 +103,7 @@ Push de `teams-landing-proof` aciona somente controles hosted Linux:
 - Playwright `--list`: sete controles carregados, sem browser/CDP nem execução instalada.
 - Guards canônicos contra `origin/dev`.
 
-O controle DOM evita publicar seletores inexistentes como prontos. Não qualifica a integração Microsoft ou a navegação #654 só por compilar. Os source hashes, relatório bruto, host-before/after e cleanup têm digests separados. No host, apenas relatório inteiro, sete resultados originais, workers1/retries0, sem filtros/shards/skips/falhas/resultado ausente, exit0 e cleanup completo produz o recibo do subconjunto.
+Os outputs hosted ficam em `RUNNER_TEMP`, fora do checkout; o guard canônico continua inspecionando todo o delta sem waiver ou exclusão de arquivos gerados. O controle DOM evita publicar seletores inexistentes como prontos. Não qualifica a integração Microsoft ou a navegação #654 só por compilar. Os source hashes, relatório bruto, host-before/after e cleanup têm digests separados. No host, apenas relatório inteiro, sete resultados originais, workers1/retries0, sem filtros/shards/skips/falhas/resultado ausente, exit0 e cleanup completo produz o recibo do subconjunto.
 
 O recibo público permite apenas C/T, digests, IDs estáveis, contagens, referência do produtor e cobertura. Não publica URL, cookies, CDP, env, claims/bodies brutos, erro privado, trace, vídeo ou screenshot. Dados brutos permanecem na reserva privada, cuja política governa retenção/remoção.
 
@@ -111,4 +111,4 @@ O recibo público permite apenas C/T, digests, IDs estáveis, contagens, referê
 
 G08 exige todas as nove obrigações integralmente comprovadas, U15/U39/U40 completos em suas invocações, F04 e todas as fases AZ02, mesmo candidato/tar G07, atores/grants reais, dados/mutações autorizados e cleanup/restauração observados. Sete controles verdes não substituem essa condição.
 
-A prova222 (2) continua4/4 no QA original atestado pelo handoff; seu backlink/SHA/tar ainda não foi recuperado nesta frente. Não é promovida para este candidato. Ver [matriz](../../../../../docs/qa/sucafina/go-live/g08-teams-qa.md) e [ledger](../../../../../docs/qa/sucafina/go-live/status.json). Resultados anteriores permanecem vinculados aos seus SHAs e alcances.
+A prova 222 (2) continua 4/4 no QA original atestado pelo handoff; seu backlink/SHA/tar ainda não foi recuperado nesta frente. Não é promovida para este candidato. Ver [matriz](../../../../../docs/qa/sucafina/go-live/g08-teams-qa.md) e [ledger](../../../../../docs/qa/sucafina/go-live/status.json). Resultados anteriores permanecem vinculados aos seus SHAs e alcances.

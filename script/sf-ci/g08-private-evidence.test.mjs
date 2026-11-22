@@ -262,3 +262,24 @@ test("source prerequisite refuses missing integrated files without using file pr
     assert.throws(() => requireCompleteGate(coverageLedger(obligations, true)), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
   } finally { await rm(root, { recursive: true, force: true }) }
 })
+
+for (const [name, change] of [
+  ["empty all", (value) => { value.originalTeams = []; value.groups = [] }],
+  ["empty Teams", (value) => { value.originalTeams = [] }],
+  ["empty groups", (value) => { value.groups = [] }],
+  ["subset Teams", (value) => { value.originalTeams.pop() }],
+  ["duplicate Teams", (value) => { value.originalTeams[0] = value.originalTeams[1] }],
+  ["unknown Teams", (value) => { value.originalTeams[0].id = "unregistered" }],
+  ["subset groups", (value) => { value.groups.pop() }],
+  ["duplicate groups", (value) => { value.groups[0] = value.groups[1] }],
+  ["unknown groups", (value) => { value.groups[0].id = "unregistered" }],
+  ["incorrect group count", (value) => { value.groups[0].expectedCount = 1 }],
+]) test("closing coverage rejects vacuous or forged PASS inventory: " + name, () => {
+  // Synthetic metadata only. Even a fully passing shape could never replace verified original receipts.
+  const value = coverageLedger(obligations, true)
+  value.complete = true
+  value.originalTeams.forEach((entry) => { entry.status = "PASS" })
+  value.groups.forEach((entry) => { entry.status = "PASS" })
+  change(value)
+  assert.throws(() => requireCompleteGate(value))
+})

@@ -2,13 +2,18 @@ import { expect } from "@playwright/test"
 import type { Page, Request } from "@playwright/test"
 import {
   adminCatalog, businessReply, configureTeam, contextReply, contextURL, expectUnauthenticated,
-  focusRefresh, installedTest, observe, selected, switchTeam, uiContext, uiReply,
+  focusRefresh, installedTest, observe, ownerQuery, selected, switchTeam, uiContext, uiReply,
 } from "./installed-fixture.ts"
 import type { Target } from "./installed-fixture.ts"
 import { landing } from "./landing-contract.ts"
 
 const test = installedTest
-const href = (target: Target) => new URL(target.chapterHref, target.shellOrigin).href
+const href = (target: Target) => {
+  const url = new URL(target.chapterHref, target.shellOrigin)
+  // The plan admits the closed query by values; compare the canonical URL emitted by the native page.
+  url.search = ownerQuery(target).toString()
+  return url.href
+}
 test.describe.configure({ mode: "serial" })
 
 async function expectNoBusiness(page: Page, target: Target, principal: string) {
