@@ -68,7 +68,8 @@ export function createSfTeamDomainTransport(options: Readonly<{
       })
       if (url.search.length > 4096) return failure("contract-mismatch")
       const fixed = mutating && "fixedBodyDiscriminator" in metadata ? metadata.fixedBodyDiscriminator : undefined
-      if (mutating && (!fixed || Object.entries(fixed).some(([key, value]) => key in values && values[key] !== value)))
+      if (mutating && (!fixed || Object.entries(fixed).some(([key, value]) =>
+        Object.entries(values).some(([inputKey, inputValue]) => inputKey === key && inputValue !== value))))
         return failure("contract-mismatch")
       const body = mutating ? JSON.stringify({ ...values, ...fixed }) : undefined
       if (body && new TextEncoder().encode(body).byteLength > 2 * 1024 * 1024) return failure("contract-mismatch")
