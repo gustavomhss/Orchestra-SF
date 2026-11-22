@@ -1,0 +1,63 @@
+name: go-live-followup-document-guards
+
+on:
+  push:
+    branches: [followup-guards-ci]
+
+permissions:
+  contents: read
+
+jobs:
+  document-guards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GO_LIVE_DOC_SOURCE_SHA: "998bb8bdfb08deb11630198f2034cbf7106bca5d"
+      GO_LIVE_DOC_SOURCE_TREE: "0652cac9d3d29e702dc1da88d51fecbfcafe3538"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact reviewed documentation source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "998bb8bdfb08deb11630198f2034cbf7106bca5d"
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Observe the seven-file source and validation base
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(git rev-parse HEAD)" = "$GO_LIVE_DOC_SOURCE_SHA"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$GO_LIVE_DOC_SOURCE_TREE"
+          test -z "$(git status --porcelain)"
+          mkdir -m 700 "$RUNNER_TEMP/go-live-docs"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/go-live-docs/refs.txt"
+          git merge-base HEAD origin/dev > "$RUNNER_TEMP/go-live-docs/merge-base.txt"
+          git diff --name-only "$(git merge-base HEAD origin/dev)" HEAD > "$RUNNER_TEMP/go-live-docs/changed-paths.txt"
+          printf '%s\n' "$GITHUB_SHA" > "$RUNNER_TEMP/go-live-docs/workflow-sha.txt"
+          test "$(wc -l < "$RUNNER_TEMP/go-live-docs/changed-paths.txt")" -eq 7
+          while IFS= read -r file; do
+            case "$file" in
+              docs/qa/sucafina/go-live/*) sha256sum "$file" ;;
+              *) exit 2 ;;
+            esac
+          done < "$RUNNER_TEMP/go-live-docs/changed-paths.txt" > "$RUNNER_TEMP/go-live-docs/documents.sha256"
+          git diff --check "$(git merge-base HEAD origin/dev)" HEAD
+          cat "$RUNNER_TEMP/go-live-docs/refs.txt"
+          cat "$RUNNER_TEMP/go-live-docs/changed-paths.txt"
+      - name: Repository setup for canonical guards
+        uses: ./.github/actions/setup-bun
+      - name: Canonical documentation guards
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/go-live-docs/guards.log"
+          test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Preserve source and guard evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: go-live-docs-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/go-live-docs
+          if-no-files-found: error
+          retention-days: 14
