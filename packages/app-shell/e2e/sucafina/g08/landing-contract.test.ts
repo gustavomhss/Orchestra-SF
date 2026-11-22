@@ -87,7 +87,9 @@ function mount() {
   const requests: PendingRequest[] = []
   let discoveries = 0
   // Only the network boundary is controlled; the component and its strict HTTP reader are real.
-  const fetch = spyOn(globalThis, "fetch").mockImplementation((input, init) => {
+  const transport: typeof globalThis.fetch = Object.assign((
+    input: Parameters<typeof globalThis.fetch>[0], init?: Parameters<typeof globalThis.fetch>[1],
+  ): Promise<Response> => {
     const url = new URL(input instanceof Request ? input.url : input.toString(), window.location.href)
     if (url.pathname === "/api/sucafina/installations") {
       discoveries++
@@ -96,7 +98,8 @@ function mount() {
     return new Promise<Response>((resolve, reject) => {
       requests.push({ url, signal: init?.signal ?? undefined, resolve, reject })
     })
-  })
+  }, { preconnect: globalThis.fetch.preconnect })
+  const fetch = spyOn(globalThis, "fetch").mockImplementation(transport)
   const host = document.createElement("div")
   document.body.append(host)
   const dispose = render(() => createComponent(PlatformProvider, {
