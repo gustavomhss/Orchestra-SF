@@ -1,0 +1,906 @@
+{
+  "area": "UI42–UI44",
+  "attempt": 14,
+  "diagnosticName": "Portfolio17",
+  "source": "6acd67a926c664c696df3ae1c0791599ef58e811",
+  "headDifference": "QA-only; runtime, source preparation and full spec byte-identical to6acd67",
+  "snapshot": "9ec17019b555606c5e3a47cf6dd7602ff5f65ac0",
+  "tree": "01a8fc6a28b37dd316901eb6253ad3fe7a7cf484",
+  "branch": "ci-run-sf5portfolio17",
+  "run": 45002137493,
+  "testJob": 137145783704,
+  "conclusion": "failure",
+  "config": "packages/app-shell/e2e/playwright.production.config.ts",
+  "workflow": ".github/workflows/test-ci.yml",
+  "environment": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+    "ORCHESTRA_CHANNEL": "prod"
+  },
+  "originalPreviewWaitMs": 60000,
+  "diagnosticObservationLimitMs": 420000,
+  "fullSpec": "1c9aaeeb88dd319d834e09bdc545a05a3f02c238",
+  "isolatedDiagnosticSpec": "d457c752d3e85597a1ca5f147fee86e6442570a4",
+  "sourcePreparation": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+  "timedPreparation": "81b92ef4f4754627eefbdc7877d2bc8cf80048eb",
+  "captureHelper": "ebbab2a37b7f1fe5b65bbe4595dbc4b12347ae02",
+  "originalSeed": "32b39933bf81c220729d3af910809e7d7b88910f",
+  "overlays": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "722fb43a9665ec2cc34e36d8f5d4fa6202be6d86"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d3d960e681e2a3e75dc42fc56666afb1f0397692"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "73c635c11aa1869c864820e0879050e33a29b57c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3c47a44d2fb8205007b5fc2e25e4a664415343cf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f63ab9457b2d7e94a47c4d990fc5da0030ef513"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cfa98fc1a5ab1a24804e3781d4eb3641ec28f200"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8d76796b05c1f40068c9ea7d5422c621e679e650"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-comparison-observation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3b56e9ecc4ecb2d0220c7e9b03ff5873fa985710"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a5dfb5eca2aa5fad9353149cea249592412b2093"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c5969aede705804e4918469507ccbce8cf32802"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3ab2e00fcfdbcb820393c67f67747c96c6b5a817"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dc7797bb9859c95eb3b2e0f519848164f41df3e9"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d457c752d3e85597a1ca5f147fee86e6442570a4"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics-source.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "81b92ef4f4754627eefbdc7877d2bc8cf80048eb"
+    },
+    {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a11922821a47594d76397582be38f9b7940177ca"
+    }
+  ],
+  "integrateOverlays": false,
+  "review": {
+    "root": "HTTP admission/revalidation/finish, synchronous timers/returns/exceptions, actual batch capability, source helper twoGETs and exact prefix3714chars checked; absolute cap corrected beforelaunch.",
+    "peer": "Five overlays compared to6acd67: case,operation access,Planner evidence,authority andcomparison adapter. Same original arguments/order/awaits/short-circuits/results/exceptions, no new provider read.",
+    "limits": {
+      "buckets": 8192,
+      "lineLength": 8192,
+      "lowerIntervals": 190000,
+      "absoluteIntervals": 200000,
+      "drops": "intervalsDropped andbucketsDropped explicit"
+    }
+  },
+  "comparability": [
+    "New real sensitivity rule preparation581 is present, unlike Portfolio16; original authority verifies both evidenceRefs and sensitivity.sourceRefs.",
+    "Original resolveMany forwarding is composed, unlike Portfolio16.",
+    "All timing values come from instrumented runtime; sourceElapsed excludes diagnostic emission, whereas browser timing includes it.",
+    "Per-bucket unions overlap parents andcategories and cannot be summed aswall time.",
+    "One original preview request only; no replay, explicit evaluation or producer budget/lease change. Preview may persist original analysis/binding internally."
+  ],
+  "unexecutedPreparationSnapshots": [
+    {
+      "sha": "ededafe75f1ee7ee0c395b68b88bf6a32345ca04",
+      "reason": "Preflight required absolute interval cap; noCIbranch."
+    },
+    {
+      "sha": "5e55a04103cbce124b9577373e11bc1c2a00747e",
+      "reason": "Independent equivalent cap correction; notused after rootfinal9ec170; noCIbranch."
+    }
+  ],
+  "cleanupJob": 137149005151,
+  "cleanupConclusion": "success",
+  "result": {
+    "originalVerdict": "Timeout60000ms exceeded while waiting for the first native preview response",
+    "originalWaitObservedMs": 60003,
+    "emittedPreviewRequests": 1,
+    "sameRequestCompletion": {
+      "testElapsedMs": 300176,
+      "operationObserverElapsedMs": 300092,
+      "http": 403,
+      "status": "denied",
+      "reason": "decision-authority-changed",
+      "bodyAcquisition": "same-native-response"
+    },
+    "explicitPortfolioEvaluationObserved": false,
+    "explicitSensitivityEvaluationObserved": false,
+    "ui43Reached": false,
+    "ui44Reached": false,
+    "qualification": "UI42 captured stages only; full UI42 and UI43/UI44 remain unqualified by this run. Preview can persist original analysis/binding internally; no write-free claim is made."
+  },
+  "artifact": {
+    "id": 14746593251,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 9448788,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14746593251",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14746593251/zip",
+    "expired": false,
+    "created_at": "2026-11-22T08:31:17Z",
+    "expires_at": "2026-11-29T08:31:15Z",
+    "updated_at": "2026-11-22T08:31:17Z",
+    "digest": "sha256:3eb5b4bf10390ebbb339cb7935c08f8a313b675dec08a6e89e50a0c505bc49fc",
+    "workflow_run": {
+      "id": 45002137493,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf5portfolio17",
+      "head_sha": "9ec17019b555606c5e3a47cf6dd7602ff5f65ac0"
+    },
+    "canonicalUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45002137493/artifacts/14746593251"
+  },
+  "sourceResponses": [
+    {
+      "at": "2026-11-22T08:21:37.6587297Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "at": "2026-11-22T08:21:42.8569659Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "at": "2026-11-22T08:21:49.2105162Z",
+      "operation": "parameter-source-read",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "at": "2026-11-22T08:21:51.6123439Z",
+      "operation": "decision-promote-parameter",
+      "http": 200,
+      "status": "ok",
+      "parameterPeriod": {
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "parameterUnit": "USD"
+    },
+    {
+      "at": "2026-11-22T08:21:58.6799306Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "at": "2026-11-22T08:22:13.0654652Z",
+      "operation": "sensitivity-controls-units-read",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 14374
+    },
+    {
+      "at": "2026-11-22T08:22:13.0842012Z",
+      "operation": "decision-criteria",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T08:22:14.5328553Z",
+      "operation": "decision-criteria",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 1449
+    },
+    {
+      "at": "2026-11-22T08:22:29.0983975Z",
+      "operation": "sensitivity-controls-units-read",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 14563
+    },
+    {
+      "at": "2026-11-22T08:22:29.1065122Z",
+      "operation": "sensitivity-rule-fixture-registered-readback",
+      "status": "ok",
+      "caseVersion": 6,
+      "criterionId": "d142416e-0270-4eb8-9356-6f7ef9f61722",
+      "ruleRef": "criterion-rule:6547dcd8112d4234eab480c5cd9556337b5ceac52f85b9fd332a52313f6437e3",
+      "previousVersion": 1,
+      "ruleVersion": 2,
+      "baselineRef": "decision-result:9ed434e8a16e15cdaa70599b5123bf38bf1886fa35c3e18960d78c4201652c06",
+      "scenarioRef": "decision-result:6156cfc7de13ca5e363c7f7b36dcf91a786df704721a0a24530a5b1e67ac047b",
+      "parameterRef": "0176e7f3-9894-4c85-a00a-28caacb99929:2",
+      "parameterUnit": "USD",
+      "resultUnit": "USD",
+      "engineVersion": "planner-runtime-v1",
+      "sourceReferences": [
+        {
+          "refId": "planner-version:bea40e92-058d-4662-a5e1-137cdbe804b3:e0449602-2763-459e-8ed2-71a9ebe2276c:1",
+          "refDigest": "fb11b7a21bf054135b52ff226ae8b2ce503405c5427120f370569f0f3cd36f44"
+        },
+        {
+          "refId": "planner-version:794d3d8a-618e-4337-afbe-7b9fa150ac7c:0dd25eee-d1ff-4ddd-8157-aee6695e989d:1",
+          "refDigest": "801c9aad79db7148d2055f70cfc9242c965be8363acf26d3046c7937e7b65772"
+        }
+      ],
+      "originalCaseUnchanged": true,
+      "originalUnitsReadbackMatched": true,
+      "acquisition": "original-register-canonical-resolve-then-controls-units-and-version"
+    },
+    {
+      "at": "2026-11-22T08:22:29.1072887Z",
+      "operation": "decision-compare",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T08:23:29.8353800Z",
+      "operation": "decision-compare",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 60729
+    },
+    {
+      "at": "2026-11-22T08:23:29.8440190Z",
+      "operation": "portfolio-selection-fixture-basis",
+      "initialVersion": 0,
+      "basis": "new-isolated-fixture-with-no-prior-registration",
+      "caseVersion": 6,
+      "criteriaCount": 1
+    },
+    {
+      "at": "2026-11-22T08:23:29.8444141Z",
+      "operation": "decision-select-portfolio",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T08:24:34.4840091Z",
+      "operation": "decision-select-portfolio",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 64644
+    },
+    {
+      "at": "2026-11-22T08:24:42.1821414Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "at": "2026-11-22T08:24:42.1913553Z",
+      "operation": "decision-compare",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T08:25:44.6790207Z",
+      "operation": "decision-compare",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 62488
+    },
+    {
+      "at": "2026-11-22T08:25:44.6806488Z",
+      "operation": "portfolio-selection-registered-readback",
+      "status": "ok",
+      "selectionVersion": 1,
+      "caseVersion": 6,
+      "originalAlternativePairMatched": true,
+      "originalCriteriaMatched": true,
+      "currentComparisonUnchanged": true,
+      "acquisition": "original-register-canonical-read-then-controls-and-comparison"
+    },
+    {
+      "at": "2026-11-22T08:25:59.4367050Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-request",
+      "sequence": 1,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T08:25:59.8883329Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-response",
+      "sequence": 1,
+      "ownerBinding": "exact",
+      "elapsedMs": 449,
+      "http": 200,
+      "status": "ok",
+      "reason": null,
+      "valueShape": "array"
+    },
+    {
+      "at": "2026-11-22T08:26:12.2371247Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-request",
+      "sequence": 2,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T08:26:13.0301518Z",
+      "operation": "decision-portfolio-results",
+      "phase": "native-response",
+      "sequence": 2,
+      "ownerBinding": "exact",
+      "elapsedMs": 790,
+      "http": 200,
+      "status": "ok",
+      "reason": null,
+      "valueShape": "array"
+    },
+    {
+      "at": "2026-11-22T08:26:13.6476809Z",
+      "operation": "decision-portfolio-preview",
+      "phase": "native-request",
+      "sequence": 3,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "at": "2026-11-22T08:31:14.1925617Z",
+      "operation": "decision-portfolio-preview",
+      "phase": "native-response",
+      "sequence": 3,
+      "ownerBinding": "exact",
+      "elapsedMs": 300092,
+      "http": 403,
+      "status": "denied",
+      "reason": "decision-authority-changed",
+      "valueShape": "undefined"
+    }
+  ],
+  "contextReadbacks": [
+    {
+      "at": "2026-11-22T08:25:50.8693536Z",
+      "stage": "UI42-list",
+      "http": 200,
+      "status": "ok",
+      "acquisition": "authenticated-original-readback",
+      "ownerBinding": "exact",
+      "resources": [
+        {
+          "family": "decisions",
+          "resource": "case-intent",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "decisions",
+          "resource": "assumptions",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "campaign",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "results",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "sensitivity",
+          "state": "ready",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-sensitivity-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-units",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T08:26:00.9088992Z",
+      "stage": "UI42-empty-case",
+      "http": 200,
+      "status": "ok",
+      "acquisition": "authenticated-original-readback",
+      "ownerBinding": "exact",
+      "resources": [
+        {
+          "family": "decisions",
+          "resource": "case-intent",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "decisions",
+          "resource": "assumptions",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "decisions.controls.read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "campaign",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "results",
+          "state": "partial",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-portfolio-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-preview",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-reconcile",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-portfolio-results",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-prepare-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            },
+            {
+              "operationId": "portfolio.decision-promote-portfolio",
+              "state": "unavailable",
+              "operational": false,
+              "reason": "operational-source-unavailable"
+            }
+          ]
+        },
+        {
+          "family": "portfolio",
+          "resource": "sensitivity",
+          "state": "ready",
+          "operations": [
+            {
+              "operationId": "portfolio.decision-sensitivity-evaluate",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-read",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            },
+            {
+              "operationId": "portfolio.decision-sensitivity-units",
+              "state": "ready",
+              "operational": true,
+              "reason": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "deadlines": [
+    {
+      "at": "2026-11-22T08:27:13.4865902Z",
+      "verdict": "failed-original60000ms-wait",
+      "elapsedMs": 60003,
+      "emittedRequests": 1
+    }
+  ],
+  "completion": [
+    {
+      "at": "2026-11-22T08:31:14.1926742Z",
+      "verdict": "original-timeout-retained",
+      "sameRequest": true,
+      "elapsedMs": 300176,
+      "http": 403,
+      "status": "denied",
+      "reason": "decision-authority-changed",
+      "valueKeys": [],
+      "acquisition": "same-native-response"
+    }
+  ],
+  "profile": {
+    "file": "profile.json",
+    "schema": "sf-portfolio-phase-v2",
+    "summary": {
+      "request": 1,
+      "phase": "summary",
+      "operation": "decision-portfolio-preview",
+      "elapsedMs": 300003,
+      "roots": 39,
+      "buckets": 3501,
+      "intervalsStored": 190037,
+      "intervalsDropped": 103297,
+      "bucketsDropped": 0,
+      "emitted": 3502,
+      "pending": 0,
+      "aborted": false,
+      "diagnosticEmissionMs": 62
+    },
+    "integrity": {
+      "events": 3503,
+      "parseErrors": 0,
+      "buckets": 3501,
+      "bucketsMatch": true,
+      "allSettled": true,
+      "timedCalls": 293334,
+      "intervalsAccounted": 293334,
+      "intervalDrops": 103297,
+      "allRequests": [
+        1
+      ]
+    },
+    "aggregationFile": "aggregates.json",
+    "limits": "Allcalls/completions/inclusive accumulators remain complete.103297 lower-level interval records were discarded at the190000 reserve boundary; affected unionMs values are null. Allhigh-level interval categories have zero drops and are preserved separately. Summed rounded bucket durations are accumulated inclusive durations, not cross-bucket wall unions."
+  },
+  "measuredFinding": "Only2458ms accumulated in116502 calculated calls. Native pure calculation is not the dominant300s cost. Source/guard boundaries account for larger inclusive times, but inner copying/hashing/authority costs are not separately measured.",
+  "staticFollowup": {
+    "file": "SOURCE-AUDIT.md",
+    "machine": "source-audit.json",
+    "status": "read-only audit; no implementation or extra diagnostic authorized by this receipt"
+  },
+  "images": [
+    {
+      "originalName": "UI42-list-dark-desktop-test-data",
+      "file": "UI42-list-dark-desktop.jpg",
+      "blob": "8cbce6ef45c82279374f638f3dcc71f600ce4cc2",
+      "parts": 5,
+      "complete": true,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "viewed": true,
+      "index": 0,
+      "verdict": "approve-captured-stage-only",
+      "finding": "Dark desktop list: clear title/card hierarchy, two authorized cases with complete titles, source versions and open actions; compact Context and access remains separate."
+    },
+    {
+      "originalName": "UI42-list-light-desktop-test-data",
+      "file": "UI42-list-light-desktop.jpg",
+      "blob": "f0f45ca1652479d3fbb466e117418fd3eba4ccf9",
+      "parts": 5,
+      "complete": true,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "light",
+      "viewed": true,
+      "index": 1,
+      "verdict": "approve-captured-stage-only",
+      "finding": "Light desktop list: readable metadata and action contrast; same complete source cases and balanced native card spacing."
+    },
+    {
+      "originalName": "UI42-list-dark-390-test-data",
+      "file": "UI42-list-dark-390.jpg",
+      "blob": "cbdaa8459e3c46aa27e4bc499b30882325192448",
+      "parts": 2,
+      "complete": true,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "theme": "dark",
+      "viewed": true,
+      "index": 2,
+      "verdict": "approve-captured-stage-only",
+      "finding": "Dark390: cards stack within the gutter, titles wrap without clipping, source versions and open actions remain visible; no page-wide horizontal overflow observed."
+    },
+    {
+      "originalName": "UI42-list-light-320-test-data",
+      "file": "UI42-list-light-320.jpg",
+      "blob": "ae3a6677a1d7a99c527e38282b1c666c9d26d0a9",
+      "parts": 2,
+      "complete": true,
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "theme": "light",
+      "viewed": true,
+      "index": 3,
+      "verdict": "approve-captured-stage-only",
+      "finding": "Light320: heading and source copy wrap in the native column; both cards and actions fit without clipping."
+    },
+    {
+      "originalName": "UI42-empty-authorized-case-test-data",
+      "file": "UI42-empty-authorized-case.jpg",
+      "blob": "4c8016e36f6b64a1979fd9764b58485f2062bdce",
+      "parts": 6,
+      "complete": true,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "viewed": true,
+      "index": 4,
+      "verdict": "approve-captured-stage-only",
+      "finding": "Authorized empty case: genuine empty-scenario and empty-history messages remain visible; Preview combinations is disabled, source metadata retained."
+    },
+    {
+      "originalName": "UI42-configure-focused-candidate-test-data",
+      "file": "UI42-configure-focused-candidate.jpg",
+      "blob": "aa20b63fd5745b36bb93b212cb9edc478ec8df20",
+      "parts": 6,
+      "complete": true,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "viewed": true,
+      "index": 5,
+      "verdict": "approve-captured-stage-only",
+      "finding": "Configured case: actual candidate and original criterionv2 checked, limit4 retained with full visible focus outline, source context/history visible."
+    },
+    {
+      "originalName": "FAILED-native-wave-three-test-data",
+      "file": "UI42-original-authority-refusal.jpg",
+      "blob": "f8bad4c67010bf5c6c87e40d42a60a6d9c158f25",
+      "parts": 7,
+      "complete": true,
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "theme": "dark",
+      "viewed": true,
+      "index": 6,
+      "verdict": "diagnostic-failure-state-only",
+      "finding": "Original final refusal state is visible with retained source candidate/criterionv2/limit; no portfolio result or complete total is supplied."
+    }
+  ],
+  "visualScope": "All7 originalJPEGs were emitted as images and manually inspected. Six captured stages have presentation approval; final refusal is diagnostic only. No UI43/UI44, Portuguese or successful-preview image exists in this run.",
+  "documentedQaHead": "afe16ab7822b894bb22307a7f8dced9727728c23"
+}
