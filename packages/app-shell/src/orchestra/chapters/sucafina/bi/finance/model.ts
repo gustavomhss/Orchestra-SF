@@ -67,7 +67,8 @@ export function sfBiEvidenceRef(value: SourceValue): SfRef | undefined {
   return sfBiValueSource(value)?.refId
 }
 
-export function sfBiResolveValueSource(result: SfBiSnapshot, selection: SfBiValueSource) {
+export function sfBiResolveValueSource(result: SfBiSnapshot, selection: SfBiValueSource):
+  Readonly<{ value: SourceValue; source: SourceValue["sourceRefs"][number] }> | undefined {
   const values = result.projection.values.filter((value) => value.id === selection.valueId)
   if (values.length !== 1) return undefined
   const value = values[0]!
