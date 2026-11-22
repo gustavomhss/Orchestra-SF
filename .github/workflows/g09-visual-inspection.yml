@@ -1,0 +1,119 @@
+name: g09-visual-inspection
+run-name: Inspect preserved visual contexts from candidate 83f1283
+
+on:
+  push:
+    branches:
+      - g09-visual-inspection
+
+concurrency:
+  group: g09-visual-inspection
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  visual-context-inspection:
+    name: visual-context-inspection
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout the external inspection code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          path: inspection
+          persist-credentials: false
+
+      - name: Checkout the exact preserved product source separately
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 83f1283f8e39cd5863d9806b9a48f0573f44eaff
+          path: source
+          persist-credentials: false
+
+      - name: Set up the same Node version as the original inspection tooling
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.15.0
+
+      - name: Prepare explicit preserved identities and separate paths
+        run: |
+          set -euo pipefail
+          test "$(git -C inspection rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git -C source rev-parse HEAD)" = "83f1283f8e39cd5863d9806b9a48f0573f44eaff"
+          test -z "$(git -C source status --porcelain=v1 --untracked-files=all)"
+          python3 inspection/.github/ci/g09-visual-stage.py prepare \
+            "$GITHUB_WORKSPACE/inspection" "$RUNNER_TEMP/g09-visual-input"
+
+      - name: Install the exact source-pinned syntax parser outside both checkouts
+        run: |
+          set -euo pipefail
+          parser="$(node -p 'JSON.parse(require("node:fs").readFileSync("source/package.json", "utf8")).workspaces.catalog.typescript')"
+          test "$parser" = "5.8.2"
+          npm install --prefix "$RUNNER_TEMP/g09-visual-typescript" \
+            --ignore-scripts --no-audit --no-fund --no-package-lock "typescript@$parser"
+          mkdir node_modules
+          ln -s "$RUNNER_TEMP/g09-visual-typescript/node_modules/typescript" node_modules/typescript
+          node --input-type=module -e 'import assert from "node:assert/strict"; import ts from "typescript"; assert.equal(ts.version, "5.8.2"); console.log(JSON.stringify({node:process.version, typescript:ts.version}))'
+
+      - name: Download the original diagnostic and actual producer ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          input="$RUNNER_TEMP/g09-visual-input"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$NAV_REPORT_ARTIFACT_ID" > "$input/report-artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$NAV_PRODUCER_ARTIFACT_ID" > "$input/producer-artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$NAV_RUN_ID/attempts/$NAV_RUN_ATTEMPT" > "$input/run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$NAV_RUN_ID/attempts/$NAV_RUN_ATTEMPT/jobs?per_page=100" > "$input/jobs.json"
+          gh api "repos/$GITHUB_REPOSITORY/contents/script/sf-ci/g09-581-catalog.json?ref=$NAV_SOURCE_SHA" > "$input/catalog-metadata.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$NAV_REPORT_ARTIFACT_ID/zip" > "$input/report.zip"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$NAV_PRODUCER_ARTIFACT_ID/zip" > "$input/producer.zip"
+
+      - name: Verify preserved bindings and stage exact named evidence members
+        run: |
+          set -euo pipefail
+          python3 inspection/.github/ci/g09-visual-stage.py stage \
+            "$GITHUB_WORKSPACE/inspection" "$RUNNER_TEMP/g09-visual-input"
+
+      - name: Inspect all selected real CSS and mapped static CSS string contexts
+        run: |
+          set -euo pipefail
+          node inspection/.github/ci/g09-visual-inspect.mjs \
+            "$GITHUB_WORKSPACE/inspection" "$GITHUB_WORKSPACE/source" \
+            "$RUNNER_TEMP/g09-visual-input" "$RUNNER_TEMP/g09-visual-output"
+          test -z "$(git -C source status --porcelain=v1 --untracked-files=all)"
+
+      - name: Preserve the external inspection and original binding evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g09-visual-inspection-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/g09-visual-output/
+            ${{ runner.temp }}/g09-visual-input/canonical-context/
+            ${{ runner.temp }}/g09-visual-input/visual-stage-receipt.json
+            ${{ runner.temp }}/g09-visual-input/expected.json
+            ${{ runner.temp }}/g09-visual-input/report-artifact.json
+            ${{ runner.temp }}/g09-visual-input/producer-artifact.json
+            ${{ runner.temp }}/g09-visual-input/run.json
+            ${{ runner.temp }}/g09-visual-input/jobs.json
+            ${{ runner.temp }}/g09-visual-input/catalog.json
+            ${{ runner.temp }}/g09-visual-input/catalog-metadata.json
+            ${{ runner.temp }}/g09-visual-input/report/artifact-provenance.json
+            ${{ runner.temp }}/g09-visual-input/report/candidate-binding.json
+            ${{ runner.temp }}/g09-visual-input/report/commit.raw
+            ${{ runner.temp }}/g09-visual-input/report/tracked.z
+            ${{ runner.temp }}/g09-visual-input/package/g09-artifact-receipt.json
+            ${{ runner.temp }}/g09-visual-input/package/orchestra-sf-entra-linux-x64-baseline.tar.gz.inventory.json
+            ${{ runner.temp }}/g09-visual-input/package/orchestra-sf-entra-package-receipt.json
+            ${{ runner.temp }}/g09-visual-input/package/compile-provenance.json
+          if-no-files-found: error
+          retention-days: 30
