@@ -384,7 +384,8 @@ export function SfChartFrame(props: SfChartFrameProps): JSX.Element {
             <tbody>
               <For each={props.table.rows}>
                 {(row) => (
-                  <tr data-sf-row={row.id} data-sf-selected={row.selectionRef && props.selection === row.selectionRef ? "true" : undefined}>
+                  <tr data-sf-row={row.id} data-sf-selected={row.selectionRef && (props.selectionRowId !== undefined
+                      ? props.selectionRowId === row.id : props.selection === row.selectionRef) ? "true" : undefined}>
                     <For each={props.table.columns}>
                       {(column) => (
                         <td>
@@ -404,8 +405,9 @@ export function SfChartFrame(props: SfChartFrameProps): JSX.Element {
                             <button
                               type="button"
                               class="mx-btn sf-table-action"
-                              aria-pressed={props.selection === ref()}
-                              onClick={() => props.onSelect(ref())}
+                              aria-pressed={props.selectionRowId !== undefined
+                                ? props.selectionRowId === row.id : props.selection === ref()}
+                              onClick={() => props.onSelect(ref(), row.id)}
                             >
                               {t(sfCommonKey("sf.common.showDetails"))}
                             </button>

@@ -4,7 +4,7 @@ import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data
 import { prepareParameterizedScenario } from "./design-support/wave-five-analytics-source"
 import {
   analyticsTest, array, object, sourceText, controls, readPortfolio, isOperation,
-  enter, ready, observePage, observeAnalyticsContext,
+  enter, ready, observePage, observeAnalyticsContext, observeAnalyticsOperations,
   captureAnalytics, captureModes, withPortuguese,
 } from "./design-support/wave-five-analytics"
 
@@ -15,6 +15,7 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   expect(info.config.workers).toBe(1)
   const diagnostics = observePage(page)
   const contextReads = observeAnalyticsContext(page, owner)
+  observeAnalyticsOperations(page)
   const writes: Request[] = []
   page.on("request", (request) => {
     if (isOperation(request, "decision-portfolio-evaluate") || isOperation(request, "decision-sensitivity-evaluate")) writes.push(request)
@@ -43,7 +44,7 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   await scenarios.locator(".sf-u19-case-list > li").filter({ hasText: waveFourDecisionsData.editableObjective }).getByRole("button").click()
   await ready(page, "Portfolio scenarios", 40_000)
   await expect(scenarios.getByText("No eligible scenarios in the authorized case.", { exact: true })).toBeVisible()
-  await contextReads("UI42-empty-case")
+  await contextReads("UI42-empty-case", true)
   await expect(page.getByRole("button", { name: "Preview combinations", exact: true })).toBeDisabled()
   await captureAnalytics(page, info, "UI42-empty-authorized-case-test-data")
   await scenarios.getByRole("button", { name: "Choose a case", exact: true }).click()
@@ -254,6 +255,26 @@ async function assertBiSource(page: Page, url: string, view: string) {
   const values = array(projection.values).map(object)
   const series = array(object(body.presentation).series).map(object)
   const valueIds = series.flatMap((entry) => array(entry.valueIds))
+  const publishedPointer = (value: Record<string, unknown>) => {
+    const drilldown = value.drilldown ? object(value.drilldown) : undefined
+    const refs = array(value.sourceRefs).map(object)
+    return drilldown?.refId ? drilldown : refs.length === 1 && refs[0]?.refId ? refs[0] : undefined
+  }
+  const selectedValue = valueIds.map((id) => values.find((value) => value.id === id)!).find((value) => publishedPointer(value))
+  if (selectedValue) {
+    const pointer = publishedPointer(selectedValue)!
+    const bindings = values.flatMap((value) => {
+      const refs = [...(value.drilldown ? [object(value.drilldown)] : []), ...array(value.sourceRefs).map(object)]
+        .filter((ref) => ref.refId === pointer.refId)
+        .filter((ref, index, all) => all.findIndex((entry) => entry.refDigest === ref.refDigest) === index)
+      return refs.map((ref) => ({ valueId: value.id, period: value.period, digest: ref.refDigest,
+        sourceKeys: Object.keys(ref).sort() }))
+    })
+    console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-source-binding-readback", view,
+      selectedValueId: selectedValue.id, referenceId: pointer.refId,
+      valueBindingCount: bindings.length, distinctReferenceDigests: new Set(bindings.map((entry) => entry.digest)).size,
+      bindings: bindings.map(({ digest: _digest, ...binding }) => binding) }))
+  }
   await expect(page.locator(".sf-chart-table tbody tr")).toHaveCount(valueIds.length)
   const numeric = values.filter((entry) => valueIds.includes(entry.id) && entry.evidenceState !== "absent" && typeof entry.value === "number")
   const expectedRows = series.flatMap((entry) => array(entry.valueIds).map((id) => String(entry.id) + ":" + String(id)))
@@ -366,7 +387,7 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   await catalog.locator(".sf-chart-visual").scrollIntoViewIfNeeded()
   await captureAnalytics(page, info, "UI46-operations-original-coverage-test-data")
   await page.setViewportSize({ width: 320, height: 800 })
-  await catalog.locator(".sf-chart-table-region").scrollIntoViewIfNeeded()
+  await catalog.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()
   await captureAnalytics(page, info, "UI46-operations-dark-320-test-data")
   await page.setViewportSize({ width: 1440, height: 1100 })
 
@@ -404,7 +425,7 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     await localized.locator(".sf-bi-series").first().scrollIntoViewIfNeeded()
     await captureAnalytics(localized, info, "UI46-pt-BR-dark-desktop-values-test-data")
     await localized.setViewportSize({ width: 320, height: 800 })
-    await localized.locator(".sf-chart-table-region").scrollIntoViewIfNeeded()
+    await localized.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()
     await captureAnalytics(localized, info, "UI46-pt-BR-dark-320-values-test-data")
     expect(localizedDiagnostics.pageErrors).toEqual([])
     expect(localizedDiagnostics.consoleErrors).toEqual([])

@@ -1,4 +1,4 @@
-import { expect, type Browser, type Locator, type Page, type Request, type TestInfo } from "@playwright/test"
+import { expect, type Browser, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
 import type { DesignInstallation } from "./installation"
 import { waveFourTest, capture, enter, reflow, scheme, scrollPageTop } from "./wave-four"
 
@@ -44,15 +44,20 @@ export async function readPortfolio(page: Page, owner: AnalyticsOwner, operation
 }
 /** Report the actual native ctx.context reads without changing their admission. */
 export function observeAnalyticsContext(page: Page, owner: AnalyticsOwner) {
-  const reads: Promise<{ http: number; body: unknown }>[] = []
-  page.on("response", (response) => {
+  const reads: Promise<{ http: number; body: unknown; acquisitionFailure?: string }>[] = []
+  const onResponse = (response: Response) => {
     if (response.request().method() !== "GET" || !new URL(response.url()).pathname.endsWith("/api/ui/context")) return
-    reads.push(response.json().then((body: unknown) => ({ http: response.status(), body })))
-  })
-  return async (stage: string) => {
+    reads.push(response.json().then((body: unknown) => ({ http: response.status(), body }))
+      .catch(() => ({ http: response.status(), body: undefined, acquisitionFailure: "native-context-body-unavailable" })))
+  }
+  page.on("response", onResponse)
+  return async (stage: string, stop = false) => {
+    if (stop) page.off("response", onResponse)
     expect(reads.length).toBeGreaterThan(0)
     for (const pending of reads.splice(0)) {
-      const { http, body: raw } = await pending
+      const { http, body: raw, acquisitionFailure } = await pending
+      if (acquisitionFailure) console.info("SF_ANALYTICS_CONTEXT " + JSON.stringify({ stage, http, acquisitionFailure }))
+      expect(acquisitionFailure, "The actual native context body must be readable at its required diagnostic point").toBeUndefined()
       const body = object(raw)
       expect(http).toBe(200)
       expect(body.status).toBe("ok")
@@ -74,6 +79,22 @@ export function observeAnalyticsContext(page: Page, owner: AnalyticsOwner) {
     }
   }
 }
+/** Bounded public response codes only; acquisition failures never create readiness. */
+export function observeAnalyticsOperations(page: Page) {
+  const modes = new Set(["decision-portfolio-preview", "decision-portfolio-evaluate", "decision-portfolio-results",
+    "decision-portfolio-read", "decision-sensitivity-units", "decision-sensitivity-read", "decision-sensitivity-evaluate"])
+  page.on("response", (response) => {
+    const operation = new URL(response.url()).searchParams.get("sf")
+    if (!operation || !modes.has(operation)) return
+    void response.json().then((raw: unknown) => {
+      const body = object(raw)
+      console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation, phase: "native-response",
+        http: response.status(), status: body.status, reason: body.reason ?? null,
+        valueShape: Array.isArray(body.value) ? "array" : typeof body.value }))
+    }).catch(() => console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation, phase: "native-response",
+      http: response.status(), acquisitionFailure: "response-body-unavailable" })))
+  })
+}
 export async function captureAnalytics(page: Page, info: TestInfo, name: string) {
   await reflow(page)
   const root = page.locator('[data-sf-wave="five"]')
@@ -87,8 +108,22 @@ export async function captureAnalytics(page: Page, info: TestInfo, name: string)
 export async function captureModes(page: Page, info: TestInfo, prefix: string, focus?: Locator) {
   const captureMode = async (suffix: string) => {
     await scrollPageTop(page)
-    if (focus) await focus.scrollIntoViewIfNeeded()
+    if (focus) {
+      // Oversized scroll containers center on middle rows; anchor their real heading instead.
+      const heading = focus.locator("caption, thead").first()
+      if (await heading.count()) await heading.scrollIntoViewIfNeeded()
+      else await focus.scrollIntoViewIfNeeded()
+    }
     await captureAnalytics(page, info, prefix + suffix + "-test-data")
+    const plot = focus?.locator(".sf-bi-plot-region").first()
+    if ((page.viewportSize()?.width ?? 1440) <= 390 && plot && await plot.count()) {
+      const overflow = await plot.evaluate((element) => element.scrollWidth > element.clientWidth)
+      expect(overflow).toBe(true)
+      await plot.evaluate((element) => { element.scrollLeft = element.scrollWidth })
+      expect(await plot.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0)
+      await captureAnalytics(page, info, prefix + suffix + "-scrolled-values-test-data")
+      await plot.evaluate((element) => { element.scrollLeft = 0 })
+    }
   }
   await page.setViewportSize({ width: 1440, height: 1100 })
   await scheme(page, "dark")

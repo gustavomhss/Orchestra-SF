@@ -14,12 +14,18 @@ export type SfBiSnapshot = Extract<SfBiBiDataOutput, { request: unknown }>
 export type SfBiFinancialView = "BI01" | "BI02" | "BI03" | "BI04"
 export type SfBiOperationalView = "BI05" | "BI06" | "BI07" | "BI08"
 export type SfBiOwnedView = SfBiFinancialView | SfBiOperationalView
+export type SfBiValueSource = Readonly<{
+  valueId: string
+  refId: SfRef
+  referenceDigest: string
+}>
 export type SfBiFigureProps<Id extends SfBiOwnedView> = Readonly<{
   viewId: Id
   projection: SfBiSnapshot
   selection: SfRef | null
-  onSelect: (selectionRef: SfRef) => void
-  onOpenSource: (sourceRef: SfRef) => void
+  selectedValueId?: string
+  onSelect: (selectionRef: SfRef, source?: SfBiValueSource) => void
+  onOpenSource: (sourceRef: SfRef, source?: SfBiValueSource) => void
 }>
 
 export const sfBiKey = (key: string): SfCopyKey => key as SfCopyKey
@@ -48,14 +54,29 @@ const ROLE_LABELS = {
 } as const
 
 type SourceValue = SfBiSnapshot["projection"]["values"][number]
+export function sfBiValueSource(value: SourceValue): SfBiValueSource | undefined {
+  // Preserve the producer's value and evidence identities together: different
+  // monthly values can legitimately publish the same opaque evidence refId.
+  const source = value.drilldown?.refId ? value.drilldown
+    : value.sourceRefs.length === 1 ? value.sourceRefs[0] : undefined
+  return source?.refId ? { valueId: value.id, refId: source.refId as SfRef,
+    referenceDigest: source.refDigest } : undefined
+}
+
 export function sfBiEvidenceRef(value: SourceValue): SfRef | undefined {
-  // Only opaque references actually published by the admitted C08 producer.
-  // Never transform a valueId or an array index into an authority-bearing ref.
-  return value.drilldown?.refId
-    ? value.drilldown.refId as SfRef
-    : value.sourceRefs.length === 1 && value.sourceRefs[0]?.refId
-      ? value.sourceRefs[0].refId as SfRef
-      : undefined
+  return sfBiValueSource(value)?.refId
+}
+
+export function sfBiResolveValueSource(result: SfBiSnapshot, selection: SfBiValueSource) {
+  const values = result.projection.values.filter((value) => value.id === selection.valueId)
+  if (values.length !== 1) return undefined
+  const value = values[0]!
+  const sources = [value.drilldown, ...value.sourceRefs].filter((source) => source !== null &&
+    source.refId === selection.refId && source.refDigest === selection.referenceDigest)
+  if (!sources.length) return undefined
+  // Repeated occurrences of this same value/ref/digest are the same binding.
+  // Other values with the same refId never participate in this resolution.
+  return { value, source: sources[0]! }
 }
 
 function numeric(value: SourceValue): number | null {
@@ -91,6 +112,8 @@ export type SfBiChartModel = Readonly<{
     period: string
     value: number | null
     evidenceRef?: SfRef
+    source?: SfBiValueSource
+    tableRowId: string
     evidence: SourceValue["evidenceState"]
   }>[]
 }>
@@ -181,11 +204,13 @@ export function sfBiChartModel(viewId: SfBiOwnedView, result: SfBiSnapshot, pref
       if ((viewId === "BI01" || viewId === "BI07") &&
           value.granularity !== "month" && value.granularity !== "year")
         return unavailable()
-      const reference = sfBiEvidenceRef(value)
+      const source = sfBiValueSource(value)
+      const reference = source?.refId
       const period = sfBiPeriodLabel(value.period.start, value.period.end, locale)
       const amount = numeric(value)
       rows.push({ id: value.id, label: series.label, unit: series.unit,
-        period, value: amount, ...(reference ? { evidenceRef: reference } : {}),
+        period, value: amount, tableRowId: series.id + ":" + value.id,
+        ...(source ? { evidenceRef: source.refId, source } : {}),
         evidence: value.evidenceState })
       plotPoints.push({ id: value.id, x: value.period.start, xLabel: raw(period),
         value: amount === null

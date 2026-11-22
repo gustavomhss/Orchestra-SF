@@ -54,6 +54,7 @@
 .sf-bi-catalog[data-sf-wave="five"] :is(.sf-chart-table, .sf-bi-detail-scroll table, .sf-u22-table-scroll table, .sf-bi-waterfall-table) { inline-size: 100%; min-inline-size: 720px; border-collapse: collapse; font-size: var(--orchestra-font-size-sm); }
 .sf-bi-catalog[data-sf-wave="five"] :is(.sf-chart-table, .sf-bi-detail-scroll table, .sf-u22-table-scroll table, .sf-bi-waterfall-table) :is(th, td) { padding: 12px; border-block-end: 1px solid var(--mx-line); text-align: start; overflow-wrap: anywhere; }
 .sf-bi-catalog[data-sf-wave="five"] :is(.sf-chart-table, .sf-bi-detail-scroll table, .sf-u22-table-scroll table, .sf-bi-waterfall-table) th { color: var(--mx-dim); font-family: var(--mx-emphasis); font-weight: 600; }
+.sf-bi-catalog[data-sf-wave="five"] .sf-chart-frame:has(.sf-bi-figure) .sf-chart-table :is(th, td):is(:nth-child(2), :nth-child(3), :nth-child(5)) { overflow-wrap: normal; word-break: normal; }
 .sf-bi-catalog[data-sf-wave="five"] .sf-bi-record-detail { display: grid; gap: 20px; padding: var(--sf-bi-panel); border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg); background: var(--mx-raised); }
 .sf-bi-catalog[data-sf-wave="five"] .sf-bi-record-detail > p { font-family: var(--mx-mono); font-size: var(--orchestra-font-size-sm); color: var(--mx-dim); }
 .sf-bi-catalog[data-sf-wave="five"] .sf-bi-record-detail dl { display: grid; grid-template-columns: minmax(120px, .6fr) minmax(0, 1fr); gap: 12px 20px; margin: 0; }

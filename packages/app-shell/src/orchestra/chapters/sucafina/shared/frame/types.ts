@@ -143,8 +143,9 @@ export type SfChartFrameProps = Readonly<{
   series: readonly SfPlotSeries[]
   table: SfChartTable
   selection: SfRef | null
+  selectionRowId?: string
   state: SfUiState
-  onSelect: (selectionRef: SfRef) => void
+  onSelect: (selectionRef: SfRef, rowId?: string) => void
   onOpenSource: (sourceRef: SfRef) => void
   children: JSX.Element
 }>

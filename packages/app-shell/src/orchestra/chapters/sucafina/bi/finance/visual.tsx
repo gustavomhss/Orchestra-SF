@@ -1,6 +1,6 @@
 import { For, Show, createMemo } from "solid-js"
 import type { SfBiFigureProps, SfBiOwnedView } from "./model"
-import { sfBiChartModel, sfBiEvidenceRef, sfBiKey, sfBiPeriodLabel } from "./model"
+import { sfBiChartModel, sfBiKey, sfBiPeriodLabel, sfBiValueSource } from "./model"
 import { SfChartFrame } from "../../shared/frame"
 import { useSfPresentation } from "../../shared/frame/presentation"
 import "./figure.css"
@@ -31,8 +31,12 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
       series={model().series}
       table={model().table}
       selection={props.selection}
+      selectionRowId={model().rows.find((row) => row.id === props.selectedValueId)?.tableRowId}
       state={model().state}
-      onSelect={props.onSelect}
+      onSelect={(reference, rowId) => {
+        const source = model().rows.find((row) => row.tableRowId === rowId)?.source
+        if (source?.refId === reference) props.onSelect(reference, source)
+      }}
       onOpenSource={props.onOpenSource}
     >
       <div class="sf-bi-figure" data-sf-bi-view={props.viewId} data-sf-bi-state={model().state}>
@@ -90,8 +94,8 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                   <summary>{t(sfBiKey(props.copy + ".openSource"))}</summary>
                   <div class="sf-bi-source-action-list">
                   <For each={rows().filter((row) => row.evidenceRef)}>
-                    {(row) => <button class="mx-btn" type="button"
-                      onClick={() => row.evidenceRef && props.onOpenSource(row.evidenceRef)}>
+                    {(row) => <button class="mx-btn" type="button" data-sf-source-value-id={row.id}
+                      onClick={() => row.source && props.onOpenSource(row.source.refId, row.source)}>
                       {t(sfBiKey(props.copy + ".openSource"))}: {row.label} · {row.period}
                     </button>}
                   </For>
@@ -176,9 +180,9 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                       <strong>{item.label}</strong>
                       <span>{observedDate() ?? t(sfBiKey(props.copy + ".missingDate"))}</span>
                       <span>{t(sfBiKey(props.copy + ".milestone." + (observedDate() ? item.state : "unknown")))}</span>
-                      <Show when={date() && sfBiEvidenceRef(date()!)}>
-                        {(reference) => <button class="mx-btn" type="button"
-                          onClick={() => props.onOpenSource(reference())}>
+                      <Show when={date() && sfBiValueSource(date()!)}>
+                        {(source) => <button class="mx-btn" type="button" data-sf-source-value-id={source().valueId}
+                          onClick={() => props.onOpenSource(source().refId, source())}>
                           {t(sfBiKey(props.copy + ".openSource"))}
                         </button>}
                       </Show>
