@@ -37,16 +37,16 @@ test("record actual shared AI catalogs, a workflow draft, and a genuine local-mo
         await info.attach("ai-discovery-" + value.selector, { body: JSON.stringify(value), contentType: "application/json" })
       })
       const film = await createFilm(context, info, installed, owner, "C-shared-ai")
+      let modelFailure: Error | undefined
+      let workflowReturned = true
       try {
-        await selectOriginalGitProject(film)
+        await selectOriginalRecordingWorkspace(film)
         await catalogChapters(film)
-        await workflowChapter(film)
-        await atlasChapter(film)
         await connectionsChapter(film)
         await expect(film.page.locator('[data-slot="orchestra-profile"] small[title]'))
           .toHaveAttribute("title", installed.root + "/workspace")
-        // All independent catalog/setup footage is complete before the model
-        // download, process start or inference can fail.
+        // Secure the core catalogs and actual AI reply before any optional
+        // Workflow project-switching path. The final edit can reorder chapters.
         try {
           await withLocalModel(context.request, installed, async (local) => {
             await chatChapters(film, local)
@@ -61,52 +61,27 @@ test("record actual shared AI catalogs, a workflow draft, and a genuine local-mo
             await film.cue("04-chat-request", async () => { throw new Error(message) }, true)
           if (!film.beats.some((beat) => beat.id === "06-chat-response"))
             await film.cue("06-chat-response", async () => { throw new Error("No qualified actual AI response: " + message) }, true)
-          throw error
+          modelFailure = error instanceof Error ? error : new Error(message)
         }
+        workflowReturned = await workflowChapter(film)
+        await atlasChapter(film)
       } finally { await film.finish() }
       expect(film.missingCritical(), "actual catalogs, saved draft and genuine UI response must qualify").toEqual([])
+      expect(workflowReturned, "the workflow's project-return failure is retained without losing independent footage").toBe(true)
+      if (modelFailure) throw modelFailure
     } finally { await context.close() }
   }, "four")
 })
 
-/** Same original picker, but explicitly accept its real git setup in this AI-only
- * empty workspace. Other recording installations keep the shared default. */
-async function selectOriginalGitProject(film: Film) {
-  const page = film.page
-  await film.go("/orchestra/agents")
-  const empty = page.locator('[data-slot="orchestra-chapter-empty"]')
-  const agents = page.getByRole("list", { name: "Configured agents", exact: true })
-  await expect.poll(async () => await empty.isVisible() || await agents.isVisible(), { timeout: 40_000 }).toBe(true)
-  if (await empty.isVisible()) {
-    await film.click(empty.getByRole("button", { name: "Open project", exact: true }), "Choose the actual isolated workspace")
-    const directory = film.installed.root + "/workspace"
-    await film.input(page.getByPlaceholder("Search folders", { exact: true }), directory, "Find the original runtime workspace")
-    await film.click(page.locator('[data-directory-path=' + JSON.stringify(directory) + ']'), "Select the verified workspace")
-    const initialize = page.getByRole("button", { name: "Initialize git", exact: true })
-    await expect.poll(async () => await initialize.isVisible() || await agents.isVisible(), { timeout: 40_000 }).toBe(true)
-    if (await initialize.isVisible()) {
-      const initialized = page.waitForResponse((response) => new URL(response.url()).pathname === "/api/project/git" &&
-        response.request().method() === "POST", { timeout: 60_000 })
-      await film.click(initialize, "Initialize git in this empty demonstration workspace")
-      const response = await initialized
-      const body = await response.text()
-      if (response.status() === 200) {
-        const project = object(object(JSON.parse(body)).data)
-        expect(typeof project.id).toBe("string")
-        expect(project.worktree).toBe(directory)
-        film.proof({ kind: "actual-project-initialization", mechanism: "original Initialize git UI",
-          projectId: project.id, vcs: project.vcs, directory: "verified private workspace", initialCommitCreatedByProduct: true })
-      } else {
-        // Preserve the actual refusal/error before continuing the independent
-        // catalog and Chat chapters. Do not weaken or retry a denied operation.
-        film.proof({ kind: "actual-project-initialization-failed", status: response.status(),
-          response: safeBody(body, film), initializedClaimed: false, operationRetried: false })
-        await film.pause(1000)
-        await film.snap("setup-actual-git-failure")
-      }
-    }
-  }
+/** Keep the original Add without git path. The two earlier takes retain their
+ * actual git-init failures; a demonstration of AI does not require retrying it. */
+async function selectOriginalRecordingWorkspace(film: Film) {
   await selectOriginalProject(film)
+  film.proof({ kind: "earlier-setup-diagnostics", historicalOnly: true, currentTakeInitializesGit: false,
+    earlierTakes: [
+      { runId: 45037607487, observed: "Initialize git returned HTTP 500", artifactId: 14760785731 },
+      { runId: 45038621982, observed: "Chromium could not expose the git response body", artifactId: 14760573330 },
+    ] })
   const projectsResponse = await film.context.request.get(film.installed.origin + "/api/project")
   expect(projectsResponse.status()).toBe(200)
   const projects = rows(await projectsResponse.json())
@@ -119,8 +94,8 @@ async function selectOriginalGitProject(film: Film) {
     nativeOwnerProjectId: film.owner.projectId, sameProjectId: selected.id === film.owner.projectId,
     gitRequiredForCatalogsOrChat: false })
 
-  // Git creates a new shared project identity. Preserve the native installation's
-  // explicit original owner; never assume or overwrite its project identifier.
+  // Preserve the native installation's explicit owner after ordinary shared
+  // project selection; never assume or overwrite its project identifier.
   const discovery = new URL("/api/sucafina/installations", film.installed.origin)
   discovery.search = new URLSearchParams({ select: "ids", installationId: film.owner.installationId,
     projectId: film.owner.projectId }).toString()
@@ -142,7 +117,7 @@ async function selectOriginalGitProject(film: Film) {
   expect(stamp.projectId).toBe(film.owner.projectId)
   expect(stamp.installationId).toBe(film.owner.installationId)
   expect(stamp.principalRef).toBe(film.installed.actorId)
-  film.proof({ kind: "native-owner-preserved-after-git", nativeProjectId: stamp.projectId,
+  film.proof({ kind: "native-owner-preserved-after-project-selection", nativeProjectId: stamp.projectId,
     installationId: stamp.installationId, originalAuthenticatedPrincipal: true, explicitRegistrySelection: true })
 }
 
@@ -239,6 +214,7 @@ async function workflowChapter(film: Film) {
   const page = film.page
   let directory = film.installed.root + "/workspace"
   let separateProject = false
+  let returned = true
   try { await film.cue("41-shared-workflows", async () => {
     const current = object(object((await apiObject(film, "/api/agent", true)).location).project)
     if (current.id === "global") {
@@ -300,15 +276,23 @@ async function workflowChapter(film: Film) {
       projectScope: separateProject ? "ephemeral Actions checkout" : "original runtime workspace" })
   }, true) } finally {
     if (separateProject) {
-      await page.keyboard.press("Escape")
-      await selectProjectThroughUI(film, film.installed.root + "/workspace")
-      await film.go("/orchestra/agents")
-      const current = object((await apiObject(film, "/api/agent", true)).location)
-      expect(current.directory).toBe(film.installed.root + "/workspace")
-      film.proof({ kind: "returned-to-original-workspace", actualSharedProjectId: object(current.project).id,
-        nativeInstallationId: film.owner.installationId, modelPromptWillUseThisDirectory: true })
+      try {
+        await page.keyboard.press("Escape")
+        await selectProjectThroughUI(film, film.installed.root + "/workspace")
+        await film.go("/orchestra/agents")
+        const current = object((await apiObject(film, "/api/agent", true)).location)
+        expect(current.directory).toBe(film.installed.root + "/workspace")
+        film.proof({ kind: "returned-to-original-workspace", actualSharedProjectId: object(current.project).id,
+          nativeInstallationId: film.owner.installationId, modelWasRecordedBeforeProjectSwitch: true })
+      } catch (error: unknown) {
+        returned = false
+        film.proof({ kind: "workflow-project-return-failed", independentChatAlreadyAttempted: true,
+          error: (error instanceof Error ? error.message : "Project return failed")
+            .replaceAll(film.installed.root, "[installation]").replaceAll(film.installed.serverPassword, "[credential]").slice(0, 1200) })
+      }
     }
   }
+  return returned
 }
 
 async function selectProjectThroughUI(film: Film, directory: string) {
@@ -330,6 +314,9 @@ async function selectProjectThroughUI(film: Film, directory: string) {
 async function atlasChapter(film: Film) {
   await film.cue("42-atlas", async () => {
     await film.go("/orchestra/atlas")
+    const actualDirectory = await film.page.locator('[data-slot="orchestra-profile"] small[title]').getAttribute("title")
+    film.proof({ kind: "actual-atlas-project", directory: actualDirectory?.replaceAll(film.installed.root, "[installation]"),
+      originalWorkspace: actualDirectory === film.installed.root + "/workspace" })
     const atlas = film.page.locator('[data-component="orchestra-atlas"]')
     await expect(atlas).toBeVisible()
     const main = atlas.locator(".atlas-main")
@@ -496,9 +483,3 @@ function object(value: unknown): Json { return value !== null && typeof value ==
 function rows(value: unknown): Json[] { if (!Array.isArray(value)) throw new Error("Expected an actual API array"); return value.map(object) }
 function digest(value: string) { return createHash("sha256").update(value).digest("hex") }
 function normalizeVisible(value: string) { return value.replace(/[*_`#]/g, "").replace(/^\s*(?:[-•]|\d+[.)])\s*/gm, "").replace(/\s+/g, " ").trim() }
-function safeBody(value: string, film: Film) {
-  return value.replaceAll(film.installed.root, "[installation]").replaceAll(film.installed.serverPassword, "[credential]")
-    .replace(/(?:Bearer|Basic)\s+[A-Za-z0-9._~+/=-]+/gi, "[authorization removed]")
-    .replace(/((?:api[_-]?key|token|password|authorization)\s*[=:]\s*)[^\s,;]+/gi, "$1[removed]")
-    .slice(0, 1500)
-}
