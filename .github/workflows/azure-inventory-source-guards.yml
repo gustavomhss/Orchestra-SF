@@ -1,0 +1,71 @@
+name: azure-inventory-source-guards
+
+on:
+  push:
+    branches: [inventory-guards-ci]
+
+permissions:
+  contents: read
+
+jobs:
+  guards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact reviewed source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "04e7a49edf117d03185eeccc51ca848ed664aea1"
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Record source and parse workflow without executing cloud steps
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(git rev-parse HEAD)" = "04e7a49edf117d03185eeccc51ca848ed664aea1"
+          test "$(git rev-parse 'HEAD^{tree}')" = "2416d71fc9753c58ffb12e535e31e0e89ad475b6"
+          mkdir -m 700 "$RUNNER_TEMP/inventory-source"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/inventory-source/refs.txt"
+          printf '%s\n' "$GITHUB_SHA" > "$RUNNER_TEMP/inventory-source/workflow-sha.txt"
+          git diff --name-only "$(git merge-base HEAD origin/dev)" HEAD > "$RUNNER_TEMP/inventory-source/changed-paths.txt"
+          test "$(wc -l < "$RUNNER_TEMP/inventory-source/changed-paths.txt")" -eq 1
+          sha256sum .github/workflows/azure-qualification-inventory.yml > "$RUNNER_TEMP/inventory-source/source.sha256"
+          git diff --check "$(git merge-base HEAD origin/dev)" HEAD
+          python3 - <<'PY' | tee "$RUNNER_TEMP/inventory-source/static-parse.log"
+          import ast, pathlib, yaml
+          source = pathlib.Path(".github/workflows/azure-qualification-inventory.yml")
+          workflow = yaml.safe_load(source.read_text())
+          job = workflow["jobs"]["observe"]
+          assert job["environment"] == "azure-mvp"
+          assert job["if"] == "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/dev'"
+          assert job["permissions"] == {"contents": "read", "actions": "read", "deployments": "read", "id-token": "write"}
+          parsed = 0
+          for step in job["steps"]:
+              script = step.get("run", "")
+              if "python3 - <<'PY'" not in script:
+                  continue
+              python = script.split("\n", 1)[1] if script.startswith("python3 - <<'PY'") else script.split("python3 - <<'PY'\n", 1)[1]
+              python = python.rsplit("\nPY", 1)[0]
+              ast.parse(python)
+              parsed += 1
+          assert parsed == 3
+          print("Parsed one workflow and three Python programs; cloud code was not executed.")
+          PY
+      - name: Repository setup for canonical guards
+        uses: ./.github/actions/setup-bun
+      - name: Canonical guards
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/inventory-source/guards.log"
+          test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Retain static source evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: azure-inventory-source-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/inventory-source
+          if-no-files-found: error
+          retention-days: 7
