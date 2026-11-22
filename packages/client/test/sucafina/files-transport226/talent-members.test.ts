@@ -4,7 +4,7 @@ import { createSfContextClient } from "../../../src/sucafina/context"
 import { createSfFilesClient } from "../../../src/sucafina/files"
 import { createSfTransport, type SfDesktopCapability, type SfDesktopInvocation } from "../../../src/sucafina/transport"
 
-test("members export uses the installed byte codec and bounded desktop chunks", async () => {
+test("members export uses bounded desktop chunks and refuses a completed empty export", async () => {
   const descriptor = {
     installationId: "installation", projectId: "project", hostId: "host",
     publicOrigin: "https://installation.example", mount: "/sucafina",
@@ -13,18 +13,22 @@ test("members export uses the installed byte codec and bounded desktop chunks", 
   const stamp = { installationId: descriptor.installationId, projectId: descriptor.projectId,
     hostId: descriptor.hostId, principalRef: "principal", policyVersion: "policy", accessRevision: "revision" }
   const calls: SfDesktopInvocation[] = []
+  const aborted: string[] = []
+  let empty = false
   const desktop: SfDesktopCapability = {
     registerConnection: async () => ({ status: "cancelled" }),
     bind: async () => ({ status: "denied" }),
-    abort: async () => {},
+    abort: async ({ requestId }) => { aborted.push(requestId) },
     login: async () => ({ status: "denied" }),
     logout: async () => ({ status: "cleared", remote: "unavailable" }),
     release: async () => {},
     invoke: async (request) => {
       calls.push(request)
-      if (request.kind === "response-chunk") return request.sequence === 0
-        ? { kind: "byte-chunk", sequence: 0, bytes: new Uint8Array([80, 75, 3, 4]), done: false }
-        : { kind: "byte-chunk", sequence: 1, bytes: new Uint8Array(), done: true }
+      if (request.kind === "response-chunk") {
+        if (empty || request.sequence === 1)
+          return { kind: "byte-chunk", sequence: request.sequence, bytes: new Uint8Array(), done: true }
+        return { kind: "byte-chunk", sequence: 0, bytes: new Uint8Array([80, 75, 3, 4]), done: false }
+      }
       if (request.operationId === "ctx.context") return {
         kind: "json-response", status: 200, headers: { "content-type": "application/json" },
         body: { status: "ok", value: { stamp, contractRevision: "sf-native-ui/1", authMode: "microsoft",
@@ -51,6 +55,13 @@ test("members export uses the installed byte codec and bounded desktop chunks", 
   expect(calls.filter((call) => call.kind === "request").map((call) => call.operationId))
     .toEqual(["ctx.context", "files.export.members"])
   expect(calls.filter((call) => call.kind === "response-chunk").map((call) => call.sequence)).toEqual([0, 1])
+
+  empty = true
+  expect(await createSfFilesClient(transport)["files.export.members"]({ surface: "dashboard" }, options))
+    .toEqual({ kind: "transport-error", reason: "invalid-response" })
+  expect(calls.filter((call) => call.kind === "response-chunk").map((call) => call.sequence)).toEqual([0, 1, 0])
+  expect(aborted).toEqual(calls.filter((call) => call.kind === "request" && call.operationId === "files.export.members")
+    .map((call) => call.requestId))
 })
 
 test("document actions retain their distinct mounted request bodies", async () => {
@@ -98,6 +109,62 @@ test("document actions retain their distinct mounted request bodies", async () =
     await client["files.document-confirm"]({ surface: "dashboard", ...reject }, { signal, idempotencyKey: "123e4567-e89b-42d3-a456-426614174001" })
     await client["files.document-confirm"]({ surface: "dashboard", ...link }, { signal, idempotencyKey: "123e4567-e89b-42d3-a456-426614174002" })
     expect(bodies).toEqual([evidence, reject, link])
+  } finally {
+    if (previous) Object.defineProperty(globalThis, "window", previous)
+    else Reflect.deleteProperty(globalThis, "window")
+  }
+})
+
+test("web asset download rejects empty bytes while preserving MIME and access failures", async () => {
+  const descriptor = { installationId: "installation", projectId: "project", hostId: "host",
+    publicOrigin: "https://installation.example", mount: "/sucafina", authMode: "microsoft" as const,
+    contractRevision: "sf-native-ui/1" as const }
+  const expected = { installationId: descriptor.installationId, projectId: descriptor.projectId, hostId: descriptor.hostId }
+  const stamp = { ...expected, principalRef: "owner", policyVersion: "policy", accessRevision: "revision" }
+  const context = { status: "ok", value: {
+    stamp, contractRevision: descriptor.contractRevision, authMode: descriptor.authMode, destinations: [],
+    availability: [{ family: "files", resource: "evidence", state: "ready",
+      operations: [{ operationId: "files.asset.download", state: "ready", reason: null, operational: true }] }],
+  } }
+  const byteHeaders = { "content-type": "application/octet-stream" }
+  const bytes = new Uint8Array([42])
+  const options = { signal: new AbortController().signal }
+  const previous = Object.getOwnPropertyDescriptor(globalThis, "window")
+  Object.defineProperty(globalThis, "window", { configurable: true, value: { location: { origin: descriptor.publicOrigin } } })
+  try {
+    let response = new Response(bytes, { headers: byteHeaders })
+    let downloads = 0
+    const transport = createSfTransport({ binding: descriptor, generation: 1, currentGeneration: () => 1,
+      operations: SfNativeOperationBindings,
+      fetch: async (input) => {
+        const url = new URL(String(input))
+        if (url.searchParams.has("asset")) {
+          downloads++
+          return response
+        }
+        expect(url.pathname).toBe("/sucafina/api/ui/context")
+        return Response.json(context)
+      },
+    })
+    const admit = () => createSfContextClient(transport)["ctx.context"](expected, options)
+    const client = createSfFilesClient(transport)
+    const download = () => client["files.asset.download"]({
+      surface: "procurement", assetId: "asset", expires: 100, signature: "a".repeat(64),
+    }, options)
+    expect((await admit()).kind).toBe("response")
+    expect(await download()).toMatchObject({ kind: "response", status: 200, body: bytes })
+
+    response = new Response(new Uint8Array(), { headers: { ...byteHeaders, "content-length": "0" } })
+    expect(await download()).toEqual({ kind: "transport-error", reason: "invalid-response" })
+    response = new Response(bytes, { headers: { "content-type": "text/html" } })
+    expect(await download()).toEqual({ kind: "transport-error", reason: "invalid-response" })
+
+    for (const status of [401, 403]) {
+      expect((await admit()).kind).toBe("response")
+      response = new Response(bytes, { status, headers: byteHeaders })
+      expect(await download()).toEqual({ kind: "transport-error", reason: "contract-unavailable" })
+    }
+    expect(downloads).toBe(5)
   } finally {
     if (previous) Object.defineProperty(globalThis, "window", previous)
     else Reflect.deleteProperty(globalThis, "window")

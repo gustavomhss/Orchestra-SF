@@ -242,6 +242,8 @@ export const SfImportReadDetail = Schema.Struct({
   receipt: SfImportReceiptSummary.pipe(optional),
 })
 
-export const SfFilesDownloadBytes = Schema.Uint8Array.annotate({ identifier: "SfFiles.DownloadBytes" })
+export const SfFilesDownloadBytes = Schema.Uint8Array.check(
+  Schema.makeFilter((bytes) => bytes.byteLength > 0 || "empty download is not a successful export"),
+).annotate({ identifier: "SfFiles.DownloadBytes" })
 /** Bytes are never represented as JSON, a local pathname, a detached link or a fake clean-scan status. */
 export const SfFilesUploadBytes = Schema.Uint8Array.annotate({ identifier: "SfFiles.UploadBytes" })
