@@ -2884,8 +2884,10 @@
       "independentReview": {
         "reviewer": "Astra root coordinator",
         "sourceSha": "7bcc5ca27307181b81f53ff7347fcc49f54ff4fb",
-        "status": "STATIC_ONE_REPORT_ORDER_CORRECTION",
-        "correction": "Visual-layout report now occurs only after server, driver, installation disposal and root removal all succeed; case failures or any cleanup failure suppress the success proof."
+        "status": "STATIC_NO_FINDINGS_AFTER_REPORT_ORDER_FIX",
+        "correction": "Visual-layout report now occurs only after server, driver, installation disposal and root removal all succeed; case failures or any cleanup failure suppress the success proof.",
+        "finalSourceSha": "69418666379c0332a57ae6fd4e52428405628546",
+        "finalTreeSha": "a8195e21063c4b304f7730c5c44ee32fa645d509"
       }
     },
     "operationsReadback": {
@@ -2899,6 +2901,21 @@
       ],
       "evidence": "The save command used version 3 and returned 200/ok. The immediate helper observed version 3; the failure screenshot already displayed Source version: 4. The existing DOM expectation now awaits exactly saveVersion + 1 within the unchanged 10000 ms expectation deadline.",
       "boundaries": "No version assertion removed. No retry, second command, product admission or source identity fallback."
+    },
+    "c02MemberProvenance": {
+      "status": "PENDING_INDEPENDENT_REVIEW_AND_FOCAL",
+      "failureRunId": 45038699571,
+      "jobId": 137258101503,
+      "case": "OP-PROC-01",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/procurement/queue-view.ts",
+        "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts"
+      ],
+      "cause": "CAP25 looked only for a persistent procurement-request individual source. The real C02 collection producer persists procurement-request-selection and holds its member evidence in the validated queue. The installed probe observed 0 individual scopes and 1 current selection scope.",
+      "identity": "Copy exact member target.incarnation, target.projectionDigest and target.version from the genuine C02 presentation, alongside record.number. Refuse a missing or altered member in a prepared view. Do not invent a scope, hash, receipt or authority.",
+      "regression": "One additional existing host-integration pool case uses the real C02 service, source lifecycle and SQLite. Independent individual source is present and must not replace C02 provenance. Unchanged list/detail/reload preparations retain the canonical member identity despite new ephemeral refs; null, missing, cloned and ambiguous views fail; real source edit invalidates the retained view and advances the next identity.",
+      "qualification": "Existing installed OP-PROC-01 retains all strict identity, material and navigation assertions. New pool case is component evidence, not installed Microsoft qualification."
     }
   }
 }

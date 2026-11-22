@@ -13,6 +13,7 @@ import type { Application } from "../../../runtime/application.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { object, rows } from "../../../runtime/contract.ts"
 import { domain } from "../../../runtime/procurement.ts"
+import { createProcurementQueueView, procurementQueueMemberIdentity, readProcurementQueueView } from "../../../product/procurement/queue-view.ts"
 import { initialProcurementSettings } from "../../../src/initial-settings.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
@@ -631,6 +632,74 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       finally { await server.stop(true); await fixture?.dispose() }
     }
   }, 60_000)
+
+  test("real C02 member identity survives unchanged native selections and rejects missing, copied, ambiguous or changed sources", async () => {
+    const fixture = await hostFixture("H10-C02-member-identity")
+    const actor = { id: "alice", roles: ["requester"], canWrite: true, assigned: [], domains: [] }
+    const prepare = async (detail: boolean) => {
+      const original = fixture.request()
+      const url = new URL("/sf/api/ui/pages/CAP25", original.url)
+      if (detail) url.searchParams.set("request", "PR-1")
+      const request = new Request(url, { headers: original.headers, signal: original.signal })
+      const prepared = await fixture.business.procurementQueueView(request, "procurement", "Requests")
+      if (!prepared || prepared instanceof Response) throw new Error("Real C02 queue preparation unavailable")
+      return prepared
+    }
+    const read = async (detail: boolean) => {
+      const prepared = await prepare(detail)
+      try {
+        return await fixture.persistence.transaction("procurement", async (snapshot) => {
+          expect(await prepared.current(snapshot, actor)).toBe(true)
+          const queue = readProcurementQueueView(prepared.data.procurementQueueView)
+          if (!queue) throw new Error("Real C02 presentation unavailable")
+          const members = queue.rows.filter((row) => row.id === "PR-1")
+          expect(members).toHaveLength(1)
+          const member = members[0]!
+          const identity = procurementQueueMemberIdentity(queue, "PR-1")
+          if (!identity) throw new Error("Real C02 member identity unavailable")
+          expect(identity).toEqual({
+            sourceRef: member.evidence.target.incarnation,
+            sourceDigest: member.evidence.target.projectionDigest,
+            sourceVersion: member.evidence.target.version,
+          })
+          // The fixture also issued an individual source: it must not replace
+          // the exact member selected by this C02 presentation.
+          expect(identity.sourceRef).not.toBe(fixture.evidence.target.incarnation)
+          expect(Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) =>
+            entry.alive && entry.scope.recordType === "procurement-request-selection" &&
+            entry.incarnation === identity.sourceRef && entry.version === identity.sourceVersion)).toHaveLength(1)
+          expect(procurementQueueMemberIdentity(null, "PR-1")).toBeUndefined()
+          expect(procurementQueueMemberIdentity(queue, "PR-MISSING")).toBeUndefined()
+          expect(procurementQueueMemberIdentity(structuredClone(queue), "PR-1")).toBeUndefined()
+          const ambiguous = createProcurementQueueView({
+            queue: [member.projection, member.projection], stock: queue.stock, aging: queue.aging,
+          })
+          expect(ambiguous).toBeUndefined()
+          expect(procurementQueueMemberIdentity(ambiguous, "PR-1")).toBeUndefined()
+          return { commit: false, value: { identity, ephemeralRef: member.evidence.refId } }
+        })
+      } finally { prepared.finish() }
+    }
+    try {
+      const listed = await read(false)
+      const detail = await read(true)
+      const reloaded = await read(true)
+      expect(detail.identity).toEqual(listed.identity)
+      expect(reloaded.identity).toEqual(listed.identity)
+      expect(detail.ephemeralRef).not.toBe(listed.ephemeralRef)
+      const retained = await prepare(true)
+      try {
+        await fixture.edit({ estAmount: 175 })
+        expect(await fixture.persistence.transaction("procurement", async (snapshot) => ({
+          commit: false, value: await retained.current(snapshot, actor),
+        }))).toBe(false)
+        const changed = await read(true)
+        expect(changed.identity.sourceRef).toBe(listed.identity.sourceRef)
+        expect(changed.identity.sourceVersion).toBeGreaterThan(listed.identity.sourceVersion)
+        expect(changed.identity.sourceDigest).not.toBe(listed.identity.sourceDigest)
+      } finally { retained.finish() }
+    } finally { await fixture.dispose() }
+  }, 30_000)
 
   async function hostFixture(scenario: string, controlledReviewClock = false, origin = "https://local.invalid", allowCaseNavigation = false) {
     const started = performance.now()

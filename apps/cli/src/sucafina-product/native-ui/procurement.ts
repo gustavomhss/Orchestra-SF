@@ -10,7 +10,7 @@ import { procurementKeys } from "../../../../../modules/sucafina/Sucafinav1/src/
 import { approvalQueue, procurementDashboard } from "../../../../../modules/sucafina/Sucafinav1/src/procurement-screen.ts"
 import type { RequestView } from "../../../../../modules/sucafina/Sucafinav1/src/procurement-screen.ts"
 import { publicSfData } from "../../../../../modules/sucafina/Sucafinav1/product/integration/public-state.ts"
-import { readProcurementQueueView, procurementApprovalGroups } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/queue-view.ts"
+import { readProcurementQueueView, procurementApprovalGroups, procurementQueueMemberIdentity } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/queue-view.ts"
 import { projectSourcingComparison } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/sources.ts"
 import type { ProcurementQueueView } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/queue-view.ts"
 
@@ -221,11 +221,16 @@ function approvalGroups(
     unassigned: groups.unassigned.map((row) => selectRequest(row, true, actor, formSettings)),
   }
 }
-function publishedRequestBasis(row: Record<string, unknown>, snapshot: Snapshot, formSettings: unknown, version: number) {
+function publishedRequestBasis(row: Record<string, unknown>, snapshot: Snapshot, formSettings: unknown, version: number, queue?: ProcurementQueueView) {
   const baseCurrency = text(object(formSettings).currency)
   const facts = procurementMonetaryFacts(row, baseCurrency, formSettings)
   const order = procurementOrderPresentation(row, baseCurrency, formSettings)
-  const identity = typeof row.number === "string" ? procurementRowSourceIdentity(snapshot, row.number) : undefined
+  const identity = typeof row.number === "string"
+    ? queue ? procurementQueueMemberIdentity(queue, row.number) : procurementRowSourceIdentity(snapshot, row.number)
+    : undefined
+  // A prepared C02 view must identify this exact member. Missing provenance is
+  // a failed projection, never a null identity or an unrelated individual source.
+  if (queue && !identity) return undefined
   return {
     monetaryState: facts.monetaryState,
     sourceRef: identity?.sourceRef ?? null,
@@ -262,16 +267,21 @@ function pageData(
       versions: {},
     }
   }
-  if (capability === "CAP25") return {
-    data: {
-      requests: requests.map((row) => ({
-        ...selectRequest(row, true, actor, data.formSettings),
-        ...publishedRequestBasis(row, snapshot, data.formSettings, typeof row.number === "string" ? view.versions["requests:" + row.number]?.version ?? 0 : 0),
-      })),
-      suppliers: suppliers.map((row) => selectSupplier(row, false)),
-      directory, formSettings, bankVerificationAvailable: data.bankVerificationAvailable === true,
-    },
-    versions: requestsVersion,
+  if (capability === "CAP25") {
+    const published = requests.flatMap((row) => {
+      const basis = publishedRequestBasis(row, snapshot, data.formSettings,
+        typeof row.number === "string" ? view.versions["requests:" + row.number]?.version ?? 0 : 0, queue)
+      return basis ? [{ ...selectRequest(row, true, actor, data.formSettings), ...basis }] : []
+    })
+    if (published.length !== requests.length) return undefined
+    return {
+      data: {
+        requests: published,
+        suppliers: suppliers.map((row) => selectSupplier(row, false)),
+        directory, formSettings, bankVerificationAvailable: data.bankVerificationAvailable === true,
+      },
+      versions: requestsVersion,
+    }
   }
   if (capability === "CAP26") return {
     data: { requests: requestsDetail, ...approvalGroups(requests, actor, queue, data.formSettings), directory, formSettings },
