@@ -17,6 +17,18 @@ const port = 4174
 const webRoot = path.join(repository, "apps/web/dist")
 export const decisionsInstallationOrigin = `http://${hostname}:${port}`
 
+// The test hook may run after the test body times out while an unrelated Promise
+// is pending. Retain only the cleanup handles created for this exact TestInfo.
+const ownedInstallations = new WeakMap<TestInfo, Set<() => Promise<void>>>()
+
+export async function stopPlannerInstallations(info: TestInfo) {
+  const owned = ownedInstallations.get(info)
+  if (!owned) return
+  const results = await Promise.allSettled([...owned].map((stop) => stop()))
+  const failures = results.flatMap((result) => result.status === "rejected" ? [result.reason] : [])
+  if (failures.length) throw new AggregateError(failures, "The fixture-owned installation did not finish cleanup")
+}
+
 /** Launch the distributed CLI and installation factory; no alternate application or route handler. */
 export async function startPlannerInstallation(info: TestInfo) {
   const origin = decisionsInstallationOrigin
@@ -85,32 +97,42 @@ export async function startPlannerInstallation(info: TestInfo) {
     "--installation", path.join(repository, "modules/sucafina/Sucafinav1/local/entry.ts")], {
     cwd: directory, env: environment, stdio: ["ignore", "pipe", "pipe"],
   })
-  const state = { log: "", error: undefined as Error | undefined, stopped: false, secrets: [enrollment.searchParams.get("code")!] }
+  const state = { log: "", error: undefined as Error | undefined, secrets: [enrollment.searchParams.get("code")!] }
   const capture = (chunk: Buffer) => { state.log = (state.log + chunk.toString("utf8")).slice(-64_000) }
   child.stdout.on("data", capture)
   child.stderr.on("data", capture)
   child.once("error", (error) => { state.error = error })
   const exited = () => child.exitCode !== null || child.signalCode !== null || !!state.error
-  const stop = async () => {
-    if (state.stopped) return
-    state.stopped = true
-    let listenerReleased = false
-    try {
-      if (!exited()) child.kill("SIGTERM")
-      try { await expect.poll(exited, { message: "the fixture-owned CLI exits after SIGTERM", timeout: 15_000 }).toBe(true) }
-      catch {
-        if (!exited()) child.kill("SIGKILL")
-        await expect.poll(exited, { message: "the fixture-owned CLI is no longer running", timeout: 5_000 }).toBe(true)
+  let stopping: Promise<void> | undefined
+  const stop = (): Promise<void> => {
+    // A concurrent finally/hook must await the same cleanup, not return early.
+    if (stopping) return stopping
+    stopping = (async () => {
+      let listenerReleased = false
+      try {
+        if (!exited()) child.kill("SIGTERM")
+        try { await expect.poll(exited, { message: "the fixture-owned CLI exits after SIGTERM", timeout: 15_000 }).toBe(true) }
+        catch {
+          if (!exited()) child.kill("SIGKILL")
+          await expect.poll(exited, { message: "the fixture-owned CLI is no longer running", timeout: 5_000 }).toBe(true)
+        }
+        await expect.poll(portAvailable, { message: `the fixture-owned local listener releases ${origin}`, timeout: 5_000 }).toBe(true)
+        listenerReleased = true
+      } finally {
+        // DEBUG diagnostics can include authentication URLs or HTTP headers. Redact
+        // known credentials and credential-shaped fields before creating an artifact.
+        await info.attach("wp03-real-cli.log", { body: redactDiagnostics(state.log, state.secrets), contentType: "text/plain" })
+        if (exited() && listenerReleased) await rm(directory, { recursive: true, force: true })
       }
-      await expect.poll(portAvailable, { message: `the fixture-owned local listener releases ${origin}`, timeout: 5_000 }).toBe(true)
-      listenerReleased = true
-    } finally {
-      // DEBUG diagnostics can include authentication URLs or HTTP headers. Redact
-      // known credentials and credential-shaped fields before creating an artifact.
-      await info.attach("wp03-real-cli.log", { body: redactDiagnostics(state.log, state.secrets), contentType: "text/plain" })
-      if (exited() && listenerReleased) await rm(directory, { recursive: true, force: true })
-    }
+      const owned = ownedInstallations.get(info)
+      owned?.delete(stop)
+      if (owned?.size === 0) ownedInstallations.delete(info)
+    })()
+    return stopping
   }
+  const owned = ownedInstallations.get(info) ?? new Set<() => Promise<void>>()
+  owned.add(stop)
+  ownedInstallations.set(info, owned)
   try {
     await expect.poll(async () => {
       if (exited()) return "cli-exited"

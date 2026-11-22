@@ -3,6 +3,7 @@
 // Keep the original executable contracts until the same authenticated native
 // host can produce an equivalent observation; a route/200 is not parity.
 import { expect, test } from "@playwright/test"
+import { stopPlannerInstallations } from "./wp03/installation-fixture"
 import { asRecord, caseIdentity, clickCommand, draft, enterInstalledWorkbench, enterWorkbench, fillDecision, isCommand, openCreatedDecision, withInstallation } from "./decisions-support/journey"
 import { caseLifecycleJourney, lostCreationJourney } from "./decisions-support/case-lifecycle"
 import { initialAlternativesJourney } from "./decisions-support/initial-alternatives"
@@ -12,6 +13,10 @@ import { procurementClosureJourney } from "./decisions-support/procurement-closu
 // Enrollment and the HttpOnly operator session are real. Do not retain auth in traces.
 test.use({ trace: "off" })
 test.describe.configure({ retries: 0 })
+
+// afterEach is awaited by Playwright even when an unresolved observation outlives
+// the test body; it joins the exact child cleanup registered by this test.
+test.afterEach(async ({}, info) => { await stopPlannerInstallations(info) })
 
 test("CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change", async ({ page }, info) => {
   test.setTimeout(180_000)
