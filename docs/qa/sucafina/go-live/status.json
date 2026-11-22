@@ -1,0 +1,787 @@
+{
+  "schema": "orchestra-sf.go-live-preparation.v1",
+  "recordKind": "PREPARATION_STATUS_WITH_COMPONENT_EXECUTION_REFERENCES",
+  "observedAtUtc": "2026-11-22T13:16:41Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "go-live-readiness",
+  "base": {
+    "sha": "79912446753af5bb291fc2581543732eb4c83057",
+    "tree": "5c32cd72537799632e7d2583c1775df1d88b8780",
+    "role": "TRIAGE_ONLY"
+  },
+  "scope": [
+    "G05",
+    "G06",
+    "G07",
+    "G08",
+    "G10"
+  ],
+  "excludedOwnership": {
+    "G01-G04-and-pool": "Retomar migração para Microsoft Teams",
+    "#349": "Astra da frente audit-residual-bundle",
+    "G09-and-588": "Gustavo e Astra já responsável"
+  },
+  "authorization": {
+    "preparation": true,
+    "coordination": true,
+    "qualificationOnlyInAuthorizedIsolatedEnvironments": true,
+    "productionWindowApproval": null,
+    "productionGoNoGoDecision": null
+  },
+  "finalCandidate": {
+    "sha": null,
+    "tree": null,
+    "migrationAcknowledgement": null,
+    "releaseAcknowledgement": null,
+    "packagingExecutionOwner": null,
+    "workflowSha": null,
+    "toolchainReceipt": null
+  },
+  "environments": {
+    "qa": {
+      "reservation": null,
+      "hostOperator": null,
+      "entraOwner": null,
+      "authorizationRef": null
+    },
+    "recovery": {
+      "reservation": null,
+      "hostOperator": null,
+      "backupOwner": null,
+      "externalEffectObserver": null,
+      "authorizationRef": null
+    }
+  },
+  "coordination": {
+    "currentReleaseOwner": null,
+    "serverOwnerClaim": {
+      "owner": "Astra go-live",
+      "scope": "G05 proof transport and CI only",
+      "pullRequest": 637
+    },
+    "filesOperationsOwnerClaim": {
+      "owner": "Astra go-live",
+      "scope": "G06 scanner proof and benign invalid-payload controls",
+      "pullRequest": 638
+    },
+    "installedRunnerOwnerClaim": {
+      "owner": "Astra go-live",
+      "scope": "G08 private executor tooling; no QA reservation claimed",
+      "pullRequest": 644
+    },
+    "requests": [
+      {
+        "target": "Migração Teams / reservas QA e recuperação / vínculo da prova 222 (2)",
+        "pr": 628,
+        "commentId": 7074623731,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7074623731",
+        "status": "PUBLISHED_AWAITING_ACK"
+      },
+      {
+        "target": "Release atual: confirmar responsável e mesmo C/T",
+        "pr": 247,
+        "commentId": 7074623941,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/247#issuecomment-7074623941",
+        "status": "PUBLISHED_AWAITING_ACK",
+        "historicalThread": true
+      },
+      {
+        "target": "Executor do pacote Microsoft; preservar claim genérico do Astra #349",
+        "pr": 257,
+        "commentId": 7074624125,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/257#issuecomment-7074624125",
+        "status": "PUBLISHED_AWAITING_ACK",
+        "historicalThread": true
+      },
+      {
+        "target": "Migração: C/T final, contratos G08, reservas QA/G10 e recibo222",
+        "pr": 628,
+        "commentId": 7079652837,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7079652837",
+        "status": "PUBLISHED_AWAITING_ACK"
+      },
+      {
+        "target": "Release: dono atual, C/T, operador e toolchain antes do produtor",
+        "pr": 247,
+        "commentId": 7079656702,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/247#issuecomment-7079656702",
+        "status": "PUBLISHED_AWAITING_ACK",
+        "historicalThread": true
+      }
+    ]
+  },
+  "gates": [
+    {
+      "gate": "G05",
+      "title": "HTTP e isolamento por Team",
+      "owner": "Astra go-live (preparação e coordenação)",
+      "componentOwner": "Astra go-live — tooling and component proof",
+      "status": "COMPONENT_PASS_INTEGRATED_FINAL_BLOCKED",
+      "candidateSha": null,
+      "candidateTree": null,
+      "artifact": null,
+      "receipt": null,
+      "approval": null,
+      "document": "g05-g06-controls.md",
+      "evidenceRefs": [
+        "handoff",
+        "teams-plan",
+        "g05-work-proof-2026-11-22"
+      ],
+      "firstBlocker": "C/T final sem ACK conjunto da Migração e Release; executar replay completo nesse candidato integrado.",
+      "remaining": [
+        "Confirmar e executar coverage/auth/effect e isolamento Team sobre C/T final; reconciliar inventário se C mudar endpoints.",
+        "Conservar recibos completos, hashes, veredito Omni real, cleanup e aprovação para o candidato efetivo."
+      ],
+      "closure": "Três recibos aprovados ligados ao mesmo candidato final e inventário completo; HTTP real observado.",
+      "workProof": {
+        "sourceSha": "db896193346305fb1fee2d0d389cfc0b73077a01",
+        "sourceTree": "027c26022afe0ef74ae61f40c21e8e5b0b3995c6",
+        "pullRequest": 637,
+        "mergeCommit": "48768330ce2bdd6dc6673cd0b4926b61778e3bd4",
+        "runId": 45024901473,
+        "runAttempt": 1,
+        "status": "success",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45024901473",
+        "finalCandidateApproval": false,
+        "counts": {
+          "coverage": 409,
+          "auth": 409,
+          "effect": 409,
+          "teamControls": 11,
+          "teamAssertions": 123,
+          "guards": 78
+        },
+        "artifacts": [
+          {
+            "id": 14756065892,
+            "name": "g05-effect-db896193346305fb1fee2d0d389cfc0b73077a01-1",
+            "zipSha256": "d12edf58b1ef8365cb0de9e3f8bcc9a3c8cffcc6a1b8bde2df33f1c3769bdf2e",
+            "zipBytes": 56763,
+            "independentlyDownloadedAndHashVerified": true
+          },
+          {
+            "id": 14755800231,
+            "name": "g05-validation-db896193346305fb1fee2d0d389cfc0b73077a01-1",
+            "zipSha256": "f622c6a7228de0d06281f914a78dcf30f4ecd161fb5bc9205df27f335eef3aa1",
+            "zipBytes": 724,
+            "independentlyDownloadedAndHashVerified": true
+          },
+          {
+            "id": 14755382665,
+            "name": "g05-teams-db896193346305fb1fee2d0d389cfc0b73077a01-1",
+            "zipSha256": "077c56778054225b2423cbeabb007a0c39e87dba3e2f4d533cd4c9e9e23eec74",
+            "zipBytes": 3658,
+            "independentlyDownloadedAndHashVerified": true
+          },
+          {
+            "id": 14755013627,
+            "name": "g05-coverage-db896193346305fb1fee2d0d389cfc0b73077a01-1",
+            "zipSha256": "693773f32f5cc2440a6388c0c1bbf31158b2f05815538cbd9cf8837592e1f4fe",
+            "zipBytes": 22437,
+            "independentlyDownloadedAndHashVerified": true
+          },
+          {
+            "id": 14754728044,
+            "name": "g05-auth-db896193346305fb1fee2d0d389cfc0b73077a01-1",
+            "zipSha256": "b87ffb8edf45c698934bdd925d9baf82e9ce4db8aa90af14e7b962fc0d011fe6",
+            "zipBytes": 29725,
+            "independentlyDownloadedAndHashVerified": true
+          }
+        ],
+        "receiptSchemas": [
+          "orchestra.g05.httpapi/1",
+          "orchestra.g05.team-http/1"
+        ],
+        "installedTeamsProof": false,
+        "finalCandidate": false,
+        "jobs": [
+          {
+            "id": 137215694059,
+            "name": "G05 guards and types",
+            "result": "success"
+          },
+          {
+            "id": 137215694229,
+            "name": "G05 (coverage)",
+            "result": "success"
+          },
+          {
+            "id": 137215694245,
+            "name": "G05 (effect)",
+            "result": "success"
+          },
+          {
+            "id": 137215694351,
+            "name": "G05 (teams)",
+            "result": "success"
+          },
+          {
+            "id": 137215694426,
+            "name": "G05 (auth)",
+            "result": "success"
+          }
+        ],
+        "receipts": [
+          {
+            "mode": "coverage",
+            "schema": "orchestra.g05.httpapi/1",
+            "sha256": "dd446d7de6154264dcd4aab5c4997d8189a8d30b58d197707931457e9592a5b2",
+            "internalHashesVerified": 10,
+            "proofClass": "HTTPAPI_CATALOG"
+          },
+          {
+            "mode": "auth",
+            "schema": "orchestra.g05.httpapi/1",
+            "sha256": "90434aa79bc8b93e002b8162f9959a7d321ea6e1b32d8206098612a542acd9d6",
+            "internalHashesVerified": 10,
+            "proofClass": "HTTP_LOOPBACK_COMPONENT",
+            "requestsAndLoopbackPeers": 819,
+            "omniSpawns": 25,
+            "omniDelegations": 0
+          },
+          {
+            "mode": "effect",
+            "schema": "orchestra.g05.httpapi/1",
+            "sha256": "94b3da8a38dbb2ee838ec068ab60f76b5935ce6e0a902ed75749fb3453a3a289",
+            "internalHashesVerified": 10,
+            "proofClass": "HTTP_LOOPBACK_COMPONENT",
+            "requestsAndLoopbackPeers": 642,
+            "listeners": 409,
+            "closedListeners": 409,
+            "omniSpawns": 4789,
+            "omniDelegations": 0
+          },
+          {
+            "mode": "teams",
+            "schema": "orchestra.g05.team-http/1",
+            "sha256": "99b44373889b682a3096a11c1403286ae91357833df8d894927d58217b70769b",
+            "internalHashesVerified": 9,
+            "proofClass": "HTTP_LOOPBACK_MICROSOFT_COMPONENT",
+            "requestsAndLoopbackPeers": 16
+          }
+        ]
+      }
+    },
+    {
+      "gate": "G06",
+      "title": "ClamAV e admissão privada",
+      "owner": "Astra go-live (preparação e coordenação)",
+      "componentOwner": "Astra go-live — tooling and component proof",
+      "status": "COMPONENT_PASS_INTEGRATED_FINAL_BLOCKED",
+      "candidateSha": null,
+      "candidateTree": null,
+      "artifact": null,
+      "receipt": null,
+      "approval": null,
+      "document": "g05-g06-controls.md",
+      "evidenceRefs": [
+        "clamav-component-reference",
+        "g06-work-proof-2026-11-22"
+      ],
+      "firstBlocker": "C/T final e composição pertinente ainda sem confirmação; reexecutar nesse candidato.",
+      "coverageGap": "RESOLVED_ON_WORK_CANDIDATE_NOT_FINAL_APPROVAL",
+      "remaining": [
+        "Executar os 8 casos e verificador sobre C/T final, preservando seleção, daemon real, integridade e cleanup.",
+        "Manter o alcance de componente local explícito; qualificar a composição pertinente sem promover local-operator a Microsoft instalado."
+      ],
+      "closure": "Scanner real, arquivo malformado e admissão privada qualificados no candidato final; negativos sem efeitos duráveis.",
+      "workProof": {
+        "sourceSha": "9a6b7323bb35463005c978af5257f4107f7e62d1",
+        "sourceTree": "b189a570fd57ce9cc6a39c1c41dbb321de9cdb2d",
+        "pullRequest": 638,
+        "mergeCommit": "babc660b2cda3e20ed6b68ecab86b973110652cb",
+        "runId": 44998523282,
+        "runAttempt": 1,
+        "status": "success",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44998523282",
+        "finalCandidateApproval": false,
+        "snapshotSha": "a99d4c650c30ae6581d23c7463e1379757778348",
+        "jobId": 137134720749,
+        "counts": {
+          "verifierControls": 69,
+          "realCases": 8,
+          "files": 3,
+          "assertions": 218,
+          "fail": 0,
+          "skip": 0,
+          "declaredOmniTests": 4,
+          "omniSpawns": 5,
+          "guards": 78
+        },
+        "artifact": {
+          "id": 14744986410,
+          "zipSha256": "71552dcaa03d1576c6e52047b3f2d6133eca7ebfad98ab931e6337df018bccc8",
+          "zipBytes": 25740,
+          "independentlyDownloadedAndHashVerified": true,
+          "internalEvidenceHashesVerified": 14
+        },
+        "receipt": {
+          "schema": "teams-profile-scanner-receipt-v1",
+          "sha256": "7b9098b2af0d097e2ccd9daae4ed75e7176b8a5fa782a577bc7d6f426dad657b",
+          "proofClass": "COMPONENT_REAL_CLAMD",
+          "installedTeamsProof": false
+        },
+        "junitSha256": "b52e22d0a245c5a362cfa8419d9422d078125e658b63509a3e68797970f631bd",
+        "malformedApplicationFile": {
+          "formatMismatchBytes": 54,
+          "truncatedXlsxOriginalBytes": 6569,
+          "truncatedXlsxBytes": 6547,
+          "scannerAdmission": "accepted",
+          "applicationPreviewStatus": 400,
+          "applicationPreviewCode": "needs-input",
+          "durableEffectsAfterStaging": "unchanged",
+          "fixtureCleanup": "verified"
+        },
+        "requestSha256": "5d8d0ef32b33cc90cb86cd02484927e53585cda803cacddaf57d6bc96204d610"
+      }
+    },
+    {
+      "gate": "G07",
+      "title": "Pacote Linux x64",
+      "owner": "Astra go-live (preparação e coordenação)",
+      "componentOwner": "Astra go-live — tooling and component proof",
+      "status": "VERIFIER_PASS_INTEGRATED_FINAL_TAR_BLOCKED",
+      "candidateSha": null,
+      "candidateTree": null,
+      "artifact": null,
+      "receipt": null,
+      "approval": null,
+      "document": "g07-linux-package.md",
+      "evidenceRefs": [
+        "entra-prod-package-reference",
+        "g07-work-proof-2026-11-22"
+      ],
+      "firstBlocker": "Faltam ACKs de C/T pela Migração e Release anteriores ao produtor, executor Release e toolchain fixados.",
+      "remaining": [
+        "Obter confirmação real do mesmo C/T e executar o produtor Microsoft da Release depois dos ACKs.",
+        "Admitir a requisição versionada com fontes reais de ACKs/run/artefato; verificar ZIP original e tar pelo instalador de C.",
+        "Vincular manifesto/roster/factory e instalação real dos mesmos bytes a G08/G10."
+      ],
+      "closure": "Tar verificável vinculado ao mesmo SHA/árvore, hashes e instalação comprovados; nenhuma reconstrução entre gates.",
+      "workProof": {
+        "sourceSha": "b7edac10a2e9bbe10fec6ec1318f568ccde74813",
+        "sourceTree": "fa8734cdf99883488183b5ef423c48d608ba116e",
+        "pullRequest": 640,
+        "mergeCommit": "f07690a41ccf090a39a76ce2733323a98c75c326",
+        "runId": 44999252013,
+        "runAttempt": 1,
+        "status": "success",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44999252013",
+        "finalCandidateApproval": false,
+        "jobId": 137136940722,
+        "additionalRuns": [
+          {
+            "id": 44999256028,
+            "jobId": 137136954264
+          }
+        ],
+        "counts": {
+          "nodeControls": 31,
+          "pythonControls": 18,
+          "guards": 78
+        },
+        "packageQualification": "skipped",
+        "artifact": null,
+        "receipt": null,
+        "logsVerified": true,
+        "actualFinalTarVerified": false
+      }
+    },
+    {
+      "gate": "G08",
+      "title": "Homologação Teams em QA",
+      "owner": "Astra go-live (preparação e coordenação)",
+      "componentOwner": "Astra go-live — tooling and component proof",
+      "status": "EXECUTOR_PASS_INTEGRATED_INSTALLED_NOT_RUN",
+      "candidateSha": null,
+      "candidateTree": null,
+      "artifact": null,
+      "receipt": null,
+      "approval": null,
+      "document": "g08-teams-qa.md",
+      "evidenceRefs": [
+        "purchases-qa-222",
+        "purchases-technical",
+        "qa-historical-support",
+        "g08-work-proof-2026-11-22"
+      ],
+      "firstBlocker": "Reconciliar contratos originais UI/admin no candidato integrado e obter reserva/atores reais; pin e tar finais ausentes.",
+      "remaining": [
+        "Reconciliar seletores chat/draft/picker/admin e contrato /api/ui/team-profiles com a integração Teams.",
+        "Confirmar reserva QA, operador e quatro contextos Microsoft originais com Teams/grants/mutações autorizados.",
+        "Instalar exatamente o tar G07 e executar nove casos centrais com prova antes/depois de host/processo/HTTPS e limpeza.",
+        "Reconciliar/executar U15/U39/U40/F04/AZ02 e demais obrigações da matriz, com seleções e recibos próprios.",
+        "Vincular o aceite 222 (2) somente ao QA original; obter backlink sem estendê-lo ao tar novo."
+      ],
+      "closure": "Homologação real comprovada no tar G07 instalado; evidência sanitizada e cleanup concluído.",
+      "workProof": {
+        "sourceSha": "aa928b6ae4a5944e5dad4b5bd206d5c123d2238e",
+        "sourceTree": "36794c205023010cf43dc29d6856340f4ed325ea",
+        "pullRequest": 644,
+        "mergeCommit": "ab54723003859c01251617716272ad7ebd834fb6",
+        "runId": 45003896381,
+        "runAttempt": 1,
+        "status": "success",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45003896381",
+        "finalCandidateApproval": false,
+        "jobId": 137151128459,
+        "counts": {
+          "nodeControls": 84,
+          "pythonControls": 28,
+          "guards": 78,
+          "listedCases": 9,
+          "installedCasesRun": 0
+        },
+        "installedJob": {
+          "id": 137151129591,
+          "status": "skipped"
+        },
+        "artifact": {
+          "id": 14746898273,
+          "zipSha256": "17c1d362a945b23c5b10a3c7c13bffd37ef78a61d49d42e7bbae5c09fc4474a8",
+          "zipBytes": 4521,
+          "independentlyDownloadedAndHashVerified": true
+        },
+        "receipt": {
+          "schema": "sf-g08-executor-inventory-v1",
+          "sha256": "a07736cc9d3467cbeafe71820e8f5524c0e407f71e332697bdb562874def71e4",
+          "status": "EXECUTOR_INVENTORY_VERIFIED",
+          "caseStatus": "LISTED_NOT_RUN",
+          "installed": false,
+          "g08Closed": false,
+          "productionCutover": false
+        },
+        "pendingGroups": [
+          "U15",
+          "U39",
+          "U40",
+          "F04",
+          "AZ02"
+        ]
+      }
+    },
+    {
+      "gate": "G10",
+      "title": "Virada, retomada e rollback",
+      "owner": "Astra go-live (preparação e coordenação)",
+      "componentOwner": "Astra go-live — tooling and component proof",
+      "status": "BACKUP_COMPONENT_PASS_INTEGRATED_REHEARSAL_NOT_RUN",
+      "candidateSha": null,
+      "candidateTree": null,
+      "artifact": null,
+      "receipt": null,
+      "approval": null,
+      "document": "g10-cutover-rollback.md",
+      "evidenceRefs": [
+        "recovery-component-reference",
+        "current-installer",
+        "g10-work-proof-2026-11-22"
+      ],
+      "firstBlocker": "Reserva isolada, operadores/observador/chave e C/T/tar finais ainda não recebidos para o ensaio operacional.",
+      "remaining": [
+        "Reservar host e VM clone separados de G08, donos de backup/chave/corte e observador externo.",
+        "Verificar R instalado/retido antes do corte, tar G07 C e compatibilidade independente para rollback.",
+        "Executar backup real, censo completo, clone e uso da chave; manter registro monotônico fora da área restaurada.",
+        "Executar migração admitida, corte, efeito posterior ao checkpoint, restore, restart real, retry sem duplicação e rollback com dados/recibos preservados.",
+        "Medir RPO/RTO, validar negativas e limpeza; a rota /recover cobre apenas dashboard Team."
+      ],
+      "closure": "Ensaio isolado comprovado no tar final: backup, corte, retomada e rollback, incluindo efeitos e recibos posteriores ao checkpoint.",
+      "workProof": {
+        "sourceSha": "f5b22050bbe04c228576dbe5ca1356cafbe1f431",
+        "sourceTree": "28a6d7cd0cbecaf6d3f3d364c81cda1bca9ca5c0",
+        "pullRequest": 639,
+        "mergeCommit": "e1ed546cac909208959f60734d601723d3101662",
+        "runId": 45024293423,
+        "runAttempt": 1,
+        "status": "success",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45024293423",
+        "finalCandidateApproval": false,
+        "jobId": 137213794907,
+        "counts": {
+          "filesystemSQLiteControls": 15,
+          "fail": 0,
+          "skip": 0,
+          "guards": 78
+        },
+        "artifact": {
+          "id": 14755630213,
+          "zipSha256": "ba3531559a97f82f5a1533c5b2aaa5517aae03f566e9dad90ba052334fd27655",
+          "zipBytes": 1875,
+          "independentlyDownloadedAndHashVerified": true
+        },
+        "receipt": {
+          "schema": "orchestra-sf.g10-component-tests.v1",
+          "sha256": "b6e5932bdc63d759480cfee9c01f6bf6e4d0d8373347839b4d7167917b064d02",
+          "proofClass": "FILESYSTEM_COMPONENT_CONTROLS",
+          "installedTeamsProof": false,
+          "releaseQualified": false
+        },
+        "hostBackup": "NOT_RUN",
+        "businessRecovery": "NOT_RUN",
+        "keyDecryption": "NOT_RUN",
+        "cutover": "NOT_RUN",
+        "actualServiceRestart": "NOT_RUN",
+        "compatibleCodeRollback": "NOT_RUN",
+        "sourceTargetBinding": "observed installed R verified separately from G07 target C"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "handoff",
+      "kind": "USER_DIRECTED_HANDOFF",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c02f329d48d37e2f6296154978cd8a7cf80bcb64/docs/qa/sucafina/astra-go-live-handoff.md",
+      "sourceSha": "c02f329d48d37e2f6296154978cd8a7cf80bcb64"
+    },
+    {
+      "id": "teams-plan",
+      "kind": "HISTORICAL_NORMATIVE_PLAN",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/736a5087c223629be4d73c8a4535d615fcafd96a/docs/architecture/teams-profile-test-plan.json",
+      "sourceSha": "736a5087c223629be4d73c8a4535d615fcafd96a",
+      "executionProof": false
+    },
+    {
+      "id": "clamav-component-reference",
+      "kind": "HISTORICAL_EXECUTED_COMPONENT",
+      "sourceSha": "6f9b66a2aaa8b057653244c94183254bb6f008b2",
+      "sourceTree": "1ac16688f1733473d5e6ef8cb8cf09a456500c08",
+      "snapshotSha": "60bffd3d1f53de2076612c809c95fc244b145ced",
+      "runId": 44684352036,
+      "runAttempt": 1,
+      "jobId": 136115014524,
+      "artifactId": 14606100590,
+      "artifactZipSha256": "f8f3e6475eedd000023315b5e61c44d640a5be492f5893f8863d841de1f85760",
+      "expiresAtUtc": "2026-12-04T05:57:46Z",
+      "verifierPassed": 59,
+      "componentCasesPassed": 7,
+      "componentCasesFailed": 0,
+      "assertions": 162,
+      "proofClass": "COMPONENT_REAL_CLAMD",
+      "installedTeamsProof": false,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44684352036",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "entra-prod-package-reference",
+      "kind": "HISTORICAL_EXECUTED_PACKAGE",
+      "sourceSha": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+      "sourceTree": "3dc5e13e4368c0452fa54481878965295f77405e",
+      "runId": 44983358294,
+      "runAttempt": 1,
+      "jobId": 137088492396,
+      "artifactId": 14738902174,
+      "artifactZipSha256": "f080447b290086cc2b4fa0229204568876ee76f4cba5a98e608e0ba0aa1312a9",
+      "archiveSha256": "af312871e79307bd281e7d46a162feeb44bc0112db0e67cb59f8be55db20a109",
+      "manifestSha256": "12fe0b65b2c6b7851ba7184914145d0e0c0ff92c071c6fead7821085e0aeaca9",
+      "factorySha256": "fdcb3fbc2348b3e1a8a8054c7ea518c21df504e02e60e372ae4c5c8565606297",
+      "expiresAtUtc": "2026-12-22T04:15:39Z",
+      "proofLimit": "Logs e metadata verificados; preflight da instalação temporária substituído no runner. Não prova VM/Entra reais; bytes não readquiridos por esta frente.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44983358294",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "purchases-qa-222",
+      "kind": "QA_ACCEPTANCE_ATTESTED_IN_HANDOFF",
+      "ownerSession": "222 (2)",
+      "qaAccepted": true,
+      "passed": 4,
+      "total": 4,
+      "scope": "Instalação QA testada; leitura, gravação/releitura e revogação do acesso temporário.",
+      "originalReceipt": null,
+      "sourceSha": null,
+      "artifact": null,
+      "reservation": null,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c02f329d48d37e2f6296154978cd8a7cf80bcb64/docs/qa/sucafina/astra-go-live-handoff.md",
+      "bindingStatus": "ORIGINAL_RECEIPT_AND_CANDIDATE_NOT_RECOVERED",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "purchases-technical",
+      "kind": "CONTROLLED_TECHNICAL_REFERENCES",
+      "pullRequests": [
+        586,
+        592,
+        604
+      ],
+      "proofLimit": "CI com sessões sintéticas/fixture loopback; distinto do aceite QA 222 (2).",
+      "urls": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/586",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/592",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/604"
+      ],
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "qa-historical-support",
+      "kind": "HISTORICAL_EXECUTOR_INPUT",
+      "sourceSha": "08fa1796973742153b2fa33a0d0d9b20a30e628e",
+      "sourceTree": "2b82af86f6d1c9c545698a6d5c9f2b032b7f6ae5",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/tree/08fa1796973742153b2fa33a0d0d9b20a30e628e",
+      "executionProof": false
+    },
+    {
+      "id": "recovery-component-reference",
+      "kind": "CONTROLLED_TECHNICAL_REFERENCES",
+      "pullRequests": [
+        561,
+        568,
+        574
+      ],
+      "runs": [
+        44876219213,
+        44877477431
+      ],
+      "scope": "Restore dashboard Team, retenção e reabertura/retry em testes hospedados com OIDC/Graph controlados.",
+      "proofLimit": "Não prova backup operacional completo, corte, restart real do serviço ou rollback no host.",
+      "urls": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/568",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/574"
+      ],
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "current-installer",
+      "kind": "CURRENT_SOURCE",
+      "sourceSha": "79912446753af5bb291fc2581543732eb4c83057",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/79912446753af5bb291fc2581543732eb4c83057/sf/azure/vm/install-factory-distribution.py",
+      "executionProof": false
+    },
+    {
+      "id": "g05-work-proof-2026-11-22",
+      "kind": "CURRENT_FRONT_EXECUTION",
+      "sourceSha": "db896193346305fb1fee2d0d389cfc0b73077a01",
+      "sourceTree": "027c26022afe0ef74ae61f40c21e8e5b0b3995c6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45024901473",
+      "detailsGate": "G05",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "g06-work-proof-2026-11-22",
+      "kind": "CURRENT_FRONT_EXECUTION",
+      "sourceSha": "9a6b7323bb35463005c978af5257f4107f7e62d1",
+      "sourceTree": "b189a570fd57ce9cc6a39c1c41dbb321de9cdb2d",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44998523282",
+      "detailsGate": "G06",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "g07-work-proof-2026-11-22",
+      "kind": "CURRENT_FRONT_EXECUTION",
+      "sourceSha": "b7edac10a2e9bbe10fec6ec1318f568ccde74813",
+      "sourceTree": "fa8734cdf99883488183b5ef423c48d608ba116e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44999252013",
+      "detailsGate": "G07",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "g08-work-proof-2026-11-22",
+      "kind": "CURRENT_FRONT_EXECUTION",
+      "sourceSha": "aa928b6ae4a5944e5dad4b5bd206d5c123d2238e",
+      "sourceTree": "36794c205023010cf43dc29d6856340f4ed325ea",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45003896381",
+      "detailsGate": "G08",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "g10-work-proof-2026-11-22",
+      "kind": "CURRENT_FRONT_EXECUTION",
+      "sourceSha": "f5b22050bbe04c228576dbe5ca1356cafbe1f431",
+      "sourceTree": "28a6d7cd0cbecaf6d3f3d364c81cda1bca9ca5c0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45024293423",
+      "detailsGate": "G10",
+      "finalCandidateApproval": false
+    }
+  ],
+  "migrationObservations": [
+    {
+      "runId": 44984930949,
+      "sha": "0eab89232860463ab2aabbee15fc422e43bd6e74",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44984930949"
+    },
+    {
+      "runId": 44987301540,
+      "sha": "b4ba7f595e6b3b5ff10a3379cd91b6771bb1b793",
+      "tree": "7f6077c35fcff4d6f53033f1586478a3536b3f62",
+      "status": "completed",
+      "conclusion": "failure",
+      "observedAtUtc": "2026-11-22T13:06:55Z",
+      "scope": "Latest observed g03-g04-repair run; integration belongs to Migration.",
+      "observedFailedJobs": [
+        137101012346,
+        137101012416,
+        137101012387,
+        137101012393,
+        137101012446,
+        137101012464,
+        137106205840
+      ],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987301540"
+    }
+  ],
+  "review": {
+    "kind": "INDEPENDENT_ASSISTANT_TECHNICAL_REVIEW_NOT_FORMAL_GATE_APPROVAL",
+    "findingsResolved": [
+      "G06: protocolo ClamD inválido não prova arquivo inválido da aplicação; obrigação final explicitada.",
+      "G08: restabelecido F04 malformed-selector/zero-network; invocações e bundles separados Teams/U15/U39/U40.",
+      "G10: R precisa estar instalado/retido antes de C; rollback não instala tar antigo.",
+      "G10: /recover restaura somente dashboard Team; demais classes exigem recuperação separada.",
+      "G05: limpeza aceita somente ENOENT para diretórios próprios, recusa GLOBAL vazio e congela ownership.",
+      "G06: payload benigno de formato inválido e XLSX truncado agora passam pelo scanner real antes da recusa da aplicação.",
+      "G08: vínculo factory/PID/host/Caddy/HTTPS e respostas F02 das próprias ações observado pelo executor.",
+      "G10: backup pré-corte verifica origem instalada R separadamente do destino G07 C.",
+      "G10 documentation: network fence and disabled clone credentials are reservation attestations requiring independent operational proof."
+    ],
+    "documentReview": "Seven files reviewed independently; no material finding after the G05 status and G10 attestation corrections."
+  },
+  "executionThisFront": {
+    "testsStarted": [
+      44999009678,
+      45024375644,
+      45024901473,
+      44998523282,
+      44999252013,
+      44999256028,
+      45003896381,
+      45024293423
+    ],
+    "testInventoryScope": "Selected current and superseded reference runs; exact current source/result is in each gate workProof.",
+    "buildsStarted": [],
+    "tarsGenerated": [],
+    "environmentsMutated": [],
+    "hostQualificationExecuted": [],
+    "productionChanges": [],
+    "gateApprovals": [],
+    "componentCodeIntegrated": [
+      637,
+      638,
+      639,
+      640,
+      644
+    ],
+    "executionEnvironmentScope": "GitHub-hosted ephemeral component jobs; no reserved installed QA/recovery host was mutated.",
+    "buildsStartedScope": "Production/release artifact builds; test setup and component fixtures are recorded with their runs."
+  },
+  "overall": {
+    "preparation": "IMPLEMENTED_TESTED_INTEGRATED_WITH_EXPLICIT_FINAL_DEPENDENCIES",
+    "qualifiedFinalGates": 0,
+    "requiredFinalGates": 5,
+    "goNoGoReadiness": "NOT_READY",
+    "formalProductionDecision": null
+  },
+  "publication": {
+    "pullRequest": 628,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628",
+    "initialCommit": "377707a32a6146e5e51ea2922a87f8e1bd5c41e8",
+    "scope": "Seven repository documents; exact source and guard run recorded on PR #628.",
+    "stateSource": "Live GitHub PR metadata; not duplicated in this immutable source snapshot."
+  },
+  "latestDevObserved": {
+    "sha": "48768330ce2bdd6dc6673cd0b4926b61778e3bd4",
+    "tree": "10787ab1c2d02d514b97184af2db7f53345fe66b",
+    "observedAtUtc": "2026-11-22T13:16:41Z",
+    "notFinalCandidate": true
+  }
+}

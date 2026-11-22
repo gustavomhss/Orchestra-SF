@@ -157,11 +157,17 @@ const ingress = (relative: string, headers?: Record<string, string>, init?: Pick
 
 // Uses the installed HTTP handlers, encrypted login/session store and real RS256 verification.
 // Only the Microsoft HTTP transport is controlled; no identity or Team decision is stubbed.
-async function nativeNavigationFixture() {
+async function nativeNavigationFixture(options: {
+  teams?: readonly string[]; enabledTeamIds?: readonly string[]; administrator?: boolean
+} = {}) {
   const keys = await generateKeyPair("RS256", { extractable: true })
   const jwk = await exportJWK(keys.publicKey)
   const pending = new Map<string, { nonce: string; challenge: string }>()
-  const membership = { teams: [teamObjectId, disabledTeamId], reads: 0 }
+  const teamLookups: string[] = []
+  const membership = {
+    teams: [...(options.teams ?? [teamObjectId, disabledTeamId])], reads: 0,
+    administrator: options.administrator ?? true, groupReads: 0, revokeDuringTeamRead: false,
+  }
   const f = await fixture("direct", async (request) => {
     const url = new URL(request.url)
     if (url.href === authority + "/v2.0/.well-known/openid-configuration") return discovery()
@@ -193,7 +199,16 @@ async function nativeNavigationFixture() {
       if (url.pathname === "/v1.0/me") return Response.json({ id: oid, displayName: "Verified navigator" })
       if (url.href === graph + "/me/checkMemberGroups") {
         expect(await request.json()).toEqual({ groupIds: [grantPrincipal] })
-        return Response.json({ value: [grantPrincipal] })
+        membership.groupReads++
+        return Response.json({ value: membership.administrator ? [grantPrincipal] : [] })
+      }
+      const id = [teamObjectId, secondTeamId, disabledTeamId].find((id) => url.pathname === "/v1.0/teams/" + id)
+      if (id) {
+        expect(request.method).toBe("GET")
+        expect(Object.fromEntries(url.searchParams)).toEqual({ $select: "id,displayName,isArchived,tenantId" })
+        teamLookups.push(id)
+        if (membership.revokeDuringTeamRead) membership.administrator = false
+        return Response.json({ id, tenantId, displayName: id, isArchived: false })
       }
       if (url.href === graph + "/me/joinedTeams") {
         membership.reads++
@@ -203,7 +218,7 @@ async function nativeNavigationFixture() {
       }
     }
     throw new Error("Unexpected navigation Microsoft request")
-  }, [teamObjectId, secondTeamId], {
+  }, options.enabledTeamIds ?? [teamObjectId, secondTeamId], {
     dashboard: { viewer: "group:" + grantPrincipal }, planner: {}, procurement: {},
   }, undefined, { nativeWeb: true })
   try {
@@ -215,7 +230,7 @@ async function nativeNavigationFixture() {
       installationId: binding.installationId, tenantId: installed.tenantId,
     }
     return {
-      selection, binding, membership, close: f.close, reopen: f.reopen,
+      selection, binding, membership, teamLookups, close: f.close, reopen: f.reopen,
       get installation() { return f.installation },
       async signIn(returnTo: string, expected = returnTo, callbackReturnTo?: string) {
         const begin = await f.installation.handler(ingress("/auth/login?" + new URLSearchParams({ returnTo })))
@@ -250,10 +265,11 @@ async function nativeNavigationFixture() {
         expect(session).not.toContain(accessToken)
         return session.split(";")[0]!
       },
-      context(id: string, cookie?: string) {
+      context(id: string | undefined, cookie?: string) {
         return f.installation.handler(ingress("/api/ui/context?" + new URLSearchParams({
           contractRevision: selection.contractRevision, installationId: selection.installationId,
-          tenantId: selection.tenantId, hostId: binding.hostId, kind: "team", teamObjectId: id,
+          tenantId: selection.tenantId, hostId: binding.hostId,
+          kind: id === undefined ? "selection" : "team", ...(id === undefined ? {} : { teamObjectId: id }),
         }), cookie ? { cookie } : undefined))
       },
     }
@@ -365,6 +381,103 @@ test("A valid native login return never grants an ineligible Team and the instal
     const callsBeforeLogoutContext = f.membership.reads
     expect((await f.context(teamObjectId, cookie))?.status).toBe(401)
     expect(f.membership.reads).toBe(callsBeforeLogoutContext)
+  } finally { await f.close() }
+})
+
+
+test("Corporate profile administration uses the signed Microsoft identity without Team membership and fences revocation", async () => {
+  const f = await nativeNavigationFixture({ teams: [], enabledTeamIds: [] })
+  try {
+    const cookie = await f.signIn("/")
+    const route = "/api/ui/team-profiles?" + new URLSearchParams({
+      contractRevision: f.selection.contractRevision, installationId: f.selection.installationId,
+      tenantId: f.selection.tenantId,
+    })
+    const list = async () => {
+      const response = await f.installation.handler(ingress(route, { cookie }))
+      expect(response?.status).toBe(200)
+      expect(response!.headers.get("cache-control")).toBe("no-store")
+      const result = Schema.decodeUnknownSync(TeamProfile.AdminListResult)(await response!.json())
+      if (result.status !== "ok") throw new Error("Expected the authenticated administrator catalog")
+      return result
+    }
+    const profile = (id: string) => ({
+      installationId: f.selection.installationId, tenantId: f.selection.tenantId, teamObjectId: id,
+    })
+    const enable = (id: string, expectedRevision: TeamProfile.ConfigRevision, fields: Record<string, string> = { origin }) =>
+      f.installation.handler(ingress(route, { cookie, "content-type": "application/json", ...fields }, {
+        method: "POST", body: JSON.stringify({ action: "enable", profile: profile(id), expectedRevision }),
+      }))
+    expect((await f.installation.handler(ingress(route)))?.status).toBe(401)
+    const initial = await list()
+    expect(initial.profiles).toEqual([])
+    expect(f.membership.groupReads).toBeGreaterThan(0)
+    expect(f.membership.reads).toBe(0)
+    expect(f.teamLookups).toEqual([])
+
+    const selection = await f.context(undefined, cookie)
+    expect(selection?.status).toBe(200)
+    const context = Schema.decodeUnknownSync(SfTeamContextResult)(await selection!.json())
+    if (context.status !== "ok") throw new Error("Expected authenticated administration without a Team")
+    expect(context.value.profile).toMatchObject({
+      status: "authenticated", principal: { tenantId, principalObjectId: oid },
+      administration: { status: "available" }, teams: { status: "no-teams" },
+    })
+    expect(context.value.stamp.team).toBeUndefined()
+    expect(context.value.destinations).toEqual([])
+    expect(context.value.availability).toEqual([])
+
+    const groupsBeforeInvalidOrigin = f.membership.groupReads
+    const invalidOrigins: Record<string, string>[] = [{}, { origin: "https://foreign.example.test" }]
+    for (const fields of invalidOrigins) {
+      const denied = await enable(teamObjectId, initial.configRevision, fields)
+      expect(denied?.status).toBe(403)
+      expect(await denied!.json()).toEqual({ status: "denied" })
+    }
+    const foreignRead = await f.installation.handler(ingress(route, { cookie, origin: "https://foreign.example.test" }))
+    expect(foreignRead?.status).toBe(403)
+    expect(f.membership.groupReads).toBe(groupsBeforeInvalidOrigin)
+    expect(f.teamLookups).toEqual([])
+
+    const membershipReadsBeforeEnable = f.membership.reads
+    const enabled = await enable(teamObjectId, initial.configRevision)
+    expect(enabled?.status).toBe(200)
+    const changed = Schema.decodeUnknownSync(TeamProfile.AdminConfigureResult)(await enabled!.json())
+    if (changed.status !== "ok") throw new Error("Expected the Team profile configuration to commit")
+    expect(changed.changed).toBe(true)
+    expect(changed.configRevision).not.toBe(initial.configRevision)
+    expect(f.teamLookups).toContain(teamObjectId)
+    expect(f.membership.reads).toBe(membershipReadsBeforeEnable)
+    const committed = await list()
+    expect(committed.configRevision).toBe(changed.configRevision)
+    expect(committed.profiles).toEqual([{ profile: profile(teamObjectId), enabled: true }])
+    await expectRevokedTeamContext(await f.context(teamObjectId, cookie))
+    expect((await f.installation.handler(ingress("/teams/" + teamObjectId + "/dashboard", { cookie })))?.status).toBe(403)
+
+    // The provider removes supreme membership while the real Team lookup is in flight.
+    f.membership.revokeDuringTeamRead = true
+    const revoked = await enable(secondTeamId, committed.configRevision)
+    expect(revoked?.status).toBe(503)
+    expect(await revoked!.json()).toEqual({ status: "unavailable", reason: "forbidden" })
+    expect(f.teamLookups).toContain(secondTeamId)
+    expect(f.membership.administrator).toBe(false)
+    const denied = await f.installation.handler(ingress(route, { cookie }))
+    expect(denied?.status).toBe(403)
+    expect(await denied!.json()).toEqual({ status: "denied" })
+    f.membership.revokeDuringTeamRead = false
+    f.membership.administrator = true
+    expect(await list()).toEqual(committed)
+
+    const logout = await f.installation.handler(ingress("/auth/logout", { cookie, origin }, { method: "POST" }))
+    expect(logout?.status).toBe(204)
+    const readsAfterLogout = { groups: f.membership.groupReads, teams: f.teamLookups.length }
+    const copiedCookieRead = await f.installation.handler(ingress(route, { cookie }))
+    expect(copiedCookieRead?.status).toBe(401)
+    expect(await copiedCookieRead!.json()).toEqual({ status: "unauthenticated" })
+    const copiedCookieWrite = await enable(secondTeamId, committed.configRevision)
+    expect(copiedCookieWrite?.status).toBe(401)
+    expect(await copiedCookieWrite!.json()).toEqual({ status: "unauthenticated" })
+    expect({ groups: f.membership.groupReads, teams: f.teamLookups.length }).toEqual(readsAfterLogout)
   } finally { await f.close() }
 })
 

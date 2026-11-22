@@ -76,6 +76,12 @@ Ajuste os filtros e aplique-os para localizar um registro. Abra o detalhe para c
 
 O contrato de desempenho organiza objetivos e seus subitens. Consulte pesos, responsáveis, metas e resultados disponíveis. A edição de um objetivo e a de um subitem permanecem separadas, preservando as regras de peso e os avisos apresentados pela fonte.
 
+## Respostas sobre requisições de Procurement
+
+No perfil local, respostas a perguntas dirigidas à própria pessoa autenticada podem ser lidas como não confirmadas enquanto a fonte e o período continuam acessíveis. Confirme a resposta somente depois de revisar os valores e o escopo apresentados. Uma mudança nesses valores impede confirmar aquela revisão; uma resposta já confirmada perde a validade quando os dados observados mudam.
+
+Nas etapas de aprovação, a idade da requisição avança continuamente. Se esse valor mudar entre a revisão e a confirmação, a confirmação é recusada e a resposta permanece não confirmada, podendo ser consultada com essa indicação. Revisar de novo não garante a confirmação enquanto a idade continua mudando. Uma fonte indisponível ou acesso revogado impede a leitura. Enviar a pergunta para outra pessoa exige autoridade da instalação para aquele destinatário; selecionar seu nome não concede esse acesso.
+
 ## Contratos
 
 A lista reúne fornecedor, identificação e informações principais de cada contrato. Abra o detalhe para consultar vigência, valor, renovação, avaliação, notas e documentos disponíveis. A edição agrupa os campos por assunto e apresenta uma revisão antes do envio.
@@ -87,6 +93,8 @@ Um campo opcional em branco permanece sem valor. A moeda e o valor exibidos depe
 Os rótulos de origem e de seleção do pedido acompanham o idioma da interface. A seleção continua usando a referência original da solicitação; mudar o idioma não escolhe outro pedido nem autoriza uma exportação.
 
 Na revisão de mudanças, **ausente**, **indefinido** e **nulo** identificam estados distintos da fonte. Zero, falso e texto vazio conservam seus valores. Para baixar um arquivo novamente, solicite nova autorização.
+
+A disponibilidade de exportação de pedidos acompanha o serviço e o acesso ativos. Cada download confere novamente o pedido selecionado; uma mudança de fonte ou de permissão exige uma nova leitura antes de obter o arquivo.
 
 ## Planner
 
@@ -105,6 +113,14 @@ A edição, a colagem de valores, a distribuição e a revisão usam as regras d
 O custo mensal de cada posição e o orçamento total de pessoal são calculados pelo Planner em USD, usando as taxas de câmbio da versão selecionada. A tela mantém esses valores em USD. O valor anual de uma tabela de custos permanece na moeda original dessa tabela. Se essa moeda não estiver informada, o valor anual mostra **Moeda não especificada na fonte**. Zero e **Não informado** continuam distintos.
 
 A seleção de ano e versão define o planejamento exibido. **Ainda não há registros** indica uma leitura autorizada vazia; **Você não tem acesso a este conteúdo** indica acesso recusado e oculta os dados.
+
+## Confirmar sem alteração
+
+A seleção preparada pode ser reaberta enquanto a fonte e suas dependências continuarem atuais e autorizadas. A releitura não altera os registros de origem nem cria uma confirmação. Se a fonte mudar ou o acesso for revogado, a seleção precisa ser revista antes de confirmar.
+
+Antes de confirmar, confira a **Impressão digital do escopo**, a **Versão de armazenamento** e a lista completa de **Dependências materiais**. Cada dependência mostra a referência, a encarnação, a versão, os campos, o período e a data de observação usados na operação. Quando não há dependências, a tela informa isso explicitamente.
+
+O clique envia o material preparado que aparece nessa revisão. Se a fonte ou a versão de armazenamento mudar depois da leitura, a confirmação é recusada e exige nova leitura. Uma repetição da mesma operação conserva o recibo original.
 
 ## Leitura em telas menores
 

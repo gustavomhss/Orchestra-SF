@@ -159,3 +159,14 @@ test("Team context: administrative proof revoked during enumeration cannot escap
   f.state.beforeTeams = async () => { f.state.administrator = false }
   expect(await f.readContext("administration")).toEqual({ status: "denied" })
 })
+
+test("Team context: group removal during the final membership reread suppresses the administrative projection", async () => {
+  const f = await fixture()
+  f.state.administrator = true
+  const enumerations = { count: 0 }
+  f.state.beforeTeams = async () => {
+    enumerations.count++
+    if (enumerations.count === 2) f.state.administrator = false
+  }
+  expect(await f.readContext("administration")).toEqual({ status: "denied" })
+})

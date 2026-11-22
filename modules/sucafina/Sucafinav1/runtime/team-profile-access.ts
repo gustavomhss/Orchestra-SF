@@ -126,7 +126,7 @@ export function createTeamProfileAccess(input: {
       current.eligible.length === 1 ? current.eligible[0] : undefined
     const readMembers = current.observation.readMembers
     if (selected && current.observation.verifyCurrent) {
-      if (!await current.observation.verifyCurrent() || !await policyCurrent(current.catalog, selected.teamObjectId) ||
+      if (!await current.observation.verifyCurrent().catch(() => false) || !await policyCurrent(current.catalog, selected.teamObjectId) ||
           request.signal.aborted) return { status: "denied" } as const
       return {
         status: "allowed",
@@ -204,9 +204,10 @@ export function createTeamProfileAccess(input: {
       destinations: [], availability: [],
     })
     if (Option.isNone(decoded)) return { status: "unavailable", reason: "invalid-response" }
-    if (administrator.status === "available" && !await administrator.verifyCurrent().catch(() => false)) return { status: "denied" }
     if (current.status === "observed" && !await verifyObservation(request, current, admitted?.teamObjectId))
       return { status: "unavailable", reason: "identity-unavailable" }
+    // Group proof follows the awaited Teams reread so enumeration cannot outlive revocation.
+    if (administrator.status === "available" && !await administrator.verifyCurrent().catch(() => false)) return { status: "denied" }
     if (!await policyCurrent(catalog) || request.signal.aborted) return { status: "unavailable", reason: "identity-unavailable" }
     return { status: "ok", value: decoded.value }
   }

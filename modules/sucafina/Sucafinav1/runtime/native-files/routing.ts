@@ -1,5 +1,18 @@
 import { SfFileRoutes } from "@orchestra/schema/sucafina/files/routes"
 import { createSfFilesHostBindings, type SfFilesHostSources } from "./bindings.ts"
+import { readSfApplicationSource, type Application } from "../application.ts"
+
+const applicationSources = new WeakMap<object, () => {
+  producer: NonNullable<SfFilesHostSources["application"]>
+  application: Application
+  origin: string
+  mount: string
+} | undefined>()
+
+/** Only the original mounted route can identify its current application delegate. */
+export function readSfFilesApplicationSource(route: object) {
+  return applicationSources.get(route)?.()
+}
 
 function fail(request: Request, status: number, headers?: Record<string, string>) {
   const init = { status, headers: { "Cache-Control": "no-store", ...headers } }
@@ -14,7 +27,8 @@ export function mountSfFilesOriginalRoutes(input: Readonly<{
   if (!/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(input.mount) ||
       new URL(input.origin).origin !== input.origin) throw new Error("SF_A06_HOST_ROUTE_INVALID")
 
-  const bound = createSfFilesHostBindings(input.sources)
+  const sources = input.sources
+  const bound = createSfFilesHostBindings(sources)
   const fixed = new Map(Object.keys(bound).flatMap((key) => {
     const operation = key as keyof typeof bound
     const metadata = SfFileRoutes[operation]
@@ -23,7 +37,7 @@ export function mountSfFilesOriginalRoutes(input: Readonly<{
       : []
   }))
 
-  return async (request) => {
+  const route = async (request: Request): Promise<Response | undefined> => {
     const url = new URL(request.url)
     if (url.origin !== input.origin || !url.pathname.startsWith(input.mount + "/")) return undefined
     const surface = url.pathname.slice(input.mount.length + 1)
@@ -51,4 +65,11 @@ export function mountSfFilesOriginalRoutes(input: Readonly<{
     // Original producers keep ownership of access, redaction, streamed byte caps and revalidation.
     return bound[operation](request, surface)
   }
+  applicationSources.set(route, () => {
+    const producer = sources.application
+    const source = producer && readSfApplicationSource(producer)
+    return input.sources === sources && producer && source && source.mount === input.mount
+      ? { producer, application: source.application, origin: input.origin, mount: input.mount } : undefined
+  })
+  return route
 }
