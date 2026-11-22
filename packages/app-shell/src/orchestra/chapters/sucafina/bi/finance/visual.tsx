@@ -145,7 +145,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                     const start = () => assigned().get(segment.startValueId)
                     const amount = () => assigned().get(segment.componentValueId)
                     const end = () => assigned().get(segment.endValueId)
-                    const ref = () => amount() ? sfBiEvidenceRef(amount()!) : undefined
+                    const ref = () => amount() ? sfBiValueSource(amount()!) : undefined
                     return (
                       <li data-sf-step={segment.componentValueId}>
                         <strong>{segment.label}</strong>
@@ -153,7 +153,8 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                         <span>{t(sfBiKey(props.copy + ".waterfall.delta"))}: {fmt(amount()?.evidenceState !== "absent" && typeof amount()?.value === "number" ? amount()!.value as number : null)}</span>
                         <span>{t(sfBiKey(props.copy + ".waterfall.end"))}: {fmt(end()?.evidenceState !== "absent" && typeof end()?.value === "number" ? end()!.value as number : null)}</span>
                         <Show when={ref()}>{(reference) =>
-                          <button class="mx-btn" type="button" onClick={() => props.onSelect(reference())}>
+                          <button class="mx-btn" type="button" data-sf-source-value-id={reference().valueId}
+                            onClick={() => props.onSelect(reference().refId, reference())}>
                             {t(sfBiKey(props.copy + ".selectComponent"))}
                           </button>}
                         </Show>
