@@ -27,7 +27,7 @@ The recorded events contain one native sensitivity evaluation request and no nat
 
 ## Actual visual review
 
-All nine JPEGs were assembled from **37 complete original preview chunks**, totaling **608,004 bytes**, and uploaded without conversion, cropping, resizing or recompression. Each image was displayed and visually inspected by `dev_delta`. Remote file contents were compared against the original joined base64 bytes before updating the QA branch. Root and peer visual reviews are not claimed in this archive.
+All nine JPEGs were assembled from **37 complete original preview chunks**, totaling **608,004 bytes**, and uploaded without conversion, cropping, resizing or recompression. Each image was displayed and visually inspected by `dev_delta`. Remote file contents were compared against the original joined base64 bytes before updating the QA branch. Root independently read the seven QA text files, checked the original event/chunk evidence, and visually inspected exactly the dark desktop editor, the 320-pixel review and the failure screenshot; those three remote image contents matched the original chunks. [root-review.json](root-review.json) records that review and its limits. No peer visual review is claimed.
 
 [capture-manifest.json](capture-manifest.json) contains original names, paths, Git blob SHAs, byte counts, chunk counts and timestamps. The failure image retains the original helper's `FAILED-native-wave-three` name.
 
