@@ -1,5 +1,7 @@
 # G09 closeout review for preserved candidate 14722264806
 
+**The preserved candidate is not qualified. Installed TUI execution found a real missing-fallback defect: two named cases pass and six fail. This branch contains a source repair and unsigned review evidence; it does not claim a corrected distribution or formal PASS.**
+
 **Qualification state: unqualified.** This record separates verified evidence from acceptance decisions and missing authenticated inputs. It does not replace the historical checkpoint, promote a release, or assign any occurrence/finding disposition.
 
 The implementation in this branch adds one focused execution probe for the generic TUI in the original ELF. Actual outcomes belong to the Actions run for the branch commit and its `execution-manifest.json`; the presence of this document or a successful probe is not a formal G09 PASS.
@@ -155,3 +157,74 @@ The exact original full diagnostic, independently established reviewer/producer 
 Changing the ELF to incorporate #589 creates a new candidate and new qualification bindings. Keeping the old ELF does not make its source defects disappear. Neither route permits copying the corrected-source green result onto the old artifact.
 
 No signing key, signer authority, replacement signature or historical disposition is created by this branch.
+
+## Verified new review preparation
+
+The new review starts from every exact ID, without importing historical dispositions:
+
+- 19,718 occurrences and 3,146 reachability/findings, across 17,501 inventoried files.
+- Source report SHA-256: `961f5887408921b93f55ce960e9c4570279335bc94d623cfe2bbddae19e25451`.
+- [Index run 44975787464](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44975787464), artifact `14735392840`, ZIP SHA-256 `aeb63841fe5566f85a1f3f78e99e48f488186797548996edbebe615f6bb56f46`.
+- Every occurrence/finding ID was recomputed from the canonical identity fields. Full ID sets remain in the artifact; stdout is bounded file-level navigation.
+
+The proposed supplemental adapter with a custom ZIP reader and evidence registry was rejected during technical review as unnecessary for preparation. It is not committed or used for qualification. Preparation already has the exact frozen inventory and binding; the applicable final verifier must be explicitly established before authentication.
+
+## Unsigned semantic work products
+
+`g09-visual-disposition-draft.json` records 1,424 exact source CSS occurrence IDs and positions in 26 hash-verified files. The proposal is `different-meaning`: 1,423 class-selector spans and one explanatory comment. It includes producer/consumer context and the actual palette-generation case from the original producer. That case does not cover 41 of these source occurrences, and it does not establish raw packed CSS/JavaScript attribution. The 1,425 packed visual occurrences remain pending their own exact context review; the separate command-palette worktree token is excluded.
+
+`g09-solid-disposition-draft.json` records the 33 exact Solid occurrences with source, intermediate and packed token identities, semantic proposals, execution conditions and explicit unresolved branches. Thirty-two have a technical-placement proposal; the saved-permission refresh token remains unresolved. Proposals and supplementary execution observations are not authenticated dispositions.
+
+The reference census inspected 7,921 tracked script files and found 51 files matching the declared patterns. In production TUI code, the identified `useData()` caller is Autocomplete, whose observed use is `data.location.reference.list()`. No direct production caller of `data.project.permission.refresh` was found in this inspected set. Textual absence does not establish universal dead code or authorize an orphan/personal-installation classification.
+
+Both work products keep canonical dispositions unassigned. They do not claim that the full 22,864-ID review is finished.
+
+## Installed TUI journey execution
+
+The eight named cases exercise real PTY input against the preserved generic daemon. Setup/oracle HTTP calls are recorded separately from forwarded TUI traffic. Product effects are checked against Session state, filesystem bytes, Git worktree registration and a real external-editor observer.
+
+The first run, [44976993733](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44976993733), stopped before all cases with `GIT_PROJECT_IDENTITIES_NOT_DISTINCT`. The harness had used the old `?directory=` query, which the preserved Location contract ignores. Both setup requests therefore resolved the server working directory. The Git fixtures already had distinct content and were not changed.
+
+The correction uses the protocol's `location[directory]` query, validates the same query in the forwarding observer, and records both requested/resolved directories and Git HEADs. The distinct-project requirement remains intact. The original failed run is retained as a setup failure with zero credited journeys.
+
+[Run 44977473580](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44977473580), attempt 1, job `137070483874`, executed all eight named cases at harness SHA-256 `7d1a56231a5388e1a8e06da9b917a2d22f47af959ef61b8ad6c6341cff64e25c`:
+
+| Named behavior | Result | Observed limit |
+| --- | --- | --- |
+| Fork a Session | PASS | Actual TUI fork POST, new identity, preserved source placement and keyboard exit 0 |
+| Project/directory listing and Session selection | FAIL | Filtering, search and selected Session GET occurred; the required Session title did not render |
+| Create Git worktree and move Session | FAIL | Move command was absent; the creation branch was not reached |
+| Cancel and confirm moving changed files | FAIL | Move command was absent; cancellation/transfer was not reached |
+| Normal removal | FAIL | Move dialog was not reached; removal confirmation was not exercised |
+| Forced removal | FAIL | Move dialog was not reached; forced-removal confirmation was not exercised |
+| Editor and export | FAIL | Editor was not invoked; later export actions were not attempted |
+| Bootstrap without Basic authority | PASS | Seven real 401 responses, natural rejected exit 1 and unchanged project/Session state |
+
+The artifact is `14736875120`, ZIP SHA-256 `2d05e7d50fea55c3654b78f8b2cf287cae29b4864a86f620daa82783c7e6606d`. All forwarding-error and unexpected-response lists are empty. Original ELF/tar bytes remained unchanged and the temporary runtime was removed. The six failed cases required cleanup signals; those signals do not count as successful keyboard exits.
+
+## Confirmed TUI defect and source repair
+
+The observed failures have a concrete composition cause:
+
+1. `apps/cli/src/tui.ts` in the preserved source passes a host whose `start()` is empty (blob `ec99d67457f67a0a184b742dd4e61c84efaada4d`).
+2. `packages/tui/src/plugin/slots.tsx` initializes its slot view to `() => null`; only `setup(api)` replaces it with the registry-backed renderer (blob `0ec84d58bf6bdb63bd4bd00392a474036b01beff`).
+3. App awaits the empty start and marks itself ready. The CLI never calls `runtime.setupSlots(api)`.
+4. The Session wraps its Prompt in `session_prompt`, and its sidebar title/footer use slots too. The empty view discards their children. Session data effects and global commands still run, while the Prompt's Move/editor commands never register.
+
+The same CLI/slot source blobs were present in inspected dev commit `d3ccea42b5f8409c8d6c68e4909f7b868b50322c`. Empty providers do not guard registration of the Move/editor commands in this source; changing the fixture policy or extending waits is not the repair.
+
+This branch changes the default view to `(props) => props.children ?? null`. Registry setup, plugin registration and replacement remain unchanged. The accompanying source regression file renders the real runtime without a host, checks plugin replacement and restoration, and checks fallback behavior after lifecycle operations. Its hosted validation is recorded in [PR #610](https://github.com/gustavomhss/Orchestra-SF/pull/610).
+
+This is a source repair. It neither changes the preserved ELF nor proves that a newly built distribution passes all eight installed journeys. The unchanged failing ELF is not rerun merely to repeat the known composition defect.
+
+## Conditions for qualification
+
+The canonical scanner has **16 named control cases**. A prior test suite may report a different total because it includes additional tests; that does not change the canonical control set.
+
+A formal PASS requires the exact inventory/artifact binding; justified dispositions for every occurrence and finding; zero unclassified IDs, active legacy or orphans; the complete authenticated review; current successful canonical controls; every exact applicable executed obligation; a producer attestation bound to the review payload with independently trusted reviewer/producer identities; and an empty blocker list.
+
+The historical signature is not a universal prerequisite to start a new review. An original Bun end point and a separate TUI journey for each lexical token are not universal requirements of the published scanner either. Additional obligations must come from the applicable review/protocol and cannot be silently waived.
+
+**Technical decision for the preserved candidate: NO-GO; formal G09 has not been run.** Review and technical obligations remain unfinished, in addition to authentication and verifier requirements. It would be incorrect to state that only a signature is missing. The corrected later-source PermissionV2 result cannot be assigned to this frozen ELF.
+
+This evidence branch is a draft review/probe deliverable. It does not promote, rebuild, replace, deploy or qualify the original candidate.
