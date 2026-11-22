@@ -94,6 +94,8 @@ Os rótulos de origem e de seleção do pedido acompanham o idioma da interface.
 
 Na revisão de mudanças, **ausente**, **indefinido** e **nulo** identificam estados distintos da fonte. Zero, falso e texto vazio conservam seus valores. Para baixar um arquivo novamente, solicite nova autorização.
 
+A disponibilidade de exportação de pedidos acompanha o serviço e o acesso ativos. Cada download confere novamente o pedido selecionado; uma mudança de fonte ou de permissão exige uma nova leitura antes de obter o arquivo.
+
 ## Planner
 
 ### Visão geral

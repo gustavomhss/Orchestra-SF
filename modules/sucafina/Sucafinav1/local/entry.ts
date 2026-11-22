@@ -29,6 +29,7 @@ import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucaf
 import { observeSfDashboardPages } from "../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
 import { observeSfDomainHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
 import { observeSfAssetHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/asset-health.ts"
+import { observeSfPoHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/po-health.ts"
 import { createSfActionSource } from "../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfOperationsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
@@ -285,6 +286,10 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
           observeSfAssetHealth({ source: () => {
             const authority = runtime?.services?.()
             return authority && nativeReadBinding && runtime?.identity() ? { application: nativeApplication, producer: business, authority } : undefined
+          } }, request, stamp),
+          observeSfPoHealth({ source: () => {
+            const authority = runtime?.services?.()
+            return authority && files && runtime?.identity() ? { routes: files, authority } : undefined
           } }, request, stamp),
           observeSfHome(runtime?.services?.(), request, stamp),
           observeSfWorkHealth({ source: () => {
