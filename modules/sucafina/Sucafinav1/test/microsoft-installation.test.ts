@@ -1,4 +1,4 @@
-import { createSfTeamPurchaseMcp, createSfTeamSupplierMcp } from "../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts"
+import { createSfTeamContractMcp, createSfTeamPurchaseMcp, createSfTeamSupplierMcp } from "../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { AppProcess } from "@orchestra/core/process"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
@@ -20,7 +20,7 @@ import { createLocalBackups } from "../runtime/local-backups.ts"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
 import type { LocalConfiguration } from "../runtime/local-configuration.ts"
 import { initialProcurementSettings } from "../src/initial-settings.ts"
-import { changed, object } from "../runtime/contract.ts"
+import { changed, object, rows } from "../runtime/contract.ts"
 import { teamProfileInstallationId } from "../runtime/team-profile-access.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { bindMicrosoftInstallation } from "../runtime/microsoft-configuration.ts"
@@ -50,7 +50,7 @@ async function fixture(
   enabledTeamIds?: unknown,
   groups: LocalConfiguration["groups"] = { dashboard: {}, planner: {}, procurement: {} },
   teamDirectory?: "members",
-  options: { nativeDecisions?: boolean; nativeRecovery?: boolean; nativeWeb?: boolean; purchasePrincipals?: readonly string[]; supplierReview?: boolean } = {},
+  options: { nativeDecisions?: boolean; nativeRecovery?: boolean; nativeWeb?: boolean; purchasePrincipals?: readonly string[]; supplierReview?: boolean; contractReview?: boolean } = {},
 ) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sf-microsoft-installation-"))
   const directory = join(root, "installation")
@@ -63,6 +63,7 @@ async function fixture(
       ? [{ principalRef: oid, namespaces: ["cases"], operations: ["sf_case_draft"], ...(options.nativeRecovery ? { migrationActions: ["recover"] } : {}) }]
       : options.purchasePrincipals?.map((principalRef) => ({ principalRef, operations: [
         "sf_request_read", "sf_sourcing_compare", ...(options.supplierReview ? ["sf_supplier_read"] : []),
+        ...(options.contractReview ? ["sf_contract_read"] : []),
       ] })) ??
         [{ principalRef: grantPrincipal, operations: ["sf_case_read"] }]
     await writeFile(file, JSON.stringify({
@@ -74,6 +75,7 @@ async function fixture(
       ...(teams ? { teams } : {}),
       ...(options.purchasePrincipals ? { clawPurchasePeriod: { start: "2026-01-01", end: "2026-12-31" } } : {}),
       ...(options.supplierReview ? { clawSupplierReview: true } : {}),
+      ...(options.contractReview ? { clawContractReview: true } : {}),
       teamDirectory,
       enabledTeamIds,
     }))
@@ -114,6 +116,7 @@ async function fixture(
     const open = () => createMicrosoftInstallation({ origin: listenerOrigin,
       ...(options.purchasePrincipals ? { loadTeamPurchaseMcp: async () => createSfTeamPurchaseMcp } : {}),
       ...(options.supplierReview ? { loadTeamSupplierMcp: async () => createSfTeamSupplierMcp } : {}),
+      ...(options.contractReview ? { loadTeamContractMcp: async () => createSfTeamContractMcp } : {}),
     }, file, environment, {
       fetch, now: () => new Date(epoch * 1000),
       openRecoveryRegister: (file, directory) => openCorporateRecoveryRegister(file, directory, process.getuid?.()),
@@ -149,13 +152,14 @@ const ingress = (relative: string, headers?: Record<string, string>, init?: Pick
   headers: { host: new URL(ingressOrigin).host, ...headers },
 })
 
-test("Installed purchase MCP and supplier review keep paired A/B procurement in its admitted Team", async () => {
+test("Installed purchase MCP and supplier review preserve A/B Team scopes alongside contract review", async () => {
   const keys = await generateKeyPair("RS256", { extractable: true })
   const jwk = await exportJWK(keys.publicKey)
   const nonces = new Map<string, string>()
   const principals = [oid, grantPrincipal]
   const ungranted = "77777777-7777-4777-8777-777777777777"
-  const membership = { revokeOnRoleCheck: false, teamRemoved: false }
+  const membership: { revokeOnRoleCheck: boolean; teamRemoved: boolean; onRoleCheck?: () => Promise<void> } =
+    { revokeOnRoleCheck: false, teamRemoved: false }
   const teams = [teamObjectId, secondTeamId].map((id) => ({ id, tenantId, displayName: id, isArchived: false }))
   const fetch = async (request: Request) => {
     const url = new URL(request.url)
@@ -177,6 +181,7 @@ test("Installed purchase MCP and supplier review keep paired A/B procurement in 
       if (!principal) throw new Error("Unexpected test Microsoft session")
       if (url.pathname === "/v1.0/me") return Response.json({ id: principal, displayName: "Test purchaser" })
       if (url.href === graph + "/me/checkMemberGroups") {
+        await membership.onRoleCheck?.()
         if (principal === oid && membership.revokeOnRoleCheck) membership.teamRemoved = true
         return Response.json({ value: [grantPrincipal] })
       }
@@ -186,8 +191,8 @@ test("Installed purchase MCP and supplier review keep paired A/B procurement in 
     throw new Error("Unexpected synthetic Microsoft request")
   }
   const f = await fixture("direct", fetch, [teamObjectId, secondTeamId], {
-    dashboard: {}, planner: {}, procurement: { requester: "group:" + grantPrincipal, buyer: "group:" + grantPrincipal },
-  }, undefined, { purchasePrincipals: principals, supplierReview: true })
+    dashboard: { viewer: "group:" + grantPrincipal }, planner: {}, procurement: { requester: "group:" + grantPrincipal, buyer: "group:" + grantPrincipal },
+  }, undefined, { purchasePrincipals: principals, supplierReview: true, contractReview: true })
   try {
     const signIn = async (principal: string) => {
       const begin = await f.installation.handler(ingress("/auth/login"))
@@ -204,26 +209,39 @@ test("Installed purchase MCP and supplier review keep paired A/B procurement in 
     const select = (id: string) => JSON.stringify({ contractRevision: "sf-team-profile/1",
       kind: "team", profile: { installationId, tenantId, teamObjectId: id } })
     const vendorPath = "/api/claw/vendor-review"
+    const contractPath = "/api/claw/contract-review"
+    const paths = { purchases: "/api/claw", "vendor-review": vendorPath, "contract-review": contractPath }
     const ungrantedCookie = await signIn(ungranted)
-    expect((await f.installation.handler(ingress(vendorPath + "/connect", {
-      cookie: ungrantedCookie, origin, "x-sf-claw-purpose": "vendor-review", "x-sf-team-profile": select(teamObjectId),
-    }, { method: "POST" })))?.status).toBe(403)
-    const pair = async (cookie: string, id: string, purpose: "purchases" | "vendor-review" = "purchases") => {
-      const response = await f.installation.handler(ingress((purpose === "purchases" ? "/api/claw" : vendorPath) + "/connect", {
+    for (const purpose of ["vendor-review", "contract-review"] as const) {
+      expect((await f.installation.handler(ingress(paths[purpose] + "/connect", {
+        cookie: ungrantedCookie, origin, "x-sf-claw-purpose": purpose, "x-sf-team-profile": select(teamObjectId),
+      }, { method: "POST" })))?.status).toBe(403)
+    }
+    const pair = async (cookie: string, id: string, purpose: keyof typeof paths = "purchases") => {
+      const response = await f.installation.handler(ingress(paths[purpose] + "/connect", {
         cookie, origin, "x-sf-claw-purpose": purpose, "x-sf-team-profile": select(id),
       }, { method: "POST" }))
       expect(response?.status).toBe(200)
       return ((await response!.json()) as { token: string }).token
     }
     const cases = await Promise.all([
-      [oid, teamObjectId, "PR-2026-0901", "A", "SUP-09001", "active"],
-      [grantPrincipal, secondTeamId, "PR-2026-0902", "B", "SUP-09002", "pending"],
-    ].map(async ([principal, team, ref, label, number, status]) => {
+      [oid, teamObjectId, "PR-2026-0901", "A", "SUP-09001", "active", "CT-09001", "2027-06-30", "fixed"],
+      [grantPrincipal, secondTeamId, "PR-2026-0902", "B", "SUP-09002", "pending", "CT-09002", "2027-12-31", "auto"],
+    ].map(async ([principal, team, ref, label, number, status, contractNumber, end, renewType]) => {
       const cookie = await signIn(principal!)
       const partition = digestSfValue({ installationId, tenantId, teamObjectId: team })
       const storePath = join(f.directory, "business-teams", partition)
       const store = await openLocalStore(storePath)
       try {
+        await store.transaction("dashboard", async (snapshot) => {
+          snapshot.data.summaries = ["Vendor Contracts"]
+          snapshot.data.contracts = [{
+            id: "contract-" + label, num: contractNumber, ...(label === "A" ? { name: "Contrato Sintético A" } : {}),
+            vendor: "Fornecedor Sintético " + label, end, renewType,
+            amount: 100_000, notes: "private-fixture-note", documents: [{ id: "private-file", name: "private.pdf" }],
+          }, ...(label === "A" ? [{ id: "contract-companion", num: "CT-09003", name: "Contrato Companheiro" }] : [])]
+          return { commit: true, value: undefined }
+        })
         await store.transaction("procurement", async (snapshot) => {
           const at = new Date(epoch * 1000).toISOString()
           const entry = { version: 1, request: {
@@ -243,8 +261,8 @@ test("Installed purchase MCP and supplier review keep paired A/B procurement in 
           return { commit: true, value: undefined }
         })
       } finally { await store.dispose() }
-      return { cookie, team: team!, ref: ref!, label, number, storePath, token: await pair(cookie, team!),
-        vendorToken: await pair(cookie, team!, "vendor-review") }
+      return { cookie, team: team!, ref: ref!, label, number, contractNumber, storePath, token: await pair(cookie, team!),
+        vendorToken: await pair(cookie, team!, "vendor-review"), contractToken: await pair(cookie, team!, "contract-review") }
     }))
     const rpc = (token: string, method: string, params?: Record<string, unknown>, extra?: Record<string, string>, path = "/api/claw/mcp") =>
       f.installation.handler(ingress(path, {
@@ -252,6 +270,9 @@ test("Installed purchase MCP and supplier review keep paired A/B procurement in 
       }, { method: "POST", body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) }))
     const call = (token: string, requestRef: string, extra?: Record<string, string>) =>
       rpc(token, "tools/call", { name: "sf_comparar_compra", arguments: { requestRef } }, extra)
+    const contractCall = (token: string, recordRef: string, name = "sf_read_contract_review") =>
+      rpc(token, "tools/call", { name, arguments: { recordRef } }, undefined, contractPath + "/mcp")
+    const contractDenied = { isError: true, content: [{ type: "text", text: '{"status":"denied"}' }] }
     for (const actor of cases) {
       const { result: supplierTools } = await (await rpc(actor.vendorToken, "tools/list", undefined, undefined, vendorPath + "/mcp"))!.json()
       expect(supplierTools.tools).toHaveLength(1)
@@ -259,6 +280,20 @@ test("Installed purchase MCP and supplier review keep paired A/B procurement in 
       expect((await rpc(actor.token, "tools/list", undefined, undefined, vendorPath + "/mcp"))?.status).toBe(403)
       expect((await rpc(actor.vendorToken, "tools/list"))?.status).toBe(403)
       const other = cases.find((item) => item !== actor)!
+      const contractTools = await (await rpc(actor.contractToken, "tools/list", undefined, undefined, contractPath + "/mcp"))!.json()
+      expect(contractTools.result.tools).toHaveLength(1)
+      expect(contractTools.result.tools[0]).toMatchObject({ name: "sf_read_contract_review", annotations: { readOnlyHint: true } })
+      expect((await contractCall(actor.token, actor.contractNumber!))?.status).toBe(403)
+      expect((await contractCall(actor.vendorToken, actor.contractNumber!))?.status).toBe(403)
+      expect((await rpc(actor.contractToken, "tools/list"))?.status).toBe(403)
+      expect((await rpc(actor.contractToken, "tools/list", undefined, undefined, vendorPath + "/mcp"))?.status).toBe(403)
+      for (const recordRef of [other.contractNumber!, "CT-09999"]) {
+        const response = await contractCall(actor.contractToken, recordRef)
+        expect(response?.status).toBe(200)
+        expect((await response!.json()).result).toEqual(contractDenied)
+      }
+      const contractMutation = await contractCall(actor.contractToken, actor.contractNumber!, "sf_contract_renew")
+      expect((await contractMutation!.json()).result).toEqual({ isError: true, content: [{ type: "text", text: '{"status":"invalid"}' }] })
       for (const recordRef of [other.number, "SUP-09999"]) {
         const response = await rpc(actor.vendorToken, "tools/call", { name: "sf_read_vendor_review", arguments: { recordRef } },
           undefined, vendorPath + "/mcp")
@@ -297,7 +332,7 @@ test("Installed purchase MCP and supplier review keep paired A/B procurement in 
       const proxy = Bun.serve({ hostname: "127.0.0.1", port: 0, async fetch(request) {
         const pathname = new URL(request.url).pathname
         if (request.method !== "POST") return new Response(null, { status: 405 })
-        if (pathname === mount + "/api/claw/mcp" || pathname === mount + vendorPath + "/mcp") {
+        if (Object.values(paths).some((path) => pathname === mount + path + "/mcp")) {
           const headers = Object.fromEntries(Array.from(request.headers).filter(([name]) => name !== "host"))
           return await f.installation.handler(ingress(pathname.slice(mount.length), headers, {
             method: "POST", body: await request.text(),
@@ -344,23 +379,65 @@ test("Installed purchase MCP and supplier review keep paired A/B procurement in 
           return yield* AppProcess.requireSuccess(result)
         }).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
         const b = cases[1]!
-        const fingerprint = (path: string) => openLocalStore(path).then(async (store) => {
+        const fingerprint = (surface: "dashboard" | "procurement", path: string) => openLocalStore(path).then(async (store) => {
           try {
-            return await store.transaction("procurement", async (state) => ({ commit: false, value: digestSfValue(state) }))
+            return await store.transaction(surface, async (state) => ({ commit: false, value: digestSfValue(state) }))
           } finally { await store.dispose() }
         })
-        const before = await Promise.all(cases.map((item) => fingerprint(item.storePath)))
+        const before = await Promise.all(cases.map((item) => fingerprint("procurement", item.storePath)))
         const vendor = await runGateway("sf-vendor-review.node-smoke.mjs", { A: a.vendorToken, B: b.vendorToken })
         const vendorReceipt = vendor.stdout.toString().split("\n").find((line) => line.startsWith("SF supplier review "))
         expect(vendorReceipt).toBe("SF supplier review SUP-09001/SUP-09002: two own reads, two crossed denials.")
-        expect(await Promise.all(cases.map((item) => fingerprint(item.storePath)))).toEqual(before)
+        expect(await Promise.all(cases.map((item) => fingerprint("procurement", item.storePath)))).toEqual(before)
         console.log(vendorReceipt)
+        const beforeContracts = await Promise.all(cases.map((item) => fingerprint("dashboard", item.storePath)))
+        const contracts = await runGateway("sf-contract-review.node-smoke.mjs", { A: a.contractToken, B: b.contractToken })
+        const contractReceipt = contracts.stdout.toString().split("\n").find((line) => line.startsWith("SF contract review "))
+        expect(contractReceipt).toBe("SF contract review CT-09001/CT-09002: two own reads, two crossed denials.")
+        expect(await Promise.all(cases.map((item) => fingerprint("dashboard", item.storePath)))).toEqual(beforeContracts)
+        console.log(contractReceipt)
         const run = await runGateway("sf-purchase-invoke.node-smoke.mjs", { A: a.token, B: b.token }, control)
         const receipt = run.stdout.toString().split("\n").find((line) => line.startsWith("SF synthetic purchase "))
         expect(receipt).toBe("SF synthetic purchase PR-2026-0901: A/B 4/4, confirmed A1, version 1 -> 2, one quotation selection in history.")
         console.log(receipt)
       } finally { await proxy.stop(true) }
     }
+    const dashboard = await openLocalStore(a.storePath)
+    try {
+      const batch = () => f.installation.handler(ingress(contractPath + "/mcp", {
+        authorization: "Bearer " + a.contractToken, "content-type": "application/json", accept: "application/json, text/event-stream",
+      }, { method: "POST", body: JSON.stringify([a.contractNumber, "CT-09003"].map((recordRef, index) => ({
+        jsonrpc: "2.0", id: index + 1, method: "tools/call",
+        params: { name: "sf_read_contract_review", arguments: { recordRef } },
+      }))) }))
+      const original = await batch()
+      expect(original?.status).toBe(200)
+      const messages = await original!.json() as { result: { content: { text: string }[] } }[]
+      expect(messages.map((message) => JSON.parse(message.result.content[0]!.text).contract.ref).sort())
+        .toEqual([a.contractNumber, "CT-09003"])
+      const checks = { count: 0 }
+      membership.onRoleCheck = async () => {
+        if (++checks.count !== 2) return
+        await dashboard.transaction("dashboard", async (snapshot) => {
+          snapshot.data.contracts = rows(snapshot.data.contracts).map((row) =>
+            row.num === "CT-09003" ? { ...row, name: "Changed during publication" } : row)
+          return { commit: true, value: undefined }
+        })
+      }
+      try {
+        const staleBatch = await batch()
+        expect(staleBatch?.status).toBe(403)
+        expect(await staleBatch?.text()).toBe("")
+        expect(checks.count).toBe(2)
+      } finally { membership.onRoleCheck = undefined }
+      await dashboard.transaction("dashboard", async (snapshot) => {
+        snapshot.data.summaries = []
+        return { commit: true, value: undefined }
+      })
+    } finally { await dashboard.dispose() }
+    const afterPageRevocation = await contractCall(a.contractToken, a.contractNumber!)
+    expect(afterPageRevocation?.status).toBe(200)
+    expect((await afterPageRevocation!.json()).result).toEqual(contractDenied)
     membership.revokeOnRoleCheck = true
     expect((await call(a.token, a.ref))?.status).toBe(403)
     expect(membership.teamRemoved).toBe(true)
