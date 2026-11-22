@@ -587,9 +587,12 @@
         45025502692,
         45029253108,
         45029259117,
-        45033525825
+        45033525825,
+        45037289486,
+        45037958471,
+        45040443689
       ],
-      "limitation": "The current product e4cc03b has composed passing technical evidence, including one complete original C17 run, but installed UI42–UI44 remain unqualified. Clean Portfolio22 completes original preparation and both native histories, then fails the unchanged first-preview60000ms wait with no response observed. UI44 isolated03 completes original source/units/editor/review/cancel stages, then its one evaluation POST has no response observed within the unchanged120000ms wait. Neither journey reaches its result assertions/readbacks or final scope footer. Internal completion or persistence is unknown. Prior attempts and instrumented diagnostics remain separately recorded; their counts and inclusive times do not establish a causal speedup. Portfolio23 is an instrumented failure of the same original preview deadline; it confirms actual context/selector use in a partial prefix, without qualification, completed egress or causal performance attribution.",
+      "limitation": "The current product e4cc03b has composed passing technical evidence, including one complete original C17 run, but installed UI42–UI44 remain unqualified. Clean Portfolio22 completes original preparation and both native histories, then fails the unchanged first-preview60000ms wait with no response observed. UI44 isolated03 completes original source/units/editor/review/cancel stages, then its one evaluation POST has no response observed within the unchanged120000ms wait. Neither journey reaches its result assertions/readbacks or final scope footer. Internal completion or persistence is unknown. Prior attempts and instrumented diagnostics remain separately recorded; their counts and inclusive times do not establish a causal speedup. Portfolio23 is an instrumented failure of the same original preview deadline; it confirms actual context/selector use in a partial prefix, without qualification, completed egress or causal performance attribution. Portfolio24 failed in Setup Bun with HTTP 403 and skipped Run tests; runtime measurements and product outcome are unavailable. Portfolio25 and Portfolio26 remain instrumented failures of the original first-preview deadline, with no response/final snapshot or qualification. Portfolio26 is the latest executed diagnostic; its first native History response body was unavailable despite HTTP 200, while its second response recorded status ok. Inclusive caller populations do not establish saved time or select a product optimization.",
       "evidence": "analytics/attempt-19/README.md",
       "isolatedSensitivityEvidence": "collab/sensitivity-isolated-03/README.md",
       "latestClean": {
@@ -628,262 +631,957 @@
         "rootReview": "analytics/attempt-19/root-review.json"
       },
       "latestDiagnostic": {
-        "label": "Portfolio23",
+        "label": "Portfolio26",
         "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
         "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
-        "run": 45033525825,
-        "job": 137242109427,
-        "cleanupJob": 137244040727,
+        "technicalAttempt": 27,
+        "run": 45040443689,
+        "job": 137263467188,
+        "cleanupJob": 137266432739,
         "cleanupStatus": "SUCCESS",
         "source": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
         "runtime": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
-        "snapshot": "7f9a1233a200c4da2e80baa2e546d70afbd87ff4",
-        "evidence": "analytics/attempt-20/README.md",
-        "receipt": "analytics/attempt-20/receipt.json",
-        "profile": "analytics/attempt-20/profile.json",
-        "manifest": "analytics/attempt-20/manifest.json",
-        "immutableArchiveCommit": "29f86ded00253462b5c1bbef5f51c87ae2362ccb",
+        "snapshot": "48faf8ddcc242ed1ffb10d01f4619534b169a52b",
+        "evidence": "analytics/attempt-23/README.md",
+        "receipt": "analytics/attempt-23/receipt.json",
+        "profile": "analytics/attempt-23/profile.json",
+        "aggregates": "analytics/attempt-23/aggregates.json",
+        "manifest": "analytics/attempt-23/manifest.json",
+        "rootReview": "analytics/attempt-23/root-review.json",
+        "immutableArchiveCommit": "160c14f29265e9033f1295a6b55fa2b40fe202c3",
         "originalPreviewTimeoutMs": 60000,
         "failureLine": 72,
         "previewResponseObserved": false,
         "internalPersistence": "UNKNOWN",
         "preparation": {
-          "complete": true
+          "originalPreparationReached": true,
+          "allNativeHistoryBodiesConfirmed": false
         },
         "nativeHistory": [
           {
+            "timestamp": "2026-11-22T15:59:08.6740329Z",
+            "sourceLine": 1209,
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
             "sequence": 1,
-            "http": 200,
-            "status": "ok",
-            "elapsedMs": 351
+            "method": "POST",
+            "ownerBinding": "exact"
           },
           {
+            "timestamp": "2026-11-22T15:59:09.2829039Z",
+            "sourceLine": 1211,
+            "operation": "decision-portfolio-results",
+            "phase": "native-request-failed",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 612
+          },
+          {
+            "timestamp": "2026-11-22T15:59:09.2843613Z",
+            "sourceLine": 1213,
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 610,
+            "http": 200,
+            "acquisitionFailure": "response-body-unavailable"
+          },
+          {
+            "timestamp": "2026-11-22T15:59:24.5333155Z",
+            "sourceLine": 1231,
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
             "sequence": 2,
+            "method": "POST",
+            "ownerBinding": "exact"
+          },
+          {
+            "timestamp": "2026-11-22T15:59:25.7612854Z",
+            "sourceLine": 1249,
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 2,
+            "ownerBinding": "exact",
+            "elapsedMs": 1226,
             "http": 200,
             "status": "ok",
-            "elapsedMs": 592
+            "reason": null,
+            "valueShape": "array"
           }
         ],
         "profiler": {
-          "records": 181,
+          "records": 236,
           "started": 1,
           "periodicSnapshots": 5,
           "finalSnapshots": 0,
-          "bucketsPerSnapshot": 35,
-          "emittedBucketRecords": 175,
+          "bucketsPerSnapshot": 46,
+          "emittedBucketRecords": 230,
           "elapsedMs": [
             10000,
-            20003,
+            20000,
             30000,
-            40006,
-            50000
+            40000,
+            50008
           ],
           "scopeOrigin": "before-human-admit",
           "pendingAtLastSample": 1,
           "drops": 0,
           "errors": 0,
           "skippedThresholds": 0,
-          "interpretation": "Cumulative settled-span prefix through 50000 ms; HTTP remains pending and no final snapshot exists. Inclusive times overlap, and the earlier scope origin differs from Portfolio21."
+          "interpretation": "Cumulative settled-span prefix only; no final snapshot or completed preview response. Inclusive times overlap and no causal speedup is established."
+        },
+        "canonical": {
+          "digestPopulations": [
+            {
+              "surface": "unlabelled",
+              "calls": 133332,
+              "settled": 133332,
+              "pending": 0,
+              "inclusiveMs": 7506
+            },
+            {
+              "surface": "principal.direct",
+              "calls": 106491,
+              "settled": 106491,
+              "pending": 0,
+              "inclusiveMs": 1672
+            },
+            {
+              "surface": "source.scope-validation",
+              "calls": 68920,
+              "settled": 68920,
+              "pending": 0,
+              "inclusiveMs": 585
+            },
+            {
+              "surface": "source.other",
+              "calls": 41978,
+              "settled": 41978,
+              "pending": 0,
+              "inclusiveMs": 2545
+            },
+            {
+              "surface": "canonical.evidence-ref",
+              "calls": 8167,
+              "settled": 8167,
+              "pending": 0,
+              "inclusiveMs": 97
+            },
+            {
+              "surface": "bcs.planner.projection-period",
+              "calls": 1357,
+              "settled": 1357,
+              "pending": 0,
+              "inclusiveMs": 3
+            },
+            {
+              "surface": "bcs.planner.expected-period",
+              "calls": 1357,
+              "settled": 1357,
+              "pending": 0,
+              "inclusiveMs": 3
+            },
+            {
+              "surface": "bcs.planner.source-ref",
+              "calls": 213005,
+              "settled": 213005,
+              "pending": 0,
+              "inclusiveMs": 1728
+            },
+            {
+              "surface": "bcs.planner.expected-ref",
+              "calls": 213004,
+              "settled": 213004,
+              "pending": 0,
+              "inclusiveMs": 1772
+            },
+            {
+              "surface": "finance.other",
+              "calls": 493,
+              "settled": 493,
+              "pending": 0,
+              "inclusiveMs": 333
+            },
+            {
+              "surface": "finance.current",
+              "calls": 525,
+              "settled": 525,
+              "pending": 0,
+              "inclusiveMs": 2
+            }
+          ],
+          "digestTotal": {
+            "calls": 788629,
+            "settled": 788629,
+            "pending": 0,
+            "inclusiveMs": 16246
+          },
+          "directOutsideDigest": {
+            "calls": 1316,
+            "settled": 1316,
+            "pending": 0,
+            "inclusiveMs": 402
+          },
+          "interpretation": "Only sum the eleven canonical.digest surface populations for the digest invocation total. Do not add that inclusive duration to other spans or treat it as CPU time."
         },
         "contextIntegrity": {
           "mintRegistrations": 1,
           "Business": {
-            "captures": 132,
-            "attested": 132,
-            "currentCalls": 589,
-            "fastCalls": 589,
-            "provenanceHits": 853,
-            "environmentCurrent": 853
+            "captures": 72,
+            "attested": 72,
+            "currentCalls": 320,
+            "fastCalls": 320,
+            "provenanceHits": 464,
+            "environmentCurrent": 464
           },
           "Root": {
-            "captures": 9,
-            "attested": 9,
-            "currentCalls": 125,
-            "fastCalls": 125,
-            "provenanceHits": 143,
-            "environmentCurrent": 143
+            "captures": 5,
+            "attested": 5,
+            "currentCalls": 68,
+            "fastCalls": 68,
+            "provenanceHits": 78,
+            "environmentCurrent": 78
           },
           "fallbackOrEnvironmentRejectionBucketsObserved": 0
         },
         "selector": {
-          "factory": 131,
-          "registered": 131,
-          "eligible": 131,
-          "narrowBranch": 131,
-          "callback": 131,
-          "narrowCloneProjectAwaitInclusiveMs": 51,
-          "identityAbsentAcrossNamespaces": 1792
+          "factory": 71,
+          "registered": 71,
+          "eligible": 71,
+          "narrowBranch": 71,
+          "callback": 71,
+          "narrowCloneProjectAwaitInclusiveMs": 41,
+          "identityAbsentAcrossNamespaces": 1004
         },
         "root": {
-          "prepareEntries": 9,
-          "ownedReady": 9,
-          "physicalCallbackEntries": 9,
-          "callerBucketsObserved": 0
+          "prepareEntries": 5,
+          "initializeEntries": 5,
+          "ownedReady": 5,
+          "physicalCallbackEntries": 5,
+          "callerBucketsObserved": []
         },
         "selectedMeasurements": [
           {
-            "name": "canonical.digest",
-            "surface": "none",
-            "calls": 1414970,
-            "settledInclusiveMs": 17879
-          },
-          {
             "name": "authority.principal",
             "surface": "none",
-            "calls": 63608,
-            "settledInclusiveMs": 13371
+            "calls": 35497,
+            "settled": 35497,
+            "pending": 0,
+            "settledInclusiveMs": 13245
+          },
+          {
+            "name": "state.read.total",
+            "surface": "none",
+            "calls": 1075,
+            "settled": 1075,
+            "pending": 0,
+            "settledInclusiveMs": 3960
           },
           {
             "name": "state.read.full.clone-callback-await",
             "surface": "none",
-            "calls": 1032,
-            "settledInclusiveMs": 3226
+            "calls": 567,
+            "settled": 567,
+            "pending": 0,
+            "settledInclusiveMs": 2692
           },
           {
             "name": "state.read.identity-narrow.clone-project-await",
             "surface": "none",
-            "calls": 131,
-            "settledInclusiveMs": 51
+            "calls": 71,
+            "settled": 71,
+            "pending": 0,
+            "settledInclusiveMs": 41
           }
         ],
         "interpretationLimits": [
-          "canonical.digest measures digestSfValue only, excluding direct canonicalSfValue calls such as plannerRequestIdentity and any uninstrumented CPU work.",
-          "root.caller.* covers PlannerCalculationServices only, not the direct Finance caller; absence does not mean Root was unused.",
-          "identity-absent aggregates namespaces and arbitrary callbacks, not missed case-selector opportunities.",
-          "baseline-accessor rejects before comparing getter/setter identities, so that reason would not prove equality; no such rejection bucket was observed.",
-          "Physical callback entries do not prove accepted roots or completed transactions. Clone spans include original callbacks/awaits and different populations.",
-          "Zero drops applies to the emitted checkpoints, with no final snapshot; no causal speedup or qualification claim."
+          "Diagnostic evidence only. The full original first declaration did not complete; no qualification or global counter increment is supported.",
+          "The collector starts before human.admit. Portfolio26 adds five direct-caller labels to Portfolio25 while preserving original hash sites and direct-canonical measurement. These observations do not establish a causal performance comparison with earlier attempts.",
+          "Bucket values are cumulative at an observed checkpoint. Inclusive durations overlap, are rounded to integer milliseconds, and must not be summed across bucket families or across snapshots into total CPU or wall time.",
+          "The eleven canonical.digest surfaces partition the recorded digestSfValue invocation population; only those same-name populations are summed for the digest total. Each invocation retains one digest span. Labels identify direct call sites, not complete ancestry, and unlabelled calls remain unattributed.",
+          "BCS retains two period hash sites when the period comparison is reached, followed by two reference hash sites for each value whose sourceRefs length guard passes. A settled-span checkpoint can fall between the source and expected-reference hashes. The observed 213005/213004 counts are a sampled-prefix difference, not proof of mismatch, a skipped comparison, memoization or completed value comparisons.",
+          "canonical.direct measures direct canonicalSfValue calls outside active digest canonicalization; internal digest canonicalization is excluded. Neither canonical bucket measures all serialization, all canonical work outside the frame, or all CPU work.",
+          "root.caller.* instruments PlannerCalculationServices only. It excludes the direct Finance caller. Missing caller buckets do not imply Root was unused or attribute every Root invocation to Finance.",
+          "state.read.identity-absent aggregates read namespaces and arbitrary callbacks. It is not a count of missed selectSfCaseIdentity opportunities.",
+          "The baseline-accessor rejection branch rejects an unsupported accessor before comparing getter/setter identities. That reason would not prove getter/setter equality. No such rejection bucket was observed in this prefix.",
+          "root.physical.callback counts callback entries, not independently identified physical roots, committed transactions, accepted roots, or completed requests.",
+          "The narrow and full clone spans include their original callback and await, not only cloning. Their populations differ, so their average durations are not a controlled clone benchmark.",
+          "Zero drops, diagnostic errors and skipped thresholds apply to the five emitted checkpoints. There is no final snapshot. The last http.preview span remains pending; the archive does not establish backend unwind or later completion.",
+          "Native history sequence 1 has a request-failed event and HTTP 200 with response-body-unavailable; its application-level body readback is not confirmed. Sequence 2 has HTTP 200/status ok. These events do not establish the cause of the preview timeout.",
+          "Absent buckets describe one diagnostic frame and emitted prefix only. Aggregate counters do not establish per-object joins or behavior outside the frame.",
+          "The diagnostic adds bookkeeping and output overhead without installing global intrinsic hooks, wrapping providers, or adding authority/provider queries. No product optimization is selected by this archive."
         ],
-        "captures": 7,
-        "agentViewed": 7,
-        "originalChunks": 33,
-        "totalJpegBytes": 536861,
-        "sourceEvents": 24,
-        "contextReadbacks": 2,
-        "captureEvents": 6,
-        "stages": 46,
-        "diagnostics": 3,
+        "preservedEvidence": {
+          "profilerRecords": 236,
+          "sourceEvents": 25,
+          "contextReadbacks": 2,
+          "captureEvents": 6,
+          "stages": 46,
+          "diagnostics": 3,
+          "structuredEmissions": 351,
+          "jpegs": 7,
+          "chunks": 33,
+          "jpegBytes": 536652,
+          "agentViewed": 7,
+          "rawLogArchived": false,
+          "rootViewed": 2,
+          "rootMatchedJpegs": 7
+        },
         "resultAssertionsReached": false,
         "ptBrCompletion": false,
         "additionalQualifiedAreas": 0,
-        "rootViewed": 2,
-        "rootReview": "analytics/attempt-20/root-review.json",
-        "rootMatchedJpegs": 7
+        "retainedCheckpointGuard": {
+          "attempt": 23,
+          "run": 45032261331,
+          "conclusion": "success",
+          "reexecuted": false,
+          "qa": "b17cb0b20251fe485db79ab3e8de80b7aa560e4b",
+          "snapshot": "ae98de00a9b49ee74b47aca83a8d36a808b86dc2",
+          "scope": "Previously reviewed context QA checkpoint only. This run does not cover Portfolio24–26 archives or these rollup additions; no new guard result is claimed."
+        },
+        "bcsPlanner": {
+          "referenceLoop": {
+            "calls": 426009,
+            "inclusiveMs": 3500
+          },
+          "periodPair": {
+            "calls": 2714,
+            "inclusiveMs": 6
+          },
+          "allFourSites": {
+            "calls": 428723,
+            "inclusiveMs": 3506
+          },
+          "interpretation": "The two period digests execute once per reached projection, outside every; the two reference digests execute per visited value. The final settled-span checkpoint contains one more source-ref than expected-ref call because it can cut between the two expressions. This is not evidence of a mismatch or a speedup."
+        },
+        "preparatoryHistory": {
+          "sequence1": "native-request-failed at line 1211; HTTP 200 at line 1213 with acquisitionFailure=response-body-unavailable; status ok was not observed for this response",
+          "sequence2": "HTTP 200/status ok at line 1249",
+          "preview": "Sequence 3 POST at line 1247, 2026-11-22T15:59:25.7399373Z; no corresponding response"
+        }
       },
       "previousDiagnostic": {
-        "label": "Portfolio21",
+        "label": "Portfolio25",
         "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
         "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
-        "run": 45019357466,
-        "job": 137198592243,
-        "cleanupJob": 137201120833,
+        "technicalAttempt": 26,
+        "run": 45037958471,
+        "job": 137255778039,
+        "cleanupJob": 137259046881,
         "cleanupStatus": "SUCCESS",
-        "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
-        "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
-        "snapshot": "27499e0b3f81bed868dfe2d4724b295fd5aab9c6",
-        "evidence": "analytics/attempt-18/README.md",
-        "immutableArchiveCommit": "858f23928ce48c628c418a33454818a40c52d258",
-        "rootReview": "analytics/attempt-18/root-review.json",
+        "source": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+        "runtime": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+        "snapshot": "fe306be28d7543d4ed3890a6e78d3d010e494486",
+        "evidence": "analytics/attempt-22/README.md",
+        "receipt": "analytics/attempt-22/receipt.json",
+        "profile": "analytics/attempt-22/profile.json",
+        "aggregates": "analytics/attempt-22/aggregates.json",
+        "manifest": "analytics/attempt-22/manifest.json",
+        "rootReview": "analytics/attempt-22/root-review.json",
+        "immutableArchiveCommit": "47804dbc5fb56d58167c333c8faa99a4580c809e",
         "originalPreviewTimeoutMs": 60000,
         "failureLine": 72,
         "previewResponseObserved": false,
         "internalPersistence": "UNKNOWN",
         "preparation": {
-          "helper": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
-          "complete": true
+          "originalPreparationReached": true,
+          "allNativeHistoryBodiesConfirmed": true
         },
         "nativeHistory": [
           {
+            "timestamp": "2026-11-22T15:32:24.2724099Z",
+            "sourceLine": 1214,
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
             "sequence": 1,
-            "http": 200,
-            "status": "ok",
-            "elapsedMs": 529
+            "method": "POST",
+            "ownerBinding": "exact"
           },
           {
-            "sequence": 2,
+            "timestamp": "2026-11-22T15:32:24.8744727Z",
+            "sourceLine": 1216,
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 599,
             "http": 200,
             "status": "ok",
-            "elapsedMs": 1064
+            "reason": null,
+            "valueShape": "array"
+          },
+          {
+            "timestamp": "2026-11-22T15:32:42.6188384Z",
+            "sourceLine": 1234,
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
+            "sequence": 2,
+            "method": "POST",
+            "ownerBinding": "exact"
+          },
+          {
+            "timestamp": "2026-11-22T15:32:43.7747886Z",
+            "sourceLine": 1236,
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 2,
+            "ownerBinding": "exact",
+            "elapsedMs": 1151,
+            "http": 200,
+            "status": "ok",
+            "reason": null,
+            "valueShape": "array"
           }
         ],
         "profiler": {
-          "records": 625,
+          "records": 211,
           "started": 1,
-          "sealedRootMarkers": 5,
-          "rootCallbackExits": 4,
           "periodicSnapshots": 5,
           "finalSnapshots": 0,
-          "bucketsPerSnapshot": 122,
-          "emittedBucketRecords": 610,
+          "bucketsPerSnapshot": 41,
+          "emittedBucketRecords": 205,
           "elapsedMs": [
-            10000,
+            10006,
             20000,
-            30000,
+            30001,
             40000,
-            50015
+            50041
           ],
-          "pendingAtLastSample": 4,
+          "scopeOrigin": "before-human-admit",
+          "pendingAtLastSample": 3,
           "drops": 0,
           "errors": 0,
           "skippedThresholds": 0,
-          "interpretation": "Cumulative settled-span samples through 50,015 ms only; nested populations and active pending work do not establish exclusive cost or available savings. Instrumentation coverage differs from Portfolio20."
+          "interpretation": "Cumulative settled-span prefix only; no final snapshot or completed preview response. Inclusive times overlap and no causal speedup is established."
+        },
+        "canonical": {
+          "digestPopulations": [
+            {
+              "surface": "unlabelled",
+              "calls": 504197,
+              "settled": 504197,
+              "pending": 0,
+              "inclusiveMs": 10914
+            },
+            {
+              "surface": "source.scope-validation",
+              "calls": 60829,
+              "settled": 60829,
+              "pending": 0,
+              "inclusiveMs": 476
+            },
+            {
+              "surface": "principal.direct",
+              "calls": 94080,
+              "settled": 94080,
+              "pending": 0,
+              "inclusiveMs": 1762
+            },
+            {
+              "surface": "source.other",
+              "calls": 37376,
+              "settled": 37376,
+              "pending": 0,
+              "inclusiveMs": 2630
+            },
+            {
+              "surface": "finance.other",
+              "calls": 489,
+              "settled": 489,
+              "pending": 0,
+              "inclusiveMs": 383
+            },
+            {
+              "surface": "finance.current",
+              "calls": 516,
+              "settled": 516,
+              "pending": 0,
+              "inclusiveMs": 2
+            }
+          ],
+          "digestTotal": {
+            "calls": 697487,
+            "settled": 697487,
+            "pending": 0,
+            "inclusiveMs": 16167
+          },
+          "directOutsideDigest": {
+            "calls": 1167,
+            "settled": 1167,
+            "pending": 0,
+            "inclusiveMs": 428
+          },
+          "interpretation": "Only sum the six canonical.digest surface populations for the digest invocation total. Do not add that inclusive duration to other spans or interpret it as CPU time."
+        },
+        "contextIntegrity": {
+          "mintRegistrations": 1,
+          "Business": {
+            "captures": 64,
+            "attested": 64,
+            "currentCalls": 301,
+            "fastCalls": 301,
+            "provenanceHits": 429,
+            "environmentCurrent": 429
+          },
+          "Root": {
+            "captures": 5,
+            "attested": 5,
+            "currentCalls": 67,
+            "fastCalls": 67,
+            "provenanceHits": 77,
+            "environmentCurrent": 77
+          },
+          "fallbackOrEnvironmentRejectionBucketsObserved": 0
+        },
+        "selector": {
+          "factory": 63,
+          "registered": 63,
+          "eligible": 63,
+          "narrowBranch": 63,
+          "callback": 63,
+          "narrowCloneProjectAwaitInclusiveMs": 52,
+          "identityAbsentAcrossNamespaces": 891
+        },
+        "root": {
+          "prepareEntries": 5,
+          "initializeEntries": 5,
+          "ownedReady": 5,
+          "physicalCallbackEntries": 5,
+          "callerBucketsObserved": []
         },
         "selectedMeasurements": [
           {
-            "name": "canonical.digest.total",
+            "name": "authority.principal",
             "surface": "none",
-            "calls": 748497,
-            "settledInclusiveMs": 15457
+            "calls": 31360,
+            "settled": 31360,
+            "pending": 0,
+            "settledInclusiveMs": 12715
           },
           {
-            "name": "authority.principal.total",
+            "name": "state.read.total",
             "surface": "none",
-            "calls": 33687,
-            "settledInclusiveMs": 14058
+            "calls": 954,
+            "settled": 953,
+            "pending": 1,
+            "settledInclusiveMs": 4084
           },
           {
-            "name": "local.operation.ingress",
+            "name": "state.read.full.clone-callback-await",
             "surface": "none",
-            "calls": 387132,
-            "settledInclusiveMs": 1474
+            "calls": 507,
+            "settled": 506,
+            "pending": 1,
+            "settledInclusiveMs": 2713
           },
           {
-            "name": "local.file.lstat",
+            "name": "state.read.identity-narrow.clone-project-await",
             "surface": "none",
-            "calls": 1934412,
-            "settledInclusiveMs": 5788
+            "calls": 63,
+            "settled": 63,
+            "pending": 0,
+            "settledInclusiveMs": 52
           }
         ],
-        "staticFollowup": {
-          "authentication": {
-            "source": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
-            "blob": "4845de24285df2459991da7d9895aad95eb93b19",
-            "originalSuccessfulSessionReads": [
-              "revoked before session",
-              "session payload",
-              "revoked after decrypt and valid"
-            ],
-            "productAuthoritySurfaces": 3,
-            "successfulPrincipalStaticReadEnvelope": 9,
-            "limit": "This is a conditional static call graph, not measured attribution of all 387132 operations. It does not prove every principal followed all successful branches.",
-            "noAuthorityCache": true
-          },
-          "canonical": {
-            "source": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
-            "blob": "d52aca01250ccff4c3811cee95f8a341fa3335c8",
-            "noSelectedCandidate": true,
-            "reason": "The measurement includes canonical traversal, tagged AST, serialization and SHA. Existing scoped memos do not provide a general exact-hasher capability. General memo/streaming alternatives lack equivalence for original hooks, getters, sparse arrays, species and error order."
-          },
-          "noNewRuntimeCandidate": true,
-          "noNewCi": true,
-          "interpretation": "These findings and no-candidate/no-CI fields describe the Portfolio21 checkpoint only. The later context integrity candidate and Portfolio22/UI44 isolated03 runs are recorded separately."
+        "interpretationLimits": [
+          "Diagnostic evidence only. The full original first declaration did not complete; no qualification or global counter increment is supported.",
+          "The collector starts before human.admit. Portfolio25 also adds direct-canonical bookkeeping to the labelled diagnostic. These observations do not establish a causal performance comparison with Portfolio23 or earlier attempts.",
+          "All bucket values are cumulative at an observed checkpoint. Inclusive durations overlap, are rounded to integer milliseconds, and must not be summed across bucket families into total CPU or wall time. Pending spans can be nested.",
+          "The six canonical.digest surfaces partition the recorded digestSfValue invocation population; their counts and inclusive durations may be summed for that bucket name. Each invocation has one digest span. Labels identify direct labelled call sites, not complete ancestry, and unlabelled calls remain unattributed.",
+          "canonical.direct measures direct canonicalSfValue calls outside active digest canonicalization; internal digest canonicalization is excluded. Neither canonical bucket measures all serialization, all canonical work outside the frame, or all CPU work.",
+          "root.caller.* instruments PlannerCalculationServices only. It does not cover the direct Finance caller. Missing caller buckets do not imply that Root was unused or attribute every Root invocation to Finance.",
+          "state.read.identity-absent aggregates read namespaces and arbitrary callbacks. It is not a count of missed selectSfCaseIdentity opportunities.",
+          "The baseline-accessor rejection branch rejects an unsupported accessor before comparing getter/setter identities. That reason would not prove getter/setter equality. No such rejection bucket was observed in this prefix.",
+          "root.physical.callback counts callback entries, not independently identified physical roots, committed transactions, accepted roots, or completed requests.",
+          "The narrow and full clone spans include their original callback and await, not only cloning. Their populations differ, so their average durations are not a controlled clone benchmark.",
+          "Zero drops, diagnostic errors and skipped thresholds apply to the five emitted checkpoints. There is no final snapshot. At the last checkpoint HTTP, state.read.total and the full clone/callback/await span each have one pending entry; the archive does not prove complete backend unwind.",
+          "Absent buckets describe this one diagnostic frame and emitted prefix only. Aggregate counters do not establish per-object joins or behavior outside the frame.",
+          "The diagnostic adds bookkeeping and output overhead without installing global intrinsic hooks, wrapping providers, or making extra authority/provider queries. No product candidate is selected by this archive."
+        ],
+        "preservedEvidence": {
+          "profilerRecords": 211,
+          "sourceEvents": 24,
+          "contextReadbacks": 2,
+          "captureEvents": 6,
+          "stages": 46,
+          "diagnostics": 3,
+          "structuredEmissions": 325,
+          "jpegs": 7,
+          "chunks": 33,
+          "jpegBytes": 536633,
+          "agentViewed": 7,
+          "rawLogArchived": false,
+          "rootViewed": 2,
+          "rootMatchedJpegs": 7
         },
-        "captures": 7,
-        "agentViewed": 7,
-        "rootViewed": 2,
-        "additionalQualifiedAreas": 0
+        "resultAssertionsReached": false,
+        "ptBrCompletion": false,
+        "additionalQualifiedAreas": 0,
+        "retainedCheckpointGuard": {
+          "attempt": 23,
+          "run": 45032261331,
+          "conclusion": "success",
+          "reexecuted": false,
+          "qa": "b17cb0b20251fe485db79ab3e8de80b7aa560e4b",
+          "snapshot": "ae98de00a9b49ee74b47aca83a8d36a808b86dc2",
+          "scope": "Previously reviewed context QA checkpoint only. This run does not cover Portfolio24–26 archives or these rollup additions; no new guard result is claimed."
+        }
       },
       "olderDiagnostics": [
+        {
+          "label": "Portfolio24",
+          "kind": "INFRASTRUCTURE_FAILURE_BEFORE_TESTS_NOT_QUALIFICATION",
+          "status": "SETUP_BUN_HTTP403_RUN_TESTS_SKIPPED",
+          "technicalAttempt": 25,
+          "run": 45037289486,
+          "job": 137253750631,
+          "cleanupJob": 137253902896,
+          "cleanupStatus": "SUCCESS",
+          "source": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+          "runtime": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+          "snapshot": "912deed79badd8684298ae9c3799f8ef5f15e016",
+          "evidence": "analytics/attempt-21/README.md",
+          "receipt": "analytics/attempt-21/receipt.json",
+          "aggregates": "analytics/attempt-21/aggregates.json",
+          "manifest": "analytics/attempt-21/manifest.json",
+          "rootReview": "analytics/attempt-21/root-review.json",
+          "immutableArchiveCommit": "5abb86723f00b287325e3ac274388bdda8adec8b",
+          "setupFailure": {
+            "step": "Setup Bun",
+            "action": "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "version": "1.3.14",
+            "downloadUrl": "https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip",
+            "observedHttpStatus": 403,
+            "errorMessage": "Error: Unexpected HTTP response: 403",
+            "errorTimestamp": "2026-11-22T15:15:54.1523321Z",
+            "errorSourceLine": 252,
+            "observations": [
+              {
+                "sourceLine": 244,
+                "timestamp": "2026-11-22T15:15:53.9793652Z",
+                "observedText": "##[group]Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6"
+              },
+              {
+                "sourceLine": 250,
+                "timestamp": "2026-11-22T15:15:54.0941148Z",
+                "observedText": "Obtained version 1.3.14 from package.json"
+              },
+              {
+                "sourceLine": 251,
+                "timestamp": "2026-11-22T15:15:54.0947944Z",
+                "observedText": "Downloading a new version of Bun: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip"
+              },
+              {
+                "sourceLine": 252,
+                "timestamp": "2026-11-22T15:15:54.1523321Z",
+                "observedText": "##[error]Error: Unexpected HTTP response: 403"
+              },
+              {
+                "sourceLine": 253,
+                "timestamp": "2026-11-22T15:15:54.1566227Z",
+                "observedText": "##[end-action id=__self.__oven-sh_setup-bun;outcome=failure;conclusion=failure;duration_ms=180]"
+              }
+            ],
+            "underlyingHttp403Cause": "NOT_ESTABLISHED_BY_THIS_LOG"
+          },
+          "runTestsConclusion": "skipped",
+          "testDeclarationExecuted": false,
+          "productPassOrFailureEstablished": false,
+          "measurementAvailable": false,
+          "profiler": null,
+          "selectedMeasurements": null,
+          "canonical": {
+            "surfaceBreakdown": [],
+            "totalCalls": null,
+            "totalSettled": null,
+            "totalPending": null,
+            "totalInclusiveMs": null
+          },
+          "nativePreviewOutcome": "NOT_EXECUTED",
+          "preservedEvidence": {
+            "structuredEmissions": 0,
+            "profilerRecords": 0,
+            "jpegs": 0,
+            "chunks": 0,
+            "agentViewed": 0,
+            "rootViewed": 0,
+            "rawLogArchived": false
+          },
+          "additionalQualifiedAreas": 0,
+          "interpretationLimits": [
+            "Run tests was skipped after Setup Bun failed with HTTP403.",
+            "Zero emitted records describes log acquisition only; runtime counts/times are unknown, not zero.",
+            "The intended one-span canonical.digest surface populations have no measurements in this run; no population total can be summed.",
+            "No bucket count, timing, or caller distribution is copied from Portfolio23.",
+            "This infrastructure failure establishes no native product pass/failure, timeout, causal performance result, or qualification."
+          ],
+          "retainedCheckpointGuard": {
+            "attempt": 23,
+            "run": 45032261331,
+            "conclusion": "success",
+            "reexecuted": false,
+            "qa": "b17cb0b20251fe485db79ab3e8de80b7aa560e4b",
+            "snapshot": "ae98de00a9b49ee74b47aca83a8d36a808b86dc2",
+            "scope": "Previously reviewed context QA checkpoint only. This run does not cover Portfolio24–26 archives or these rollup additions; no new guard result is claimed."
+          }
+        },
+        {
+          "label": "Portfolio23",
+          "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
+          "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
+          "run": 45033525825,
+          "job": 137242109427,
+          "cleanupJob": 137244040727,
+          "cleanupStatus": "SUCCESS",
+          "source": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+          "runtime": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+          "snapshot": "7f9a1233a200c4da2e80baa2e546d70afbd87ff4",
+          "evidence": "analytics/attempt-20/README.md",
+          "receipt": "analytics/attempt-20/receipt.json",
+          "profile": "analytics/attempt-20/profile.json",
+          "manifest": "analytics/attempt-20/manifest.json",
+          "immutableArchiveCommit": "29f86ded00253462b5c1bbef5f51c87ae2362ccb",
+          "originalPreviewTimeoutMs": 60000,
+          "failureLine": 72,
+          "previewResponseObserved": false,
+          "internalPersistence": "UNKNOWN",
+          "preparation": {
+            "complete": true
+          },
+          "nativeHistory": [
+            {
+              "sequence": 1,
+              "http": 200,
+              "status": "ok",
+              "elapsedMs": 351
+            },
+            {
+              "sequence": 2,
+              "http": 200,
+              "status": "ok",
+              "elapsedMs": 592
+            }
+          ],
+          "profiler": {
+            "records": 181,
+            "started": 1,
+            "periodicSnapshots": 5,
+            "finalSnapshots": 0,
+            "bucketsPerSnapshot": 35,
+            "emittedBucketRecords": 175,
+            "elapsedMs": [
+              10000,
+              20003,
+              30000,
+              40006,
+              50000
+            ],
+            "scopeOrigin": "before-human-admit",
+            "pendingAtLastSample": 1,
+            "drops": 0,
+            "errors": 0,
+            "skippedThresholds": 0,
+            "interpretation": "Cumulative settled-span prefix through 50000 ms; HTTP remains pending and no final snapshot exists. Inclusive times overlap, and the earlier scope origin differs from Portfolio21."
+          },
+          "contextIntegrity": {
+            "mintRegistrations": 1,
+            "Business": {
+              "captures": 132,
+              "attested": 132,
+              "currentCalls": 589,
+              "fastCalls": 589,
+              "provenanceHits": 853,
+              "environmentCurrent": 853
+            },
+            "Root": {
+              "captures": 9,
+              "attested": 9,
+              "currentCalls": 125,
+              "fastCalls": 125,
+              "provenanceHits": 143,
+              "environmentCurrent": 143
+            },
+            "fallbackOrEnvironmentRejectionBucketsObserved": 0
+          },
+          "selector": {
+            "factory": 131,
+            "registered": 131,
+            "eligible": 131,
+            "narrowBranch": 131,
+            "callback": 131,
+            "narrowCloneProjectAwaitInclusiveMs": 51,
+            "identityAbsentAcrossNamespaces": 1792
+          },
+          "root": {
+            "prepareEntries": 9,
+            "ownedReady": 9,
+            "physicalCallbackEntries": 9,
+            "callerBucketsObserved": 0
+          },
+          "selectedMeasurements": [
+            {
+              "name": "canonical.digest",
+              "surface": "none",
+              "calls": 1414970,
+              "settledInclusiveMs": 17879
+            },
+            {
+              "name": "authority.principal",
+              "surface": "none",
+              "calls": 63608,
+              "settledInclusiveMs": 13371
+            },
+            {
+              "name": "state.read.full.clone-callback-await",
+              "surface": "none",
+              "calls": 1032,
+              "settledInclusiveMs": 3226
+            },
+            {
+              "name": "state.read.identity-narrow.clone-project-await",
+              "surface": "none",
+              "calls": 131,
+              "settledInclusiveMs": 51
+            }
+          ],
+          "interpretationLimits": [
+            "canonical.digest measures digestSfValue only, excluding direct canonicalSfValue calls such as plannerRequestIdentity and any uninstrumented CPU work.",
+            "root.caller.* covers PlannerCalculationServices only, not the direct Finance caller; absence does not mean Root was unused.",
+            "identity-absent aggregates namespaces and arbitrary callbacks, not missed case-selector opportunities.",
+            "baseline-accessor rejects before comparing getter/setter identities, so that reason would not prove equality; no such rejection bucket was observed.",
+            "Physical callback entries do not prove accepted roots or completed transactions. Clone spans include original callbacks/awaits and different populations.",
+            "Zero drops applies to the emitted checkpoints, with no final snapshot; no causal speedup or qualification claim."
+          ],
+          "captures": 7,
+          "agentViewed": 7,
+          "originalChunks": 33,
+          "totalJpegBytes": 536861,
+          "sourceEvents": 24,
+          "contextReadbacks": 2,
+          "captureEvents": 6,
+          "stages": 46,
+          "diagnostics": 3,
+          "resultAssertionsReached": false,
+          "ptBrCompletion": false,
+          "additionalQualifiedAreas": 0,
+          "rootViewed": 2,
+          "rootReview": "analytics/attempt-20/root-review.json",
+          "rootMatchedJpegs": 7
+        },
+        {
+          "label": "Portfolio21",
+          "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
+          "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
+          "run": 45019357466,
+          "job": 137198592243,
+          "cleanupJob": 137201120833,
+          "cleanupStatus": "SUCCESS",
+          "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+          "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+          "snapshot": "27499e0b3f81bed868dfe2d4724b295fd5aab9c6",
+          "evidence": "analytics/attempt-18/README.md",
+          "immutableArchiveCommit": "858f23928ce48c628c418a33454818a40c52d258",
+          "rootReview": "analytics/attempt-18/root-review.json",
+          "originalPreviewTimeoutMs": 60000,
+          "failureLine": 72,
+          "previewResponseObserved": false,
+          "internalPersistence": "UNKNOWN",
+          "preparation": {
+            "helper": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+            "complete": true
+          },
+          "nativeHistory": [
+            {
+              "sequence": 1,
+              "http": 200,
+              "status": "ok",
+              "elapsedMs": 529
+            },
+            {
+              "sequence": 2,
+              "http": 200,
+              "status": "ok",
+              "elapsedMs": 1064
+            }
+          ],
+          "profiler": {
+            "records": 625,
+            "started": 1,
+            "sealedRootMarkers": 5,
+            "rootCallbackExits": 4,
+            "periodicSnapshots": 5,
+            "finalSnapshots": 0,
+            "bucketsPerSnapshot": 122,
+            "emittedBucketRecords": 610,
+            "elapsedMs": [
+              10000,
+              20000,
+              30000,
+              40000,
+              50015
+            ],
+            "pendingAtLastSample": 4,
+            "drops": 0,
+            "errors": 0,
+            "skippedThresholds": 0,
+            "interpretation": "Cumulative settled-span samples through 50,015 ms only; nested populations and active pending work do not establish exclusive cost or available savings. Instrumentation coverage differs from Portfolio20."
+          },
+          "selectedMeasurements": [
+            {
+              "name": "canonical.digest.total",
+              "surface": "none",
+              "calls": 748497,
+              "settledInclusiveMs": 15457
+            },
+            {
+              "name": "authority.principal.total",
+              "surface": "none",
+              "calls": 33687,
+              "settledInclusiveMs": 14058
+            },
+            {
+              "name": "local.operation.ingress",
+              "surface": "none",
+              "calls": 387132,
+              "settledInclusiveMs": 1474
+            },
+            {
+              "name": "local.file.lstat",
+              "surface": "none",
+              "calls": 1934412,
+              "settledInclusiveMs": 5788
+            }
+          ],
+          "staticFollowup": {
+            "authentication": {
+              "source": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+              "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+              "originalSuccessfulSessionReads": [
+                "revoked before session",
+                "session payload",
+                "revoked after decrypt and valid"
+              ],
+              "productAuthoritySurfaces": 3,
+              "successfulPrincipalStaticReadEnvelope": 9,
+              "limit": "This is a conditional static call graph, not measured attribution of all 387132 operations. It does not prove every principal followed all successful branches.",
+              "noAuthorityCache": true
+            },
+            "canonical": {
+              "source": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+              "blob": "d52aca01250ccff4c3811cee95f8a341fa3335c8",
+              "noSelectedCandidate": true,
+              "reason": "The measurement includes canonical traversal, tagged AST, serialization and SHA. Existing scoped memos do not provide a general exact-hasher capability. General memo/streaming alternatives lack equivalence for original hooks, getters, sparse arrays, species and error order."
+            },
+            "noNewRuntimeCandidate": true,
+            "noNewCi": true,
+            "interpretation": "These findings and no-candidate/no-CI fields describe the Portfolio21 checkpoint only. The later context integrity candidate and Portfolio22/UI44 isolated03 runs are recorded separately."
+          },
+          "captures": 7,
+          "agentViewed": 7,
+          "rootViewed": 2,
+          "additionalQualifiedAreas": 0
+        },
         {
           "label": "Portfolio20",
           "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
@@ -1154,5 +1852,19 @@
       }
     },
     "integratedProduct": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d"
+  },
+  "diagnosticQaGuardCoverage": {
+    "retainedCheckpointGuard": {
+      "attempt": 23,
+      "run": 45032261331,
+      "conclusion": "success",
+      "reexecuted": false,
+      "qa": "b17cb0b20251fe485db79ab3e8de80b7aa560e4b",
+      "snapshot": "ae98de00a9b49ee74b47aca83a8d36a808b86dc2",
+      "scope": "Previously reviewed context QA checkpoint only. This run does not cover Portfolio24–26 archives or these rollup additions; no new guard result is claimed."
+    },
+    "newGuardRun": null,
+    "coveredByRetainedGuard": false,
+    "scope": "Portfolio24–26 archives and the five current rollup additions have no new original-guard execution. Prior gate and regression entries remain unchanged."
   }
 }

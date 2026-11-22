@@ -320,11 +320,12 @@
     "merged": false,
     "inventoryAcceptedAndMergedAreas": 41,
     "pendingFinalTestTypes": [],
-    "latestTechnicalAttempt": 24,
+    "latestTechnicalAttempt": 27,
     "latestInstalledFailures": {
-      "portfolioDiagnostic": 45033525825,
+      "portfolioDiagnostic": 45040443689,
       "isolatedSensitivity": 45029259117,
-      "cleanPortfolio": 45029253108
+      "cleanPortfolio": 45029253108,
+      "portfolioInfrastructure": 45037289486
     },
     "latestInstalledImportRun": 44998959512,
     "originalC17Failure": {
@@ -347,24 +348,140 @@
       "guardRun": 45007665762,
       "installedQualification": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED"
     },
-    "latestInstalledDiagnosticEvidence": "analytics/attempt-20/README.md",
+    "latestInstalledDiagnosticEvidence": "analytics/attempt-23/README.md",
     "latestDiagnostic": {
-      "label": "Portfolio23",
-      "status": "FAILED_ORIGINAL60S_FIVE_COMPLETE_PARTIAL_SAMPLES",
-      "run": 45033525825,
-      "job": 137242109427,
-      "cleanupJob": 137244040727,
+      "label": "Portfolio26",
+      "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
+      "run": 45040443689,
+      "job": 137263467188,
+      "cleanupJob": 137266432739,
       "cleanupStatus": "SUCCESS",
       "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
-      "snapshot": "7f9a1233a200c4da2e80baa2e546d70afbd87ff4",
+      "snapshot": "48faf8ddcc242ed1ffb10d01f4619534b169a52b",
       "samples": 5,
-      "lastSampleMs": 50000,
+      "lastSampleMs": 50008,
       "scopeOrigin": "before-human-admit",
       "finalObserved": false,
+      "measurementAvailable": true,
       "qualificationAdded": 0,
-      "evidence": "analytics/attempt-20/README.md",
-      "receipt": "analytics/attempt-20/receipt.json",
-      "technicalAttempt": 24
+      "evidence": "analytics/attempt-23/README.md",
+      "receipt": "analytics/attempt-23/receipt.json",
+      "rootReview": "analytics/attempt-23/root-review.json",
+      "technicalAttempt": 27,
+      "canonical": {
+        "digestPopulations": [
+          {
+            "surface": "unlabelled",
+            "calls": 133332,
+            "settled": 133332,
+            "pending": 0,
+            "inclusiveMs": 7506
+          },
+          {
+            "surface": "principal.direct",
+            "calls": 106491,
+            "settled": 106491,
+            "pending": 0,
+            "inclusiveMs": 1672
+          },
+          {
+            "surface": "source.scope-validation",
+            "calls": 68920,
+            "settled": 68920,
+            "pending": 0,
+            "inclusiveMs": 585
+          },
+          {
+            "surface": "source.other",
+            "calls": 41978,
+            "settled": 41978,
+            "pending": 0,
+            "inclusiveMs": 2545
+          },
+          {
+            "surface": "canonical.evidence-ref",
+            "calls": 8167,
+            "settled": 8167,
+            "pending": 0,
+            "inclusiveMs": 97
+          },
+          {
+            "surface": "bcs.planner.projection-period",
+            "calls": 1357,
+            "settled": 1357,
+            "pending": 0,
+            "inclusiveMs": 3
+          },
+          {
+            "surface": "bcs.planner.expected-period",
+            "calls": 1357,
+            "settled": 1357,
+            "pending": 0,
+            "inclusiveMs": 3
+          },
+          {
+            "surface": "bcs.planner.source-ref",
+            "calls": 213005,
+            "settled": 213005,
+            "pending": 0,
+            "inclusiveMs": 1728
+          },
+          {
+            "surface": "bcs.planner.expected-ref",
+            "calls": 213004,
+            "settled": 213004,
+            "pending": 0,
+            "inclusiveMs": 1772
+          },
+          {
+            "surface": "finance.other",
+            "calls": 493,
+            "settled": 493,
+            "pending": 0,
+            "inclusiveMs": 333
+          },
+          {
+            "surface": "finance.current",
+            "calls": 525,
+            "settled": 525,
+            "pending": 0,
+            "inclusiveMs": 2
+          }
+        ],
+        "digestTotal": {
+          "calls": 788629,
+          "settled": 788629,
+          "pending": 0,
+          "inclusiveMs": 16246
+        },
+        "directOutsideDigest": {
+          "calls": 1316,
+          "settled": 1316,
+          "pending": 0,
+          "inclusiveMs": 402
+        },
+        "interpretation": "Only sum the eleven canonical.digest surface populations for the digest invocation total. Do not add that inclusive duration to other spans or treat it as CPU time."
+      },
+      "bcsPlanner": {
+        "referenceLoop": {
+          "calls": 426009,
+          "inclusiveMs": 3500
+        },
+        "periodPair": {
+          "calls": 2714,
+          "inclusiveMs": 6
+        },
+        "allFourSites": {
+          "calls": 428723,
+          "inclusiveMs": 3506
+        },
+        "interpretation": "The two period digests execute once per reached projection, outside every; the two reference digests execute per visited value. The final settled-span checkpoint contains one more source-ref than expected-ref call because it can cut between the two expressions. This is not evidence of a mismatch or a speedup."
+      },
+      "preparatoryHistory": {
+        "sequence1": "native-request-failed at line 1211; HTTP 200 at line 1213 with acquisitionFailure=response-body-unavailable; status ok was not observed for this response",
+        "sequence2": "HTTP 200/status ok at line 1249",
+        "preview": "Sequence 3 POST at line 1247, 2026-11-22T15:59:25.7399373Z; no corresponding response"
+      }
     },
     "contextIntegrity": {
       "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
@@ -391,6 +508,140 @@
     "latestInstalledEvidence": {
       "portfolio": "analytics/attempt-19/README.md",
       "sensitivity": "collab/sensitivity-isolated-03/README.md"
+    },
+    "previousDiagnostics": [
+      {
+        "label": "Portfolio25",
+        "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
+        "run": 45037958471,
+        "job": 137255778039,
+        "cleanupJob": 137259046881,
+        "cleanupStatus": "SUCCESS",
+        "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+        "snapshot": "fe306be28d7543d4ed3890a6e78d3d010e494486",
+        "samples": 5,
+        "lastSampleMs": 50041,
+        "scopeOrigin": "before-human-admit",
+        "finalObserved": false,
+        "measurementAvailable": true,
+        "qualificationAdded": 0,
+        "evidence": "analytics/attempt-22/README.md",
+        "receipt": "analytics/attempt-22/receipt.json",
+        "rootReview": "analytics/attempt-22/root-review.json",
+        "technicalAttempt": 26,
+        "canonical": {
+          "digestPopulations": [
+            {
+              "surface": "unlabelled",
+              "calls": 504197,
+              "settled": 504197,
+              "pending": 0,
+              "inclusiveMs": 10914
+            },
+            {
+              "surface": "source.scope-validation",
+              "calls": 60829,
+              "settled": 60829,
+              "pending": 0,
+              "inclusiveMs": 476
+            },
+            {
+              "surface": "principal.direct",
+              "calls": 94080,
+              "settled": 94080,
+              "pending": 0,
+              "inclusiveMs": 1762
+            },
+            {
+              "surface": "source.other",
+              "calls": 37376,
+              "settled": 37376,
+              "pending": 0,
+              "inclusiveMs": 2630
+            },
+            {
+              "surface": "finance.other",
+              "calls": 489,
+              "settled": 489,
+              "pending": 0,
+              "inclusiveMs": 383
+            },
+            {
+              "surface": "finance.current",
+              "calls": 516,
+              "settled": 516,
+              "pending": 0,
+              "inclusiveMs": 2
+            }
+          ],
+          "digestTotal": {
+            "calls": 697487,
+            "settled": 697487,
+            "pending": 0,
+            "inclusiveMs": 16167
+          },
+          "directOutsideDigest": {
+            "calls": 1167,
+            "settled": 1167,
+            "pending": 0,
+            "inclusiveMs": 428
+          },
+          "interpretation": "Only sum the six canonical.digest surface populations for the digest invocation total. Do not add that inclusive duration to other spans or interpret it as CPU time."
+        }
+      },
+      {
+        "label": "Portfolio24",
+        "status": "SETUP_BUN_HTTP403_RUN_TESTS_SKIPPED",
+        "run": 45037289486,
+        "job": 137253750631,
+        "cleanupJob": 137253902896,
+        "cleanupStatus": "SUCCESS",
+        "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+        "snapshot": "912deed79badd8684298ae9c3799f8ef5f15e016",
+        "samples": null,
+        "lastSampleMs": null,
+        "scopeOrigin": null,
+        "finalObserved": null,
+        "measurementAvailable": false,
+        "qualificationAdded": 0,
+        "evidence": "analytics/attempt-21/README.md",
+        "receipt": "analytics/attempt-21/receipt.json",
+        "rootReview": "analytics/attempt-21/root-review.json",
+        "technicalAttempt": 25,
+        "runTestsConclusion": "skipped",
+        "productOutcome": "NOT_OBSERVED"
+      },
+      {
+        "label": "Portfolio23",
+        "status": "FAILED_ORIGINAL60S_FIVE_COMPLETE_PARTIAL_SAMPLES",
+        "run": 45033525825,
+        "job": 137242109427,
+        "cleanupJob": 137244040727,
+        "cleanupStatus": "SUCCESS",
+        "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+        "snapshot": "7f9a1233a200c4da2e80baa2e546d70afbd87ff4",
+        "samples": 5,
+        "lastSampleMs": 50000,
+        "scopeOrigin": "before-human-admit",
+        "finalObserved": false,
+        "qualificationAdded": 0,
+        "evidence": "analytics/attempt-20/README.md",
+        "receipt": "analytics/attempt-20/receipt.json",
+        "technicalAttempt": 24
+      }
+    ],
+    "diagnosticQaGuardCoverage": {
+      "retainedCheckpointGuard": {
+        "attempt": 23,
+        "run": 45032261331,
+        "conclusion": "success",
+        "reexecuted": false,
+        "qa": "b17cb0b20251fe485db79ab3e8de80b7aa560e4b",
+        "snapshot": "ae98de00a9b49ee74b47aca83a8d36a808b86dc2",
+        "scope": "Previously reviewed context QA checkpoint only. This run does not cover Portfolio24–26 archives or these rollup additions; no new guard result is claimed."
+      },
+      "newGuardRun": null,
+      "coveredByRetainedGuard": false
     }
   }
 }

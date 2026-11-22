@@ -271,3 +271,60 @@ All 24 source events, two authenticated context readbacks, six capture events, 4
 
 The archive and rollups contain QA only, without raw logs or the 13 code/selection overlays. Portfolio22 remains the latest clean installed attempt, UI44 isolated03 remains the latest isolated sensitivity attempt, and the original checkpoint guard run 45032261331 remains passed within its prior scope. Portfolio23 is recorded separately as an installed diagnostic failure, not a new passing technical gate. Counts remain 41 accepted/merged and 12 of 15 qualified, with UI42–UI44 pending.
 
+## Portfolio24–26: infrastructure boundary and measured canonical callers
+
+The product remains `e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d`. These are QA-only additions from the reviewed original archives. Technical attempts **25, 26 and 27** record **Portfolio24, Portfolio25 and Portfolio26**, respectively; the previous 24 attempt records, delivery gates, regressions and qualified areas remain unchanged.
+
+### Portfolio24: no native execution
+
+[Portfolio24](analytics/attempt-21/README.md), run [45037289486](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45037289486), used snapshot `912deed79badd8684298ae9c3799f8ef5f15e016`. Test job 137253750631 failed in **Setup Bun** with HTTP 403 while downloading Bun 1.3.14. **Run tests was skipped**; cleanup 137253902896 succeeded. The log does not establish the underlying cause of the 403.
+
+No original native declaration, preview, profiler frame or visual journey executed. There are no structured native records or JPEGs. Runtime calls, durations and product outcome are unavailable, not zero-valued measurements or a product timeout. [The root archive review](analytics/attempt-21/root-review.json) confirms the seven-file QA archive at `5abb86723f00b287325e3ac274388bdda8adec8b` and does not claim visual review or qualification.
+
+### Portfolio25: six digest populations and direct canonical work
+
+[Portfolio25](analytics/attempt-22/README.md), run [45037958471](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45037958471), used snapshot `fe306be28d7543d4ed3890a6e78d3d010e494486`. The original first analytics declaration retained its complete journey and fixtures. Both native History responses were 200/ok, but the first preview POST had no observed response before the original 60,000 ms waiter at spec line 72. Test job 137255778039 failed; cleanup 137259046881 succeeded.
+
+The archive at `47804dbc5fb56d58167c333c8faa99a4580c809e` preserves 325 emissions: 211 profiler records, 81 source/context/capture/stage/diagnostic records and 33 image chunks. Five complete partial snapshots have 41 keys each, through 50,041 ms, with zero recorded losses/errors/skips and no final snapshot. The six digest populations total **697,487 calls / 16,167 inclusive ms**. Direct `canonicalSfValue` work outside digest canonicalization totals **1,167 / 428 ms**. HTTP, state.read.total and the full clone/callback/await span remain pending; those entries can be nested.
+
+All seven original JPEGs, totalling 536,633 bytes, were individually viewed by the acquiring agent and exactly matched to their chunks. Root matched all seven byte streams and viewed only configuration and failure; [the review](analytics/attempt-22/root-review.json) preserves that subset. No result/readback/sensitivity qualification follows from these partial captures.
+
+### Portfolio26: original BCS hash sites remain visible
+
+[Portfolio26](analytics/attempt-23/README.md), run [45040443689](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45040443689), used snapshot `48faf8ddcc242ed1ffb10d01f4619534b169a52b`. Its delta from Portfolio25 adds five literal labels to the four existing BCS period/reference hash sites and the existing `digestSfEvidenceRef` hash site. It does not memoize hashes, alter operands, move the period comparison into the loop or remove either reference digest. There remain two period hash sites when that comparison is reached, followed by two reference hash sites per visited value whose `sourceRefs.length === 1` guard passes. Each digest still creates one diagnostic span.
+
+The first preview POST, sequence 3 at 2026-11-22T15:59:25.7399373Z, has no corresponding response. The unchanged 60,000 ms waiter at spec line 72 failed; test job 137263467188 failed and cleanup 137266432739 succeeded. The original result, persistence and sensitivity readbacks were not reached.
+
+The archive at `160c14f29265e9033f1295a6b55fa2b40fe202c3` preserves **351 emissions**: 236 profiler records, 82 source/context/capture/stage/diagnostic records and 33 preview chunks. The five settled-span checkpoints have 46 unique keys each, balanced calls/settled/pending, monotonic cumulative values and zero recorded drops/errors/skips. The last checkpoint is 50,008 ms; HTTP remains pending and there is no final snapshot.
+
+| Direct-caller digest surface at 50,008 ms | Calls | Inclusive ms |
+|---|---:|---:|
+| `unlabelled` | 133,332 | 7,506 |
+| `principal.direct` | 106,491 | 1,672 |
+| `source.scope-validation` | 68,920 | 585 |
+| `source.other` | 41,978 | 2,545 |
+| `canonical.evidence-ref` | 8,167 | 97 |
+| `bcs.planner.projection-period` | 1,357 | 3 |
+| `bcs.planner.expected-period` | 1,357 | 3 |
+| `bcs.planner.source-ref` | 213,005 | 1,728 |
+| `bcs.planner.expected-ref` | 213,004 | 1,772 |
+| `finance.other` | 493 | 333 |
+| `finance.current` | 525 | 2 |
+| **Digest total** | **788,629** | **16,246** |
+
+The BCS reference loop accounts for **426,009 hashes / 3,500 inclusive ms**. Its period pair adds **2,714 / 6 ms**, for **428,723 / 3,506 ms** across all four sites. The observed **213,005 source-ref / 213,004 expected-ref** prefix is compatible with a settled-span checkpoint cutting between the two original expressions; it does not prove mismatch, omitted hashing or completed comparisons. **Unlabelled remains 133,332 calls / 7,506 inclusive ms** without caller attribution. Direct canonical work outside digest is **1,316 / 402 ms**; principal is **35,497 / 13,245 ms**. Overlapping families are not added to these same-name digest populations.
+
+The first native History sequence had a request-failed event at source line 1211 and HTTP 200 with `acquisitionFailure: response-body-unavailable` at line 1213; no application-level `status: ok` was observed for that body. Sequence 2 returned HTTP 200/status ok at line 1249. These original events remain preserved, with no causal claim about the preview timeout.
+
+The seven JPEGs total 536,652 bytes and match all 33 complete 1-based chunks. The agent viewed all seven individually; root independently matched the complete byte streams and viewed only configuration and failure. [Root's review](analytics/attempt-23/root-review.json) confirms 236 exact profiler payloads and 82 exact native event payloads, including timestamps and source lines. The failure frame shows Running, unavailable preview and empty History; this is not a completed producer response or user visual acceptance.
+
+### Interpretation, guard scope and qualification
+
+Portfolio26 is the latest executed diagnostic. Portfolio22 remains the latest clean installed attempt, and sensitivity-isolated-03 remains the latest isolated UI44 attempt. No later prepared snapshot is classified as tested by this consolidation.
+
+The collector's scope begins before `human.admit`. Labels and bookkeeping add overhead. Inclusive durations overlap, are rounded and describe cumulative prefixes; do not sum snapshots or different span families into CPU/wall time or project causal savings. The eleven digest labels partition direct call sites only, and direct canonical measurement excludes internal digest canonicalization. The original limits of `root.caller.*` (PlannerCalculationServices only), `identity-absent` (mixed namespaces/callbacks), `baseline-accessor` (rejection before getter/setter comparison), physical callback counts and clone/callback/await populations still apply. No runtime optimization is selected by these measurements.
+
+Guard run **45032261331 / technical attempt 23** retains its passed result for QA `b17cb0b20251fe485db79ab3e8de80b7aa560e4b`, snapshot `ae98de00a9b49ee74b47aca83a8d36a808b86dc2`: 78 rules, 782 files, 36 warnings, zero blocking gates/errors/exception approvals. **That run does not cover the Portfolio24–26 archives or these five rollup additions.** No guard rerun, new CI, runtime test or typecheck was performed for this consolidation.
+
+The complete prior attempt/gate/regression records and all 15 area entries are preserved. Counts stay **41 accepted/merged and 12 of 15 qualified (UI45–UI56)**. UI42–UI44 remain pending, user acceptance remains pending, and no merge is recorded.
+
