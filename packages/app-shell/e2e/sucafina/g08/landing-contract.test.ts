@@ -76,6 +76,7 @@ const settle = () => new Promise<void>((resolve) => setImmediate(resolve))
 
 type PendingRequest = {
   url: URL
+  method: string
   signal: AbortSignal | undefined
   resolve: (response: Response) => void
   reject: (error: Error) => void
@@ -96,7 +97,8 @@ function mount() {
       return Promise.resolve(json({ installations: [installation] }))
     }
     return new Promise<Response>((resolve, reject) => {
-      requests.push({ url, signal: init?.signal ?? undefined, resolve, reject })
+      requests.push({ url, method: init?.method ?? (input instanceof Request ? input.method : "GET"),
+        signal: init?.signal ?? undefined, resolve, reject })
     })
   }, { preconnect: globalThis.fetch.preconnect })
   const fetch = spyOn(globalThis, "fetch").mockImplementation(transport)
@@ -181,6 +183,8 @@ test("G08 DOM selectors drive the real native selection and its original A B A r
     await select(view, 3, teamA)
     expect(view.host.querySelectorAll(landing.refresh)).toHaveLength(1)
     expect(view.host.querySelectorAll(landing.logout)).toHaveLength(1)
+    expect(view.host.querySelectorAll(landing.newChat)).toHaveLength(1)
+    expect(view.host.querySelector(landing.workspace)).toBeNull()
     // The current F02 payload has no business destinations: this pass is not a different-grants proof.
     expect(context(teamA).value.destinations).toEqual([])
   } finally { view.close() }
@@ -220,7 +224,9 @@ test("G08 DOM reflects the actual denied response without inventing a revoked pr
     expect(view.selected()).toBeNull()
     expect(view.host.querySelector(landing.picker)).toBeNull()
     expect(view.host.querySelector(landing.dashboard)).toBeNull()
-    expect(view.host.querySelector("[data-sf-team-administration]")).toBeNull()
+    expect(view.host.querySelector(landing.administration)).toBeNull()
+    expect(view.host.querySelector(landing.newChat)).toBeNull()
+    expect(view.host.querySelector(landing.workspace)).toBeNull()
     // A controlled 403 demonstrates the rendering contract, not a real named denied Microsoft actor.
   } finally { view.close() }
 })
@@ -241,5 +247,68 @@ test("G08 DOM logout selector reaches the real logout handler and clears selecti
     expect(view.selected()).toBeNull()
     expect(view.host.querySelector(landing.logout)).toBeNull()
     expect(view.host.querySelector('a[href*="/auth/login"]')).not.toBeNull()
+  } finally { view.close() }
+})
+
+test("G08 DOM opens the actual administration catalog without Team and keeps refresh unambiguous", async () => {
+  const view = mount()
+  try {
+    const current = context()
+    const administrator = { ...current, value: { ...current.value, profile: { ...current.value.profile,
+      administration: { status: "available" }, teams: { status: "no-teams" },
+    } } }
+    await settle()
+    expectRequest(view, 0).resolve(json(administrator))
+    await settle()
+    expect(view.state()).toBe("authenticated")
+    expect(view.host.querySelector(landing.picker)).toBeNull()
+    expect(view.host.querySelector(landing.dashboard)).toBeNull()
+    expect(view.host.querySelector(landing.newChat)).toBeNull()
+    expect(view.host.querySelector(landing.workspace)).toBeNull()
+    expect(view.host.querySelectorAll(landing.adminToggle)).toHaveLength(1)
+    expect(view.host.querySelectorAll(landing.refresh)).toHaveLength(1)
+    view.click(landing.adminToggle)
+    await settle()
+    const catalog = view.request(1)
+    expect(catalog.method).toBe("GET")
+    expect(catalog.url.pathname).toBe(installation.mount + "/api/ui/team-profiles")
+    expect(Object.fromEntries(catalog.url.searchParams)).toEqual({
+      contractRevision: installation.contractRevision, installationId: installation.installationId, tenantId: installation.tenantId,
+    })
+    expect([...catalog.url.searchParams]).toHaveLength(3)
+    catalog.resolve(json({ status: "ok", configRevision: "opaque-catalog", profiles: [
+      { profile: profile(teamA), enabled: true },
+    ] }))
+    await settle()
+    expect(view.host.querySelector(landing.administration)?.getAttribute("data-sf-team-administration")).toBe("ready")
+    expect(view.host.querySelector(landing.adminToggle)?.getAttribute("aria-expanded")).toBe("true")
+    expect(view.host.querySelector<HTMLButtonElement>(landing.adminRead)?.disabled).toBe(false)
+    view.click('[data-sf-admin-team="' + teamA + '"] [data-sf-admin-configuration]')
+    await settle()
+    const configuration = view.request(2)
+    expect(configuration.method).toBe("GET")
+    expect(configuration.url.pathname).toBe(installation.mount + "/api/ui/team-profiles/configuration")
+    expect(Object.fromEntries(configuration.url.searchParams)).toEqual({
+      contractRevision: installation.contractRevision, installationId: installation.installationId,
+      tenantId: installation.tenantId, teamObjectId: teamA,
+    })
+    expect([...configuration.url.searchParams]).toHaveLength(4)
+    configuration.resolve(json({ status: "ok", configuration: {
+      origin: "installation-team-store", profile: profile(teamA), configRevision: "configuration-read",
+      document: { version: 1, settings: { model: "approved/model", default_agent: "analyst" } },
+    } }))
+    await settle()
+    expect(view.host.querySelector("[data-sf-team-configuration]")?.getAttribute("data-sf-team-configuration")).toBe("ready")
+    expect(view.host.querySelector<HTMLInputElement>("[data-sf-configuration-model]")?.value).toBe("approved/model")
+    expect(view.host.querySelector<HTMLInputElement>("[data-sf-configuration-agent]")?.value).toBe("analyst")
+    expect(view.host.querySelector<HTMLButtonElement>("[data-sf-configuration-read]")?.disabled).toBe(false)
+    view.click("[data-sf-configuration-close]")
+    await settle()
+    expect(view.host.querySelector("[data-sf-team-configuration]")).toBeNull()
+    expect(view.host.querySelector<HTMLButtonElement>(landing.adminRead)?.disabled).toBe(false)
+    expect(view.host.querySelectorAll(landing.refresh)).toHaveLength(1)
+    expect(view.host.querySelector(landing.dashboard)).toBeNull()
+    expect(view.host.querySelector(landing.newChat)).toBeNull()
+    expect(view.requests.filter((request) => request.method === "POST")).toHaveLength(0)
   } finally { view.close() }
 })

@@ -50,23 +50,24 @@ async function originalRequest(page: Page, url: string, method: "GET" | "POST" =
   return response
 }
 
-export async function uiReply(page: Page, url: string, method: "GET" | "POST", action: () => Promise<unknown>) {
+async function waitUIReply(page: Page, url: string, method: "GET" | "POST") {
   const expected = new URL(url)
-  const [request] = await Promise.all([
-    page.waitForRequest((entry) => {
-      const actual = new URL(entry.url())
-      return entry.method() === method && entry.frame() === page.mainFrame() &&
-        entry.headers()[observationHeader] === undefined &&
-        actual.origin === expected.origin && actual.pathname === expected.pathname &&
-        actual.searchParams.size === expected.searchParams.size &&
-        [...expected.searchParams].every(([key, value]) =>
-          actual.searchParams.getAll(key).length === 1 && actual.searchParams.get(key) === value)
-    }),
-    action(),
-  ])
+  const request = await page.waitForRequest((entry) => {
+    const actual = new URL(entry.url())
+    return entry.method() === method && entry.frame() === page.mainFrame() &&
+      entry.headers()[observationHeader] === undefined &&
+      actual.origin === expected.origin && actual.pathname === expected.pathname &&
+      actual.searchParams.size === expected.searchParams.size &&
+      [...expected.searchParams].every(([key, value]) =>
+        actual.searchParams.getAll(key).length === 1 && actual.searchParams.get(key) === value)
+  })
   const response = await request.response()
   if (!response) throw new Error("G08_ORIGINAL_UI_RESPONSE_REQUIRED")
   await requireBoundPeer(page, response)
+  return response
+}
+export async function uiReply(page: Page, url: string, method: "GET" | "POST", action: () => Promise<unknown>) {
+  const [response] = await Promise.all([waitUIReply(page, url, method), action()])
   return response
 }
 const actors = ["requester", "holder", "denied", "dashboardAdmin"] as const
@@ -85,6 +86,11 @@ export function contextURL(target: Target, selection: boolean | "administration"
   url.search = new URLSearchParams({ contractRevision: "sf-team-profile/1", installationId: target.installationId,
     tenantId: target.tenantId, hostId: target.hostId, kind: selection === "administration" ? "administration" : selection ? "selection" : "team",
     ...(selection ? {} : { teamObjectId: target.teamObjectId }) }).toString()
+  return url.href
+}
+export function draftURL(target: Target) {
+  const url = new URL("/orchestra/sf-sessions/new", target.shellOrigin)
+  url.search = ownerQuery(target).toString()
   return url.href
 }
 export async function contextReply(page: Page, target: Target, selection: boolean | "administration" = false) {
@@ -150,6 +156,39 @@ export async function switchTeam(page: Page, target: Target, principal: string, 
   // The action's original F02 response and the independent re-read must both have the selected owner.
   return selected(page, target, principal)
 }
+/** Observe the actual UI list/stream and F02 before accepting an editable draft. */
+export async function uiDraft(page: Page, target: Target, principal: string, action: () => Promise<unknown>) {
+  const listURL = new URL(target.mount + "/api/session", target.publicOrigin)
+  listURL.search = new URLSearchParams({ limit: "50", order: "desc" }).toString()
+  const eventURL = new URL(target.mount + "/api/event", target.publicOrigin)
+  // Register both Session waits before the action can start navigation/F02.
+  const [list, events, live] = await Promise.all([
+    waitUIReply(page, listURL.href, "GET"),
+    waitUIReply(page, eventURL.href, "GET"),
+    uiContext(page, target, action),
+  ])
+  for (const response of [list, events]) {
+    expect(response.status()).toBe(200)
+    expect(response.headers()["cache-control"]).toBe("no-store")
+    expect(response.request().postData()).toBeNull()
+    expect(response.request().headers()["authorization"]).toBeUndefined()
+    const selector = Schema.decodeUnknownSync(TeamProfile.Selector, strict)(
+      JSON.parse(response.request().headers()["x-sf-team-profile"] ?? "null"))
+    expect(selector).toEqual({ contractRevision: "sf-team-profile/1", kind: "team", profile: teamRef(target) })
+  }
+  expect(list.headers()["content-type"]).toMatch(/^application\/json(?:;|$)/i)
+  expect(events.headers()["content-type"]).toMatch(/^text\/event-stream(?:;|$)/i)
+  // The native SDK validates the full list and every SSE frame. Independently
+  // compare the original list's canonical namespace with the original F02 owner.
+  const namespace = Schema.decodeUnknownSync(TeamProfile.SessionNamespace, strict)(record(await list.json()).namespace)
+  expect(namespace.owner).toEqual(live.stamp.team?.owner)
+  const workspace = page.locator(landing.workspace)
+  await expect(workspace).toHaveAttribute("data-sf-session-state", "ready")
+  await expect(workspace).toHaveAttribute("data-sf-session-stream", "open")
+  await expect(workspace.locator(landing.composer).getByRole("textbox")).toBeEditable()
+  expect((await selected(page, target, principal)).stamp.team?.owner).toEqual(namespace.owner)
+  return { live, namespace }
+}
 export async function focusRefresh(page: Page, target: Target) {
   const documentStart = await page.evaluate(() => performance.timeOrigin)
   const live = await uiContext(page, target, () => page.evaluate(() => window.dispatchEvent(new FocusEvent("focus"))))
@@ -157,7 +196,7 @@ export async function focusRefresh(page: Page, target: Target) {
   return live
 }
 
-// Public shapes observed in integrated295eb / #655. The original mounted producer and current actor remain required.
+// Original mounted administration and the current Microsoft actor remain required.
 // ConfigRevision is opaque: preserve the exact token; never coerce or assume +1.
 const AdminCatalog = Schema.Struct({
   status: Schema.Literal("ok"), configRevision: TeamProfile.ConfigRevision,
@@ -170,9 +209,9 @@ function adminURL(target: Target) {
     tenantId: target.tenantId }).toString()
   return url.href
 }
-export async function adminCatalog(page: Page, target: Target) {
-  const response = await originalRequest(page, adminURL(target))
-  if (response.status() !== 200 || response.headers()["cache-control"] !== "no-store")
+async function adminCatalogValue(response: Response, target: Target) {
+  if (response.status() !== 200 || response.headers()["cache-control"] !== "no-store" ||
+    !/^application\/json(?:;|$)/i.test(response.headers()["content-type"] ?? ""))
     throw new Error("G08_REAL_ADMIN_ROUTE_NOT_AVAILABLE")
   const catalog = Schema.decodeUnknownSync(AdminCatalog, strict)(await response.json())
   if (catalog.profiles.length > 10_000 ||
@@ -181,6 +220,33 @@ export async function adminCatalog(page: Page, target: Target) {
       entry.profile.tenantId !== target.tenantId))
     throw new Error("G08_REAL_ADMIN_CATALOG_INVALID")
   return catalog
+}
+export async function adminCatalog(page: Page, target: Target) {
+  return adminCatalogValue(await originalRequest(page, adminURL(target)), target)
+}
+export async function uiAdminCatalog(page: Page, target: Target, action: () => Promise<unknown>) {
+  return adminCatalogValue(await uiReply(page, adminURL(target), "GET", action), target)
+}
+/** The optional action observes the UI's own GET; otherwise read through the original cookie jar. */
+export async function readTeamConfiguration(page: Page, target: Target, action?: () => Promise<unknown>) {
+  const url = new URL(adminURL(target))
+  url.pathname += "/configuration"
+  url.searchParams.set("teamObjectId", target.teamObjectId)
+  const response = action ? await uiReply(page, url.href, "GET", action) : await originalRequest(page, url.href)
+  if (response.headers()["cache-control"] !== "no-store" ||
+    !/^application\/json(?:;|$)/i.test(response.headers()["content-type"] ?? ""))
+    throw new Error("G08_ORIGINAL_SHARED_CONFIGURATION_REQUIRED")
+  const value = Schema.decodeUnknownSync(TeamProfile.ConfigurationReadResult, strict)(await response.json())
+  if (value.status === "not-found" && response.status() === 404) return value
+  if (value.status !== "ok" || response.status() !== 200) throw new Error("G08_ORIGINAL_SHARED_CONFIGURATION_REQUIRED")
+  expect(value.configuration.profile).toEqual(teamRef(target))
+  return value
+}
+export async function teamConfiguration(page: Page, target: Target) {
+  const value = await readTeamConfiguration(page, target)
+  // Revocation/restoration still requires an actual document before and after; absence is not preservation.
+  if (value.status !== "ok") throw new Error("G08_ORIGINAL_SHARED_CONFIGURATION_REQUIRED")
+  return value.configuration
 }
 export async function configureTeam(page: Page, target: Target, action: "enable" | "disable", expectedRevision: TeamProfile.ConfigRevision) {
   const response = await originalRequest(page, adminURL(target), "POST", {
