@@ -9,6 +9,7 @@ import { createSfAnalysisHostServices } from "../src/sucafina-product/analysis-h
 import { createSfBusinessServices } from "../src/sucafina-product/business-services.ts"
 import { createSfProcurementCaseReadScope } from "../src/sucafina-product/procurement-case-read-scope.ts"
 import { createResidentAiBundle } from "../../../modules/sucafina/Sucafinav1/product/ai/resident.ts"
+import { createSfAtlasMemory, retainSfAtlasRecallResult, revalidateSfAtlasRecall, withSfAtlasRecallObservation } from "../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
 import { createSfProductAuthority } from "../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { createSfSourcePersistence } from "../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
@@ -229,6 +230,54 @@ test("analysis preparation distinguishes unavailable case evidence from a refuse
       fixture.control.authorized = true
       expect(await revisions()).toEqual(before)
     } finally { source.mockRestore() }
+  })
+}, 45_000)
+
+test("canonical Atlas witnesses and renewals stay bound to their live observation", async () => {
+  await withFixture(async (fixture) => {
+    const memory = createSfAtlasMemory({
+      state: fixture.authority.state, cases: fixture.business.cases, host: fixture.authority.host,
+      evidence: fixture.business.context, proveContinuity: async () => false,
+      scanner: { name: "read-only-fixture", scan: () => { throw new Error("Recall must not scan or write") } },
+      scannerVersion: "1", now: () => at,
+    })
+    const ref = { id: fixture.plannerCase.id, incarnation: fixture.plannerCase.incarnation }
+    await fixture.ui("sf_case_read", { caseRef: encodeCaseRef(ref) }, async (call, request) => {
+      const read = () => memory.recall(ref, call)
+      const current = () => fixture.authority.host.requestFor(call) === request && !request.signal.aborted
+      const leaked = Promise.withResolvers<readonly unknown[]>()
+      const outside = leaked.promise.then((records) => revalidateSfAtlasRecall([records], call))
+      const released = await withSfAtlasRecallObservation(call, current, async () => {
+        const result = await read()
+        if (result.status !== "ok") throw new Error("Canonical Atlas observation unavailable")
+        const renew = retainSfAtlasRecallResult(result, call)
+        if (!renew) throw new Error("Canonical Atlas observation could not be retained")
+        leaked.resolve(result.records)
+        expect(await outside).toBe(false)
+        expect(await revalidateSfAtlasRecall([result.records], call)).toBe(true)
+        const renewed = await renew()
+        if (renewed?.status !== "ok") throw new Error("Live owner could not renew its Atlas observation")
+        expect(renewed.records).not.toBe(result.records)
+        return { records: renewed.records, renew }
+      })
+      if (!released) throw new Error("Live Atlas observation did not complete")
+      expect(await revalidateSfAtlasRecall([released.records], call)).toBe(false)
+      expect(await released.renew()).toBeUndefined()
+      const ordinary = await read()
+      if (ordinary.status !== "ok") throw new Error("Standalone canonical Atlas read unavailable")
+      expect(await revalidateSfAtlasRecall([ordinary.records], call)).toBe(true)
+      expect(await revalidateSfAtlasRecall([ordinary.records], call)).toBe(false)
+      const revoked = await withSfAtlasRecallObservation(call, current, async () => {
+        const result = await read()
+        if (result.status !== "ok") throw new Error("Canonical Atlas read unavailable before revocation")
+        fixture.control.authorized = false
+        expect(await revalidateSfAtlasRecall([result.records], call)).toBe(false)
+        fixture.control.authorized = true
+        expect(await read()).toEqual({ status: "unavailable" })
+        return true
+      })
+      expect(revoked).toBeUndefined()
+    })
   })
 }, 45_000)
 
