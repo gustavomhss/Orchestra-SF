@@ -4,6 +4,8 @@ import { Effect, Layer, Schema, Scope } from "effect"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { SessionAccess } from "@orchestra/schema/session-access"
 import { Database } from "../../src/database/database"
+import type { CredentialVault } from "../../src/credential/vault"
+import type { ProviderAdmission } from "../../src/provider/admission"
 import { AuthorityControl } from "../../src/database/authority-control"
 import { AuthorityControlFile } from "../../src/database/authority-control-file"
 import { AuthoritySqlFence } from "../../src/database/authority-sql-fence"
@@ -55,6 +57,9 @@ export async function sessionOwnerFixture<Extra extends LayerNode.Node<unknown, 
   legacyID?: SessionV2.ID
   extraNodes?: readonly Extra[]
   inspection?: boolean
+  connections?: (owner: TeamProfile.Owner) => CredentialVault.Factory
+  providers?: (owner: TeamProfile.Owner) => ProviderAdmission.Factory
+  replacements?: LayerNode.Replacements
 } = {}) {
   const temporary = await tmpdir()
   const directory = temporary.path
@@ -91,6 +96,7 @@ export async function sessionOwnerFixture<Extra extends LayerNode.Node<unknown, 
       [SessionExecution.node, execution],
       [Global.node, Global.layerWith({ home: directory, data: directory, config: directory,
         cache: directory, state: directory })],
+      ...input.replacements ?? [],
     ],
   ))
   const run = <A, E>(body: Effect.Effect<A, E, Services | LayerNode.Output<Extra> | Scope.Scope>) =>
@@ -136,6 +142,8 @@ export async function sessionOwnerFixture<Extra extends LayerNode.Node<unknown, 
     const admission: SessionOwner.Admission = {
       binding: { owner, revisions: { configRevision: capturedRevision, accessRevision: "core-test-authority" } },
       verifyCurrent: () => Effect.sync(valid),
+      ...(input.connections ? { connections: input.connections(owner) } : {}),
+      ...(input.providers ? { providers: input.providers(owner) } : {}),
       authorize: (action, sessionID) => Effect.sync(() => authorized(action, sessionID)),
       excludedSessions: () => Effect.sync(() => [...excluded()]),
       configuration: () => Effect.promise(async () => {

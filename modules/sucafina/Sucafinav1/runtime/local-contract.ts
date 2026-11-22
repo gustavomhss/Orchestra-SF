@@ -1,6 +1,7 @@
 import type { HoldTargetPreimage, Persistence, SnapshotAuthorityRead } from "./contract.ts"
 import type { AssetPersistence } from "./assets.ts"
 import type { TeamProfilePolicyStore } from "./team-profile-store.ts"
+import type { TeamConnectionStore } from "./team-connection-store.ts"
 import type { RoleRow, ResolvedActor, Surface } from "../src/identity.ts"
 
 /** Authentication records are separate from business snapshots and their backups. Payloads are encrypted by identity. */
@@ -25,6 +26,7 @@ export type LocalStore = Persistence & AssetPersistence & {
   secrets: CorporateLocalSecrets
   /** Private installation policy; never a business snapshot or a generic Core DB. */
   teamProfiles?: TeamProfilePolicyStore
+  teamConnections?: TeamConnectionStore
   dispose: () => Promise<void>
 }
 export type DirectoryPerson = { id: string; name: string }

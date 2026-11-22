@@ -1,4 +1,7 @@
 import { createEntraClient } from "./entra-client.ts"
+import { teamConnectionKey } from "./team-connection-crypto.ts"
+import { teamSessionPolicy } from "./team-session-policy.ts"
+import type { TeamProfilePolicySource } from "./team-profile-policy.ts"
 import { requireLocalIsolation } from "./local-configuration.ts"
 import type { CorporateLocalSecrets, EntraOptions } from "./local-contract.ts"
 import { createMicrosoftIdentity } from "./local-identity.ts"
@@ -28,12 +31,39 @@ export async function prepareMicrosoftInstallation(
     ...(config.teams === "direct" ? { teams: config.teams } : {}), teamDirectory: config.teamDirectory,
     fetch: overrides.fetch, now: overrides.now,
   })
+  const readCurrentConfiguration = async () => {
+    const current = await loadMicrosoftConfiguration(file)
+    for (const field of ["deployment", "authentication", "origin", "listenerOrigin", "ingressOrigin", "mount", "tenantId", "clientId", "workspaceDirectory"] as const)
+      if (current.config[field] !== config[field]) throw new Error("Microsoft installation binding changed; explicit reconfiguration required")
+    for (const name of ["session", "bank", "assets"] as const)
+      if (!Bun.deepEquals(current.keys[name], keys[name])) throw new Error("Microsoft installation keys changed; explicit reconfiguration required")
+    if (JSON.stringify([...(current.config.enabledTeamIds ?? [])].toSorted()) !== JSON.stringify([...(config.enabledTeamIds ?? [])].toSorted()))
+      throw new Error("Microsoft Team bootstrap changed; explicit reconfiguration required")
+    return current.config
+  }
+  const readGrants = async () => {
+    const current = await readCurrentConfiguration()
+    return teamSessionPolicy({ groups: current.groups, grants: current.grants }).grants
+  }
+  const readConnectionKey = async () => {
+    // The existing private key is checked on use; missing/rotated keys never cause replacement.
+    await readCurrentConfiguration()
+    return teamConnectionKey(keys.session)
+  }
+  const readTeamProfilePolicy = async (): Promise<TeamProfilePolicySource> => {
+    const current = await readCurrentConfiguration()
+    return Object.freeze({
+      ...(current.teams === "direct" ? { teams: current.teams } : {}),
+      ...(current.supremeAdminGroupId ? { supremeAdminGroupId: current.supremeAdminGroupId } : {}),
+    })
+  }
   const transport: MicrosoftTransport = Object.freeze({
     kind: "explicit-https-proxy",
     listenerOrigin: config.listenerOrigin, ingressOrigin: config.ingressOrigin, publicOrigin: config.origin,
   })
   return {
     loaded: { config, directory, keys }, transport,
+    readCurrentConfiguration, readGrants, readConnectionKey, readTeamProfilePolicy,
     createIdentity(secrets: CorporateLocalSecrets, nativeWeb = false) {
       const identity = createMicrosoftIdentity({
         origin: config.origin, mount: config.mount, tenantId: config.tenantId, clientId: config.clientId,

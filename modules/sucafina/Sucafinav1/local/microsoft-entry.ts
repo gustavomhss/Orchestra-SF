@@ -10,6 +10,7 @@ import type { EntraOptions, EntraTeamsSessionResult } from "../runtime/local-con
 import { createTeamProfileAccess, teamProfileInstallationId } from "../runtime/team-profile-access.ts"
 import { createTeamProfileResolver } from "../runtime/team-profile-resolver.ts"
 import { createTeamProfileHttp } from "../runtime/team-profile-http.ts"
+import { createTeamSessionAdmission } from "../runtime/team-session-admission.ts"
 import { runTeamBusiness } from "../runtime/team-business.ts"
 import { teamBusinessRoute } from "../runtime/team-profile-selector.ts"
 import { esc } from "../src/screen-shell.ts"
@@ -19,6 +20,7 @@ export const nativeSfTeamInstallation = true
 type InstallationContext = {
   origin: string
   teamCurrentChoice?: SfTeamCurrentChoice
+  loadTeamSessionHttp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-session-http.ts").createSfTeamSessionHttp>
   loadTeamPurchaseMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamPurchaseMcp>
   loadTeamSupplierMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamSupplierMcp>
   loadTeamContractMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamContractMcp>
@@ -68,7 +70,7 @@ export async function createMicrosoftInstallation(
     if (config.teams === "direct" && !store.teamProfiles) throw new Error("Microsoft Team policy is unavailable")
     const teamProfiles = store.teamProfiles && identity.observeTeamProfileAdministrator && createTeamProfileResolver({
       installationId, tenantId: config.tenantId, store: store.teamProfiles,
-      policy: async () => ({ teams: config.teams, supremeAdminGroupId: config.supremeAdminGroupId }),
+      policy: prepared.readTeamProfilePolicy,
       observeAdministrator: identity.observeTeamProfileAdministrator, prepare: identity.prepare,
       now: () => now().getTime(),
     })
@@ -82,6 +84,56 @@ export async function createMicrosoftInstallation(
       ...(teamProfiles ? { observeAdministrator: (request: Request) => teamProfiles.administrator(request, { refreshSession: false }) } : {}),
     })
     if (nativeWeb && !teamAccess) throw new Error("Native Team Web admission is unavailable")
+    const readSessionAdmission = nativeWeb && teamAccess && store.teamProfiles ? createTeamSessionAdmission({
+      origin: config.origin, mount: config.mount, installationId, tenantId: config.tenantId, directory,
+      authorizeTeam: teamAccess, identity, profilePolicy: store.teamProfiles,
+      readCurrentConfiguration: prepared.readCurrentConfiguration, readGrants: prepared.readGrants,
+      connections: store.teamConnections, readKey: prepared.readConnectionKey, policyVersion: "sf-team-profile/1",
+    }) : undefined
+    type SessionRuntime = Awaited<ReturnType<typeof import("../../../../apps/cli/src/sucafina-product/team-session-http.ts").createSfTeamSessionHttp>>
+    let sessionRuntime: Promise<SessionRuntime> | undefined
+    let disposed = false
+    const sessionHttp = async (request: Request): Promise<Response | undefined> => {
+      const pathname = new URL(request.url).pathname
+      if (!nativeWeb || !(pathname === config.mount + "/api/session" || pathname.startsWith(config.mount + "/api/session/") ||
+        pathname === config.mount + "/api/event" || pathname === config.mount + "/api/reference")) return undefined
+      const headers = { "cache-control": "no-store", "x-content-type-options": "nosniff" }
+      const unavailable = () => Response.json({ status: "unavailable" }, { status: 503, headers })
+      if (disposed || !readSessionAdmission || !context.loadTeamSessionHttp) return unavailable()
+      const admission = await readSessionAdmission(request)
+      if (!admission || request.signal.aborted)
+        return Response.json({ _tag: "UnauthorizedError", message: "Current session authority required" }, { status: 401, headers })
+      try {
+        // Only a current private Microsoft/Team grant can load and start the Core graph.
+        // Each actual HTTP operation still captures and verifies its own opaque owner lease.
+        if (!sessionRuntime) {
+          const load = context.loadTeamSessionHttp
+          sessionRuntime = (async () => {
+            const create = await load()
+            const runtime = await create({
+              origin: config.origin, mount: config.mount, directory,
+              workspaceDirectory: config.workspaceDirectory, readAdmission: readSessionAdmission,
+            })
+            if (disposed) {
+              await runtime.dispose()
+              throw new Error("Microsoft session runtime disposed")
+            }
+            return runtime
+          })()
+        }
+        const pending = sessionRuntime
+        const runtime = await pending.catch((error) => {
+          if (sessionRuntime === pending) sessionRuntime = undefined
+          throw error
+        })
+        if (disposed || request.signal.aborted) return unavailable()
+        return await runtime.handler(request)
+      } catch (error) {
+        console.error("SF_TEAM_SESSION_RUNTIME_UNAVAILABLE", error)
+        return unavailable()
+      }
+    }
+
     const purchasePeriod = config.clawPurchasePeriod
     const purchaseMcp = purchasePeriod ? await (async () => {
       if (!teamAccess || !context.loadTeamPurchaseMcp) throw new Error("Purchase MCP requires the Microsoft Team host")
@@ -124,6 +176,7 @@ export async function createMicrosoftInstallation(
       trustedIngress: Object.freeze({ origin: prepared.transport.ingressOrigin, authorize }),
       ...(web ? { nativeWeb: true, discovery: web.discovery } : {}),
       async handler(incoming: Request) {
+        if (disposed) return new Response(null, { status: 503, headers })
         const request = microsoftRequest(incoming, prepared.transport)
         if (!request) return new Response(null, { status: 403, headers })
         const url = new URL(request.url)
@@ -139,6 +192,8 @@ export async function createMicrosoftInstallation(
         if (web && url.pathname === config.mount + "/api/ui/context") return web.context.handle(request)
         const profiles = await profileHttp?.(request)
         if (profiles) return profiles
+        const session = await sessionHttp(request)
+        if (session) return session
         const mcp = await purchaseMcp?.(request) ?? await supplierMcp?.(request) ?? await contractMcp?.(request)
         if (mcp) return mcp
         const recovered = await recovery?.(request)
@@ -201,7 +256,15 @@ export async function createMicrosoftInstallation(
         const request = microsoftRequest(incoming, prepared.transport)
         return request ? readTeams(request) : { state: "unauthenticated" }
       } } : {}),
-      dispose: () => store.dispose(),
+      async dispose() {
+        if (disposed) return
+        disposed = true
+        try {
+          // A failed startup owns no live graph; its request already returned an explicit unavailable response.
+          const runtime = await sessionRuntime?.catch(() => undefined)
+          await runtime?.dispose()
+        } finally { await store.dispose() }
+      },
     }
   } catch (error) {
     await store.dispose()

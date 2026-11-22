@@ -8,6 +8,7 @@ import { isAbsolute, join, parse, resolve, sep } from "node:path"
 import type { LocalStore } from "./local-contract.ts"
 import { createTeamProfilePolicyStore, initializeTeamProfilePolicy, teamProfilePolicyInitialization } from "./team-profile-store.ts"
 import type { TeamProfilePolicyInitialization } from "./team-profile-store.ts"
+import { createTeamConnectionStore, initializeTeamConnections } from "./team-connection-store.ts"
 import type { Snapshot, TransactionOptions } from "./contract.ts"
 import type { BlobTransaction } from "./assets.ts"
 import type { Surface } from "../src/identity.ts"
@@ -158,7 +159,10 @@ export async function openLocalStore(directory: string, options: {
         CREATE TABLE IF NOT EXISTS blobs (surface TEXT NOT NULL, key TEXT NOT NULL, payload BLOB NOT NULL, type TEXT NOT NULL, PRIMARY KEY (surface, key));
         CREATE TABLE IF NOT EXISTS authentication_payloads (key TEXT PRIMARY KEY, payload BLOB NOT NULL, expires_at REAL NOT NULL);
       `)
-      if (teamPolicy) initializeTeamProfilePolicy(initial, teamPolicy)
+      if (teamPolicy) {
+        initializeTeamProfilePolicy(initial, teamPolicy)
+        initializeTeamConnections(initial, teamPolicy.binding)
+      }
       requireDatabaseFile()
       initial.exec("COMMIT")
     } finally {
@@ -410,8 +414,29 @@ export async function openLocalStore(directory: string, options: {
       db.exec("COMMIT")
     },
   })
+  const teamConnections = teamPolicy && createTeamConnectionStore({
+    binding: teamPolicy.binding,
+    locked: (work, signal) => operation(true, work, signal),
+    // Only current credential/policy reads are admitted here. Business authority is
+    // observed by the session producer in the already-held, separate Team partition.
+    authorityRead: async (db, work, signal) => {
+      if (context.getStore() || !db.inTransaction) throw new Error("Invalid private connection authority scope")
+      const scope: ReadScope = { root: { identity: {}, db, snapshots: {}, poisoned: false, readers: 0, readOnly: true }, open: true, signal }
+      try {
+        const result = await context.run(scope, work)
+        requireScope(scope)
+        if (scope.root.poisoned || scope.root.readers) throw new Error("Private connection authority scope changed")
+        return result
+      } finally { scope.open = false }
+    },
+    commit: (db) => {
+      requireDatabaseFile()
+      db.exec("COMMIT")
+    },
+  })
   const store: LocalStore = {
     ...(teamProfiles ? { teamProfiles } : {}),
+    ...(teamConnections ? { teamConnections } : {}),
     hasSnapshotRoot: hasCurrentSnapshots,
     holdTargetPreimage: () => {
       const state = { active: true }

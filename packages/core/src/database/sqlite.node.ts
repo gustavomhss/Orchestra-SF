@@ -77,9 +77,9 @@ const make = (options: Config) =>
         statement.setReadBigInts(Context.get(fiber.context, Client.SafeIntegers))
         statement.setReturnArrays(true)
         try {
-          return Effect.succeed(
-            guarded(query, fiber.context, () => statement.all(...(params as SQLInputValue[])) as unknown as ReadonlyArray<ReadonlyArray<unknown>>),
-          )
+          const rows: ReadonlyArray<unknown> = guarded(query, fiber.context, () => statement.all(...(params as SQLInputValue[])))
+          if (!rows.every(Array.isArray)) throw new TypeError("SQLite array results required")
+          return Effect.succeed(rows)
         } catch (cause) {
           return Effect.fail(
             new SqlError({
