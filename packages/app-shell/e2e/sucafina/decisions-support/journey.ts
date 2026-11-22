@@ -265,14 +265,25 @@ export async function assertCase(page: Page, reference: string, objective: strin
     horizon: draft.horizon, currency: draft.currency })
   expect(original.criteria.map((criterion) => ({ description: criterion.description, required: criterion.required })))
     .toEqual(draft.criteria.map((description) => ({ description, required: true })))
-  await expect(decision.getByRole("region", { name: "Question", exact: true }).getByText(objective, { exact: true })).toBeVisible()
-  await expect(decision.locator(".sf-n24-metadata > span")).toHaveText([
-    `Current version: ${version}`, "State: draft",
-    `Period: ${draft.horizon.start} – ${draft.horizon.end}`, draft.currency,
-  ])
+  const question = decision.getByRole("region", { name: "Question", exact: true })
+  await expect(question.getByText(objective, { exact: true })).toBeVisible()
+  for (const [label, value] of [
+    ["Current version", String(version)], ["State", "draft"],
+    ["Period", `${draft.horizon.start} – ${draft.horizon.end}`], ["Currency", draft.currency],
+  ] as const) {
+    const pair = question.locator("dl > div").filter({ has: page.getByText(label, { exact: true }) })
+    await expect(pair).toHaveCount(1)
+    await expect(pair.getByRole("term")).toHaveText(label)
+    await expect(pair.getByRole("definition")).toHaveText(value)
+  }
   const criteria = decision.getByRole("region", { name: "Criteria", exact: true })
-  for (const criterion of draft.criteria)
-    await expect(criteria.getByRole("listitem").filter({ hasText: criterion })).toHaveText(criterion + " · Required")
+  await expect(criteria.getByRole("listitem")).toHaveCount(draft.criteria.length)
+  for (const criterion of draft.criteria) {
+    const item = criteria.getByRole("listitem").filter({ has: page.getByText(criterion, { exact: true }) })
+    await expect(item).toHaveCount(1)
+    await expect(item.getByText(criterion, { exact: true })).toBeVisible()
+    await expect(item.getByText("Required", { exact: true })).toBeVisible()
+  }
   await expect(decision.getByText("No alternatives recorded.", { exact: true })).toBeVisible()
   await expect(decision.getByText("No changes prepared.", { exact: true })).toBeVisible()
   expect(original.alternatives).toEqual([])

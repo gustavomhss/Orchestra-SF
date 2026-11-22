@@ -83,6 +83,18 @@ export async function connectInstalledShell(page: Page, installation: {
   await expect(add).toHaveCount(0, { timeout: 10_000 })
 
   console.info("[sf-installed] Selecting the installation project in the shell")
+  // Adding an empty canonical workspace asks a real optional Git question.
+  // Install before selection because the question follows the asynchronous
+  // directory read. It stays Page-owned until used once or the Page closes.
+  const gitQuestion = page.getByRole("dialog", { name: "Set up git for this folder?", exact: true })
+  await page.addLocatorHandler(gitQuestion, async (dialog) => {
+    await expect(dialog.getByText(
+      `${installation.workspace} is empty. Initialize a git repository with an empty first commit so Orchestra can track changes in it.`,
+      { exact: true },
+    )).toBeVisible({ timeout: 10_000 })
+    await dialog.getByRole("button", { name: "Add without git", exact: true }).click({ timeout: 10_000 })
+    await expect(dialog).toHaveCount(0, { timeout: 10_000 })
+  }, { times: 1 })
   const profile = page.getByRole("button", { name: "Choose project", exact: true })
   await profile.click({ timeout: 10_000 })
   await page.locator('[data-component="orchestra-profile-picker"]').getByRole("menuitem", { name: "Add project", exact: true }).click({ timeout: 10_000 })

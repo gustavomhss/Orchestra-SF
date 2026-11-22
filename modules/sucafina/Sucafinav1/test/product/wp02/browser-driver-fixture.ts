@@ -231,7 +231,7 @@ try {
   if (launchTimeoutMs <= 0) throw new Error("Node browser startup deadline expired before launch")
   console.log(JSON.stringify({ event: "phase", phase: "chromium-launch", timeoutMs: launchTimeoutMs, deadlineEpochMs: startup.deadlineEpochMs }))
   const browserSelection = startup.executablePath ? { executablePath: startup.executablePath }
-    : ["wp01-shared-pool", "visual-layout", "local-browser"].includes(startup.consumer) ? { channel: "chrome" } : {}
+    : ["wp01-shared-pool", "visual-layout", "local-browser", "form-layout"].includes(startup.consumer) ? { channel: "chrome" } : {}
   server = await chromium.launchServer({ ...browserSelection, host: "127.0.0.1", headless: true,
     args: ["--no-sandbox"], timeout: launchTimeoutMs, logger: launchLogger })
   clearInterval(launchSampler)

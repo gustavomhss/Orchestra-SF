@@ -74,7 +74,7 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     // The grid renders month inputs; its annual total is verified in the exported workbook below.
     for (const month of Array.from({ length: 12 }, (_, index) => index)) await expect(importedLine.locator(`[name="b${month}"]`)).toHaveValue("125")
     const exported = new Workbook()
-    const plannerDownload = await expectDownload(page, page.getByRole("link", { name: "Export Excel", exact: true }).first())
+    const plannerDownload = await expectDownload(page, page.getByRole("link", { name: "Export Excel", exact: true }).first(), fixture.root)
     console.info("browser IO: Planner XLSX parse starting")
     await exported.xlsx.load(await plannerDownload.arrayBuffer())
     console.info("browser IO: Planner XLSX parse complete")
@@ -127,11 +127,11 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     await upload.locator('input[type="file"]').setInputFiles({ name: "browser-clean.txt", mimeType: "text/plain", buffer: bytes })
     // Real private HTTP asset path; INSTREAM loopback scanner is a fixture, not production AV proof.
     await submit(page, upload)
-    const document = await expectDownload(page, page.getByRole("link", { name: "browser-clean.txt", exact: true }))
+    const document = await expectDownload(page, page.getByRole("link", { name: "browser-clean.txt", exact: true }), fixture.root)
     console.info("browser IO: private document byte verification starting")
     expect(Buffer.from(await document.arrayBuffer())).toEqual(bytes)
     console.info("browser IO: private document byte verification complete")
-    const csv = await (await expectDownload(page, page.getByRole("link", { name: "Download suppliers CSV", exact: true }))).text()
+    const csv = await (await expectDownload(page, page.getByRole("link", { name: "Download suppliers CSV", exact: true }), fixture.root)).text()
     console.info("browser IO: supplier CSV parse starting")
     const records = csv.split(/\r?\n/).map((line) => [...line.matchAll(/"((?:[^"]|"")*)"(?:,|$)/g)].map((cell) => cell[1]!.replaceAll('""', '"')))
     expect(records).toHaveLength(2)
@@ -168,7 +168,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     const capturedMembers = await captureBrowserPng(page, path.join(import.meta.dir, "artifacts/browser-business-members.png"))
       .then(() => ({ ok: true as const }), (error: unknown) => ({ ok: false as const, error }))
     const membersExport = new Workbook()
-    const memberDownload = await expectDownload(page, page.getByRole("link", { name: "Export All Members", exact: true }))
+    const memberDownload = await expectDownload(page, page.getByRole("link", { name: "Export All Members", exact: true }), fixture.root)
     console.info("browser IO: Members XLSX parse starting")
     await membersExport.xlsx.load(await memberDownload.arrayBuffer())
     console.info("browser IO: Members XLSX parse complete")
@@ -209,7 +209,7 @@ async function submit(page: Page, form: Locator) {
   await page.reload()
   console.info("browser IO: persisted", JSON.stringify(command))
 }
-async function expectDownload(page: Page, link: Locator) {
+async function expectDownload(page: Page, link: Locator, privateRoot: string) {
   console.info("browser IO: download", await link.innerText())
   const [downloaded] = await Promise.all([
     page.waitForEvent("download", { timeout: 10000 }),
@@ -218,8 +218,10 @@ async function expectDownload(page: Page, link: Locator) {
   console.info("browser IO: download event received", downloaded.suggestedFilename())
   const deadline = performance.now() + 10_000
   expect(await withinBrowserDeadline("download completion", () => downloaded.failure(), deadline - performance.now())).toBeNull()
-  const file = await withinBrowserDeadline("downloaded file path", () => downloaded.path(), deadline - performance.now())
-  expect(file).not.toBeNull()
+  // A Node-owned remote browser cannot expose its download path. Copy the same
+  // received bytes into this fixture's private directory, removed by dispose().
+  const file = path.join(privateRoot, "browser-download-" + crypto.randomUUID())
+  await withinBrowserDeadline("downloaded file copy", () => downloaded.saveAs(file), deadline - performance.now())
   console.info("browser IO: downloaded", downloaded.suggestedFilename())
-  return Bun.file(file!)
+  return Bun.file(file)
 }

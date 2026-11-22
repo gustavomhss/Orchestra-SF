@@ -78,13 +78,49 @@ export async function queueIdentity(page: Page, account: Account, id: string, mo
   return drilled
 }
 
+type ProcurementCapture = { forward(route: Route): Promise<void>; reject(reason: Error): void }
+type ProcurementInterceptor = { endpoint: string; ready: Promise<void>; active?: ProcurementCapture }
+const procurementInterceptors = new WeakMap<Page, ProcurementInterceptor>()
+
+/** Chromium enables CDP Fetch for all requests while any Playwright route exists.
+ * Keep this endpoint's route until Page closure: removing the last route during
+ * command delivery can strand the automatic CAP25 readback. Other requests and
+ * commands outside the one active capture continue through the normal handlers. */
+async function procurementInterceptor(page: Page, endpoint: URL) {
+  let state = procurementInterceptors.get(page)
+  if (state) {
+    if (state.endpoint !== endpoint.href) throw new Error("A Procurement Page cannot switch command endpoints")
+    await state.ready
+    return state
+  }
+  state = { endpoint: endpoint.href, ready: Promise.resolve() }
+  procurementInterceptors.set(page, state)
+  const owned = state
+  const routePattern = new RegExp("^" + endpoint.href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?:\\?|$)")
+  owned.ready = page.route(routePattern, (route) => owned.active
+    ? owned.active.forward(route) : route.fallback()).then(() => undefined)
+  page.once("close", () => {
+    // Closing the Page disposes its route; never toggle interception while live.
+    procurementInterceptors.delete(page)
+    const active = owned.active
+    owned.active = undefined
+    active?.reject(new Error("Procurement Page closed before command capture completed"))
+  })
+  try {
+    await owned.ready
+  } catch (error) {
+    if (procurementInterceptors.get(page) === owned) procurementInterceptors.delete(page)
+    throw error
+  }
+  return owned
+}
+
 export async function captureProcurementCommand(page: Page, account: Account, confirm: Locator, expected: {
   page: "Requests" | "My approvals" | "Settings"; action: string; id?: string; version?: number; values?: Record<string, unknown>
 }, beforeDelivery?: (response: APIResponse) => Promise<void>) {
   const endpoint = new URL(account.baseURL + "/procurement")
-  // A URL predicate installs **/* in Chromium. Keep interception off the
-  // automatic CAP25 readback while this exact command handler is removed.
-  const routePattern = new RegExp("^" + endpoint.href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?:\\?|$)")
+  const interceptor = await procurementInterceptor(page, endpoint)
+  if (interceptor.active) throw new Error("Concurrent Procurement captures on one Page are not allowed")
   const match = (url: URL) => url.origin === endpoint.origin && url.pathname === endpoint.pathname &&
     url.searchParams.size === 1 && url.searchParams.get("page") === expected.page
   const producer = Promise.withResolvers<{ response: APIResponse; command: unknown }>()
@@ -111,14 +147,15 @@ export async function captureProcurementCommand(page: Page, account: Account, co
       await route.abort("failed").catch(() => undefined)
     }
   }
-  await page.route(routePattern, forward)
+  const capture: ProcurementCapture = { forward, reject: producer.reject }
+  interceptor.active = capture
   try {
     const [{ response, command }] = await Promise.all([producer.promise, confirm.click()])
     const body: unknown = await response.json()
     expect(posts).toBe(1)
     return { status: response.status(), body, command }
   } finally {
-    if (!page.isClosed()) await page.unroute(routePattern, forward)
+    if (interceptor.active === capture) interceptor.active = undefined
   }
 }
 
