@@ -42,6 +42,38 @@ export async function readPortfolio(page: Page, owner: AnalyticsOwner, operation
   expect(body.status).toBe("ok")
   return body.value
 }
+/** Report the actual native ctx.context reads without changing their admission. */
+export function observeAnalyticsContext(page: Page, owner: AnalyticsOwner) {
+  const reads: Promise<{ http: number; body: unknown }>[] = []
+  page.on("response", (response) => {
+    if (response.request().method() !== "GET" || !new URL(response.url()).pathname.endsWith("/api/ui/context")) return
+    reads.push(response.json().then((body: unknown) => ({ http: response.status(), body })))
+  })
+  return async (stage: string) => {
+    expect(reads.length).toBeGreaterThan(0)
+    for (const pending of reads.splice(0)) {
+      const { http, body: raw } = await pending
+      const body = object(raw)
+      expect(http).toBe(200)
+      expect(body.status).toBe("ok")
+      const context = object(body.value)
+      expect(object(context.stamp)).toEqual(expect.objectContaining({
+        installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId,
+      }))
+      const resources = array(context.availability).map(object)
+        .filter((resource) => resource.family === "portfolio" || array(resource.operations).map(object)
+          .some((operation) => operation.operationId === "decisions.controls.read"))
+        .map((resource) => ({ family: resource.family, resource: resource.resource, state: resource.state,
+          operations: array(resource.operations).map(object)
+            .filter((operation) => String(operation.operationId).startsWith("portfolio.") ||
+              operation.operationId === "decisions.controls.read")
+            .map((operation) => ({ operationId: operation.operationId, state: operation.state,
+              operational: operation.operational, reason: operation.reason ?? null })) }))
+      console.info("SF_ANALYTICS_CONTEXT " + JSON.stringify({ stage, http, status: body.status,
+        ownerBinding: "exact", resources }))
+    }
+  }
+}
 export async function captureAnalytics(page: Page, info: TestInfo, name: string) {
   await reflow(page)
   const root = page.locator('[data-sf-wave="five"]')
