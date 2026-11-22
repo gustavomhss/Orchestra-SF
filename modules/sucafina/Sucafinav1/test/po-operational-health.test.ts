@@ -132,6 +132,7 @@ async function fixture(change: Change = "none") {
       headers: { "x-fixture-actor": change === "recipient" ? "another-person" : "po-owner" }, signal,
     }),
     snapshot: () => original.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) })),
+    privateState: () => original.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.__sfProductV1) })),
     dispose: async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) },
   }
 }
@@ -180,8 +181,9 @@ test.each([
     expect(response?.status).toBe(status)
     expect(response?.headers.get("cache-control")).toBe("no-store")
     const body = await response!.text()
-    expect(before.data.__sfProductV1).toBeDefined()
-    expect(body).not.toContain(JSON.stringify(before.data.__sfProductV1))
+    const privateState = await value.privateState()
+    expect(privateState).toBeDefined()
+    expect(body).not.toContain(JSON.stringify(privateState))
     expect(value.gate.exportCommits).toBe(0)
     const after = await value.snapshot()
     expect(after.audit).toEqual(before.audit)
