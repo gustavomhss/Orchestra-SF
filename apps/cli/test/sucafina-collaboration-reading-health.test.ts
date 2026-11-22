@@ -59,7 +59,7 @@ async function fixture() {
     controls.calls++
     throw new Error("Health must not read records, write, prepare, dispatch, send, or produce receipts")
   }
-  const driver: Parameters<typeof createSfSourcePersistence>[0]["persistence"] = {
+  const driver: typeof storage = {
     ...storage,
     transaction: (surface, work, options) => storage.transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
       await hooks.read?.(surface, snapshot)
