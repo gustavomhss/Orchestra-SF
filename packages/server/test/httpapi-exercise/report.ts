@@ -1,5 +1,6 @@
 import { Duration } from "effect"
 import { indent, pad } from "./assertions"
+import { transportEvidence } from "./backend"
 import type { Options, Result, Scenario } from "./types"
 
 export const color = {
@@ -63,4 +64,45 @@ export function printResults(results: Result[], missing: string[], extra: Scenar
 
 function routeKey(scenario: Scenario) {
   return `${scenario.method} ${scenario.path}`
+}
+
+/** Machine-readable evidence includes every selected case, never only the summary. */
+export async function writeReceipt(options: Options, routes: string[], catalog: Scenario[], results: Result[], missing: string[], extra: Scenario[]) {
+  const destination = process.env.ORCHESTRA_HTTPAPI_EXERCISE_RECEIPT
+  if (!destination) return
+  const transport = transportEvidence()
+  const receipt = {
+    schema: "orchestra.g05.httpapi/1",
+    sourceSha: process.env.GITHUB_SHA ?? null,
+    sourceTree: process.env.G05_SOURCE_TREE ?? null,
+    runId: process.env.GITHUB_RUN_ID ?? null,
+    runAttempt: process.env.GITHUB_RUN_ATTEMPT ?? null,
+    proofClass: options.mode === "coverage" ? "HTTPAPI_CATALOG" : transport.transport === "loopback" ? "HTTP_LOOPBACK_COMPONENT" : "DIRECT_HANDLER_COMPONENT",
+    installedTeamsProof: false,
+    finalCandidate: false,
+    mode: options.mode,
+    fullInventory: results.length === catalog.length && !options.include && !options.startAt && !options.stopAt,
+    failOnMissing: options.failOnMissing,
+    failOnSkip: options.failOnSkip,
+    transport,
+    routes,
+    missing,
+    extra: extra.map((scenario) => ({ method: scenario.method, path: scenario.path, name: scenario.name })),
+    summary: {
+      catalog: catalog.length,
+      selected: results.length,
+      pass: results.filter((result) => result.status === "pass").length,
+      fail: results.filter((result) => result.status === "fail").length,
+      skip: results.filter((result) => result.status === "skip").length,
+    },
+    cases: results.map((result) => ({
+      method: result.scenario.method,
+      path: result.scenario.path,
+      name: result.scenario.name,
+      status: result.status,
+      ...(result.scenario.kind === "active" ? { auth: result.scenario.auth } : { reason: result.scenario.reason }),
+      ...(result.status === "fail" ? { message: result.message } : {}),
+    })),
+  }
+  await Bun.write(destination, JSON.stringify(receipt, null, 2) + "\n")
 }

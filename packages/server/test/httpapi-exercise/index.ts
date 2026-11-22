@@ -21,7 +21,7 @@ import { OpenApi } from "effect/unstable/httpapi"
 import { array, check, data, isRecord, locationData, object } from "./assertions"
 import { controlledPtyInput, cursor, http, route } from "./dsl"
 import { cleanupExercisePaths, exerciseConfigDirectory, exerciseDataDirectory, exerciseGlobalRoot } from "./environment"
-import { color, printHeader, printResults } from "./report"
+import { color, printHeader, printResults, writeReceipt } from "./report"
 import { coverageResult, parseOptions, routeKey, routeKeys, selectedScenarios } from "./routing"
 import { runScenario } from "./runner"
 import { type ExerciseApp } from "./backend"
@@ -604,13 +604,15 @@ export function main(args: string[]) {
             { concurrency: 1 },
           )
     printResults(results, missing, extra)
+    yield* Effect.promise(() => writeReceipt(options, apiRoutes, scenarios, results, missing, extra))
 
+    if (results.length === 0) return yield* Effect.fail(new Error("no scenarios selected"))
     if (results.some((result) => result.status === "fail"))
       return yield* Effect.fail(new Error("one or more scenarios failed"))
     if (options.failOnSkip && results.some((result) => result.status === "skip"))
       return yield* Effect.fail(new Error("one or more scenarios are skipped"))
-    if (options.failOnMissing && missing.length > 0)
-      return yield* Effect.fail(new Error("one or more routes have no scenario"))
+    if (options.failOnMissing && (missing.length > 0 || extra.length > 0))
+      return yield* Effect.fail(new Error("route inventory has missing or extra scenarios"))
     return undefined
   }).pipe(Effect.scoped)
 }
