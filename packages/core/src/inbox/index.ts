@@ -1,7 +1,0 @@
-export { door } from "./door"
-export { Inbox } from "./service"
-export { InboxHandoff } from "./handoff"
-export { open } from "./store"
-export { shown, surfaces } from "./surface"
-export { sourceKinds } from "./types"
-export type { DoorInput, Item, Person, Pulled, SourceKind } from "./types"
