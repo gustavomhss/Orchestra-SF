@@ -8,6 +8,7 @@ import { hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
+import { digestSfPrivateValue } from "../contracts/private-canonical.ts"
 import type { SfHostRuntime } from "../contracts/host-context.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
 import type { SfNativeAdmission, SfSelectedRuntime } from "../contracts/runtime.ts"
@@ -134,7 +135,7 @@ export function createSfProductAuthority(input: {
     const current = identity()
     if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
       (request.headers.has("origin") && request.headers.get("origin") !== input.origin)) return undefined
-    const identityDigest = digestSfValue(current)
+    const identityDigest = digestSfPrivateValue(current)
     const observe = async (surface: Surface, snapshot: Pick<Snapshot, "data">) => {
       if (currentRead && !currentRead()) return undefined
       const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
@@ -158,9 +159,9 @@ export function createSfProductAuthority(input: {
     if (!roles.length) return undefined
     const canWrite = present.some((entry) => entry.actor.canWrite)
     const scopes = present.map((entry) => ({ surface: entry.surface, assigned: entry.assigned, domains: entry.domains }))
-    const accessRevision = digestSfValue({ installationId: current.installationId, projectId: current.projectId,
+    const accessRevision = digestSfPrivateValue({ installationId: current.installationId, projectId: current.projectId,
       principalRef: first.id, roles, scopes, canWrite, namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(), humanActions: [...grant.humanActions ?? []].toSorted(), policyVersion: input.policyVersion })
-    if (digestSfValue(identity()) !== identityDigest || (currentRead && !currentRead())) return undefined
+    if (digestSfPrivateValue(identity()) !== identityDigest || (currentRead && !currentRead())) return undefined
     return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
   }
   const resolve = async (request: Request) => {
