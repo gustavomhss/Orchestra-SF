@@ -39,7 +39,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
    * This is a consumer proof, not acceptance of the complete host router.
    * These source-free cases do not assert source provenance or native execution.
    */
-  async function fixture() {
+  async function fixture(includePrivateCase = false) {
     const disposers: Array<() => void | Promise<void>> = []
     let closing: Promise<void> | undefined
     const close = () => closing ??= (async () => {
@@ -139,7 +139,11 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         criteria: [{ id: "cost", description: "Initial cost criterion", required: true }, { id: "quality", description: "Initial quality criterion", required: false }],
         sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
       const seeded = await authority.state.transaction(request(), { namespace: "cases", expectedStorageVersion: 0, targetRef: authority.creationTarget.ref,
-        targetIncarnation: authority.creationTarget.incarnation, idempotencyKey: "fixture-case", commandDigest: digestSfValue(decision) }, async (state) => { state.cases[decision.id] = decision; return { commit: true, value: true } })
+        targetIncarnation: authority.creationTarget.incarnation, idempotencyKey: "fixture-case", commandDigest: digestSfValue({ decision, includePrivateCase }) }, async (state) => {
+        state.cases[decision.id] = decision
+        if (includePrivateCase) state.cases.private = { ...decision, id: "private", incarnation: "private-incarnation", objective: "First operator private decision", participants: [principals[0]!] }
+        return { commit: true, value: true }
+      })
       expect(seeded.status).toBe("ok")
       const url = `${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "workbench-case", caseRef: encodeCaseRef(decision) })}`
       for (const actor of actors) {
@@ -347,15 +351,38 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   }, 60_000)
 
   test("real session revocation during decision reconciliation purges the retained draft and prevents another write", async () => {
-    const f = await fixture()
+    const f = await fixture(true)
     try {
       const page = f.actors[1].page, editor = form(page)
+      const decisionList = f.origin + "/sucafina/dashboard?sf=decision-list"
+      const beforeList = await f.read()
+      const own = await f.actors[0].context.request.get(decisionList)
+      expect(own.status()).toBe(200)
+      expect((await own.json()).value).toContainEqual({
+        caseRef: { id: "private", incarnation: "private-incarnation", version: 1 }, objective: "First operator private decision", state: "draft",
+      })
+      const shared = await page.request.get(decisionList)
+      expect(shared.status()).toBe(200)
+      expect(shared.headers()["cache-control"]).toBe("no-store")
+      expect(await shared.json()).toEqual({ status: "ok", value: [{ caseRef: editBody(f.initial, f.initial.objective).caseRef, objective: f.initial.objective, state: "draft" }] })
+      for (const extra of ["&sf=decision-list", "&case=private", "&page=Budget"])
+        expect((await page.request.get(decisionList + extra)).status()).toBe(400)
+      expect((await page.request.post(decisionList)).status()).toBe(405)
+      expect((await page.request.get(decisionList, { headers: { "sec-fetch-site": "cross-site" } })).status()).toBe(403)
+      expect((await page.request.get(decisionList, { headers: { origin: "https://other.test" } })).status()).toBe(403)
+      expect((await f.read()).storageVersion).toBe(beforeList.storageVersion)
+      const alternatives = page.locator("form[data-decision-alternatives]")
+      expect(await alternatives.getAttribute("data-sf-alternatives-ready")).toBe("true")
+      expect(await alternatives.getByRole("button", { name: "Create alternative", exact: true }).isDisabled()).toBe(true)
       await editor.getByLabel("Decision objective", { exact: true }).fill("Private losing decision draft")
       expect((await f.post(editBody(f.initial, "First operator current objective"))).status()).toBe(200)
       await editor.getByRole("button", { name: "Save decision", exact: true }).click()
       await editor.getByRole("button", { name: "Use current version and keep my edits", exact: true }).waitFor()
       const before = await f.read()
       expect(await page.evaluate(async () => (await fetch("/sucafina/auth/logout", { method: "POST", credentials: "same-origin" })).status)).toBe(204)
+      const revoked = await page.request.get(decisionList)
+      expect(revoked.status()).toBe(403)
+      expect(await revoked.text()).not.toContain(f.initial.objective)
       await editor.getByRole("button", { name: "Use current version and keep my edits", exact: true }).click()
       await editor.getByText("Your access changed. Reload before editing this decision.", { exact: true }).waitFor()
       expect(await editor.locator("[data-context], input, [data-decision-conflict]").count()).toBe(0)
