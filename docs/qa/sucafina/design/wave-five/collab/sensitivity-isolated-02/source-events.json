@@ -1,0 +1,549 @@
+{
+  "schema": "sucafina-design-observed-events-v1",
+  "surface": "UI44",
+  "attempt": "sensitivity-isolated-02",
+  "run": 45025502692,
+  "testJob": 137217522587,
+  "sourceEvents": [
+    {
+      "timestamp": "2026-11-22T13:07:53.1337247Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:58.0225347Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "timestamp": "2026-11-22T13:08:03.9736871Z",
+      "operation": "parameter-source-read",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "timestamp": "2026-11-22T13:08:06.2331863Z",
+      "operation": "decision-promote-parameter",
+      "http": 200,
+      "status": "ok",
+      "parameterPeriod": {
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "parameterUnit": "USD"
+    },
+    {
+      "timestamp": "2026-11-22T13:08:13.0287272Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "timestamp": "2026-11-22T13:08:27.0377560Z",
+      "operation": "sensitivity-controls-units-read",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "timestamp": "2026-11-22T13:08:27.0600599Z",
+      "operation": "decision-criteria",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "timestamp": "2026-11-22T13:08:28.5297457Z",
+      "operation": "decision-criteria",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 1470
+    },
+    {
+      "timestamp": "2026-11-22T13:08:43.2106140Z",
+      "operation": "sensitivity-controls-units-read",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "timestamp": "2026-11-22T13:08:43.2184058Z",
+      "operation": "sensitivity-rule-fixture-registered-readback",
+      "status": "ok",
+      "caseVersion": 6,
+      "criterionId": "91b422c6-e24c-4f7e-b158-1aaa08727fa7",
+      "ruleRef": "criterion-rule:f3a28d8a2cdcf9ce3124e8bd2d2c76cc17b04bf8ffea4388755165c17d95e514",
+      "previousVersion": 1,
+      "ruleVersion": 2,
+      "baselineRef": "decision-result:7d7a87840047d3ad7265e29493fd18b2165b2c3cd85aff9b7b07ada86836ad4b",
+      "scenarioRef": "decision-result:6a424444771f5b5c0199dceb7e3133431d8508ed23ca66c488bd3a8a35ae7e4f",
+      "parameterRef": "86156bcf-5eef-45bd-b0c1-d757639554bb:2",
+      "parameterUnit": "USD",
+      "resultUnit": "USD",
+      "engineVersion": "planner-runtime-v1",
+      "sourceReferences": [
+        {
+          "refId": "planner-version:f2d8a824-3ce7-4f14-a5c0-354626c494db:d183bbc1-16f2-432b-b532-1c5c834a1771:1",
+          "refDigest": "ec859a66a586c713e7053f59dc127f62cb4cd48705db227ca1a9e4f34a2bb285"
+        },
+        {
+          "refId": "planner-version:6d675f84-f2b6-4c02-8d8e-046cd2be347c:a12c0e11-293f-4a44-aa47-09b78c1b1352:1",
+          "refDigest": "a50c63580a66433327072d453e62cb899d886682c5ab83560c48216b724db2cc"
+        }
+      ],
+      "originalCaseUnchanged": true,
+      "originalUnitsReadbackMatched": true,
+      "acquisition": "original-register-canonical-resolve-then-controls-units-and-version"
+    },
+    {
+      "timestamp": "2026-11-22T13:08:43.2188317Z",
+      "operation": "decision-compare",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "timestamp": "2026-11-22T13:09:43.2788833Z",
+      "operation": "decision-compare",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 60061
+    },
+    {
+      "timestamp": "2026-11-22T13:09:43.2828531Z",
+      "operation": "portfolio-selection-fixture-basis",
+      "initialVersion": 0,
+      "basis": "new-isolated-fixture-with-no-prior-registration",
+      "caseVersion": 6,
+      "criteriaCount": 1
+    },
+    {
+      "timestamp": "2026-11-22T13:09:43.2840508Z",
+      "operation": "decision-select-portfolio",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "timestamp": "2026-11-22T13:10:23.5818222Z",
+      "operation": "decision-select-portfolio",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 40299
+    },
+    {
+      "timestamp": "2026-11-22T13:10:31.0136512Z",
+      "operation": "decision-controls",
+      "http": 200,
+      "status": "ok"
+    },
+    {
+      "timestamp": "2026-11-22T13:10:31.0217060Z",
+      "operation": "decision-compare",
+      "phase": "source-request",
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "timestamp": "2026-11-22T13:11:33.1138543Z",
+      "operation": "decision-compare",
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 62092
+    },
+    {
+      "timestamp": "2026-11-22T13:11:33.1155250Z",
+      "operation": "portfolio-selection-registered-readback",
+      "status": "ok",
+      "selectionVersion": 1,
+      "caseVersion": 6,
+      "originalAlternativePairMatched": true,
+      "originalCriteriaMatched": true,
+      "currentComparisonUnchanged": true,
+      "acquisition": "original-register-canonical-read-then-controls-and-comparison"
+    },
+    {
+      "timestamp": "2026-11-22T13:12:08.9994101Z",
+      "operation": "decision-controls-sensitivity-units",
+      "method": "GET",
+      "http": 200,
+      "selection": {
+        "scenarioRef": "decision-result:6a424444771f5b5c0199dceb7e3133431d8508ed23ca66c488bd3a8a35ae7e4f",
+        "baselineRef": "decision-result:7d7a87840047d3ad7265e29493fd18b2165b2c3cd85aff9b7b07ada86836ad4b",
+        "parameterRef": "86156bcf-5eef-45bd-b0c1-d757639554bb:2"
+      },
+      "units": {
+        "baselineRef": "decision-result:7d7a87840047d3ad7265e29493fd18b2165b2c3cd85aff9b7b07ada86836ad4b",
+        "parameterRef": "86156bcf-5eef-45bd-b0c1-d757639554bb:2",
+        "parameterUnit": "USD",
+        "resultUnit": "USD",
+        "engineVersion": "planner-runtime-v1",
+        "sourceRefs": [
+          {
+            "schema": "sf-evidence-v1",
+            "kind": "record",
+            "refId": "planner-version:f2d8a824-3ce7-4f14-a5c0-354626c494db:d183bbc1-16f2-432b-b532-1c5c834a1771:1",
+            "installationId": "f67c4f89-cb0e-43cd-9979-9f5b1bd2854f",
+            "projectId": "global",
+            "refDigest": "ec859a66a586c713e7053f59dc127f62cb4cd48705db227ca1a9e4f34a2bb285",
+            "evidenceLevel": "observed",
+            "target": {
+              "surface": "planner",
+              "recordType": "planner-version",
+              "recordId": "f2d8a824-3ce7-4f14-a5c0-354626c494db",
+              "incarnation": "d183bbc1-16f2-432b-b532-1c5c834a1771",
+              "version": 1,
+              "fields": [
+                "id",
+                "name",
+                "year",
+                "locked",
+                "closed",
+                "hc",
+                "lists",
+                "lines",
+                "projects",
+                "fx",
+                "summary",
+                "hr",
+                "restrictedHr",
+                "fteInputsKnown",
+                "hrMonthStates",
+                "sharedEntities",
+                "sharedAllocations"
+              ],
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-12-31"
+              },
+              "projectionDigest": "a2813a5fc4e2ebabee6cfbffa4962854554b5e8259e0d3384e4fc99bb60cff9b"
+            }
+          },
+          {
+            "schema": "sf-evidence-v1",
+            "kind": "record",
+            "refId": "planner-version:6d675f84-f2b6-4c02-8d8e-046cd2be347c:a12c0e11-293f-4a44-aa47-09b78c1b1352:1",
+            "installationId": "f67c4f89-cb0e-43cd-9979-9f5b1bd2854f",
+            "projectId": "global",
+            "refDigest": "a50c63580a66433327072d453e62cb899d886682c5ab83560c48216b724db2cc",
+            "evidenceLevel": "observed",
+            "target": {
+              "surface": "planner",
+              "recordType": "planner-version",
+              "recordId": "6d675f84-f2b6-4c02-8d8e-046cd2be347c",
+              "incarnation": "a12c0e11-293f-4a44-aa47-09b78c1b1352",
+              "version": 1,
+              "fields": [
+                "id",
+                "name",
+                "year",
+                "locked",
+                "closed",
+                "hc",
+                "lists",
+                "lines",
+                "projects",
+                "fx",
+                "summary",
+                "hr",
+                "restrictedHr",
+                "fteInputsKnown",
+                "hrMonthStates",
+                "sharedEntities",
+                "sharedAllocations"
+              ],
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-12-31"
+              },
+              "projectionDigest": "b20d3e0170e0f6ce1613eecbe0f350762e44001a8dfe745489cc88e511c52530"
+            }
+          }
+        ]
+      },
+      "acquisition": "native-original-get-body"
+    },
+    {
+      "timestamp": "2026-11-22T13:12:11.6353865Z",
+      "operation": "decision-sensitivity-evaluate",
+      "phase": "native-request",
+      "sequence": 1,
+      "method": "POST",
+      "ownerBinding": "exact"
+    }
+  ],
+  "contextEvents": [],
+  "captureEvents": [
+    {
+      "timestamp": "2026-11-22T13:11:44.5671676Z",
+      "name": "UI44-no-source-scenarios-test-data",
+      "width": 1440,
+      "surface": "UI44",
+      "stage": "configure"
+    },
+    {
+      "timestamp": "2026-11-22T13:11:53.9167481Z",
+      "name": "UI44-original-source-selection-test-data",
+      "width": 1440,
+      "surface": "UI44",
+      "stage": "configure"
+    },
+    {
+      "timestamp": "2026-11-22T13:12:09.6624747Z",
+      "name": "UI44-issued-units-editor-dark-desktop-test-data",
+      "width": 1440,
+      "surface": "UI44",
+      "stage": "configure"
+    },
+    {
+      "timestamp": "2026-11-22T13:12:10.2246164Z",
+      "name": "UI44-issued-units-editor-light-desktop-test-data",
+      "width": 1440,
+      "surface": "UI44",
+      "stage": "configure"
+    },
+    {
+      "timestamp": "2026-11-22T13:12:10.4189914Z",
+      "name": "UI44-issued-units-editor-dark-390-test-data",
+      "width": 390,
+      "surface": "UI44",
+      "stage": "configure"
+    },
+    {
+      "timestamp": "2026-11-22T13:12:10.7546426Z",
+      "name": "UI44-issued-units-editor-light-320-test-data",
+      "width": 320,
+      "surface": "UI44",
+      "stage": "configure"
+    },
+    {
+      "timestamp": "2026-11-22T13:12:11.4610117Z",
+      "name": "UI44-dark-desktop-review-test-data",
+      "width": 1440,
+      "surface": "UI44",
+      "stage": "review"
+    },
+    {
+      "timestamp": "2026-11-22T13:12:11.6352947Z",
+      "name": "UI44-dark-320-review-actions-test-data",
+      "width": 320,
+      "surface": "UI44",
+      "stage": "review"
+    }
+  ],
+  "scopeEvents": [],
+  "diagnostics": [
+    {
+      "timestamp": "2026-11-22T13:14:11.6313078Z",
+      "kind": "wave-three-failure",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "timestamp": "2026-11-22T13:14:11.6406037Z",
+      "kind": "native-view",
+      "state": {
+        "discovery": "ready",
+        "provider": "ready",
+        "view": "ready",
+        "text": "Context and access⁨127.0.0.1:38683⁩ · SensitivitySensitivityChoose a caseAuthorized casesChoose a caseDesign test data · Review regional sourcing intent and evidence · Case version 2Design test data · Compare regional operating plans with explicit cost uncertainties · Case version 6Design test data · Compare regional operating plans with explicit cost uncertaintiesUSD · Jan 1, 2026 — Dec 31, 2026Select a case and approved unitsScenarioChoose a caseDesign test data · Decision baseline plan · revisão 1Design test data · Decision candidate plan · revisão 1Design test data · Regional monthly amount hypothesis · revisão 1BaselineChoose a caseDesign test data · Decision baseline plan · revisão 1Design test data · Decision candidate plan · revisão 1Design test data · Regional monthly amount hypothesis · revisão 1ParameterChoose a caseSubstituição 1 · 200 USD · 2026-02-01 a 2026-02-28UnitUnit: USD / USDEvidence references: 2CriterionCriterionChoose a case91b422c6-e24c-4f7e-b158-1aaa08727fa7 · v2Operator≤≥=Criterion valueMinimumMaximumStepsReview sensitivity requestScenariodecision-result:6a424444771f5b5c0199dceb7e3133431d8508ed23ca66c488bd3a8a35ae7e4fParameter86156bcf-5eef-45bd-b0c1-d757639554bb:2Criterion valuelte 2000 USDBasis200 — 2200 (2) USDNo client-side feasibility, coverage or cost evaluation is performed.Confirm sensitivity evaluationCancel review"
+      }
+    },
+    {
+      "timestamp": "2026-11-22T13:14:11.7486569Z",
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  ],
+  "stages": [
+    {
+      "timestamp": "2026-11-22T13:06:16.5392258Z",
+      "stage": "build"
+    },
+    {
+      "timestamp": "2026-11-22T13:06:58.4424466Z",
+      "stage": "installation"
+    },
+    {
+      "timestamp": "2026-11-22T13:06:58.4603897Z",
+      "stage": "configuration"
+    },
+    {
+      "timestamp": "2026-11-22T13:06:58.4605677Z",
+      "stage": "dashboard-seed"
+    },
+    {
+      "timestamp": "2026-11-22T13:06:58.4756158Z",
+      "stage": "planner-seed"
+    },
+    {
+      "timestamp": "2026-11-22T13:06:58.4797932Z",
+      "stage": "procurement-seed"
+    },
+    {
+      "timestamp": "2026-11-22T13:06:58.5214241Z",
+      "stage": "seed-complete"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:00.7105676Z",
+      "stage": "native-ready"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:00.7109231Z",
+      "stage": "decisions-seed"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:00.7121066Z",
+      "stage": "decisions-request-bi-options"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:00.8328838Z",
+      "stage": "decisions-response-bi-options"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:00.8329345Z",
+      "stage": "decisions-request-bi-data"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:01.1775847Z",
+      "stage": "decisions-response-bi-data"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:01.1793336Z",
+      "stage": "decisions-request-bi-data"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:01.4392259Z",
+      "stage": "decisions-response-bi-data"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:01.4409502Z",
+      "stage": "decisions-request-workbench-command"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:01.5042680Z",
+      "stage": "decisions-response-workbench-command"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:01.5043407Z",
+      "stage": "decisions-request-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:04.2971981Z",
+      "stage": "decisions-response-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:04.2985267Z",
+      "stage": "decisions-request-decision-edit"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:04.5392802Z",
+      "stage": "decisions-response-decision-edit"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:04.5393798Z",
+      "stage": "decisions-request-workbench-command"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:04.5846704Z",
+      "stage": "decisions-response-workbench-command"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:04.5847457Z",
+      "stage": "decisions-request-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:07.2274681Z",
+      "stage": "decisions-response-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:07.2291896Z",
+      "stage": "decisions-request-decision-edit"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:07.4791900Z",
+      "stage": "decisions-response-decision-edit"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:07.4793279Z",
+      "stage": "decisions-request-decision-coverage"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:07.9697619Z",
+      "stage": "decisions-response-decision-coverage"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:07.9698111Z",
+      "stage": "decisions-request-decision-promote"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:10.4200659Z",
+      "stage": "decisions-response-decision-promote"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:10.4201208Z",
+      "stage": "decisions-request-decision-coverage"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:10.9463613Z",
+      "stage": "decisions-response-decision-coverage"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:10.9465222Z",
+      "stage": "decisions-request-decision-promote"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:13.7248169Z",
+      "stage": "decisions-response-decision-promote"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:13.7248775Z",
+      "stage": "decisions-request-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:17.8086045Z",
+      "stage": "decisions-response-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:17.8131517Z",
+      "stage": "decisions-request-decision-criteria"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:18.3925121Z",
+      "stage": "decisions-response-decision-criteria"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:18.3925819Z",
+      "stage": "decisions-request-decision-compare"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:33.3729562Z",
+      "stage": "decisions-response-decision-compare"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:33.3730278Z",
+      "stage": "decisions-request-decision-choose"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:46.4639858Z",
+      "stage": "decisions-response-decision-choose"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:46.4642922Z",
+      "stage": "decisions-request-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:51.3827985Z",
+      "stage": "decisions-response-decision-controls"
+    },
+    {
+      "timestamp": "2026-11-22T13:07:51.3876263Z",
+      "stage": "decisions-ready"
+    }
+  ],
+  "notes": [
+    "The original SF_ANALYTICS_SOURCE string shown by Playwright in the failure source excerpt was excluded because it is code, not an emitted event.",
+    "No final SF_ANALYTICS_SCOPE event was emitted."
+  ]
+}
