@@ -16,12 +16,16 @@ function measureMetrics(page: Page) {
     const box = (element: Element | undefined | null) => {
       if (!element) return null
       const bounds = element.getBoundingClientRect()
+      if (!element.getClientRects().length || bounds.width <= 0 || bounds.height <= 0) return null
       return { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height }
     }
     const cards = [...document.querySelectorAll(".metric")]
     return {
       first: box(cards[0]), third: box(cards[2]), content: box(document.querySelector("#content")),
-      people: labels.map((label) => box(cards.find((card) => [...card.querySelectorAll("span")].some((span) => span.textContent?.trim() === label)))),
+      people: labels.map((label) => {
+        const matches = cards.filter((card) => [...card.querySelectorAll("span")].some((span) => span.textContent?.trim() === label))
+        return matches.length === 1 ? box(matches[0]) : null
+      }),
     }
   }, peopleLabels)
 }
