@@ -648,12 +648,6 @@ jobs:
       CANDIDATE_ARTIFACT_DIGEST: ${{ needs.teams-profile-artifact.outputs.artifact-digest }}
       CANDIDATE_PRODUCER_CHECK_RUN_ID: ${{ needs.teams-profile-artifact.outputs.check-run-id }}
       SF_TEAMS_RESIDUE_ARTIFACT_ID: ${{ needs.teams-profile-artifact.outputs.artifact-id }}
-      SF_TEAMS_RESIDUE_COMMIT_FILE: ${{ runner.temp }}/g09-candidate/commit.raw
-      SF_TEAMS_RESIDUE_TRACKED_FILE: ${{ runner.temp }}/g09-candidate/tracked.z
-      SF_TEAMS_RESIDUE_INVENTORY_FILE: ${{ runner.temp }}/g09-candidate/package/orchestra-sf-entra-linux-x64-baseline.tar.gz.inventory.json
-      SF_TEAMS_RESIDUE_RECEIPT_FILE: ${{ runner.temp }}/g09-candidate/package/g09-artifact-receipt.json
-      SF_TEAMS_RESIDUE_PROVENANCE_FILE: ${{ runner.temp }}/g09-candidate/artifact-provenance.json
-      SF_TEAMS_RESIDUE_CONTROLS_FILE: ${{ runner.temp }}/g09-candidate/controls.json
     outputs:
       evidence-artifact-id: ${{ steps.diagnostic-evidence.outputs.artifact-id }}
       evidence-artifact-digest: ${{ steps.diagnostic-evidence.outputs.artifact-digest }}
@@ -698,6 +692,13 @@ jobs:
           [[ "$CANDIDATE_PRODUCER_CHECK_RUN_ID" =~ ^[1-9][0-9]*$ ]]
           evidence="$RUNNER_TEMP/g09-candidate"
           mkdir -m 0700 "$evidence"
+          printf '%s\n' \
+            "SF_TEAMS_RESIDUE_COMMIT_FILE=$evidence/commit.raw" \
+            "SF_TEAMS_RESIDUE_TRACKED_FILE=$evidence/tracked.z" \
+            "SF_TEAMS_RESIDUE_INVENTORY_FILE=$evidence/package/orchestra-sf-entra-linux-x64-baseline.tar.gz.inventory.json" \
+            "SF_TEAMS_RESIDUE_RECEIPT_FILE=$evidence/package/g09-artifact-receipt.json" \
+            "SF_TEAMS_RESIDUE_PROVENANCE_FILE=$evidence/artifact-provenance.json" \
+            "SF_TEAMS_RESIDUE_CONTROLS_FILE=$evidence/controls.json" >> "$GITHUB_ENV"
           git cat-file commit HEAD > "$evidence/commit.raw"
           git ls-tree -rz --full-tree HEAD > "$evidence/tracked.z"
           gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$CANDIDATE_ARTIFACT_ID" > "$evidence/artifact.json"
