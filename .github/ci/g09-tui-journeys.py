@@ -251,7 +251,7 @@ class Harness:
             connection.close()
 
     def query(self, path, directory):
-        return path + "?" + urllib.parse.urlencode({"directory": str(directory)})
+        return path + "?" + urllib.parse.urlencode({"location[directory]": str(directory)})
 
     def git(self, directory, *argv):
         result = subprocess.run(["git", "-C", str(directory), *argv], env=self.fixture_env,
@@ -281,6 +281,7 @@ class Harness:
         self.main = self.repository("main-repository")
         self.original_head = self.git(self.main, "rev-parse", "HEAD").strip()
         self.foreign = self.repository("foreign-repository")
+        foreign_head = self.git(self.foreign, "rev-parse", "HEAD").strip()
         self.server_env = self.env(self.args.runtime_dir / "server")
         base.private(Path(self.server_env["ORCHESTRA_CONFIG_DIR"]) / "orchestra.json", POLICY)
         self.server_env["ORCHESTRA_SERVER_PASSWORD"] = self.password
@@ -318,6 +319,14 @@ class Harness:
         self.main_location = self.request("GET", self.query("/api/location", self.main), purpose="setup")
         self.project = self.main_location["project"]["id"]
         foreign = self.request("GET", self.query("/api/location", self.foreign), purpose="setup")
+        self.save(self.args.output_dir / "fixture-project-identities.json", {
+            "main": {"requestedDirectory": str(self.main), "gitHead": self.original_head.decode("ascii"),
+                     "location": self.main_location},
+            "foreign": {"requestedDirectory": str(self.foreign), "gitHead": foreign_head.decode("ascii"),
+                        "location": foreign},
+        })
+        check(self.main_location["directory"] == str(self.main) and foreign["directory"] == str(self.foreign),
+              "FIXTURE_LOCATION_DIRECTORY_MISMATCH")
         check(self.project != foreign["project"]["id"] and self.project != "global", "GIT_PROJECT_IDENTITIES_NOT_DISTINCT")
         providers = self.request("GET", self.query("/api/provider", self.main), purpose="setup")
         model = self.request("GET", self.query("/api/model/default", self.main), purpose="setup")
@@ -422,9 +431,9 @@ class Tui:
                     path = split.path
                     allowed = self.command == "GET" and path.startswith("/api/")
                     query = urllib.parse.parse_qs(split.query)
-                    if query.get("directory"):
+                    if query.get("location[directory]"):
                         check(all(Path(value).resolve().is_relative_to(target.h.args.runtime_dir)
-                                  for value in query["directory"]), "TUI_QUERY_ESCAPED_RUNTIME")
+                                  for value in query["location[directory]"]), "TUI_QUERY_ESCAPED_RUNTIME")
                     copy_root = "/experimental/project/" + target.h.project + "/copy"
                     if self.command == "POST" and path in (copy_root + "/refresh", copy_root + "/generate-name"):
                         allowed = target.h.model_execution_disabled
