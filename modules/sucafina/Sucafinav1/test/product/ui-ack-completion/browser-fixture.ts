@@ -10,8 +10,6 @@ import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { caseQuestionScript, caseQuestionThreads } from "../../../product/ui/work-collaboration.ts"
 import { createThreadActorsFixture } from "../ui-split/ui-work/actors-fixture.ts"
-import { loadRecipientActions } from "./producer-loader.ts"
-import { createCollaborationMutationFence } from "../../../product/collaboration/mutation-fence.ts"
 import type { SfProductState } from "../../../product/contracts/state.ts"
 import { esc } from "../../../src/screen-shell.ts"
 import { object, rows } from "../../../runtime/contract.ts"
@@ -20,8 +18,7 @@ import { sfSourceIdentity } from "../../../product/integration/source-lifecycle.
 import { available } from "../ui-split/ui-work/domain-fixture.ts"
 
 /** Actual shared Collaboration HTTP/C08/source issuers and SQLite; the recipient action
- * factory is the pinned producer loaded verbatim in this test-owned composition.
- * This is a component proof, not proof that the production host has adopted that producer.
+ * factory is the one installed by the production collaboration host in this fixture.
  * Actor authentication and recipient leases are the published fixture boundary.
  * The case's question link is seeded test corpus, not proof of question attachment.
  * Decision-answer attachment is deliberately unmounted: no success is fabricated.
@@ -38,24 +35,19 @@ export async function createAckBrowserFixture(browser: Browser) {
     waits.push(operation.then((value) => ({ status: 'fulfilled', value }), (reason) => ({ status: 'rejected', reason })))
     return operation
   }
-  let producer: Awaited<ReturnType<typeof loadRecipientActions>> | undefined
   const close = async () => {
     const errors: unknown[] = []
     try { await context?.close() } catch (error) { errors.push(error) }
     await Promise.all(waits)
     try { await server.stop(true) } catch (error) { errors.push(error) }
     try { await actors?.dispose() } catch (error) { errors.push(error) }
-    try { await producer?.close() } catch (error) { errors.push(error) }
     if (errors.length) throw new AggregateError(errors, "Shared Collaboration browser cleanup failed")
   }
   try {
     const app = actors = await createThreadActorsFixture(origin)
-    producer = await loadRecipientActions()
-    if (!app.port.recipientThread) throw new Error("Real recipient reader unavailable")
-    const recipientActions = producer.createRecipientThreadActions({ state: app.state, host: app.host, human: app.human,
-      mutationFence: createCollaborationMutationFence(app.host), read: app.port.recipientThread,
-      creationTarget: app.creationTarget, createId: randomUUID, now: () => app.clock.at })
-    const port = { ...app.port, recipientActions }
+    const port = app.port
+    const recipientActions = port.recipientActions
+    if (!port.recipientThread || !recipientActions) throw new Error("Real recipient reader or actions unavailable")
     const source = await app.issueProject(app.author)
     const draft = { kind: "clarification" as const, sourceRef: source.refId, sourceIncarnation: source.target.incarnation,
       observedVersion: source.target.version, period: app.period, recipientRef: "reader-b", body: "Clarify the selected project's work.", evidenceRefs: [source] }
@@ -117,10 +109,9 @@ export async function createAckBrowserFixture(browser: Browser) {
       return { status: response.status, result: await response.json() as PortResult<unknown> }
     }
     const reply = async (body: string) => {
-      if (!port.recipientActions) throw new Error("Recipient action producer unavailable")
       const current = await app.admitRead("reader-b")
       const mutation = { expectedStorageVersion: available(await app.port.storageVersion("threads", current)), idempotencyKey: randomUUID() }
-      return available(await port.recipientActions.reply(thread.id, body, mutation, await app.admit("reader-b", "collaboration.thread.reply", { id: thread.id, body, mutation })))
+      return available(await recipientActions.reply(thread.id, body, mutation, await app.admit("reader-b", "collaboration.thread.reply", { id: thread.id, body, mutation })))
     }
     const inspect = () => app.state.read(app.request("person"), "threads", (state) => {
       const stored = state.threads[thread.id]
@@ -129,7 +120,7 @@ export async function createAckBrowserFixture(browser: Browser) {
     const resolveThread = async () => {
       const current = await app.admitRead("reader-b")
       const mutation = { expectedStorageVersion: available(await port.storageVersion("threads", current)), idempotencyKey: randomUUID() }
-      return available(await port.recipientActions.resolve(thread.id, mutation, await app.admit("reader-b", "collaboration.thread.resolve", { id: thread.id, mutation })))
+      return available(await recipientActions.resolve(thread.id, mutation, await app.admit("reader-b", "collaboration.thread.resolve", { id: thread.id, mutation })))
     }
     const editMessage = async (messageId: string, expectedVersion: number, body: string) => {
       if (!port.threadHistory) throw new Error("Actual message history writer unavailable")

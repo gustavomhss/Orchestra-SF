@@ -123,7 +123,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     await page.getByRole("button", { name: "Find alternatives", exact: true }).click()
     await page.getByText("Choose alternatives and enter the portfolio scope.", { exact: true }).waitFor()
     await page.locator('[data-portfolio-candidates] input').check()
-    const owner = page.getByLabel("Decision that will own this evaluation", { exact: true })
+    const owner = page.getByLabel(/^Decision that will own this evaluation/)
     expect(await owner.count()).toBe(1)
     expect(await owner.locator('option[value="0"]').textContent()).toBe("Restricted decision")
     await owner.selectOption("0")
@@ -136,17 +136,17 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     await page.getByRole("button", { name: "Preview portfolio", exact: true }).click()
     await page.getByText("Preview complete. No portfolio result has been saved.", { exact: true }).waitFor()
     if (kind === "evaluation") return
-    await page.getByLabel("Combination", { exact: true }).selectOption("combination")
+    await page.getByLabel(/^Combination/).selectOption("combination")
     if (kind === "promotion") {
       await page.getByRole("button", { name: "Find coverage assessments", exact: true }).click()
       await page.getByText("Choose the coverage to review.", { exact: true }).waitFor()
-      await page.getByLabel("Coverage", { exact: true }).selectOption("fixture-coverage")
+      await page.getByLabel(/^Coverage/).selectOption("fixture-coverage")
       await page.getByLabel("Alternative title", { exact: true }).fill("Original renewal")
       return
     }
     await page.getByRole("button", { name: "Find recorded choices", exact: true }).click()
     await page.getByText("Choose a recorded choice and a combination above.", { exact: true }).waitFor()
-    await page.getByLabel("Recorded choice", { exact: true }).selectOption("fixture-choice")
+    await page.getByLabel(/^Recorded choice/).selectOption("fixture-choice")
   }
   async function settled(page: Page) {
     await within(page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))), "settle browser response handling")
