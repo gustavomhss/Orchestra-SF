@@ -15,7 +15,7 @@ The product candidate is [ad5ed29c582752b72ee91ddd03bb2622bff7299a](https://gith
 
 Test job `137139546983` and cleanup job `137140053936` both succeeded. This execution did not run app-shell types, E2E types or a browser journey.
 
-The [machine-readable receipt](attempt-01.json) retains every measurement and the exact source/configuration identities. The [complete decoded job log](attempt-01.log) is preserved as Git blob `da6543d63843a43fb2086b5684f02ab37e20f240`. GitHub returned no workflow artifacts for this Bun run; no artifact ZIP or SHA-256 is claimed.
+The [machine-readable receipt](attempt-01.json) retains the measurements and exact source/configuration identities. The original execution log remains in [Actions test job 137139546983](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45000105434/job/137139546983). The raw job-log copy was removed from the repository in response to the original `agent-scratch` guard; no renamed copy or guard exception is used. GitHub returned no workflow artifacts for this Bun run; no artifact ZIP or SHA-256 is claimed.
 
 ## What changed
 

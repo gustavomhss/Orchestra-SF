@@ -1,0 +1,28 @@
+{
+  "schema": "sucafina-evidence-guard-correction-v1",
+  "observedIn": {
+    "run": 45006460499,
+    "job": 137159049164,
+    "snapshot": "37417cdeda06111bec608e4839d458e49b39ae25",
+    "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c"
+  },
+  "finding": {
+    "rule": "agent-scratch",
+    "severity": "gate",
+    "path": "docs/qa/sucafina/design/wave-five/reviews/portfolio-metric-batch/attempt-01.log",
+    "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+  },
+  "correction": [
+    "Delete raw job transcript from the product tree.",
+    "Retain original structured receipt and official Actions job link.",
+    "Do not integrate pending UI44 failure.log; retain its structured failure receipt and Actions link."
+  ],
+  "unchanged": [
+    "guard rules",
+    "guard workflow",
+    "approvals",
+    "test budgets",
+    "runtime"
+  ],
+  "qualification": "Guard rerun required after correction; prior workflow remains failed."
+}
