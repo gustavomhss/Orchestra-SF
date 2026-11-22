@@ -13,7 +13,7 @@ const screens = [
 for (const area of screens) waveFourTest(area.id + " · native work, private search and saved views use their admitted producer", async ({ page, browser, installation, owner }, info) => {
   waveFourTest.setTimeout(300_000)
   page.setDefaultTimeout(15_000)
-  expect(info.project.metadata.bundle).toBe("production")
+  expect(info.config.metadata.bundle).toBe("production")
   const diagnostics = observePage(page)
   const writes: string[] = []
   const searchRequests: { method: string; url: string; body: string | null }[] = []
@@ -232,6 +232,7 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     await capture(page, info, "UI32-light-desktop-confirmed-view-readback")
     await editor.getByRole("button", { name: "Remove saved view", exact: true }).click()
     await expect(review.getByRole("button", { name: "Confirm removal", exact: true })).toBeVisible()
+    await expect(review.getByText("This saved view will be removed.", { exact: true })).toBeVisible()
     await capture(page, info, "UI32-light-desktop-removal-review")
     await review.getByRole("button", { name: "Cancel review", exact: true }).click()
     expect(writes).toEqual(["save"])

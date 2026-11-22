@@ -7,6 +7,7 @@ export type WorkflowCheckpoint = {
   evidence: string
   attributes?: Readonly<Record<string, string>>
   focus?: string
+  selector?: string
 }
 export type WorkflowCapture = (page: Page, info: TestInfo, checkpoint: WorkflowCheckpoint) => Promise<void>
 
@@ -16,7 +17,7 @@ export type WorkflowCapture = (page: Page, info: TestInfo, checkpoint: WorkflowC
  * Theme and viewport changes never create data, credentials, grants or receipts.
  */
 export const captureWorkflowState: WorkflowCapture = async (page, info, checkpoint) => {
-  const surface = page.locator("[data-sf-surface=" + JSON.stringify(checkpoint.surface) + "]")
+  const surface = page.locator(checkpoint.selector ?? "[data-sf-surface=" + JSON.stringify(checkpoint.surface) + "]")
   const originalViewport = page.viewportSize()
   const originalScheme = await page.locator("html").getAttribute("data-color-scheme")
   const verify = async () => {

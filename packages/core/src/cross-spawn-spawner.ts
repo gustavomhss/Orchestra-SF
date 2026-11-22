@@ -26,7 +26,7 @@ import launch from "cross-spawn"
 import { toError, toPlatformError } from "./child-process-common"
 import { fds, pipeline, stdin, stdio } from "./cross-spawn-command"
 import { makeGlobalNode } from "./effect/app-node"
-import { filesystem, path } from "./effect/app-node-platform"
+import { filesystem, path } from "./effect/app-node-system"
 import { Flag } from "./flag/flag"
 import { OmniSpawner } from "./omni-spawner"
 
