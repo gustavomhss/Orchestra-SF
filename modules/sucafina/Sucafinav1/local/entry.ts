@@ -20,6 +20,7 @@ import type { Surface } from "../src/identity.ts"
 import { createLocalIdentity } from "../runtime/local-identity.ts"
 import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
+import { prepareSfLocalWorkspace } from "./workspace.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
 import { mountSfFilesOriginalRoutes } from "../runtime/native-files/routing.ts"
 import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
@@ -73,6 +74,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
   const operator = config.authentication === "local-operator" && config.localOperator
     ? { ...config.localOperator, name: config.localOperator.name ?? userInfo().username }
     : undefined
+  const directory = operator && context.createHostRuntime ? await prepareSfLocalWorkspace(loaded.directory) : loaded.directory
   const client = !operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined
   const driver = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
   const services = { jobs: undefined as Awaited<ReturnType<typeof createLocalJobs>> | undefined }
@@ -164,7 +166,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
     let nativeReadBinding: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]> | undefined
     if (operator && runtimeStore && currentChoiceFence && context.createHostRuntime) {
       runtime = await context.createHostRuntime({
-        installationId: operator.installationId, directory: loaded.directory, origin: config.origin,
+        installationId: operator.installationId, directory, origin: config.origin,
         sourceRoot: context.sourceRoot ?? path.resolve(import.meta.dir, "../product/ai"),
         mount: config.mount, authMode: "local-operator",
         operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
