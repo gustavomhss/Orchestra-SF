@@ -82,6 +82,9 @@ export async function captureProcurementCommand(page: Page, account: Account, co
   page: "Requests" | "My approvals" | "Settings"; action: string; id?: string; version?: number; values?: Record<string, unknown>
 }, beforeDelivery?: (response: APIResponse) => Promise<void>) {
   const endpoint = new URL(account.baseURL + "/procurement")
+  // A URL predicate installs **/* in Chromium. Keep interception off the
+  // automatic CAP25 readback while this exact command handler is removed.
+  const routePattern = new RegExp("^" + endpoint.href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?:\\?|$)")
   const match = (url: URL) => url.origin === endpoint.origin && url.pathname === endpoint.pathname &&
     url.searchParams.size === 1 && url.searchParams.get("page") === expected.page
   const producer = Promise.withResolvers<{ response: APIResponse; command: unknown }>()
@@ -89,7 +92,7 @@ export async function captureProcurementCommand(page: Page, account: Account, co
   let posts = 0
   const forward = async (route: Route) => {
     const request = route.request()
-    if (request.method() !== "POST") return route.fallback()
+    if (request.method() !== "POST" || !match(new URL(request.url()))) return route.fallback()
     try {
       const command = request.postDataJSON() as { page?: unknown; action?: unknown; id?: unknown } | null
       if (command?.page !== expected.page || command.action !== expected.action || command.id !== expected.id) return route.fallback()
@@ -108,14 +111,14 @@ export async function captureProcurementCommand(page: Page, account: Account, co
       await route.abort("failed").catch(() => undefined)
     }
   }
-  await page.route(match, forward)
+  await page.route(routePattern, forward)
   try {
     const [{ response, command }] = await Promise.all([producer.promise, confirm.click()])
     const body: unknown = await response.json()
     expect(posts).toBe(1)
     return { status: response.status(), body, command }
   } finally {
-    if (!page.isClosed()) await page.unroute(match, forward)
+    if (!page.isClosed()) await page.unroute(routePattern, forward)
   }
 }
 

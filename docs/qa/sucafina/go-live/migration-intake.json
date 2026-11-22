@@ -2916,6 +2916,38 @@
       "identity": "Copy exact member target.incarnation, target.projectionDigest and target.version from the genuine C02 presentation, alongside record.number. Refuse a missing or altered member in a prepared view. Do not invent a scope, hash, receipt or authority.",
       "regression": "One additional existing host-integration pool case uses the real C02 service, source lifecycle and SQLite. Independent individual source is present and must not replace C02 provenance. Unchanged list/detail/reload preparations retain the canonical member identity despite new ephemeral refs; null, missing, cloned and ambiguous views fail; real source edit invalidates the retained view and advances the next identity.",
       "qualification": "Existing installed OP-PROC-01 retains all strict identity, material and navigation assertions. New pool case is component evidence, not installed Microsoft qualification."
+    },
+    "operationsCommandInterception": {
+      "status": "PENDING_INDEPENDENT_REVIEW_AND_FOCAL",
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+      "case": "OP-PROC-02",
+      "diagnostic": {
+        "runId": 45042223828,
+        "jobId": 137268982943,
+        "sourceSha": "60767271587022fd68d611deb4032c5faa4b5733",
+        "treeSha": "452c859feab486537bdaf7f82bbfb76e34cb4e94",
+        "driverSha": "4e4dfbc427ab380cb5b7283fc5c16ec8d01b0092",
+        "status": "REPRODUCED_FAILURE_NOT_GATE_EVIDENCE",
+        "artifacts": [
+          {
+            "id": 14761269456,
+            "zipSha256": "8a065ee585bfaa06d9c8222e9e0d5d5ca7902994b66548d2306e22c391790758"
+          },
+          {
+            "id": 14761249711,
+            "zipSha256": "7619f78788d12f33edb48ff3dbfb38b6425a2cc2821452f471f14d290982b9ee"
+          }
+        ],
+        "hashes": {
+          "execution.txt": "3e7cf54b3e2a600ba2f620dc2bf40a89b28f7ba5df886460515789d7847f4199",
+          "run.log": "c685f722aae07e6856bd7f27eafc32da53eb49bb2e408e4d126a5c7fe87a2e59",
+          "selection.txt": "4dc1f982c5e6e638c90483e400cd24db18a2a3543506ae047804bba10c39e364",
+          "report.raw.json": "fb186418a3db4c5656edea09d7003e066c5773f150ad149138c12cc26b01f26c"
+        },
+        "observations": "204 phase records, zero unclosed phases. Last pre-submit CAP25 read completed in about109ms. After save200, Chromium begins CAP25 GET at16:12:41.653Z but this read never enters the handler. Trace shows URL predicate installed glob **/*, command fulfill at70471ms, then interception patterns cleared at70473–70475ms while the automatic read starts."
+      },
+      "behavior": "Restrict browser interception to the original procurement pathname. Retain the exact origin/path/query predicate inside the handler, method/DTO validation, one-POST assertion, route.fetch(maxRetries:0,maxRedirects:0) and untouched producer response. Remove only that exact route/handler pair; CAP25 GET is never intercepted by command capture.",
+      "limits": "No product sourcing/transport/SQLite change. Original five-case installed suite and all deadlines/assertions remain required for acceptance. Diagnostic source instrumentation is isolated and not included in this PR."
     }
   }
 }
