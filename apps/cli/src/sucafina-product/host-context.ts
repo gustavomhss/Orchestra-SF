@@ -105,6 +105,7 @@ import { observeSfImportHealth } from "./native-ui/import-health.ts"
 import { observeSfDocumentHealth } from "./native-ui/document-health.ts"
 import { observeSfSearchHealth } from "./native-ui/work-health.ts"
 import { observeSfCollaborationReadingHealth } from "./native-ui/collaboration-reading-health.ts"
+import { observeSfPortfolioReadingHealth } from "./native-ui/portfolio-reading-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
@@ -1117,6 +1118,46 @@ export const createSfHostRuntimeWithRoutineNative = async (
               business.dashboardServices.discover, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
               input.persistence, input.persistence.resolveScopedSource] }
           } }, request, stamp),
+        observeSfPortfolioReadingHealth({
+          ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+          binding: input.nativeReadBinding, source: (id) => {
+            const portfolio = extended.portfolioServices, product = portfolio.product
+            if (services.productHttp !== productHttp || !identity() || !product ||
+              extended.portfolio !== product || !business.plannerProduct.scenarios) return undefined
+            const dependencies: object[] = [authority, authority.ui, authority.host, authority.host.revalidate,
+              authority.host.requestFor, authority.human, authority.human.admit, authority.human.authorize,
+              authority.state, authority.state.read, authority.state.transaction,
+              portfolioHttp, portfolio, portfolio.http, product, product.http, product.contribution,
+              business, business.withCase, business.cases, business.cases.read, business.results,
+              business.results.read, business.plannerProduct, business.plannerProduct.scenarios,
+              business.plannerSources, portfolio.planner, business.context, input.persistence]
+            switch (id) {
+              case "portfolio.decision-portfolio-results":
+                dependencies.push(product.http.list, portfolio.portfolioBindings, portfolio.portfolioBindings.list); break
+              case "portfolio.decision-portfolio-preview":
+                dependencies.push(product.http.preview, product.contribution.preview, portfolio.selection); break
+              case "portfolio.decision-portfolio-read":
+                if (!product.contribution.persistent) return undefined
+                dependencies.push(product.http.read, product.contribution.persistent, product.contribution.persistent.read); break
+              case "portfolio.decision-portfolio-evaluate":
+                if (!product.contribution.persistent) return undefined
+                dependencies.push(product.http.evaluate, product.contribution.persistent,
+                  product.contribution.persistent.evaluateAndStore, portfolio.portfolioBindings); break
+              case "portfolio.decision-sensitivity-units":
+                if (!portfolio.units) return undefined
+                dependencies.push(product.http.sensitivityUnits, portfolio.units, portfolio.units.issue); break
+              case "portfolio.decision-sensitivity-read":
+                if (!product.contribution.persistentSensitivity) return undefined
+                dependencies.push(product.http.readSensitivity, product.contribution.persistentSensitivity,
+                  product.contribution.persistentSensitivity.read); break
+              case "portfolio.decision-sensitivity-evaluate":
+                if (!product.contribution.persistentSensitivity || !portfolio.units) return undefined
+                dependencies.push(product.http.sensitivity, product.contribution.persistentSensitivity,
+                  product.contribution.persistentSensitivity.evaluateAndStore, portfolio.units, portfolio.units.issue); break
+            }
+            return { producer: productHttp, dependencies }
+          },
+        }, request, stamp),
         observeSfDecisionIntentHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
           humanActions: authority.humanActions, source: (operationId) => {
             if (services.productHttp !== productHttp || !identity()) return undefined
