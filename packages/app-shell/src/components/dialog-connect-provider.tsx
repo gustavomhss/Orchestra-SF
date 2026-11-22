@@ -96,7 +96,13 @@ export const DialogConnectProvider: Component<{
 
   return (
     <DialogV2
-      containerClass="!h-[min(calc(100vh_-_16px),512px)] !w-[min(calc(100vw_-_16px),640px)]"
+      fit={!!controller.selected()}
+      containerClass={
+        (controller.selected()
+          ? "!max-h-[min(calc(100dvh_-_16px),640px)]"
+          : "!h-[min(calc(100dvh_-_16px),512px)]") +
+        " !w-[min(calc(100vw_-_16px),640px)]"
+      }
       class="[font-family:var(--v2-font-family-sans)] [&_[data-slot=dialog-header]]:!px-5 [&_[data-slot=dialog-header-title]]:!text-[15px] [&_[data-slot=dialog-header-title]]:!tracking-[-0.13px]"
     >
       <DialogHeader closeLabel={language.t("common.close")}>
@@ -114,7 +120,9 @@ export const DialogConnectProvider: Component<{
           </button>
         </Show>
       </DialogHeader>
-      <DialogBody class="min-h-0 flex-1 overflow-hidden px-2 pb-2">
+      <DialogBody class={controller.selected()
+        ? "min-h-0 flex-1 !overflow-y-auto px-2 pb-5"
+        : "min-h-0 flex-1 overflow-hidden px-2 pb-2"}>
         <div ref={focusHost} tabIndex={-1} class="flex min-h-0 flex-1 flex-col outline-none">
           <Show when={sdk()} keyed>
             {(_client) => <Content />}
@@ -461,7 +469,7 @@ function ProviderConnection(props: {
     })
 
     return (
-      <form onSubmit={handleSubmit} class="flex flex-col items-start gap-4">
+      <form onSubmit={handleSubmit} class="flex flex-col items-start gap-4 px-3">
         <Switch>
           <Match when={item()?.prompt.type === "text"}>
             <TextField
@@ -838,7 +846,7 @@ function ProviderConnection(props: {
     })
 
     return (
-      <div class="flex flex-col gap-6">
+      <div class="flex flex-col gap-6 px-3">
         <div class="text-14-regular text-text-base">
           {language.t("provider.connect.oauth.auto.visit.prefix")}
           <ExternalLink href={store.authorization!.url}>
@@ -886,7 +894,7 @@ function ProviderConnection(props: {
           </Show>
           <Switch>
             <Match when={loading()}>
-              <div class="text-14-regular text-text-base">
+              <div class="px-3 text-[13px] leading-5 text-v2-text-text-base">
                 <div class="flex items-center gap-x-2">
                   <Spinner />
                   <span>{language.t("provider.connect.status.inProgress")}</span>
@@ -900,7 +908,7 @@ function ProviderConnection(props: {
               <MethodSelection />
             </Match>
             <Match when={store.state === "pending"}>
-              <div class="text-14-regular text-text-base">
+              <div class="px-3 text-[13px] leading-5 text-v2-text-text-base">
                 <div class="flex items-center gap-x-2">
                   <Spinner />
                   <span>{language.t("provider.connect.status.inProgress")}</span>
@@ -911,20 +919,18 @@ function ProviderConnection(props: {
               <AuthPromptsView />
             </Match>
             <Match when={store.state === "error"}>
-              <div class="text-14-regular text-text-base">
-                <div class="flex items-center gap-x-2">
-                  <Icon name="circle-ban-sign" class="text-icon-critical-base" />
-                  <span>{language.t("provider.connect.status.failed", { error: store.error ?? "" })}</span>
+              <div data-provider-connection-error class="flex flex-col gap-4 px-3 text-[13px] leading-5 text-v2-text-text-base">
+                <div role="alert" class="flex items-start gap-2">
+                  <Icon name="circle-ban-sign" class="mt-0.5 shrink-0 text-icon-critical-base" />
+                  <span class="min-w-0 break-words">{language.t("provider.connect.status.failed", { error: store.error ?? "" })}</span>
                 </div>
                 {/* A stored sign-in only needs its refresh repeated; a failed attempt starts over. */}
-                <div class="mt-3 flex flex-col">
-                  <ButtonV2
-                    class="self-start"
-                    onClick={() => void (store.connected ? complete() : selectMethod(store.methodIndex ?? 0))}
-                  >
-                    {language.t("orchestra.providers.retry")}
-                  </ButtonV2>
-                </div>
+                <ButtonV2
+                  class="self-start"
+                  onClick={() => void (store.connected ? complete() : selectMethod(store.methodIndex ?? 0))}
+                >
+                  {language.t("orchestra.providers.retry")}
+                </ButtonV2>
               </div>
             </Match>
             <Match when={method()?.type === "key"}>
