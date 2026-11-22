@@ -192,9 +192,8 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                                   <details class="sf-technical-details"><summary>{t("sf.u32.valueReference")}</summary><bdi>{value.id}</bdi></details>
                                 </dt>
                                 <dd>
-                                  <span>{value.value === null ? t("sf.u32.missing") : <AmountText value={value.value} currency={value.currency} />}</span>
-                                  <Show when={value.unit}><span> {value.unit}</span></Show>
-                                  <Show when={value.currency}><span> {value.currency}</span></Show>
+                                  <span>{value.value === null ? t("sf.u32.missing") : <AmountText value={value.value} currency={value.currency} unit={value.unit} />}</span>
+                                                                    <Show when={value.currency && typeof value.value !== "number"}><span> {value.currency}</span></Show>
                                   <small> {t("sf.u32.evidence")}: <StatusText value={value.evidenceState} /></small>
                                 </dd>
                               </div>}
@@ -299,9 +298,9 @@ function SfPreservedMeeting(props: {
           <Show when={projection()} fallback={<p>{t("sf.u32.materialUnavailable")}</p>}>
             {(shown) => <ul>
               <For each={shown().values}>{(value) => <li>
-                <strong><AmountText value={value.value} currency={value.currency} /></strong>
-                <Show when={value.unit}><span> {value.unit}</span></Show>
-                <p class="sf-workflow-note"><PeriodText start={value.period.start} end={value.period.end} /></p>
+                <strong><AmountText value={value.value} currency={value.currency} unit={value.unit} /></strong>
+                <Show when={value.currency && typeof value.value !== "number"}><span> {value.currency}</span></Show>
+                                <p class="sf-workflow-note"><PeriodText start={value.period.start} end={value.period.end} /></p>
                 <details class="sf-technical-details">
                   <summary>{t("sf.u32.inspectSource")}</summary>
                   <p>{t("sf.u32.valueReference")}: <bdi>{value.id}</bdi></p>

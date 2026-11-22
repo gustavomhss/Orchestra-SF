@@ -10,6 +10,7 @@ import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import type { SfOperationRef, SfRef, SfEditScopeKey, SfIntentRef } from "@orchestra/schema/sucafina/context"
 import { useLanguage } from "@/context/language"
+import type { SF_U08_COPY } from "@/i18n/orchestra-chapters/sf-u08"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState, SfMessage } from "../../shared/frame"
 import type { SfReviewField } from "../../shared/change-review"
@@ -68,7 +69,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
   const t = (s: string, params?: Record<string, string | number>) =>
     language.t(s as Parameters<typeof language.t>[0], params)
   const missingCurrency = () => t("sf.u02.noCurrency")
-  const reviewLabels: Readonly<Record<Review["kind"], Parameters<typeof language.t>[0]>> = {
+  const reviewLabels: Readonly<Record<Review["kind"], keyof typeof SF_U08_COPY>> = {
     "position-save": "sf.u08.savePosition",
     "position-delete": "sf.u08.deletePosition",
     "rate-save": "sf.u08.saveRate",

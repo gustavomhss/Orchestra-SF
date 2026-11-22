@@ -31,7 +31,17 @@ export function SessionCrumbs(props: { project?: Crumb; title: string }) {
 }
 
 // The chapter name followed by the trail, for the titlebar's breadcrumb. The leading name links to Home on session pages.
-export function CrumbTrail(props: { label: string }) {
+export function CrumbTrail(props: { label: string; pageLabel?: string }) {
+  const items = () => {
+    const current = trail()
+    const first = current[0]
+    const firstLabel = typeof first === "string" ? first : first?.label
+    // Native subpages share a chapter. Their route title supplements the chapter
+    // label without replacing session trails or exposing opaque route segments.
+    return props.pageLabel && props.pageLabel !== props.label && props.pageLabel !== firstLabel
+      ? [props.pageLabel, ...current]
+      : current
+  }
   return (
     <>
       <span class="truncate" title={props.label}>
@@ -41,7 +51,7 @@ export function CrumbTrail(props: { label: string }) {
           </button>
         </Show>
       </span>
-      <For each={trail()}>
+      <For each={items()}>
         {(item) => (
           <>
             <span aria-hidden="true">/</span>

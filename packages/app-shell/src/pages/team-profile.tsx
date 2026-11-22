@@ -425,10 +425,10 @@ export function SfTeamWebApp() {
         <img src="/brand/sucafina/lockup-primary.svg" alt="Sucafina" width="145" />
         <div class="sf-team-brand-actions">
           <Show when={state().status !== "loading" && state().status !== "unauthenticated"}>
-            <button type="button" class="mx-btn" onClick={refresh}>{language.t("sf.ui67.refreshAccess")}</button>
+            <button type="button" class="mx-btn" data-sf-refresh-access onClick={refresh}>{language.t("sf.ui67.refreshAccess")}</button>
           </Show>
           <Show when={state().status === "authenticated" || state().status === "denied"}>
-            <button type="button" class="mx-btn" onClick={() => void logout()}>{language.t("sf.ui67.signOut")}</button>
+            <button type="button" class="mx-btn" data-sf-sign-out onClick={() => void logout()}>{language.t("sf.ui67.signOut")}</button>
           </Show>
         </div>
       </header>

@@ -87,7 +87,7 @@
 .orchestra-skill-reader [data-component="markdown"] h3 { font-size: var(--orchestra-font-size-lg); }
 .orchestra-skill-reader [data-component="markdown"] :is(pre, table) { max-inline-size: 100%; overflow-x: auto; }
 .orchestra-skill-source { margin-block-start: var(--skill-reader-gap); border-block-start: var(--skill-reader-hairline) solid var(--mx-line); }
-.orchestra-skill-source summary { display: flex; align-items: center; min-block-size: var(--skill-reader-target); color: var(--mx-dim); font: 500 var(--orchestra-font-size-sm)/1.5 var(--mx-sans); cursor: pointer; }
+.orchestra-skill-source summary { display: list-item; list-style-position: inside; min-block-size: var(--skill-reader-target); padding-block: var(--skill-reader-small-gap); color: var(--mx-dim); font: 500 var(--orchestra-font-size-sm)/1.5 var(--mx-sans); cursor: pointer; }
 .orchestra-skill-source summary:focus-visible { outline: var(--skill-reader-focus) solid var(--mx-blue); outline-offset: var(--skill-reader-focus); }
 .orchestra-skill-source p { margin: 0 0 var(--skill-reader-small-gap); color: var(--mx-dim); overflow-wrap: anywhere; }
 .orchestra-skill-source .mx-field { margin: 0; }

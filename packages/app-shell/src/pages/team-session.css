@@ -47,7 +47,7 @@
 .sf-team-session-transcript { min-block-size: 0; flex: 1; overflow: auto; overscroll-behavior: contain; padding: var(--sf-chat-row-gap) var(--sf-chat-small-gap); scrollbar-gutter: stable; }
 .sf-team-session-transcript [data-sf-message-id] { margin-block-end: var(--sf-chat-gap); overflow-wrap: anywhere; }
 .sf-team-session-note { margin: var(--sf-chat-row-gap) 0; color: var(--mx-dim); }
-.sf-team-session-note summary { min-block-size: var(--sf-chat-control); display: flex; align-items: center; cursor: pointer; }
+.sf-team-session-note summary { min-block-size: var(--sf-chat-control); display: list-item; list-style-position: inside; padding-block: var(--sf-chat-small-gap); cursor: pointer; }
 .sf-team-session-note pre { white-space: pre-wrap; overflow-wrap: anywhere; font: var(--orchestra-font-size-sm)/1.6 var(--mx-mono); padding: var(--sf-chat-row-gap); border-radius: var(--orchestra-radius-md); background: var(--mx-soft); }
 .sf-team-session-queued { padding: var(--sf-chat-gap); border: var(--sf-chat-line) solid var(--mx-line); border-radius: var(--orchestra-radius-lg); margin-block-start: var(--sf-chat-gap); white-space: pre-wrap; overflow-wrap: anywhere; background: var(--mx-soft); }
 .sf-team-session-queued p:first-child { color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); margin: 0 0 var(--sf-chat-small-gap); }
