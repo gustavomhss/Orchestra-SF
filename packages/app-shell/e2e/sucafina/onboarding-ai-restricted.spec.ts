@@ -142,7 +142,15 @@ async function chatChapters(film: Film, local: LocalModelRecording, restricted: 
       model: await model.innerText(), permissionControlInDraft: await page.locator('[data-action="prompt-permissions"]').count(),
       permissionModeChanged: false, draftPolicyBasis: "fresh original context; publicly configured project tool denial; no auto-accept action",
       operatorConfiguredToolRestriction: true })
-    await film.input(prompt, local.prompt, "Enter explicit example inputs and keep human approval", true)
+    // The visible 612-character example needs at least 21.42s at the original
+    // 35ms typing cadence. Extend only this input operation, then restore the
+    // shared film helper's original 20s default for all subsequent UI actions.
+    page.setDefaultTimeout(45_000)
+    try {
+      await film.input(prompt, local.prompt, "Enter explicit example inputs and keep human approval", true)
+    } finally {
+      page.setDefaultTimeout(20_000)
+    }
     await film.snap("04-visible-prompt-and-model-before-send")
     await film.pause(4000)
     const beforeSend = await restricted.verify()
