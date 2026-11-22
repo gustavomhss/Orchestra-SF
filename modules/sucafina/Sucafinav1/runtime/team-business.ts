@@ -23,22 +23,38 @@ export async function runTeamBusiness(input: {
   admission: Admission
   authorizeTeam: TeamAccess
   identity: LocalIdentity
-  config: MicrosoftConfiguration
+  readCurrentConfiguration: () => Promise<MicrosoftConfiguration>
   directory: string
   keys: { assets: Uint8Array; bank: Uint8Array }
   now: () => Date
   teamCurrentChoice?: SfTeamCurrentChoice
   decisionIntentions?: Pick<LocalStore, "transaction">
 }) {
-  const { request, route, admission, identity, config, keys } = input
+  const { request, route, admission, identity, keys } = input
+  const unavailable = () => Response.json({ status: "unavailable" }, { status: 503, headers: { "Cache-Control": "no-store" } })
+  let config: MicrosoftConfiguration
+  try {
+    if (typeof input.readCurrentConfiguration !== "function") return unavailable()
+    config = await input.readCurrentConfiguration()
+  } catch { return unavailable() }
+  // One validated private snapshot supplies this request. Its authority is never
+  // reused across an await without reopening the canonical installation reader.
+  const configurationDigest = digestSfValue(config)
+  const configurationCurrent = async () => {
+    try {
+      const current = await input.readCurrentConfiguration()
+      return !request.signal.aborted && current.teams === "direct" && digestSfValue(current) === configurationDigest
+    } catch { return false }
+  }
   const partition = digestSfValue(admission.profile)
   const denied = () => new Response(null, { status: 403, headers: { "Cache-Control": "no-store" } })
+  if (config.teams !== "direct") return denied()
   const rolePolicy = (surface: Surface) => emptyMap().filter((row) => row.surface === surface)
     .map((row) => ({ ...row, entra: config.groups[surface][row.role] ?? null }))
   const currentActor = async (surface = route.surface) => {
-    if (!await admission.verifyCurrent()) return null
+    if (!await configurationCurrent() || !await admission.verifyCurrent()) return null
     const actor = await identity.authenticate(request, { surface, roleMap: rolePolicy(surface) })
-    return actor?.id === admission.principalObjectId && await admission.verifyCurrent() ? actor : null
+    return actor?.id === admission.principalObjectId && await admission.verifyCurrent() && await configurationCurrent() ? actor : null
   }
   const authorized: { actor?: ResolvedActor; committed: boolean; roster?: string } = { committed: false }
   const readDirectory = async (admitted: Admission) => {
@@ -49,6 +65,7 @@ export async function runTeamBusiness(input: {
     })
   }
   const reauthorize = async (options?: { refreshSession?: boolean }) => {
+    if (!await configurationCurrent()) return false
     // Recheck the roster before the last authority read so a provider wait cannot extend that decision.
     if (authorized.roster !== undefined && rosterDigest(await readDirectory(admission)) !== authorized.roster) return false
     const [actor, current] = await Promise.all([
@@ -57,7 +74,7 @@ export async function runTeamBusiness(input: {
     ])
     if (!actor || !authorized.actor || digestSfValue(actor) !== digestSfValue(authorized.actor) ||
         current.status !== "allowed" || current.principalObjectId !== admission.principalObjectId) return false
-    return admission.verifyCurrent()
+    return await admission.verifyCurrent() && await configurationCurrent()
   }
   const storeDirectory = path.join(input.directory, "business-teams", partition)
   const currentChoice = input.teamCurrentChoice?.handles(request) ? input.teamCurrentChoice : undefined
@@ -160,7 +177,7 @@ export async function runTeamBusiness(input: {
     const response = await business(request)
     // This request already proved Microsoft/Team admission. Revocation during the
     // first role/roster await is forbidden even when no actor reached the module.
-    if (response?.status === 401 && !await admission.verifyCurrent().catch(() => false)) return denied()
+    if (response?.status === 401 && (!await admission.verifyCurrent().catch(() => false) || !await configurationCurrent())) return denied()
     // Uncommitted conflicts and previews can include stored data too. Exports may
     // generate their bytes after the audit transaction, so they are checked again.
     if (response && authorized.actor && (!authorized.committed || request.method !== "POST") && !await reauthorize())

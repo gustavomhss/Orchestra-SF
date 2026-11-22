@@ -246,7 +246,7 @@ export async function createMicrosoftInstallation(
         const access = await teamAccess(request, route?.teamObjectId)
         if (access.status === "allowed") {
           if (route) return runTeamBusiness({
-            request, route, admission: access, authorizeTeam: teamAccess, identity, config, directory,
+            request, route, admission: access, authorizeTeam: teamAccess, identity, readCurrentConfiguration: prepared.readCurrentConfiguration, directory,
             keys: prepared.loaded.keys, now,
             teamCurrentChoice: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? context.teamCurrentChoice : undefined,
             decisionIntentions: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? store : undefined,
