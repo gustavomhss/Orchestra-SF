@@ -116,7 +116,7 @@ export function SfTeamWebApp() {
       return false
     }
   }
-  const load = async (teamObjectId?: string, push = false, reason: TeamSessionRetirement = "refresh") => {
+  const load = async (teamObjectId?: string, push = false, reason: TeamSessionRetirement = "refresh"): Promise<void> => {
     if (signingOut()) return
     const href = window.location.href
     pendingNavigation = { href, teamObjectId, push }
@@ -127,19 +127,19 @@ export function SfTeamWebApp() {
     if (window.location.href !== href) { void load(); return }
     if (!current) {
       pendingNavigation = undefined
-      return setState({ status: "unavailable" })
+      setState({ status: "unavailable" }); return
     }
     const intent = readTeamNavigationIntent(new URL(href), current)
     if (!intent) {
       pendingNavigation = undefined
-      return setState({ status: "invalid" })
+      setState({ status: "invalid" }); return
     }
     const result = await readTeamWebContext(current, signal,
       teamObjectId ?? (intent.kind === "team" ? intent.profile.teamObjectId : undefined))
     if (signal.aborted) return
     if (window.location.href !== href) { void load(); return }
     pendingNavigation = undefined
-    if (!result) return setState({ status: "unavailable" })
+    if (!result) { setState({ status: "unavailable" }); return }
     if (result.status === "ok") {
       const teams = result.value.profile.teams
       if (teams.status === "ready") {
@@ -147,7 +147,7 @@ export function SfTeamWebApp() {
         // A Team picker change starts that Team's new chat; a Session ID never crosses owners.
         if (teamObjectId && readTeamSessionNavigation(source, current)) source.pathname = "/orchestra/sf-sessions/new"
         const url = teamNavigationURL(source, current, teams.selected)
-        if (!url || !writeNavigation(url, push)) return setState({ status: "unavailable" })
+        if (!url || !writeNavigation(url, push)) { setState({ status: "unavailable" }); return }
       }
       const principal = JSON.stringify([current, result.value.profile.principal])
       if (previousPrincipal && previousPrincipal !== principal) {
@@ -184,7 +184,7 @@ export function SfTeamWebApp() {
     return true
   }
   const activateSession = async (current: SfTeamInstallationDescriptor, context: SfTeamContext,
-    sessionID: string | undefined, signal: AbortSignal, epoch: number) => {
+    sessionID: string | undefined, signal: AbortSignal, epoch: number): Promise<void> => {
     try {
       acquiringIdentity ??= acquireTeamWindowIdentity({ storage,
         locks: typeof navigator === "object" ? navigator.locks : undefined, signal: lifetime.signal })

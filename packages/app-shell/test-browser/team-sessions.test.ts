@@ -123,6 +123,7 @@ function fixture(input: Readonly<{ storage?: Map<string, string>; windowId?: str
   activate()
   const draft = (text: string) => workspace.prompt[1]("prompt", [{ type: "text", content: text, start: 0, end: text.length }])
   return { workspace, calls, notices, opened, rows, messages, history, storage, info, namespace, emit, draft,
+    dropStream() { for (const controller of streams) controller.error(new Error("stream connection lost")); streams.clear() },
     setHook: (value: typeof hook) => { hook = value }, loseCreate: () => { failCreate = true }, losePrompt: () => { failPrompt = true },
     refresh(value = context(), nextAuthorityGeneration = authorityGeneration) { workspace.retire("refresh"); activate(value, nextAuthorityGeneration) },
     retire() { workspace.retire("revoked"); generation++ }, unauthenticated: () => unauthenticated,
@@ -384,3 +385,54 @@ for (const reason of ["logout", "revoked", "principal-change"] as const) {
     } finally { f.close() }
   })
 }
+
+test("a stream failure after POST dispatch preserves only operation IDs until fresh admission proves the receipt", async () => {
+  const f = fixture({ persistent: false }), id = Session.ID.create()
+  f.rows.set(id, f.info(id))
+  const entered = gate<void>(), release = gate<void>()
+  let messageID: string | undefined
+  try {
+    await f.workspace.open(id)
+    await eventually(() => f.workspace.state.stream === "open")
+    f.setHook(async (request) => {
+      if (!new URL(request.url).pathname.endsWith("/prompt")) return undefined
+      const body = Schema.decodeUnknownSync(Schema.Struct({
+        id: SessionMessage.ID, prompt: Schema.Struct({ text: Schema.String }),
+      }), { onExcessProperty: "error" })(await request.json())
+      messageID = body.id
+      const admitted = Schema.encodeSync(SessionEvent.PromptAdmitted)(Schema.decodeUnknownSync(SessionEvent.PromptAdmitted)({
+        id: "evt_uncertain_" + body.id, type: "session.next.prompt.admitted",
+        durable: { aggregateID: id, seq: 1, version: 1 },
+        data: { timestamp: 10, sessionID: id, messageID: body.id, prompt: body.prompt, delivery: "queue" },
+      }))
+      f.history.set(id, [admitted])
+      entered.resolve()
+      await release.promise
+      return json({ data: { id: body.id, sessionID: id, admittedSeq: 1, timeCreated: 10,
+        prompt: body.prompt, delivery: "queue" } })
+    })
+    f.draft("submitted text is not a retry")
+    const posting = f.workspace.submit()
+    await entered.promise
+    f.dropStream()
+    await eventually(() => f.workspace.state.status === "unavailable")
+    expect(f.workspace.state.reason).toBe("stream")
+    expect(f.workspace.state.threads).toEqual({})
+    expect(f.workspace.prompt[0].prompt).toEqual([])
+    expect(f.workspace.hasPendingRequests()).toBe(true)
+    expect(f.workspace.discardDrafts()).toBe(false)
+    release.resolve()
+    expect(await posting).toBe(false)
+    f.setHook(undefined)
+    f.refresh()
+    await f.workspace.open(id)
+    const operation = f.workspace.state.pending[0]
+    expect(operation).toMatchObject({ action: "prompt", sessionID: id, messageID })
+    if (!operation) throw new Error("Expected retained uncertain operation")
+    expect(await f.workspace.confirmPending(operation)).toBe(true)
+    expect(f.workspace.state.pending).toEqual([])
+    expect(f.workspace.state.threads[id]?.queue[0]?.text).toBe("submitted text is not a retry")
+    expect(f.calls.filter((request) => request.method === "POST")).toHaveLength(1)
+    expect([...f.storage.values()].join("")).not.toContain("submitted text is not a retry")
+  } finally { release.resolve(); f.close() }
+})

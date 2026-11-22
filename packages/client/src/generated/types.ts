@@ -439,7 +439,7 @@ export type SessionsListOutput = {
       readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
     }
     readonly authorityGeneration: number
-  } | null
+  }
   readonly cursor: { readonly previous?: string | null; readonly next?: string | null }
 }
 
@@ -524,20 +524,14 @@ export type SessionsCreateOutput = {
 
 export type SessionsActiveOutput = {
   readonly data: { readonly [x: string]: { readonly type: "running" } }
-  readonly namespace?:
-    | {
-        readonly version: 1
-        readonly owner: {
-          readonly profile: {
-            readonly installationId: string
-            readonly tenantId: string
-            readonly teamObjectId: string
-          }
-          readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
-        }
-        readonly authorityGeneration: number
-      }
-    | undefined
+  readonly namespace?: {
+    readonly version: 1
+    readonly owner: {
+      readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+      readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+    }
+    readonly authorityGeneration: number
+  }
 }
 
 export type SessionsGetInput = { readonly sessionID: { readonly sessionID: string }["sessionID"] }
@@ -1854,7 +1848,7 @@ export type SessionsHistoryOutput = {
       readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
     }
     readonly authorityGeneration: number
-  } | null
+  }
   readonly hasMore: boolean
 }
 
@@ -2253,7 +2247,7 @@ export type MessagesListOutput = {
       readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
     }
     readonly authorityGeneration: number
-  } | null
+  }
   readonly cursor: { readonly previous?: string | null; readonly next?: string | null }
 }
 
