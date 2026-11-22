@@ -4,7 +4,9 @@ run-name: Linux Teams final candidate with behavioral checks and separate G09 in
 on:
   push:
     branches:
-      - g09-final-review
+      # B is an immutable request commit; this new ref points exactly to candidate C.
+      # The historical g09-final-review ref and its original run remain untouched.
+      - release-build-*
 
 concurrency:
   group: g09-final-review
@@ -22,7 +24,7 @@ defaults:
 
 jobs:
   teams-profile-artifact:
-    if: "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/g09-final-review'"
+    if: "github.repository == 'gustavomhss/Orchestra-SF' && startsWith(github.ref, 'refs/heads/release-build-')"
     outputs:
       artifact-id: ${{ steps.package.outputs.artifact-id }}
       artifact-name: orchestra-sf-entra-linux-${{ steps.source.outputs.sha }}
@@ -67,7 +69,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
           test "$SOURCE_REVISION" = "$GITHUB_SHA"
-          test "$GITHUB_REF" = refs/heads/g09-final-review
+          [[ "$GITHUB_REF" =~ ^refs/heads/release-build-[0-9a-f]{40}$ ]]
           [[ "$CHECK_RUN_ID" =~ ^[1-9][0-9]*$ ]]
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs?per_page=100" > "$RUNNER_TEMP/g09-producer-jobs.json"
@@ -81,12 +83,24 @@ jobs:
           [[ "$job_id" =~ ^[1-9][0-9]*$ ]]
           printf 'job_id=%s\n' "$job_id" >> "$GITHUB_OUTPUT"
           printf 'check_run_id=%s\n' "$CHECK_RUN_ID" >> "$GITHUB_OUTPUT"
+          printf 'source_tree=%s\n' "$(git rev-parse 'HEAD^{tree}')" >> "$GITHUB_OUTPUT"
 
       - name: Setup Node
         id: node
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: "24.15"
+
+      - name: Verify both actual candidate confirmations before any build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+          PRODUCER_JOB_ID: ${{ steps.identity.outputs.job_id }}
+          SOURCE_TREE: ${{ steps.identity.outputs.source_tree }}
+        run: |
+          set -euo pipefail
+          umask 077
+          node script/sf-ci/go-live-package.mjs build-admit "$RUNNER_TEMP/g07-build-admission.json"
 
       - name: Verify and set up Bun Linux x64 baseline
         run: |
@@ -316,6 +330,10 @@ jobs:
       - name: Build and verify the Azure Entra archive
         env:
           SOURCE_REVISION: ${{ steps.source.outputs.sha }}
+          SOURCE_TREE: ${{ steps.identity.outputs.source_tree }}
+          GH_TOKEN: ${{ github.token }}
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+          PRODUCER_JOB_ID: ${{ steps.identity.outputs.job_id }}
         run: |
           set -euo pipefail
           archive_dir="$RUNNER_TEMP/azure-entra-package"
@@ -348,6 +366,13 @@ jobs:
           assert records and any(item["output"].endswith(".js") for item in records)
           (maps / "index.json").write_text(json.dumps(records) + "\n")
           PYMAP
+          test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$SOURCE_TREE"
+          git diff --exit-code
+          git diff --cached --exit-code
+          # The original live sources must still match before entering the tar producer.
+          node script/sf-ci/go-live-package.mjs build-recheck \
+            "$RUNNER_TEMP/g07-build-admission.json" "$RUNNER_TEMP/g07-build-admission-final.json"
           bun apps/cli/script/azure-entra-package.ts --dist "$PWD/apps/cli/dist" --web "$PWD/apps/web/dist" --out "$archive_dir" --source-sha "$SOURCE_REVISION" --factory-source-map
           tar -C "$RUNNER_TEMP/web-source-maps" -czf "$archive_dir/web-source-maps.tar.gz" .
           python3 -B - "$archive_dir" <<'PYMAP'
@@ -680,13 +705,16 @@ jobs:
           git ls-tree -rz --full-tree HEAD > "$evidence/tracked.z"
           node script/sf-ci/g09-candidate-evidence.mjs receipt "$evidence" \
             "$RUNNER_TEMP/azure-entra-package" "$RUNNER_TEMP/azure-entra-vm/current"
+          cp "$RUNNER_TEMP/g07-build-admission.json" "$RUNNER_TEMP/g07-build-admission-final.json" \
+            "$RUNNER_TEMP/azure-entra-package/"
           cp "$RUNNER_TEMP/g09-producer-jobs.json" "$RUNNER_TEMP/g09-guards.log" "$RUNNER_TEMP/g09-slot-source-proof.log" \
             "$RUNNER_TEMP/g09-slot-source-proof.json" "$RUNNER_TEMP/g09-tui-typecheck.log" \
             "$RUNNER_TEMP/g09-cli-typecheck.log" "$RUNNER_TEMP/g09-app-shell-typecheck.log" "$RUNNER_TEMP/azure-entra-package/"
           cp -R "$RUNNER_TEMP/g09-source-regressions" "$RUNNER_TEMP/azure-entra-package/"
           (
             cd "$RUNNER_TEMP/azure-entra-package"
-            sha256sum g09-artifact-receipt.json orchestra-sf-entra-linux-x64-baseline.tar.gz.inventory.json \
+            sha256sum g07-build-admission.json g07-build-admission-final.json \
+              g09-artifact-receipt.json orchestra-sf-entra-linux-x64-baseline.tar.gz.inventory.json \
               g09-build-inputs.json g09-producer-jobs.json g09-guards.log g09-slot-source-proof.log g09-slot-source-proof.json \
               g09-tui-typecheck.log g09-cli-typecheck.log g09-app-shell-typecheck.log cli-map-verification.json \
               g09-source-regressions/*.json g09-source-regressions/*.log >> SHA256SUMS
@@ -710,6 +738,8 @@ jobs:
           path: |
             ${{ runner.temp }}/azure-entra-package
             ${{ runner.temp }}/g09-producer-jobs.json
+            ${{ runner.temp }}/g07-build-admission.json
+            ${{ runner.temp }}/g07-build-admission-final.json
             ${{ runner.temp }}/g09-guards.log
             ${{ runner.temp }}/g09-build-inputs.json
             ${{ runner.temp }}/g09-slot-source-proof.log
