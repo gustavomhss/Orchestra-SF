@@ -353,6 +353,7 @@ function supplierAssetReadReady(context: SfContext) {
     ["files.asset.link", "files.asset.download"].every((id) => resource.operations.some((operation) =>
       operation.operationId === id && operation.state === "ready" && operation.operational)))
 }
+let diagnosticSequence = 0
 function makePageHandler(deps: SfNativeHostDependencies, capability: Capability) {
   const page = pages[capability]
   return async (request: Request): Promise<Response> => {
@@ -365,7 +366,14 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
     if (request.signal.aborted) return refusal("unavailable", "request-aborted")
     const selection = parseSelection(url.searchParams, capability)
     if (!selection) return refusal("needs-input", "invalid-procurement-selection")
-    const bound = await deps.readContext(request)
+    const probe = `${capability}:${++diagnosticSequence}`
+    const phase = async <T>(name: string, work: () => T | Promise<T>): Promise<T> => {
+      const started = performance.now()
+      console.error("SF_OPERATIONS_CAP25_PROBE", JSON.stringify({ probe, phase: name, state: "start" }))
+      try { return await work() }
+      finally { console.error("SF_OPERATIONS_CAP25_PROBE", JSON.stringify({ probe, phase: name, state: "end", elapsedMs: Math.round(performance.now() - started), aborted: request.signal.aborted })) }
+    }
+    const bound = await phase("readContext.initial", () => deps.readContext(request))
     if (bound.status === "unauthenticated" || bound.status === "denied") return refusal(bound.status)
     if (bound.status !== "ok") return refusal("unavailable", bound.reason)
     const destination = bound.value.destinations.find((item) =>
@@ -377,15 +385,15 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
     let prepared: Exclude<Awaited<ReturnType<NonNullable<typeof deps.application.productView>>>, Response> | undefined
     try {
       // Prepare the original environment outside the lock, as Application already does.
-      const environment = await deps.application.environment(request)
-      const productView = await deps.application.productView?.(request, "procurement", page)
+      const environment = await phase("environment", () => deps.application.environment(request))
+      const productView = await phase("productView", () => deps.application.productView?.(request, "procurement", page))
       if (productView instanceof Response)
         return refusal("unavailable", "procurement-producer-unavailable")
       prepared = productView
-      const result = await deps.application.persistence.transaction<ProcurementPageOutcome<typeof bound.value.stamp>>("procurement", async (snapshot: Snapshot) => {
-        const principal = await deps.application.authenticate(request, {
+      const result = await phase("transaction", () => deps.application.persistence.transaction<ProcurementPageOutcome<typeof bound.value.stamp>>("procurement", async (snapshot: Snapshot) => {
+        const principal = await phase("transaction.authenticate", () => deps.application.authenticate(request, {
           surface: "procurement", roleMap: roleMap(snapshot, "procurement"),
-        })
+        }))
         if (!principal || !principal.id || principal.id.startsWith("local:"))
           return { commit: false, value: { status: "unauthenticated" as const } }
         const roles = principal.roles.filter((row) => row.surface === "procurement").map((row) => row.role)
@@ -404,13 +412,15 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
         const contribution = deps.application.domains.procurement.find((item) => item.pages.includes(page))
         if (!contribution)
           return { commit: false, value: { status: "unavailable" as const, reason: "procurement-domain-unavailable" } }
-        if (prepared && !await prepared.current(snapshot, actor))
+        if (prepared && !await phase("transaction.preparedCurrent", () => prepared!.current(snapshot, actor)))
           return { commit: false, value: { status: "stale" as const, reason: "procurement-source-changed" } }
+        console.error("SF_OPERATIONS_CAP25_PROBE", JSON.stringify({ probe, phase: "projection", state: "start" }))
         const view = contribution.domain.view(
           { ...snapshot, data: publicSfData(snapshot.data) }, actor,
           environment,
         )
         const projection = pageData(capability, view, actor, prepared?.data ?? {}, snapshot, assetSupplier)
+        console.error("SF_OPERATIONS_CAP25_PROBE", JSON.stringify({ probe, phase: "projection", state: "end", prepared: !!prepared, individualScopes: Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.alive && entry.scope.recordType === "procurement-request").length, selectionScopes: Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.alive && entry.scope.recordType === "procurement-request-selection").length }))
         if (!projection)
           return { commit: false, value: { status: "unavailable" as const, reason: "procurement-projection-unavailable" } }
         return {
@@ -423,11 +433,11 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
             },
           },
         }
-      }, { signal: request.signal })
+      }, { signal: request.signal }))
       if (result.status !== "ok") return refusal(result.status, "reason" in result ? result.reason : undefined)
       // Re-admit outside the producer lock, with the original Request. Never
       // reinterpret a vanished response as an empty list or a successful edit.
-      const current = await deps.readContext(request)
+      const current = await phase("readContext.final", () => deps.readContext(request))
       if (request.signal.aborted || current.status !== "ok")
         return refusal(current.status === "unauthenticated" || current.status === "denied" ? current.status : "unavailable", "procurement-context-changed")
       if (!sameStamp(current.value.stamp, bound.value.stamp)) return refusal("stale", "procurement-context-changed")
@@ -443,6 +453,7 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
       return refusal("unavailable", "procurement-read-unavailable")
     } finally {
       prepared?.finish()
+      console.error("SF_OPERATIONS_CAP25_PROBE", JSON.stringify({ probe, phase: "finish", state: "end", aborted: request.signal.aborted }))
     }
   }
 }
