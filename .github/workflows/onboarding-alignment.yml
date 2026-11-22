@@ -1,0 +1,82 @@
+# Prepared only. Root owns publication and launch on an isolated media branch.
+name: Onboarding narration alignment
+on:
+  push:
+    branches: [onboarding-recording]
+    paths:
+      - '.github/workflows/onboarding-alignment.yml'
+      - 'scripts/onboarding-media/narration-alignment/**'
+  workflow_dispatch:
+    inputs:
+      source_manifest:
+        description: Reviewed source manifest basename in the alignment folder
+        required: true
+        default: source-clips.json
+        type: string
+      word_map:
+        description: Reviewed canonical caption map basename in the alignment folder
+        required: true
+        default: caption-word-map.json
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: onboarding-narration-alignment-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  alignment:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    env:
+      ALIGNMENT_DIR: scripts/onboarding-media/narration-alignment
+      ALIGNMENT_SOURCE: ${{ inputs.source_manifest || 'source-clips.json' }}
+      ALIGNMENT_WORD_MAP: ${{ inputs.word_map || 'caption-word-map.json' }}
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+    steps:
+      - name: Checkout isolated media source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # Existing narration workflow pin
+        with:
+          persist-credentials: false
+      - name: Set up Python 3.11
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # Existing narration workflow pin
+        with:
+          python-version: '3.11'
+      - name: Verify and download only declared original narration
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$ALIGNMENT_SOURCE" =~ ^[A-Za-z0-9_-]+\.json$ ]]
+          [[ "$ALIGNMENT_WORD_MAP" =~ ^[A-Za-z0-9_-]+\.json$ ]]
+          mkdir -p alignment-output
+          python "$ALIGNMENT_DIR/download_sources.py" --input "$ALIGNMENT_DIR/$ALIGNMENT_SOURCE" --audio-root alignment-input --receipt alignment-output/source-artifacts.json --repository "$GITHUB_REPOSITORY"
+          cp "$ALIGNMENT_DIR/$ALIGNMENT_SOURCE" alignment-output/source-clips.json
+          cp "$ALIGNMENT_DIR/$ALIGNMENT_WORD_MAP" alignment-output/caption-word-map.json
+          cp "$ALIGNMENT_DIR/requirements-cpu.txt" "$ALIGNMENT_DIR/SOURCES.md" alignment-output/
+      - name: Install pinned CPU alignment dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv .venv-alignment
+          .venv-alignment/bin/python -m pip install --only-binary=:all: --index-url https://download.pytorch.org/whl/cpu --report alignment-output/install-report.json -r "$ALIGNMENT_DIR/requirements-cpu.txt"
+          .venv-alignment/bin/python -m pip check
+          .venv-alignment/bin/python -m pip freeze > alignment-output/requirements-resolved.txt
+      - name: Align exact speech and audit with the same acoustic emissions
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout --signal=TERM --kill-after=15s 720s .venv-alignment/bin/python "$ALIGNMENT_DIR/align_narration.py" --input "$ALIGNMENT_DIR/$ALIGNMENT_SOURCE" --audio-root alignment-input --word-map "$ALIGNMENT_DIR/$ALIGNMENT_WORD_MAP" --output alignment-output --model-cache alignment-model-cache --threads 4 --analysis-budget-seconds 600
+      - name: Preserve actual results and partial diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # Existing narration workflow pin
+        with:
+          name: onboarding-alignment-${{ github.sha }}
+          path: alignment-output/
+          if-no-files-found: error
+          retention-days: 14
