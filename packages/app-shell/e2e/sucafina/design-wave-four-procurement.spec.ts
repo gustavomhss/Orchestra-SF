@@ -236,6 +236,10 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
 
     await waveFourTest.step("CAP25 · canonical sourcing comparison, retained quote metadata and one save", async () => {
       await requestRow(page, data.requests.sourcing).locator('[data-sf-action="select"]').click()
+      const unavailablePo = "Purchase order submission is unavailable at this stage. After sourcing approval, open Purchase order to review the order."
+      const requestDetail = page.locator(".sf-u11-detail")
+      await expect(requestDetail.getByText(unavailablePo, { exact: true })).toBeVisible()
+      await expect(requestDetail.getByRole("button", { name: "Submit purchase order", exact: true })).toHaveCount(0)
       const comparisonLink = page.locator(".sf-u11-tabs").getByRole("link", { name: "Open sourcing comparison", exact: true })
       await expect(comparisonLink).toHaveAttribute("href", /\/sourcing\/compare(?:\?|$)/)
       await comparisonLink.click()
@@ -243,6 +247,8 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await expect(page).toHaveURL((url) => url.pathname.endsWith("/sourcing/compare") &&
         url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
       const surface = page.locator(".sf-u12-root")
+      await expect(surface.getByText(unavailablePo, { exact: true })).toBeVisible()
+      await expect(surface.getByRole("button", { name: "Submit purchase order", exact: true })).toHaveCount(0)
       await expect(surface.locator(".sf-u12-comparison tr[data-sf-row]")).toHaveCount(3)
       const selectedQuote = await surface.locator(".sf-u12-comparison > label").getByRole("combobox").inputValue()
       expect(selectedQuote, "the original source has an explicit winning quotation").not.toBe("")
@@ -341,6 +347,9 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await expect(review).toContainText(sourceRef)
       await confirm("Approve current step")
       await assertRowStatus(data.requests.sourceApproval, "Purchase order draft")
+      await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(sourceRef) + "/po")
+      await expect(page.locator(".sf-u11-detail")
+        .getByRole("button", { name: "Submit purchase order", exact: true })).toBeEnabled()
 
       const poRef = requestRef(data.requests.poApproval)
       await record("/orchestra/sf-procurement/approvals/" + encodeSfRouteRef(poRef) + "/review", "My approvals")

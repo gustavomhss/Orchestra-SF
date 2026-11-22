@@ -709,9 +709,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
                 </label>
               </fieldset>
             </Show>
-            <button type="button" disabled={!stageAllowed("submit_po")} onClick={() => reviewAction("submit_po")}>
-              {t("sf.u11.remaining.submitPo")}
-            </button>
+            <p role="note">{t("sf.u11.remaining.poUnavailableDuringSourcing")}</p>
           </section>
         </Show>
       </header>
