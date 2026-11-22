@@ -354,10 +354,16 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
           return yield* new ScheduledTaskShared.RunError({
             reason: `${begun.run.error ?? "revoked"}; retrying the same call will not run`,
           })
-        // A claim still starting elsewhere (or stopped before its lease ended) is reused only once admitted.
-        const admitted = begun.run.message_id && (yield* SessionInput.find(db, begun.run.message_id))
-        if (begun.run.state === "running" && !admitted)
-          return yield* new ScheduledTaskShared.RunError({ reason: "This run is still starting; retry shortly." })
+        if (begun.run.state === "failed")
+          return yield* new ScheduledTaskShared.RunError({ reason: begun.run.error ?? "The earlier run failed." })
+        // A claim still starting elsewhere is reusable only after its exact prompt was admitted.
+        if (begun.run.state === "running") {
+          const admitted = begun.run.message_id && (yield* SessionInput.find(db, begun.run.message_id))
+          if (!admitted)
+            return yield* new ScheduledTaskShared.RunError({ reason: "This run is still starting; retry shortly." })
+          if (begun.run.prompt === null || !ScheduledTaskShared.matchesPrompt(admitted, begun.run.session_id, begun.run.prompt))
+            return yield* new ScheduledTaskShared.RunError({ reason: ScheduledTaskShared.PROMPT_MISMATCH })
+        }
         return { sessionID: begun.run.session_id, reused: true }
       }
       const outcome = yield* ops.dispatch(begun.claim)

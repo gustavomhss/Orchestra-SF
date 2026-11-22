@@ -38,7 +38,7 @@ export default definePluginEntry({
           !token || !/^[a-f0-9]{64}$/.test(token) || !URL.canParse(server.url)) return purchaseStatus("unavailable")
 
         const endpoint = new URL(server.url)
-        if (endpoint.protocol !== "https:" || endpoint.pathname !== "/sucafina/api/claw/mcp" ||
+        if (endpoint.protocol !== "https:" || !/^\/(?:[A-Za-z0-9_-]+\/)+api\/claw\/mcp$/.test(endpoint.pathname) ||
           endpoint.username || endpoint.password || endpoint.search || endpoint.hash) return purchaseStatus("unavailable")
 
         const requestSignal = signal ? AbortSignal.any([signal, AbortSignal.timeout(timeout)]) : AbortSignal.timeout(timeout)

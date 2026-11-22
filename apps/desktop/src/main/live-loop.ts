@@ -281,6 +281,8 @@ export function registerLiveLoop(options: {
 
   return {
     settings,
+    getOverlayContentProtection: () => overlay.state().contentProtection,
+    setOverlayContentProtection: overlay.setContentProtection,
     running: () => state.starting || state.meeting?.senses !== undefined,
     runState,
     onRunState: (listener: (state: LiveRunState) => void) => {

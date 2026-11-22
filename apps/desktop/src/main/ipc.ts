@@ -15,6 +15,7 @@ import { flushStoreWrites, getStore, removeStoreFileIfEmpty, setStoreValue } fro
 import {
   getPinchZoomEnabled,
   getWindowID,
+  isMainWindow,
   openExternalURL,
   openLocalFileURL,
   setPinchZoomEnabled,
@@ -343,7 +344,7 @@ export function registerIpcHandlers(deps: Deps) {
     if (!win || win.webContents !== event.sender) return
     setWindowZoom(win, factor, () => updateTitlebar(win))
   })
-  registerLiveIpc(deps.liveLoop)
+  registerLiveIpc(deps.liveLoop, isMainWindow)
   handle("get-caffeinate", () => getCaffeinate())
   handle("set-caffeinate", (_event: IpcMainInvokeEvent, enabled: boolean) => {
     setCaffeinate(enabled)
