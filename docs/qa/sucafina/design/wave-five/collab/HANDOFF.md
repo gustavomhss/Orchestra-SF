@@ -34,7 +34,7 @@ The only shared collaboration renderer change is the bounded correction of the t
 
 ## Original source and effect checks
 
-The collaboration health observer requires the installed product binding, original request admission, namespace grants, effective original operation path, exact source method identities and coherent source/version metadata. It does not invoke writes to prove readiness. Leases are finished in `finally`. Its 24 focused cases use genuine SQLite, current-choice transaction ownership and the original dashboard source fence. The observer shares metadata reads only within each of two separate phases, after every original operation has been individually admitted; no promise or availability result survives the invocation.
+The collaboration health observer requires the installed product binding, original request admission, namespace grants, effective original operation path, exact source method identities and coherent source/version metadata. It does not invoke writes to prove readiness. Leases are finished in `finally`. Its 25 focused cases use genuine SQLite, current-choice transaction ownership and the original dashboard source fence. The observer shares metadata reads only within each of two separate phases, after every original operation has been individually admitted; no promise or availability result survives the invocation.
 
 Root owns the type-only binding ID union and original host composition. That union is not an authorization list. The confirmation repair puts only the existing readSelection manifest/source fences in the original readonly transaction. Both original comparisons, expiry and write fence remain intact.
 
@@ -51,6 +51,16 @@ The helper pins original driver methods and scope identity, checks abort/poison/
 The [installed equivalence run](attempts/phase-equivalence-01.json) compares the exact original availability fields of every installed observer:16 host groups/66 operations and eight local groups/149 operations all match. It then passes the diagnostic import journey. This comparison does not replace the clean import requirement or imply a performance benchmark.
 
 Root's pure decoder memo correction retains the same 8 Mi UTF-16-unit budget, fresh SQL byte observation/SHA identity, ACL behavior, detached copies, existing node/depth limits and decoder fallback. [Store2](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987840434) passes 42 cases, with two existing skips and 512 assertions. No runtime profile overlay is integrated into production.
+
+## Portfolio metadata batching and queued-reader identity
+
+Root integrated the exact four observer/test blobs from candidate `536a06dc32704ba87eb9b02964db1a70ee6248ea` in `506a0a6141c5afaff37ec8c282ea3cb2cc7daf31`. Portfolio shares the same original metadata read only for an identical namespace, read/write mode and phase. Each of the seven candidates still has its own admission, exact source/binding, lease, namespace-mode grant check, source/version digest comparison and revalidation. Every next phase and invocation creates new promises. When all candidates are admitted, the canonical metadata reads decrease from 28 to 8 per observer invocation; the original callbacks and state provider are unchanged.
+
+Both portfolio and collaboration now capture the registered original `state.read` before awaiting, so a queued sibling cannot invoke a replacement reader. The existing `current()` fence still refuses readiness if the live method changes. Two new genuine SQLite readonly-root regressions demonstrate the exact gap: the baseline invokes the replacement twice in collaboration and once in portfolio, despite refusing final readiness. The corrected readers invoke it zero times and finish all admitted leases.
+
+[The current qualification](qualification/portfolio-batch-02.json) records 71 passing cases/680 assertions (13 helper, 25 collaboration, 33 portfolio) and the separate baseline's two expected failures with 56 other cases passing. Independent static review approved namespace/mode/phase isolation, original fences and the reader capture. No decoder, provider callback, selector allowlist, grant, registry, schema or workflow changed.
+
+The installed comparison currently running on `536a06` compares the exact original availability fields for all seven portfolio and nine collaboration operations. That snapshot was dispatched before root's composed integration; its observer blobs are identical. The subsequent clean import journey will use `506a0a`, including root's independently qualified comparator, without repeating the installed comparison unless a concrete difference appears.
 
 ## Remaining import cost and next action
 
