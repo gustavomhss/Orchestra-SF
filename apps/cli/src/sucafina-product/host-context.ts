@@ -104,6 +104,7 @@ import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThread
 import { observeSfImportHealth } from "./native-ui/import-health.ts"
 import { observeSfDocumentHealth } from "./native-ui/document-health.ts"
 import { observeSfSearchHealth } from "./native-ui/work-health.ts"
+import { observeSfCollaborationReadingHealth } from "./native-ui/collaboration-reading-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
@@ -1028,6 +1029,45 @@ export const createSfHostRuntimeWithRoutineNative = async (
               documents && services.documents === documents.documents && input.assets
               ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets,
                 catalog: descriptors, dispatch: nativeSearchDispatch } : undefined,
+        }, request, stamp),
+        observeSfCollaborationReadingHealth({
+          ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+          binding: input.nativeReadBinding, source: (id) => {
+            if (services.productHttp !== productHttp || !identity()) return undefined
+            const c = business.collaboration
+            const handlers = [collaborationHttp.get("dashboard"), collaborationHttp.get("planner"), collaborationHttp.get("procurement")]
+            if (handlers.some((handler) => typeof handler !== "function")) return undefined
+            const dependencies: object[] = [business, c, c.authority, c.authority.sources, collaborationHttp,
+              collaborationHuman, collaborationHuman.admit, collaborationHuman.authorize, collaborationHuman.finish,
+              authority, authority.ui, authority.host, authority.state, authority.state.read, authority.state.transaction, input.persistence]
+            for (const handler of handlers) { if (handler) dependencies.push(handler) }
+            switch (id) {
+              case "collaboration.relation-read": dependencies.push(c.relations, c.relations.read, c.relations.readByReference); break
+              case "collaboration.relation-create": dependencies.push(c.relations, c.relations.create); break
+              case "collaboration.relation-remove": dependencies.push(c.relations, c.relations.remove); break
+              case "collaboration.thread-read":
+                dependencies.push(c.threads, c.threads.read)
+                if (c.recipientThread) dependencies.push(c.recipientThread)
+                break
+              case "collaboration.thread-reply":
+                dependencies.push(c.threads, c.threads.read, c.threads.reply)
+                if (c.recipientThread) dependencies.push(c.recipientThread)
+                if (c.recipientActions) dependencies.push(c.recipientActions, c.recipientActions.reply)
+                if (c.replyInstalledReview) dependencies.push(c.replyInstalledReview)
+                break
+              case "collaboration.confirmation-prepare":
+                if (!c.confirmation) return undefined
+                dependencies.push(c.confirmation, c.confirmation.prepare); break
+              case "collaboration.confirmation-project":
+                if (!c.confirmation) return undefined
+                dependencies.push(c.confirmation, c.confirmation.project, c.confirmation.readSelection); break
+              case "collaboration.confirmation-confirm":
+                if (!c.confirmation) return undefined
+                dependencies.push(c.confirmation, c.confirmation.confirm); break
+              case "collaboration.storage-version": dependencies.push(c.storageVersion); break
+            }
+            return { producer: productHttp, dependencies }
+          },
         }, request, stamp),
         observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfReviewThreadContextHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
