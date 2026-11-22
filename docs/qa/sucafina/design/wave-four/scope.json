@@ -772,17 +772,17 @@
   "verification": {
     "runtime": "IN_PROGRESS",
     "visual": "IN_PROGRESS",
-    "technical": "TWELVE_GATES_PASSED_AT_31944B99",
-    "regression": "FIRST_SIX_PASSED_AT_4B224618",
+    "technical": "TWELVE_GATES_PASSED_AT_3C57DCC8",
+    "regression": "FIRST_SIX_PASSED_AT_7C0CAF8D",
     "userAcceptance": "PENDING",
     "merge": "NOT_MERGED"
   },
   "technicalEvidence": {
-    "run": 44963051950,
-    "snapshot": "7f33a61d9b8152075eaa9c36871adb01f1c110a6",
-    "productHead": "31944b99c3e9a049f1a529c149d32fa390c783a3",
+    "run": 44964454946,
+    "snapshot": "7fa02bcd424429bf4fb86ea2cc458db76400ccb4",
+    "productHead": "3c57dcc8e64dbc3b725f27af82242bd9ac9fbdd0",
     "checks": 12,
-    "regressionTests": 83,
+    "regressionTests": 84,
     "includesOriginalInstalledHost": true,
     "fullCli": {
       "status": "KNOWN_BASELINE_FAILURE_NO_NEW_DIAGNOSTICS",
@@ -790,6 +790,17 @@
       "baselineRun": 44958162297,
       "existingDiagnostics": 7,
       "newDiagnostics": 0
-    }
+    },
+    "job": 137030229344
+  },
+  "regressionEvidence": {
+    "run": 44963871177,
+    "job": 137028409834,
+    "snapshot": "f6533b5856840c4722f38d3e5070204c8e4d4877",
+    "productHead": "7c0caf8da905a03579379c35ce1cd49375a87509",
+    "passedTests": 2,
+    "completeCaptures": 67,
+    "persistedRepresentativeCaptures": 6,
+    "gallery": "evidence/regression/README.md"
   }
 }
