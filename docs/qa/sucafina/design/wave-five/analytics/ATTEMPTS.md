@@ -217,3 +217,46 @@ The caption, headings, source limitations and financial values are now readable 
 | [UI46 original operational refusal](attempt-05/UI46-operational-original-refusal.jpg) | Original BI06 request rejected; no operational plot supplied |
 
 UI43, UI44, the operational BI result, BI11 empty context and final Portuguese states remain unqualified after this failed attempt. Financial source navigation and table corrections have direct evidence; that partial success does not turn the grouped failure into a pass.
+
+## Attempt 6 — native preview restored, original persistence proof refused
+
+- Source composition: `ef8d53e59c779e36bfddf0b375dbcf7c92541706`.
+- Test snapshot: `643a70c8de5e37bfff63b4cb56ae4a5b82c041fa`; branch `ci-run-sf5portfolio9`.
+- [Run 44986981782](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44986981782), job `137099585169`, attempt 1, no retries.
+- The first permanent UI42–UI44 declaration remained byte-identical; only the independent second declaration was removed in the disposable snapshot. The existing production Playwright configuration, strict omni control and production channel were used.
+- [Canonical artifact 14740293132](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44986981782/artifacts/14740293132): `playwright-ubuntu-24.04-1`, 8,871,639 bytes, SHA-256 `bcb5f5436ebf2bbd21b5f3b15f56d853ee43f339253fbcf2cc147b0c0078f700`.
+- Result: the first grouped journey failed at its original persistence response assertion. Nine captures were produced, emitted as images, inspected and persisted. One HTTP 503 console error and no page errors were observed. UI43 and UI44 were not reached; BI was not included in this isolated execution.
+
+### Source responses and preserved user intent
+
+The genuine parameter promotion, Planner read and controls readbacks again returned 200 / ok. Native context readbacks matched the exact owner tuple and independently published all seven targeted portfolio operations as ready and operational. Unavailable siblings remained unavailable.
+
+After the reactive-input correction, both native history requests reached the original installed consumer and returned 200 / ok. The authorized empty case showed its genuine empty history and no eligible scenarios. The main case displayed its three original alternatives and version 6. Selecting the original candidate and setting the exploration limit to 4 produced a native preview response of 200 / ok. The preview showed one conditioned combination and retained the explicit notice that partial coverage does not establish a total.
+
+Back to scenarios restored the selected candidate and limit. A second preview returned 200 / ok. The evaluation remained disabled until Review portfolio request was checked; the mobile confirmation target was at least 44px high. No evaluation write occurred before the explicit confirmation.
+
+The first evaluation POST returned **503**, with the original body **status unavailable / reason portfolio-proof-unavailable**. The strict positive response assertion failed. The native transport conservatively classified the submitted mutation as outcome-unknown and displayed its existing lost-response instruction. The screenshot records that exact state; it does not prove whether any downstream work was persisted. No retry was made against that installation, and no result or receipt was substituted.
+
+Source review located the refusal in `modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts`: the current human selection must resolve successfully, its criteria must match the request constraints exactly, and all candidates must resolve. The canonical four-decisions fixture records a choice but never calls `decision-select-portfolio`; our parameter promotion helper also had no portfolio-selection step. The next fixture correction must use the original operation and its versioned receipt. This attempt did not read the selection itself, so it does not establish a stale-selection status or distinguish the individual failed proof conditions.
+
+### Visual inspection and concrete interaction correction
+
+The list has a clear heading, compact Context and access, distinct case cards and readable version metadata in both desktop themes. At 390px dark and 320px light, the cases stack within the native content gutter without page overflow. The empty-case panel retains a visible empty message and disabled preview. The selected-candidate editor groups candidates, source rule references and priorities; the focused numeric control has a visible outline.
+
+The preview separates its source result, conditioned status, limitations and explicit confirmation. The 390px review stacks these elements and preserves the full confirmation label. The final refusal remains visible in the same native surface.
+
+Inspection also exposed an existing ineffective Open record action in the combination table. Commit `521b3bc4e460d01bf3e6f40c765a353eeb9b2a42` now connects that action to the existing source-details disclosure for the exact combination ID and selects the matching row. Its E2E assertion binds the disclosure to the original readback combination, not a positional first match. This small correction was made after the failed attempt and has no completed browser receipt yet.
+
+| Inspected image | Observed state |
+| --- | --- |
+| [Dark desktop list](attempt-06/UI42-list-dark-desktop.jpg) | Two authorized cases and source versions |
+| [Light desktop list](attempt-06/UI42-list-light-desktop.jpg) | Same cases and native quiet-glass materials |
+| [Dark 390px list](attempt-06/UI42-list-dark-390.jpg) | Stacked case cards |
+| [Light 320px list](attempt-06/UI42-list-light-320.jpg) | Narrow wrapping within native gutters |
+| [Authorized empty case](attempt-06/UI42-empty-case-history-confirmed.jpg) | Original history 200; empty scenarios; preview disabled |
+| [Selected source candidate](attempt-06/UI42-configure-source-candidate.jpg) | Candidate, limit 4 and visible input focus |
+| [Conditioned original preview](attempt-06/UI42-conditioned-original-preview.jpg) | First original preview 200; no inferred total |
+| [Dark 390px review](attempt-06/UI42-dark-390-review-confirmation.jpg) | Explicit reviewed evaluation, before submission |
+| [Original proof refusal](attempt-06/UI42-proof-refusal-outcome-unknown.jpg) | First submitted evaluation 503; outcome-unknown state |
+
+This is a failed persistence qualification with successful preceding history and preview evidence. It does not qualify UI43, UI44, the next selection fixture or the post-attempt disclosure correction.

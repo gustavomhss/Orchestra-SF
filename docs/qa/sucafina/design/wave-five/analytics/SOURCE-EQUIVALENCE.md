@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-This record binds UI42–UI46 to source composition `ef8d53e59c779e36bfddf0b375dbcf7c92541706`, from pinned dev `d3ccea42b5f8409c8d6c68e4909f7b868b50322c`. It records source identity and the purpose of each adapter change. At this revision, the installed portfolio/sensitivity journey is running in [44986981782](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44986981782); the BI temporal-source correction is still pending. This is not a completed five-area qualification or user visual approval. Failed attempts and actual inspected screenshots remain in [ATTEMPTS.md](ATTEMPTS.md); the narrow diagnostic receipts are in [DIAGNOSTICS.md](DIAGNOSTICS.md).
+This record binds UI42–UI46 to source composition `ef8d53e59c779e36bfddf0b375dbcf7c92541706`, from pinned dev `d3ccea42b5f8409c8d6c68e4909f7b868b50322c`. It records source identity and the purpose of each adapter change. At this tested revision, [44986981782](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44986981782) failed at the original evaluation response: 503 / portfolio-proof-unavailable. Native history and two previews returned 200 / ok, but UI43 and UI44 were not reached. A corrected original human-selection preparation and the final BI journey remain pending. This is not a completed five-area qualification or user visual approval. Failed attempts and actual inspected screenshots remain in [ATTEMPTS.md](ATTEMPTS.md); the narrow diagnostic receipts are in [DIAGNOSTICS.md](DIAGNOSTICS.md).
 
 | Area | Presentation and authoritative content |
 | --- | --- |
@@ -77,7 +77,7 @@ The following blobs were read directly from the composition above. The integrati
 | [packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/frame.css](https://github.com/gustavomhss/Orchestra-SF/blob/ef8d53e59c779e36bfddf0b375dbcf7c92541706/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/frame.css) | `9d9c3c95108043eeaeb5080a46bbccb28a949f97` |
 | [packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx](https://github.com/gustavomhss/Orchestra-SF/blob/ef8d53e59c779e36bfddf0b375dbcf7c92541706/packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx) | `7f261bc6a4351560bc9e1218669de2172eb7ba5a` |
 
-The permanent grouped spec is blob `30fa384f032e2e8e3d509c68d67954362cd3a314`; its capture helper is `c3f03a6553c83bae7b9665cec204c834bac20c46` and genuine source-preparation helper is `22245ef7d79206f2574633b1a8cad543bcc5f8c0`. The current first-journey snapshot `643a70c8de5e37bfff63b4cb56ae4a5b82c041fa` removes only the second test declaration. The first declaration is byte-identical to the permanent spec, and the unchanged production configuration selects exactly that named file with one worker and no retries. Both strict omni control and production channel are requested.
+The permanent grouped spec is blob `30fa384f032e2e8e3d509c68d67954362cd3a314`; its capture helper is `c3f03a6553c83bae7b9665cec204c834bac20c46` and genuine source-preparation helper is `22245ef7d79206f2574633b1a8cad543bcc5f8c0`. The failed first-journey snapshot `643a70c8de5e37bfff63b4cb56ae4a5b82c041fa` removes only the second test declaration. The first declaration is byte-identical to the permanent spec, and the unchanged production configuration selects exactly that named file with one worker and no retries. Both strict omni control and production channel are requested.
 
 The source/technical checks precede the final installed outcome. The earlier composed gate [44981671317](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44981671317), job `137083298996`, passed twelve gates with ninety-four source/adapter regressions; focused route, destination and input tests above cover later concrete changes. These are separate receipts on explicit source compositions, not one invented aggregate test run.
 
@@ -88,3 +88,7 @@ No HTTP route or source response is mocked. No synthetic evaluation, history row
 The UI46 BI09 decision-table wrapper currently has source review only; the required runtime scope uses real financial data, operational data and the genuine BI11 empty selection catalog. Narrow viewport reflow is not actual browser zoom. Browser transport is the qualification target; no additional installed D01 broker URL constructor was found in this checkout. User design acceptance and merging remain separate from implementation and test evidence.
 
 [Machine-readable source/implementation map](SOURCE-EQUIVALENCE.json) contains the exact hashes and scope.
+
+## Candidate after the failed installed attempt
+
+Source `6703cc5ba71709f0616b186383ab63f779c22dfb` includes the exact combination disclosure correction: scenario view blob `658e49dd2dd76da7847b4917ca585465e13ead02` and permanent spec blob `e39da7921aade96fbeecd732c131836db3a8301e`. That candidate also contains parent-owned source-scope work. It is listed separately from the tested runtime table above until a fresh installed execution supplies an outcome. The source preparation will register an explicit human portfolio selection through the original versioned operation; no evaluation result, grant or proof will be injected.
